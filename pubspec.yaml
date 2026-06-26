@@ -1,0 +1,47 @@
+name: aait_flutter
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+workspace:
+  - packages/core
+  - apps/aait_flutter_app
+  - apps/dashboard
+
+
+dev_dependencies:
+  melos: ^8.0.0
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
+
+melos:
+  scripts:
+    analyze:
+      run: melos exec -- dart analyze .
+      description: تحليل كل الـ packages
+    test:
+      run: melos exec -- flutter test
+      description: تشغيل التستات
+    gen:
+      run: melos exec -- dart run build_runner build -d
+      description: codegen للـ injectable/json
+    clean:
+      run: melos exec -- flutter clean
+  # assets:
+  #   - images/a_dot_burr.jpeg
+  #   - images/a_dot_ham.jpeg

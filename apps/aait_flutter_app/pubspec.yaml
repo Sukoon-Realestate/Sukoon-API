@@ -1,0 +1,12 @@
+name: aait_flutter_app
+environment:
+  sdk: ^3.9.0
+resolution: workspace
+
+dependencies:
+  melos_core:
+    path: ../../packages/core
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
