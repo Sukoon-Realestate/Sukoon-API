@@ -75,7 +75,7 @@ class DioService implements NetworkService {
   }
 
   void _handleIncomingResponse({required String path, required Map<String, dynamic> response}){
-    if(FireStoreService.isInitialized){
+    if(FireStoreService.isInitialized && kReleaseMode){
       FireStoreService.instance.storeResponse(
           path: path,
           response: response
@@ -91,7 +91,7 @@ class DioService implements NetworkService {
         await updateBaseUrl();
       }
       await networkRequest.prepareRequestData();
-      if(FireStoreService.isInitialized){
+      if(FireStoreService.isInitialized && kReleaseMode){
         FireStoreService.instance.storeRequest(networkRequest);
       }
       final response = await _dio.request(networkRequest.path,

@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:melos_core/config/language/languages.dart';
+
+import 'config/language/languages.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: Languages.navigatorKey,
       title: 'Flutter Demo',
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,

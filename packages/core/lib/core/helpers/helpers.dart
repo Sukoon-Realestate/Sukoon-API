@@ -5,7 +5,6 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:lottie/lottie.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import '../../../generated/assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,6 +14,7 @@ import 'package:share_plus/share_plus.dart';
 import '../../config/language/languages.dart';
 import '../../config/language/locale_keys.g.dart';
 import '../../config/res/config_imports.dart';
+import '../../generated/assets.dart';
 import '../extensions/padding_extension.dart';
 import '../navigation/navigator.dart';
 import '../widgets/app_bottom_sheet.dart';
@@ -61,7 +61,7 @@ class Helpers {
     AppBottomSheet.large(
         asyncCall: (context) async => await Phoenix.rebirth(context),
         btnTitle: LocaleKeys.updateAvailableUpdateNow,
-        upperWidget: Lottie.asset(Assets.errorErrorView)
+        upperWidget: Lottie.asset(Assets)
     );
   }
 

@@ -10,40 +10,54 @@ import 'models/names.dart';
 /// "dart generate/strings/main.dart"
 Future<void> main(List<String> args) async {
   final bool watch = args.contains('--watch');
-  await generateTranslations();
+  final List<TranslationTarget> targets = GenerateConstants.translationTargets
+      .toList();
+  await generateTranslations(targets);
 
   if (!watch) {
     return;
   }
 
-  const String filePath = GenerateConstants.langJsonAssetFilePath;
-  final File file = File(filePath);
-  final FileWatcher watcher = FileWatcher(filePath);
-  String previousContent = file.readAsStringSync();
+  for (final target in targets) {
+    final String filePath = target.langJsonAssetFilePath;
+    final File file = File(filePath);
+    final FileWatcher watcher = FileWatcher(filePath);
+    String previousContent = file.readAsStringSync();
 
-  watcher.events.listen((WatchEvent event) {
-    if (event.type == ChangeType.MODIFY) {
-      log('File changed: ${watcher.path}');
-      handleFileChange(file, previousContent);
-      previousContent = file.readAsStringSync();
-    }
-  });
-  log('Watching for changes in: ${watcher.path}');
+    watcher.events.listen((WatchEvent event) {
+      if (event.type == ChangeType.MODIFY) {
+        log('File changed: ${watcher.path}');
+        handleFileChange(target, file, previousContent);
+        previousContent = file.readAsStringSync();
+      }
+    });
+    log('Watching for changes in: ${watcher.path}');
+  }
 }
 
-Future<void> generateTranslations() async {
-  const String filePath = GenerateConstants.langJsonAssetFilePath;
-  final File file = File(filePath);
+Future<void> generateTranslations(List<TranslationTarget> targets) async {
+  for (final target in targets) {
+    await generateTranslationsForTarget(target);
+  }
+}
+
+Future<void> generateTranslationsForTarget(TranslationTarget target) async {
+  final File file = File(target.langJsonAssetFilePath);
   final Map<String, dynamic> jsonMap = json.decode(file.readAsStringSync());
   final Map<String, dynamic> jsonEnMap = await generateJsonTranslate(
     lang: 'en',
     jsonMap: jsonMap,
+    target: target,
   );
-  await generateJsonTranslate(lang: 'ar', jsonMap: jsonMap);
-  await generateAppStrings(jsonEnMap);
+  await generateJsonTranslate(lang: 'ar', jsonMap: jsonMap, target: target);
+  await generateAppStrings(jsonEnMap, target);
 }
 
-void handleFileChange(File file, String previousContent) async {
+void handleFileChange(
+  TranslationTarget target,
+  File file,
+  String previousContent,
+) async {
   try {
     final String currentContent = file.readAsStringSync();
     final List<String> currentLines = currentContent.split('\n');
@@ -64,9 +78,10 @@ void handleFileChange(File file, String previousContent) async {
     final Map<String, dynamic> jsonEnMap = await generateJsonTranslate(
       lang: 'en',
       jsonMap: jsonMap,
+      target: target,
     );
-    await generateJsonTranslate(lang: 'ar', jsonMap: jsonMap);
-    await generateAppStrings(jsonEnMap);
+    await generateJsonTranslate(lang: 'ar', jsonMap: jsonMap, target: target);
+    await generateAppStrings(jsonEnMap, target);
   } catch (e) {
     log('Uknown Key');
   }
@@ -75,12 +90,13 @@ void handleFileChange(File file, String previousContent) async {
 Future<Map<String, dynamic>> generateJsonTranslate({
   required String lang,
   required Map<String, dynamic> jsonMap,
+  required TranslationTarget target,
 }) async {
   final StringBuffer buffer = StringBuffer();
   final String filePath = lang == 'en'
-      ? GenerateConstants.langEnJsonAssetFilePath
+      ? target.langEnJsonAssetFilePath
       : lang == 'ar'
-      ? GenerateConstants.langArJsonAssetFilePath
+      ? target.langArJsonAssetFilePath
       : '';
   final File file = File(filePath);
   buffer.writeln('{');
@@ -139,7 +155,10 @@ Future<Map<String, dynamic>> generateJsonTranslate({
   return json.decode(buffer.toString());
 }
 
-Future<void> generateAppStrings(Map<String, dynamic> jsonMap) async {
+Future<void> generateAppStrings(
+  Map<String, dynamic> jsonMap,
+  TranslationTarget target,
+) async {
   final StringBuffer buffer = StringBuffer();
   // String content = file.readAsStringSync();
   // List<String> lines = content.split('\n');
@@ -171,9 +190,9 @@ Future<void> generateAppStrings(Map<String, dynamic> jsonMap) async {
     }
   });
   buffer.writeln('}');
-  final File file = File(GenerateConstants.outputStringsFilePath);
+  final File file = File(target.outputStringsFilePath);
   await file.writeAsString(buffer.toString());
   log(
-    '${GenerateConstants.greenColorCode} class AppStrings Generated successfully at ${GenerateConstants.outputStringsFilePath} ${GenerateConstants.resetColorCode}',
+    '${GenerateConstants.greenColorCode} class AppStrings Generated successfully at ${target.outputStringsFilePath} ${GenerateConstants.resetColorCode}',
   );
 }

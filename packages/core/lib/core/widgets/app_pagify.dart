@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:melos_core/generated/assets.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:pagify/helpers/errors.dart';
 import 'package:pagify/helpers/status_stream.dart';
 import 'package:pagify/pagify.dart';
-import '../../../generated/assets.dart';
 import '../../config/language/locale_keys.g.dart';
 import '../local_db/objectbox_cache_service.dart';
 import 'app_text.dart';
@@ -79,7 +79,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
           emptyListView: Center(
             child: Column(
               children: [
-                Lottie.asset(Assets.dataEmptyBox),
+                Lottie.asset(Assets),
                 AppText(LocaleKeys.notFound)
               ],
             ),
@@ -125,7 +125,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
           physics: widget.physics,
           errorBuilder: (e) => Column(
             children: [
-              Lottie.asset(Assets.errorApiError),
+              Lottie.asset(Assets),
               AppText(LocaleKeys.notFound)
             ],
           ),
