@@ -1,0 +1,201 @@
+import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:multiple_result/multiple_result.dart';
+import '../../../../../../config/language/locale_keys.g.dart';
+import '../../../../../../config/res/config_imports.dart';
+import '../../../../../error/failure.dart';
+import '../../../../../extensions/object.dart';
+import '../../../../../shared/base_state.dart';
+import '../../../../../widgets/custom_messages.dart';
+import '../../../domain/base_domain_imports.dart';
+import '../../../domain/usecases/pagination_response.dart';
+part 'async_state.dart';
+
+abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
+  AsyncCubit(T initialData) : super(AsyncState.initial(data: initialData)) {
+    baseCrudUseCase = injector();
+  }
+  late final BaseCrudUseCase baseCrudUseCase;
+  void setLoading() {
+    emit(state.loading());
+  }
+
+  void setLoadingMore() {
+    emit(state.loadingMore());
+  }
+
+  void setSuccess(BaseModel<T> data) {
+    emit(state.success(data: data.data, msg: data.msg));
+    if(data.key == 'fromCache'){
+      MessageUtils.showTopMsg(data.msg);
+    }
+  }
+
+  void setError({String? errorMessage, bool showToast = false}) {
+    emit(state.error(errorMessage: errorMessage));
+  }
+
+  void reset() {
+    emit(AsyncState.initial(data: state.data));
+  }
+
+  void updateData(T data) {
+    emit(state.copyWith(data: data));
+  }
+
+  void updateErrorMessage(String? errorMessage) {
+    emit(state.copyWith(msg: errorMessage));
+  }
+
+  bool get isLoading => state.isLoading;
+
+  // Future<void> executeAsyncWithBaseModel({
+  //   required Future<Result<BaseModel<T>, Failure>> Function() operation,
+  //   FutureOr<void> Function(BaseModel<T>)? successEmitter,
+  // }) async {
+  //   setLoading();
+  //   final result = await operation();
+  //   result.when(
+  //         (success) {
+  //       setSuccess(data: success.data, msg: success.message);
+  //       if (successEmitter != null) {
+  //         successEmitter(success);
+  //       }
+  //     },
+  //         (failure) {
+  //       MessageUtils.showTopMsg(failure.message, state: MsgState.error);
+  //       setError(errorMessage: failure.message);
+  //     },
+  //   );
+  // }
+
+  StreamSubscription? _streamSubscription;
+  Future<void> executeAsyncWithBaseModel({
+    required Future<Result<BaseModel<T>, Failure>> Function() operation,
+    Function(BaseModel<T>)? onSuccess,
+    Function(String msg)? onError,
+    bool withInternetInterceptor = false,
+  }) async {
+    if(withInternetInterceptor){
+      await _basicOperationWithInternetInterceptor(
+          operation: operation,
+          successEmitter: onSuccess,
+          onError: onError
+      );
+
+    }else{
+      await _basicOperation(
+          operation: operation,
+          successEmitter: onSuccess,
+          onError: onError
+      );
+    }
+  }
+
+  bool _firstRequest = true;
+  FutureOr<void> _checkIsFirstTime(bool val, {required FutureOr<void> Function() onNotFirstTime}) async{
+    if(_firstRequest){
+      _firstRequest = false;
+      return;
+
+    }else{
+      await onNotFirstTime.call();
+    }
+  }
+
+  late final Connectivity _connectivity = Connectivity();
+  Future<void> _basicOperationWithInternetInterceptor({
+    required Future<Result<BaseModel<T>, Failure>> Function() operation,
+    Function(BaseModel<T>)? successEmitter,
+    Function(String msg)? onError,
+  })async{
+    await _basicOperation(
+        operation: operation,
+        successEmitter: successEmitter,
+        onError: onError
+    );
+
+    _streamSubscription = _connectivity.onConnectivityChanged.listen((status)async{
+      if(status.contains(ConnectivityResult.none)){
+        if(state.data.isNull || (state.data is List && (state.data as List).isEmpty)){
+          emit(state.error(errorMessage: LocaleKeys.checkInternet));
+
+        }else{
+          MessageUtils.showTopMsg(LocaleKeys.checkInternet);
+        }
+
+      }else{
+        MessageUtils.showTopMsg(LocaleKeys.theInternetConnectionIsRestored);
+        await _basicOperation(
+            operation: operation,
+            successEmitter: successEmitter,
+            onError: onError
+        );
+        // if(state.data.isNull || (state.data is List && (state.data as List).isEmpty)){
+        //   await _basicOperation(
+        //       operation: operation,
+        //       successEmitter: successEmitter,
+        //       onError: onError
+        //   );
+        // }
+      }
+      // _checkIsFirstTime(
+      //     _firstRequest,
+      //     onNotFirstTime: ()async{
+      //       if(status.contains(ConnectivityResult.none)){
+      //         if(state.data.isNull || (state.data is List && (state.data as List).isEmpty)){
+      //           emit(state.error(errorMessage: LocaleKeys.checkInternet));
+      //
+      //         }else{
+      //           MessageUtils.showSnackBar(LocaleKeys.checkInternet);
+      //         }
+      //
+      //       }else{
+      //         MessageUtils.showSnackBar(LocaleKeys.theInternetConnectionIsRestored);
+      //         if(state.data.isNull || (state.data is List && (state.data as List).isEmpty)){
+      //           await _basicOperation(
+      //               operation: operation,
+      //               successEmitter: successEmitter,
+      //               onError: onError
+      //           );
+      //         }
+      //       }
+      //     }
+      // );
+    });
+  }
+
+  Future<void> _basicOperation({
+    required Future<Result<BaseModel<T>, Failure>> Function() operation,
+    required Function(BaseModel<T>)? successEmitter,
+    required Function(String msg)? onError,
+  })async{
+    setLoading();
+    final result = await operation();
+    result.when(
+          (success) {
+        setSuccess(success);
+        successEmitter?.call(success);
+      },
+          (failure) {
+        MessageUtils.showTopMsg(failure.message);
+        setError(errorMessage: failure.message);
+        onError?.call(failure.message);
+      },
+    );
+  }
+
+  @override
+  Future<void> close() async {
+    await _streamSubscription?.cancel();
+    return super.close();
+  }
+
+  @override
+  void emit(AsyncState<T> state) {
+    if (isClosed) return;
+    super.emit(state);
+  }
+}

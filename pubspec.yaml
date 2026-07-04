@@ -12,6 +12,7 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
+  watcher: ^1.2.1
 
 workspace:
   - packages/core
@@ -40,6 +41,12 @@ melos:
     gen:
       run: melos exec -- dart run build_runner build -d
       description: codegen للـ injectable/json
+    translations:
+      run: dart run generate/strings/main.dart
+      description: generate translation files
+    translations_watch:
+      run: dart run generate/strings/main.dart --watch
+      description: watch and generate translation files
     clean:
       run: melos exec -- flutter clean
   # assets:

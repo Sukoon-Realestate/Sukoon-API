@@ -4,9 +4,15 @@ environment:
 resolution: workspace
 
 dependencies:
+  flutter:
+    sdk: flutter
+  easy_localization: ^3.0.8
   melos_core:
     path: ../../packages/core
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+flutter:
+  uses-material-design: true

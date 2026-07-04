@@ -6,13 +6,27 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:dashboard/main.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:melos_core/config/language/languages.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+    await EasyLocalization.ensureInitialized();
+
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(
+      EasyLocalization(
+        supportedLocales: Languages.supportedLocales,
+        path: Languages.translationsPath,
+        startLocale: Languages.english.locale,
+        fallbackLocale: Languages.english.locale,
+        child: const MyApp(),
+      ),
+    );
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);
