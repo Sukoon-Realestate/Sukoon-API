@@ -3,13 +3,12 @@ part of 'config_imports.dart';
 final GetIt injector = GetIt.instance;
 
 class ConstantManager {
-  static const String bundleId = 'com.aait.flutter.sitr';
-  static const String devBundleId = 'com.aait.flutter.sitr.dev';
-  static const String appName = 'sitr';
+  static const String bundleId = 'com.app.sokoon';
+  static const String devBundleId = 'com.app.sokoon.dev';
+  static const String appName = 'سكون';
   static const String defaultAvatar = 'https://share.google/images/xqtQr0B9c0ROYtxeG';
   static const String fontFamily = 'Tajawal';
-  static const String token = 'token';
-  static const String projectName = 'sitr';
+  static const String projectName = 'سكون';
   static const int splashTimer = 3000;
   static const String baseUrl = 'https://str-sa.com/api/v1/';
   static const String testUrl = 'https://str-sa.4hoste.com/api/v1/';

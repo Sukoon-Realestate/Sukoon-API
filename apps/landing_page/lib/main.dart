@@ -14,13 +14,13 @@ Future<void> main() async {
       saveLocale: true,
       startLocale: Languages.arabic.locale,
       fallbackLocale: Languages.arabic.locale,
-      child: const MyApp(),
+      child: const LandingPage(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class LandingPage extends StatelessWidget {
+  const LandingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
