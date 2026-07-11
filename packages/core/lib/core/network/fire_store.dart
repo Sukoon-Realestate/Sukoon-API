@@ -6,6 +6,7 @@ class FireStoreService{
   final String _collectionName = 'requests';
   final String _requestCollection = 'request';
   final String _responseCollection = 'response';
+  final String _errorsCollection = 'errors';
   late final _fireStoreMainCollection = FirebaseFirestore.instance.collection(_collectionName);
 
   FireStoreService._internal();
@@ -20,6 +21,12 @@ class FireStoreService{
         .doc(_docId(request.path))
         .collection(_requestCollection)
         .add(request.toJson());
+  }
+
+  Future<void> storeError(String error)async{
+    await FirebaseFirestore.instance
+        .collection(_errorsCollection)
+        .add({'error' : error});
   }
 
   Future<void> storeResponse({

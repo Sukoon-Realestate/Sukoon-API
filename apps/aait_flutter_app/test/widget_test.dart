@@ -5,6 +5,7 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:aait_flutter_app/app.dart';
 import 'package:aait_flutter_app/main.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ void main() {
         path: Languages.translationsPath,
         startLocale: Languages.english.locale,
         fallbackLocale: Languages.english.locale,
-        child: const MyApp(),
+        child: const Sokoon(),
       ),
     );
 

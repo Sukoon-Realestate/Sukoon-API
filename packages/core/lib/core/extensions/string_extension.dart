@@ -100,34 +100,6 @@ extension FormatString on String {
     return Languages.english;
   }
 
-
-  UserGender toUserGender(){
-    if(this == LocaleKeys.male || this == UserGender.male.name){
-      return UserGender.male;
-
-    }else if(this == LocaleKeys.female || this == UserGender.female.name){
-      return UserGender.female;
-
-    }else{
-      return UserGender.unknown;
-    }
-  }
-
-  UserType toUserType(){
-    if(this == UserType.individual.name){
-      return UserType.individual;
-
-    }else if(this == UserType.parent.name){
-      return UserType.parent;
-
-    }else if(this == UserType.child.name){
-      return UserType.child;
-
-    }else{
-      return UserType.unknown;
-    }
-  }
-
   String capitalize() {
     return '${this[0].toUpperCase()}${substring(1)}';
   }

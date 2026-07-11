@@ -87,8 +87,7 @@ class AppyFlyerHelper{
     await _appsflyerSdk.logEvent(event.name, {
       'id' : UserModel.currentUser?.id,
       'name' : UserModel.currentUser?.name,
-      'phone' : UserModel.currentUser?.phone,
-      'gender' : UserModel.currentUser?.gender,
+      'phone' : UserModel.currentUser?.email,
       'type' : UserModel.currentUser?.type,
     });
   }

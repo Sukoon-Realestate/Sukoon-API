@@ -1,4 +1,4 @@
-package com.aait.melos_dashboard
+package com.app.sokoon
 
 import io.flutter.embedding.android.FlutterActivity
 

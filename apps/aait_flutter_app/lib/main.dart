@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/helpers/helpers.dart';
 import 'package:melos_core/core/local_db/objectbox_cache_service.dart';
@@ -15,8 +16,37 @@ import 'package:melos_core/core/network/fire_store.dart';
 import 'package:melos_core/core/shared/Functions/setup_service_locators.dart';
 import 'package:melos_core/core/shared/bloc_observer.dart';
 import 'package:melos_core/core/widgets/exeption_view.dart';
-
+import 'app.dart';
 import 'config/language/languages.dart';
+
+void main() async {
+  Helpers.changeStatusbarColor(statusBarColor: AppColors.white);
+  Bloc.observer = AppBlocObserver();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Future.wait([
+    EasyLocalization.ensureInitialized(),
+    CacheStorage.init(),
+    ObjectBoxCacheService.init(),
+    ScreenUtil.ensureScreenSize(),
+  ]);
+  await _initializeFirebaseApp();
+  await fetchBaseUrl();
+
+  setUpServiceLocator();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+  if (kReleaseMode) {
+    ErrorWidget.builder = (FlutterErrorDetails details) {
+      if(FireStoreService.isInitialized && kReleaseMode){
+        FireStoreService.instance.storeError(details.exceptionAsString());
+      }
+
+      return const ExceptionView();
+    };
+  }
+}
 
 void _changeFireStoreAvailability(bool enable) {
   if (enable) {
@@ -104,53 +134,4 @@ Future<void> _initializeFirebaseApp() async {
     }(),
   };
   await Firebase.initializeApp(options: firebaseOptions);
-}
-
-void main() async {
-  Helpers.changeStatusbarColor(statusBarColor: AppColors.white);
-  Bloc.observer = AppBlocObserver();
-  WidgetsFlutterBinding.ensureInitialized();
-  await Future.wait([
-    EasyLocalization.ensureInitialized(),
-    CacheStorage.init(),
-    ObjectBoxCacheService.init(),
-    ScreenUtil.ensureScreenSize(),
-  ]);
-  await _initializeFirebaseApp();
-  await fetchBaseUrl();
-
-  setUpServiceLocator();
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
-  if (kReleaseMode) {
-    ErrorWidget.builder = (FlutterErrorDetails details) =>
-        const ExceptionView();
-  }
-
-  _initSentry();
-}
-
-void _initSentry() async {
-  await SentryFlutter.init(
-    (options) {
-      options.dsn =
-          'https://cb95fd92d19a9f57924ae8dba99d9df4@o4508946921291776.ingest.us.sentry.io/4510555526070272';
-      // Adds request headers and IP for users, for more info visit:
-      // https://docs.sentry.io/platforms/dart/guides/flutter/data-management/data-collected/
-      options.sendDefaultPii = true;
-    },
-    appRunner: () => runApp(
-      EasyLocalization(
-        supportedLocales: Languages.suppoerLocales,
-        path: Languages.translationsPath,
-        saveLocale: true,
-        startLocale: Languages.arabic.locale,
-        // startLocale: Languages.getDeviceLocaleFromPlatform().locale,
-        fallbackLocale: Languages.arabic.locale,
-        child: const Satr(),
-      ),
-    ),
-  );
 }
