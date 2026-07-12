@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../config/language/locale_keys.g.dart';
-import '../../config/res/assets.gen.dart';
 import '../../config/res/config_imports.dart';
 import '../extensions/context_extension.dart';
 import '../extensions/text_style_extensions.dart';
-
 
 class NotContainData extends StatelessWidget {
   final double? width, height;
@@ -30,7 +29,9 @@ class NotContainData extends StatelessWidget {
           children: [
             Visibility(
               visible: placeHolder != null,
-              replacement: AppAssets.lottie.data.notFound2.lottie(
+              replacement: Lottie.asset(
+                'assets/lottie/not_found_2.json',
+                package: 'melos_core',
                 width: width ?? context.width * .8,
                 height: height != null ? (height! * .8) : context.height * .3,
               ),

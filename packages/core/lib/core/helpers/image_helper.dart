@@ -121,10 +121,6 @@ class ImageHelper {
   //       PopupMenuItem(
   //         value: 'camera',
   //         child: ListTile(
-  //           leading: AppAssets.svg.camera.svg(
-  //             height: 24.h,
-  //             width: 24.w,
-  //           ),
   //           visualDensity: VisualDensity.compact,
   //           title: Text(LocaleKeys.camera),
   //         ),
@@ -132,10 +128,6 @@ class ImageHelper {
   //       PopupMenuItem(
   //         value: 'photo_library',
   //         child: ListTile(
-  //           leading: AppAssets.svg.uploadImage.svg(
-  //             height: 22.h,
-  //             width: 22.w,
-  //           ),
   //           visualDensity: VisualDensity.compact,
   //           title: Text(LocaleKeys.photoLibrary),
   //         ),

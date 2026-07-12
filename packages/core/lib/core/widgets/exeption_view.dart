@@ -10,7 +10,7 @@ class ExceptionView extends StatelessWidget {
   Widget build(BuildContext context) {
     return FittedBox(
       child: Lottie.asset(
-        Assets.errorErrorView,
+        Assets.lottie.error1.path,
         width: size?.width,
         height: size?.height,
         fit: BoxFit.contain,

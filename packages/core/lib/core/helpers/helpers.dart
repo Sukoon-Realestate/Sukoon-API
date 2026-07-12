@@ -61,7 +61,7 @@ class Helpers {
     AppBottomSheet.large(
         asyncCall: (context) async => await Phoenix.rebirth(context),
         btnTitle: LocaleKeys.updateAvailableUpdateNow,
-        upperWidget: Lottie.asset(Assets)
+        upperWidget: Lottie.asset(Assets.lottie.loading4)
     );
   }
 

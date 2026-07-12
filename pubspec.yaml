@@ -18,7 +18,7 @@ dependencies:
 workspace:
   - packages/core
   - apps/aait_flutter_app
-  - apps/dashboard
+  - apps/landing_page
 
 
 dev_dependencies:

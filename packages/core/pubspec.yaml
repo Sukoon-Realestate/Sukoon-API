@@ -62,6 +62,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/translations/
+    - assets/lottie/
 flutter_assets_generator:
   output_dir: generated/
   output_filename: assets

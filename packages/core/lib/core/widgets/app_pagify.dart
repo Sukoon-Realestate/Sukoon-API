@@ -79,7 +79,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
           emptyListView: Center(
             child: Column(
               children: [
-                Lottie.asset(Assets),
+                Lottie.asset(Assets.lottie.notFound2.path),
                 AppText(LocaleKeys.notFound)
               ],
             ),
@@ -125,13 +125,13 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
           physics: widget.physics,
           errorBuilder: (e) => Column(
             children: [
-              Lottie.asset(Assets),
+              Lottie.asset(Assets.lottie.notFound2.path),
               AppText(LocaleKeys.notFound)
             ],
           ),
           emptyListView: Column(
             children: [
-              Lottie.asset(Assets.dataEmptyBox),
+              Lottie.asset(Assets.lottie.notFound2.path),
               AppText(LocaleKeys.notFound)
             ],
           ),

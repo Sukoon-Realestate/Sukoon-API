@@ -9,6 +9,7 @@ import 'package:lottie/src/composition.dart';
 class Assets {
   Assets._();
 
+  static const $AssetsLottieGen lottie = $AssetsLottieGen();
   static const $AssetsTranslationsGen translations = $AssetsTranslationsGen();
 }
 
@@ -18,6 +19,63 @@ class $AssetsTranslationsGen {
   final String ar = 'assets/translations/ar.json';
   final String en = 'assets/translations/en.json';
   final String lang = 'assets/translations/lang.json';
+}
+
+class $AssetsLottieGen {
+  const $AssetsLottieGen();
+
+  final LottieGenImage apiError = const LottieGenImage(
+    'assets/lottie/api_error.json',
+  );
+  final LottieGenImage done = const LottieGenImage('assets/lottie/done.json');
+  final LottieGenImage emptyBox = const LottieGenImage(
+    'assets/lottie/empty_box.json',
+  );
+  final LottieGenImage emptyCart = const LottieGenImage(
+    'assets/lottie/empty_cart.json',
+  );
+  final LottieGenImage error = const LottieGenImage('assets/lottie/error.json');
+  final LottieGenImage error1 = const LottieGenImage(
+    'assets/lottie/error_1.json',
+  );
+  final LottieGenImage error2 = const LottieGenImage(
+    'assets/lottie/error_2.json',
+  );
+  final LottieGenImage error3 = const LottieGenImage(
+    'assets/lottie/error_3.json',
+  );
+  final LottieGenImage error4 = const LottieGenImage(
+    'assets/lottie/error_4.json',
+  );
+  final LottieGenImage errorView = const LottieGenImage(
+    'assets/lottie/error_view.json',
+  );
+  final LottieGenImage loading = const LottieGenImage(
+    'assets/lottie/loading.json',
+  );
+  final LottieGenImage loading2 = const LottieGenImage(
+    'assets/lottie/loading_2.json',
+  );
+  final String loading3 = 'assets/lottie/loading_3.json';
+  final String loading4 = 'assets/lottie/loading_4.json';
+  final LottieGenImage noData = const LottieGenImage(
+    'assets/lottie/no_data.json',
+  );
+  final LottieGenImage noInternet = const LottieGenImage(
+    'assets/lottie/no_internet.json',
+  );
+  final LottieGenImage notFound1 = const LottieGenImage(
+    'assets/lottie/not_found_1.json',
+  );
+  final LottieGenImage notFound2 = const LottieGenImage(
+    'assets/lottie/not_found_2.json',
+  );
+  final LottieGenImage success = const LottieGenImage(
+    'assets/lottie/success.json',
+  );
+  final LottieGenImage successfullOrder = const LottieGenImage(
+    'assets/lottie/successfull_order.json',
+  );
 }
 
 class AssetGenImage {
@@ -83,6 +141,75 @@ class AssetGenImage {
 
   ImageProvider provider({AssetBundle? bundle, String? package}) {
     return AssetImage(_assetName, bundle: bundle, package: package);
+  }
+
+  Widget custom({
+    Key? key,
+    required Widget Function(BuildContext context, String assetPath) builder,
+  }) {
+    return Builder(
+      key: key,
+      builder: (context) => builder(context, _assetName),
+    );
+  }
+
+  String get path => _assetName;
+
+  String get keyName => _assetName;
+}
+
+class LottieGenImage {
+  const LottieGenImage(this._assetName);
+
+  final String _assetName;
+
+  LottieBuilder lottie({
+    Animation<double>? controller,
+    bool? animate,
+    FrameRate? frameRate,
+    bool? repeat,
+    bool? reverse,
+    LottieDelegates? delegates,
+    LottieOptions? options,
+    void Function(LottieComposition)? onLoaded,
+    LottieImageProviderFactory? imageProviderFactory,
+    Key? key,
+    AssetBundle? bundle,
+    LottieFrameBuilder? frameBuilder,
+    ImageErrorWidgetBuilder? errorBuilder,
+    double? width,
+    double? height,
+    BoxFit? fit,
+    AlignmentGeometry? alignment,
+    String? package,
+    bool? addRepaintBoundary,
+    FilterQuality? filterQuality,
+    WarningCallback? onWarning,
+  }) {
+    return Lottie.asset(
+      _assetName,
+      controller: controller,
+      animate: animate,
+      frameRate: frameRate,
+      repeat: repeat,
+      reverse: reverse,
+      delegates: delegates,
+      options: options,
+      onLoaded: onLoaded,
+      imageProviderFactory: imageProviderFactory,
+      key: key,
+      bundle: bundle,
+      frameBuilder: frameBuilder,
+      errorBuilder: errorBuilder,
+      width: width,
+      height: height,
+      fit: fit,
+      alignment: alignment,
+      package: package,
+      addRepaintBoundary: addRepaintBoundary,
+      filterQuality: filterQuality,
+      onWarning: onWarning,
+    );
   }
 
   Widget custom({
