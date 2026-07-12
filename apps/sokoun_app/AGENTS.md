@@ -15,6 +15,19 @@ Dependency injection via `GetIt`: `injector<Type>()`
 
 ---
 
+## Shared Widgets
+
+Before creating a widget from scratch, check `packages/core/lib/core/widgets` for an existing custom widget that fits the use case. Reuse or extend the shared widget when possible so UI stays consistent across apps.
+
+When asked to create shared UI like auth fields or social sign-in buttons:
+- Put each component in its own file.
+- Reuse ready components from `packages/core/lib/core/widgets` instead of building controls from scratch.
+- Add app-specific colors to `packages/core/lib/config/res/color_manager.dart`.
+- Add plain user-facing text to `packages/core/assets/translations/lang.json`.
+- Run `dart run generate/strings/main.dart` after translation changes.
+
+---
+
 ## Navigation — `Go` class
 
 All navigation is done through the static `Go` class (`lib/src/core/navigation/navigator.dart`).

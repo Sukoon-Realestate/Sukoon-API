@@ -35,6 +35,14 @@ abstract class AppColors {
   static const Color darkGay = Color(0xff525252);
   static const Color redColor = Color(0xffF54242);
   static const Color unSelectedLabelColor = Color(0xff4F4F4F);
+  static const Color sokoonTeal = Color(0xFF0F766E);
+  static const Color sokoonGold = Color(0xFFD6A84F);
+  static const Color sokoonRose = Color(0xFFE11D48);
+  static const Color sokoonNavy = Color(0xFF111827);
+  static const Color sokoonGray = Color(0xFF6B7280);
+  static const Color sokoonMuted = Color(0xFF9CA3AF);
+  static const Color sokoonBorder = Color(0xFFEEF0F3);
+  static const Color facebookBlue = Color(0xFF1877F2);
 }
 
 class AppColorsWithDarkMode {

@@ -37,6 +37,13 @@
 
     "_____________________________________Login___________________________________": "",
     "Login" : "تسجيل الدخول",
+    "password #$ Password" : "كلمة المرور",
+    "confirmPassword #$ Confirm password" : "تأكيد كلمة المرور",
+    "fullName #$ Full name" : "الاسم الكامل",
+    "fullNameHint #$ Mohamed Ahmed" : "محمد أحمد",
+    "continueWithGoogle #$ Continue with Google" : "المتابعة باستخدام Google",
+    "continueWithFacebook #$ Continue with Facebook" : "المتابعة باستخدام Facebook",
+    "continueWithApple #$ Continue with Apple" : "المتابعة باستخدام Apple",
     "Phone Number" : "رقم الجوال",
     "Sign in as visitor" : "الدخول كزائر",
     "Please Enter Your Mobile Number To Register Or Skip To Register And View Some Application Data" : "من فضلك قم بادخال رقم الجوال للتسجيل او عمل تخطي للتسجيل والاطلاع علي بعض بيانات التطبيق",

@@ -109,6 +109,27 @@ abstract class LocaleKeys {
   static const String _login = 'login';
   static String get login => _login.tr();
 
+  static const String _password = 'password';
+  static String get password => _password.tr();
+
+  static const String _confirmPassword = 'confirm_password';
+  static String get confirmPassword => _confirmPassword.tr();
+
+  static const String _fullName = 'full_name';
+  static String get fullName => _fullName.tr();
+
+  static const String _fullNameHint = 'full_name_hint';
+  static String get fullNameHint => _fullNameHint.tr();
+
+  static const String _continueWithGoogle = 'continue_with_google';
+  static String get continueWithGoogle => _continueWithGoogle.tr();
+
+  static const String _continueWithFacebook = 'continue_with_facebook';
+  static String get continueWithFacebook => _continueWithFacebook.tr();
+
+  static const String _continueWithApple = 'continue_with_apple';
+  static String get continueWithApple => _continueWithApple.tr();
+
   static const String _phoneNumber = 'phone_number';
   static String get phoneNumber => _phoneNumber.tr();
 

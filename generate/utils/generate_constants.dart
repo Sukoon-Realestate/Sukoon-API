@@ -6,11 +6,7 @@ abstract class GenerateConstants {
   static const String greenColorCode = '\x1B[32m';
   static const String resetColorCode = '\x1B[0m';
   //generate_strings
-  static const List<String> translationPackageRoots = [
-    'packages/core',
-    'apps/aait_flutter_app',
-    'apps/dashboard',
-  ];
+  static const List<String> translationPackageRoots = ['packages/core'];
 
   static Iterable<TranslationTarget> get translationTargets =>
       translationPackageRoots.map(TranslationTarget.new);
