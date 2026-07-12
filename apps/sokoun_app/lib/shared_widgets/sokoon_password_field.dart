@@ -50,7 +50,6 @@ class SokoonPasswordField extends StatelessWidget {
               title: hintText,
               isPassword: true,
               action: action,
-              textAlign: TextAlign.left,
               borderRadius: 12.r,
               borderColor: borderColor,
               fillColor: AppColors.white,

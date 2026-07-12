@@ -4,19 +4,18 @@ import '../extensions/object.dart';
 import '../navigation/navigator.dart';
 
 class Validators {
-
-  static String? validateChatMessage(String? value, {String? fieldTitle}){
+  static String? validateChatMessage(String? value, {String? fieldTitle}) {
     final regex = RegExp(r'^[a-zA-Z\u0600-\u06FF\s]+$');
     final emptyRegex = RegExp(r'^(?!\s*$).+');
-    if(value!.isEmpty){
+    if (value!.isEmpty) {
       return null;
     }
 
-    if(!emptyRegex.hasMatch(value!)){
+    if (!emptyRegex.hasMatch(value)) {
       return LocaleKeys.fillField;
     }
 
-    if(value.isNull || !regex.hasMatch(value!)) {
+    if (value.isNull || !regex.hasMatch(value)) {
       return LocaleKeys.onlyLettersAllowed;
     }
 
@@ -29,9 +28,7 @@ class Validators {
           ? LocaleKeys.fillField.tr(context: Go.context)
           : '${LocaleKeys.filedValidation.tr()} $fieldTitle';
     } else if (RegExp(r'[<>]').hasMatch(value)) {
-      return LocaleKeys.scripInjectionValidate.tr(
-        context: Go.context,
-      );
+      return LocaleKeys.scripInjectionValidate.tr(context: Go.context);
     }
 
     return null;
@@ -61,7 +58,11 @@ class Validators {
     return null;
   }
 
-  static String? validateAge(String? value, {String? fieldTitle, bool isRequired = false}) {
+  static String? validateAge(
+    String? value, {
+    String? fieldTitle,
+    bool isRequired = false,
+  }) {
     if (value == null || value.isEmpty) {
       if (isRequired) {
         return fieldTitle == null
@@ -74,7 +75,9 @@ class Validators {
     } else {
       final age = num.parse(value);
       if (age < 18 || age > 150) {
-        return LocaleKeys.theAgeMustBeAtLeast18YearsOld.tr(context: Go.context); // Or generic invalid range
+        return LocaleKeys.theAgeMustBeAtLeast18YearsOld.tr(
+          context: Go.context,
+        ); // Or generic invalid range
       }
     }
 
@@ -99,7 +102,7 @@ class Validators {
     final num minNum = num.tryParse(min) ?? 0;
     final num maxNum = num.tryParse(max) ?? 0;
 
-    if(minNum >= maxNum){
+    if (minNum >= maxNum) {
       return LocaleKeys.theMinDowryCanNotBeGreaterThanMax.tr();
     }
 
@@ -112,13 +115,11 @@ class Validators {
           ? LocaleKeys.fillField.tr(context: Go.context)
           : '${LocaleKeys.filedValidation.tr()} $fieldTitle';
     } else if (RegExp(r'[<>]').hasMatch(value!)) {
-      return LocaleKeys.scripInjectionValidate.tr(
-        context: Go.context,
-      );
+      return LocaleKeys.scripInjectionValidate.tr(context: Go.context);
     } else if (!RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.["
-        r'a-zA-Z]+')
-        .hasMatch(value)) {
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.["
+      r'a-zA-Z]+',
+    ).hasMatch(value)) {
       return LocaleKeys.mailValidation.tr(context: Go.context);
     } else if (value.length > 50) {
       return LocaleKeys.mailValidation.tr(context: Go.context);
@@ -129,13 +130,13 @@ class Validators {
   static String? validatePhone(String? value, {String? message}) {
     if (value?.trim().isEmpty ?? true) {
       return message ?? LocaleKeys.fillField;
-    } else if(!value!.startsWith('5')){
+    } else if (!value!.startsWith('5')) {
       return LocaleKeys.thePhoneMustStartsWith5;
-
-    }else if(value.length != 9) {
+    } else if (value.length != 9) {
       return LocaleKeys.phoneShouldBe9Digits;
-    }else if (!RegExp(r'^(5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$')
-        .hasMatch(value.trim()) ||
+    } else if (!RegExp(
+          r'^(5)(5|0|3|6|4|9|1|8|7)([0-9]{7})$',
+        ).hasMatch(value.trim()) ||
         value.length < 9) {
       return message ?? LocaleKeys.phoneValidation.tr();
     }
@@ -143,8 +144,13 @@ class Validators {
     return null;
   }
 
-
-  static String? validateInteger(String? value, {String? fieldTitle, int min = 0, int max = 100, bool isRequired = true}) {
+  static String? validateInteger(
+    String? value, {
+    String? fieldTitle,
+    int min = 0,
+    int max = 100,
+    bool isRequired = true,
+  }) {
     if (value == null || value.isEmpty) {
       if (isRequired) {
         return fieldTitle == null
@@ -163,7 +169,13 @@ class Validators {
     return null;
   }
 
-  static String? validateNumeric(String? value, {String? fieldTitle, double min = 0, double max = 1000000, bool isRequired = true}) {
+  static String? validateNumeric(
+    String? value, {
+    String? fieldTitle,
+    double min = 0,
+    double max = 1000000,
+    bool isRequired = true,
+  }) {
     if (value == null || value.isEmpty) {
       if (isRequired) {
         return fieldTitle == null
@@ -182,7 +194,13 @@ class Validators {
     return null;
   }
 
-  static String? validateString(String? value, {String? fieldTitle, int min = 0, int max = 255, bool isRequired = true}) {
+  static String? validateString(
+    String? value, {
+    String? fieldTitle,
+    int min = 0,
+    int max = 255,
+    bool isRequired = true,
+  }) {
     if (value == null || value.isEmpty) {
       if (isRequired) {
         return fieldTitle == null
@@ -199,21 +217,19 @@ class Validators {
 
   static String? noValidate(String value) {
     if (RegExp(r'[<>]').hasMatch(value)) {
-      return LocaleKeys.scripInjectionValidate.tr(
-        context: Go.context,
-      );
+      return LocaleKeys.scripInjectionValidate.tr(context: Go.context);
     } else {
       return null;
     }
   }
 
-// static String? validateDropDown<T>(T? value, {String? fieldTitle}) {
-//   if (value == null) {
-//     return fieldTitle != null ?
-//     '${LocaleKeys.please.tr()} $fieldTitle' :
-//     LocaleKeys.fillField.tr(context: Go.context);
-//   } else {
-//     return null;
-//   }
-// }
+  // static String? validateDropDown<T>(T? value, {String? fieldTitle}) {
+  //   if (value == null) {
+  //     return fieldTitle != null ?
+  //     '${LocaleKeys.please.tr()} $fieldTitle' :
+  //     LocaleKeys.fillField.tr(context: Go.context);
+  //   } else {
+  //     return null;
+  //   }
+  // }
 }

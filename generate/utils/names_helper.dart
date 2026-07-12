@@ -1,12 +1,15 @@
 abstract class NamesHelper {
-  static final RegExp validCharactersPattern = RegExp(r"^[A-Za-z0-9_\s\?'']+$");
+  static final RegExp validCharactersPattern = RegExp(
+    r"^[A-Za-z0-9_\s\?''@.]+$",
+  );
   static final RegExp shortKey = RegExp(r'#\$');
 
   static String toSnakeCase(String input) {
     // Replace all non-alphanumeric characters (except underscore) with underscores
 
-    String snakeCase =
-        input.replaceAll(RegExp(r'[^\w\s]'), '').replaceAll(' ', '_');
+    String snakeCase = input
+        .replaceAll(RegExp(r'[^\w\s]'), '')
+        .replaceAll(' ', '_');
     // Check if input String needs to be converted to snake case
     if (!snakeCase.contains('_')) {
       final String snakeWithoutUnderscore = snakeCase;
