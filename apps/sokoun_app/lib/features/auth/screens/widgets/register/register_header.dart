@@ -4,6 +4,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:sokoun_app/shared_widgets/shared_widgets.dart';
 
 class RegisterHeader extends StatelessWidget {
   const RegisterHeader({super.key, this.onBack});
@@ -17,25 +18,7 @@ class RegisterHeader extends StatelessWidget {
       children: [
         Align(
           alignment: AlignmentDirectional.centerEnd,
-          child: SizedBox.square(
-            dimension: 36.r,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: AppColors.sokoonBorder),
-              ),
-              child: IconButton(
-                onPressed: onBack,
-                padding: EdgeInsets.zero,
-                icon: Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: AppColors.sokoonNavy,
-                  size: 16.r,
-                ),
-              ),
-            ),
-          ),
+          child: SokoonBackButton(),
         ),
         14.szH,
         AppText(

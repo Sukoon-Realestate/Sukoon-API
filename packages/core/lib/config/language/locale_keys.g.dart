@@ -112,6 +112,57 @@ abstract class LocaleKeys {
   static const String _welcomeBackToSokoon = 'welcome_back_to_sokoon';
   static String get welcomeBackToSokoon => _welcomeBackToSokoon.tr();
 
+  static const String _welcomeToSokoon = 'welcome_to_sokoon';
+  static String get welcomeToSokoon => _welcomeToSokoon.tr();
+
+  static const String _sokoonWelcomeDescription = 'sokoon_welcome_description';
+  static String get sokoonWelcomeDescription => _sokoonWelcomeDescription.tr();
+
+  static const String _searchEasily = 'search_easily';
+  static String get searchEasily => _searchEasily.tr();
+
+  static const String _thousandsPropertiesAcrossEgypt = 'thousands_properties_across_egypt';
+  static String get thousandsPropertiesAcrossEgypt => _thousandsPropertiesAcrossEgypt.tr();
+
+  static const String _safetyAndReliability = 'safety_and_reliability';
+  static String get safetyAndReliability => _safetyAndReliability.tr();
+
+  static const String _verifiedOwnersReviewedProperties = 'verified_owners_reviewed_properties';
+  static String get verifiedOwnersReviewedProperties => _verifiedOwnersReviewedProperties.tr();
+
+  static const String _directContact = 'direct_contact';
+  static String get directContact => _directContact.tr();
+
+  static const String _directChatWithOwnersAfterVerification = 'direct_chat_with_owners_after_verification';
+  static String get directChatWithOwnersAfterVerification => _directChatWithOwnersAfterVerification.tr();
+
+  static const String _startHousingSearch = 'start_housing_search';
+  static String get startHousingSearch => _startHousingSearch.tr();
+
+  static const String _haveAccountLogin = 'have_account_login';
+  static String get haveAccountLogin => _haveAccountLogin.tr();
+
+  static const String _youAre = 'you_are';
+  static String get youAre => _youAre.tr();
+
+  static const String _chooseAccountTypeToContinue = 'choose_account_type_to_continue';
+  static String get chooseAccountTypeToContinue => _chooseAccountTypeToContinue.tr();
+
+  static const String _tenantRole = 'tenant_role';
+  static String get tenantRole => _tenantRole.tr();
+
+  static const String _tenantRoleDescription = 'tenant_role_description';
+  static String get tenantRoleDescription => _tenantRoleDescription.tr();
+
+  static const String _propertyOwnerRole = 'property_owner_role';
+  static String get propertyOwnerRole => _propertyOwnerRole.tr();
+
+  static const String _propertyOwnerRoleDescription = 'property_owner_role_description';
+  static String get propertyOwnerRoleDescription => _propertyOwnerRoleDescription.tr();
+
+  static const String _continueButton = 'continue_button';
+  static String get continueButton => _continueButton.tr();
+
   static const String _forgotPassword = 'forgot_password';
   static String get forgotPassword => _forgotPassword.tr();
 
