@@ -17,7 +17,7 @@ dependencies:
 
 workspace:
   - packages/core
-  - apps/aait_flutter_app
+  - apps/sokoun_app
   - apps/landing_page
 
 

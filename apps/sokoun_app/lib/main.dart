@@ -29,7 +29,7 @@ void main() async {
     ObjectBoxCacheService.init(),
     ScreenUtil.ensureScreenSize(),
   ]);
-  await _initializeFirebaseApp();
+  // await _initializeFirebaseApp();
   await fetchBaseUrl();
 
   setUpServiceLocator();
@@ -119,19 +119,19 @@ Future<bool> fetchBaseUrl() async {
   }
 }
 
-Future<void> _initializeFirebaseApp() async {
-  // Determine which Firebase options to use based on the flavor.
-  // Fall back to production when the flavor is missing (e.g. launched from
-  // Xcode without --flavor) so initialization never hard-crashes the launch.
-  final firebaseOptions = switch (appFlavor) {
-    'dev' => dev.DefaultFirebaseOptions.currentPlatform,
-    'production' => production.DefaultFirebaseOptions.currentPlatform,
-    _ => () {
-      log(
-        'Unknown/empty appFlavor "$appFlavor" — defaulting Firebase to production options',
-      );
-      return production.DefaultFirebaseOptions.currentPlatform;
-    }(),
-  };
-  await Firebase.initializeApp(options: firebaseOptions);
-}
+// Future<void> _initializeFirebaseApp() async {
+//   // Determine which Firebase options to use based on the flavor.
+//   // Fall back to production when the flavor is missing (e.g. launched from
+//   // Xcode without --flavor) so initialization never hard-crashes the launch.
+//   final firebaseOptions = switch (appFlavor) {
+//     'dev' => dev.DefaultFirebaseOptions.currentPlatform,
+//     'production' => production.DefaultFirebaseOptions.currentPlatform,
+//     _ => () {
+//       log(
+//         'Unknown/empty appFlavor "$appFlavor" — defaulting Firebase to production options',
+//       );
+//       return production.DefaultFirebaseOptions.currentPlatform;
+//     }(),
+//   };
+//   await Firebase.initializeApp(options: firebaseOptions);
+// }

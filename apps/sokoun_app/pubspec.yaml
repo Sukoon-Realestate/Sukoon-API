@@ -1,4 +1,4 @@
-name: aait_flutter_app
+name: sokoun_app
 environment:
   sdk: ^3.9.0
 resolution: workspace
