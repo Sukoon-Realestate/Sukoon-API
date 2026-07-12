@@ -49,6 +49,7 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             title: ConstantManager.projectName,
+            theme: ThemeData(fontFamily: ConstantManager.fontFamily),
             localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,
             locale: context.locale,

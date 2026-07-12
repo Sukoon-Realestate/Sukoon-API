@@ -63,6 +63,7 @@ class AppText extends StatelessWidget {
                 fontSize: fontSize ?? FontSize.s16,
                 fontWeight: fontWeight,
                 height: height,
+                fontFamily: ConstantManager.fontFamily
               ),
             ),
           ],

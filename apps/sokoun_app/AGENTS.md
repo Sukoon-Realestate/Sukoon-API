@@ -1592,3 +1592,18 @@ For form features, use this flow:
 5. Screen handles success: show `MessageUtils`, navigate with `Go`, and trigger analytics or follow-up flow if needed.
 
 Do not bypass validation, do not navigate from cubits, and do not hardcode display strings outside `LocaleKeys`.
+
+### Rule 45 — Screen build skill
+
+Use this workflow when building or refactoring any Sokoun screen from Figma:
+
+1. Read the Figma node with `get_design_context` when a Figma URL is provided. Use metadata only as orientation; full design context is the source of truth when available.
+2. Inspect `apps/sokoun_app/lib/shared_widgets` and feature-local widgets before creating new UI. Reuse existing controls whenever they match the design.
+3. Put the screen under its feature's `screens/` folder and name the public widget by the screen role only, for example `LoginScreen`. Do not prefix screen classes with the app name.
+4. Put screen-specific presentational widgets under `screens/widgets/<screen_name>/`, for example `screens/widgets/login/LoginHeader` and `LoginDivider`.
+5. Keep the screen responsible for flow-level orchestration only: form key, controllers or callbacks, submit handling, and screen layout. Move reusable visual chunks into widgets.
+6. Use `LocaleKeys` for every user-facing string. If keys are missing, add translations through the repo localization flow and keep generated keys in sync.
+7. Reuse `packages/core` UI primitives (`AppText`, `DefaultButton`) and narrow extension imports such as `sized_box_helper.dart` for spacing.
+8. If a shared widget blocks correct behavior, extend it with optional parameters instead of duplicating its styling. Preserve existing defaults for other call sites.
+9. Wire the screen into `MaterialApp.home` only when the task requires making it immediately visible.
+10. Run `dart format`, `flutter analyze apps/sokoun_app`, and `flutter test apps/sokoun_app` after the refactor.

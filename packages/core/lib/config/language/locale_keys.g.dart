@@ -154,6 +154,9 @@ abstract class LocaleKeys {
   static const String _newRegisteration = 'new_registeration';
   static String get newRegisteration => _newRegisteration.tr();
 
+  static const String _signUp = 'sign_up';
+  static String get signUp => _signUp.tr();
+
   static const String _skip = 'skip';
   static String get skip => _skip.tr();
 
@@ -198,6 +201,27 @@ abstract class LocaleKeys {
 
   static const String _createAccount = 'create_account';
   static String get createAccount => _createAccount.tr();
+
+  static const String _registerJourneySubtitle = 'register_journey_subtitle';
+  static String get registerJourneySubtitle => _registerJourneySubtitle.tr();
+
+  static const String _otpSentToEmail = 'otp_sent_to_email';
+  static String get otpSentToEmail => _otpSentToEmail.tr();
+
+  static const String _changeEmail = 'change_email';
+  static String get changeEmail => _changeEmail.tr();
+
+  static const String _resendAfter = 'resend_after';
+  static String get resendAfter => _resendAfter.tr();
+
+  static const String _seconds = 'seconds';
+  static String get seconds => _seconds.tr();
+
+  static const String _confirmLogin = 'confirm_login';
+  static String get confirmLogin => _confirmLogin.tr();
+
+  static const String _youCanResendCodeNow = 'you_can_resend_code_now';
+  static String get youCanResendCodeNow => _youCanResendCodeNow.tr();
 
   static const String _profilePicture = 'profile_picture';
   static String get profilePicture => _profilePicture.tr();

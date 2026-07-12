@@ -9,6 +9,7 @@ import 'package:lottie/src/composition.dart';
 class Assets {
   Assets._();
 
+  static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const $AssetsLottieGen lottie = $AssetsLottieGen();
   static const $AssetsTranslationsGen translations = $AssetsTranslationsGen();
 }
@@ -76,6 +77,12 @@ class $AssetsLottieGen {
   final LottieGenImage successfullOrder = const LottieGenImage(
     'assets/lottie/successfull_order.json',
   );
+}
+
+class $AssetsFontsGen {
+  const $AssetsFontsGen();
+
+  final String riyal = 'assets/fonts/riyal.ttf';
 }
 
 class AssetGenImage {

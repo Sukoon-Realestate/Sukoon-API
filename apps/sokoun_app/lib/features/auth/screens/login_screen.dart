@@ -6,6 +6,7 @@ import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:sokoun_app/features/auth/screens/widgets/login/login_divider.dart';
+import 'package:sokoun_app/features/auth/screens/widgets/login/login_footer.dart';
 import 'package:sokoun_app/features/auth/screens/widgets/login/login_header.dart';
 import 'package:sokoun_app/shared_widgets/shared_widgets.dart';
 
@@ -18,6 +19,7 @@ class LoginScreen extends StatefulWidget {
     this.onFacebookSignIn,
     this.onAppleSignIn,
     this.onVisitorSignIn,
+    this.onSignUp,
   });
 
   final void Function(String email, String password)? onLogin;
@@ -26,6 +28,7 @@ class LoginScreen extends StatefulWidget {
   final VoidCallback? onFacebookSignIn;
   final VoidCallback? onAppleSignIn;
   final VoidCallback? onVisitorSignIn;
+  final VoidCallback? onSignUp;
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -144,6 +147,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
+                        18.szH,
+                        LoginFooter(onSignUp: widget.onSignUp),
                         24.szH,
                       ],
                     ),
