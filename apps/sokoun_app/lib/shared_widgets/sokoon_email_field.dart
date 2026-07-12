@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 
 class SokoonEmailField extends StatelessWidget {
@@ -13,6 +14,9 @@ class SokoonEmailField extends StatelessWidget {
     this.accentColor = AppColors.sokoonTeal,
     this.hasError = false,
     this.onChanged,
+    this.validator,
+    this.action = TextInputAction.next,
+    this.textAlign = TextAlign.left,
   });
 
   final TextEditingController controller;
@@ -21,6 +25,9 @@ class SokoonEmailField extends StatelessWidget {
   final Color accentColor;
   final bool hasError;
   final ValueChanged<String?>? onChanged;
+  final FormFieldValidator<String?>? validator;
+  final TextInputAction action;
+  final TextAlign textAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +45,8 @@ class SokoonEmailField extends StatelessWidget {
           upperTitle: label ?? LocaleKeys.email,
           title: hintText,
           inputType: TextInputType.emailAddress,
-          action: TextInputAction.next,
-          textAlign: TextAlign.left,
+          action: action,
+          textAlign: textAlign,
           borderRadius: 12.r,
           borderColor: borderColor,
           fillColor: AppColors.white,
@@ -54,6 +61,7 @@ class SokoonEmailField extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
           onChanged: onChanged,
+          validator: validator ?? Validators.validateEmail,
         );
       },
     );

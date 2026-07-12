@@ -16,6 +16,8 @@ class SokoonPasswordField extends StatelessWidget {
     this.hasError = false,
     this.errorText,
     this.onChanged,
+    this.validator,
+    this.action = TextInputAction.done,
   });
 
   final TextEditingController controller;
@@ -25,6 +27,8 @@ class SokoonPasswordField extends StatelessWidget {
   final bool hasError;
   final String? errorText;
   final ValueChanged<String?>? onChanged;
+  final FormFieldValidator<String?>? validator;
+  final TextInputAction action;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +49,7 @@ class SokoonPasswordField extends StatelessWidget {
               upperTitle: label ?? LocaleKeys.password,
               title: hintText,
               isPassword: true,
-              action: TextInputAction.done,
+              action: action,
               textAlign: TextAlign.left,
               borderRadius: 12.r,
               borderColor: borderColor,
@@ -61,7 +65,7 @@ class SokoonPasswordField extends StatelessWidget {
                 fontWeight: FontWeight.w600,
               ),
               onChanged: onChanged,
-              validator: Validators.validateEmail,
+              validator: validator ?? _validatePassword,
             ),
             if (errorText != null && errorText!.isNotEmpty) ...[
               SizedBox(height: 4.h),
@@ -76,5 +80,17 @@ class SokoonPasswordField extends StatelessWidget {
         );
       },
     );
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return LocaleKeys.passRequiredValidation;
+    }
+
+    if (value.length < 8) {
+      return LocaleKeys.passValidation;
+    }
+
+    return Validators.noValidate(value);
   }
 }

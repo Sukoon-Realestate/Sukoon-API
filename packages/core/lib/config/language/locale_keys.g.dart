@@ -109,6 +109,15 @@ abstract class LocaleKeys {
   static const String _login = 'login';
   static String get login => _login.tr();
 
+  static const String _welcomeBackToSokoon = 'welcome_back_to_sokoon';
+  static String get welcomeBackToSokoon => _welcomeBackToSokoon.tr();
+
+  static const String _forgotPassword = 'forgot_password';
+  static String get forgotPassword => _forgotPassword.tr();
+
+  static const String _or = 'or';
+  static String get or => _or.tr();
+
   static const String _password = 'password';
   static String get password => _password.tr();
 

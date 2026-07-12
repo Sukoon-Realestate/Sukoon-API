@@ -1,43 +1,33 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:melos_core/config/language/languages.dart';
-import 'package:sokoun_app/app.dart';
+import 'package:melos_core/config/res/config_imports.dart';
+import 'package:sokoun_app/features/auth/screens/login_screen.dart';
+import 'package:sokoun_app/shared_widgets/shared_widgets.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    await EasyLocalization.ensureInitialized();
-
-    // Build our app and trigger a frame.
+  testWidgets('builds Sokoon login screen from shared widgets', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
-      EasyLocalization(
-        supportedLocales: Languages.supportedLocales,
-        path: Languages.translationsPath,
-        startLocale: Languages.english.locale,
-        fallbackLocale: Languages.english.locale,
-        child: const Sokoon(),
+      ScreenUtilInit(
+        designSize: Size(ScreenSizes.width, ScreenSizes.height),
+        builder: (context, child) {
+          return const MaterialApp(home: LoginScreen());
+        },
       ),
     );
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.byType(LoginScreen), findsOneWidget);
+    expect(find.byType(SokoonEmailField), findsOneWidget);
+    expect(find.byType(SokoonPasswordField), findsOneWidget);
+    expect(find.byType(SokoonGoogleSignInButton), findsOneWidget);
+    expect(find.byType(SokoonFacebookSignInButton), findsOneWidget);
+    expect(find.byType(SokoonAppleSignInButton), findsOneWidget);
   });
 }

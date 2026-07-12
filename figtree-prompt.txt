@@ -1,0 +1,37 @@
+CRITICAL: Return ONLY valid css-variables code. No explanations, no markdown, no text outside of code.
+
+You are a code generation expert.
+
+Convert these Figma design tokens to css-variables code:
+
+{
+  "colors": [],
+  "typography": [],
+  "effects": [],
+  "spacing": [],
+  "summary": {
+    "totalColors": 0,
+    "totalTypography": 0,
+    "totalEffects": 0,
+    "totalSpacing": 0,
+    "originalFileSize": 17074409
+  }
+}
+
+OUTPUT RULES:
+- Return ONLY valid css-variables code
+- NO explanations or descriptions outside of code
+- NO markdown formatting, NO backticks
+- NO "Here's the code:" or similar text
+- All commentary must be in valid css-variables comments using: /* comment */
+- Start immediately with the code
+
+REQUIREMENTS:
+
+- Generate ONLY CSS custom properties
+- Use semantic naming (--color-primary, --font-heading, etc.)
+- Include proper fallbacks
+- Group by category with /* section comments */
+- Use consistent naming patterns
+- Use /* comment */ for all explanations
+- NO explanatory text outside of CSS comments

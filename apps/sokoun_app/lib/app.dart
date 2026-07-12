@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sokoun_app/features/auth/screens/login_screen.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/notification/inactivity_notification_service.dart';
@@ -52,6 +53,8 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
             supportedLocales: context.supportedLocales,
             locale: context.locale,
             navigatorKey: Go.navigatorKey,
+            home: const LoginScreen(),
+
             // builder: (context, child) {
             //   return Overlay(
             //     initialEntries: [
@@ -68,7 +71,6 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
             // },
             // home: const ContactUsChatScreen(),
             // home: const ZegoUIKitPrebuiltCallMiniPopScope(child: SplashScreen()),
-
             navigatorObservers: [AppNavigationObserver.instance],
           ),
         );
