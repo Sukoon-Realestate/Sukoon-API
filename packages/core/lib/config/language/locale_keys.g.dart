@@ -163,6 +163,129 @@ abstract class LocaleKeys {
   static const String _continueButton = 'continue_button';
   static String get continueButton => _continueButton.tr();
 
+  static const String _identityVerification = 'identity_verification';
+  static String get identityVerification => _identityVerification.tr();
+
+  static const String _verifyIdentityAndStart = 'verify_identity_and_start';
+  static String get verifyIdentityAndStart => _verifyIdentityAndStart.tr();
+
+  static const String _kycIntroDescription = 'kyc_intro_description';
+  static String get kycIntroDescription => _kycIntroDescription.tr();
+
+  static const String _requiredDocuments = 'required_documents';
+  static String get requiredDocuments => _requiredDocuments.tr();
+
+  static const String _nationalIdFrontBack = 'national_id_front_back';
+  static String get nationalIdFrontBack => _nationalIdFrontBack.tr();
+
+  static const String _clearSelfie = 'clear_selfie';
+  static String get clearSelfie => _clearSelfie.tr();
+
+  static const String _kycPrivacyIntroTitle = 'kyc_privacy_intro_title';
+  static String get kycPrivacyIntroTitle => _kycPrivacyIntroTitle.tr();
+
+  static const String _internalReviewOnly = 'internal_review_only';
+  static String get internalReviewOnly => _internalReviewOnly.tr();
+
+  static const String _uploadDocuments = 'upload_documents';
+  static String get uploadDocuments => _uploadDocuments.tr();
+
+  static const String _uploadDocumentsTitle = 'upload_documents_title';
+  static String get uploadDocumentsTitle => _uploadDocumentsTitle.tr();
+
+  static const String _uploadClearIdImage = 'upload_clear_id_image';
+  static String get uploadClearIdImage => _uploadClearIdImage.tr();
+
+  static const String _nationalId = 'national_id';
+  static String get nationalId => _nationalId.tr();
+
+  static const String _nationalIdHint = 'national_id_hint';
+  static String get nationalIdHint => _nationalIdHint.tr();
+
+  static const String _digits = 'digits';
+  static String get digits => _digits.tr();
+
+  static const String _nationalIdPrivacyHint = 'national_id_privacy_hint';
+  static String get nationalIdPrivacyHint => _nationalIdPrivacyHint.tr();
+
+  static const String _idFrontLabel = 'id_front_label';
+  static String get idFrontLabel => _idFrontLabel.tr();
+
+  static const String _idBackLabel = 'id_back_label';
+  static String get idBackLabel => _idBackLabel.tr();
+
+  static const String _uploaded = 'uploaded';
+  static String get uploaded => _uploaded.tr();
+
+  static const String _tapToUpload = 'tap_to_upload';
+  static String get tapToUpload => _tapToUpload.tr();
+
+  static const String _jpgPngUpTo5mb = 'jpg_png_up_to_5mb';
+  static String get jpgPngUpTo5mb => _jpgPngUpTo5mb.tr();
+
+  static const String _selfiePhoto = 'selfie_photo';
+  static String get selfiePhoto => _selfiePhoto.tr();
+
+  static const String _capturePhoto = 'capture_photo';
+  static String get capturePhoto => _capturePhoto.tr();
+
+  static const String _kycUploadPrivacyTitle = 'kyc_upload_privacy_title';
+  static String get kycUploadPrivacyTitle => _kycUploadPrivacyTitle.tr();
+
+  static const String _idPhotoNeverVisible = 'id_photo_never_visible';
+  static String get idPhotoNeverVisible => _idPhotoNeverVisible.tr();
+
+  static const String _enterNationalIdToContinue = 'enter_national_id_to_continue';
+  static String get enterNationalIdToContinue => _enterNationalIdToContinue.tr();
+
+  static const String _nextReviewData = 'next_review_data';
+  static String get nextReviewData => _nextReviewData.tr();
+
+  static const String _kycPendingBadge = 'kyc_pending_badge';
+  static String get kycPendingBadge => _kycPendingBadge.tr();
+
+  static const String _kycPendingTitle = 'kyc_pending_title';
+  static String get kycPendingTitle => _kycPendingTitle.tr();
+
+  static const String _kycPendingDescription = 'kyc_pending_description';
+  static String get kycPendingDescription => _kycPendingDescription.tr();
+
+  static const String _cardNumber = 'card_number';
+  static String get cardNumber => _cardNumber.tr();
+
+  static const String _submittedAt = 'submitted_at';
+  static String get submittedAt => _submittedAt.tr();
+
+  static const String _expected = 'expected';
+  static String get expected => _expected.tr();
+
+  static const String _within24Hours = 'within_24_hours';
+  static String get within24Hours => _within24Hours.tr();
+
+  static const String _today941Am = 'today_941_am';
+  static String get today941Am => _today941Am.tr();
+
+  static const String _returnHome = 'return_home';
+  static String get returnHome => _returnHome.tr();
+
+  static const String _verified = 'verified';
+  static String get verified => _verified.tr();
+
+  static const String _kycApprovedTitle = 'kyc_approved_title';
+  static String get kycApprovedTitle => _kycApprovedTitle.tr();
+
+  static const String _kycApprovedDescription = 'kyc_approved_description';
+  static String get kycApprovedDescription => _kycApprovedDescription.tr();
+
+  static const String _chatEnabled = 'chat_enabled';
+  static String get chatEnabled => _chatEnabled.tr();
+
+  static const String _accountVerifiedBadge = 'account_verified_badge';
+  static String get accountVerifiedBadge => _accountVerifiedBadge.tr();
+
+  static const String _priorityVisitBooking = 'priority_visit_booking';
+  static String get priorityVisitBooking => _priorityVisitBooking.tr();
+
   static const String _forgotPassword = 'forgot_password';
   static String get forgotPassword => _forgotPassword.tr();
 

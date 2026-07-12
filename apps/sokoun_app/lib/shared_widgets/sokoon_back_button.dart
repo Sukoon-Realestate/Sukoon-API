@@ -4,7 +4,18 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 
 class SokoonBackButton extends StatelessWidget {
-  const SokoonBackButton({super.key});
+  const SokoonBackButton({
+    super.key,
+    this.onTap,
+    this.backgroundColor = AppColors.white,
+    this.borderColor = AppColors.sokoonBorder,
+    this.icon = Icons.arrow_back_ios_new_rounded,
+  });
+
+  final VoidCallback? onTap;
+  final Color backgroundColor;
+  final Color borderColor;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -12,18 +23,14 @@ class SokoonBackButton extends StatelessWidget {
       dimension: 36.r,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: backgroundColor,
           borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: AppColors.sokoonBorder),
+          border: Border.all(color: borderColor),
         ),
         child: IconButton(
-          onPressed: () => Go.back(),
+          onPressed: onTap ?? () => Go.back(),
           padding: EdgeInsets.zero,
-          icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: AppColors.sokoonNavy,
-            size: 16.r,
-          ),
+          icon: Icon(icon, color: AppColors.sokoonNavy, size: 16.r),
         ),
       ),
     );

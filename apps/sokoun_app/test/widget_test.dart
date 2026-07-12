@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:sokoun_app/features/auth/screens/kyc_approved_screen.dart';
+import 'package:sokoun_app/features/auth/screens/kyc_intro_screen.dart';
+import 'package:sokoun_app/features/auth/screens/kyc_pending_screen.dart';
+import 'package:sokoun_app/features/auth/screens/kyc_upload_documents_screen.dart';
 import 'package:sokoun_app/features/auth/screens/login_screen.dart';
 import 'package:sokoun_app/features/auth/screens/otp_screen.dart';
 import 'package:sokoun_app/features/auth/screens/register_screen.dart';
@@ -12,6 +16,11 @@ import 'package:sokoun_app/features/auth/screens/widgets/otp/otp_code_field.dart
 import 'package:sokoun_app/features/auth/screens/widgets/otp/otp_resend_timer.dart';
 import 'package:sokoun_app/features/auth/screens/widgets/role_select/role_option_card.dart';
 import 'package:sokoun_app/features/auth/screens/widgets/welcome/welcome_center_card.dart';
+import 'package:sokoun_app/features/auth/screens/widgets/kyc/kyc_progress_bar.dart';
+import 'package:sokoun_app/features/auth/screens/widgets/kyc/kyc_requirement_tile.dart';
+import 'package:sokoun_app/features/auth/screens/widgets/kyc/kyc_upload_tile.dart';
+import 'package:sokoun_app/features/auth/screens/widgets/kyc/kyc_status_summary_card.dart';
+import 'package:sokoun_app/features/auth/screens/widgets/kyc/kyc_feature_tile.dart';
 import 'package:sokoun_app/shared_widgets/shared_widgets.dart';
 
 void main() {
@@ -65,6 +74,50 @@ void main() {
 
     expect(find.byType(RoleSelectScreen), findsOneWidget);
     expect(find.byType(RoleOptionCard), findsNWidgets(2));
+  });
+
+  testWidgets('builds Sokoon kyc intro screen', (WidgetTester tester) async {
+    await tester.pumpWidget(buildScreen(const KycIntroScreen()));
+
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(find.byType(KycIntroScreen), findsOneWidget);
+    expect(find.byType(KycProgressBar), findsOneWidget);
+    expect(find.byType(KycRequirementTile), findsNWidgets(2));
+  });
+
+  testWidgets('builds Sokoon kyc upload documents screen', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(buildScreen(const KycUploadDocumentsScreen()));
+
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(find.byType(KycUploadDocumentsScreen), findsOneWidget);
+    expect(find.byType(KycProgressBar), findsOneWidget);
+    expect(find.byType(KycUploadTile), findsNWidgets(3));
+  });
+
+  testWidgets('builds Sokoon kyc pending screen', (WidgetTester tester) async {
+    await tester.pumpWidget(buildScreen(const KycPendingScreen()));
+
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(find.byType(KycPendingScreen), findsOneWidget);
+    expect(find.byType(KycStatusSummaryCard), findsOneWidget);
+  });
+
+  testWidgets('builds Sokoon kyc approved screen', (WidgetTester tester) async {
+    await tester.pumpWidget(buildScreen(const KycApprovedScreen()));
+
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(find.byType(KycApprovedScreen), findsOneWidget);
+    expect(find.byType(KycFeatureTile), findsNWidgets(3));
   });
 
   testWidgets('builds Sokoon register screen from shared fields', (
