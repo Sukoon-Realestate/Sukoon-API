@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-
-import 'config/language/languages.dart';
+import 'package:melos_core/config/language/languages.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +25,7 @@ class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      navigatorKey: Languages.navigatorKey,
+      navigatorKey: Go.navigatorKey,
       title: 'Flutter Demo',
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
