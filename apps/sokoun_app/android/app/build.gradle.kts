@@ -37,6 +37,21 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    flavorDimensions += "default"
+    productFlavors {
+        create("dev") {
+            dimension = "default"
+            applicationId = "com.app.sokoon.dev"
+            resValue("string", "app_name", "سكون dev")
+        }
+        create("prod") {
+            dimension = "default"
+            applicationId = "com.app.sokoon"
+            resValue("string", "app_name", "سكون")
+        }
+
+    }
 }
 
 flutter {
