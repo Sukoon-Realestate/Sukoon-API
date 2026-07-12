@@ -96,7 +96,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         14.szH,
                         SokoonEmailField(
                           controller: _emailController,
-                          textAlign: TextAlign.left,
                         ),
                         14.szH,
                         SokoonPasswordField(

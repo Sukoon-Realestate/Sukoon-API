@@ -46,7 +46,6 @@ class SokoonPhoneField extends StatelessWidget {
           title: hintText,
           inputType: TextInputType.phone,
           action: action,
-          textAlign: TextAlign.left,
           borderRadius: 12.r,
           borderColor: borderColor,
           fillColor: AppColors.white,

@@ -16,7 +16,6 @@ class SokoonEmailField extends StatelessWidget {
     this.onChanged,
     this.validator,
     this.action = TextInputAction.next,
-    this.textAlign = TextAlign.left,
   });
 
   final TextEditingController controller;
@@ -27,7 +26,6 @@ class SokoonEmailField extends StatelessWidget {
   final ValueChanged<String?>? onChanged;
   final FormFieldValidator<String?>? validator;
   final TextInputAction action;
-  final TextAlign textAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +44,6 @@ class SokoonEmailField extends StatelessWidget {
           title: hintText,
           inputType: TextInputType.emailAddress,
           action: action,
-          textAlign: textAlign,
           borderRadius: 12.r,
           borderColor: borderColor,
           fillColor: AppColors.white,

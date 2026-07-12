@@ -82,7 +82,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         SokoonEmailField(
                           controller: _emailController,
                           hintText: 'ahmed@gmail.com',
-                          textAlign: TextAlign.right,
                         ),
                         16.szH,
                         SokoonPasswordField(controller: _passwordController),
