@@ -8,6 +8,6 @@ class SplashLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: SvgPic(assetName: Assets.svgSatr, size: 220.sp));
+    return Center(child: SvgPic(assetName: '', size: 220.sp));
   }
 }

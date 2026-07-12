@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:melos_core/core/widgets/svg_pic.dart';
 import '../../../generated/assets.dart';
 
 class AppLogoWidget extends StatelessWidget {
@@ -7,6 +8,6 @@ class AppLogoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SvgPicture.asset(Assets.svgAppLogo);
+    return SvgPic(assetName: '');
   }
 }

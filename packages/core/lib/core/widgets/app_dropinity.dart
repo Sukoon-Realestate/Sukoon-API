@@ -97,7 +97,7 @@ class _AppDropinityState<FullResponse, Model> extends State<AppDropinity<FullRes
               color: Colors.grey[50],
               buttonBorderRadius: ConstantManager.buttonBorderRadius,
               selectedItemWidget: (e) => AppText(widget.getLabel.call(e!)),
-              collapsedListIcon: const SvgPic(assetName: Assets.svgArrowDown)
+              // collapsedListIcon: const SvgPic(assetName: Assets.svgArrowDown)
           ),
           textFieldData: TextFieldData(
             onSearch: (pattern, e) => widget.getLabel.call(e!).contains(pattern??''),
@@ -139,7 +139,7 @@ class _AppDropinityState<FullResponse, Model> extends State<AppDropinity<FullRes
               color: Colors.grey[50],
               buttonBorderRadius: ConstantManager.buttonBorderRadius,
               selectedItemWidget: (e) => AppText(widget.getLabel.call(e!)),
-              collapsedListIcon: const SvgPic(assetName: Assets.svgArrowDown)
+              // collapsedListIcon: const SvgPic(assetName: Assets.svgArrowDown)
           ),
           textFieldData: TextFieldData(
             onSearch: (pattern, e) => widget.getLabel.call(e!).contains(pattern??''),
