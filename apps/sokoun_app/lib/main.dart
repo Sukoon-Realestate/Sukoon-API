@@ -16,8 +16,6 @@ import 'package:melos_core/core/network/fire_store.dart';
 import 'package:melos_core/core/shared/Functions/setup_service_locators.dart';
 import 'package:melos_core/core/shared/bloc_observer.dart';
 import 'package:melos_core/core/widgets/exeption_view.dart';
-import 'app.dart';
-import 'config/language/languages.dart';
 
 void main() async {
   Helpers.changeStatusbarColor(statusBarColor: AppColors.white);
