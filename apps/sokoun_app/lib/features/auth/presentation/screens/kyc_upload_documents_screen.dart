@@ -1,16 +1,18 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/helpers.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
-import 'package:sokoun_app/features/auth/screens/widgets/kyc/kyc_flow_header.dart';
-import 'package:sokoun_app/features/auth/screens/widgets/kyc/kyc_privacy_card.dart';
-import 'package:sokoun_app/features/auth/screens/widgets/kyc/kyc_progress_bar.dart';
-import 'package:sokoun_app/features/auth/screens/widgets/kyc/kyc_upload_tile.dart';
+import '../widgets/kyc/kyc_flow_header.dart';
+import '../widgets/kyc/kyc_privacy_card.dart';
+import '../widgets/kyc/kyc_progress_bar.dart';
+import '../widgets/kyc/kyc_upload_tile.dart';
 
 class KycUploadDocumentsScreen extends StatefulWidget {
   const KycUploadDocumentsScreen({
@@ -20,13 +22,13 @@ class KycUploadDocumentsScreen extends StatefulWidget {
     this.onFrontIdUpload,
     this.onBackIdUpload,
     this.onSelfieCapture,
-    this.frontIdFileName = 'national_id_front.jpg',
+    this.frontIdFileName,
     this.backIdFileName,
     this.selfieFileName,
   });
 
   final VoidCallback? onBack;
-  final ValueChanged<String>? onSubmit;
+  final ValueChanged<KycDocumentUploadData>? onSubmit;
   final VoidCallback? onFrontIdUpload;
   final VoidCallback? onBackIdUpload;
   final VoidCallback? onSelfieCapture;
@@ -39,8 +41,51 @@ class KycUploadDocumentsScreen extends StatefulWidget {
       _KycUploadDocumentsScreenState();
 }
 
+class KycDocumentUploadData {
+  const KycDocumentUploadData({
+    required this.nationalId,
+    required this.frontIdImage,
+    required this.backIdImage,
+    required this.selfieImage,
+  });
+
+  final String nationalId;
+  final File? frontIdImage;
+  final File? backIdImage;
+  final File? selfieImage;
+}
+
 class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
   final _nationalIdController = TextEditingController();
+  File? _frontIdImage;
+  File? _backIdImage;
+  File? _selfieImage;
+  String? _frontIdFileName;
+  String? _backIdFileName;
+  String? _selfieFileName;
+
+  @override
+  void initState() {
+    super.initState();
+    _frontIdFileName = widget.frontIdFileName;
+    _backIdFileName = widget.backIdFileName;
+    _selfieFileName = widget.selfieFileName;
+  }
+
+  @override
+  void didUpdateWidget(covariant KycUploadDocumentsScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.frontIdFileName != widget.frontIdFileName) {
+      _frontIdFileName = widget.frontIdFileName;
+    }
+    if (oldWidget.backIdFileName != widget.backIdFileName) {
+      _backIdFileName = widget.backIdFileName;
+    }
+    if (oldWidget.selfieFileName != widget.selfieFileName) {
+      _selfieFileName = widget.selfieFileName;
+    }
+  }
 
   @override
   void dispose() {
@@ -50,9 +95,9 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
 
   bool get _canSubmit {
     return _nationalIdController.text.trim().length == 14 &&
-        widget.frontIdFileName != null &&
-        widget.backIdFileName != null &&
-        widget.selfieFileName != null;
+        (_frontIdImage != null || _frontIdFileName != null) &&
+        (_backIdImage != null || _backIdFileName != null) &&
+        (_selfieImage != null || _selfieFileName != null);
   }
 
   void _submit() {
@@ -60,7 +105,59 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
       return;
     }
 
-    widget.onSubmit?.call(_nationalIdController.text.trim());
+    widget.onSubmit?.call(
+      KycDocumentUploadData(
+        nationalId: _nationalIdController.text.trim(),
+        frontIdImage: _frontIdImage,
+        backIdImage: _backIdImage,
+        selfieImage: _selfieImage,
+      ),
+    );
+  }
+
+  String _fileNameFrom(File image) {
+    return image.uri.pathSegments.isEmpty
+        ? image.path
+        : image.uri.pathSegments.last;
+  }
+
+  Future<void> _pickFrontIdImage() async {
+    final image = await Helpers.getImageFromCameraOrDevice();
+    if (!mounted || image == null) {
+      return;
+    }
+
+    setState(() {
+      _frontIdImage = image;
+      _frontIdFileName = _fileNameFrom(image);
+    });
+    widget.onFrontIdUpload?.call();
+  }
+
+  Future<void> _pickBackIdImage() async {
+    final image = await Helpers.getImageFromCameraOrDevice();
+    if (!mounted || image == null) {
+      return;
+    }
+
+    setState(() {
+      _backIdImage = image;
+      _backIdFileName = _fileNameFrom(image);
+    });
+    widget.onBackIdUpload?.call();
+  }
+
+  Future<void> _captureSelfieImage() async {
+    final image = await Helpers.getImageFromCameraOrDevice();
+    if (!mounted || image == null) {
+      return;
+    }
+
+    setState(() {
+      _selfieImage = image;
+      _selfieFileName = _fileNameFrom(image);
+    });
+    widget.onSelfieCapture?.call();
   }
 
   @override
@@ -172,20 +269,20 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
                     18.szH,
                     KycUploadTile(
                       title: LocaleKeys.idFrontLabel,
-                      fileName: widget.frontIdFileName,
-                      onTap: widget.onFrontIdUpload,
+                      fileName: _frontIdFileName,
+                      onTap: _pickFrontIdImage,
                     ),
                     14.szH,
                     KycUploadTile(
                       title: LocaleKeys.idBackLabel,
-                      fileName: widget.backIdFileName,
-                      onTap: widget.onBackIdUpload,
+                      fileName: _backIdFileName,
+                      onTap: _pickBackIdImage,
                     ),
                     14.szH,
                     KycUploadTile(
                       title: LocaleKeys.selfiePhoto,
-                      fileName: widget.selfieFileName,
-                      onTap: widget.onSelfieCapture,
+                      fileName: _selfieFileName,
+                      onTap: _captureSelfieImage,
                       emptyIcon: Icons.add_a_photo_outlined,
                       emptyTitle: LocaleKeys.capturePhoto,
                       emptySubtitle: null,

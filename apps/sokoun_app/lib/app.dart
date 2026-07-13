@@ -6,10 +6,8 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/notification/inactivity_notification_service.dart';
 import 'package:melos_core/core/shared/route_observer.dart';
-import 'package:melos_core/core/shared/models/user_enum.dart';
 import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
-import 'package:sokoun_app/features/auth/screens/role_select_screen.dart';
-import 'package:sokoun_app/features/auth/screens/tenant_kyc_flow_screen.dart';
+import 'features/auth/presentation/screens/role_select_screen.dart';
 
 class Sokoon extends StatefulWidget {
   const Sokoon({super.key});
@@ -19,6 +17,7 @@ class Sokoon extends StatefulWidget {
 }
 
 class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
+
   @override
   void initState() {
     super.initState();
@@ -56,13 +55,14 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
             supportedLocales: context.supportedLocales,
             locale: context.locale,
             navigatorKey: Go.navigatorKey,
-            home: RoleSelectScreen(
-              onContinue: (role) {
-                if (role == UserType.tenant) {
-                  Go.to(const TenantKycFlowScreen());
-                }
-              },
-            ),
+            home: RoleSelectScreen(),
+            // home: RoleSelectScreen(
+            //   onContinue: (role) {
+            //     if (role == UserType.tenant) {
+            //       Go.to(const TenantKycFlowScreen());
+            //     }
+            //   },
+            // ),
             // home: LoginScreen(onAppleSignIn: (){}, onFacebookSignIn: (){}, onGoogleSignIn: (){},),
 
             // builder: (context, child) {

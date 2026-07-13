@@ -5,7 +5,8 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
-import 'package:sokoun_app/features/auth/screens/widgets/kyc/kyc_feature_tile.dart';
+
+import '../widgets/kyc/kyc_feature_tile.dart';
 
 class KycApprovedScreen extends StatelessWidget {
   const KycApprovedScreen({super.key, this.onStartSearch});

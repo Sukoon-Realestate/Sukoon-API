@@ -6,9 +6,9 @@ import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
-import 'package:sokoun_app/features/auth/screens/widgets/otp/otp_code_field.dart';
-import 'package:sokoun_app/features/auth/screens/widgets/otp/otp_header.dart';
-import 'package:sokoun_app/features/auth/screens/widgets/otp/otp_resend_timer.dart';
+import '../widgets/otp/otp_code_field.dart';
+import '../widgets/otp/otp_header.dart';
+import '../widgets/otp/otp_resend_timer.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({

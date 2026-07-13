@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:melos_core/core/shared/models/user_enum.dart';
-import 'package:sokoun_app/features/auth/screens/kyc_approved_screen.dart';
-import 'package:sokoun_app/features/auth/screens/kyc_intro_screen.dart';
-import 'package:sokoun_app/features/auth/screens/kyc_pending_screen.dart';
-import 'package:sokoun_app/features/auth/screens/kyc_upload_documents_screen.dart';
+import 'package:sokoun_app/features/auth/presentation/screens/kyc_approved_screen.dart';
+import 'package:sokoun_app/features/auth/presentation/screens/kyc_intro_screen.dart';
+import 'package:sokoun_app/features/auth/presentation/screens/kyc_pending_screen.dart';
+import 'package:sokoun_app/features/auth/presentation/screens/kyc_upload_documents_screen.dart';
 
 class TenantKycFlowScreen extends StatefulWidget {
   const TenantKycFlowScreen({

@@ -142,6 +142,36 @@ abstract class LocaleKeys {
   static const String _haveAccountLogin = 'have_account_login';
   static String get haveAccountLogin => _haveAccountLogin.tr();
 
+  static const String _ownerWelcomeTitle = 'owner_welcome_title';
+  static String get ownerWelcomeTitle => _ownerWelcomeTitle.tr();
+
+  static const String _ownerWelcomeDescription = 'owner_welcome_description';
+  static String get ownerWelcomeDescription => _ownerWelcomeDescription.tr();
+
+  static const String _addPropertiesEasily = 'add_properties_easily';
+  static String get addPropertiesEasily => _addPropertiesEasily.tr();
+
+  static const String _fourSimpleStepsPropertyLive = 'four_simple_steps_property_live';
+  static String get fourSimpleStepsPropertyLive => _fourSimpleStepsPropertyLive.tr();
+
+  static const String _verifiedTenantsOnly = 'verified_tenants_only';
+  static String get verifiedTenantsOnly => _verifiedTenantsOnly.tr();
+
+  static const String _allTenantsIdentityVerified = 'all_tenants_identity_verified';
+  static String get allTenantsIdentityVerified => _allTenantsIdentityVerified.tr();
+
+  static const String _detailedStatistics = 'detailed_statistics';
+  static String get detailedStatistics => _detailedStatistics.tr();
+
+  static const String _trackViewsAndVisitRequests = 'track_views_and_visit_requests';
+  static String get trackViewsAndVisitRequests => _trackViewsAndVisitRequests.tr();
+
+  static const String _startAsOwner = 'start_as_owner';
+  static String get startAsOwner => _startAsOwner.tr();
+
+  static const String _haveOwnerAccountLogin = 'have_owner_account_login';
+  static String get haveOwnerAccountLogin => _haveOwnerAccountLogin.tr();
+
   static const String _youAre = 'you_are';
   static String get youAre => _youAre.tr();
 

@@ -6,10 +6,11 @@ import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
-import 'package:sokoun_app/features/auth/screens/widgets/kyc/kyc_flow_header.dart';
-import 'package:sokoun_app/features/auth/screens/widgets/kyc/kyc_privacy_card.dart';
-import 'package:sokoun_app/features/auth/screens/widgets/kyc/kyc_progress_bar.dart';
-import 'package:sokoun_app/features/auth/screens/widgets/kyc/kyc_requirement_tile.dart';
+
+import '../widgets/kyc/kyc_flow_header.dart';
+import '../widgets/kyc/kyc_privacy_card.dart';
+import '../widgets/kyc/kyc_progress_bar.dart';
+import '../widgets/kyc/kyc_requirement_tile.dart';
 
 class KycIntroScreen extends StatelessWidget {
   const KycIntroScreen({super.key, this.onBack, this.onUploadDocuments});

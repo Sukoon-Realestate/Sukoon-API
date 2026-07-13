@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
-import 'package:sokoun_app/features/auth/screens/widgets/welcome/welcome_center_card.dart';
+import 'package:sokoun_app/features/auth/presentation/screens/login_screen.dart';
+import 'package:sokoun_app/features/auth/presentation/screens/register_screen.dart';
+import '../../data/models/welcome.dart';
+import '../cubits/select_role.dart';
+import '../widgets/welcome/welcome_center_card.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key, this.onStartSearch, this.onLogin});
-
-  final VoidCallback? onStartSearch;
-  final VoidCallback? onLogin;
+  const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final currentRole = context.read<SelectRoleCubit>().currentRole;
+    final WelcomeScreenContent content = WelcomeScreenContent.fromRole(currentRole);
+
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
@@ -35,18 +40,18 @@ class WelcomeScreen extends StatelessWidget {
                         width: 64.r,
                         height: 64.r,
                         decoration: BoxDecoration(
-                          color: AppColors.mintLight,
+                          color: content.headerIconBackgroundColor,
                           borderRadius: BorderRadius.circular(16.r),
                         ),
                         child: Icon(
-                          Icons.shield_outlined,
-                          color: AppColors.sokoonTeal,
+                          content.headerIcon,
+                          color: content.headerIconColor,
                           size: 30.r,
                         ),
                       ).centerWidget,
                       18.szH,
                       AppText(
-                        LocaleKeys.welcomeToSokoon,
+                        content.title,
                         color: AppColors.sokoonNavy,
                         fontSize: 24.sp,
                         fontWeight: FontWeight.w900,
@@ -54,7 +59,7 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                       8.szH,
                       AppText(
-                        LocaleKeys.sokoonWelcomeDescription,
+                        content.description,
                         color: AppColors.sokoonGray,
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
@@ -62,36 +67,11 @@ class WelcomeScreen extends StatelessWidget {
                         height: 1.45,
                       ),
                       24.szH,
-                      WelcomeCenterCard(
-                        icon: Icons.search_rounded,
-                        iconBackgroundColor: AppColors.mintLight,
-                        iconColor: AppColors.sokoonTeal,
-                        title: LocaleKeys.searchEasily,
-                        subtitle: LocaleKeys.thousandsPropertiesAcrossEgypt,
-                      ),
-                      12.szH,
-                      WelcomeCenterCard(
-                        icon: Icons.verified_user_outlined,
-                        iconBackgroundColor: AppColors.greenPale,
-                        iconColor: AppColors.green,
-                        title: LocaleKeys.safetyAndReliability,
-                        subtitle: LocaleKeys.verifiedOwnersReviewedProperties,
-                      ),
-                      12.szH,
-                      WelcomeCenterCard(
-                        icon: Icons.chat_bubble_outline_rounded,
-                        iconBackgroundColor: AppColors.bluePale,
-                        iconColor: AppColors.blue,
-                        title: LocaleKeys.directContact,
-                        subtitle:
-                            LocaleKeys.directChatWithOwnersAfterVerification,
-                      ),
-                      // 26.szH,
-                      // const WelcomePageIndicator(),
+                      ..._buildFeatureCards(content.features),
                       22.szH,
                       DefaultButton(
-                        onTap: onStartSearch,
-                        title: LocaleKeys.startHousingSearch,
+                        onTap: () => Go.to(const RegisterScreen()),
+                        title: content.primaryButtonTitle,
                         color: AppColors.sokoonTeal,
                         textColor: AppColors.white,
                         borderRadius: BorderRadius.circular(8.r),
@@ -102,7 +82,7 @@ class WelcomeScreen extends StatelessWidget {
                       ),
                       14.szH,
                       TextButton(
-                        onPressed: onLogin,
+                        onPressed: () => Go.to(const LoginScreen()),
                         style: TextButton.styleFrom(
                           minimumSize: Size.zero,
                           padding: EdgeInsets.symmetric(
@@ -112,7 +92,7 @@ class WelcomeScreen extends StatelessWidget {
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
                         child: AppText(
-                          LocaleKeys.haveAccountLogin,
+                          content.loginButtonTitle,
                           color: AppColors.sokoonGray,
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
@@ -130,5 +110,28 @@ class WelcomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<Widget> _buildFeatureCards(List<WelcomeFeatureContent> features) {
+    final List<Widget> widgets = <Widget>[];
+
+    for (int i = 0; i < features.length; i++) {
+      final WelcomeFeatureContent feature = features[i];
+      widgets.add(
+        WelcomeCenterCard(
+          icon: feature.icon,
+          iconBackgroundColor: feature.iconBackgroundColor,
+          iconColor: feature.iconColor,
+          title: feature.title,
+          subtitle: feature.subtitle,
+        ),
+      );
+
+      if (i < features.length - 1) {
+        widgets.add(12.szH);
+      }
+    }
+
+    return widgets;
   }
 }
