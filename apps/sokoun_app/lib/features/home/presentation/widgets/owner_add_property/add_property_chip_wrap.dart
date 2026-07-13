@@ -5,9 +5,16 @@ import 'package:sokoun_app/features/home/data/models/owner_add_property_content.
 import 'add_property_chip.dart';
 
 class AddPropertyChipWrap extends StatelessWidget {
-  const AddPropertyChipWrap({super.key, required this.chips});
+  const AddPropertyChipWrap({
+    super.key,
+    required this.chips,
+    this.onChipTap,
+    this.showCheck = true,
+  });
 
   final List<AddPropertyChipContent> chips;
+  final ValueChanged<AddPropertyChipContent>? onChipTap;
+  final bool showCheck;
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +22,14 @@ class AddPropertyChipWrap extends StatelessWidget {
       alignment: WrapAlignment.end,
       spacing: 8.w,
       runSpacing: 8.h,
-      children: [for (final chip in chips) AddPropertyChip(chip: chip)],
+      children: [
+        for (final chip in chips)
+          AddPropertyChip(
+            chip: chip,
+            showCheck: showCheck,
+            onTap: onChipTap == null ? null : () => onChipTap!(chip),
+          ),
+      ],
     );
   }
 }

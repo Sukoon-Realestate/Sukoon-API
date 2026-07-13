@@ -12,43 +12,72 @@ import 'add_property_step_shell.dart';
 class AddPropertyPhotosPage extends StatelessWidget {
   const AddPropertyPhotosPage({
     super.key,
+    required this.photoCount,
+    required this.isReady,
+    required this.onAddPhoto,
+    required this.onRemovePhoto,
     required this.onNext,
     required this.onBack,
   });
 
+  final int photoCount;
+  final bool isReady;
+  final VoidCallback onAddPhoto;
+  final VoidCallback onRemovePhoto;
   final VoidCallback onNext;
   final VoidCallback onBack;
 
   @override
   Widget build(BuildContext context) {
+    final remaining = OwnerAddPropertyContent.minimumPhotoCount - photoCount;
+
     return AddPropertyStepShell(
       title: 'صور العقار',
       activeSegments: 2,
       progressSubtitle: 'الخطوة 2 من 4 — صور العقار',
       primaryLabel: 'التالي — التسعير',
-      onPrimaryTap: onNext,
+      onPrimaryTap: isReady ? onNext : null,
       onBack: onBack,
-      children: const [
+      children: [
         AddPropertyInfoBanner(
-          text: '10 صور على الأقل — تأكد إن الصور واضحة وبدون أرقام هواتف',
-          backgroundColor: AppColors.orangePale,
-          borderColor: AppColors.goldAlpha15,
-          iconColor: AppColors.brown,
-          textColor: AppColors.brown,
-          icon: Icons.warning_amber_rounded,
+          title: isReady ? 'الصور جاهزة للمراجعة' : null,
+          text: isReady
+              ? 'تقدر تضيف صور زيادة أو تكمل لخطوة التسعير'
+              : 'اضغط على مربعات الإضافة لرفع $remaining صور كمان',
+          backgroundColor: isReady ? AppColors.greenPale : AppColors.orangePale,
+          borderColor: isReady ? AppColors.greenAlpha19 : AppColors.goldAlpha15,
+          iconColor: isReady ? AppColors.green : AppColors.brown,
+          textColor: isReady ? AppColors.sokoonNavy : AppColors.brown,
+          icon: isReady
+              ? Icons.check_circle_outline_rounded
+              : Icons.warning_amber_rounded,
         ),
-        _PhotoGridSection(),
-        _PhotoTipsSection(),
+        _PhotoGridSection(
+          photoCount: photoCount,
+          onAddPhoto: onAddPhoto,
+          onRemovePhoto: onRemovePhoto,
+        ),
+        const _PhotoTipsSection(),
       ],
     );
   }
 }
 
 class _PhotoGridSection extends StatelessWidget {
-  const _PhotoGridSection();
+  const _PhotoGridSection({
+    required this.photoCount,
+    required this.onAddPhoto,
+    required this.onRemovePhoto,
+  });
+
+  final int photoCount;
+  final VoidCallback onAddPhoto;
+  final VoidCallback onRemovePhoto;
 
   @override
   Widget build(BuildContext context) {
+    final isReady = photoCount >= OwnerAddPropertyContent.minimumPhotoCount;
+
     return Column(
       children: [
         GridView.builder(
@@ -60,17 +89,23 @@ class _PhotoGridSection extends StatelessWidget {
             mainAxisSpacing: 10.h,
             childAspectRatio: 1,
           ),
-          itemCount: 6,
+          itemCount: OwnerAddPropertyContent.maxPhotoCount,
           itemBuilder: (context, index) {
-            return _PhotoTile(hasPhoto: index < 4);
+            final hasPhoto = index < photoCount;
+            return _PhotoTile(
+              index: index,
+              hasPhoto: hasPhoto,
+              onAddPhoto: onAddPhoto,
+              onRemovePhoto: onRemovePhoto,
+            );
           },
         ),
         10.szH,
         AppText(
-          '4 / 10 صور مرفوعة (الحد الأدنى 10)',
-          color: AppColors.sokoonGray,
+          '$photoCount / ${OwnerAddPropertyContent.minimumPhotoCount} صور مرفوعة (الحد الأدنى ${OwnerAddPropertyContent.minimumPhotoCount})',
+          color: isReady ? AppColors.green : AppColors.sokoonGray,
           fontSize: 12.sp,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w700,
           textAlign: TextAlign.center,
         ),
       ],
@@ -79,66 +114,84 @@ class _PhotoGridSection extends StatelessWidget {
 }
 
 class _PhotoTile extends StatelessWidget {
-  const _PhotoTile({required this.hasPhoto});
+  const _PhotoTile({
+    required this.index,
+    required this.hasPhoto,
+    required this.onAddPhoto,
+    required this.onRemovePhoto,
+  });
 
+  final int index;
   final bool hasPhoto;
+  final VoidCallback onAddPhoto;
+  final VoidCallback onRemovePhoto;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: hasPhoto ? AppColors.grayBluePale : AppColors.scaffoldBackground,
-        borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(
-          color: hasPhoto ? AppColors.transparent : AppColors.sokoonBorder,
-          style: BorderStyle.solid,
+    return GestureDetector(
+      onTap: hasPhoto ? null : onAddPhoto,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        decoration: BoxDecoration(
+          color: hasPhoto
+              ? AppColors.grayBluePale
+              : AppColors.scaffoldBackground,
+          borderRadius: BorderRadius.circular(14.r),
+          border: Border.all(
+            color: hasPhoto ? AppColors.transparent : AppColors.sokoonBorder,
+            style: BorderStyle.solid,
+          ),
         ),
-      ),
-      child: Stack(
-        children: [
-          Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  hasPhoto ? Icons.image_outlined : Icons.add_rounded,
-                  color: hasPhoto
-                      ? AppColors.blueGrayLight
-                      : AppColors.sokoonMuted,
-                  size: hasPhoto ? 24.r : 20.r,
-                ),
-                if (!hasPhoto) ...[
+        child: Stack(
+          children: [
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    hasPhoto ? Icons.image_outlined : Icons.add_rounded,
+                    color: hasPhoto
+                        ? AppColors.blueGrayLight
+                        : AppColors.sokoonMuted,
+                    size: hasPhoto ? 24.r : 20.r,
+                  ),
                   4.szH,
                   AppText(
-                    'إضافة',
-                    color: AppColors.sokoonMuted,
+                    hasPhoto ? 'صورة ${index + 1}' : 'إضافة',
+                    color: hasPhoto
+                        ? AppColors.sokoonGray
+                        : AppColors.sokoonMuted,
                     fontSize: 10.sp,
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.w600,
                   ),
                 ],
-              ],
-            ),
-          ),
-          if (hasPhoto)
-            PositionedDirectional(
-              top: 6.r,
-              start: 6.r,
-              child: Container(
-                width: 20.r,
-                height: 20.r,
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  color: AppColors.red,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.close_rounded,
-                  color: AppColors.white,
-                  size: 12.r,
-                ),
               ),
             ),
-        ],
+            if (hasPhoto)
+              PositionedDirectional(
+                top: 6.r,
+                start: 6.r,
+                child: GestureDetector(
+                  onTap: onRemovePhoto,
+                  behavior: HitTestBehavior.opaque,
+                  child: Container(
+                    width: 20.r,
+                    height: 20.r,
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                      color: AppColors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.close_rounded,
+                      color: AppColors.white,
+                      size: 12.r,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

@@ -12,8 +12,8 @@ class AddPropertyStepShell extends StatelessWidget {
     required this.title,
     required this.children,
     required this.primaryLabel,
-    required this.onPrimaryTap,
     required this.activeSegments,
+    this.onPrimaryTap,
     this.progressSubtitle,
     this.segmentCount = 4,
     this.onBack,
@@ -22,7 +22,7 @@ class AddPropertyStepShell extends StatelessWidget {
   final String title;
   final List<Widget> children;
   final String primaryLabel;
-  final VoidCallback onPrimaryTap;
+  final VoidCallback? onPrimaryTap;
   final int activeSegments;
   final String? progressSubtitle;
   final int segmentCount;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
@@ -6,6 +7,7 @@ import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/home/data/models/owner_add_property_content.dart';
 
 import 'add_property_chip_wrap.dart';
+import 'add_property_dropdown_field.dart';
 import 'add_property_field.dart';
 import 'add_property_info_banner.dart';
 import 'add_property_section_card.dart';
@@ -14,10 +16,30 @@ import 'add_property_step_shell.dart';
 class AddPropertyPricingPage extends StatelessWidget {
   const AddPropertyPricingPage({
     super.key,
+    required this.form,
+    required this.monthlyPriceController,
+    required this.rentalDurationController,
+    required this.descriptionController,
+    required this.onMonthlyPriceChanged,
+    required this.onDepositChanged,
+    required this.onRentalDurationChanged,
+    required this.onRentalUnitChanged,
+    required this.onAmenityToggled,
+    required this.onDescriptionChanged,
     required this.onNext,
     required this.onBack,
   });
 
+  final OwnerAddPropertyFormState form;
+  final TextEditingController monthlyPriceController;
+  final TextEditingController rentalDurationController;
+  final TextEditingController descriptionController;
+  final ValueChanged<String> onMonthlyPriceChanged;
+  final ValueChanged<String> onDepositChanged;
+  final ValueChanged<String> onRentalDurationChanged;
+  final ValueChanged<String> onRentalUnitChanged;
+  final ValueChanged<String> onAmenityToggled;
+  final ValueChanged<String> onDescriptionChanged;
   final VoidCallback onNext;
   final VoidCallback onBack;
 
@@ -28,23 +50,52 @@ class AddPropertyPricingPage extends StatelessWidget {
       activeSegments: 3,
       progressSubtitle: 'الخطوة 3 من 4 — السعر والتفاصيل',
       primaryLabel: 'التالي — التفاصيل الإضافية',
-      onPrimaryTap: onNext,
+      onPrimaryTap: form.isPricingReady ? onNext : null,
       onBack: onBack,
-      children: const [
-        _PriceSection(),
-        _RentalPeriodSection(),
+      children: [
+        _PriceSection(
+          form: form,
+          monthlyPriceController: monthlyPriceController,
+          onMonthlyPriceChanged: onMonthlyPriceChanged,
+          onDepositChanged: onDepositChanged,
+        ),
+        _RentalPeriodSection(
+          form: form,
+          rentalDurationController: rentalDurationController,
+          onRentalDurationChanged: onRentalDurationChanged,
+          onRentalUnitChanged: onRentalUnitChanged,
+        ),
         AddPropertySectionCard(
           title: 'المرافق والخدمات',
-          child: AddPropertyChipWrap(chips: OwnerAddPropertyContent.amenities),
+          child: AddPropertyChipWrap(
+            chips: OwnerAddPropertyContent.multiSelectedChips(
+              labels: OwnerAddPropertyContent.amenityOptions,
+              selectedValues: form.amenities,
+            ),
+            onChipTap: (chip) => onAmenityToggled(chip.label),
+          ),
         ),
-        _DescriptionSection(),
+        _DescriptionSection(
+          descriptionController: descriptionController,
+          onDescriptionChanged: onDescriptionChanged,
+        ),
         AddPropertyInfoBanner(
-          text: 'رسوم المنصة يتم خصمها من أرباح المالك حسب سياسة سكون',
-          backgroundColor: AppColors.amberPale,
-          borderColor: AppColors.goldAlpha15,
-          iconColor: AppColors.brown,
-          textColor: AppColors.brown,
-          icon: Icons.info_outline_rounded,
+          text: form.isPricingReady
+              ? 'بيانات التسعير والوصف جاهزة للمتابعة'
+              : 'اكتب سعر، مدة إيجار، ووصف واضح لا يقل عن 10 أحرف',
+          backgroundColor: form.isPricingReady
+              ? AppColors.greenPale
+              : AppColors.amberPale,
+          borderColor: form.isPricingReady
+              ? AppColors.greenAlpha19
+              : AppColors.goldAlpha15,
+          iconColor: form.isPricingReady ? AppColors.green : AppColors.brown,
+          textColor: form.isPricingReady
+              ? AppColors.sokoonNavy
+              : AppColors.brown,
+          icon: form.isPricingReady
+              ? Icons.check_circle_outline_rounded
+              : Icons.info_outline_rounded,
         ),
       ],
     );
@@ -52,7 +103,17 @@ class AddPropertyPricingPage extends StatelessWidget {
 }
 
 class _PriceSection extends StatelessWidget {
-  const _PriceSection();
+  const _PriceSection({
+    required this.form,
+    required this.monthlyPriceController,
+    required this.onMonthlyPriceChanged,
+    required this.onDepositChanged,
+  });
+
+  final OwnerAddPropertyFormState form;
+  final TextEditingController monthlyPriceController;
+  final ValueChanged<String> onMonthlyPriceChanged;
+  final ValueChanged<String> onDepositChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +122,16 @@ class _PriceSection extends StatelessWidget {
       child: Column(
         children: [
           AddPropertyField(
-            field: OwnerAddPropertyContent.pricingFields[0],
+            field: AddPropertyFieldContent(
+              label: 'السعر',
+              value: '0',
+              isFocused: true,
+              textAlign: TextAlign.right,
+            ),
+            controller: monthlyPriceController,
+            onChanged: onMonthlyPriceChanged,
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             suffix: AppText(
               'ر.س',
               color: AppColors.sokoonGray,
@@ -70,7 +140,12 @@ class _PriceSection extends StatelessWidget {
             ),
           ),
           10.szH,
-          AddPropertyField(field: OwnerAddPropertyContent.pricingFields[1]),
+          AddPropertyDropdownField(
+            label: 'تأمين الشقة',
+            value: form.deposit,
+            items: OwnerAddPropertyContent.depositOptions,
+            onChanged: onDepositChanged,
+          ),
         ],
       ),
     );
@@ -78,7 +153,17 @@ class _PriceSection extends StatelessWidget {
 }
 
 class _RentalPeriodSection extends StatelessWidget {
-  const _RentalPeriodSection();
+  const _RentalPeriodSection({
+    required this.form,
+    required this.rentalDurationController,
+    required this.onRentalDurationChanged,
+    required this.onRentalUnitChanged,
+  });
+
+  final OwnerAddPropertyFormState form;
+  final TextEditingController rentalDurationController;
+  final ValueChanged<String> onRentalDurationChanged;
+  final ValueChanged<String> onRentalUnitChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -91,54 +176,25 @@ class _RentalPeriodSection extends StatelessWidget {
             children: [
               Expanded(
                 child: AddPropertyField(
-                  field: AddPropertyFieldContent(
+                  field: const AddPropertyFieldContent(
                     label: 'العدد',
-                    value: '6',
+                    value: '0',
                     isFocused: true,
                     textAlign: TextAlign.center,
                   ),
+                  controller: rentalDurationController,
+                  onChanged: onRentalDurationChanged,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 ),
               ),
               10.szW,
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    AppText(
-                      'الوحدة',
-                      color: AppColors.sokoonGray,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w600,
-                      textAlign: TextAlign.right,
-                    ),
-                    6.szH,
-                    Container(
-                      height: 46.h,
-                      padding: EdgeInsets.symmetric(horizontal: 12.w),
-                      decoration: BoxDecoration(
-                        color: AppColors.tealAlpha03,
-                        borderRadius: BorderRadius.circular(12.r),
-                        border: Border.all(color: AppColors.sokoonTeal),
-                      ),
-                      child: Row(
-                        textDirection: TextDirection.ltr,
-                        children: [
-                          Icon(
-                            Icons.keyboard_arrow_down_rounded,
-                            color: AppColors.sokoonTeal,
-                            size: 20.r,
-                          ),
-                          const Spacer(),
-                          AppText(
-                            'شهر',
-                            color: AppColors.sokoonTeal,
-                            fontSize: 15.sp,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                child: AddPropertyDropdownField(
+                  label: 'الوحدة',
+                  value: form.rentalUnit,
+                  items: OwnerAddPropertyContent.rentalUnitOptions,
+                  onChanged: onRentalUnitChanged,
                 ),
               ),
             ],
@@ -152,7 +208,7 @@ class _RentalPeriodSection extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.r),
             ),
             child: AppText(
-              'فترة التأجير: 6 شهر',
+              'فترة التأجير: ${form.rentalDuration} ${form.rentalUnit}',
               color: AppColors.sokoonTeal,
               fontSize: 12.sp,
               fontWeight: FontWeight.w700,
@@ -166,28 +222,29 @@ class _RentalPeriodSection extends StatelessWidget {
 }
 
 class _DescriptionSection extends StatelessWidget {
-  const _DescriptionSection();
+  const _DescriptionSection({
+    required this.descriptionController,
+    required this.onDescriptionChanged,
+  });
+
+  final TextEditingController descriptionController;
+  final ValueChanged<String> onDescriptionChanged;
 
   @override
   Widget build(BuildContext context) {
     return AddPropertySectionCard(
       title: 'وصف العقار',
-      child: Container(
-        height: 86.h,
-        padding: EdgeInsets.all(12.w),
-        decoration: BoxDecoration(
-          color: AppColors.grayOffWhite,
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: AppColors.grayPale),
+      child: AddPropertyField(
+        field: const AddPropertyFieldContent(
+          label: 'الوصف',
+          value: 'اكتب وصفاً جذاباً للعقار…',
         ),
-        alignment: AlignmentDirectional.topStart,
-        child: AppText(
-          'اكتب وصفاً جذاباً للعقار…',
-          color: AppColors.navyAlpha50,
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w400,
-          textAlign: TextAlign.right,
-        ),
+        controller: descriptionController,
+        onChanged: onDescriptionChanged,
+        hint: 'اكتب وصفاً جذاباً للعقار…',
+        keyboardType: TextInputType.multiline,
+        maxLines: 4,
+        minLines: 4,
       ),
     );
   }

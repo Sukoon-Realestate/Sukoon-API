@@ -7,16 +7,18 @@ class AddPropertyPrimaryButton extends StatelessWidget {
   const AddPropertyPrimaryButton({
     super.key,
     required this.label,
-    required this.onTap,
+    this.onTap,
     this.isOutline = false,
   });
 
   final String label;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final bool isOutline;
 
   @override
   Widget build(BuildContext context) {
+    final isEnabled = onTap != null;
+
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -24,15 +26,29 @@ class AddPropertyPrimaryButton extends StatelessWidget {
         height: 48.h,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: isOutline ? AppColors.white : AppColors.sokoonTeal,
+          color: isOutline
+              ? AppColors.white
+              : isEnabled
+              ? AppColors.sokoonTeal
+              : AppColors.graySoft,
           borderRadius: BorderRadius.circular(14.r),
           border: Border.all(
-            color: isOutline ? AppColors.sokoonBorder : AppColors.sokoonTeal,
+            color: isOutline
+                ? isEnabled
+                      ? AppColors.sokoonBorder
+                      : AppColors.grayPale
+                : isEnabled
+                ? AppColors.sokoonTeal
+                : AppColors.graySoft,
           ),
         ),
         child: AppText(
           label,
-          color: isOutline ? AppColors.sokoonNavy : AppColors.white,
+          color: isOutline
+              ? isEnabled
+                    ? AppColors.sokoonNavy
+                    : AppColors.sokoonMuted
+              : AppColors.white,
           fontSize: 15.sp,
           fontWeight: FontWeight.w900,
           textAlign: TextAlign.center,

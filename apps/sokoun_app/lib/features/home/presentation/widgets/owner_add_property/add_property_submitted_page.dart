@@ -8,8 +8,13 @@ import 'package:sokoun_app/features/home/data/models/owner_add_property_content.
 import 'add_property_primary_button.dart';
 
 class AddPropertySubmittedPage extends StatelessWidget {
-  const AddPropertySubmittedPage({super.key, required this.onAddAnother});
+  const AddPropertySubmittedPage({
+    super.key,
+    required this.summaryItems,
+    required this.onAddAnother,
+  });
 
+  final List<AddPropertySummaryContent> summaryItems;
   final VoidCallback onAddAnother;
 
   @override
@@ -21,19 +26,20 @@ class AddPropertySubmittedPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Container(
-              width: 96.r,
-              height: 96.r,
-              alignment: Alignment.center,
-              margin: EdgeInsets.symmetric(horizontal: 98.w),
-              decoration: const BoxDecoration(
-                color: AppColors.orangePale,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.schedule_rounded,
-                color: AppColors.amber,
-                size: 42.r,
+            Center(
+              child: Container(
+                width: 96.r,
+                height: 96.r,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  color: AppColors.orangePale,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.schedule_rounded,
+                  color: AppColors.amber,
+                  size: 42.r,
+                ),
               ),
             ),
             16.szH,
@@ -82,7 +88,7 @@ class AddPropertySubmittedPage extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             22.szH,
-            const _SubmittedSummaryCard(),
+            _SubmittedSummaryCard(items: summaryItems),
             22.szH,
             AddPropertyPrimaryButton(label: 'عرض عقاراتي', onTap: () {}),
             12.szH,
@@ -99,7 +105,9 @@ class AddPropertySubmittedPage extends StatelessWidget {
 }
 
 class _SubmittedSummaryCard extends StatelessWidget {
-  const _SubmittedSummaryCard();
+  const _SubmittedSummaryCard({required this.items});
+
+  final List<AddPropertySummaryContent> items;
 
   @override
   Widget build(BuildContext context) {
@@ -119,13 +127,9 @@ class _SubmittedSummaryCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          for (
-            int index = 0;
-            index < OwnerAddPropertyContent.submittedSummary.length;
-            index++
-          ) ...[
-            _SummaryRow(item: OwnerAddPropertyContent.submittedSummary[index]),
-            if (index < OwnerAddPropertyContent.submittedSummary.length - 1)
+          for (int index = 0; index < items.length; index++) ...[
+            _SummaryRow(item: items[index]),
+            if (index < items.length - 1)
               const Divider(color: AppColors.sokoonBorder),
           ],
         ],

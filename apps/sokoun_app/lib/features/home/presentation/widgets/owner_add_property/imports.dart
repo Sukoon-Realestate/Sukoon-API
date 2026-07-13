@@ -1,6 +1,7 @@
 export 'add_property_basics_page.dart';
 export 'add_property_chip.dart';
 export 'add_property_chip_wrap.dart';
+export 'add_property_dropdown_field.dart';
 export 'add_property_extra_details_page.dart';
 export 'add_property_field.dart';
 export 'add_property_info_banner.dart';

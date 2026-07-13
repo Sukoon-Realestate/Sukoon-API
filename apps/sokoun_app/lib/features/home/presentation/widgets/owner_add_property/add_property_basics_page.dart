@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
@@ -6,14 +7,53 @@ import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/home/data/models/owner_add_property_content.dart';
 
 import 'add_property_chip_wrap.dart';
+import 'add_property_dropdown_field.dart';
 import 'add_property_field.dart';
 import 'add_property_info_banner.dart';
 import 'add_property_section_card.dart';
 import 'add_property_step_shell.dart';
 
 class AddPropertyBasicsPage extends StatelessWidget {
-  const AddPropertyBasicsPage({super.key, required this.onNext, this.onBack});
+  const AddPropertyBasicsPage({
+    super.key,
+    required this.form,
+    required this.streetController,
+    required this.bedroomsController,
+    required this.spaceController,
+    required this.floorController,
+    required this.buildingYearController,
+    required this.mapQueryController,
+    required this.onPropertyTypeSelected,
+    required this.onGovernorateChanged,
+    required this.onDistrictChanged,
+    required this.onStreetChanged,
+    required this.onBedroomsChanged,
+    required this.onSpaceChanged,
+    required this.onFloorChanged,
+    required this.onBuildingYearChanged,
+    required this.onMapQueryChanged,
+    required this.onLocationSelected,
+    required this.onNext,
+    this.onBack,
+  });
 
+  final OwnerAddPropertyFormState form;
+  final TextEditingController streetController;
+  final TextEditingController bedroomsController;
+  final TextEditingController spaceController;
+  final TextEditingController floorController;
+  final TextEditingController buildingYearController;
+  final TextEditingController mapQueryController;
+  final ValueChanged<String> onPropertyTypeSelected;
+  final ValueChanged<String> onGovernorateChanged;
+  final ValueChanged<String> onDistrictChanged;
+  final ValueChanged<String> onStreetChanged;
+  final ValueChanged<String> onBedroomsChanged;
+  final ValueChanged<String> onSpaceChanged;
+  final ValueChanged<String> onFloorChanged;
+  final ValueChanged<String> onBuildingYearChanged;
+  final ValueChanged<String> onMapQueryChanged;
+  final VoidCallback onLocationSelected;
   final VoidCallback onNext;
   final VoidCallback? onBack;
 
@@ -24,43 +64,96 @@ class AddPropertyBasicsPage extends StatelessWidget {
       activeSegments: 1,
       progressSubtitle: 'الخطوة 1 من 4 — معلومات العقار',
       primaryLabel: 'التالي — الصور',
-      onPrimaryTap: onNext,
+      onPrimaryTap: form.isBasicsReady ? onNext : null,
       onBack: onBack,
-      children: const [
+      children: [
         AddPropertySectionCard(
           title: 'نوع العقار',
           child: AddPropertyChipWrap(
-            chips: OwnerAddPropertyContent.propertyTypes,
+            chips: OwnerAddPropertyContent.singleSelectedChips(
+              labels: OwnerAddPropertyContent.propertyTypeOptions,
+              selectedValue: form.propertyType,
+            ),
+            onChipTap: (chip) => onPropertyTypeSelected(chip.label),
           ),
         ),
-        _AddressSection(),
-        _DetailsSection(),
-        _MapSection(),
+        _AddressSection(
+          form: form,
+          streetController: streetController,
+          onGovernorateChanged: onGovernorateChanged,
+          onDistrictChanged: onDistrictChanged,
+          onStreetChanged: onStreetChanged,
+        ),
+        _DetailsSection(
+          bedroomsController: bedroomsController,
+          spaceController: spaceController,
+          floorController: floorController,
+          buildingYearController: buildingYearController,
+          onBedroomsChanged: onBedroomsChanged,
+          onSpaceChanged: onSpaceChanged,
+          onFloorChanged: onFloorChanged,
+          onBuildingYearChanged: onBuildingYearChanged,
+        ),
+        _MapSection(
+          form: form,
+          mapQueryController: mapQueryController,
+          onMapQueryChanged: onMapQueryChanged,
+          onLocationSelected: onLocationSelected,
+        ),
       ],
     );
   }
 }
 
 class _AddressSection extends StatelessWidget {
-  const _AddressSection();
+  const _AddressSection({
+    required this.form,
+    required this.streetController,
+    required this.onGovernorateChanged,
+    required this.onDistrictChanged,
+    required this.onStreetChanged,
+  });
+
+  final OwnerAddPropertyFormState form;
+  final TextEditingController streetController;
+  final ValueChanged<String> onGovernorateChanged;
+  final ValueChanged<String> onDistrictChanged;
+  final ValueChanged<String> onStreetChanged;
 
   @override
   Widget build(BuildContext context) {
+    final districts =
+        OwnerAddPropertyContent.districtOptionsByGovernorate[form
+            .governorate] ??
+        const <String>[];
+
     return AddPropertySectionCard(
       title: 'المنطقة والعنوان',
       child: Column(
         children: [
-          for (
-            int index = 0;
-            index < OwnerAddPropertyContent.addressFields.length;
-            index++
-          ) ...[
-            AddPropertyField(
-              field: OwnerAddPropertyContent.addressFields[index],
+          AddPropertyDropdownField(
+            label: 'المحافظة',
+            value: form.governorate,
+            items: OwnerAddPropertyContent.governorateOptions,
+            onChanged: onGovernorateChanged,
+          ),
+          10.szH,
+          AddPropertyDropdownField(
+            label: 'المنطقة',
+            value: form.district,
+            items: districts,
+            onChanged: onDistrictChanged,
+          ),
+          10.szH,
+          AddPropertyField(
+            field: const AddPropertyFieldContent(
+              label: 'الشارع',
+              value: 'اكتب اسم الشارع',
             ),
-            if (index < OwnerAddPropertyContent.addressFields.length - 1)
-              10.szH,
-          ],
+            controller: streetController,
+            onChanged: onStreetChanged,
+            hint: 'اكتب اسم الشارع',
+          ),
         ],
       ),
     );
@@ -68,10 +161,51 @@ class _AddressSection extends StatelessWidget {
 }
 
 class _DetailsSection extends StatelessWidget {
-  const _DetailsSection();
+  const _DetailsSection({
+    required this.bedroomsController,
+    required this.spaceController,
+    required this.floorController,
+    required this.buildingYearController,
+    required this.onBedroomsChanged,
+    required this.onSpaceChanged,
+    required this.onFloorChanged,
+    required this.onBuildingYearChanged,
+  });
+
+  final TextEditingController bedroomsController;
+  final TextEditingController spaceController;
+  final TextEditingController floorController;
+  final TextEditingController buildingYearController;
+  final ValueChanged<String> onBedroomsChanged;
+  final ValueChanged<String> onSpaceChanged;
+  final ValueChanged<String> onFloorChanged;
+  final ValueChanged<String> onBuildingYearChanged;
 
   @override
   Widget build(BuildContext context) {
+    final fields = [
+      _NumberFieldConfig(
+        label: 'عدد الغرف',
+        controller: bedroomsController,
+        onChanged: onBedroomsChanged,
+      ),
+      _NumberFieldConfig(
+        label: 'المساحة (م²)',
+        controller: spaceController,
+        onChanged: onSpaceChanged,
+      ),
+      _NumberFieldConfig(
+        label: 'الدور',
+        controller: floorController,
+        onChanged: onFloorChanged,
+      ),
+      _NumberFieldConfig(
+        label: 'سنة البناء',
+        controller: buildingYearController,
+        onChanged: onBuildingYearChanged,
+      ),
+    ];
+
     return AddPropertySectionCard(
       title: 'تفاصيل العقار',
       child: GridView.builder(
@@ -83,10 +217,19 @@ class _DetailsSection extends StatelessWidget {
           crossAxisSpacing: 10.w,
           mainAxisSpacing: 10.h,
         ),
-        itemCount: OwnerAddPropertyContent.detailFields.length,
+        itemCount: fields.length,
         itemBuilder: (context, index) {
+          final field = fields[index];
           return AddPropertyField(
-            field: OwnerAddPropertyContent.detailFields[index],
+            field: AddPropertyFieldContent(
+              label: field.label,
+              value: '0',
+              textAlign: TextAlign.center,
+            ),
+            controller: field.controller,
+            onChanged: field.onChanged,
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           );
         },
       ),
@@ -95,7 +238,17 @@ class _DetailsSection extends StatelessWidget {
 }
 
 class _MapSection extends StatelessWidget {
-  const _MapSection();
+  const _MapSection({
+    required this.form,
+    required this.mapQueryController,
+    required this.onMapQueryChanged,
+    required this.onLocationSelected,
+  });
+
+  final OwnerAddPropertyFormState form;
+  final TextEditingController mapQueryController;
+  final ValueChanged<String> onMapQueryChanged;
+  final VoidCallback onLocationSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -123,11 +276,25 @@ class _MapSection extends StatelessWidget {
                 ),
                 8.szW,
                 Expanded(
-                  child: AppText(
-                    'ابحث عن الموقع...',
-                    color: AppColors.navyAlpha50,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w400,
+                  child: TextField(
+                    controller: mapQueryController,
+                    onChanged: onMapQueryChanged,
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                      color: AppColors.sokoonNavy,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    decoration: InputDecoration(
+                      isCollapsed: true,
+                      border: InputBorder.none,
+                      hintText: 'ابحث عن الموقع...',
+                      hintStyle: TextStyle(
+                        color: AppColors.navyAlpha50,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -148,48 +315,82 @@ class _MapSection extends StatelessWidget {
                 ),
                 Icon(
                   Icons.location_on_rounded,
-                  color: AppColors.sokoonTeal,
+                  color: form.isLocationSelected
+                      ? AppColors.green
+                      : AppColors.sokoonTeal,
                   size: 34.r,
                 ),
               ],
             ),
           ),
           12.szH,
-          Container(
-            height: 44.h,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: AppColors.sokoonTeal,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.my_location_rounded,
-                  color: AppColors.white,
-                  size: 17.r,
-                ),
-                8.szW,
-                AppText(
-                  'تحديد الموقع',
-                  color: AppColors.white,
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w900,
-                ),
-              ],
+          GestureDetector(
+            onTap: onLocationSelected,
+            behavior: HitTestBehavior.opaque,
+            child: Container(
+              height: 44.h,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: form.isLocationSelected
+                    ? AppColors.green
+                    : AppColors.sokoonTeal,
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    form.isLocationSelected
+                        ? Icons.check_circle_outline_rounded
+                        : Icons.my_location_rounded,
+                    color: AppColors.white,
+                    size: 17.r,
+                  ),
+                  8.szW,
+                  AppText(
+                    form.isLocationSelected
+                        ? 'تم تحديد الموقع'
+                        : 'تحديد الموقع',
+                    color: AppColors.white,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ],
+              ),
             ),
           ),
           10.szH,
-          const AddPropertyInfoBanner(
-            text: 'قد يظهر الموقع للمستأجرين بشكل تقريبي لحماية الخصوصية',
-            icon: Icons.shield_outlined,
-          ),
+          if (form.isLocationSelected)
+            AddPropertyInfoBanner(
+              title: 'الموقع المحدد',
+              text: form.mapQuery,
+              backgroundColor: AppColors.greenPale,
+              borderColor: AppColors.greenAlpha19,
+              iconColor: AppColors.green,
+              icon: Icons.location_on_outlined,
+            )
+          else
+            const AddPropertyInfoBanner(
+              text: 'قد يظهر الموقع للمستأجرين بشكل تقريبي لحماية الخصوصية',
+              icon: Icons.shield_outlined,
+            ),
         ],
       ),
     );
   }
+}
+
+class _NumberFieldConfig {
+  const _NumberFieldConfig({
+    required this.label,
+    required this.controller,
+    required this.onChanged,
+  });
+
+  final String label;
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
 }
 
 class _MapPatternPainter extends CustomPainter {
