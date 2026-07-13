@@ -7,9 +7,7 @@ import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/shared_widgets/shared_widgets.dart';
 
 class RegisterHeader extends StatelessWidget {
-  const RegisterHeader({super.key, this.onBack});
-
-  final VoidCallback? onBack;
+  const RegisterHeader({super.key});
 
   @override
   Widget build(BuildContext context) {

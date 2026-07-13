@@ -1,6 +1,6 @@
 import 'package:melos_core/core/extensions/object.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
-import 'package:melos_core/core/shared/models/user_enum.dart';
+import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:melos_core/core/shared/models/user_models/owner_model.dart';
 import 'package:melos_core/core/shared/models/user_models/tenent_model.dart';
 

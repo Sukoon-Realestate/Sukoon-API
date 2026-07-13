@@ -292,7 +292,7 @@ abstract class LocaleKeys {
   static const String _within24Hours = 'within_24_hours';
   static String get within24Hours => _within24Hours.tr();
 
-  static const String _today941Am = 'today_941_am';
+  static const String _today941Am = 'today_9_41_am';
   static String get today941Am => _today941Am.tr();
 
   static const String _returnHome = 'return_home';
@@ -375,6 +375,9 @@ abstract class LocaleKeys {
 
   static const String _confirm = 'confirm';
   static String get confirm => _confirm.tr();
+
+  static const String _signInAsOwner = 'sign_in_as_owner';
+  static String get signInAsOwner => _signInAsOwner.tr();
 
   static const String _otpCode = 'otp_code';
   static String get otpCode => _otpCode.tr();

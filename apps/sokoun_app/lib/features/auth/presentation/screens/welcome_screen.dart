@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:sokoun_app/features/auth/presentation/screens/login_screen.dart';
 import 'package:sokoun_app/features/auth/presentation/screens/register_screen.dart';
 import '../../data/models/welcome.dart';
-import '../cubits/select_role.dart';
 import '../widgets/welcome/welcome_center_card.dart';
 
 class WelcomeScreen extends StatelessWidget {
@@ -18,9 +17,8 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentRole = context.read<SelectRoleCubit>().currentRole;
+    final currentRole = UserTypeHelper.instance.currentUserType;
     final WelcomeScreenContent content = WelcomeScreenContent.fromRole(currentRole);
-
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(

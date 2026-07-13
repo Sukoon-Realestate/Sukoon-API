@@ -13,12 +13,10 @@ import '../widgets/register/register_header.dart';
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({
     super.key,
-    this.onBack,
     this.onLogin,
     this.onCreateAccount,
   });
 
-  final VoidCallback? onBack;
   final VoidCallback? onLogin;
   final void Function({
     required String fullName,
@@ -83,7 +81,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         20.szH,
-                        RegisterHeader(onBack: widget.onBack),
+                        RegisterHeader(),
                         26.szH,
                         SokoonNameField(
                           controller: _nameController,
@@ -95,9 +93,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           validator: Validators.validateEmpty,
                         ),
                         14.szH,
-                        SokoonEmailField(
-                          controller: _emailController,
-                        ),
+                        SokoonEmailField(controller: _emailController),
                         14.szH,
                         SokoonPasswordField(
                           controller: _passwordController,
@@ -121,7 +117,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           fontWeight: FontWeight.w700,
                         ),
                         18.szH,
-                        RegisterFooter(onLogin: widget.onLogin),
+                        RegisterFooter(),
                         24.szH,
                       ],
                     ),

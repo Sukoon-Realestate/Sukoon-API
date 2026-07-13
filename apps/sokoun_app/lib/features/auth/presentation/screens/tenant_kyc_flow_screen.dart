@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:melos_core/core/shared/models/user_enum.dart';
+import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:sokoun_app/features/auth/presentation/screens/kyc_approved_screen.dart';
 import 'package:sokoun_app/features/auth/presentation/screens/kyc_intro_screen.dart';
 import 'package:sokoun_app/features/auth/presentation/screens/kyc_pending_screen.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/shared/models/user_enum.dart';
+import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 
 class WelcomeScreenContent {
   const WelcomeScreenContent({

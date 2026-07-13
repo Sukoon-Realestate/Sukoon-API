@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/user_type/user_enum.dart';
+import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:sokoun_app/features/auth/presentation/screens/login_screen.dart';
 
 class RegisterFooter extends StatefulWidget {
-  const RegisterFooter({super.key, this.onLogin});
-
-  final VoidCallback? onLogin;
+  const RegisterFooter({super.key});
 
   @override
   State<RegisterFooter> createState() => _RegisterFooterState();
@@ -30,8 +32,9 @@ class _RegisterFooterState extends State<RegisterFooter> {
 
   @override
   Widget build(BuildContext context) {
-    _loginRecognizer.onTap = widget.onLogin;
+    final isTenant = UserTypeHelper.instance.currentUserType.isTenant;
 
+    _loginRecognizer.onTap = () => Go.offAll(const LoginScreen());
     return Text.rich(
       TextSpan(
         text: '${LocaleKeys.alreadyHaveAnAccount}؟ ',
@@ -45,8 +48,8 @@ class _RegisterFooterState extends State<RegisterFooter> {
           TextSpan(
             text: LocaleKeys.login,
             recognizer: _loginRecognizer,
-            style: const TextStyle(
-              color: AppColors.sokoonTeal,
+            style: TextStyle(
+              color: isTenant ? AppColors.sokoonTeal : AppColors.gold,
               fontWeight: FontWeight.w800,
             ),
           ),
