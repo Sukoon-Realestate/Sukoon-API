@@ -12,8 +12,6 @@ class LoginHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isTenant = UserTypeHelper.instance.currentUserType.isTenant;
-
     return Column(
       children: [
         Container(
@@ -31,7 +29,9 @@ class LoginHeader extends StatelessWidget {
         ),
         12.szH,
         AppText(
-          isTenant ? LocaleKeys.login : LocaleKeys.signInAsOwner,
+          UserTypeHelper.instance.currentUserType.isTenant
+              ? LocaleKeys.login
+              : LocaleKeys.signInAsOwner,
           color: AppColors.sokoonNavy,
           fontSize: 22.sp,
           fontWeight: FontWeight.w900,

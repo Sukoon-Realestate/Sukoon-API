@@ -13,7 +13,6 @@ class RegisterHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isTenant = UserTypeHelper.instance.currentUserType.isTenant;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -23,18 +22,18 @@ class RegisterHeader extends StatelessWidget {
         ),
         14.szH,
         AppText(
-          isTenant?
-          LocaleKeys.createAccount :
-          LocaleKeys.newOwnerSigningUp,
+          UserTypeHelper.instance.currentUserType.isTenant
+              ? LocaleKeys.createAccount
+              : LocaleKeys.newOwnerSigningUp,
           color: AppColors.sokoonNavy,
           fontSize: 24.sp,
           fontWeight: FontWeight.w900,
         ),
         6.szH,
         AppText(
-          isTenant?
-          LocaleKeys.registerJourneySubtitle :
-          LocaleKeys.createYourAccountToStartListingYourProperties,
+          UserTypeHelper.instance.currentUserType.isTenant
+              ? LocaleKeys.registerJourneySubtitle
+              : LocaleKeys.createYourAccountToStartListingYourProperties,
           color: AppColors.sokoonGray,
           fontSize: 14.sp,
           fontWeight: FontWeight.w500,

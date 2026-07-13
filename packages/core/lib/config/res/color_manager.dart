@@ -1,6 +1,13 @@
 part of 'config_imports.dart';
 
 abstract class AppColors {
+  static Color get tealOrGoldBasedRole =>
+      UserTypeHelper.instance.currentUserType.isTenant ? teal : gold;
+  static Color get tealOrGoldAlphaBasedRole =>
+      UserTypeHelper.instance.currentUserType.isTenant
+      ? tealAlpha09
+      : goldAlpha15;
+
   static const Color transparent = Color(0x00000000);
 
   static const Color black = Color(0xFF000000);

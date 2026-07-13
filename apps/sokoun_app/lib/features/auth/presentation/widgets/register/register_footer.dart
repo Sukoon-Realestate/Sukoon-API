@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/helpers/user_type/user_enum.dart';
-import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/auth/presentation/screens/login_screen.dart';
 
@@ -32,8 +30,6 @@ class _RegisterFooterState extends State<RegisterFooter> {
 
   @override
   Widget build(BuildContext context) {
-    final isTenant = UserTypeHelper.instance.currentUserType.isTenant;
-
     _loginRecognizer.onTap = () => Go.off(const LoginScreen());
     return Text.rich(
       TextSpan(
@@ -49,7 +45,7 @@ class _RegisterFooterState extends State<RegisterFooter> {
             text: LocaleKeys.login,
             recognizer: _loginRecognizer,
             style: TextStyle(
-              color: isTenant ? AppColors.sokoonTeal : AppColors.gold,
+              color: AppColors.tealOrGoldBasedRole,
               fontWeight: FontWeight.w800,
             ),
           ),
