@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:melos_core/config/res/config_imports.dart';
 
 class HomeAvatar extends StatelessWidget {
   const HomeAvatar({

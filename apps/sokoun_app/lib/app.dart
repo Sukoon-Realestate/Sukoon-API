@@ -7,7 +7,7 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/notification/inactivity_notification_service.dart';
 import 'package:melos_core/core/shared/route_observer.dart';
 import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
-import 'features/home/presentation/screens/tenant_home_screen.dart';
+import 'features/home/presentation/screens/owner_requests_screen.dart';
 
 class Sokoon extends StatefulWidget {
   const Sokoon({super.key});
@@ -54,7 +54,7 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
             supportedLocales: context.supportedLocales,
             locale: context.locale,
             navigatorKey: Go.navigatorKey,
-            home: TenantHomeScreen(),
+            home: const OwnerRequestsScreen(),
             // home: RoleSelectScreen(
             //   onContinue: (role) {
             //     if (role == UserType.tenant) {
