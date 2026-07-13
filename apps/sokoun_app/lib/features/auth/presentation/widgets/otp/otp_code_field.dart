@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/user_type/user_enum.dart';
+import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:pinput/pinput.dart';
 
 class OtpCodeField extends StatelessWidget {
@@ -18,6 +20,7 @@ class OtpCodeField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTenant = UserTypeHelper.instance.currentUserType.isTenant;
     final defaultTheme = PinTheme(
       width: 45.w,
       height: 58.h,
@@ -35,8 +38,8 @@ class OtpCodeField extends StatelessWidget {
     );
 
     final activeTheme = defaultTheme.copyDecorationWith(
-      color: AppColors.tealAlpha03,
-      border: Border.all(color: AppColors.sokoonTeal, width: 1.5),
+      color: isTenant? AppColors.tealAlpha07 : AppColors.goldAlpha15,
+      border: Border.all(color: isTenant? AppColors.teal : AppColors.gold, width: 1.5),
       borderRadius: BorderRadius.circular(12.r),
     );
 

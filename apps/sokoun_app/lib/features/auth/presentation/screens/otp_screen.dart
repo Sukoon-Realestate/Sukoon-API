@@ -4,6 +4,8 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/user_type/user_enum.dart';
+import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import '../widgets/otp/otp_code_field.dart';
@@ -61,6 +63,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isTenant = UserTypeHelper.instance.currentUserType.isTenant;
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
@@ -75,12 +78,12 @@ class _OtpScreenState extends State<OtpScreen> {
                 width: 64.r,
                 height: 64.r,
                 decoration: BoxDecoration(
-                  color: AppColors.tealAlpha07,
+                  color: isTenant? AppColors.tealAlpha07 : AppColors.goldAlpha15,
                   borderRadius: BorderRadius.circular(18.r),
                 ),
                 child: Icon(
                   Icons.mail_outline_rounded,
-                  color: AppColors.sokoonTeal,
+                  color: isTenant? AppColors.sokoonTeal : AppColors.gold,
                   size: 30.r,
                 ),
               ).centerWidget,
@@ -95,7 +98,7 @@ class _OtpScreenState extends State<OtpScreen> {
               8.szH,
               AppText(
                 widget.maskedEmail,
-                color: AppColors.sokoonTeal,
+                color: isTenant? AppColors.sokoonTeal : AppColors.gold,
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w700,
                 textAlign: TextAlign.center,
@@ -139,7 +142,7 @@ class _OtpScreenState extends State<OtpScreen> {
                 onTap: _isCodeComplete ? _confirm : null,
                 title: LocaleKeys.confirmLogin,
                 color: _isCodeComplete
-                    ? AppColors.sokoonTeal
+                    ? isTenant? AppColors.tealAlpha03 : AppColors.gold
                     : AppColors.sokoonMuted,
                 textColor: AppColors.white,
                 borderRadius: BorderRadius.circular(14.r),
@@ -163,7 +166,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   child: AppText(
                     LocaleKeys.resendCode,
                     color: _canResend
-                        ? AppColors.sokoonTeal
+                        ? isTenant? AppColors.tealAlpha03 : AppColors.gold
                         : AppColors.sokoonMuted,
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w700,

@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/user_type/user_enum.dart';
+import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class OtpResendTimer extends StatelessWidget {
@@ -21,6 +23,7 @@ class OtpResendTimer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTenant = UserTypeHelper.instance.currentUserType.isTenant;
     if (canResend) {
       return AppText(
         LocaleKeys.youCanResendCodeNow,
@@ -52,8 +55,8 @@ class OtpResendTimer extends StatelessWidget {
             children: [
               TextSpan(
                 text: '$seconds ${LocaleKeys.seconds}',
-                style: const TextStyle(
-                  color: AppColors.sokoonTeal,
+                style: TextStyle(
+                  color: isTenant? AppColors.teal : AppColors.gold,
                   fontWeight: FontWeight.w800,
                 ),
               ),
