@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:sokoun_app/features/home/data/models/tenant_search_content.dart';
 
+import '../widgets/tenant_search/imports.dart';
 import '../widgets/tenant_widgets/imports.dart';
 
-class TenantHomeScreen extends StatelessWidget {
-  const TenantHomeScreen({super.key});
+class TenantSearchScreen extends StatelessWidget {
+  const TenantSearchScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,33 +23,30 @@ class TenantHomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const TenantHeader(),
-                18.szH,
-                const HomeSearchBox(),
-                16.szH,
-                const TenantVisitBanner(),
-                18.szH,
-                HomeSectionHeader(
-                  title: 'مقترح ليك',
-                  actionTitle: 'عرض الكل',
-                  onActionTap: () {},
+                AppText(
+                  'ابحث عن سكن',
+                  color: AppColors.sokoonNavy,
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.w900,
+                  textAlign: TextAlign.right,
                 ),
+                14.szH,
+                const TenantSearchField(),
+                14.szH,
+                const SearchCategoryChips(
+                  categories: TenantSearchContent.categories,
+                ),
+                18.szH,
+                const SearchSectionTitle('مناطق مقترحة'),
                 10.szH,
-                const TenantPropertyCard(
-                  title: 'شقة مفروشة — مدينة نصر',
-                  rating: '4.8',
-                  area: '90م²',
-                  price: '6,500 ج/شهر',
-                  icon: Icons.apartment_rounded,
+                const SuggestedAreasGrid(
+                  areas: TenantSearchContent.suggestedAreas,
                 ),
-                12.szH,
-                const TenantPropertyCard(
-                  title: 'ستوديو التجمع الخامس',
-                  rating: '4.6',
-                  area: '55م²',
-                  price: '4,200 ج/شهر',
-                  icon: Icons.meeting_room_outlined,
-                ),
+                18.szH,
+                const SearchSectionTitle('بحثت عنها مؤخراً'),
+                6.szH,
+                for (final search in TenantSearchContent.recentSearches)
+                  RecentSearchRow(search: search),
                 24.szH,
               ],
             ),
@@ -59,7 +59,6 @@ class TenantHomeScreen extends StatelessWidget {
               HomeBottomNavItemData(
                 icon: Icons.home_outlined,
                 label: 'الرئيسية',
-                isActive: true,
               ),
               HomeBottomNavItemData(
                 icon: Icons.favorite_border_rounded,

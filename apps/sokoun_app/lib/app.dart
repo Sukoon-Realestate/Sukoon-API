@@ -7,7 +7,6 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/notification/inactivity_notification_service.dart';
 import 'package:melos_core/core/shared/route_observer.dart';
 import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
-import 'features/auth/presentation/screens/register_flow_screen.dart';
 import 'features/home/presentation/screens/tenant_home_screen.dart';
 
 class Sokoon extends StatefulWidget {
