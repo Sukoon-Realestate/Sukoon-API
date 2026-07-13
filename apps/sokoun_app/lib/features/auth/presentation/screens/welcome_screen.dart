@@ -8,7 +8,7 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:sokoun_app/features/auth/presentation/screens/login_screen.dart';
-import 'package:sokoun_app/features/auth/presentation/screens/register_screen.dart';
+import 'package:sokoun_app/features/auth/presentation/screens/register_flow_screen.dart';
 import '../../data/models/welcome.dart';
 import '../widgets/welcome/welcome_center_card.dart';
 
@@ -18,7 +18,9 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentRole = UserTypeHelper.instance.currentUserType;
-    final WelcomeScreenContent content = WelcomeScreenContent.fromRole(currentRole);
+    final WelcomeScreenContent content = WelcomeScreenContent.fromRole(
+      currentRole,
+    );
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
@@ -68,7 +70,7 @@ class WelcomeScreen extends StatelessWidget {
                       ..._buildFeatureCards(content.features),
                       22.szH,
                       DefaultButton(
-                        onTap: () => Go.to(const RegisterScreen()),
+                        onTap: () => Go.to(const RegisterFlowScreen()),
                         title: content.primaryButtonTitle,
                         color: AppColors.sokoonTeal,
                         textColor: AppColors.white,

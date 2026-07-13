@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/user_type/user_enum.dart';
+import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:sokoun_app/shared_widgets/shared_widgets.dart';
@@ -11,13 +13,8 @@ import '../widgets/register/register_footer.dart';
 import '../widgets/register/register_header.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({
-    super.key,
-    this.onLogin,
-    this.onCreateAccount,
-  });
+  const RegisterScreen({super.key, this.onCreateAccount});
 
-  final VoidCallback? onLogin;
   final void Function({
     required String fullName,
     required String phone,
@@ -63,6 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isTenant = UserTypeHelper.instance.currentUserType.isTenant;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: AppColors.scaffoldBackground,
@@ -108,7 +106,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         DefaultButton(
                           onTap: _submit,
                           title: LocaleKeys.createAccount,
-                          color: AppColors.sokoonTeal,
+                          color: isTenant
+                              ? AppColors.sokoonTeal
+                              : AppColors.gold,
                           textColor: AppColors.white,
                           borderRadius: BorderRadius.circular(14.r),
                           height: 52.h,

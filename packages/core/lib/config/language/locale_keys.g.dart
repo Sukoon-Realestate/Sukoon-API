@@ -355,11 +355,11 @@ abstract class LocaleKeys {
   static const String _doNotHaveAnAccount = 'do_not_have_an_account';
   static String get doNotHaveAnAccount => _doNotHaveAnAccount.tr();
 
-  static const String _newRegisteration = 'new_registeration';
-  static String get newRegisteration => _newRegisteration.tr();
-
   static const String _signUp = 'sign_up';
   static String get signUp => _signUp.tr();
+
+  static const String _newOwnerSigningUp = 'new_owner_signing_up';
+  static String get newOwnerSigningUp => _newOwnerSigningUp.tr();
 
   static const String _skip = 'skip';
   static String get skip => _skip.tr();
@@ -411,6 +411,9 @@ abstract class LocaleKeys {
 
   static const String _registerJourneySubtitle = 'register_journey_subtitle';
   static String get registerJourneySubtitle => _registerJourneySubtitle.tr();
+
+  static const String _createYourAccountToStartListingYourProperties = 'create_your_account_to_start_listing_your_properties';
+  static String get createYourAccountToStartListingYourProperties => _createYourAccountToStartListingYourProperties.tr();
 
   static const String _otpSentToEmail = 'otp_sent_to_email';
   static String get otpSentToEmail => _otpSentToEmail.tr();

@@ -34,7 +34,7 @@ class _RegisterFooterState extends State<RegisterFooter> {
   Widget build(BuildContext context) {
     final isTenant = UserTypeHelper.instance.currentUserType.isTenant;
 
-    _loginRecognizer.onTap = () => Go.offAll(const LoginScreen());
+    _loginRecognizer.onTap = () => Go.off(const LoginScreen());
     return Text.rich(
       TextSpan(
         text: '${LocaleKeys.alreadyHaveAnAccount}؟ ',

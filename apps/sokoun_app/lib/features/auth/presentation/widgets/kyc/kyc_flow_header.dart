@@ -20,6 +20,7 @@ class KycFlowHeader extends StatelessWidget {
         border: Border(bottom: BorderSide(color: AppColors.grayPale)),
       ),
       child: Row(
+        spacing: 10.w,
         children: [
           SokoonBackButton(
             onTap: onBack,

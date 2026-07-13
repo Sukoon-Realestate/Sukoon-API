@@ -113,9 +113,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         DefaultButton(
                           onTap: _submit,
                           title: LocaleKeys.login,
-                          color: isTenant
-                              ? AppColors.sokoonTeal
-                              : AppColors.gold,
+                          color: isTenant ?
+                          AppColors.sokoonTeal :
+                          AppColors.gold,
                           textColor: AppColors.white,
                           borderRadius: BorderRadius.circular(14.r),
                           height: 52.h,

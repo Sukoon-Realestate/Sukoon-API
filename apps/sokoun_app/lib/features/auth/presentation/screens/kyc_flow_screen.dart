@@ -5,26 +5,49 @@ import 'package:sokoun_app/features/auth/presentation/screens/kyc_intro_screen.d
 import 'package:sokoun_app/features/auth/presentation/screens/kyc_pending_screen.dart';
 import 'package:sokoun_app/features/auth/presentation/screens/kyc_upload_documents_screen.dart';
 
-class TenantKycFlowScreen extends StatefulWidget {
-  const TenantKycFlowScreen({
+class KycFlowScreen extends StatefulWidget {
+  const KycFlowScreen({
     super.key,
     this.role = UserType.tenant,
+    this.initialStep = 0,
     this.onBack,
+    this.onUploadDocuments,
     this.onStartSearch,
   });
 
   final UserType role;
+  final int initialStep;
   final VoidCallback? onBack;
+  final VoidCallback? onUploadDocuments;
   final VoidCallback? onStartSearch;
 
   @override
-  State<TenantKycFlowScreen> createState() => _TenantKycFlowScreenState();
+  State<KycFlowScreen> createState() => _KycFlowScreenState();
 }
 
-class _TenantKycFlowScreenState extends State<TenantKycFlowScreen> {
-  int _step = 0;
+class _KycFlowScreenState extends State<KycFlowScreen> {
+  late int _step;
+
+  @override
+  void initState() {
+    super.initState();
+    _step = widget.initialStep;
+  }
+
+  @override
+  void didUpdateWidget(covariant KycFlowScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.initialStep != widget.initialStep) {
+      _step = widget.initialStep;
+    }
+  }
 
   void _goToStep(int step) {
+    if (_step == step) {
+      return;
+    }
+
     setState(() {
       _step = step;
     });
@@ -35,7 +58,7 @@ class _TenantKycFlowScreenState extends State<TenantKycFlowScreen> {
     return switch (_step) {
       0 => KycIntroScreen(
         onBack: widget.onBack,
-        onUploadDocuments: () => _goToStep(1),
+        onUploadDocuments: widget.onUploadDocuments ?? () => _goToStep(1),
       ),
       1 => KycUploadDocumentsScreen(
         onBack: () => _goToStep(0),
