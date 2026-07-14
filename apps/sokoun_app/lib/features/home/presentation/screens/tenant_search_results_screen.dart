@@ -6,6 +6,8 @@ import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/home/data/models/tenant_search_result_content.dart';
 
 import '../widgets/tenant_search_results/imports.dart';
+import 'tenant_filter_screen.dart';
+import 'tenant_property_details_screen.dart';
 
 class TenantSearchResultsScreen extends StatefulWidget {
   const TenantSearchResultsScreen({
@@ -60,31 +62,28 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
     });
   }
 
-  void _showFiltersSheet() {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: AppColors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(22.r)),
-      ),
-      builder: (context) {
-        return ResultsFilterSheet(
-          groups: TenantSearchResultContent.filterGroups,
-          selectedFilters: _filters.selectedFilters,
-          onClear: () {
-            setState(() {
-              _filters = _filters.copyWith(selectedFilters: {});
-            });
-          },
-          onApply: (selectedFilters) {
-            setState(() {
-              _filters = _filters.copyWith(selectedFilters: selectedFilters);
-            });
-            Navigator.of(context).pop();
-          },
+  Future<void> _openFilters() async {
+    final updatedFilters = await Navigator.of(context)
+        .push<TenantSearchResultsFilterState>(
+          MaterialPageRoute(
+            builder: (_) => TenantFilterScreen(initialFilters: _filters),
+          ),
         );
-      },
+    if (updatedFilters == null) {
+      return;
+    }
+
+    setState(() {
+      _filters = updatedFilters;
+      _queryController.text = updatedFilters.query;
+    });
+  }
+
+  void _openDetails(SearchResultContent item) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => TenantPropertyDetailsScreen(item: item),
+      ),
     );
   }
 
@@ -104,7 +103,7 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
                 controller: _queryController,
                 onChanged: _updateQuery,
                 onSubmitted: _updateQuery,
-                onFiltersTap: _showFiltersSheet,
+                onFiltersTap: _openFilters,
               ),
               ActiveFiltersBar(
                 filters: _filters.activeFilters,
@@ -123,11 +122,14 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
               ),
               Expanded(
                 child: results.isEmpty
-                    ? const _EmptyResultsState()
+                    ? const EmptyResultsState()
                     : ListView.separated(
                         padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 18.h),
                         itemBuilder: (context, index) {
-                          return SearchResultCard(item: results[index]);
+                          return SearchResultCard(
+                            item: results[index],
+                            onDetailsTap: () => _openDetails(results[index]),
+                          );
                         },
                         separatorBuilder: (context, index) => 14.szH,
                         itemCount: results.length,
@@ -135,54 +137,6 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _EmptyResultsState extends StatelessWidget {
-  const _EmptyResultsState();
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 28.w),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 78.r,
-              height: 78.r,
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                color: AppColors.tealAlpha07,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.search_off_rounded,
-                color: AppColors.sokoonTeal,
-                size: 34.r,
-              ),
-            ),
-            14.szH,
-            AppText(
-              'لا توجد نتائج مطابقة',
-              color: AppColors.sokoonNavy,
-              fontSize: 17.sp,
-              fontWeight: FontWeight.w900,
-              textAlign: TextAlign.center,
-            ),
-            6.szH,
-            AppText(
-              'جرّب تغيير البحث أو إزالة بعض الفلاتر',
-              color: AppColors.sokoonGray,
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w500,
-              textAlign: TextAlign.center,
-            ),
-          ],
         ),
       ),
     );

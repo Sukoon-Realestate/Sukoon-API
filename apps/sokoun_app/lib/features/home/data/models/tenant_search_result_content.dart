@@ -80,7 +80,21 @@ class SearchResultContent {
   }
 
   bool matchesFilter(String filter) {
-    return propertyType == filter ||
+    final minPrice = _priceValue(filter, 'من ');
+    if (minPrice != null) {
+      return monthlyPrice >= minPrice;
+    }
+
+    final maxPrice = _priceValue(filter, 'إلى ');
+    if (maxPrice != null) {
+      return monthlyPrice <= maxPrice;
+    }
+
+    return (filter == 'موثّق' && isVerified) ||
+        (filter == 'إثبات ملكية' && isVerified) ||
+        rooms == filter ||
+        bathrooms == filter ||
+        propertyType == filter ||
         district == filter ||
         location.contains(filter) ||
         rentalTerm == filter ||
@@ -88,6 +102,13 @@ class SearchResultContent {
         smokingPolicy == filter ||
         tags.contains(filter) ||
         amenities.contains(filter);
+  }
+
+  int? _priceValue(String filter, String prefix) {
+    if (!filter.startsWith(prefix)) {
+      return null;
+    }
+    return int.tryParse(filter.replaceFirst(prefix, '').trim());
   }
 }
 

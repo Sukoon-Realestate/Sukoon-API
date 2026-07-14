@@ -11,9 +11,10 @@ import 'result_image_header.dart';
 import 'tags_row.dart';
 
 class SearchResultCard extends StatelessWidget {
-  const SearchResultCard({super.key, required this.item});
+  const SearchResultCard({super.key, required this.item, this.onDetailsTap});
 
   final SearchResultContent item;
+  final VoidCallback? onDetailsTap;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +71,7 @@ class SearchResultCard extends StatelessWidget {
                 Row(
                   textDirection: TextDirection.ltr,
                   children: [
-                    const DetailsButton(),
+                    DetailsButton(onTap: onDetailsTap),
                     const Spacer(),
                     Row(
                       children: [

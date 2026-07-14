@@ -7,7 +7,12 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/notification/inactivity_notification_service.dart';
 import 'package:melos_core/core/shared/route_observer.dart';
 import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
-import 'features/home/presentation/screens/owner_add_property_flow_screen.dart';
+import 'package:sokoun_app/features/home/data/models/tenant_property_content.dart';
+import 'package:sokoun_app/features/home/presentation/screens/tenant_book_visit_screen.dart';
+import 'package:sokoun_app/features/home/presentation/screens/tenant_filter_screen.dart';
+import 'package:sokoun_app/features/home/presentation/screens/tenant_property_details_screen.dart';
+import 'features/home/data/models/tenant_search_result_content.dart';
+import 'features/home/presentation/screens/tenant_search_results_screen.dart';
 
 class Sokoon extends StatefulWidget {
   const Sokoon({super.key});
@@ -54,7 +59,8 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
             supportedLocales: context.supportedLocales,
             locale: context.locale,
             navigatorKey: Go.navigatorKey,
-            home: const OwnerAddPropertyFlowScreen(),
+            home: TenantPropertyDetailsScreen(),
+            // home: TenantBookVisitScreen(property: TenantPropertyDetailsContent.fromSearchResult(SearchResultContent(title: '', district: '', location: '', rooms: '', bathrooms: '', area: '', tags: [], price: '', monthlyPrice: 100, rentalTerm: '', tenantType: '', smokingPolicy: '', amenities: [], photoCount: 8, imageColor: Colors.white, imageColorEnd: Colors.black, isVerified: true, propertyType: ''))),
             // home: RoleSelectScreen(
             //   onContinue: (role) {
             //     if (role == UserType.tenant) {
