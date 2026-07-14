@@ -8,9 +8,16 @@ import 'active_filter_chip.dart';
 import 'clear_filters_chip.dart';
 
 class ActiveFiltersBar extends StatelessWidget {
-  const ActiveFiltersBar({super.key, required this.filters});
+  const ActiveFiltersBar({
+    super.key,
+    required this.filters,
+    this.onFilterRemoved,
+    this.onClearAll,
+  });
 
   final List<ActiveFilterContent> filters;
+  final ValueChanged<ActiveFilterContent>? onFilterRemoved;
+  final VoidCallback? onClearAll;
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +34,15 @@ class ActiveFiltersBar extends StatelessWidget {
           textDirection: TextDirection.ltr,
           children: [
             for (final filter in filters) ...[
-              ActiveFilterChip(filter: filter),
+              ActiveFilterChip(
+                filter: filter,
+                onRemove: onFilterRemoved == null
+                    ? null
+                    : () => onFilterRemoved!(filter),
+              ),
               8.szW,
             ],
-            const ClearFiltersChip(),
+            if (filters.isNotEmpty) ClearFiltersChip(onTap: onClearAll),
           ],
         ),
       ),

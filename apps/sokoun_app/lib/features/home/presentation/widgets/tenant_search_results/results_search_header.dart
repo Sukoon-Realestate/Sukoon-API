@@ -2,10 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
-import 'package:melos_core/core/widgets/app_text.dart';
 
 class ResultsSearchHeader extends StatelessWidget {
-  const ResultsSearchHeader({super.key});
+  const ResultsSearchHeader({
+    super.key,
+    this.controller,
+    this.onChanged,
+    this.onSubmitted,
+    this.onFiltersTap,
+  });
+
+  final TextEditingController? controller;
+  final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onSubmitted;
+  final VoidCallback? onFiltersTap;
 
   @override
   Widget build(BuildContext context) {
@@ -36,12 +46,27 @@ class ResultsSearchHeader extends StatelessWidget {
                   ),
                   8.szW,
                   Expanded(
-                    child: AppText(
-                      'شقة مفروشة مدينة نصر…',
-                      color: AppColors.sokoonGray,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w400,
-                      overflow: TextOverflow.ellipsis,
+                    child: TextField(
+                      controller: controller,
+                      onChanged: onChanged,
+                      onSubmitted: onSubmitted,
+                      textInputAction: TextInputAction.search,
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                        color: AppColors.sokoonNavy,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      decoration: InputDecoration(
+                        isCollapsed: true,
+                        border: InputBorder.none,
+                        hintText: 'شقة مفروشة مدينة نصر…',
+                        hintStyle: TextStyle(
+                          color: AppColors.sokoonGray,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -49,18 +74,22 @@ class ResultsSearchHeader extends StatelessWidget {
             ),
           ),
           10.szW,
-          Container(
-            width: 44.r,
-            height: 44.r,
-            decoration: BoxDecoration(
-              color: AppColors.tealAlpha07,
-              borderRadius: BorderRadius.circular(14.r),
-              border: Border.all(color: AppColors.tealAlpha19),
-            ),
-            child: Icon(
-              Icons.tune_rounded,
-              color: AppColors.sokoonTeal,
-              size: 21.r,
+          GestureDetector(
+            onTap: onFiltersTap,
+            behavior: HitTestBehavior.opaque,
+            child: Container(
+              width: 44.r,
+              height: 44.r,
+              decoration: BoxDecoration(
+                color: AppColors.tealAlpha07,
+                borderRadius: BorderRadius.circular(14.r),
+                border: Border.all(color: AppColors.tealAlpha19),
+              ),
+              child: Icon(
+                Icons.tune_rounded,
+                color: AppColors.sokoonTeal,
+                size: 21.r,
+              ),
             ),
           ),
         ],

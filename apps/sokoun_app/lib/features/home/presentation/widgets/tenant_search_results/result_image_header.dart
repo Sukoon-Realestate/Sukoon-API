@@ -57,7 +57,7 @@ class ResultImageHeader extends StatelessWidget {
                 borderRadius: BorderRadius.circular(7.r),
               ),
               child: AppText(
-                '8 صور',
+                '${item.photoCount} صور',
                 color: AppColors.white,
                 fontSize: 10.sp,
                 fontWeight: FontWeight.w600,

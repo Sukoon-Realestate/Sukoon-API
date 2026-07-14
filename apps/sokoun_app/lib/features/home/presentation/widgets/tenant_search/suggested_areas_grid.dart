@@ -5,9 +5,16 @@ import 'package:sokoun_app/features/home/data/models/tenant_search_content.dart'
 import 'suggested_area_card.dart';
 
 class SuggestedAreasGrid extends StatelessWidget {
-  const SuggestedAreasGrid({super.key, required this.areas});
+  const SuggestedAreasGrid({
+    super.key,
+    required this.areas,
+    this.selectedArea,
+    this.onAreaSelected,
+  });
 
   final List<SuggestedAreaContent> areas;
+  final String? selectedArea;
+  final ValueChanged<SuggestedAreaContent>? onAreaSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +24,15 @@ class SuggestedAreasGrid extends StatelessWidget {
           textDirection: TextDirection.ltr,
           children: [
             for (int index = 0; index < 3; index++) ...[
-              Expanded(child: SuggestedAreaCard(area: areas[index])),
+              Expanded(
+                child: SuggestedAreaCard(
+                  area: areas[index],
+                  isSelected: areas[index].title == selectedArea,
+                  onTap: onAreaSelected == null
+                      ? null
+                      : () => onAreaSelected!(areas[index]),
+                ),
+              ),
               if (index < 2) 10.szW,
             ],
           ],
@@ -27,7 +42,15 @@ class SuggestedAreasGrid extends StatelessWidget {
           textDirection: TextDirection.ltr,
           children: [
             for (int index = 3; index < 6; index++) ...[
-              Expanded(child: SuggestedAreaCard(area: areas[index])),
+              Expanded(
+                child: SuggestedAreaCard(
+                  area: areas[index],
+                  isSelected: areas[index].title == selectedArea,
+                  onTap: onAreaSelected == null
+                      ? null
+                      : () => onAreaSelected!(areas[index]),
+                ),
+              ),
               if (index < 5) 10.szW,
             ],
           ],

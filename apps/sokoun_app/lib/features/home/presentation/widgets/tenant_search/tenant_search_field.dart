@@ -5,7 +5,18 @@ import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class TenantSearchField extends StatelessWidget {
-  const TenantSearchField({super.key});
+  const TenantSearchField({
+    super.key,
+    this.controller,
+    this.onChanged,
+    this.onSubmitted,
+    this.onSearchTap,
+  });
+
+  final TextEditingController? controller;
+  final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onSubmitted;
+  final VoidCallback? onSearchTap;
 
   @override
   Widget build(BuildContext context) {
@@ -23,25 +34,44 @@ class TenantSearchField extends StatelessWidget {
           Icon(Icons.search_rounded, color: AppColors.sokoonMuted, size: 20.r),
           10.szW,
           Expanded(
-            child: AppText(
-              'مدينة نصر، القاهرة…',
-              color: AppColors.sokoonMuted,
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w400,
-              overflow: TextOverflow.ellipsis,
+            child: TextField(
+              controller: controller,
+              onChanged: onChanged,
+              onSubmitted: onSubmitted,
+              textInputAction: TextInputAction.search,
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                color: AppColors.sokoonNavy,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+              ),
+              decoration: InputDecoration(
+                isCollapsed: true,
+                border: InputBorder.none,
+                hintText: 'مدينة نصر، القاهرة…',
+                hintStyle: TextStyle(
+                  color: AppColors.sokoonMuted,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
             ),
           ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              color: AppColors.mintLight,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: AppText(
-              'بحث',
-              color: AppColors.sokoonTeal,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w800,
+          GestureDetector(
+            onTap: onSearchTap,
+            behavior: HitTestBehavior.opaque,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+              decoration: BoxDecoration(
+                color: AppColors.mintLight,
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: AppText(
+                'بحث',
+                color: AppColors.sokoonTeal,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ),
         ],

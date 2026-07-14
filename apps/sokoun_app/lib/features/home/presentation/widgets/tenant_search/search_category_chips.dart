@@ -5,9 +5,14 @@ import 'package:sokoun_app/features/home/data/models/tenant_search_content.dart'
 import 'search_chip.dart';
 
 class SearchCategoryChips extends StatelessWidget {
-  const SearchCategoryChips({super.key, required this.categories});
+  const SearchCategoryChips({
+    super.key,
+    required this.categories,
+    this.onCategorySelected,
+  });
 
   final List<SearchCategoryContent> categories;
+  final ValueChanged<SearchCategoryContent>? onCategorySelected;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +22,12 @@ class SearchCategoryChips extends StatelessWidget {
         textDirection: TextDirection.ltr,
         children: [
           for (int index = 0; index < categories.length; index++) ...[
-            SearchChip(category: categories[index]),
+            SearchChip(
+              category: categories[index],
+              onTap: onCategorySelected == null
+                  ? null
+                  : () => onCategorySelected!(categories[index]),
+            ),
             if (index < categories.length - 1) 8.szW,
           ],
         ],

@@ -31,6 +31,15 @@ class RecentSearchContent {
 }
 
 abstract final class TenantSearchContent {
+  static const categoryLabels = [
+    'الكل',
+    'شقة',
+    'ستوديو',
+    'غرفة',
+    'دوبلكس',
+    'فيلا',
+  ];
+
   static const categories = [
     SearchCategoryContent(label: 'الكل', isSelected: true),
     SearchCategoryContent(label: 'شقة'),
@@ -90,4 +99,82 @@ abstract final class TenantSearchContent {
     RecentSearchContent(title: 'ستوديو التجمع الخامس'),
     RecentSearchContent(title: 'غرفة في الزمالك'),
   ];
+
+  static List<SearchCategoryContent> categoriesFor(String selectedCategory) {
+    return [
+      for (final label in categoryLabels)
+        SearchCategoryContent(
+          label: label,
+          isSelected: label == selectedCategory,
+        ),
+    ];
+  }
+}
+
+class TenantSearchFormState {
+  const TenantSearchFormState({
+    required this.query,
+    required this.selectedCategory,
+    required this.selectedArea,
+    required this.recentSearches,
+  });
+
+  factory TenantSearchFormState.initial() {
+    return const TenantSearchFormState(
+      query: 'مدينة نصر، القاهرة',
+      selectedCategory: 'الكل',
+      selectedArea: 'مدينة نصر',
+      recentSearches: TenantSearchContent.recentSearches,
+    );
+  }
+
+  final String query;
+  final String selectedCategory;
+  final String? selectedArea;
+  final List<RecentSearchContent> recentSearches;
+
+  bool get canSearch {
+    return query.trim().isNotEmpty ||
+        selectedCategory != 'الكل' ||
+        selectedArea != null;
+  }
+
+  Set<String> get resultFilters {
+    return {
+      if (selectedCategory != 'الكل') selectedCategory,
+      if (selectedArea != null) selectedArea!,
+    };
+  }
+
+  TenantSearchFormState copyWith({
+    String? query,
+    String? selectedCategory,
+    String? selectedArea,
+    bool clearSelectedArea = false,
+    List<RecentSearchContent>? recentSearches,
+  }) {
+    return TenantSearchFormState(
+      query: query ?? this.query,
+      selectedCategory: selectedCategory ?? this.selectedCategory,
+      selectedArea: clearSelectedArea
+          ? null
+          : selectedArea ?? this.selectedArea,
+      recentSearches: recentSearches ?? this.recentSearches,
+    );
+  }
+
+  TenantSearchFormState withRecentSearch(String title) {
+    final normalizedTitle = title.trim();
+    if (normalizedTitle.isEmpty) {
+      return this;
+    }
+
+    final updatedRecent = [
+      RecentSearchContent(title: normalizedTitle),
+      for (final search in recentSearches)
+        if (search.title != normalizedTitle) search,
+    ].take(5).toList();
+
+    return copyWith(recentSearches: updatedRecent);
+  }
 }

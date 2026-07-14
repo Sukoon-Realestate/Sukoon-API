@@ -6,9 +6,10 @@ import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/home/data/models/tenant_search_result_content.dart';
 
 class ActiveFilterChip extends StatelessWidget {
-  const ActiveFilterChip({super.key, required this.filter});
+  const ActiveFilterChip({super.key, required this.filter, this.onRemove});
 
   final ActiveFilterContent filter;
+  final VoidCallback? onRemove;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,15 @@ class ActiveFilterChip extends StatelessWidget {
             fontWeight: FontWeight.w600,
           ),
           5.szW,
-          Icon(Icons.close_rounded, color: AppColors.sokoonTeal, size: 14.r),
+          GestureDetector(
+            onTap: onRemove,
+            behavior: HitTestBehavior.opaque,
+            child: Icon(
+              Icons.close_rounded,
+              color: AppColors.sokoonTeal,
+              size: 14.r,
+            ),
+          ),
         ],
       ),
     );
