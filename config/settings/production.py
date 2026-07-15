@@ -10,7 +10,7 @@ local_env_file = path.join(BASE_DIR, ".envs", ".env.local")
 if path.isfile(local_env_file):
     load_dotenv(local_env_file)
 
-DEBUG = getenv("DEBUG", "False") == "True"
+DEBUG = getenv("DEBUG", "True")
 
 SECRET_KEY = getenv("SECRET_KEY")
 
