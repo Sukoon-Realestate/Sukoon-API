@@ -1,3 +1,5 @@
+from typing import Optional
+
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import BaseUserManager
 from django.core.exceptions import ValidationError
@@ -13,7 +15,7 @@ def validate_email_address(email: str):
 
 
 class UserManager(BaseUserManager):
-    def _create_user(self, email: str, password: str | None, **extra_fields):
+    def _create_user(self, email: str, password: Optional[str], **extra_fields):
         if not email:
             raise ValidationError(_("An email is required."))
         email = self.normalize_email(email)
@@ -23,12 +25,12 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_user(self, email: str, password: str | None = None, **extra_fields):
+    def create_user(self, email: str, password: Optional[str] = None, **extra_fields):
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
         return self._create_user(email, password, **extra_fields)
 
-    def create_superuser(self, email: str, password: str | None = None, **extra_fields):
+    def create_superuser(self, email: str, password: Optional[str] = None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
 

@@ -16,6 +16,9 @@ migrate:
 collectstatic:
 	pipenv run python manage.py collectstatic --no-input --clear
 
+build:
+	pipenv install && pipenv run python manage.py collectstatic --no-input
+
 superuser:
 	pipenv run python manage.py createsuperuser
 

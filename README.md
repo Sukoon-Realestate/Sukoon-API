@@ -27,8 +27,8 @@ Detailed documentation for the project structure, API design, and rules:
 
 ### Prerequisites
 
-- Python 3.12+
-- Pipenv (or standard virtualenv using `requirements.txt`)
+- Python 3.11+
+- Pipenv
 - PostgreSQL database
 
 ### Installation & Run

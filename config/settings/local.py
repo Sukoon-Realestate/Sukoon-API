@@ -16,7 +16,7 @@ SECRET_KEY = getenv("SECRET_KEY", "zymJqYSgQrxHLGS1MbVPB043BbXZPlBDHAkcIVPuskhiF
 
 SITE_NAME = getenv("SITE_NAME")
 
-ADMIN_URL = getenv("DJANGO_ADMIN_URL")
+ADMIN_URL = getenv("DJANGO_ADMIN_URL", "admin/")
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 

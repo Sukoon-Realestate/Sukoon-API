@@ -198,15 +198,16 @@ REST_FRAMEWORK = {
 
 
 SIMPLE_JWT = {
-    "SIGNING_KEY": getenv(
-        "SIGNING_KEY"
-    ),  # ? secret crypt-key, used to sign a JWT to ensure it's authenticity.
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=2),
     "ROTATE_REFRESH_TOKENS": True,  # ? return new refresh when the old one is used
     "USER_ID_FIELD": "id",
     "USER_ID_CLAIM": "user_id",  # ? the claim used in generated tokens, which will be used to store user identifiers.
 }
+
+_signing_key = getenv("SIGNING_KEY")
+if _signing_key:
+    SIMPLE_JWT["SIGNING_KEY"] = _signing_key  # ? secret crypt-key, used to sign a JWT to ensure it's authenticity.
 
 
 ## Djoser Settings
