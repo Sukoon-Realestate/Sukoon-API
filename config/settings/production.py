@@ -10,9 +10,11 @@ local_env_file = path.join(BASE_DIR, ".envs", ".env.local")
 if path.isfile(local_env_file):
     load_dotenv(local_env_file)
 
-DEBUG = True
+DEBUG = getenv("DEBUG", "False") == "True"
 
 SECRET_KEY = getenv("SECRET_KEY")
+
+ADMIN_URL = getenv("DJANGO_ADMIN_URL", "admin/")
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
@@ -24,7 +26,7 @@ DEFAULT_FROM_EMAIL = getenv("DEFAULT_FROM_EMAIL")
 
 DOMAIN = getenv("DOMAIN")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = getenv("ALLOWED_HOSTS", "").split(",") if getenv("ALLOWED_HOSTS") else []
 
 ADMINS = [
     ("Zeyad Mohammed Salama", "zeyadslama23@gmail.com"),
