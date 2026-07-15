@@ -28,6 +28,7 @@ python-dotenv==1.0.1
 setuptools==69.5.1
 phonenumbers==8.13.32
 colorlog==6.8.2
+whitenoise==6.7.0
 
 # Real-time / WebSockets
 channels==4.3.2
