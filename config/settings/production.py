@@ -26,7 +26,7 @@ DEFAULT_FROM_EMAIL = getenv("DEFAULT_FROM_EMAIL")
 
 DOMAIN = getenv("DOMAIN")
 
-ALLOWED_HOSTS = getenv("ALLOWED_HOSTS", "*").split(",") if getenv("ALLOWED_HOSTS") else []
+ALLOWED_HOSTS = getenv("ALLOWED_HOSTS", "*").split(",")
 
 ADMINS = [
     ("Zeyad Mohammed Salama", "zeyadslama23@gmail.com"),
