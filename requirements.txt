@@ -19,7 +19,6 @@ drf-yasg==1.21.15
 
 # Database
 psycopg2-binary==2.9.9
-psycopg2==2.9.9
 
 # Image Processing
 pillow==10.2.0
@@ -52,6 +51,3 @@ pytest==8.3.5
 pytest-django==4.9.0
 pytest-cov==6.0.0
 pytest-asyncio==0.23.7
-
-
-AQ.Ab8RN6J1SwdZlZEDZZJRGnyK69H0olbqzLlZH89R9mW9ITtKHA
