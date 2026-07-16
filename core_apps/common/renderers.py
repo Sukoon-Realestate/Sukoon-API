@@ -32,7 +32,13 @@ class GenericJsonRenderer(JSONRenderer):
 
         status_code = response.status_code
 
-        errors = data.get("errors", None)
+        if data is None:
+            return b""
+
+        if isinstance(data, list):
+            errors = None
+        else:
+            errors = data.get("errors", None)
 
         if errors is not None:
             return super(GenericJsonRenderer, self).render(data)

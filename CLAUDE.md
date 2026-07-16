@@ -1,3 +1,11 @@
+# Project Guidelines
+
+## Command Guide
+- **Run Dev Server**: `pipenv run uvicorn config.asgi:application --reload --host 127.0.0.1 --port 8000`
+- **Run Tests**: `PIPENV_DONT_LOAD_ENV=1 DJANGO_SETTINGS_MODULE=config.settings.test pipenv run pytest`
+- **Generate Migrations**: `pipenv run python manage.py makemigrations`
+- **Apply Migrations**: `pipenv run python manage.py migrate`
+
 # Project Rules
 
 ## Code Quality

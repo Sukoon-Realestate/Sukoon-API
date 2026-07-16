@@ -28,7 +28,12 @@ DJANGO_APPS = [
     "django.contrib.sites",  # ? allows to manage multiple domains within a single django project
 ]
 
-LOCAL_APPS = ["core_apps.common", "core_apps.users", "core_apps.profiles"]
+LOCAL_APPS = [
+    "core_apps.common",
+    "core_apps.users",
+    "core_apps.profiles",
+    "core_apps.properties",
+]
 
 THIRD_PARTY_APPS = [
     "rest_framework",

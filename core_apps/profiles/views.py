@@ -6,16 +6,11 @@ from django.contrib.auth import get_user_model
 from rest_framework import filters, generics
 from rest_framework.pagination import PageNumberPagination
 from core_apps.common.renderers import GenericJsonRenderer
+from core_apps.common.pagination import StandardResultsSetPagination
 from .models import Profile
 from .serializers import ProfileSerializer, UpdateProfileSerializer
 
 User = get_user_model()
-
-
-class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 9
-    page_size_query_param = "page_size"
-    max_page_size = 100
 
 
 class ProfileListAPIView(generics.ListAPIView):
