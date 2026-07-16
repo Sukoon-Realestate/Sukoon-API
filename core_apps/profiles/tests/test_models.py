@@ -26,6 +26,7 @@ class TestProfileModel:
 
     def test_profile_kyc_fields_default(self, user):
         assert user.profile.national_id == ""
+        assert not user.profile.avatar
         assert not user.profile.id_face
         assert not user.profile.id_back
         assert not user.profile.confirmation_selfi

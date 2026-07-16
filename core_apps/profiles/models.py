@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from core_apps.common.models import TimeStampedModel
+from cloudinary.models import CloudinaryField
 
 User = get_user_model()
 
@@ -18,17 +19,29 @@ class Profile(TimeStampedModel):
         _("Gender"), max_length=6, choices=Gender.choices, default=Gender.MALE
     )
     birth_date = models.DateField(_("Birth Date"), null=True, blank=True)
-    id_face = models.ImageField(
-        _("ID Face"), upload_to="profile_documents/id_face/", null=True, blank=True
-    )
-    id_back = models.ImageField(
-        _("ID Back"), upload_to="profile_documents/id_back/", null=True, blank=True
-    )
-    confirmation_selfi = models.ImageField(
-        _("Confirmation Selfie"),
-        upload_to="profile_documents/selfie/",
+    avatar = CloudinaryField(
+        folder="profile_documents/avatar/",
         null=True,
         blank=True,
+        verbose_name=_("Avatar"),
+    )
+    id_face = CloudinaryField(
+        folder="profile_documents/id_face/",
+        null=True,
+        blank=True,
+        verbose_name=_("ID Face"),
+    )
+    id_back = CloudinaryField(
+        folder="profile_documents/id_back/",
+        null=True,
+        blank=True,
+        verbose_name=_("ID Back"),
+    )
+    confirmation_selfi = CloudinaryField(
+        folder="profile_documents/selfie/",
+        null=True,
+        blank=True,
+        verbose_name=_("Confirmation Selfie"),
     )
     national_id = models.CharField(
         _("National ID"), max_length=50, blank=True, default=""

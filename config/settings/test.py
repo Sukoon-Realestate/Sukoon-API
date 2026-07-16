@@ -33,3 +33,12 @@ SIMPLE_JWT = {
 
 # ? In-memory layer keeps consumer tests hermetic (no Redis dependency in CI)
 CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
+
+# Dummy Cloudinary config for tests to allow URL generation locally
+import cloudinary
+cloudinary.config(
+    cloud_name="test_cloud",
+    api_key="test_key",
+    api_secret="test_secret",
+)
+

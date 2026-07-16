@@ -40,6 +40,7 @@ THIRD_PARTY_APPS = [
     "taggit",
     "django_filters",
     "django_extensions",
+    "cloudinary",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS + ["channels"]
@@ -274,4 +275,20 @@ APPLE_CLIENT_IDS = [c.strip() for c in getenv("APPLE_CLIENT_IDS", "").split(",")
 APPLE_DEV_PRIVATE_KEY_PATH = getenv("APPLE_DEV_PRIVATE_KEY_PATH", "").strip()
 
 FACEBOOK_APP_ID = getenv("FACEBOOK_APP_ID", "").strip()
+
+
+# Cloudinary Settings
+import cloudinary
+
+CLOUDINARY_URL = getenv("CLOUDINARY_URL")
+if CLOUDINARY_URL:
+    cloudinary.config(cloudinary_url=CLOUDINARY_URL)
+else:
+    cloudinary.config(
+        cloud_name=getenv("CLOUDINARY_CLOUD_NAME"),
+        api_key=getenv("CLOUDINARY_API_KEY"),
+        api_secret=getenv("CLOUDINARY_API_SECRET"),
+        secure=True,
+    )
+
 
