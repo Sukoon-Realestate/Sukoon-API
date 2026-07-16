@@ -53,3 +53,32 @@ class CustomUserSerializer(UserSerializer):
             "date_joined",
         ]
         read_only_fields = ["id", "email", "date_joined"]
+
+
+class GoogleAuthSerializer(serializers.Serializer):
+    token = serializers.CharField(
+        error_messages={
+            "required": "Google ID token is required.",
+            "blank": "Google ID token cannot be blank.",
+        }
+    )
+
+
+class AppleAuthSerializer(serializers.Serializer):
+    token = serializers.CharField(
+        error_messages={
+            "required": "Apple identity token is required.",
+            "blank": "Apple identity token cannot be blank.",
+        }
+    )
+    first_name = serializers.CharField(required=False, allow_blank=True, default="")
+    last_name = serializers.CharField(required=False, allow_blank=True, default="")
+
+
+class FacebookAuthSerializer(serializers.Serializer):
+    token = serializers.CharField(
+        error_messages={
+            "required": "Facebook access token is required.",
+            "blank": "Facebook access token cannot be blank.",
+        }
+    )

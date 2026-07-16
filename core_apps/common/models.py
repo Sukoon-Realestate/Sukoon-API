@@ -2,10 +2,8 @@ from django.db import IntegrityError, models
 import uuid
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-
-User = get_user_model()
 
 
 class TimeStampedModel(models.Model):
@@ -26,7 +24,7 @@ class ContentView(TimeStampedModel):
     object_id = models.PositiveIntegerField(_("Object ID"))
     content_object = GenericForeignKey("content_type", "object_id")
     user = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         verbose_name=_("Content Views"),
         on_delete=models.SET_NULL,
         null=True,
@@ -52,7 +50,7 @@ class ContentView(TimeStampedModel):
         return f"{self.content_type} viewed by {viewer} from ip {self.viewer_ip}"
 
     @classmethod
-    def record_view(cls, content_object, user: User, viewer_ip: str) -> None:
+    def record_view(cls, content_object, user: "User", viewer_ip: str) -> None:
         content_type = ContentType.objects.get_for_model(content_object)
 
         try:

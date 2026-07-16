@@ -259,3 +259,16 @@ AUTHENTICATION_BACKENDS = [
     "social_core.backends.google.GoogleOAuth2",
     "django.contrib.auth.backends.ModelBackend",
 ]
+
+
+# * Custom Social Auth Settings (Google, Apple, Facebook)
+GOOGLE_CLIENT_IDS = [c.strip() for c in getenv("GOOGLE_CLIENT_IDS", "").split(",") if c.strip()]
+_google_client_id_single = getenv("GOOGLE_CLIENT_ID")
+if _google_client_id_single and _google_client_id_single not in GOOGLE_CLIENT_IDS:
+    GOOGLE_CLIENT_IDS.append(_google_client_id_single)
+
+APPLE_CLIENT_IDS = [c.strip() for c in getenv("APPLE_CLIENT_IDS", "").split(",") if c.strip()]
+APPLE_DEV_PRIVATE_KEY_PATH = getenv("APPLE_DEV_PRIVATE_KEY_PATH", "").strip()
+
+FACEBOOK_APP_ID = getenv("FACEBOOK_APP_ID", "").strip()
+

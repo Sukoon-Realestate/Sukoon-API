@@ -4,6 +4,9 @@ from .views import (
     CustomTokenObtainPairView,
     CustomTokenRefreshView,
     LogoutAPIView,
+    GoogleAuthView,
+    AppleAuthView,
+    FacebookAuthView,
 )
 
 
@@ -16,4 +19,7 @@ urlpatterns = [
     path("login/", CustomTokenObtainPairView.as_view(), name="login"),
     path("refresh/", CustomTokenRefreshView.as_view(), name="refresh"),
     path("logout/", LogoutAPIView.as_view()),
+    path("google/", GoogleAuthView.as_view(), name="google-login"),
+    path("apple/", AppleAuthView.as_view(), name="apple-login"),
+    path("facebook/", FacebookAuthView.as_view(), name="facebook-login"),
 ]
