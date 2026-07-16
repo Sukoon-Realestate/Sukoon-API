@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/foundation.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -18,6 +19,9 @@ import 'package:melos_core/core/shared/bloc_observer.dart';
 import 'package:melos_core/core/widgets/exeption_view.dart';
 import 'package:sokoun_app/app.dart';
 
+import 'firebase_options.dart' as dev;
+import 'firebase_options_dev.dart' as prod;
+
 void main() async {
   Helpers.changeStatusbarColor(statusBarColor: AppColors.white);
   Bloc.observer = AppBlocObserver();
@@ -28,8 +32,8 @@ void main() async {
     ObjectBoxCacheService.init(),
     ScreenUtil.ensureScreenSize(),
   ]);
-  // await _initializeFirebaseApp();
-  // await fetchBaseUrl();
+  await _initializeFirebaseApp();
+  await fetchBaseUrl();
 
   setUpServiceLocator();
   SystemChrome.setPreferredOrientations([
@@ -129,19 +133,16 @@ Future<bool> fetchBaseUrl() async {
   }
 }
 
-// Future<void> _initializeFirebaseApp() async {
-//   // Determine which Firebase options to use based on the flavor.
-//   // Fall back to production when the flavor is missing (e.g. launched from
-//   // Xcode without --flavor) so initialization never hard-crashes the launch.
-//   final firebaseOptions = switch (appFlavor) {
-//     'dev' => dev.DefaultFirebaseOptions.currentPlatform,
-//     'production' => production.DefaultFirebaseOptions.currentPlatform,
-//     _ => () {
-//       log(
-//         'Unknown/empty appFlavor "$appFlavor" — defaulting Firebase to production options',
-//       );
-//       return production.DefaultFirebaseOptions.currentPlatform;
-//     }(),
-//   };
-//   await Firebase.initializeApp(options: firebaseOptions);
-// }
+Future<void> _initializeFirebaseApp() async {
+  final firebaseOptions = switch (appFlavor) {
+    'dev' => dev.DefaultFirebaseOptions.currentPlatform,
+    'prod' => prod.DefaultFirebaseOptions.currentPlatform,
+    _ => () {
+      log(
+        'Unknown/empty appFlavor "$appFlavor" — defaulting Firebase to production options',
+      );
+      return prod.DefaultFirebaseOptions.currentPlatform;
+    }(),
+  };
+  await Firebase.initializeApp(options: firebaseOptions);
+}
