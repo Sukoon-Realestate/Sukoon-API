@@ -23,3 +23,10 @@ class TestProfileModel:
 
     def test_one_profile_per_user(self, user):
         assert Profile.objects.filter(user=user).count() == 1
+
+    def test_profile_kyc_fields_default(self, user):
+        assert user.profile.national_id == ""
+        assert not user.profile.id_face
+        assert not user.profile.id_back
+        assert not user.profile.confirmation_selfi
+

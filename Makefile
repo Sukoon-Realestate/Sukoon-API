@@ -1,38 +1,40 @@
+PIPENV := $(shell command -v pipenv 2>/dev/null || echo $(HOME)/Library/Python/3.9/bin/pipenv)
+
 test:
-	pipenv run pytest
+	$(PIPENV) run pytest
 
 test-cov:
-	pipenv run pytest --cov=core_apps --cov-report=term-missing
+	$(PIPENV) run pytest --cov=core_apps --cov-report=term-missing
 
 run:
-	pipenv run uvicorn config.asgi:application --reload --host 127.0.0.1 --port 8000
+	$(PIPENV) run uvicorn config.asgi:application --reload --host 127.0.0.1 --port 8000
 
 makemigrations:
-	pipenv run python manage.py makemigrations
+	$(PIPENV) run python manage.py makemigrations
 
 migrate:
-	pipenv run python manage.py migrate
+	$(PIPENV) run python manage.py migrate
 
 collectstatic:
-	pipenv run python manage.py collectstatic --no-input --clear
+	$(PIPENV) run python manage.py collectstatic --no-input --clear
 
 build:
-	pipenv install && pipenv run python manage.py collectstatic --no-input
+	$(PIPENV) install && $(PIPENV) run python manage.py collectstatic --no-input
 
 superuser:
-	pipenv run python manage.py createsuperuser
+	$(PIPENV) run python manage.py createsuperuser
 
 shell:
-	pipenv run python manage.py shell_plus
+	$(PIPENV) run python manage.py shell_plus
 
 django_shell:
-	pipenv run python manage.py shell_plus
+	$(PIPENV) run python manage.py shell_plus
 
 lint:
-	pipenv run flake8 .
+	$(PIPENV) run flake8 .
 
 lint-check:
-	pipenv run black --check .
+	$(PIPENV) run black --check .
 
 generate_token:
 	python -c "import secrets; print(secrets.token_urlsafe(38))"

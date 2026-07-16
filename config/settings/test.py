@@ -16,12 +16,8 @@ EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": getenv("POSTGRES_DB", "test_db"),
-        "USER": getenv("POSTGRES_USER", "postgres"),
-        "PASSWORD": getenv("POSTGRES_PASSWORD", "postgres"),
-        "HOST": getenv("POSTGRES_HOST", "localhost"),
-        "PORT": getenv("POSTGRES_PORT", "5432"),
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 

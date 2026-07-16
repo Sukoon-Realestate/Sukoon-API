@@ -17,6 +17,10 @@ class ProfileSerializer(serializers.ModelSerializer):
             "full_name",
             "gender",
             "birth_date",
+            "id_face",
+            "id_back",
+            "confirmation_selfi",
+            "national_id",
             "date_joined",
         ]
 
@@ -32,4 +36,8 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
             "last_name",
             "gender",
             "birth_date",
+            "id_face",
+            "id_back",
+            "confirmation_selfi",
+            "national_id",
         ]
