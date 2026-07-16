@@ -1,6 +1,8 @@
 import logging
 from typing import Optional
 from django.conf import settings
+from django.shortcuts import render
+from django.views import View
 from djoser.social.views import ProviderAuthView
 from rest_framework import status
 from rest_framework.request import Request
@@ -274,3 +276,16 @@ class FacebookAuthView(APIView):
         )
         set_auth_cookies(response, tokens["access"], tokens["refresh"])
         return response
+
+
+class PasswordResetConfirmView(View):
+    """
+    Renders the custom password reset confirmation page.
+    """
+
+    def get(self, request, uid, token):
+        context = {
+            "uid": uid,
+            "token": token,
+        }
+        return render(request, "password_reset_confirm.html", context)

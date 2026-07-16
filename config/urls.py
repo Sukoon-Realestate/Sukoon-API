@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
+from core_apps.users.views import PasswordResetConfirmView
 from django.conf.urls.static import static
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
@@ -21,6 +22,8 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
+    path("password-reset/<str:uid>/<str:token>/", PasswordResetConfirmView.as_view(), name="password_reset_confirm"),
+    path("password-reset/<str:uid>/<str:token>", PasswordResetConfirmView.as_view()),
     path("redoc/", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     path("api/v1/auth/", include("djoser.urls")),
     path("api/v1/auth/", include("core_apps.users.urls")),

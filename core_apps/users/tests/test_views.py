@@ -64,3 +64,16 @@ class TestTokenRefreshView:
         """Bug was: refresh_res unbound when no cookie → UnboundLocalError (500)."""
         res = api_client.post(REFRESH_URL)
         assert res.status_code == status.HTTP_400_BAD_REQUEST
+
+
+@pytest.mark.django_db
+class TestPasswordResetConfirmView:
+    def test_view_returns_200_and_renders_template(self, api_client):
+        url = "/password-reset/Mw/dbttvc-38c137a0de596fcd601891f5208827ab/"
+        res = api_client.get(url)
+        assert res.status_code == 200
+        assert b"Reset Your Password" in res.content
+        assert b"Mw" in res.content
+        assert b"dbttvc-38c137a0de596fcd601891f5208827ab" in res.content
+        assert b"sukoon.com" in res.content
+
