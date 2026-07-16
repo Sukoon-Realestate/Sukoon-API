@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "661591953888",
+    "project_id": "sokoun-99c7b",
+    "storage_bucket": "sokoun-99c7b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:661591953888:android:ae4bafbe75cc93820a5b85",
+        "android_client_info": {
+          "package_name": "com.app.sokoon"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuA6HPrJPq2wxk-83W_pd1FeTeSZ_kmjQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:661591953888:android:787f2357d03a79bb0a5b85",
+        "android_client_info": {
+          "package_name": "com.app.sokoon.real.estate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuA6HPrJPq2wxk-83W_pd1FeTeSZ_kmjQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
