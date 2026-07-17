@@ -11,6 +11,7 @@ import 'package:melos_core/config/language/languages.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/helpers/helpers.dart';
+import 'package:melos_core/core/helpers/nsfw_detector.dart';
 import 'package:melos_core/core/local_db/objectbox_cache_service.dart';
 import 'package:melos_core/core/network/dio_service.dart';
 import 'package:melos_core/core/network/fire_store.dart';
@@ -34,7 +35,7 @@ void main() async {
   ]);
   await _initializeFirebaseApp();
   await fetchBaseUrl();
-
+  await NsfwDetectorHelper.init();
   setUpServiceLocator();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

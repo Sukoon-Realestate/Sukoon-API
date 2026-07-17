@@ -81,9 +81,8 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
   }
 
   String _fileNameFrom(File image) {
-    return image.uri.pathSegments.isEmpty
-        ? image.path
-        : image.uri.pathSegments.last;
+    return image.uri.pathSegments.isEmpty ?
+    image.path : image.uri.pathSegments.last;
   }
 
   Future<void> _pickFrontIdImage() async {
@@ -253,6 +252,7 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
                       (data) => KycUploadTile(
                         title: LocaleKeys.idFrontLabel,
                         fileName: data.frontIdFileName,
+                        image: data.frontIdImage,
                         onTap: _pickFrontIdImage,
                       ),
                     ),
@@ -261,6 +261,7 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
                       (data) => KycUploadTile(
                         title: LocaleKeys.idBackLabel,
                         fileName: data.backIdFileName,
+                        image: data.backIdImage,
                         onTap: _pickBackIdImage,
                       ),
                     ),
@@ -269,6 +270,7 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
                       (data) => KycUploadTile(
                         title: LocaleKeys.selfiePhoto,
                         fileName: data.selfieFileName,
+                        image: data.selfieImage,
                         onTap: _captureSelfieImage,
                         emptyIcon: Icons.add_a_photo_outlined,
                         emptyTitle: LocaleKeys.capturePhoto,

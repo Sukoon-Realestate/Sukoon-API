@@ -12,6 +12,7 @@ import 'package:sokoun_app/features/auth/data/models/register.dart';
 import 'package:sokoun_app/features/auth/presentation/cubits/register.dart';
 import 'package:sokoun_app/shared_widgets/shared_widgets.dart';
 
+import '../widgets/auth_scaffold.dart';
 import '../widgets/register/register_footer.dart';
 import '../widgets/register/register_header.dart';
 
@@ -105,87 +106,68 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: AppColors.scaffoldBackground,
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  child: FirstValidationErrorForm(
-                    validationFields: _validationFields,
-                    onValid: _submit,
-                    builder: (context, submit) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          20.szH,
-                          const RegisterHeader(),
-                          26.szH,
-                          SokoonNameField(
-                            key: _nameFieldKey,
-                            controller: _nameController,
-                            validator: Validators.validateName,
-                          ),
-                          14.szH,
-                          SokoonPhoneField(
-                            key: _phoneFieldKey,
-                            controller: _phoneController,
-                            validator: Validators.validateEmpty,
-                          ),
-                          14.szH,
-                          SokoonEmailField(
-                            key: _emailFieldKey,
-                            controller: _emailController,
-                            validator: Validators.validateEmail,
-                          ),
-                          14.szH,
-                          SokoonPasswordField(
-                            key: _passwordFieldKey,
-                            controller: _passwordController,
-                            action: TextInputAction.next,
-                            validator: Validators.validatePassword,
-                          ),
-                          14.szH,
-                          SokoonPasswordConfirmationField(
-                            key: _confirmPasswordFieldKey,
-                            controller: _confirmPasswordController,
-                            passwordController: _passwordController,
-                            validator: (value) =>
-                                Validators.validatePasswordConfirmation(
-                                  value,
-                                  password: _passwordController.text,
-                                ),
-                          ),
-                          24.szH,
-                          DefaultButton(
-                            onTap: submit,
-                            title: LocaleKeys.createAccount,
-                            color: AppColors.tealOrGoldBasedRole,
-                            textColor: AppColors.white,
-                            borderRadius: BorderRadius.circular(14.r),
-                            height: 52.h,
-                            width: double.infinity,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w700,
-                          ),
-                          18.szH,
-                          const RegisterFooter(),
-                          24.szH,
-                        ],
-                      );
-                    },
-                  ),
+    return AuthScaffold(
+      child: FirstValidationErrorForm(
+        validationFields: _validationFields,
+        onValid: _submit,
+        builder: (context, submit) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const RegisterHeader(),
+              26.szH,
+              SokoonNameField(
+                key: _nameFieldKey,
+                controller: _nameController,
+                validator: Validators.validateName,
+              ),
+              14.szH,
+              SokoonPhoneField(
+                key: _phoneFieldKey,
+                controller: _phoneController,
+                validator: Validators.validateEmpty,
+              ),
+              14.szH,
+              SokoonEmailField(
+                key: _emailFieldKey,
+                controller: _emailController,
+                validator: Validators.validateEmail,
+              ),
+              14.szH,
+              SokoonPasswordField(
+                key: _passwordFieldKey,
+                controller: _passwordController,
+                action: TextInputAction.next,
+                validator: Validators.validatePassword,
+              ),
+              14.szH,
+              SokoonPasswordConfirmationField(
+                key: _confirmPasswordFieldKey,
+                controller: _confirmPasswordController,
+                passwordController: _passwordController,
+                validator: (value) => Validators.validatePasswordConfirmation(
+                  value,
+                  password: _passwordController.text,
                 ),
               ),
-            );
-          },
-        ),
+              24.szH,
+              DefaultButton(
+                onTap: submit,
+                title: LocaleKeys.createAccount,
+                color: AppColors.tealOrGoldBasedRole,
+                textColor: AppColors.white,
+                borderRadius: BorderRadius.circular(14.r),
+                height: 52.h,
+                width: double.infinity,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w700,
+              ),
+              18.szH,
+              const RegisterFooter(),
+              24.szH,
+            ],
+          );
+        },
       ),
     );
   }

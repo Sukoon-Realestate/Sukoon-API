@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
+import 'package:melos_core/core/extensions/object.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
@@ -127,18 +128,19 @@ class KycIntroScreen extends StatelessWidget {
                 fontWeight: FontWeight.w700,
               ),
               10.szH,
-              DefaultButton(
-                onTap: onSkip == null ? null : () async => await onSkip!(),
-                title: LocaleKeys.skip,
-                color: AppColors.white,
-                textColor: AppColors.sokoonTeal,
-                borderColor: AppColors.grayPale,
-                borderRadius: BorderRadius.circular(14.r),
-                height: 48.h,
-                width: double.infinity,
-                fontSize: 15.sp,
-                fontWeight: FontWeight.w700,
-              ),
+              if(!onSkip.isNull)
+                DefaultButton(
+                  onTap: () async => await onSkip!(),
+                  title: LocaleKeys.skip,
+                  color: AppColors.white,
+                  textColor: AppColors.sokoonTeal,
+                  borderColor: AppColors.grayPale,
+                  borderRadius: BorderRadius.circular(14.r),
+                  height: 48.h,
+                  width: double.infinity,
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w700,
+                ),
             ],
           ),
         ),

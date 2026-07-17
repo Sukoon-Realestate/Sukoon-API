@@ -13,6 +13,7 @@ import 'package:sokoun_app/features/home/presentation/screens/tenant_book_visit_
 import 'package:sokoun_app/features/home/presentation/screens/tenant_filter_screen.dart';
 import 'package:sokoun_app/features/home/presentation/screens/tenant_property_details_screen.dart';
 import 'package:toastification/toastification.dart';
+import 'features/auth/presentation/screens/kyc_upload_documents_screen.dart';
 import 'features/home/data/models/tenant_search_result_content.dart';
 import 'features/home/presentation/screens/tenant_search_results_screen.dart';
 import 'features/splash_screen.dart';
@@ -63,7 +64,7 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
               supportedLocales: context.supportedLocales,
               locale: context.locale,
               navigatorKey: Go.navigatorKey,
-              home: SplashScreen(),
+              home: KycUploadDocumentsScreen(),
               // home: TenantBookVisitScreen(property: TenantPropertyDetailsContent.fromSearchResult(SearchResultContent(title: '', district: '', location: '', rooms: '', bathrooms: '', area: '', tags: [], price: '', monthlyPrice: 100, rentalTerm: '', tenantType: '', smokingPolicy: '', amenities: [], photoCount: 8, imageColor: Colors.white, imageColorEnd: Colors.black, isVerified: true, propertyType: ''))),
               // home: RoleSelectScreen(
               //   onContinue: (role) {

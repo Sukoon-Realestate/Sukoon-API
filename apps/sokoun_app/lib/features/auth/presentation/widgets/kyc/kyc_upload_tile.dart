@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -11,6 +13,7 @@ class KycUploadTile extends StatelessWidget {
     required this.title,
     required this.onTap,
     this.fileName,
+    this.image,
     this.emptyIcon = Icons.upload_file_outlined,
     this.emptyTitle,
     this.emptySubtitle,
@@ -19,11 +22,13 @@ class KycUploadTile extends StatelessWidget {
   final String title;
   final VoidCallback? onTap;
   final String? fileName;
+  final File? image;
   final IconData emptyIcon;
   final String? emptyTitle;
   final String? emptySubtitle;
 
-  bool get _isUploaded => fileName != null && fileName!.isNotEmpty;
+  bool get _isUploaded =>
+      image != null || (fileName != null && fileName!.isNotEmpty);
 
   @override
   Widget build(BuildContext context) {
@@ -56,48 +61,99 @@ class KycUploadTile extends StatelessWidget {
               border: Border.all(color: borderColor, width: 1.2),
             ),
             alignment: Alignment.center,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  _isUploaded ? Icons.check_circle_outline_rounded : emptyIcon,
-                  color: _isUploaded
-                      ? AppColors.sokoonTeal
-                      : AppColors.sokoonGray,
-                  size: 28.r,
-                ),
-                8.szH,
-                AppText(
-                  _isUploaded
-                      ? LocaleKeys.uploaded
-                      : emptyTitle ?? LocaleKeys.tapToUpload,
-                  color: _isUploaded
-                      ? AppColors.sokoonTeal
-                      : AppColors.sokoonGray,
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w800,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                5.szH,
-                AppText(
-                  _isUploaded
-                      ? fileName!
-                      : emptySubtitle ?? LocaleKeys.jpgPngUpTo5mb,
-                  color: _isUploaded
-                      ? AppColors.sokoonTeal
-                      : AppColors.sokoonMuted,
-                  fontSize: 11.sp,
-                  fontWeight: FontWeight.w400,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+            child: _isUploaded ? _UploadedContent(this) : _EmptyContent(this),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _UploadedContent extends StatelessWidget {
+  final KycUploadTile tile;
+
+  const _UploadedContent(this.tile);
+
+  @override
+  Widget build(BuildContext context) {
+    final File? image = tile.image;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (image != null) ...[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10.r),
+            child: Image.file(
+              image,
+              width: double.infinity,
+              height: 118.h,
+              fit: BoxFit.cover,
             ),
           ),
+          10.szH,
+        ] else
+          Icon(
+            Icons.check_circle_outline_rounded,
+            color: AppColors.sokoonTeal,
+            size: 28.r,
+          ),
+        Row(
+          children: [
+            Icon(
+              Icons.check_circle_outline_rounded,
+              color: AppColors.sokoonTeal,
+              size: 18.r,
+            ),
+            8.szW,
+            Expanded(
+              child: AppText(
+                tile.fileName ?? LocaleKeys.uploaded,
+                color: AppColors.sokoonTeal,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w700,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _EmptyContent extends StatelessWidget {
+  final KycUploadTile tile;
+
+  const _EmptyContent(this.tile);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(tile.emptyIcon, color: AppColors.sokoonGray, size: 28.r),
+        8.szH,
+        AppText(
+          tile.emptyTitle ?? LocaleKeys.tapToUpload,
+          color: AppColors.sokoonGray,
+          fontSize: 13.sp,
+          fontWeight: FontWeight.w800,
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        5.szH,
+        AppText(
+          tile.emptySubtitle ?? LocaleKeys.jpgPngUpTo5mb,
+          color: AppColors.sokoonMuted,
+          fontSize: 11.sp,
+          fontWeight: FontWeight.w400,
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );
