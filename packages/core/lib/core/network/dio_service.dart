@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -54,6 +55,7 @@ class DioService implements NetworkService {
     SecureLocalVariableKeys.devBaseUrlKey :
     SecureLocalVariableKeys.baseUrlKey;
 
+    log('the primaryKey is $primaryKey');
     final String primary = await SecureStorage.read(primaryKey) ?? '';
     return primary;
   }

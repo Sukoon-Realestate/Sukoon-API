@@ -3,8 +3,8 @@ part of 'config_imports.dart';
 final GetIt injector = GetIt.instance;
 
 class ConstantManager {
-  static const String bundleId = 'com.app.sokoon';
-  static const String devBundleId = 'com.app.sokoon.dev';
+  static const String bundleId = 'com.app.sokoon.real.estate';
+  static const String devBundleId = 'com.app.sokoon.real.estate.dev';
   static const String appName = 'سكون';
   static const String defaultAvatar =
       'https://share.google/images/xqtQr0B9c0ROYtxeG';
@@ -50,7 +50,7 @@ class ConstantManager {
   static const int rateCount = 5;
   static const double minRateCount = 1;
   static BorderRadius buttonBorderRadius = BorderRadius.circular(40.r);
-  static double buttonBorderRadiusNumber = 40.r;
+  static double buttonBorderRadiusNumber = 10.r;
 }
 
 class CacheConstant {

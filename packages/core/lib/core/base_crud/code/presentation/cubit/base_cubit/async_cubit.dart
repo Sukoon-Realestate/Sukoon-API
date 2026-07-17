@@ -51,32 +51,13 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
 
   bool get isLoading => state.isLoading;
 
-  // Future<void> executeAsyncWithBaseModel({
-  //   required Future<Result<BaseModel<T>, Failure>> Function() operation,
-  //   FutureOr<void> Function(BaseModel<T>)? successEmitter,
-  // }) async {
-  //   setLoading();
-  //   final result = await operation();
-  //   result.when(
-  //         (success) {
-  //       setSuccess(data: success.data, msg: success.message);
-  //       if (successEmitter != null) {
-  //         successEmitter(success);
-  //       }
-  //     },
-  //         (failure) {
-  //       MessageUtils.showTopMsg(failure.message, state: MsgState.error);
-  //       setError(errorMessage: failure.message);
-  //     },
-  //   );
-  // }
-
   StreamSubscription? _streamSubscription;
   Future<void> executeAsyncWithBaseModel({
     required Future<Result<BaseModel<T>, Failure>> Function() operation,
     Function(BaseModel<T>)? onSuccess,
     Function(String msg)? onError,
     bool withInternetInterceptor = false,
+    bool showMsgOnSuccess = false
   }) async {
     if(withInternetInterceptor){
       await _basicOperationWithInternetInterceptor(
@@ -89,7 +70,8 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
       await _basicOperation(
           operation: operation,
           successEmitter: onSuccess,
-          onError: onError
+          onError: onError,
+          showMsgOnSuccess: showMsgOnSuccess
       );
     }
   }
@@ -110,11 +92,13 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
     required Future<Result<BaseModel<T>, Failure>> Function() operation,
     Function(BaseModel<T>)? successEmitter,
     Function(String msg)? onError,
+    bool showMsgOnSuccess = false
   })async{
     await _basicOperation(
         operation: operation,
         successEmitter: successEmitter,
-        onError: onError
+        onError: onError,
+        showMsgOnSuccess: showMsgOnSuccess
     );
 
     _streamSubscription = _connectivity.onConnectivityChanged.listen((status)async{
@@ -131,7 +115,8 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
         await _basicOperation(
             operation: operation,
             successEmitter: successEmitter,
-            onError: onError
+            onError: onError,
+            showMsgOnSuccess: showMsgOnSuccess
         );
         // if(state.data.isNull || (state.data is List && (state.data as List).isEmpty)){
         //   await _basicOperation(
@@ -171,18 +156,22 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
     required Future<Result<BaseModel<T>, Failure>> Function() operation,
     required Function(BaseModel<T>)? successEmitter,
     required Function(String msg)? onError,
+    bool showMsgOnSuccess = false
   })async{
     setLoading();
     final result = await operation();
     result.when(
           (success) {
-        setSuccess(success);
-        successEmitter?.call(success);
+            if(showMsgOnSuccess && success.msg.isNotEmpty){
+              MessageUtils.showSnackBar(success.msg);
+            }
+            setSuccess(success);
+            successEmitter?.call(success);
       },
           (failure) {
-        MessageUtils.showTopMsg(failure.message);
-        setError(errorMessage: failure.message);
-        onError?.call(failure.message);
+            MessageUtils.showTopMsg(failure.message);
+            setError(errorMessage: failure.message);
+            onError?.call(failure.message);
       },
     );
   }

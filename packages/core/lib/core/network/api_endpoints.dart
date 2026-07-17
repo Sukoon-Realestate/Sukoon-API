@@ -1,51 +1,7 @@
 class ApiConstants {
 // ---------------------- Home -----------------------------------
-  static const String home = 'home';
-  static const String slider = 'Home/GetTop5NewsByLang/';
-  static const String services = 'Home/GetAllServices';
-  static const String emirateNumbers = 'Home/GetCounts';
-  static const String introPages = 'intros';
-
-// ---------------------- About_Emirate -----------------------------------
-  static const String aboutUs = 'AboutUs';
-  static const String princes = 'EmiratesPrince/GetAll';
-  static const String princesDetails = 'EmiratesPrince/GetById/';
-  static const String allGovernorate = 'Governorate/GetAll';
-  static const String womanSection = 'WomanSection';
-  static const String opportunities = 'opportunities';
-
-// ---------------------- Media_Center -----------------------------------
-  static const String allNews = 'Home/GetAllNews';
-  static const String newsFilter = 'Home/GetNewsSearch/';
-  static const String allAuctiont = 'Auction/GetAll';
-  static const String allMovables = 'Movables/GetAll';
-  static const String newsDetails = 'News/GetById/';
-  static const String aucationDetails = 'Auction/GetById/';
-  static const String movableDetails = 'Movables/GetById/';
-
-
-
   // auth
-  static const String login = 'login';
-  static const String logout = 'sign-out';
-  static const String showWallet = 'show-wallet';
-  static const String complaintDetails = 'complaints-show/';
-  static const String successPartners = 'partners';
-  static const String blockUser = 'user-blocks';
-  static const String unBlockUser = 'user-blocks/';
-  static const String addComplaint = 'new-complaint';
-  static const String marriageConsultants = 'marriage-consultants';
-  static const String complaints = 'complaints';
-  static const String getPaymentBrands = 'payment-brands';
-  static const String chargeWallet = 'charge-wallet';
-  static const String contactStore = 'contact-us-store';
-  static const String contactUsIndex = 'contact-us/index';
-  static const String contactUsSendReply = 'contact-us/';
-  static const String activate = 'activate';
-  static const String register = 'register';
-  static const String completeRegister = 'complete-registration';
-  static const String checkCodeAfterLogin = 'check-code';
-  static const String resendCode = 'resend-code';
+  static const String login = 'auth/login/';
 
   // packages
   static const String getPackages = 'packages/';
