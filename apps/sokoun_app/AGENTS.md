@@ -1549,6 +1549,7 @@ Do not put field controllers, per-field mutation, or conditional form sections d
 ### Rule 41 — Use body models for form submission
 
 Feature forms should submit typed body models, not loose maps from the UI. Follow `SignUpBody`, `MaleAndFemaleSignUp`, and `ParentSignUp`:
+- If a request body has more than 2 keys, create a typed body model in the feature's `data/models/` folder and submit `body.toJson()`.
 - Base body model contains shared fields
 - Specialized child body models extend the base body for mode-specific fields
 - Every body model provides `initial()`, `copyWith(...)`, and `toJson()`

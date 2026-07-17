@@ -1,30 +1,25 @@
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
-import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
-import 'package:sokoun_app/features/auth/presentation/screens/otp_screen.dart';
+import 'package:sokoun_app/features/auth/data/models/register.dart';
 
-class LoginCubit extends AsyncCubit<String> {
-  LoginCubit() : super('');
+class RegisterCubit extends AsyncCubit<String> {
+  RegisterCubit() : super('');
 
-  Future<void> login({
-    required String email,
-    required String password
+  Future<void> register({
+    required RegisterBody body,
+    void Function()? onSuccess,
   }) async {
     await executeAsyncWithBaseModel(
       showMsgOnSuccess: true,
       operation: () async => await baseCrudUseCase.call(
         CrudBaseParmas(
-          api: ApiConstants.login,
+          api: ApiConstants.register,
           httpRequestType: HttpRequestType.post,
-          body: {
-            "email": email,
-            "password": password
-          },
+          body: body.toJson(),
         ),
       ),
-
-      onSuccess: (_) => Go.to(const OtpScreen())
+      onSuccess: (_) => onSuccess?.call(),
     );
   }
 }
