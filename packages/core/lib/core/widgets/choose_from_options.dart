@@ -6,7 +6,7 @@ import '../../config/res/config_imports.dart';
 import '../extensions/context_extension.dart';
 import '../extensions/padding_extension.dart';
 import 'app_text.dart';
-import 'custom_messages.dart';
+import 'toast_messages/custom_messages.dart';
 
 enum OptionsRanking{vertical, horizontal}
 class ChooseFromOptionsWidget extends StatefulWidget {

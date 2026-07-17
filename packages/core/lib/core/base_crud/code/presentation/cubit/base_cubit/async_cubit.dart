@@ -8,7 +8,8 @@ import '../../../../../../config/res/config_imports.dart';
 import '../../../../../error/failure.dart';
 import '../../../../../extensions/object.dart';
 import '../../../../../shared/base_state.dart';
-import '../../../../../widgets/custom_messages.dart';
+import '../../../../../widgets/toast_messages/custom_messages.dart';
+import '../../../../../widgets/toast_messages/toast_message.dart';
 import '../../../domain/base_domain_imports.dart';
 import '../../../domain/usecases/pagination_response.dart';
 part 'async_state.dart';
@@ -28,12 +29,12 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
 
   void setSuccess(BaseModel<T> data) {
     emit(state.success(data: data.data, msg: data.msg));
-    if(data.key == 'fromCache'){
+    if (data.key == 'fromCache') {
       MessageUtils.showTopMsg(data.msg);
     }
   }
 
-  void setError({String? errorMessage, bool showToast = false}) {
+  void setError({String? errorMessage}) {
     emit(state.error(errorMessage: errorMessage));
   }
 
@@ -57,32 +58,33 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
     Function(BaseModel<T>)? onSuccess,
     Function(String msg)? onError,
     bool withInternetInterceptor = false,
-    bool showMsgOnSuccess = false
+    bool showMsgOnSuccess = false,
   }) async {
-    if(withInternetInterceptor){
+    if (withInternetInterceptor) {
       await _basicOperationWithInternetInterceptor(
-          operation: operation,
-          successEmitter: onSuccess,
-          onError: onError
+        operation: operation,
+        successEmitter: onSuccess,
+        onError: onError,
       );
-
-    }else{
+    } else {
       await _basicOperation(
-          operation: operation,
-          successEmitter: onSuccess,
-          onError: onError,
-          showMsgOnSuccess: showMsgOnSuccess
+        operation: operation,
+        successEmitter: onSuccess,
+        onError: onError,
+        showMsgOnSuccess: showMsgOnSuccess,
       );
     }
   }
 
   bool _firstRequest = true;
-  FutureOr<void> _checkIsFirstTime(bool val, {required FutureOr<void> Function() onNotFirstTime}) async{
-    if(_firstRequest){
+  FutureOr<void> _checkIsFirstTime(
+    bool val, {
+    required FutureOr<void> Function() onNotFirstTime,
+  }) async {
+    if (_firstRequest) {
       _firstRequest = false;
       return;
-
-    }else{
+    } else {
       await onNotFirstTime.call();
     }
   }
@@ -92,31 +94,32 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
     required Future<Result<BaseModel<T>, Failure>> Function() operation,
     Function(BaseModel<T>)? successEmitter,
     Function(String msg)? onError,
-    bool showMsgOnSuccess = false
-  })async{
+    bool showMsgOnSuccess = false,
+  }) async {
     await _basicOperation(
-        operation: operation,
-        successEmitter: successEmitter,
-        onError: onError,
-        showMsgOnSuccess: showMsgOnSuccess
+      operation: operation,
+      successEmitter: successEmitter,
+      onError: onError,
+      showMsgOnSuccess: showMsgOnSuccess,
     );
 
-    _streamSubscription = _connectivity.onConnectivityChanged.listen((status)async{
-      if(status.contains(ConnectivityResult.none)){
-        if(state.data.isNull || (state.data is List && (state.data as List).isEmpty)){
+    _streamSubscription = _connectivity.onConnectivityChanged.listen((
+      status,
+    ) async {
+      if (status.contains(ConnectivityResult.none)) {
+        if (state.data.isNull ||
+            (state.data is List && (state.data as List).isEmpty)) {
           emit(state.error(errorMessage: LocaleKeys.checkInternet));
-
-        }else{
+        } else {
           MessageUtils.showTopMsg(LocaleKeys.checkInternet);
         }
-
-      }else{
+      } else {
         MessageUtils.showTopMsg(LocaleKeys.theInternetConnectionIsRestored);
         await _basicOperation(
-            operation: operation,
-            successEmitter: successEmitter,
-            onError: onError,
-            showMsgOnSuccess: showMsgOnSuccess
+          operation: operation,
+          successEmitter: successEmitter,
+          onError: onError,
+          showMsgOnSuccess: showMsgOnSuccess,
         );
         // if(state.data.isNull || (state.data is List && (state.data as List).isEmpty)){
         //   await _basicOperation(
@@ -156,22 +159,22 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
     required Future<Result<BaseModel<T>, Failure>> Function() operation,
     required Function(BaseModel<T>)? successEmitter,
     required Function(String msg)? onError,
-    bool showMsgOnSuccess = false
-  })async{
+    bool showMsgOnSuccess = false,
+  }) async {
     setLoading();
     final result = await operation();
     result.when(
-          (success) {
-            if(showMsgOnSuccess && success.msg.isNotEmpty){
-              MessageUtils.showSnackBar(success.msg);
-            }
-            setSuccess(success);
-            successEmitter?.call(success);
+      (success) {
+        if (showMsgOnSuccess && success.msg.isNotEmpty) {
+          Messages.showToast(msg: success.msg);
+        }
+        setSuccess(success);
+        successEmitter?.call(success);
       },
-          (failure) {
-            MessageUtils.showTopMsg(failure.message);
-            setError(errorMessage: failure.message);
-            onError?.call(failure.message);
+      (failure) {
+        Messages.showToast(msg: failure.message);
+        setError(errorMessage: failure.message);
+        onError?.call(failure.message);
       },
     );
   }

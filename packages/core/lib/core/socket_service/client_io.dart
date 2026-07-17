@@ -4,7 +4,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../config/language/locale_keys.g.dart';
 import '../widgets/chat_builder/chat_message.dart';
-import '../widgets/custom_messages.dart';
+import '../widgets/toast_messages/custom_messages.dart';
 
 class MessageEvents {
   final String receiveMsgEvent;

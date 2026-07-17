@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
-import '../../config/res/config_imports.dart';
-import '../navigation/navigator.dart';
+import '../../../config/res/config_imports.dart';
+import '../../navigation/navigator.dart';
 
 enum MsgState{success, error, info}
 class MessageUtils {

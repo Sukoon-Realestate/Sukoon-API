@@ -10,7 +10,7 @@ import '../../config/language/locale_keys.g.dart';
 import '../local_db/objectbox_cache_service.dart';
 import 'app_text.dart';
 import 'custom_loading.dart';
-import 'custom_messages.dart';
+import 'toast_messages/custom_messages.dart';
 import 'exeption_view.dart';
 
 enum Ranking{listView, gridView}
