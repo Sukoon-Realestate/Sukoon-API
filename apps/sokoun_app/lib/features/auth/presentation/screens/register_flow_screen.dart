@@ -74,9 +74,12 @@ class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
               );
             case _kycIntroRoute:
               return MaterialPageRoute(
-                builder: (_) => KycIntroScreen(
+                builder: (context) => KycIntroScreen(
                   onBack: _goBack,
                   onUploadDocuments: () => _pushRoute(_uploadDocumentsRoute),
+                  onSkip: () async => await context
+                      .read<RegisterCubit>()
+                      .register(onSuccess: _handleRegisterSuccess),
                 ),
               );
             case _uploadDocumentsRoute:

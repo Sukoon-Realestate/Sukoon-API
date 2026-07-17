@@ -13,10 +13,16 @@ import '../widgets/kyc/kyc_progress_bar.dart';
 import '../widgets/kyc/kyc_requirement_tile.dart';
 
 class KycIntroScreen extends StatelessWidget {
-  const KycIntroScreen({super.key, this.onBack, this.onUploadDocuments});
+  const KycIntroScreen({
+    super.key,
+    this.onBack,
+    this.onUploadDocuments,
+    this.onSkip,
+  });
 
   final VoidCallback? onBack;
   final VoidCallback? onUploadDocuments;
+  final Future<void> Function()? onSkip;
 
   @override
   Widget build(BuildContext context) {
@@ -106,16 +112,34 @@ class KycIntroScreen extends StatelessWidget {
             color: AppColors.white,
             border: Border(top: BorderSide(color: AppColors.grayPale)),
           ),
-          child: DefaultButton(
-            onTap: onUploadDocuments,
-            title: LocaleKeys.uploadDocuments,
-            color: AppColors.sokoonTeal,
-            textColor: AppColors.white,
-            borderRadius: BorderRadius.circular(14.r),
-            height: 52.h,
-            width: double.infinity,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w700,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DefaultButton(
+                onTap: onUploadDocuments,
+                title: LocaleKeys.uploadDocuments,
+                color: AppColors.sokoonTeal,
+                textColor: AppColors.white,
+                borderRadius: BorderRadius.circular(14.r),
+                height: 52.h,
+                width: double.infinity,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w700,
+              ),
+              10.szH,
+              DefaultButton(
+                onTap: onSkip == null ? null : () async => await onSkip!(),
+                title: LocaleKeys.skip,
+                color: AppColors.white,
+                textColor: AppColors.sokoonTeal,
+                borderColor: AppColors.grayPale,
+                borderRadius: BorderRadius.circular(14.r),
+                height: 48.h,
+                width: double.infinity,
+                fontSize: 15.sp,
+                fontWeight: FontWeight.w700,
+              ),
+            ],
           ),
         ),
       ),
