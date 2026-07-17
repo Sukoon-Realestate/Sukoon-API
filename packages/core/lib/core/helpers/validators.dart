@@ -127,6 +127,33 @@ class Validators {
     return null;
   }
 
+  static String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return LocaleKeys.passRequiredValidation;
+    }
+
+    if (value.length < 8) {
+      return LocaleKeys.passValidation;
+    }
+
+    return noValidate(value);
+  }
+
+  static String? validatePasswordConfirmation(
+    String? value, {
+    required String password,
+  }) {
+    if (value == null || value.isEmpty) {
+      return LocaleKeys.passRequiredValidation;
+    }
+
+    if (value != password) {
+      return LocaleKeys.confirmValidation;
+    }
+
+    return null;
+  }
+
   static String? validatePhone(String? value, {String? message}) {
     if (value?.trim().isEmpty ?? true) {
       return message ?? LocaleKeys.fillField;
