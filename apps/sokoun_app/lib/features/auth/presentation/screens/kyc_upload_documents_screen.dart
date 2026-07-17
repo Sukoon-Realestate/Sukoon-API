@@ -11,6 +11,8 @@ import 'package:melos_core/core/helpers/helpers.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
 import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
+import 'package:sokoun_app/features/auth/data/models/kyc_upload_documents_data.dart';
+import 'package:sokoun_app/features/auth/data/models/register.dart';
 import 'package:sokoun_app/features/auth/presentation/cubits/register.dart';
 
 import '../widgets/kyc/kyc_flow_header.dart';
@@ -35,53 +37,32 @@ class KycUploadDocumentsScreen extends StatefulWidget {
       _KycUploadDocumentsScreenState();
 }
 
-class KycDocumentUploadData {
-  const KycDocumentUploadData({
-    required this.nationalId,
-    required this.frontIdImage,
-    required this.backIdImage,
-    required this.selfieImage,
-  });
-
-  final String nationalId;
-  final File? frontIdImage;
-  final File? backIdImage;
-  final File? selfieImage;
-}
-
 class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
   final TextEditingController _nationalIdController = TextEditingController();
-  File? _frontIdImage;
-  File? _backIdImage;
-  File? _selfieImage;
-  String? _frontIdFileName;
-  String? _backIdFileName;
-  String? _selfieFileName;
+  final ValueNotifier<KycUploadDocumentsData> _dataNotifier = ValueNotifier(
+    const KycUploadDocumentsData(),
+  );
 
   @override
   void dispose() {
     _nationalIdController.dispose();
+    _dataNotifier.dispose();
     super.dispose();
   }
 
-  bool get _canSubmit {
-    return _nationalIdController.text.trim().length == 14 &&
-        (_frontIdImage != null || _frontIdFileName != null) &&
-        (_backIdImage != null || _backIdFileName != null) &&
-        (_selfieImage != null || _selfieFileName != null);
+  void _updateData(
+    KycUploadDocumentsData Function(KycUploadDocumentsData data) update,
+  ) {
+    _dataNotifier.value = update(_dataNotifier.value);
   }
 
   Future<void> _submit(BuildContext context) async {
-    if (!_canSubmit) {
+    final KycUploadDocumentsData formData = _dataNotifier.value;
+    if (!formData.canSubmit) {
       return;
     }
 
-    final KycDocumentUploadData data = KycDocumentUploadData(
-      nationalId: _nationalIdController.text.trim(),
-      frontIdImage: _frontIdImage,
-      backIdImage: _backIdImage,
-      selfieImage: _selfieImage,
-    );
+    final KycDocumentUploadData data = formData.toUploadData();
 
     if (widget.onSubmit != null) {
       widget.onSubmit?.call(data);
@@ -111,10 +92,12 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
       return;
     }
 
-    setState(() {
-      _frontIdImage = image;
-      _frontIdFileName = _fileNameFrom(image);
-    });
+    _updateData(
+      (data) => data.copyWith(
+        frontIdImage: image,
+        frontIdFileName: _fileNameFrom(image),
+      ),
+    );
   }
 
   Future<void> _pickBackIdImage() async {
@@ -123,10 +106,12 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
       return;
     }
 
-    setState(() {
-      _backIdImage = image;
-      _backIdFileName = _fileNameFrom(image);
-    });
+    _updateData(
+      (data) => data.copyWith(
+        backIdImage: image,
+        backIdFileName: _fileNameFrom(image),
+      ),
+    );
   }
 
   Future<void> _captureSelfieImage() async {
@@ -135,10 +120,21 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
       return;
     }
 
-    setState(() {
-      _selfieImage = image;
-      _selfieFileName = _fileNameFrom(image);
-    });
+    _updateData(
+      (data) => data.copyWith(
+        selfieImage: image,
+        selfieFileName: _fileNameFrom(image),
+      ),
+    );
+  }
+
+  Widget _buildDataListener(
+    Widget Function(KycUploadDocumentsData data) builder,
+  ) {
+    return ValueListenableBuilder<KycUploadDocumentsData>(
+      valueListenable: _dataNotifier,
+      builder: (context, data, _) => builder(data),
+    );
   }
 
   @override
@@ -206,14 +202,19 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0,
                       ),
-                      onChanged: (_) => setState(() {}),
+                      onChanged: (value) => _updateData(
+                        (data) =>
+                            data.copyWith(nationalId: (value ?? '').trim()),
+                      ),
                     ),
                     6.szH,
-                    AppText(
-                      '${_nationalIdController.text.length}/14 ${LocaleKeys.digits}',
-                      color: AppColors.sokoonGray,
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w400,
+                    _buildDataListener(
+                      (data) => AppText(
+                        '${data.nationalId.length}/14 ${LocaleKeys.digits}',
+                        color: AppColors.sokoonGray,
+                        fontSize: 11.sp,
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
                     10.szH,
                     Container(
@@ -248,25 +249,31 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
                       ),
                     ),
                     18.szH,
-                    KycUploadTile(
-                      title: LocaleKeys.idFrontLabel,
-                      fileName: _frontIdFileName,
-                      onTap: _pickFrontIdImage,
+                    _buildDataListener(
+                      (data) => KycUploadTile(
+                        title: LocaleKeys.idFrontLabel,
+                        fileName: data.frontIdFileName,
+                        onTap: _pickFrontIdImage,
+                      ),
                     ),
                     14.szH,
-                    KycUploadTile(
-                      title: LocaleKeys.idBackLabel,
-                      fileName: _backIdFileName,
-                      onTap: _pickBackIdImage,
+                    _buildDataListener(
+                      (data) => KycUploadTile(
+                        title: LocaleKeys.idBackLabel,
+                        fileName: data.backIdFileName,
+                        onTap: _pickBackIdImage,
+                      ),
                     ),
                     14.szH,
-                    KycUploadTile(
-                      title: LocaleKeys.selfiePhoto,
-                      fileName: _selfieFileName,
-                      onTap: _captureSelfieImage,
-                      emptyIcon: Icons.add_a_photo_outlined,
-                      emptyTitle: LocaleKeys.capturePhoto,
-                      emptySubtitle: null,
+                    _buildDataListener(
+                      (data) => KycUploadTile(
+                        title: LocaleKeys.selfiePhoto,
+                        fileName: data.selfieFileName,
+                        onTap: _captureSelfieImage,
+                        emptyIcon: Icons.add_a_photo_outlined,
+                        emptyTitle: LocaleKeys.capturePhoto,
+                        emptySubtitle: null,
+                      ),
                     ),
                     14.szH,
                     KycPrivacyCard(
@@ -299,18 +306,20 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
                 textAlign: TextAlign.center,
               ),
               8.szH,
-              AppLoadingButton(
-                asyncCall: _submit,
-                title: LocaleKeys.nextReviewData,
-                buttonColor: _canSubmit
-                    ? AppColors.sokoonTeal
-                    : AppColors.sokoonMuted,
-                textColor: AppColors.white,
-                borderRadius: 14.r,
-                height: 52.h,
-                width: double.infinity,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w700,
+              _buildDataListener(
+                (data) => AppLoadingButton(
+                  asyncCall: _submit,
+                  title: LocaleKeys.nextReviewData,
+                  buttonColor: data.canSubmit
+                      ? AppColors.sokoonTeal
+                      : AppColors.sokoonMuted,
+                  textColor: AppColors.white,
+                  borderRadius: 14.r,
+                  height: 52.h,
+                  width: double.infinity,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ],
           ),

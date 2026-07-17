@@ -1,5 +1,19 @@
 import 'dart:io';
 
+class KycDocumentUploadData {
+  const KycDocumentUploadData({
+    required this.nationalId,
+    required this.frontIdImage,
+    required this.backIdImage,
+    required this.selfieImage,
+  });
+
+  final String nationalId;
+  final File? frontIdImage;
+  final File? backIdImage;
+  final File? selfieImage;
+}
+
 class RegisterBody {
   final String name;
   final String phone;
