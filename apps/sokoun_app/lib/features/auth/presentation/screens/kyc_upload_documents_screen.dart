@@ -1,5 +1,7 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -7,8 +9,10 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/helpers.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:melos_core/core/widgets/buttons/default_button.dart';
+import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
 import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
+import 'package:sokoun_app/features/auth/presentation/cubits/register.dart';
+
 import '../widgets/kyc/kyc_flow_header.dart';
 import '../widgets/kyc/kyc_privacy_card.dart';
 import '../widgets/kyc/kyc_progress_bar.dart';
@@ -19,22 +23,12 @@ class KycUploadDocumentsScreen extends StatefulWidget {
     super.key,
     this.onBack,
     this.onSubmit,
-    this.onFrontIdUpload,
-    this.onBackIdUpload,
-    this.onSelfieCapture,
-    this.frontIdFileName,
-    this.backIdFileName,
-    this.selfieFileName,
+    this.onRegisterSuccess,
   });
 
   final VoidCallback? onBack;
   final ValueChanged<KycDocumentUploadData>? onSubmit;
-  final VoidCallback? onFrontIdUpload;
-  final VoidCallback? onBackIdUpload;
-  final VoidCallback? onSelfieCapture;
-  final String? frontIdFileName;
-  final String? backIdFileName;
-  final String? selfieFileName;
+  final VoidCallback? onRegisterSuccess;
 
   @override
   State<KycUploadDocumentsScreen> createState() =>
@@ -56,36 +50,13 @@ class KycDocumentUploadData {
 }
 
 class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
-  final _nationalIdController = TextEditingController();
+  final TextEditingController _nationalIdController = TextEditingController();
   File? _frontIdImage;
   File? _backIdImage;
   File? _selfieImage;
   String? _frontIdFileName;
   String? _backIdFileName;
   String? _selfieFileName;
-
-  @override
-  void initState() {
-    super.initState();
-    _frontIdFileName = widget.frontIdFileName;
-    _backIdFileName = widget.backIdFileName;
-    _selfieFileName = widget.selfieFileName;
-  }
-
-  @override
-  void didUpdateWidget(covariant KycUploadDocumentsScreen oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (oldWidget.frontIdFileName != widget.frontIdFileName) {
-      _frontIdFileName = widget.frontIdFileName;
-    }
-    if (oldWidget.backIdFileName != widget.backIdFileName) {
-      _backIdFileName = widget.backIdFileName;
-    }
-    if (oldWidget.selfieFileName != widget.selfieFileName) {
-      _selfieFileName = widget.selfieFileName;
-    }
-  }
 
   @override
   void dispose() {
@@ -100,19 +71,32 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
         (_selfieImage != null || _selfieFileName != null);
   }
 
-  void _submit() {
+  Future<void> _submit(BuildContext context) async {
     if (!_canSubmit) {
       return;
     }
 
-    widget.onSubmit?.call(
-      KycDocumentUploadData(
-        nationalId: _nationalIdController.text.trim(),
-        frontIdImage: _frontIdImage,
-        backIdImage: _backIdImage,
-        selfieImage: _selfieImage,
-      ),
+    final KycDocumentUploadData data = KycDocumentUploadData(
+      nationalId: _nationalIdController.text.trim(),
+      frontIdImage: _frontIdImage,
+      backIdImage: _backIdImage,
+      selfieImage: _selfieImage,
     );
+
+    if (widget.onSubmit != null) {
+      widget.onSubmit?.call(data);
+      return;
+    }
+
+    final RegisterCubit registerCubit = context.read<RegisterCubit>();
+    registerCubit.updateKycDocuments(
+      nationalId: data.nationalId,
+      frontIdImage: data.frontIdImage,
+      backIdImage: data.backIdImage,
+      selfieImage: data.selfieImage,
+    );
+
+    await registerCubit.register(onSuccess: widget.onRegisterSuccess);
   }
 
   String _fileNameFrom(File image) {
@@ -122,7 +106,7 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
   }
 
   Future<void> _pickFrontIdImage() async {
-    final image = await Helpers.getImageFromCameraOrDevice();
+    final File? image = await Helpers.getImageFromCameraOrDevice();
     if (!mounted || image == null) {
       return;
     }
@@ -131,11 +115,10 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
       _frontIdImage = image;
       _frontIdFileName = _fileNameFrom(image);
     });
-    widget.onFrontIdUpload?.call();
   }
 
   Future<void> _pickBackIdImage() async {
-    final image = await Helpers.getImageFromCameraOrDevice();
+    final File? image = await Helpers.getImageFromCameraOrDevice();
     if (!mounted || image == null) {
       return;
     }
@@ -144,11 +127,10 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
       _backIdImage = image;
       _backIdFileName = _fileNameFrom(image);
     });
-    widget.onBackIdUpload?.call();
   }
 
   Future<void> _captureSelfieImage() async {
-    final image = await Helpers.getImageFromCameraOrDevice();
+    final File? image = await Helpers.getImageFromCameraOrDevice();
     if (!mounted || image == null) {
       return;
     }
@@ -157,7 +139,6 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
       _selfieImage = image;
       _selfieFileName = _fileNameFrom(image);
     });
-    widget.onSelfieCapture?.call();
   }
 
   @override
@@ -318,14 +299,14 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
                 textAlign: TextAlign.center,
               ),
               8.szH,
-              DefaultButton(
-                onTap: _canSubmit ? _submit : null,
+              AppLoadingButton(
+                asyncCall: _submit,
                 title: LocaleKeys.nextReviewData,
-                color: _canSubmit
+                buttonColor: _canSubmit
                     ? AppColors.sokoonTeal
                     : AppColors.sokoonMuted,
                 textColor: AppColors.white,
-                borderRadius: BorderRadius.circular(14.r),
+                borderRadius: 14.r,
                 height: 52.h,
                 width: double.infinity,
                 fontSize: 16.sp,

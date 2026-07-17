@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
+import 'package:sokoun_app/features/auth/data/models/register.dart';
+import 'package:sokoun_app/features/auth/presentation/cubits/register.dart';
 
-import 'kyc_flow_screen.dart';
+import 'kyc_approved_screen.dart';
+import 'kyc_intro_screen.dart';
+import 'kyc_pending_screen.dart';
 import 'kyc_upload_documents_screen.dart';
 import 'register_screen.dart';
 
@@ -13,82 +18,97 @@ class RegisterFlowScreen extends StatefulWidget {
 }
 
 class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
-  static const int _registerPage = 0;
-  static const int _kycIntroPage = 1;
-  static const int _uploadDocumentsPage = 2;
+  static const String _basicInfoRoute = '/basic-info';
+  static const String _kycIntroRoute = '/kyc-intro';
+  static const String _uploadDocumentsRoute = '/upload-documents';
+  static const String _pendingReviewRoute = '/pending-review';
+  static const String _approvedRoute = '/approved';
 
-  final PageController _pageController = PageController();
-  int _kycStep = 0;
+  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
+  void _pushRoute(String route) {
+    _navigatorKey.currentState?.pushNamed(route);
   }
 
-  void _goToPage(int page) {
-    if (!_pageController.hasClients) {
-      return;
+  void _replaceRoute(String route) {
+    _navigatorKey.currentState?.pushReplacementNamed(route);
+  }
+
+  void _goBack() {
+    _navigatorKey.currentState?.pop();
+  }
+
+  void _handleBasicInfoSubmitted() {
+    _pushRoute(_kycIntroRoute);
+  }
+
+  void _handleRegisterSuccess() {
+    _replaceRoute(_pendingReviewRoute);
+  }
+
+  String _maskedNationalId(String? value) {
+    final String nationalId = value ?? '';
+    if (nationalId.length < 4) {
+      return nationalId;
     }
 
-    _pageController.animateToPage(
-      page,
-      duration: const Duration(milliseconds: 280),
-      curve: Curves.easeOutCubic,
-    );
-  }
-
-  void _showRegister() {
-    _goToPage(_registerPage);
-  }
-
-  void _showKycIntro() {
-    setState(() {
-      _kycStep = 0;
-    });
-    _goToPage(_kycIntroPage);
-  }
-
-  void _showUploadDocuments() {
-    _goToPage(_uploadDocumentsPage);
-  }
-
-  void _showPendingReview(KycDocumentUploadData data) {
-    setState(() {
-      _kycStep = 2;
-    });
-    _goToPage(_kycIntroPage);
-  }
-
-  void _handleCreateAccount({
-    required String fullName,
-    required String phone,
-    required String email,
-    required String password,
-  }) {
-    _showKycIntro();
+    return '${nationalId.substring(0, 2)}*********${nationalId.substring(nationalId.length - 2)}';
   }
 
   @override
   Widget build(BuildContext context) {
     final currentUserType = UserTypeHelper.instance.currentUserType;
+    return BlocProvider(
+      create: (_) => RegisterCubit(),
+      child: Navigator(
+        key: _navigatorKey,
+        initialRoute: _basicInfoRoute,
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            case _basicInfoRoute:
+              return MaterialPageRoute(
+                builder: (_) => RegisterScreen(
+                  userType: currentUserType,
+                  onSubmit: _handleBasicInfoSubmitted,
+                ),
+              );
+            case _kycIntroRoute:
+              return MaterialPageRoute(
+                builder: (_) => KycIntroScreen(
+                  onBack: _goBack,
+                  onUploadDocuments: () => _pushRoute(_uploadDocumentsRoute),
+                ),
+              );
+            case _uploadDocumentsRoute:
+              return MaterialPageRoute(
+                builder: (_) => KycUploadDocumentsScreen(
+                  onBack: _goBack,
+                  onRegisterSuccess: _handleRegisterSuccess,
+                ),
+              );
+            case _pendingReviewRoute:
+              return MaterialPageRoute(
+                builder: (context) {
+                  final RegisterBody body = context
+                      .read<RegisterCubit>()
+                      .registerBody;
 
-    return PageView(
-      controller: _pageController,
-      physics: const NeverScrollableScrollPhysics(),
-      children: [
-        RegisterScreen(onCreateAccount: _handleCreateAccount),
-        KycFlowScreen(
-          role: currentUserType,
-          initialStep: _kycStep,
-          onBack: _showRegister,
-          onUploadDocuments: _showUploadDocuments,
-        ),
-        KycUploadDocumentsScreen(
-          onBack: _showKycIntro,
-          onSubmit: _showPendingReview,
-        ),
-      ],
+                  return KycPendingScreen(
+                    fullName: body.name,
+                    maskedNationalId: _maskedNationalId(body.nationalId),
+                    onBackHome: () => _replaceRoute(_approvedRoute),
+                  );
+                },
+              );
+            case _approvedRoute:
+              return MaterialPageRoute(
+                builder: (_) => const KycApprovedScreen(),
+              );
+            default:
+              return null;
+          }
+        },
+      ),
     );
   }
 }
