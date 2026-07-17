@@ -8,6 +8,11 @@ from .views import (
     PropertyImageUploadAPIView,
     PropertyListAPIView,
     PropertyUpdateAPIView,
+    PropertyVisitCreateAPIView,
+    TenantPropertyVisitListAPIView,
+    OwnerPropertyVisitListAPIView,
+    PropertyVisitDetailAPIView,
+    PropertyVisitUpdateAPIView,
 )
 
 urlpatterns = [
@@ -25,5 +30,31 @@ urlpatterns = [
         "images/<uuid:id>/",
         PropertyImageDetailAPIView.as_view(),
         name="property-image-detail",
+    ),
+    # Property Visits (Bookings) URLs
+    path(
+        "<uuid:property_id>/visits/",
+        PropertyVisitCreateAPIView.as_view(),
+        name="property-visit-create",
+    ),
+    path(
+        "visits/",
+        TenantPropertyVisitListAPIView.as_view(),
+        name="tenant-visit-list",
+    ),
+    path(
+        "visits/received/",
+        OwnerPropertyVisitListAPIView.as_view(),
+        name="owner-visit-list",
+    ),
+    path(
+        "visits/<uuid:id>/",
+        PropertyVisitDetailAPIView.as_view(),
+        name="property-visit-detail",
+    ),
+    path(
+        "visits/<uuid:id>/update/",
+        PropertyVisitUpdateAPIView.as_view(),
+        name="property-visit-update",
     ),
 ]

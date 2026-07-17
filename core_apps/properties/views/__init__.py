@@ -7,3 +7,10 @@ from .property import (
     PropertyListAPIView,
     PropertyUpdateAPIView,
 )
+from .visit import (
+    PropertyVisitCreateAPIView,
+    TenantPropertyVisitListAPIView,
+    OwnerPropertyVisitListAPIView,
+    PropertyVisitDetailAPIView,
+    PropertyVisitUpdateAPIView,
+)

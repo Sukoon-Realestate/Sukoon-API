@@ -10,7 +10,7 @@ from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import status
 
-from core_apps.properties.models import Property, PropertyImage
+from core_apps.properties.models import Property, PropertyImage, PropertyVisit
 
 
 @pytest.fixture(autouse=True)
@@ -318,3 +318,156 @@ class TestPropertyViews:
         response = auth_client.delete(url)
         assert response.status_code == status.HTTP_204_NO_CONTENT
         assert not PropertyImage.objects.filter(id=image_obj.id).exists()
+
+
+@pytest.mark.django_db
+class TestPropertyVisitViews:
+    def test_create_visit_unauthenticated_returns_401(self, api_client, user):
+        property_obj = Property.objects.create(
+            owner=user,
+            title="Apartment Heliopolis",
+            price=20000.00,
+            city="Cairo",
+            district="Heliopolis",
+        )
+        url = reverse("property-visit-create", kwargs={"property_id": property_obj.id})
+        data = {
+            "visit_date": "2026-07-20",
+            "visit_time": "14:00:00",
+            "note": "Can I view it?",
+        }
+        response = api_client.post(url, data, format="json")
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_create_visit_authenticated_happy_path(self, auth_client, user, another_user):
+        property_obj = Property.objects.create(
+            owner=user,
+            title="Apartment Heliopolis",
+            price=20000.00,
+            city="Cairo",
+            district="Heliopolis",
+        )
+        # Auth client uses "user" fixture as authenticated user. So let's make another_user the owner to let "user" book.
+        property_obj.owner = another_user
+        property_obj.save()
+
+        url = reverse("property-visit-create", kwargs={"property_id": property_obj.id})
+        data = {
+            "visit_date": "2026-07-20",
+            "visit_time": "14:00:00",
+            "note": "Can I view it?",
+        }
+        response = auth_client.post(url, data, format="json")
+        assert response.status_code == status.HTTP_201_CREATED
+        assert PropertyVisit.objects.filter(property=property_obj, tenant=user).exists()
+
+    def test_create_visit_owner_cannot_book_own_property(self, auth_client, user):
+        property_obj = Property.objects.create(
+            owner=user,
+            title="Apartment Heliopolis",
+            price=20000.00,
+            city="Cairo",
+            district="Heliopolis",
+        )
+        url = reverse("property-visit-create", kwargs={"property_id": property_obj.id})
+        data = {
+            "visit_date": "2026-07-20",
+            "visit_time": "14:00:00",
+        }
+        response = auth_client.post(url, data, format="json")
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert "You cannot book a visit for your own property." in str(response.data)
+
+    def test_list_tenant_visits(self, auth_client, user, another_user):
+        property_obj = Property.objects.create(
+            owner=another_user,
+            title="Apartment Heliopolis",
+            price=20000.00,
+            city="Cairo",
+            district="Heliopolis",
+        )
+        visit1 = PropertyVisit.objects.create(
+            property=property_obj,
+            tenant=user,
+            visit_date="2026-07-20",
+            visit_time="14:00:00",
+        )
+        url = reverse("tenant-visit-list")
+        response = auth_client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+        json_data = response.json()
+        assert "visits" in json_data
+        assert len(json_data["visits"]["results"]) == 1
+        assert json_data["visits"]["results"][0]["tenant_email"] == user.email
+
+    def test_list_owner_received_visits(self, auth_client, user, another_user):
+        property_obj = Property.objects.create(
+            owner=user,
+            title="Owner Property",
+            price=20000.00,
+            city="Cairo",
+            district="Heliopolis",
+        )
+        visit1 = PropertyVisit.objects.create(
+            property=property_obj,
+            tenant=another_user,
+            visit_date="2026-07-20",
+            visit_time="14:00:00",
+            status=PropertyVisit.Status.PENDING,
+        )
+        url = reverse("owner-visit-list")
+        response = auth_client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+        json_data = response.json()
+        assert "visits" in json_data
+        assert len(json_data["visits"]["results"]) == 1
+        # Email should be hidden for unconfirmed visits
+        assert json_data["visits"]["results"][0]["tenant_email"] == ""
+
+    def test_owner_confirms_visit_shows_email(self, auth_client, user, another_user):
+        property_obj = Property.objects.create(
+            owner=user,
+            title="Owner Property",
+            price=20000.00,
+            city="Cairo",
+            district="Heliopolis",
+        )
+        visit = PropertyVisit.objects.create(
+            property=property_obj,
+            tenant=another_user,
+            visit_date="2026-07-20",
+            visit_time="14:00:00",
+            status=PropertyVisit.Status.PENDING,
+        )
+        url = reverse("property-visit-update", kwargs={"id": visit.id})
+        response = auth_client.patch(url, {"status": "confirmed"}, format="json")
+        assert response.status_code == status.HTTP_200_OK
+        visit.refresh_from_db()
+        assert visit.status == PropertyVisit.Status.CONFIRMED
+
+        # After confirmation, the email is visible to the owner
+        detail_url = reverse("property-visit-detail", kwargs={"id": visit.id})
+        detail_response = auth_client.get(detail_url)
+        assert detail_response.status_code == status.HTTP_200_OK
+        assert detail_response.json()["visit"]["tenant_email"] == another_user.email
+
+    def test_tenant_cancels_visit(self, auth_client, user, another_user):
+        property_obj = Property.objects.create(
+            owner=another_user,
+            title="Other Property",
+            price=20000.00,
+            city="Cairo",
+            district="Heliopolis",
+        )
+        visit = PropertyVisit.objects.create(
+            property=property_obj,
+            tenant=user,
+            visit_date="2026-07-20",
+            visit_time="14:00:00",
+            status=PropertyVisit.Status.PENDING,
+        )
+        url = reverse("property-visit-update", kwargs={"id": visit.id})
+        response = auth_client.patch(url, {"status": "canceled"}, format="json")
+        assert response.status_code == status.HTTP_200_OK
+        visit.refresh_from_db()
+        assert visit.status == PropertyVisit.Status.CANCELED
