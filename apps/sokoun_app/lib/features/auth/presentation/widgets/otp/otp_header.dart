@@ -19,7 +19,7 @@ class OtpHeader extends StatelessWidget {
         children: [
           Align(
             alignment: AlignmentDirectional.centerStart,
-            child: SokoonBackButton(),
+            child: SokoonBackButton(onTap: onBack),
           ),
           AppText(
             LocaleKeys.verificationCode,

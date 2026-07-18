@@ -126,7 +126,6 @@ class _ToastDesign {
   factory _ToastDesign.fromStatus(BaseStatus status) {
     switch (status) {
       case BaseStatus.success:
-      case BaseStatus.loadingMore:
         return _ToastDesign(
           title: LocaleKeys.successDone,
           accentColor: AppColors.green,
@@ -154,8 +153,9 @@ class _ToastDesign {
             Icons.close_rounded,
           ),
         );
-      case BaseStatus.loading:
       case BaseStatus.initial:
+      case BaseStatus.loading:
+      case BaseStatus.loadingMore:
         return _ToastDesign(
           title: ConstantManager.projectName,
           accentColor: AppColors.blue,

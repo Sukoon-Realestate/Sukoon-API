@@ -13,6 +13,8 @@ class AuthScaffold extends StatelessWidget {
     this.onBack,
     this.backgroundColor = AppColors.scaffoldBackground,
     this.padding,
+    this.bottomNavigationBar,
+    this.isScrollable = true,
     this.resizeToAvoidBottomInset = true,
     this.backButtonAlignment = AlignmentDirectional.centerEnd,
   });
@@ -23,6 +25,8 @@ class AuthScaffold extends StatelessWidget {
   final VoidCallback? onBack;
   final Color backgroundColor;
   final EdgeInsetsGeometry? padding;
+  final Widget? bottomNavigationBar;
+  final bool isScrollable;
   final bool resizeToAvoidBottomInset;
   final AlignmentGeometry backButtonAlignment;
 
@@ -31,35 +35,48 @@ class AuthScaffold extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       backgroundColor: backgroundColor,
+      bottomNavigationBar: bottomNavigationBar,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
+            final Widget content = Padding(
+              padding: padding ?? EdgeInsets.symmetric(horizontal: 24.w),
+              child: _buildContent(),
+            );
+
+            if (!isScrollable) {
+              return content;
+            }
+
             return SingleChildScrollView(
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               child: ConstrainedBox(
                 constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: Padding(
-                  padding: padding ?? EdgeInsets.symmetric(horizontal: 24.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      if (showBackButton || backButton != null) ...[
-                        20.szH,
-                        Align(
-                          alignment: backButtonAlignment,
-                          child: backButton ?? SokoonBackButton(onTap: onBack),
-                        ),
-                        14.szH,
-                      ],
-                      child,
-                    ],
-                  ),
-                ),
+                child: content,
               ),
             );
           },
         ),
       ),
+    );
+  }
+
+  Widget _buildContent() {
+    if (!showBackButton && backButton == null) {
+      return child;
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        20.szH,
+        Align(
+          alignment: backButtonAlignment,
+          child: backButton ?? SokoonBackButton(onTap: onBack),
+        ),
+        14.szH,
+        child,
+      ],
     );
   }
 }
