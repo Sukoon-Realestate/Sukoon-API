@@ -20,7 +20,6 @@ class ProfileListAPIView(generics.ListAPIView):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     search_fields = ["user__first_name", "user__last_name"]
     filterset_fields = ["gender"]
-    object_label = "profiles"
 
     def get_queryset(self) -> List[Profile]:
         return Profile.objects.exclude(user__is_staff=True).exclude(
@@ -31,7 +30,6 @@ class ProfileListAPIView(generics.ListAPIView):
 class ProfileDetailAPIView(generics.RetrieveAPIView):
     serializer_class = ProfileSerializer
     renderer_classes = [GenericJsonRenderer]
-    object_label = "Profile"
 
     def get_queryset(self) -> QuerySet:
         return Profile.objects.select_related("user").all()
@@ -46,7 +44,6 @@ class ProfileDetailAPIView(generics.RetrieveAPIView):
 class ProfileUpdateAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = UpdateProfileSerializer
     renderer_classes = [GenericJsonRenderer]
-    object_label = "profile"
 
     def get_queryset(self) -> None:
         return Profile.objects.none()

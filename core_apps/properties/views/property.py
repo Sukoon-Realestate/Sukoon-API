@@ -60,7 +60,6 @@ class PropertyListAPIView(generics.ListAPIView):
     filterset_class = PropertyFilter
     search_fields = ["title", "description", "city", "district"]
     ordering_fields = ["price", "created_at"]
-    object_label = "properties"
 
 
 class PropertyCreateAPIView(generics.CreateAPIView):
@@ -99,7 +98,6 @@ class PropertyCreateAPIView(generics.CreateAPIView):
     serializer_class = PropertySerializer
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticated]
-    object_label = "properties"
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -115,7 +113,6 @@ class PropertyDetailAPIView(generics.RetrieveAPIView):
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.AllowAny]
     lookup_field = "id"
-    object_label = "property"
 
     def get_object(self):
         obj = get_object_or_404(self.get_queryset(), id=self.kwargs["id"])
@@ -145,7 +142,6 @@ class MyPropertyListAPIView(generics.ListAPIView):
     renderer_classes = [GenericJsonRenderer]
     pagination_class = PropertyPagination
     permission_classes = [permissions.IsAuthenticated]
-    object_label = "properties"
 
     def get_queryset(self):
         # ? ContentView uses a generic FK on the internal pkid, so a subquery is
@@ -189,7 +185,6 @@ class PropertyUpdateAPIView(generics.UpdateAPIView):
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     lookup_field = "id"
-    object_label = "property"
 
     def get_object(self):
         obj = get_object_or_404(self.get_queryset(), id=self.kwargs["id"])
@@ -207,7 +202,6 @@ class PropertyDeleteAPIView(generics.DestroyAPIView):
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
     lookup_field = "id"
-    object_label = "property"
 
     def get_object(self):
         obj = get_object_or_404(self.get_queryset(), id=self.kwargs["id"])
@@ -224,7 +218,6 @@ class PropertyImageUploadAPIView(generics.CreateAPIView):
     serializer_class = PropertyImageUploadSerializer
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticated]
-    object_label = "image"
 
     def perform_create(self, serializer):
         property_obj = get_object_or_404(
@@ -252,7 +245,6 @@ class PropertyImageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     lookup_field = "id"
-    object_label = "image"
 
     def get_serializer_class(self):
         if self.request.method in ["PUT", "PATCH"]:

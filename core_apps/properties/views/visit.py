@@ -40,7 +40,6 @@ class PropertyVisitCreateAPIView(generics.CreateAPIView):
     serializer_class = PropertyVisitCreateSerializer
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticated]
-    object_label = "visit"
 
     def perform_create(self, serializer):
         property_obj = get_object_or_404(
@@ -62,7 +61,6 @@ class TenantPropertyVisitListAPIView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = PropertyVisitPagination
     filterset_class = PropertyVisitFilter
-    object_label = "visits"
 
     def get_queryset(self):
         return (
@@ -88,7 +86,6 @@ class OwnerPropertyVisitListAPIView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = PropertyVisitPagination
     filterset_class = PropertyVisitFilter
-    object_label = "visits"
 
     def get_queryset(self):
         return (
@@ -115,7 +112,6 @@ class PropertyVisitDetailAPIView(generics.RetrieveAPIView):
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticated, IsTenantOrPropertyOwner]
     lookup_field = "id"
-    object_label = "visit"
 
     def get_object(self):
         obj = get_object_or_404(self.get_queryset(), id=self.kwargs["id"])
@@ -141,7 +137,6 @@ class PropertyVisitUpdateAPIView(generics.UpdateAPIView):
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticated, IsTenantOrPropertyOwner]
     lookup_field = "id"
-    object_label = "visit"
 
     def get_object(self):
         obj = get_object_or_404(self.get_queryset(), id=self.kwargs["id"])

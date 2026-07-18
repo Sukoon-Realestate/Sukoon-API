@@ -90,7 +90,7 @@ class TestPropertyViews:
         # Check rendered response JSON
         json_data = response.json()
         assert json_data["status_code"] == 200
-        assert "properties" in json_data
+        assert "data" in json_data
 
         # Verify query count is small and constant (e.g. <= 3 queries)
         assert len(ctx.captured_queries) <= 3
@@ -128,7 +128,7 @@ class TestPropertyViews:
         # Verify rendered JSON
         json_data = response.json()
         assert json_data["status_code"] == 201
-        assert json_data["properties"]["title"] == "Apartment in Heliopolis"
+        assert json_data["data"]["title"] == "Apartment in Heliopolis"
 
     def test_create_property_invalid_payload_returns_400(self, auth_client):
         url = reverse("property-create")
@@ -438,7 +438,7 @@ class TestMyPropertyListView:
 
         json_data = response.json()
         assert json_data["status_code"] == 200
-        assert "properties" in json_data
+        assert "data" in json_data
 
     def test_my_properties_queries_optimized(self, auth_client, user, another_user):
         for i in range(5):
@@ -558,9 +558,9 @@ class TestPropertyVisitViews:
         response = auth_client.get(url)
         assert response.status_code == status.HTTP_200_OK
         json_data = response.json()
-        assert "visits" in json_data
-        assert len(json_data["visits"]["results"]) == 1
-        assert json_data["visits"]["results"][0]["tenant_email"] == user.email
+        assert "data" in json_data
+        assert len(json_data["data"]["results"]) == 1
+        assert json_data["data"]["results"][0]["tenant_email"] == user.email
 
     def test_list_owner_received_visits(self, auth_client, user, another_user):
         property_obj = Property.objects.create(
@@ -581,10 +581,10 @@ class TestPropertyVisitViews:
         response = auth_client.get(url)
         assert response.status_code == status.HTTP_200_OK
         json_data = response.json()
-        assert "visits" in json_data
-        assert len(json_data["visits"]["results"]) == 1
+        assert "data" in json_data
+        assert len(json_data["data"]["results"]) == 1
         # Owner received list returns the trimmed visit payload
-        result = json_data["visits"]["results"][0]
+        result = json_data["data"]["results"][0]
         assert set(result.keys()) == {"tenant", "visit_date", "status"}
         assert set(result["tenant"].keys()) == {"name", "avatar", "is_verified"}
         assert result["tenant"]["name"] == another_user.get_full_name
@@ -615,7 +615,7 @@ class TestPropertyVisitViews:
         response = auth_client.get(url, {"status": "confirmed"})
 
         assert response.status_code == status.HTTP_200_OK
-        results = response.json()["visits"]["results"]
+        results = response.json()["data"]["results"]
         assert len(results) == 1
         assert results[0]["status"] == PropertyVisit.Status.CONFIRMED
 
@@ -652,7 +652,7 @@ class TestPropertyVisitViews:
         response = auth_client.get(url, {"status": "pending"})
 
         assert response.status_code == status.HTTP_200_OK
-        results = response.json()["visits"]["results"]
+        results = response.json()["data"]["results"]
         assert len(results) == 1
         assert results[0]["status"] == PropertyVisit.Status.PENDING
 
@@ -684,7 +684,7 @@ class TestPropertyVisitViews:
         list_url = reverse("owner-visit-list")
         list_response = auth_client.get(list_url)
         assert list_response.status_code == status.HTTP_200_OK
-        results = list_response.json()["visits"]["results"]
+        results = list_response.json()["data"]["results"]
         assert set(results[0].keys()) == {"tenant", "visit_date", "status"}
         assert results[0]["status"] == PropertyVisit.Status.CONFIRMED
 
@@ -710,7 +710,7 @@ class TestPropertyVisitViews:
         response = auth_client.get(url)
 
         assert response.status_code == status.HTTP_200_OK
-        visit_data = response.json()["visit"]
+        visit_data = response.json()["data"]
         # ? Detail payload is intentionally trimmed to these keys only
         assert set(visit_data.keys()) == {"tenant", "visit_date", "status"}
         tenant_data = visit_data["tenant"]
