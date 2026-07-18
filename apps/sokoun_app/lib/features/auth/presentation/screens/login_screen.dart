@@ -99,7 +99,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
               ),
               12.szH,
-              SokoonFacebookSignInButton(),
+              AppFacebookSignInButton(
+                onSuccess: (token)async{
+
+                },
+              ),
               12.szH,
               SokoonAppleSignInButton(),
               16.szH,

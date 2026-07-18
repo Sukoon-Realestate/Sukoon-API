@@ -123,6 +123,8 @@
     "googleSignInUnsupportedDevice #$ Your device does not support Google sign in" : "جهازك لا يدعم تسجيل الدخول باستخدام Google",
     "googleSignInCancelled #$ Google sign in was cancelled" : "تم إلغاء تسجيل الدخول باستخدام Google",
     "googleSignInFailed #$ Google sign in failed" : "فشل تسجيل الدخول باستخدام Google",
+    "facebookSignInCancelled #$ Facebook sign in was cancelled" : "تم إلغاء تسجيل الدخول باستخدام Facebook",
+    "facebookSignInFailed #$ Facebook sign in failed" : "فشل تسجيل الدخول باستخدام Facebook",
     "Phone Number" : "رقم الجوال",
     "Sign in as visitor" : "الدخول كزائر",
     "Please Enter Your Mobile Number To Register Or Skip To Register And View Some Application Data" : "من فضلك قم بادخال رقم الجوال للتسجيل او عمل تخطي للتسجيل والاطلاع علي بعض بيانات التطبيق",

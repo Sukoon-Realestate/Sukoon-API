@@ -120,6 +120,8 @@
   "google_sign_in_unsupported_device": "جهازك لا يدعم تسجيل الدخول باستخدام Google",
   "google_sign_in_cancelled": "تم إلغاء تسجيل الدخول باستخدام Google",
   "google_sign_in_failed": "فشل تسجيل الدخول باستخدام Google",
+  "facebook_sign_in_cancelled": "تم إلغاء تسجيل الدخول باستخدام Facebook",
+  "facebook_sign_in_failed": "فشل تسجيل الدخول باستخدام Facebook",
   "phone_number": "رقم الجوال",
   "sign_in_as_visitor": "الدخول كزائر",
   "please_enter_your_mobile_number_to_register_or_skip_to_register_and_view_some_application_data": "من فضلك قم بادخال رقم الجوال للتسجيل او عمل تخطي للتسجيل والاطلاع علي بعض بيانات التطبيق",

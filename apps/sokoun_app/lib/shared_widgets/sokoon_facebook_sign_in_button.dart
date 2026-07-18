@@ -4,17 +4,25 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
+import 'package:sokoun_app/features/auth/data/social_auth_service/facebook_sign_in.dart';
 
-class SokoonFacebookSignInButton extends StatelessWidget {
-  const SokoonFacebookSignInButton({super.key, this.onTap, this.label});
+class AppFacebookSignInButton extends StatelessWidget {
+  const AppFacebookSignInButton({
+    super.key,
+    required this.onSuccess,
+  });
 
-  final VoidCallback? onTap;
-  final String? label;
+  final Future<void> Function(String userToken) onSuccess;
 
   @override
   Widget build(BuildContext context) {
     return DefaultButton(
-      onTap: onTap,
+      onTap: () async {
+            final String userToken = await FacebookSignService.instance.authorize();
+            if (userToken.isNotEmpty) {
+              await onSuccess.call(userToken);
+            }
+       },
       color: AppColors.white,
       borderColor: AppColors.sokoonBorder,
       borderRadius: BorderRadius.circular(12.r),
@@ -28,7 +36,7 @@ class SokoonFacebookSignInButton extends StatelessWidget {
           SizedBox(width: 10.w),
           Flexible(
             child: AppText(
-              label ?? LocaleKeys.continueWithFacebook,
+              LocaleKeys.continueWithFacebook,
               color: AppColors.facebookBlue,
               fontSize: 14.sp,
               fontWeight: FontWeight.w700,

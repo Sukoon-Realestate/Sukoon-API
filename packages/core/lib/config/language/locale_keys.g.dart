@@ -364,6 +364,12 @@ abstract class LocaleKeys {
   static const String _googleSignInFailed = 'google_sign_in_failed';
   static String get googleSignInFailed => _googleSignInFailed.tr();
 
+  static const String _facebookSignInCancelled = 'facebook_sign_in_cancelled';
+  static String get facebookSignInCancelled => _facebookSignInCancelled.tr();
+
+  static const String _facebookSignInFailed = 'facebook_sign_in_failed';
+  static String get facebookSignInFailed => _facebookSignInFailed.tr();
+
   static const String _phoneNumber = 'phone_number';
   static String get phoneNumber => _phoneNumber.tr();
 
