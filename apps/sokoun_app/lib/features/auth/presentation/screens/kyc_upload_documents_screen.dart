@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/services.dart';
@@ -18,7 +17,6 @@ import 'package:melos_core/core/widgets/validation_helper.dart';
 import 'package:sokoun_app/features/auth/data/models/kyc_upload_documents_data.dart';
 import 'package:sokoun_app/features/auth/data/models/register.dart';
 import 'package:sokoun_app/features/auth/presentation/cubits/register.dart';
-
 import '../widgets/auth_scaffold.dart';
 import '../widgets/kyc/kyc_flow_header.dart';
 import '../widgets/kyc/kyc_privacy_card.dart';
@@ -249,6 +247,8 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
       },
       builder: (context, submit) {
         return AuthScaffold(
+          showBackButton: false,
+          isScrollable: false,
           padding: EdgeInsets.zero,
           bottomNavigationBar: SafeArea(
             child: Container(

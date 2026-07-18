@@ -15,6 +15,7 @@ import 'package:sokoun_app/features/home/presentation/screens/tenant_book_visit_
 import 'package:sokoun_app/features/home/presentation/screens/tenant_filter_screen.dart';
 import 'package:sokoun_app/features/home/presentation/screens/tenant_property_details_screen.dart';
 import 'features/auth/presentation/screens/kyc_upload_documents_screen.dart';
+import 'features/auth/presentation/screens/register_screen.dart';
 import 'features/home/data/models/tenant_search_result_content.dart';
 import 'features/home/presentation/screens/tenant_search_results_screen.dart';
 import 'features/splash_screen.dart';
@@ -65,7 +66,7 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
               supportedLocales: context.supportedLocales,
               locale: context.locale,
               navigatorKey: Go.navigatorKey,
-              home: KycUploadDocumentsScreen(),
+              home: RegisterScreen(),
               // builder: (context, child) {
               //   return Overlay(
               //     initialEntries: [

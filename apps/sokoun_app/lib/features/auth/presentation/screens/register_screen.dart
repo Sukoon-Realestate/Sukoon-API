@@ -31,12 +31,14 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _nameFieldKey = GlobalKey();
+  final _firstNameFieldKey = GlobalKey();
+  final _lastNameFieldKey = GlobalKey();
   final _phoneFieldKey = GlobalKey();
   final _emailFieldKey = GlobalKey();
   final _passwordFieldKey = GlobalKey();
   final _confirmPasswordFieldKey = GlobalKey();
-  final _nameController = TextEditingController();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -44,7 +46,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
-    _nameController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
     _phoneController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -53,8 +56,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _submit() {
+    final String fullName = [
+      _firstNameController.text.trim(),
+      _lastNameController.text.trim(),
+    ].where((name) => name.isNotEmpty).join(' ');
+
     final RegisterBody body = RegisterBody(
-      name: _nameController.text.trim(),
+      name: fullName,
       phone: _phoneController.text.trim(),
       email: _emailController.text.trim(),
       password: _passwordController.text,
@@ -69,9 +77,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
   List<FirstValidationErrorField> _validationFields() {
     return [
       FirstValidationErrorField(
-        fieldKey: _nameFieldKey,
-        title: LocaleKeys.fullName,
-        value: _nameController.text,
+        fieldKey: _firstNameFieldKey,
+        title: LocaleKeys.firstName,
+        value: _firstNameController.text,
+        validator: Validators.validateName,
+      ),
+      FirstValidationErrorField(
+        fieldKey: _lastNameFieldKey,
+        title: LocaleKeys.lastName,
+        value: _lastNameController.text,
         validator: Validators.validateName,
       ),
       FirstValidationErrorField(
@@ -117,8 +131,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const RegisterHeader(),
               26.szH,
               SokoonNameField(
-                key: _nameFieldKey,
-                controller: _nameController,
+                key: _firstNameFieldKey,
+                controller: _firstNameController,
+                label: LocaleKeys.firstName,
+                hintText: LocaleKeys.firstNameHint,
+                validator: Validators.validateName,
+              ),
+              14.szH,
+              SokoonNameField(
+                key: _lastNameFieldKey,
+                controller: _lastNameController,
+                label: LocaleKeys.lastName,
+                hintText: LocaleKeys.lastNameHint,
                 validator: Validators.validateName,
               ),
               14.szH,

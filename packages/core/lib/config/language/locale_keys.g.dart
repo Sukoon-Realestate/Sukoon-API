@@ -334,6 +334,18 @@ abstract class LocaleKeys {
   static const String _fullNameHint = 'full_name_hint';
   static String get fullNameHint => _fullNameHint.tr();
 
+  static const String _firstName = 'first_name';
+  static String get firstName => _firstName.tr();
+
+  static const String _firstNameHint = 'first_name_hint';
+  static String get firstNameHint => _firstNameHint.tr();
+
+  static const String _lastName = 'last_name';
+  static String get lastName => _lastName.tr();
+
+  static const String _lastNameHint = 'last_name_hint';
+  static String get lastNameHint => _lastNameHint.tr();
+
   static const String _continueWithGoogle = 'continue_with_google';
   static String get continueWithGoogle => _continueWithGoogle.tr();
 
