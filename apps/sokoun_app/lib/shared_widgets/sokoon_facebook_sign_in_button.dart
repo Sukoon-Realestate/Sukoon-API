@@ -7,10 +7,7 @@ import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:sokoun_app/features/auth/data/social_auth_service/facebook_sign_in.dart';
 
 class AppFacebookSignInButton extends StatelessWidget {
-  const AppFacebookSignInButton({
-    super.key,
-    required this.onSuccess,
-  });
+  const AppFacebookSignInButton({super.key, required this.onSuccess});
 
   final Future<void> Function(String userToken) onSuccess;
 
@@ -18,11 +15,11 @@ class AppFacebookSignInButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultButton(
       onTap: () async {
-            final String userToken = await FacebookSignService.instance.authorize();
-            if (userToken.isNotEmpty) {
-              await onSuccess.call(userToken);
-            }
-       },
+        final String userToken = await FacebookSignService.instance.authorize();
+        if (userToken.isNotEmpty) {
+          await onSuccess.call(userToken);
+        }
+      },
       color: AppColors.white,
       borderColor: AppColors.sokoonBorder,
       borderRadius: BorderRadius.circular(12.r),
