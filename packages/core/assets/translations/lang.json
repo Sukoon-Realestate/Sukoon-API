@@ -37,6 +37,7 @@
 
     "_____________________________________Login___________________________________": "",
     "Login" : "تسجيل الدخول",
+    "Login" : "تسجيل الدخول",
     "welcomeBackToSokoon #$ Welcome back to Sokoon" : "مرحباً بك مجدداً في سكون",
     "welcomeToSokoon #$ Welcome to Sokoon" : "أهلاً في سكون",
     "sokoonWelcomeDescription #$ Find the right home safely and transparently with Sokoon. The first rental platform in Egypt" : "ابحث عن سكنك المناسب بأمان وشفافية مع منصة سكون المصرية الأولى في تأجير العقارات",
@@ -119,6 +120,9 @@
     "continueWithGoogle #$ Continue with Google" : "المتابعة باستخدام Google",
     "continueWithFacebook #$ Continue with Facebook" : "المتابعة باستخدام Facebook",
     "continueWithApple #$ Continue with Apple" : "المتابعة باستخدام Apple",
+    "googleSignInUnsupportedDevice #$ Your device does not support Google sign in" : "جهازك لا يدعم تسجيل الدخول باستخدام Google",
+    "googleSignInCancelled #$ Google sign in was cancelled" : "تم إلغاء تسجيل الدخول باستخدام Google",
+    "googleSignInFailed #$ Google sign in failed" : "فشل تسجيل الدخول باستخدام Google",
     "Phone Number" : "رقم الجوال",
     "Sign in as visitor" : "الدخول كزائر",
     "Please Enter Your Mobile Number To Register Or Skip To Register And View Some Application Data" : "من فضلك قم بادخال رقم الجوال للتسجيل او عمل تخطي للتسجيل والاطلاع علي بعض بيانات التطبيق",

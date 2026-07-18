@@ -7,14 +7,18 @@ import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:sokoun_app/features/auth/data/social_auth_service/google_sign_in.dart';
 
 class AppGoogleSignInButton extends StatelessWidget {
-  const AppGoogleSignInButton({super.key});
+  const AppGoogleSignInButton({super.key, required this.onSuccess});
+  final Future<void> Function(String userToken) onSuccess;
 
   @override
   Widget build(BuildContext context) {
     return DefaultButton(
       onTap: ()async{
         await GoogleSignService.instance.init();
-        await GoogleSignService.instance.authorize();
+        final String token = await GoogleSignService.instance.authorize();
+        if(token.isNotEmpty){
+          onSuccess.call(token);
+        }
       },
       color: AppColors.white,
       borderColor: AppColors.sokoonBorder,

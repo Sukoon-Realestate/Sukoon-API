@@ -355,6 +355,15 @@ abstract class LocaleKeys {
   static const String _continueWithApple = 'continue_with_apple';
   static String get continueWithApple => _continueWithApple.tr();
 
+  static const String _googleSignInUnsupportedDevice = 'google_sign_in_unsupported_device';
+  static String get googleSignInUnsupportedDevice => _googleSignInUnsupportedDevice.tr();
+
+  static const String _googleSignInCancelled = 'google_sign_in_cancelled';
+  static String get googleSignInCancelled => _googleSignInCancelled.tr();
+
+  static const String _googleSignInFailed = 'google_sign_in_failed';
+  static String get googleSignInFailed => _googleSignInFailed.tr();
+
   static const String _phoneNumber = 'phone_number';
   static String get phoneNumber => _phoneNumber.tr();
 
