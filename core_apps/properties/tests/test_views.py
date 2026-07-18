@@ -4,12 +4,15 @@ from PIL import Image
 from unittest.mock import patch
 
 import pytest
+from django.contrib.contenttypes.models import ContentType
 from django.db import connection
 from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
+from django.utils import timezone
 from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import status
 
+from core_apps.common.models import ContentView
 from core_apps.properties.models import Property, PropertyImage, PropertyVisit
 
 
@@ -17,14 +20,24 @@ from core_apps.properties.models import Property, PropertyImage, PropertyVisit
 def mock_cloudinary_upload():
     mock_upload_response = lambda file, **kwargs: {
         "public_id": f"mocked_{file.name}" if hasattr(file, "name") else "mocked_file",
-        "url": f"https://res.cloudinary.com/mocked/{file.name}" if hasattr(file, "name") else "https://res.cloudinary.com/mocked/file",
-        "secure_url": f"https://res.cloudinary.com/mocked/{file.name}" if hasattr(file, "name") else "https://res.cloudinary.com/mocked/file",
+        "url": (
+            f"https://res.cloudinary.com/mocked/{file.name}"
+            if hasattr(file, "name")
+            else "https://res.cloudinary.com/mocked/file"
+        ),
+        "secure_url": (
+            f"https://res.cloudinary.com/mocked/{file.name}"
+            if hasattr(file, "name")
+            else "https://res.cloudinary.com/mocked/file"
+        ),
         "format": "png",
         "resource_type": "image",
         "version": 123456,
         "type": "upload",
     }
-    with patch("cloudinary.uploader.upload", side_effect=mock_upload_response) as mocked:
+    with patch(
+        "cloudinary.uploader.upload", side_effect=mock_upload_response
+    ) as mocked:
         yield mocked
 
 
@@ -143,6 +156,48 @@ class TestPropertyViews:
         url = reverse("property-detail", kwargs={"id": uuid.uuid4()})
         response = api_client.get(url)
         assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_retrieve_property_records_authenticated_view(self, api_client, user):
+        property_obj = Property.objects.create(
+            owner=user,
+            title="Apartment in Nasr City",
+            price=15000.00,
+            city="Cairo",
+            district="Nasr City",
+        )
+        api_client.force_authenticate(user=user)
+        url = reverse("property-detail", kwargs={"id": property_obj.id})
+
+        response = api_client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+
+        content_type = ContentType.objects.get_for_model(Property)
+        views = ContentView.objects.filter(
+            content_type=content_type, object_id=property_obj.pkid, user=user
+        )
+        assert views.count() == 1
+
+        # A repeat view by the same user refreshes the row instead of duplicating it
+        response = api_client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+        assert views.count() == 1
+
+    def test_retrieve_property_records_anonymous_view(self, api_client, user):
+        property_obj = Property.objects.create(
+            owner=user,
+            title="Apartment in Nasr City",
+            price=15000.00,
+            city="Cairo",
+            district="Nasr City",
+        )
+        url = reverse("property-detail", kwargs={"id": property_obj.id})
+        response = api_client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+
+        content_type = ContentType.objects.get_for_model(Property)
+        assert ContentView.objects.filter(
+            content_type=content_type, object_id=property_obj.pkid, user=None
+        ).exists()
 
     def test_update_property_owner_happy_path(self, auth_client, user):
         property_obj = Property.objects.create(
@@ -321,6 +376,111 @@ class TestPropertyViews:
 
 
 @pytest.mark.django_db
+class TestMyPropertyListView:
+    def test_my_properties_unauthenticated_returns_401(self, api_client):
+        url = reverse("my-property-list")
+        response = api_client.get(url)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_my_properties_happy_path_with_counts(
+        self, auth_client, user, another_user
+    ):
+        property_obj = Property.objects.create(
+            owner=user,
+            title="My Apartment",
+            price=15000.00,
+            city="Cairo",
+            district="Nasr City",
+        )
+        # Another owner's property must not appear in the response
+        Property.objects.create(
+            owner=another_user,
+            title="Not Mine",
+            price=9000.00,
+            city="Cairo",
+            district="Heliopolis",
+        )
+        PropertyVisit.objects.create(
+            property=property_obj,
+            tenant=another_user,
+            visit_date="2026-07-20",
+            visit_time="14:00:00",
+        )
+        content_type = ContentType.objects.get_for_model(Property)
+        ContentView.objects.create(
+            content_type=content_type,
+            object_id=property_obj.pkid,
+            user=another_user,
+            viewer_ip="127.0.0.1",
+            last_viewed=timezone.now(),
+        )
+        ContentView.objects.create(
+            content_type=content_type,
+            object_id=property_obj.pkid,
+            user=None,
+            viewer_ip="10.0.0.1",
+            last_viewed=timezone.now(),
+        )
+
+        url = reverse("my-property-list")
+        response = auth_client.get(url)
+
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data["results"]) == 1
+
+        item = response.data["results"][0]
+        assert item["title"] == "My Apartment"
+        assert "main_image" in item
+        assert item["price"] == "15000.00"
+        assert item["status"] == Property.Status.UNDER_REVIEW
+        assert item["views_count"] == 2
+        assert item["visits_count"] == 1
+
+        json_data = response.json()
+        assert json_data["status_code"] == 200
+        assert "properties" in json_data
+
+    def test_my_properties_queries_optimized(self, auth_client, user, another_user):
+        for i in range(5):
+            property_obj = Property.objects.create(
+                owner=user,
+                title=f"Apartment {i}",
+                price=15000.00,
+                city="Cairo",
+                district="Nasr City",
+            )
+            PropertyVisit.objects.create(
+                property=property_obj,
+                tenant=another_user,
+                visit_date="2026-07-20",
+                visit_time="14:00:00",
+            )
+        url = reverse("my-property-list")
+
+        with CaptureQueriesContext(connection) as ctx:
+            response = auth_client.get(url)
+
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.data["results"]) == 5
+        # Pagination count + annotated list query (+ one-time ContentType lookup)
+        assert len(ctx.captured_queries) <= 3
+
+    def test_owner_cannot_set_status_via_api(self, auth_client):
+        url = reverse("property-create")
+        data = {
+            "title": "Apartment in Heliopolis",
+            "price": 20000.00,
+            "city": "Cairo",
+            "district": "Heliopolis",
+            "status": Property.Status.VERIFIED,
+        }
+        response = auth_client.post(url, data)
+        assert response.status_code == status.HTTP_201_CREATED
+        property_obj = Property.objects.get(title="Apartment in Heliopolis")
+        assert property_obj.status == Property.Status.UNDER_REVIEW
+
+
+@pytest.mark.django_db
 class TestPropertyVisitViews:
     def test_create_visit_unauthenticated_returns_401(self, api_client, user):
         property_obj = Property.objects.create(
@@ -339,7 +499,9 @@ class TestPropertyVisitViews:
         response = api_client.post(url, data, format="json")
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-    def test_create_visit_authenticated_happy_path(self, auth_client, user, another_user):
+    def test_create_visit_authenticated_happy_path(
+        self, auth_client, user, another_user
+    ):
         property_obj = Property.objects.create(
             owner=user,
             title="Apartment Heliopolis",
@@ -445,11 +607,72 @@ class TestPropertyVisitViews:
         visit.refresh_from_db()
         assert visit.status == PropertyVisit.Status.CONFIRMED
 
-        # After confirmation, the email is visible to the owner
-        detail_url = reverse("property-visit-detail", kwargs={"id": visit.id})
-        detail_response = auth_client.get(detail_url)
-        assert detail_response.status_code == status.HTTP_200_OK
-        assert detail_response.json()["visit"]["tenant_email"] == another_user.email
+        # After confirmation, the email is visible to the owner in the received visits list
+        list_url = reverse("owner-visit-list")
+        list_response = auth_client.get(list_url)
+        assert list_response.status_code == status.HTTP_200_OK
+        results = list_response.json()["visits"]["results"]
+        assert results[0]["tenant_email"] == another_user.email
+
+    def test_retrieve_visit_detail_returns_trimmed_payload(
+        self, auth_client, user, another_user
+    ):
+        property_obj = Property.objects.create(
+            owner=user,
+            title="Owner Property",
+            price=20000.00,
+            city="Cairo",
+            district="Heliopolis",
+        )
+        another_user.is_verified = True
+        another_user.save()
+        visit = PropertyVisit.objects.create(
+            property=property_obj,
+            tenant=another_user,
+            visit_date="2026-07-20",
+            visit_time="14:00:00",
+        )
+        url = reverse("property-visit-detail", kwargs={"id": visit.id})
+        response = auth_client.get(url)
+
+        assert response.status_code == status.HTTP_200_OK
+        visit_data = response.json()["visit"]
+        # ? Detail payload is intentionally trimmed to these four keys only
+        assert set(visit_data.keys()) == {
+            "tenant_name",
+            "tenant_status",
+            "visit_date",
+            "status",
+        }
+        assert visit_data["tenant_name"] == another_user.get_full_name
+        assert visit_data["tenant_status"] is True
+        assert visit_data["visit_date"] == "2026-07-20"
+        assert visit_data["status"] == PropertyVisit.Status.PENDING
+
+    def test_retrieve_visit_detail_unauthenticated_returns_401(
+        self, api_client, user, another_user
+    ):
+        property_obj = Property.objects.create(
+            owner=user,
+            title="Owner Property",
+            price=20000.00,
+            city="Cairo",
+            district="Heliopolis",
+        )
+        visit = PropertyVisit.objects.create(
+            property=property_obj,
+            tenant=another_user,
+            visit_date="2026-07-20",
+            visit_time="14:00:00",
+        )
+        url = reverse("property-visit-detail", kwargs={"id": visit.id})
+        response = api_client.get(url)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_retrieve_visit_detail_not_found_returns_404(self, auth_client):
+        url = reverse("property-visit-detail", kwargs={"id": uuid.uuid4()})
+        response = auth_client.get(url)
+        assert response.status_code == status.HTTP_404_NOT_FOUND
 
     def test_tenant_cancels_visit(self, auth_client, user, another_user):
         property_obj = Property.objects.create(

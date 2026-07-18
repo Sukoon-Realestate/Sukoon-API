@@ -43,6 +43,16 @@ class PropertyVisitSerializer(serializers.ModelSerializer):
         return ""
 
 
+class PropertyVisitDetailSerializer(serializers.ModelSerializer):
+    tenant_name = serializers.CharField(source="tenant.get_full_name", read_only=True)
+    tenant_status = serializers.BooleanField(source="tenant.is_verified", read_only=True)
+
+    class Meta:
+        model = PropertyVisit
+        fields = ["tenant_name", "tenant_status", "visit_date", "status"]
+        read_only_fields = fields
+
+
 class PropertyVisitCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = PropertyVisit

@@ -70,6 +70,29 @@ class PropertyListSerializer(serializers.ModelSerializer):
         ]
 
 
+class MyPropertyListSerializer(serializers.ModelSerializer):
+    """
+    Read-only per-property stats for the owner dashboard.
+    Requires `views_count` and `visits_count` annotations on the queryset.
+    """
+
+    main_image = CloudinarySerializerField(read_only=True)
+    views_count = serializers.IntegerField(read_only=True)
+    visits_count = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = Property
+        fields = [
+            "id",
+            "title",
+            "main_image",
+            "price",
+            "status",
+            "views_count",
+            "visits_count",
+        ]
+
+
 class PropertySerializer(serializers.ModelSerializer):
     images = PropertyImageSerializer(many=True, read_only=True)
     main_image = CloudinarySerializerField(required=False, allow_null=True)

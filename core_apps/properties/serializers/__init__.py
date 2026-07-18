@@ -1,4 +1,5 @@
 from .property import (
+    MyPropertyListSerializer,
     PropertyImageSerializer,
     PropertyImageUpdateSerializer,
     PropertyImageUploadSerializer,
@@ -8,5 +9,6 @@ from .property import (
 from .visit import (
     PropertyVisitSerializer,
     PropertyVisitCreateSerializer,
+    PropertyVisitDetailSerializer,
     PropertyVisitUpdateSerializer,
 )

@@ -174,7 +174,7 @@ COOKIE_NAME = "access"
 ? while allowing the cookies to be sent with top-level navigation that is initiated by user actions
 """
 COOKIE_SAMESITE = "Lax"
-COOKIE_PATH = "/"  # ? cookies will be accessed project wide
+COOKIE_PATH = "/"  # ? cookies will be accessed project widest
 COOKIE_HTTPONLY = True  # ? can't be accessed via js
 # ?HTTPS only or HTTP && HTTPS
 COOKIE_SECURE = getenv("COOKIE_SECURE", "True") == "True"

@@ -28,6 +28,11 @@ class Property(TimeStampedModel):
         FEMALE_STUDENTS = ("female_students", _("Female Students Only"))
         ALL = ("all", _("All"))
 
+    class Status(models.TextChoices):
+        VERIFIED = ("verified", _("Verified"))
+        UNDER_REVIEW = ("under_review", _("Under Review"))
+        NEEDS_REVISION = ("needs_revision", _("Needs Revision"))
+
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -57,6 +62,13 @@ class Property(TimeStampedModel):
     )
     is_furnished = models.BooleanField(_("Is Furnished"), default=False)
     is_verified = models.BooleanField(_("Is Verified"), default=False)
+    # ? Moderation state — only editable by admin/staff, never via the API
+    status = models.CharField(
+        _("Status"),
+        max_length=20,
+        choices=Status.choices,
+        default=Status.UNDER_REVIEW,
+    )
     bedrooms = models.IntegerField(_("Bedrooms"), default=1)
     bathrooms = models.IntegerField(_("Bathrooms"), default=1)
     area = models.IntegerField(_("Area (sqm)"), default=0)
@@ -88,9 +100,7 @@ class Property(TimeStampedModel):
     has_garage = models.BooleanField(_("Has Garage"), default=False)
     has_security = models.BooleanField(_("Has Security"), default=False)
     has_balcony = models.BooleanField(_("Has Balcony"), default=False)
-    has_air_conditioning = models.BooleanField(
-        _("Has Air Conditioning"), default=False
-    )
+    has_air_conditioning = models.BooleanField(_("Has Air Conditioning"), default=False)
     near_metro = models.BooleanField(_("Near Metro"), default=False)
     has_natural_gas = models.BooleanField(_("Has Natural Gas"), default=False)
     has_electricity_meter = models.BooleanField(

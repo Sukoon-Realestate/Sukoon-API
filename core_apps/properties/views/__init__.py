@@ -1,4 +1,5 @@
 from .property import (
+    MyPropertyListAPIView,
     PropertyCreateAPIView,
     PropertyDeleteAPIView,
     PropertyDetailAPIView,

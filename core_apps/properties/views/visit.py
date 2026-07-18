@@ -10,6 +10,7 @@ from ..models import Property, PropertyVisit
 from ..permissions import IsTenantOrPropertyOwner
 from ..serializers import (
     PropertyVisitCreateSerializer,
+    PropertyVisitDetailSerializer,
     PropertyVisitSerializer,
     PropertyVisitUpdateSerializer,
 )
@@ -88,13 +89,16 @@ class OwnerPropertyVisitListAPIView(generics.ListAPIView):
 class PropertyVisitDetailAPIView(generics.RetrieveAPIView):
     """
     API view to retrieve details of a specific property visit request.
+
+    Returns a trimmed payload: tenant name, tenant verification status,
+    visit date, and visit status.
     """
 
     queryset = (
         PropertyVisit.objects.select_related("property", "property__owner", "tenant")
         .all()
     )
-    serializer_class = PropertyVisitSerializer
+    serializer_class = PropertyVisitDetailSerializer
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticated, IsTenantOrPropertyOwner]
     lookup_field = "id"

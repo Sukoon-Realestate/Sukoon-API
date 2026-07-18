@@ -16,10 +16,12 @@ class PropertyAdmin(admin.ModelAdmin):
         "property_type",
         "price",
         "price_period",
+        "status",
         "is_verified",
         "created_at",
     ]
     list_filter = [
+        "status",
         "property_type",
         "price_period",
         "is_verified",

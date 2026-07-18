@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    MyPropertyListAPIView,
     PropertyCreateAPIView,
     PropertyDeleteAPIView,
     PropertyDetailAPIView,
@@ -18,6 +19,7 @@ from .views import (
 urlpatterns = [
     path("", PropertyListAPIView.as_view(), name="property-list"),
     path("create/", PropertyCreateAPIView.as_view(), name="property-create"),
+    path("owned/", MyPropertyListAPIView.as_view(), name="my-property-list"),
     path("<uuid:id>/", PropertyDetailAPIView.as_view(), name="property-detail"),
     path("<uuid:id>/update/", PropertyUpdateAPIView.as_view(), name="property-update"),
     path("<uuid:id>/delete/", PropertyDeleteAPIView.as_view(), name="property-delete"),

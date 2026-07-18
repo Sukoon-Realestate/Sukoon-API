@@ -1,18 +1,22 @@
 import logging
 
+from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
-from django.db.models import Count
+from django.db.models import Count, IntegerField, OuterRef, Subquery
+from django.db.models.functions import Coalesce
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics, permissions, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
+from core_apps.common.models import ContentView
 from core_apps.common.renderers import GenericJsonRenderer
 
 from ..filters import PropertyFilter
 from ..models import Property, PropertyImage
 from ..permissions import IsOwnerOrReadOnly
 from ..serializers import (
+    MyPropertyListSerializer,
     PropertyImageSerializer,
     PropertyImageUpdateSerializer,
     PropertyImageUploadSerializer,
@@ -22,6 +26,14 @@ from ..serializers import (
 from ..services import PropertyService
 
 logger = logging.getLogger(__name__)
+
+
+def get_client_ip(request):
+    # ? Behind a proxy the real client IP is the first entry of X-Forwarded-For
+    x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
+    if x_forwarded_for:
+        return x_forwarded_for.split(",")[0].strip()
+    return request.META.get("REMOTE_ADDR")
 
 
 class PropertyPagination(PageNumberPagination):
@@ -109,6 +121,55 @@ class PropertyDetailAPIView(generics.RetrieveAPIView):
         obj = get_object_or_404(self.get_queryset(), id=self.kwargs["id"])
         self.check_object_permissions(self.request, obj)
         return obj
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        # * Track the view so owners see real "number of views" stats
+        ContentView.record_view(
+            content_object=instance,
+            user=request.user if request.user.is_authenticated else None,
+            viewer_ip=get_client_ip(request),
+        )
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
+
+class MyPropertyListAPIView(generics.ListAPIView):
+    """
+    API view for an owner to list their own properties with per-property stats:
+    title, main image, price, moderation status, number of views and number of
+    visit requests.
+    """
+
+    serializer_class = MyPropertyListSerializer
+    renderer_classes = [GenericJsonRenderer]
+    pagination_class = PropertyPagination
+    permission_classes = [permissions.IsAuthenticated]
+    object_label = "properties"
+
+    def get_queryset(self):
+        # ? ContentView uses a generic FK on the internal pkid, so a subquery is
+        # ? needed to count views without a reverse relation
+        property_content_type = ContentType.objects.get_for_model(Property)
+        views_count_subquery = (
+            ContentView.objects.filter(
+                content_type=property_content_type, object_id=OuterRef("pkid")
+            )
+            .values("object_id")
+            .annotate(count=Count("pkid"))
+            .values("count")
+        )
+        return (
+            Property.objects.filter(owner=self.request.user).annotate(
+                views_count=Coalesce(
+                    Subquery(views_count_subquery, output_field=IntegerField()), 0
+                ),
+                visits_count=Count("visits"),
+            )
+            # ! Default Meta ordering is ignored on GROUP BY queries — set it
+            # ! explicitly so pagination stays stable
+            .order_by("-created_at")
+        )
 
 
 class PropertyUpdateAPIView(generics.UpdateAPIView):
