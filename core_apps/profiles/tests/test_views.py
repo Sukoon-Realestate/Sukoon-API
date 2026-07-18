@@ -52,6 +52,13 @@ class TestProfileDetailView:
         assert res.status_code == status.HTTP_200_OK
         assert str(another_user.profile.id) != res.data["id"]
 
+    def test_detail_response_includes_phone_number(self, auth_client, user):
+        user.profile.phone_number = "+14155552671"
+        user.profile.save()
+        res = auth_client.get(PROFILE_DETAIL_URL)
+        assert res.status_code == status.HTTP_200_OK
+        assert res.data["phone_number"] == "+14155552671"
+
 
 @pytest.mark.django_db
 class TestProfileUpdateView:
@@ -79,6 +86,24 @@ class TestProfileUpdateView:
         assert res.status_code == status.HTTP_200_OK
         user.profile.refresh_from_db()
         assert user.profile.gender == "female"
+
+    def test_update_phone_number(self, auth_client, user):
+        res = auth_client.patch(
+            PROFILE_UPDATE_URL,
+            {"phone_number": "+14155552671"},
+            format="json",
+        )
+        assert res.status_code == status.HTTP_200_OK
+        user.profile.refresh_from_db()
+        assert str(user.profile.phone_number) == "+14155552671"
+
+    def test_update_phone_number_invalid_returns_400(self, auth_client, user):
+        res = auth_client.patch(
+            PROFILE_UPDATE_URL,
+            {"phone_number": "not-a-phone-number"},
+            format="json",
+        )
+        assert res.status_code == status.HTTP_400_BAD_REQUEST
 
     def test_update_kyc_fields(self, auth_client, user):
         from unittest.mock import patch
