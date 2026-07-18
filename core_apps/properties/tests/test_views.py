@@ -583,10 +583,82 @@ class TestPropertyVisitViews:
         json_data = response.json()
         assert "visits" in json_data
         assert len(json_data["visits"]["results"]) == 1
-        # Email should be hidden for unconfirmed visits
-        assert json_data["visits"]["results"][0]["tenant_email"] == ""
+        # Owner received list returns the trimmed visit payload
+        result = json_data["visits"]["results"][0]
+        assert set(result.keys()) == {"tenant", "visit_date", "status"}
+        assert set(result["tenant"].keys()) == {"name", "avatar", "is_verified"}
+        assert result["tenant"]["name"] == another_user.get_full_name
 
-    def test_owner_confirms_visit_shows_email(self, auth_client, user, another_user):
+    def test_list_tenant_visits_filter_by_status(self, auth_client, user, another_user):
+        property_obj = Property.objects.create(
+            owner=another_user,
+            title="Apartment Heliopolis",
+            price=20000.00,
+            city="Cairo",
+            district="Heliopolis",
+        )
+        PropertyVisit.objects.create(
+            property=property_obj,
+            tenant=user,
+            visit_date="2026-07-20",
+            visit_time="14:00:00",
+            status=PropertyVisit.Status.PENDING,
+        )
+        PropertyVisit.objects.create(
+            property=property_obj,
+            tenant=user,
+            visit_date="2026-07-21",
+            visit_time="15:00:00",
+            status=PropertyVisit.Status.CONFIRMED,
+        )
+        url = reverse("tenant-visit-list")
+        response = auth_client.get(url, {"status": "confirmed"})
+
+        assert response.status_code == status.HTTP_200_OK
+        results = response.json()["visits"]["results"]
+        assert len(results) == 1
+        assert results[0]["status"] == PropertyVisit.Status.CONFIRMED
+
+    def test_list_tenant_visits_invalid_status_returns_400(self, auth_client):
+        url = reverse("tenant-visit-list")
+        response = auth_client.get(url, {"status": "not-a-status"})
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_list_owner_received_visits_filter_by_status(
+        self, auth_client, user, another_user
+    ):
+        property_obj = Property.objects.create(
+            owner=user,
+            title="Owner Property",
+            price=20000.00,
+            city="Cairo",
+            district="Heliopolis",
+        )
+        PropertyVisit.objects.create(
+            property=property_obj,
+            tenant=another_user,
+            visit_date="2026-07-20",
+            visit_time="14:00:00",
+            status=PropertyVisit.Status.PENDING,
+        )
+        PropertyVisit.objects.create(
+            property=property_obj,
+            tenant=another_user,
+            visit_date="2026-07-21",
+            visit_time="15:00:00",
+            status=PropertyVisit.Status.REJECTED,
+        )
+        url = reverse("owner-visit-list")
+        response = auth_client.get(url, {"status": "pending"})
+
+        assert response.status_code == status.HTTP_200_OK
+        results = response.json()["visits"]["results"]
+        assert len(results) == 1
+        assert results[0]["status"] == PropertyVisit.Status.PENDING
+
+    def test_owner_confirms_visit_and_received_list_stays_trimmed(
+        self, auth_client, user, another_user
+    ):
         property_obj = Property.objects.create(
             owner=user,
             title="Owner Property",
@@ -607,12 +679,14 @@ class TestPropertyVisitViews:
         visit.refresh_from_db()
         assert visit.status == PropertyVisit.Status.CONFIRMED
 
-        # After confirmation, the email is visible to the owner in the received visits list
+        # ? Owner received list is always trimmed — tenant email is never exposed,
+        # ? even after the visit is confirmed
         list_url = reverse("owner-visit-list")
         list_response = auth_client.get(list_url)
         assert list_response.status_code == status.HTTP_200_OK
         results = list_response.json()["visits"]["results"]
-        assert results[0]["tenant_email"] == another_user.email
+        assert set(results[0].keys()) == {"tenant", "visit_date", "status"}
+        assert results[0]["status"] == PropertyVisit.Status.CONFIRMED
 
     def test_retrieve_visit_detail_returns_trimmed_payload(
         self, auth_client, user, another_user
@@ -637,15 +711,13 @@ class TestPropertyVisitViews:
 
         assert response.status_code == status.HTTP_200_OK
         visit_data = response.json()["visit"]
-        # ? Detail payload is intentionally trimmed to these four keys only
-        assert set(visit_data.keys()) == {
-            "tenant_name",
-            "tenant_status",
-            "visit_date",
-            "status",
-        }
-        assert visit_data["tenant_name"] == another_user.get_full_name
-        assert visit_data["tenant_status"] is True
+        # ? Detail payload is intentionally trimmed to these keys only
+        assert set(visit_data.keys()) == {"tenant", "visit_date", "status"}
+        tenant_data = visit_data["tenant"]
+        assert set(tenant_data.keys()) == {"name", "avatar", "is_verified"}
+        assert tenant_data["name"] == another_user.get_full_name
+        assert tenant_data["avatar"] is None
+        assert tenant_data["is_verified"] is True
         assert visit_data["visit_date"] == "2026-07-20"
         assert visit_data["status"] == PropertyVisit.Status.PENDING
 

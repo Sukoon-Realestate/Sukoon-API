@@ -1,10 +1,14 @@
 import datetime
+from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
+from core_apps.profiles.serializers import CloudinarySerializerField
 from core_apps.properties.serializers.property import PropertyListSerializer
 from ..models import PropertyVisit
 from ..services import PropertyVisitService
+
+User = get_user_model()
 
 
 class PropertyVisitSerializer(serializers.ModelSerializer):
@@ -43,13 +47,23 @@ class PropertyVisitSerializer(serializers.ModelSerializer):
         return ""
 
 
+class VisitTenantSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source="get_full_name", read_only=True)
+    # ? DRF returns None here if the tenant has no profile/avatar
+    avatar = CloudinarySerializerField(source="profile.avatar", read_only=True)
+
+    class Meta:
+        model = User
+        fields = ["name", "avatar", "is_verified"]
+        read_only_fields = fields
+
+
 class PropertyVisitDetailSerializer(serializers.ModelSerializer):
-    tenant_name = serializers.CharField(source="tenant.get_full_name", read_only=True)
-    tenant_status = serializers.BooleanField(source="tenant.is_verified", read_only=True)
+    tenant = VisitTenantSerializer(read_only=True)
 
     class Meta:
         model = PropertyVisit
-        fields = ["tenant_name", "tenant_status", "visit_date", "status"]
+        fields = ["tenant", "visit_date", "status"]
         read_only_fields = fields
 
 

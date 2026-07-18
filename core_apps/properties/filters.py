@@ -1,6 +1,6 @@
 import django_filters
 
-from .models import Property
+from .models import Property, PropertyVisit
 
 
 class PropertyFilter(django_filters.FilterSet):
@@ -51,3 +51,16 @@ class PropertyFilter(django_filters.FilterSet):
             "near_metro",
             "has_natural_gas",
         ]
+
+
+class PropertyVisitFilter(django_filters.FilterSet):
+    """
+    Filter class for PropertyVisit listings.
+
+    Supported filters:
+    - status (e.g. ?status=pending) — one of: pending, confirmed, canceled, rejected
+    """
+
+    class Meta:
+        model = PropertyVisit
+        fields = ["status"]
