@@ -84,3 +84,7 @@ fingerPrint:
 
 kill:
 	killall -9 dart
+
+sha:
+    cd android
+    ./gradlew signingReport

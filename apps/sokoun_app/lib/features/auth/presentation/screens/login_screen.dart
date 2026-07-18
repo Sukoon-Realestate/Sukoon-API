@@ -93,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
               20.szH,
               const LoginDivider(),
               18.szH,
-              SokoonGoogleSignInButton(),
+              AppGoogleSignInButton(),
               12.szH,
               SokoonFacebookSignInButton(),
               12.szH,

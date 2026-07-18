@@ -66,7 +66,7 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
               supportedLocales: context.supportedLocales,
               locale: context.locale,
               navigatorKey: Go.navigatorKey,
-              home: RegisterScreen(),
+              home: LoginScreen(),
               // builder: (context, child) {
               //   return Overlay(
               //     initialEntries: [

@@ -4,17 +4,18 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
+import 'package:sokoun_app/features/auth/data/social_auth_service/google_sign_in.dart';
 
-class SokoonGoogleSignInButton extends StatelessWidget {
-  const SokoonGoogleSignInButton({super.key, this.onTap, this.label});
-
-  final VoidCallback? onTap;
-  final String? label;
+class AppGoogleSignInButton extends StatelessWidget {
+  const AppGoogleSignInButton({super.key});
 
   @override
   Widget build(BuildContext context) {
     return DefaultButton(
-      onTap: onTap,
+      onTap: ()async{
+        await GoogleSignService.instance.init();
+        await GoogleSignService.instance.authorize();
+      },
       color: AppColors.white,
       borderColor: AppColors.sokoonBorder,
       borderRadius: BorderRadius.circular(12.r),
@@ -32,7 +33,7 @@ class SokoonGoogleSignInButton extends StatelessWidget {
           SizedBox(width: 10.w),
           Flexible(
             child: AppText(
-              label ?? LocaleKeys.continueWithGoogle,
+              LocaleKeys.continueWithGoogle,
               color: AppColors.sokoonNavy,
               fontSize: 14.sp,
               fontWeight: FontWeight.w700,
