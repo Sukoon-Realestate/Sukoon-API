@@ -1,6 +1,6 @@
 import django_filters
 
-from .models import Property, PropertyVisit
+from .models import Property, PropertyVisit, PropertyType
 
 
 class PropertyFilter(django_filters.FilterSet):
@@ -8,7 +8,7 @@ class PropertyFilter(django_filters.FilterSet):
     Filter class for Property listings.
 
     Supported filters:
-    - property_type (e.g. ?property_type=apartment)
+    - property_type (e.g. ?property_type=apartment) — filters by PropertyType slug
     - price_period (e.g. ?price_period=monthly)
     - is_furnished (e.g. ?is_furnished=true)
     - is_verified (e.g. ?is_verified=true)
@@ -28,6 +28,7 @@ class PropertyFilter(django_filters.FilterSet):
     - price_max (e.g. ?price_max=10000)
     """
 
+    property_type = django_filters.CharFilter(field_name="property_type__slug")
     price_min = django_filters.NumberFilter(field_name="price", lookup_expr="gte")
     price_max = django_filters.NumberFilter(field_name="price", lookup_expr="lte")
 

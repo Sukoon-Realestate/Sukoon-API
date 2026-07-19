@@ -1,11 +1,19 @@
 from django.contrib import admin
 
-from .models import Property, PropertyImage
+from .models import Property, PropertyImage, PropertyType
 
 
 class PropertyImageInline(admin.TabularInline):
     model = PropertyImage
     extra = 1
+
+
+@admin.register(PropertyType)
+class PropertyTypeAdmin(admin.ModelAdmin):
+    list_display = ["name", "slug", "created_at"]
+    search_fields = ["name", "slug"]
+    prepopulated_fields = {"slug": ("name",)}
+    ordering = ["name"]
 
 
 @admin.register(Property)

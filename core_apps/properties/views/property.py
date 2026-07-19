@@ -13,7 +13,7 @@ from core_apps.common.models import ContentView
 from core_apps.common.renderers import GenericJsonRenderer
 
 from ..filters import PropertyFilter
-from ..models import Property, PropertyImage
+from ..models import Property, PropertyImage, PropertyType
 from ..permissions import IsOwnerOrReadOnly
 from ..serializers import (
     MyPropertyListSerializer,
@@ -22,6 +22,7 @@ from ..serializers import (
     PropertyImageUploadSerializer,
     PropertyListSerializer,
     PropertySerializer,
+    PropertyTypeSerializer,
 )
 from ..services import PropertyService
 
@@ -42,12 +43,25 @@ class PropertyPagination(PageNumberPagination):
     max_page_size = 100
 
 
+class PropertyTypeListAPIView(generics.ListAPIView):
+    """
+    API view to list available property types (managed by admins).
+
+    Returns all PropertyType records: id, name, slug, description.
+    """
+
+    queryset = PropertyType.objects.all()
+    serializer_class = PropertyTypeSerializer
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+
+
 class PropertyListAPIView(generics.ListAPIView):
     """
     API view to list properties.
     """
 
-    queryset = Property.objects.annotate(images_count=Count("images"))
+    queryset = Property.objects.select_related("property_type").annotate(images_count=Count("images")).order_by("-created_at")
     serializer_class = PropertyListSerializer
     renderer_classes = [GenericJsonRenderer]
     pagination_class = PropertyPagination
@@ -108,7 +122,7 @@ class PropertyDetailAPIView(generics.RetrieveAPIView):
     API view to retrieve details of a single property listing.
     """
 
-    queryset = Property.objects.select_related("owner").prefetch_related("images").all()
+    queryset = Property.objects.select_related("owner", "property_type").prefetch_related("images").all()
     serializer_class = PropertySerializer
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.AllowAny]
@@ -156,7 +170,7 @@ class MyPropertyListAPIView(generics.ListAPIView):
             .values("count")
         )
         return (
-            Property.objects.filter(owner=self.request.user).annotate(
+            Property.objects.filter(owner=self.request.user).select_related("property_type").annotate(
                 views_count=Coalesce(
                     Subquery(views_count_subquery, output_field=IntegerField()), 0
                 ),
@@ -180,7 +194,7 @@ class PropertyUpdateAPIView(generics.UpdateAPIView):
     }
     """
 
-    queryset = Property.objects.select_related("owner").prefetch_related("images").all()
+    queryset = Property.objects.select_related("owner", "property_type").prefetch_related("images").all()
     serializer_class = PropertySerializer
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
@@ -197,7 +211,7 @@ class PropertyDeleteAPIView(generics.DestroyAPIView):
     API view to delete a property listing.
     """
 
-    queryset = Property.objects.select_related("owner").prefetch_related("images").all()
+    queryset = Property.objects.select_related("owner", "property_type").prefetch_related("images").all()
     serializer_class = PropertySerializer
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]

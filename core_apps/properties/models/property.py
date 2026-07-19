@@ -14,13 +14,6 @@ class Property(TimeStampedModel):
         MONTHLY = ("monthly", _("Monthly"))
         YEARLY = ("yearly", _("Yearly"))
 
-    class PropertyType(models.TextChoices):
-        APARTMENT = ("apartment", _("Apartment"))
-        HOUSE = ("house", _("House"))
-        VILLA = ("villa", _("Villa"))
-        STUDIO = ("studio", _("Studio"))
-        PENTHOUSE = ("penthouse", _("Penthouse"))
-
     class SuitableFor(models.TextChoices):
         FAMILIES = ("families", _("Families"))
         SINGLES = ("singles", _("Singles"))
@@ -54,11 +47,11 @@ class Property(TimeStampedModel):
         choices=PricePeriod.choices,
         default=PricePeriod.MONTHLY,
     )
-    property_type = models.CharField(
-        _("Property Type"),
-        max_length=20,
-        choices=PropertyType.choices,
-        default=PropertyType.APARTMENT,
+    property_type = models.ForeignKey(
+        "properties.PropertyType",
+        on_delete=models.PROTECT,
+        related_name="properties",
+        verbose_name=_("Property Type"),
     )
     is_furnished = models.BooleanField(_("Is Furnished"), default=False)
     is_verified = models.BooleanField(_("Is Verified"), default=False)

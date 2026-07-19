@@ -8,6 +8,7 @@ from .views import (
     PropertyImageDetailAPIView,
     PropertyImageUploadAPIView,
     PropertyListAPIView,
+    PropertyTypeListAPIView,
     PropertyUpdateAPIView,
     PropertyVisitCreateAPIView,
     TenantPropertyVisitListAPIView,
@@ -17,6 +18,7 @@ from .views import (
 )
 
 urlpatterns = [
+    path("types/", PropertyTypeListAPIView.as_view(), name="property-type-list"),
     path("", PropertyListAPIView.as_view(), name="property-list"),
     path("create/", PropertyCreateAPIView.as_view(), name="property-create"),
     path("owned/", MyPropertyListAPIView.as_view(), name="my-property-list"),

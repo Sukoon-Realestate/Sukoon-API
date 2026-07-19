@@ -2,8 +2,14 @@ from rest_framework import serializers
 
 from core_apps.profiles.serializers import CloudinarySerializerField
 
-from ..models import Property, PropertyImage
+from ..models import Property, PropertyImage, PropertyType
 from ..services import PropertyService
+
+
+class PropertyTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PropertyType
+        fields = ["id", "name", "slug", "description"]
 
 
 class PropertyImageSerializer(serializers.ModelSerializer):
@@ -32,6 +38,9 @@ class PropertyImageUpdateSerializer(serializers.ModelSerializer):
 class PropertyListSerializer(serializers.ModelSerializer):
     main_image = CloudinarySerializerField(read_only=True)
     images_count = serializers.IntegerField(read_only=True)
+    property_type = serializers.SlugRelatedField(
+        slug_field="slug", queryset=PropertyType.objects.all()
+    )
 
     class Meta:
         model = Property
@@ -97,6 +106,9 @@ class PropertySerializer(serializers.ModelSerializer):
     images = PropertyImageSerializer(many=True, read_only=True)
     main_image = CloudinarySerializerField(required=False, allow_null=True)
     owner = serializers.ReadOnlyField(source="owner.get_full_name")
+    property_type = serializers.SlugRelatedField(
+        slug_field="slug", queryset=PropertyType.objects.all()
+    )
 
     class Meta:
         model = Property

@@ -5,6 +5,7 @@ from .property import (
     PropertyImageUploadSerializer,
     PropertyListSerializer,
     PropertySerializer,
+    PropertyTypeSerializer,
 )
 from .visit import (
     PropertyVisitSerializer,

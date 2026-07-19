@@ -6,6 +6,7 @@ from .property import (
     PropertyImageDetailAPIView,
     PropertyImageUploadAPIView,
     PropertyListAPIView,
+    PropertyTypeListAPIView,
     PropertyUpdateAPIView,
 )
 from .visit import (
