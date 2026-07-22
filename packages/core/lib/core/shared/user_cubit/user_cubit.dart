@@ -8,7 +8,7 @@ import '../../helpers/cache_service.dart';
 import '../../helpers/nsfw_detector.dart';
 import '../../local_db/objectbox_cache_service.dart';
 import '../../helpers/helpers.dart';
-import '../../network/log_interceptor.dart';
+import '../../network/interceptors/log_interceptor.dart';
 import '../../network/network_service.dart';
 import '../models/user_models/user_model.dart';
 part 'user_state.dart';

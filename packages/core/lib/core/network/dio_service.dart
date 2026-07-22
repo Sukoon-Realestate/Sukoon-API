@@ -10,16 +10,15 @@ import '../base_crud/code/domain/usecases/pagination_response.dart';
 import '../extensions/object.dart';
 import '../helpers/cache_service.dart';
 import '../helpers/helpers.dart';
-import 'configuration_interceptor.dart';
 import 'extensions.dart';
 import 'fire_store.dart';
-import 'log_interceptor.dart';
+import 'interceptors/log_interceptor.dart';
+import 'interceptors/unauthorized_interceptor.dart';
 import 'network_request.dart';
 import 'network_service.dart';
 
 class DioService implements NetworkService {
   late final Dio _dio;
-
   DioService() {
     _initDio();
   }
@@ -37,23 +36,22 @@ class DioService implements NetworkService {
         HttpHeaders.acceptHeader: ContentType.json,
         Headers.contentTypeHeader: Headers.jsonContentType,
         HttpHeaders.acceptLanguageHeader:
-            Languages.currentLanguage.locale.languageCode
+            Languages.currentLanguage.locale.languageCode,
       })
       ..options.responseType = ResponseType.json;
 
-    _dio.interceptors.add(ConfigurationInterceptor());
+    _dio.interceptors.add(UnauthorizedInterceptor(_dio));
     if (kDebugMode) {
       _dio.interceptors.add(LoggerInterceptor());
     }
   }
 
-
   Future<String> getBaseUrl() async {
     final bool isDev = Helpers.currentFlavor.isDev;
 
-    final String primaryKey = isDev ?
-    SecureLocalVariableKeys.devBaseUrlKey :
-    SecureLocalVariableKeys.baseUrlKey;
+    final String primaryKey = isDev
+        ? SecureLocalVariableKeys.devBaseUrlKey
+        : SecureLocalVariableKeys.baseUrlKey;
 
     log('the primaryKey is $primaryKey');
     final String primary = await SecureStorage.read(primaryKey) ?? '';
@@ -76,49 +74,62 @@ class DioService implements NetworkService {
     _dio.options.headers.remove(HttpHeaders.authorizationHeader);
   }
 
-  void _handleIncomingResponse({required String path, required Map<String, dynamic> response}){
-    if(FireStoreService.isInitialized && kReleaseMode){
-      FireStoreService.instance.storeResponse(
-          path: path,
-          response: response
-      );
+  void _handleIncomingResponse({
+    required String path,
+    required Map<String, dynamic> response,
+  }) {
+    if (FireStoreService.isInitialized && kReleaseMode) {
+      FireStoreService.instance.storeResponse(path: path, response: response);
     }
   }
 
   @override
-  Future<BaseModel<Model>> callApi<Model>(NetworkRequest networkRequest,
-      {Model Function(dynamic json)? mapper}) async {
+  Future<BaseModel<Model>> callApi<Model>(
+    NetworkRequest networkRequest, {
+    Model Function(dynamic json)? mapper,
+  }) async {
     try {
-      if(_dio.options.baseUrl.isNull || _dio.options.baseUrl.isEmpty){
+      if (_dio.options.baseUrl.isNull || _dio.options.baseUrl.isEmpty) {
         await updateBaseUrl();
       }
       await networkRequest.prepareRequestData();
-      if(FireStoreService.isInitialized && kReleaseMode){
+      if (FireStoreService.isInitialized && kReleaseMode) {
         FireStoreService.instance.storeRequest(networkRequest);
       }
-      final response = await _dio.request(networkRequest.path,
-          data: networkRequest.hasBodyAndProgress() ?
-          networkRequest.isFormData ?
-          FormData.fromMap(networkRequest.body!) :
-          networkRequest.body : networkRequest.body,
-          queryParameters: networkRequest.queryParameters,
-          onSendProgress: networkRequest.hasBodyAndProgress() ?
-          networkRequest.onSendProgress : null,
-          onReceiveProgress: networkRequest.hasBodyAndProgress() ?
-          networkRequest.onReceiveProgress : null,
-          options: Options(
-              method: networkRequest.asString(),
-              headers: networkRequest.headers
-          ));
+      final response = await _dio.request(
+        networkRequest.path,
+        data: networkRequest.hasBodyAndProgress()
+            ? networkRequest.isFormData
+                  ? FormData.fromMap(networkRequest.body!)
+                  : networkRequest.body
+            : networkRequest.body,
+        queryParameters: networkRequest.queryParameters,
+        onSendProgress: networkRequest.hasBodyAndProgress()
+            ? networkRequest.onSendProgress
+            : null,
+        onReceiveProgress: networkRequest.hasBodyAndProgress()
+            ? networkRequest.onReceiveProgress
+            : null,
+        options: Options(
+          method: networkRequest.asString(),
+          headers: networkRequest.headers,
+        ),
+      );
 
-      _handleIncomingResponse(path: networkRequest.path, response: response.data);
+      _handleIncomingResponse(
+        path: networkRequest.path,
+        response: response.data,
+      );
       if (mapper != null) {
         return BaseModel.fromJson(response.data, jsonToModel: mapper);
       } else {
         return BaseModel.fromJson(response.data);
       }
     } on DioException catch (e) {
-      _handleIncomingResponse(path: networkRequest.path, response: e.response?.data);
+      _handleIncomingResponse(
+        path: networkRequest.path,
+        response: e.response?.data,
+      );
       return _handleError(e);
     }
   }

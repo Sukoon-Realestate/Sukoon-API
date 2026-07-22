@@ -1,7 +1,8 @@
 class ApiConstants {
-// ---------------------- Home -----------------------------------
+  // ---------------------- Home -----------------------------------
   // auth
   static const String login = 'auth/login/';
+  static const String refreshToken = 'auth/refresh/';
   static const String register = 'auth/users/';
 
   // packages
@@ -56,12 +57,11 @@ class ApiConstants {
   static const String sendMsg = 'send-message/';
   static const String filter = 'filter';
 
-
-
   static const String startChat = 'start-chat';
   static const String appStages = 'app-stages';
   static const String parentExchangeNumbers = 'parent-exchange-numbers';
-  static const String parentIndividualConversation = 'parent-individual-conversation';
+  static const String parentIndividualConversation =
+      'parent-individual-conversation';
   static const String uploadImage = 'upload-room-file/';
   static const String matchTipPageSeen = 'match-tip-page-seen';
   static const String finishChat = 'finish-chat';
@@ -70,13 +70,15 @@ class ApiConstants {
   // Chat
   // ============================== Tips ==============================
   static const String chattingStageTips = 'chatting-stage-tips';
-  static const String shariaComplaintMeetingTerms = 'sharia-complaint-meeting-terms';
-  static const String shariaComplaintMeetingTips = 'sharia-complaint-meeting-tips';
+  static const String shariaComplaintMeetingTerms =
+      'sharia-complaint-meeting-terms';
+  static const String shariaComplaintMeetingTips =
+      'sharia-complaint-meeting-tips';
   static const String istikharaTips = 'istikhara-tips';
   static const String informParentsTips = 'inform-parents';
   static const String engagementTips = 'engagement-tips';
 
-// ============================== user request ==============================
+  // ============================== user request ==============================
 
   static const String matchRequestAnd = 'user-match-request/';
   static const String userMoveToNextRequest = 'next_stage_request';
@@ -86,7 +88,6 @@ class ApiConstants {
   static const String adminMeetingRequest = 'admin_meeting_request';
   static const String parentMeetingRequest = 'parent_meeting_request';
   static const String forceReject = 'force-reject-match';
-
 
   static const String istikharaReminder = 'istikhara-reminder';
   static const String istikharaDua = 'istikhara-dua';
@@ -98,8 +99,7 @@ class ApiConstants {
   static const String markRead = 'mark-read';
   static const String checkChatEligibility = 'check-chat-eligibility';
 
-// ============================== acceptance ==============================
+  // ============================== acceptance ==============================
   static const String acceptRequest = 'accept-request/';
   static const String rejectRequest = 'reject-request/';
-
 }

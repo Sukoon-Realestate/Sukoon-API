@@ -56,13 +56,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _submit() {
-    final String fullName = [
-      _firstNameController.text.trim(),
-      _lastNameController.text.trim(),
-    ].where((name) => name.isNotEmpty).join(' ');
-
     final RegisterBody body = RegisterBody(
-      name: fullName,
+      firstName: _firstNameController.text.trim(),
+      lastName: _lastNameController.text.trim(),
       phone: _phoneController.text.trim(),
       email: _emailController.text.trim(),
       password: _passwordController.text,

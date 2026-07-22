@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
-import '../network/log_interceptor.dart';
+import '../network/interceptors/log_interceptor.dart';
 import 'image_widgets/cached_image.dart';
 
 /// A versatile widget that handles different types of icons (IconData, SVG, network images, Lottie animations, and asset images)

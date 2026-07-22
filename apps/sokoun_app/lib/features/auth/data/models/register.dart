@@ -15,7 +15,8 @@ class KycDocumentUploadData {
 }
 
 class RegisterBody {
-  final String name;
+  final String firstName;
+  final String lastName;
   final String phone;
   final String email;
   final String password;
@@ -27,7 +28,8 @@ class RegisterBody {
   final File? selfieImage;
 
   const RegisterBody({
-    required this.name,
+    required this.firstName,
+    required this.lastName,
     required this.phone,
     required this.email,
     required this.password,
@@ -40,7 +42,8 @@ class RegisterBody {
   });
 
   factory RegisterBody.initial() => const RegisterBody(
-    name: '',
+    firstName: '',
+    lastName: '',
     phone: '',
     email: '',
     password: '',
@@ -48,7 +51,8 @@ class RegisterBody {
   );
 
   factory RegisterBody.fromJson(Map<String, dynamic> json) => RegisterBody(
-    name: json['name'] ?? '',
+    firstName: json['first_name'] ?? '',
+    lastName: json['last_name'] ?? '',
     phone: json['phone'] ?? '',
     email: json['email'] ?? '',
     password: json['password'] ?? '',
@@ -62,7 +66,8 @@ class RegisterBody {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> body = {
-      'name': name,
+      'first_name': firstName,
+      'last_name': lastName,
       'phone': phone,
       'email': email,
       'password': password,
@@ -89,7 +94,8 @@ class RegisterBody {
   }
 
   RegisterBody copyWith({
-    String? name,
+    String? firstName,
+    String? lastName,
     String? phone,
     String? email,
     String? password,
@@ -100,7 +106,8 @@ class RegisterBody {
     File? backIdImage,
     File? selfieImage,
   }) => RegisterBody(
-    name: name ?? this.name,
+    firstName: firstName ?? this.firstName,
+    lastName: lastName ?? this.lastName,
     phone: phone ?? this.phone,
     email: email ?? this.email,
     password: password ?? this.password,

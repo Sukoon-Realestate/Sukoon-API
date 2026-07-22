@@ -166,13 +166,13 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
     result.when(
       (success) {
         if (showMsgOnSuccess && success.msg.isNotEmpty) {
-          Messages.showToast(msg: success.msg);
+          Messages.showToast(msg: success.msg, status: BaseStatus.error);
         }
         setSuccess(success);
         successEmitter?.call(success);
       },
       (failure) {
-        Messages.showToast(msg: failure.message);
+        Messages.showToast(msg: failure.message, status: BaseStatus.error);
         setError(errorMessage: failure.message);
         onError?.call(failure.message);
       },

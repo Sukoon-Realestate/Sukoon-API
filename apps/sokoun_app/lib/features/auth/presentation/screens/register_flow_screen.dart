@@ -97,7 +97,7 @@ class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
                       .registerBody;
 
                   return KycPendingScreen(
-                    fullName: body.name,
+                    fullName: '${body.firstName} ${body.lastName}'.trim(),
                     maskedNationalId: _maskedNationalId(body.nationalId),
                     onBackHome: () => _replaceRoute(_approvedRoute),
                   );
