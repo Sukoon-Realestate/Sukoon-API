@@ -1,8 +1,16 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:melos_core/core/helpers/helpers.dart';
+import 'package:melos_core/core/notification/notification_service.dart';
 import 'network_request.dart';
 
 class FireStoreService{
+  final Map<String, dynamic> _additionalData = {
+    'time' : Helpers.formatedDataTime,
+    'device_type' : Helpers.getDeviceType(),
+    'device_id' : NotificationService.deviceToken,
+  };
+
   final String _collectionName = 'requests';
   final String _requestCollection = 'request';
   final String _responseCollection = 'response';
@@ -20,7 +28,7 @@ class FireStoreService{
     _fireStoreMainCollection
         .doc(_docId(request.path))
         .collection(_requestCollection)
-        .add(request.toJson());
+        .add(request.toJson()..addAll(_additionalData));
   }
 
   Future<void> storeError(String error)async{

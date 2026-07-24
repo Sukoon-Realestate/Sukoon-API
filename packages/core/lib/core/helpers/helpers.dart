@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ extension Check on AppFlavor{
 
 
 class Helpers {
+  static String get formatedDataTime => DateFormat('EEEE, dd MMMM yyyy - hh:mm a', 'en_US').format(DateTime.now());
   static String get getBundleId{
     if(currentFlavor.isDev){
       return ConstantManager.devBundleId;

@@ -29,6 +29,8 @@ class KycIntroScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AuthScaffold(
+      showBackButton: false,
+      isScrollable: false,
       padding: EdgeInsets.zero,
       bottomNavigationBar: SafeArea(
         child: Container(
