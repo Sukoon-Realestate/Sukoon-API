@@ -1,291 +1,429 @@
-# Sokoun Design System
+# Sokoun App Design System
 
-This document captures the current visual direction of the Sokoun app based on
-the Flutter theme, shared tokens, and existing screens.
+This is the implementation reference for Sokoun's current mobile design
+language. It is derived from the Flutter tokens, shared widgets, and the
+authentication, KYC, tenant, owner, search, property, and visit flows already
+in the repository.
 
-## Source Of Truth
+The app is Arabic-first, calm, and utility-led. New UI should look like it
+belongs to the existing product before introducing a new visual pattern.
+
+## Source of Truth
 
 - Colors: `packages/core/lib/config/res/color_manager.dart`
-- Typography and constants: `packages/core/lib/config/res/constants_manager.dart`
-- Spacing, sizing, radius, font sizes: `packages/core/lib/config/res/app_sizes.dart`
-- App theme bootstrap: `lib/app.dart`
-- Shared app widgets: `lib/shared_widgets/`
-- Shared core widgets: `packages/core/lib/core/widgets/`
+- Font families and shared constants:
+  `packages/core/lib/config/res/constants_manager.dart`
+- Spacing, sizing, radii, and font sizes:
+  `packages/core/lib/config/res/app_sizes.dart`
+- App theme bootstrap: `apps/sokoun_app/lib/app.dart`
+- Sokoun-specific widgets: `apps/sokoun_app/lib/shared_widgets/`
+- Feature UI: `apps/sokoun_app/lib/features/`
+- Cross-app widgets: `packages/core/lib/core/widgets/`
+- Localized content: `packages/core/assets/translations/lang.json`
 
-Use the token names in code. Do not duplicate raw color values or hardcoded
-sizes in feature widgets unless the value is genuinely one-off.
+Use token names in code. Do not duplicate raw color values or hardcode sizes
+unless a value is genuinely one-off.
+
+The global `ThemeData` currently sets the Tajawal font family. Colors,
+component states, shapes, and spacing are primarily defined by `AppColors`,
+ScreenUtil tokens, and shared widgets, so those are the operative source of
+truth.
 
 ## Brand Direction
 
-Sokoun is a real-estate app with two main modes: tenant and owner. The UI should
-feel calm, trustworthy, private, and practical. Screens should prioritize clear
-decision making, readable property information, and low-friction form flows.
+Sokoun is a real-estate app with tenant and owner modes. The experience should
+feel calm, trustworthy, private, and practical. Screens should favor clear
+decisions, readable property information, and low-friction task flows.
 
-The current visual language is:
+The visual language is:
 
-- Clean white cards on a warm off-white scaffold.
+- Clean white cards on a warm off-white canvas.
 - Deep navy text for confidence and readability.
-- Teal as the primary action and tenant accent.
-- Gold as the owner/role accent and premium highlight.
-- Soft borders and pale color fills instead of heavy shadows.
-- Compact, rounded controls with strong Arabic readability.
+- Teal for universal actions, active navigation, and tenant identity.
+- Gold for owner identity, verification, and premium highlights.
+- Pale semantic fills and soft borders instead of heavy shadows.
+- Compact rounded controls with strong Arabic readability.
 
-## Color Tokens
+### Product principles
 
-### Core Brand
+1. **Clarity before decoration.** Property facts, price, status, and the next
+   action should be immediately scannable.
+2. **Trust through restraint.** Use quiet surfaces and explicit privacy or
+   verification cues instead of dramatic effects.
+3. **Role-aware, not fragmented.** Tenant and owner experiences share one
+   system. Gold adds owner identity; teal remains the product action color.
+4. **Arabic-first by construction.** RTL layout, alignment, icon direction,
+   copy length, and truncation must work from the start.
+5. **State must be visible.** Selected, loading, disabled, empty, success,
+   warning, and error states need more than a text change.
 
-| Token | Hex | Use |
+## Color System
+
+### Core brand
+
+| Token | Hex | Primary use |
 | --- | --- | --- |
-| `AppColors.sokoonTeal` / `AppColors.primary` | `#0F766E` | Primary actions, selected controls, tenant accent, active icons |
-| `AppColors.sokoonGold` | `#D6A84F` | Owner accent, premium highlights, secondary brand moments |
-| `AppColors.sokoonNavy` | `#111827` | Main text, titles, important icons |
-| `AppColors.scaffoldBackground` | `#FAFAF8` | Default page background |
-| `AppColors.white` | `#FFFFFF` | Cards, fields, app bars, sheets |
+| `AppColors.sokoonTeal` / `AppColors.primary` | `#0F766E` | Primary actions, active navigation, selected controls, tenant identity |
+| `AppColors.sokoonGold` | `#D6A84F` | Owner identity, verification, premium highlights |
+| `AppColors.sokoonNavy` | `#111827` | Titles, body text, and important icons |
+| `AppColors.scaffoldBackground` | `#FAFAF8` | Default page canvas |
+| `AppColors.white` | `#FFFFFF` | Cards, fields, app bars, and sheets |
+| `AppColors.splash` / `AppColors.amber` | `#F59E0B` | Splash and focused warning moments |
 
 ### Neutrals
 
-| Token | Hex | Use |
+| Token | Hex | Primary use |
 | --- | --- | --- |
-| `AppColors.sokoonGray` / `AppColors.gray` | `#6B7280` | Secondary text, loading button background, muted icons |
-| `AppColors.sokoonMuted` / `AppColors.grayLight` | `#9CA3AF` | Hints, placeholders, disabled secondary text |
-| `AppColors.graySoft` | `#D1D5DB` | Stronger neutral dividers |
+| `AppColors.sokoonGray` / `AppColors.gray` | `#6B7280` | Secondary text and muted icons |
+| `AppColors.sokoonMuted` / `AppColors.grayLight` | `#9CA3AF` | Hints, placeholders, and disabled content |
+| `AppColors.graySoft` | `#D1D5DB` | Strong neutral dividers |
 | `AppColors.grayPale` | `#E5E7EB` | Light dividers and inactive borders |
-| `AppColors.sokoonBorder` / `AppColors.grayMist` | `#EEF0F3` | Default component borders |
-| `AppColors.grayBackground` | `#F3F4F6` | Neutral chips and subtle grouped backgrounds |
-| `AppColors.grayOffWhite` | `#F9FAFB` | Light card interiors and empty areas |
+| `AppColors.sokoonBorder` / `AppColors.grayMist` | `#EEF0F3` | Default component border |
+| `AppColors.grayBackground` | `#F3F4F6` | Neutral chips and grouped backgrounds |
+| `AppColors.grayOffWhite` | `#F9FAFB` | Subtle card interiors and empty areas |
 
-### Semantic And Support
+### Semantic colors
 
-| Token | Hex | Use |
+| Meaning | Foreground | Background/support |
 | --- | --- | --- |
-| `AppColors.sokoonRose` / `AppColors.rose` | `#E11D48` | Errors, destructive actions, validation states |
-| `AppColors.red` | `#EF4444` | Error foregrounds and critical badges |
-| `AppColors.redPale` | `#FFF1F1` | Error backgrounds |
-| `AppColors.green` | `#16A34A` | Success states and confirmations |
-| `AppColors.emerald` | `#22C55E` | Positive status badges |
-| `AppColors.greenPale` | `#EAFBF1` | Success backgrounds |
-| `AppColors.mintLight` | `#E0F2F1` | Teal icon wells and soft positive surfaces |
-| `AppColors.mintPale` | `#E8F4F0` | Informational teal surfaces |
-| `AppColors.amber` | `#F59E0B` | Ratings, warnings, pending statuses |
-| `AppColors.amberPale` | `#FFFBEB` | Warning backgrounds |
-| `AppColors.blue` | `#2563EB` | Informational status accents |
-| `AppColors.bluePale` | `#EEF5FF` | Informational status backgrounds |
+| Destructive | `AppColors.sokoonRose` (`#E11D48`) | `AppColors.roseAlpha07` |
+| Error | `AppColors.red` (`#EF4444`) | `AppColors.redPale` |
+| Success | `AppColors.green` (`#16A34A`) | `AppColors.greenPale` |
+| Positive badge | `AppColors.emerald` (`#22C55E`) | `AppColors.mint` |
+| Warning/pending | `AppColors.amber` (`#F59E0B`) | `AppColors.amberPale` or `AppColors.orangePale` |
+| Information | `AppColors.blue` (`#2563EB`) | `AppColors.bluePale` |
+| Teal information | `AppColors.sokoonTeal` | `AppColors.mintLight` or `AppColors.mintPale` |
 
-### Role-Aware Color
+Use a pale background with a strong matching foreground. Do not use gold as a
+generic warning color; use amber/orange. Do not use teal for a specifically
+semantic success state; use green.
 
-Use these helpers for UI that changes by selected user type:
+### Role-aware color
+
+Use these helpers when a control changes with the selected user type:
 
 - `AppColors.tealOrGoldBasedRole`
 - `AppColors.tealOrGoldAlphaBasedRole`
 
-Tenant-facing flows should lean teal. Owner-facing flows may use gold for
-selection, premium, and property management moments, while retaining navy text
-and the off-white page background.
+Tenant flows lean teal. Owner flows use gold for identity, verification, and
+premium moments. Primary actions and active bottom navigation remain teal
+unless a role-selection flow explicitly uses the role-aware helpers.
 
 ## Typography
 
-The app uses Tajawal:
+The primary typeface is Tajawal:
 
 - `ConstantManager.fontFamily = packages/melos_core/Tajawal`
 - Riyal-specific text can use `ConstantManager.riyalFontFamily`
-- The global `ThemeData` sets the font family in `lib/app.dart`
+- The app-wide family is set in `apps/sokoun_app/lib/app.dart`
 
 Use `AppText` for display text when possible.
 
 | Purpose | Size | Weight | Color |
 | --- | --- | --- | --- |
-| Screen title | `20.sp` to `22.sp` | `FontWeight.w900` | `AppColors.sokoonNavy` |
-| App bar title | `16.sp` | `FontWeight.w800` | `AppColors.sokoonNavy` |
-| Card title | `14.sp` to `18.sp` | `FontWeight.w800` / `w900` | `AppColors.sokoonNavy` |
-| Body text | `13.sp` to `15.sp` | `FontWeight.w500` / `w600` | `AppColors.sokoonNavy` |
-| Secondary text | `12.sp` to `13.sp` | `FontWeight.w400` / `w500` | `AppColors.sokoonGray` |
-| Button text | `14.sp` | `FontWeight.w700` / `bold` | `AppColors.white` or `sokoonNavy` |
-| Metadata | `11.sp` to `12.sp` | `FontWeight.w400` | `AppColors.sokoonGray` |
+| Screen title | `20.sp` to `22.sp` | `w900` | `AppColors.sokoonNavy` |
+| App bar title | `16.sp` | `w800` to `w900` | `AppColors.sokoonNavy` |
+| Hero/property title | `18.sp` to `20.sp` | `w900` | `AppColors.sokoonNavy` |
+| Card title | `14.sp` to `16.sp` | `w800` to `w900` | `AppColors.sokoonNavy` |
+| Body | `13.sp` to `15.sp` | `w500` to `w600` | `AppColors.sokoonNavy` |
+| Secondary | `12.sp` to `13.sp` | `w400` to `w500` | `AppColors.sokoonGray` |
+| Button | `14.sp` | `w700` | White or navy |
+| Metadata | `11.sp` to `12.sp` | `w400` | `AppColors.sokoonGray` |
 
-Keep text compact and readable. Use `maxLines` and `TextOverflow.ellipsis` in
-cards, buttons, app bars, chips, and rows that can receive dynamic content.
+Use weight and color before adding more sizes. Reserve `w900` for short,
+high-value text such as titles, prices, metrics, and status labels. Body copy
+uses a line height around `1.4` to `1.5`.
 
-## Sizing And Layout
+Wrap explanatory content. Use `maxLines` and `TextOverflow.ellipsis` for
+dynamic content in cards, app bars, chips, navigation labels, and constrained
+rows. Do not shrink content with `FittedBox` when a flexible layout or wrapping
+can preserve readability and text scaling.
 
-The app is built with `flutter_screenutil`.
+## Responsive Layout
 
-- Design size: `360 x 690`
+The app uses `flutter_screenutil`.
+
+- Reference size: `360 × 690`
 - Use `.w`, `.h`, `.r`, and `.sp`
-- Prefer shared constants from `AppSize`, `AppPadding`, `AppMargin`,
-  `FontSize`, and `AppCircular`
-- Avoid raw pixel values in app UI
+- Prefer `AppSize`, `AppPadding`, `AppMargin`, `FontSize`, and `AppCircular`
+- Avoid unscaled raw pixels in app UI
 
-Common spacing:
+### Spacing rhythm
 
-- `4.h`: tight label/detail spacing
-- `8.h`: compact vertical grouping
-- `10.w` / `10.h`: row and section rhythm
-- `12.h`: header-to-copy spacing
-- `16.w` / `16.h`: default card and screen content padding
-- `20.w` to `24.w`: large screen section padding
+- `4`: tight label-to-detail spacing
+- `8`: compact internal grouping
+- `10` to `12`: row gaps and related component rhythm
+- `16`: default card padding and compact screen padding
+- `18` to `20`: standard screen padding and section gaps
+- `24`: major section separation and auth horizontal padding
 
-## Radius And Shape
+### Layout standards
 
-Use rounded but practical shapes:
+- Auth screens use `24.w` horizontal padding through `AuthScaffold`.
+- Home and dashboard screens commonly use `20.w`.
+- Detail and dense task screens commonly use `16.w` to `18.w`.
+- Card grids use consistent gutters, normally `10.w` to `12.w`.
+- Bottom-fixed actions sit in a white safe-area surface with a top border and
+  `16.w` horizontal padding.
+- Protect essential content from system safe areas and the keyboard.
+- Avoid fixed-width text containers. Use `Expanded`, `Flexible`, `Wrap`, or a
+  scrollable row where Arabic or translated content can grow.
 
-- Small controls: `10.r` to `12.r`
-- Text fields: `12.r`
+## Radius and Shape
+
+- Small controls and fields: `10.r` to `12.r`
 - Icon wells: `12.r` to `16.r`
 - Cards: `16.r` to `20.r`
-- Circular buttons and avatars: equal width/height with `.r`
-- Primary app loading buttons: `ConstantManager.buttonBorderRadiusNumber`
+- Bottom sheets: `24.r` top corners
+- Pills and status badges: `999.r`
+- Circular actions and avatars: equal width and height using `.r`
+- Loading buttons: `ConstantManager.buttonBorderRadiusNumber`
 
-Do not over-round dense operational controls. Use larger radii only for cards,
-profile elements, and friendly auth/empty-state surfaces.
+The cross-app `DefaultButton` falls back to `AppCircular.r5`. Sokoun screens
+should pass the app-specific radius when the surrounding flow uses the current
+`8.r` to `12.r` button shape. Reserve `20.r` for large selection cards and
+friendly empty-state surfaces.
 
 ## Surfaces
 
-Default screen composition:
+Default composition:
 
-- `Scaffold.backgroundColor`: `AppColors.scaffoldBackground`
-- App bars are flat, same color as the screen, no elevation
-- Primary content appears in `AppColors.white` cards
-- Borders use `AppColors.sokoonBorder` or `AppColors.grayPale`
-- Shadows should be rare and subtle, usually `AppColors.shadowBlack04`
+- Canvas: `AppColors.scaffoldBackground`
+- Primary surface: `AppColors.white`
+- Grouped surface: `AppColors.grayOffWhite` or `AppColors.grayBackground`
+- Borders: `AppColors.sokoonBorder` or `AppColors.grayPale`
+- Shadow: rare and subtle, normally `AppColors.shadowBlack04`
+- Media: edge-to-edge and clipped by the parent card
 
-Cards should be readable and structured:
+Standard cards use a white fill, a 1-pixel light border, `16.r` to `20.r`
+corners, and `14.w` to `16.w` internal padding. Strong fills are reserved for
+selection, status, or information.
 
-- White fill
-- 1px light border
-- `16.r` to `20.r` radius
-- Padding around `16.w`
-- Only use stronger color fills for selected, status, or informational blocks
+Use borders to define most cards. Add a subtle shadow only when a selectable or
+floating surface needs separation; avoid combining a strong border with a
+heavy shadow.
 
-## Buttons
+## Screen Composition
 
-### Primary Button
+### Authentication and KYC
 
-- Background: `AppColors.sokoonTeal` or `AppColors.tealOrGoldBasedRole`
-- Text: `AppColors.white`
-- Height: usually `45.h` to `48.h`
-- Radius: `10.r` to `12.r`
-- Loading state: `AppColors.gray`
+- Use `AuthScaffold`.
+- Center the main message and keep forms full-width.
+- Separate the title, supporting copy, form, and CTA with clear rhythm.
+- Use the role-aware accent for auth actions after a role is known.
+- Multi-step KYC flows show progress near the top and keep the primary action
+  fixed at the bottom when possible.
+- Privacy, verification, and document requirements use pale informational
+  cards with an icon, short title, and concise explanation.
 
-### Secondary Button
+### Tenant discovery
 
-- Background: `AppColors.white`
-- Border: `AppColors.sokoonBorder`
-- Text: `AppColors.sokoonNavy`
-- Use for social sign-in, cancel, back, and alternate actions
+- Compose screens from a greeting/header, prominent search entry point,
+  contextual banner, section header, and property cards.
+- Property cards prioritize image, title, location, metrics, tags, rating, and
+  price in that order.
+- Price is high-emphasis teal; supporting metadata remains gray.
+- Results, filters, and details should preserve search context.
 
-### Destructive Button
+### Owner operations
 
-- Foreground: `AppColors.sokoonRose`
-- Border or pale background: `AppColors.sokoonRose`, `AppColors.roseAlpha07`,
-  or `AppColors.redPale`
-- Avoid using full red backgrounds unless the action is critical
+- Use gold in the owner avatar, verification badges, and identity moments.
+- Keep operational actions teal and state feedback semantic.
+- Dashboard cards prioritize counts and pending work.
+- Request and listing cards place status near the title and group accept,
+  reject, edit, or view actions consistently.
 
-### Disabled State
+### Detail and task flows
 
-- Background: `AppColors.grayPale` or `Colors.grey[300]`
-- Text/icon: `AppColors.sokoonMuted`
-- Keep disabled controls visually present but clearly inactive
+- Use a clear top bar or media hero, followed by grouped information sections.
+- Keep one obvious primary task, such as booking a visit or continuing a form.
+- Long flows use segmented progress, scrollable content, and a fixed CTA
+  footer.
+- Full-screen media viewers may use `AppColors.slate` with high-contrast
+  controls.
+
+## Buttons and Actions
+
+### Primary
+
+- Teal or role-aware background
+- White text
+- `45.h` to `48.h` height
+- `8.r` to `12.r` corners
+- Full width for final auth and multi-step actions
+
+### Secondary
+
+- White background
+- `AppColors.sokoonBorder` border
+- Navy text
+- Used for alternate, back, cancel, and social sign-in actions
+
+### Destructive
+
+- Rose foreground and border or a pale red/rose background
+- Usually secondary to the safe action
+- A solid red fill is reserved for critical confirmation
+
+### Disabled and loading
+
+- Disabled fill: `AppColors.grayPale` or a comparable light gray
+- Disabled content: `AppColors.sokoonMuted`
+- Loading preserves the button footprint and prevents duplicate submission
+
+Use `DefaultButton` for standard synchronous actions and `AppLoadingButton` for
+async submissions. Icon-only actions need a semantic label and a touch target
+of approximately 44 logical pixels even when the glyph is smaller.
 
 ## Forms
 
-Current Sokoun fields use:
+Sokoun fields use:
 
 - White fill
-- `12.r` radius
-- `16.w` horizontal and `14.h` vertical padding
-- Navy input text
-- Border changes by state:
-  - Empty/default: `AppColors.sokoonBorder`
-  - Focused or filled: role/accent color, usually `AppColors.sokoonTeal`
-  - Error: `AppColors.sokoonRose`
+- `12.r` corners
+- `16.w` horizontal and `14.h` vertical content padding
+- Tajawal input text at `15.sp`, `w600`, in navy
+- Short field labels above the control
+- Default border: `AppColors.sokoonBorder`
+- Focused or filled border: teal or the current role accent
+- Error border: rose/red
 
-Field text should use Tajawal, `15.sp`, and `FontWeight.w600`.
+Use the Sokoun field wrappers from `apps/sokoun_app/lib/shared_widgets/`
+before styling `DefaultTextField` directly. Preserve keyboard type, autofill
+hints, input actions, formatters, and password visibility controls. Error text
+must explain how to fix the value and must not rely on border color alone.
 
-## Chips, Badges, And Status
+## Chips, Badges, and Status
 
-Use soft fill plus colored foreground:
+Use a soft fill with a strong foreground:
 
-- Selected teal chip: `AppColors.tealAlpha07` fill,
-  `AppColors.tealAlpha19` border, `AppColors.sokoonTeal` text/icon
-- Warning chip: `AppColors.amberPale` or `AppColors.orangePale` fill,
-  `AppColors.amber` or `AppColors.brown` foreground
-- Success chip: `AppColors.greenPale` fill, `AppColors.green` foreground
-- Error chip: `AppColors.redPale` fill, `AppColors.red` or
-  `AppColors.sokoonRose` foreground
-- Neutral chip: `AppColors.grayBackground` fill, `AppColors.sokoonGray`
-  foreground
+- Selected: `AppColors.tealAlpha07` fill,
+  `AppColors.tealAlpha19` border, teal content
+- Warning: amber/orange pale fill with amber or brown content
+- Success: `AppColors.greenPale` fill with green content
+- Error: `AppColors.redPale` fill with red or rose content
+- Neutral: `AppColors.grayBackground` fill with gray content
 
-Badges should stay compact and not compete with primary actions.
+Pill badges generally use `9.w` horizontal and `5.h` vertical padding with
+`12.sp` high-emphasis text. Keep badges compact and visually below primary
+actions.
 
-## Icons
+## Icons and Media
 
-Use Material icons already present in the app. Icon sizing should generally be:
+Use the rounded Material icon language already established in the app:
 
-- `14.r` to `16.r`: metadata icons
+- `14.r` to `16.r`: metadata
 - `18.r` to `20.r`: buttons and row actions
-- `24.r` to `28.r`: header marks and empty-state icons
+- `22.r`: bottom navigation
+- `24.r` to `28.r`: headers and empty states
 
-Icon wells should use a pale background and a strong foreground:
+Icon wells pair a pale background with a strong foreground:
 
-- Teal icon well: `AppColors.mintLight` + `AppColors.sokoonTeal`
-- Gold icon well: `AppColors.goldPale` + `AppColors.sokoonGold`
-- Warning icon well: `AppColors.orangePale` + `AppColors.amber`
-- Error icon well: `AppColors.redPale` + `AppColors.sokoonRose`
+- Teal: `AppColors.mintLight` + `AppColors.sokoonTeal`
+- Gold: `AppColors.goldPale` + `AppColors.sokoonGold`
+- Warning: `AppColors.orangePale` + `AppColors.amber`
+- Error: `AppColors.redPale` + `AppColors.sokoonRose`
 
-## Navigation And App Bars
+Mirror directional arrows for RTL where appropriate. Do not mirror universal
+symbols such as search, favorite, camera, or close. Property media should keep
+a stable aspect ratio, use clipped rounded corners, and include a deliberate
+loading/error placeholder.
 
-Use `AppScaffold` for standard screens.
+## Navigation and App Bars
 
-App bars should be:
+Use `AppScaffold` for standard titled screens. App bars are flat, have no
+elevation or surface tint, share the canvas color, and use a centered navy
+`16.sp` title. Use `SokoonBackButton` for the standard back action.
 
-- Flat, no elevation
-- Center-titled when a title exists
-- `AppColors.sokoonNavy` title at `16.sp`, `FontWeight.w800`
-- Same background as the scaffold
-- Back button from `SokoonBackButton`
+Home navigation uses:
 
-Do not use `Navigator` directly. Use the shared `Go` navigation helper.
+- White surface with a top `AppColors.sokoonBorder` divider
+- `70.h` height plus the device safe area
+- Five evenly distributed items
+- `22.r` icons and `11.sp` labels
+- Teal active state and muted gray inactive state
+- Stable item order within each role
 
-## Motion
+Use the shared `Go` navigation helper instead of calling `Navigator` directly.
 
-Motion should be subtle and functional:
+## Bottom Sheets and Overlays
 
-- Selection cards: about `180ms`
-- Loading buttons: use the shared loading button animation
-- Avoid decorative animation in form and dashboard flows
-- Use animation to clarify state changes, not to add visual noise
+- Use a transparent route background and a white surface with `24.r` top
+  corners.
+- Add a centered `42.w × 4.h` gray drag handle for draggable/action sheets.
+- Use `20.w` side padding and protect the bottom safe area.
+- Put the title first, followed by clear full-width action rows.
+- Destructive actions use rose/red; dismiss actions remain secondary.
+- Keyboard-driven sheets must remain scrollable and keep controls visible.
 
-## Content And Localization
+## Motion and Feedback
 
-- Use `LocaleKeys.*` for user-facing text.
+- Selection cards: approximately `180ms`
+- Other selection, expansion, and state feedback: `150ms` to `250ms`
+- Async actions: use the shared loading button behavior
+- Use motion to explain a state change, not as decoration
+- Respect reduced-motion platform settings for nonessential movement
+
+Reuse the state widgets and Lottie assets under
+`packages/core/assets/lottie/` for loading, empty, error, no-connection, and
+success feedback.
+
+## Content, Localization, and RTL
+
+- Use `LocaleKeys.*` for user-facing production text.
 - Do not hardcode production strings in widgets.
-- Keep Arabic text concise and layout-aware.
-- Use `TextAlign.right` or directional alignment where content is explicitly
-  Arabic.
-- Prefer `AlignmentDirectional` and padding helpers for RTL-safe layouts.
+- Keep Arabic copy concise and layout-aware.
+- Prefer `TextAlign.start`, `AlignmentDirectional`, and
+  `EdgeInsetsDirectional` over fixed left/right assumptions.
+- Use an explicit `TextAlign.right` only for a deliberately Arabic-only
+  composition.
+- Let the active locale provide directionality. Add `Directionality` only for
+  isolated previews or deliberate mixed-direction content.
+- Keep numbers, prices, phone numbers, dates, and units readable in RTL text.
+- Do not put essential meaning in emoji or iconography alone.
+
+## Accessibility
+
+- Target at least 44 logical pixels for touch interactions.
+- Keep normal text contrast at or above 4.5:1 and large text at or above 3:1.
+- Pair status color with a label, icon, border, or shape.
+- Add `Semantics` labels to icon-only buttons, media actions, progress
+  indicators, and non-text status marks.
+- Preserve logical focus order and visible keyboard focus.
+- Support text scaling without clipping primary content or actions.
+- Give meaningful images a description and exclude decorative images from
+  semantics.
+- Announce loading feedback and avoid layout jumps.
 
 ## Component Rules
 
-- Prefer shared widgets from `packages/core/lib/core/widgets` and
-  `lib/shared_widgets` before creating new controls.
+- Check `apps/sokoun_app/lib/shared_widgets/` and
+  `packages/core/lib/core/widgets/` before creating a control.
 - Put reusable components in their own files.
 - Keep screen files thin and compose them from named section widgets.
-- Parent widgets own selected values; picker/selector children receive callbacks.
-- Use `StatelessWidget` unless local mutable UI state is needed.
-- Use `StatefulWidget` for controllers, focus nodes, animation controllers,
-  `initState`, `dispose`, or local toggles.
+- Parent widgets own selected values; selector children receive callbacks.
+- Prefer `StatelessWidget`; use `StatefulWidget` for controllers, focus nodes,
+  animation controllers, lifecycle work, or local mutable state.
 
-## Implementation Checklist
+Preferred reuse order:
 
-Before finishing a UI change:
+1. Existing Sokoun-specific component
+2. Existing core component configured with Sokoun tokens
+3. New feature-local component
+4. New shared component after a pattern repeats across features
 
-- Uses `AppColors` tokens, not duplicated hex values.
-- Uses ScreenUtil sizing: `.w`, `.h`, `.r`, `.sp`.
-- Uses `AppText` or Tajawal text styles.
-- Uses `LocaleKeys` for user-facing text.
-- Handles long text with wrapping or ellipsis.
-- Keeps cards white with light borders unless status/selection requires color.
-- Uses teal for primary action and role-aware helpers where needed.
-- Uses gold only for owner, premium, role, or highlight moments.
-- Keeps destructive states rose/red and visually secondary unless critical.
-- Reuses shared buttons, fields, scaffolds, and auth widgets where possible.
+## UI Review Checklist
+
+- Uses `AppColors` rather than duplicated hex values.
+- Uses ScreenUtil units and shared size tokens.
+- Uses `AppText` or an explicit Tajawal style.
+- Uses `LocaleKeys` for production copy.
+- Handles long and scaled text with wrapping or ellipsis.
+- Works in RTL without accidental fixed left/right assumptions.
+- Handles the keyboard, system safe areas, and fluid widths.
+- Gives icon-only actions semantic labels and usable touch targets.
+- Uses white bordered cards unless status or selection needs color.
+- Uses teal for actions/navigation and gold for owner identity moments.
+- Uses semantic green, amber, blue, and red/rose consistently.
+- Includes loading, disabled, empty, error, and success states as applicable.
+- Reuses shared buttons, fields, scaffolds, and auth components where possible.
