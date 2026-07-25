@@ -1,0 +1,133 @@
+part of '../../imports.dart';
+
+enum OwnerVisitRequestStatus {
+  newRequest,
+  pending,
+  accepted,
+  rejected,
+  completed,
+}
+
+extension OwnerVisitRequestStatusExtension on OwnerVisitRequestStatus {
+  bool get isNewRequest => this == OwnerVisitRequestStatus.newRequest;
+  bool get isPending => this == OwnerVisitRequestStatus.pending;
+  bool get isAccepted => this == OwnerVisitRequestStatus.accepted;
+  bool get isRejected => this == OwnerVisitRequestStatus.rejected;
+  bool get isCompleted => this == OwnerVisitRequestStatus.completed;
+  bool get canDecide => isNewRequest || isPending;
+
+  String get label {
+    if (isNewRequest) {
+      return LocaleKeys.ownerVisitStatusNew;
+    }
+    if (isPending) {
+      return LocaleKeys.ownerVisitStatusPending;
+    }
+    if (isAccepted) {
+      return LocaleKeys.ownerVisitStatusAccepted;
+    }
+    if (isRejected) {
+      return LocaleKeys.ownerVisitStatusRejected;
+    }
+    return LocaleKeys.ownerVisitStatusCompleted;
+  }
+}
+
+enum OwnerVisitRequestFilter { all, newRequests, accepted, rejected, completed }
+
+extension OwnerVisitRequestFilterExtension on OwnerVisitRequestFilter {
+  bool get isAll => this == OwnerVisitRequestFilter.all;
+  bool get isNewRequests => this == OwnerVisitRequestFilter.newRequests;
+  bool get isAccepted => this == OwnerVisitRequestFilter.accepted;
+  bool get isRejected => this == OwnerVisitRequestFilter.rejected;
+  bool get isCompleted => this == OwnerVisitRequestFilter.completed;
+
+  String get label {
+    if (isAll) {
+      return LocaleKeys.ownerVisitsFilterAll;
+    }
+    if (isNewRequests) {
+      return LocaleKeys.ownerVisitsFilterNew;
+    }
+    if (isAccepted) {
+      return LocaleKeys.ownerVisitsFilterAccepted;
+    }
+    if (isRejected) {
+      return LocaleKeys.ownerVisitsFilterRejected;
+    }
+    return LocaleKeys.ownerVisitsFilterCompleted;
+  }
+
+  bool accepts(OwnerVisitRequestStatus status) {
+    if (isAll) {
+      return true;
+    }
+    if (isNewRequests) {
+      return status.isNewRequest || status.isPending;
+    }
+    if (isAccepted) {
+      return status.isAccepted;
+    }
+    if (isRejected) {
+      return status.isRejected;
+    }
+    return status.isCompleted;
+  }
+
+  bool isSame(OwnerVisitRequestFilter other) => this == other;
+}
+
+enum OwnerRequestResolution { accepted, rejected }
+
+extension OwnerRequestResolutionExtension on OwnerRequestResolution {
+  bool get isAccepted => this == OwnerRequestResolution.accepted;
+  bool get isRejected => this == OwnerRequestResolution.rejected;
+}
+
+enum OwnerRejectionReason {
+  inconvenientTime,
+  propertyRented,
+  requirementsNotMet,
+  other,
+}
+
+extension OwnerRejectionReasonExtension on OwnerRejectionReason {
+  bool get isInconvenientTime => this == OwnerRejectionReason.inconvenientTime;
+  bool get isPropertyRented => this == OwnerRejectionReason.propertyRented;
+  bool get isRequirementsNotMet =>
+      this == OwnerRejectionReason.requirementsNotMet;
+  bool get isOther => this == OwnerRejectionReason.other;
+
+  String get label {
+    if (isInconvenientTime) {
+      return LocaleKeys.ownerRejectReasonInconvenientTime;
+    }
+    if (isPropertyRented) {
+      return LocaleKeys.ownerRejectReasonPropertyRented;
+    }
+    if (isRequirementsNotMet) {
+      return LocaleKeys.ownerRejectReasonRequirementsNotMet;
+    }
+    return LocaleKeys.ownerRejectReasonOther;
+  }
+
+  bool isSame(OwnerRejectionReason other) => this == other;
+}
+
+enum OwnerAvailabilitySlotState { unspecified, available, booked }
+
+extension OwnerAvailabilitySlotStateExtension on OwnerAvailabilitySlotState {
+  bool get isUnspecified => this == OwnerAvailabilitySlotState.unspecified;
+  bool get isAvailable => this == OwnerAvailabilitySlotState.available;
+  bool get isBooked => this == OwnerAvailabilitySlotState.booked;
+
+  String get label {
+    if (isAvailable) {
+      return LocaleKeys.ownerAvailabilityAvailable;
+    }
+    if (isBooked) {
+      return LocaleKeys.ownerAvailabilityBooked;
+    }
+    return LocaleKeys.ownerAvailabilityUnspecified;
+  }
+}

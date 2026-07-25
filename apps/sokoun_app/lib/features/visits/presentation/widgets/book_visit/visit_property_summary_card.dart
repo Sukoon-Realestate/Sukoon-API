@@ -1,38 +1,33 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
-import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:sokoun_app/features/home/data/models/tenant_property_content.dart';
+part of '../../../imports.dart';
 
 class VisitPropertySummaryCard extends StatelessWidget {
   const VisitPropertySummaryCard({super.key, required this.property});
 
-  final TenantPropertyDetailsContent property;
+  final VisitPropertyContent property;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
         color: AppColors.white,
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(18.r),
         border: Border.all(color: AppColors.sokoonBorder),
       ),
       child: Row(
         children: [
           Container(
-            width: 44.r,
-            height: 44.r,
+            width: 42.r,
+            height: 42.r,
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: AppColors.mintLight,
-              borderRadius: BorderRadius.circular(14.r),
+              borderRadius: BorderRadius.circular(12.r),
             ),
             child: Icon(
               Icons.apartment_rounded,
               color: AppColors.sokoonTeal,
-              size: 20.r,
+              size: 19.r,
             ),
           ),
           12.szW,
@@ -41,7 +36,7 @@ class VisitPropertySummaryCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AppText(
-                  property.shortTitle,
+                  property.title,
                   color: AppColors.sokoonNavy,
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w900,
@@ -50,10 +45,11 @@ class VisitPropertySummaryCard extends StatelessWidget {
                 ),
                 4.szH,
                 AppText(
-                  '${property.price} ج/شهر · ${property.metrics.first.value} غرف',
+                  property.meta,
                   color: AppColors.sokoonGray,
                   fontSize: 12.sp,
-                  fontWeight: FontWeight.w500,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),

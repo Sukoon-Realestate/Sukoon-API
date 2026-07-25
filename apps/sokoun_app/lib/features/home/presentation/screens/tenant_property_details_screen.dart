@@ -3,12 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/home/data/models/tenant_property_content.dart';
 import 'package:sokoun_app/features/home/data/models/tenant_search_result_content.dart';
+import 'package:sokoun_app/features/visits/imports.dart';
 
 import '../widgets/tenant_property_details/imports.dart';
-import 'tenant_book_visit_screen.dart';
 import 'tenant_property_location_screen.dart';
 import 'tenant_property_photos_screen.dart';
 
@@ -55,9 +56,9 @@ class _TenantPropertyDetailsScreenState
   }
 
   void _openBookVisit() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => TenantBookVisitScreen(property: _property),
+    Go.to(
+      BookVisitScreen(
+        property: VisitPropertyContent.fromPropertyDetails(_property),
       ),
     );
   }

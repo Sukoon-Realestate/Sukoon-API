@@ -3,129 +3,132 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:sokoun_app/features/home/data/models/owner_visit_request_content.dart';
+import 'package:sokoun_app/features/visits/imports.dart';
 
 import 'owner_visit_request_action_row.dart';
 
 class OwnerVisitRequestCard extends StatelessWidget {
-  const OwnerVisitRequestCard({super.key, required this.request});
+  const OwnerVisitRequestCard({
+    super.key,
+    required this.request,
+    required this.onPressed,
+    required this.onChatPressed,
+    required this.onAcceptPressed,
+    required this.onRejectPressed,
+  });
 
   final OwnerVisitRequestContent request;
+  final VoidCallback onPressed;
+  final VoidCallback onChatPressed;
+  final VoidCallback onAcceptPressed;
+  final VoidCallback onRejectPressed;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(15.w),
-      decoration: BoxDecoration(
-        color: AppColors.white,
+    return Material(
+      color: AppColors.transparent,
+      child: InkWell(
+        key: ValueKey('owner-request-card-${request.id}'),
+        onTap: onPressed,
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.grayPale),
-      ),
-      child: Column(
-        children: [
-          Row(
-            textDirection: TextDirection.ltr,
+        child: Container(
+          padding: EdgeInsets.all(15.w),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(color: AppColors.grayPale),
+          ),
+          child: Column(
             children: [
-              Container(
-                width: 40.r,
-                height: 40.r,
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  color: AppColors.tealAlpha13,
-                  shape: BoxShape.circle,
-                ),
-                child: AppText(
-                  request.initial,
-                  color: AppColors.sokoonTeal,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-              10.szW,
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+              Row(
+                textDirection: TextDirection.ltr,
+                children: [
+                  Container(
+                    width: 40.r,
+                    height: 40.r,
+                    alignment: Alignment.center,
+                    decoration: const BoxDecoration(
+                      color: AppColors.tealAlpha13,
+                      shape: BoxShape.circle,
+                    ),
+                    child: AppText(
+                      request.initial,
+                      color: AppColors.sokoonTeal,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  10.szW,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Flexible(
-                          child: AppText(
-                            request.name,
-                            color: AppColors.sokoonNavy,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w900,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: AppText(
+                                request.name,
+                                color: AppColors.sokoonNavy,
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w900,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            if (request.isVerified) ...[
+                              6.szW,
+                              const OwnerVerifiedBadge(),
+                            ],
+                          ],
                         ),
-                        if (request.isVerified) ...[
-                          6.szW,
-                          const _VerifiedTag(),
-                        ],
+                        4.szH,
+                        AppText(
+                          request.property,
+                          color: AppColors.sokoonGray,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ],
                     ),
-                    4.szH,
-                    AppText(
-                      request.property,
-                      color: AppColors.sokoonGray,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                  ),
+                  8.szW,
+                  IconButton(
+                    key: ValueKey('owner-request-chat-${request.id}'),
+                    onPressed: onChatPressed,
+                    visualDensity: VisualDensity.compact,
+                    style: IconButton.styleFrom(
+                      backgroundColor: AppColors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.r),
+                        side: const BorderSide(color: AppColors.grayPale),
+                      ),
                     ),
-                  ],
-                ),
+                    icon: Icon(
+                      Icons.chat_bubble_outline_rounded,
+                      color: AppColors.sokoonTeal,
+                      size: 16.r,
+                    ),
+                  ),
+                ],
               ),
-              8.szW,
-              Container(
-                width: 32.r,
-                height: 32.r,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(10.r),
-                  border: Border.all(color: AppColors.grayPale),
+              12.szH,
+              _VisitTimeRow(time: request.time),
+              if (request.status.canDecide) ...[
+                12.szH,
+                OwnerVisitRequestActionRow(
+                  onAcceptPressed: onAcceptPressed,
+                  onRejectPressed: onRejectPressed,
                 ),
-                child: Icon(
-                  Icons.chat_bubble_outline_rounded,
-                  color: AppColors.sokoonGray,
-                  size: 16.r,
-                ),
-              ),
+              ],
+              if (!request.status.canDecide) ...[
+                12.szH,
+                _RequestStatusBanner(status: request.status),
+              ],
             ],
           ),
-          12.szH,
-          _VisitTimeRow(time: request.time),
-          if (request.showActions) ...[
-            12.szH,
-            const OwnerVisitRequestActionRow(),
-          ],
-          if (request.acceptedLabel != null) ...[
-            12.szH,
-            _AcceptedBanner(label: request.acceptedLabel!),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _VerifiedTag extends StatelessWidget {
-  const _VerifiedTag();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
-      decoration: BoxDecoration(
-        color: AppColors.tealAlpha07,
-        borderRadius: BorderRadius.circular(8.r),
-      ),
-      child: AppText(
-        'موثّق',
-        color: AppColors.sokoonTeal,
-        fontSize: 10.sp,
-        fontWeight: FontWeight.w900,
+        ),
       ),
     );
   }
@@ -166,10 +169,30 @@ class _VisitTimeRow extends StatelessWidget {
   }
 }
 
-class _AcceptedBanner extends StatelessWidget {
-  const _AcceptedBanner({required this.label});
+class _RequestStatusBanner extends StatelessWidget {
+  const _RequestStatusBanner({required this.status});
 
-  final String label;
+  final OwnerVisitRequestStatus status;
+
+  Color get _backgroundColor {
+    if (status.isAccepted) {
+      return AppColors.greenPale;
+    }
+    if (status.isRejected) {
+      return AppColors.redPale;
+    }
+    return AppColors.grayBackground;
+  }
+
+  Color get _foregroundColor {
+    if (status.isAccepted) {
+      return AppColors.green;
+    }
+    if (status.isRejected) {
+      return AppColors.red;
+    }
+    return AppColors.sokoonGray;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -178,13 +201,13 @@ class _AcceptedBanner extends StatelessWidget {
       height: 40.h,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: AppColors.greenAlpha06,
+        color: _backgroundColor,
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: AppColors.greenAlpha19),
+        border: Border.all(color: _foregroundColor.withValues(alpha: 0.2)),
       ),
       child: AppText(
-        label,
-        color: AppColors.green,
+        status.label,
+        color: _foregroundColor,
         fontSize: 13.sp,
         fontWeight: FontWeight.w700,
       ),

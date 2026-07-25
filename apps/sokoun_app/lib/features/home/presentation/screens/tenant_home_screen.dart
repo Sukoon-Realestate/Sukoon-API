@@ -7,6 +7,7 @@ import 'package:sokoun_app/features/chat/presentation/screens/chat_list_screen.d
 import 'package:sokoun_app/features/favorites/presentation/screens/favorites_screen.dart';
 import 'package:sokoun_app/features/notifications/data/enums/notification_role.dart';
 import 'package:sokoun_app/features/notifications/presentation/screens/notifications_screen.dart';
+import 'package:sokoun_app/features/visits/imports.dart';
 
 import '../widgets/tenant_widgets/imports.dart';
 
@@ -33,7 +34,9 @@ class TenantHomeScreen extends StatelessWidget {
                 18.szH,
                 const HomeSearchBox(),
                 16.szH,
-                const TenantVisitBanner(),
+                TenantVisitBanner(
+                  onPressed: () => Go.to(const TenantVisitsScreen()),
+                ),
                 18.szH,
                 HomeSectionHeader(
                   title: 'مقترح ليك',

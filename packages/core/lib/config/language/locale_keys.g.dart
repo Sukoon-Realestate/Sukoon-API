@@ -2239,4 +2239,541 @@ abstract class LocaleKeys {
   static const String _notificationsOwnerMoreNavigation = 'notifications_owner_more_navigation';
   static String get notificationsOwnerMoreNavigation => _notificationsOwnerMoreNavigation.tr();
 
+  static const String _tenantVisitsTitle = 'tenant_visits_title';
+  static String get tenantVisitsTitle => _tenantVisitsTitle.tr();
+
+  static const String _tenantVisitsFilterAll = 'tenant_visits_filter_all';
+  static String get tenantVisitsFilterAll => _tenantVisitsFilterAll.tr();
+
+  static const String _tenantVisitsFilterAccepted = 'tenant_visits_filter_accepted';
+  static String get tenantVisitsFilterAccepted => _tenantVisitsFilterAccepted.tr();
+
+  static const String _tenantVisitsFilterPending = 'tenant_visits_filter_pending';
+  static String get tenantVisitsFilterPending => _tenantVisitsFilterPending.tr();
+
+  static const String _tenantVisitsFilterRejected = 'tenant_visits_filter_rejected';
+  static String get tenantVisitsFilterRejected => _tenantVisitsFilterRejected.tr();
+
+  static const String _tenantVisitsNoResults = 'tenant_visits_no_results';
+  static String get tenantVisitsNoResults => _tenantVisitsNoResults.tr();
+
+  static const String _tenantVisitOwnerLabel = 'tenant_visit_owner_label';
+  static String get tenantVisitOwnerLabel => _tenantVisitOwnerLabel.tr();
+
+  static const String _tenantVisitStatusAccepted = 'tenant_visit_status_accepted';
+  static String get tenantVisitStatusAccepted => _tenantVisitStatusAccepted.tr();
+
+  static const String _tenantVisitStatusAcceptedWithCheck = 'tenant_visit_status_accepted_with_check';
+  static String get tenantVisitStatusAcceptedWithCheck => _tenantVisitStatusAcceptedWithCheck.tr();
+
+  static const String _tenantVisitStatusPending = 'tenant_visit_status_pending';
+  static String get tenantVisitStatusPending => _tenantVisitStatusPending.tr();
+
+  static const String _tenantVisitStatusRejected = 'tenant_visit_status_rejected';
+  static String get tenantVisitStatusRejected => _tenantVisitStatusRejected.tr();
+
+  static const String _tenantVisitChatAction = 'tenant_visit_chat_action';
+  static String get tenantVisitChatAction => _tenantVisitChatAction.tr();
+
+  static const String _tenantVisitRateAction = 'tenant_visit_rate_action';
+  static String get tenantVisitRateAction => _tenantVisitRateAction.tr();
+
+  static const String _tenantVisitCancelRequest = 'tenant_visit_cancel_request';
+  static String get tenantVisitCancelRequest => _tenantVisitCancelRequest.tr();
+
+  static const String _tenantVisitFindAlternative = 'tenant_visit_find_alternative';
+  static String get tenantVisitFindAlternative => _tenantVisitFindAlternative.tr();
+
+  static const String _tenantVisitBookTitle = 'tenant_visit_book_title';
+  static String get tenantVisitBookTitle => _tenantVisitBookTitle.tr();
+
+  static const String _tenantVisitChooseDay = 'tenant_visit_choose_day';
+  static String get tenantVisitChooseDay => _tenantVisitChooseDay.tr();
+
+  static const String _tenantVisitChooseTime = 'tenant_visit_choose_time';
+  static String get tenantVisitChooseTime => _tenantVisitChooseTime.tr();
+
+  static const String _tenantVisitNoteLabel = 'tenant_visit_note_label';
+  static String get tenantVisitNoteLabel => _tenantVisitNoteLabel.tr();
+
+  static const String _tenantVisitNoteHint = 'tenant_visit_note_hint';
+  static String get tenantVisitNoteHint => _tenantVisitNoteHint.tr();
+
+  static const String _tenantVisitPrivacyMessage = 'tenant_visit_privacy_message';
+  static String get tenantVisitPrivacyMessage => _tenantVisitPrivacyMessage.tr();
+
+  static const String _tenantVisitConfirmRequest = 'tenant_visit_confirm_request';
+  static String get tenantVisitConfirmRequest => _tenantVisitConfirmRequest.tr();
+
+  static const String _tenantVisitConfirmedTitle = 'tenant_visit_confirmed_title';
+  static String get tenantVisitConfirmedTitle => _tenantVisitConfirmedTitle.tr();
+
+  static const String _tenantVisitConfirmedDescription = 'tenant_visit_confirmed_description';
+  static String get tenantVisitConfirmedDescription => _tenantVisitConfirmedDescription.tr();
+
+  static const String _tenantVisitSummaryProperty = 'tenant_visit_summary_property';
+  static String get tenantVisitSummaryProperty => _tenantVisitSummaryProperty.tr();
+
+  static const String _tenantVisitSummaryDay = 'tenant_visit_summary_day';
+  static String get tenantVisitSummaryDay => _tenantVisitSummaryDay.tr();
+
+  static const String _tenantVisitSummaryTime = 'tenant_visit_summary_time';
+  static String get tenantVisitSummaryTime => _tenantVisitSummaryTime.tr();
+
+  static const String _tenantVisitSummaryStatus = 'tenant_visit_summary_status';
+  static String get tenantVisitSummaryStatus => _tenantVisitSummaryStatus.tr();
+
+  static const String _tenantVisitPendingOwnerResponse = 'tenant_visit_pending_owner_response';
+  static String get tenantVisitPendingOwnerResponse => _tenantVisitPendingOwnerResponse.tr();
+
+  static const String _tenantVisitFollowRequests = 'tenant_visit_follow_requests';
+  static String get tenantVisitFollowRequests => _tenantVisitFollowRequests.tr();
+
+  static const String _tenantVisitBackToSearch = 'tenant_visit_back_to_search';
+  static String get tenantVisitBackToSearch => _tenantVisitBackToSearch.tr();
+
+  static const String _tenantVisitDetailsTitle = 'tenant_visit_details_title';
+  static String get tenantVisitDetailsTitle => _tenantVisitDetailsTitle.tr();
+
+  static const String _tenantVisitConfirmedHeading = 'tenant_visit_confirmed_heading';
+  static String get tenantVisitConfirmedHeading => _tenantVisitConfirmedHeading.tr();
+
+  static const String _tenantVisitContactInfo = 'tenant_visit_contact_info';
+  static String get tenantVisitContactInfo => _tenantVisitContactInfo.tr();
+
+  static const String _tenantVisitOwnerPhoneConfirmed = 'tenant_visit_owner_phone_confirmed';
+  static String get tenantVisitOwnerPhoneConfirmed => _tenantVisitOwnerPhoneConfirmed.tr();
+
+  static const String _tenantVisitOpenOwnerChat = 'tenant_visit_open_owner_chat';
+  static String get tenantVisitOpenOwnerChat => _tenantVisitOpenOwnerChat.tr();
+
+  static const String _tenantVisitCancelVisit = 'tenant_visit_cancel_visit';
+  static String get tenantVisitCancelVisit => _tenantVisitCancelVisit.tr();
+
+  static const String _tenantVisitRateTitle = 'tenant_visit_rate_title';
+  static String get tenantVisitRateTitle => _tenantVisitRateTitle.tr();
+
+  static const String _tenantVisitRatingCleanliness = 'tenant_visit_rating_cleanliness';
+  static String get tenantVisitRatingCleanliness => _tenantVisitRatingCleanliness.tr();
+
+  static const String _tenantVisitRatingAccuracy = 'tenant_visit_rating_accuracy';
+  static String get tenantVisitRatingAccuracy => _tenantVisitRatingAccuracy.tr();
+
+  static const String _tenantVisitRatingOwnerTreatment = 'tenant_visit_rating_owner_treatment';
+  static String get tenantVisitRatingOwnerTreatment => _tenantVisitRatingOwnerTreatment.tr();
+
+  static const String _tenantVisitRatingCommentHint = 'tenant_visit_rating_comment_hint';
+  static String get tenantVisitRatingCommentHint => _tenantVisitRatingCommentHint.tr();
+
+  static const String _tenantVisitRatingSubmit = 'tenant_visit_rating_submit';
+  static String get tenantVisitRatingSubmit => _tenantVisitRatingSubmit.tr();
+
+  static const String _tenantVisitRatingSubmitted = 'tenant_visit_rating_submitted';
+  static String get tenantVisitRatingSubmitted => _tenantVisitRatingSubmitted.tr();
+
+  static const String _tenantVisitRequestCanceled = 'tenant_visit_request_canceled';
+  static String get tenantVisitRequestCanceled => _tenantVisitRequestCanceled.tr();
+
+  static const String _tenantVisitPropertyNasrCity = 'tenant_visit_property_nasr_city';
+  static String get tenantVisitPropertyNasrCity => _tenantVisitPropertyNasrCity.tr();
+
+  static const String _tenantVisitOwnerAhmed = 'tenant_visit_owner_ahmed';
+  static String get tenantVisitOwnerAhmed => _tenantVisitOwnerAhmed.tr();
+
+  static const String _tenantVisitDateToday = 'tenant_visit_date_today';
+  static String get tenantVisitDateToday => _tenantVisitDateToday.tr();
+
+  static const String _tenantVisitPropertyFifthSettlement = 'tenant_visit_property_fifth_settlement';
+  static String get tenantVisitPropertyFifthSettlement => _tenantVisitPropertyFifthSettlement.tr();
+
+  static const String _tenantVisitOwnerMona = 'tenant_visit_owner_mona';
+  static String get tenantVisitOwnerMona => _tenantVisitOwnerMona.tr();
+
+  static const String _tenantVisitDateTomorrow = 'tenant_visit_date_tomorrow';
+  static String get tenantVisitDateTomorrow => _tenantVisitDateTomorrow.tr();
+
+  static const String _tenantVisitPropertyMohandessin = 'tenant_visit_property_mohandessin';
+  static String get tenantVisitPropertyMohandessin => _tenantVisitPropertyMohandessin.tr();
+
+  static const String _tenantVisitOwnerKhaled = 'tenant_visit_owner_khaled';
+  static String get tenantVisitOwnerKhaled => _tenantVisitOwnerKhaled.tr();
+
+  static const String _tenantVisitDateThursday = 'tenant_visit_date_thursday';
+  static String get tenantVisitDateThursday => _tenantVisitDateThursday.tr();
+
+  static const String _tenantVisitBannerTitle = 'tenant_visit_banner_title';
+  static String get tenantVisitBannerTitle => _tenantVisitBannerTitle.tr();
+
+  static const String _tenantVisitBannerProperty = 'tenant_visit_banner_property';
+  static String get tenantVisitBannerProperty => _tenantVisitBannerProperty.tr();
+
+  static const String _tenantVisitBookingPropertyTitle = 'tenant_visit_booking_property_title';
+  static String get tenantVisitBookingPropertyTitle => _tenantVisitBookingPropertyTitle.tr();
+
+  static const String _tenantVisitBookingPropertyMeta = 'tenant_visit_booking_property_meta';
+  static String get tenantVisitBookingPropertyMeta => _tenantVisitBookingPropertyMeta.tr();
+
+  static const String _tenantVisitDetailDate = 'tenant_visit_detail_date';
+  static String get tenantVisitDetailDate => _tenantVisitDetailDate.tr();
+
+  static const String _tenantVisitDetailPhone = 'tenant_visit_detail_phone';
+  static String get tenantVisitDetailPhone => _tenantVisitDetailPhone.tr();
+
+  static const String _tenantVisitDayFriday = 'tenant_visit_day_friday';
+  static String get tenantVisitDayFriday => _tenantVisitDayFriday.tr();
+
+  static const String _tenantVisitDaySaturday = 'tenant_visit_day_saturday';
+  static String get tenantVisitDaySaturday => _tenantVisitDaySaturday.tr();
+
+  static const String _tenantVisitDaySunday = 'tenant_visit_day_sunday';
+  static String get tenantVisitDaySunday => _tenantVisitDaySunday.tr();
+
+  static const String _tenantVisitDayMonday = 'tenant_visit_day_monday';
+  static String get tenantVisitDayMonday => _tenantVisitDayMonday.tr();
+
+  static const String _tenantVisitDayTuesday = 'tenant_visit_day_tuesday';
+  static String get tenantVisitDayTuesday => _tenantVisitDayTuesday.tr();
+
+  static const String _tenantVisitMonthJune = 'tenant_visit_month_june';
+  static String get tenantVisitMonthJune => _tenantVisitMonthJune.tr();
+
+  static const String _tenantVisitTimeTenAm = 'tenant_visit_time_ten_am';
+  static String get tenantVisitTimeTenAm => _tenantVisitTimeTenAm.tr();
+
+  static const String _tenantVisitTimeElevenAm = 'tenant_visit_time_eleven_am';
+  static String get tenantVisitTimeElevenAm => _tenantVisitTimeElevenAm.tr();
+
+  static const String _tenantVisitTimeNoon = 'tenant_visit_time_noon';
+  static String get tenantVisitTimeNoon => _tenantVisitTimeNoon.tr();
+
+  static const String _tenantVisitTimeTwoPm = 'tenant_visit_time_two_pm';
+  static String get tenantVisitTimeTwoPm => _tenantVisitTimeTwoPm.tr();
+
+  static const String _tenantVisitTimeThreePm = 'tenant_visit_time_three_pm';
+  static String get tenantVisitTimeThreePm => _tenantVisitTimeThreePm.tr();
+
+  static const String _tenantVisitTimeFivePm = 'tenant_visit_time_five_pm';
+  static String get tenantVisitTimeFivePm => _tenantVisitTimeFivePm.tr();
+
+  static const String _ownerVisitsTitle = 'owner_visits_title';
+  static String get ownerVisitsTitle => _ownerVisitsTitle.tr();
+
+  static const String _ownerVisitsTotalRequests = 'owner_visits_total_requests';
+  static String get ownerVisitsTotalRequests => _ownerVisitsTotalRequests.tr();
+
+  static const String _ownerVisitsWaitingForReply = 'owner_visits_waiting_for_reply';
+  static String get ownerVisitsWaitingForReply => _ownerVisitsWaitingForReply.tr();
+
+  static const String _ownerVisitsFilterAll = 'owner_visits_filter_all';
+  static String get ownerVisitsFilterAll => _ownerVisitsFilterAll.tr();
+
+  static const String _ownerVisitsFilterNew = 'owner_visits_filter_new';
+  static String get ownerVisitsFilterNew => _ownerVisitsFilterNew.tr();
+
+  static const String _ownerVisitsFilterAccepted = 'owner_visits_filter_accepted';
+  static String get ownerVisitsFilterAccepted => _ownerVisitsFilterAccepted.tr();
+
+  static const String _ownerVisitsFilterRejected = 'owner_visits_filter_rejected';
+  static String get ownerVisitsFilterRejected => _ownerVisitsFilterRejected.tr();
+
+  static const String _ownerVisitsFilterCompleted = 'owner_visits_filter_completed';
+  static String get ownerVisitsFilterCompleted => _ownerVisitsFilterCompleted.tr();
+
+  static const String _ownerVisitsNoRequests = 'owner_visits_no_requests';
+  static String get ownerVisitsNoRequests => _ownerVisitsNoRequests.tr();
+
+  static const String _ownerVisitStatusNew = 'owner_visit_status_new';
+  static String get ownerVisitStatusNew => _ownerVisitStatusNew.tr();
+
+  static const String _ownerVisitStatusPending = 'owner_visit_status_pending';
+  static String get ownerVisitStatusPending => _ownerVisitStatusPending.tr();
+
+  static const String _ownerVisitStatusAccepted = 'owner_visit_status_accepted';
+  static String get ownerVisitStatusAccepted => _ownerVisitStatusAccepted.tr();
+
+  static const String _ownerVisitStatusRejected = 'owner_visit_status_rejected';
+  static String get ownerVisitStatusRejected => _ownerVisitStatusRejected.tr();
+
+  static const String _ownerVisitStatusCompleted = 'owner_visit_status_completed';
+  static String get ownerVisitStatusCompleted => _ownerVisitStatusCompleted.tr();
+
+  static const String _ownerVisitVerified = 'owner_visit_verified';
+  static String get ownerVisitVerified => _ownerVisitVerified.tr();
+
+  static const String _ownerVisitAccept = 'owner_visit_accept';
+  static String get ownerVisitAccept => _ownerVisitAccept.tr();
+
+  static const String _ownerVisitReject = 'owner_visit_reject';
+  static String get ownerVisitReject => _ownerVisitReject.tr();
+
+  static const String _ownerVisitAcceptedMessage = 'owner_visit_accepted_message';
+  static String get ownerVisitAcceptedMessage => _ownerVisitAcceptedMessage.tr();
+
+  static const String _ownerVisitRejectedMessage = 'owner_visit_rejected_message';
+  static String get ownerVisitRejectedMessage => _ownerVisitRejectedMessage.tr();
+
+  static const String _ownerRequestDetailsTitle = 'owner_request_details_title';
+  static String get ownerRequestDetailsTitle => _ownerRequestDetailsTitle.tr();
+
+  static const String _ownerVisitRequestedProperty = 'owner_visit_requested_property';
+  static String get ownerVisitRequestedProperty => _ownerVisitRequestedProperty.tr();
+
+  static const String _ownerVisitRequestDate = 'owner_visit_request_date';
+  static String get ownerVisitRequestDate => _ownerVisitRequestDate.tr();
+
+  static const String _ownerVisitRequestTime = 'owner_visit_request_time';
+  static String get ownerVisitRequestTime => _ownerVisitRequestTime.tr();
+
+  static const String _ownerVisitTenantNoteTitle = 'owner_visit_tenant_note_title';
+  static String get ownerVisitTenantNoteTitle => _ownerVisitTenantNoteTitle.tr();
+
+  static const String _ownerVisitTenantPhoneHidden = 'owner_visit_tenant_phone_hidden';
+  static String get ownerVisitTenantPhoneHidden => _ownerVisitTenantPhoneHidden.tr();
+
+  static const String _ownerVisitAcceptWithCheck = 'owner_visit_accept_with_check';
+  static String get ownerVisitAcceptWithCheck => _ownerVisitAcceptWithCheck.tr();
+
+  static const String _ownerVisitRejectRequest = 'owner_visit_reject_request';
+  static String get ownerVisitRejectRequest => _ownerVisitRejectRequest.tr();
+
+  static const String _ownerVisitOpenChat = 'owner_visit_open_chat';
+  static String get ownerVisitOpenChat => _ownerVisitOpenChat.tr();
+
+  static const String _ownerAcceptTitle = 'owner_accept_title';
+  static String get ownerAcceptTitle => _ownerAcceptTitle.tr();
+
+  static const String _ownerAcceptSubtitle = 'owner_accept_subtitle';
+  static String get ownerAcceptSubtitle => _ownerAcceptSubtitle.tr();
+
+  static const String _ownerVisitTenantLabel = 'owner_visit_tenant_label';
+  static String get ownerVisitTenantLabel => _ownerVisitTenantLabel.tr();
+
+  static const String _ownerAcceptConfirm = 'owner_accept_confirm';
+  static String get ownerAcceptConfirm => _ownerAcceptConfirm.tr();
+
+  static const String _ownerRequestCancel = 'owner_request_cancel';
+  static String get ownerRequestCancel => _ownerRequestCancel.tr();
+
+  static const String _ownerRejectTitle = 'owner_reject_title';
+  static String get ownerRejectTitle => _ownerRejectTitle.tr();
+
+  static const String _ownerRejectSubtitle = 'owner_reject_subtitle';
+  static String get ownerRejectSubtitle => _ownerRejectSubtitle.tr();
+
+  static const String _ownerRejectReasonInconvenientTime = 'owner_reject_reason_inconvenient_time';
+  static String get ownerRejectReasonInconvenientTime => _ownerRejectReasonInconvenientTime.tr();
+
+  static const String _ownerRejectReasonPropertyRented = 'owner_reject_reason_property_rented';
+  static String get ownerRejectReasonPropertyRented => _ownerRejectReasonPropertyRented.tr();
+
+  static const String _ownerRejectReasonRequirementsNotMet = 'owner_reject_reason_requirements_not_met';
+  static String get ownerRejectReasonRequirementsNotMet => _ownerRejectReasonRequirementsNotMet.tr();
+
+  static const String _ownerRejectReasonOther = 'owner_reject_reason_other';
+  static String get ownerRejectReasonOther => _ownerRejectReasonOther.tr();
+
+  static const String _ownerRejectConfirm = 'owner_reject_confirm';
+  static String get ownerRejectConfirm => _ownerRejectConfirm.tr();
+
+  static const String _ownerVisitTenantSaraInitial = 'owner_visit_tenant_sara_initial';
+  static String get ownerVisitTenantSaraInitial => _ownerVisitTenantSaraInitial.tr();
+
+  static const String _ownerVisitTenantSara = 'owner_visit_tenant_sara';
+  static String get ownerVisitTenantSara => _ownerVisitTenantSara.tr();
+
+  static const String _ownerVisitTenantMohamedInitial = 'owner_visit_tenant_mohamed_initial';
+  static String get ownerVisitTenantMohamedInitial => _ownerVisitTenantMohamedInitial.tr();
+
+  static const String _ownerVisitTenantMohamed = 'owner_visit_tenant_mohamed';
+  static String get ownerVisitTenantMohamed => _ownerVisitTenantMohamed.tr();
+
+  static const String _ownerVisitTenantKhaledInitial = 'owner_visit_tenant_khaled_initial';
+  static String get ownerVisitTenantKhaledInitial => _ownerVisitTenantKhaledInitial.tr();
+
+  static const String _ownerVisitTenantKhaled = 'owner_visit_tenant_khaled';
+  static String get ownerVisitTenantKhaled => _ownerVisitTenantKhaled.tr();
+
+  static const String _ownerVisitPropertyNasrCity = 'owner_visit_property_nasr_city';
+  static String get ownerVisitPropertyNasrCity => _ownerVisitPropertyNasrCity.tr();
+
+  static const String _ownerVisitPropertyJeddahStudio = 'owner_visit_property_jeddah_studio';
+  static String get ownerVisitPropertyJeddahStudio => _ownerVisitPropertyJeddahStudio.tr();
+
+  static const String _ownerVisitPropertyDammamRoom = 'owner_visit_property_dammam_room';
+  static String get ownerVisitPropertyDammamRoom => _ownerVisitPropertyDammamRoom.tr();
+
+  static const String _ownerVisitDateSaturdayAtThree = 'owner_visit_date_saturday_at_three';
+  static String get ownerVisitDateSaturdayAtThree => _ownerVisitDateSaturdayAtThree.tr();
+
+  static const String _ownerVisitDateSundayAtTwo = 'owner_visit_date_sunday_at_two';
+  static String get ownerVisitDateSundayAtTwo => _ownerVisitDateSundayAtTwo.tr();
+
+  static const String _ownerVisitDateMondayAtEleven = 'owner_visit_date_monday_at_eleven';
+  static String get ownerVisitDateMondayAtEleven => _ownerVisitDateMondayAtEleven.tr();
+
+  static const String _ownerVisitDateSaturday = 'owner_visit_date_saturday';
+  static String get ownerVisitDateSaturday => _ownerVisitDateSaturday.tr();
+
+  static const String _ownerVisitDateSunday = 'owner_visit_date_sunday';
+  static String get ownerVisitDateSunday => _ownerVisitDateSunday.tr();
+
+  static const String _ownerVisitDateMonday = 'owner_visit_date_monday';
+  static String get ownerVisitDateMonday => _ownerVisitDateMonday.tr();
+
+  static const String _ownerVisitTimeThreePm = 'owner_visit_time_three_pm';
+  static String get ownerVisitTimeThreePm => _ownerVisitTimeThreePm.tr();
+
+  static const String _ownerVisitTimeTwoPm = 'owner_visit_time_two_pm';
+  static String get ownerVisitTimeTwoPm => _ownerVisitTimeTwoPm.tr();
+
+  static const String _ownerVisitTimeElevenAm = 'owner_visit_time_eleven_am';
+  static String get ownerVisitTimeElevenAm => _ownerVisitTimeElevenAm.tr();
+
+  static const String _ownerVisitVerifiedMemberSince = 'owner_visit_verified_member_since';
+  static String get ownerVisitVerifiedMemberSince => _ownerVisitVerifiedMemberSince.tr();
+
+  static const String _ownerVisitMemberSince = 'owner_visit_member_since';
+  static String get ownerVisitMemberSince => _ownerVisitMemberSince.tr();
+
+  static const String _ownerVisitTenantNote = 'owner_visit_tenant_note';
+  static String get ownerVisitTenantNote => _ownerVisitTenantNote.tr();
+
+  static const String _ownerVisitTenantPhone = 'owner_visit_tenant_phone';
+  static String get ownerVisitTenantPhone => _ownerVisitTenantPhone.tr();
+
+  static const String _ownerCalendarTitle = 'owner_calendar_title';
+  static String get ownerCalendarTitle => _ownerCalendarTitle.tr();
+
+  static const String _ownerCalendarMonth = 'owner_calendar_month';
+  static String get ownerCalendarMonth => _ownerCalendarMonth.tr();
+
+  static const String _ownerCalendarDaySundayShort = 'owner_calendar_day_sunday_short';
+  static String get ownerCalendarDaySundayShort => _ownerCalendarDaySundayShort.tr();
+
+  static const String _ownerCalendarDayMondayShort = 'owner_calendar_day_monday_short';
+  static String get ownerCalendarDayMondayShort => _ownerCalendarDayMondayShort.tr();
+
+  static const String _ownerCalendarDayTuesdayShort = 'owner_calendar_day_tuesday_short';
+  static String get ownerCalendarDayTuesdayShort => _ownerCalendarDayTuesdayShort.tr();
+
+  static const String _ownerCalendarDayWednesdayShort = 'owner_calendar_day_wednesday_short';
+  static String get ownerCalendarDayWednesdayShort => _ownerCalendarDayWednesdayShort.tr();
+
+  static const String _ownerCalendarDayThursdayShort = 'owner_calendar_day_thursday_short';
+  static String get ownerCalendarDayThursdayShort => _ownerCalendarDayThursdayShort.tr();
+
+  static const String _ownerCalendarDayFridayShort = 'owner_calendar_day_friday_short';
+  static String get ownerCalendarDayFridayShort => _ownerCalendarDayFridayShort.tr();
+
+  static const String _ownerCalendarDaySaturdayShort = 'owner_calendar_day_saturday_short';
+  static String get ownerCalendarDaySaturdayShort => _ownerCalendarDaySaturdayShort.tr();
+
+  static const String _ownerCalendarVisitsOnDay = 'owner_calendar_visits_on_day';
+  static String get ownerCalendarVisitsOnDay => _ownerCalendarVisitsOnDay.tr();
+
+  static const String _ownerCalendarTenantSaraMahmoud = 'owner_calendar_tenant_sara_mahmoud';
+  static String get ownerCalendarTenantSaraMahmoud => _ownerCalendarTenantSaraMahmoud.tr();
+
+  static const String _ownerCalendarTimeFiveThirty = 'owner_calendar_time_five_thirty';
+  static String get ownerCalendarTimeFiveThirty => _ownerCalendarTimeFiveThirty.tr();
+
+  static const String _ownerCalendarConfirmed = 'owner_calendar_confirmed';
+  static String get ownerCalendarConfirmed => _ownerCalendarConfirmed.tr();
+
+  static const String _ownerCalendarPending = 'owner_calendar_pending';
+  static String get ownerCalendarPending => _ownerCalendarPending.tr();
+
+  static const String _ownerCalendarManageAvailability = 'owner_calendar_manage_availability';
+  static String get ownerCalendarManageAvailability => _ownerCalendarManageAvailability.tr();
+
+  static const String _ownerAvailabilityTitle = 'owner_availability_title';
+  static String get ownerAvailabilityTitle => _ownerAvailabilityTitle.tr();
+
+  static const String _ownerAvailabilityDescription = 'owner_availability_description';
+  static String get ownerAvailabilityDescription => _ownerAvailabilityDescription.tr();
+
+  static const String _ownerAvailabilitySunday = 'owner_availability_sunday';
+  static String get ownerAvailabilitySunday => _ownerAvailabilitySunday.tr();
+
+  static const String _ownerAvailabilityMonday = 'owner_availability_monday';
+  static String get ownerAvailabilityMonday => _ownerAvailabilityMonday.tr();
+
+  static const String _ownerAvailabilityTuesday = 'owner_availability_tuesday';
+  static String get ownerAvailabilityTuesday => _ownerAvailabilityTuesday.tr();
+
+  static const String _ownerAvailabilityWednesday = 'owner_availability_wednesday';
+  static String get ownerAvailabilityWednesday => _ownerAvailabilityWednesday.tr();
+
+  static const String _ownerAvailabilityThursday = 'owner_availability_thursday';
+  static String get ownerAvailabilityThursday => _ownerAvailabilityThursday.tr();
+
+  static const String _ownerAvailabilityFriday = 'owner_availability_friday';
+  static String get ownerAvailabilityFriday => _ownerAvailabilityFriday.tr();
+
+  static const String _ownerAvailabilitySaturday = 'owner_availability_saturday';
+  static String get ownerAvailabilitySaturday => _ownerAvailabilitySaturday.tr();
+
+  static const String _ownerAvailabilitySundayShort = 'owner_availability_sunday_short';
+  static String get ownerAvailabilitySundayShort => _ownerAvailabilitySundayShort.tr();
+
+  static const String _ownerAvailabilityMondayShort = 'owner_availability_monday_short';
+  static String get ownerAvailabilityMondayShort => _ownerAvailabilityMondayShort.tr();
+
+  static const String _ownerAvailabilityTuesdayShort = 'owner_availability_tuesday_short';
+  static String get ownerAvailabilityTuesdayShort => _ownerAvailabilityTuesdayShort.tr();
+
+  static const String _ownerAvailabilityWednesdayShort = 'owner_availability_wednesday_short';
+  static String get ownerAvailabilityWednesdayShort => _ownerAvailabilityWednesdayShort.tr();
+
+  static const String _ownerAvailabilityThursdayShort = 'owner_availability_thursday_short';
+  static String get ownerAvailabilityThursdayShort => _ownerAvailabilityThursdayShort.tr();
+
+  static const String _ownerAvailabilityFridayShort = 'owner_availability_friday_short';
+  static String get ownerAvailabilityFridayShort => _ownerAvailabilityFridayShort.tr();
+
+  static const String _ownerAvailabilitySaturdayShort = 'owner_availability_saturday_short';
+  static String get ownerAvailabilitySaturdayShort => _ownerAvailabilitySaturdayShort.tr();
+
+  static const String _ownerAvailabilityMonthJune = 'owner_availability_month_june';
+  static String get ownerAvailabilityMonthJune => _ownerAvailabilityMonthJune.tr();
+
+  static const String _ownerAvailabilityTimeNineAm = 'owner_availability_time_nine_am';
+  static String get ownerAvailabilityTimeNineAm => _ownerAvailabilityTimeNineAm.tr();
+
+  static const String _ownerAvailabilityTimeTenAm = 'owner_availability_time_ten_am';
+  static String get ownerAvailabilityTimeTenAm => _ownerAvailabilityTimeTenAm.tr();
+
+  static const String _ownerAvailabilityTimeElevenAm = 'owner_availability_time_eleven_am';
+  static String get ownerAvailabilityTimeElevenAm => _ownerAvailabilityTimeElevenAm.tr();
+
+  static const String _ownerAvailabilityTimeNoon = 'owner_availability_time_noon';
+  static String get ownerAvailabilityTimeNoon => _ownerAvailabilityTimeNoon.tr();
+
+  static const String _ownerAvailabilityTimeTwoPm = 'owner_availability_time_two_pm';
+  static String get ownerAvailabilityTimeTwoPm => _ownerAvailabilityTimeTwoPm.tr();
+
+  static const String _ownerAvailabilityTimeThreePm = 'owner_availability_time_three_pm';
+  static String get ownerAvailabilityTimeThreePm => _ownerAvailabilityTimeThreePm.tr();
+
+  static const String _ownerAvailabilityTimeFourPm = 'owner_availability_time_four_pm';
+  static String get ownerAvailabilityTimeFourPm => _ownerAvailabilityTimeFourPm.tr();
+
+  static const String _ownerAvailabilityTimeFivePm = 'owner_availability_time_five_pm';
+  static String get ownerAvailabilityTimeFivePm => _ownerAvailabilityTimeFivePm.tr();
+
+  static const String _ownerAvailabilityAvailable = 'owner_availability_available';
+  static String get ownerAvailabilityAvailable => _ownerAvailabilityAvailable.tr();
+
+  static const String _ownerAvailabilityBooked = 'owner_availability_booked';
+  static String get ownerAvailabilityBooked => _ownerAvailabilityBooked.tr();
+
+  static const String _ownerAvailabilityUnspecified = 'owner_availability_unspecified';
+  static String get ownerAvailabilityUnspecified => _ownerAvailabilityUnspecified.tr();
+
+  static const String _ownerAvailabilitySave = 'owner_availability_save';
+  static String get ownerAvailabilitySave => _ownerAvailabilitySave.tr();
+
+  static const String _ownerAvailabilitySaved = 'owner_availability_saved';
+  static String get ownerAvailabilitySaved => _ownerAvailabilitySaved.tr();
+
 }

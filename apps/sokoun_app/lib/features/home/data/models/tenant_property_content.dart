@@ -27,25 +27,6 @@ class TenantNearbyPlaceContent {
   final String subtitle;
 }
 
-class TenantVisitDayContent {
-  const TenantVisitDayContent({
-    required this.weekday,
-    required this.day,
-    required this.month,
-  });
-
-  final String weekday;
-  final String day;
-  final String month;
-}
-
-class TenantVisitSlotContent {
-  const TenantVisitSlotContent({required this.label, this.isAvailable = true});
-
-  final String label;
-  final bool isAvailable;
-}
-
 class TenantPropertyDetailsContent {
   const TenantPropertyDetailsContent({
     required this.title,
@@ -364,20 +345,5 @@ abstract final class TenantPropertyFilterOptions {
     'غاز طبيعي',
     'عداد كهرباء',
     'عداد مياه',
-  ];
-  static const visitDays = [
-    TenantVisitDayContent(weekday: 'الجمعة', day: '14', month: 'يونيو'),
-    TenantVisitDayContent(weekday: 'السبت', day: '15', month: 'يونيو'),
-    TenantVisitDayContent(weekday: 'الأحد', day: '16', month: 'يونيو'),
-    TenantVisitDayContent(weekday: 'الاثنين', day: '17', month: 'يونيو'),
-    TenantVisitDayContent(weekday: 'الثلاثاء', day: '18', month: 'يونيو'),
-  ];
-  static const visitSlots = [
-    TenantVisitSlotContent(label: '10:00 ص'),
-    TenantVisitSlotContent(label: '11:00 ص'),
-    TenantVisitSlotContent(label: '12:00 م ✕', isAvailable: false),
-    TenantVisitSlotContent(label: '2:00 م'),
-    TenantVisitSlotContent(label: '3:00 م'),
-    TenantVisitSlotContent(label: '5:00 م'),
   ];
 }

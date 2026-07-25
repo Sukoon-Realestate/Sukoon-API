@@ -3,46 +3,76 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:sokoun_app/features/home/data/models/owner_visit_request_content.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 
 class OwnerVisitRequestSummaryGrid extends StatelessWidget {
-  const OwnerVisitRequestSummaryGrid({super.key, required this.summaries});
+  const OwnerVisitRequestSummaryGrid({
+    super.key,
+    required this.totalCount,
+    required this.pendingCount,
+  });
 
-  final List<OwnerVisitRequestSummaryContent> summaries;
+  final int totalCount;
+  final int pendingCount;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       textDirection: TextDirection.ltr,
       children: [
-        for (int index = 0; index < summaries.length; index++) ...[
-          Expanded(child: _SummaryCard(summary: summaries[index])),
-          if (index < summaries.length - 1) 8.szW,
-        ],
+        Expanded(
+          child: _SummaryCard(
+            label: LocaleKeys.ownerVisitsTotalRequests,
+            value: '$totalCount',
+            backgroundColor: AppColors.tealAlpha07,
+            borderColor: AppColors.tealAlpha19,
+            valueColor: AppColors.sokoonTeal,
+          ),
+        ),
+        8.szW,
+        Expanded(
+          child: _SummaryCard(
+            label: LocaleKeys.ownerVisitsWaitingForReply,
+            value: '$pendingCount',
+            backgroundColor: AppColors.goldAlpha15,
+            borderColor: AppColors.goldAlpha15,
+            valueColor: AppColors.gold,
+          ),
+        ),
       ],
     );
   }
 }
 
 class _SummaryCard extends StatelessWidget {
-  const _SummaryCard({required this.summary});
+  const _SummaryCard({
+    required this.label,
+    required this.value,
+    required this.backgroundColor,
+    required this.borderColor,
+    required this.valueColor,
+  });
 
-  final OwnerVisitRequestSummaryContent summary;
+  final String label;
+  final String value;
+  final Color backgroundColor;
+  final Color borderColor;
+  final Color valueColor;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 11.h),
       decoration: BoxDecoration(
-        color: summary.backgroundColor,
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: summary.borderColor),
+        border: Border.all(color: borderColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AppText(
-            summary.label,
+            label,
             color: AppColors.sokoonGray,
             fontSize: 11.sp,
             fontWeight: FontWeight.w400,
@@ -51,8 +81,8 @@ class _SummaryCard extends StatelessWidget {
           ),
           4.szH,
           AppText(
-            summary.value,
-            color: summary.valueColor,
+            value,
+            color: valueColor,
             fontSize: 20.sp,
             fontWeight: FontWeight.w900,
           ),

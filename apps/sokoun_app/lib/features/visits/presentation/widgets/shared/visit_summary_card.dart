@@ -1,12 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/widgets/app_text.dart';
+part of '../../../imports.dart';
 
 class VisitSummaryCard extends StatelessWidget {
   const VisitSummaryCard({super.key, required this.rows});
 
-  final List<VisitSummaryRowData> rows;
+  final List<({String label, String value})> rows;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +16,7 @@ class VisitSummaryCard extends StatelessWidget {
         boxShadow: const [
           BoxShadow(
             color: AppColors.shadowBlack04,
-            blurRadius: 4,
+            blurRadius: 8,
             offset: Offset(0, 2),
           ),
         ],
@@ -27,9 +24,9 @@ class VisitSummaryCard extends StatelessWidget {
       child: Column(
         children: [
           for (int index = 0; index < rows.length; index++) ...[
-            _SummaryRow(row: rows[index]),
+            _VisitSummaryRow(row: rows[index]),
             if (index < rows.length - 1)
-              const Divider(color: AppColors.sokoonBorder),
+              const Divider(height: 1, color: AppColors.sokoonBorder),
           ],
         ],
       ),
@@ -37,44 +34,36 @@ class VisitSummaryCard extends StatelessWidget {
   }
 }
 
-class _SummaryRow extends StatelessWidget {
-  const _SummaryRow({required this.row});
+class _VisitSummaryRow extends StatelessWidget {
+  const _VisitSummaryRow({required this.row});
 
-  final VisitSummaryRowData row;
+  final ({String label, String value}) row;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 38.h,
+    return ConstrainedBox(
+      constraints: BoxConstraints(minHeight: 43.h),
       child: Row(
-        textDirection: TextDirection.ltr,
         children: [
-          Flexible(
+          Expanded(
             child: AppText(
               row.value,
               color: AppColors.sokoonNavy,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w900,
-              maxLines: 1,
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w800,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          const Spacer(),
+          12.szW,
           AppText(
             row.label,
             color: AppColors.sokoonGray,
             fontSize: 12.sp,
-            fontWeight: FontWeight.w500,
+            maxLines: 1,
           ),
         ],
       ),
     );
   }
-}
-
-class VisitSummaryRowData {
-  const VisitSummaryRowData({required this.label, required this.value});
-
-  final String label;
-  final String value;
 }
