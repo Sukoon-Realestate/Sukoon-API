@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:sokoun_app/features/favorites/presentation/screens/favorites_screen.dart';
 
 import '../widgets/tenant_widgets/imports.dart';
 
@@ -52,11 +54,11 @@ class TenantHomeScreen extends StatelessWidget {
             ),
           ),
         ),
-        bottomNavigationBar: const SafeArea(
+        bottomNavigationBar: SafeArea(
           top: false,
           child: HomeBottomNav(
             items: [
-              HomeBottomNavItemData(
+              const HomeBottomNavItemData(
                 icon: Icons.home_outlined,
                 label: 'الرئيسية',
                 isActive: true,
@@ -64,8 +66,9 @@ class TenantHomeScreen extends StatelessWidget {
               HomeBottomNavItemData(
                 icon: Icons.favorite_border_rounded,
                 label: 'المحفوظات',
+                onTap: () => Go.to(const FavoritesScreen()),
               ),
-              HomeBottomNavItemData(
+              const HomeBottomNavItemData(
                 icon: Icons.chat_bubble_outline_rounded,
                 label: 'الشات',
               ),

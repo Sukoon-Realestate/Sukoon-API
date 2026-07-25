@@ -27,12 +27,10 @@ class KycUploadDocumentsScreen extends StatefulWidget {
   const KycUploadDocumentsScreen({
     super.key,
     this.onBack,
-    this.onSubmit,
     this.onRegisterSuccess,
   });
 
   final VoidCallback? onBack;
-  final ValueChanged<KycDocumentUploadData>? onSubmit;
   final VoidCallback? onRegisterSuccess;
 
   @override
@@ -117,11 +115,6 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
     }
 
     final KycDocumentUploadData data = formData.toUploadData();
-
-    if (widget.onSubmit != null) {
-      widget.onSubmit?.call(data);
-      return;
-    }
 
     final RegisterCubit registerCubit = context.read<RegisterCubit>();
     registerCubit.updateKycDocuments(

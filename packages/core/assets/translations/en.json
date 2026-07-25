@@ -475,5 +475,17 @@
   "chat_reason_same_gender": "You cannot chat with a user of the same gender",
   "chat_reason_active_match_with_other": "This user has an active conversation with someone else",
   "chat_reason_parent_approval_required": "Parent approval is required to start this chat",
-  "chat_reason_has_problem": "Unable to start the chat right now"
+  "chat_reason_has_problem": "Unable to start the chat right now",
+  "favorites_title": "Favorites",
+  "favorites_saved_properties_count": "saved properties",
+  "favorites_empty_title": "No saved properties yet",
+  "favorites_empty_description": "Tap the heart on any property to find it here later",
+  "favorites_browse_properties": "Browse properties",
+  "favorites_removed_message": "Property removed from favorites",
+  "favorites_undo_action": "Undo",
+  "favorites_navigation_saved": "Saved",
+  "favorites_navigation_account": "Account",
+  "favorite_remove_semantic_label": "Remove from favorites",
+  "favorites_select_all": "Select all",
+  "favorites_currency_short": "EGP"
 }

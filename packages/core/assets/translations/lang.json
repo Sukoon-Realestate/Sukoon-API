@@ -486,5 +486,18 @@
   "chatReasonSameGender #$ You cannot chat with a user of the same gender" : "لا يمكنك التحدث مع مستخدم من نفس الجنس",
   "chatReasonActiveMatchWithOther #$ This user has an active conversation with someone else" : "لدى هذا المستخدم محادثة نشطة مع شخص آخر",
   "chatReasonParentApprovalRequired #$ Parent approval is required to start this chat" : "يتطلب بدء هذه المحادثة موافقة ولي الأمر",
-  "chatReasonHasProblem #$ Unable to start the chat right now" : "لا يمكن بدء المحادثة في الوقت الحالي"
+  "chatReasonHasProblem #$ Unable to start the chat right now" : "لا يمكن بدء المحادثة في الوقت الحالي",
+  "_____________________________________Favorites___________________________________" : "",
+  "favoritesTitle #$ Favorites" : "المحفوظات",
+  "favoritesSavedPropertiesCount #$ saved properties" : "عقارات محفوظة",
+  "favoritesEmptyTitle #$ No saved properties yet" : "لسه ما حفظتش عقارات",
+  "favoritesEmptyDescription #$ Tap the heart on any property to find it here later" : "اضغط على علامة القلب في أي عقار علشان تلاقيه هنا بعدين",
+  "favoritesBrowseProperties #$ Browse properties" : "تصفّح العقارات",
+  "favoritesRemovedMessage #$ Property removed from favorites" : "تمت إزالة العقار من المحفوظات",
+  "favoritesUndoAction #$ Undo" : "تراجع",
+  "favoritesNavigationSaved #$ Saved" : "المحفوظات",
+  "favoritesNavigationAccount #$ Account" : "الحساب",
+  "favoriteRemoveSemanticLabel #$ Remove from favorites" : "إزالة من المحفوظات",
+  "favoritesSelectAll #$ Select all" : "تحديد الكل",
+  "favoritesCurrencyShort #$ EGP" : "ج"
 }

@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/network/fire_store.dart';
+import 'package:melos_core/core/shared/base_state.dart';
 import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 
 class GoogleSignService {
@@ -31,23 +34,23 @@ class GoogleSignService {
       try {
         user = await _signIn.authenticate();
         await user.authorizationClient.authorizationForScopes(scopes);
-
+        log('the token is ${user.authentication.idToken}');
         return user.authentication.idToken ?? '';
       } on GoogleSignInException catch (e) {
         if (e.code == GoogleSignInExceptionCode.canceled) {
-          Messages.showToast(msg: LocaleKeys.googleSignInCancelled);
+          Messages.showToast(msg: LocaleKeys.googleSignInCancelled, status: BaseStatus.error);
           return '';
         }
         FireStoreService.instance.storeError(e.toString());
-        Messages.showToast(msg: LocaleKeys.googleSignInFailed);
+        Messages.showToast(msg: LocaleKeys.googleSignInFailed, status: BaseStatus.error);
         return '';
       } catch (e) {
         FireStoreService.instance.storeError(e.toString());
-        Messages.showToast(msg: LocaleKeys.googleSignInFailed);
+        Messages.showToast(msg: LocaleKeys.googleSignInFailed, status: BaseStatus.error);
         return '';
       }
     } else {
-      Messages.showToast(msg: LocaleKeys.googleSignInUnsupportedDevice);
+      Messages.showToast(msg: LocaleKeys.googleSignInUnsupportedDevice, status: BaseStatus.error);
       return '';
     }
   }

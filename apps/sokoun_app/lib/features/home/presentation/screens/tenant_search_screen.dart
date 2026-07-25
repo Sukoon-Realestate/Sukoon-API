@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:sokoun_app/features/favorites/presentation/screens/favorites_screen.dart';
 import 'package:sokoun_app/features/home/data/models/tenant_search_content.dart';
 
 import '../widgets/tenant_search/imports.dart';
@@ -136,19 +138,20 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
             ),
           ),
         ),
-        bottomNavigationBar: const SafeArea(
+        bottomNavigationBar: SafeArea(
           top: false,
           child: HomeBottomNav(
             items: [
-              HomeBottomNavItemData(
+              const HomeBottomNavItemData(
                 icon: Icons.home_outlined,
                 label: 'الرئيسية',
               ),
               HomeBottomNavItemData(
                 icon: Icons.favorite_border_rounded,
                 label: 'المحفوظات',
+                onTap: () => Go.to(const FavoritesScreen()),
               ),
-              HomeBottomNavItemData(
+              const HomeBottomNavItemData(
                 icon: Icons.chat_bubble_outline_rounded,
                 label: 'الشات',
               ),

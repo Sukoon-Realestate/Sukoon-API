@@ -1417,4 +1417,40 @@ abstract class LocaleKeys {
   static const String _chatReasonHasProblem = 'chat_reason_has_problem';
   static String get chatReasonHasProblem => _chatReasonHasProblem.tr();
 
+  static const String _favoritesTitle = 'favorites_title';
+  static String get favoritesTitle => _favoritesTitle.tr();
+
+  static const String _favoritesSavedPropertiesCount = 'favorites_saved_properties_count';
+  static String get favoritesSavedPropertiesCount => _favoritesSavedPropertiesCount.tr();
+
+  static const String _favoritesEmptyTitle = 'favorites_empty_title';
+  static String get favoritesEmptyTitle => _favoritesEmptyTitle.tr();
+
+  static const String _favoritesEmptyDescription = 'favorites_empty_description';
+  static String get favoritesEmptyDescription => _favoritesEmptyDescription.tr();
+
+  static const String _favoritesBrowseProperties = 'favorites_browse_properties';
+  static String get favoritesBrowseProperties => _favoritesBrowseProperties.tr();
+
+  static const String _favoritesRemovedMessage = 'favorites_removed_message';
+  static String get favoritesRemovedMessage => _favoritesRemovedMessage.tr();
+
+  static const String _favoritesUndoAction = 'favorites_undo_action';
+  static String get favoritesUndoAction => _favoritesUndoAction.tr();
+
+  static const String _favoritesNavigationSaved = 'favorites_navigation_saved';
+  static String get favoritesNavigationSaved => _favoritesNavigationSaved.tr();
+
+  static const String _favoritesNavigationAccount = 'favorites_navigation_account';
+  static String get favoritesNavigationAccount => _favoritesNavigationAccount.tr();
+
+  static const String _favoriteRemoveSemanticLabel = 'favorite_remove_semantic_label';
+  static String get favoriteRemoveSemanticLabel => _favoriteRemoveSemanticLabel.tr();
+
+  static const String _favoritesSelectAll = 'favorites_select_all';
+  static String get favoritesSelectAll => _favoritesSelectAll.tr();
+
+  static const String _favoritesCurrencyShort = 'favorites_currency_short';
+  static String get favoritesCurrencyShort => _favoritesCurrencyShort.tr();
+
 }

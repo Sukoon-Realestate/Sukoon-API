@@ -475,5 +475,17 @@
   "chat_reason_same_gender": "لا يمكنك التحدث مع مستخدم من نفس الجنس",
   "chat_reason_active_match_with_other": "لدى هذا المستخدم محادثة نشطة مع شخص آخر",
   "chat_reason_parent_approval_required": "يتطلب بدء هذه المحادثة موافقة ولي الأمر",
-  "chat_reason_has_problem": "لا يمكن بدء المحادثة في الوقت الحالي"
+  "chat_reason_has_problem": "لا يمكن بدء المحادثة في الوقت الحالي",
+  "favorites_title": "المحفوظات",
+  "favorites_saved_properties_count": "عقارات محفوظة",
+  "favorites_empty_title": "لسه ما حفظتش عقارات",
+  "favorites_empty_description": "اضغط على علامة القلب في أي عقار علشان تلاقيه هنا بعدين",
+  "favorites_browse_properties": "تصفّح العقارات",
+  "favorites_removed_message": "تمت إزالة العقار من المحفوظات",
+  "favorites_undo_action": "تراجع",
+  "favorites_navigation_saved": "المحفوظات",
+  "favorites_navigation_account": "الحساب",
+  "favorite_remove_semantic_label": "إزالة من المحفوظات",
+  "favorites_select_all": "تحديد الكل",
+  "favorites_currency_short": "ج"
 }

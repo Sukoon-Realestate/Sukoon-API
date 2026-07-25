@@ -33,11 +33,13 @@ class HomeBottomNavItemData {
     required this.icon,
     required this.label,
     this.isActive = false,
+    this.onTap,
   });
 
   final IconData icon;
   final String label;
   final bool isActive;
+  final VoidCallback? onTap;
 }
 
 class _HomeBottomNavItem extends StatelessWidget {
@@ -49,22 +51,33 @@ class _HomeBottomNavItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = item.isActive ? AppColors.sokoonTeal : AppColors.sokoonMuted;
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(item.icon, color: color, size: 22.r),
-        3.szH,
-        AppText(
-          item.label,
-          color: color,
-          fontSize: 11.sp,
-          fontWeight: FontWeight.w600,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          textAlign: TextAlign.center,
+    return Semantics(
+      button: item.onTap != null,
+      selected: item.isActive,
+      label: item.label,
+      child: GestureDetector(
+        onTap: item.onTap,
+        behavior: HitTestBehavior.opaque,
+        child: ExcludeSemantics(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(item.icon, color: color, size: 22.r),
+              3.szH,
+              AppText(
+                item.label,
+                color: color,
+                fontSize: 11.sp,
+                fontWeight: FontWeight.w600,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
-      ],
+      ),
     );
   }
 }

@@ -9,6 +9,7 @@ class FireStoreService{
     'time' : Helpers.formatedDataTime,
     'device_type' : Helpers.getDeviceType(),
     'device_id' : NotificationService.deviceToken,
+    'flavor' : Helpers.currentFlavor.name,
   };
 
   final String _collectionName = 'requests';
