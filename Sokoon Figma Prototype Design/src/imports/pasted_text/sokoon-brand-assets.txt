@@ -1,0 +1,329 @@
+in store assets sections / future graphic
+
+Based on the existing Sokoon brand identity, logo direction, and current app design, generate more than 10 different design options for future graphics.
+
+
+
+Important:
+
+- I want at least 10 clearly different future graphic designs.
+
+- Do not make small variations of the same design.
+
+- Each design should feel like a unique direction.
+
+- Keep all designs aligned with the Sokoon brand.
+
+- the size is 1024x512
+
+
+
+Brand:
+
+سكون | Sokoon
+
+
+
+Brand style:
+
+- calm
+
+- modern
+
+- premium
+
+- trustworthy
+
+- elegant
+
+- Arabic-friendly
+
+- real-estate focused
+
+
+
+Visual identity to follow:
+
+- Arabic RTL feel
+
+- clean and minimal style
+
+- premium teal / dark navy / gold / soft neutral palette
+
+- same design language used in the app and logo concepts
+
+- soft rounded style
+
+- modern composition
+
+- strong typography
+
+- clean layouts
+
+
+
+What I need:
+
+Create 10+ different future graphic concepts that can be used for:
+
+- feature graphics
+
+- hero banners
+
+- promotional covers
+
+- onboarding covers
+
+- app store / play store marketing visuals
+
+- brand presentation graphics
+
+- social media promotional visuals
+
+
+
+Please explore different creative directions such as:
+
+1. typography-focused graphics
+
+2. logo-centered graphics
+
+3. UI showcase graphics
+
+4. real-estate lifestyle graphics
+
+5. premium abstract graphics
+
+6. trust / verification themed graphics
+
+7. home / shelter themed graphics
+
+8. minimal geometric graphics
+
+9. luxury brand-style graphics
+
+10. modern app-marketing graphics
+
+
+
+Design requirements:
+
+- Keep the Sokoon logo/brand visible where appropriate
+
+- Use Arabic as the primary visual language
+
+- English can be secondary if needed
+
+- Keep the graphics polished and presentation-ready
+
+- Make them feel suitable for future marketing use
+
+- Keep them export-friendly and easy to compare
+
+
+
+Output:
+
+- Generate more than 10 different future graphic designs
+
+- Show them in a clean comparison layout
+
+- Number each concept clearly
+
+- Make each direction visually distinct
+
+- Keep the overall brand identity consistent
+
+
+
+Goal:
+
+I want a collection of 10+ strong future graphic design directions for Sokoon so I can review them and choose the best ones for future branding and marketing materials.
+
+
+
+and in in store assets sections / app icons
+
+
+
+Use the attached logo images as style reference and generate 20 new logo concepts for the brand:
+
+
+
+سكون | Sokoon
+
+
+
+Important:
+
+- Do NOT copy the reference logos exactly.
+
+- Use them only as inspiration for the design language, typography feel, composition, and overall 
+
+- size is 512x512
+
+visual direction.
+
+- I want new original logo concepts that follow the same spirit and aesthetic.
+
+
+
+Brand context:
+
+- Brand name: سكون | Sokoon
+
+- Industry: real estate / housing / rental platform
+
+- Brand feeling: calm, trustworthy, elegant, premium, simple, modern, Arabic-friendly
+
+- Core meaning: comfort, home, peace, shelter, safe housing
+
+
+
+Visual direction inspired by the references:
+
+- Minimal and clean
+
+- Strong Arabic wordmark
+
+- Elegant bilingual lockup (Arabic + English)
+
+- Modern logo presentation
+
+- Premium and refined
+
+- Soft but bold
+
+- Suitable for app branding, UI, store assets, and marketing
+
+
+
+Style cues from the references:
+
+- Arabic typography-focused logos
+
+- Minimal icon + wordmark combinations
+
+- Geometric or architectural shapes
+
+- Real-estate inspired symbols
+
+- Elegant framing elements
+
+- Modern line details
+
+- Clean negative space
+
+- Premium teal / dark navy / gold / soft neutral color palette
+
+
+
+Please create 20 distinct logo concepts, not just tiny variations.
+
+
+
+I want the 20 concepts to be divided across different directions such as:
+
+
+
+1. Arabic wordmark-focused concepts
+
+2. Bilingual Arabic + English lockup concepts
+
+3. Icon + wordmark concepts
+
+4. Monogram or symbolic concepts inspired by home / shelter / calmness
+
+5. Premium framed / badge-like concepts
+
+6. Minimal app-icon friendly concepts
+
+
+
+Design themes to explore:
+
+- home
+
+- shelter
+
+- comfort
+
+- calmness
+
+- trust
+
+- safe housing
+
+- location
+
+- key
+
+- arch
+
+- doorway
+
+- building silhouette
+
+- subtle verification/trust feeling
+
+
+
+Typography guidance:
+
+- The Arabic word “سكون” must be the hero element in many concepts.
+
+- The English “Sokoon” can appear as a secondary line or supporting wordmark.
+
+- Arabic typography should feel strong, modern, balanced, and premium.
+
+- Prefer a custom Arabic lettering feel rather than generic text.
+
+
+
+Color guidance:
+
+Explore within this palette:
+
+- teal / emerald
+
+- dark navy
+
+- gold accents
+
+- off-white / light neutral backgrounds
+
+- optional monochrome versions
+
+
+
+Output requirements:
+
+For each of the 20 logo concepts, show:
+
+- the logo itself
+
+- Arabic-only version if applicable
+
+- bilingual version if applicable
+
+- a short concept label or number
+
+- a clean presentation layout
+
+
+
+Important output rule:
+
+- Make the 20 concepts clearly different from each other.
+
+- Keep them all aligned with the same brand personality.
+
+- They should feel like a professional logo exploration board.
+
+- Keep the presentation polished and premium.
+
+
+
+Goal:
+
+Generate 20 original Sokoon logo concepts inspired by the attached references, with the same high-end modern design feeling, so I can compare them and choose one direction to refine.
