@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:sokoun_app/features/chat/presentation/screens/tenant_chat_list_screen.dart';
 import 'package:sokoun_app/features/favorites/presentation/screens/favorites_screen.dart';
 
 import '../widgets/tenant_widgets/imports.dart';
@@ -68,9 +69,10 @@ class TenantHomeScreen extends StatelessWidget {
                 label: 'المحفوظات',
                 onTap: () => Go.to(const FavoritesScreen()),
               ),
-              const HomeBottomNavItemData(
+              HomeBottomNavItemData(
                 icon: Icons.chat_bubble_outline_rounded,
                 label: 'الشات',
+                onTap: () => Go.to(const TenantChatListScreen()),
               ),
               HomeBottomNavItemData(
                 icon: Icons.notifications_none_rounded,

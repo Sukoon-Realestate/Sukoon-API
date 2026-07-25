@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:sokoun_app/features/chat/presentation/screens/tenant_chat_list_screen.dart';
 import 'package:sokoun_app/features/home/presentation/screens/tenant_home_screen.dart';
 import 'package:sokoun_app/features/home/presentation/widgets/tenant_widgets/imports.dart';
 
@@ -26,6 +27,7 @@ class FavoritesBottomNavigation extends StatelessWidget {
           HomeBottomNavItemData(
             icon: Icons.chat_bubble_outline_rounded,
             label: LocaleKeys.chats,
+            onTap: () => Go.off(const TenantChatListScreen()),
           ),
           HomeBottomNavItemData(
             icon: Icons.notifications_none_rounded,

@@ -1453,4 +1453,712 @@ abstract class LocaleKeys {
   static const String _favoritesCurrencyShort = 'favorites_currency_short';
   static String get favoritesCurrencyShort => _favoritesCurrencyShort.tr();
 
+  static const String _chatConversationsTitle = 'chat_conversations_title';
+  static String get chatConversationsTitle => _chatConversationsTitle.tr();
+
+  static const String _chatSearchHint = 'chat_search_hint';
+  static String get chatSearchHint => _chatSearchHint.tr();
+
+  static const String _chatPhonePrivacyInbox = 'chat_phone_privacy_inbox';
+  static String get chatPhonePrivacyInbox => _chatPhonePrivacyInbox.tr();
+
+  static const String _chatEmptyTitle = 'chat_empty_title';
+  static String get chatEmptyTitle => _chatEmptyTitle.tr();
+
+  static const String _chatEmptyDescription = 'chat_empty_description';
+  static String get chatEmptyDescription => _chatEmptyDescription.tr();
+
+  static const String _chatExploreProperties = 'chat_explore_properties';
+  static String get chatExploreProperties => _chatExploreProperties.tr();
+
+  static const String _chatSearchResultsFor = 'chat_search_results_for';
+  static String get chatSearchResultsFor => _chatSearchResultsFor.tr();
+
+  static const String _chatMentionedProperties = 'chat_mentioned_properties';
+  static String get chatMentionedProperties => _chatMentionedProperties.tr();
+
+  static const String _chatActiveNow = 'chat_active_now';
+  static String get chatActiveNow => _chatActiveNow.tr();
+
+  static const String _chatToday = 'chat_today';
+  static String get chatToday => _chatToday.tr();
+
+  static const String _chatPhonePrivacyThread = 'chat_phone_privacy_thread';
+  static String get chatPhonePrivacyThread => _chatPhonePrivacyThread.tr();
+
+  static const String _chatMessageHint = 'chat_message_hint';
+  static String get chatMessageHint => _chatMessageHint.tr();
+
+  static const String _chatNow = 'chat_now';
+  static String get chatNow => _chatNow.tr();
+
+  static const String _chatSendAttachment = 'chat_send_attachment';
+  static String get chatSendAttachment => _chatSendAttachment.tr();
+
+  static const String _chatPhotos = 'chat_photos';
+  static String get chatPhotos => _chatPhotos.tr();
+
+  static const String _chatFile = 'chat_file';
+  static String get chatFile => _chatFile.tr();
+
+  static const String _chatLocation = 'chat_location';
+  static String get chatLocation => _chatLocation.tr();
+
+  static const String _chatVoiceRecording = 'chat_voice_recording';
+  static String get chatVoiceRecording => _chatVoiceRecording.tr();
+
+  static const String _chatRestrictedTitle = 'chat_restricted_title';
+  static String get chatRestrictedTitle => _chatRestrictedTitle.tr();
+
+  static const String _chatRestrictedDescription = 'chat_restricted_description';
+  static String get chatRestrictedDescription => _chatRestrictedDescription.tr();
+
+  static const String _chatVerifiedOnlyBanner = 'chat_verified_only_banner';
+  static String get chatVerifiedOnlyBanner => _chatVerifiedOnlyBanner.tr();
+
+  static const String _chatVerifyNow = 'chat_verify_now';
+  static String get chatVerifyNow => _chatVerifyNow.tr();
+
+  static const String _chatStartKyc = 'chat_start_kyc';
+  static String get chatStartKyc => _chatStartKyc.tr();
+
+  static const String _chatLearnMoreVerification = 'chat_learn_more_verification';
+  static String get chatLearnMoreVerification => _chatLearnMoreVerification.tr();
+
+  static const String _chatTypingDisabled = 'chat_typing_disabled';
+  static String get chatTypingDisabled => _chatTypingDisabled.tr();
+
+  static const String _chatReportProblemTitle = 'chat_report_problem_title';
+  static String get chatReportProblemTitle => _chatReportProblemTitle.tr();
+
+  static const String _chatReportReasonPrompt = 'chat_report_reason_prompt';
+  static String get chatReportReasonPrompt => _chatReportReasonPrompt.tr();
+
+  static const String _chatReportIncorrectProperty = 'chat_report_incorrect_property';
+  static String get chatReportIncorrectProperty => _chatReportIncorrectProperty.tr();
+
+  static const String _chatReportOffensiveContent = 'chat_report_offensive_content';
+  static String get chatReportOffensiveContent => _chatReportOffensiveContent.tr();
+
+  static const String _chatReportPotentialFraud = 'chat_report_potential_fraud';
+  static String get chatReportPotentialFraud => _chatReportPotentialFraud.tr();
+
+  static const String _chatReportPhoneInPhotos = 'chat_report_phone_in_photos';
+  static String get chatReportPhoneInPhotos => _chatReportPhoneInPhotos.tr();
+
+  static const String _chatReportUnavailableProperty = 'chat_report_unavailable_property';
+  static String get chatReportUnavailableProperty => _chatReportUnavailableProperty.tr();
+
+  static const String _chatReportOtherReason = 'chat_report_other_reason';
+  static String get chatReportOtherReason => _chatReportOtherReason.tr();
+
+  static const String _chatReportDetailsHint = 'chat_report_details_hint';
+  static String get chatReportDetailsHint => _chatReportDetailsHint.tr();
+
+  static const String _chatReportPrivacy = 'chat_report_privacy';
+  static String get chatReportPrivacy => _chatReportPrivacy.tr();
+
+  static const String _chatSubmitReport = 'chat_submit_report';
+  static String get chatSubmitReport => _chatSubmitReport.tr();
+
+  static const String _landingAppTitle = 'landing_app_title';
+  static String get landingAppTitle => _landingAppTitle.tr();
+
+  static const String _landingLogoLatinName = 'landing_logo_latin_name';
+  static String get landingLogoLatinName => _landingLogoLatinName.tr();
+
+  static const String _landingLogoSemanticLabel = 'landing_logo_semantic_label';
+  static String get landingLogoSemanticLabel => _landingLogoSemanticLabel.tr();
+
+  static const String _landingNavHome = 'landing_nav_home';
+  static String get landingNavHome => _landingNavHome.tr();
+
+  static const String _landingNavTenant = 'landing_nav_tenant';
+  static String get landingNavTenant => _landingNavTenant.tr();
+
+  static const String _landingNavOwner = 'landing_nav_owner';
+  static String get landingNavOwner => _landingNavOwner.tr();
+
+  static const String _landingNavTrust = 'landing_nav_trust';
+  static String get landingNavTrust => _landingNavTrust.tr();
+
+  static const String _landingNavHow = 'landing_nav_how';
+  static String get landingNavHow => _landingNavHow.tr();
+
+  static const String _landingNavFaq = 'landing_nav_faq';
+  static String get landingNavFaq => _landingNavFaq.tr();
+
+  static const String _landingLogin = 'landing_login';
+  static String get landingLogin => _landingLogin.tr();
+
+  static const String _landingStartNow = 'landing_start_now';
+  static String get landingStartNow => _landingStartNow.tr();
+
+  static const String _landingOpenNavigation = 'landing_open_navigation';
+  static String get landingOpenNavigation => _landingOpenNavigation.tr();
+
+  static const String _landingAudienceTenant = 'landing_audience_tenant';
+  static String get landingAudienceTenant => _landingAudienceTenant.tr();
+
+  static const String _landingAudienceOwner = 'landing_audience_owner';
+  static String get landingAudienceOwner => _landingAudienceOwner.tr();
+
+  static const String _landingAudienceTenantTab = 'landing_audience_tenant_tab';
+  static String get landingAudienceTenantTab => _landingAudienceTenantTab.tr();
+
+  static const String _landingAudienceOwnerTab = 'landing_audience_owner_tab';
+  static String get landingAudienceOwnerTab => _landingAudienceOwnerTab.tr();
+
+  static const String _landingHeroTag = 'landing_hero_tag';
+  static String get landingHeroTag => _landingHeroTag.tr();
+
+  static const String _landingHeroTitle = 'landing_hero_title';
+  static String get landingHeroTitle => _landingHeroTitle.tr();
+
+  static const String _landingHeroTitleAccent = 'landing_hero_title_accent';
+  static String get landingHeroTitleAccent => _landingHeroTitleAccent.tr();
+
+  static const String _landingHeroDescription = 'landing_hero_description';
+  static String get landingHeroDescription => _landingHeroDescription.tr();
+
+  static const String _landingSearchHousing = 'landing_search_housing';
+  static String get landingSearchHousing => _landingSearchHousing.tr();
+
+  static const String _landingListProperty = 'landing_list_property';
+  static String get landingListProperty => _landingListProperty.tr();
+
+  static const String _landingBrowseAsGuest = 'landing_browse_as_guest';
+  static String get landingBrowseAsGuest => _landingBrowseAsGuest.tr();
+
+  static const String _landingTrustVerifiedAccountsTitle = 'landing_trust_verified_accounts_title';
+  static String get landingTrustVerifiedAccountsTitle => _landingTrustVerifiedAccountsTitle.tr();
+
+  static const String _landingTrustVerifiedAccountsBody = 'landing_trust_verified_accounts_body';
+  static String get landingTrustVerifiedAccountsBody => _landingTrustVerifiedAccountsBody.tr();
+
+  static const String _landingTrustHiddenNumbersTitle = 'landing_trust_hidden_numbers_title';
+  static String get landingTrustHiddenNumbersTitle => _landingTrustHiddenNumbersTitle.tr();
+
+  static const String _landingTrustHiddenNumbersBody = 'landing_trust_hidden_numbers_body';
+  static String get landingTrustHiddenNumbersBody => _landingTrustHiddenNumbersBody.tr();
+
+  static const String _landingTrustReviewedPropertiesTitle = 'landing_trust_reviewed_properties_title';
+  static String get landingTrustReviewedPropertiesTitle => _landingTrustReviewedPropertiesTitle.tr();
+
+  static const String _landingTrustReviewedPropertiesBody = 'landing_trust_reviewed_properties_body';
+  static String get landingTrustReviewedPropertiesBody => _landingTrustReviewedPropertiesBody.tr();
+
+  static const String _landingTrustOrganizedVisitsTitle = 'landing_trust_organized_visits_title';
+  static String get landingTrustOrganizedVisitsTitle => _landingTrustOrganizedVisitsTitle.tr();
+
+  static const String _landingTrustOrganizedVisitsBody = 'landing_trust_organized_visits_body';
+  static String get landingTrustOrganizedVisitsBody => _landingTrustOrganizedVisitsBody.tr();
+
+  static const String _landingFeaturesTag = 'landing_features_tag';
+  static String get landingFeaturesTag => _landingFeaturesTag.tr();
+
+  static const String _landingFeaturesTitle = 'landing_features_title';
+  static String get landingFeaturesTitle => _landingFeaturesTitle.tr();
+
+  static const String _landingTenantFeaturesTitle = 'landing_tenant_features_title';
+  static String get landingTenantFeaturesTitle => _landingTenantFeaturesTitle.tr();
+
+  static const String _landingTenantFeaturesBody = 'landing_tenant_features_body';
+  static String get landingTenantFeaturesBody => _landingTenantFeaturesBody.tr();
+
+  static const String _landingOwnerFeaturesTitle = 'landing_owner_features_title';
+  static String get landingOwnerFeaturesTitle => _landingOwnerFeaturesTitle.tr();
+
+  static const String _landingOwnerFeaturesBody = 'landing_owner_features_body';
+  static String get landingOwnerFeaturesBody => _landingOwnerFeaturesBody.tr();
+
+  static const String _landingStartTenantSearch = 'landing_start_tenant_search';
+  static String get landingStartTenantSearch => _landingStartTenantSearch.tr();
+
+  static const String _landingStartListingProperty = 'landing_start_listing_property';
+  static String get landingStartListingProperty => _landingStartListingProperty.tr();
+
+  static const String _landingFeatureSmartSearchTitle = 'landing_feature_smart_search_title';
+  static String get landingFeatureSmartSearchTitle => _landingFeatureSmartSearchTitle.tr();
+
+  static const String _landingFeaturePropertyTypeArea = 'landing_feature_property_type_area';
+  static String get landingFeaturePropertyTypeArea => _landingFeaturePropertyTypeArea.tr();
+
+  static const String _landingFeaturePriceRentalPeriod = 'landing_feature_price_rental_period';
+  static String get landingFeaturePriceRentalPeriod => _landingFeaturePriceRentalPeriod.tr();
+
+  static const String _landingFeatureFamiliesIndividuals = 'landing_feature_families_individuals';
+  static String get landingFeatureFamiliesIndividuals => _landingFeatureFamiliesIndividuals.tr();
+
+  static const String _landingFeatureAmenitiesSmoking = 'landing_feature_amenities_smoking';
+  static String get landingFeatureAmenitiesSmoking => _landingFeatureAmenitiesSmoking.tr();
+
+  static const String _landingFeatureFullDetailsTitle = 'landing_feature_full_details_title';
+  static String get landingFeatureFullDetailsTitle => _landingFeatureFullDetailsTitle.tr();
+
+  static const String _landingFeatureMediaLocation = 'landing_feature_media_location';
+  static String get landingFeatureMediaLocation => _landingFeatureMediaLocation.tr();
+
+  static const String _landingFeatureRoomsArea = 'landing_feature_rooms_area';
+  static String get landingFeatureRoomsArea => _landingFeatureRoomsArea.tr();
+
+  static const String _landingFeatureHousingRules = 'landing_feature_housing_rules';
+  static String get landingFeatureHousingRules => _landingFeatureHousingRules.tr();
+
+  static const String _landingFeatureVerificationStatus = 'landing_feature_verification_status';
+  static String get landingFeatureVerificationStatus => _landingFeatureVerificationStatus.tr();
+
+  static const String _landingFeatureSaveCompareTitle = 'landing_feature_save_compare_title';
+  static String get landingFeatureSaveCompareTitle => _landingFeatureSaveCompareTitle.tr();
+
+  static const String _landingFeatureSaveFavorites = 'landing_feature_save_favorites';
+  static String get landingFeatureSaveFavorites => _landingFeatureSaveFavorites.tr();
+
+  static const String _landingFeatureReturnFavorites = 'landing_feature_return_favorites';
+  static String get landingFeatureReturnFavorites => _landingFeatureReturnFavorites.tr();
+
+  static const String _landingFeatureCompareOptions = 'landing_feature_compare_options';
+  static String get landingFeatureCompareOptions => _landingFeatureCompareOptions.tr();
+
+  static const String _landingFeatureSafeChatTitle = 'landing_feature_safe_chat_title';
+  static String get landingFeatureSafeChatTitle => _landingFeatureSafeChatTitle.tr();
+
+  static const String _landingFeaturePhoneNumbersHidden = 'landing_feature_phone_numbers_hidden';
+  static String get landingFeaturePhoneNumbersHidden => _landingFeaturePhoneNumbersHidden.tr();
+
+  static const String _landingFeaturePhotosVoiceMessages = 'landing_feature_photos_voice_messages';
+  static String get landingFeaturePhotosVoiceMessages => _landingFeaturePhotosVoiceMessages.tr();
+
+  static const String _landingFeatureUnverifiedLimits = 'landing_feature_unverified_limits';
+  static String get landingFeatureUnverifiedLimits => _landingFeatureUnverifiedLimits.tr();
+
+  static const String _landingFeatureBookVisitTitle = 'landing_feature_book_visit_title';
+  static String get landingFeatureBookVisitTitle => _landingFeatureBookVisitTitle.tr();
+
+  static const String _landingFeatureChooseDateTime = 'landing_feature_choose_date_time';
+  static String get landingFeatureChooseDateTime => _landingFeatureChooseDateTime.tr();
+
+  static const String _landingFeatureTrackRequest = 'landing_feature_track_request';
+  static String get landingFeatureTrackRequest => _landingFeatureTrackRequest.tr();
+
+  static const String _landingFeatureChangeCancelVisit = 'landing_feature_change_cancel_visit';
+  static String get landingFeatureChangeCancelVisit => _landingFeatureChangeCancelVisit.tr();
+
+  static const String _landingFeatureOrganizedListingTitle = 'landing_feature_organized_listing_title';
+  static String get landingFeatureOrganizedListingTitle => _landingFeatureOrganizedListingTitle.tr();
+
+  static const String _landingFeatureCompleteDataMap = 'landing_feature_complete_data_map';
+  static String get landingFeatureCompleteDataMap => _landingFeatureCompleteDataMap.tr();
+
+  static const String _landingFeatureRoomsAreaAmenities = 'landing_feature_rooms_area_amenities';
+  static String get landingFeatureRoomsAreaAmenities => _landingFeatureRoomsAreaAmenities.tr();
+
+  static const String _landingFeatureRentalSuitableFor = 'landing_feature_rental_suitable_for';
+  static String get landingFeatureRentalSuitableFor => _landingFeatureRentalSuitableFor.tr();
+
+  static const String _landingFeatureSmokingRules = 'landing_feature_smoking_rules';
+  static String get landingFeatureSmokingRules => _landingFeatureSmokingRules.tr();
+
+  static const String _landingFeatureClearMediaTitle = 'landing_feature_clear_media_title';
+  static String get landingFeatureClearMediaTitle => _landingFeatureClearMediaTitle.tr();
+
+  static const String _landingFeatureImageNameDescription = 'landing_feature_image_name_description';
+  static String get landingFeatureImageNameDescription => _landingFeatureImageNameDescription.tr();
+
+  static const String _landingFeatureOneMinuteVideo = 'landing_feature_one_minute_video';
+  static String get landingFeatureOneMinuteVideo => _landingFeatureOneMinuteVideo.tr();
+
+  static const String _landingFeaturePreviewBeforePublish = 'landing_feature_preview_before_publish';
+  static String get landingFeaturePreviewBeforePublish => _landingFeaturePreviewBeforePublish.tr();
+
+  static const String _landingFeatureOwnershipProofTitle = 'landing_feature_ownership_proof_title';
+  static String get landingFeatureOwnershipProofTitle => _landingFeatureOwnershipProofTitle.tr();
+
+  static const String _landingFeatureUtilityBill = 'landing_feature_utility_bill';
+  static String get landingFeatureUtilityBill => _landingFeatureUtilityBill.tr();
+
+  static const String _landingFeatureOwnershipLeaseContract = 'landing_feature_ownership_lease_contract';
+  static String get landingFeatureOwnershipLeaseContract => _landingFeatureOwnershipLeaseContract.tr();
+
+  static const String _landingFeatureInternalReviewOnly = 'landing_feature_internal_review_only';
+  static String get landingFeatureInternalReviewOnly => _landingFeatureInternalReviewOnly.tr();
+
+  static const String _landingFeatureManageVisitsTitle = 'landing_feature_manage_visits_title';
+  static String get landingFeatureManageVisitsTitle => _landingFeatureManageVisitsTitle.tr();
+
+  static const String _landingFeatureAcceptRejectRequests = 'landing_feature_accept_reject_requests';
+  static String get landingFeatureAcceptRejectRequests => _landingFeatureAcceptRejectRequests.tr();
+
+  static const String _landingFeatureOpenTenantChat = 'landing_feature_open_tenant_chat';
+  static String get landingFeatureOpenTenantChat => _landingFeatureOpenTenantChat.tr();
+
+  static const String _landingFeatureManageAppointments = 'landing_feature_manage_appointments';
+  static String get landingFeatureManageAppointments => _landingFeatureManageAppointments.tr();
+
+  static const String _landingFeatureTrackPerformanceTitle = 'landing_feature_track_performance_title';
+  static String get landingFeatureTrackPerformanceTitle => _landingFeatureTrackPerformanceTitle.tr();
+
+  static const String _landingFeatureViewsSaves = 'landing_feature_views_saves';
+  static String get landingFeatureViewsSaves => _landingFeatureViewsSaves.tr();
+
+  static const String _landingFeatureMessagesVisits = 'landing_feature_messages_visits';
+  static String get landingFeatureMessagesVisits => _landingFeatureMessagesVisits.tr();
+
+  static const String _landingFeatureMonthlyAnalytics = 'landing_feature_monthly_analytics';
+  static String get landingFeatureMonthlyAnalytics => _landingFeatureMonthlyAnalytics.tr();
+
+  static const String _landingFeatureManageStatusTitle = 'landing_feature_manage_status_title';
+  static String get landingFeatureManageStatusTitle => _landingFeatureManageStatusTitle.tr();
+
+  static const String _landingFeatureReviewStatuses = 'landing_feature_review_statuses';
+  static String get landingFeatureReviewStatuses => _landingFeatureReviewStatuses.tr();
+
+  static const String _landingFeatureHideEditProperty = 'landing_feature_hide_edit_property';
+  static String get landingFeatureHideEditProperty => _landingFeatureHideEditProperty.tr();
+
+  static const String _landingFeatureChangeHistory = 'landing_feature_change_history';
+  static String get landingFeatureChangeHistory => _landingFeatureChangeHistory.tr();
+
+  static const String _landingHowTag = 'landing_how_tag';
+  static String get landingHowTag => _landingHowTag.tr();
+
+  static const String _landingHowTitle = 'landing_how_title';
+  static String get landingHowTitle => _landingHowTitle.tr();
+
+  static const String _landingTenantStepOneTitle = 'landing_tenant_step_one_title';
+  static String get landingTenantStepOneTitle => _landingTenantStepOneTitle.tr();
+
+  static const String _landingTenantStepOneBody = 'landing_tenant_step_one_body';
+  static String get landingTenantStepOneBody => _landingTenantStepOneBody.tr();
+
+  static const String _landingTenantStepTwoTitle = 'landing_tenant_step_two_title';
+  static String get landingTenantStepTwoTitle => _landingTenantStepTwoTitle.tr();
+
+  static const String _landingTenantStepTwoBody = 'landing_tenant_step_two_body';
+  static String get landingTenantStepTwoBody => _landingTenantStepTwoBody.tr();
+
+  static const String _landingTenantStepThreeTitle = 'landing_tenant_step_three_title';
+  static String get landingTenantStepThreeTitle => _landingTenantStepThreeTitle.tr();
+
+  static const String _landingTenantStepThreeBody = 'landing_tenant_step_three_body';
+  static String get landingTenantStepThreeBody => _landingTenantStepThreeBody.tr();
+
+  static const String _landingTenantStepFourTitle = 'landing_tenant_step_four_title';
+  static String get landingTenantStepFourTitle => _landingTenantStepFourTitle.tr();
+
+  static const String _landingTenantStepFourBody = 'landing_tenant_step_four_body';
+  static String get landingTenantStepFourBody => _landingTenantStepFourBody.tr();
+
+  static const String _landingOwnerStepOneTitle = 'landing_owner_step_one_title';
+  static String get landingOwnerStepOneTitle => _landingOwnerStepOneTitle.tr();
+
+  static const String _landingOwnerStepOneBody = 'landing_owner_step_one_body';
+  static String get landingOwnerStepOneBody => _landingOwnerStepOneBody.tr();
+
+  static const String _landingOwnerStepTwoTitle = 'landing_owner_step_two_title';
+  static String get landingOwnerStepTwoTitle => _landingOwnerStepTwoTitle.tr();
+
+  static const String _landingOwnerStepTwoBody = 'landing_owner_step_two_body';
+  static String get landingOwnerStepTwoBody => _landingOwnerStepTwoBody.tr();
+
+  static const String _landingOwnerStepThreeTitle = 'landing_owner_step_three_title';
+  static String get landingOwnerStepThreeTitle => _landingOwnerStepThreeTitle.tr();
+
+  static const String _landingOwnerStepThreeBody = 'landing_owner_step_three_body';
+  static String get landingOwnerStepThreeBody => _landingOwnerStepThreeBody.tr();
+
+  static const String _landingOwnerStepFourTitle = 'landing_owner_step_four_title';
+  static String get landingOwnerStepFourTitle => _landingOwnerStepFourTitle.tr();
+
+  static const String _landingOwnerStepFourBody = 'landing_owner_step_four_body';
+  static String get landingOwnerStepFourBody => _landingOwnerStepFourBody.tr();
+
+  static const String _landingPropertiesTag = 'landing_properties_tag';
+  static String get landingPropertiesTag => _landingPropertiesTag.tr();
+
+  static const String _landingPropertiesTitle = 'landing_properties_title';
+  static String get landingPropertiesTitle => _landingPropertiesTitle.tr();
+
+  static const String _landingPropertiesBody = 'landing_properties_body';
+  static String get landingPropertiesBody => _landingPropertiesBody.tr();
+
+  static const String _landingPropertyOneTitle = 'landing_property_one_title';
+  static String get landingPropertyOneTitle => _landingPropertyOneTitle.tr();
+
+  static const String _landingPropertyOneArea = 'landing_property_one_area';
+  static String get landingPropertyOneArea => _landingPropertyOneArea.tr();
+
+  static const String _landingPropertyTwoTitle = 'landing_property_two_title';
+  static String get landingPropertyTwoTitle => _landingPropertyTwoTitle.tr();
+
+  static const String _landingPropertyTwoArea = 'landing_property_two_area';
+  static String get landingPropertyTwoArea => _landingPropertyTwoArea.tr();
+
+  static const String _landingPropertyThreeTitle = 'landing_property_three_title';
+  static String get landingPropertyThreeTitle => _landingPropertyThreeTitle.tr();
+
+  static const String _landingPropertyThreeArea = 'landing_property_three_area';
+  static String get landingPropertyThreeArea => _landingPropertyThreeArea.tr();
+
+  static const String _landingPropertyFourTitle = 'landing_property_four_title';
+  static String get landingPropertyFourTitle => _landingPropertyFourTitle.tr();
+
+  static const String _landingPropertyFourArea = 'landing_property_four_area';
+  static String get landingPropertyFourArea => _landingPropertyFourArea.tr();
+
+  static const String _landingPropertyFamilies = 'landing_property_families';
+  static String get landingPropertyFamilies => _landingPropertyFamilies.tr();
+
+  static const String _landingPropertyIndividuals = 'landing_property_individuals';
+  static String get landingPropertyIndividuals => _landingPropertyIndividuals.tr();
+
+  static const String _landingVerified = 'landing_verified';
+  static String get landingVerified => _landingVerified.tr();
+
+  static const String _landingAddFavorite = 'landing_add_favorite';
+  static String get landingAddFavorite => _landingAddFavorite.tr();
+
+  static const String _landingRemoveFavorite = 'landing_remove_favorite';
+  static String get landingRemoveFavorite => _landingRemoveFavorite.tr();
+
+  static const String _landingRooms = 'landing_rooms';
+  static String get landingRooms => _landingRooms.tr();
+
+  static const String _landingSquareMeters = 'landing_square_meters';
+  static String get landingSquareMeters => _landingSquareMeters.tr();
+
+  static const String _landingPriceUnit = 'landing_price_unit';
+  static String get landingPriceUnit => _landingPriceUnit.tr();
+
+  static const String _landingDetails = 'landing_details';
+  static String get landingDetails => _landingDetails.tr();
+
+  static const String _landingExploreProperties = 'landing_explore_properties';
+  static String get landingExploreProperties => _landingExploreProperties.tr();
+
+  static const String _landingPrivacyTag = 'landing_privacy_tag';
+  static String get landingPrivacyTag => _landingPrivacyTag.tr();
+
+  static const String _landingPrivacyTitle = 'landing_privacy_title';
+  static String get landingPrivacyTitle => _landingPrivacyTitle.tr();
+
+  static const String _landingPrivacyHiddenNumberTitle = 'landing_privacy_hidden_number_title';
+  static String get landingPrivacyHiddenNumberTitle => _landingPrivacyHiddenNumberTitle.tr();
+
+  static const String _landingPrivacyHiddenNumberBody = 'landing_privacy_hidden_number_body';
+  static String get landingPrivacyHiddenNumberBody => _landingPrivacyHiddenNumberBody.tr();
+
+  static const String _landingPrivacyIdentityTitle = 'landing_privacy_identity_title';
+  static String get landingPrivacyIdentityTitle => _landingPrivacyIdentityTitle.tr();
+
+  static const String _landingPrivacyIdentityBody = 'landing_privacy_identity_body';
+  static String get landingPrivacyIdentityBody => _landingPrivacyIdentityBody.tr();
+
+  static const String _landingPrivacyOwnershipTitle = 'landing_privacy_ownership_title';
+  static String get landingPrivacyOwnershipTitle => _landingPrivacyOwnershipTitle.tr();
+
+  static const String _landingPrivacyOwnershipBody = 'landing_privacy_ownership_body';
+  static String get landingPrivacyOwnershipBody => _landingPrivacyOwnershipBody.tr();
+
+  static const String _landingPrivacyChatTitle = 'landing_privacy_chat_title';
+  static String get landingPrivacyChatTitle => _landingPrivacyChatTitle.tr();
+
+  static const String _landingPrivacyChatBody = 'landing_privacy_chat_body';
+  static String get landingPrivacyChatBody => _landingPrivacyChatBody.tr();
+
+  static const String _landingAppTag = 'landing_app_tag';
+  static String get landingAppTag => _landingAppTag.tr();
+
+  static const String _landingAppSectionTitle = 'landing_app_section_title';
+  static String get landingAppSectionTitle => _landingAppSectionTitle.tr();
+
+  static const String _landingTenantHomePreviewLabel = 'landing_tenant_home_preview_label';
+  static String get landingTenantHomePreviewLabel => _landingTenantHomePreviewLabel.tr();
+
+  static const String _landingOwnerDashboardPreviewLabel = 'landing_owner_dashboard_preview_label';
+  static String get landingOwnerDashboardPreviewLabel => _landingOwnerDashboardPreviewLabel.tr();
+
+  static const String _landingPreviousScreen = 'landing_previous_screen';
+  static String get landingPreviousScreen => _landingPreviousScreen.tr();
+
+  static const String _landingNextScreen = 'landing_next_screen';
+  static String get landingNextScreen => _landingNextScreen.tr();
+
+  static const String _landingFinalTitle = 'landing_final_title';
+  static String get landingFinalTitle => _landingFinalTitle.tr();
+
+  static const String _landingFinalBody = 'landing_final_body';
+  static String get landingFinalBody => _landingFinalBody.tr();
+
+  static const String _landingStartAsTenant = 'landing_start_as_tenant';
+  static String get landingStartAsTenant => _landingStartAsTenant.tr();
+
+  static const String _landingStartAsOwner = 'landing_start_as_owner';
+  static String get landingStartAsOwner => _landingStartAsOwner.tr();
+
+  static const String _landingComingSoonOn = 'landing_coming_soon_on';
+  static String get landingComingSoonOn => _landingComingSoonOn.tr();
+
+  static const String _landingAppStore = 'landing_app_store';
+  static String get landingAppStore => _landingAppStore.tr();
+
+  static const String _landingGooglePlay = 'landing_google_play';
+  static String get landingGooglePlay => _landingGooglePlay.tr();
+
+  static const String _landingFaqTag = 'landing_faq_tag';
+  static String get landingFaqTag => _landingFaqTag.tr();
+
+  static const String _landingFaqTitle = 'landing_faq_title';
+  static String get landingFaqTitle => _landingFaqTitle.tr();
+
+  static const String _landingFaqOneQuestion = 'landing_faq_one_question';
+  static String get landingFaqOneQuestion => _landingFaqOneQuestion.tr();
+
+  static const String _landingFaqOneAnswer = 'landing_faq_one_answer';
+  static String get landingFaqOneAnswer => _landingFaqOneAnswer.tr();
+
+  static const String _landingFaqTwoQuestion = 'landing_faq_two_question';
+  static String get landingFaqTwoQuestion => _landingFaqTwoQuestion.tr();
+
+  static const String _landingFaqTwoAnswer = 'landing_faq_two_answer';
+  static String get landingFaqTwoAnswer => _landingFaqTwoAnswer.tr();
+
+  static const String _landingFaqThreeQuestion = 'landing_faq_three_question';
+  static String get landingFaqThreeQuestion => _landingFaqThreeQuestion.tr();
+
+  static const String _landingFaqThreeAnswer = 'landing_faq_three_answer';
+  static String get landingFaqThreeAnswer => _landingFaqThreeAnswer.tr();
+
+  static const String _landingFaqFourQuestion = 'landing_faq_four_question';
+  static String get landingFaqFourQuestion => _landingFaqFourQuestion.tr();
+
+  static const String _landingFaqFourAnswer = 'landing_faq_four_answer';
+  static String get landingFaqFourAnswer => _landingFaqFourAnswer.tr();
+
+  static const String _landingFaqFiveQuestion = 'landing_faq_five_question';
+  static String get landingFaqFiveQuestion => _landingFaqFiveQuestion.tr();
+
+  static const String _landingFaqFiveAnswer = 'landing_faq_five_answer';
+  static String get landingFaqFiveAnswer => _landingFaqFiveAnswer.tr();
+
+  static const String _landingFaqSixQuestion = 'landing_faq_six_question';
+  static String get landingFaqSixQuestion => _landingFaqSixQuestion.tr();
+
+  static const String _landingFaqSixAnswer = 'landing_faq_six_answer';
+  static String get landingFaqSixAnswer => _landingFaqSixAnswer.tr();
+
+  static const String _landingFaqSevenQuestion = 'landing_faq_seven_question';
+  static String get landingFaqSevenQuestion => _landingFaqSevenQuestion.tr();
+
+  static const String _landingFaqSevenAnswer = 'landing_faq_seven_answer';
+  static String get landingFaqSevenAnswer => _landingFaqSevenAnswer.tr();
+
+  static const String _landingFaqEightQuestion = 'landing_faq_eight_question';
+  static String get landingFaqEightQuestion => _landingFaqEightQuestion.tr();
+
+  static const String _landingFaqEightAnswer = 'landing_faq_eight_answer';
+  static String get landingFaqEightAnswer => _landingFaqEightAnswer.tr();
+
+  static const String _landingFooterPlatform = 'landing_footer_platform';
+  static String get landingFooterPlatform => _landingFooterPlatform.tr();
+
+  static const String _landingFooterHelp = 'landing_footer_help';
+  static String get landingFooterHelp => _landingFooterHelp.tr();
+
+  static const String _landingFooterHelpCenter = 'landing_footer_help_center';
+  static String get landingFooterHelpCenter => _landingFooterHelpCenter.tr();
+
+  static const String _landingFooterContact = 'landing_footer_contact';
+  static String get landingFooterContact => _landingFooterContact.tr();
+
+  static const String _landingFooterLegal = 'landing_footer_legal';
+  static String get landingFooterLegal => _landingFooterLegal.tr();
+
+  static const String _landingFooterTerms = 'landing_footer_terms';
+  static String get landingFooterTerms => _landingFooterTerms.tr();
+
+  static const String _landingFooterPrivacy = 'landing_footer_privacy';
+  static String get landingFooterPrivacy => _landingFooterPrivacy.tr();
+
+  static const String _landingFooterBody = 'landing_footer_body';
+  static String get landingFooterBody => _landingFooterBody.tr();
+
+  static const String _landingFooterCopyright = 'landing_footer_copyright';
+  static String get landingFooterCopyright => _landingFooterCopyright.tr();
+
+  static const String _landingFooterCountry = 'landing_footer_country';
+  static String get landingFooterCountry => _landingFooterCountry.tr();
+
+  static const String _landingPhoneTenantSemantic = 'landing_phone_tenant_semantic';
+  static String get landingPhoneTenantSemantic => _landingPhoneTenantSemantic.tr();
+
+  static const String _landingPhoneOwnerSemantic = 'landing_phone_owner_semantic';
+  static String get landingPhoneOwnerSemantic => _landingPhoneOwnerSemantic.tr();
+
+  static const String _landingPhoneWelcome = 'landing_phone_welcome';
+  static String get landingPhoneWelcome => _landingPhoneWelcome.tr();
+
+  static const String _landingPhoneTenantName = 'landing_phone_tenant_name';
+  static String get landingPhoneTenantName => _landingPhoneTenantName.tr();
+
+  static const String _landingPhoneSearchHint = 'landing_phone_search_hint';
+  static String get landingPhoneSearchHint => _landingPhoneSearchHint.tr();
+
+  static const String _landingPhoneNearbyProperties = 'landing_phone_nearby_properties';
+  static String get landingPhoneNearbyProperties => _landingPhoneNearbyProperties.tr();
+
+  static const String _landingPhonePropertyOneTitle = 'landing_phone_property_one_title';
+  static String get landingPhonePropertyOneTitle => _landingPhonePropertyOneTitle.tr();
+
+  static const String _landingPhonePropertyOneArea = 'landing_phone_property_one_area';
+  static String get landingPhonePropertyOneArea => _landingPhonePropertyOneArea.tr();
+
+  static const String _landingPhonePropertyTwoTitle = 'landing_phone_property_two_title';
+  static String get landingPhonePropertyTwoTitle => _landingPhonePropertyTwoTitle.tr();
+
+  static const String _landingPhonePropertyTwoArea = 'landing_phone_property_two_area';
+  static String get landingPhonePropertyTwoArea => _landingPhonePropertyTwoArea.tr();
+
+  static const String _landingPhoneCurrency = 'landing_phone_currency';
+  static String get landingPhoneCurrency => _landingPhoneCurrency.tr();
+
+  static const String _landingPhoneViews = 'landing_phone_views';
+  static String get landingPhoneViews => _landingPhoneViews.tr();
+
+  static const String _landingPhoneVisitRequests = 'landing_phone_visit_requests';
+  static String get landingPhoneVisitRequests => _landingPhoneVisitRequests.tr();
+
+  static const String _landingPhoneMessages = 'landing_phone_messages';
+  static String get landingPhoneMessages => _landingPhoneMessages.tr();
+
+  static const String _landingPhoneActiveProperties = 'landing_phone_active_properties';
+  static String get landingPhoneActiveProperties => _landingPhoneActiveProperties.tr();
+
+  static const String _landingPhoneOwnerDashboard = 'landing_phone_owner_dashboard';
+  static String get landingPhoneOwnerDashboard => _landingPhoneOwnerDashboard.tr();
+
+  static const String _landingPhoneOwnerName = 'landing_phone_owner_name';
+  static String get landingPhoneOwnerName => _landingPhoneOwnerName.tr();
+
+  static const String _landingPhoneRecentRequests = 'landing_phone_recent_requests';
+  static String get landingPhoneRecentRequests => _landingPhoneRecentRequests.tr();
+
+  static const String _landingPhoneRequestOne = 'landing_phone_request_one';
+  static String get landingPhoneRequestOne => _landingPhoneRequestOne.tr();
+
+  static const String _landingPhoneRequestTwo = 'landing_phone_request_two';
+  static String get landingPhoneRequestTwo => _landingPhoneRequestTwo.tr();
+
+  static const String _landingPhoneNew = 'landing_phone_new';
+  static String get landingPhoneNew => _landingPhoneNew.tr();
+
+  static const String _landingFacebook = 'landing_facebook';
+  static String get landingFacebook => _landingFacebook.tr();
+
+  static const String _landingInstagram = 'landing_instagram';
+  static String get landingInstagram => _landingInstagram.tr();
+
+  static const String _landingLinkedin = 'landing_linkedin';
+  static String get landingLinkedin => _landingLinkedin.tr();
+
 }

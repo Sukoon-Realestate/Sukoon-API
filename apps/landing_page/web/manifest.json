@@ -1,11 +1,11 @@
 {
-    "name": "melos_dashboard",
-    "short_name": "melos_dashboard",
+    "name": "سكون | Sokoon",
+    "short_name": "Sokoon",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#FAFAF8",
+    "theme_color": "#0F766E",
+    "description": "منصة الإيجار الموثوقة في مصر",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
