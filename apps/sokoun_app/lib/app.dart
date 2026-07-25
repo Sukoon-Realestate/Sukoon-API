@@ -22,6 +22,7 @@ import 'features/auth/presentation/screens/kyc_upload_documents_screen.dart';
 import 'features/auth/presentation/screens/register_screen.dart';
 import 'features/home/data/models/tenant_search_result_content.dart';
 import 'features/home/presentation/screens/owner_add_property_flow_screen.dart';
+import 'features/home/presentation/screens/owner_listings_screen.dart';
 import 'features/home/presentation/screens/tenant_search_results_screen.dart';
 import 'features/splash_screen.dart';
 
@@ -72,7 +73,7 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
               locale: context.locale,
               navigatorKey: Go.navigatorKey,
               // home: FavoritesScreen(),
-              home: TenantVisitsScreen(),
+              home: OwnerListingsScreen(),
               // builder: (context, child) {
               //   return Overlay(
               //     initialEntries: [

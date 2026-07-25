@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -11,10 +12,12 @@ class AddPropertySubmittedPage extends StatelessWidget {
   const AddPropertySubmittedPage({
     super.key,
     required this.summaryItems,
+    required this.onViewProperties,
     required this.onAddAnother,
   });
 
   final List<AddPropertySummaryContent> summaryItems;
+  final VoidCallback onViewProperties;
   final VoidCallback onAddAnother;
 
   @override
@@ -60,7 +63,7 @@ class AddPropertySubmittedPage extends StatelessWidget {
                     ),
                     4.szW,
                     AppText(
-                      'قيد المراجعة',
+                      LocaleKeys.ownerPropertySubmittedStatus,
                       color: AppColors.amber,
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
@@ -71,7 +74,7 @@ class AddPropertySubmittedPage extends StatelessWidget {
             ),
             14.szH,
             AppText(
-              'تم إرسال العقار للمراجعة',
+              LocaleKeys.ownerPropertySubmittedTitle,
               color: AppColors.sokoonNavy,
               fontSize: 23.sp,
               fontWeight: FontWeight.w900,
@@ -79,7 +82,7 @@ class AddPropertySubmittedPage extends StatelessWidget {
             ),
             8.szH,
             AppText(
-              'فريقنا هيراجع عقارك خلال 24-48 ساعة وهتلاقي النتيجة في الإشعارات.',
+              LocaleKeys.ownerPropertySubmittedDescription,
               color: AppColors.sokoonGray,
               fontSize: 14.sp,
               fontWeight: FontWeight.w400,
@@ -90,10 +93,13 @@ class AddPropertySubmittedPage extends StatelessWidget {
             22.szH,
             _SubmittedSummaryCard(items: summaryItems),
             22.szH,
-            AddPropertyPrimaryButton(label: 'عرض عقاراتي', onTap: () {}),
+            AddPropertyPrimaryButton(
+              label: LocaleKeys.ownerPropertySubmittedViewProperties,
+              onTap: onViewProperties,
+            ),
             12.szH,
             AddPropertyPrimaryButton(
-              label: 'إضافة عقار آخر',
+              label: LocaleKeys.ownerPropertySubmittedAddAnother,
               isOutline: true,
               onTap: onAddAnother,
             ),

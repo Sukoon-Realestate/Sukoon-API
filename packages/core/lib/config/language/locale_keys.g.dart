@@ -2776,4 +2776,310 @@ abstract class LocaleKeys {
   static const String _ownerAvailabilitySaved = 'owner_availability_saved';
   static String get ownerAvailabilitySaved => _ownerAvailabilitySaved.tr();
 
+  static const String _ownerPropertiesTitle = 'owner_properties_title';
+  static String get ownerPropertiesTitle => _ownerPropertiesTitle.tr();
+
+  static const String _ownerPropertiesAdd = 'owner_properties_add';
+  static String get ownerPropertiesAdd => _ownerPropertiesAdd.tr();
+
+  static const String _ownerPropertiesEdit = 'owner_properties_edit';
+  static String get ownerPropertiesEdit => _ownerPropertiesEdit.tr();
+
+  static const String _ownerPropertiesAnalytics = 'owner_properties_analytics';
+  static String get ownerPropertiesAnalytics => _ownerPropertiesAnalytics.tr();
+
+  static const String _ownerPropertiesActions = 'owner_properties_actions';
+  static String get ownerPropertiesActions => _ownerPropertiesActions.tr();
+
+  static const String _ownerPropertiesOptions = 'owner_properties_options';
+  static String get ownerPropertiesOptions => _ownerPropertiesOptions.tr();
+
+  static const String _ownerPropertiesEditProperty = 'owner_properties_edit_property';
+  static String get ownerPropertiesEditProperty => _ownerPropertiesEditProperty.tr();
+
+  static const String _ownerPropertiesPause = 'owner_properties_pause';
+  static String get ownerPropertiesPause => _ownerPropertiesPause.tr();
+
+  static const String _ownerPropertiesReactivate = 'owner_properties_reactivate';
+  static String get ownerPropertiesReactivate => _ownerPropertiesReactivate.tr();
+
+  static const String _ownerPropertiesMarkRented = 'owner_properties_mark_rented';
+  static String get ownerPropertiesMarkRented => _ownerPropertiesMarkRented.tr();
+
+  static const String _ownerPropertiesDeleteProperty = 'owner_properties_delete_property';
+  static String get ownerPropertiesDeleteProperty => _ownerPropertiesDeleteProperty.tr();
+
+  static const String _ownerPropertiesPriceUnit = 'owner_properties_price_unit';
+  static String get ownerPropertiesPriceUnit => _ownerPropertiesPriceUnit.tr();
+
+  static const String _ownerPropertiesViewUnit = 'owner_properties_view_unit';
+  static String get ownerPropertiesViewUnit => _ownerPropertiesViewUnit.tr();
+
+  static const String _ownerPropertiesVisitUnit = 'owner_properties_visit_unit';
+  static String get ownerPropertiesVisitUnit => _ownerPropertiesVisitUnit.tr();
+
+  static const String _ownerPropertyStatusVerified = 'owner_property_status_verified';
+  static String get ownerPropertyStatusVerified => _ownerPropertyStatusVerified.tr();
+
+  static const String _ownerPropertyStatusPending = 'owner_property_status_pending';
+  static String get ownerPropertyStatusPending => _ownerPropertyStatusPending.tr();
+
+  static const String _ownerPropertyStatusHidden = 'owner_property_status_hidden';
+  static String get ownerPropertyStatusHidden => _ownerPropertyStatusHidden.tr();
+
+  static const String _ownerPropertyStatusRejected = 'owner_property_status_rejected';
+  static String get ownerPropertyStatusRejected => _ownerPropertyStatusRejected.tr();
+
+  static const String _ownerPropertyStatusRented = 'owner_property_status_rented';
+  static String get ownerPropertyStatusRented => _ownerPropertyStatusRented.tr();
+
+  static const String _ownerPropertiesEmptyTitle = 'owner_properties_empty_title';
+  static String get ownerPropertiesEmptyTitle => _ownerPropertiesEmptyTitle.tr();
+
+  static const String _ownerPropertiesEmptyDescription = 'owner_properties_empty_description';
+  static String get ownerPropertiesEmptyDescription => _ownerPropertiesEmptyDescription.tr();
+
+  static const String _ownerPropertiesSubmittedMessage = 'owner_properties_submitted_message';
+  static String get ownerPropertiesSubmittedMessage => _ownerPropertiesSubmittedMessage.tr();
+
+  static const String _ownerPropertiesSaved = 'owner_properties_saved';
+  static String get ownerPropertiesSaved => _ownerPropertiesSaved.tr();
+
+  static const String _ownerPropertiesResubmitted = 'owner_properties_resubmitted';
+  static String get ownerPropertiesResubmitted => _ownerPropertiesResubmitted.tr();
+
+  static const String _ownerPropertiesPausedMessage = 'owner_properties_paused_message';
+  static String get ownerPropertiesPausedMessage => _ownerPropertiesPausedMessage.tr();
+
+  static const String _ownerPropertiesReactivatedMessage = 'owner_properties_reactivated_message';
+  static String get ownerPropertiesReactivatedMessage => _ownerPropertiesReactivatedMessage.tr();
+
+  static const String _ownerPropertiesMarkedRentedMessage = 'owner_properties_marked_rented_message';
+  static String get ownerPropertiesMarkedRentedMessage => _ownerPropertiesMarkedRentedMessage.tr();
+
+  static const String _ownerPropertiesDeletedMessage = 'owner_properties_deleted_message';
+  static String get ownerPropertiesDeletedMessage => _ownerPropertiesDeletedMessage.tr();
+
+  static const String _ownerPropertiesEditTitle = 'owner_properties_edit_title';
+  static String get ownerPropertiesEditTitle => _ownerPropertiesEditTitle.tr();
+
+  static const String _ownerPropertiesDelete = 'owner_properties_delete';
+  static String get ownerPropertiesDelete => _ownerPropertiesDelete.tr();
+
+  static const String _ownerPropertiesPhotos = 'owner_properties_photos';
+  static String get ownerPropertiesPhotos => _ownerPropertiesPhotos.tr();
+
+  static const String _ownerPropertiesPhotoUnit = 'owner_properties_photo_unit';
+  static String get ownerPropertiesPhotoUnit => _ownerPropertiesPhotoUnit.tr();
+
+  static const String _ownerPropertiesAddPhoto = 'owner_properties_add_photo';
+  static String get ownerPropertiesAddPhoto => _ownerPropertiesAddPhoto.tr();
+
+  static const String _ownerPropertiesName = 'owner_properties_name';
+  static String get ownerPropertiesName => _ownerPropertiesName.tr();
+
+  static const String _ownerPropertiesNameRequired = 'owner_properties_name_required';
+  static String get ownerPropertiesNameRequired => _ownerPropertiesNameRequired.tr();
+
+  static const String _ownerPropertiesMonthlyPrice = 'owner_properties_monthly_price';
+  static String get ownerPropertiesMonthlyPrice => _ownerPropertiesMonthlyPrice.tr();
+
+  static const String _ownerPropertiesBedrooms = 'owner_properties_bedrooms';
+  static String get ownerPropertiesBedrooms => _ownerPropertiesBedrooms.tr();
+
+  static const String _ownerPropertiesArea = 'owner_properties_area';
+  static String get ownerPropertiesArea => _ownerPropertiesArea.tr();
+
+  static const String _ownerPropertiesDescription = 'owner_properties_description';
+  static String get ownerPropertiesDescription => _ownerPropertiesDescription.tr();
+
+  static const String _ownerPropertiesCurrency = 'owner_properties_currency';
+  static String get ownerPropertiesCurrency => _ownerPropertiesCurrency.tr();
+
+  static const String _ownerPropertiesSquareMeter = 'owner_properties_square_meter';
+  static String get ownerPropertiesSquareMeter => _ownerPropertiesSquareMeter.tr();
+
+  static const String _ownerPropertiesSaveChanges = 'owner_properties_save_changes';
+  static String get ownerPropertiesSaveChanges => _ownerPropertiesSaveChanges.tr();
+
+  static const String _ownerPropertiesPreview = 'owner_properties_preview';
+  static String get ownerPropertiesPreview => _ownerPropertiesPreview.tr();
+
+  static const String _ownerPropertiesPreviewMessage = 'owner_properties_preview_message';
+  static String get ownerPropertiesPreviewMessage => _ownerPropertiesPreviewMessage.tr();
+
+  static const String _ownerPropertySubmittedStatus = 'owner_property_submitted_status';
+  static String get ownerPropertySubmittedStatus => _ownerPropertySubmittedStatus.tr();
+
+  static const String _ownerPropertySubmittedTitle = 'owner_property_submitted_title';
+  static String get ownerPropertySubmittedTitle => _ownerPropertySubmittedTitle.tr();
+
+  static const String _ownerPropertySubmittedDescription = 'owner_property_submitted_description';
+  static String get ownerPropertySubmittedDescription => _ownerPropertySubmittedDescription.tr();
+
+  static const String _ownerPropertySubmittedViewProperties = 'owner_property_submitted_view_properties';
+  static String get ownerPropertySubmittedViewProperties => _ownerPropertySubmittedViewProperties.tr();
+
+  static const String _ownerPropertySubmittedAddAnother = 'owner_property_submitted_add_another';
+  static String get ownerPropertySubmittedAddAnother => _ownerPropertySubmittedAddAnother.tr();
+
+  static const String _ownerPropertyNasrCityTitle = 'owner_property_nasr_city_title';
+  static String get ownerPropertyNasrCityTitle => _ownerPropertyNasrCityTitle.tr();
+
+  static const String _ownerPropertyNasrCityLocation = 'owner_property_nasr_city_location';
+  static String get ownerPropertyNasrCityLocation => _ownerPropertyNasrCityLocation.tr();
+
+  static const String _ownerPropertyNasrCityDescription = 'owner_property_nasr_city_description';
+  static String get ownerPropertyNasrCityDescription => _ownerPropertyNasrCityDescription.tr();
+
+  static const String _ownerPropertyStudioTitle = 'owner_property_studio_title';
+  static String get ownerPropertyStudioTitle => _ownerPropertyStudioTitle.tr();
+
+  static const String _ownerPropertyStudioLocation = 'owner_property_studio_location';
+  static String get ownerPropertyStudioLocation => _ownerPropertyStudioLocation.tr();
+
+  static const String _ownerPropertyStudioDescription = 'owner_property_studio_description';
+  static String get ownerPropertyStudioDescription => _ownerPropertyStudioDescription.tr();
+
+  static const String _ownerPropertyMohandessinTitle = 'owner_property_mohandessin_title';
+  static String get ownerPropertyMohandessinTitle => _ownerPropertyMohandessinTitle.tr();
+
+  static const String _ownerPropertyMohandessinLocation = 'owner_property_mohandessin_location';
+  static String get ownerPropertyMohandessinLocation => _ownerPropertyMohandessinLocation.tr();
+
+  static const String _ownerPropertyMohandessinDescription = 'owner_property_mohandessin_description';
+  static String get ownerPropertyMohandessinDescription => _ownerPropertyMohandessinDescription.tr();
+
+  static const String _ownerPropertyRejectionTitle = 'owner_property_rejection_title';
+  static String get ownerPropertyRejectionTitle => _ownerPropertyRejectionTitle.tr();
+
+  static const String _ownerPropertyRejectedHeadline = 'owner_property_rejected_headline';
+  static String get ownerPropertyRejectedHeadline => _ownerPropertyRejectedHeadline.tr();
+
+  static const String _ownerPropertyRejectionReasons = 'owner_property_rejection_reasons';
+  static String get ownerPropertyRejectionReasons => _ownerPropertyRejectionReasons.tr();
+
+  static const String _ownerPropertyReasonUnclearPhotos = 'owner_property_reason_unclear_photos';
+  static String get ownerPropertyReasonUnclearPhotos => _ownerPropertyReasonUnclearPhotos.tr();
+
+  static const String _ownerPropertyReasonIncompleteInfo = 'owner_property_reason_incomplete_info';
+  static String get ownerPropertyReasonIncompleteInfo => _ownerPropertyReasonIncompleteInfo.tr();
+
+  static const String _ownerPropertyReviewerNotes = 'owner_property_reviewer_notes';
+  static String get ownerPropertyReviewerNotes => _ownerPropertyReviewerNotes.tr();
+
+  static const String _ownerPropertyReviewerNotesDescription = 'owner_property_reviewer_notes_description';
+  static String get ownerPropertyReviewerNotesDescription => _ownerPropertyReviewerNotesDescription.tr();
+
+  static const String _ownerPropertyRejectionWarning = 'owner_property_rejection_warning';
+  static String get ownerPropertyRejectionWarning => _ownerPropertyRejectionWarning.tr();
+
+  static const String _ownerPropertyEditAndResubmit = 'owner_property_edit_and_resubmit';
+  static String get ownerPropertyEditAndResubmit => _ownerPropertyEditAndResubmit.tr();
+
+  static const String _ownerPropertyContactSupport = 'owner_property_contact_support';
+  static String get ownerPropertyContactSupport => _ownerPropertyContactSupport.tr();
+
+  static const String _ownerPropertySupportMessage = 'owner_property_support_message';
+  static String get ownerPropertySupportMessage => _ownerPropertySupportMessage.tr();
+
+  static const String _ownerAnalyticsTitle = 'owner_analytics_title';
+  static String get ownerAnalyticsTitle => _ownerAnalyticsTitle.tr();
+
+  static const String _ownerAnalyticsThirtyDays = 'owner_analytics_thirty_days';
+  static String get ownerAnalyticsThirtyDays => _ownerAnalyticsThirtyDays.tr();
+
+  static const String _ownerAnalyticsViews = 'owner_analytics_views';
+  static String get ownerAnalyticsViews => _ownerAnalyticsViews.tr();
+
+  static const String _ownerAnalyticsVisitRequests = 'owner_analytics_visit_requests';
+  static String get ownerAnalyticsVisitRequests => _ownerAnalyticsVisitRequests.tr();
+
+  static const String _ownerAnalyticsSaved = 'owner_analytics_saved';
+  static String get ownerAnalyticsSaved => _ownerAnalyticsSaved.tr();
+
+  static const String _ownerAnalyticsAcceptanceRate = 'owner_analytics_acceptance_rate';
+  static String get ownerAnalyticsAcceptanceRate => _ownerAnalyticsAcceptanceRate.tr();
+
+  static const String _ownerAnalyticsViewsLastFourteenDays = 'owner_analytics_views_last_fourteen_days';
+  static String get ownerAnalyticsViewsLastFourteenDays => _ownerAnalyticsViewsLastFourteenDays.tr();
+
+  static const String _ownerAnalyticsFourteenDaysAgo = 'owner_analytics_fourteen_days_ago';
+  static String get ownerAnalyticsFourteenDaysAgo => _ownerAnalyticsFourteenDaysAgo.tr();
+
+  static const String _ownerAnalyticsToday = 'owner_analytics_today';
+  static String get ownerAnalyticsToday => _ownerAnalyticsToday.tr();
+
+  static const String _ownerAnalyticsTopInterests = 'owner_analytics_top_interests';
+  static String get ownerAnalyticsTopInterests => _ownerAnalyticsTopInterests.tr();
+
+  static const String _ownerAnalyticsInterestArea = 'owner_analytics_interest_area';
+  static String get ownerAnalyticsInterestArea => _ownerAnalyticsInterestArea.tr();
+
+  static const String _ownerAnalyticsInterestPrice = 'owner_analytics_interest_price';
+  static String get ownerAnalyticsInterestPrice => _ownerAnalyticsInterestPrice.tr();
+
+  static const String _ownerAnalyticsInterestLocation = 'owner_analytics_interest_location';
+  static String get ownerAnalyticsInterestLocation => _ownerAnalyticsInterestLocation.tr();
+
+  static const String _ownerAnalyticsInterestAmenities = 'owner_analytics_interest_amenities';
+  static String get ownerAnalyticsInterestAmenities => _ownerAnalyticsInterestAmenities.tr();
+
+  static const String _ownerAnalyticsOpenRevenue = 'owner_analytics_open_revenue';
+  static String get ownerAnalyticsOpenRevenue => _ownerAnalyticsOpenRevenue.tr();
+
+  static const String _ownerRevenueTitle = 'owner_revenue_title';
+  static String get ownerRevenueTitle => _ownerRevenueTitle.tr();
+
+  static const String _ownerRevenueThisMonth = 'owner_revenue_this_month';
+  static String get ownerRevenueThisMonth => _ownerRevenueThisMonth.tr();
+
+  static const String _ownerRevenueCurrency = 'owner_revenue_currency';
+  static String get ownerRevenueCurrency => _ownerRevenueCurrency.tr();
+
+  static const String _ownerRevenueGrowth = 'owner_revenue_growth';
+  static String get ownerRevenueGrowth => _ownerRevenueGrowth.tr();
+
+  static const String _ownerRevenueProperties = 'owner_revenue_properties';
+  static String get ownerRevenueProperties => _ownerRevenueProperties.tr();
+
+  static const String _ownerRevenueLatestTransactions = 'owner_revenue_latest_transactions';
+  static String get ownerRevenueLatestTransactions => _ownerRevenueLatestTransactions.tr();
+
+  static const String _ownerRevenuePaid = 'owner_revenue_paid';
+  static String get ownerRevenuePaid => _ownerRevenuePaid.tr();
+
+  static const String _ownerRevenueDue = 'owner_revenue_due';
+  static String get ownerRevenueDue => _ownerRevenueDue.tr();
+
+  static const String _ownerRevenueLate = 'owner_revenue_late';
+  static String get ownerRevenueLate => _ownerRevenueLate.tr();
+
+  static const String _ownerRevenuePaidThisMonth = 'owner_revenue_paid_this_month';
+  static String get ownerRevenuePaidThisMonth => _ownerRevenuePaidThisMonth.tr();
+
+  static const String _ownerRevenueDueJuneFifteen = 'owner_revenue_due_june_fifteen';
+  static String get ownerRevenueDueJuneFifteen => _ownerRevenueDueJuneFifteen.tr();
+
+  static const String _ownerRevenueLateSinceJuneOne = 'owner_revenue_late_since_june_one';
+  static String get ownerRevenueLateSinceJuneOne => _ownerRevenueLateSinceJuneOne.tr();
+
+  static const String _ownerRevenueZamalekRoom = 'owner_revenue_zamalek_room';
+  static String get ownerRevenueZamalekRoom => _ownerRevenueZamalekRoom.tr();
+
+  static const String _ownerRevenueNasrMonthlyRent = 'owner_revenue_nasr_monthly_rent';
+  static String get ownerRevenueNasrMonthlyRent => _ownerRevenueNasrMonthlyRent.tr();
+
+  static const String _ownerRevenueMohandessinRent = 'owner_revenue_mohandessin_rent';
+  static String get ownerRevenueMohandessinRent => _ownerRevenueMohandessinRent.tr();
+
+  static const String _ownerRevenuePlatformFee = 'owner_revenue_platform_fee';
+  static String get ownerRevenuePlatformFee => _ownerRevenuePlatformFee.tr();
+
+  static const String _ownerRevenueJuneOne = 'owner_revenue_june_one';
+  static String get ownerRevenueJuneOne => _ownerRevenueJuneOne.tr();
+
+  static const String _ownerRevenueMayTwentyEight = 'owner_revenue_may_twenty_eight';
+  static String get ownerRevenueMayTwentyEight => _ownerRevenueMayTwentyEight.tr();
+
 }

@@ -213,7 +213,7 @@ class _DetailsSection extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 2.2,
+          childAspectRatio: 1.45,
           crossAxisSpacing: 10.w,
           mainAxisSpacing: 10.h,
         ),

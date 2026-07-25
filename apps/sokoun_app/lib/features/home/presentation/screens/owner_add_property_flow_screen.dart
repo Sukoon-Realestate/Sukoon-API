@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 
 import '../../data/models/owner_add_property_content.dart';
 import '../widgets/owner_add_property/imports.dart';
 
 class OwnerAddPropertyFlowScreen extends StatefulWidget {
-  const OwnerAddPropertyFlowScreen({super.key});
+  const OwnerAddPropertyFlowScreen({super.key, this.onViewProperties});
+
+  final VoidCallback? onViewProperties;
 
   @override
   State<OwnerAddPropertyFlowScreen> createState() =>
@@ -97,10 +100,10 @@ class _OwnerAddPropertyFlowScreenState
   void _selectGovernorate(String governorate) {
     final districts =
         OwnerAddPropertyContent.districtOptionsByGovernorate[governorate] ??
-            const <String>[];
+        const <String>[];
 
     _updateForm(
-          () => _form.copyWith(
+      () => _form.copyWith(
         governorate: governorate,
         district: districts.isEmpty ? '' : districts.first,
         mapQuery: governorate,
@@ -113,7 +116,7 @@ class _OwnerAddPropertyFlowScreenState
   void _selectDistrict(String district) {
     final query = '$district، ${_form.governorate}';
     _updateForm(
-          () => _form.copyWith(
+      () => _form.copyWith(
         district: district,
         mapQuery: query,
         isLocationSelected: false,
@@ -128,7 +131,7 @@ class _OwnerAddPropertyFlowScreenState
         : _mapQueryController.text.trim();
     _mapQueryController.text = query;
     _updateForm(
-          () => _form.copyWith(mapQuery: query, isLocationSelected: true),
+      () => _form.copyWith(mapQuery: query, isLocationSelected: true),
     );
   }
 
@@ -195,7 +198,7 @@ class _OwnerAddPropertyFlowScreenState
                 onBuildingYearChanged: (value) =>
                     _updateForm(() => _form.copyWith(buildingYear: value)),
                 onMapQueryChanged: (value) => _updateForm(
-                      () => _form.copyWith(
+                  () => _form.copyWith(
                     mapQuery: value,
                     isLocationSelected: false,
                   ),
@@ -245,6 +248,7 @@ class _OwnerAddPropertyFlowScreenState
               ),
               AddPropertySubmittedPage(
                 summaryItems: _form.submittedSummary,
+                onViewProperties: widget.onViewProperties ?? () => Go.back(),
                 onAddAnother: _resetFlow,
               ),
             ],
