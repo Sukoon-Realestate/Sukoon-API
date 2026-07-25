@@ -4,19 +4,19 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:sokoun_app/features/chat/data/models/tenant_chat_content.dart';
+import 'package:sokoun_app/features/chat/data/models/chat_content.dart';
 
 import '../shared/chat_verified_badge.dart';
 
-class TenantChatThreadHeader extends StatelessWidget {
-  const TenantChatThreadHeader({
+class ChatThreadHeader extends StatelessWidget {
+  const ChatThreadHeader({
     super.key,
     required this.conversation,
     required this.onBackPressed,
     required this.onReportPressed,
   });
 
-  final TenantConversationContent conversation;
+  final ConversationContent conversation;
   final VoidCallback onBackPressed;
   final VoidCallback onReportPressed;
 
@@ -31,7 +31,7 @@ class TenantChatThreadHeader extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            key: const ValueKey('tenant-chat-thread-back'),
+            key: const ValueKey('chat-thread-back'),
             onPressed: onBackPressed,
             visualDensity: VisualDensity.compact,
             icon: Icon(
@@ -80,7 +80,7 @@ class TenantChatThreadHeader extends StatelessWidget {
           ),
           if (conversation.isVerified) ...[const ChatVerifiedBadge(), 4.szW],
           IconButton(
-            key: const ValueKey('tenant-chat-report-action'),
+            key: const ValueKey('chat-report-action'),
             tooltip: LocaleKeys.chatReportProblemTitle,
             onPressed: onReportPressed,
             visualDensity: VisualDensity.compact,

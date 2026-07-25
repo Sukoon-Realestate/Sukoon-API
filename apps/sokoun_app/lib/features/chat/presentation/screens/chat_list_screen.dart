@@ -4,36 +4,36 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:sokoun_app/features/chat/data/models/tenant_chat_content.dart';
+import 'package:sokoun_app/features/chat/data/models/chat_content.dart';
 import 'package:sokoun_app/features/home/presentation/screens/tenant_search_screen.dart';
 
 import '../widgets/imports.dart';
-import 'tenant_chat_empty_screen.dart';
-import 'tenant_chat_restricted_screen.dart';
-import 'tenant_chat_search_screen.dart';
-import 'tenant_chat_thread_screen.dart';
+import 'chat_empty_screen.dart';
+import 'chat_restricted_screen.dart';
+import 'chat_search_screen.dart';
+import 'chat_thread_screen.dart';
 
-class TenantChatListScreen extends StatelessWidget {
-  const TenantChatListScreen({
+class ChatListScreen extends StatelessWidget {
+  const ChatListScreen({
     super.key,
-    this.conversations = TenantChatContent.conversations,
+    this.conversations = ChatContent.conversations,
   });
 
-  final List<TenantConversationContent> conversations;
+  final List<ConversationContent> conversations;
 
-  void _openConversation(TenantConversationContent conversation) {
+  void _openConversation(ConversationContent conversation) {
     if (conversation.isVerified) {
-      Go.to(TenantChatThreadScreen(conversation: conversation));
+      Go.to(ChatThreadScreen(conversation: conversation));
       return;
     }
 
-    Go.to(TenantChatRestrictedScreen(conversation: conversation));
+    Go.to(ChatRestrictedScreen(conversation: conversation));
   }
 
   @override
   Widget build(BuildContext context) {
     if (conversations.isEmpty) {
-      return TenantChatEmptyScreen(
+      return ChatEmptyScreen(
         onExplorePressed: () => Go.off(const TenantSearchScreen()),
       );
     }
@@ -57,9 +57,9 @@ class TenantChatListScreen extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: TenantChatSearchField(
+                child: ChatSearchField(
                   readOnly: true,
-                  onTap: () => Go.to(const TenantChatSearchScreen()),
+                  onTap: () => Go.to(const ChatSearchScreen()),
                 ),
               ),
               Padding(
@@ -72,9 +72,9 @@ class TenantChatListScreen extends StatelessWidget {
                 child: ListView.separated(
                   padding: EdgeInsets.only(top: 10.h, bottom: 14.h),
                   itemBuilder: (context, index) {
-                    final TenantConversationContent conversation =
+                    final ConversationContent conversation =
                         conversations[index];
-                    return TenantChatListItem(
+                    return ChatListItem(
                       conversation: conversation,
                       onPressed: () => _openConversation(conversation),
                     );
@@ -90,7 +90,7 @@ class TenantChatListScreen extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: const TenantChatBottomNavigation(),
+        bottomNavigationBar: const ChatBottomNavigation(),
       ),
     );
   }

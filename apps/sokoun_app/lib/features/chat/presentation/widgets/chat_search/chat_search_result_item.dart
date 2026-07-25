@@ -3,22 +3,22 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:sokoun_app/features/chat/data/models/tenant_chat_content.dart';
+import 'package:sokoun_app/features/chat/data/models/chat_content.dart';
 
-class TenantChatSearchResultItem extends StatelessWidget {
-  const TenantChatSearchResultItem({
+class ChatSearchResultItem extends StatelessWidget {
+  const ChatSearchResultItem({
     super.key,
     required this.conversation,
     required this.onPressed,
   });
 
-  final TenantConversationContent conversation;
+  final ConversationContent conversation;
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      key: ValueKey('tenant-chat-search-result-${conversation.id}'),
+      key: ValueKey('chat-search-result-${conversation.id}'),
       onTap: onPressed,
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 12.h),

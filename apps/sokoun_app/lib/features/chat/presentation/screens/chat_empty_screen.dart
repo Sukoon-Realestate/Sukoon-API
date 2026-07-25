@@ -6,8 +6,8 @@ import 'package:melos_core/core/widgets/app_text.dart';
 
 import '../widgets/imports.dart';
 
-class TenantChatEmptyScreen extends StatelessWidget {
-  const TenantChatEmptyScreen({super.key, required this.onExplorePressed});
+class ChatEmptyScreen extends StatelessWidget {
+  const ChatEmptyScreen({super.key, required this.onExplorePressed});
 
   final VoidCallback onExplorePressed;
 
@@ -36,12 +36,12 @@ class TenantChatEmptyScreen extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: TenantChatEmptyState(onExplorePressed: onExplorePressed),
+                child: ChatEmptyState(onExplorePressed: onExplorePressed),
               ),
             ],
           ),
         ),
-        bottomNavigationBar: const TenantChatBottomNavigation(),
+        bottomNavigationBar: const ChatBottomNavigation(),
       ),
     );
   }

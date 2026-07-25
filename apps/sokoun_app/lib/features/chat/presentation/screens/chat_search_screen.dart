@@ -5,25 +5,25 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:sokoun_app/features/chat/data/models/tenant_chat_content.dart';
+import 'package:sokoun_app/features/chat/data/models/chat_content.dart';
 
 import '../widgets/imports.dart';
-import 'tenant_chat_restricted_screen.dart';
-import 'tenant_chat_thread_screen.dart';
+import 'chat_restricted_screen.dart';
+import 'chat_thread_screen.dart';
 
-class TenantChatSearchScreen extends StatefulWidget {
-  const TenantChatSearchScreen({super.key});
+class ChatSearchScreen extends StatefulWidget {
+  const ChatSearchScreen({super.key});
 
   @override
-  State<TenantChatSearchScreen> createState() => _TenantChatSearchScreenState();
+  State<ChatSearchScreen> createState() => _ChatSearchScreenState();
 }
 
-class _TenantChatSearchScreenState extends State<TenantChatSearchScreen> {
+class _ChatSearchScreenState extends State<ChatSearchScreen> {
   late final TextEditingController _searchController;
   String _query = 'أحمد';
 
-  List<TenantConversationContent> get _results {
-    return TenantChatContent.searchConversations
+  List<ConversationContent> get _results {
+    return ChatContent.searchConversations
         .where((conversation) => conversation.matchesQuery(_query))
         .toList(growable: false);
   }
@@ -31,10 +31,10 @@ class _TenantChatSearchScreenState extends State<TenantChatSearchScreen> {
   List<String> get _mentionedProperties {
     final String normalizedQuery = _query.trim();
     if (normalizedQuery.isEmpty) {
-      return TenantChatContent.mentionedProperties;
+      return ChatContent.mentionedProperties;
     }
 
-    return TenantChatContent.mentionedProperties
+    return ChatContent.mentionedProperties
         .where((property) => property.contains(normalizedQuery))
         .toList(growable: false);
   }
@@ -58,13 +58,13 @@ class _TenantChatSearchScreenState extends State<TenantChatSearchScreen> {
     setState(() => _query = '');
   }
 
-  void _openConversation(TenantConversationContent conversation) {
+  void _openConversation(ConversationContent conversation) {
     if (conversation.isVerified) {
-      Go.to(TenantChatThreadScreen(conversation: conversation));
+      Go.to(ChatThreadScreen(conversation: conversation));
       return;
     }
 
-    Go.to(TenantChatRestrictedScreen(conversation: conversation));
+    Go.to(ChatRestrictedScreen(conversation: conversation));
   }
 
   @override
@@ -81,7 +81,7 @@ class _TenantChatSearchScreenState extends State<TenantChatSearchScreen> {
                 child: Row(
                   children: [
                     IconButton(
-                      key: const ValueKey('tenant-chat-search-back'),
+                      key: const ValueKey('chat-search-back'),
                       onPressed: () => Go.back(),
                       icon: Icon(
                         Icons.arrow_back_ios_new_rounded,
@@ -91,7 +91,7 @@ class _TenantChatSearchScreenState extends State<TenantChatSearchScreen> {
                     ),
                     8.szW,
                     Expanded(
-                      child: TenantChatSearchField(
+                      child: ChatSearchField(
                         controller: _searchController,
                         autofocus: false,
                         isActive: true,
@@ -116,7 +116,7 @@ class _TenantChatSearchScreenState extends State<TenantChatSearchScreen> {
                     ),
                     8.szH,
                     for (int index = 0; index < _results.length; index++) ...[
-                      TenantChatSearchResultItem(
+                      ChatSearchResultItem(
                         conversation: _results[index],
                         onPressed: () => _openConversation(_results[index]),
                       ),

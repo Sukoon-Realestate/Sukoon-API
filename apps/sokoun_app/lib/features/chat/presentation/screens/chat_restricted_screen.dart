@@ -7,12 +7,12 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:sokoun_app/features/auth/presentation/screens/kyc_intro_screen.dart';
-import 'package:sokoun_app/features/chat/data/models/tenant_chat_content.dart';
+import 'package:sokoun_app/features/chat/data/models/chat_content.dart';
 
-class TenantChatRestrictedScreen extends StatelessWidget {
-  const TenantChatRestrictedScreen({super.key, required this.conversation});
+class ChatRestrictedScreen extends StatelessWidget {
+  const ChatRestrictedScreen({super.key, required this.conversation});
 
-  final TenantConversationContent conversation;
+  final ConversationContent conversation;
 
   void _openVerification() => Go.to(const KycIntroScreen());
 
@@ -71,7 +71,7 @@ class TenantChatRestrictedScreen extends StatelessWidget {
                       _VerificationWarning(onVerifyPressed: _openVerification),
                       20.szH,
                       DefaultButton(
-                        key: const ValueKey('tenant-chat-start-kyc'),
+                        key: const ValueKey('chat-start-kyc'),
                         onTap: _openVerification,
                         title: LocaleKeys.chatStartKyc,
                         color: AppColors.sokoonTeal,
@@ -111,7 +111,7 @@ class TenantChatRestrictedScreen extends StatelessWidget {
 class _RestrictedHeader extends StatelessWidget {
   const _RestrictedHeader({required this.conversation});
 
-  final TenantConversationContent conversation;
+  final ConversationContent conversation;
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +124,7 @@ class _RestrictedHeader extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            key: const ValueKey('tenant-chat-restricted-back'),
+            key: const ValueKey('chat-restricted-back'),
             onPressed: () => Go.back(),
             icon: Icon(
               Icons.arrow_back_ios_new_rounded,

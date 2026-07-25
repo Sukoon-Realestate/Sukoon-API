@@ -5,8 +5,8 @@ import 'package:sokoun_app/features/favorites/presentation/screens/favorites_scr
 import 'package:sokoun_app/features/home/presentation/screens/tenant_home_screen.dart';
 import 'package:sokoun_app/features/home/presentation/widgets/tenant_widgets/imports.dart';
 
-class TenantChatBottomNavigation extends StatelessWidget {
-  const TenantChatBottomNavigation({super.key});
+class ChatBottomNavigation extends StatelessWidget {
+  const ChatBottomNavigation({super.key});
 
   @override
   Widget build(BuildContext context) {

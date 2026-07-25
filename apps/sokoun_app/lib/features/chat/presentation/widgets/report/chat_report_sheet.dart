@@ -9,16 +9,16 @@ import 'package:melos_core/core/widgets/buttons/default_button.dart';
 
 import '../shared/chat_privacy_banner.dart';
 
-class TenantChatReportSheet extends StatefulWidget {
-  const TenantChatReportSheet({super.key, required this.onSubmitted});
+class ChatReportSheet extends StatefulWidget {
+  const ChatReportSheet({super.key, required this.onSubmitted});
 
   final void Function(int selectedReason, String details) onSubmitted;
 
   @override
-  State<TenantChatReportSheet> createState() => _TenantChatReportSheetState();
+  State<ChatReportSheet> createState() => _ChatReportSheetState();
 }
 
-class _TenantChatReportSheetState extends State<TenantChatReportSheet> {
+class _ChatReportSheetState extends State<ChatReportSheet> {
   late final TextEditingController _detailsController;
   int _selectedReason = 0;
 
@@ -71,7 +71,7 @@ class _TenantChatReportSheetState extends State<TenantChatReportSheet> {
                     children: [
                       for (int index = 0; index < _reasons.length; index++) ...[
                         _ReportReasonTile(
-                          key: ValueKey('tenant-chat-report-reason-$index'),
+                          key: ValueKey('chat-report-reason-$index'),
                           label: _reasons[index],
                           isSelected: _selectedReason == index,
                           onPressed: () {
@@ -83,7 +83,7 @@ class _TenantChatReportSheetState extends State<TenantChatReportSheet> {
                       if (_isOtherReason) ...[
                         12.szH,
                         TextField(
-                          key: const ValueKey('tenant-chat-report-details'),
+                          key: const ValueKey('chat-report-details'),
                           controller: _detailsController,
                           minLines: 3,
                           maxLines: 4,
@@ -128,7 +128,7 @@ class _TenantChatReportSheetState extends State<TenantChatReportSheet> {
                       ChatPrivacyBanner(text: LocaleKeys.chatReportPrivacy),
                       16.szH,
                       DefaultButton(
-                        key: const ValueKey('tenant-chat-report-submit'),
+                        key: const ValueKey('chat-report-submit'),
                         onTap: _submit,
                         title: LocaleKeys.chatSubmitReport,
                         color: AppColors.red,
@@ -141,7 +141,7 @@ class _TenantChatReportSheetState extends State<TenantChatReportSheet> {
                       ),
                       6.szH,
                       TextButton(
-                        key: const ValueKey('tenant-chat-report-cancel'),
+                        key: const ValueKey('chat-report-cancel'),
                         onPressed: () => Go.back(),
                         child: AppText(
                           LocaleKeys.cancel,
@@ -197,7 +197,7 @@ class _ReportHeader extends StatelessWidget {
                 ),
               ),
               IconButton(
-                key: const ValueKey('tenant-chat-report-close'),
+                key: const ValueKey('chat-report-close'),
                 onPressed: onClosePressed,
                 icon: Icon(
                   Icons.close_rounded,

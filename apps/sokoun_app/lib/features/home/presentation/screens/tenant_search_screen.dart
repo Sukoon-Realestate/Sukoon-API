@@ -4,7 +4,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:sokoun_app/features/chat/presentation/screens/tenant_chat_list_screen.dart';
+import 'package:sokoun_app/features/chat/presentation/screens/chat_list_screen.dart';
 import 'package:sokoun_app/features/favorites/presentation/screens/favorites_screen.dart';
 import 'package:sokoun_app/features/home/data/models/tenant_search_content.dart';
 
@@ -155,7 +155,7 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
               HomeBottomNavItemData(
                 icon: Icons.chat_bubble_outline_rounded,
                 label: 'الشات',
-                onTap: () => Go.to(const TenantChatListScreen()),
+                onTap: () => Go.to(const ChatListScreen()),
               ),
               HomeBottomNavItemData(
                 icon: Icons.notifications_none_rounded,

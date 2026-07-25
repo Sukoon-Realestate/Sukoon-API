@@ -1,5 +1,5 @@
-class TenantConversationContent {
-  const TenantConversationContent({
+class ConversationContent {
+  const ConversationContent({
     required this.id,
     required this.name,
     required this.property,
@@ -10,20 +10,19 @@ class TenantConversationContent {
     required this.isOnline,
   });
 
-  factory TenantConversationContent.initial() =>
-      const TenantConversationContent(
-        id: 0,
-        name: '',
-        property: '',
-        lastMessage: '',
-        time: '',
-        unreadCount: 0,
-        isVerified: false,
-        isOnline: false,
-      );
+  factory ConversationContent.initial() => const ConversationContent(
+    id: 0,
+    name: '',
+    property: '',
+    lastMessage: '',
+    time: '',
+    unreadCount: 0,
+    isVerified: false,
+    isOnline: false,
+  );
 
-  factory TenantConversationContent.fromJson(Map<String, dynamic> json) {
-    return TenantConversationContent(
+  factory ConversationContent.fromJson(Map<String, dynamic> json) {
+    return ConversationContent(
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
       property: json['property'] ?? '',
@@ -68,7 +67,7 @@ class TenantConversationContent {
     };
   }
 
-  TenantConversationContent copyWith({
+  ConversationContent copyWith({
     int? id,
     String? name,
     String? property,
@@ -78,7 +77,7 @@ class TenantConversationContent {
     bool? isVerified,
     bool? isOnline,
   }) {
-    return TenantConversationContent(
+    return ConversationContent(
       id: id ?? this.id,
       name: name ?? this.name,
       property: property ?? this.property,
@@ -91,8 +90,8 @@ class TenantConversationContent {
   }
 }
 
-class TenantChatMessageContent {
-  const TenantChatMessageContent({
+class ChatMessageContent {
+  const ChatMessageContent({
     required this.id,
     required this.body,
     required this.time,
@@ -100,15 +99,11 @@ class TenantChatMessageContent {
     this.type = 'text',
   });
 
-  factory TenantChatMessageContent.initial() => const TenantChatMessageContent(
-    id: 0,
-    body: '',
-    time: '',
-    isFromMe: false,
-  );
+  factory ChatMessageContent.initial() =>
+      const ChatMessageContent(id: 0, body: '', time: '', isFromMe: false);
 
-  factory TenantChatMessageContent.fromJson(Map<String, dynamic> json) {
-    return TenantChatMessageContent(
+  factory ChatMessageContent.fromJson(Map<String, dynamic> json) {
+    return ChatMessageContent(
       id: json['id'] ?? 0,
       body: json['body'] ?? '',
       time: json['time'] ?? '',
@@ -133,14 +128,14 @@ class TenantChatMessageContent {
     };
   }
 
-  TenantChatMessageContent copyWith({
+  ChatMessageContent copyWith({
     int? id,
     String? body,
     String? time,
     bool? isFromMe,
     String? type,
   }) {
-    return TenantChatMessageContent(
+    return ChatMessageContent(
       id: id ?? this.id,
       body: body ?? this.body,
       time: time ?? this.time,
@@ -150,9 +145,9 @@ class TenantChatMessageContent {
   }
 }
 
-abstract final class TenantChatContent {
-  static const List<TenantConversationContent> conversations = [
-    TenantConversationContent(
+abstract final class ChatContent {
+  static const List<ConversationContent> conversations = [
+    ConversationContent(
       id: 1,
       name: 'أحمد محمد',
       property: 'شقة مدينة نصر',
@@ -162,7 +157,7 @@ abstract final class TenantChatContent {
       isVerified: true,
       isOnline: true,
     ),
-    TenantConversationContent(
+    ConversationContent(
       id: 2,
       name: 'منى علي',
       property: 'ستوديو التجمع',
@@ -172,7 +167,7 @@ abstract final class TenantChatContent {
       isVerified: true,
       isOnline: false,
     ),
-    TenantConversationContent(
+    ConversationContent(
       id: 3,
       name: 'كريم طارق',
       property: 'شقة المعادي',
@@ -184,8 +179,8 @@ abstract final class TenantChatContent {
     ),
   ];
 
-  static const List<TenantConversationContent> searchConversations = [
-    TenantConversationContent(
+  static const List<ConversationContent> searchConversations = [
+    ConversationContent(
       id: 1,
       name: 'أحمد محمد',
       property: 'شقة مدينة نصر',
@@ -195,7 +190,7 @@ abstract final class TenantChatContent {
       isVerified: true,
       isOnline: true,
     ),
-    TenantConversationContent(
+    ConversationContent(
       id: 4,
       name: 'أحمد طارق',
       property: 'ستوديو الزمالك',
@@ -212,26 +207,26 @@ abstract final class TenantChatContent {
     'ستوديو الزمالك',
   ];
 
-  static const List<TenantChatMessageContent> initialMessages = [
-    TenantChatMessageContent(
+  static const List<ChatMessageContent> initialMessages = [
+    ChatMessageContent(
       id: 1,
       body: 'أهلاً! الشقة لسه متاحة، تحب تحجز زيارة؟',
       time: '9:10 ص',
       isFromMe: false,
     ),
-    TenantChatMessageContent(
+    ChatMessageContent(
       id: 2,
       body: 'أيوه عايز أزور يوم السبت الساعة 2م',
       time: '9:12 ص',
       isFromMe: true,
     ),
-    TenantChatMessageContent(
+    ChatMessageContent(
       id: 3,
       body: 'تمام، هينفع معايا. هبعتلك تأكيد',
       time: '9:13 ص',
       isFromMe: false,
     ),
-    TenantChatMessageContent(
+    ChatMessageContent(
       id: 4,
       body: 'شكراً جزيلاً',
       time: '9:14 ص',

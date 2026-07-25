@@ -4,8 +4,8 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 
-class TenantChatComposer extends StatelessWidget {
-  const TenantChatComposer({
+class ChatComposer extends StatelessWidget {
+  const ChatComposer({
     super.key,
     required this.controller,
     required this.onAttachmentPressed,
@@ -31,7 +31,7 @@ class TenantChatComposer extends StatelessWidget {
         child: Row(
           children: [
             _ComposerActionButton(
-              key: const ValueKey('tenant-chat-send'),
+              key: const ValueKey('chat-send'),
               onPressed: onSendPressed,
               backgroundColor: AppColors.sokoonTeal,
               icon: Icons.send_rounded,
@@ -50,7 +50,7 @@ class TenantChatComposer extends StatelessWidget {
                 child: Row(
                   children: [
                     IconButton(
-                      key: const ValueKey('tenant-chat-voice'),
+                      key: const ValueKey('chat-voice'),
                       onPressed: onVoicePressed,
                       visualDensity: VisualDensity.compact,
                       padding: EdgeInsets.zero,
@@ -62,7 +62,7 @@ class TenantChatComposer extends StatelessWidget {
                     ),
                     Expanded(
                       child: TextField(
-                        key: const ValueKey('tenant-chat-message-field'),
+                        key: const ValueKey('chat-message-field'),
                         controller: controller,
                         minLines: 1,
                         maxLines: 4,
@@ -92,7 +92,7 @@ class TenantChatComposer extends StatelessWidget {
             ),
             8.szW,
             _ComposerActionButton(
-              key: const ValueKey('tenant-chat-attachment'),
+              key: const ValueKey('chat-attachment'),
               onPressed: onAttachmentPressed,
               backgroundColor: AppColors.scaffoldBackground,
               icon: Icons.image_outlined,

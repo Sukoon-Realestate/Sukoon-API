@@ -5,8 +5,8 @@ import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/chat_builder/chat_message.dart';
 
-class TenantChatMessageBubble extends StatelessWidget {
-  const TenantChatMessageBubble({
+class ChatMessageBubble extends StatelessWidget {
+  const ChatMessageBubble({
     super.key,
     required this.message,
     required this.isFromMe,
@@ -20,7 +20,7 @@ class TenantChatMessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      key: ValueKey('tenant-chat-message-${message.message.id}'),
+      key: ValueKey('chat-message-${message.message.id}'),
       constraints: BoxConstraints(maxWidth: 285.w),
       margin: EdgeInsets.only(bottom: 8.h),
       child: Column(

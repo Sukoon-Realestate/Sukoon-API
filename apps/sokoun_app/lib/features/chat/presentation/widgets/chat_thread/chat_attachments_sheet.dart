@@ -6,15 +6,12 @@ import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
-import 'package:sokoun_app/features/chat/data/enums/tenant_chat_attachment_type.dart';
+import 'package:sokoun_app/features/chat/data/enums/chat_attachment_type.dart';
 
-class TenantChatAttachmentsSheet extends StatelessWidget {
-  const TenantChatAttachmentsSheet({
-    super.key,
-    required this.onAttachmentSelected,
-  });
+class ChatAttachmentsSheet extends StatelessWidget {
+  const ChatAttachmentsSheet({super.key, required this.onAttachmentSelected});
 
-  final void Function(TenantChatAttachmentType type) onAttachmentSelected;
+  final void Function(ChatAttachmentType type) onAttachmentSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +48,7 @@ class TenantChatAttachmentsSheet extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                for (final type in TenantChatAttachmentType.values)
+                for (final type in ChatAttachmentType.values)
                   _AttachmentAction(
                     type: type,
                     onPressed: () => onAttachmentSelected(type),
@@ -60,7 +57,7 @@ class TenantChatAttachmentsSheet extends StatelessWidget {
             ),
             24.szH,
             DefaultButton(
-              key: const ValueKey('tenant-chat-attachment-cancel'),
+              key: const ValueKey('chat-attachment-cancel'),
               onTap: () => Go.back(),
               title: LocaleKeys.cancel,
               color: AppColors.white,
@@ -82,13 +79,13 @@ class TenantChatAttachmentsSheet extends StatelessWidget {
 class _AttachmentAction extends StatelessWidget {
   const _AttachmentAction({required this.type, required this.onPressed});
 
-  final TenantChatAttachmentType type;
+  final ChatAttachmentType type;
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      key: ValueKey('tenant-chat-attachment-${type.name}'),
+      key: ValueKey('chat-attachment-${type.name}'),
       onTap: onPressed,
       borderRadius: BorderRadius.circular(18.r),
       child: SizedBox(

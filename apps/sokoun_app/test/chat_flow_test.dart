@@ -6,17 +6,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/chat_builder/easy_chat.dart';
-import 'package:sokoun_app/features/chat/data/models/tenant_chat_content.dart';
-import 'package:sokoun_app/features/chat/presentation/screens/tenant_chat_empty_screen.dart';
-import 'package:sokoun_app/features/chat/presentation/screens/tenant_chat_list_screen.dart';
-import 'package:sokoun_app/features/chat/presentation/screens/tenant_chat_restricted_screen.dart';
-import 'package:sokoun_app/features/chat/presentation/screens/tenant_chat_search_screen.dart';
-import 'package:sokoun_app/features/chat/presentation/screens/tenant_chat_thread_screen.dart';
-import 'package:sokoun_app/features/chat/presentation/widgets/chat_list/tenant_chat_list_item.dart';
-import 'package:sokoun_app/features/chat/presentation/widgets/chat_thread/tenant_chat_attachments_sheet.dart';
-import 'package:sokoun_app/features/chat/presentation/widgets/chat_thread/tenant_chat_message_bubble.dart';
-import 'package:sokoun_app/features/chat/presentation/widgets/chat_thread/tenant_chat_voice_recording_bar.dart';
-import 'package:sokoun_app/features/chat/presentation/widgets/report/tenant_chat_report_sheet.dart';
+import 'package:sokoun_app/features/chat/data/models/chat_content.dart';
+import 'package:sokoun_app/features/chat/presentation/screens/chat_empty_screen.dart';
+import 'package:sokoun_app/features/chat/presentation/screens/chat_list_screen.dart';
+import 'package:sokoun_app/features/chat/presentation/screens/chat_restricted_screen.dart';
+import 'package:sokoun_app/features/chat/presentation/screens/chat_search_screen.dart';
+import 'package:sokoun_app/features/chat/presentation/screens/chat_thread_screen.dart';
+import 'package:sokoun_app/features/chat/presentation/widgets/chat_list/chat_list_item.dart';
+import 'package:sokoun_app/features/chat/presentation/widgets/chat_thread/chat_attachments_sheet.dart';
+import 'package:sokoun_app/features/chat/presentation/widgets/chat_thread/chat_message_bubble.dart';
+import 'package:sokoun_app/features/chat/presentation/widgets/chat_thread/chat_voice_recording_bar.dart';
+import 'package:sokoun_app/features/chat/presentation/widgets/report/chat_report_sheet.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -80,27 +80,22 @@ void main() {
     (tester) async {
       configurePhoneViewport(tester);
 
-      await tester.pumpWidget(buildScreen(const TenantChatListScreen()));
+      await tester.pumpWidget(buildScreen(const ChatListScreen()));
       await tester.pumpAndSettle();
 
-      expect(find.byType(TenantChatListItem), findsNWidgets(3));
+      expect(find.byType(ChatListItem), findsNWidgets(3));
 
-      await tester.tap(find.byKey(const ValueKey('tenant-chat-search-field')));
+      await tester.tap(find.byKey(const ValueKey('chat-search-field')));
       await tester.pumpAndSettle();
 
-      expect(find.byType(TenantChatSearchScreen), findsOneWidget);
+      expect(find.byType(ChatSearchScreen), findsOneWidget);
 
-      await tester.tap(
-        find.byKey(const ValueKey('tenant-chat-search-result-1')),
-      );
+      await tester.tap(find.byKey(const ValueKey('chat-search-result-1')));
       await tester.pumpAndSettle();
 
-      expect(find.byType(TenantChatThreadScreen), findsOneWidget);
-      expect(
-        find.byType(EasyChat<List<TenantChatMessageContent>>),
-        findsOneWidget,
-      );
-      expect(find.byType(TenantChatMessageBubble), findsNWidgets(4));
+      expect(find.byType(ChatThreadScreen), findsOneWidget);
+      expect(find.byType(EasyChat<List<ChatMessageContent>>), findsOneWidget);
+      expect(find.byType(ChatMessageBubble), findsNWidgets(4));
       expect(tester.takeException(), isNull);
     },
   );
@@ -112,59 +107,49 @@ void main() {
 
     await tester.pumpWidget(
       buildScreen(
-        TenantChatThreadScreen(
-          conversation: TenantChatContent.conversations.first,
-        ),
+        ChatThreadScreen(conversation: ChatContent.conversations.first),
       ),
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const ValueKey('tenant-chat-attachment')));
+    await tester.tap(find.byKey(const ValueKey('chat-attachment')));
     await tester.pumpAndSettle();
 
-    expect(find.byType(TenantChatAttachmentsSheet), findsOneWidget);
+    expect(find.byType(ChatAttachmentsSheet), findsOneWidget);
 
-    await tester.tap(
-      find.byKey(const ValueKey('tenant-chat-attachment-photos')),
-    );
+    await tester.tap(find.byKey(const ValueKey('chat-attachment-photos')));
     await tester.pumpAndSettle();
 
-    expect(
-      find.byKey(const ValueKey('tenant-chat-message-101')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const ValueKey('chat-message-101')), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('tenant-chat-voice')));
+    await tester.tap(find.byKey(const ValueKey('chat-voice')));
     await tester.pump();
 
-    expect(find.byType(TenantChatVoiceRecordingBar), findsOneWidget);
+    expect(find.byType(ChatVoiceRecordingBar), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('tenant-chat-voice-send')));
+    await tester.tap(find.byKey(const ValueKey('chat-voice-send')));
     await tester.pumpAndSettle();
 
-    expect(
-      find.byKey(const ValueKey('tenant-chat-message-102')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const ValueKey('chat-message-102')), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('tenant-chat-report-action')));
+    await tester.tap(find.byKey(const ValueKey('chat-report-action')));
     await tester.pumpAndSettle();
 
-    expect(find.byType(TenantChatReportSheet), findsOneWidget);
+    expect(find.byType(ChatReportSheet), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('tenant-chat-report-reason-5')));
+    await tester.tap(find.byKey(const ValueKey('chat-report-reason-5')));
     await tester.pump();
     await tester.enterText(
-      find.byKey(const ValueKey('tenant-chat-report-details')),
+      find.byKey(const ValueKey('chat-report-details')),
       'تفاصيل البلاغ',
     );
     await tester.ensureVisible(
-      find.byKey(const ValueKey('tenant-chat-report-submit')),
+      find.byKey(const ValueKey('chat-report-submit')),
     );
-    await tester.tap(find.byKey(const ValueKey('tenant-chat-report-submit')));
+    await tester.tap(find.byKey(const ValueKey('chat-report-submit')));
     await tester.pumpAndSettle();
 
-    expect(find.byType(TenantChatListScreen), findsOneWidget);
+    expect(find.byType(ChatListScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -172,19 +157,19 @@ void main() {
     configurePhoneViewport(tester);
 
     await tester.pumpWidget(
-      buildScreen(const TenantChatListScreen(conversations: [])),
+      buildScreen(const ChatListScreen(conversations: [])),
     );
     await tester.pumpAndSettle();
 
-    expect(find.byType(TenantChatEmptyScreen), findsOneWidget);
+    expect(find.byType(ChatEmptyScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
 
-    await tester.pumpWidget(buildScreen(const TenantChatListScreen()));
+    await tester.pumpWidget(buildScreen(const ChatListScreen()));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('tenant-chat-3')));
+    await tester.tap(find.byKey(const ValueKey('chat-3')));
     await tester.pumpAndSettle();
 
-    expect(find.byType(TenantChatRestrictedScreen), findsOneWidget);
+    expect(find.byType(ChatRestrictedScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }

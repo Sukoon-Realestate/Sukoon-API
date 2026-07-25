@@ -6,8 +6,8 @@ import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 
-class TenantChatEmptyState extends StatelessWidget {
-  const TenantChatEmptyState({super.key, required this.onExplorePressed});
+class ChatEmptyState extends StatelessWidget {
+  const ChatEmptyState({super.key, required this.onExplorePressed});
 
   final VoidCallback onExplorePressed;
 

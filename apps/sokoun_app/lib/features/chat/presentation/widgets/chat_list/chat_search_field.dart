@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 
-class TenantChatSearchField extends StatelessWidget {
-  const TenantChatSearchField({
+class ChatSearchField extends StatelessWidget {
+  const ChatSearchField({
     super.key,
     this.controller,
     this.readOnly = false,
@@ -30,7 +30,7 @@ class TenantChatSearchField extends StatelessWidget {
         : AppColors.sokoonGray;
 
     return TextField(
-      key: const ValueKey('tenant-chat-search-field'),
+      key: const ValueKey('chat-search-field'),
       controller: controller,
       readOnly: readOnly,
       autofocus: autofocus,
@@ -56,7 +56,7 @@ class TenantChatSearchField extends StatelessWidget {
         suffixIcon: onClearPressed == null
             ? null
             : IconButton(
-                key: const ValueKey('tenant-chat-search-clear'),
+                key: const ValueKey('chat-search-clear'),
                 onPressed: onClearPressed,
                 icon: Icon(
                   Icons.close_rounded,

@@ -9,22 +9,22 @@ import 'package:melos_core/core/widgets/chat_builder/easy_chat.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:pagify/helpers/errors.dart';
 import 'package:pagify/pagify.dart';
-import 'package:sokoun_app/features/chat/data/enums/tenant_chat_attachment_type.dart';
-import 'package:sokoun_app/features/chat/data/models/tenant_chat_content.dart';
+import 'package:sokoun_app/features/chat/data/enums/chat_attachment_type.dart';
+import 'package:sokoun_app/features/chat/data/models/chat_content.dart';
 
 import '../widgets/imports.dart';
-import 'tenant_chat_list_screen.dart';
+import 'chat_list_screen.dart';
 
-class TenantChatThreadScreen extends StatefulWidget {
-  const TenantChatThreadScreen({super.key, required this.conversation});
+class ChatThreadScreen extends StatefulWidget {
+  const ChatThreadScreen({super.key, required this.conversation});
 
-  final TenantConversationContent conversation;
+  final ConversationContent conversation;
 
   @override
-  State<TenantChatThreadScreen> createState() => _TenantChatThreadScreenState();
+  State<ChatThreadScreen> createState() => _ChatThreadScreenState();
 }
 
-class _TenantChatThreadScreenState extends State<TenantChatThreadScreen> {
+class _ChatThreadScreenState extends State<ChatThreadScreen> {
   late final PagifyController<ChatMessages> _chatController;
   late final TextEditingController _messageController;
   int _nextMessageId = 100;
@@ -44,31 +44,29 @@ class _TenantChatThreadScreenState extends State<TenantChatThreadScreen> {
     super.dispose();
   }
 
-  Future<List<TenantChatMessageContent>> _loadMessages(
+  Future<List<ChatMessageContent>> _loadMessages(
     BuildContext context,
     int currentPage,
   ) async {
     if (currentPage > 1) {
       return const [];
     }
-    return TenantChatContent.initialMessages;
+    return ChatContent.initialMessages;
   }
 
-  PagifyData<ChatMessages> _mapMessages(
-    List<TenantChatMessageContent> response,
-  ) {
+  PagifyData<ChatMessages> _mapMessages(List<ChatMessageContent> response) {
     return PagifyData(
       data: response.reversed.map(_toChatMessage).toList(growable: false),
       paginationData: PaginationData(perPage: 20, totalPages: 1),
     );
   }
 
-  ChatMessages _toChatMessage(TenantChatMessageContent content) {
+  ChatMessages _toChatMessage(ChatMessageContent content) {
     return ChatMessages(
       message: Message(id: content.id, type: content.type, body: content.body),
       sender: Sender(
-        id: content.isFromMe ? 'tenant' : '${widget.conversation.id}',
-        name: content.isFromMe ? 'tenant' : widget.conversation.name,
+        id: content.isFromMe ? 'current-user' : '${widget.conversation.id}',
+        name: content.isFromMe ? 'current-user' : widget.conversation.name,
         image: '',
         isFromMe: content.isFromMe,
       ),
@@ -108,7 +106,12 @@ class _TenantChatThreadScreenState extends State<TenantChatThreadScreen> {
     _nextMessageId++;
     return ChatMessages(
       message: Message(id: _nextMessageId, type: type, body: body),
-      sender: Sender(id: 'tenant', name: 'tenant', image: '', isFromMe: true),
+      sender: Sender(
+        id: 'current-user',
+        name: 'current-user',
+        image: '',
+        isFromMe: true,
+      ),
       time: LocaleKeys.chatNow,
       messageState: MessageState.sent,
     );
@@ -122,21 +125,19 @@ class _TenantChatThreadScreenState extends State<TenantChatThreadScreen> {
       backgroundColor: AppColors.transparent,
       barrierColor: AppColors.blackAlpha50,
       builder: (context) {
-        return TenantChatAttachmentsSheet(
-          onAttachmentSelected: _selectAttachment,
-        );
+        return ChatAttachmentsSheet(onAttachmentSelected: _selectAttachment);
       },
     );
   }
 
-  void _selectAttachment(TenantChatAttachmentType type) {
+  void _selectAttachment(ChatAttachmentType type) {
     Go.back();
     _chatController.addAtBeginning(
       _buildOutgoingMessage(body: _attachmentLabel(type), type: 'text'),
     );
   }
 
-  String _attachmentLabel(TenantChatAttachmentType type) {
+  String _attachmentLabel(ChatAttachmentType type) {
     if (type.isCamera) {
       return LocaleKeys.camera;
     }
@@ -157,14 +158,14 @@ class _TenantChatThreadScreenState extends State<TenantChatThreadScreen> {
       backgroundColor: AppColors.transparent,
       barrierColor: AppColors.blackAlpha50,
       builder: (context) {
-        return TenantChatReportSheet(
+        return ChatReportSheet(
           onSubmitted: (selectedReason, details) => Go.back(true),
         );
       },
     );
 
     if (submitted == true && mounted) {
-      Go.off(const TenantChatListScreen());
+      Go.off(const ChatListScreen());
     }
   }
 
@@ -179,7 +180,7 @@ class _TenantChatThreadScreenState extends State<TenantChatThreadScreen> {
           bottom: false,
           child: Column(
             children: [
-              TenantChatThreadHeader(
+              ChatThreadHeader(
                 conversation: widget.conversation,
                 onBackPressed: () => Go.back(),
                 onReportPressed: _showReportSheet,
@@ -211,7 +212,7 @@ class _TenantChatThreadScreenState extends State<TenantChatThreadScreen> {
                           horizontal: 16.w,
                           vertical: 8.h,
                         ),
-                        child: EasyChat<List<TenantChatMessageContent>>(
+                        child: EasyChat<List<ChatMessageContent>>(
                           controller: _chatController,
                           asyncCall: _loadMessages,
                           mapper: _mapMessages,
@@ -230,13 +231,13 @@ class _TenantChatThreadScreenState extends State<TenantChatThreadScreen> {
                               ? MainAxisAlignment.end
                               : MainAxisAlignment.start,
                           rightMessageBuilder: (message) {
-                            return TenantChatMessageBubble(
+                            return ChatMessageBubble(
                               message: message,
                               isFromMe: true,
                             );
                           },
                           leftMessageBuilder: (message) {
-                            return TenantChatMessageBubble(
+                            return ChatMessageBubble(
                               message: message,
                               isFromMe: false,
                             );
@@ -260,12 +261,12 @@ class _TenantChatThreadScreenState extends State<TenantChatThreadScreen> {
                 ),
               ),
               if (_isRecording)
-                TenantChatVoiceRecordingBar(
+                ChatVoiceRecordingBar(
                   onCancelPressed: _cancelVoiceRecording,
                   onSendPressed: _sendVoiceMessage,
                 )
               else
-                TenantChatComposer(
+                ChatComposer(
                   controller: _messageController,
                   onAttachmentPressed: _showAttachments,
                   onVoicePressed: _startVoiceRecording,

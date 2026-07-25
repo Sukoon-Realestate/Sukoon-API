@@ -5,8 +5,8 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
-class TenantChatVoiceRecordingBar extends StatelessWidget {
-  const TenantChatVoiceRecordingBar({
+class ChatVoiceRecordingBar extends StatelessWidget {
+  const ChatVoiceRecordingBar({
     super.key,
     required this.onCancelPressed,
     required this.onSendPressed,
@@ -34,7 +34,7 @@ class TenantChatVoiceRecordingBar extends StatelessWidget {
           child: Row(
             children: [
               _RecordingButton(
-                key: const ValueKey('tenant-chat-voice-send'),
+                key: const ValueKey('chat-voice-send'),
                 onPressed: onSendPressed,
                 color: AppColors.sokoonTeal,
                 icon: Icons.send_rounded,
@@ -73,7 +73,7 @@ class TenantChatVoiceRecordingBar extends StatelessWidget {
               ),
               12.szW,
               _RecordingButton(
-                key: const ValueKey('tenant-chat-voice-cancel'),
+                key: const ValueKey('chat-voice-cancel'),
                 onPressed: onCancelPressed,
                 color: AppColors.red,
                 icon: Icons.close_rounded,
