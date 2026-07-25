@@ -1789,8 +1789,8 @@ abstract class LocaleKeys {
   static const String _landingFeatureAcceptRejectRequests = 'landing_feature_accept_reject_requests';
   static String get landingFeatureAcceptRejectRequests => _landingFeatureAcceptRejectRequests.tr();
 
-  static const String _landingFeatureOpenTenantChat = 'landing_feature_open_tenant_chat';
-  static String get landingFeatureOpenTenantChat => _landingFeatureOpenTenantChat.tr();
+  static const String _landingFeatureOpenChat = 'landing_feature_open_chat';
+  static String get landingFeatureOpenChat => _landingFeatureOpenChat.tr();
 
   static const String _landingFeatureManageAppointments = 'landing_feature_manage_appointments';
   static String get landingFeatureManageAppointments => _landingFeatureManageAppointments.tr();
@@ -2160,5 +2160,83 @@ abstract class LocaleKeys {
 
   static const String _landingLinkedin = 'landing_linkedin';
   static String get landingLinkedin => _landingLinkedin.tr();
+
+  static const String _notificationsFlowTitle = 'notifications_flow_title';
+  static String get notificationsFlowTitle => _notificationsFlowTitle.tr();
+
+  static const String _notificationsMarkAllRead = 'notifications_mark_all_read';
+  static String get notificationsMarkAllRead => _notificationsMarkAllRead.tr();
+
+  static const String _notificationsMarkAll = 'notifications_mark_all';
+  static String get notificationsMarkAll => _notificationsMarkAll.tr();
+
+  static const String _notificationDetailsTitle = 'notification_details_title';
+  static String get notificationDetailsTitle => _notificationDetailsTitle.tr();
+
+  static const String _notificationsEmptyTitle = 'notifications_empty_title';
+  static String get notificationsEmptyTitle => _notificationsEmptyTitle.tr();
+
+  static const String _notificationsEmptyDescription = 'notifications_empty_description';
+  static String get notificationsEmptyDescription => _notificationsEmptyDescription.tr();
+
+  static const String _notificationsExploreProperties = 'notifications_explore_properties';
+  static String get notificationsExploreProperties => _notificationsExploreProperties.tr();
+
+  static const String _notificationViewVisit = 'notification_view_visit';
+  static String get notificationViewVisit => _notificationViewVisit.tr();
+
+  static const String _notificationViewRequest = 'notification_view_request';
+  static String get notificationViewRequest => _notificationViewRequest.tr();
+
+  static const String _notificationOpenRelated = 'notification_open_related';
+  static String get notificationOpenRelated => _notificationOpenRelated.tr();
+
+  static const String _notificationDismiss = 'notification_dismiss';
+  static String get notificationDismiss => _notificationDismiss.tr();
+
+  static const String _notificationSettingsTitle = 'notification_settings_title';
+  static String get notificationSettingsTitle => _notificationSettingsTitle.tr();
+
+  static const String _notificationSettingVisitRequests = 'notification_setting_visit_requests';
+  static String get notificationSettingVisitRequests => _notificationSettingVisitRequests.tr();
+
+  static const String _notificationSettingVisitRequestsDescription = 'notification_setting_visit_requests_description';
+  static String get notificationSettingVisitRequestsDescription => _notificationSettingVisitRequestsDescription.tr();
+
+  static const String _notificationSettingNewMessages = 'notification_setting_new_messages';
+  static String get notificationSettingNewMessages => _notificationSettingNewMessages.tr();
+
+  static const String _notificationSettingNewMessagesDescription = 'notification_setting_new_messages_description';
+  static String get notificationSettingNewMessagesDescription => _notificationSettingNewMessagesDescription.tr();
+
+  static const String _notificationSettingPropertyUpdates = 'notification_setting_property_updates';
+  static String get notificationSettingPropertyUpdates => _notificationSettingPropertyUpdates.tr();
+
+  static const String _notificationSettingPropertyUpdatesDescription = 'notification_setting_property_updates_description';
+  static String get notificationSettingPropertyUpdatesDescription => _notificationSettingPropertyUpdatesDescription.tr();
+
+  static const String _notificationSettingSecurityAlerts = 'notification_setting_security_alerts';
+  static String get notificationSettingSecurityAlerts => _notificationSettingSecurityAlerts.tr();
+
+  static const String _notificationSettingSecurityAlertsDescription = 'notification_setting_security_alerts_description';
+  static String get notificationSettingSecurityAlertsDescription => _notificationSettingSecurityAlertsDescription.tr();
+
+  static const String _notificationSettingPromotions = 'notification_setting_promotions';
+  static String get notificationSettingPromotions => _notificationSettingPromotions.tr();
+
+  static const String _notificationSettingPromotionsDescription = 'notification_setting_promotions_description';
+  static String get notificationSettingPromotionsDescription => _notificationSettingPromotionsDescription.tr();
+
+  static const String _notificationSettingsInfo = 'notification_settings_info';
+  static String get notificationSettingsInfo => _notificationSettingsInfo.tr();
+
+  static const String _notificationsOwnerPropertiesNavigation = 'notifications_owner_properties_navigation';
+  static String get notificationsOwnerPropertiesNavigation => _notificationsOwnerPropertiesNavigation.tr();
+
+  static const String _notificationsOwnerRequestsNavigation = 'notifications_owner_requests_navigation';
+  static String get notificationsOwnerRequestsNavigation => _notificationsOwnerRequestsNavigation.tr();
+
+  static const String _notificationsOwnerMoreNavigation = 'notifications_owner_more_navigation';
+  static String get notificationsOwnerMoreNavigation => _notificationsOwnerMoreNavigation.tr();
 
 }

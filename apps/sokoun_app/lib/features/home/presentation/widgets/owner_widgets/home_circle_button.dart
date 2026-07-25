@@ -9,27 +9,36 @@ class HomeCircleButton extends StatelessWidget {
     required this.iconColor,
     this.backgroundColor = AppColors.white,
     this.showBadge = false,
+    this.onPressed,
   });
 
   final IconData icon;
   final Color iconColor;
   final Color backgroundColor;
   final bool showBadge;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        Container(
-          width: 36.r,
-          height: 36.r,
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            shape: BoxShape.circle,
-            border: Border.all(color: AppColors.sokoonBorder),
+        Semantics(
+          button: onPressed != null,
+          child: GestureDetector(
+            onTap: onPressed,
+            behavior: HitTestBehavior.opaque,
+            child: Container(
+              width: 36.r,
+              height: 36.r,
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.sokoonBorder),
+              ),
+              child: Icon(icon, color: iconColor, size: 18.r),
+            ),
           ),
-          child: Icon(icon, color: iconColor, size: 18.r),
         ),
         if (showBadge)
           PositionedDirectional(

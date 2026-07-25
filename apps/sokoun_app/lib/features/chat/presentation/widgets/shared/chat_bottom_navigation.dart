@@ -4,6 +4,8 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/favorites/presentation/screens/favorites_screen.dart';
 import 'package:sokoun_app/features/home/presentation/screens/tenant_home_screen.dart';
 import 'package:sokoun_app/features/home/presentation/widgets/tenant_widgets/imports.dart';
+import 'package:sokoun_app/features/notifications/data/enums/notification_role.dart';
+import 'package:sokoun_app/features/notifications/presentation/screens/notifications_screen.dart';
 
 class ChatBottomNavigation extends StatelessWidget {
   const ChatBottomNavigation({super.key});
@@ -32,6 +34,9 @@ class ChatBottomNavigation extends StatelessWidget {
           HomeBottomNavItemData(
             icon: Icons.notifications_none_rounded,
             label: LocaleKeys.notifications,
+            onTap: () => Go.off(
+              const NotificationsScreen(role: NotificationRole.tenant),
+            ),
           ),
           HomeBottomNavItemData(
             icon: Icons.person_outline_rounded,

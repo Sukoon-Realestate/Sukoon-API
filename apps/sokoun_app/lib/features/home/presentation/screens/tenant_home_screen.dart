@@ -5,6 +5,8 @@ import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/chat/presentation/screens/chat_list_screen.dart';
 import 'package:sokoun_app/features/favorites/presentation/screens/favorites_screen.dart';
+import 'package:sokoun_app/features/notifications/data/enums/notification_role.dart';
+import 'package:sokoun_app/features/notifications/presentation/screens/notifications_screen.dart';
 
 import '../widgets/tenant_widgets/imports.dart';
 
@@ -23,7 +25,11 @@ class TenantHomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const TenantHeader(),
+                TenantHeader(
+                  onNotificationsPressed: () => Go.to(
+                    const NotificationsScreen(role: NotificationRole.tenant),
+                  ),
+                ),
                 18.szH,
                 const HomeSearchBox(),
                 16.szH,
@@ -77,6 +83,9 @@ class TenantHomeScreen extends StatelessWidget {
               HomeBottomNavItemData(
                 icon: Icons.notifications_none_rounded,
                 label: 'الإشعارات',
+                onTap: () => Go.to(
+                  const NotificationsScreen(role: NotificationRole.tenant),
+                ),
               ),
               HomeBottomNavItemData(
                 icon: Icons.person_outline_rounded,

@@ -7,6 +7,8 @@ import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/chat/presentation/screens/chat_list_screen.dart';
 import 'package:sokoun_app/features/favorites/presentation/screens/favorites_screen.dart';
 import 'package:sokoun_app/features/home/data/models/tenant_search_content.dart';
+import 'package:sokoun_app/features/notifications/data/enums/notification_role.dart';
+import 'package:sokoun_app/features/notifications/presentation/screens/notifications_screen.dart';
 
 import '../widgets/tenant_search/imports.dart';
 import '../widgets/tenant_widgets/imports.dart';
@@ -160,6 +162,9 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
               HomeBottomNavItemData(
                 icon: Icons.notifications_none_rounded,
                 label: 'الإشعارات',
+                onTap: () => Go.to(
+                  const NotificationsScreen(role: NotificationRole.tenant),
+                ),
               ),
               HomeBottomNavItemData(
                 icon: Icons.person_outline_rounded,

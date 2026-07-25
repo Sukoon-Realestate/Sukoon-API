@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:sokoun_app/features/notifications/data/enums/notification_role.dart';
+import 'package:sokoun_app/features/notifications/presentation/screens/notifications_screen.dart';
 
 import '../widgets/owner_widgets/imports.dart';
 
@@ -20,7 +23,11 @@ class OwnerHomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const OwnerHeader(),
+                OwnerHeader(
+                  onNotificationsPressed: () => Go.to(
+                    const NotificationsScreen(role: NotificationRole.owner),
+                  ),
+                ),
                 18.szH,
                 const OwnerStatsGrid(),
                 18.szH,

@@ -8,7 +8,9 @@ import 'home_avatar.dart';
 import 'home_circle_button.dart';
 
 class OwnerHeader extends StatelessWidget {
-  const OwnerHeader({super.key});
+  const OwnerHeader({super.key, this.onNotificationsPressed});
+
+  final VoidCallback? onNotificationsPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -61,10 +63,12 @@ class OwnerHeader extends StatelessWidget {
           ),
         ),
         10.szW,
-        const HomeCircleButton(
+        HomeCircleButton(
+          key: const ValueKey('owner-open-notifications'),
           icon: Icons.notifications_none_rounded,
           iconColor: AppColors.sokoonNavy,
           showBadge: true,
+          onPressed: onNotificationsPressed,
         ),
       ],
     );

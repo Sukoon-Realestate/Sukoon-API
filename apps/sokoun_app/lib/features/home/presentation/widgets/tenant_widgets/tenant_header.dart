@@ -8,7 +8,9 @@ import 'home_avatar.dart';
 import 'home_circle_button.dart';
 
 class TenantHeader extends StatelessWidget {
-  const TenantHeader({super.key});
+  const TenantHeader({super.key, this.onNotificationsPressed});
+
+  final VoidCallback? onNotificationsPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +47,12 @@ class TenantHeader extends StatelessWidget {
           ),
         ),
         10.szW,
-        const HomeCircleButton(
+        HomeCircleButton(
+          key: const ValueKey('tenant-open-notifications'),
           icon: Icons.notifications_none_rounded,
           iconColor: AppColors.sokoonNavy,
           showBadge: true,
+          onPressed: onNotificationsPressed,
         ),
       ],
     );
