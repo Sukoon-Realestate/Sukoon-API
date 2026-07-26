@@ -81,10 +81,11 @@ class TestPropertyViews:
             response = auth_client.get(url)
 
         assert response.status_code == status.HTTP_200_OK
-        assert "results" in response.data
-        assert len(response.data["results"]) == 5
+        json_data = response.json()
+        assert "results" in json_data["data"]
+        assert len(json_data["data"]["results"]) == 5
 
-        first_item = response.data["results"][0]
+        first_item = json_data["data"]["results"][0]
         assert "owner" not in first_item
         assert "images" not in first_item
         assert "floor" not in first_item
@@ -92,10 +93,8 @@ class TestPropertyViews:
         assert "latitude" not in first_item
         assert "longitude" not in first_item
         assert first_item["images_count"] == 0
-        assert response.data["results"][4]["images_count"] == 2
+        assert json_data["data"]["results"][4]["images_count"] == 2
 
-        json_data = response.json()
-        assert json_data["status_code"] == 200
         assert "data" in json_data
 
         assert len(ctx.captured_queries) <= 3
@@ -127,12 +126,10 @@ class TestPropertyViews:
         response = auth_client.post(url, data)
         assert response.status_code == status.HTTP_201_CREATED
 
-        assert response.data["title"] == "Apartment in Heliopolis"
-        assert response.data["owner"] == user.get_full_name
-
         json_data = response.json()
-        assert json_data["status_code"] == 201
         assert json_data["data"]["title"] == "Apartment in Heliopolis"
+        assert json_data["data"]["owner"] == user.get_full_name
+        assert json_data["message"] == "Created successfully."
 
     def test_create_property_invalid_payload_returns_400(self, auth_client):
         url = reverse("property-create")
@@ -147,7 +144,7 @@ class TestPropertyViews:
         url = reverse("property-detail", kwargs={"id": property_obj.id})
         response = api_client.get(url)
         assert response.status_code == status.HTTP_200_OK
-        assert response.data["title"] == "Apartment in Nasr City"
+        assert response.json()["data"]["title"] == "Apartment in Nasr City"
 
     def test_retrieve_property_not_found_returns_404(self, api_client):
         url = reverse("property-detail", kwargs={"id": uuid.uuid4()})
@@ -189,7 +186,7 @@ class TestPropertyViews:
         data = {"title": "Updated Apartment Title"}
         response = auth_client.patch(url, data, format="json")
         assert response.status_code == status.HTTP_200_OK
-        assert response.data["title"] == "Updated Apartment Title"
+        assert response.json()["data"]["title"] == "Updated Apartment Title"
 
     def test_update_property_unauthenticated_returns_401(self, api_client, user):
         property_obj = _create_property(owner=user)
@@ -242,8 +239,9 @@ class TestPropertyViews:
         }
         response = auth_client.post(url, data, format="multipart")
         assert response.status_code == status.HTTP_201_CREATED
-        assert response.data["name"] == "Living Room View"
-        assert response.data["description"] == "Lovely room view"
+        json_data = response.json()
+        assert json_data["data"]["name"] == "Living Room View"
+        assert json_data["data"]["description"] == "Lovely room view"
         assert PropertyImage.objects.filter(property=property_obj).count() == 1
 
     def test_upload_property_images_not_owner(self, auth_client, another_user):
@@ -310,13 +308,16 @@ class TestMyPropertyListView:
     ):
         property_obj = _create_property(owner=user, title="My Apartment")
         _create_property(
-            owner=another_user, title="Not Mine",
-            city="Cairo", district="Heliopolis", price=9000.00,
+            owner=another_user,
+            title="Not Mine",
+            city="Cairo",
+            district="Heliopolis",
+            price=9000.00,
         )
         PropertyVisit.objects.create(
             property=property_obj,
             tenant=another_user,
-            visit_date="2026-07-20",
+            visit_date="2099-07-20",
             visit_time="14:00:00",
         )
         content_type = ContentType.objects.get_for_model(Property)
@@ -339,9 +340,10 @@ class TestMyPropertyListView:
         response = auth_client.get(url)
 
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data["results"]) == 1
+        json_data = response.json()
+        assert len(json_data["data"]["results"]) == 1
 
-        item = response.data["results"][0]
+        item = json_data["data"]["results"][0]
         assert item["title"] == "My Apartment"
         assert "main_image" in item
         assert item["price"] == "15000.00"
@@ -349,8 +351,6 @@ class TestMyPropertyListView:
         assert item["views_count"] == 2
         assert item["visits_count"] == 1
 
-        json_data = response.json()
-        assert json_data["status_code"] == 200
         assert "data" in json_data
 
     def test_my_properties_queries_optimized(self, auth_client, user, another_user):
@@ -359,7 +359,7 @@ class TestMyPropertyListView:
             PropertyVisit.objects.create(
                 property=property_obj,
                 tenant=another_user,
-                visit_date="2026-07-20",
+                visit_date="2099-07-20",
                 visit_time="14:00:00",
             )
         url = reverse("my-property-list")
@@ -368,7 +368,8 @@ class TestMyPropertyListView:
             response = auth_client.get(url)
 
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data["results"]) == 5
+        json_data = response.json()
+        assert len(json_data["data"]["results"]) == 5
         assert len(ctx.captured_queries) <= 3
 
     def test_owner_cannot_set_status_via_api(self, auth_client):
@@ -390,10 +391,12 @@ class TestMyPropertyListView:
 @pytest.mark.django_db
 class TestPropertyVisitViews:
     def test_create_visit_unauthenticated_returns_401(self, api_client, user):
-        property_obj = _create_property(owner=user, title="Apartment Heliopolis", price=20000.00)
+        property_obj = _create_property(
+            owner=user, title="Apartment Heliopolis", price=20000.00
+        )
         url = reverse("property-visit-create", kwargs={"property_id": property_obj.id})
         data = {
-            "visit_date": "2026-07-20",
+            "visit_date": "2099-07-20",
             "visit_time": "14:00:00",
             "note": "Can I view it?",
         }
@@ -408,7 +411,7 @@ class TestPropertyVisitViews:
         )
         url = reverse("property-visit-create", kwargs={"property_id": property_obj.id})
         data = {
-            "visit_date": "2026-07-20",
+            "visit_date": "2099-07-20",
             "visit_time": "14:00:00",
             "note": "Can I view it?",
         }
@@ -422,7 +425,7 @@ class TestPropertyVisitViews:
         )
         url = reverse("property-visit-create", kwargs={"property_id": property_obj.id})
         data = {
-            "visit_date": "2026-07-20",
+            "visit_date": "2099-07-20",
             "visit_time": "14:00:00",
         }
         response = auth_client.post(url, data, format="json")
@@ -436,7 +439,7 @@ class TestPropertyVisitViews:
         PropertyVisit.objects.create(
             property=property_obj,
             tenant=user,
-            visit_date="2026-07-20",
+            visit_date="2099-07-20",
             visit_time="14:00:00",
         )
         url = reverse("tenant-visit-list")
@@ -454,7 +457,7 @@ class TestPropertyVisitViews:
         PropertyVisit.objects.create(
             property=property_obj,
             tenant=another_user,
-            visit_date="2026-07-20",
+            visit_date="2099-07-20",
             visit_time="14:00:00",
             status=PropertyVisit.Status.PENDING,
         )
@@ -476,14 +479,14 @@ class TestPropertyVisitViews:
         PropertyVisit.objects.create(
             property=property_obj,
             tenant=user,
-            visit_date="2026-07-20",
+            visit_date="2099-07-20",
             visit_time="14:00:00",
             status=PropertyVisit.Status.PENDING,
         )
         PropertyVisit.objects.create(
             property=property_obj,
             tenant=user,
-            visit_date="2026-07-21",
+            visit_date="2099-07-21",
             visit_time="15:00:00",
             status=PropertyVisit.Status.CONFIRMED,
         )
@@ -509,14 +512,14 @@ class TestPropertyVisitViews:
         PropertyVisit.objects.create(
             property=property_obj,
             tenant=another_user,
-            visit_date="2026-07-20",
+            visit_date="2099-07-20",
             visit_time="14:00:00",
             status=PropertyVisit.Status.PENDING,
         )
         PropertyVisit.objects.create(
             property=property_obj,
             tenant=another_user,
-            visit_date="2026-07-21",
+            visit_date="2099-07-21",
             visit_time="15:00:00",
             status=PropertyVisit.Status.REJECTED,
         )
@@ -537,7 +540,7 @@ class TestPropertyVisitViews:
         visit = PropertyVisit.objects.create(
             property=property_obj,
             tenant=another_user,
-            visit_date="2026-07-20",
+            visit_date="2099-07-20",
             visit_time="14:00:00",
             status=PropertyVisit.Status.PENDING,
         )
@@ -565,7 +568,7 @@ class TestPropertyVisitViews:
         visit = PropertyVisit.objects.create(
             property=property_obj,
             tenant=another_user,
-            visit_date="2026-07-20",
+            visit_date="2099-07-20",
             visit_time="14:00:00",
         )
         url = reverse("property-visit-detail", kwargs={"id": visit.id})
@@ -579,7 +582,7 @@ class TestPropertyVisitViews:
         assert tenant_data["name"] == another_user.get_full_name
         assert tenant_data["avatar"] is None
         assert tenant_data["is_verified"] is True
-        assert visit_data["visit_date"] == "2026-07-20"
+        assert visit_data["visit_date"] == "2099-07-20"
         assert visit_data["status"] == PropertyVisit.Status.PENDING
 
     def test_retrieve_visit_detail_unauthenticated_returns_401(
@@ -591,7 +594,7 @@ class TestPropertyVisitViews:
         visit = PropertyVisit.objects.create(
             property=property_obj,
             tenant=another_user,
-            visit_date="2026-07-20",
+            visit_date="2099-07-20",
             visit_time="14:00:00",
         )
         url = reverse("property-visit-detail", kwargs={"id": visit.id})
@@ -610,7 +613,7 @@ class TestPropertyVisitViews:
         visit = PropertyVisit.objects.create(
             property=property_obj,
             tenant=user,
-            visit_date="2026-07-20",
+            visit_date="2099-07-20",
             visit_time="14:00:00",
             status=PropertyVisit.Status.PENDING,
         )

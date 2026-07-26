@@ -192,6 +192,8 @@ REST_FRAMEWORK = {
         "django_filters.rest_framework.DjangoFilterBackend",
     ],
     "PAGE_SIZE": 10,
+    "DEFAULT_RENDERER_CLASSES": ("core_apps.common.renderers.GenericJsonRenderer",),
+    "EXCEPTION_HANDLER": "core_apps.common.renderers.custom_exception_handler",
     "DEFAULT_THROTTLE_CLASSES": (
         "rest_framework.throttling.AnonRateThrottle",  # ? throttle users who are not authenticated.
         "rest_framework.throttling.UserRateThrottle",  # ? throttle auth-users to a given rate of requests.
@@ -213,7 +215,9 @@ SIMPLE_JWT = {
 
 _signing_key = getenv("SIGNING_KEY")
 if _signing_key:
-    SIMPLE_JWT["SIGNING_KEY"] = _signing_key  # ? secret crypt-key, used to sign a JWT to ensure it's authenticity.
+    SIMPLE_JWT["SIGNING_KEY"] = (
+        _signing_key  # ? secret crypt-key, used to sign a JWT to ensure it's authenticity.
+    )
 
 
 ## Djoser Settings
@@ -271,12 +275,16 @@ AUTHENTICATION_BACKENDS = [
 
 
 # * Custom Social Auth Settings (Google, Apple, Facebook)
-GOOGLE_CLIENT_IDS = [c.strip() for c in getenv("GOOGLE_CLIENT_IDS", "").split(",") if c.strip()]
+GOOGLE_CLIENT_IDS = [
+    c.strip() for c in getenv("GOOGLE_CLIENT_IDS", "").split(",") if c.strip()
+]
 _google_client_id_single = getenv("GOOGLE_CLIENT_ID")
 if _google_client_id_single and _google_client_id_single not in GOOGLE_CLIENT_IDS:
     GOOGLE_CLIENT_IDS.append(_google_client_id_single)
 
-APPLE_CLIENT_IDS = [c.strip() for c in getenv("APPLE_CLIENT_IDS", "").split(",") if c.strip()]
+APPLE_CLIENT_IDS = [
+    c.strip() for c in getenv("APPLE_CLIENT_IDS", "").split(",") if c.strip()
+]
 APPLE_DEV_PRIVATE_KEY_PATH = getenv("APPLE_DEV_PRIVATE_KEY_PATH", "").strip()
 
 FACEBOOK_APP_ID = getenv("FACEBOOK_APP_ID", "").strip()
@@ -295,5 +303,3 @@ else:
         api_secret=getenv("CLOUDINARY_API_SECRET"),
         secure=True,
     )
-
-

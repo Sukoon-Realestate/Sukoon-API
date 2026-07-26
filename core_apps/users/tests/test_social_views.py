@@ -20,7 +20,7 @@ class TestSocialAuthViews:
         assert "refresh" in res.cookies
         assert "logged_in" in res.cookies
         assert res.data["message"] == "Logged in Successfully"
-        assert res.data["user"]["email"] == user.email
+        assert res.json()["data"]["user"]["email"] == user.email
 
     @patch("core_apps.users.views.authenticate_google")
     def test_google_login_failure(self, mock_authenticate, api_client):
