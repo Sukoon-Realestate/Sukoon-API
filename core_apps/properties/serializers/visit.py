@@ -63,7 +63,7 @@ class PropertyVisitDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PropertyVisit
-        fields = ["tenant", "visit_date", "status"]
+        fields = ["id", "tenant", "visit_date", "status"]
         read_only_fields = fields
 
 
