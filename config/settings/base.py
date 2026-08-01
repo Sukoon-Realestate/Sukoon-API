@@ -28,7 +28,12 @@ DJANGO_APPS = [
     "django.contrib.sites",  # ? allows to manage multiple domains within a single django project
 ]
 
-LOCAL_APPS = ["core_apps.common", "core_apps.users", "core_apps.profiles"]
+LOCAL_APPS = [
+    "core_apps.common",
+    "core_apps.users",
+    "core_apps.profiles",
+    "core_apps.properties",
+]
 
 THIRD_PARTY_APPS = [
     "rest_framework",
@@ -40,6 +45,7 @@ THIRD_PARTY_APPS = [
     "taggit",
     "django_filters",
     "django_extensions",
+    "cloudinary",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS + ["channels"]
@@ -168,7 +174,7 @@ COOKIE_NAME = "access"
 ? while allowing the cookies to be sent with top-level navigation that is initiated by user actions
 """
 COOKIE_SAMESITE = "Lax"
-COOKIE_PATH = "/"  # ? cookies will be accessed project wide
+COOKIE_PATH = "/"  # ? cookies will be accessed project widest
 COOKIE_HTTPONLY = True  # ? can't be accessed via js
 # ?HTTPS only or HTTP && HTTPS
 COOKIE_SECURE = getenv("COOKIE_SECURE", "True") == "True"
@@ -186,6 +192,8 @@ REST_FRAMEWORK = {
         "django_filters.rest_framework.DjangoFilterBackend",
     ],
     "PAGE_SIZE": 10,
+    "DEFAULT_RENDERER_CLASSES": ("core_apps.common.renderers.GenericJsonRenderer",),
+    "EXCEPTION_HANDLER": "core_apps.common.renderers.custom_exception_handler",
     "DEFAULT_THROTTLE_CLASSES": (
         "rest_framework.throttling.AnonRateThrottle",  # ? throttle users who are not authenticated.
         "rest_framework.throttling.UserRateThrottle",  # ? throttle auth-users to a given rate of requests.
@@ -207,7 +215,9 @@ SIMPLE_JWT = {
 
 _signing_key = getenv("SIGNING_KEY")
 if _signing_key:
-    SIMPLE_JWT["SIGNING_KEY"] = _signing_key  # ? secret crypt-key, used to sign a JWT to ensure it's authenticity.
+    SIMPLE_JWT["SIGNING_KEY"] = (
+        _signing_key  # ? secret crypt-key, used to sign a JWT to ensure it's authenticity.
+    )
 
 
 ## Djoser Settings
@@ -265,13 +275,31 @@ AUTHENTICATION_BACKENDS = [
 
 
 # * Custom Social Auth Settings (Google, Apple, Facebook)
-GOOGLE_CLIENT_IDS = [c.strip() for c in getenv("GOOGLE_CLIENT_IDS", "").split(",") if c.strip()]
+GOOGLE_CLIENT_IDS = [
+    c.strip() for c in getenv("GOOGLE_CLIENT_IDS", "").split(",") if c.strip()
+]
 _google_client_id_single = getenv("GOOGLE_CLIENT_ID")
 if _google_client_id_single and _google_client_id_single not in GOOGLE_CLIENT_IDS:
     GOOGLE_CLIENT_IDS.append(_google_client_id_single)
 
-APPLE_CLIENT_IDS = [c.strip() for c in getenv("APPLE_CLIENT_IDS", "").split(",") if c.strip()]
+APPLE_CLIENT_IDS = [
+    c.strip() for c in getenv("APPLE_CLIENT_IDS", "").split(",") if c.strip()
+]
 APPLE_DEV_PRIVATE_KEY_PATH = getenv("APPLE_DEV_PRIVATE_KEY_PATH", "").strip()
 
 FACEBOOK_APP_ID = getenv("FACEBOOK_APP_ID", "").strip()
 
+
+# Cloudinary Settings
+import cloudinary
+
+CLOUDINARY_URL = getenv("CLOUDINARY_URL")
+if CLOUDINARY_URL:
+    cloudinary.config(cloudinary_url=CLOUDINARY_URL)
+else:
+    cloudinary.config(
+        cloud_name=getenv("CLOUDINARY_CLOUD_NAME"),
+        api_key=getenv("CLOUDINARY_API_KEY"),
+        api_secret=getenv("CLOUDINARY_API_SECRET"),
+        secure=True,
+    )

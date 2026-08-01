@@ -1,4 +1,5 @@
 from django.db import IntegrityError, models
+from django.utils import timezone
 import uuid
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -50,16 +51,23 @@ class ContentView(TimeStampedModel):
         return f"{self.content_type} viewed by {viewer} from ip {self.viewer_ip}"
 
     @classmethod
-    def record_view(cls, content_object, user: "User", viewer_ip: str) -> None:
+    def record_view(cls, content_object, user, viewer_ip) -> None:
+        """
+        Records a view of the given object. One row per (object, user, ip);
+        repeat views only refresh `last_viewed`.
+        """
         content_type = ContentType.objects.get_for_model(content_object)
 
         try:
             view, created = cls.objects.get_or_create(
                 content_type=content_type,
-                object_id=content_type.pkid,
-                defaults={user: user, viewer_ip: viewer_ip},
+                object_id=content_object.pkid,
+                user=user,
+                viewer_ip=viewer_ip,
+                defaults={"last_viewed": timezone.now()},
             )
             if not created:
-                pass
+                view.last_viewed = timezone.now()
+                view.save(update_fields=["last_viewed"])
         except IntegrityError:
             pass

@@ -1,7 +1,13 @@
+import json
 import uuid
+
 import pytest
 from django.contrib.contenttypes.models import ContentType
+from rest_framework.response import Response
+from rest_framework.test import APIRequestFactory
+
 from core_apps.common.models import TimeStampedModel, ContentView
+from core_apps.common.renderers import GenericJsonRenderer, custom_exception_handler
 
 
 @pytest.mark.django_db
@@ -36,3 +42,114 @@ class TestContentView:
             content_type=content_type,
             object_id=profile.pkid,
         ).exists()
+
+
+class TestGenericJsonRenderer:
+    def test_get_request_wraps_payload_in_data(self):
+        factory = APIRequestFactory()
+        request = factory.get("/")
+        response = Response({"id": 1})
+        renderer = GenericJsonRenderer()
+
+        rendered = renderer.render(
+            response.data,
+            renderer_context={"response": response, "request": request},
+        )
+
+        assert json.loads(rendered) == {"data": {"id": 1}}
+
+    def test_post_request_extracts_message_and_wraps_payload(self):
+        factory = APIRequestFactory()
+        request = factory.post("/")
+        response = Response({"message": "Created", "id": 1}, status=201)
+        renderer = GenericJsonRenderer()
+
+        rendered = renderer.render(
+            response.data,
+            renderer_context={"response": response, "request": request},
+        )
+
+        assert json.loads(rendered) == {"message": "Created", "data": {"id": 1}}
+
+    def test_post_request_without_message_uses_default(self):
+        factory = APIRequestFactory()
+        request = factory.post("/")
+        response = Response({"id": 1}, status=201)
+        renderer = GenericJsonRenderer()
+
+        rendered = renderer.render(
+            response.data,
+            renderer_context={"response": response, "request": request},
+        )
+
+        assert json.loads(rendered) == {
+            "message": "Created successfully.",
+            "data": {"id": 1},
+        }
+
+    def test_patch_request_uses_updated_default_message(self):
+        factory = APIRequestFactory()
+        request = factory.patch("/")
+        response = Response({"id": 1})
+        renderer = GenericJsonRenderer()
+
+        rendered = renderer.render(
+            response.data,
+            renderer_context={"response": response, "request": request},
+        )
+
+        assert json.loads(rendered) == {
+            "message": "Updated successfully.",
+            "data": {"id": 1},
+        }
+
+    def test_delete_request_uses_deleted_default_message(self):
+        factory = APIRequestFactory()
+        request = factory.delete("/")
+        response = Response(status=204)
+        renderer = GenericJsonRenderer()
+
+        rendered = renderer.render(
+            response.data,
+            renderer_context={"response": response, "request": request},
+        )
+
+        assert json.loads(rendered) == {
+            "message": "Deleted successfully.",
+            "data": {},
+        }
+
+    def test_error_response_wraps_detail_as_message(self):
+        response = Response({"detail": "Invalid token"}, status=400)
+        renderer = GenericJsonRenderer()
+
+        rendered = renderer.render(
+            response.data,
+            renderer_context={"response": response},
+        )
+
+        assert json.loads(rendered) == {"message": "Invalid token"}
+
+    def test_error_response_wraps_field_errors_as_message(self):
+        response = Response({"name": ["This field is required."]}, status=400)
+        renderer = GenericJsonRenderer()
+
+        rendered = renderer.render(
+            response.data,
+            renderer_context={"response": response},
+        )
+
+        assert json.loads(rendered) == {"message": "Name: This field is required."}
+
+    def test_custom_exception_handler_standardizes_errors(self):
+        factory = APIRequestFactory()
+        request = factory.get("/")
+        from rest_framework.exceptions import AuthenticationFailed
+
+        response = custom_exception_handler(
+            AuthenticationFailed("Unauthorized"),
+            {"request": request, "view": None},
+        )
+
+        assert response.status_code == 401
+        assert response.data == {"message": "Unauthorized"}

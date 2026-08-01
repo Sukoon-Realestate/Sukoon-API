@@ -12,7 +12,15 @@ class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
-    list_display = ["pkid", "id", "email", "first_name", "last_name", "is_superuser"]
+    list_display = [
+        "pkid",
+        "id",
+        "email",
+        "first_name",
+        "last_name",
+        "is_verified",
+        "is_superuser",
+    ]
     search_fields = ["first_name", "last_name", "email"]
     list_display_links = ["pkid", "id", "email"]
     ordering = ["pkid"]
@@ -25,6 +33,7 @@ class UserAdmin(BaseUserAdmin):
             {
                 "fields": (
                     "is_active",
+                    "is_verified",
                     "is_superuser",
                     "is_staff",
                     "groups",

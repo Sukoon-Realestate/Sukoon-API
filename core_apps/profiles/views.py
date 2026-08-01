@@ -6,16 +6,11 @@ from django.contrib.auth import get_user_model
 from rest_framework import filters, generics
 from rest_framework.pagination import PageNumberPagination
 from core_apps.common.renderers import GenericJsonRenderer
+from core_apps.common.pagination import StandardResultsSetPagination
 from .models import Profile
 from .serializers import ProfileSerializer, UpdateProfileSerializer
 
 User = get_user_model()
-
-
-class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 9
-    page_size_query_param = "page_size"
-    max_page_size = 100
 
 
 class ProfileListAPIView(generics.ListAPIView):
@@ -25,7 +20,6 @@ class ProfileListAPIView(generics.ListAPIView):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     search_fields = ["user__first_name", "user__last_name"]
     filterset_fields = ["gender"]
-    object_label = "profiles"
 
     def get_queryset(self) -> List[Profile]:
         return Profile.objects.exclude(user__is_staff=True).exclude(
@@ -36,7 +30,6 @@ class ProfileListAPIView(generics.ListAPIView):
 class ProfileDetailAPIView(generics.RetrieveAPIView):
     serializer_class = ProfileSerializer
     renderer_classes = [GenericJsonRenderer]
-    object_label = "Profile"
 
     def get_queryset(self) -> QuerySet:
         return Profile.objects.select_related("user").all()
@@ -51,7 +44,6 @@ class ProfileDetailAPIView(generics.RetrieveAPIView):
 class ProfileUpdateAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = UpdateProfileSerializer
     renderer_classes = [GenericJsonRenderer]
-    object_label = "profile"
 
     def get_queryset(self) -> None:
         return Profile.objects.none()

@@ -16,12 +16,8 @@ EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": getenv("POSTGRES_DB", "test_db"),
-        "USER": getenv("POSTGRES_USER", "postgres"),
-        "PASSWORD": getenv("POSTGRES_PASSWORD", "postgres"),
-        "HOST": getenv("POSTGRES_HOST", "localhost"),
-        "PORT": getenv("POSTGRES_PORT", "5432"),
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
@@ -37,3 +33,12 @@ SIMPLE_JWT = {
 
 # ? In-memory layer keeps consumer tests hermetic (no Redis dependency in CI)
 CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
+
+# Dummy Cloudinary config for tests to allow URL generation locally
+import cloudinary
+cloudinary.config(
+    cloud_name="test_cloud",
+    api_key="test_key",
+    api_secret="test_secret",
+)
+

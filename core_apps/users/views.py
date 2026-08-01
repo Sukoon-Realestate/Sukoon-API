@@ -120,9 +120,9 @@ class CustomTokenRefreshView(TokenRefreshView):
                 refresh_res.data.pop("access", None)
                 refresh_res.data.pop("refresh", None)
 
-                refresh_res["message"] = "Token Refreshed Successfully"
+                refresh_res.data["message"] = "Token Refreshed Successfully"
             else:
-                refresh_res["message"] = "Token Refresh Failure"
+                refresh_res.data["message"] = "Token Refresh Failure"
                 logger.error("Access or Refresh Tokens missing from Refresh Response.")
 
         return refresh_res
