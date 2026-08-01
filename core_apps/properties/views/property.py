@@ -4,6 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
 from django.db.models import Count, IntegerField, OuterRef, Subquery
 from django.db.models.functions import Coalesce
+from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics, permissions, status
 from rest_framework.pagination import PageNumberPagination
@@ -13,7 +14,7 @@ from core_apps.common.models import ContentView
 from core_apps.common.renderers import GenericJsonRenderer
 
 from ..filters import PropertyFilter
-from ..models import Property, PropertyImage, PropertyType
+from ..models import Property, PropertyImage, PropertyType, PropertyVisit
 from ..permissions import IsOwnerOrReadOnly
 from ..serializers import (
     MyPropertyListSerializer,
@@ -59,6 +60,9 @@ class PropertyTypeListAPIView(generics.ListAPIView):
 class PropertyListAPIView(generics.ListAPIView):
     """
     API view to list properties.
+
+    The paginated response includes a `banner` key with the authenticated
+    tenant's next confirmed upcoming visit, if any.
     """
 
     queryset = Property.objects.select_related("property_type").annotate(images_count=Count("images")).order_by("-created_at")
@@ -74,6 +78,53 @@ class PropertyListAPIView(generics.ListAPIView):
     filterset_class = PropertyFilter
     search_fields = ["title", "description", "city", "district"]
     ordering_fields = ["price", "created_at"]
+
+    def _get_upcoming_visit_banner(self):
+        # ? Promote an approved upcoming visit to the top of the feed.
+        user = self.request.user
+        if not user.is_authenticated:
+            return None
+
+        today = timezone.localdate()
+        visit = (
+            PropertyVisit.objects.filter(
+                tenant=user,
+                status=PropertyVisit.Status.CONFIRMED,
+                visit_date__gte=today,
+            )
+            .select_related("property")
+            .order_by("visit_date", "visit_time")
+            .first()
+        )
+        if not visit:
+            return None
+
+        return {
+            "visit_id": str(visit.id),
+            "property_id": str(visit.property.id),
+            "property_title": visit.property.title,
+            "property_district": visit.property.district,
+            "visit_date": visit.visit_date.isoformat(),
+            "visit_time": visit.visit_time.strftime("%H:%M"),
+            "is_today": visit.visit_date == today,
+        }
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            response = self.get_paginated_response(serializer.data)
+            # ! Mutate the paginated payload before rendering; DRF Response.data
+            # ! is the unrendered dict, so this is safe.
+            response.data["banner"] = self._get_upcoming_visit_banner()
+            return response
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({
+            "banner": self._get_upcoming_visit_banner(),
+            "results": serializer.data,
+        })
 
 
 class PropertyCreateAPIView(generics.CreateAPIView):

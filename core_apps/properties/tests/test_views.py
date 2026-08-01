@@ -96,8 +96,56 @@ class TestPropertyViews:
         assert json_data["data"]["results"][4]["images_count"] == 2
 
         assert "data" in json_data
+        assert "banner" in json_data["data"]
+        assert json_data["data"]["banner"] is None
 
-        assert len(ctx.captured_queries) <= 3
+        assert len(ctx.captured_queries) <= 4
+
+    def test_list_properties_includes_upcoming_confirmed_visit_banner(
+        self, auth_client, user, another_user
+    ):
+        prop = _create_property(
+            owner=another_user,
+            title="Apartment in Maadi",
+            district="Maadi",
+        )
+        PropertyVisit.objects.create(
+            property=prop,
+            tenant=user,
+            visit_date=timezone.localdate(),
+            visit_time="15:00:00",
+            status=PropertyVisit.Status.CONFIRMED,
+        )
+        url = reverse("property-list")
+
+        response = auth_client.get(url)
+
+        assert response.status_code == status.HTTP_200_OK
+        json_data = response.json()
+        banner = json_data["data"]["banner"]
+        assert banner is not None
+        assert banner["property_title"] == "Apartment in Maadi"
+        assert banner["property_district"] == "Maadi"
+        assert banner["visit_time"] == "15:00"
+        assert banner["is_today"] is True
+
+    def test_list_properties_does_not_show_pending_visit_banner(
+        self, auth_client, user, another_user
+    ):
+        prop = _create_property(owner=another_user)
+        PropertyVisit.objects.create(
+            property=prop,
+            tenant=user,
+            visit_date=timezone.localdate(),
+            visit_time="15:00:00",
+            status=PropertyVisit.Status.PENDING,
+        )
+        url = reverse("property-list")
+
+        response = auth_client.get(url)
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.json()["data"]["banner"] is None
 
     def test_create_property_unauthenticated_returns_401(self, api_client):
         url = reverse("property-create")
