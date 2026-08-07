@@ -66,6 +66,74 @@ class PropertyListSerializer(serializers.ModelSerializer):
         return None
 
 
+class PropertyNewListSerializer(serializers.ModelSerializer):
+    """
+    Card-style serializer for the new properties feed.
+
+    Returns a compact payload matching the property card UI:
+    image, verification badge, title, location, bedrooms, bathrooms,
+    area and a short list of translated amenity / restriction tags.
+    """
+
+    main_image = CloudinarySerializerField(read_only=True)
+    images_count = serializers.IntegerField(read_only=True)
+    location = serializers.SerializerMethodField()
+    tags = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Property
+        fields = [
+            "id",
+            "main_image",
+            "images_count",
+            "is_verified",
+            "title",
+            "location",
+            "bedrooms",
+            "bathrooms",
+            "area",
+            "tags",
+            "price",
+            "price_period",
+        ]
+
+    def get_location(self, obj: Property) -> str:
+        return f"{obj.district}, {obj.city}"
+
+    def get_tags(self, obj: Property) -> list[str]:
+        # ? Map model flags to Arabic UI chip labels shown on the property card.
+        suitable_for_labels = {
+            Property.SuitableFor.FAMILIES: "عائلات",
+            Property.SuitableFor.SINGLES: "أعزاب",
+            Property.SuitableFor.STUDENTS: "طلاب",
+            Property.SuitableFor.FEMALE_STUDENTS: "طالبات فقط",
+        }
+
+        tags = []
+        if obj.suitable_for and obj.suitable_for != Property.SuitableFor.ALL:
+            tags.append(suitable_for_labels.get(obj.suitable_for, obj.suitable_for))
+
+        tags.append(
+            "ممنوع التدخين" if not obj.smoking_allowed else "مسموح بالتدخين"
+        )
+
+        amenity_labels = [
+            (obj.has_elevator, "أسانسير"),
+            (obj.has_wifi, "واي فاي"),
+            (obj.has_air_conditioning, "تكييف"),
+            (obj.has_security, "أمن"),
+            (obj.has_balcony, "بلكونة"),
+            (obj.has_garage, "جراج"),
+            (obj.near_metro, "قريب من المترو"),
+            (obj.has_natural_gas, "غاز طبيعي"),
+        ]
+        for active, label in amenity_labels:
+            if active:
+                tags.append(label)
+
+        return tags
+
+
 class MyPropertyListSerializer(serializers.ModelSerializer):
     """
     Read-only per-property stats for the owner dashboard.

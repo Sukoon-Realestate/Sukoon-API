@@ -69,13 +69,13 @@ def _create_property(**kwargs):
 
 @pytest.mark.django_db
 class TestPropertyViews:
-    def test_list_properties_public_and_queries_optimized(self, auth_client, user):
+    def test_homepage_properties_public_and_queries_optimized(self, auth_client, user):
         for i in range(5):
             prop = _create_property(owner=user, title=f"Apartment {i}")
             if i == 0:
                 PropertyImage.objects.create(property=prop, image="test1.png")
                 PropertyImage.objects.create(property=prop, image="test2.png")
-        url = reverse("property-list")
+        url = reverse("property-homepage-list")
 
         with CaptureQueriesContext(connection) as ctx:
             response = auth_client.get(url)
@@ -103,7 +103,7 @@ class TestPropertyViews:
 
         assert len(ctx.captured_queries) <= 4
 
-    def test_list_properties_includes_upcoming_confirmed_visit_banner(
+    def test_homepage_properties_includes_upcoming_confirmed_visit_banner(
         self, auth_client, user, another_user
     ):
         prop = _create_property(
@@ -118,7 +118,7 @@ class TestPropertyViews:
             visit_time="15:00:00",
             status=PropertyVisit.Status.CONFIRMED,
         )
-        url = reverse("property-list")
+        url = reverse("property-homepage-list")
 
         response = auth_client.get(url)
 
@@ -131,7 +131,7 @@ class TestPropertyViews:
         assert banner["visit_time"] == "15:00"
         assert banner["is_today"] is True
 
-    def test_list_properties_does_not_show_pending_visit_banner(
+    def test_homepage_properties_does_not_show_pending_visit_banner(
         self, auth_client, user, another_user
     ):
         prop = _create_property(owner=another_user)
@@ -142,12 +142,96 @@ class TestPropertyViews:
             visit_time="15:00:00",
             status=PropertyVisit.Status.PENDING,
         )
-        url = reverse("property-list")
+        url = reverse("property-homepage-list")
 
         response = auth_client.get(url)
 
         assert response.status_code == status.HTTP_200_OK
         assert response.json()["data"]["banner"] is None
+
+    def test_new_properties_unauthenticated_returns_401(self, api_client):
+        url = reverse("property-list")
+        response = api_client.get(url)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_new_properties_happy_path_card_shape(self, auth_client, user):
+        prop = _create_property(
+            owner=user,
+            title="شقة مفروشة 3 غرف",
+            bedrooms=3,
+            bathrooms=2,
+            area=90,
+            suitable_for=Property.SuitableFor.FAMILIES,
+            smoking_allowed=False,
+            has_elevator=True,
+            has_wifi=True,
+        )
+        PropertyImage.objects.create(property=prop, image="test1.png")
+        PropertyImage.objects.create(property=prop, image="test2.png")
+        url = reverse("property-list")
+
+        response = auth_client.get(url)
+
+        assert response.status_code == status.HTTP_200_OK
+        json_data = response.json()
+        assert "results" in json_data["data"]
+        assert len(json_data["data"]["results"]) == 1
+
+        item = json_data["data"]["results"][0]
+        assert item["title"] == "شقة مفروشة 3 غرف"
+        assert item["bedrooms"] == 3
+        assert item["bathrooms"] == 2
+        assert item["area"] == 90
+        assert item["location"] == "Nasr City, Cairo"
+        assert item["images_count"] == 2
+        assert "عائلات" in item["tags"]
+        assert "ممنوع التدخين" in item["tags"]
+        assert "أسانسير" in item["tags"]
+        assert "واي فاي" in item["tags"]
+        assert "price" in item
+        assert "price_period" in item
+
+    def test_new_properties_queries_optimized(self, auth_client, user):
+        for i in range(5):
+            prop = _create_property(owner=user, title=f"New Apartment {i}")
+            PropertyImage.objects.create(property=prop, image="test.png")
+        url = reverse("property-list")
+
+        with CaptureQueriesContext(connection) as ctx:
+            response = auth_client.get(url)
+
+        assert response.status_code == status.HTTP_200_OK
+        assert len(response.json()["data"]["results"]) == 5
+        assert len(ctx.captured_queries) <= 4
+
+    def test_new_properties_supports_search_and_filter(self, auth_client, user):
+        _create_property(
+            owner=user,
+            title="Apartment in Nasr City",
+            city="Cairo",
+            district="Nasr City",
+            price=5000.00,
+        )
+        _create_property(
+            owner=user,
+            title="Villa in Maadi",
+            city="Cairo",
+            district="Maadi",
+            price=20000.00,
+        )
+        url = reverse("property-list")
+
+        response = auth_client.get(url, {"search": "Maadi"})
+        assert response.status_code == status.HTTP_200_OK
+        results = response.json()["data"]["results"]
+        assert len(results) == 1
+        assert results[0]["title"] == "Villa in Maadi"
+
+        response = auth_client.get(url, {"price_max": 10000})
+        assert response.status_code == status.HTTP_200_OK
+        results = response.json()["data"]["results"]
+        assert len(results) == 1
+        assert results[0]["title"] == "Apartment in Nasr City"
 
     def test_create_property_unauthenticated_returns_401(self, api_client):
         url = reverse("property-create")

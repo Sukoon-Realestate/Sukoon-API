@@ -22,6 +22,7 @@ from ..serializers import (
     PropertyImageUpdateSerializer,
     PropertyImageUploadSerializer,
     PropertyListSerializer,
+    PropertyNewListSerializer,
     PropertySerializer,
     PropertyTypeSerializer,
 )
@@ -125,6 +126,50 @@ class PropertyListAPIView(generics.ListAPIView):
             "banner": self._get_upcoming_visit_banner(),
             "results": serializer.data,
         })
+
+
+class PropertyNewListAPIView(generics.ListAPIView):
+    """
+    API view to list the newest property listings in card format.
+
+    Returns a compact payload for the property card UI: image gallery count,
+    verification badge, title, location, bedrooms, bathrooms, area, tags,
+    price and price period.
+
+    Supports the same filtering, search and ordering options as the main
+    property list endpoint.
+
+    Filters:
+    - property_type (e.g. ?property_type=apartment)
+    - price_period, is_furnished, is_verified, bedrooms, bathrooms
+    - suitable_for, smoking_allowed, has_wifi, has_elevator, has_garage
+    - has_security, has_balcony, has_air_conditioning, near_metro
+    - has_natural_gas, price_min, price_max
+
+    Search:
+    - ?search=nasr (searches title, description, city, district)
+
+    Ordering:
+    - ?ordering=price or ?ordering=-created_at
+    """
+
+    queryset = (
+        Property.objects.select_related("property_type")
+        .annotate(images_count=Count("images"))
+        .order_by("-created_at")
+    )
+    serializer_class = PropertyNewListSerializer
+    renderer_classes = [GenericJsonRenderer]
+    pagination_class = PropertyPagination
+    permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter,
+        filters.OrderingFilter,
+    ]
+    filterset_class = PropertyFilter
+    search_fields = ["title", "description", "city", "district"]
+    ordering_fields = ["price", "created_at"]
 
 
 class PropertyCreateAPIView(generics.CreateAPIView):

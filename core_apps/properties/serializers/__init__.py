@@ -4,6 +4,7 @@ from .property import (
     PropertyImageUpdateSerializer,
     PropertyImageUploadSerializer,
     PropertyListSerializer,
+    PropertyNewListSerializer,
     PropertySerializer,
     PropertyTypeSerializer,
 )

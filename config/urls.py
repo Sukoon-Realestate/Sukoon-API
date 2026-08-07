@@ -7,6 +7,8 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
+from core_apps.properties.views import PropertyListAPIView
+
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -28,6 +30,7 @@ urlpatterns = [
     path("api/v1/auth/", include("djoser.urls")),
     path("api/v1/auth/", include("core_apps.users.urls")),
     path("api/v1/profiles/", include("core_apps.profiles.urls")),
+    path("api/v1/homepage/", PropertyListAPIView.as_view(), name="property-homepage-list"),
     path("api/v1/properties/", include("core_apps.properties.urls")),
     path(settings.ADMIN_URL, admin.site.urls),
 ]
