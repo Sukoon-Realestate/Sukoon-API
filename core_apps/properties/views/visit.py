@@ -14,6 +14,7 @@ from ..serializers import (
     PropertyVisitDetailSerializer,
     PropertyVisitSerializer,
     PropertyVisitUpdateSerializer,
+    TenantVisitListSerializer,
 )
 
 logger = logging.getLogger(__name__)
@@ -52,11 +53,14 @@ class TenantPropertyVisitListAPIView(generics.ListAPIView):
     """
     API view to list all visits requested by the authenticated tenant.
 
+    Returns a compact card-style payload per visit: title (property + district),
+    Arabic-formatted visit day/time and an Arabic status label.
+
     Filters:
     - status (e.g. ?status=confirmed) — one of: pending, confirmed, canceled, rejected
     """
 
-    serializer_class = PropertyVisitSerializer
+    serializer_class = TenantVisitListSerializer
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = PropertyVisitPagination

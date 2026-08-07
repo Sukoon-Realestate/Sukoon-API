@@ -13,4 +13,5 @@ from .visit import (
     PropertyVisitCreateSerializer,
     PropertyVisitDetailSerializer,
     PropertyVisitUpdateSerializer,
+    TenantVisitListSerializer,
 )

@@ -8,6 +8,40 @@ from core_apps.properties.serializers.property import PropertyListSerializer
 from ..models import PropertyVisit
 from ..services import PropertyVisitService
 
+
+# ? Arabic date/time labels for the tenant visit card UI
+_ARABIC_WEEKDAYS = {
+    0: "الإثنين",
+    1: "الثلاثاء",
+    2: "الأربعاء",
+    3: "الخميس",
+    4: "الجمعة",
+    5: "السبت",
+    6: "الأحد",
+}
+
+_ARABIC_MONTHS = {
+    1: "يناير",
+    2: "فبراير",
+    3: "مارس",
+    4: "أبريل",
+    5: "مايو",
+    6: "يونيو",
+    7: "يوليو",
+    8: "أغسطس",
+    9: "سبتمبر",
+    10: "أكتوبر",
+    11: "نوفمبر",
+    12: "ديسمبر",
+}
+
+_ARABIC_VISIT_STATUS = {
+    PropertyVisit.Status.PENDING: "بانتظار رد المالك",
+    PropertyVisit.Status.CONFIRMED: "مؤكد",
+    PropertyVisit.Status.CANCELED: "ملغي",
+    PropertyVisit.Status.REJECTED: "مرفوض",
+}
+
 User = get_user_model()
 
 
@@ -45,6 +79,45 @@ class PropertyVisitSerializer(serializers.ModelSerializer):
             ):
                 return obj.tenant.email
         return ""
+
+
+class TenantVisitListSerializer(serializers.ModelSerializer):
+    """
+    Card-style serializer for a tenant's own visit requests.
+
+    Returns a compact Arabic-formatted payload matching the visit card UI:
+    property title + district, visit day, time and status label.
+    """
+
+    title = serializers.SerializerMethodField()
+    day = serializers.SerializerMethodField()
+    time = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PropertyVisit
+        fields = ["id", "title", "day", "time", "status"]
+        read_only_fields = fields
+
+    def get_title(self, obj: PropertyVisit) -> str:
+        return f"{obj.property.title} - {obj.property.district}"
+
+    def get_day(self, obj: PropertyVisit) -> str:
+        weekday = _ARABIC_WEEKDAYS[obj.visit_date.weekday()]
+        month = _ARABIC_MONTHS[obj.visit_date.month]
+        return f"{weekday} {obj.visit_date.day} {month}"
+
+    def get_time(self, obj: PropertyVisit) -> str:
+        hour = obj.visit_time.hour
+        minute = obj.visit_time.minute
+        period = "ص" if hour < 12 else "م"
+        hour_12 = hour % 12
+        if hour_12 == 0:
+            hour_12 = 12
+        return f"{hour_12}:{minute:02d} {period}"
+
+    def get_status(self, obj: PropertyVisit) -> str:
+        return _ARABIC_VISIT_STATUS.get(obj.status, obj.status)
 
 
 class VisitTenantSerializer(serializers.ModelSerializer):

@@ -582,7 +582,13 @@ class TestPropertyVisitViews:
         json_data = response.json()
         assert "data" in json_data
         assert len(json_data["data"]["results"]) == 1
-        assert json_data["data"]["results"][0]["tenant_email"] == user.email
+
+        result = json_data["data"]["results"][0]
+        assert set(result.keys()) == {"id", "title", "day", "time", "status"}
+        assert result["title"] == "Apartment Heliopolis - Nasr City"
+        assert result["day"] == "الإثنين 20 يوليو"
+        assert result["time"] == "2:00 م"
+        assert result["status"] == "بانتظار رد المالك"
 
     def test_list_owner_received_visits(self, auth_client, user, another_user):
         property_obj = _create_property(
@@ -630,7 +636,7 @@ class TestPropertyVisitViews:
         assert response.status_code == status.HTTP_200_OK
         results = response.json()["data"]["results"]
         assert len(results) == 1
-        assert results[0]["status"] == PropertyVisit.Status.CONFIRMED
+        assert results[0]["status"] == "مؤكد"
 
     def test_list_tenant_visits_invalid_status_returns_400(self, auth_client):
         url = reverse("tenant-visit-list")
