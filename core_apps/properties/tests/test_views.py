@@ -89,9 +89,11 @@ class TestPropertyViews:
         assert "owner" not in first_item
         assert "images" not in first_item
         assert "floor" not in first_item
-        assert "area" not in first_item
+        assert "description" not in first_item
         assert "latitude" not in first_item
         assert "longitude" not in first_item
+        assert "area" in first_item
+        assert "rate" in first_item
         assert first_item["images_count"] == 0
         assert json_data["data"]["results"][4]["images_count"] == 2
 

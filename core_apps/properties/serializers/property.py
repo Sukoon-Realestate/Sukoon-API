@@ -1,3 +1,5 @@
+from typing import Optional
+
 from rest_framework import serializers
 
 from core_apps.profiles.serializers import CloudinarySerializerField
@@ -38,6 +40,7 @@ class PropertyImageUpdateSerializer(serializers.ModelSerializer):
 class PropertyListSerializer(serializers.ModelSerializer):
     main_image = CloudinarySerializerField(read_only=True)
     images_count = serializers.IntegerField(read_only=True)
+    rate = serializers.SerializerMethodField()
     property_type = serializers.SlugRelatedField(
         slug_field="slug", queryset=PropertyType.objects.all()
     )
@@ -49,11 +52,18 @@ class PropertyListSerializer(serializers.ModelSerializer):
             "main_image",
             "images_count",
             "title",
-            "description",
             "price",
             "price_period",
             "property_type",
+            "area",
+            "rate",
         ]
+
+    def get_rate(self, obj: Property) -> Optional[float]:
+        # ? Price per square meter; None when area is not provided
+        if obj.area:
+            return round(float(obj.price) / obj.area, 2)
+        return None
 
 
 class MyPropertyListSerializer(serializers.ModelSerializer):
