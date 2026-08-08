@@ -1,5 +1,4 @@
 export 'home_avatar.dart';
-export 'home_bottom_nav.dart';
 export 'home_circle_button.dart';
 export 'home_section_header.dart';
 export 'owner_header.dart';

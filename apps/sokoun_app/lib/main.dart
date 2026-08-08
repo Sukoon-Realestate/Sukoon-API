@@ -81,6 +81,9 @@ Future<bool> fetchBaseUrl() async {
         minimumFetchInterval: Duration.zero,
       ),
     );
+    await remoteConfig.setDefaults(const <String, dynamic>{
+      SecureLocalVariableKeys.minAppVersionKey: '',
+    });
 
     await remoteConfig.fetchAndActivate();
 
@@ -101,10 +104,18 @@ Future<bool> fetchBaseUrl() async {
     final String socetIoUrl = remoteConfig.getString(
       SecureLocalVariableKeys.socetIoUrl,
     );
+    final String minAppVersion = remoteConfig
+        .getString(SecureLocalVariableKeys.minAppVersionKey)
+        .trim();
 
     log('the prod base url is $prodBaseUrl');
     log('the dev base url is $devBaseUrl');
     log('the socket url is $socetIoUrl');
+    log(
+      'the minimum app version is '
+      '${minAppVersion.isEmpty ? 'not configured' : minAppVersion}',
+    );
+    RemoteConfigValues.setMinAppVersion(minAppVersion);
 
     if (socetIoUrl.isNotEmpty) {
       await SecureStorage.write(SecureLocalVariableKeys.socetIoUrl, socetIoUrl);

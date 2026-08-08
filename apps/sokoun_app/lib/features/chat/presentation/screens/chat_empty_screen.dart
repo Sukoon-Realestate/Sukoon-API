@@ -41,7 +41,6 @@ class ChatEmptyScreen extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: const ChatBottomNavigation(),
       ),
     );
   }

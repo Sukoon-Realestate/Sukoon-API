@@ -12,9 +12,14 @@ import 'package:sokoun_app/features/visits/imports.dart';
 import '../widgets/owner_visit_requests/imports.dart';
 
 class OwnerVisitRequestsScreen extends StatefulWidget {
-  const OwnerVisitRequestsScreen({super.key, this.initialRequests});
+  const OwnerVisitRequestsScreen({
+    super.key,
+    this.initialRequests,
+    this.showBackButton = true,
+  });
 
   final List<OwnerVisitRequestContent>? initialRequests;
+  final bool showBackButton;
 
   @override
   State<OwnerVisitRequestsScreen> createState() =>
@@ -154,7 +159,7 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               OwnerVisitRequestsTopBar(
-                onBackPressed: () => Go.back(),
+                onBackPressed: widget.showBackButton ? () => Go.back() : null,
                 onCalendarPressed: () =>
                     Go.to(const OwnerRequestsCalendarScreen()),
               ),

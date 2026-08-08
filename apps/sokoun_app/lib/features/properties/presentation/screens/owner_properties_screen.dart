@@ -155,9 +155,6 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
             ],
           ),
         ),
-        bottomNavigationBar: const OwnerPropertiesBottomNavigation(
-          activeTab: OwnerPropertiesNavigationTab.properties,
-        ),
       ),
     );
   }

@@ -7,12 +7,7 @@ import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
-import 'package:sokoun_app/features/chat/presentation/screens/chat_list_screen.dart';
 import 'package:sokoun_app/features/home/presentation/screens/owner_add_property_flow_screen.dart';
-import 'package:sokoun_app/features/home/presentation/screens/owner_home_screen.dart';
-import 'package:sokoun_app/features/home/presentation/screens/owner_visit_requests_screen.dart';
-import 'package:sokoun_app/features/home/presentation/widgets/owner_widgets/home_bottom_nav.dart'
-    as owner_nav;
 
 part 'data/enums/owner_property_action.dart';
 part 'data/enums/owner_property_status.dart';
@@ -37,5 +32,4 @@ part 'presentation/widgets/list/owner_property_card.dart';
 part 'presentation/widgets/list/owner_property_status_badge.dart';
 part 'presentation/widgets/revenue/owner_revenue_property_card.dart';
 part 'presentation/widgets/revenue/owner_transaction_row.dart';
-part 'presentation/widgets/shared/owner_properties_bottom_navigation.dart';
 part 'presentation/widgets/shared/owner_property_top_bar.dart';

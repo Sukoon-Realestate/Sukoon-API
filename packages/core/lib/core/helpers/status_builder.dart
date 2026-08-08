@@ -1,54 +1,112 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/core/extensions/object.dart';
 import '../base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import '../shared/base_state.dart';
 import '../widgets/custom_loading.dart';
 import '../widgets/exeption_view.dart';
+import '../widgets/not_contain_data.dart';
 
-class StatusBuilder<T> extends StatelessWidget {
-  final AsyncState<T> data;
-  final Widget Function(T data, BuildContext context) onSuccess;
-  final Widget Function()? onFail;
-  final Widget Function()? onLoading;
-  final Size? errorWidgetSize;
-
-  const StatusBuilder(
-      {super.key,
-        required this.data,
-        required this.onSuccess,
-        this.onFail,
-        this.onLoading,
-        this.errorWidgetSize,
-      });
-
-  @override
-  Widget build(BuildContext context) {
-    return data.status.when(onSuccess: () {
-      return onSuccess(data.data, context);
-    }, onLoading: () {
-      return onLoading?.call() ??
-          Center(child: CustomLoading.showLoadingView());
-    }, onError: () {
-      // if (data.data != null) { // لو عايزين نظهر الداتا ال initial اما اول request fails
-      //   return onSuccess(data.data, context);
-      // }
-      return onFail?.call() ?? ExceptionView(size: errorWidgetSize);
-    },
-      onInitial: () {
-        return onSuccess(data.data, context);
-      }
-    );
-  }
+enum LoadingType{loadingIndicator, shimmer}
+extension CheckLoadingType on LoadingType{
+  bool get isLoadingIndicator => this == LoadingType.loadingIndicator;
+  bool get isShimmer => this == LoadingType.shimmer;
 }
 
-class CenterErrorWidget extends StatelessWidget {
-  const CenterErrorWidget({super.key, required this.message});
-  final String message;
+enum ErrorType{withData, customView, defaultView}
+extension CheckErrorType on ErrorType{
+  bool get isWithData => this == ErrorType.withData;
+  bool get isCustomView => this == ErrorType.customView;
+  bool get isDefaultView => this == ErrorType.defaultView;
+}
+
+class StatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
+  final Function(T data) builder;
+  final LoadingType loadingType;
+  final ErrorType errorType;
+  final Widget? errorWidget;
+  final Widget? emptyView;
+  final T? initialDataForShimmer;
+
+  const StatusBuilder({
+    super.key,
+    required this.builder,
+    this.errorType = ErrorType.withData,
+    this.errorWidget,
+    this.emptyView,
+  }) : loadingType = LoadingType.loadingIndicator, initialDataForShimmer = null;
+
+  const StatusBuilder.withShimmer({
+    super.key,
+    required this.builder,
+    this.errorType = ErrorType.withData,
+    required this.initialDataForShimmer,
+    this.errorWidget,
+    this.emptyView
+  }) : loadingType = LoadingType.shimmer;
+
+  bool _isEmpty(T data){
+    if(data is List){
+      if(data.isEmpty){
+        return true;
+      }
+
+      return false;
+    }
+
+    return false;
+  }
+
+  Widget get _loadingView{
+    if(loadingType.isShimmer){
+      return builder.call(initialDataForShimmer!);
+    }else if(loadingType.isLoadingIndicator){
+      return SizedBox.square(
+          dimension: 50.sp,
+          child: CustomLoading.showLoadingView()
+      );
+    }else{
+      return const CupertinoActivityIndicator();
+    }
+  }
+
+  Widget _successView(T data){
+    if(_isEmpty(data)){
+      return _emptyView;
+    }else{
+     return builder(data);
+    }
+  }
+
+  Widget get _emptyView{
+    if(emptyView.isNotNull){
+      return emptyView!;
+    }else{
+      return NotContainData();
+    }
+  }
+
+  Widget _errorView(T data){
+    if(errorType.isWithData){
+      return builder.call(data);
+    }else if(errorType.isCustomView && errorWidget.isNotNull){
+      return errorWidget!;
+    }
+    
+    return ExceptionView();
+  }
+  
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        message,
-        textAlign: TextAlign.center,
+    return BlocBuilder<C, AsyncState<T>>(
+      builder: (context, state) => state.status.when(
+        onLoading: () => _loadingView,
+        onSuccess: () => _successView(state.data),
+        onError: () => _errorView(state.data)
+        // onLoadingMore: () {
+        //   return _buildCircularLoading();
+        // },
       ),
     );
   }

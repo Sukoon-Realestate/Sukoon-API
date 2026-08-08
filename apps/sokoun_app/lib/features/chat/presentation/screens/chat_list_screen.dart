@@ -90,7 +90,6 @@ class ChatListScreen extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: const ChatBottomNavigation(),
       ),
     );
   }

@@ -2,16 +2,23 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 
-import '../../helpers/cache_service.dart';
 import '../api_endpoints.dart';
 
 class UnauthorizedInterceptor extends Interceptor {
-  UnauthorizedInterceptor(this._dio);
+  UnauthorizedInterceptor({
+    required Dio dio,
+    required Future<bool> Function() canRefreshSession,
+    required Future<void> Function() onSessionExpired,
+  }) : _dio = dio,
+       _canRefreshSession = canRefreshSession,
+       _onSessionExpired = onSessionExpired;
 
-  static const String _retryKey = 'retried_after_token_refresh';
-  static const String _tokenKey = 'token';
+  static const String _retryKey = 'retried_after_cookie_refresh';
 
   final Dio _dio;
+  final Future<bool> Function() _canRefreshSession;
+  final Future<void> Function() _onSessionExpired;
+  Future<void>? _refreshFuture;
 
   @override
   Future<void> onError(
@@ -21,29 +28,26 @@ class UnauthorizedInterceptor extends Interceptor {
     final RequestOptions request = err.requestOptions;
     if (err.response?.statusCode != HttpStatus.unauthorized ||
         request.extra[_retryKey] == true ||
-        request.headers[HttpHeaders.authorizationHeader] == null) {
+        request.path == ApiConstants.refreshToken) {
       handler.next(err);
       return;
     }
 
     try {
-      final Response<dynamic> refreshResponse = await _dio.post<dynamic>(
-        ApiConstants.refreshToken,
-        options: Options(
-          headers: {
-            HttpHeaders.authorizationHeader:
-                request.headers[HttpHeaders.authorizationHeader],
-          },
-          extra: {_retryKey: true},
-        ),
-      );
-      final String token = refreshResponse.data['data']['token'];
+      if (!await _canRefreshSession()) {
+        handler.next(err);
+        return;
+      }
+    } catch (_) {
+      handler.next(err);
+      return;
+    }
 
-      await SecureStorage.write(_tokenKey, token);
-      _dio.options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+    try {
+      await _refreshSession();
 
       request
-        ..headers[HttpHeaders.authorizationHeader] = 'Bearer $token'
+        ..headers.remove(HttpHeaders.cookieHeader)
         ..extra[_retryKey] = true;
       if (request.data is FormData) {
         request.data = (request.data as FormData).clone();
@@ -52,7 +56,28 @@ class UnauthorizedInterceptor extends Interceptor {
       final Response<dynamic> response = await _dio.fetch<dynamic>(request);
       handler.resolve(response);
     } catch (_) {
+      await _onSessionExpired();
       handler.next(err);
     }
+  }
+
+  Future<void> _refreshSession() {
+    final Future<void>? pendingRefresh = _refreshFuture;
+    if (pendingRefresh != null) {
+      return pendingRefresh;
+    }
+
+    final Future<void> refresh = _dio
+        .post<void>(
+          ApiConstants.refreshToken,
+          options: Options(extra: {_retryKey: true}),
+        )
+        .then((_) {});
+    _refreshFuture = refresh;
+    return refresh.whenComplete(() {
+      if (identical(_refreshFuture, refresh)) {
+        _refreshFuture = null;
+      }
+    });
   }
 }

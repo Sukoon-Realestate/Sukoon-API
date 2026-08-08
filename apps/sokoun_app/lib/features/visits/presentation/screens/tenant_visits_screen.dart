@@ -150,7 +150,6 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
             ],
           ),
         ),
-        bottomNavigationBar: const TenantVisitsBottomNavigation(),
       ),
     );
   }

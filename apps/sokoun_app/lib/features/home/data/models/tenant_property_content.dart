@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 
+import 'property_details_model.dart';
 import 'tenant_search_result_content.dart';
 
 class TenantPropertyMetricContent {
@@ -45,6 +46,7 @@ class TenantPropertyDetailsContent {
     required this.ownerName,
     required this.ownerMeta,
     required this.imageColors,
+    this.imageUrls = const [],
   });
 
   factory TenantPropertyDetailsContent.fromSearchResult(
@@ -128,6 +130,49 @@ class TenantPropertyDetailsContent {
     );
   }
 
+  factory TenantPropertyDetailsContent.fromModel(PropertyDetailsModel model) {
+    return TenantPropertyDetailsContent(
+      title: model.title,
+      propertyType: model.propertyTypeLabel,
+      location: model.locationLabel,
+      price: model.formattedPrice,
+      rating: '—',
+      reviewCount: '0',
+      isVerified: model.isVerified,
+      isFurnished: model.isFurnished,
+      metrics: [
+        TenantPropertyMetricContent(
+          icon: Icons.bed_outlined,
+          value: '${model.bedrooms}',
+          label: 'غرف',
+        ),
+        TenantPropertyMetricContent(
+          icon: Icons.shower_outlined,
+          value: '${model.bathrooms}',
+          label: 'حمام',
+        ),
+        TenantPropertyMetricContent(
+          icon: Icons.square_foot_outlined,
+          value: '${model.area}',
+          label: 'م²',
+        ),
+        TenantPropertyMetricContent(
+          icon: Icons.calendar_month_outlined,
+          value: '${model.rentalPeriod}',
+          label: 'شهور',
+        ),
+      ],
+      description: model.description,
+      amenities: model.amenities,
+      photoLabels: model.photoLabels,
+      nearbyPlaces: const [],
+      ownerName: model.owner,
+      ownerMeta: model.isVerified ? 'مالك موثّق' : 'مالك',
+      imageColors: const [AppColors.tealDark, AppColors.sokoonTeal],
+      imageUrls: model.imageUrls,
+    );
+  }
+
   final String title;
   final String propertyType;
   final String location;
@@ -144,6 +189,7 @@ class TenantPropertyDetailsContent {
   final String ownerName;
   final String ownerMeta;
   final List<Color> imageColors;
+  final List<String> imageUrls;
 
   String get shortTitle => '$propertyType مفروشة — مدينة نصر';
   String get shareUrl => 'https://sokoun.app/property/cairo-nasr-city-6500';

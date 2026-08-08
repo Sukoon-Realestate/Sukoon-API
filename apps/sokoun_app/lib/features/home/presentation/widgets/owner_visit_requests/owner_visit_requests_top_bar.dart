@@ -7,11 +7,11 @@ import 'package:melos_core/core/widgets/app_text.dart';
 class OwnerVisitRequestsTopBar extends StatelessWidget {
   const OwnerVisitRequestsTopBar({
     super.key,
-    required this.onBackPressed,
+    this.onBackPressed,
     required this.onCalendarPressed,
   });
 
-  final VoidCallback onBackPressed;
+  final VoidCallback? onBackPressed;
   final VoidCallback onCalendarPressed;
 
   @override
@@ -26,21 +26,27 @@ class OwnerVisitRequestsTopBar extends StatelessWidget {
       child: Row(
         textDirection: TextDirection.ltr,
         children: [
-          IconButton(
-            key: const ValueKey('owner-requests-back'),
-            onPressed: onBackPressed,
-            visualDensity: VisualDensity.compact,
-            style: IconButton.styleFrom(
-              backgroundColor: AppColors.grayBackground,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-            ),
-            icon: Icon(
-              Icons.chevron_left_rounded,
-              color: AppColors.sokoonNavy,
-              size: 22.r,
-            ),
+          SizedBox(
+            width: 40.r,
+            height: 40.r,
+            child: onBackPressed == null
+                ? null
+                : IconButton(
+                    key: const ValueKey('owner-requests-back'),
+                    onPressed: onBackPressed,
+                    visualDensity: VisualDensity.compact,
+                    style: IconButton.styleFrom(
+                      backgroundColor: AppColors.grayBackground,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                    ),
+                    icon: Icon(
+                      Icons.chevron_left_rounded,
+                      color: AppColors.sokoonNavy,
+                      size: 22.r,
+                    ),
+                  ),
           ),
           const Spacer(),
           AppText(

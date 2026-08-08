@@ -12,8 +12,8 @@ class BaseModel<T> {
     T Function(dynamic json)? jsonToModel,
   }) {
     return BaseModel<T>(
-      key: json['key'],
-      msg: json['msg'],
+      key: json['key'] ?? '',
+      msg: json['message'] ?? '',
       data: jsonToModel.isNotNull?
       jsonToModel!(json['data']) : json['data'],
     );

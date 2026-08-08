@@ -1372,11 +1372,47 @@ abstract class LocaleKeys {
   static const String _whatsNewGotIt = 'whats_new_got_it';
   static String get whatsNewGotIt => _whatsNewGotIt.tr();
 
+  static const String _whatsNewDescription = 'whats_new_description';
+  static String get whatsNewDescription => _whatsNewDescription.tr();
+
+  static const String _whatsNewVersionLabel = 'whats_new_version_label';
+  static String get whatsNewVersionLabel => _whatsNewVersionLabel.tr();
+
+  static const String _whatsNewStartNow = 'whats_new_start_now';
+  static String get whatsNewStartNow => _whatsNewStartNow.tr();
+
   static const String _whatsNewV107Item1 = 'whats_new_v_1_0_7_item_1';
   static String get whatsNewV107Item1 => _whatsNewV107Item1.tr();
 
   static const String _whatsNewV107Item2 = 'whats_new_v_1_0_7_item_2';
   static String get whatsNewV107Item2 => _whatsNewV107Item2.tr();
+
+  static const String _updateDialogOptionalTitle = 'update_dialog_optional_title';
+  static String get updateDialogOptionalTitle => _updateDialogOptionalTitle.tr();
+
+  static const String _updateDialogOptionalDescription = 'update_dialog_optional_description';
+  static String get updateDialogOptionalDescription => _updateDialogOptionalDescription.tr();
+
+  static const String _updateDialogRequiredTitle = 'update_dialog_required_title';
+  static String get updateDialogRequiredTitle => _updateDialogRequiredTitle.tr();
+
+  static const String _updateDialogRequiredDescription = 'update_dialog_required_description';
+  static String get updateDialogRequiredDescription => _updateDialogRequiredDescription.tr();
+
+  static const String _updateDialogNewVersion = 'update_dialog_new_version';
+  static String get updateDialogNewVersion => _updateDialogNewVersion.tr();
+
+  static const String _updateDialogUpdateNow = 'update_dialog_update_now';
+  static String get updateDialogUpdateNow => _updateDialogUpdateNow.tr();
+
+  static const String _updateDialogLater = 'update_dialog_later';
+  static String get updateDialogLater => _updateDialogLater.tr();
+
+  static const String _updateDialogOpeningStore = 'update_dialog_opening_store';
+  static String get updateDialogOpeningStore => _updateDialogOpeningStore.tr();
+
+  static const String _updateDialogClose = 'update_dialog_close';
+  static String get updateDialogClose => _updateDialogClose.tr();
 
   static const String _chatReasonChatWithYourself = 'chat_reason_chat_with_yourself';
   static String get chatReasonChatWithYourself => _chatReasonChatWithYourself.tr();

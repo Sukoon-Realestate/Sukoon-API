@@ -10,4 +10,3 @@ export 'chat_thread/chat_voice_recording_bar.dart';
 export 'report/chat_report_sheet.dart';
 export 'shared/chat_privacy_banner.dart';
 export 'shared/chat_verified_badge.dart';
-export 'shared/chat_bottom_navigation.dart';

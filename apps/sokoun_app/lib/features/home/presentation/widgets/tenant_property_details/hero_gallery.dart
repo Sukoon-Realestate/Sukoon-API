@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/widgets/image_widgets/cached_image.dart';
 import 'package:sokoun_app/features/home/data/models/tenant_property_content.dart';
 
 class TenantPropertyHeroGallery extends StatelessWidget {
@@ -25,6 +26,15 @@ class TenantPropertyHeroGallery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> imageUrls = property.imageUrls;
+    final bool hasImages = imageUrls.isNotEmpty;
+    final int photoCount = hasImages
+        ? imageUrls.length
+        : property.photoLabels.length + 3;
+    final int thumbCount = hasImages && imageUrls.length < 6
+        ? imageUrls.length
+        : 6;
+
     return Container(
       height: 258.h,
       decoration: const BoxDecoration(
@@ -36,13 +46,22 @@ class TenantPropertyHeroGallery extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          Center(
-            child: Icon(
-              Icons.apartment_outlined,
-              color: AppColors.whiteAlpha40,
-              size: 62.r,
+          if (hasImages)
+            Positioned.fill(
+              child: CachedImage(
+                url: imageUrls.first,
+                fit: BoxFit.cover,
+                height: 258.h,
+              ),
+            )
+          else
+            Center(
+              child: Icon(
+                Icons.apartment_outlined,
+                color: AppColors.whiteAlpha40,
+                size: 62.r,
+              ),
             ),
-          ),
           PositionedDirectional(
             top: 14.h,
             start: 14.w,
@@ -79,7 +98,7 @@ class TenantPropertyHeroGallery extends StatelessWidget {
                   ),
                 8.szW,
                 _HeroPill(
-                  label: '${property.photoLabels.length + 3} صورة',
+                  label: '$photoCount صورة',
                   color: AppColors.blackAlpha45,
                   textColor: AppColors.white,
                 ),
@@ -100,6 +119,9 @@ class TenantPropertyHeroGallery extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final color =
                       property.imageColors[index % property.imageColors.length];
+                  final bool showMoreOverlay = hasImages
+                      ? index == thumbCount - 1 && imageUrls.length > thumbCount
+                      : index == 5;
                   return GestureDetector(
                     onTap: () => onPhotosTap(index),
                     behavior: HitTestBehavior.opaque,
@@ -112,22 +134,32 @@ class TenantPropertyHeroGallery extends StatelessWidget {
                             ? Border.all(color: AppColors.white, width: 2)
                             : null,
                       ),
-                      child: index == 5
+                      clipBehavior: Clip.antiAlias,
+                      child: showMoreOverlay
                           ? Center(
                               child: AppText(
-                                '+7\nصور',
+                                hasImages
+                                    ? '+${imageUrls.length - thumbCount}\nصور'
+                                    : '+7\nصور',
                                 color: AppColors.white,
                                 fontSize: 11.sp,
                                 fontWeight: FontWeight.w900,
                                 textAlign: TextAlign.center,
                               ),
                             )
+                          : hasImages
+                          ? CachedImage(
+                              url: imageUrls[index],
+                              fit: BoxFit.cover,
+                              width: index == 0 ? 64.w : 58.w,
+                              height: 48.h,
+                            )
                           : null,
                     ),
                   );
                 },
                 separatorBuilder: (context, index) => 8.szW,
-                itemCount: 6,
+                itemCount: thumbCount,
               ),
             ),
           ),

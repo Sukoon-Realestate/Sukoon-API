@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/widgets/image_widgets/cached_image.dart';
 
 class TenantPropertyCard extends StatelessWidget {
   const TenantPropertyCard({
@@ -12,6 +13,7 @@ class TenantPropertyCard extends StatelessWidget {
     required this.area,
     required this.price,
     required this.icon,
+    this.imageUrl,
   });
 
   final String title;
@@ -19,6 +21,7 @@ class TenantPropertyCard extends StatelessWidget {
   final String area;
   final String price;
   final IconData icon;
+  final String? imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +40,14 @@ class TenantPropertyCard extends StatelessWidget {
             width: 96.w,
             height: double.infinity,
             color: AppColors.grayBluePale,
-            child: Icon(icon, color: AppColors.blueGrayLight, size: 26.r),
+            child: imageUrl != null && imageUrl!.isNotEmpty
+                ? CachedImage(
+                    url: imageUrl!,
+                    fit: BoxFit.cover,
+                    width: 96.w,
+                    height: 94.h,
+                  )
+                : Icon(icon, color: AppColors.blueGrayLight, size: 26.r),
           ),
           Expanded(
             child: Padding(

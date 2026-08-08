@@ -7,16 +7,9 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:sokoun_app/features/chat/data/models/chat_content.dart';
-import 'package:sokoun_app/features/chat/presentation/screens/chat_list_screen.dart';
 import 'package:sokoun_app/features/chat/presentation/screens/chat_thread_screen.dart';
-import 'package:sokoun_app/features/favorites/presentation/screens/favorites_screen.dart';
 import 'package:sokoun_app/features/home/data/models/tenant_property_content.dart';
-import 'package:sokoun_app/features/home/presentation/screens/tenant_home_screen.dart';
 import 'package:sokoun_app/features/home/presentation/screens/tenant_search_screen.dart';
-import 'package:sokoun_app/features/home/presentation/widgets/tenant_widgets/home_bottom_nav.dart'
-    as tenant_nav;
-import 'package:sokoun_app/features/notifications/data/enums/notification_role.dart';
-import 'package:sokoun_app/features/notifications/presentation/screens/notifications_screen.dart';
 
 part 'data/enums/visit_status.dart';
 part 'data/enums/owner_visit_request_state.dart';
@@ -55,7 +48,6 @@ part 'presentation/widgets/rating/visit_rating_sheet.dart';
 part 'presentation/widgets/rating/visit_rating_stars.dart';
 part 'presentation/widgets/shared/owner_request_privacy_banner.dart';
 part 'presentation/widgets/shared/owner_verified_badge.dart';
-part 'presentation/widgets/shared/tenant_visits_bottom_navigation.dart';
 part 'presentation/widgets/shared/visit_header.dart';
 part 'presentation/widgets/shared/visit_summary_card.dart';
 part 'presentation/widgets/tenant_visits/tenant_visit_card.dart';

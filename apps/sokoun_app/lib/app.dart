@@ -10,6 +10,7 @@ import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 import 'package:sokoun_app/features/chat/presentation/screens/chat_list_screen.dart';
 import 'package:sokoun_app/features/favorites/presentation/screens/favorites_screen.dart';
 import 'package:sokoun_app/features/home/presentation/screens/owner_visit_requests_screen.dart';
+import 'package:sokoun_app/features/home/presentation/screens/tenant_home_screen.dart';
 import 'package:sokoun_app/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:sokoun_app/features/visits/imports.dart';
 import 'package:toastification/toastification.dart';
@@ -73,7 +74,7 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
               locale: context.locale,
               navigatorKey: Go.navigatorKey,
               // home: FavoritesScreen(),
-              home: OwnerListingsScreen(),
+              home: SplashScreen(),
               // builder: (context, child) {
               //   return Overlay(
               //     initialEntries: [

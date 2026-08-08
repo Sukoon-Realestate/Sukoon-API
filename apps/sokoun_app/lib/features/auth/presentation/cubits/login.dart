@@ -4,12 +4,13 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:sokoun_app/features/auth/presentation/screens/otp_screen.dart';
 
-class LoginCubit extends AsyncCubit<String> {
-  LoginCubit() : super('');
+class LoginCubit extends AsyncCubit<Map<String, dynamic>> {
+  LoginCubit() : super({});
 
   Future<void> login({
     required String email,
-    required String password
+    required String password,
+    required Future<void> Function() onSuccess,
   }) async {
     await executeAsyncWithBaseModel(
       showMsgOnSuccess: true,
@@ -24,7 +25,7 @@ class LoginCubit extends AsyncCubit<String> {
         ),
       ),
 
-      onSuccess: (_) => Go.to(const OtpScreen())
+      onSuccess: (_) => onSuccess.call()
     );
   }
 }

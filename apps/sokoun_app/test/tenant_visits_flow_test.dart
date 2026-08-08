@@ -8,6 +8,8 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/home/presentation/screens/tenant_home_screen.dart';
 import 'package:sokoun_app/features/visits/imports.dart';
 
+import 'helpers/home_page_test_dependencies.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -21,6 +23,7 @@ void main() {
           return call.method == 'getAll' ? <String, Object>{} : true;
         });
     await EasyLocalization.ensureInitialized();
+    registerHomePageTestDependencies();
   });
 
   tearDownAll(() {

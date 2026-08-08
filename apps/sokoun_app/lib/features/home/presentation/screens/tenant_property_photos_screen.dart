@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/widgets/image_widgets/cached_image.dart';
 import 'package:sokoun_app/features/home/data/models/tenant_property_content.dart';
 
 import '../widgets/tenant_property_photos/imports.dart';
@@ -84,11 +85,29 @@ class _TenantPropertyPhotosScreenState
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        Icon(
-                          Icons.apartment_outlined,
-                          color: AppColors.whiteAlpha40,
-                          size: 58.r,
-                        ),
+                        if (widget.property.imageUrls.isNotEmpty)
+                          Positioned.fill(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(24.r),
+                              child: CachedImage(
+                                url:
+                                    widget.property.imageUrls[_selectedIndex
+                                        .clamp(
+                                          0,
+                                          widget.property.imageUrls.length - 1,
+                                        )
+                                        .toInt()],
+                                fit: BoxFit.cover,
+                                height: 280.h,
+                              ),
+                            ),
+                          )
+                        else
+                          Icon(
+                            Icons.apartment_outlined,
+                            color: AppColors.whiteAlpha40,
+                            size: 58.r,
+                          ),
                         PositionedDirectional(
                           start: 12.w,
                           child: TenantPhotoNavButton(

@@ -1,10 +1,16 @@
 part of '../../imports.dart';
 
 class OwnerRevenueScreen extends StatelessWidget {
-  const OwnerRevenueScreen({super.key, this.properties, this.transactions});
+  const OwnerRevenueScreen({
+    super.key,
+    this.properties,
+    this.transactions,
+    this.showBackButton = true,
+  });
 
   final List<OwnerRevenuePropertyContent>? properties;
   final List<OwnerTransactionContent>? transactions;
+  final bool showBackButton;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +28,7 @@ class OwnerRevenueScreen extends StatelessWidget {
             children: [
               OwnerPropertyTopBar(
                 title: LocaleKeys.ownerRevenueTitle,
-                onBackPressed: () => Go.back(),
+                onBackPressed: showBackButton ? () => Go.back() : null,
               ),
               Expanded(
                 child: ListView(
@@ -129,9 +135,6 @@ class OwnerRevenueScreen extends StatelessWidget {
               ),
             ],
           ),
-        ),
-        bottomNavigationBar: const OwnerPropertiesBottomNavigation(
-          activeTab: OwnerPropertiesNavigationTab.more,
         ),
       ),
     );

@@ -4,6 +4,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 
@@ -16,15 +17,11 @@ class OtpScreen extends StatefulWidget {
   const OtpScreen({
     super.key,
     this.maskedEmail = 'ah****@gmail.com',
-    this.onBack,
-    this.onChangeEmail,
     this.onConfirm,
     this.onResend,
   });
 
   final String maskedEmail;
-  final VoidCallback? onBack;
-  final VoidCallback? onChangeEmail;
   final ValueChanged<String>? onConfirm;
   final VoidCallback? onResend;
 
@@ -68,7 +65,7 @@ class _OtpScreenState extends State<OtpScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          OtpHeader(onBack: widget.onBack),
+          OtpHeader(),
           36.szH,
           Container(
             width: 64.r,
@@ -101,7 +98,7 @@ class _OtpScreenState extends State<OtpScreen> {
           ),
           6.szH,
           TextButton(
-            onPressed: widget.onChangeEmail,
+            onPressed: () => Go.back(),
             style: TextButton.styleFrom(
               minimumSize: Size.zero,
               padding: EdgeInsets.zero,

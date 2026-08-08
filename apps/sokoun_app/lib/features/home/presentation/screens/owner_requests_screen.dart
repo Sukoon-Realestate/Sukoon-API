@@ -6,7 +6,6 @@ import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/home/data/models/owner_request_content.dart';
 
 import '../widgets/owner_requests/imports.dart';
-import '../widgets/owner_widgets/home_bottom_nav.dart';
 
 class OwnerRequestsScreen extends StatelessWidget {
   const OwnerRequestsScreen({super.key});
@@ -40,34 +39,6 @@ class OwnerRequestsScreen extends StatelessWidget {
                 12.szH,
               ],
             ),
-          ),
-        ),
-        bottomNavigationBar: const SafeArea(
-          top: false,
-          child: HomeBottomNav(
-            items: [
-              HomeBottomNavItemData(
-                icon: Icons.home_outlined,
-                label: 'الرئيسية',
-              ),
-              HomeBottomNavItemData(
-                icon: Icons.apartment_rounded,
-                label: 'عقاراتي',
-              ),
-              HomeBottomNavItemData(
-                icon: Icons.assignment_outlined,
-                label: 'الطلبات',
-                isActive: true,
-              ),
-              HomeBottomNavItemData(
-                icon: Icons.chat_bubble_outline_rounded,
-                label: 'الشات',
-              ),
-              HomeBottomNavItemData(
-                icon: Icons.more_horiz_rounded,
-                label: 'المزيد',
-              ),
-            ],
           ),
         ),
       ),

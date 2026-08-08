@@ -15,6 +15,8 @@ import 'package:sokoun_app/features/notifications/presentation/screens/notificat
 import 'package:sokoun_app/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:sokoun_app/features/notifications/presentation/widgets/notification_card.dart';
 
+import 'helpers/home_page_test_dependencies.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -28,6 +30,7 @@ void main() {
           return call.method == 'getAll' ? <String, Object>{} : true;
         });
     await EasyLocalization.ensureInitialized();
+    registerHomePageTestDependencies();
   });
 
   tearDownAll(() {

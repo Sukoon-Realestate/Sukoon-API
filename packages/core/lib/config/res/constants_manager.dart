@@ -59,6 +59,14 @@ class CacheConstant {
   static const String lastSeenWhatsNewVersion = "lastSeenWhatsNewVersion";
 }
 
+final class RemoteConfigValues {
+  static String _minAppVersion = '';
+
+  static String get minAppVersion => _minAppVersion;
+
+  static void setMinAppVersion(String value) => _minAppVersion = value;
+}
+
 class Styles {
   static TextStyle bold16 = TextStyle(
     fontSize: 16.sp,

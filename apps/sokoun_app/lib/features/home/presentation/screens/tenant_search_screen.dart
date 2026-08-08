@@ -2,16 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
-import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:sokoun_app/features/chat/presentation/screens/chat_list_screen.dart';
-import 'package:sokoun_app/features/favorites/presentation/screens/favorites_screen.dart';
 import 'package:sokoun_app/features/home/data/models/tenant_search_content.dart';
-import 'package:sokoun_app/features/notifications/data/enums/notification_role.dart';
-import 'package:sokoun_app/features/notifications/presentation/screens/notifications_screen.dart';
 
 import '../widgets/tenant_search/imports.dart';
-import '../widgets/tenant_widgets/imports.dart';
 import 'tenant_search_results_screen.dart';
 
 class TenantSearchScreen extends StatefulWidget {
@@ -139,38 +133,6 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
                 24.szH,
               ],
             ),
-          ),
-        ),
-        bottomNavigationBar: SafeArea(
-          top: false,
-          child: HomeBottomNav(
-            items: [
-              const HomeBottomNavItemData(
-                icon: Icons.home_outlined,
-                label: 'الرئيسية',
-              ),
-              HomeBottomNavItemData(
-                icon: Icons.favorite_border_rounded,
-                label: 'المحفوظات',
-                onTap: () => Go.to(const FavoritesScreen()),
-              ),
-              HomeBottomNavItemData(
-                icon: Icons.chat_bubble_outline_rounded,
-                label: 'الشات',
-                onTap: () => Go.to(const ChatListScreen()),
-              ),
-              HomeBottomNavItemData(
-                icon: Icons.notifications_none_rounded,
-                label: 'الإشعارات',
-                onTap: () => Go.to(
-                  const NotificationsScreen(role: NotificationRole.tenant),
-                ),
-              ),
-              HomeBottomNavItemData(
-                icon: Icons.person_outline_rounded,
-                label: 'الحساب',
-              ),
-            ],
           ),
         ),
       ),

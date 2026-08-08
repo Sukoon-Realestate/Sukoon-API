@@ -77,7 +77,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             ],
           ),
         ),
-        bottomNavigationBar: const FavoritesBottomNavigation(),
       ),
     );
   }

@@ -7,8 +7,9 @@ abstract interface class NetworkService {
     Model Function(dynamic json)? mapper,
   });
 
-  void setToken(String token);
+  Future<bool> hasSessionCookies();
 
-  void removeToken();
+  Future<void> clearSessionCookies();
+
   Future<void> updateBaseUrl();
 }

@@ -5,6 +5,10 @@ class ApiConstants {
   static const String refreshToken = 'auth/refresh/';
   static const String register = 'auth/users/';
 
+  // home
+  static const String homePage = 'homepage';
+  static const String properties = 'properties/';
+
   // packages
   static const String getPackages = 'packages/';
   static const String individual = 'individual';

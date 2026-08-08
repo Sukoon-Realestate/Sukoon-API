@@ -7,7 +7,6 @@ import '../../helpers/apps_flyer/apps_flyer_helper.dart';
 import '../../helpers/cache_service.dart';
 import '../../helpers/nsfw_detector.dart';
 import '../../local_db/objectbox_cache_service.dart';
-import '../../helpers/helpers.dart';
 import '../../network/interceptors/log_interceptor.dart';
 import '../../network/network_service.dart';
 import '../models/user_models/user_model.dart';
@@ -15,37 +14,29 @@ part 'user_state.dart';
 part 'user_utils.dart';
 
 const String _userKey = 'user';
-const String _tokenKey = 'token';
+const String _legacyTokenKey = 'token';
 
 class UserCubit extends Cubit<UserState> with UserUtils {
   UserCubit() : super(UserState.initial());
 
-  Future<void> setUserLoggedIn({
-    required UserModel user,
-    required String token,
-  }) async {
-    await Future.wait([
-      _saveUser(user),
-      _saveToken(token),
-    ]);
-    injector<NetworkService>().setToken(token);
+  Future<void> setUserLoggedIn({required UserModel user}) async {
+    await Future.wait([_saveUser(user), SecureStorage.delete(_legacyTokenKey)]);
     AppyFlyerHelper.setCustomer();
     emit(state.copyWith(userModel: user, userStatus: UserStatus.loggedIn));
   }
 
   Future<void> logout() async {
-    await Future.wait([
-      CacheStorage.delete(_userKey),
-      SecureStorage.delete(_tokenKey),
-    ]);
-    ObjectBoxCacheService.clearAll();
-    NsfwDetectorHelper.terminate();
-    _clearUser();
-    emit(state.copyWith(userStatus: UserStatus.loggedOut));
-  }
-
-  Future<void> updateToken(String token) async {
-    _saveToken(token);
+    try {
+      await injector<NetworkService>().clearSessionCookies();
+    } finally {
+      await Future.wait([
+        CacheStorage.delete(_userKey),
+        SecureStorage.delete(_legacyTokenKey),
+      ]);
+      ObjectBoxCacheService.clearAll();
+      NsfwDetectorHelper.terminate();
+      emit(UserState.initial());
+    }
   }
 
   Future<void> updateUser(UserModel user) async {
@@ -58,10 +49,14 @@ class UserCubit extends Cubit<UserState> with UserUtils {
       _userKey,
       isDecoded: true,
     );
-    final token = await SecureStorage.read(_tokenKey);
-    log('userMap $userMap, token $token');
-    if (token != null && userMap != null) {
-      injector<NetworkService>().setToken(token);
+    await SecureStorage.delete(_legacyTokenKey);
+    final bool hasSessionCookies = await injector<NetworkService>()
+        .hasSessionCookies();
+    log(
+      'Cached user exists: ${userMap != null}, '
+      'cookie session exists: $hasSessionCookies',
+    );
+    if (hasSessionCookies && userMap != null) {
       AppyFlyerHelper.setCustomer();
       emit(
         state.copyWith(
@@ -71,12 +66,10 @@ class UserCubit extends Cubit<UserState> with UserUtils {
       );
       return true;
     }
+    if (userMap != null) {
+      await CacheStorage.delete(_userKey);
+    }
     return false;
-  }
-
-  void _clearUser() {
-    injector<NetworkService>().removeToken();
-    emit(UserState.initial());
   }
 
   UserModel get user => state.userModel;

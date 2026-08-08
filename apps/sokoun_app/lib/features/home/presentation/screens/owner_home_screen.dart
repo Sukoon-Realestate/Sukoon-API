@@ -3,12 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
-import 'package:sokoun_app/features/chat/presentation/screens/chat_list_screen.dart';
 import 'package:sokoun_app/features/notifications/data/enums/notification_role.dart';
 import 'package:sokoun_app/features/notifications/presentation/screens/notifications_screen.dart';
 
-import 'owner_listings_screen.dart';
-import 'owner_visit_requests_screen.dart';
 import '../widgets/owner_widgets/imports.dart';
 
 class OwnerHomeScreen extends StatelessWidget {
@@ -48,37 +45,6 @@ class OwnerHomeScreen extends StatelessWidget {
                 24.szH,
               ],
             ),
-          ),
-        ),
-        bottomNavigationBar: SafeArea(
-          top: false,
-          child: HomeBottomNav(
-            items: [
-              const HomeBottomNavItemData(
-                icon: Icons.home_outlined,
-                label: 'الرئيسية',
-                isActive: true,
-              ),
-              HomeBottomNavItemData(
-                icon: Icons.apartment_rounded,
-                label: 'عقاراتي',
-                onTap: () => Go.to(const OwnerListingsScreen()),
-              ),
-              HomeBottomNavItemData(
-                icon: Icons.assignment_outlined,
-                label: 'الطلبات',
-                onTap: () => Go.to(const OwnerVisitRequestsScreen()),
-              ),
-              HomeBottomNavItemData(
-                icon: Icons.chat_bubble_outline_rounded,
-                label: 'الشات',
-                onTap: () => Go.to(const ChatListScreen()),
-              ),
-              const HomeBottomNavItemData(
-                icon: Icons.more_horiz_rounded,
-                label: 'المزيد',
-              ),
-            ],
           ),
         ),
       ),
