@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -31,7 +32,7 @@ class EmptyResultsState extends StatelessWidget {
             ),
             14.szH,
             AppText(
-              'لا توجد نتائج مطابقة',
+              LocaleKeys.tenantSearchResultsEmptyTitle,
               color: AppColors.sokoonNavy,
               fontSize: 17.sp,
               fontWeight: FontWeight.w900,
@@ -39,7 +40,7 @@ class EmptyResultsState extends StatelessWidget {
             ),
             6.szH,
             AppText(
-              'جرّب تغيير البحث أو إزالة بعض الفلاتر',
+              LocaleKeys.tenantSearchResultsEmptyDescription,
               color: AppColors.sokoonGray,
               fontSize: 13.sp,
               fontWeight: FontWeight.w500,

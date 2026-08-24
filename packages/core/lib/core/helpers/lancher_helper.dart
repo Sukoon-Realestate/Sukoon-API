@@ -7,6 +7,36 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../config/language/locale_keys.g.dart';
 
 class LauncherHelper {
+  static Future<void> launchGoogleMaps({
+    required String latitude,
+    required String longitude,
+  }) async {
+    final double? parsedLatitude = double.tryParse(latitude.trim());
+    final double? parsedLongitude = double.tryParse(longitude.trim());
+
+    if (parsedLatitude == null ||
+        parsedLongitude == null ||
+        parsedLatitude < -90 ||
+        parsedLatitude > 90 ||
+        parsedLongitude < -180 ||
+        parsedLongitude > 180) {
+      throw ArgumentError('Invalid latitude or longitude');
+    }
+
+    final Uri googleMapsUrl = Uri.https('www.google.com', '/maps/search/', {
+      'api': '1',
+      'query': '$parsedLatitude,$parsedLongitude',
+    });
+
+    final bool didLaunch = await launchUrl(
+      googleMapsUrl,
+      mode: LaunchMode.externalApplication,
+    );
+    if (!didLaunch) {
+      throw LocaleKeys.exceptionError;
+    }
+  }
+
   static void launchURL({required String url}) async {
     if (!url.toString().startsWith('https')) {
       url = 'https://$url';
@@ -22,9 +52,13 @@ class LauncherHelper {
       phone = phone.substring(2);
     }
 
-    final String message = Uri.encodeComponent('مرحبا بك'); // ✅ encode Arabic text
+    final String message = Uri.encodeComponent(
+      'مرحبا بك',
+    ); // ✅ encode Arabic text
 
-    final Uri nativeUrl = Uri.parse("whatsapp://send?phone=$phone&text=$message");
+    final Uri nativeUrl = Uri.parse(
+      "whatsapp://send?phone=$phone&text=$message",
+    );
     final Uri webUrl = Uri.parse("https://wa.me/$phone?text=$message");
 
     debugPrint("Trying WhatsApp URL: $nativeUrl");
@@ -60,8 +94,9 @@ class LauncherHelper {
   }
 
   static Future<void> launchTwitter(String userName) async {
-    final twitterProfileUrl =
-        Uri.parse('twitter://user?screen_name=$userName'); // Twitter app URL
+    final twitterProfileUrl = Uri.parse(
+      'twitter://user?screen_name=$userName',
+    ); // Twitter app URL
     final Uri webUrl = Uri.parse('https://twitter.com/$userName'); // Web URL
     try {
       if (await canLaunchUrl(twitterProfileUrl)) {
@@ -80,9 +115,11 @@ class LauncherHelper {
 
   static Future<void> launchInstagram(String userName) async {
     final Uri instagramProfileUrl = Uri.parse(
-        'https://www.instagram.com/$userName'); // Replace with your Instagram profile URL
-    final Uri instagramNativeApp =
-        Uri.parse('instagram://user?username=$userName');
+      'https://www.instagram.com/$userName',
+    ); // Replace with your Instagram profile URL
+    final Uri instagramNativeApp = Uri.parse(
+      'instagram://user?username=$userName',
+    );
 
     try {
       if (await canLaunchUrl(instagramNativeApp)) {
@@ -101,15 +138,14 @@ class LauncherHelper {
 
   static void launchFacebook(String userName) async {
     final Uri nativeUrl = Uri.parse(
-        'fb://facewebmodal/f?href=https://www.facebook.com/$userName');
+      'fb://facewebmodal/f?href=https://www.facebook.com/$userName',
+    );
     final Uri webUrl = Uri.parse('https://www.facebook.com/$userName');
     if (await canLaunchUrl(nativeUrl)) {
       await launchUrl(nativeUrl);
     } else {
       if (await canLaunchUrl(webUrl)) {
-        await launchUrl(
-          webUrl,
-        );
+        await launchUrl(webUrl);
       } else {
         throw 'Could not launch $webUrl';
       }
@@ -117,8 +153,9 @@ class LauncherHelper {
   }
 
   static Future<void> launchSnapchat(String userName) async {
-    final snapchatProfileUrl =
-        Uri.parse('https://www.snapchat.com/add/$userName');
+    final snapchatProfileUrl = Uri.parse(
+      'https://www.snapchat.com/add/$userName',
+    );
     final snapChatNativeApp = Uri.parse('snapchat://add/$userName');
 
     try {
@@ -142,7 +179,8 @@ class LauncherHelper {
     try {
       if (await canLaunchUrl(Uri.parse('com.zhiliaoapp.musically'))) {
         await launchUrl(
-            Uri.parse('com.zhiliaoapp.musically://user?u=$userName'));
+          Uri.parse('com.zhiliaoapp.musically://user?u=$userName'),
+        );
       } else {
         if (await canLaunchUrl(tiktokProfileUrl)) {
           await launchUrl(tiktokProfileUrl);

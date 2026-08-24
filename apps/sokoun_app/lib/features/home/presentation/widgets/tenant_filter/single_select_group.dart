@@ -5,6 +5,7 @@ import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 import 'filter_chip_wrap.dart';
+import 'property_filter_options.dart';
 
 class SingleSelectGroup extends StatelessWidget {
   const SingleSelectGroup({
@@ -16,7 +17,7 @@ class SingleSelectGroup extends StatelessWidget {
   });
 
   final String title;
-  final List<String> options;
+  final List<TenantFilterOption> options;
   final String selectedValue;
   final ValueChanged<String> onSelected;
 

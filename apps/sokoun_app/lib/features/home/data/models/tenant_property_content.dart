@@ -30,6 +30,7 @@ class TenantNearbyPlaceContent {
 
 class TenantPropertyDetailsContent {
   const TenantPropertyDetailsContent({
+    required this.id,
     required this.title,
     required this.propertyType,
     required this.location,
@@ -46,13 +47,16 @@ class TenantPropertyDetailsContent {
     required this.ownerName,
     required this.ownerMeta,
     required this.imageColors,
+    required this.latitude,
+    required this.longitude,
     this.imageUrls = const [],
   });
 
   factory TenantPropertyDetailsContent.fromSearchResult(
-    SearchResultContent item,
-  ) {
+      SearchResultContent item,
+      ) {
     return TenantPropertyDetailsContent(
+      id: '',
       title: item.title.contains('—')
           ? item.title
           : '${item.title} — ${item.district}',
@@ -86,7 +90,7 @@ class TenantPropertyDetailsContent {
         ),
       ],
       description:
-          'شقة مفروشة بالكامل في موقع حيوي وقريبة من الخدمات والمواصلات. مناسبة للسكن الهادئ وتحتوي على كل الأساسيات المطلوبة للإقامة الشهرية.',
+      'شقة مفروشة بالكامل في موقع حيوي وقريبة من الخدمات والمواصلات. مناسبة للسكن الهادئ وتحتوي على كل الأساسيات المطلوبة للإقامة الشهرية.',
       amenities: item.amenities.isEmpty
           ? item.tags
           : [...item.amenities, ...item.tags],
@@ -127,11 +131,14 @@ class TenantPropertyDetailsContent {
         AppColors.sokoonTeal,
         AppColors.tealDeep,
       ],
+      latitude: '30.0444',
+      longitude: '31.2357',
     );
   }
 
   factory TenantPropertyDetailsContent.fromModel(PropertyDetailsModel model) {
     return TenantPropertyDetailsContent(
+      id: model.id,
       title: model.title,
       propertyType: model.propertyTypeLabel,
       location: model.locationLabel,
@@ -170,9 +177,12 @@ class TenantPropertyDetailsContent {
       ownerMeta: model.isVerified ? 'مالك موثّق' : 'مالك',
       imageColors: const [AppColors.tealDark, AppColors.sokoonTeal],
       imageUrls: model.imageUrls,
+      latitude: model.latitude,
+      longitude: model.longitude,
     );
   }
 
+  final String id;
   final String title;
   final String propertyType;
   final String location;
@@ -190,6 +200,8 @@ class TenantPropertyDetailsContent {
   final String ownerMeta;
   final List<Color> imageColors;
   final List<String> imageUrls;
+  final String latitude;
+  final String longitude;
 
   String get shortTitle => '$propertyType مفروشة — مدينة نصر';
   String get shareUrl => 'https://sokoun.app/property/cairo-nasr-city-6500';
@@ -311,10 +323,10 @@ class TenantFilterFormState {
   }
 
   static String _firstMatching(
-    Set<String> selectedFilters,
-    List<String> options, {
-    String fallback = '',
-  }) {
+      Set<String> selectedFilters,
+      List<String> options, {
+        String fallback = '',
+      }) {
     for (final option in options) {
       if (selectedFilters.contains(option)) {
         return option;
@@ -352,7 +364,7 @@ class TenantFilterFormState {
       amenities: amenities ?? this.amenities,
       verifiedOnly: verifiedOnly ?? this.verifiedOnly,
       ownershipVerifiedOnly:
-          ownershipVerifiedOnly ?? this.ownershipVerifiedOnly,
+      ownershipVerifiedOnly ?? this.ownershipVerifiedOnly,
     );
   }
 }

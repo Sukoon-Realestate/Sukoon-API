@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 
@@ -60,7 +61,7 @@ class ResultsSearchHeader extends StatelessWidget {
                       decoration: InputDecoration(
                         isCollapsed: true,
                         border: InputBorder.none,
-                        hintText: 'شقة مفروشة مدينة نصر…',
+                        hintText: LocaleKeys.tenantSearchResultsHint,
                         hintStyle: TextStyle(
                           color: AppColors.sokoonGray,
                           fontSize: 14.sp,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -23,7 +24,7 @@ class ClearFiltersChip extends StatelessWidget {
           border: Border.all(color: AppColors.roseAlpha19),
         ),
         child: AppText(
-          'مسح الكل',
+          LocaleKeys.tenantSearchResultsClearAll,
           color: AppColors.sokoonRose,
           fontSize: 12.sp,
           fontWeight: FontWeight.w600,

@@ -3,12 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/lancher_helper.dart';
 import 'package:melos_core/core/helpers/status_builder.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:melos_core/core/widgets/custom_loading.dart';
 import 'package:melos_core/core/widgets/exeption_view.dart';
 import 'package:sokoun_app/features/home/data/models/property_details_model.dart';
 import 'package:sokoun_app/features/home/data/models/tenant_property_content.dart';
@@ -17,7 +16,6 @@ import 'package:sokoun_app/features/home/presentation/cubits/property_details_cu
 import 'package:sokoun_app/features/visits/imports.dart';
 
 import '../widgets/tenant_property_details/imports.dart';
-import 'tenant_property_location_screen.dart';
 import 'tenant_property_photos_screen.dart';
 
 class TenantPropertyDetailsScreen extends StatefulWidget {
@@ -34,6 +32,7 @@ class TenantPropertyDetailsScreen extends StatefulWidget {
 class _TenantPropertyDetailsScreenState
     extends State<TenantPropertyDetailsScreen> {
   late final PropertyDetailsCubit? _detailsCubit;
+  late final Future<void>? _detailsRequest;
   late final TenantPropertyDetailsContent? _mockProperty;
   bool _isSaved = false;
 
@@ -44,9 +43,10 @@ class _TenantPropertyDetailsScreenState
     if (propertyId != null) {
       _mockProperty = null;
       _detailsCubit = PropertyDetailsCubit();
-      _detailsCubit!.getPropertyDetails(propertyId);
+      _detailsRequest = _detailsCubit!.getPropertyDetails(propertyId);
     } else {
       _detailsCubit = null;
+      _detailsRequest = null;
       _mockProperty = TenantPropertyDetailsContent.fromSearchResult(
         widget.item ?? TenantSearchResultContent.results.first,
       );
@@ -68,11 +68,10 @@ class _TenantPropertyDetailsScreenState
     );
   }
 
-  void _openLocation(TenantPropertyDetailsContent property) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => TenantPropertyLocationScreen(property: property),
-      ),
+  Future<void> _openLocation(TenantPropertyDetailsContent property) async {
+    await LauncherHelper.launchGoogleMaps(
+      latitude: property.latitude,
+      longitude: property.longitude,
     );
   }
 
@@ -175,26 +174,17 @@ class _TenantPropertyDetailsScreenState
               : BlocProvider.value(
                   value: cubit,
                   child:
-                      BlocBuilder<
+                      StatusBuilder<
                         PropertyDetailsCubit,
-                        AsyncState<PropertyDetailsModel>
-                      >(
-                        builder: (context, state) {
-                          return StatusBuilder<
-                            PropertyDetailsModel,
-                            PropertyDetailsCubit
-                          >(
-                            data: state,
-                            onSuccess: (data, context) => _buildBody(
-                              TenantPropertyDetailsContent.fromModel(data),
-                            ),
-                            onLoading: () => _buildStatusView(
-                              CustomLoading.showLoadingView(),
-                            ),
-                            onFail: () =>
-                                _buildStatusView(const ExceptionView()),
-                          );
-                        },
+                        PropertyDetailsModel
+                      >.withShimmer(
+                        initialDataForShimmer: PropertyDetailsModel.initial(),
+                        requestToTryAgainWhenError: _detailsRequest!,
+                        builder: (data) => _buildBody(
+                          TenantPropertyDetailsContent.fromModel(data),
+                        ),
+                        errorType: ErrorType.customView,
+                        errorWidget: _buildStatusView(const ExceptionView()),
                       ),
                 ),
         ),
@@ -323,34 +313,34 @@ class _TenantPropertyDetailsScreenState
                         ),
                       ),
                       12.szH,
-                      Container(
-                        padding: EdgeInsets.all(14.w),
-                        decoration: BoxDecoration(
-                          color: AppColors.amberPale,
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(color: AppColors.goldAlpha15),
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Icon(
-                              Icons.info_outline_rounded,
-                              color: AppColors.brown,
-                              size: 18.r,
-                            ),
-                            8.szW,
-                            Expanded(
-                              child: AppText(
-                                'رسوم المنصة يتم خصمها من أرباح المالك — السعر المعروض هو ما ستدفعه فعلاً',
-                                color: AppColors.brown,
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w500,
-                                maxLines: 2,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // Container(
+                      //   padding: EdgeInsets.all(14.w),
+                      //   decoration: BoxDecoration(
+                      //     color: AppColors.amberPale,
+                      //     borderRadius: BorderRadius.circular(12.r),
+                      //     border: Border.all(color: AppColors.goldAlpha15),
+                      //   ),
+                      //   child: Row(
+                      //     crossAxisAlignment: CrossAxisAlignment.start,
+                      //     children: [
+                      //       Icon(
+                      //         Icons.info_outline_rounded,
+                      //         color: AppColors.brown,
+                      //         size: 18.r,
+                      //       ),
+                      //       8.szW,
+                      //       Expanded(
+                      //         child: AppText(
+                      //           'رسوم المنصة يتم خصمها من أرباح المالك — السعر المعروض هو ما ستدفعه فعلاً',
+                      //           color: AppColors.brown,
+                      //           fontSize: 12.sp,
+                      //           fontWeight: FontWeight.w500,
+                      //           maxLines: 2,
+                      //         ),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                       12.szH,
                       TenantPropertyOwnerCard(property: property),
                       28.szH,

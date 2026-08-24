@@ -1,33 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:sokoun_app/features/home/data/models/tenant_search_result_content.dart';
+import 'package:melos_core/core/widgets/image_widgets/cached_image.dart';
+import 'package:sokoun_app/features/home/data/models/property_details_model.dart';
 
 class ResultImageHeader extends StatelessWidget {
   const ResultImageHeader({super.key, required this.item});
 
-  final SearchResultContent item;
+  final PropertyDetailsModel item;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final int photoCount = item.imageUrls.length;
+    return SizedBox(
       height: 140.h,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: AlignmentDirectional.topStart,
-          end: AlignmentDirectional.bottomEnd,
-          colors: [item.imageColor.withValues(alpha: .78), item.imageColorEnd],
-        ),
-      ),
       child: Stack(
         children: [
-          Center(
-            child: Icon(
-              Icons.image_outlined,
-              color: AppColors.whiteAlpha60,
-              size: 36.r,
-            ),
+          Positioned.fill(
+            child: item.mainImage.isEmpty
+                ? Container(
+                    color: AppColors.tealMuted,
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.image_outlined,
+                      color: AppColors.whiteAlpha60,
+                      size: 36.r,
+                    ),
+                  )
+                : CachedImage(
+                    url: item.mainImage,
+                    fit: BoxFit.cover,
+                    placeHolder: Icon(
+                      Icons.image_outlined,
+                      color: AppColors.whiteAlpha60,
+                      size: 36.r,
+                    ),
+                  ),
           ),
           if (item.isVerified)
             PositionedDirectional(
@@ -40,7 +50,7 @@ class ResultImageHeader extends StatelessWidget {
                   borderRadius: BorderRadius.circular(7.r),
                 ),
                 child: AppText(
-                  'موثّق ✓',
+                  '${LocaleKeys.verified} ✓',
                   color: AppColors.white,
                   fontSize: 10.sp,
                   fontWeight: FontWeight.w800,
@@ -57,7 +67,7 @@ class ResultImageHeader extends StatelessWidget {
                 borderRadius: BorderRadius.circular(7.r),
               ),
               child: AppText(
-                '${item.photoCount} صور',
+                '$photoCount ${LocaleKeys.chatPhotos}',
                 color: AppColors.white,
                 fontSize: 10.sp,
                 fontWeight: FontWeight.w600,

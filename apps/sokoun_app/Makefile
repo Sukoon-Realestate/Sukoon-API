@@ -2,89 +2,123 @@
 # Flutter Makefile
 # ==============================
 
-.PHONY: clean run apk ios upgrade handlePods openXcode translations gradleFix clearGradleCache \
-        buildIos distribute distributeAndroid flutterfireSetup
+SHELL := /bin/bash
+.DEFAULT_GOAL := help
 
-# Clean Flutter build and get packages
+.PHONY: help clean run apk ipa appbundle ios upgrade \
+	handlePods openXcode flutterfireSetup translations \
+	gradleFix clearGradleCache buildIos distribute \
+	distributeAndroid fingerPrint kill sha
+
+# Show available commands
+help:
+	@echo "Available commands:"
+	@echo "  make clean"
+	@echo "  make run"
+	@echo "  make apk"
+	@echo "  make ipa"
+	@echo "  make appbundle"
+	@echo "  make ios"
+	@echo "  make upgrade"
+	@echo "  make handlePods"
+	@echo "  make openXcode"
+	@echo "  make flutterfireSetup"
+	@echo "  make translations"
+	@echo "  make gradleFix"
+	@echo "  make clearGradleCache"
+	@echo "  make buildIos"
+	@echo "  make distribute ARGS=\"...\""
+	@echo "  make distributeAndroid ARGS=\"...\""
+	@echo "  make fingerPrint"
+	@echo "  make sha"
+	@echo "  make kill"
+
+# Clean Flutter build and install packages
 clean:
-	flutter clean && flutter pub get
+	flutter clean
+	flutter pub get
 
-# Run the app on a connected device
+# Run the app
 run:
-	flutter run
+	flutter run --flavor production
 
-# Build APK
+# Build Android APK
 apk:
 	flutter build apk --split-per-abi --flavor production
 
-ipa:
-	flutter build ipa --flavor production
-
+# Build Android App Bundle
 appbundle:
 	flutter build appbundle --flavor production
 
-# Build iOS (for macOS users with Xcode)
+# Build iOS IPA
+ipa:
+	flutter build ipa --flavor production
+
+# Build iOS application without IPA
 ios:
-	flutter build ios
+	flutter build ios --flavor production
 
 # Upgrade Flutter packages
 upgrade:
 	flutter pub upgrade
 
-# Install & update CocoaPods
+# Install CocoaPods dependencies
 handlePods:
-	cd ios && pod install && pod update && cd ..
+	cd ios && pod install --repo-update
 
-# Open project in Xcode
+# Open the iOS workspace in Xcode
 openXcode:
 	open ios/Runner.xcworkspace
 
-# Install flutterfire CLI (fixes iOS "flutterfire: command not found" build phase failure)
+# Install FlutterFire CLI
 flutterfireSetup:
 	dart pub global activate flutterfire_cli
+	@echo "Add FlutterFire to PATH if needed:"
+	@echo 'export PATH="$$PATH:$$HOME/.pub-cache/bin"'
 
 # Generate translations
 translations:
 	dart run generate/strings/main.dart
 
-# Fix Gradle lock issues
+# Stop Gradle and remove lock files
 gradleFix:
 	@echo "Stopping Gradle daemons..."
-	-cd android && ./gradlew --stop
-	@echo "Killing Gradle and Java processes..."
-	-pkill -9 -f gradle || true
-	-pkill -9 -f java || true
-	@echo "Removing lock files..."
-	-find android/.gradle -name "*.lock" -delete 2>/dev/null || true
-	-find ~/.gradle -name "*.lock" -delete 2>/dev/null || true
-	@echo "Gradle locks cleared!"
+	@cd android && ./gradlew --stop || true
+	@echo "Killing Gradle processes..."
+	@pkill -9 -f gradle || true
+	@echo "Removing Gradle lock files..."
+	@find android/.gradle -name "*.lock" -delete 2>/dev/null || true
+	@find "$$HOME/.gradle" -name "*.lock" -delete 2>/dev/null || true
+	@echo "Gradle locks cleared."
 
+# Clear Gradle caches
 clearGradleCache:
 	rm -rf android/.gradle
-	rm -rf ~/.gradle/caches
+	rm -rf "$$HOME/.gradle/caches"
+	@echo "Gradle caches cleared."
 
 # Upload iOS build
 buildIos:
 	sh upload_ios.sh
 
-# ==============================
-# Firebase App Distribution
-# ==============================
-
-# Distribute iOS build — see distribute_ios.sh for all options
+# Distribute iOS build
 distribute:
 	sh distribute_ios.sh $(ARGS)
 
-# Distribute Android build — see distribute_android.sh for all options
+# Distribute Android build
 distributeAndroid:
 	sh distribute_android.sh $(ARGS)
 
+# Show signing key fingerprint
 fingerPrint:
-	keytool -list -v -keystore android/app/key.jks -storepass 123456
+	keytool -list -v \
+		-keystore android/app/key.jks \
+		-storepass 123456
 
+# Stop Dart processes
 kill:
-	killall -9 dart
+	@killall -9 dart || true
 
+# Show Android signing report
 sha:
-    cd android
-    ./gradlew signingReport
+	cd android && ./gradlew signingReport

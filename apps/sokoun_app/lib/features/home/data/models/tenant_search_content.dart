@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/cache_service.dart';
 
 class SearchCategoryContent {
   const SearchCategoryContent({required this.label, this.isSelected = false});
@@ -31,23 +32,8 @@ class RecentSearchContent {
 }
 
 abstract final class TenantSearchContent {
-  static const categoryLabels = [
-    'الكل',
-    'شقة',
-    'ستوديو',
-    'غرفة',
-    'دوبلكس',
-    'فيلا',
-  ];
-
-  static const categories = [
-    SearchCategoryContent(label: 'الكل', isSelected: true),
-    SearchCategoryContent(label: 'شقة'),
-    SearchCategoryContent(label: 'ستوديو'),
-    SearchCategoryContent(label: 'غرفة'),
-    SearchCategoryContent(label: 'دوبلكس'),
-    SearchCategoryContent(label: 'فيلا'),
-  ];
+  static const String _recentSearchesCacheKey = 'tenant_recent_searches';
+  static const int _maxRecentSearches = 5;
 
   static const suggestedAreas = [
     SuggestedAreaContent(
@@ -94,20 +80,23 @@ abstract final class TenantSearchContent {
     ),
   ];
 
-  static const recentSearches = [
-    RecentSearchContent(title: 'شقة مفروشة مدينة نصر'),
-    RecentSearchContent(title: 'ستوديو التجمع الخامس'),
-    RecentSearchContent(title: 'غرفة في الزمالك'),
-  ];
+  static List<RecentSearchContent> get recentSearches {
+    return CacheStorage.readList(_recentSearchesCacheKey)
+        .where((title) => title.trim().isNotEmpty)
+        .map((title) => RecentSearchContent(title: title))
+        .take(_maxRecentSearches)
+        .toList(growable: false);
+  }
 
-  static List<SearchCategoryContent> categoriesFor(String selectedCategory) {
-    return [
-      for (final label in categoryLabels)
-        SearchCategoryContent(
-          label: label,
-          isSelected: label == selectedCategory,
-        ),
-    ];
+  static Future<void> saveRecentSearches(
+    List<RecentSearchContent> searches,
+  ) async {
+    final List<String> titles = searches
+        .map((search) => search.title.trim())
+        .where((title) => title.isNotEmpty)
+        .take(_maxRecentSearches)
+        .toList(growable: false);
+    await CacheStorage.write(_recentSearchesCacheKey, titles);
   }
 }
 
@@ -120,9 +109,9 @@ class TenantSearchFormState {
   });
 
   factory TenantSearchFormState.initial() {
-    return const TenantSearchFormState(
+    return TenantSearchFormState(
       query: 'مدينة نصر، القاهرة',
-      selectedCategory: 'الكل',
+      selectedCategory: '',
       selectedArea: 'مدينة نصر',
       recentSearches: TenantSearchContent.recentSearches,
     );
@@ -135,13 +124,13 @@ class TenantSearchFormState {
 
   bool get canSearch {
     return query.trim().isNotEmpty ||
-        selectedCategory != 'الكل' ||
+        selectedCategory.isNotEmpty ||
         selectedArea != null;
   }
 
   Set<String> get resultFilters {
     return {
-      if (selectedCategory != 'الكل') selectedCategory,
+      if (selectedCategory.isNotEmpty) selectedCategory,
       if (selectedArea != null) selectedArea!,
     };
   }

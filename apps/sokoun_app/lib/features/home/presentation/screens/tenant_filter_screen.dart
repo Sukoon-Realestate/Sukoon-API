@@ -1,41 +1,51 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/status_builder.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:sokoun_app/features/home/data/models/tenant_property_content.dart';
-import 'package:sokoun_app/features/home/data/models/tenant_search_result_content.dart';
+import 'package:sokoun_app/features/home/data/models/property_search_model.dart';
+import 'package:sokoun_app/features/home/presentation/cubits/property_search_count_cubit.dart';
 
 import '../widgets/tenant_filter/imports.dart';
 
 class TenantFilterScreen extends StatefulWidget {
   const TenantFilterScreen({super.key, required this.initialFilters});
 
-  final TenantSearchResultsFilterState initialFilters;
+  final PropertySearchFilters initialFilters;
 
   @override
   State<TenantFilterScreen> createState() => _TenantFilterScreenState();
 }
 
 class _TenantFilterScreenState extends State<TenantFilterScreen> {
-  late TenantFilterFormState _form;
+  static const Duration _countDebounceDuration = Duration(milliseconds: 400);
+
+  late PropertySearchFilters _filters;
   late final TextEditingController _cityController;
   late final TextEditingController _districtController;
   late final TextEditingController _minPriceController;
   late final TextEditingController _maxPriceController;
+  late final PropertySearchCountCubit _propertySearchCountCubit;
+  late Future<void> _propertySearchCountRequest;
+  Timer? _countDebounce;
 
   @override
   void initState() {
     super.initState();
-    _form = TenantFilterFormState.initial(
-      query: widget.initialFilters.query,
-      selectedFilters: widget.initialFilters.selectedFilters,
-    );
-    _cityController = TextEditingController(text: _form.city);
-    _districtController = TextEditingController(text: _form.district);
-    _minPriceController = TextEditingController(text: _form.minPrice);
-    _maxPriceController = TextEditingController(text: _form.maxPrice);
+    _filters = widget.initialFilters;
+    _cityController = TextEditingController(text: _filters.city);
+    _districtController = TextEditingController(text: _filters.district);
+    _minPriceController = TextEditingController(text: _filters.priceMin);
+    _maxPriceController = TextEditingController(text: _filters.priceMax);
+    _propertySearchCountCubit = PropertySearchCountCubit();
+    _propertySearchCountRequest = _propertySearchCountCubit.getCount(_filters);
   }
 
   @override
@@ -44,51 +54,86 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
     _districtController.dispose();
     _minPriceController.dispose();
     _maxPriceController.dispose();
+    _countDebounce?.cancel();
+    _propertySearchCountCubit.close();
     super.dispose();
   }
 
   void _reset() {
     setState(() {
-      _form = TenantFilterFormState.initial();
+      _filters = widget.initialFilters.clearFilters();
       _cityController.clear();
       _districtController.clear();
       _minPriceController.clear();
       _maxPriceController.clear();
     });
+    _scheduleResultCountRefresh();
   }
 
-  void _togglePropertyType(String value) {
-    final selected = Set<String>.from(_form.propertyTypes);
-    selected.contains(value) ? selected.remove(value) : selected.add(value);
-    setState(() => _form = _form.copyWith(propertyTypes: selected));
+  void _updateFilters(
+    PropertySearchFilters filters, {
+    bool debounceCount = false,
+  }) {
+    setState(() => _filters = filters);
+    _scheduleResultCountRefresh(debounce: debounceCount);
   }
 
-  void _toggleAmenity(String value) {
-    final selected = Set<String>.from(_form.amenities);
-    selected.contains(value) ? selected.remove(value) : selected.add(value);
-    setState(() => _form = _form.copyWith(amenities: selected));
+  void _scheduleResultCountRefresh({bool debounce = false}) {
+    _countDebounce?.cancel();
+    if (debounce) {
+      _countDebounce = Timer(_countDebounceDuration, _refreshResultCount);
+      return;
+    }
+    _refreshResultCount();
   }
 
-  void _apply() {
-    Navigator.of(context).pop(
-      TenantSearchResultsFilterState(
-        query: _form.query.isEmpty ? widget.initialFilters.query : _form.query,
-        selectedFilters: _form.selectedFilters,
+  void _refreshResultCount() {
+    if (!mounted) return;
+    final Future<void> request = _propertySearchCountCubit.getCount(_filters);
+    setState(() => _propertySearchCountRequest = request);
+  }
+
+  Widget _buildShowResultsLabel([int? count]) {
+    return AppText(
+      count == null
+          ? LocaleKeys.tenantFilterShowResults
+          : '${LocaleKeys.tenantFilterShowResults} ($count)',
+      color: AppColors.white,
+      fontSize: 14.sp,
+      fontWeight: FontWeight.w900,
+    );
+  }
+
+  void _selectPropertyType(String value) {
+    _updateFilters(
+      _filters.copyWith(
+        propertyType: _filters.propertyType == value ? '' : value,
+        page: 1,
       ),
     );
   }
 
+  void _toggleAmenity(String value) {
+    final Set<String> selectedAmenities = Set<String>.from(_filters.amenities);
+    selectedAmenities.contains(value)
+        ? selectedAmenities.remove(value)
+        : selectedAmenities.add(value);
+    _updateFilters(_filters.copyWith(amenities: selectedAmenities, page: 1));
+  }
+
+  void _apply() => Go.back(_filters.copyWith(page: 1));
+
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
+    return BlocProvider.value(
+      value: _propertySearchCountCubit,
       child: Scaffold(
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              FilterTopBar(activeCount: _form.activeCount, onReset: _reset),
+              FilterTopBar(activeCount: _filters.activeCount, onReset: _reset),
               Expanded(
                 child: SingleChildScrollView(
                   padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 20.h),
@@ -96,33 +141,47 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       FilterCard(
-                        title: 'نوع العقار',
-                        child: FilterChipWrap(
-                          options: TenantPropertyFilterOptions.propertyTypes,
-                          selectedValues: _form.propertyTypes,
-                          onSelected: _togglePropertyType,
+                        title: LocaleKeys.tenantFilterOrdering,
+                        child: SingleSelectGroup(
+                          title: LocaleKeys.tenantFilterSortListings,
+                          options: TenantPropertyFilterOptions.ordering,
+                          selectedValue: _filters.ordering,
+                          onSelected: (value) => _updateFilters(
+                            _filters.copyWith(ordering: value, page: 1),
+                          ),
                         ),
                       ),
                       12.szH,
                       FilterCard(
-                        title: 'المدينة والمنطقة',
+                        title: LocaleKeys.tenantFilterPropertyType,
+                        child: FilterChipWrap(
+                          options: TenantPropertyFilterOptions.propertyTypes,
+                          selectedValues: {_filters.propertyType},
+                          onSelected: _selectPropertyType,
+                        ),
+                      ),
+                      12.szH,
+                      FilterCard(
+                        title: LocaleKeys.tenantFilterLocation,
                         child: Column(
                           children: [
                             FilterTextField(
-                              label: 'المدينة',
-                              hint: 'مثال: القاهرة، الرياض…',
+                              label: LocaleKeys.tenantFilterCity,
+                              hint: LocaleKeys.tenantFilterCityHint,
                               controller: _cityController,
-                              onChanged: (value) => setState(
-                                () => _form = _form.copyWith(city: value),
+                              onChanged: (value) => _updateFilters(
+                                _filters.copyWith(city: value, page: 1),
+                                debounceCount: true,
                               ),
                             ),
                             10.szH,
                             FilterTextField(
-                              label: 'المنطقة / الحي',
-                              hint: 'مثال: مدينة نصر، التجمع…',
+                              label: LocaleKeys.tenantFilterDistrict,
+                              hint: LocaleKeys.tenantFilterDistrictHint,
                               controller: _districtController,
-                              onChanged: (value) => setState(
-                                () => _form = _form.copyWith(district: value),
+                              onChanged: (value) => _updateFilters(
+                                _filters.copyWith(district: value, page: 1),
+                                debounceCount: true,
                               ),
                             ),
                           ],
@@ -130,21 +189,22 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
                       ),
                       12.szH,
                       FilterCard(
-                        title: 'نطاق السعر (ر.س / ج)',
+                        title: LocaleKeys.tenantFilterPriceRange,
                         child: Row(
                           children: [
                             Expanded(
                               child: FilterTextField(
-                                label: 'من',
-                                hint: 'من',
+                                label: LocaleKeys.tenantFilterFrom,
+                                hint: LocaleKeys.tenantFilterFrom,
                                 controller: _minPriceController,
                                 keyboardType: TextInputType.number,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                 ],
                                 textAlign: TextAlign.center,
-                                onChanged: (value) => setState(
-                                  () => _form = _form.copyWith(minPrice: value),
+                                onChanged: (value) => _updateFilters(
+                                  _filters.copyWith(priceMin: value, page: 1),
+                                  debounceCount: true,
                                 ),
                               ),
                             ),
@@ -158,16 +218,17 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
                             10.szW,
                             Expanded(
                               child: FilterTextField(
-                                label: 'إلى',
-                                hint: 'إلى',
+                                label: LocaleKeys.tenantFilterTo,
+                                hint: LocaleKeys.tenantFilterTo,
                                 controller: _maxPriceController,
                                 keyboardType: TextInputType.number,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                 ],
                                 textAlign: TextAlign.center,
-                                onChanged: (value) => setState(
-                                  () => _form = _form.copyWith(maxPrice: value),
+                                onChanged: (value) => _updateFilters(
+                                  _filters.copyWith(priceMax: value, page: 1),
+                                  debounceCount: true,
                                 ),
                               ),
                             ),
@@ -176,53 +237,66 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
                       ),
                       12.szH,
                       FilterCard(
-                        title: 'تفاصيل العقار',
+                        title: LocaleKeys.tenantFilterPropertyDetails,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             SingleSelectGroup(
-                              title: 'عدد الغرف',
-                              options: TenantPropertyFilterOptions.rooms,
-                              selectedValue: _form.rooms,
-                              onSelected: (value) => setState(
-                                () => _form = _form.copyWith(rooms: value),
+                              title: LocaleKeys.tenantFilterBedrooms,
+                              options: TenantPropertyFilterOptions.counts,
+                              selectedValue: _filters.bedrooms,
+                              onSelected: (value) => _updateFilters(
+                                _filters.copyWith(bedrooms: value, page: 1),
                               ),
                             ),
                             12.szH,
                             SingleSelectGroup(
-                              title: 'عدد الحمامات',
-                              options: TenantPropertyFilterOptions.bathrooms,
-                              selectedValue: _form.bathrooms,
-                              onSelected: (value) => setState(
-                                () => _form = _form.copyWith(bathrooms: value),
+                              title: LocaleKeys.tenantFilterBathrooms,
+                              options: TenantPropertyFilterOptions.counts,
+                              selectedValue: _filters.bathrooms,
+                              onSelected: (value) => _updateFilters(
+                                _filters.copyWith(bathrooms: value, page: 1),
                               ),
                             ),
                             12.szH,
                             SingleSelectGroup(
-                              title: 'مدة الإيجار',
-                              options: TenantPropertyFilterOptions.rentalTerms,
-                              selectedValue: _form.rentalTerm,
-                              onSelected: (value) => setState(
-                                () => _form = _form.copyWith(rentalTerm: value),
+                              title: LocaleKeys.tenantFilterPricePeriod,
+                              options: TenantPropertyFilterOptions.pricePeriods,
+                              selectedValue: _filters.pricePeriod,
+                              onSelected: (value) => _updateFilters(
+                                _filters.copyWith(pricePeriod: value, page: 1),
                               ),
                             ),
                             12.szH,
                             SingleSelectGroup(
-                              title: 'مناسب لـ',
-                              options: TenantPropertyFilterOptions.tenantTypes,
-                              selectedValue: _form.tenantType,
-                              onSelected: (value) => setState(
-                                () => _form = _form.copyWith(tenantType: value),
+                              title: LocaleKeys.tenantFilterSuitableFor,
+                              options: TenantPropertyFilterOptions.suitableFor,
+                              selectedValue: _filters.suitableFor,
+                              onSelected: (value) => _updateFilters(
+                                _filters.copyWith(suitableFor: value, page: 1),
                               ),
                             ),
                             12.szH,
                             SingleSelectGroup(
-                              title: 'التدخين',
+                              title: LocaleKeys.tenantFilterFurnished,
                               options:
-                                  TenantPropertyFilterOptions.smokingOptions,
-                              selectedValue: _form.smoking,
-                              onSelected: (value) => setState(
-                                () => _form = _form.copyWith(smoking: value),
+                                  TenantPropertyFilterOptions.booleanOptions,
+                              selectedValue: _filters.isFurnished,
+                              onSelected: (value) => _updateFilters(
+                                _filters.copyWith(isFurnished: value, page: 1),
+                              ),
+                            ),
+                            12.szH,
+                            SingleSelectGroup(
+                              title: LocaleKeys.tenantFilterSmoking,
+                              options:
+                                  TenantPropertyFilterOptions.booleanOptions,
+                              selectedValue: _filters.smokingAllowed,
+                              onSelected: (value) => _updateFilters(
+                                _filters.copyWith(
+                                  smokingAllowed: value,
+                                  page: 1,
+                                ),
                               ),
                             ),
                           ],
@@ -230,66 +304,23 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
                       ),
                       12.szH,
                       FilterCard(
-                        title: 'المرافق والخدمات',
+                        title: LocaleKeys.tenantFilterAmenities,
                         child: FilterChipWrap(
                           options: TenantPropertyFilterOptions.amenities,
-                          selectedValues: _form.amenities,
+                          selectedValues: _filters.amenities,
                           onSelected: _toggleAmenity,
                         ),
                       ),
                       12.szH,
                       FilterCard(
-                        title: 'التوثيق',
-                        child: Column(
-                          children: [
-                            SwitchRow(
-                              title: 'عقارات موثقة فقط',
-                              subtitle: 'عقارات مراجعة ومعتمدة من سكون',
-                              value: _form.verifiedOnly,
-                              onChanged: (value) => setState(
-                                () =>
-                                    _form = _form.copyWith(verifiedOnly: value),
-                              ),
-                            ),
-                            const Divider(color: AppColors.sokoonBorder),
-                            SwitchRow(
-                              title: 'إثبات ملكية تم التحقق منه',
-                              subtitle: 'المالك أثبت ملكية العقار',
-                              value: _form.ownershipVerifiedOnly,
-                              onChanged: (value) => setState(
-                                () => _form = _form.copyWith(
-                                  ownershipVerifiedOnly: value,
-                                ),
-                              ),
-                            ),
-                            10.szH,
-                            Container(
-                              padding: EdgeInsets.all(10.w),
-                              decoration: BoxDecoration(
-                                color: AppColors.yellowPale,
-                                borderRadius: BorderRadius.circular(10.r),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    Icons.privacy_tip_outlined,
-                                    color: AppColors.brown,
-                                    size: 16.r,
-                                  ),
-                                  8.szW,
-                                  Expanded(
-                                    child: AppText(
-                                      'المستندات الخاصة لا تظهر للمستخدمين — فقط حالة التحقق',
-                                      color: AppColors.brown,
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w500,
-                                      maxLines: 2,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                        title: LocaleKeys.tenantFilterVerification,
+                        child: SingleSelectGroup(
+                          title: LocaleKeys.tenantFilterVerified,
+                          options: TenantPropertyFilterOptions.booleanOptions,
+                          selectedValue: _filters.isVerified,
+                          onSelected: (value) => _updateFilters(
+                            _filters.copyWith(isVerified: value, page: 1),
+                          ),
                         ),
                       ),
                     ],
@@ -312,12 +343,18 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
                       color: AppColors.sokoonTeal,
                       borderRadius: BorderRadius.circular(14.r),
                     ),
-                    child: AppText(
-                      'عرض النتائج (${_form.activeCount} فلاتر نشطة)',
-                      color: AppColors.white,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w900,
-                    ),
+                    child:
+                        StatusBuilder<
+                          PropertySearchCountCubit,
+                          int
+                        >.withShimmer(
+                          initialDataForShimmer: 0,
+                          requestToTryAgainWhenError:
+                              _propertySearchCountRequest,
+                          errorType: ErrorType.customView,
+                          errorWidget: _buildShowResultsLabel(),
+                          builder: _buildShowResultsLabel,
+                        ),
                   ),
                 ),
               ),

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/languages.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -35,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   late final Upgrader upgrader = Upgrader(
     languageCode: Languages.currentLanguage.languageCode,
-    debugDisplayAlways: kDebugMode,
+    // debugDisplayAlways: kDebugMode,
     minAppVersion: RemoteConfigValues.minAppVersion.isEmpty
         ? null
         : RemoteConfigValues.minAppVersion,
@@ -76,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
           selectedIcon: Icons.home_rounded,
           label: LocaleKeys.home,
         ),
-        screen: TenantHomeScreen(onNotificationsPressed: () => _selectTab(3)),
+        screen: TenantHomeScreen(),
       ),
       _HomeTab(
         destination: HomeNavigationDestination(

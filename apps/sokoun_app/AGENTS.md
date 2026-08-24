@@ -162,6 +162,35 @@ class MyDataCubit extends AsyncCubit<List<MyModel>> {
 }
 ```
 
+### `StatusBuilder` — always use shimmer
+
+Every `AsyncCubit` UI must use `StatusBuilder.withShimmer`; do not use the
+default `StatusBuilder` constructor. Start the request once from `initState`
+and pass that same future to the builder so widget rebuilds do not trigger
+duplicate API calls.
+
+```dart
+late final MyDataCubit _cubit;
+late final Future<void> _loadRequest;
+
+@override
+void initState() {
+  super.initState();
+  _cubit = MyDataCubit();
+  _loadRequest = _cubit.loadData();
+}
+
+StatusBuilder<MyDataCubit, MyModel>.withShimmer(
+  initialDataForShimmer: MyModel.initial(),
+  requestToTryAgainWhenError: _loadRequest,
+  builder: (data) => MyContent(data: data),
+)
+```
+
+The state model must always provide an `initial()` factory backed by const
+empty values. This initial model is mandatory because it supplies the shimmer
+placeholder data.
+
 ### State shape
 
 ```dart
@@ -359,6 +388,16 @@ widget.marginSymmetric(horizontal: 16)
 widget.centerWidget
 widget.startWidget
 widget.endWidget
+```
+
+### Conditional visibility
+
+Use the `showIf` widget extension instead of an inline conditional when a
+widget should collapse completely while hidden. It returns
+`SizedBox.shrink()` when the condition is false.
+
+```dart
+widget.showIf(condition: () => shouldShow)
 ```
 
 ### List separator
@@ -887,6 +926,10 @@ operation: () async {
 ### Models
 
 #### Rule 16 — Every model needs: constructor + `fromJson` + `toJson` + `copyWith` + `initial`
+
+The `initial()` factory is mandatory for every model. It must return a
+const-backed instance with meaningful empty values so the model can safely be
+used by `StatusBuilder.withShimmer`.
 
 ```dart
 class MyModel extends Equatable {

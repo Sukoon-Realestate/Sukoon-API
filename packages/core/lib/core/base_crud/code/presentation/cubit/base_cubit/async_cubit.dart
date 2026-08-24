@@ -19,6 +19,8 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
     baseCrudUseCase = injector();
   }
   late final BaseCrudUseCase baseCrudUseCase;
+
+  T get data => state.data;
   void setLoading() {
     emit(state.loading());
   }

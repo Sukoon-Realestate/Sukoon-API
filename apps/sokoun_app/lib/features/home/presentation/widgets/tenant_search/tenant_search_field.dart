@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 
 class TenantSearchField extends StatelessWidget {
   const TenantSearchField({
@@ -20,61 +21,46 @@ class TenantSearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 52.h,
-      padding: EdgeInsetsDirectional.only(start: 14.w, end: 8.w),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.sokoonTeal, width: 1.4),
+    return DefaultTextField(
+      controller: controller,
+      onChanged: (value) => onChanged?.call(value ?? ''),
+      onSubmitted: (value) => onSubmitted?.call(value ?? ''),
+      action: TextInputAction.search,
+      textAlign: TextAlign.right,
+      title: LocaleKeys.tenantSearchFieldHint,
+      borderRadius: 16.r,
+      borderColor: AppColors.sokoonTeal,
+      fillColor: AppColors.white,
+      contentPadding: EdgeInsets.symmetric(vertical: 15.h),
+      style: TextStyle(
+        color: AppColors.sokoonNavy,
+        fontSize: 14.sp,
+        fontWeight: FontWeight.w600,
       ),
-      child: Row(
-        textDirection: TextDirection.ltr,
-        children: [
-          Icon(Icons.search_rounded, color: AppColors.sokoonMuted, size: 20.r),
-          10.szW,
-          Expanded(
-            child: TextField(
-              controller: controller,
-              onChanged: onChanged,
-              onSubmitted: onSubmitted,
-              textInputAction: TextInputAction.search,
-              textAlign: TextAlign.right,
-              style: TextStyle(
-                color: AppColors.sokoonNavy,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
-              ),
-              decoration: InputDecoration(
-                isCollapsed: true,
-                border: InputBorder.none,
-                hintText: 'مدينة نصر، القاهرة…',
-                hintStyle: TextStyle(
-                  color: AppColors.sokoonMuted,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+      prefixIcon: Padding(
+        padding: EdgeInsetsDirectional.only(start: 8.w),
+        child: GestureDetector(
+          onTap: onSearchTap,
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+            decoration: BoxDecoration(
+              color: AppColors.mintLight,
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: AppText(
+              LocaleKeys.search,
+              color: AppColors.sokoonTeal,
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w800,
             ),
           ),
-          GestureDetector(
-            onTap: onSearchTap,
-            behavior: HitTestBehavior.opaque,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-              decoration: BoxDecoration(
-                color: AppColors.mintLight,
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: AppText(
-                'بحث',
-                color: AppColors.sokoonTeal,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w800,
-              ),
-            ),
-          ),
-        ],
+        ),
+      ),
+      suffixIcon: Icon(
+        Icons.search_rounded,
+        color: AppColors.sokoonMuted,
+        size: 20.r,
       ),
     );
   }

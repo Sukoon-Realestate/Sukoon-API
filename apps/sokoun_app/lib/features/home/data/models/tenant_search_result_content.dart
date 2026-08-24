@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 
 class ActiveFilterContent {
-  const ActiveFilterContent({required this.label});
+  const ActiveFilterContent({this.id = '', required this.label});
 
+  final String id;
   final String label;
 }
 

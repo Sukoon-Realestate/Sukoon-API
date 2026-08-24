@@ -1,7 +1,11 @@
 part of '../../imports.dart';
 
 class VisitPropertyContent {
-  const VisitPropertyContent({required this.title, required this.meta});
+  const VisitPropertyContent({
+    this.id = '',
+    required this.title,
+    required this.meta,
+  });
 
   factory VisitPropertyContent.initial() =>
       const VisitPropertyContent(title: '', meta: '');
@@ -17,6 +21,7 @@ class VisitPropertyContent {
     TenantPropertyDetailsContent property,
   ) {
     return VisitPropertyContent(
+      id: property.id,
       title: property.shortTitle,
       meta: LocaleKeys.tenantVisitBookingPropertyMeta,
     );
@@ -24,18 +29,21 @@ class VisitPropertyContent {
 
   factory VisitPropertyContent.fromJson(Map<String, dynamic> json) {
     return VisitPropertyContent(
+      id: json['id'] ?? '',
       title: json['title'] ?? '',
       meta: json['meta'] ?? '',
     );
   }
 
+  final String id;
   final String title;
   final String meta;
 
-  Map<String, dynamic> toJson() => {'title': title, 'meta': meta};
+  Map<String, dynamic> toJson() => {'id': id, 'title': title, 'meta': meta};
 
-  VisitPropertyContent copyWith({String? title, String? meta}) {
+  VisitPropertyContent copyWith({String? id, String? title, String? meta}) {
     return VisitPropertyContent(
+      id: id ?? this.id,
       title: title ?? this.title,
       meta: meta ?? this.meta,
     );

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
+import 'package:melos_core/core/extensions/object.dart';
 
 import '../api_endpoints.dart';
 
@@ -36,10 +37,10 @@ class CookieTokenHeaderInterceptor extends Interceptor {
     }
 
     final String? accessToken = valueFor(accessCookieName);
-    if (accessToken != null && accessToken.isNotEmpty) {
-      options.headers[HttpHeaders.authorizationHeader] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg2MjkxOTg2LCJpYXQiOjE3ODYyMDU1ODYsImp0aSI6ImQ3MTUzZmViZWVmMzRiZmZhM2Y0NGE5ZWJkOTQwNTc1IiwidXNlcl9pZCI6IjliYTZjNmIzLTZlYjUtNDAwYy1iMTI1LWM1YjIyNmI4ZmM3MCJ9.FeJqu6fXGYdkGL7T-Qh2FfPeiCzKNSKImzWbbUTDSu8';
-      // options.headers[HttpHeaders.authorizationHeader] = 'Bearer $accessToken';
-    }
+    // if (accessToken.isNotNull && accessToken!.isNotEmpty) {
+    //   options.headers[HttpHeaders.authorizationHeader] = 'Bearer $accessToken';
+    // }
+    options.headers[HttpHeaders.authorizationHeader] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg3NjcwNjM2LCJpYXQiOjE3ODc1ODQyMzYsImp0aSI6IjhkZGFiODYyNGI2ZTRjMjE5MGQwYTJlNTNkZGIzOGY2IiwidXNlcl9pZCI6IjllZWY0MjAxLTBjYTQtNGZjMS1iOTFmLTllZjI3NTUxYzBlYSJ9.Xa5rdsi_WLF_fb_jKQXEUxwF3fF0s9xfLb40hjcMfnE';
 
     if (options.path == ApiConstants.refreshToken) {
       final String? refreshToken = valueFor(refreshCookieName);

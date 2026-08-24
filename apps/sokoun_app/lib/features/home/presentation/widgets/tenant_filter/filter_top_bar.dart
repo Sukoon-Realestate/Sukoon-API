@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -42,7 +43,7 @@ class FilterTopBar extends StatelessWidget {
           ),
           8.szW,
           AppText(
-            'فلتر البحث',
+            LocaleKeys.tenantFilterTitle,
             color: AppColors.sokoonNavy,
             fontSize: 17.sp,
             fontWeight: FontWeight.w900,
@@ -52,7 +53,7 @@ class FilterTopBar extends StatelessWidget {
             onTap: onReset,
             behavior: HitTestBehavior.opaque,
             child: AppText(
-              'إعادة تعيين',
+              LocaleKeys.tenantFilterReset,
               color: AppColors.sokoonTeal,
               fontSize: 13.sp,
               fontWeight: FontWeight.w800,

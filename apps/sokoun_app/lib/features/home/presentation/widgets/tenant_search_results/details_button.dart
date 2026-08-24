@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -22,7 +23,7 @@ class DetailsButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.r),
         ),
         child: AppText(
-          'تفاصيل',
+          LocaleKeys.landingDetails,
           color: AppColors.white,
           fontSize: 13.sp,
           fontWeight: FontWeight.w800,

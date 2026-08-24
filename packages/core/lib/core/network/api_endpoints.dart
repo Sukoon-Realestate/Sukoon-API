@@ -8,6 +8,8 @@ class ApiConstants {
   // home
   static const String homePage = 'homepage';
   static const String properties = 'properties/';
+  static const String propertyTypes = 'properties/types';
+  static const String visits = 'visits/';
 
   // packages
   static const String getPackages = 'packages/';

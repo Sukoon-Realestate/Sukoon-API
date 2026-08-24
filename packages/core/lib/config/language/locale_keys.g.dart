@@ -3118,4 +3118,211 @@ abstract class LocaleKeys {
   static const String _ownerRevenueMayTwentyEight = 'owner_revenue_may_twenty_eight';
   static String get ownerRevenueMayTwentyEight => _ownerRevenueMayTwentyEight.tr();
 
+  static const String _tenantHomeSuggestedForYou = 'tenant_home_suggested_for_you';
+  static String get tenantHomeSuggestedForYou => _tenantHomeSuggestedForYou.tr();
+
+  static const String _tenantHomeViewAll = 'tenant_home_view_all';
+  static String get tenantHomeViewAll => _tenantHomeViewAll.tr();
+
+  static const String _tenantHomeSearchAreaHint = 'tenant_home_search_area_hint';
+  static String get tenantHomeSearchAreaHint => _tenantHomeSearchAreaHint.tr();
+
+  static const String _tenantSearchTitle = 'tenant_search_title';
+  static String get tenantSearchTitle => _tenantSearchTitle.tr();
+
+  static const String _tenantSearchSuggestedAreas = 'tenant_search_suggested_areas';
+  static String get tenantSearchSuggestedAreas => _tenantSearchSuggestedAreas.tr();
+
+  static const String _tenantSearchRecentSearches = 'tenant_search_recent_searches';
+  static String get tenantSearchRecentSearches => _tenantSearchRecentSearches.tr();
+
+  static const String _tenantSearchCairo = 'tenant_search_cairo';
+  static String get tenantSearchCairo => _tenantSearchCairo.tr();
+
+  static const String _tenantSearchFieldHint = 'tenant_search_field_hint';
+  static String get tenantSearchFieldHint => _tenantSearchFieldHint.tr();
+
+  static const String _tenantSearchAll = 'tenant_search_all';
+  static String get tenantSearchAll => _tenantSearchAll.tr();
+
+  static const String _tenantSearchResultsHint = 'tenant_search_results_hint';
+  static String get tenantSearchResultsHint => _tenantSearchResultsHint.tr();
+
+  static const String _tenantSearchResultsCount = 'tenant_search_results_count';
+  static String get tenantSearchResultsCount => _tenantSearchResultsCount.tr();
+
+  static const String _tenantSearchResultsEmptyTitle = 'tenant_search_results_empty_title';
+  static String get tenantSearchResultsEmptyTitle => _tenantSearchResultsEmptyTitle.tr();
+
+  static const String _tenantSearchResultsEmptyDescription = 'tenant_search_results_empty_description';
+  static String get tenantSearchResultsEmptyDescription => _tenantSearchResultsEmptyDescription.tr();
+
+  static const String _tenantSearchResultsClearAll = 'tenant_search_results_clear_all';
+  static String get tenantSearchResultsClearAll => _tenantSearchResultsClearAll.tr();
+
+  static const String _tenantSearchResultsBeds = 'tenant_search_results_beds';
+  static String get tenantSearchResultsBeds => _tenantSearchResultsBeds.tr();
+
+  static const String _tenantSearchResultsBaths = 'tenant_search_results_baths';
+  static String get tenantSearchResultsBaths => _tenantSearchResultsBaths.tr();
+
+  static const String _tenantSearchResultsSquareMeters = 'tenant_search_results_square_meters';
+  static String get tenantSearchResultsSquareMeters => _tenantSearchResultsSquareMeters.tr();
+
+  static const String _tenantFilterTitle = 'tenant_filter_title';
+  static String get tenantFilterTitle => _tenantFilterTitle.tr();
+
+  static const String _tenantFilterReset = 'tenant_filter_reset';
+  static String get tenantFilterReset => _tenantFilterReset.tr();
+
+  static const String _tenantFilterOrdering = 'tenant_filter_ordering';
+  static String get tenantFilterOrdering => _tenantFilterOrdering.tr();
+
+  static const String _tenantFilterSortListings = 'tenant_filter_sort_listings';
+  static String get tenantFilterSortListings => _tenantFilterSortListings.tr();
+
+  static const String _tenantFilterNewest = 'tenant_filter_newest';
+  static String get tenantFilterNewest => _tenantFilterNewest.tr();
+
+  static const String _tenantFilterOldest = 'tenant_filter_oldest';
+  static String get tenantFilterOldest => _tenantFilterOldest.tr();
+
+  static const String _tenantFilterLowestPrice = 'tenant_filter_lowest_price';
+  static String get tenantFilterLowestPrice => _tenantFilterLowestPrice.tr();
+
+  static const String _tenantFilterHighestPrice = 'tenant_filter_highest_price';
+  static String get tenantFilterHighestPrice => _tenantFilterHighestPrice.tr();
+
+  static const String _tenantFilterPropertyType = 'tenant_filter_property_type';
+  static String get tenantFilterPropertyType => _tenantFilterPropertyType.tr();
+
+  static const String _tenantFilterApartment = 'tenant_filter_apartment';
+  static String get tenantFilterApartment => _tenantFilterApartment.tr();
+
+  static const String _tenantFilterHouse = 'tenant_filter_house';
+  static String get tenantFilterHouse => _tenantFilterHouse.tr();
+
+  static const String _tenantFilterVilla = 'tenant_filter_villa';
+  static String get tenantFilterVilla => _tenantFilterVilla.tr();
+
+  static const String _tenantFilterStudio = 'tenant_filter_studio';
+  static String get tenantFilterStudio => _tenantFilterStudio.tr();
+
+  static const String _tenantFilterPenthouse = 'tenant_filter_penthouse';
+  static String get tenantFilterPenthouse => _tenantFilterPenthouse.tr();
+
+  static const String _tenantFilterLocation = 'tenant_filter_location';
+  static String get tenantFilterLocation => _tenantFilterLocation.tr();
+
+  static const String _tenantFilterCity = 'tenant_filter_city';
+  static String get tenantFilterCity => _tenantFilterCity.tr();
+
+  static const String _tenantFilterCityHint = 'tenant_filter_city_hint';
+  static String get tenantFilterCityHint => _tenantFilterCityHint.tr();
+
+  static const String _tenantFilterDistrict = 'tenant_filter_district';
+  static String get tenantFilterDistrict => _tenantFilterDistrict.tr();
+
+  static const String _tenantFilterDistrictHint = 'tenant_filter_district_hint';
+  static String get tenantFilterDistrictHint => _tenantFilterDistrictHint.tr();
+
+  static const String _tenantFilterPriceRange = 'tenant_filter_price_range';
+  static String get tenantFilterPriceRange => _tenantFilterPriceRange.tr();
+
+  static const String _tenantFilterFrom = 'tenant_filter_from';
+  static String get tenantFilterFrom => _tenantFilterFrom.tr();
+
+  static const String _tenantFilterTo = 'tenant_filter_to';
+  static String get tenantFilterTo => _tenantFilterTo.tr();
+
+  static const String _tenantFilterPropertyDetails = 'tenant_filter_property_details';
+  static String get tenantFilterPropertyDetails => _tenantFilterPropertyDetails.tr();
+
+  static const String _tenantFilterBedrooms = 'tenant_filter_bedrooms';
+  static String get tenantFilterBedrooms => _tenantFilterBedrooms.tr();
+
+  static const String _tenantFilterBathrooms = 'tenant_filter_bathrooms';
+  static String get tenantFilterBathrooms => _tenantFilterBathrooms.tr();
+
+  static const String _tenantFilterPricePeriod = 'tenant_filter_price_period';
+  static String get tenantFilterPricePeriod => _tenantFilterPricePeriod.tr();
+
+  static const String _tenantFilterDaily = 'tenant_filter_daily';
+  static String get tenantFilterDaily => _tenantFilterDaily.tr();
+
+  static const String _tenantFilterWeekly = 'tenant_filter_weekly';
+  static String get tenantFilterWeekly => _tenantFilterWeekly.tr();
+
+  static const String _tenantFilterMonthly = 'tenant_filter_monthly';
+  static String get tenantFilterMonthly => _tenantFilterMonthly.tr();
+
+  static const String _tenantFilterYearly = 'tenant_filter_yearly';
+  static String get tenantFilterYearly => _tenantFilterYearly.tr();
+
+  static const String _tenantFilterSuitableFor = 'tenant_filter_suitable_for';
+  static String get tenantFilterSuitableFor => _tenantFilterSuitableFor.tr();
+
+  static const String _tenantFilterFamilies = 'tenant_filter_families';
+  static String get tenantFilterFamilies => _tenantFilterFamilies.tr();
+
+  static const String _tenantFilterSingles = 'tenant_filter_singles';
+  static String get tenantFilterSingles => _tenantFilterSingles.tr();
+
+  static const String _tenantFilterStudents = 'tenant_filter_students';
+  static String get tenantFilterStudents => _tenantFilterStudents.tr();
+
+  static const String _tenantFilterFemaleStudents = 'tenant_filter_female_students';
+  static String get tenantFilterFemaleStudents => _tenantFilterFemaleStudents.tr();
+
+  static const String _tenantFilterEveryone = 'tenant_filter_everyone';
+  static String get tenantFilterEveryone => _tenantFilterEveryone.tr();
+
+  static const String _tenantFilterFurnished = 'tenant_filter_furnished';
+  static String get tenantFilterFurnished => _tenantFilterFurnished.tr();
+
+  static const String _tenantFilterSmoking = 'tenant_filter_smoking';
+  static String get tenantFilterSmoking => _tenantFilterSmoking.tr();
+
+  static const String _tenantFilterYes = 'tenant_filter_yes';
+  static String get tenantFilterYes => _tenantFilterYes.tr();
+
+  static const String _tenantFilterNo = 'tenant_filter_no';
+  static String get tenantFilterNo => _tenantFilterNo.tr();
+
+  static const String _tenantFilterAmenities = 'tenant_filter_amenities';
+  static String get tenantFilterAmenities => _tenantFilterAmenities.tr();
+
+  static const String _tenantFilterWifi = 'tenant_filter_wifi';
+  static String get tenantFilterWifi => _tenantFilterWifi.tr();
+
+  static const String _tenantFilterElevator = 'tenant_filter_elevator';
+  static String get tenantFilterElevator => _tenantFilterElevator.tr();
+
+  static const String _tenantFilterGarage = 'tenant_filter_garage';
+  static String get tenantFilterGarage => _tenantFilterGarage.tr();
+
+  static const String _tenantFilterSecurity = 'tenant_filter_security';
+  static String get tenantFilterSecurity => _tenantFilterSecurity.tr();
+
+  static const String _tenantFilterBalcony = 'tenant_filter_balcony';
+  static String get tenantFilterBalcony => _tenantFilterBalcony.tr();
+
+  static const String _tenantFilterAirConditioning = 'tenant_filter_air_conditioning';
+  static String get tenantFilterAirConditioning => _tenantFilterAirConditioning.tr();
+
+  static const String _tenantFilterNearMetro = 'tenant_filter_near_metro';
+  static String get tenantFilterNearMetro => _tenantFilterNearMetro.tr();
+
+  static const String _tenantFilterNaturalGas = 'tenant_filter_natural_gas';
+  static String get tenantFilterNaturalGas => _tenantFilterNaturalGas.tr();
+
+  static const String _tenantFilterVerification = 'tenant_filter_verification';
+  static String get tenantFilterVerification => _tenantFilterVerification.tr();
+
+  static const String _tenantFilterVerified = 'tenant_filter_verified';
+  static String get tenantFilterVerified => _tenantFilterVerified.tr();
+
+  static const String _tenantFilterShowResults = 'tenant_filter_show_results';
+  static String get tenantFilterShowResults => _tenantFilterShowResults.tr();
+
 }

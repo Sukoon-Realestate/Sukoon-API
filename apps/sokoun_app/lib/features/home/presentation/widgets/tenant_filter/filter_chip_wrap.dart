@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
+import 'property_filter_options.dart';
+
 class FilterChipWrap extends StatelessWidget {
   const FilterChipWrap({
     super.key,
@@ -11,7 +13,7 @@ class FilterChipWrap extends StatelessWidget {
     required this.onSelected,
   });
 
-  final List<String> options;
+  final List<TenantFilterOption> options;
   final Set<String> selectedValues;
   final ValueChanged<String> onSelected;
 
@@ -22,11 +24,11 @@ class FilterChipWrap extends StatelessWidget {
       spacing: 8.w,
       runSpacing: 8.h,
       children: [
-        for (final option in options)
+        for (final TenantFilterOption option in options)
           _FilterChip(
-            label: option,
-            isSelected: selectedValues.contains(option),
-            onTap: () => onSelected(option),
+            label: option.label,
+            isSelected: selectedValues.contains(option.value),
+            onTap: () => onSelected(option.value),
           ),
       ],
     );

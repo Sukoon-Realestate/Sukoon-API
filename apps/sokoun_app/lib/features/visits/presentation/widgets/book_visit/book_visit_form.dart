@@ -22,7 +22,7 @@ class BookVisitForm extends StatelessWidget {
   final TextEditingController noteController;
   final ValueChanged<int> onDaySelected;
   final ValueChanged<int> onTimeSelected;
-  final VoidCallback onConfirmPressed;
+  final Future<void> Function(BuildContext context) onConfirmPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -110,13 +110,13 @@ class BookVisitForm extends StatelessWidget {
           16.szH,
           const VisitPrivacyBanner(),
           16.szH,
-          DefaultButton(
+          AppLoadingButton(
             key: const ValueKey('visit-confirm-request'),
-            onTap: onConfirmPressed,
+            asyncCall: onConfirmPressed,
             title: LocaleKeys.tenantVisitConfirmRequest,
-            color: AppColors.sokoonTeal,
+            buttonColor: AppColors.sokoonTeal,
             textColor: AppColors.white,
-            borderRadius: BorderRadius.circular(14.r),
+            borderRadius: 14.r,
             height: 50.h,
             fontSize: 15.sp,
             fontWeight: FontWeight.w900,

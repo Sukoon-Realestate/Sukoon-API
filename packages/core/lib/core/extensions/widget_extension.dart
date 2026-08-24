@@ -45,3 +45,13 @@ extension Refresh on Widget{
     );
   }
 }
+
+extension Visibility on Widget{
+  Widget showIf({required bool Function() condition}){
+    if(condition.call()){
+      return this;
+    }
+
+    return SizedBox.shrink();
+  }
+}

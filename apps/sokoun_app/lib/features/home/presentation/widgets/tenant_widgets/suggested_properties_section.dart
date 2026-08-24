@@ -8,29 +8,37 @@ import 'package:sokoun_app/features/home/presentation/screens/tenant_property_de
 import 'tenant_property_card.dart';
 
 class SuggestedPropertiesSection extends StatelessWidget {
-  const SuggestedPropertiesSection({super.key});
+  const SuggestedPropertiesSection({
+    required this.requestToTryAgainWhenError,
+    super.key,
+  });
+
+  final Future<void> requestToTryAgainWhenError;
 
   @override
   Widget build(BuildContext context) {
-    return StatusBuilder<HomePageCubit, HomePageModel>(
+    return StatusBuilder<HomePageCubit, HomePageModel>.withShimmer(
+      initialDataForShimmer: HomePageModel.initial(),
+      requestToTryAgainWhenError: requestToTryAgainWhenError,
       builder: (properties) => Column(
         spacing: 12.h,
-        children: properties.results.map(
+        children: properties.results
+            .map(
               (property) => GestureDetector(
-            onTap: () => Go.to(
-              TenantPropertyDetailsScreen(propertyId: property.id),
-            ),
-            behavior: HitTestBehavior.opaque,
-            child: TenantPropertyCard(
-              title: property.title,
-              rating: property.formattedRate,
-              area: property.formattedArea,
-              price: property.formattedPrice,
-              icon: property.propertyIcon,
-              imageUrl: property.mainImage,
-            ),
-          ),
-        ).toList()
+                onTap: () =>
+                    Go.to(TenantPropertyDetailsScreen(propertyId: property.id)),
+                behavior: HitTestBehavior.opaque,
+                child: TenantPropertyCard(
+                  title: property.title,
+                  rating: property.formattedRate,
+                  area: property.formattedArea,
+                  price: property.formattedPrice,
+                  icon: property.propertyIcon,
+                  imageUrl: property.mainImage,
+                ),
+              ),
+            )
+            .toList(),
       ),
     );
   }

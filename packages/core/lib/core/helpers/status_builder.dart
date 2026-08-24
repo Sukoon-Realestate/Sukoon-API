@@ -5,17 +5,20 @@ import 'package:melos_core/core/extensions/object.dart';
 import '../base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import '../shared/base_state.dart';
 import '../widgets/custom_loading.dart';
+import '../widgets/custom_shimmer.dart';
 import '../widgets/exeption_view.dart';
 import '../widgets/not_contain_data.dart';
 
-enum LoadingType{loadingIndicator, shimmer}
-extension CheckLoadingType on LoadingType{
+enum LoadingType { loadingIndicator, shimmer }
+
+extension CheckLoadingType on LoadingType {
   bool get isLoadingIndicator => this == LoadingType.loadingIndicator;
   bool get isShimmer => this == LoadingType.shimmer;
 }
 
-enum ErrorType{withData, customView, defaultView}
-extension CheckErrorType on ErrorType{
+enum ErrorType { withData, customView, defaultView }
+
+extension CheckErrorType on ErrorType {
   bool get isWithData => this == ErrorType.withData;
   bool get isCustomView => this == ErrorType.customView;
   bool get isDefaultView => this == ErrorType.defaultView;
@@ -28,27 +31,31 @@ class StatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
   final Widget? errorWidget;
   final Widget? emptyView;
   final T? initialDataForShimmer;
+  final Future<void> requestToTryAgainWhenError;
 
   const StatusBuilder({
     super.key,
     required this.builder,
+    required this.requestToTryAgainWhenError,
     this.errorType = ErrorType.withData,
     this.errorWidget,
     this.emptyView,
-  }) : loadingType = LoadingType.loadingIndicator, initialDataForShimmer = null;
+  }) : loadingType = LoadingType.loadingIndicator,
+       initialDataForShimmer = null;
 
   const StatusBuilder.withShimmer({
     super.key,
     required this.builder,
+    required this.requestToTryAgainWhenError,
     this.errorType = ErrorType.withData,
     required this.initialDataForShimmer,
     this.errorWidget,
-    this.emptyView
+    this.emptyView,
   }) : loadingType = LoadingType.shimmer;
 
-  bool _isEmpty(T data){
-    if(data is List){
-      if(data.isEmpty){
+  bool _isEmpty(T data) {
+    if (data is List) {
+      if (data.isEmpty) {
         return true;
       }
 
@@ -58,52 +65,56 @@ class StatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
     return false;
   }
 
-  Widget get _loadingView{
-    if(loadingType.isShimmer){
-      return builder.call(initialDataForShimmer!);
-    }else if(loadingType.isLoadingIndicator){
+  Widget get _loadingView {
+    if (loadingType.isShimmer) {
+      final T? shimmerData = initialDataForShimmer;
+      if (shimmerData == null) {
+        return const SizedBox.shrink();
+      }
+      return CustomShimmer(child: builder.call(shimmerData));
+    } else if (loadingType.isLoadingIndicator) {
       return SizedBox.square(
-          dimension: 50.sp,
-          child: CustomLoading.showLoadingView()
+        dimension: 50.sp,
+        child: CustomLoading.showLoadingView(),
       );
-    }else{
+    } else {
       return const CupertinoActivityIndicator();
     }
   }
 
-  Widget _successView(T data){
-    if(_isEmpty(data)){
+  Widget _successView(T data) {
+    if (_isEmpty(data)) {
       return _emptyView;
-    }else{
-     return builder(data);
+    } else {
+      return builder(data);
     }
   }
 
-  Widget get _emptyView{
-    if(emptyView.isNotNull){
+  Widget get _emptyView {
+    if (emptyView.isNotNull) {
       return emptyView!;
-    }else{
+    } else {
       return NotContainData();
     }
   }
 
-  Widget _errorView(T data){
-    if(errorType.isWithData){
+  Widget _errorView(T data) {
+    if (errorType.isWithData) {
       return builder.call(data);
-    }else if(errorType.isCustomView && errorWidget.isNotNull){
+    } else if (errorType.isCustomView && errorWidget.isNotNull) {
       return errorWidget!;
     }
-    
+
     return ExceptionView();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<C, AsyncState<T>>(
       builder: (context, state) => state.status.when(
         onLoading: () => _loadingView,
         onSuccess: () => _successView(state.data),
-        onError: () => _errorView(state.data)
+        onError: () => _errorView(state.data),
         // onLoadingMore: () {
         //   return _buildCircularLoading();
         // },
