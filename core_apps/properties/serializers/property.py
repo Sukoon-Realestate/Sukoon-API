@@ -151,6 +151,7 @@ class MyPropertyListSerializer(serializers.ModelSerializer):
             "title",
             "main_image",
             "price",
+            "price_period",
             "status",
             "views_count",
             "visits_count",

@@ -1,3 +1,6 @@
+from .owner_dashboard import (
+    OwnerDashboardSerializer,
+)
 from .property import (
     MyPropertyListSerializer,
     PropertyImageSerializer,

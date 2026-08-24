@@ -273,12 +273,47 @@ class TestPropertyViews:
         response = auth_client.post(url, data)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
+    def test_create_property_with_latitude_longitude(self, auth_client, user):
+        url = reverse("property-create")
+        data = {
+            "title": "Apartment in Heliopolis",
+            "price": 20000.00,
+            "city": "Cairo",
+            "district": "Heliopolis",
+            "latitude": 30.0444,
+            "longitude": 31.2357,
+            "property_type": "apartment",
+        }
+        response = auth_client.post(url, data)
+        assert response.status_code == status.HTTP_201_CREATED
+
+        json_data = response.json()
+        assert json_data["data"]["latitude"] == "30.044400"
+        assert json_data["data"]["longitude"] == "31.235700"
+
+        property_obj = Property.objects.get(title="Apartment in Heliopolis")
+        assert float(property_obj.latitude) == 30.0444
+        assert float(property_obj.longitude) == 31.2357
+
     def test_retrieve_property_happy_path(self, api_client, user):
         property_obj = _create_property(owner=user)
         url = reverse("property-detail", kwargs={"id": property_obj.id})
         response = api_client.get(url)
         assert response.status_code == status.HTTP_200_OK
         assert response.json()["data"]["title"] == "Apartment in Nasr City"
+
+    def test_retrieve_property_includes_latitude_longitude(self, api_client, user):
+        property_obj = _create_property(
+            owner=user,
+            latitude=30.0444,
+            longitude=31.2357,
+        )
+        url = reverse("property-detail", kwargs={"id": property_obj.id})
+        response = api_client.get(url)
+        assert response.status_code == status.HTTP_200_OK
+        data = response.json()["data"]
+        assert data["latitude"] == "30.044400"
+        assert data["longitude"] == "31.235700"
 
     def test_retrieve_property_not_found_returns_404(self, api_client):
         url = reverse("property-detail", kwargs={"id": uuid.uuid4()})
@@ -481,6 +516,7 @@ class TestMyPropertyListView:
         assert item["title"] == "My Apartment"
         assert "main_image" in item
         assert item["price"] == "15000.00"
+        assert item["price_period"] == Property.PricePeriod.MONTHLY
         assert item["status"] == Property.Status.UNDER_REVIEW
         assert item["views_count"] == 2
         assert item["visits_count"] == 1
@@ -762,3 +798,85 @@ class TestPropertyVisitViews:
         assert response.status_code == status.HTTP_200_OK
         visit.refresh_from_db()
         assert visit.status == PropertyVisit.Status.CANCELED
+
+
+@pytest.mark.django_db
+class TestOwnerDashboard:
+    def test_owner_dashboard_unauthenticated_returns_401(self, api_client):
+        url = reverse("owner-dashboard")
+        response = api_client.get(url)
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_owner_dashboard_happy_path(self, auth_client, user, another_user):
+        user.is_verified = True
+        user.save()
+
+        verified_prop = _create_property(
+            owner=user,
+            title="Verified Apartment",
+            status=Property.Status.VERIFIED,
+        )
+        _create_property(
+            owner=user,
+            title="Under Review Apartment",
+            status=Property.Status.UNDER_REVIEW,
+        )
+
+        today = timezone.localdate()
+        tomorrow = today + timezone.timedelta(days=1)
+        next_week = today + timezone.timedelta(days=8)
+
+        # Visit today (counts in weekly visits + pending)
+        visit_today = PropertyVisit.objects.create(
+            property=verified_prop,
+            tenant=another_user,
+            visit_date=today,
+            visit_time="15:00:00",
+            status=PropertyVisit.Status.PENDING,
+        )
+        # Visit tomorrow (counts in weekly visits + pending)
+        PropertyVisit.objects.create(
+            property=verified_prop,
+            tenant=another_user,
+            visit_date=tomorrow,
+            visit_time="12:00:00",
+            status=PropertyVisit.Status.PENDING,
+        )
+        # Visit next week (pending only)
+        PropertyVisit.objects.create(
+            property=verified_prop,
+            tenant=another_user,
+            visit_date=next_week,
+            visit_time="10:00:00",
+            status=PropertyVisit.Status.PENDING,
+        )
+        # Confirmed visit today (counts in weekly visits only)
+        PropertyVisit.objects.create(
+            property=verified_prop,
+            tenant=another_user,
+            visit_date=today,
+            visit_time="09:00:00",
+            status=PropertyVisit.Status.CONFIRMED,
+        )
+
+        url = reverse("owner-dashboard")
+        response = auth_client.get(url)
+
+        assert response.status_code == status.HTTP_200_OK
+        data = response.json()["data"]
+
+        assert data["owner"]["name"] == user.get_full_name
+        assert data["owner"]["is_verified"] is True
+        assert data["visits_this_week"] == 3
+        assert data["active_properties"] == 1
+        assert data["overall_rating"] == 0.0
+        assert data["pending_requests"] == 3
+
+        pending = data["pending_visits"]
+        assert len(pending) == 3
+        assert pending[0]["id"] == str(visit_today.id)
+        assert pending[0]["scheduled_at"] == "النهاره 3م"
+        assert pending[1]["scheduled_at"] == "غداً 12م"
+        assert pending[0]["tenant_name"] == another_user.get_full_name
+        assert pending[0]["property_title"] == "Verified Apartment"
+        assert pending[0]["property_district"] == "Nasr City"

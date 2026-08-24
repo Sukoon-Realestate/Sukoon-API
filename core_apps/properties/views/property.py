@@ -193,6 +193,8 @@ class PropertyCreateAPIView(generics.CreateAPIView):
         "smoking_allowed": false,
         "city": "Cairo",
         "district": "Nasr City",
+        "latitude": 30.0444,
+        "longitude": 31.2357,
         "has_wifi": true,
         "has_elevator": true,
         "has_garage": false,

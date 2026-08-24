@@ -1,3 +1,4 @@
+from .owner_dashboard import OwnerDashboardAPIView
 from .property import (
     MyPropertyListAPIView,
     PropertyCreateAPIView,
