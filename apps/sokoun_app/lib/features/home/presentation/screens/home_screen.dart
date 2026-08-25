@@ -6,6 +6,7 @@ import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:sokoun_app/features/chat/presentation/screens/chat_list_screen.dart';
 import 'package:sokoun_app/features/favorites/presentation/screens/favorites_screen.dart';
+import 'package:sokoun_app/features/home/presentation/screens/owner_add_property_flow_screen.dart';
 import 'package:sokoun_app/features/notifications/data/enums/notification_role.dart';
 import 'package:sokoun_app/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:sokoun_app/features/properties/imports.dart';
@@ -75,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
           selectedIcon: Icons.home_rounded,
           label: LocaleKeys.home,
         ),
-        screen: TenantHomeScreen(),
+        screen: OwnerPropertiesScreen(),
       ),
       _HomeTab(
         destination: HomeNavigationDestination(

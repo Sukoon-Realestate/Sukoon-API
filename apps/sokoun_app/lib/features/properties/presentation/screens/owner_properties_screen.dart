@@ -10,13 +10,40 @@ class OwnerPropertiesScreen extends StatefulWidget {
 }
 
 class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
-  late List<OwnerPropertyContent> _properties;
+  static const int _pageSize = 10;
+
+  late final PagifyController<OwnerPropertyContent> _pagifyController;
 
   @override
   void initState() {
     super.initState();
-    _properties = List<OwnerPropertyContent>.of(
-      widget.initialProperties ?? OwnerPropertiesContent.prototype(),
+    _pagifyController = PagifyController<OwnerPropertyContent>();
+  }
+
+  Future<(List<OwnerPropertyContent>, PaginationData)> _getPropertiesPage(
+    BuildContext context,
+    int page,
+  ) async {
+    final List<OwnerPropertyContent>? initialProperties =
+        widget.initialProperties;
+    if (initialProperties != null) {
+      return (
+        page == 1 ? initialProperties : const <OwnerPropertyContent>[],
+        PaginationData(perPage: initialProperties.length, totalPages: 1),
+      );
+    }
+
+    final OwnerPropertiesResponse response =
+        await OwnerPropertiesData.getOwnedProperties(
+          page: page,
+          pageSize: _pageSize,
+        );
+    final int totalPages = response.count == 0
+        ? 1
+        : (response.count + _pageSize - 1) ~/ _pageSize;
+    return (
+      response.results,
+      PaginationData(perPage: _pageSize, totalPages: totalPages),
     );
   }
 
@@ -26,6 +53,9 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
     );
     if (shouldReturnToProperties == true && mounted) {
       _showMessage(LocaleKeys.ownerPropertiesSubmittedMessage);
+      if (widget.initialProperties == null) {
+        await _pagifyController.refresh();
+      }
     }
   }
 
@@ -97,17 +127,17 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
   }
 
   void _replaceProperty(OwnerPropertyContent property) {
-    final int index = _properties.indexWhere((item) => item.id == property.id);
+    final int index = _pagifyController.items.indexWhere(
+      (item) => item.id == property.id,
+    );
     if (index < 0) {
       return;
     }
-    setState(() => _properties[index] = property);
+    _pagifyController.replaceWith(index, property);
   }
 
   void _deleteProperty(OwnerPropertyContent property) {
-    setState(() {
-      _properties.removeWhere((item) => item.id == property.id);
-    });
+    _pagifyController.removeWhere((item) => item.id == property.id);
     _showMessage(LocaleKeys.ownerPropertiesDeletedMessage);
   }
 
@@ -131,86 +161,29 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
                 child: OwnerPropertiesHeader(onAddPressed: _openAddProperty),
               ),
               Expanded(
-                child: _properties.isEmpty
-                    ? _OwnerPropertiesEmptyState(onAddPressed: _openAddProperty)
-                    : ListView.separated(
-                        padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 20.h),
-                        itemBuilder: (context, index) {
-                          final OwnerPropertyContent property =
-                              _properties[index];
-                          return OwnerPropertyCard(
-                            property: property,
-                            onEditPressed: () => _openEdit(property),
-                            onAnalyticsPressed: () => _openAnalytics(property),
-                            onActionsPressed: () => _openActions(property),
-                            onPressed: property.status.isRejected
-                                ? () => _openRejection(property)
-                                : () => _openActions(property),
-                          );
-                        },
-                        separatorBuilder: (context, index) => 12.szH,
-                        itemCount: _properties.length,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 20.h),
+                  child: AppPagify<OwnerPropertyContent>(
+                    pagifyController: _pagifyController,
+                    asyncCall: _getPropertiesPage,
+                    shrinkWrap: false,
+                    itemBuilder: (context, data, index, property) => Padding(
+                      padding: EdgeInsets.only(bottom: 12.h),
+                      child: OwnerPropertyCard(
+                        property: property,
+                        onEditPressed: () => _openEdit(property),
+                        onAnalyticsPressed: () => _openAnalytics(property),
+                        onActionsPressed: () => _openActions(property),
+                        onPressed: property.status.isRejected
+                            ? () => _openRejection(property)
+                            : () => _openActions(property),
                       ),
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _OwnerPropertiesEmptyState extends StatelessWidget {
-  const _OwnerPropertiesEmptyState({required this.onAddPressed});
-
-  final VoidCallback onAddPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(28.w),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 88.r,
-              height: 88.r,
-              decoration: const BoxDecoration(
-                color: AppColors.mintPale,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.apartment_rounded,
-                color: AppColors.sokoonTeal,
-                size: 40.r,
-              ),
-            ),
-            16.szH,
-            AppText(
-              LocaleKeys.ownerPropertiesEmptyTitle,
-              color: AppColors.sokoonNavy,
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w900,
-              textAlign: TextAlign.center,
-            ),
-            8.szH,
-            AppText(
-              LocaleKeys.ownerPropertiesEmptyDescription,
-              color: AppColors.sokoonGray,
-              fontSize: 14.sp,
-              textAlign: TextAlign.center,
-            ),
-            20.szH,
-            DefaultButton(
-              title: LocaleKeys.ownerPropertiesAdd,
-              onTap: onAddPressed,
-              width: 190.w,
-              height: 46.h,
-              borderRadius: BorderRadius.circular(14.r),
-              fontWeight: FontWeight.w900,
-            ),
-          ],
         ),
       ),
     );

@@ -4,6 +4,7 @@ class OwnerPropertyContent {
   const OwnerPropertyContent({
     required this.id,
     required this.title,
+    required this.mainImage,
     required this.location,
     required this.monthlyPrice,
     required this.views,
@@ -20,6 +21,7 @@ class OwnerPropertyContent {
     return const OwnerPropertyContent(
       id: '',
       title: '',
+      mainImage: '',
       location: '',
       monthlyPrice: 0,
       views: 0,
@@ -37,12 +39,22 @@ class OwnerPropertyContent {
     return OwnerPropertyContent(
       id: json['id'] ?? '',
       title: json['title'] ?? '',
+      mainImage: json['main_image'] ?? '',
       location: json['location'] ?? '',
-      monthlyPrice: json['monthly_price'] ?? 0,
-      views: json['views'] ?? 0,
-      visitRequests: json['visit_requests'] ?? 0,
-      bedrooms: json['bedrooms'] ?? 0,
-      area: json['area'] ?? 0,
+      monthlyPrice:
+          (double.tryParse('${json['price'] ?? json['monthly_price'] ?? ''}') ??
+                  0)
+              .round(),
+      views:
+          (json['views_count'] as num?)?.toInt() ??
+          (json['views'] as num?)?.toInt() ??
+          0,
+      visitRequests:
+          (json['visits_count'] as num?)?.toInt() ??
+          (json['visit_requests'] as num?)?.toInt() ??
+          0,
+      bedrooms: (json['bedrooms'] as num?)?.toInt() ?? 0,
+      area: (json['area'] as num?)?.toInt() ?? 0,
       description: json['description'] ?? '',
       photoCount: json['photo_count'] ?? 0,
       status: OwnerPropertyStatusX.fromName(json['status']),
@@ -55,6 +67,7 @@ class OwnerPropertyContent {
 
   final String id;
   final String title;
+  final String mainImage;
   final String location;
   final int monthlyPrice;
   final int views;
@@ -70,6 +83,7 @@ class OwnerPropertyContent {
     return {
       'id': id,
       'title': title,
+      'main_image': mainImage,
       'location': location,
       'monthly_price': monthlyPrice,
       'views': views,
@@ -86,6 +100,7 @@ class OwnerPropertyContent {
   OwnerPropertyContent copyWith({
     String? id,
     String? title,
+    String? mainImage,
     String? location,
     int? monthlyPrice,
     int? views,
@@ -100,6 +115,7 @@ class OwnerPropertyContent {
     return OwnerPropertyContent(
       id: id ?? this.id,
       title: title ?? this.title,
+      mainImage: mainImage ?? this.mainImage,
       location: location ?? this.location,
       monthlyPrice: monthlyPrice ?? this.monthlyPrice,
       views: views ?? this.views,
@@ -120,6 +136,7 @@ abstract final class OwnerPropertiesContent {
       OwnerPropertyContent(
         id: 'nasr-city-furnished',
         title: LocaleKeys.ownerPropertyNasrCityTitle,
+        mainImage: '',
         location: LocaleKeys.ownerPropertyNasrCityLocation,
         monthlyPrice: 6500,
         views: 142,
@@ -134,6 +151,7 @@ abstract final class OwnerPropertiesContent {
       OwnerPropertyContent(
         id: 'fifth-settlement-studio',
         title: LocaleKeys.ownerPropertyStudioTitle,
+        mainImage: '',
         location: LocaleKeys.ownerPropertyStudioLocation,
         monthlyPrice: 4200,
         views: 67,
@@ -148,6 +166,7 @@ abstract final class OwnerPropertiesContent {
       OwnerPropertyContent(
         id: 'mohandessin-three-bed',
         title: LocaleKeys.ownerPropertyMohandessinTitle,
+        mainImage: '',
         location: LocaleKeys.ownerPropertyMohandessinLocation,
         monthlyPrice: 8800,
         views: 0,
@@ -166,6 +185,7 @@ abstract final class OwnerPropertiesContent {
     return OwnerPropertyContent(
       id: 'nasr-city-rejected',
       title: LocaleKeys.ownerPropertyNasrCityTitle,
+      mainImage: '',
       location: LocaleKeys.ownerPropertyNasrCityLocation,
       monthlyPrice: 6500,
       views: 0,

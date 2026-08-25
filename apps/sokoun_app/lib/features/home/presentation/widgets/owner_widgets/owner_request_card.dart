@@ -10,10 +10,12 @@ class OwnerRequestCard extends StatelessWidget {
     super.key,
     required this.name,
     required this.details,
+    this.avatarUrl,
   });
 
   final String name;
   final String details;
+  final String? avatarUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +43,19 @@ class OwnerRequestCard extends StatelessWidget {
               color: AppColors.bluePale,
               shape: BoxShape.circle,
             ),
-            child: Icon(
-              Icons.person_outline,
-              color: AppColors.blue,
-              size: 20.r,
-            ),
+            child: avatarUrl?.isNotEmpty ?? false
+                ? ClipOval(
+                    child: Image.network(
+                      avatarUrl!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) => Icon(
+                        Icons.person_outline,
+                        color: AppColors.blue,
+                        size: 20.r,
+                      ),
+                    ),
+                  )
+                : Icon(Icons.person_outline, color: AppColors.blue, size: 20.r),
           ),
           10.szW,
           Expanded(

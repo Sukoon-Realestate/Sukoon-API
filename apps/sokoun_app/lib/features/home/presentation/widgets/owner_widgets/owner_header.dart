@@ -8,18 +8,28 @@ import 'home_avatar.dart';
 import 'home_circle_button.dart';
 
 class OwnerHeader extends StatelessWidget {
-  const OwnerHeader({super.key, this.onNotificationsPressed});
+  const OwnerHeader({
+    super.key,
+    required this.name,
+    required this.avatarUrl,
+    required this.isVerified,
+    this.onNotificationsPressed,
+  });
 
+  final String name;
+  final String? avatarUrl;
+  final bool isVerified;
   final VoidCallback? onNotificationsPressed;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const HomeAvatar(
+        HomeAvatar(
           icon: Icons.key_rounded,
           backgroundColor: AppColors.goldPale,
           iconColor: AppColors.gold,
+          imageUrl: avatarUrl,
         ),
         10.szW,
         Expanded(
@@ -27,7 +37,7 @@ class OwnerHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppText(
-                'أهلاً أحمد 👋',
+                'أهلاً $name 👋',
                 color: AppColors.sokoonNavy,
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w900,
@@ -38,21 +48,23 @@ class OwnerHeader extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                 decoration: BoxDecoration(
-                  color: AppColors.goldPale,
+                  color: isVerified ? AppColors.goldPale : AppColors.grayPale,
                   borderRadius: BorderRadius.circular(999.r),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      Icons.verified_rounded,
-                      color: AppColors.gold,
+                      isVerified
+                          ? Icons.verified_rounded
+                          : Icons.info_outline_rounded,
+                      color: isVerified ? AppColors.gold : AppColors.sokoonGray,
                       size: 12.r,
                     ),
                     3.szW,
                     AppText(
-                      'موثّق',
-                      color: AppColors.gold,
+                      isVerified ? 'موثّق' : 'غير موثّق',
+                      color: isVerified ? AppColors.gold : AppColors.sokoonGray,
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
                     ),

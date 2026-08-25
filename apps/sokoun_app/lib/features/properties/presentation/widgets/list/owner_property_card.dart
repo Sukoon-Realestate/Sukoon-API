@@ -51,11 +51,24 @@ class OwnerPropertyCard extends StatelessWidget {
                       color: AppColors.grayBluePale,
                       borderRadius: BorderRadius.circular(16.r),
                     ),
-                    child: Icon(
-                      property.icon,
-                      color: AppColors.blueGrayLight,
-                      size: 30.r,
-                    ),
+                    child: property.mainImage.isEmpty
+                        ? Icon(
+                            property.icon,
+                            color: AppColors.blueGrayLight,
+                            size: 30.r,
+                          )
+                        : CachedImage(
+                            url: property.mainImage,
+                            width: 80.r,
+                            height: 80.r,
+                            fit: BoxFit.cover,
+                            borderRadius: BorderRadius.circular(16.r),
+                            placeHolder: Icon(
+                              property.icon,
+                              color: AppColors.blueGrayLight,
+                              size: 30.r,
+                            ),
+                          ),
                   ),
                   12.szW,
                   Expanded(

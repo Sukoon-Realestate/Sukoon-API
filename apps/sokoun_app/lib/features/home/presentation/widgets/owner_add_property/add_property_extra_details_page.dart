@@ -16,19 +16,19 @@ class AddPropertyExtraDetailsPage extends StatelessWidget {
     required this.form,
     required this.onSmokingSelected,
     required this.onSuitableForSelected,
-    required this.onProofStatusSelected,
     required this.onProofUploadTap,
     required this.onNext,
     required this.onBack,
+    this.isSubmitting = false,
   });
 
   final OwnerAddPropertyFormState form;
   final ValueChanged<String> onSmokingSelected;
   final ValueChanged<String> onSuitableForSelected;
-  final ValueChanged<String> onProofStatusSelected;
   final VoidCallback onProofUploadTap;
   final VoidCallback onNext;
   final VoidCallback onBack;
+  final bool isSubmitting;
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +36,8 @@ class AddPropertyExtraDetailsPage extends StatelessWidget {
       title: 'تفاصيل العقار',
       activeSegments: 4,
       progressSubtitle: 'الخطوة 4 من 4 — التفاصيل الإضافية',
-      primaryLabel: 'إرسال للمراجعة',
-      onPrimaryTap: form.isExtraDetailsReady ? onNext : null,
+      primaryLabel: isSubmitting ? 'جار الإرسال...' : 'إرسال للمراجعة',
+      onPrimaryTap: form.isExtraDetailsReady && !isSubmitting ? onNext : null,
       onBack: onBack,
       children: [
         AddPropertySectionCard(
@@ -60,11 +60,7 @@ class AddPropertyExtraDetailsPage extends StatelessWidget {
             onChipTap: (chip) => onSuitableForSelected(chip.label),
           ),
         ),
-        _OwnershipProofSection(
-          form: form,
-          onProofStatusSelected: onProofStatusSelected,
-          onProofUploadTap: onProofUploadTap,
-        ),
+        _OwnershipProofSection(form: form, onProofUploadTap: onProofUploadTap),
       ],
     );
   }
@@ -73,22 +69,15 @@ class AddPropertyExtraDetailsPage extends StatelessWidget {
 class _OwnershipProofSection extends StatelessWidget {
   const _OwnershipProofSection({
     required this.form,
-    required this.onProofStatusSelected,
     required this.onProofUploadTap,
   });
 
   final OwnerAddPropertyFormState form;
-  final ValueChanged<String> onProofStatusSelected;
   final VoidCallback onProofUploadTap;
 
   @override
   Widget build(BuildContext context) {
-    final isUploaded = form.isProofUploaded;
-    final isError = form.proofStatus == 'خطأ';
-    final isUploading = form.proofStatus == 'يرفع';
-    final proofLabels = [
-      for (final state in OwnerAddPropertyContent.proofStates) state.label,
-    ];
+    final bool isUploaded = form.isProofUploaded;
 
     return AddPropertySectionCard(
       title: 'إثبات ملكية العقار',
@@ -104,15 +93,11 @@ class _OwnershipProofSection extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isUploaded
                     ? AppColors.greenPale
-                    : isError
-                    ? AppColors.redPale
                     : AppColors.grayOffWhite,
                 borderRadius: BorderRadius.circular(12.r),
                 border: Border.all(
                   color: isUploaded
                       ? AppColors.greenAlpha19
-                      : isError
-                      ? AppColors.roseAlpha19
                       : AppColors.grayPale,
                   width: 1.2,
                 ),
@@ -122,28 +107,14 @@ class _OwnershipProofSection extends StatelessWidget {
                   Icon(
                     isUploaded
                         ? Icons.insert_drive_file_outlined
-                        : isError
-                        ? Icons.error_outline_rounded
-                        : isUploading
-                        ? Icons.cloud_sync_outlined
                         : Icons.cloud_upload_outlined,
-                    color: isUploaded
-                        ? AppColors.green
-                        : isError
-                        ? AppColors.red
-                        : AppColors.sokoonGray,
+                    color: isUploaded ? AppColors.green : AppColors.sokoonGray,
                     size: 30.r,
                   ),
                   8.szH,
                   AppText(
-                    isUploaded
-                        ? form.proofFileName
-                        : isError
-                        ? 'حصل خطأ في الرفع'
-                        : isUploading
-                        ? 'جار رفع إثبات الملكية...'
-                        : 'ارفع إثبات الملكية',
-                    color: isError ? AppColors.red : AppColors.sokoonNavy,
+                    isUploaded ? form.proofFileName : 'ارفع إثبات الملكية',
+                    color: AppColors.sokoonNavy,
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w800,
                     textAlign: TextAlign.center,
@@ -152,16 +123,8 @@ class _OwnershipProofSection extends StatelessWidget {
                   ),
                   4.szH,
                   AppText(
-                    isUploaded
-                        ? 'اضغط لتغيير المستند'
-                        : isError
-                        ? 'اضغط للمحاولة مرة تانية'
-                        : 'PDF · JPG · PNG',
-                    color: isUploaded
-                        ? AppColors.green
-                        : isError
-                        ? AppColors.red
-                        : AppColors.sokoonGray,
+                    isUploaded ? 'اضغط لتغيير المستند' : 'JPG · PNG',
+                    color: isUploaded ? AppColors.green : AppColors.sokoonGray,
                     fontSize: 11.sp,
                     fontWeight: FontWeight.w500,
                   ),
@@ -187,14 +150,6 @@ class _OwnershipProofSection extends StatelessWidget {
                 ? AppColors.green
                 : AppColors.sokoonTeal,
             icon: Icons.lock_outline_rounded,
-          ),
-          10.szH,
-          AddPropertyChipWrap(
-            chips: OwnerAddPropertyContent.singleSelectedChips(
-              labels: proofLabels,
-              selectedValue: form.proofStatus,
-            ),
-            onChipTap: (chip) => onProofStatusSelected(chip.label),
           ),
         ],
       ),

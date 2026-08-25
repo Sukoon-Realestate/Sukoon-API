@@ -32,23 +32,56 @@ class OwnerVisitRequestContent {
   );
 
   factory OwnerVisitRequestContent.fromJson(Map<String, dynamic> json) {
+    final Map<String, dynamic> tenant =
+        (json['tenant'] as Map?)?.cast<String, dynamic>() ??
+        (json['user'] as Map?)?.cast<String, dynamic>() ??
+        const {};
+    final Map<String, dynamic> property =
+        (json['property'] as Map?)?.cast<String, dynamic>() ?? const {};
+    final String name =
+        json['tenant_name'] ??
+        json['name'] ??
+        tenant['full_name'] ??
+        tenant['name'] ??
+        '';
+    final String visitDate =
+        json['visit_date'] ?? json['date'] ?? json['detail_date'] ?? '';
+    final String visitTime =
+        json['visit_time'] ?? json['time'] ?? property['time'] ?? '';
+
     return OwnerVisitRequestContent(
       id: json['id'] ?? '',
-      initial: json['initial'] ?? '',
-      name: json['name'] ?? '',
-      property: json['property'] ?? '',
-      dateLabel: json['date_label'] ?? '',
-      detailDate: json['detail_date'] ?? '',
-      time: json['time'] ?? '',
-      memberSince: json['member_since'] ?? '',
-      tenantNote: json['tenant_note'] ?? '',
-      phone: json['phone'] ?? '',
-      status: OwnerVisitRequestStatus.values.firstWhere(
-        (status) => status.name == json['status'],
-        orElse: () => OwnerVisitRequestStatus.pending,
-      ),
-      isVerified: json['is_verified'] ?? false,
+      initial:
+          json['initial'] ??
+          tenant['initial'] ??
+          (name.isEmpty ? '' : name.substring(0, 1)),
+      name: name,
+      property:
+          json['property_title'] ??
+          property['title'] ??
+          (json['property'] is String ? json['property'] : '') ??
+          '',
+      dateLabel:
+          json['date_label'] ??
+          [visitDate, visitTime].where((value) => value.isNotEmpty).join(' · '),
+      detailDate: visitDate,
+      time: visitTime,
+      memberSince: json['member_since'] ?? tenant['member_since'] ?? '',
+      tenantNote: json['tenant_note'] ?? json['note'] ?? '',
+      phone: json['phone'] ?? tenant['phone'] ?? '',
+      status: OwnerVisitRequestStatusExtension.fromName(json['status']),
+      isVerified: json['is_verified'] ?? tenant['is_verified'] ?? false,
     );
+  }
+
+  static List<OwnerVisitRequestContent> listFromResponse(dynamic json) {
+    final dynamic rawItems = json is Map<String, dynamic>
+        ? json['results'] ?? json['items'] ?? json['data'] ?? const []
+        : json;
+    return (rawItems as List? ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map(OwnerVisitRequestContent.fromJson)
+        .toList(growable: false);
   }
 
   final String id;
@@ -110,51 +143,4 @@ class OwnerVisitRequestContent {
       isVerified: isVerified ?? this.isVerified,
     );
   }
-}
-
-abstract final class OwnerVisitRequestsContent {
-  static List<OwnerVisitRequestContent> get requests => [
-    OwnerVisitRequestContent(
-      id: 'sara-nasr-city',
-      initial: LocaleKeys.ownerVisitTenantSaraInitial,
-      name: LocaleKeys.ownerVisitTenantSara,
-      property: LocaleKeys.ownerVisitPropertyNasrCity,
-      dateLabel: LocaleKeys.ownerVisitDateSaturdayAtThree,
-      detailDate: LocaleKeys.ownerVisitDateSaturday,
-      time: LocaleKeys.ownerVisitTimeThreePm,
-      memberSince: LocaleKeys.ownerVisitVerifiedMemberSince,
-      tenantNote: LocaleKeys.ownerVisitTenantNote,
-      phone: LocaleKeys.ownerVisitTenantPhone,
-      status: OwnerVisitRequestStatus.newRequest,
-      isVerified: true,
-    ),
-    OwnerVisitRequestContent(
-      id: 'mohamed-jeddah',
-      initial: LocaleKeys.ownerVisitTenantMohamedInitial,
-      name: LocaleKeys.ownerVisitTenantMohamed,
-      property: LocaleKeys.ownerVisitPropertyJeddahStudio,
-      dateLabel: LocaleKeys.ownerVisitDateSundayAtTwo,
-      detailDate: LocaleKeys.ownerVisitDateSunday,
-      time: LocaleKeys.ownerVisitTimeTwoPm,
-      memberSince: LocaleKeys.ownerVisitVerifiedMemberSince,
-      tenantNote: LocaleKeys.ownerVisitTenantNote,
-      phone: LocaleKeys.ownerVisitTenantPhone,
-      status: OwnerVisitRequestStatus.accepted,
-      isVerified: true,
-    ),
-    OwnerVisitRequestContent(
-      id: 'khaled-dammam',
-      initial: LocaleKeys.ownerVisitTenantKhaledInitial,
-      name: LocaleKeys.ownerVisitTenantKhaled,
-      property: LocaleKeys.ownerVisitPropertyDammamRoom,
-      dateLabel: LocaleKeys.ownerVisitDateMondayAtEleven,
-      detailDate: LocaleKeys.ownerVisitDateMonday,
-      time: LocaleKeys.ownerVisitTimeElevenAm,
-      memberSince: LocaleKeys.ownerVisitMemberSince,
-      tenantNote: LocaleKeys.ownerVisitTenantNote,
-      phone: LocaleKeys.ownerVisitTenantPhone,
-      status: OwnerVisitRequestStatus.newRequest,
-      isVerified: false,
-    ),
-  ];
 }

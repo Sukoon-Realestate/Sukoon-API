@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:sokoun_app/features/home/data/models/owner_add_property_content.dart';
 import 'package:sokoun_app/features/home/presentation/screens/owner_add_property_flow_screen.dart';
 import 'package:sokoun_app/features/properties/imports.dart';
 
@@ -14,11 +17,18 @@ void main() {
   const MethodChannel sharedPreferencesChannel = MethodChannel(
     'plugins.flutter.io/shared_preferences',
   );
+  const MethodChannel connectivityChannel = MethodChannel(
+    'dev.fluttercommunity.plus/connectivity',
+  );
 
   setUpAll(() async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(sharedPreferencesChannel, (call) async {
           return call.method == 'getAll' ? <String, Object>{} : true;
+        });
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(connectivityChannel, (call) async {
+          return call.method == 'check' ? <String>['wifi'] : null;
         });
     await EasyLocalization.ensureInitialized();
   });
@@ -26,6 +36,8 @@ void main() {
   tearDownAll(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(sharedPreferencesChannel, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(connectivityChannel, null);
   });
 
   Widget buildScreen(Widget screen) {
@@ -56,12 +68,139 @@ void main() {
     addTearDown(tester.view.reset);
   }
 
+  List<OwnerPropertyContent> ownerPropertiesFixture() {
+    return const [
+      OwnerPropertyContent(
+        id: 'nasr-city-furnished',
+        title: 'شقة مفروشة — مدينة نصر',
+        mainImage: '',
+        location: 'مدينة نصر، القاهرة',
+        monthlyPrice: 6500,
+        views: 142,
+        visitRequests: 3,
+        bedrooms: 2,
+        area: 120,
+        description: 'شقة مفروشة بإضاءة طبيعية ومرافق متكاملة',
+        photoCount: 12,
+        status: OwnerPropertyStatus.verified,
+        icon: Icons.apartment_rounded,
+      ),
+      OwnerPropertyContent(
+        id: 'fifth-settlement-studio',
+        title: 'ستوديو — التجمع الخامس',
+        mainImage: '',
+        location: 'التجمع الخامس، القاهرة',
+        monthlyPrice: 4200,
+        views: 67,
+        visitRequests: 0,
+        bedrooms: 1,
+        area: 65,
+        description: 'ستوديو حديث قريب من الخدمات والمواصلات',
+        photoCount: 8,
+        status: OwnerPropertyStatus.pending,
+        icon: Icons.meeting_room_outlined,
+      ),
+      OwnerPropertyContent(
+        id: 'mohandessin-three-bed',
+        title: 'شقة 3 غرف — المهندسين',
+        mainImage: '',
+        location: 'المهندسين، الجيزة',
+        monthlyPrice: 8800,
+        views: 0,
+        visitRequests: 0,
+        bedrooms: 3,
+        area: 165,
+        description: 'شقة واسعة من ثلاث غرف بإطلالة هادئة',
+        photoCount: 10,
+        status: OwnerPropertyStatus.hidden,
+        icon: Icons.home_work_outlined,
+      ),
+    ];
+  }
+
+  test('maps the owned-properties response', () {
+    final OwnerPropertiesResponse response = OwnerPropertiesResponse.fromJson({
+      'count': 1,
+      'next': null,
+      'previous': null,
+      'results': [
+        {
+          'id': 'ade32b4e-8ab3-43b6-927e-65918f628e22',
+          'title': 'Cozy Studio Near Metro Station 1',
+          'main_image': 'https://example.com/property.jpg',
+          'price': '7000.00',
+          'status': 'under_review',
+          'views_count': 0,
+          'visits_count': 1,
+        },
+      ],
+    });
+
+    expect(response.count, 1);
+    expect(response.results, hasLength(1));
+    expect(response.results.single.monthlyPrice, 7000);
+    expect(response.results.single.status, OwnerPropertyStatus.pending);
+    expect(response.results.single.views, 0);
+    expect(response.results.single.visitRequests, 1);
+  });
+
+  test('builds a real multipart create-property payload', () {
+    final List<File> photos = List<File>.generate(
+      10,
+      (index) => File('/tmp/property-photo-$index.jpg'),
+    );
+    final File ownershipProof = File('/tmp/ownership-proof.png');
+    final OwnerAddPropertyFormState form = OwnerAddPropertyFormState.initial()
+        .copyWith(
+          title: 'Cozy Studio',
+          propertyType: 'استوديو',
+          governorate: 'القاهرة',
+          district: 'مدينة نصر',
+          street: 'شارع النصر',
+          bedrooms: '1',
+          bathrooms: '1',
+          space: '65',
+          floor: '3',
+          buildingYear: '2020',
+          mapQuery: 'مدينة نصر، القاهرة',
+          isLocationSelected: true,
+          photos: photos,
+          monthlyPrice: '7000',
+          deposit: 'شهر واحد',
+          rentalDuration: '6',
+          rentalUnit: 'شهر',
+          amenities: {'واي فاي', 'جراج', 'مفروش'},
+          description: 'A furnished studio near the metro station.',
+          smokingPolicy: 'ممنوع',
+          suitableFor: 'أفراد',
+          ownershipProof: ownershipProof,
+        );
+
+    final Map<String, dynamic> body = form.toRequestBody();
+
+    expect(form.isBasicsReady, isTrue);
+    expect(form.isPhotosReady, isTrue);
+    expect(form.isPricingReady, isTrue);
+    expect(form.isExtraDetailsReady, isTrue);
+    expect(body['property_type'], 'studio');
+    expect(body['price_period'], 'monthly');
+    expect(body['main_image'], same(photos.first));
+    expect(body['images'], hasLength(9));
+    expect(body['ownership_proof'], same(ownershipProof));
+    expect(body['has_wifi'], isTrue);
+    expect(body['has_elevator'], isFalse);
+  });
+
   testWidgets('runs O-PROPS-01b actions edit analytics and revenue', (
     tester,
   ) async {
     configurePhoneViewport(tester);
 
-    await tester.pumpWidget(buildScreen(const OwnerPropertiesScreen()));
+    await tester.pumpWidget(
+      buildScreen(
+        OwnerPropertiesScreen(initialProperties: ownerPropertiesFixture()),
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('عقاراتي'), findsWidgets);
@@ -122,8 +261,13 @@ void main() {
 
   testWidgets('runs O-REJECT-01 edit and resubmit flow', (tester) async {
     configurePhoneViewport(tester);
-    final OwnerPropertyContent rejected =
-        OwnerPropertiesContent.rejectedPrototype();
+    final OwnerPropertyContent rejected = ownerPropertiesFixture().first
+        .copyWith(
+          id: 'nasr-city-rejected',
+          views: 0,
+          visitRequests: 0,
+          status: OwnerPropertyStatus.rejected,
+        );
 
     await tester.pumpWidget(
       buildScreen(OwnerPropertiesScreen(initialProperties: [rejected])),
@@ -163,7 +307,11 @@ void main() {
   testWidgets('connects add property from O-PROPS-01b', (tester) async {
     configurePhoneViewport(tester);
 
-    await tester.pumpWidget(buildScreen(const OwnerPropertiesScreen()));
+    await tester.pumpWidget(
+      buildScreen(
+        OwnerPropertiesScreen(initialProperties: ownerPropertiesFixture()),
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('owner-properties-add')));
     await tester.pumpAndSettle();

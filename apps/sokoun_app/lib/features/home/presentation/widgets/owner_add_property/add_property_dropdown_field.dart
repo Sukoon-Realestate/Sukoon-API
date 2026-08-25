@@ -41,8 +41,17 @@ class AddPropertyDropdownField extends StatelessWidget {
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
-              value: value,
+              value: items.contains(value) ? value : null,
               isExpanded: true,
+              hint: Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: AppText(
+                  'اختر',
+                  color: AppColors.sokoonMuted,
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               icon: Icon(
                 Icons.keyboard_arrow_down_rounded,
                 color: AppColors.sokoonTeal,

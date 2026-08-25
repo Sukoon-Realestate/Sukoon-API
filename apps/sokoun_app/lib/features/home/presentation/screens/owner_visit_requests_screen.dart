@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/status_builder.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/chat/data/models/chat_content.dart';
 import 'package:sokoun_app/features/chat/presentation/screens/chat_thread_screen.dart';
 import 'package:sokoun_app/features/visits/imports.dart';
+import 'package:sokoun_app/features/visits/presentation/cubits/received_visits_cubit.dart';
 
 import '../widgets/owner_visit_requests/imports.dart';
 
@@ -27,28 +30,47 @@ class OwnerVisitRequestsScreen extends StatefulWidget {
 }
 
 class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
-  late List<OwnerVisitRequestContent> _requests;
+  ReceivedVisitsCubit? _receivedVisitsCubit;
+  Future<void>? _receivedVisitsRequest;
+  late List<OwnerVisitRequestContent> _fixtureRequests;
   OwnerVisitRequestFilter _selectedFilter = OwnerVisitRequestFilter.all;
 
-  List<OwnerVisitRequestContent> get _visibleRequests {
-    return _requests
+  List<OwnerVisitRequestContent> _visibleRequests(
+    List<OwnerVisitRequestContent> requests,
+  ) {
+    return requests
         .where((request) => _selectedFilter.accepts(request.status))
         .toList(growable: false);
   }
 
-  int get _pendingCount =>
-      _requests.where((request) => request.status.canDecide).length;
+  int _pendingCount(List<OwnerVisitRequestContent> requests) =>
+      requests.where((request) => request.status.canDecide).length;
 
   @override
   void initState() {
     super.initState();
-    _requests = List<OwnerVisitRequestContent>.of(
-      widget.initialRequests ?? OwnerVisitRequestsContent.requests,
-    );
+    final List<OwnerVisitRequestContent>? initialRequests =
+        widget.initialRequests;
+    if (initialRequests == null) {
+      final ReceivedVisitsCubit cubit = ReceivedVisitsCubit();
+      _receivedVisitsCubit = cubit;
+      _receivedVisitsRequest = cubit.getReceivedVisits();
+    } else {
+      _fixtureRequests = List<OwnerVisitRequestContent>.of(initialRequests);
+    }
   }
 
-  int _countForFilter(OwnerVisitRequestFilter filter) {
-    return _requests.where((request) => filter.accepts(request.status)).length;
+  @override
+  void dispose() {
+    _receivedVisitsCubit?.close();
+    super.dispose();
+  }
+
+  int _countForFilter(
+    List<OwnerVisitRequestContent> requests,
+    OwnerVisitRequestFilter filter,
+  ) {
+    return requests.where((request) => filter.accepts(request.status)).length;
   }
 
   void _selectFilter(OwnerVisitRequestFilter filter) {
@@ -104,18 +126,21 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
     required OwnerVisitRequestContent request,
     required OwnerRequestResolution resolution,
   }) {
-    final int index = _requests.indexWhere((item) => item.id == request.id);
-    if (index < 0) {
-      return;
+    final OwnerVisitRequestContent updatedRequest = request.copyWith(
+      status: resolution.isAccepted
+          ? OwnerVisitRequestStatus.accepted
+          : OwnerVisitRequestStatus.rejected,
+    );
+    final ReceivedVisitsCubit? cubit = _receivedVisitsCubit;
+    if (cubit == null) {
+      setState(() {
+        _fixtureRequests = _fixtureRequests
+            .map((item) => item.id == request.id ? updatedRequest : item)
+            .toList(growable: false);
+      });
+    } else {
+      cubit.replaceRequest(updatedRequest);
     }
-
-    setState(() {
-      _requests[index] = request.copyWith(
-        status: resolution.isAccepted
-            ? OwnerVisitRequestStatus.accepted
-            : OwnerVisitRequestStatus.rejected,
-      );
-    });
     _showMessage(
       resolution.isAccepted
           ? LocaleKeys.ownerVisitAcceptedMessage
@@ -148,7 +173,32 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<OwnerVisitRequestContent> visibleRequests = _visibleRequests;
+    final ReceivedVisitsCubit? cubit = _receivedVisitsCubit;
+    if (cubit == null) {
+      return _buildScreen(_fixtureRequests);
+    }
+    return BlocProvider.value(
+      value: cubit,
+      child:
+          StatusBuilder<
+            ReceivedVisitsCubit,
+            List<OwnerVisitRequestContent>
+          >.withShimmer(
+            initialDataForShimmer: List<OwnerVisitRequestContent>.filled(
+              3,
+              OwnerVisitRequestContent.initial(),
+            ),
+            requestToTryAgainWhenError: _receivedVisitsRequest!,
+            emptyView: _buildScreen(const []),
+            builder: _buildScreen,
+          ),
+    );
+  }
+
+  Widget _buildScreen(List<OwnerVisitRequestContent> requests) {
+    final List<OwnerVisitRequestContent> visibleRequests = _visibleRequests(
+      requests,
+    );
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -172,14 +222,15 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
                 child: Column(
                   children: [
                     OwnerVisitRequestSummaryGrid(
-                      totalCount: _requests.length,
-                      pendingCount: _pendingCount,
+                      totalCount: requests.length,
+                      pendingCount: _pendingCount(requests),
                     ),
                     12.szH,
                     OwnerVisitRequestFilters(
                       filters: OwnerVisitRequestFilter.values,
                       selectedFilter: _selectedFilter,
-                      countForFilter: _countForFilter,
+                      countForFilter: (filter) =>
+                          _countForFilter(requests, filter),
                       onFilterSelected: _selectFilter,
                     ),
                   ],

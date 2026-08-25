@@ -74,6 +74,9 @@ extension OwnerPropertyStatusX on OwnerPropertyStatus {
   }
 
   static OwnerPropertyStatus fromName(String? name) {
+    if (name == 'under_review') {
+      return OwnerPropertyStatus.pending;
+    }
     return OwnerPropertyStatus.values.firstWhere(
       (status) => status.name == name,
       orElse: () => OwnerPropertyStatus.pending,

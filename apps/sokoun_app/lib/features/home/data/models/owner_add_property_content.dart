@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 
@@ -53,44 +55,6 @@ abstract final class OwnerAddPropertyContent {
     'الدقهلية': ['المنصورة', 'طلخا', 'ميت غمر', 'السنبلاوين'],
   };
 
-  static const propertyTypes = [
-    AddPropertyChipContent(label: 'شقة', isSelected: true),
-    AddPropertyChipContent(label: 'غرفة'),
-    AddPropertyChipContent(label: 'استوديو'),
-    AddPropertyChipContent(label: 'فيلا'),
-    AddPropertyChipContent(label: 'دور'),
-    AddPropertyChipContent(label: 'روف'),
-  ];
-
-  static const addressFields = [
-    AddPropertyFieldContent(label: 'المحافظة', value: 'القاهرة'),
-    AddPropertyFieldContent(label: 'المنطقة', value: 'مدينة نصر'),
-    AddPropertyFieldContent(label: 'الشارع', value: 'شارع النصر'),
-  ];
-
-  static const detailFields = [
-    AddPropertyFieldContent(
-      label: 'عدد الغرف',
-      value: '3',
-      textAlign: TextAlign.center,
-    ),
-    AddPropertyFieldContent(
-      label: 'المساحة (م²)',
-      value: '90',
-      textAlign: TextAlign.center,
-    ),
-    AddPropertyFieldContent(
-      label: 'الدور',
-      value: '3',
-      textAlign: TextAlign.center,
-    ),
-    AddPropertyFieldContent(
-      label: 'سنة البناء',
-      value: '2020',
-      textAlign: TextAlign.center,
-    ),
-  ];
-
   static const photoTips = [
     'صوّر كل الغرف: صالة، غرف نوم، مطبخ، حمام',
     'استخدم إضاءة طبيعية',
@@ -105,26 +69,12 @@ abstract final class OwnerAddPropertyContent {
 
   static const rentalUnitOptions = ['يوم', 'أسبوع', 'شهر', 'سنة'];
 
-  static const pricingFields = [
-    AddPropertyFieldContent(
-      label: 'السعر',
-      value: '2500',
-      isFocused: true,
-      textAlign: TextAlign.right,
-    ),
-    AddPropertyFieldContent(label: 'تأمين الشقة', value: 'شهر واحد'),
-  ];
-
   static const amenityOptions = [
     'واي فاي',
-    'مكيف',
-    'غسالة',
-    'ثلاجة',
     'مفروش',
-    'بوتوجاز',
     'جراج',
     'أسانسير',
-    'حارس',
+    'أمن',
     'بلكونة',
     'تكييف',
     'غاز طبيعي',
@@ -133,31 +83,7 @@ abstract final class OwnerAddPropertyContent {
     'قريب من المترو',
   ];
 
-  static const amenities = [
-    AddPropertyChipContent(label: 'واي فاي', isSelected: true),
-    AddPropertyChipContent(label: 'مكيف', isSelected: true),
-    AddPropertyChipContent(label: 'غسالة', isSelected: true),
-    AddPropertyChipContent(label: 'ثلاجة', isSelected: true),
-    AddPropertyChipContent(label: 'مفروش', isSelected: true),
-    AddPropertyChipContent(label: 'بوتوجاز'),
-    AddPropertyChipContent(label: 'جراج'),
-    AddPropertyChipContent(label: 'أسانسير'),
-    AddPropertyChipContent(label: 'حارس'),
-    AddPropertyChipContent(label: 'بلكونة'),
-    AddPropertyChipContent(label: 'تكييف'),
-    AddPropertyChipContent(label: 'غاز طبيعي'),
-    AddPropertyChipContent(label: 'عداد كهرباء'),
-    AddPropertyChipContent(label: 'عداد مياه'),
-    AddPropertyChipContent(label: 'قريب من المترو'),
-  ];
-
   static const smokingOptionLabels = ['مسموح', 'ممنوع', 'حسب الاتفاق'];
-
-  static const smokingOptions = [
-    AddPropertyChipContent(label: 'مسموح'),
-    AddPropertyChipContent(label: 'ممنوع', isSelected: true),
-    AddPropertyChipContent(label: 'حسب الاتفاق'),
-  ];
 
   static const suitableForOptions = [
     'الكل',
@@ -166,30 +92,6 @@ abstract final class OwnerAddPropertyContent {
     'عائلات',
     'أفراد',
     'مشاركة',
-  ];
-
-  static const suitableFor = [
-    AddPropertyChipContent(label: 'الكل'),
-    AddPropertyChipContent(label: 'ولاد فقط'),
-    AddPropertyChipContent(label: 'بنات فقط'),
-    AddPropertyChipContent(label: 'عائلات', isSelected: true),
-    AddPropertyChipContent(label: 'أفراد'),
-    AddPropertyChipContent(label: 'مشاركة'),
-  ];
-
-  static const proofStates = [
-    AddPropertyChipContent(label: 'فارغ', isSelected: true),
-    AddPropertyChipContent(label: 'يرفع'),
-    AddPropertyChipContent(label: 'مرفوع'),
-    AddPropertyChipContent(label: 'خطأ'),
-  ];
-
-  static const submittedSummary = [
-    AddPropertySummaryContent(label: 'نوع العقار', value: 'شقة مفروشة'),
-    AddPropertySummaryContent(label: 'المنطقة', value: 'مدينة نصر، القاهرة'),
-    AddPropertySummaryContent(label: 'السعر', value: '6,500 ج/شهر'),
-    AddPropertySummaryContent(label: 'الصور', value: '12 صورة'),
-    AddPropertySummaryContent(label: 'وقت الإرسال', value: 'النهارده 10:30 ص'),
   ];
 
   static const tealSoft = AppColors.tealAlpha07;
@@ -226,17 +128,19 @@ abstract final class OwnerAddPropertyContent {
 
 class OwnerAddPropertyFormState {
   const OwnerAddPropertyFormState({
+    required this.title,
     required this.propertyType,
     required this.governorate,
     required this.district,
     required this.street,
     required this.bedrooms,
+    required this.bathrooms,
     required this.space,
     required this.floor,
     required this.buildingYear,
     required this.mapQuery,
     required this.isLocationSelected,
-    required this.photoCount,
+    required this.photos,
     required this.monthlyPrice,
     required this.deposit,
     required this.rentalDuration,
@@ -245,47 +149,50 @@ class OwnerAddPropertyFormState {
     required this.description,
     required this.smokingPolicy,
     required this.suitableFor,
-    required this.proofStatus,
+    required this.ownershipProof,
     this.submittedAt,
   });
 
   factory OwnerAddPropertyFormState.initial() {
     return const OwnerAddPropertyFormState(
-      propertyType: 'شقة',
-      governorate: 'القاهرة',
-      district: 'مدينة نصر',
-      street: 'شارع النصر',
-      bedrooms: '3',
-      space: '90',
-      floor: '3',
-      buildingYear: '2020',
-      mapQuery: 'مدينة نصر، القاهرة',
-      isLocationSelected: true,
-      photoCount: 4,
-      monthlyPrice: '6500',
-      deposit: 'شهر واحد',
-      rentalDuration: '6',
-      rentalUnit: 'شهر',
-      amenities: {'واي فاي', 'مكيف', 'غسالة', 'ثلاجة', 'مفروش'},
-      description:
-          'شقة مفروشة بالكامل قريبة من الخدمات والمواصلات، مناسبة للإيجار الشهري.',
-      smokingPolicy: 'ممنوع',
-      suitableFor: 'عائلات',
-      proofStatus: 'فارغ',
+      title: '',
+      propertyType: '',
+      governorate: '',
+      district: '',
+      street: '',
+      bedrooms: '',
+      bathrooms: '',
+      space: '',
+      floor: '',
+      buildingYear: '',
+      mapQuery: '',
+      isLocationSelected: false,
+      photos: [],
+      monthlyPrice: '',
+      deposit: '',
+      rentalDuration: '',
+      rentalUnit: '',
+      amenities: {},
+      description: '',
+      smokingPolicy: '',
+      suitableFor: '',
+      ownershipProof: null,
     );
   }
 
+  final String title;
   final String propertyType;
   final String governorate;
   final String district;
   final String street;
   final String bedrooms;
+  final String bathrooms;
   final String space;
   final String floor;
   final String buildingYear;
   final String mapQuery;
   final bool isLocationSelected;
-  final int photoCount;
+  final List<File> photos;
   final String monthlyPrice;
   final String deposit;
   final String rentalDuration;
@@ -294,17 +201,20 @@ class OwnerAddPropertyFormState {
   final String description;
   final String smokingPolicy;
   final String suitableFor;
-  final String proofStatus;
+  final File? ownershipProof;
   final DateTime? submittedAt;
 
-  bool get isProofUploaded => proofStatus == 'مرفوع';
+  int get photoCount => photos.length;
+  bool get isProofUploaded => ownershipProof != null;
 
   bool get isBasicsReady {
-    return propertyType.trim().isNotEmpty &&
+    return title.trim().isNotEmpty &&
+        propertyType.trim().isNotEmpty &&
         governorate.trim().isNotEmpty &&
         district.trim().isNotEmpty &&
         street.trim().isNotEmpty &&
         _hasPositiveNumber(bedrooms) &&
+        _hasPositiveNumber(bathrooms) &&
         _hasPositiveNumber(space) &&
         floor.trim().isNotEmpty &&
         _hasPositiveNumber(buildingYear) &&
@@ -338,7 +248,13 @@ class OwnerAddPropertyFormState {
 
   String get photoSummary => '$photoCount صورة';
 
-  String get proofFileName => 'ownership-proof-${district.hashCode.abs()}.pdf';
+  String get proofFileName {
+    final File? proof = ownershipProof;
+    if (proof == null || proof.uri.pathSegments.isEmpty) {
+      return '';
+    }
+    return proof.uri.pathSegments.last;
+  }
 
   List<AddPropertySummaryContent> get submittedSummary {
     return [
@@ -346,7 +262,7 @@ class OwnerAddPropertyFormState {
       AddPropertySummaryContent(label: 'المنطقة', value: locationSummary),
       AddPropertySummaryContent(label: 'السعر', value: priceSummary),
       AddPropertySummaryContent(label: 'الصور', value: photoSummary),
-      AddPropertySummaryContent(label: 'إثبات الملكية', value: proofStatus),
+      AddPropertySummaryContent(label: 'إثبات الملكية', value: proofFileName),
       AddPropertySummaryContent(
         label: 'وقت الإرسال',
         value: _formatSubmittedAt(submittedAt ?? DateTime.now()),
@@ -355,17 +271,19 @@ class OwnerAddPropertyFormState {
   }
 
   OwnerAddPropertyFormState copyWith({
+    String? title,
     String? propertyType,
     String? governorate,
     String? district,
     String? street,
     String? bedrooms,
+    String? bathrooms,
     String? space,
     String? floor,
     String? buildingYear,
     String? mapQuery,
     bool? isLocationSelected,
-    int? photoCount,
+    List<File>? photos,
     String? monthlyPrice,
     String? deposit,
     String? rentalDuration,
@@ -374,21 +292,24 @@ class OwnerAddPropertyFormState {
     String? description,
     String? smokingPolicy,
     String? suitableFor,
-    String? proofStatus,
+    File? ownershipProof,
+    bool clearOwnershipProof = false,
     DateTime? submittedAt,
   }) {
     return OwnerAddPropertyFormState(
+      title: title ?? this.title,
       propertyType: propertyType ?? this.propertyType,
       governorate: governorate ?? this.governorate,
       district: district ?? this.district,
       street: street ?? this.street,
       bedrooms: bedrooms ?? this.bedrooms,
+      bathrooms: bathrooms ?? this.bathrooms,
       space: space ?? this.space,
       floor: floor ?? this.floor,
       buildingYear: buildingYear ?? this.buildingYear,
       mapQuery: mapQuery ?? this.mapQuery,
       isLocationSelected: isLocationSelected ?? this.isLocationSelected,
-      photoCount: photoCount ?? this.photoCount,
+      photos: photos ?? this.photos,
       monthlyPrice: monthlyPrice ?? this.monthlyPrice,
       deposit: deposit ?? this.deposit,
       rentalDuration: rentalDuration ?? this.rentalDuration,
@@ -397,9 +318,95 @@ class OwnerAddPropertyFormState {
       description: description ?? this.description,
       smokingPolicy: smokingPolicy ?? this.smokingPolicy,
       suitableFor: suitableFor ?? this.suitableFor,
-      proofStatus: proofStatus ?? this.proofStatus,
+      ownershipProof: clearOwnershipProof
+          ? null
+          : ownershipProof ?? this.ownershipProof,
       submittedAt: submittedAt ?? this.submittedAt,
     );
+  }
+
+  Map<String, dynamic> toRequestBody() {
+    final Set<String> selectedAmenities = amenities;
+    return {
+      'title': title.trim(),
+      'description': description.trim(),
+      'price': monthlyPrice.trim(),
+      'price_period': _rentalUnitValue(rentalUnit),
+      'property_type': _propertyTypeValue(propertyType),
+      'is_furnished': selectedAmenities.contains('مفروش'),
+      'bedrooms': int.parse(bedrooms),
+      'bathrooms': int.parse(bathrooms),
+      'area': int.parse(space),
+      'space': space.trim(),
+      'floor': int.parse(floor),
+      'rental_period': int.parse(rentalDuration),
+      'suitable_for': _suitableForValue(suitableFor),
+      'smoking_allowed': smokingPolicy == 'مسموح',
+      'country': 'Egypt',
+      'city': governorate,
+      'district': district,
+      'street': street.trim(),
+      'building_year': int.parse(buildingYear),
+      'deposit': _depositValue(deposit),
+      'location': mapQuery.trim(),
+      'has_wifi': selectedAmenities.contains('واي فاي'),
+      'has_elevator': selectedAmenities.contains('أسانسير'),
+      'has_garage': selectedAmenities.contains('جراج'),
+      'has_security': selectedAmenities.contains('أمن'),
+      'has_balcony': selectedAmenities.contains('بلكونة'),
+      'has_air_conditioning': selectedAmenities.contains('تكييف'),
+      'near_metro': selectedAmenities.contains('قريب من المترو'),
+      'has_natural_gas': selectedAmenities.contains('غاز طبيعي'),
+      'has_electricity_meter': selectedAmenities.contains('عداد كهرباء'),
+      'has_water_meter': selectedAmenities.contains('عداد مياه'),
+      'main_image': photos.first,
+      if (photos.length > 1) 'images': photos.skip(1).toList(growable: false),
+      if (ownershipProof != null) 'ownership_proof': ownershipProof,
+    };
+  }
+
+  static String _propertyTypeValue(String value) {
+    return const {
+          'شقة': 'apartment',
+          'غرفة': 'room',
+          'استوديو': 'studio',
+          'فيلا': 'villa',
+          'دور': 'floor',
+          'روف': 'roof',
+        }[value] ??
+        value;
+  }
+
+  static String _rentalUnitValue(String value) {
+    return const {
+          'يوم': 'daily',
+          'أسبوع': 'weekly',
+          'شهر': 'monthly',
+          'سنة': 'yearly',
+        }[value] ??
+        value;
+  }
+
+  static String _suitableForValue(String value) {
+    return const {
+          'الكل': 'all',
+          'ولاد فقط': 'males_only',
+          'بنات فقط': 'females_only',
+          'عائلات': 'families',
+          'أفراد': 'individuals',
+          'مشاركة': 'shared',
+        }[value] ??
+        value;
+  }
+
+  static String _depositValue(String value) {
+    return const {
+          'بدون تأمين': 'none',
+          'نصف شهر': 'half_month',
+          'شهر واحد': 'one_month',
+          'شهرين': 'two_months',
+        }[value] ??
+        value;
   }
 
   static bool _hasPositiveNumber(String value) {

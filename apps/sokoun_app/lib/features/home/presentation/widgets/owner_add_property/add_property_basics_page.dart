@@ -17,17 +17,21 @@ class AddPropertyBasicsPage extends StatelessWidget {
   const AddPropertyBasicsPage({
     super.key,
     required this.form,
+    required this.titleController,
     required this.streetController,
     required this.bedroomsController,
+    required this.bathroomsController,
     required this.spaceController,
     required this.floorController,
     required this.buildingYearController,
     required this.mapQueryController,
     required this.onPropertyTypeSelected,
+    required this.onTitleChanged,
     required this.onGovernorateChanged,
     required this.onDistrictChanged,
     required this.onStreetChanged,
     required this.onBedroomsChanged,
+    required this.onBathroomsChanged,
     required this.onSpaceChanged,
     required this.onFloorChanged,
     required this.onBuildingYearChanged,
@@ -38,17 +42,21 @@ class AddPropertyBasicsPage extends StatelessWidget {
   });
 
   final OwnerAddPropertyFormState form;
+  final TextEditingController titleController;
   final TextEditingController streetController;
   final TextEditingController bedroomsController;
+  final TextEditingController bathroomsController;
   final TextEditingController spaceController;
   final TextEditingController floorController;
   final TextEditingController buildingYearController;
   final TextEditingController mapQueryController;
   final ValueChanged<String> onPropertyTypeSelected;
+  final ValueChanged<String> onTitleChanged;
   final ValueChanged<String> onGovernorateChanged;
   final ValueChanged<String> onDistrictChanged;
   final ValueChanged<String> onStreetChanged;
   final ValueChanged<String> onBedroomsChanged;
+  final ValueChanged<String> onBathroomsChanged;
   final ValueChanged<String> onSpaceChanged;
   final ValueChanged<String> onFloorChanged;
   final ValueChanged<String> onBuildingYearChanged;
@@ -77,6 +85,18 @@ class AddPropertyBasicsPage extends StatelessWidget {
             onChipTap: (chip) => onPropertyTypeSelected(chip.label),
           ),
         ),
+        AddPropertySectionCard(
+          title: 'عنوان العقار',
+          child: AddPropertyField(
+            field: const AddPropertyFieldContent(
+              label: 'العنوان',
+              value: 'مثال: شقة مفروشة قريبة من المترو',
+            ),
+            controller: titleController,
+            onChanged: onTitleChanged,
+            hint: 'اكتب عنواناً واضحاً للعقار',
+          ),
+        ),
         _AddressSection(
           form: form,
           streetController: streetController,
@@ -86,10 +106,12 @@ class AddPropertyBasicsPage extends StatelessWidget {
         ),
         _DetailsSection(
           bedroomsController: bedroomsController,
+          bathroomsController: bathroomsController,
           spaceController: spaceController,
           floorController: floorController,
           buildingYearController: buildingYearController,
           onBedroomsChanged: onBedroomsChanged,
+          onBathroomsChanged: onBathroomsChanged,
           onSpaceChanged: onSpaceChanged,
           onFloorChanged: onFloorChanged,
           onBuildingYearChanged: onBuildingYearChanged,
@@ -163,20 +185,24 @@ class _AddressSection extends StatelessWidget {
 class _DetailsSection extends StatelessWidget {
   const _DetailsSection({
     required this.bedroomsController,
+    required this.bathroomsController,
     required this.spaceController,
     required this.floorController,
     required this.buildingYearController,
     required this.onBedroomsChanged,
+    required this.onBathroomsChanged,
     required this.onSpaceChanged,
     required this.onFloorChanged,
     required this.onBuildingYearChanged,
   });
 
   final TextEditingController bedroomsController;
+  final TextEditingController bathroomsController;
   final TextEditingController spaceController;
   final TextEditingController floorController;
   final TextEditingController buildingYearController;
   final ValueChanged<String> onBedroomsChanged;
+  final ValueChanged<String> onBathroomsChanged;
   final ValueChanged<String> onSpaceChanged;
   final ValueChanged<String> onFloorChanged;
   final ValueChanged<String> onBuildingYearChanged;
@@ -188,6 +214,11 @@ class _DetailsSection extends StatelessWidget {
         label: 'عدد الغرف',
         controller: bedroomsController,
         onChanged: onBedroomsChanged,
+      ),
+      _NumberFieldConfig(
+        label: 'عدد الحمامات',
+        controller: bathroomsController,
+        onChanged: onBathroomsChanged,
       ),
       _NumberFieldConfig(
         label: 'المساحة (م²)',

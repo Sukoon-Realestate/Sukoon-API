@@ -40,8 +40,8 @@ class CookieTokenHeaderInterceptor extends Interceptor {
     // if (accessToken.isNotNull && accessToken!.isNotEmpty) {
     //   options.headers[HttpHeaders.authorizationHeader] = 'Bearer $accessToken';
     // }
-    options.headers[HttpHeaders.authorizationHeader] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg3NjcwNjM2LCJpYXQiOjE3ODc1ODQyMzYsImp0aSI6IjhkZGFiODYyNGI2ZTRjMjE5MGQwYTJlNTNkZGIzOGY2IiwidXNlcl9pZCI6IjllZWY0MjAxLTBjYTQtNGZjMS1iOTFmLTllZjI3NTUxYzBlYSJ9.Xa5rdsi_WLF_fb_jKQXEUxwF3fF0s9xfLb40hjcMfnE';
 
+    options.headers[HttpHeaders.authorizationHeader] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg3NjkzMjUyLCJpYXQiOjE3ODc2MDY4NTIsImp0aSI6ImRhNTc3ZDg5NmZiMzQwY2U4NmM4OTA3NDlmZmJjM2FhIiwidXNlcl9pZCI6IjllZWY0MjAxLTBjYTQtNGZjMS1iOTFmLTllZjI3NTUxYzBlYSJ9.wApXOjCIsBk1yRVmgfGjgID1_4IgqfvfAdTc3F53Ihs';
     if (options.path == ApiConstants.refreshToken) {
       final String? refreshToken = valueFor(refreshCookieName);
       if (refreshToken != null && refreshToken.isNotEmpty) {

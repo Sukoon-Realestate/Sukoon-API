@@ -56,10 +56,89 @@ void main() {
     addTearDown(tester.view.reset);
   }
 
+  List<OwnerVisitRequestContent> ownerVisitRequestsFixture() {
+    return const [
+      OwnerVisitRequestContent(
+        id: 'sara-nasr-city',
+        initial: 'س',
+        name: 'سارة أحمد خالد',
+        property: 'شقة مفروشة — مدينة نصر',
+        dateLabel: 'السبت 15 يونيو · 3:00 م',
+        detailDate: 'السبت 15 يونيو 2025',
+        time: '3:00 م',
+        memberSince: 'مستأجر موثّق · عضو منذ 2024',
+        tenantNote: 'مهتمة بالشقة ومحتاجة تاكدي من المساحة وحالة التشطيب.',
+        phone: '010****432',
+        status: OwnerVisitRequestStatus.newRequest,
+        isVerified: true,
+      ),
+      OwnerVisitRequestContent(
+        id: 'mohamed-jeddah',
+        initial: 'م',
+        name: 'محمد أحمد',
+        property: 'استوديو — جدة',
+        dateLabel: 'الأحد 2:00 م',
+        detailDate: 'الأحد 16 يونيو 2025',
+        time: '2:00 م',
+        memberSince: 'مستأجر موثّق · عضو منذ 2024',
+        tenantNote: '',
+        phone: '010****432',
+        status: OwnerVisitRequestStatus.accepted,
+        isVerified: true,
+      ),
+      OwnerVisitRequestContent(
+        id: 'khaled-dammam',
+        initial: 'خ',
+        name: 'خالد عبدالله',
+        property: 'غرفة — الدمام',
+        dateLabel: 'الإثنين 11:00 ص',
+        detailDate: 'الإثنين 17 يونيو 2025',
+        time: '11:00 ص',
+        memberSince: 'عضو منذ 2024',
+        tenantNote: '',
+        phone: '010****432',
+        status: OwnerVisitRequestStatus.newRequest,
+        isVerified: false,
+      ),
+    ];
+  }
+
+  test('maps received visit data from nested API fields', () {
+    final List<OwnerVisitRequestContent> requests =
+        OwnerVisitRequestContent.listFromResponse({
+          'count': 1,
+          'results': [
+            {
+              'id': 'visit-id',
+              'property': {'id': 'property-id', 'title': 'Cozy Studio'},
+              'tenant': {
+                'full_name': 'Sara Ahmed',
+                'phone': '01000000000',
+                'is_verified': true,
+              },
+              'visit_date': '2026-09-15',
+              'visit_time': '10:00:00',
+              'note': 'Please confirm',
+              'status': 'pending',
+            },
+          ],
+        });
+
+    expect(requests, hasLength(1));
+    expect(requests.single.property, 'Cozy Studio');
+    expect(requests.single.name, 'Sara Ahmed');
+    expect(requests.single.tenantNote, 'Please confirm');
+    expect(requests.single.status, OwnerVisitRequestStatus.pending);
+  });
+
   testWidgets('opens O-REQ-02 and completes the O-ACCEPT flow', (tester) async {
     configurePhoneViewport(tester);
 
-    await tester.pumpWidget(buildScreen(const OwnerVisitRequestsScreen()));
+    await tester.pumpWidget(
+      buildScreen(
+        OwnerVisitRequestsScreen(initialRequests: ownerVisitRequestsFixture()),
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
@@ -97,7 +176,11 @@ void main() {
   testWidgets('opens O-REQ-02 and completes the O-REJECT flow', (tester) async {
     configurePhoneViewport(tester);
 
-    await tester.pumpWidget(buildScreen(const OwnerVisitRequestsScreen()));
+    await tester.pumpWidget(
+      buildScreen(
+        OwnerVisitRequestsScreen(initialRequests: ownerVisitRequestsFixture()),
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(
       find.byKey(const ValueKey('owner-request-card-sara-nasr-city')),
@@ -129,7 +212,11 @@ void main() {
   testWidgets('opens O-CAL-01 and edits O-AVAIL-01', (tester) async {
     configurePhoneViewport(tester);
 
-    await tester.pumpWidget(buildScreen(const OwnerVisitRequestsScreen()));
+    await tester.pumpWidget(
+      buildScreen(
+        OwnerVisitRequestsScreen(initialRequests: ownerVisitRequestsFixture()),
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('owner-open-calendar')));
     await tester.pumpAndSettle();

@@ -79,7 +79,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
           emptyListView: Center(
             child: Column(
               children: [
-                Lottie.asset(Assets.lottie.notFound2.path),
+                // Lottie.asset(Assets.lottie.notFound2.path),
                 AppText(LocaleKeys.notFound)
               ],
             ),
@@ -98,7 +98,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
           onError: (c, page, e) => MessageUtils.showTopMsg(e.msg),
           errorMapper: PagifyErrorMapper(
               errorWhenDio: (e) {
-                final String? msg = e.response?.data['msg'];
+                final String? msg = e.response?.data['message'];
                 return PagifyApiRequestException(
                   msg ?? 'network error occur',
                   pagifyFailure: RequestFailureData(
@@ -144,7 +144,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
               )
           ),
           errorMapper: PagifyErrorMapper(
-              errorWhenDio: (error) => error.response?.data['msg']
+              errorWhenDio: (error) => error.response?.data['message']
           ),
           cacheKey: widget.cacheKey,
           cacheToJson: hasCacheConfig ? widget.cacheToJson : null,

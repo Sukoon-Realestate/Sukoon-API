@@ -7,11 +7,13 @@ class HomeAvatar extends StatelessWidget {
     required this.icon,
     required this.backgroundColor,
     required this.iconColor,
+    this.imageUrl,
   });
 
   final IconData icon;
   final Color backgroundColor;
   final Color iconColor;
+  final String? imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,16 @@ class HomeAvatar extends StatelessWidget {
       width: 36.r,
       height: 36.r,
       decoration: BoxDecoration(color: backgroundColor, shape: BoxShape.circle),
-      child: Icon(icon, color: iconColor, size: 18.r),
+      child: imageUrl?.isNotEmpty ?? false
+          ? ClipOval(
+              child: Image.network(
+                imageUrl!,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                    Icon(icon, color: iconColor, size: 18.r),
+              ),
+            )
+          : Icon(icon, color: iconColor, size: 18.r),
     );
   }
 }

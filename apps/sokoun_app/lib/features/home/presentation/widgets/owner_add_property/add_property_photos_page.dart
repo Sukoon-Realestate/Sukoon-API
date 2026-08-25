@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -12,24 +14,26 @@ import 'add_property_step_shell.dart';
 class AddPropertyPhotosPage extends StatelessWidget {
   const AddPropertyPhotosPage({
     super.key,
-    required this.photoCount,
+    required this.photos,
     required this.isReady,
-    required this.onAddPhoto,
+    required this.onAddPhotos,
     required this.onRemovePhoto,
     required this.onNext,
     required this.onBack,
   });
 
-  final int photoCount;
+  final List<File> photos;
   final bool isReady;
-  final VoidCallback onAddPhoto;
-  final VoidCallback onRemovePhoto;
+  final VoidCallback onAddPhotos;
+  final ValueChanged<int> onRemovePhoto;
   final VoidCallback onNext;
   final VoidCallback onBack;
 
   @override
   Widget build(BuildContext context) {
-    final remaining = OwnerAddPropertyContent.minimumPhotoCount - photoCount;
+    final int photoCount = photos.length;
+    final int remaining =
+        OwnerAddPropertyContent.minimumPhotoCount - photoCount;
 
     return AddPropertyStepShell(
       title: 'صور العقار',
@@ -53,8 +57,8 @@ class AddPropertyPhotosPage extends StatelessWidget {
               : Icons.warning_amber_rounded,
         ),
         _PhotoGridSection(
-          photoCount: photoCount,
-          onAddPhoto: onAddPhoto,
+          photos: photos,
+          onAddPhotos: onAddPhotos,
           onRemovePhoto: onRemovePhoto,
         ),
         const _PhotoTipsSection(),
@@ -65,18 +69,20 @@ class AddPropertyPhotosPage extends StatelessWidget {
 
 class _PhotoGridSection extends StatelessWidget {
   const _PhotoGridSection({
-    required this.photoCount,
-    required this.onAddPhoto,
+    required this.photos,
+    required this.onAddPhotos,
     required this.onRemovePhoto,
   });
 
-  final int photoCount;
-  final VoidCallback onAddPhoto;
-  final VoidCallback onRemovePhoto;
+  final List<File> photos;
+  final VoidCallback onAddPhotos;
+  final ValueChanged<int> onRemovePhoto;
 
   @override
   Widget build(BuildContext context) {
-    final isReady = photoCount >= OwnerAddPropertyContent.minimumPhotoCount;
+    final int photoCount = photos.length;
+    final bool isReady =
+        photoCount >= OwnerAddPropertyContent.minimumPhotoCount;
 
     return Column(
       children: [
@@ -93,10 +99,9 @@ class _PhotoGridSection extends StatelessWidget {
           itemBuilder: (context, index) {
             final hasPhoto = index < photoCount;
             return _PhotoTile(
-              index: index,
-              hasPhoto: hasPhoto,
-              onAddPhoto: onAddPhoto,
-              onRemovePhoto: onRemovePhoto,
+              photo: hasPhoto ? photos[index] : null,
+              onAddPhotos: onAddPhotos,
+              onRemovePhoto: () => onRemovePhoto(index),
             );
           },
         ),
@@ -115,21 +120,20 @@ class _PhotoGridSection extends StatelessWidget {
 
 class _PhotoTile extends StatelessWidget {
   const _PhotoTile({
-    required this.index,
-    required this.hasPhoto,
-    required this.onAddPhoto,
+    required this.photo,
+    required this.onAddPhotos,
     required this.onRemovePhoto,
   });
 
-  final int index;
-  final bool hasPhoto;
-  final VoidCallback onAddPhoto;
+  final File? photo;
+  final VoidCallback onAddPhotos;
   final VoidCallback onRemovePhoto;
 
   @override
   Widget build(BuildContext context) {
+    final bool hasPhoto = photo != null;
     return GestureDetector(
-      onTap: hasPhoto ? null : onAddPhoto,
+      onTap: hasPhoto ? null : onAddPhotos,
       behavior: HitTestBehavior.opaque,
       child: Container(
         decoration: BoxDecoration(
@@ -144,28 +148,31 @@ class _PhotoTile extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    hasPhoto ? Icons.image_outlined : Icons.add_rounded,
-                    color: hasPhoto
-                        ? AppColors.blueGrayLight
-                        : AppColors.sokoonMuted,
-                    size: hasPhoto ? 24.r : 20.r,
-                  ),
-                  4.szH,
-                  AppText(
-                    hasPhoto ? 'صورة ${index + 1}' : 'إضافة',
-                    color: hasPhoto
-                        ? AppColors.sokoonGray
-                        : AppColors.sokoonMuted,
-                    fontSize: 10.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ],
-              ),
+            Positioned.fill(
+              child: hasPhoto
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(14.r),
+                      child: Image.file(photo!, fit: BoxFit.cover),
+                    )
+                  : Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.add_rounded,
+                            color: AppColors.sokoonMuted,
+                            size: 20.r,
+                          ),
+                          4.szH,
+                          AppText(
+                            'إضافة',
+                            color: AppColors.sokoonMuted,
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ],
+                      ),
+                    ),
             ),
             if (hasPhoto)
               PositionedDirectional(

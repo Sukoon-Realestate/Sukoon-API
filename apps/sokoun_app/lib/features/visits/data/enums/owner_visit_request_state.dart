@@ -16,6 +16,24 @@ extension OwnerVisitRequestStatusExtension on OwnerVisitRequestStatus {
   bool get isCompleted => this == OwnerVisitRequestStatus.completed;
   bool get canDecide => isNewRequest || isPending;
 
+  static OwnerVisitRequestStatus fromName(String? value) {
+    switch (value) {
+      case 'new':
+      case 'new_request':
+      case 'requested':
+        return OwnerVisitRequestStatus.newRequest;
+      case 'accepted':
+        return OwnerVisitRequestStatus.accepted;
+      case 'rejected':
+        return OwnerVisitRequestStatus.rejected;
+      case 'completed':
+        return OwnerVisitRequestStatus.completed;
+      case 'pending':
+      default:
+        return OwnerVisitRequestStatus.pending;
+    }
+  }
+
   String get label {
     if (isNewRequest) {
       return LocaleKeys.ownerVisitStatusNew;
