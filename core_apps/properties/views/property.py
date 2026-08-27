@@ -2,7 +2,17 @@ import logging
 
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
-from django.db.models import Count, IntegerField, OuterRef, Subquery
+from django.db.models import (
+    Avg,
+    BooleanField,
+    Count,
+    Exists,
+    FloatField,
+    IntegerField,
+    OuterRef,
+    Subquery,
+    Value,
+)
 from django.db.models.functions import Coalesce
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
@@ -14,10 +24,19 @@ from core_apps.common.models import ContentView
 from core_apps.common.renderers import GenericJsonRenderer
 
 from ..filters import PropertyFilter
-from ..models import Property, PropertyImage, PropertyType, PropertyVisit
+from ..models import (
+    Property,
+    PropertyFavorite,
+    PropertyImage,
+    PropertyType,
+    PropertyVisit,
+    SavedProperty,
+)
 from ..permissions import IsOwnerOrReadOnly
 from ..serializers import (
     MyPropertyListSerializer,
+    AvailablePlacesQuerySerializer,
+    PropertyDetailSerializer,
     PropertyImageSerializer,
     PropertyImageUpdateSerializer,
     PropertyImageUploadSerializer,
@@ -58,6 +77,22 @@ class PropertyTypeListAPIView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
 
+class AvailablePlacesAPIView(generics.GenericAPIView):
+    """Return distinct locations with approved properties of the requested type."""
+
+    serializer_class = AvailablePlacesQuerySerializer
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        places = PropertyService.get_available_places(
+            serializer.validated_data["property_type"]
+        )
+        return Response({"places": places})
+
+
 class PropertyListAPIView(generics.ListAPIView):
     """
     API view to list properties.
@@ -66,7 +101,11 @@ class PropertyListAPIView(generics.ListAPIView):
     tenant's next confirmed upcoming visit, if any.
     """
 
-    queryset = Property.objects.select_related("property_type").annotate(images_count=Count("images")).order_by("-created_at")
+    queryset = (
+        Property.objects.select_related("property_type")
+        .annotate(images_count=Count("images"))
+        .order_by("-created_at")
+    )
     serializer_class = PropertyListSerializer
     renderer_classes = [GenericJsonRenderer]
     pagination_class = PropertyPagination
@@ -122,10 +161,12 @@ class PropertyListAPIView(generics.ListAPIView):
             return response
 
         serializer = self.get_serializer(queryset, many=True)
-        return Response({
-            "banner": self._get_upcoming_visit_banner(),
-            "results": serializer.data,
-        })
+        return Response(
+            {
+                "banner": self._get_upcoming_visit_banner(),
+                "results": serializer.data,
+            }
+        )
 
 
 class PropertyNewListAPIView(generics.ListAPIView):
@@ -220,11 +261,41 @@ class PropertyDetailAPIView(generics.RetrieveAPIView):
     API view to retrieve details of a single property listing.
     """
 
-    queryset = Property.objects.select_related("owner", "property_type").prefetch_related("images").all()
-    serializer_class = PropertySerializer
+    serializer_class = PropertyDetailSerializer
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.AllowAny]
     lookup_field = "id"
+
+    def get_queryset(self):
+        queryset = Property.objects.select_related(
+            "owner", "property_type"
+        ).prefetch_related("images")
+        request_user = self.request.user
+        if request_user.is_authenticated:
+            queryset = queryset.annotate(
+                is_fav=Exists(
+                    PropertyFavorite.objects.filter(
+                        user=request_user, property=OuterRef("pkid")
+                    )
+                ),
+                is_saved=Exists(
+                    SavedProperty.objects.filter(
+                        user=request_user, property=OuterRef("pkid")
+                    )
+                ),
+            )
+        else:
+            queryset = queryset.annotate(
+                is_fav=Value(False, output_field=BooleanField()),
+                is_saved=Value(False, output_field=BooleanField()),
+            )
+        return queryset.annotate(
+            rating=Coalesce(
+                Avg("ratings__rating"),
+                Value(0.0),
+                output_field=FloatField(),
+            )
+        )
 
     def get_object(self):
         obj = get_object_or_404(self.get_queryset(), id=self.kwargs["id"])
@@ -268,7 +339,9 @@ class MyPropertyListAPIView(generics.ListAPIView):
             .values("count")
         )
         return (
-            Property.objects.filter(owner=self.request.user).select_related("property_type").annotate(
+            Property.objects.filter(owner=self.request.user)
+            .select_related("property_type")
+            .annotate(
                 views_count=Coalesce(
                     Subquery(views_count_subquery, output_field=IntegerField()), 0
                 ),
@@ -292,7 +365,11 @@ class PropertyUpdateAPIView(generics.UpdateAPIView):
     }
     """
 
-    queryset = Property.objects.select_related("owner", "property_type").prefetch_related("images").all()
+    queryset = (
+        Property.objects.select_related("owner", "property_type")
+        .prefetch_related("images")
+        .all()
+    )
     serializer_class = PropertySerializer
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
@@ -309,7 +386,11 @@ class PropertyDeleteAPIView(generics.DestroyAPIView):
     API view to delete a property listing.
     """
 
-    queryset = Property.objects.select_related("owner", "property_type").prefetch_related("images").all()
+    queryset = (
+        Property.objects.select_related("owner", "property_type")
+        .prefetch_related("images")
+        .all()
+    )
     serializer_class = PropertySerializer
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]

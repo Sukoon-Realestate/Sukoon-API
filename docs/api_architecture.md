@@ -22,6 +22,22 @@ Endpoints for viewing and updating user profiles:
 - `PATCH /api/v1/profiles/me/update/`: Update profile details.
 - `GET /api/v1/profiles/all/`: Retrieve all profiles (paginated).
 
+### 3. Property discovery and visits
+
+- `GET /api/v1/properties/available_places/?property_type_id=<uuid>`: distinct
+  approved-property locations for a property type.
+- `GET /api/v1/properties/<property_id>/`: property details, including the
+  `amenities`, `is_fav`, `is_saved`, and aggregate `rating` fields.
+- `GET /api/v1/properties/<property_id>/available_dates/?date=YYYY-MM-DD`:
+  future availability configured by that property's owner. If `date` is
+  omitted, `times` describes the first date in `days`.
+- `POST /api/v1/properties/<property_id>/visits/`: book an owner slot; the slot
+  is checked again transactionally when the request is created.
+
+Availability expiry and all past/future comparisons use the configured
+`Africa/Cairo` timezone. Machine-readable booking values use `YYYY-MM-DD` dates
+and `HH:mm:ss` times.
+
 ---
 
 ## Response Formatting

@@ -1,5 +1,6 @@
 from .owner_dashboard import OwnerDashboardAPIView
 from .property import (
+    AvailablePlacesAPIView,
     MyPropertyListAPIView,
     PropertyCreateAPIView,
     PropertyDeleteAPIView,
@@ -12,6 +13,7 @@ from .property import (
     PropertyUpdateAPIView,
 )
 from .visit import (
+    PropertyAvailableDatesAPIView,
     PropertyVisitCreateAPIView,
     TenantPropertyVisitListAPIView,
     OwnerPropertyVisitListAPIView,

@@ -17,16 +17,27 @@ from .views import (
     OwnerPropertyVisitListAPIView,
     PropertyVisitDetailAPIView,
     PropertyVisitUpdateAPIView,
+    AvailablePlacesAPIView,
+    PropertyAvailableDatesAPIView,
 )
 
 urlpatterns = [
     path("types/", PropertyTypeListAPIView.as_view(), name="property-type-list"),
+    path(
+        "available_places/",
+        AvailablePlacesAPIView.as_view(),
+        name="property-available-places",
+    ),
     path("", PropertyNewListAPIView.as_view(), name="property-list"),
     path("create/", PropertyCreateAPIView.as_view(), name="property-create"),
     path("owned/", MyPropertyListAPIView.as_view(), name="my-property-list"),
     path("owner/dashboard/", OwnerDashboardAPIView.as_view(), name="owner-dashboard"),
-
     path("<uuid:id>/", PropertyDetailAPIView.as_view(), name="property-detail"),
+    path(
+        "<uuid:property_id>/available_dates/",
+        PropertyAvailableDatesAPIView.as_view(),
+        name="property-available-dates",
+    ),
     path("<uuid:id>/update/", PropertyUpdateAPIView.as_view(), name="property-update"),
     path("<uuid:id>/delete/", PropertyDeleteAPIView.as_view(), name="property-delete"),
     path(

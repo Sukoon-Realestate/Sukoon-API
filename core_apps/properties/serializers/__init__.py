@@ -9,9 +9,12 @@ from .property import (
     PropertyListSerializer,
     PropertyNewListSerializer,
     PropertySerializer,
+    PropertyDetailSerializer,
+    AvailablePlacesQuerySerializer,
     PropertyTypeSerializer,
 )
 from .visit import (
+    AvailableDatesQuerySerializer,
     PropertyVisitSerializer,
     PropertyVisitCreateSerializer,
     PropertyVisitDetailSerializer,

@@ -13,7 +13,12 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import status
 
 from core_apps.common.models import ContentView
-from core_apps.properties.models import Property, PropertyImage, PropertyVisit
+from core_apps.properties.models import (
+    OwnerAvailabilitySlot,
+    Property,
+    PropertyImage,
+    PropertyVisit,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -578,6 +583,9 @@ class TestPropertyVisitViews:
     ):
         property_obj = _create_property(
             owner=another_user, title="Apartment Heliopolis", price=20000.00
+        )
+        OwnerAvailabilitySlot.objects.create(
+            owner=another_user, date="2099-07-20", time="14:00:00"
         )
         url = reverse("property-visit-create", kwargs={"property_id": property_obj.id})
         data = {

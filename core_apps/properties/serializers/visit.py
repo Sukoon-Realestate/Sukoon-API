@@ -1,4 +1,3 @@
-import datetime
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
@@ -147,7 +146,9 @@ class PropertyVisitCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ["id", "created_at", "updated_at"]
 
     def validate_visit_date(self, value):
-        if value < datetime.date.today():
+        from django.utils import timezone
+
+        if value < timezone.localdate():
             raise serializers.ValidationError(_("Visit date cannot be in the past."))
         return value
 
@@ -170,3 +171,7 @@ class PropertyVisitUpdateSerializer(serializers.ModelSerializer):
         return PropertyVisitService.update_visit_status(
             user=user, visit_obj=instance, status=status
         )
+
+
+class AvailableDatesQuerySerializer(serializers.Serializer):
+    date = serializers.DateField(required=False)

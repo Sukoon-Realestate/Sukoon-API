@@ -113,9 +113,7 @@ class PropertyNewListSerializer(serializers.ModelSerializer):
         if obj.suitable_for and obj.suitable_for != Property.SuitableFor.ALL:
             tags.append(suitable_for_labels.get(obj.suitable_for, obj.suitable_for))
 
-        tags.append(
-            "ممنوع التدخين" if not obj.smoking_allowed else "مسموح بالتدخين"
-        )
+        tags.append("ممنوع التدخين" if not obj.smoking_allowed else "مسموح بالتدخين")
 
         amenity_labels = [
             (obj.has_elevator, "أسانسير"),
@@ -217,3 +215,76 @@ class PropertySerializer(serializers.ModelSerializer):
         return PropertyService.update_property(
             property_obj=instance, validated_data=validated_data
         )
+
+
+class PropertyDetailSerializer(serializers.ModelSerializer):
+    images = PropertyImageSerializer(many=True, read_only=True)
+    main_image = CloudinarySerializerField(read_only=True)
+    owner = serializers.ReadOnlyField(source="owner.get_full_name")
+    property_type = serializers.SlugRelatedField(slug_field="slug", read_only=True)
+    amenities = serializers.SerializerMethodField()
+    is_fav = serializers.BooleanField(read_only=True)
+    is_saved = serializers.BooleanField(read_only=True)
+    rating = serializers.FloatField(read_only=True)
+
+    AMENITY_FIELDS = (
+        ("has_wifi", "wifi"),
+        ("has_elevator", "elevator"),
+        ("has_garage", "garage"),
+        ("has_security", "security"),
+        ("has_balcony", "balcony"),
+        ("has_air_conditioning", "air_conditioning"),
+        ("near_metro", "near_metro"),
+        ("has_natural_gas", "natural_gas"),
+        ("has_electricity_meter", "electricity_meter"),
+        ("has_water_meter", "water_meter"),
+    )
+
+    class Meta:
+        model = Property
+        fields = [
+            "id",
+            "owner",
+            "main_image",
+            "title",
+            "description",
+            "price",
+            "price_period",
+            "property_type",
+            "is_furnished",
+            "is_verified",
+            "bedrooms",
+            "bathrooms",
+            "area",
+            "space",
+            "floor",
+            "rental_period",
+            "suitable_for",
+            "smoking_allowed",
+            "country",
+            "city",
+            "district",
+            "latitude",
+            "longitude",
+            "amenities",
+            "is_fav",
+            "is_saved",
+            "rating",
+            "images",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = fields
+
+    def get_amenities(self, obj: Property) -> list[str]:
+        return [
+            amenity
+            for model_field, amenity in self.AMENITY_FIELDS
+            if getattr(obj, model_field)
+        ]
+
+
+class AvailablePlacesQuerySerializer(serializers.Serializer):
+    property_type_id = serializers.SlugRelatedField(
+        slug_field="id", queryset=PropertyType.objects.all(), source="property_type"
+    )

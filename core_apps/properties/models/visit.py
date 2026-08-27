@@ -48,3 +48,29 @@ class PropertyVisit(TimeStampedModel):
 
     def __str__(self):
         return f"Visit for {self.property.title} by {self.tenant.email} on {self.visit_date} at {self.visit_time}"
+
+
+class OwnerAvailabilitySlot(TimeStampedModel):
+    owner = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="availability_slots",
+        verbose_name=_("Owner"),
+    )
+    date = models.DateField(_("Date"))
+    time = models.TimeField(_("Time"))
+    is_enabled = models.BooleanField(_("Is Enabled"), default=True)
+
+    class Meta:
+        verbose_name = _("Owner Availability Slot")
+        verbose_name_plural = _("Owner Availability Slots")
+        ordering = ["date", "time"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["owner", "date", "time"],
+                name="unique_owner_availability_slot",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.owner.email} on {self.date} at {self.time}"

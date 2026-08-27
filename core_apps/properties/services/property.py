@@ -1,9 +1,23 @@
 from django.db import transaction
+from django.db.models import Q
 
 from ..models import Property, PropertyImage
 
 
 class PropertyService:
+    @staticmethod
+    def get_available_places(property_type):
+        """Return distinct locations for approved properties of a given type."""
+        return list(
+            Property.objects.filter(
+                property_type=property_type,
+            )
+            .filter(Q(status=Property.Status.VERIFIED) | Q(is_verified=True))
+            .values("country", "city", "district")
+            .distinct()
+            .order_by("country", "city", "district")
+        )
+
     @staticmethod
     @transaction.atomic
     def create_property(owner, validated_data):

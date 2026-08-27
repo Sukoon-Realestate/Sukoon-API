@@ -1,6 +1,15 @@
 from django.contrib import admin
 
-from .models import Property, PropertyImage, PropertyType
+from .models import (
+    OwnerAvailabilitySlot,
+    Property,
+    PropertyFavorite,
+    PropertyImage,
+    PropertyRating,
+    PropertyType,
+    PropertyVisit,
+    SavedProperty,
+)
 
 
 class PropertyImageInline(admin.TabularInline):
@@ -47,3 +56,10 @@ class PropertyAdmin(admin.ModelAdmin):
         "owner__last_name",
     ]
     inlines = [PropertyImageInline]
+
+
+admin.site.register(OwnerAvailabilitySlot)
+admin.site.register(PropertyVisit)
+admin.site.register(PropertyFavorite)
+admin.site.register(SavedProperty)
+admin.site.register(PropertyRating)

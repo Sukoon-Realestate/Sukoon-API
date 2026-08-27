@@ -3,6 +3,7 @@ import logging
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
 
 from core_apps.common.renderers import GenericJsonRenderer
 
@@ -10,12 +11,14 @@ from ..filters import PropertyVisitFilter
 from ..models import Property, PropertyVisit
 from ..permissions import IsTenantOrPropertyOwner
 from ..serializers import (
+    AvailableDatesQuerySerializer,
     PropertyVisitCreateSerializer,
     PropertyVisitDetailSerializer,
     PropertyVisitSerializer,
     PropertyVisitUpdateSerializer,
     TenantVisitListSerializer,
 )
+from ..services import PropertyVisitService
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +50,29 @@ class PropertyVisitCreateAPIView(generics.CreateAPIView):
             Property.objects.all(), id=self.kwargs["property_id"]
         )
         serializer.save(tenant=self.request.user, property_obj=property_obj)
+
+
+class PropertyAvailableDatesAPIView(generics.GenericAPIView):
+    """Return the property's owner's future visit availability.
+
+    Dates and past-slot checks use the configured Africa/Cairo timezone.
+    """
+
+    serializer_class = AvailableDatesQuerySerializer
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        property_obj = get_object_or_404(
+            Property.objects.select_related("owner"), id=self.kwargs["property_id"]
+        )
+        serializer = self.get_serializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        schedule = PropertyVisitService.get_available_dates(
+            property_obj=property_obj,
+            requested_date=serializer.validated_data.get("date"),
+        )
+        return Response(schedule)
 
 
 class TenantPropertyVisitListAPIView(generics.ListAPIView):
@@ -107,11 +133,9 @@ class PropertyVisitDetailAPIView(generics.RetrieveAPIView):
     visit date, and visit status.
     """
 
-    queryset = (
-        PropertyVisit.objects.select_related(
-            "property", "property__owner", "tenant", "tenant__profile"
-        ).all()
-    )
+    queryset = PropertyVisit.objects.select_related(
+        "property", "property__owner", "tenant", "tenant__profile"
+    ).all()
     serializer_class = PropertyVisitDetailSerializer
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticated, IsTenantOrPropertyOwner]
@@ -133,10 +157,9 @@ class PropertyVisitUpdateAPIView(generics.UpdateAPIView):
     }
     """
 
-    queryset = (
-        PropertyVisit.objects.select_related("property", "property__owner", "tenant")
-        .all()
-    )
+    queryset = PropertyVisit.objects.select_related(
+        "property", "property__owner", "tenant"
+    ).all()
     serializer_class = PropertyVisitUpdateSerializer
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticated, IsTenantOrPropertyOwner]

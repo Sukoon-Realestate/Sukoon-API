@@ -1,6 +1,11 @@
 import pytest
 
-from core_apps.properties.models import Property, PropertyImage, PropertyVisit
+from core_apps.properties.models import (
+    OwnerAvailabilitySlot,
+    Property,
+    PropertyImage,
+    PropertyVisit,
+)
 from core_apps.properties.services import PropertyService, PropertyVisitService
 
 
@@ -88,13 +93,18 @@ class TestPropertyVisitService:
 
     def test_create_visit_service_success(self, user, another_user):
         property_obj = _create_property(owner=user, title="Sample Property")
+        OwnerAvailabilitySlot.objects.create(
+            owner=user, date="2099-07-20", time="14:00:00"
+        )
         validated_data = {
-            "visit_date": "2026-07-20",
+            "visit_date": "2099-07-20",
             "visit_time": "14:00:00",
             "note": "Let's visit",
         }
         visit = PropertyVisitService.create_visit(
-            tenant=another_user, property_obj=property_obj, validated_data=validated_data
+            tenant=another_user,
+            property_obj=property_obj,
+            validated_data=validated_data,
         )
         assert visit.tenant == another_user
         assert visit.property == property_obj
@@ -116,20 +126,27 @@ class TestPropertyVisitService:
 
     def test_create_visit_service_duplicate_fails(self, user, another_user):
         property_obj = _create_property(owner=user, title="Sample Property")
+        OwnerAvailabilitySlot.objects.create(
+            owner=user, date="2099-07-20", time="14:00:00"
+        )
         validated_data = {
-            "visit_date": "2026-07-20",
+            "visit_date": "2099-07-20",
             "visit_time": "14:00:00",
         }
         PropertyVisitService.create_visit(
-            tenant=another_user, property_obj=property_obj, validated_data=validated_data
+            tenant=another_user,
+            property_obj=property_obj,
+            validated_data=validated_data,
         )
         from rest_framework.exceptions import ValidationError
 
         with pytest.raises(ValidationError) as excinfo:
             PropertyVisitService.create_visit(
-                tenant=another_user, property_obj=property_obj, validated_data=validated_data
+                tenant=another_user,
+                property_obj=property_obj,
+                validated_data=validated_data,
             )
-        assert "You have already requested a visit for this property" in str(excinfo.value)
+        assert "The selected visit slot is already booked." in str(excinfo.value)
 
     def test_update_visit_status_tenant_cancels(self, user, another_user):
         property_obj = _create_property(owner=user, title="Sample Property")
