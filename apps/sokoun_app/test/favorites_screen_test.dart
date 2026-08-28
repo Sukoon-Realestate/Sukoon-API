@@ -5,10 +5,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
-import 'package:sokoun_app/features/favorites/data/models/favorites_content.dart';
-import 'package:sokoun_app/features/favorites/presentation/screens/favorites_screen.dart';
-import 'package:sokoun_app/features/favorites/presentation/widgets/favorite_property_card.dart';
-import 'package:sokoun_app/features/favorites/presentation/widgets/favorites_empty_state.dart';
+import 'package:sokoun_app/features/tenant/favorites/data/models/favorites_content.dart';
+import 'package:sokoun_app/features/tenant/favorites/presentation/screens/favorites_screen.dart';
+import 'package:sokoun_app/features/tenant/favorites/presentation/widgets/favorite_property_card.dart';
+import 'package:sokoun_app/features/tenant/favorites/presentation/widgets/favorites_empty_state.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

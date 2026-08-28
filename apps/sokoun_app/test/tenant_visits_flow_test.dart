@@ -5,8 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
-import 'package:sokoun_app/features/home/presentation/screens/tenant_home_screen.dart';
-import 'package:sokoun_app/features/visits/imports.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_home_screen.dart';
+import 'package:sokoun_app/features/tenant/visits/imports.dart';
 
 import 'helpers/home_page_test_dependencies.dart';
 

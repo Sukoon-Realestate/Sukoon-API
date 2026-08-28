@@ -6,8 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/language/languages.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
-import 'package:sokoun_app/features/auth/presentation/screens/kyc_intro_screen.dart';
-import 'package:sokoun_app/features/auth/presentation/screens/kyc_upload_documents_screen.dart';
+import 'package:sokoun_app/features/shared/auth/presentation/screens/kyc_intro_screen.dart';
+import 'package:sokoun_app/features/shared/auth/presentation/screens/kyc_upload_documents_screen.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

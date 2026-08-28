@@ -6,16 +6,18 @@ class SvgPic extends StatelessWidget {
   final Color? color;
   final double? size;
 
-  const SvgPic({super.key,
-    required this.assetName,
-    this.color,
-    this.size,
-  });
+  const SvgPic({super.key, required this.assetName, this.color, this.size});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox.square(
       dimension: size,
-        child: SvgPicture.asset(assetName, color: color));
+      child: SvgPicture.asset(
+        assetName,
+        colorFilter: color == null
+            ? null
+            : ColorFilter.mode(color!, BlendMode.srcIn),
+      ),
+    );
   }
 }

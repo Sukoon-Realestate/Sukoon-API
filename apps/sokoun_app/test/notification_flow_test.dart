@@ -5,15 +5,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
-import 'package:sokoun_app/features/home/presentation/screens/owner_home_screen.dart';
-import 'package:sokoun_app/features/home/presentation/screens/tenant_home_screen.dart';
-import 'package:sokoun_app/features/notifications/data/enums/notification_role.dart';
-import 'package:sokoun_app/features/notifications/data/models/app_notification_content.dart';
-import 'package:sokoun_app/features/notifications/presentation/screens/notification_detail_screen.dart';
-import 'package:sokoun_app/features/notifications/presentation/screens/notification_settings_screen.dart';
-import 'package:sokoun_app/features/notifications/presentation/screens/notifications_empty_screen.dart';
-import 'package:sokoun_app/features/notifications/presentation/screens/notifications_screen.dart';
-import 'package:sokoun_app/features/notifications/presentation/widgets/notification_card.dart';
+import 'package:sokoun_app/features/owner/home/presentation/screens/owner_home_screen.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_home_screen.dart';
+import 'package:sokoun_app/features/shared/notifications/data/enums/notification_role.dart';
+import 'package:sokoun_app/features/shared/notifications/data/models/app_notification_content.dart';
+import 'package:sokoun_app/features/shared/notifications/presentation/screens/notification_detail_screen.dart';
+import 'package:sokoun_app/features/shared/notifications/presentation/screens/notification_settings_screen.dart';
+import 'package:sokoun_app/features/shared/notifications/presentation/screens/notifications_empty_screen.dart';
+import 'package:sokoun_app/features/shared/notifications/presentation/screens/notifications_screen.dart';
+import 'package:sokoun_app/features/shared/notifications/presentation/widgets/notification_card.dart';
 
 import 'helpers/home_page_test_dependencies.dart';
 

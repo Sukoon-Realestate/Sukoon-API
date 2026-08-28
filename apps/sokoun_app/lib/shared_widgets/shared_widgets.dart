@@ -1,4 +1,5 @@
 export 'app_scaffold.dart';
+export 'property_details_screen.dart';
 export 'sokoon_apple_sign_in_button.dart';
 export 'sokoon_back_button.dart';
 export 'sokoon_email_field.dart';

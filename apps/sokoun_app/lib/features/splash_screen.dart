@@ -5,9 +5,8 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/notification/notification_service.dart';
 import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 import 'package:melos_core/core/widgets/splash_logo.dart';
-import 'package:sokoun_app/features/auth/presentation/screens/role_select_screen.dart';
-
-import 'home/presentation/screens/home_screen.dart';
+import 'package:sokoun_app/features/shared/auth/presentation/screens/role_select_screen.dart';
+import 'main_view/presentation/screens/view.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

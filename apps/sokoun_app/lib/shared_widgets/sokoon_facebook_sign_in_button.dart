@@ -4,7 +4,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
-import 'package:sokoun_app/features/auth/data/social_auth_service/facebook_sign_in.dart';
+import 'package:sokoun_app/features/shared/auth/data/social_auth_service/facebook_sign_in.dart';
 
 class AppFacebookSignInButton extends StatelessWidget {
   const AppFacebookSignInButton({super.key, required this.onSuccess});

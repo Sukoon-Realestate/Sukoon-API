@@ -67,6 +67,7 @@ flutter:
     - assets/translations/
     - assets/lottie/
     - assets/fonts/
+    - assets/svg/
   fonts:
     - family: Tajawal
       fonts:

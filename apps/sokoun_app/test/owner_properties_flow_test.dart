@@ -7,9 +7,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
-import 'package:sokoun_app/features/home/data/models/owner_add_property_content.dart';
-import 'package:sokoun_app/features/home/presentation/screens/owner_add_property_flow_screen.dart';
-import 'package:sokoun_app/features/properties/imports.dart';
+import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
+import 'package:sokoun_app/features/owner/home/presentation/screens/owner_add_property_flow_screen.dart';
+import 'package:sokoun_app/features/owner/properties/imports.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

@@ -6,17 +6,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/chat_builder/easy_chat.dart';
-import 'package:sokoun_app/features/chat/data/models/chat_content.dart';
-import 'package:sokoun_app/features/chat/presentation/screens/chat_empty_screen.dart';
-import 'package:sokoun_app/features/chat/presentation/screens/chat_list_screen.dart';
-import 'package:sokoun_app/features/chat/presentation/screens/chat_restricted_screen.dart';
-import 'package:sokoun_app/features/chat/presentation/screens/chat_search_screen.dart';
-import 'package:sokoun_app/features/chat/presentation/screens/chat_thread_screen.dart';
-import 'package:sokoun_app/features/chat/presentation/widgets/chat_list/chat_list_item.dart';
-import 'package:sokoun_app/features/chat/presentation/widgets/chat_thread/chat_attachments_sheet.dart';
-import 'package:sokoun_app/features/chat/presentation/widgets/chat_thread/chat_message_bubble.dart';
-import 'package:sokoun_app/features/chat/presentation/widgets/chat_thread/chat_voice_recording_bar.dart';
-import 'package:sokoun_app/features/chat/presentation/widgets/report/chat_report_sheet.dart';
+import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_empty_screen.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_list_screen.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_restricted_screen.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_search_screen.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_thread_screen.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_list/chat_list_item.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_attachments_sheet.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_message_bubble.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_voice_recording_bar.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/widgets/report/chat_report_sheet.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

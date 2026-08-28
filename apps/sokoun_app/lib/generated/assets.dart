@@ -4,6 +4,17 @@ import 'package:flutter/widgets.dart';
 
 class Assets {
   Assets._();
+
+  static const String svgBuilding =
+      'packages/melos_core/assets/svg/building.svg';
+  static const String svgCalendar =
+      'packages/melos_core/assets/svg/calendar.svg';
+  static const String svgHome = 'packages/melos_core/assets/svg/home.svg';
+  static const String svgMenu = 'packages/melos_core/assets/svg/menu.svg';
+  static const String svgMessage = 'packages/melos_core/assets/svg/message.svg';
+  static const String svgNotification =
+      'packages/melos_core/assets/svg/notification.svg';
+  static const String svgProfile = 'packages/melos_core/assets/svg/profile.svg';
 }
 
 class AssetGenImage {

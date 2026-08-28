@@ -78,7 +78,7 @@ flutterfireSetup:
 
 # Generate translations
 translations:
-	dart run generate/strings/main.dart
+	cd ../.. && dart run generate/strings/main.dart
 
 # Stop Gradle and remove lock files
 gradleFix:

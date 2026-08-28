@@ -3169,6 +3169,42 @@ abstract class LocaleKeys {
   static const String _tenantSearchResultsSquareMeters = 'tenant_search_results_square_meters';
   static String get tenantSearchResultsSquareMeters => _tenantSearchResultsSquareMeters.tr();
 
+  static const String _tenantPropertyDetailsShareTitle = 'tenant_property_details_share_title';
+  static String get tenantPropertyDetailsShareTitle => _tenantPropertyDetailsShareTitle.tr();
+
+  static const String _tenantPropertyDetailsCopyLink = 'tenant_property_details_copy_link';
+  static String get tenantPropertyDetailsCopyLink => _tenantPropertyDetailsCopyLink.tr();
+
+  static const String _tenantPropertyDetailsLinkCopied = 'tenant_property_details_link_copied';
+  static String get tenantPropertyDetailsLinkCopied => _tenantPropertyDetailsLinkCopied.tr();
+
+  static const String _tenantPropertyDetailsShare = 'tenant_property_details_share';
+  static String get tenantPropertyDetailsShare => _tenantPropertyDetailsShare.tr();
+
+  static const String _tenantPropertyDetailsDescription = 'tenant_property_details_description';
+  static String get tenantPropertyDetailsDescription => _tenantPropertyDetailsDescription.tr();
+
+  static const String _tenantPropertyDetailsAmenities = 'tenant_property_details_amenities';
+  static String get tenantPropertyDetailsAmenities => _tenantPropertyDetailsAmenities.tr();
+
+  static const String _tenantPropertyDetailsOwnershipVerified = 'tenant_property_details_ownership_verified';
+  static String get tenantPropertyDetailsOwnershipVerified => _tenantPropertyDetailsOwnershipVerified.tr();
+
+  static const String _tenantPropertyDetailsPhonePrivacy = 'tenant_property_details_phone_privacy';
+  static String get tenantPropertyDetailsPhonePrivacy => _tenantPropertyDetailsPhonePrivacy.tr();
+
+  static const String _tenantPropertyDetailsFurnished = 'tenant_property_details_furnished';
+  static String get tenantPropertyDetailsFurnished => _tenantPropertyDetailsFurnished.tr();
+
+  static const String _tenantPropertyDetailsMonthlyPriceUnit = 'tenant_property_details_monthly_price_unit';
+  static String get tenantPropertyDetailsMonthlyPriceUnit => _tenantPropertyDetailsMonthlyPriceUnit.tr();
+
+  static const String _tenantPropertyDetailsPhotoCountUnit = 'tenant_property_details_photo_count_unit';
+  static String get tenantPropertyDetailsPhotoCountUnit => _tenantPropertyDetailsPhotoCountUnit.tr();
+
+  static const String _tenantPropertyDetailsPhotos = 'tenant_property_details_photos';
+  static String get tenantPropertyDetailsPhotos => _tenantPropertyDetailsPhotos.tr();
+
   static const String _tenantFilterTitle = 'tenant_filter_title';
   static String get tenantFilterTitle => _tenantFilterTitle.tr();
 
