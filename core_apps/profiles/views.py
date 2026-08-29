@@ -4,7 +4,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django.http import Http404
 from django.contrib.auth import get_user_model
 from rest_framework import filters, generics
-from rest_framework.pagination import PageNumberPagination
 from core_apps.common.renderers import GenericJsonRenderer
 from core_apps.common.pagination import StandardResultsSetPagination
 from .models import Profile

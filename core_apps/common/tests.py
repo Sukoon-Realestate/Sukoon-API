@@ -3,10 +3,12 @@ import uuid
 
 import pytest
 from django.contrib.contenttypes.models import ContentType
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.test import APIRequestFactory
 
 from core_apps.common.models import TimeStampedModel, ContentView
+from core_apps.common.pagination import StandardResultsSetPagination
 from core_apps.common.renderers import GenericJsonRenderer, custom_exception_handler
 
 
@@ -153,3 +155,18 @@ class TestGenericJsonRenderer:
 
         assert response.status_code == 401
         assert response.data == {"message": "Unauthorized"}
+
+
+class TestStandardResultsSetPagination:
+    def test_response_contains_only_compact_pagination_metadata_and_results(self):
+        paginator = StandardResultsSetPagination()
+        request = Request(APIRequestFactory().get("/?page_size=2"))
+        page = paginator.paginate_queryset([1, 2, 3], request)
+
+        response = paginator.get_paginated_response(page)
+
+        assert response.data == {
+            "per_page": 2,
+            "total_pages": 2,
+            "results": [1, 2],
+        }

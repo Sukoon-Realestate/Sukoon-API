@@ -2,9 +2,9 @@ import logging
 
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
+from core_apps.common.pagination import StandardResultsSetPagination
 from core_apps.common.renderers import GenericJsonRenderer
 
 from ..filters import PropertyVisitFilter
@@ -23,7 +23,7 @@ from ..services import PropertyVisitService
 logger = logging.getLogger(__name__)
 
 
-class PropertyVisitPagination(PageNumberPagination):
+class PropertyVisitPagination(StandardResultsSetPagination):
     page_size = 10
     page_size_query_param = "page_size"
     max_page_size = 100

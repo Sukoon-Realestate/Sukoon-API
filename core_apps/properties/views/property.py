@@ -17,10 +17,10 @@ from django.db.models.functions import Coalesce
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics, permissions, status
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 from core_apps.common.models import ContentView
+from core_apps.common.pagination import StandardResultsSetPagination
 from core_apps.common.renderers import GenericJsonRenderer
 
 from ..filters import PropertyFilter
@@ -58,7 +58,7 @@ def get_client_ip(request):
     return request.META.get("REMOTE_ADDR")
 
 
-class PropertyPagination(PageNumberPagination):
+class PropertyPagination(StandardResultsSetPagination):
     page_size = 9
     page_size_query_param = "page_size"
     max_page_size = 100
