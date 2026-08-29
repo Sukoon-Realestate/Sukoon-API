@@ -13,6 +13,7 @@ class PropertyFilter(django_filters.FilterSet):
     - is_furnished (e.g. ?is_furnished=true)
     - is_verified (e.g. ?is_verified=true)
     - bedrooms (e.g. ?bedrooms=3)
+    - bedrooms_min (e.g. ?bedrooms_min=4) — useful for the "4+" option
     - bathrooms (e.g. ?bathrooms=2)
     - suitable_for (e.g. ?suitable_for=families)
     - smoking_allowed (e.g. ?smoking_allowed=false)
@@ -33,6 +34,7 @@ class PropertyFilter(django_filters.FilterSet):
     city = django_filters.UUIDFilter(field_name="city__id")
     price_min = django_filters.NumberFilter(field_name="price", lookup_expr="gte")
     price_max = django_filters.NumberFilter(field_name="price", lookup_expr="lte")
+    bedrooms_min = django_filters.NumberFilter(field_name="bedrooms", lookup_expr="gte")
 
     class Meta:
         model = Property

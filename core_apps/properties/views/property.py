@@ -63,6 +63,12 @@ class PropertyPagination(StandardResultsSetPagination):
     page_size_query_param = "page_size"
     max_page_size = 100
 
+    def get_paginated_response(self, data):
+        """Expose the exact filtered count needed by the filter action button."""
+        response = super().get_paginated_response(data)
+        response.data["count"] = self.page.paginator.count
+        return response
+
 
 class PropertyTypeListAPIView(generics.ListAPIView):
     """

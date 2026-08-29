@@ -1,0 +1,545 @@
+{
+  "info": {
+    "_postman_id": "4f1b951a-c877-4ac4-aad9-cda7e9089e09",
+    "name": "Sukoon API - Save Property Cycle",
+    "description": "End-to-end Postman collection for the tenant saved-property cycle. Run the collection in order. Postman keeps the access/refresh cookies returned by Login and sends them to subsequent requests. The Select First Property request automatically fills propertyId; alternatively, skip it and set propertyId manually in collection variables.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    },
+    {
+      "key": "tenantEmail",
+      "value": "user@example.com",
+      "type": "string"
+    },
+    {
+      "key": "tenantPassword",
+      "value": "Testpass123!",
+      "type": "string"
+    },
+    {
+      "key": "propertyId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "propertyType",
+      "value": "apartment",
+      "type": "string"
+    },
+    {
+      "key": "maxPrice",
+      "value": "8000",
+      "type": "string"
+    },
+    {
+      "key": "bedrooms",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "invalidPropertyId",
+      "value": "00000000-0000-0000-0000-000000000000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - Authentication and Setup",
+      "item": [
+        {
+          "name": "01 - Login (stores auth cookies)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{tenantEmail}}\",\n  \"password\": \"{{tenantPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/v1/auth/login/",
+            "description": "Authenticates the tenant. Postman automatically stores the access, refresh, and logged_in cookies for later requests."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Login returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test(\"Login response sets authentication cookies\", function () {",
+                  "    const setCookieHeaders = pm.response.headers.all()",
+                  "        .filter(header => header.key.toLowerCase() === \"set-cookie\")",
+                  "        .map(header => header.value)",
+                  "        .join(\"; \");",
+                  "    pm.expect(setCookieHeaders).to.include(\"access=\");",
+                  "    pm.expect(setCookieHeaders).to.include(\"refresh=\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "02 - Select First Property (sets propertyId)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/properties/?page=1&page_size=1",
+            "description": "Selects the first property and saves its UUID into the propertyId collection variable. If you prefer a specific property, skip this request and set propertyId manually."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Property list returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "const results = body.data && body.data.results ? body.data.results : [];",
+                  "pm.test(\"At least one property exists for the cycle\", function () {",
+                  "    pm.expect(results.length, \"Create a property first or set propertyId manually\").to.be.above(0);",
+                  "});",
+                  "",
+                  "if (results.length > 0) {",
+                  "    pm.collectionVariables.set(\"propertyId\", results[0].id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "03 - Get Selected Property Details (sets filter variables)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/properties/{{propertyId}}/",
+            "description": "Loads the selected property and derives matching propertyType, maxPrice, and bedrooms variables for the filtered saved-list request."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Property details return 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "if (body.data) {",
+                  "    pm.collectionVariables.set(\"propertyType\", body.data.property_type);",
+                  "    pm.collectionVariables.set(\"maxPrice\", body.data.price);",
+                  "    pm.collectionVariables.set(\"bedrooms\", body.data.bedrooms);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02 - Save Property Cycle",
+      "item": [
+        {
+          "name": "01 - Save Property",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/v1/properties/{{propertyId}}/save/",
+            "description": "Saves the selected property for the authenticated tenant. Returns 201 when first created, or 200 if it was already saved before the collection started."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Save returns 201 or idempotent 200\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "pm.test(\"Save response identifies the selected property\", function () {",
+                  "    pm.expect(body.data.property_id).to.eql(pm.collectionVariables.get(\"propertyId\"));",
+                  "    pm.expect(body.data.is_saved).to.eql(true);",
+                  "    pm.expect(body.data.saved_at).to.be.a(\"string\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "02 - Save Property Again (idempotency)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/v1/properties/{{propertyId}}/save/",
+            "description": "Repeats the save action. The API should return 200 and keep only one saved record."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Duplicate save returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "pm.test(\"Duplicate remains saved\", function () {",
+                  "    pm.expect(body.data.property_id).to.eql(pm.collectionVariables.get(\"propertyId\"));",
+                  "    pm.expect(body.data.is_saved).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "03 - List Saved Properties",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/properties/saved/?page=1&page_size=9&ordering=-saved_at",
+            "description": "Returns the paginated saved cards used by the populated and empty saved screens."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Saved list returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "pm.test(\"Saved list has pagination and count\", function () {",
+                  "    pm.expect(body.data.count).to.be.a(\"number\");",
+                  "    pm.expect(body.data.per_page).to.be.a(\"number\");",
+                  "    pm.expect(body.data.total_pages).to.be.a(\"number\");",
+                  "    pm.expect(body.data.results).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "pm.test(\"Saved list contains selected property\", function () {",
+                  "    const ids = body.data.results.map(item => item.id);",
+                  "    pm.expect(ids).to.include(pm.collectionVariables.get(\"propertyId\"));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "04 - Filter Saved Properties",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/properties/saved/?property_type={{propertyType}}&price_max={{maxPrice}}&bedrooms={{bedrooms}}&page=1&page_size=9",
+            "description": "Exercises the filter-sheet parameters using values derived from the selected property. For the 4+ rooms UI option, replace bedrooms with bedrooms_min=4. Amenity examples: is_furnished=true, has_wifi=true, has_air_conditioning=true, has_elevator=true, has_garage=true, has_security=true."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Filtered saved list returns 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "pm.test(\"Filtered count is available for the results button\", function () {",
+                  "    pm.expect(body.data.count).to.be.a(\"number\");",
+                  "    pm.expect(body.data.results).to.be.an(\"array\");",
+                  "});",
+                  "",
+                  "pm.test(\"Matching filters include selected property\", function () {",
+                  "    const ids = body.data.results.map(item => item.id);",
+                  "    pm.expect(ids).to.include(pm.collectionVariables.get(\"propertyId\"));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "05 - Get Filter Options",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/properties/filter-options/",
+            "description": "Returns the property types, ordering options, price periods, suitable-for values, amenities, and defaults used to build the filter sheet."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Filter options return 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "pm.test(\"Filter option catalogs are present\", function () {",
+                  "    pm.expect(body.data.property_types).to.be.an(\"array\");",
+                  "    pm.expect(body.data.amenities).to.be.an(\"array\");",
+                  "    pm.expect(body.data.ordering).to.be.an(\"array\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "06 - Unsave Property",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/properties/{{propertyId}}/unsave/",
+            "description": "Removes the selected property from the authenticated tenant's saved list."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Unsave returns 204\", function () {",
+                  "    pm.response.to.have.status(204);",
+                  "});",
+                  "",
+                  "pm.test(\"Unsave response has no body\", function () {",
+                  "    pm.expect(pm.response.text()).to.eql(\"\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "07 - Verify Property Was Removed",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/properties/saved/?page=1&page_size=100",
+            "description": "Confirms that the selected property no longer appears. If this was the tenant's only saved property, results is the empty-state array."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Saved list returns 200 after removal\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "pm.test(\"Removed property is absent\", function () {",
+                  "    const ids = body.data.results.map(item => item.id);",
+                  "    pm.expect(ids).not.to.include(pm.collectionVariables.get(\"propertyId\"));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03 - Expected Errors",
+      "item": [
+        {
+          "name": "01 - Unsave Property Again (404)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/properties/{{propertyId}}/unsave/",
+            "description": "After the successful unsave request, a second removal returns 404 because the tenant no longer owns a saved record for this property."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Repeated unsave returns 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "pm.test(\"Error uses standard envelope\", function () {",
+                  "    pm.expect(body.message).to.be.a(\"string\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "02 - Save Unknown Property (404)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{baseUrl}}/api/v1/properties/{{invalidPropertyId}}/save/",
+            "description": "Verifies the not-found response for a valid UUID that does not identify a property."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Unknown property returns 404\", function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "pm.test(\"Error uses standard envelope\", function () {",
+                  "    pm.expect(body.message).to.be.a(\"string\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    }
+  ]
+}

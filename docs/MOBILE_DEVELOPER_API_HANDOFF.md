@@ -12,6 +12,7 @@ The mobile app needs to:
 4. Load visit dates and times from the property's new `available_dates` endpoint.
 5. Send the returned `visit_date` and `visit_time` values when booking.
 6. Handle booking failure if another tenant books the slot first.
+7. Use the saved-property endpoints for the populated and empty saved screens.
 
 All endpoints continue to use the existing API response envelope.
 
@@ -338,6 +339,92 @@ Other unavailable-slot errors use the same error envelope:
 }
 ```
 
+## 6. Saved Properties
+
+All saved-property endpoints require authentication.
+
+### List saved properties
+
+```http
+GET {{base_url}}/api/v1/properties/saved/
+```
+
+The response includes a pagination-safe `count` for the screen heading. An
+empty `results` array is the empty state, not an error.
+
+```json
+{
+  "data": {
+    "count": 1,
+    "per_page": 9,
+    "total_pages": 1,
+    "results": [
+      {
+        "id": "property-uuid",
+        "main_image": "https://example.com/property.jpg",
+        "title": "Furnished apartment in Nasr City",
+        "property_type": "apartment",
+        "is_furnished": true,
+        "bedrooms": 3,
+        "bathrooms": 2,
+        "area": 90,
+        "price": "6500.00",
+        "price_period": "monthly",
+        "rating": 4.8,
+        "saved_at": "2026-08-29T12:00:00Z",
+        "is_saved": true
+      }
+    ]
+  }
+}
+```
+
+The endpoint accepts the same filters as the property feed. The filter-sheet
+controls map to query parameters as follows:
+
+| UI control | Query parameter example |
+| --- | --- |
+| Property type | `property_type=apartment` |
+| Maximum price | `price_max=8000` |
+| Exact rooms | `bedrooms=3` |
+| 4+ rooms | `bedrooms_min=4` |
+| Furnished | `is_furnished=true` |
+| Wi-Fi | `has_wifi=true` |
+| Air conditioning | `has_air_conditioning=true` |
+| Elevator | `has_elevator=true` |
+| Garage | `has_garage=true` |
+| Security | `has_security=true` |
+
+Use `GET /api/v1/properties/filter-options/` for the available property types,
+amenities, price periods, and ordering values. Saved results support `search`,
+`page`, `page_size`, and `ordering` (`saved_at`, `price`, or `created_at`, with
+an optional `-` prefix).
+
+For the global search filter sheet, send the same query parameters to
+`GET /api/v1/properties/`. Its paginated payload also includes `count`; display
+that value in the "show results" button.
+
+### Save a property
+
+```http
+POST {{base_url}}/api/v1/properties/{property_id}/save/
+Content-Type: application/json
+
+{}
+```
+
+The first request returns `201`; repeated requests are safe and return `200`
+without creating duplicates.
+
+### Remove a saved property
+
+```http
+DELETE {{base_url}}/api/v1/properties/{property_id}/unsave/
+```
+
+A successful removal returns `204`. Removing a property that is not saved by
+the authenticated tenant returns `404`.
+
 ## Mobile Migration Checklist
 
 - [ ] Load `property_type_id` from the property-types endpoint.
@@ -349,4 +436,8 @@ Other unavailable-slot errors use the same error envelope:
 - [ ] Allow selection only when `is_available=true`.
 - [ ] Book using `visit_date` and `visit_time`, not the display labels.
 - [ ] On booking `400`, show an unavailable-slot message and refresh the schedule.
+- [ ] Use saved-list `count` for the saved-screen heading.
+- [ ] Treat saved-list `results=[]` as the designed empty state.
+- [ ] Use `bedrooms_min=4` for the filter sheet's 4+ option.
+- [ ] Call save/unsave when the heart state changes.
 - [ ] Treat all empty lists as valid empty states, not `null` or errors.

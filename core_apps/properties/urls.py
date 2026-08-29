@@ -22,6 +22,9 @@ from .views import (
     PropertyVisitUpdateAPIView,
     AvailablePlacesAPIView,
     PropertyAvailableDatesAPIView,
+    SavedPropertyCreateAPIView,
+    SavedPropertyDeleteAPIView,
+    SavedPropertyListAPIView,
 )
 
 urlpatterns = [
@@ -41,8 +44,19 @@ urlpatterns = [
     path("", PropertyNewListAPIView.as_view(), name="property-list"),
     path("create/", PropertyCreateAPIView.as_view(), name="property-create"),
     path("owned/", MyPropertyListAPIView.as_view(), name="my-property-list"),
+    path("saved/", SavedPropertyListAPIView.as_view(), name="saved-property-list"),
     path("owner/dashboard/", OwnerDashboardAPIView.as_view(), name="owner-dashboard"),
     path("<uuid:id>/", PropertyDetailAPIView.as_view(), name="property-detail"),
+    path(
+        "<uuid:property_id>/save/",
+        SavedPropertyCreateAPIView.as_view(),
+        name="saved-property-create",
+    ),
+    path(
+        "<uuid:property_id>/unsave/",
+        SavedPropertyDeleteAPIView.as_view(),
+        name="saved-property-delete",
+    ),
     path(
         "<uuid:property_id>/available_dates/",
         PropertyAvailableDatesAPIView.as_view(),

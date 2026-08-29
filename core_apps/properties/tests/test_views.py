@@ -289,13 +289,17 @@ class TestPropertyViews:
 
         response = auth_client.get(url, {"search": "Maadi"})
         assert response.status_code == status.HTTP_200_OK
-        results = response.json()["data"]["results"]
+        response_data = response.json()["data"]
+        results = response_data["results"]
+        assert response_data["count"] == 1
         assert len(results) == 1
         assert results[0]["title"] == "Villa in Maadi"
 
         response = auth_client.get(url, {"price_max": 10000})
         assert response.status_code == status.HTTP_200_OK
-        results = response.json()["data"]["results"]
+        response_data = response.json()["data"]
+        results = response_data["results"]
+        assert response_data["count"] == 1
         assert len(results) == 1
         assert results[0]["title"] == "Apartment in Nasr City"
 
