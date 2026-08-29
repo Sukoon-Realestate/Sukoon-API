@@ -29,7 +29,8 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   late final PropertyDetailsCubit? _detailsCubit;
   late final Future<void>? _detailsRequest;
   late final TenantPropertyDetailsContent? _mockProperty;
-  bool _isSaved = false;
+  bool? _favoriteOverride;
+  bool? _savedOverride;
 
   @override
   void initState() {
@@ -55,7 +56,13 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
     super.dispose();
   }
 
-  void _toggleSaved() => setState(() => _isSaved = !_isSaved);
+  void _toggleFavorite(bool initialValue) {
+    setState(() => _favoriteOverride = !(_favoriteOverride ?? initialValue));
+  }
+
+  void _toggleSaved(bool initialValue) {
+    setState(() => _savedOverride = !(_savedOverride ?? initialValue));
+  }
 
   void _openPhotos(TenantPropertyDetailsContent property, [int index = 0]) {
     Go.to(TenantPropertyPhotosScreen(property: property, initialIndex: index));
@@ -137,12 +144,16 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   }
 
   Widget _buildDetailsBody(TenantPropertyDetailsContent property) {
+    final bool isFavorite = _favoriteOverride ?? property.isFavorite;
+    final bool isSaved = _savedOverride ?? property.isSaved;
     return TenantPropertyDetailsBody(
       property: property,
-      isSaved: _isSaved,
+      isFavorite: isFavorite,
+      isSaved: isSaved,
       onBackPressed: Go.back,
       onSharePressed: () => _showShareSheet(property),
-      onSavedPressed: _toggleSaved,
+      onFavoritePressed: () => _toggleFavorite(property.isFavorite),
+      onSavedPressed: () => _toggleSaved(property.isSaved),
       onPhotosPressed: (index) => _openPhotos(property, index),
       onLocationPressed: () => _openLocation(property),
       onBookVisitPressed: () => _openBookVisit(property),

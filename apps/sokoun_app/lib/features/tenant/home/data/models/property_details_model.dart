@@ -1,14 +1,8 @@
 import 'package:equatable/equatable.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/extensions/string_extension.dart';
 
 class PropertyImageModel extends Equatable {
-  final String id;
-  final String image;
-  final String name;
-  final String description;
-  final String createdAt;
-  final String updatedAt;
-
   const PropertyImageModel({
     required this.id,
     required this.image,
@@ -27,15 +21,23 @@ class PropertyImageModel extends Equatable {
     updatedAt: '',
   );
 
-  factory PropertyImageModel.fromJson(Map<String, dynamic> json) =>
-      PropertyImageModel(
-        id: json['id'] ?? '',
-        image: json['image'] ?? '',
-        name: json['name'] ?? '',
-        description: json['description'] ?? '',
-        createdAt: json['created_at'] ?? '',
-        updatedAt: json['updated_at'] ?? '',
-      );
+  factory PropertyImageModel.fromJson(Map<String, dynamic> json) {
+    return PropertyImageModel(
+      id: json['id'] as String? ?? '',
+      image: json['image'] as String? ?? '',
+      name: json['name'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      createdAt: json['created_at'] as String? ?? '',
+      updatedAt: json['updated_at'] as String? ?? '',
+    );
+  }
+
+  final String id;
+  final String image;
+  final String name;
+  final String description;
+  final String createdAt;
+  final String updatedAt;
 
   Map<String, dynamic> toJson() => {
     'id': id,
@@ -53,14 +55,16 @@ class PropertyImageModel extends Equatable {
     String? description,
     String? createdAt,
     String? updatedAt,
-  }) => PropertyImageModel(
-    id: id ?? this.id,
-    image: image ?? this.image,
-    name: name ?? this.name,
-    description: description ?? this.description,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) {
+    return PropertyImageModel(
+      id: id ?? this.id,
+      image: image ?? this.image,
+      name: name ?? this.name,
+      description: description ?? this.description,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 
   @override
   List<Object?> get props => [
@@ -74,43 +78,6 @@ class PropertyImageModel extends Equatable {
 }
 
 class PropertyDetailsModel extends Equatable {
-  final String id;
-  final String owner;
-  final String mainImage;
-  final String title;
-  final String description;
-  final String price;
-  final String pricePeriod;
-  final String propertyType;
-  final bool isFurnished;
-  final bool isVerified;
-  final int bedrooms;
-  final int bathrooms;
-  final int area;
-  final String space;
-  final int floor;
-  final int rentalPeriod;
-  final String suitableFor;
-  final bool smokingAllowed;
-  final String country;
-  final String city;
-  final String district;
-  final String latitude;
-  final String longitude;
-  final bool hasWifi;
-  final bool hasElevator;
-  final bool hasGarage;
-  final bool hasSecurity;
-  final bool hasBalcony;
-  final bool hasAirConditioning;
-  final bool nearMetro;
-  final bool hasNaturalGas;
-  final bool hasElectricityMeter;
-  final bool hasWaterMeter;
-  final List<PropertyImageModel> images;
-  final String createdAt;
-  final String updatedAt;
-
   const PropertyDetailsModel({
     required this.id,
     required this.owner,
@@ -135,16 +102,10 @@ class PropertyDetailsModel extends Equatable {
     required this.district,
     required this.latitude,
     required this.longitude,
-    required this.hasWifi,
-    required this.hasElevator,
-    required this.hasGarage,
-    required this.hasSecurity,
-    required this.hasBalcony,
-    required this.hasAirConditioning,
-    required this.nearMetro,
-    required this.hasNaturalGas,
-    required this.hasElectricityMeter,
-    required this.hasWaterMeter,
+    required this.amenities,
+    required this.isFav,
+    required this.isSaved,
+    required this.rating,
     required this.images,
     required this.createdAt,
     required this.updatedAt,
@@ -174,63 +135,92 @@ class PropertyDetailsModel extends Equatable {
       district = '',
       latitude = '',
       longitude = '',
-      hasWifi = false,
-      hasElevator = false,
-      hasGarage = false,
-      hasSecurity = false,
-      hasBalcony = false,
-      hasAirConditioning = false,
-      nearMetro = false,
-      hasNaturalGas = false,
-      hasElectricityMeter = false,
-      hasWaterMeter = false,
+      amenities = const [],
+      isFav = false,
+      isSaved = false,
+      rating = 0,
       images = const [],
       createdAt = '',
       updatedAt = '';
 
-  factory PropertyDetailsModel.fromJson(Map<String, dynamic> json) =>
-      PropertyDetailsModel(
-        id: json['id'] ?? '',
-        owner: json['owner'] ?? '',
-        mainImage: json['main_image'] ?? '',
-        title: json['title'] ?? '',
-        description: json['description'] ?? '',
-        price: json['price'] ?? '',
-        pricePeriod: json['price_period'] ?? '',
-        propertyType: json['property_type'] ?? '',
-        isFurnished: json['is_furnished'] ?? false,
-        isVerified: json['is_verified'] ?? false,
-        bedrooms: (json['bedrooms'] as num?)?.toInt() ?? 0,
-        bathrooms: (json['bathrooms'] as num?)?.toInt() ?? 0,
-        area: (json['area'] as num?)?.toInt() ?? 0,
-        space: json['space'] ?? '',
-        floor: (json['floor'] as num?)?.toInt() ?? 0,
-        rentalPeriod: (json['rental_period'] as num?)?.toInt() ?? 0,
-        suitableFor: json['suitable_for'] ?? '',
-        smokingAllowed: json['smoking_allowed'] ?? false,
-        country: json['country'] ?? '',
-        city: json['city'] ?? '',
-        district: json['district'] ?? '',
-        latitude: json['latitude'] ?? '',
-        longitude: json['longitude'] ?? '',
-        hasWifi: json['has_wifi'] ?? false,
-        hasElevator: json['has_elevator'] ?? false,
-        hasGarage: json['has_garage'] ?? false,
-        hasSecurity: json['has_security'] ?? false,
-        hasBalcony: json['has_balcony'] ?? false,
-        hasAirConditioning: json['has_air_conditioning'] ?? false,
-        nearMetro: json['near_metro'] ?? false,
-        hasNaturalGas: json['has_natural_gas'] ?? false,
-        hasElectricityMeter: json['has_electricity_meter'] ?? false,
-        hasWaterMeter: json['has_water_meter'] ?? false,
-        images:
-            (json['images'] as List?)
-                ?.map((e) => PropertyImageModel.fromJson(e))
-                .toList() ??
-            [],
-        createdAt: json['created_at'] ?? '',
-        updatedAt: json['updated_at'] ?? '',
-      );
+  factory PropertyDetailsModel.fromJson(Map<String, dynamic> json) {
+    return PropertyDetailsModel(
+      id: json['id'] as String? ?? '',
+      owner: json['owner'] as String? ?? '',
+      mainImage: json['main_image'] as String? ?? '',
+      title: json['title'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      price: json['price']?.toString() ?? '',
+      pricePeriod: json['price_period'] as String? ?? '',
+      propertyType: json['property_type'] as String? ?? '',
+      isFurnished: json['is_furnished'] as bool? ?? false,
+      isVerified: json['is_verified'] as bool? ?? false,
+      bedrooms: (json['bedrooms'] as num?)?.toInt() ?? 0,
+      bathrooms: (json['bathrooms'] as num?)?.toInt() ?? 0,
+      area: (json['area'] as num?)?.toInt() ?? 0,
+      space: json['space']?.toString() ?? '',
+      floor: (json['floor'] as num?)?.toInt() ?? 0,
+      rentalPeriod: (json['rental_period'] as num?)?.toInt() ?? 0,
+      suitableFor: json['suitable_for'] as String? ?? '',
+      smokingAllowed: json['smoking_allowed'] as bool? ?? false,
+      country: json['country'] as String? ?? '',
+      city: json['city'] as String? ?? '',
+      district: json['district'] as String? ?? '',
+      latitude: json['latitude']?.toString() ?? '',
+      longitude: json['longitude']?.toString() ?? '',
+      amenities:
+          (json['amenities'] as List?)?.whereType<String>().toList(
+            growable: false,
+          ) ??
+          const [],
+      isFav: json['is_fav'] as bool? ?? false,
+      isSaved: json['is_saved'] as bool? ?? false,
+      rating: (json['rating'] as num?)?.toDouble() ?? 0,
+      images:
+          (json['images'] as List?)
+              ?.whereType<Map>()
+              .map(
+                (image) => PropertyImageModel.fromJson(
+                  Map<String, dynamic>.from(image),
+                ),
+              )
+              .toList(growable: false) ??
+          const [],
+      createdAt: json['created_at'] as String? ?? '',
+      updatedAt: json['updated_at'] as String? ?? '',
+    );
+  }
+
+  final String id;
+  final String owner;
+  final String mainImage;
+  final String title;
+  final String description;
+  final String price;
+  final String pricePeriod;
+  final String propertyType;
+  final bool isFurnished;
+  final bool isVerified;
+  final int bedrooms;
+  final int bathrooms;
+  final int area;
+  final String space;
+  final int floor;
+  final int rentalPeriod;
+  final String suitableFor;
+  final bool smokingAllowed;
+  final String country;
+  final String city;
+  final String district;
+  final String latitude;
+  final String longitude;
+  final List<String> amenities;
+  final bool isFav;
+  final bool isSaved;
+  final double rating;
+  final List<PropertyImageModel> images;
+  final String createdAt;
+  final String updatedAt;
 
   Map<String, dynamic> toJson() => {
     'id': id,
@@ -256,17 +246,11 @@ class PropertyDetailsModel extends Equatable {
     'district': district,
     'latitude': latitude,
     'longitude': longitude,
-    'has_wifi': hasWifi,
-    'has_elevator': hasElevator,
-    'has_garage': hasGarage,
-    'has_security': hasSecurity,
-    'has_balcony': hasBalcony,
-    'has_air_conditioning': hasAirConditioning,
-    'near_metro': nearMetro,
-    'has_natural_gas': hasNaturalGas,
-    'has_electricity_meter': hasElectricityMeter,
-    'has_water_meter': hasWaterMeter,
-    'images': images.map((e) => e.toJson()).toList(),
+    'amenities': amenities,
+    'is_fav': isFav,
+    'is_saved': isSaved,
+    'rating': rating,
+    'images': images.map((image) => image.toJson()).toList(growable: false),
     'created_at': createdAt,
     'updated_at': updatedAt,
   };
@@ -295,57 +279,47 @@ class PropertyDetailsModel extends Equatable {
     String? district,
     String? latitude,
     String? longitude,
-    bool? hasWifi,
-    bool? hasElevator,
-    bool? hasGarage,
-    bool? hasSecurity,
-    bool? hasBalcony,
-    bool? hasAirConditioning,
-    bool? nearMetro,
-    bool? hasNaturalGas,
-    bool? hasElectricityMeter,
-    bool? hasWaterMeter,
+    List<String>? amenities,
+    bool? isFav,
+    bool? isSaved,
+    double? rating,
     List<PropertyImageModel>? images,
     String? createdAt,
     String? updatedAt,
-  }) => PropertyDetailsModel(
-    id: id ?? this.id,
-    owner: owner ?? this.owner,
-    mainImage: mainImage ?? this.mainImage,
-    title: title ?? this.title,
-    description: description ?? this.description,
-    price: price ?? this.price,
-    pricePeriod: pricePeriod ?? this.pricePeriod,
-    propertyType: propertyType ?? this.propertyType,
-    isFurnished: isFurnished ?? this.isFurnished,
-    isVerified: isVerified ?? this.isVerified,
-    bedrooms: bedrooms ?? this.bedrooms,
-    bathrooms: bathrooms ?? this.bathrooms,
-    area: area ?? this.area,
-    space: space ?? this.space,
-    floor: floor ?? this.floor,
-    rentalPeriod: rentalPeriod ?? this.rentalPeriod,
-    suitableFor: suitableFor ?? this.suitableFor,
-    smokingAllowed: smokingAllowed ?? this.smokingAllowed,
-    country: country ?? this.country,
-    city: city ?? this.city,
-    district: district ?? this.district,
-    latitude: latitude ?? this.latitude,
-    longitude: longitude ?? this.longitude,
-    hasWifi: hasWifi ?? this.hasWifi,
-    hasElevator: hasElevator ?? this.hasElevator,
-    hasGarage: hasGarage ?? this.hasGarage,
-    hasSecurity: hasSecurity ?? this.hasSecurity,
-    hasBalcony: hasBalcony ?? this.hasBalcony,
-    hasAirConditioning: hasAirConditioning ?? this.hasAirConditioning,
-    nearMetro: nearMetro ?? this.nearMetro,
-    hasNaturalGas: hasNaturalGas ?? this.hasNaturalGas,
-    hasElectricityMeter: hasElectricityMeter ?? this.hasElectricityMeter,
-    hasWaterMeter: hasWaterMeter ?? this.hasWaterMeter,
-    images: images ?? this.images,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
+  }) {
+    return PropertyDetailsModel(
+      id: id ?? this.id,
+      owner: owner ?? this.owner,
+      mainImage: mainImage ?? this.mainImage,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      price: price ?? this.price,
+      pricePeriod: pricePeriod ?? this.pricePeriod,
+      propertyType: propertyType ?? this.propertyType,
+      isFurnished: isFurnished ?? this.isFurnished,
+      isVerified: isVerified ?? this.isVerified,
+      bedrooms: bedrooms ?? this.bedrooms,
+      bathrooms: bathrooms ?? this.bathrooms,
+      area: area ?? this.area,
+      space: space ?? this.space,
+      floor: floor ?? this.floor,
+      rentalPeriod: rentalPeriod ?? this.rentalPeriod,
+      suitableFor: suitableFor ?? this.suitableFor,
+      smokingAllowed: smokingAllowed ?? this.smokingAllowed,
+      country: country ?? this.country,
+      city: city ?? this.city,
+      district: district ?? this.district,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      amenities: amenities ?? this.amenities,
+      isFav: isFav ?? this.isFav,
+      isSaved: isSaved ?? this.isSaved,
+      rating: rating ?? this.rating,
+      images: images ?? this.images,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 
   String get formattedPrice => (double.tryParse(price) ?? 0).toCurrency();
 
@@ -383,31 +357,47 @@ class PropertyDetailsModel extends Equatable {
 
   String get locationLabel => 'منطقة تقريبية · $district، $city';
 
-  /// All displayable images — main image first, then the gallery images.
   List<String> get imageUrls => [
     if (mainImage.isNotEmpty) mainImage,
-    ...images.map((e) => e.image).where((url) => url.isNotEmpty),
+    ...images.map((image) => image.image).where((url) => url.isNotEmpty),
   ];
 
-  /// Labels aligned with [imageUrls] (main image first).
   List<String> get photoLabels => [
     'الصورة الرئيسية',
-    ...images.map((e) => e.name),
+    ...images.map((image) => image.name),
   ];
 
-  List<String> get amenities => [
-    if (hasWifi) 'واي فاي',
-    if (hasElevator) 'أسانسير',
-    if (hasGarage) 'جراج',
-    if (hasSecurity) 'أمن',
-    if (hasBalcony) 'بلكونة',
-    if (hasAirConditioning) 'تكييف',
-    if (isFurnished) 'مفروش',
-    if (nearMetro) 'قريب من المترو',
-    if (hasNaturalGas) 'غاز طبيعي',
-    if (hasElectricityMeter) 'عداد كهرباء',
-    if (hasWaterMeter) 'عداد مياه',
-  ];
+  List<String> get amenityLabels => amenities
+      .map(_amenityLabel)
+      .where((label) => label.isNotEmpty)
+      .toList(growable: false);
+
+  String _amenityLabel(String amenity) {
+    switch (amenity) {
+      case 'wifi':
+        return LocaleKeys.tenantFilterWifi;
+      case 'elevator':
+        return LocaleKeys.tenantFilterElevator;
+      case 'garage':
+        return LocaleKeys.tenantFilterGarage;
+      case 'security':
+        return LocaleKeys.tenantFilterSecurity;
+      case 'balcony':
+        return LocaleKeys.tenantFilterBalcony;
+      case 'air_conditioning':
+        return LocaleKeys.tenantFilterAirConditioning;
+      case 'near_metro':
+        return LocaleKeys.tenantFilterNearMetro;
+      case 'natural_gas':
+        return LocaleKeys.tenantFilterNaturalGas;
+      case 'electricity_meter':
+        return LocaleKeys.tenantFilterElectricityMeter;
+      case 'water_meter':
+        return LocaleKeys.tenantFilterWaterMeter;
+      default:
+        return amenity;
+    }
+  }
 
   @override
   List<Object?> get props => [
@@ -434,16 +424,10 @@ class PropertyDetailsModel extends Equatable {
     district,
     latitude,
     longitude,
-    hasWifi,
-    hasElevator,
-    hasGarage,
-    hasSecurity,
-    hasBalcony,
-    hasAirConditioning,
-    nearMetro,
-    hasNaturalGas,
-    hasElectricityMeter,
-    hasWaterMeter,
+    amenities,
+    isFav,
+    isSaved,
+    rating,
     images,
     createdAt,
     updatedAt,

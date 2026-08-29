@@ -111,6 +111,14 @@ abstract final class TenantPropertyFilterOptions {
       value: 'has_natural_gas',
       label: LocaleKeys.tenantFilterNaturalGas,
     ),
+    TenantFilterOption(
+      value: 'has_electricity_meter',
+      label: LocaleKeys.tenantFilterElectricityMeter,
+    ),
+    TenantFilterOption(
+      value: 'has_water_meter',
+      label: LocaleKeys.tenantFilterWaterMeter,
+    ),
   ];
 
   static String labelFor(PropertySearchFilterEntry filter) {
@@ -153,16 +161,38 @@ abstract final class TenantPropertyFilterOptions {
 
   static String amenityLabel(String value) => _label(amenities, value);
 
-  static List<String> amenityLabels(PropertyDetailsModel property) => [
-    if (property.hasWifi) amenityLabel('has_wifi'),
-    if (property.hasElevator) amenityLabel('has_elevator'),
-    if (property.hasGarage) amenityLabel('has_garage'),
-    if (property.hasSecurity) amenityLabel('has_security'),
-    if (property.hasBalcony) amenityLabel('has_balcony'),
-    if (property.hasAirConditioning) amenityLabel('has_air_conditioning'),
-    if (property.nearMetro) amenityLabel('near_metro'),
-    if (property.hasNaturalGas) amenityLabel('has_natural_gas'),
-  ];
+  static List<String> amenityLabels(PropertyDetailsModel property) => property
+      .amenities
+      .map(_amenityFilterKey)
+      .map(amenityLabel)
+      .toList(growable: false);
+
+  static String _amenityFilterKey(String amenity) {
+    switch (amenity) {
+      case 'wifi':
+        return 'has_wifi';
+      case 'elevator':
+        return 'has_elevator';
+      case 'garage':
+        return 'has_garage';
+      case 'security':
+        return 'has_security';
+      case 'balcony':
+        return 'has_balcony';
+      case 'air_conditioning':
+        return 'has_air_conditioning';
+      case 'near_metro':
+        return 'near_metro';
+      case 'natural_gas':
+        return 'has_natural_gas';
+      case 'electricity_meter':
+        return 'has_electricity_meter';
+      case 'water_meter':
+        return 'has_water_meter';
+      default:
+        return amenity;
+    }
+  }
 
   static String _label(List<TenantFilterOption> options, String value) {
     for (final TenantFilterOption option in options) {

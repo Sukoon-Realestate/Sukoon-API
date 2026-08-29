@@ -39,6 +39,8 @@ class TenantPropertyDetailsContent {
     required this.reviewCount,
     required this.isVerified,
     required this.isFurnished,
+    required this.isFavorite,
+    required this.isSaved,
     required this.metrics,
     required this.description,
     required this.amenities,
@@ -67,6 +69,8 @@ class TenantPropertyDetailsContent {
       reviewCount: item.isVerified ? '31' : '24',
       isVerified: item.isVerified,
       isFurnished: item.tags.contains('مفروش') || item.title.contains('مفروش'),
+      isFavorite: false,
+      isSaved: false,
       metrics: [
         TenantPropertyMetricContent(
           icon: Icons.bed_outlined,
@@ -143,10 +147,12 @@ class TenantPropertyDetailsContent {
       propertyType: model.propertyTypeLabel,
       location: model.locationLabel,
       price: model.formattedPrice,
-      rating: '—',
+      rating: model.rating.toStringAsFixed(1),
       reviewCount: '0',
       isVerified: model.isVerified,
       isFurnished: model.isFurnished,
+      isFavorite: model.isFav,
+      isSaved: model.isSaved,
       metrics: [
         TenantPropertyMetricContent(
           icon: Icons.bed_outlined,
@@ -170,7 +176,7 @@ class TenantPropertyDetailsContent {
         ),
       ],
       description: model.description,
-      amenities: model.amenities,
+      amenities: model.amenityLabels,
       photoLabels: model.photoLabels,
       nearbyPlaces: const [],
       ownerName: model.owner,
@@ -191,6 +197,8 @@ class TenantPropertyDetailsContent {
   final String reviewCount;
   final bool isVerified;
   final bool isFurnished;
+  final bool isFavorite;
+  final bool isSaved;
   final List<TenantPropertyMetricContent> metrics;
   final String description;
   final List<String> amenities;

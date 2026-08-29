@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_search_content.dart';
 
 import 'suggested_area_card.dart';
@@ -18,44 +18,24 @@ class SuggestedAreasGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          textDirection: TextDirection.ltr,
-          children: [
-            for (int index = 0; index < 3; index++) ...[
-              Expanded(
-                child: SuggestedAreaCard(
-                  area: areas[index],
-                  isSelected: areas[index].title == selectedArea,
-                  onTap: onAreaSelected == null
-                      ? null
-                      : () => onAreaSelected!(areas[index]),
-                ),
-              ),
-              if (index < 2) 10.szW,
-            ],
-          ],
-        ),
-        10.szH,
-        Row(
-          textDirection: TextDirection.ltr,
-          children: [
-            for (int index = 3; index < 6; index++) ...[
-              Expanded(
-                child: SuggestedAreaCard(
-                  area: areas[index],
-                  isSelected: areas[index].title == selectedArea,
-                  onTap: onAreaSelected == null
-                      ? null
-                      : () => onAreaSelected!(areas[index]),
-                ),
-              ),
-              if (index < 5) 10.szW,
-            ],
-          ],
-        ),
-      ],
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        childAspectRatio: .82,
+        crossAxisSpacing: 10.w,
+        mainAxisSpacing: 10.h,
+      ),
+      itemCount: areas.length,
+      itemBuilder: (context, index) {
+        final SuggestedAreaContent area = areas[index];
+        return SuggestedAreaCard(
+          area: area,
+          isSelected: area.searchQuery == selectedArea,
+          onTap: onAreaSelected == null ? null : () => onAreaSelected!(area),
+        );
+      },
     );
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
-import 'package:sokoun_app/shared_widgets/sokoon_back_button.dart';
+import 'package:sokoun_app/shared_widgets/back_button.dart';
 
 class AuthScaffold extends StatelessWidget {
   const AuthScaffold({

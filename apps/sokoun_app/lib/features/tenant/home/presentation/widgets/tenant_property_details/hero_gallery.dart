@@ -11,18 +11,18 @@ class TenantPropertyHeroGallery extends StatelessWidget {
   const TenantPropertyHeroGallery({
     super.key,
     required this.property,
-    required this.isSaved,
+    required this.isFavorite,
     required this.onBackPressed,
     required this.onSharePressed,
-    required this.onSavedPressed,
+    required this.onFavoritePressed,
     required this.onPhotosPressed,
   });
 
   final TenantPropertyDetailsContent property;
-  final bool isSaved;
+  final bool isFavorite;
   final VoidCallback onBackPressed;
   final VoidCallback onSharePressed;
-  final VoidCallback onSavedPressed;
+  final VoidCallback onFavoritePressed;
   final ValueChanged<int> onPhotosPressed;
 
   @override
@@ -84,10 +84,10 @@ class TenantPropertyHeroGallery extends StatelessWidget {
                 8.szW,
                 _HeroIconButton(
                   key: const ValueKey('tenant-property-details-hero-save'),
-                  icon: isSaved
+                  icon: isFavorite
                       ? Icons.favorite_rounded
                       : Icons.favorite_border_rounded,
-                  onPressed: onSavedPressed,
+                  onPressed: onFavoritePressed,
                 ),
               ],
             ),

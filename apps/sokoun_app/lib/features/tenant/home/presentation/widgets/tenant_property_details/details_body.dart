@@ -9,9 +9,11 @@ class TenantPropertyDetailsBody extends StatelessWidget {
   const TenantPropertyDetailsBody({
     super.key,
     required this.property,
+    required this.isFavorite,
     required this.isSaved,
     required this.onBackPressed,
     required this.onSharePressed,
+    required this.onFavoritePressed,
     required this.onSavedPressed,
     required this.onPhotosPressed,
     required this.onLocationPressed,
@@ -19,9 +21,11 @@ class TenantPropertyDetailsBody extends StatelessWidget {
   });
 
   final TenantPropertyDetailsContent property;
+  final bool isFavorite;
   final bool isSaved;
   final VoidCallback onBackPressed;
   final VoidCallback onSharePressed;
+  final VoidCallback onFavoritePressed;
   final VoidCallback onSavedPressed;
   final ValueChanged<int> onPhotosPressed;
   final VoidCallback onLocationPressed;
@@ -38,10 +42,10 @@ class TenantPropertyDetailsBody extends StatelessWidget {
               children: [
                 TenantPropertyHeroGallery(
                   property: property,
-                  isSaved: isSaved,
+                  isFavorite: isFavorite,
                   onBackPressed: onBackPressed,
                   onSharePressed: onSharePressed,
-                  onSavedPressed: onSavedPressed,
+                  onFavoritePressed: onFavoritePressed,
                   onPhotosPressed: onPhotosPressed,
                 ),
                 TenantPropertyDetailsContentView(

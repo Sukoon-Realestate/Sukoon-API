@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:sokoun_app/shared_widgets/sokoon_back_button.dart';
+import 'package:sokoun_app/shared_widgets/back_button.dart';
 
 class AppScaffold extends StatelessWidget {
   const AppScaffold({

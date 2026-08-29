@@ -16,7 +16,7 @@ class SearchCategoryChips extends StatefulWidget {
   });
 
   final String selectedCategory;
-  final ValueChanged<PropertyTypeModel?>? onCategorySelected;
+  final ValueChanged<PropertyTypeModel>? onCategorySelected;
 
   @override
   State<SearchCategoryChips> createState() => _SearchCategoryChipsState();
@@ -66,7 +66,7 @@ class _PropertyTypeChips extends StatelessWidget {
 
   final List<PropertyTypeModel> propertyTypes;
   final String selectedCategory;
-  final ValueChanged<PropertyTypeModel?>? onCategorySelected;
+  final ValueChanged<PropertyTypeModel>? onCategorySelected;
 
   @override
   Widget build(BuildContext context) {
@@ -93,9 +93,7 @@ class _PropertyTypeChips extends StatelessWidget {
               category: categories[index],
               onTap: onCategorySelected == null
                   ? null
-                  : () => onCategorySelected!(
-                      index == 0 ? null : propertyTypes[index - 1],
-                    ),
+                  : () => onCategorySelected!(propertyTypes[index]),
             ),
             if (index < categories.length - 1) 8.szW,
           ],
