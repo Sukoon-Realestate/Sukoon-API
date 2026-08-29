@@ -1,6 +1,7 @@
 from .owner_dashboard import (
     OwnerDashboardSerializer,
 )
+from .location import CitySerializer, GovernorateSerializer
 from .property import (
     MyPropertyListSerializer,
     PropertyImageSerializer,

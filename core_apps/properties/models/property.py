@@ -77,8 +77,18 @@ class Property(TimeStampedModel):
     smoking_allowed = models.BooleanField(_("Smoking Allowed"), default=False)
 
     # Location
-    country = models.CharField(_("Country"), max_length=100, default="Egypt")
-    city = models.CharField(_("City"), max_length=100)
+    governorate = models.ForeignKey(
+        "properties.Governorate",
+        on_delete=models.PROTECT,
+        related_name="properties",
+        verbose_name=_("Governorate"),
+    )
+    city = models.ForeignKey(
+        "properties.City",
+        on_delete=models.PROTECT,
+        related_name="properties",
+        verbose_name=_("City"),
+    )
     district = models.CharField(_("District"), max_length=100)
     latitude = models.DecimalField(
         _("Latitude"), max_digits=9, decimal_places=6, null=True, blank=True
@@ -106,7 +116,10 @@ class Property(TimeStampedModel):
         verbose_name_plural = _("Properties")
         ordering = ["-created_at"]
         indexes = [
-            models.Index(fields=["city", "district"], name="property_location_idx"),
+            models.Index(
+                fields=["governorate", "city", "district"],
+                name="property_location_idx",
+            ),
             models.Index(fields=["price"], name="property_price_idx"),
             models.Index(fields=["-created_at"], name="property_created_at_idx"),
             models.Index(

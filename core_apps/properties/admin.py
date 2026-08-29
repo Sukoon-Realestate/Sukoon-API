@@ -1,6 +1,8 @@
 from django.contrib import admin
 
 from .models import (
+    City,
+    Governorate,
     OwnerAvailabilitySlot,
     Property,
     PropertyFavorite,
@@ -22,6 +24,23 @@ class PropertyTypeAdmin(admin.ModelAdmin):
     list_display = ["name", "slug", "created_at"]
     search_fields = ["name", "slug"]
     prepopulated_fields = {"slug": ("name",)}
+    ordering = ["name"]
+
+
+@admin.register(Governorate)
+class GovernorateAdmin(admin.ModelAdmin):
+    list_display = ["name", "slug", "created_at"]
+    search_fields = ["name", "slug"]
+    readonly_fields = ["slug"]
+    ordering = ["name"]
+
+
+@admin.register(City)
+class CityAdmin(admin.ModelAdmin):
+    list_display = ["name", "governorate", "slug", "created_at"]
+    list_filter = ["governorate"]
+    search_fields = ["name", "slug", "governorate__name"]
+    readonly_fields = ["slug"]
     ordering = ["name"]
 
 
@@ -49,7 +68,8 @@ class PropertyAdmin(admin.ModelAdmin):
     search_fields = [
         "title",
         "description",
-        "city",
+        "city__name",
+        "governorate__name",
         "district",
         "owner__email",
         "owner__first_name",

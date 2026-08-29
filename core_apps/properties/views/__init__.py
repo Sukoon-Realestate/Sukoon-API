@@ -1,4 +1,8 @@
 from .owner_dashboard import OwnerDashboardAPIView
+from .location import (
+    CityListAPIView,
+    GovernorateListAPIView,
+)
 from .property import (
     AvailablePlacesAPIView,
     MyPropertyListAPIView,

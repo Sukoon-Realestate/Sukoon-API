@@ -56,6 +56,8 @@ def generate_test_image():
 
 
 def _create_property(**kwargs):
+    from core_apps.properties.models import City, Governorate
+
     defaults = {
         "title": "Apartment in Nasr City",
         "price": 15000.00,
@@ -63,6 +65,21 @@ def _create_property(**kwargs):
         "district": "Nasr City",
     }
     defaults.update(kwargs)
+    city_name = defaults.pop("city", "Cairo")
+    if isinstance(city_name, str):
+        governorate = Governorate.objects.get_or_create(
+            slug="cairo", defaults={"name": "Cairo"}
+        )[0]
+        city = City.objects.get_or_create(
+            governorate=governorate,
+            slug=city_name.lower().replace(" ", "-"),
+            defaults={"name": city_name},
+        )[0]
+    else:
+        city = city_name
+        governorate = city.governorate
+    defaults.setdefault("governorate", governorate)
+    defaults["city"] = city
     if "property_type" not in defaults:
         from core_apps.properties.models import PropertyType
 
@@ -187,7 +204,7 @@ class TestPropertyViews:
         assert item["bedrooms"] == 3
         assert item["bathrooms"] == 2
         assert item["area"] == 90
-        assert item["location"] == "Nasr City, Cairo"
+        assert item["location"] == "Nasr City, Cairo, Cairo"
         assert item["images_count"] == 2
         assert "عائلات" in item["tags"]
         assert "ممنوع التدخين" in item["tags"]
@@ -249,12 +266,15 @@ class TestPropertyViews:
         response = api_client.post(url, data)
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-    def test_create_property_authenticated_happy_path(self, auth_client, user):
+    def test_create_property_authenticated_happy_path(
+        self, auth_client, user, cairo_city, cairo_governorate
+    ):
         url = reverse("property-create")
         data = {
             "title": "Apartment in Heliopolis",
             "price": 20000.00,
-            "city": "Cairo",
+            "city": str(cairo_city.id),
+            "governorate": str(cairo_governorate.id),
             "district": "Heliopolis",
             "bedrooms": 2,
             "bathrooms": 2,
@@ -278,12 +298,15 @@ class TestPropertyViews:
         response = auth_client.post(url, data)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_create_property_with_latitude_longitude(self, auth_client, user):
+    def test_create_property_with_latitude_longitude(
+        self, auth_client, user, cairo_city, cairo_governorate
+    ):
         url = reverse("property-create")
         data = {
             "title": "Apartment in Heliopolis",
             "price": 20000.00,
-            "city": "Cairo",
+            "city": str(cairo_city.id),
+            "governorate": str(cairo_governorate.id),
             "district": "Heliopolis",
             "latitude": 30.0444,
             "longitude": 31.2357,
@@ -547,12 +570,15 @@ class TestMyPropertyListView:
         assert len(json_data["data"]["results"]) == 5
         assert len(ctx.captured_queries) <= 3
 
-    def test_owner_cannot_set_status_via_api(self, auth_client):
+    def test_owner_cannot_set_status_via_api(
+        self, auth_client, cairo_city, cairo_governorate
+    ):
         url = reverse("property-create")
         data = {
             "title": "Apartment in Heliopolis",
             "price": 20000.00,
-            "city": "Cairo",
+            "city": str(cairo_city.id),
+            "governorate": str(cairo_governorate.id),
             "district": "Heliopolis",
             "status": Property.Status.VERIFIED,
             "property_type": "apartment",

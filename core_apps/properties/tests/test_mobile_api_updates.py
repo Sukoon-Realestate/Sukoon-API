@@ -17,6 +17,8 @@ from core_apps.properties.models import (
 
 
 def create_property(owner, property_type, **kwargs):
+    from core_apps.properties.models import City, Governorate
+
     defaults = {
         "title": "Mobile API Property",
         "price": 12000,
@@ -25,6 +27,16 @@ def create_property(owner, property_type, **kwargs):
         "status": Property.Status.VERIFIED,
     }
     defaults.update(kwargs)
+    city_name = defaults.pop("city", "Cairo")
+    governorate = Governorate.objects.get_or_create(
+        slug="cairo", defaults={"name": "Cairo"}
+    )[0]
+    defaults["city"] = City.objects.get_or_create(
+        governorate=governorate,
+        slug=city_name.lower().replace(" ", "-"),
+        defaults={"name": city_name},
+    )[0]
+    defaults["governorate"] = governorate
     return Property.objects.create(owner=owner, property_type=property_type, **defaults)
 
 
@@ -66,9 +78,21 @@ class TestAvailablePlaces:
 
         assert response.status_code == status.HTTP_200_OK
         assert response.json()["data"]["places"] == [
-            {"country": "Egypt", "city": "Cairo", "district": "Heliopolis"},
-            {"country": "Egypt", "city": "Cairo", "district": "Maadi"},
-            {"country": "Egypt", "city": "Cairo", "district": "Nasr City"},
+            {
+                "governorate": "Cairo",
+                "city": "Cairo",
+                "district": "Heliopolis",
+            },
+            {
+                "governorate": "Cairo",
+                "city": "Cairo",
+                "district": "Maadi",
+            },
+            {
+                "governorate": "Cairo",
+                "city": "Cairo",
+                "district": "Nasr City",
+            },
         ]
 
     def test_valid_type_without_properties_returns_empty_array(

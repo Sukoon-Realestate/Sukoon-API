@@ -29,6 +29,8 @@ class PropertyFilter(django_filters.FilterSet):
     """
 
     property_type = django_filters.CharFilter(field_name="property_type__slug")
+    governorate = django_filters.UUIDFilter(field_name="governorate__id")
+    city = django_filters.UUIDFilter(field_name="city__id")
     price_min = django_filters.NumberFilter(field_name="price", lookup_expr="gte")
     price_max = django_filters.NumberFilter(field_name="price", lookup_expr="lte")
 
@@ -36,6 +38,8 @@ class PropertyFilter(django_filters.FilterSet):
         model = Property
         fields = [
             "property_type",
+            "governorate",
+            "city",
             "price_period",
             "is_furnished",
             "is_verified",

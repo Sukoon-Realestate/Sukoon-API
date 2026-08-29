@@ -1,5 +1,5 @@
 import pytest
-from core_apps.properties.models import PropertyType
+from core_apps.properties.models import City, Governorate, PropertyType
 
 DEFAULT_PROPERTY_TYPES = [
     {"name": "Apartment", "slug": "apartment"},
@@ -22,4 +22,20 @@ def property_types(db):
 def apartment_type(db):
     return PropertyType.objects.get_or_create(
         slug="apartment", defaults={"name": "Apartment"}
+    )[0]
+
+
+@pytest.fixture
+def cairo_governorate(db):
+    return Governorate.objects.get_or_create(slug="cairo", defaults={"name": "Cairo"})[
+        0
+    ]
+
+
+@pytest.fixture
+def cairo_city(db, cairo_governorate):
+    return City.objects.get_or_create(
+        governorate=cairo_governorate,
+        slug="cairo",
+        defaults={"name": "Cairo"},
     )[0]

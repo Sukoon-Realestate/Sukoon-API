@@ -24,6 +24,10 @@ Endpoints for viewing and updating user profiles:
 
 ### 3. Property discovery and visits
 
+- `GET /api/v1/properties/governorates/`: paginated governorate list.
+- `GET /api/v1/properties/cities/?governorate=<uuid>`: paginated cities,
+  optionally filtered by governorate. Governorates and cities are managed in
+  Django admin.
 - `GET /api/v1/properties/available_places/?property_type_id=<uuid>`: distinct
   approved-property locations for a property type.
 - `GET /api/v1/properties/<property_id>/`: property details, including the

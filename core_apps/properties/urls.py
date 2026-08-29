@@ -1,6 +1,8 @@
 from django.urls import path
 
 from .views import (
+    CityListAPIView,
+    GovernorateListAPIView,
     MyPropertyListAPIView,
     OwnerDashboardAPIView,
     PropertyCreateAPIView,
@@ -22,6 +24,8 @@ from .views import (
 )
 
 urlpatterns = [
+    path("governorates/", GovernorateListAPIView.as_view(), name="governorate-list"),
+    path("cities/", CityListAPIView.as_view(), name="city-list"),
     path("types/", PropertyTypeListAPIView.as_view(), name="property-type-list"),
     path(
         "available_places/",

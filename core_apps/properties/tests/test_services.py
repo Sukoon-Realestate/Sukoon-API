@@ -10,7 +10,7 @@ from core_apps.properties.services import PropertyService, PropertyVisitService
 
 
 def _create_property(**kwargs):
-    from core_apps.properties.models import PropertyType
+    from core_apps.properties.models import City, Governorate, PropertyType
 
     defaults = {
         "title": "Service Property",
@@ -22,16 +22,27 @@ def _create_property(**kwargs):
         )[0],
     }
     defaults.update(kwargs)
+    city_name = defaults.pop("city", "Cairo")
+    governorate = Governorate.objects.get_or_create(
+        slug="cairo", defaults={"name": "Cairo"}
+    )[0]
+    defaults["city"] = City.objects.get_or_create(
+        governorate=governorate,
+        slug=city_name.lower().replace(" ", "-"),
+        defaults={"name": city_name},
+    )[0]
+    defaults["governorate"] = governorate
     return Property.objects.create(**defaults)
 
 
 @pytest.mark.django_db
 class TestPropertyService:
-    def test_create_property_service(self, user):
+    def test_create_property_service(self, user, cairo_city, cairo_governorate):
         validated_data = {
             "title": "Service Apartment",
             "price": 10000.00,
-            "city": "Cairo",
+            "city": cairo_city,
+            "governorate": cairo_governorate,
             "district": "Maadi",
             "bedrooms": 2,
             "bathrooms": 1,

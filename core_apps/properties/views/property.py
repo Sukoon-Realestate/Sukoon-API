@@ -102,7 +102,7 @@ class PropertyListAPIView(generics.ListAPIView):
     """
 
     queryset = (
-        Property.objects.select_related("property_type")
+        Property.objects.select_related("property_type", "governorate", "city")
         .annotate(images_count=Count("images"))
         .order_by("-created_at")
     )
@@ -116,7 +116,13 @@ class PropertyListAPIView(generics.ListAPIView):
         filters.OrderingFilter,
     ]
     filterset_class = PropertyFilter
-    search_fields = ["title", "description", "city", "district"]
+    search_fields = [
+        "title",
+        "description",
+        "city__name",
+        "governorate__name",
+        "district",
+    ]
     ordering_fields = ["price", "created_at"]
 
     def _get_upcoming_visit_banner(self):
@@ -195,7 +201,7 @@ class PropertyNewListAPIView(generics.ListAPIView):
     """
 
     queryset = (
-        Property.objects.select_related("property_type")
+        Property.objects.select_related("property_type", "governorate", "city")
         .annotate(images_count=Count("images"))
         .order_by("-created_at")
     )
@@ -209,7 +215,13 @@ class PropertyNewListAPIView(generics.ListAPIView):
         filters.OrderingFilter,
     ]
     filterset_class = PropertyFilter
-    search_fields = ["title", "description", "city", "district"]
+    search_fields = [
+        "title",
+        "description",
+        "city__name",
+        "governorate__name",
+        "district",
+    ]
     ordering_fields = ["price", "created_at"]
 
 
@@ -232,7 +244,8 @@ class PropertyCreateAPIView(generics.CreateAPIView):
         "rental_period": 6,
         "suitable_for": "families",
         "smoking_allowed": false,
-        "city": "Cairo",
+        "governorate": "<governorate-uuid>",
+        "city": "<city-uuid>",
         "district": "Nasr City",
         "latitude": 30.0444,
         "longitude": 31.2357,
@@ -268,7 +281,7 @@ class PropertyDetailAPIView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         queryset = Property.objects.select_related(
-            "owner", "property_type"
+            "owner", "property_type", "governorate", "city", "city__governorate"
         ).prefetch_related("images")
         request_user = self.request.user
         if request_user.is_authenticated:
@@ -340,7 +353,7 @@ class MyPropertyListAPIView(generics.ListAPIView):
         )
         return (
             Property.objects.filter(owner=self.request.user)
-            .select_related("property_type")
+            .select_related("property_type", "governorate", "city")
             .annotate(
                 views_count=Coalesce(
                     Subquery(views_count_subquery, output_field=IntegerField()), 0
@@ -366,7 +379,7 @@ class PropertyUpdateAPIView(generics.UpdateAPIView):
     """
 
     queryset = (
-        Property.objects.select_related("owner", "property_type")
+        Property.objects.select_related("owner", "property_type", "governorate", "city")
         .prefetch_related("images")
         .all()
     )
@@ -387,7 +400,7 @@ class PropertyDeleteAPIView(generics.DestroyAPIView):
     """
 
     queryset = (
-        Property.objects.select_related("owner", "property_type")
+        Property.objects.select_related("owner", "property_type", "governorate", "city")
         .prefetch_related("images")
         .all()
     )

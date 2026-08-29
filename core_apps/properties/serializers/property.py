@@ -4,7 +4,8 @@ from rest_framework import serializers
 
 from core_apps.profiles.serializers import CloudinarySerializerField
 
-from ..models import Property, PropertyImage, PropertyType
+from ..models import City, Governorate, Property, PropertyImage, PropertyType
+from .location import CitySerializer, GovernorateSerializer, PublicUUIDRelatedField
 from ..services import PropertyService
 
 
@@ -98,7 +99,7 @@ class PropertyNewListSerializer(serializers.ModelSerializer):
         ]
 
     def get_location(self, obj: Property) -> str:
-        return f"{obj.district}, {obj.city}"
+        return f"{obj.district}, {obj.city.name}, {obj.governorate.name}"
 
     def get_tags(self, obj: Property) -> list[str]:
         # ? Map model flags to Arabic UI chip labels shown on the property card.
@@ -163,6 +164,8 @@ class PropertySerializer(serializers.ModelSerializer):
     property_type = serializers.SlugRelatedField(
         slug_field="slug", queryset=PropertyType.objects.all()
     )
+    governorate = PublicUUIDRelatedField(queryset=Governorate.objects.all())
+    city = PublicUUIDRelatedField(queryset=City.objects.all())
 
     class Meta:
         model = Property
@@ -185,7 +188,7 @@ class PropertySerializer(serializers.ModelSerializer):
             "rental_period",
             "suitable_for",
             "smoking_allowed",
-            "country",
+            "governorate",
             "city",
             "district",
             "latitude",
@@ -204,6 +207,19 @@ class PropertySerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
+        read_only_fields = ["id", "owner", "is_verified", "created_at", "updated_at"]
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        city = attrs.get("city", getattr(self.instance, "city", None))
+        governorate = attrs.get(
+            "governorate", getattr(self.instance, "governorate", None)
+        )
+        if city and governorate and city.governorate_id != governorate.pkid:
+            raise serializers.ValidationError(
+                {"city": "The selected city does not belong to this governorate."}
+            )
+        return attrs
 
     def create(self, validated_data):
         owner = validated_data.pop("owner", None) or self.context["request"].user
@@ -222,6 +238,8 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
     main_image = CloudinarySerializerField(read_only=True)
     owner = serializers.ReadOnlyField(source="owner.get_full_name")
     property_type = serializers.SlugRelatedField(slug_field="slug", read_only=True)
+    governorate = GovernorateSerializer(read_only=True)
+    city = CitySerializer(read_only=True)
     amenities = serializers.SerializerMethodField()
     is_fav = serializers.BooleanField(read_only=True)
     is_saved = serializers.BooleanField(read_only=True)
@@ -261,7 +279,7 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
             "rental_period",
             "suitable_for",
             "smoking_allowed",
-            "country",
+            "governorate",
             "city",
             "district",
             "latitude",

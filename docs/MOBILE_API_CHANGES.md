@@ -24,7 +24,7 @@ GET /api/v1/properties/available_places/?property_type_id=<property-type-uuid>
   "data": {
     "places": [
       {
-        "country": "Egypt",
+        "governorate": "Cairo",
         "city": "Cairo",
         "district": "Maadi"
       }
@@ -35,7 +35,7 @@ GET /api/v1/properties/available_places/?property_type_id=<property-type-uuid>
 
 The endpoint:
 
-- Returns distinct country, city, and district combinations.
+- Returns distinct governorate, city, and district combinations.
 - Does not return duplicate locations.
 - Returns `"places": []` when there are no matching properties.
 - Returns `400` when `property_type_id` is missing or invalid.

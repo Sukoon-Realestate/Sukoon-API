@@ -4,12 +4,15 @@ from core_apps.properties.models import Property, PropertyImage, PropertyVisit
 
 @pytest.mark.django_db
 class TestPropertyModel:
-    def test_create_property_defaults(self, user, apartment_type):
+    def test_create_property_defaults(
+        self, user, apartment_type, cairo_city, cairo_governorate
+    ):
         property_obj = Property.objects.create(
             owner=user,
             title="Apartment in Nasr City",
             price=15000.00,
-            city="Cairo",
+            city=cairo_city,
+            governorate=cairo_governorate,
             district="Nasr City",
             property_type=apartment_type,
         )
@@ -28,17 +31,20 @@ class TestPropertyModel:
         assert property_obj.rental_period == 1
         assert property_obj.suitable_for == Property.SuitableFor.ALL
         assert not property_obj.smoking_allowed
-        assert property_obj.country == "Egypt"
-        assert property_obj.city == "Cairo"
+        assert property_obj.city == cairo_city
+        assert property_obj.governorate == cairo_governorate
         assert property_obj.district == "Nasr City"
         assert str(property_obj) == "Apartment in Nasr City"
 
-    def test_create_property_with_main_image(self, user, apartment_type):
+    def test_create_property_with_main_image(
+        self, user, apartment_type, cairo_city, cairo_governorate
+    ):
         property_obj = Property.objects.create(
             owner=user,
             title="Apartment in Nasr City",
             price=15000.00,
-            city="Cairo",
+            city=cairo_city,
+            governorate=cairo_governorate,
             district="Nasr City",
             main_image="properties/main_images/living_room.jpg",
             space="120m",
@@ -47,12 +53,15 @@ class TestPropertyModel:
         assert property_obj.main_image == "properties/main_images/living_room.jpg"
         assert property_obj.space == "120m"
 
-    def test_create_property_image(self, user, apartment_type):
+    def test_create_property_image(
+        self, user, apartment_type, cairo_city, cairo_governorate
+    ):
         property_obj = Property.objects.create(
             owner=user,
             title="Apartment in Nasr City",
             price=15000.00,
-            city="Cairo",
+            city=cairo_city,
+            governorate=cairo_governorate,
             district="Nasr City",
             property_type=apartment_type,
         )
@@ -76,12 +85,15 @@ class TestPropertyModel:
         assert blank_image.name == ""
         assert blank_image.description == ""
 
-    def test_create_property_suitable_for_female_students(self, user, apartment_type):
+    def test_create_property_suitable_for_female_students(
+        self, user, apartment_type, cairo_city, cairo_governorate
+    ):
         property_obj = Property.objects.create(
             owner=user,
             title="Girls Housing",
             price=12000.00,
-            city="Cairo",
+            city=cairo_city,
+            governorate=cairo_governorate,
             district="Nasr City",
             suitable_for=Property.SuitableFor.FEMALE_STUDENTS,
             property_type=apartment_type,
@@ -92,12 +104,20 @@ class TestPropertyModel:
 
 @pytest.mark.django_db
 class TestPropertyVisitModel:
-    def test_create_property_visit_defaults(self, user, another_user, apartment_type):
+    def test_create_property_visit_defaults(
+        self,
+        user,
+        another_user,
+        apartment_type,
+        cairo_city,
+        cairo_governorate,
+    ):
         property_obj = Property.objects.create(
             owner=user,
             title="Apartment in Nasr City",
             price=15000.00,
-            city="Cairo",
+            city=cairo_city,
+            governorate=cairo_governorate,
             district="Nasr City",
             property_type=apartment_type,
         )

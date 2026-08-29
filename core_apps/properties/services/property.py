@@ -8,15 +8,23 @@ class PropertyService:
     @staticmethod
     def get_available_places(property_type):
         """Return distinct locations for approved properties of a given type."""
-        return list(
+        places = (
             Property.objects.filter(
                 property_type=property_type,
             )
             .filter(Q(status=Property.Status.VERIFIED) | Q(is_verified=True))
-            .values("country", "city", "district")
+            .values("governorate__name", "city__name", "district")
             .distinct()
-            .order_by("country", "city", "district")
+            .order_by("governorate__name", "city__name", "district")
         )
+        return [
+            {
+                "governorate": place["governorate__name"],
+                "city": place["city__name"],
+                "district": place["district"],
+            }
+            for place in places
+        ]
 
     @staticmethod
     @transaction.atomic

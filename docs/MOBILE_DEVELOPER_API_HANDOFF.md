@@ -57,12 +57,12 @@ GET {{base_url}}/api/v1/properties/available_places/?property_type_id=e9772fe6-3
   "data": {
     "places": [
       {
-        "country": "Egypt",
+        "governorate": "Cairo",
         "city": "Cairo",
         "district": "Maadi"
       },
       {
-        "country": "Egypt",
+        "governorate": "Cairo",
         "city": "Cairo",
         "district": "Nasr City"
       }
@@ -84,7 +84,7 @@ GET {{base_url}}/api/v1/properties/available_places/?property_type_id=e9772fe6-3
 An empty array means there are currently no approved properties of that type in
 an available location. It is not an API error.
 
-The endpoint returns distinct locations, so the same country/city/district
+The endpoint returns distinct locations, so the same governorate/city/district
 combination will not appear twice.
 
 Authentication is required.
