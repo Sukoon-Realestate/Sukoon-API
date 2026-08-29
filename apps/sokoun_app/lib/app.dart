@@ -13,7 +13,6 @@ import 'package:sokoun_app/features/owner/home/presentation/screens/owner_visit_
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_home_screen.dart';
 import 'package:sokoun_app/features/shared/notifications/presentation/screens/notifications_screen.dart';
 import 'package:sokoun_app/features/tenant/visits/imports.dart';
-import 'package:toastification/toastification.dart';
 import 'features/shared/auth/presentation/screens/register_flow_screen.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/screens/login_screen.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
@@ -25,6 +24,7 @@ import 'features/owner/home/presentation/screens/owner_add_property_flow_screen.
 import 'features/owner/home/presentation/screens/owner_listings_screen.dart';
 import 'features/tenant/home/presentation/screens/tenant_search_results_screen.dart';
 import 'features/splash_screen.dart';
+import 'package:toastification/toastification.dart';
 
 class Sokoon extends StatefulWidget {
   const Sokoon({super.key});
@@ -72,23 +72,14 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
               supportedLocales: context.supportedLocales,
               locale: context.locale,
               navigatorKey: Go.navigatorKey,
-              // home: FavoritesScreen(),
               home: SplashScreen(),
-              // builder: (context, child) {
-              //   return Overlay(
-              //     initialEntries: [
-              //       OverlayEntry(builder: (context) => Stack(
-              //         children: [
-              //           child!,
-              //           ZegoUIKitPrebuiltCallMiniOverlayPage(
-              //               contextQuery: () => Go.context
-              //           ),
-              //         ],
-              //       )),
-              //     ],
-              //   );
-              // },
-              // home: const ZegoUIKitPrebuiltCallMiniPopScope(child: SplashScreen()),
+              builder: (context, child) {
+                return Overlay(
+                  initialEntries: [
+                    OverlayEntry(builder: (context) => child!),
+                  ],
+                );
+              },
               navigatorObservers: [AppNavigationObserver.instance],
             ),
           ),

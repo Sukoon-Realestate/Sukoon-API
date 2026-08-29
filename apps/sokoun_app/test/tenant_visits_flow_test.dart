@@ -140,24 +140,53 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.text('احجز زيارة'), findsOneWidget);
+    final DateTime today = DateUtils.dateOnly(DateTime.now());
+    final BookVisitForm form = tester.widget<BookVisitForm>(
+      find.byType(BookVisitForm),
+    );
+    expect(form.days, hasLength(7));
+    expect(form.days.first.visitDate, _formatVisitDate(today));
+    for (int index = 0; index < form.days.length; index++) {
+      final DateTime expectedDate = DateTime(
+        today.year,
+        today.month,
+        today.day + index,
+      );
+      expect(form.days[index].visitDate, _formatVisitDate(expectedDate));
+    }
     expect(
       find.text('رقمك لن يُشارك مع المالك حتى تأكيد الزيارة'),
       findsOneWidget,
     );
 
-    final Finder lastDay = find.byKey(const ValueKey('visit-day-18'));
-    await tester.ensureVisible(lastDay);
+    final Finder todayChip = find.byKey(ValueKey('visit-day-${today.day}'));
+    await tester.ensureVisible(todayChip);
     await tester.pumpAndSettle();
-    await tester.tap(lastDay);
-    await tester.tap(find.text('3:00 م'));
-    await tester.pump();
+    await tester.tap(todayChip);
+    await tester.tap(find.byKey(const ValueKey('visit-time-picker')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(TimePickerDialog), findsOneWidget);
+    final BuildContext pickerContext = tester.element(
+      find.byType(TimePickerDialog),
+    );
+    final String okLabel = MaterialLocalizations.of(
+      pickerContext,
+    ).okButtonLabel;
+    await tester.tap(find.widgetWithText(TextButton, okLabel).last);
+    await tester.pumpAndSettle();
+
+    expect(find.text('2:00 PM'), findsOneWidget);
     await tester.tap(find.byKey(const ValueKey('visit-confirm-request')));
     await tester.pumpAndSettle();
 
     expect(find.byType(VisitConfirmedScreen), findsOneWidget);
     expect(find.text('تم إرسال طلب الزيارة!'), findsOneWidget);
-    expect(find.text('الثلاثاء 18 يونيو'), findsOneWidget);
-    expect(find.text('3:00 م'), findsOneWidget);
+    final VisitConfirmedScreen confirmedScreen = tester.widget(
+      find.byType(VisitConfirmedScreen),
+    );
+    expect(confirmedScreen.selectedDay.visitDate, _formatVisitDate(today));
+    expect(find.text('2:00 PM'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
     await tester.tap(find.byKey(const ValueKey('visit-follow-requests')));
@@ -180,6 +209,12 @@ void main() {
     expect(find.text('شقة مفروشة، مدينة نصر'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+}
+
+String _formatVisitDate(DateTime date) {
+  final String month = date.month.toString().padLeft(2, '0');
+  final String day = date.day.toString().padLeft(2, '0');
+  return '${date.year}-$month-$day';
 }
 
 class _CoreTranslationsAssetLoader extends AssetLoader {
@@ -260,6 +295,8 @@ class _CoreTranslationsAssetLoader extends AssetLoader {
       'tenant_visit_day_sunday': 'الأحد',
       'tenant_visit_day_monday': 'الاثنين',
       'tenant_visit_day_tuesday': 'الثلاثاء',
+      'tenant_visit_day_wednesday': 'الأربعاء',
+      'tenant_visit_day_thursday': 'الخميس',
       'tenant_visit_month_june': 'يونيو',
       'tenant_visit_time_ten_am': '10:00 ص',
       'tenant_visit_time_eleven_am': '11:00 ص',

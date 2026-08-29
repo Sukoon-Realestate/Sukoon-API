@@ -23,6 +23,7 @@ class AppPagify<T> extends StatefulWidget {
   final PagifyController<T> pagifyController;
   final FutureOr<void> Function(PagifyAsyncCallStatus)? onUpdateStatus;
   final bool shrinkWrap;
+  final Widget? emptyListView;
 
   /// Optional — provide all three together to enable offline cache support.
   final String? cacheKey;
@@ -38,6 +39,7 @@ class AppPagify<T> extends StatefulWidget {
     this.rankingType = Ranking.listView,
     this.onUpdateStatus,
     this.shrinkWrap = true,
+    this.emptyListView,
     this.cacheKey,
     this.cacheToJson,
     this.cacheFromJson,
@@ -76,7 +78,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
           physics: widget.physics,
           onUpdateStatus: widget.onUpdateStatus,
           shrinkWrap: widget.shrinkWrap,
-          emptyListView: Center(
+          emptyListView: widget.emptyListView ?? Center(
             child: Column(
               children: [
                 // Lottie.asset(Assets.lottie.notFound2.path),
@@ -129,7 +131,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
               AppText(LocaleKeys.notFound)
             ],
           ),
-          emptyListView: Column(
+          emptyListView: widget.emptyListView ?? Column(
             children: [
               Lottie.asset(Assets.lottie.notFound2.path),
               AppText(LocaleKeys.notFound)

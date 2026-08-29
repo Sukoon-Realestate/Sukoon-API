@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-
-import 'property_filter_options.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
 
 class FilterChipWrap extends StatelessWidget {
   const FilterChipWrap({
@@ -27,8 +26,8 @@ class FilterChipWrap extends StatelessWidget {
         for (final TenantFilterOption option in options)
           _FilterChip(
             label: option.label,
-            isSelected: selectedValues.contains(option.value),
-            onTap: () => onSelected(option.value),
+            isSelected: selectedValues.contains(option.selectionValue),
+            onTap: () => onSelected(option.selectionValue),
           ),
       ],
     );

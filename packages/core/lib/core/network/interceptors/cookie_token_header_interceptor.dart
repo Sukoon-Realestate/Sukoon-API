@@ -41,7 +41,7 @@ class CookieTokenHeaderInterceptor extends Interceptor {
     //   options.headers[HttpHeaders.authorizationHeader] = 'Bearer $accessToken';
     // }
 
-    options.headers[HttpHeaders.authorizationHeader] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg4MDExOTI3LCJpYXQiOjE3ODc5MjU1MjcsImp0aSI6IjdhNzdkNWU2ZGVmMjQ3NjE4ZjEyMWNjODdmNWZhZDAwIiwidXNlcl9pZCI6IjllZWY0MjAxLTBjYTQtNGZjMS1iOTFmLTllZjI3NTUxYzBlYSJ9.NIvqCZmp6RLPij9cR7Cafr9dsyh1kqQpiAEy4ZgiLIg';
+    options.headers[HttpHeaders.authorizationHeader] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg4MTA0NDk2LCJpYXQiOjE3ODgwMTgwOTYsImp0aSI6ImU5MGE3MTU2MzMxODQ5MWY4MDFiMWJiMTM4Y2VmM2Q5IiwidXNlcl9pZCI6IjllZWY0MjAxLTBjYTQtNGZjMS1iOTFmLTllZjI3NTUxYzBlYSJ9.7pb3D2K3vY0WUNDrMUegy4mkSop6d-8hYNxQTOS0ku0';
     if (options.path == ApiConstants.refreshToken) {
       final String? refreshToken = valueFor(refreshCookieName);
       if (refreshToken != null && refreshToken.isNotEmpty) {

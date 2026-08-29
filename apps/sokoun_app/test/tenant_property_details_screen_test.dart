@@ -4,12 +4,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
+import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
+import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:melos_core/core/widgets/exeption_view.dart';
+import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/imports.dart';
 import 'package:sokoun_app/shared_widgets/property_details_screen.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  late _PropertyDetailsRepository repository;
 
   const MethodChannel sharedPreferencesChannel = MethodChannel(
     'plugins.flutter.io/shared_preferences',
@@ -22,6 +28,16 @@ void main() {
         });
     await EasyLocalization.ensureInitialized();
   });
+
+  setUp(() async {
+    await injector.reset();
+    repository = _PropertyDetailsRepository();
+    injector.registerSingleton<BaseCrudUseCase>(
+      BaseCrudUseCase(repository: repository),
+    );
+  });
+
+  tearDown(() => injector.reset());
 
   tearDownAll(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -43,7 +59,7 @@ void main() {
             localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,
             locale: context.locale,
-            home: const PropertyDetailsScreen(),
+            home: const PropertyDetailsScreen(propertyId: 'property-id'),
           );
         },
       ),
@@ -61,6 +77,9 @@ void main() {
     expect(find.byType(TenantPropertyDetailsBody), findsOneWidget);
     expect(find.byType(TenantPropertyDetailsContentView), findsOneWidget);
     expect(find.byIcon(Icons.bookmark_border_rounded), findsOneWidget);
+    expect(repository.detailsCacheKey, 'property_details_property-id');
+    expect(repository.hasCacheDeserializer, isTrue);
+    expect(repository.hasCacheSerializer, isTrue);
     expect(tester.takeException(), isNull);
 
     await tester.tap(
@@ -86,6 +105,65 @@ void main() {
     expect(find.byType(TenantPropertyShareSheet), findsNothing);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('shows the exception view when no cached details exist', (
+    tester,
+  ) async {
+    repository.failDetailsRequest = true;
+    tester.view.physicalSize = const Size(360, 690);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(buildScreen());
+    await tester.pumpAndSettle();
+
+    expect(find.byType(TenantPropertyStatusView), findsOneWidget);
+    expect(find.byType(ExceptionView), findsOneWidget);
+    expect(find.byType(TenantPropertyDetailsBody), findsNothing);
+  });
+}
+
+class _PropertyDetailsRepository implements BaseRepository {
+  bool failDetailsRequest = false;
+  String? detailsCacheKey;
+  bool hasCacheDeserializer = false;
+  bool hasCacheSerializer = false;
+
+  @override
+  Future<Result<BaseModel<T>, Failure>> crudCall<T>(
+    CrudBaseParmas<T> params,
+  ) async {
+    if (params.httpRequestType == HttpRequestType.get) {
+      if (failDetailsRequest) {
+        return const Error(Failure('offline'));
+      }
+      detailsCacheKey = params.cacheKey;
+      hasCacheDeserializer = params.fromCacheJson != null;
+      hasCacheSerializer = params.toJson != null;
+      final T data = params.mapper!(const {
+        'id': 'property-id',
+        'owner': 'أحمد محمد إبراهيم',
+        'title': 'شقة مفروشة 3 غرف',
+        'property_type': 'apartment',
+        'district': 'مدينة نصر',
+        'city': {'name': 'القاهرة'},
+        'price': '6500',
+        'is_furnished': true,
+        'is_saved': false,
+      });
+      final Map<String, dynamic> cachedJson = params.toJson!(data);
+      final T restoredData = params.fromCacheJson!(cachedJson);
+      return Success(BaseModel<T>(key: '', msg: '', data: restoredData));
+    }
+
+    final T data = params.mapper!(null);
+    return Success(BaseModel<T>(key: '', msg: '', data: data));
+  }
+
+  @override
+  Future<Result<List<T>, Failure>> getBaseIdAndNameEntity<T extends BaseEntity>(
+    GetBaseEntityParams? param,
+  ) => throw UnimplementedError();
 }
 
 class _PropertyDetailsAssetLoader extends AssetLoader {

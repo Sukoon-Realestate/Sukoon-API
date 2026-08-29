@@ -25,7 +25,6 @@ class PropertySearchCubit extends AsyncCubit<PropertySearchResponseModel> {
           mapper: (json) => PropertySearchResponseModel.fromJson(json),
         ),
       ),
-      withInternetInterceptor: true,
     );
   }
 

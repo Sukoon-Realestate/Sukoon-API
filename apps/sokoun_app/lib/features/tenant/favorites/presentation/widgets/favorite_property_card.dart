@@ -3,8 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/widgets/image_widgets/cached_image.dart';
 import 'package:sokoun_app/features/tenant/favorites/data/models/favorites_content.dart';
+import 'package:sokoun_app/shared_widgets/property_details_screen.dart';
 
 class FavoritePropertyCard extends StatelessWidget {
   const FavoritePropertyCard({
@@ -18,67 +21,79 @@ class FavoritePropertyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(24.r),
-        border: Border.all(color: AppColors.sokoonBorder),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _FavoritePropertyImage(onRemove: onRemove, itemId: item.id),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AppText(
-                  item.title,
-                  color: AppColors.sokoonNavy,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w900,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                4.szH,
-                Row(
-                  textDirection: TextDirection.rtl,
-                  children: [
-                    Expanded(
-                      child: _FavoritePropertyMeta(
-                        rating: item.rating,
-                        area: item.area,
-                      ),
-                    ),
-                    8.szW,
-                    Flexible(
-                      child: AppText(
-                        '${item.price} ${LocaleKeys.favoritesCurrencyShort}',
-                        color: AppColors.sokoonTeal,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w900,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+    return GestureDetector(
+      onTap: () => Go.to(PropertyDetailsScreen(propertyId: item.id)),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(24.r),
+          border: Border.all(color: AppColors.sokoonBorder),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _FavoritePropertyImage(
+              onRemove: onRemove,
+              itemId: item.id,
+              imageUrl: item.mainImage,
             ),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AppText(
+                    item.title,
+                    color: AppColors.sokoonNavy,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w900,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  4.szH,
+                  Row(
+                    textDirection: TextDirection.rtl,
+                    children: [
+                      Expanded(
+                        child: _FavoritePropertyMeta(
+                          rating: item.ratingLabel,
+                          area: item.areaLabel,
+                        ),
+                      ),
+                      8.szW,
+                      Flexible(
+                        child: AppText(
+                          '${item.price} ${LocaleKeys.favoritesCurrencyShort}',
+                          color: AppColors.sokoonTeal,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w900,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class _FavoritePropertyImage extends StatelessWidget {
-  const _FavoritePropertyImage({required this.onRemove, required this.itemId});
+  const _FavoritePropertyImage({
+    required this.onRemove,
+    required this.itemId,
+    required this.imageUrl,
+  });
 
   final VoidCallback onRemove;
-  final int itemId;
+  final String itemId;
+  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -88,12 +103,14 @@ class _FavoritePropertyImage extends StatelessWidget {
         color: AppColors.grayBluePale,
         child: Stack(
           children: [
-            Center(
-              child: Icon(
-                Icons.apartment_rounded,
-                color: AppColors.blueGrayLight,
-                size: 28.r,
-              ),
+            Positioned.fill(
+              child: imageUrl.isEmpty
+                  ? _FavoriteImagePlaceholder()
+                  : CachedImage(
+                      url: imageUrl,
+                      fit: BoxFit.cover,
+                      placeHolder: const _FavoriteImagePlaceholder(),
+                    ),
             ),
             Positioned(
               top: 10.h,
@@ -123,6 +140,24 @@ class _FavoritePropertyImage extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FavoriteImagePlaceholder extends StatelessWidget {
+  const _FavoriteImagePlaceholder();
+
+  @override
+  Widget build(BuildContext context) {
+    return ColoredBox(
+      color: AppColors.grayBluePale,
+      child: Center(
+        child: Icon(
+          Icons.apartment_rounded,
+          color: AppColors.blueGrayLight,
+          size: 28.r,
         ),
       ),
     );

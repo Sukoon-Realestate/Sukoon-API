@@ -10,12 +10,14 @@ class PropertyDetailsCubit extends AsyncCubit<PropertyDetailsModel> {
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<PropertyDetailsModel>(
-          api: '${ApiConstants.properties}$id/',
+          api: ApiConstants.propertyDetails(id),
           httpRequestType: HttpRequestType.get,
+          cacheKey: 'property_details_$id',
           mapper: (json) => PropertyDetailsModel.fromJson(json),
+          fromCacheJson: PropertyDetailsModel.fromJson,
+          toJson: (model) => model.toJson(),
         ),
       ),
-      withInternetInterceptor: true,
     );
   }
 }

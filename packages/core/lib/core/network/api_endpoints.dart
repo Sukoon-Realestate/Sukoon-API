@@ -9,11 +9,27 @@ class ApiConstants {
   static const String homePage = 'homepage';
   static const String properties = 'properties/';
   static const String createProperty = 'properties/create/';
+  static const String availablePlaces = 'properties/available_places/';
+  static const String savedProperties = 'properties/saved/';
   static const String receivedPropertyVisits = 'properties/visits/received/';
   static const String ownedProperties = 'properties/owned/';
   static const String ownerDashboard = 'properties/owner/dashboard/';
-  static const String propertyTypes = 'properties/types';
+  static const String propertyTypes = 'properties/types/';
+  static const String propertyFilterOptions = 'properties/filter-options/';
+  static const String propertyGovernorates = 'properties/governorates/';
+  static const String propertyCities = 'properties/cities/';
   static const String visits = 'visits/';
+
+  static String propertyDetails(String propertyId) => '$properties$propertyId/';
+
+  static String saveProperty(String propertyId) =>
+      '$properties$propertyId/save/';
+
+  static String unsaveProperty(String propertyId) =>
+      '$properties$propertyId/unsave/';
+
+  static String propertyVisits(String propertyId) =>
+      '$properties$propertyId/$visits';
 
   // packages
   static const String getPackages = 'packages/';

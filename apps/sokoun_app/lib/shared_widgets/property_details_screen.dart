@@ -9,53 +9,78 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/exeption_view.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
-import 'package:sokoun_app/features/tenant/home/data/models/tenant_search_result_content.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_details_cubit.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_save_cubit.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_property_photos_screen.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/imports.dart';
 import 'package:sokoun_app/features/tenant/visits/imports.dart';
 
-class PropertyDetailsScreen extends StatefulWidget {
-  const PropertyDetailsScreen({super.key, this.item, this.propertyId});
+import 'property_details_body.dart';
 
-  final SearchResultContent? item;
-  final String? propertyId;
+class PropertyDetailsScreen extends StatefulWidget {
+  const PropertyDetailsScreen({super.key, required this.propertyId});
+
+  final String propertyId;
 
   @override
   State<PropertyDetailsScreen> createState() => _PropertyDetailsScreenState();
 }
 
 class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
-  late final PropertyDetailsCubit? _detailsCubit;
-  late final Future<void>? _detailsRequest;
-  late final TenantPropertyDetailsContent? _mockProperty;
-  bool _isSaved = false;
+  late final PropertyDetailsCubit _detailsCubit;
+  late final PropertySaveCubit _saveCubit;
+  late final Future<void> _detailsRequest;
+  bool? _savedOverride;
+  bool _isUpdatingSaved = false;
 
   @override
   void initState() {
     super.initState();
-    final String? propertyId = widget.propertyId;
-    if (propertyId != null) {
-      _mockProperty = null;
-      _detailsCubit = PropertyDetailsCubit();
-      _detailsRequest = _detailsCubit!.getPropertyDetails(propertyId);
-      return;
-    }
-
-    _detailsCubit = null;
-    _detailsRequest = null;
-    _mockProperty = TenantPropertyDetailsContent.fromSearchResult(
-      widget.item ?? TenantSearchResultContent.results.first,
-    );
+    _detailsCubit = PropertyDetailsCubit();
+    _saveCubit = PropertySaveCubit();
+    _detailsRequest = _detailsCubit.getPropertyDetails(widget.propertyId);
   }
 
   @override
   void dispose() {
-    _detailsCubit?.close();
+    _detailsCubit.close();
+    _saveCubit.close();
     super.dispose();
   }
 
-  void _toggleSaved() => setState(() => _isSaved = !_isSaved);
+  Future<void> _toggleSaved(TenantPropertyDetailsContent property) async {
+    if (_isUpdatingSaved) return;
+
+    final bool currentValue = _savedOverride ?? property.isSaved;
+    final bool nextValue = !currentValue;
+    final String propertyId = property.id.isEmpty
+        ? widget.propertyId
+        : property.id;
+
+    setState(() {
+      _savedOverride = nextValue;
+      _isUpdatingSaved = true;
+    });
+    void rollbackSavedState(String _) {
+      if (!mounted) return;
+      setState(() => _savedOverride = currentValue);
+    }
+
+    if (nextValue) {
+      await _saveCubit.saveProperty(
+        propertyId: propertyId,
+        onError: rollbackSavedState,
+      );
+    } else {
+      await _saveCubit.unsaveProperty(
+        propertyId: propertyId,
+        onError: rollbackSavedState,
+      );
+    }
+    if (!mounted) return;
+
+    setState(() => _isUpdatingSaved = false);
+  }
 
   void _openPhotos(TenantPropertyDetailsContent property, [int index = 0]) {
     Go.to(TenantPropertyPhotosScreen(property: property, initialIndex: index));
@@ -102,50 +127,40 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final PropertyDetailsCubit? cubit = _detailsCubit;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
           bottom: false,
-          child: cubit == null
-              ? _buildDetailsBody(_mockProperty!)
-              : BlocProvider<PropertyDetailsCubit>.value(
-                  value: cubit,
-                  child:
-                      StatusBuilder<
-                        PropertyDetailsCubit,
-                        PropertyDetailsModel
-                      >.withShimmer(
-                        initialDataForShimmer:
-                            const PropertyDetailsModel.initial(),
-                        requestToTryAgainWhenError: _detailsRequest!,
-                        builder: (data) => _buildDetailsBody(
-                          TenantPropertyDetailsContent.fromModel(data),
-                        ),
-                        errorType: ErrorType.customView,
-                        errorWidget: TenantPropertyStatusView(
-                          onBackPressed: Go.back,
-                          child: const ExceptionView(),
-                        ),
-                      ),
+          child: BlocProvider<PropertyDetailsCubit>.value(
+            value: _detailsCubit,
+            child:
+                StatusBuilder<
+                  PropertyDetailsCubit,
+                  PropertyDetailsModel
+                >.withShimmer(
+                  initialDataForShimmer: const PropertyDetailsModel.initial(),
+                  requestToTryAgainWhenError: _detailsRequest,
+                  builder: (data) => PropertyDetailsBody(
+                    property: TenantPropertyDetailsContent.fromModel(data),
+                    savedOverride: _savedOverride,
+                    onBackPressed: Go.back,
+                    onSharePressed: _showShareSheet,
+                    onSavedPressed: _toggleSaved,
+                    onPhotosPressed: _openPhotos,
+                    onLocationPressed: _openLocation,
+                    onBookVisitPressed: _openBookVisit,
+                  ),
+                  errorType: ErrorType.customView,
+                  errorWidget: TenantPropertyStatusView(
+                    onBackPressed: Go.back,
+                    child: const ExceptionView(),
+                  ),
                 ),
+          ),
         ),
       ),
-    );
-  }
-
-  Widget _buildDetailsBody(TenantPropertyDetailsContent property) {
-    return TenantPropertyDetailsBody(
-      property: property,
-      isSaved: _isSaved,
-      onBackPressed: Go.back,
-      onSharePressed: () => _showShareSheet(property),
-      onSavedPressed: _toggleSaved,
-      onPhotosPressed: (index) => _openPhotos(property, index),
-      onLocationPressed: () => _openLocation(property),
-      onBookVisitPressed: () => _openBookVisit(property),
     );
   }
 }

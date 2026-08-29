@@ -51,7 +51,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _userType = widget.userType ?? UserTypeHelper.instance.currentUserType;
-    _tabs = _userType.isOwner ? _buildOwnerTabs() : _buildTenantTabs();
+    // _tabs = _userType.isOwner ? _buildOwnerTabs() : _buildTenantTabs();
+    _tabs = _buildTenantTabs();
     WidgetsBinding.instance.addPostFrameCallback((_) => _showLaunchDialogs());
   }
 

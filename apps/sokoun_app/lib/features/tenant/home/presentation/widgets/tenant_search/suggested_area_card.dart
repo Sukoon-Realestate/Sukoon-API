@@ -3,17 +3,44 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:sokoun_app/features/tenant/home/data/models/tenant_search_content.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/available_places_model.dart';
 
 class SuggestedAreaCard extends StatelessWidget {
   const SuggestedAreaCard({
     super.key,
-    required this.area,
+    required this.place,
+    required this.styleIndex,
     this.isSelected = false,
     this.onTap,
   });
 
-  final SuggestedAreaContent area;
+  static const List<Color> _backgroundColors = [
+    AppColors.orangePale,
+    AppColors.bluePale,
+    AppColors.mintLight,
+    AppColors.grayBackground,
+    AppColors.redPale,
+    AppColors.greenPale,
+  ];
+  static const List<Color> _iconColors = [
+    AppColors.amber,
+    AppColors.blue,
+    AppColors.sokoonTeal,
+    AppColors.sokoonGray,
+    AppColors.red,
+    AppColors.green,
+  ];
+  static const List<IconData> _icons = [
+    Icons.location_city_outlined,
+    Icons.maps_home_work_outlined,
+    Icons.apartment_rounded,
+    Icons.account_balance_outlined,
+    Icons.park_outlined,
+    Icons.location_on_outlined,
+  ];
+
+  final AvailablePlaceModel place;
+  final int styleIndex;
   final bool isSelected;
   final VoidCallback? onTap;
 
@@ -26,7 +53,7 @@ class SuggestedAreaCard extends StatelessWidget {
         height: 86.h,
         padding: EdgeInsets.all(12.w),
         decoration: BoxDecoration(
-          color: area.backgroundColor,
+          color: _backgroundColors[styleIndex % _backgroundColors.length],
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
             color: isSelected ? AppColors.sokoonTeal : AppColors.transparent,
@@ -37,10 +64,14 @@ class SuggestedAreaCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(area.icon, color: area.iconColor, size: 18.r),
+            Icon(
+              _icons[styleIndex % _icons.length],
+              color: _iconColors[styleIndex % _iconColors.length],
+              size: 18.r,
+            ),
             7.szH,
             AppText(
-              area.title,
+              place.district,
               color: isSelected ? AppColors.sokoonTeal : AppColors.sokoonNavy,
               fontSize: 12.sp,
               fontWeight: FontWeight.w900,
@@ -50,7 +81,10 @@ class SuggestedAreaCard extends StatelessWidget {
             ),
             3.szH,
             AppText(
-              area.subtitle,
+              [
+                place.city,
+                place.country,
+              ].where((value) => value.isNotEmpty).join('، '),
               color: AppColors.sokoonGray,
               fontSize: 10.sp,
               fontWeight: FontWeight.w600,

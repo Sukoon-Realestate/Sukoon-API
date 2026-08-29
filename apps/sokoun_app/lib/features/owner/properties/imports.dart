@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:equatable/equatable.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
@@ -24,6 +25,7 @@ part 'data/models/owner_property_analytics_content.dart';
 part 'data/models/owner_property_content.dart';
 part 'data/models/owner_property_edit_result.dart';
 part 'data/models/owner_properties_response.dart';
+part 'data/models/owner_property_location_model.dart';
 part 'data/models/owner_revenue_content.dart';
 part 'data/owner_properties_data.dart';
 part 'presentation/screens/owner_edit_property_screen.dart';

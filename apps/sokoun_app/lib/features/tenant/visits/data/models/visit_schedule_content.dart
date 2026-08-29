@@ -1,6 +1,6 @@
 part of '../../imports.dart';
 
-class VisitDayContent {
+class VisitDayContent extends Equatable {
   const VisitDayContent({
     required this.weekday,
     required this.day,
@@ -8,15 +8,20 @@ class VisitDayContent {
     required this.visitDate,
   });
 
-  factory VisitDayContent.initial() =>
-      const VisitDayContent(weekday: '', day: '', month: '', visitDate: '');
+  const VisitDayContent.initial()
+    : weekday = '',
+      day = '',
+      month = '',
+      visitDate = '';
 
   factory VisitDayContent.fromJson(Map<String, dynamic> json) {
+    final String date = json['date'] as String? ?? '';
+    final List<String> dateParts = date.split('/');
     return VisitDayContent(
-      weekday: json['weekday'] ?? '',
-      day: json['day'] ?? '',
-      month: json['month'] ?? '',
-      visitDate: json['visit_date'] ?? '',
+      weekday: json['day'] as String? ?? json['weekday'] as String? ?? '',
+      day: dateParts.isNotEmpty ? dateParts.first : '',
+      month: dateParts.length > 1 ? dateParts[1] : '',
+      visitDate: json['visit_date'] as String? ?? '',
     );
   }
 
@@ -25,16 +30,37 @@ class VisitDayContent {
   final String month;
   final String visitDate;
 
-  String get fullLabel => '$weekday $day $month';
+  String get dateLabel =>
+      [day, month].where((part) => part.isNotEmpty).join('/');
 
-  Map<String, dynamic> toJson() {
-    return {
-      'weekday': weekday,
-      'day': day,
-      'month': month,
-      'visit_date': visitDate,
-    };
+  String get weekdayLabel {
+    switch (weekday.toLowerCase()) {
+      case 'friday':
+        return LocaleKeys.tenantVisitDayFriday;
+      case 'saturday':
+        return LocaleKeys.tenantVisitDaySaturday;
+      case 'sunday':
+        return LocaleKeys.tenantVisitDaySunday;
+      case 'monday':
+        return LocaleKeys.tenantVisitDayMonday;
+      case 'tuesday':
+        return LocaleKeys.tenantVisitDayTuesday;
+      case 'wednesday':
+        return LocaleKeys.tenantVisitDayWednesday;
+      case 'thursday':
+        return LocaleKeys.tenantVisitDayThursday;
+      default:
+        return weekday;
+    }
   }
+
+  String get fullLabel => '$weekdayLabel $day $month'.trim();
+
+  Map<String, dynamic> toJson() => {
+    'day': weekday,
+    'date': dateLabel,
+    'visit_date': visitDate,
+  };
 
   VisitDayContent copyWith({
     String? weekday,
@@ -49,23 +75,28 @@ class VisitDayContent {
       visitDate: visitDate ?? this.visitDate,
     );
   }
+
+  @override
+  List<Object?> get props => [weekday, day, month, visitDate];
 }
 
-class VisitTimeSlotContent {
+class VisitTimeSlotContent extends Equatable {
   const VisitTimeSlotContent({
     required this.label,
     required this.visitTime,
     this.isAvailable = true,
   });
 
-  factory VisitTimeSlotContent.initial() =>
-      const VisitTimeSlotContent(label: '', visitTime: '');
+  const VisitTimeSlotContent.initial()
+    : label = '',
+      visitTime = '',
+      isAvailable = true;
 
   factory VisitTimeSlotContent.fromJson(Map<String, dynamic> json) {
     return VisitTimeSlotContent(
-      label: json['label'] ?? '',
-      visitTime: json['visit_time'] ?? '',
-      isAvailable: json['is_available'] ?? true,
+      label: json['time'] as String? ?? json['label'] as String? ?? '',
+      visitTime: json['visit_time'] as String? ?? '',
+      isAvailable: json['is_available'] as bool? ?? false,
     );
   }
 
@@ -73,13 +104,11 @@ class VisitTimeSlotContent {
   final String visitTime;
   final bool isAvailable;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'label': label,
-      'visit_time': visitTime,
-      'is_available': isAvailable,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+    'time': label,
+    'visit_time': visitTime,
+    'is_available': isAvailable,
+  };
 
   VisitTimeSlotContent copyWith({
     String? label,
@@ -92,4 +121,7 @@ class VisitTimeSlotContent {
       isAvailable: isAvailable ?? this.isAvailable,
     );
   }
+
+  @override
+  List<Object?> get props => [label, visitTime, isAvailable];
 }

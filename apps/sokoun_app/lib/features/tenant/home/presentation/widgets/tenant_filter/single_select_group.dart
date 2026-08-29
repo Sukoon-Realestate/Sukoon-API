@@ -3,9 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
 
 import 'filter_chip_wrap.dart';
-import 'property_filter_options.dart';
 
 class SingleSelectGroup extends StatelessWidget {
   const SingleSelectGroup({

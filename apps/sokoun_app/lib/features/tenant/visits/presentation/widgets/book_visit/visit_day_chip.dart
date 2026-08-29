@@ -36,7 +36,7 @@ class VisitDayChip extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               AppText(
-                day.weekday,
+                day.weekdayLabel,
                 color: isSelected ? AppColors.white : AppColors.sokoonGray,
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w700,

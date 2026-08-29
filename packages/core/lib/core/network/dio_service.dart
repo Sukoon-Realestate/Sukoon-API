@@ -218,7 +218,7 @@ class DioService implements NetworkService {
     } on DioException catch (e) {
       _handleIncomingResponse(
         path: networkRequest.path,
-        response: e.response?.data,
+        response: e.response?.data ?? {'error' : e.toString()},
       );
       return _handleError(e);
     }

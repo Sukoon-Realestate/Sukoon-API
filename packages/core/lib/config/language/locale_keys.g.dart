@@ -2329,6 +2329,12 @@ abstract class LocaleKeys {
   static const String _tenantVisitChooseTime = 'tenant_visit_choose_time';
   static String get tenantVisitChooseTime => _tenantVisitChooseTime.tr();
 
+  static const String _tenantVisitNoAvailableDays = 'tenant_visit_no_available_days';
+  static String get tenantVisitNoAvailableDays => _tenantVisitNoAvailableDays.tr();
+
+  static const String _tenantVisitNoAvailableTimes = 'tenant_visit_no_available_times';
+  static String get tenantVisitNoAvailableTimes => _tenantVisitNoAvailableTimes.tr();
+
   static const String _tenantVisitNoteLabel = 'tenant_visit_note_label';
   static String get tenantVisitNoteLabel => _tenantVisitNoteLabel.tr();
 
@@ -2469,6 +2475,12 @@ abstract class LocaleKeys {
 
   static const String _tenantVisitDayTuesday = 'tenant_visit_day_tuesday';
   static String get tenantVisitDayTuesday => _tenantVisitDayTuesday.tr();
+
+  static const String _tenantVisitDayWednesday = 'tenant_visit_day_wednesday';
+  static String get tenantVisitDayWednesday => _tenantVisitDayWednesday.tr();
+
+  static const String _tenantVisitDayThursday = 'tenant_visit_day_thursday';
+  static String get tenantVisitDayThursday => _tenantVisitDayThursday.tr();
 
   static const String _tenantVisitMonthJune = 'tenant_visit_month_june';
   static String get tenantVisitMonthJune => _tenantVisitMonthJune.tr();
@@ -3133,6 +3145,12 @@ abstract class LocaleKeys {
   static const String _tenantSearchSuggestedAreas = 'tenant_search_suggested_areas';
   static String get tenantSearchSuggestedAreas => _tenantSearchSuggestedAreas.tr();
 
+  static const String _tenantSearchSelectPropertyType = 'tenant_search_select_property_type';
+  static String get tenantSearchSelectPropertyType => _tenantSearchSelectPropertyType.tr();
+
+  static const String _tenantSearchNoAvailablePlaces = 'tenant_search_no_available_places';
+  static String get tenantSearchNoAvailablePlaces => _tenantSearchNoAvailablePlaces.tr();
+
   static const String _tenantSearchRecentSearches = 'tenant_search_recent_searches';
   static String get tenantSearchRecentSearches => _tenantSearchRecentSearches.tr();
 
@@ -3351,6 +3369,12 @@ abstract class LocaleKeys {
 
   static const String _tenantFilterNaturalGas = 'tenant_filter_natural_gas';
   static String get tenantFilterNaturalGas => _tenantFilterNaturalGas.tr();
+
+  static const String _tenantFilterElectricityMeter = 'tenant_filter_electricity_meter';
+  static String get tenantFilterElectricityMeter => _tenantFilterElectricityMeter.tr();
+
+  static const String _tenantFilterWaterMeter = 'tenant_filter_water_meter';
+  static String get tenantFilterWaterMeter => _tenantFilterWaterMeter.tr();
 
   static const String _tenantFilterVerification = 'tenant_filter_verification';
   static String get tenantFilterVerification => _tenantFilterVerification.tr();

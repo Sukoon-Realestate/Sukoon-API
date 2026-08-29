@@ -13,10 +13,10 @@ class AppGoogleSignInButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultButton(
-      onTap: ()async{
+      onTap: () async {
         await GoogleSignService.instance.init();
         final String token = await GoogleSignService.instance.authorize();
-        if(token.isNotEmpty){
+        if (token.isNotEmpty) {
           onSuccess.call(token);
         }
       },

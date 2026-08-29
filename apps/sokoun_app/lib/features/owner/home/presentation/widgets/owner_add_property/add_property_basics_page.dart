@@ -5,9 +5,10 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
+import 'package:sokoun_app/features/owner/properties/imports.dart';
 
+import 'add_property_address_section.dart';
 import 'add_property_chip_wrap.dart';
-import 'add_property_dropdown_field.dart';
 import 'add_property_field.dart';
 import 'add_property_info_banner.dart';
 import 'add_property_section_card.dart';
@@ -25,10 +26,13 @@ class AddPropertyBasicsPage extends StatelessWidget {
     required this.floorController,
     required this.buildingYearController,
     required this.mapQueryController,
+    required this.selectedGovernorate,
+    required this.selectedCity,
+    required this.locationDropdownGeneration,
     required this.onPropertyTypeSelected,
     required this.onTitleChanged,
     required this.onGovernorateChanged,
-    required this.onDistrictChanged,
+    required this.onCityChanged,
     required this.onStreetChanged,
     required this.onBedroomsChanged,
     required this.onBathroomsChanged,
@@ -50,10 +54,13 @@ class AddPropertyBasicsPage extends StatelessWidget {
   final TextEditingController floorController;
   final TextEditingController buildingYearController;
   final TextEditingController mapQueryController;
+  final OwnerPropertyLocationModel? selectedGovernorate;
+  final OwnerPropertyLocationModel? selectedCity;
+  final int locationDropdownGeneration;
   final ValueChanged<String> onPropertyTypeSelected;
   final ValueChanged<String> onTitleChanged;
-  final ValueChanged<String> onGovernorateChanged;
-  final ValueChanged<String> onDistrictChanged;
+  final ValueChanged<OwnerPropertyLocationModel> onGovernorateChanged;
+  final ValueChanged<OwnerPropertyLocationModel> onCityChanged;
   final ValueChanged<String> onStreetChanged;
   final ValueChanged<String> onBedroomsChanged;
   final ValueChanged<String> onBathroomsChanged;
@@ -97,11 +104,13 @@ class AddPropertyBasicsPage extends StatelessWidget {
             hint: 'اكتب عنواناً واضحاً للعقار',
           ),
         ),
-        _AddressSection(
-          form: form,
+        AddPropertyAddressSection(
           streetController: streetController,
+          selectedGovernorate: selectedGovernorate,
+          selectedCity: selectedCity,
+          dropdownGeneration: locationDropdownGeneration,
           onGovernorateChanged: onGovernorateChanged,
-          onDistrictChanged: onDistrictChanged,
+          onCityChanged: onCityChanged,
           onStreetChanged: onStreetChanged,
         ),
         _DetailsSection(
@@ -123,61 +132,6 @@ class AddPropertyBasicsPage extends StatelessWidget {
           onLocationSelected: onLocationSelected,
         ),
       ],
-    );
-  }
-}
-
-class _AddressSection extends StatelessWidget {
-  const _AddressSection({
-    required this.form,
-    required this.streetController,
-    required this.onGovernorateChanged,
-    required this.onDistrictChanged,
-    required this.onStreetChanged,
-  });
-
-  final OwnerAddPropertyFormState form;
-  final TextEditingController streetController;
-  final ValueChanged<String> onGovernorateChanged;
-  final ValueChanged<String> onDistrictChanged;
-  final ValueChanged<String> onStreetChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final districts =
-        OwnerAddPropertyContent.districtOptionsByGovernorate[form
-            .governorate] ??
-        const <String>[];
-
-    return AddPropertySectionCard(
-      title: 'المنطقة والعنوان',
-      child: Column(
-        children: [
-          AddPropertyDropdownField(
-            label: 'المحافظة',
-            value: form.governorate,
-            items: OwnerAddPropertyContent.governorateOptions,
-            onChanged: onGovernorateChanged,
-          ),
-          10.szH,
-          AddPropertyDropdownField(
-            label: 'المنطقة',
-            value: form.district,
-            items: districts,
-            onChanged: onDistrictChanged,
-          ),
-          10.szH,
-          AddPropertyField(
-            field: const AddPropertyFieldContent(
-              label: 'الشارع',
-              value: 'اكتب اسم الشارع',
-            ),
-            controller: streetController,
-            onChanged: onStreetChanged,
-            hint: 'اكتب اسم الشارع',
-          ),
-        ],
-      ),
     );
   }
 }

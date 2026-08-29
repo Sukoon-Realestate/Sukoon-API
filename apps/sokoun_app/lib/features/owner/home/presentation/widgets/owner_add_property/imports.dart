@@ -1,4 +1,5 @@
 export 'add_property_basics_page.dart';
+export 'add_property_address_section.dart';
 export 'add_property_chip.dart';
 export 'add_property_chip_wrap.dart';
 export 'add_property_dropdown_field.dart';

@@ -38,10 +38,8 @@ class TenantPropertyDetailsBody extends StatelessWidget {
               children: [
                 TenantPropertyHeroGallery(
                   property: property,
-                  isSaved: isSaved,
                   onBackPressed: onBackPressed,
                   onSharePressed: onSharePressed,
-                  onSavedPressed: onSavedPressed,
                   onPhotosPressed: onPhotosPressed,
                 ),
                 TenantPropertyDetailsContentView(

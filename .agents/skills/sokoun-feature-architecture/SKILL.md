@@ -52,6 +52,28 @@ For remote state:
 - Always await `executeAsyncWithBaseModel`, enable the internet interceptor where appropriate, and keep navigation/snackbars in the presentation layer.
 - Dispose screen-owned Cubits and cancel Cubit subscriptions.
 
+### Offline-First Remote Reads
+
+Use the core cache pipeline for cacheable GET requests instead of adding mock-data or local-content branches to screens. Supply the complete cache contract on `CrudBaseParmas<T>`:
+
+```dart
+CrudBaseParmas<MyModel>(
+  api: ApiConstants.itemDetails(id),
+  httpRequestType: HttpRequestType.get,
+  cacheKey: 'item_details_$id',
+  mapper: (json) => MyModel.fromJson(json),
+  fromCacheJson: MyModel.fromJson,
+  toJson: (model) => model.toJson(),
+)
+```
+
+- Include every resource identity or query dimension in `cacheKey`; detail screens must not share one key across IDs.
+- Keep `fromJson` and `toJson` structurally symmetric so cached models deserialize exactly like API models.
+- The core repository requests fresh data first, persists successful responses, and restores cached data as a success when the request fails. `StatusBuilder` therefore renders cached content automatically; its exception view appears only when the request fails and no valid cache exists.
+- Do not add a mock fallback branch to hide request failures, and do not start a second request from `build`.
+- Do not cache POST, PUT, PATCH, or DELETE operations through this read-cache contract.
+- For `AppPagify`, provide `cacheKey`, `cacheToJson`, and `cacheFromJson` together. Use the same three arguments on API-backed `AppDropinity` widgets. Omit the entire cache configuration when any serializer is unavailable.
+
 ## Models and Data
 
 - Use typed immutable models rather than loose maps in presentation code.
@@ -87,6 +109,7 @@ Before handing off:
 
 1. Confirm data code does not import presentation code and widgets do not import screens.
 2. Confirm async requests are not started from `build` or a Cubit constructor.
-3. Confirm the screen is orchestration-focused and visual sections are separated.
-4. Run Dart formatting, focused analysis, relevant tests, and `git diff --check`.
-5. Summarize the resulting file structure and verification. Mention any intentionally omitted layer or unavailable backend/profile screen instead of adding a misleading placeholder.
+3. Confirm cacheable GETs use a stable key plus both serializers, and that screens rely on the cache result instead of mock fallback data.
+4. Confirm the screen is orchestration-focused and visual sections are separated.
+5. Run Dart formatting, focused analysis, relevant tests, and `git diff --check`.
+6. Summarize the resulting file structure and verification. Mention any intentionally omitted layer or unavailable backend/profile screen instead of adding a misleading placeholder.

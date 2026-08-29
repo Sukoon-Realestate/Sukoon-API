@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/helpers.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:sokoun_app/features/owner/properties/imports.dart';
 
 import '../../data/models/owner_add_property_content.dart';
 import '../cubits/create_property_cubit.dart';
@@ -24,6 +25,9 @@ class _OwnerAddPropertyFlowScreenState
   late final PageController _pageController;
   CreatePropertyCubit? _createPropertyCubit;
   late OwnerAddPropertyFormState _form;
+  OwnerPropertyLocationModel? _selectedGovernorate;
+  OwnerPropertyLocationModel? _selectedCity;
+  int _locationDropdownGeneration = 0;
   bool _isSubmitting = false;
 
   late final TextEditingController _titleController;
@@ -105,6 +109,9 @@ class _OwnerAddPropertyFlowScreenState
   void _resetFlow() {
     setState(() {
       _form = OwnerAddPropertyFormState.initial();
+      _selectedGovernorate = null;
+      _selectedCity = null;
+      _locationDropdownGeneration++;
       _syncControllers();
     });
     if (_pageController.hasClients) {
@@ -112,23 +119,26 @@ class _OwnerAddPropertyFlowScreenState
     }
   }
 
-  void _selectGovernorate(String governorate) {
+  void _selectGovernorate(OwnerPropertyLocationModel governorate) {
+    _selectedGovernorate = governorate;
+    _selectedCity = null;
     _updateForm(
       () => _form.copyWith(
-        governorate: governorate,
+        governorate: governorate.name,
         district: '',
-        mapQuery: governorate,
+        mapQuery: governorate.name,
         isLocationSelected: false,
       ),
     );
-    _mapQueryController.text = governorate;
+    _mapQueryController.text = governorate.name;
   }
 
-  void _selectDistrict(String district) {
-    final query = '$district، ${_form.governorate}';
+  void _selectCity(OwnerPropertyLocationModel city) {
+    _selectedCity = city;
+    final query = '${city.name}، ${_form.governorate}';
     _updateForm(
       () => _form.copyWith(
-        district: district,
+        district: city.name,
         mapQuery: query,
         isLocationSelected: false,
       ),
@@ -237,12 +247,15 @@ class _OwnerAddPropertyFlowScreenState
                 floorController: _floorController,
                 buildingYearController: _buildingYearController,
                 mapQueryController: _mapQueryController,
+                selectedGovernorate: _selectedGovernorate,
+                selectedCity: _selectedCity,
+                locationDropdownGeneration: _locationDropdownGeneration,
                 onPropertyTypeSelected: (value) =>
                     _updateForm(() => _form.copyWith(propertyType: value)),
                 onTitleChanged: (value) =>
                     _updateForm(() => _form.copyWith(title: value)),
                 onGovernorateChanged: _selectGovernorate,
-                onDistrictChanged: _selectDistrict,
+                onCityChanged: _selectCity,
                 onStreetChanged: (value) =>
                     _updateForm(() => _form.copyWith(street: value)),
                 onBedroomsChanged: (value) =>

@@ -15,7 +15,6 @@ class OwnerDashboardCubit extends AsyncCubit<OwnerDashboardModel> {
           mapper: (json) => OwnerDashboardModel.fromJson(json),
         ),
       ),
-      withInternetInterceptor: true,
     );
   }
 }

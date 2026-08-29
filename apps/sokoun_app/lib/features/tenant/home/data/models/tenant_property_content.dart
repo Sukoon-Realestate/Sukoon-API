@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 
 import 'property_details_model.dart';
-import 'tenant_search_result_content.dart';
 
 class TenantPropertyMetricContent {
   const TenantPropertyMetricContent({
@@ -39,6 +38,8 @@ class TenantPropertyDetailsContent {
     required this.reviewCount,
     required this.isVerified,
     required this.isFurnished,
+    required this.isFavorite,
+    required this.isSaved,
     required this.metrics,
     required this.description,
     required this.amenities,
@@ -52,90 +53,6 @@ class TenantPropertyDetailsContent {
     this.imageUrls = const [],
   });
 
-  factory TenantPropertyDetailsContent.fromSearchResult(
-    SearchResultContent item,
-  ) {
-    return TenantPropertyDetailsContent(
-      id: '',
-      title: item.title.contains('—')
-          ? item.title
-          : '${item.title} — ${item.district}',
-      propertyType: item.propertyType,
-      location: 'منطقة تقريبية · ${item.location}',
-      price: item.price,
-      rating: item.isVerified ? '4.9' : '4.8',
-      reviewCount: item.isVerified ? '31' : '24',
-      isVerified: item.isVerified,
-      isFurnished: item.tags.contains('مفروش') || item.title.contains('مفروش'),
-      metrics: [
-        TenantPropertyMetricContent(
-          icon: Icons.bed_outlined,
-          value: item.rooms.replaceAll(' غرف', '').replaceAll(' غرفة', ''),
-          label: 'غرف',
-        ),
-        TenantPropertyMetricContent(
-          icon: Icons.shower_outlined,
-          value: item.bathrooms.replaceAll(' حمام', ''),
-          label: 'حمام',
-        ),
-        TenantPropertyMetricContent(
-          icon: Icons.square_foot_outlined,
-          value: item.area.replaceAll('م²', ''),
-          label: 'م²',
-        ),
-        const TenantPropertyMetricContent(
-          icon: Icons.calendar_month_outlined,
-          value: '6',
-          label: 'شهور',
-        ),
-      ],
-      description:
-          'شقة مفروشة بالكامل في موقع حيوي وقريبة من الخدمات والمواصلات. مناسبة للسكن الهادئ وتحتوي على كل الأساسيات المطلوبة للإقامة الشهرية.',
-      amenities: item.amenities.isEmpty
-          ? item.tags
-          : [...item.amenities, ...item.tags],
-      photoLabels: const [
-        'واجهة العقار',
-        'غرفة النوم',
-        'صالة المعيشة',
-        'المطبخ',
-        'الحمام',
-        'البلكونة',
-        'مدخل العمارة',
-        'تفاصيل إضافية',
-        'إضاءة طبيعية',
-      ],
-      nearbyPlaces: const [
-        TenantNearbyPlaceContent(
-          icon: Icons.train_outlined,
-          title: 'مترو كلية البنات',
-          subtitle: '5 دقائق سير',
-        ),
-        TenantNearbyPlaceContent(
-          icon: Icons.store_mall_directory_outlined,
-          title: 'مول العرب',
-          subtitle: '10 دقائق سيارة',
-        ),
-        TenantNearbyPlaceContent(
-          icon: Icons.local_hospital_outlined,
-          title: 'مستشفى النزهة',
-          subtitle: '8 دقائق سيارة',
-        ),
-      ],
-      ownerName: 'أحمد محمد إبراهيم',
-      ownerMeta: 'مالك موثّق · 3 عقارات · 4.9 ★',
-      imageColors: [
-        item.imageColor,
-        AppColors.tealDark,
-        AppColors.tealMuted,
-        AppColors.sokoonTeal,
-        AppColors.tealDeep,
-      ],
-      latitude: '30.0444',
-      longitude: '31.2357',
-    );
-  }
-
   factory TenantPropertyDetailsContent.fromModel(PropertyDetailsModel model) {
     return TenantPropertyDetailsContent(
       id: model.id,
@@ -143,10 +60,12 @@ class TenantPropertyDetailsContent {
       propertyType: model.propertyTypeLabel,
       location: model.locationLabel,
       price: model.formattedPrice,
-      rating: '—',
+      rating: model.rating.toStringAsFixed(1),
       reviewCount: '0',
       isVerified: model.isVerified,
       isFurnished: model.isFurnished,
+      isFavorite: model.isFav,
+      isSaved: model.isSaved,
       metrics: [
         TenantPropertyMetricContent(
           icon: Icons.bed_outlined,
@@ -170,7 +89,7 @@ class TenantPropertyDetailsContent {
         ),
       ],
       description: model.description,
-      amenities: model.amenities,
+      amenities: model.amenityLabels,
       photoLabels: model.photoLabels,
       nearbyPlaces: const [],
       ownerName: model.owner,
@@ -191,6 +110,8 @@ class TenantPropertyDetailsContent {
   final String reviewCount;
   final bool isVerified;
   final bool isFurnished;
+  final bool isFavorite;
+  final bool isSaved;
   final List<TenantPropertyMetricContent> metrics;
   final String description;
   final List<String> amenities;

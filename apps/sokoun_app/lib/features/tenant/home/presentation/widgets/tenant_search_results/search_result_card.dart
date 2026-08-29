@@ -5,7 +5,8 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
-import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_filter/property_filter_options.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_filter/property_filter_label_resolver.dart';
 
 import 'amenity_row.dart';
 import 'details_button.dart';
@@ -13,19 +14,27 @@ import 'result_image_header.dart';
 import 'tags_row.dart';
 
 class SearchResultCard extends StatelessWidget {
-  const SearchResultCard({super.key, required this.item, this.onDetailsTap});
+  const SearchResultCard({
+    super.key,
+    required this.item,
+    required this.filterOptions,
+    this.onDetailsTap,
+  });
 
   final PropertyDetailsModel item;
+  final PropertyFilterOptionsModel filterOptions;
   final VoidCallback? onDetailsTap;
 
   @override
   Widget build(BuildContext context) {
+    final PropertyFilterLabelResolver labelResolver =
+        PropertyFilterLabelResolver(filterOptions);
     final List<String> tags = [
-      TenantPropertyFilterOptions.propertyTypeLabel(item.propertyType),
+      labelResolver.propertyTypeLabel(item.propertyType),
       if (item.suitableFor.isNotEmpty)
-        TenantPropertyFilterOptions.suitableForLabel(item.suitableFor),
+        labelResolver.suitableForLabel(item.suitableFor),
       if (item.isFurnished) LocaleKeys.tenantFilterFurnished,
-      ...TenantPropertyFilterOptions.amenityLabels(item).take(2),
+      ...labelResolver.amenityLabels(item).take(2),
     ].where((label) => label.isNotEmpty).toList(growable: false);
 
     return Container(
@@ -67,7 +76,7 @@ class SearchResultCard extends StatelessWidget {
                             ? '••••••••••••'
                             : [
                                 item.district,
-                                item.city,
+                                item.city.name,
                               ].where((value) => value.isNotEmpty).join(', '),
                         color: AppColors.sokoonGray,
                         fontSize: 12.sp,
@@ -91,7 +100,7 @@ class SearchResultCard extends StatelessWidget {
                     Row(
                       children: [
                         AppText(
-                          '${LocaleKeys.ownerRevenueCurrency}/${TenantPropertyFilterOptions.pricePeriodLabel(item.pricePeriod)}',
+                          '${LocaleKeys.ownerRevenueCurrency}/${labelResolver.pricePeriodLabel(item.pricePeriod)}',
                           color: AppColors.sokoonGray,
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w400,

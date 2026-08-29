@@ -144,6 +144,27 @@ void main() {
     expect(response.results.single.visitRequests, 1);
   });
 
+  test('maps governorate and city lookup responses', () {
+    final OwnerPropertyLocationsResponse response =
+        OwnerPropertyLocationsResponse.fromJson({
+          'results': [
+            {
+              'id': '704e0866-15d9-44ca-b0e6-0c846a00bc74',
+              'name': 'Cairo',
+              'slug': 'cairo',
+              'created_at': '2026-08-29T16:55:02.808007+03:00',
+              'updated_at': '2026-08-29T16:55:02.808007+03:00',
+            },
+          ],
+        });
+
+    expect(response.count, 1);
+    expect(response.results, hasLength(1));
+    expect(response.results.single.id, '704e0866-15d9-44ca-b0e6-0c846a00bc74');
+    expect(response.results.single.name, 'Cairo');
+    expect(response.results.single.slug, 'cairo');
+  });
+
   test('builds a real multipart create-property payload', () {
     final List<File> photos = List<File>.generate(
       10,
