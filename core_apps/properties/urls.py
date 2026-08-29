@@ -8,6 +8,7 @@ from .views import (
     PropertyCreateAPIView,
     PropertyDeleteAPIView,
     PropertyDetailAPIView,
+    PropertyFilterOptionsAPIView,
     PropertyImageDetailAPIView,
     PropertyImageUploadAPIView,
     PropertyListAPIView,
@@ -27,6 +28,11 @@ urlpatterns = [
     path("governorates/", GovernorateListAPIView.as_view(), name="governorate-list"),
     path("cities/", CityListAPIView.as_view(), name="city-list"),
     path("types/", PropertyTypeListAPIView.as_view(), name="property-type-list"),
+    path(
+        "filter-options/",
+        PropertyFilterOptionsAPIView.as_view(),
+        name="property-filter-options",
+    ),
     path(
         "available_places/",
         AvailablePlacesAPIView.as_view(),

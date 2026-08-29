@@ -77,6 +77,16 @@ class PropertyTypeListAPIView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
 
+class PropertyFilterOptionsAPIView(generics.GenericAPIView):
+    """Return all option values accepted by the property listing filters."""
+
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        return Response(PropertyService.get_filter_options())
+
+
 class AvailablePlacesAPIView(generics.GenericAPIView):
     """Return distinct locations with approved properties of the requested type."""
 

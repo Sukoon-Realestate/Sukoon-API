@@ -91,6 +91,50 @@ def _create_property(**kwargs):
 
 @pytest.mark.django_db
 class TestPropertyViews:
+    def test_property_filter_options_requires_authentication(self, api_client):
+        response = api_client.get(reverse("property-filter-options"))
+
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_property_filter_options_returns_all_supported_options(self, auth_client):
+        response = auth_client.get(reverse("property-filter-options"))
+
+        assert response.status_code == status.HTTP_200_OK
+        data = response.json()["data"]
+        assert set(data) == {
+            "property_types",
+            "ordering",
+            "bedrooms",
+            "bathrooms",
+            "price_periods",
+            "suitable_for",
+            "amenities",
+            "defaults",
+        }
+        apartment = next(
+            property_type
+            for property_type in data["property_types"]
+            if property_type["value"] == "apartment"
+        )
+        assert apartment["label"] == "شقة"
+        assert set(apartment) == {"id", "value", "label"}
+        assert data["ordering"][0] == {"value": "-created_at", "label": "الأحدث"}
+        assert data["bedrooms"] == "number"
+        assert data["bathrooms"] == "number"
+        assert {amenity["query_parameter"] for amenity in data["amenities"]} == {
+            "has_wifi",
+            "has_elevator",
+            "has_garage",
+            "has_security",
+            "has_balcony",
+            "has_air_conditioning",
+            "near_metro",
+            "has_natural_gas",
+            "has_electricity_meter",
+            "has_water_meter",
+        }
+        assert data["defaults"] == {"ordering": "-created_at"}
+
     def test_homepage_properties_public_and_queries_optimized(self, auth_client, user):
         for i in range(5):
             prop = _create_property(owner=user, title=f"Apartment {i}")

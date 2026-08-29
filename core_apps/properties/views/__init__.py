@@ -9,6 +9,7 @@ from .property import (
     PropertyCreateAPIView,
     PropertyDeleteAPIView,
     PropertyDetailAPIView,
+    PropertyFilterOptionsAPIView,
     PropertyImageDetailAPIView,
     PropertyImageUploadAPIView,
     PropertyListAPIView,

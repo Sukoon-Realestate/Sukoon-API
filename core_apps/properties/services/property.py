@@ -1,10 +1,109 @@
 from django.db import transaction
 from django.db.models import Q
 
-from ..models import Property, PropertyImage
+from ..models import Property, PropertyImage, PropertyType
 
 
 class PropertyService:
+    PROPERTY_TYPE_LABELS = {
+        "apartment": "شقة",
+        "house": "منزل",
+        "villa": "فيلا",
+        "studio": "استوديو",
+        "penthouse": "بنتهاوس",
+        "duplex": "دوبلكس",
+        "room": "غرفة",
+        "roof": "روف",
+    }
+
+    @staticmethod
+    def get_filter_options():
+        """Return the option catalog supported by the property list filters."""
+        property_types = PropertyType.objects.only("id", "name", "slug").order_by(
+            "name"
+        )
+        return {
+            "property_types": [
+                {
+                    "id": str(property_type.id),
+                    "value": property_type.slug,
+                    "label": PropertyService.PROPERTY_TYPE_LABELS.get(
+                        property_type.slug, property_type.name
+                    ),
+                }
+                for property_type in property_types
+            ],
+            "ordering": [
+                {"value": "-created_at", "label": "الأحدث"},
+                {"value": "created_at", "label": "الأقدم"},
+                {"value": "price", "label": "السعر الأقل"},
+                {"value": "-price", "label": "السعر الأعلى"},
+            ],
+            "bedrooms": "number",
+            "bathrooms": "number",
+            "price_periods": [
+                {"value": Property.PricePeriod.DAILY, "label": "يومي"},
+                {"value": Property.PricePeriod.WEEKLY, "label": "أسبوعي"},
+                {"value": Property.PricePeriod.MONTHLY, "label": "شهري"},
+                {"value": Property.PricePeriod.YEARLY, "label": "سنوي"},
+            ],
+            "suitable_for": [
+                {"value": Property.SuitableFor.FAMILIES, "label": "عائلات"},
+                {"value": Property.SuitableFor.SINGLES, "label": "أفراد"},
+                {"value": Property.SuitableFor.STUDENTS, "label": "طلاب"},
+                {
+                    "value": Property.SuitableFor.FEMALE_STUDENTS,
+                    "label": "طالبات فقط",
+                },
+                {"value": Property.SuitableFor.ALL, "label": "الكل"},
+            ],
+            "amenities": [
+                {"value": "wifi", "query_parameter": "has_wifi", "label": "واي فاي"},
+                {
+                    "value": "elevator",
+                    "query_parameter": "has_elevator",
+                    "label": "أسانسير",
+                },
+                {"value": "garage", "query_parameter": "has_garage", "label": "جراج"},
+                {
+                    "value": "security",
+                    "query_parameter": "has_security",
+                    "label": "حراسة",
+                },
+                {
+                    "value": "balcony",
+                    "query_parameter": "has_balcony",
+                    "label": "بلكونة",
+                },
+                {
+                    "value": "air_conditioning",
+                    "query_parameter": "has_air_conditioning",
+                    "label": "تكييف",
+                },
+                {
+                    "value": "near_metro",
+                    "query_parameter": "near_metro",
+                    "label": "قريب من المترو",
+                },
+                {
+                    "value": "natural_gas",
+                    "query_parameter": "has_natural_gas",
+                    "label": "غاز طبيعي",
+                },
+                {
+                    "value": "electricity_meter",
+                    "query_parameter": "has_electricity_meter",
+                    "label": "عداد كهرباء",
+                },
+                {
+                    "value": "water_meter",
+                    "query_parameter": "has_water_meter",
+                    "label": "عداد مياه",
+                },
+            ],
+            "defaults": {"ordering": "-created_at"},
+        }
+
     @staticmethod
     def get_available_places(property_type):
         """Return distinct locations for approved properties of a given type."""
