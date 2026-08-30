@@ -4,18 +4,23 @@ class OwnerRequestDetailsContent extends StatelessWidget {
   const OwnerRequestDetailsContent({
     super.key,
     required this.request,
+    required this.isAccepting,
+    required this.isRejecting,
     required this.onAcceptPressed,
     required this.onRejectPressed,
     required this.onChatPressed,
   });
 
   final OwnerVisitRequestContent request;
+  final bool isAccepting;
+  final bool isRejecting;
   final VoidCallback onAcceptPressed;
   final VoidCallback onRejectPressed;
   final VoidCallback onChatPressed;
 
   @override
   Widget build(BuildContext context) {
+    final bool isUpdating = isAccepting || isRejecting;
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 24.h),
       child: Column(
@@ -32,8 +37,11 @@ class OwnerRequestDetailsContent extends StatelessWidget {
           if (request.status.canDecide) ...[
             DefaultButton(
               key: const ValueKey('owner-request-accept'),
-              onTap: onAcceptPressed,
+              onTap: isUpdating ? null : onAcceptPressed,
               title: LocaleKeys.ownerVisitAcceptWithCheck,
+              customChild: isAccepting
+                  ? const _OwnerActionLoader(color: AppColors.white)
+                  : null,
               color: AppColors.green,
               textColor: AppColors.white,
               borderRadius: BorderRadius.circular(16.r),
@@ -44,8 +52,11 @@ class OwnerRequestDetailsContent extends StatelessWidget {
             12.szH,
             DefaultButton(
               key: const ValueKey('owner-request-reject'),
-              onTap: onRejectPressed,
+              onTap: isUpdating ? null : onRejectPressed,
               title: LocaleKeys.ownerVisitRejectRequest,
+              customChild: isRejecting
+                  ? const _OwnerActionLoader(color: AppColors.red)
+                  : null,
               color: AppColors.white,
               textColor: AppColors.red,
               borderColor: AppColors.red,
@@ -58,7 +69,7 @@ class OwnerRequestDetailsContent extends StatelessWidget {
           ],
           DefaultButton(
             key: const ValueKey('owner-request-open-chat'),
-            onTap: onChatPressed,
+            onTap: isUpdating ? null : onChatPressed,
             title: LocaleKeys.ownerVisitOpenChat,
             color: AppColors.bluePale,
             textColor: AppColors.blue,
@@ -69,6 +80,20 @@ class OwnerRequestDetailsContent extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _OwnerActionLoader extends StatelessWidget {
+  const _OwnerActionLoader({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.square(
+      dimension: 20.r,
+      child: CircularProgressIndicator(strokeWidth: 2, color: color),
     );
   }
 }

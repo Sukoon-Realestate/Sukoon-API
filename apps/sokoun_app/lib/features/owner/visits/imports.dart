@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
+import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
@@ -11,8 +15,10 @@ import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_thread
 import 'package:sokoun_app/features/visits/presentation/widgets/shared/visit_header.dart';
 
 part 'data/enums/owner_visit_request_state.dart';
+part 'data/enums/owner_visit_update_status.dart';
 part 'data/models/owner_visit_calendar_content.dart';
 part 'data/models/owner_visit_request_content.dart';
+part 'presentation/cubits/owner_visit_status_cubit.dart';
 part 'presentation/screens/owner_availability_screen.dart';
 part 'presentation/screens/owner_request_details_screen.dart';
 part 'presentation/screens/owner_requests_calendar_screen.dart';

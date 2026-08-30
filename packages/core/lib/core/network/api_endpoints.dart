@@ -32,6 +32,9 @@ class ApiConstants {
   static String propertyVisits(String propertyId) =>
       '$properties$propertyId/$visits';
 
+  static String propertyVisitDetails(String visitId) =>
+      '$tenantVisits$visitId/';
+
   // packages
   static const String getPackages = 'packages/';
   static const String individual = 'individual';

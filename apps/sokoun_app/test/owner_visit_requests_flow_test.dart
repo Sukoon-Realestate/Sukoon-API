@@ -4,7 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
+import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
+import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/owner/home/presentation/screens/owner_visit_requests_screen.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
 
@@ -14,6 +18,7 @@ void main() {
   const MethodChannel sharedPreferencesChannel = MethodChannel(
     'plugins.flutter.io/shared_preferences',
   );
+  late _RecordingBaseRepository repository;
 
   setUpAll(() async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -27,6 +32,16 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(sharedPreferencesChannel, null);
   });
+
+  setUp(() async {
+    await injector.reset();
+    repository = _RecordingBaseRepository();
+    injector.registerSingleton<BaseCrudUseCase>(
+      BaseCrudUseCase(repository: repository),
+    );
+  });
+
+  tearDown(() => injector.reset());
 
   Widget buildScreen(Widget screen) {
     return EasyLocalization(
@@ -129,6 +144,33 @@ void main() {
     expect(requests.single.name, 'Sara Ahmed');
     expect(requests.single.tenantNote, 'Please confirm');
     expect(requests.single.status, OwnerVisitRequestStatus.pending);
+    expect(
+      OwnerVisitRequestStatusExtension.fromName('confirmed'),
+      OwnerVisitRequestStatus.accepted,
+    );
+    expect(
+      OwnerVisitRequestStatusExtension.fromName('canceled'),
+      OwnerVisitRequestStatus.canceled,
+    );
+  });
+
+  test('updates a visit using the supported owner status contract', () async {
+    final OwnerVisitStatusCubit cubit = OwnerVisitStatusCubit();
+    addTearDown(cubit.close);
+
+    for (final OwnerVisitUpdateStatus status in OwnerVisitUpdateStatus.values) {
+      bool succeeded = false;
+      await cubit.updateVisitStatus(
+        visitId: 'visit-id',
+        status: status,
+        onSuccess: () => succeeded = true,
+      );
+
+      expect(repository.lastApi, 'properties/visits/visit-id/');
+      expect(repository.lastMethod, HttpRequestType.patch);
+      expect(repository.lastBody, {'status': status.name});
+      expect(succeeded, isTrue);
+    }
   });
 
   testWidgets('renders the O-REQ-ICON-B request card states', (tester) async {
@@ -199,6 +241,9 @@ void main() {
     expect(find.byType(OwnerVisitRequestsScreen), findsOneWidget);
     expect(find.text('تم قبول طلب الزيارة'), findsOneWidget);
     expect(find.text('تم القبول'), findsNWidgets(2));
+    expect(repository.lastApi, 'properties/visits/sara-nasr-city/');
+    expect(repository.lastMethod, HttpRequestType.patch);
+    expect(repository.lastBody, {'status': 'confirmed'});
     expect(tester.takeException(), isNull);
   });
 
@@ -235,6 +280,9 @@ void main() {
     expect(find.byType(OwnerVisitRequestsScreen), findsOneWidget);
     expect(find.text('تم رفض طلب الزيارة'), findsOneWidget);
     expect(find.text('تم الرفض'), findsOneWidget);
+    expect(repository.lastApi, 'properties/visits/sara-nasr-city/');
+    expect(repository.lastMethod, HttpRequestType.patch);
+    expect(repository.lastBody, {'status': 'rejected'});
     expect(tester.takeException(), isNull);
   });
 
@@ -277,6 +325,28 @@ void main() {
     expect(find.text('تم حفظ مواعيد الإتاحة'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+}
+
+class _RecordingBaseRepository implements BaseRepository {
+  String lastApi = '';
+  HttpRequestType? lastMethod;
+  Map<String, dynamic>? lastBody;
+
+  @override
+  Future<Result<BaseModel<T>, Failure>> crudCall<T>(
+    CrudBaseParmas<T> params,
+  ) async {
+    lastApi = params.api;
+    lastMethod = params.httpRequestType;
+    lastBody = params.body;
+    final T data = params.mapper!(null);
+    return Success(BaseModel<T>(key: '', msg: '', data: data));
+  }
+
+  @override
+  Future<Result<List<T>, Failure>> getBaseIdAndNameEntity<T extends BaseEntity>(
+    GetBaseEntityParams? param,
+  ) => throw UnimplementedError();
 }
 
 class _OwnerTranslationsAssetLoader extends AssetLoader {

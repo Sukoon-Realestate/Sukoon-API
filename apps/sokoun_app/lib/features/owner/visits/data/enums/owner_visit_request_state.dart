@@ -5,6 +5,7 @@ enum OwnerVisitRequestStatus {
   pending,
   accepted,
   rejected,
+  canceled,
   completed,
 }
 
@@ -13,6 +14,7 @@ extension OwnerVisitRequestStatusExtension on OwnerVisitRequestStatus {
   bool get isPending => this == OwnerVisitRequestStatus.pending;
   bool get isAccepted => this == OwnerVisitRequestStatus.accepted;
   bool get isRejected => this == OwnerVisitRequestStatus.rejected;
+  bool get isCanceled => this == OwnerVisitRequestStatus.canceled;
   bool get isCompleted => this == OwnerVisitRequestStatus.completed;
   bool get canDecide => isNewRequest || isPending;
 
@@ -23,9 +25,13 @@ extension OwnerVisitRequestStatusExtension on OwnerVisitRequestStatus {
       case 'requested':
         return OwnerVisitRequestStatus.newRequest;
       case 'accepted':
+      case 'confirmed':
         return OwnerVisitRequestStatus.accepted;
       case 'rejected':
         return OwnerVisitRequestStatus.rejected;
+      case 'canceled':
+      case 'cancelled':
+        return OwnerVisitRequestStatus.canceled;
       case 'completed':
         return OwnerVisitRequestStatus.completed;
       case 'pending':
@@ -46,6 +52,9 @@ extension OwnerVisitRequestStatusExtension on OwnerVisitRequestStatus {
     }
     if (isRejected) {
       return LocaleKeys.ownerVisitStatusRejected;
+    }
+    if (isCanceled) {
+      return LocaleKeys.cancelled;
     }
     return LocaleKeys.ownerVisitStatusCompleted;
   }

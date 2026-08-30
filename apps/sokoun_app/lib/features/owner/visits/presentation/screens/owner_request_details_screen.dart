@@ -1,9 +1,32 @@
 part of '../../imports.dart';
 
-class OwnerRequestDetailsScreen extends StatelessWidget {
+class OwnerRequestDetailsScreen extends StatefulWidget {
   const OwnerRequestDetailsScreen({super.key, required this.request});
 
   final OwnerVisitRequestContent request;
+
+  @override
+  State<OwnerRequestDetailsScreen> createState() =>
+      _OwnerRequestDetailsScreenState();
+}
+
+class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
+  late final OwnerVisitStatusCubit _visitStatusCubit;
+  OwnerVisitUpdateStatus? _pendingStatus;
+
+  OwnerVisitRequestContent get request => widget.request;
+
+  @override
+  void initState() {
+    super.initState();
+    _visitStatusCubit = OwnerVisitStatusCubit();
+  }
+
+  @override
+  void dispose() {
+    _visitStatusCubit.close();
+    super.dispose();
+  }
 
   Future<void> _acceptRequest(BuildContext context) async {
     final bool? confirmed = await showModalBottomSheet<bool>(
@@ -16,7 +39,10 @@ class OwnerRequestDetailsScreen extends StatelessWidget {
     );
 
     if (confirmed == true && context.mounted) {
-      Go.back(OwnerRequestResolution.accepted);
+      await _updateVisitStatus(
+        status: OwnerVisitUpdateStatus.confirmed,
+        resolution: OwnerRequestResolution.accepted,
+      );
     }
   }
 
@@ -32,8 +58,26 @@ class OwnerRequestDetailsScreen extends StatelessWidget {
         );
 
     if (reason != null && context.mounted) {
-      Go.back(OwnerRequestResolution.rejected);
+      await _updateVisitStatus(
+        status: OwnerVisitUpdateStatus.rejected,
+        resolution: OwnerRequestResolution.rejected,
+      );
     }
+  }
+
+  Future<void> _updateVisitStatus({
+    required OwnerVisitUpdateStatus status,
+    required OwnerRequestResolution resolution,
+  }) async {
+    if (_visitStatusCubit.isLoading) return;
+    setState(() => _pendingStatus = status);
+    await _visitStatusCubit.updateVisitStatus(
+      visitId: request.id,
+      status: status,
+      onSuccess: () {
+        if (mounted) Go.back(resolution);
+      },
+    );
   }
 
   void _openChat() {
@@ -55,29 +99,47 @@ class OwnerRequestDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: Column(
-            children: [
-              VisitHeader(
-                title: LocaleKeys.ownerRequestDetailsTitle,
-                backKey: const ValueKey('owner-request-details-back'),
-                onBackPressed: () => Go.back(),
-              ),
-              Expanded(
-                child: OwnerRequestDetailsContent(
-                  request: request,
-                  onAcceptPressed: () => _acceptRequest(context),
-                  onRejectPressed: () => _rejectRequest(context),
-                  onChatPressed: _openChat,
+    return BlocProvider<OwnerVisitStatusCubit>.value(
+      value: _visitStatusCubit,
+      child: BlocBuilder<OwnerVisitStatusCubit, AsyncState<bool>>(
+        builder: (context, state) {
+          final bool isUpdating = state.isLoading;
+          return PopScope(
+            canPop: !isUpdating,
+            child: Directionality(
+              textDirection: TextDirection.rtl,
+              child: Scaffold(
+                backgroundColor: AppColors.scaffoldBackground,
+                body: SafeArea(
+                  child: Column(
+                    children: [
+                      VisitHeader(
+                        title: LocaleKeys.ownerRequestDetailsTitle,
+                        backKey: const ValueKey('owner-request-details-back'),
+                        onBackPressed: isUpdating ? () {} : () => Go.back(),
+                      ),
+                      Expanded(
+                        child: OwnerRequestDetailsContent(
+                          request: request,
+                          isAccepting:
+                              isUpdating &&
+                              _pendingStatus ==
+                                  OwnerVisitUpdateStatus.confirmed,
+                          isRejecting:
+                              isUpdating &&
+                              _pendingStatus == OwnerVisitUpdateStatus.rejected,
+                          onAcceptPressed: () => _acceptRequest(context),
+                          onRejectPressed: () => _rejectRequest(context),
+                          onChatPressed: _openChat,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
