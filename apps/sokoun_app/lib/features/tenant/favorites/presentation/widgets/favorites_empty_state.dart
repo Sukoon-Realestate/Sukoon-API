@@ -4,14 +4,24 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/widgets/buttons/default_button.dart';
+import 'package:melos_core/generated/assets.dart';
 
 class FavoritesEmptyState extends StatelessWidget {
-  const FavoritesEmptyState({super.key, required this.onBrowseTap});
+  const FavoritesEmptyState({
+    super.key,
+    required this.onBrowseTap,
+    this.isFiltered = false,
+    this.onClearFiltersTap,
+  });
 
   final VoidCallback onBrowseTap;
+  final bool isFiltered;
+  final VoidCallback? onClearFiltersTap;
 
   @override
   Widget build(BuildContext context) {
+    final bool reduceMotion = MediaQuery.of(context).disableAnimations;
     return Center(
       child: SingleChildScrollView(
         padding: EdgeInsets.symmetric(
@@ -21,23 +31,21 @@ class FavoritesEmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 82.r,
-              height: 82.r,
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                color: AppColors.tealAlpha07,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.favorite_border_rounded,
-                color: AppColors.sokoonTeal,
-                size: 36.r,
+            ExcludeSemantics(
+              child: Assets.lottie.emptyBox.lottie(
+                width: 136.r,
+                height: 112.r,
+                animate: !reduceMotion,
+                repeat: false,
+                fit: BoxFit.contain,
+                package: 'melos_core',
               ),
             ),
-            AppSize.sH16.szH,
+            AppSize.sH8.szH,
             AppText(
-              LocaleKeys.favoritesEmptyTitle,
+              isFiltered
+                  ? LocaleKeys.tenantSearchResultsEmptyTitle
+                  : LocaleKeys.favoritesEmptyTitle,
               color: AppColors.sokoonNavy,
               fontSize: FontSize.s18,
               fontWeight: FontWeight.w900,
@@ -45,7 +53,9 @@ class FavoritesEmptyState extends StatelessWidget {
             ),
             AppSize.sH8.szH,
             AppText(
-              LocaleKeys.favoritesEmptyDescription,
+              isFiltered
+                  ? LocaleKeys.tenantSearchResultsEmptyDescription
+                  : LocaleKeys.favoritesEmptyDescription,
               color: AppColors.sokoonGray,
               fontSize: FontSize.s13,
               fontWeight: FontWeight.w500,
@@ -54,26 +64,20 @@ class FavoritesEmptyState extends StatelessWidget {
               maxLines: 3,
             ),
             AppSize.sH20.szH,
-            GestureDetector(
-              onTap: onBrowseTap,
-              behavior: HitTestBehavior.opaque,
-              child: Container(
-                height: AppSize.sH45,
-                padding: EdgeInsets.symmetric(horizontal: AppPadding.pW20),
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: AppColors.sokoonTeal,
-                  borderRadius: BorderRadius.circular(AppCircular.r12),
-                ),
-                child: AppText(
-                  LocaleKeys.favoritesBrowseProperties,
-                  color: AppColors.white,
-                  fontSize: FontSize.s14,
-                  fontWeight: FontWeight.w800,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
+            DefaultButton(
+              onTap: isFiltered
+                  ? (onClearFiltersTap ?? onBrowseTap)
+                  : onBrowseTap,
+              title: isFiltered
+                  ? LocaleKeys.tenantSearchResultsResetSearch
+                  : LocaleKeys.favoritesBrowseProperties,
+              color: AppColors.sokoonTeal,
+              textColor: AppColors.white,
+              borderRadius: BorderRadius.circular(AppCircular.r12),
+              height: AppSize.sH45,
+              width: double.infinity,
+              fontSize: FontSize.s14,
+              fontWeight: FontWeight.w800,
             ),
           ],
         ),

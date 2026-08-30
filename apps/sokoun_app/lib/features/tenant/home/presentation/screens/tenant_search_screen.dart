@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
-import 'package:melos_core/core/helpers/status_builder.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
-import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/available_places_model.dart';
-import 'package:sokoun_app/features/tenant/home/data/models/property_types_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_search_model.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/property_types_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_search_content.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/cubits/available_places_cubit.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_types_cubit.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/cubits/tenant_recent_searches_cubit.dart';
 
 import '../widgets/tenant_search/imports.dart';
+import 'tenant_filter_screen.dart';
 import 'tenant_search_results_screen.dart';
 
 class TenantSearchScreen extends StatefulWidget {
@@ -24,31 +23,46 @@ class TenantSearchScreen extends StatefulWidget {
 }
 
 class _TenantSearchScreenState extends State<TenantSearchScreen> {
-  static const String _initialQuery = 'مدينة نصر، القاهرة';
-
   late TenantSearchFormState _form;
+  late PropertySearchFilters _filters;
   late final TextEditingController _searchController;
+  late final PropertyTypesCubit _propertyTypesCubit;
+  late final Future<void> _propertyTypesRequest;
   late final AvailablePlacesCubit _availablePlacesCubit;
+  late final TenantRecentSearchesCubit _recentSearchesCubit;
   Future<void>? _availablePlacesRequest;
 
   @override
   void initState() {
     super.initState();
-    _form = TenantSearchFormState.initial();
-    _searchController = TextEditingController(text: _initialQuery);
+    _form = const TenantSearchFormState.initial();
+    _searchController = TextEditingController(
+      text: LocaleKeys.tenantSearchInitialQuery,
+    );
+    _filters = PropertySearchFilters.initial(search: _searchController.text);
+    _propertyTypesCubit = PropertyTypesCubit();
+    _propertyTypesRequest = _propertyTypesCubit.getPropertyTypes();
     _availablePlacesCubit = AvailablePlacesCubit();
+    _recentSearchesCubit = TenantRecentSearchesCubit();
+    _recentSearchesCubit.loadRecentSearches();
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _propertyTypesCubit.close();
     _availablePlacesCubit.close();
+    _recentSearchesCubit.close();
     super.dispose();
   }
 
-  void _clearSelectedArea(String _) {
-    if (_form.selectedArea == null) return;
-    setState(() => _form = _form.copyWith(clearSelectedArea: true));
+  void _updateQuery(String value) {
+    setState(() {
+      _filters = _filters.copyWith(search: value, page: 1);
+      if (_form.selectedArea != null) {
+        _form = _form.copyWith(clearSelectedArea: true);
+      }
+    });
   }
 
   void _selectCategory(PropertyTypeModel propertyType) {
@@ -60,6 +74,7 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
         selectedCategory: propertyType.slug,
         clearSelectedArea: true,
       );
+      _filters = _filters.copyWith(propertyType: propertyType.slug, page: 1);
       _availablePlacesRequest = request;
     });
   }
@@ -67,45 +82,10 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
   void _selectArea(AvailablePlaceModel area) {
     final String query = area.searchQuery;
     _searchController.text = query;
-    setState(() => _form = _form.copyWith(selectedArea: query));
-  }
-
-  Widget _buildAvailablePlaces() {
-    final Future<void>? request = _availablePlacesRequest;
-    if (request == null) {
-      return AppText(
-        LocaleKeys.tenantSearchSelectPropertyType,
-        color: AppColors.sokoonMuted,
-        fontSize: 12.sp,
-        textAlign: TextAlign.right,
-      );
-    }
-
-    return BlocProvider<AvailablePlacesCubit>.value(
-      value: _availablePlacesCubit,
-      child:
-          StatusBuilder<AvailablePlacesCubit, AvailablePlacesModel>.withShimmer(
-            initialDataForShimmer: const AvailablePlacesModel.initial(),
-            requestToTryAgainWhenError: request,
-            errorType: ErrorType.defaultView,
-            builder: (data) {
-              if (data.places.isEmpty) {
-                return AppText(
-                  LocaleKeys.tenantSearchNoAvailablePlaces,
-                  color: AppColors.sokoonMuted,
-                  fontSize: 12.sp,
-                  textAlign: TextAlign.right,
-                );
-              }
-
-              return SuggestedAreasGrid(
-                places: data.places,
-                selectedArea: _form.selectedArea,
-                onAreaSelected: _selectArea,
-              );
-            },
-          ),
-    );
+    setState(() {
+      _form = _form.copyWith(selectedArea: query);
+      _filters = _filters.copyWith(search: query, page: 1);
+    });
   }
 
   Future<void> _selectRecent(RecentSearchContent search) async {
@@ -122,66 +102,81 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
       return;
     }
 
-    final TenantSearchFormState updatedForm = _form.withRecentSearch(query);
-    setState(() => _form = updatedForm);
-    await TenantSearchContent.saveRecentSearches(updatedForm.recentSearches);
+    await _recentSearchesCubit.addRecentSearch(query);
     if (!mounted) {
       return;
     }
 
     await Go.to(
       TenantSearchResultsScreen(
-        initialFilters: PropertySearchFilters.initial(
+        initialFilters: _filters.copyWith(
           search: query,
-          propertyType: updatedForm.selectedCategory,
+          propertyType: _form.selectedCategory,
+          page: 1,
         ),
       ),
     );
   }
 
+  Future<void> _openFilters() async {
+    await Go.to<void>(
+      TenantFilterScreen(
+        initialFilters: _filters.copyWith(
+          search: _searchController.text.trim(),
+          propertyType: _form.selectedCategory,
+          page: 1,
+        ),
+        onFiltersApplied: _applyFilters,
+      ),
+    );
+  }
+
+  Future<void> _applyFilters(PropertySearchFilters filters) async {
+    if (!mounted) return;
+    _searchController.text = filters.search;
+    setState(() {
+      _filters = filters;
+      _form = _form.copyWith(
+        selectedCategory: filters.propertyType,
+        clearSelectedArea: true,
+      );
+    });
+    if (filters.search.isNotEmpty) {
+      await _recentSearchesCubit.addRecentSearch(filters.search);
+    }
+    if (!mounted) return;
+    await Go.to(TenantSearchResultsScreen(initialFilters: filters));
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              AppText(
-                LocaleKeys.tenantSearchTitle,
-                color: AppColors.sokoonNavy,
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w900,
-                textAlign: TextAlign.right,
-              ),
-              14.szH,
-              TenantSearchField(
-                controller: _searchController,
-                onChanged: _clearSelectedArea,
-                onSubmitted: (value) => _submitSearch(value),
-                onSearchTap: () => _submitSearch(),
-              ),
-              14.szH,
-              SearchCategoryChips(
-                selectedCategory: _form.selectedCategory,
-                onCategorySelected: _selectCategory,
-              ),
-              18.szH,
-              SearchSectionTitle(LocaleKeys.tenantSearchSuggestedAreas),
-              10.szH,
-              _buildAvailablePlaces(),
-              18.szH,
-              SearchSectionTitle(LocaleKeys.tenantSearchRecentSearches),
-              6.szH,
-              for (final search in _form.recentSearches)
-                RecentSearchRow(
-                  search: search,
-                  onTap: () => _selectRecent(search),
-                ),
-              24.szH,
-            ],
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<PropertyTypesCubit>.value(value: _propertyTypesCubit),
+        BlocProvider<AvailablePlacesCubit>.value(value: _availablePlacesCubit),
+        BlocProvider<TenantRecentSearchesCubit>.value(
+          value: _recentSearchesCubit,
+        ),
+      ],
+      child: BlocBuilder<TenantRecentSearchesCubit, List<RecentSearchContent>>(
+        builder: (context, recentSearches) => Scaffold(
+          backgroundColor: AppColors.scaffoldBackground,
+          body: SafeArea(
+            child: TenantSearchContentView(
+              searchController: _searchController,
+              form: _form,
+              recentSearches: recentSearches,
+              propertyTypesRequest: _propertyTypesRequest,
+              availablePlacesRequest: _availablePlacesRequest,
+              onQueryChanged: _updateQuery,
+              onQuerySubmitted: _submitSearch,
+              onSearchPressed: _submitSearch,
+              onCategorySelected: _selectCategory,
+              onAreaSelected: _selectArea,
+              onRecentSearchSelected: _selectRecent,
+              onFiltersPressed: _openFilters,
+              activeFilterCount: _filters.activeCount,
+            ),
           ),
         ),
       ),

@@ -8,6 +8,24 @@ class PropertySearchFilterEntry extends Equatable {
 
   const PropertySearchFilterEntry({required this.id, required this.value});
 
+  const PropertySearchFilterEntry.initial() : id = '', value = '';
+
+  factory PropertySearchFilterEntry.fromJson(Map<String, dynamic> json) {
+    return PropertySearchFilterEntry(
+      id: json['id'] as String? ?? '',
+      value: json['value'] as String? ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() => {'id': id, 'value': value};
+
+  PropertySearchFilterEntry copyWith({String? id, String? value}) {
+    return PropertySearchFilterEntry(
+      id: id ?? this.id,
+      value: value ?? this.value,
+    );
+  }
+
   @override
   List<Object?> get props => [id, value];
 }
@@ -71,6 +89,30 @@ class PropertySearchFilters extends Equatable {
     this.amenities = const {},
   });
 
+  factory PropertySearchFilters.fromJson(Map<String, dynamic> json) {
+    return PropertySearchFilters(
+      search: json['search'] as String? ?? '',
+      city: json['city'] as String? ?? '',
+      district: json['district'] as String? ?? '',
+      ordering: json['ordering'] as String? ?? '-created_at',
+      page: (json['page'] as num?)?.toInt() ?? 1,
+      pageSize: (json['page_size'] as num?)?.toInt() ?? 10,
+      priceMin: json['price_min'] as String? ?? '',
+      priceMax: json['price_max'] as String? ?? '',
+      propertyType: json['property_type'] as String? ?? '',
+      pricePeriod: json['price_period'] as String? ?? '',
+      suitableFor: json['suitable_for'] as String? ?? '',
+      isFurnished: json['is_furnished'] as String? ?? '',
+      isVerified: json['is_verified'] as String? ?? '',
+      smokingAllowed: json['smoking_allowed'] as String? ?? '',
+      bedrooms: json['bedrooms'] as String? ?? '',
+      bathrooms: json['bathrooms'] as String? ?? '',
+      amenities: (json['amenities'] as List? ?? const [])
+          .map((item) => item.toString())
+          .toSet(),
+    );
+  }
+
   String get combinedSearch => [
     search.trim(),
     city.trim(),
@@ -78,6 +120,19 @@ class PropertySearchFilters extends Equatable {
   ].where((value) => value.isNotEmpty).toSet().join(' ');
 
   int get activeCount => activeFilters.length;
+
+  String get cacheKey {
+    final Map<String, dynamic> cacheDimensions = toQueryParameters()
+      ..remove('page');
+    final List<String> keys = cacheDimensions.keys.toList()..sort();
+    final String identity = keys
+        .map(
+          (key) =>
+              '${Uri.encodeQueryComponent(key)}=${Uri.encodeQueryComponent(cacheDimensions[key].toString())}',
+        )
+        .join('&');
+    return 'property_search_$identity';
+  }
 
   List<PropertySearchFilterEntry> get activeFilters => [
     if (city.trim().isNotEmpty)
@@ -139,6 +194,26 @@ class PropertySearchFilters extends Equatable {
     }
     return queryParameters;
   }
+
+  Map<String, dynamic> toJson() => {
+    'search': search,
+    'city': city,
+    'district': district,
+    'ordering': ordering,
+    'page': page,
+    'page_size': pageSize,
+    'price_min': priceMin,
+    'price_max': priceMax,
+    'property_type': propertyType,
+    'price_period': pricePeriod,
+    'suitable_for': suitableFor,
+    'is_furnished': isFurnished,
+    'is_verified': isVerified,
+    'smoking_allowed': smokingAllowed,
+    'bedrooms': bedrooms,
+    'bathrooms': bathrooms,
+    'amenities': amenities.toList(growable: false)..sort(),
+  };
 
   PropertySearchFilters removeFilter(String id) {
     final Set<String> updatedAmenities = Set<String>.from(amenities)

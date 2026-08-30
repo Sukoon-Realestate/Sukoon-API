@@ -29,6 +29,8 @@ class VisitDetailsScreen extends StatelessWidget {
                   visit: visit,
                   onOpenChatPressed: _openChat,
                   onCancelVisitPressed: () => Go.back(true),
+                  onFindAlternativePressed: () =>
+                      Go.to(const TenantSearchScreen()),
                 ),
               ),
             ],

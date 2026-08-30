@@ -4,39 +4,41 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/widgets/buttons/default_button.dart';
+import 'package:melos_core/generated/assets.dart';
 
 class EmptyResultsState extends StatelessWidget {
-  const EmptyResultsState({super.key});
+  const EmptyResultsState({super.key, required this.onResetSearchPressed});
+
+  final VoidCallback onResetSearchPressed;
 
   @override
   Widget build(BuildContext context) {
+    final bool reduceMotion = MediaQuery.of(context).disableAnimations;
     return Center(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 28.w),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 20.h),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 78.r,
-              height: 78.r,
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                color: AppColors.tealAlpha07,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.search_off_rounded,
-                color: AppColors.sokoonTeal,
-                size: 34.r,
+            ExcludeSemantics(
+              child: Assets.lottie.notFound1.lottie(
+                width: 132.r,
+                height: 112.r,
+                animate: !reduceMotion,
+                repeat: false,
+                fit: BoxFit.contain,
+                package: 'melos_core',
               ),
             ),
-            14.szH,
+            8.szH,
             AppText(
               LocaleKeys.tenantSearchResultsEmptyTitle,
               color: AppColors.sokoonNavy,
               fontSize: 17.sp,
               fontWeight: FontWeight.w900,
               textAlign: TextAlign.center,
+              maxLines: 2,
             ),
             6.szH,
             AppText(
@@ -45,6 +47,20 @@ class EmptyResultsState extends StatelessWidget {
               fontSize: 13.sp,
               fontWeight: FontWeight.w500,
               textAlign: TextAlign.center,
+              maxLines: 3,
+            ),
+            18.szH,
+            DefaultButton(
+              key: const ValueKey('tenant-search-empty-reset'),
+              onTap: onResetSearchPressed,
+              title: LocaleKeys.tenantSearchResultsResetSearch,
+              color: AppColors.sokoonTeal,
+              textColor: AppColors.white,
+              borderRadius: BorderRadius.circular(12.r),
+              height: 45.h,
+              width: double.infinity,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w800,
             ),
           ],
         ),

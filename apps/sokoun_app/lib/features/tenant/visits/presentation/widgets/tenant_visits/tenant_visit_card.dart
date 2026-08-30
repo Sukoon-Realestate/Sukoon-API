@@ -71,14 +71,16 @@ class TenantVisitCard extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        3.szH,
-                        AppText(
-                          '${LocaleKeys.tenantVisitOwnerLabel} ${visit.ownerName}',
-                          color: AppColors.sokoonGray,
-                          fontSize: 12.sp,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                        if (visit.ownerName.isNotEmpty) ...[
+                          3.szH,
+                          AppText(
+                            '${LocaleKeys.tenantVisitOwnerLabel} ${visit.ownerName}',
+                            color: AppColors.sokoonGray,
+                            fontSize: 12.sp,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -93,7 +95,7 @@ class TenantVisitCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(999.r),
                     ),
                     child: AppText(
-                      visit.status.label,
+                      visit.resolvedStatusText,
                       color: _statusColor,
                       fontSize: 11.sp,
                       fontWeight: FontWeight.w900,

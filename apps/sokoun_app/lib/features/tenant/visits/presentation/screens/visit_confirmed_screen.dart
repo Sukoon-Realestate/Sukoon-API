@@ -24,7 +24,7 @@ class VisitConfirmedScreen extends StatelessWidget {
             selectedDay: selectedDay,
             selectedTime: selectedTime,
             onFollowRequestsPressed: () => Go.off(const TenantVisitsScreen()),
-            onBackToSearchPressed: () => Go.offAll(const TenantSearchScreen()),
+            onBackToSearchPressed: () => Go.off(const TenantSearchScreen()),
           ),
         ),
       ),

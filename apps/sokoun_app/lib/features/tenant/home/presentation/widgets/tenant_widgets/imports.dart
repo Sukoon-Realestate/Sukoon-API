@@ -6,4 +6,5 @@ export 'tenant_header.dart';
 export 'tenant_property_card.dart';
 export 'tenant_visit_banner.dart';
 export 'suggested_properties_section.dart';
+export 'tenant_suggested_properties_empty_state.dart';
 export 'tenant_home_content.dart';

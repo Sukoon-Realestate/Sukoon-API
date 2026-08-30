@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/status_builder.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -43,9 +41,6 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
         .toList(growable: false);
   }
 
-  int _pendingCount(List<OwnerVisitRequestContent> requests) =>
-      requests.where((request) => request.status.canDecide).length;
-
   @override
   void initState() {
     super.initState();
@@ -64,13 +59,6 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
   void dispose() {
     _receivedVisitsCubit?.close();
     super.dispose();
-  }
-
-  int _countForFilter(
-    List<OwnerVisitRequestContent> requests,
-    OwnerVisitRequestFilter filter,
-  ) {
-    return requests.where((request) => filter.accepts(request.status)).length;
   }
 
   void _selectFilter(OwnerVisitRequestFilter filter) {
@@ -189,6 +177,7 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
               OwnerVisitRequestContent.initial(),
             ),
             requestToTryAgainWhenError: _receivedVisitsRequest!,
+            errorType: ErrorType.defaultView,
             emptyView: _buildScreen(const []),
             builder: _buildScreen,
           ),
@@ -205,65 +194,17 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
       child: Scaffold(
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              OwnerVisitRequestsTopBar(
-                onBackPressed: widget.showBackButton ? () => Go.back() : null,
-                onCalendarPressed: () =>
-                    Go.to(const OwnerRequestsCalendarScreen()),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 14.h),
-                decoration: const BoxDecoration(
-                  color: AppColors.white,
-                  border: Border(bottom: BorderSide(color: AppColors.grayPale)),
-                ),
-                child: Column(
-                  children: [
-                    OwnerVisitRequestSummaryGrid(
-                      totalCount: requests.length,
-                      pendingCount: _pendingCount(requests),
-                    ),
-                    12.szH,
-                    OwnerVisitRequestFilters(
-                      filters: OwnerVisitRequestFilter.values,
-                      selectedFilter: _selectedFilter,
-                      countForFilter: (filter) =>
-                          _countForFilter(requests, filter),
-                      onFilterSelected: _selectFilter,
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: visibleRequests.isEmpty
-                    ? Center(
-                        child: AppText(
-                          LocaleKeys.ownerVisitsNoRequests,
-                          color: AppColors.sokoonGray,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      )
-                    : ListView.separated(
-                        padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 20.h),
-                        itemBuilder: (context, index) {
-                          final OwnerVisitRequestContent request =
-                              visibleRequests[index];
-                          return OwnerVisitRequestCard(
-                            request: request,
-                            onPressed: () => _openDetails(request),
-                            onChatPressed: () => _openChat(request),
-                            onAcceptPressed: () => _acceptRequest(request),
-                            onRejectPressed: () => _rejectRequest(request),
-                          );
-                        },
-                        separatorBuilder: (context, index) => 12.szH,
-                        itemCount: visibleRequests.length,
-                      ),
-              ),
-            ],
+          child: OwnerVisitRequestsContent(
+            requests: requests,
+            visibleRequests: visibleRequests,
+            selectedFilter: _selectedFilter,
+            onBackPressed: widget.showBackButton ? () => Go.back() : null,
+            onCalendarPressed: () => Go.to(const OwnerRequestsCalendarScreen()),
+            onFilterSelected: _selectFilter,
+            onRequestPressed: _openDetails,
+            onChatPressed: _openChat,
+            onAcceptPressed: _acceptRequest,
+            onRejectPressed: _rejectRequest,
           ),
         ),
       ),

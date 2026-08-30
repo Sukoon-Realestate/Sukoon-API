@@ -12,8 +12,11 @@ class AvailablePlacesCubit extends AsyncCubit<AvailablePlacesModel> {
         CrudBaseParmas<AvailablePlacesModel>(
           api: ApiConstants.availablePlaces,
           httpRequestType: HttpRequestType.get,
+          cacheKey: 'available_places_$propertyTypeId',
           queryParameters: {'property_type_id': propertyTypeId},
           mapper: (json) => AvailablePlacesModel.fromJson(json),
+          fromCacheJson: AvailablePlacesModel.fromJson,
+          toJson: (model) => model.toJson(),
         ),
       ),
     );

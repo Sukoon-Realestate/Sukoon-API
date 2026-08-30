@@ -1,5 +1,9 @@
+export 'available_places_section.dart';
 export 'recent_search_row.dart';
 export 'search_category_chips.dart';
+export 'search_options_empty_state.dart';
+export 'search_property_types_section.dart';
 export 'search_section_title.dart';
 export 'suggested_areas_grid.dart';
+export 'tenant_search_content.dart';
 export 'tenant_search_field.dart';

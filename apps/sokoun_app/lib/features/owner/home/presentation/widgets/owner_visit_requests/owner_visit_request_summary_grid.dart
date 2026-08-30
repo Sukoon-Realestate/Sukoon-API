@@ -18,7 +18,7 @@ class OwnerVisitRequestSummaryGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      textDirection: TextDirection.ltr,
+      textDirection: TextDirection.rtl,
       children: [
         Expanded(
           child: _SummaryCard(

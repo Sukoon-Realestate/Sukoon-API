@@ -86,5 +86,24 @@ void main() {
         'Wi-Fi',
       );
     });
+
+    test('builds stable pagination cache keys from every search dimension', () {
+      const PropertySearchFilters firstPage = PropertySearchFilters.initial(
+        search: 'Nasr City',
+        propertyType: 'apartment',
+        amenities: {'has_wifi', 'has_elevator'},
+      );
+      final PropertySearchFilters laterPage = firstPage.copyWith(page: 3);
+      final PropertySearchFilters reorderedAmenities = firstPage.copyWith(
+        amenities: {'has_elevator', 'has_wifi'},
+      );
+      final PropertySearchFilters differentType = firstPage.copyWith(
+        propertyType: 'studio',
+      );
+
+      expect(laterPage.cacheKey, firstPage.cacheKey);
+      expect(reorderedAmenities.cacheKey, firstPage.cacheKey);
+      expect(differentType.cacheKey, isNot(firstPage.cacheKey));
+    });
   });
 }

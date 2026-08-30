@@ -24,11 +24,11 @@ class OwnerVisitRequestsTopBar extends StatelessWidget {
         border: Border(bottom: BorderSide(color: AppColors.grayPale)),
       ),
       child: Row(
-        textDirection: TextDirection.ltr,
+        textDirection: TextDirection.rtl,
         children: [
           SizedBox(
-            width: 40.r,
-            height: 40.r,
+            width: 36.r,
+            height: 36.r,
             child: onBackPressed == null
                 ? null
                 : IconButton(
@@ -38,13 +38,13 @@ class OwnerVisitRequestsTopBar extends StatelessWidget {
                     style: IconButton.styleFrom(
                       backgroundColor: AppColors.grayBackground,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.r),
+                        borderRadius: BorderRadius.circular(999.r),
                       ),
                     ),
                     icon: Icon(
-                      Icons.chevron_left_rounded,
+                      Icons.chevron_right_rounded,
                       color: AppColors.sokoonNavy,
-                      size: 22.r,
+                      size: 20.r,
                     ),
                   ),
           ),
@@ -53,25 +53,32 @@ class OwnerVisitRequestsTopBar extends StatelessWidget {
             LocaleKeys.ownerVisitsTitle,
             color: AppColors.sokoonNavy,
             fontSize: 16.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
             textAlign: TextAlign.center,
           ),
           const Spacer(),
-          IconButton(
-            key: const ValueKey('owner-open-calendar'),
-            onPressed: onCalendarPressed,
-            tooltip: LocaleKeys.ownerCalendarTitle,
-            visualDensity: VisualDensity.compact,
-            style: IconButton.styleFrom(
-              backgroundColor: AppColors.goldPale,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.r),
+          SizedBox.square(
+            dimension: 36.r,
+            child: IconButton(
+              key: const ValueKey('owner-open-calendar'),
+              onPressed: onCalendarPressed,
+              tooltip: LocaleKeys.ownerCalendarTitle,
+              padding: EdgeInsets.zero,
+              visualDensity: VisualDensity.compact,
+              style: IconButton.styleFrom(
+                minimumSize: Size.square(36.r),
+                maximumSize: Size.square(36.r),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                backgroundColor: AppColors.goldPale,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
               ),
-            ),
-            icon: Icon(
-              Icons.calendar_month_outlined,
-              color: AppColors.gold,
-              size: 20.r,
+              icon: Icon(
+                Icons.calendar_month_outlined,
+                color: AppColors.gold,
+                size: 20.r,
+              ),
             ),
           ),
         ],

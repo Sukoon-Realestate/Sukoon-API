@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:sokoun_app/features/tenant/home/data/models/tenant_search_content.dart';
 
 class SearchChip extends StatelessWidget {
-  const SearchChip({super.key, required this.category, this.onTap});
+  const SearchChip({
+    super.key,
+    required this.label,
+    required this.isSelected,
+    this.onTap,
+  });
 
-  final SearchCategoryContent category;
+  final String label;
+  final bool isSelected;
   final VoidCallback? onTap;
 
   @override
@@ -20,17 +25,15 @@ class SearchChip extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: category.isSelected ? AppColors.sokoonTeal : AppColors.white,
+          color: isSelected ? AppColors.sokoonTeal : AppColors.white,
           borderRadius: BorderRadius.circular(999.r),
           border: Border.all(
-            color: category.isSelected
-                ? AppColors.sokoonTeal
-                : AppColors.sokoonBorder,
+            color: isSelected ? AppColors.sokoonTeal : AppColors.sokoonBorder,
           ),
         ),
         child: AppText(
-          category.label,
-          color: category.isSelected ? AppColors.white : AppColors.sokoonNavy,
+          label,
+          color: isSelected ? AppColors.white : AppColors.sokoonNavy,
           fontSize: 12.sp,
           fontWeight: FontWeight.w800,
         ),

@@ -11,6 +11,7 @@ class ApiConstants {
   static const String createProperty = 'properties/create/';
   static const String availablePlaces = 'properties/available_places/';
   static const String savedProperties = 'properties/saved/';
+  static const String tenantVisits = 'properties/visits/';
   static const String receivedPropertyVisits = 'properties/visits/received/';
   static const String ownedProperties = 'properties/owned/';
   static const String ownerDashboard = 'properties/owner/dashboard/';

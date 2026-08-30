@@ -12,7 +12,14 @@ class ReceivedVisitsCubit extends AsyncCubit<List<OwnerVisitRequestContent>> {
         CrudBaseParmas<List<OwnerVisitRequestContent>>(
           api: ApiConstants.receivedPropertyVisits,
           httpRequestType: HttpRequestType.get,
+          cacheKey: 'owner_received_visits',
           mapper: OwnerVisitRequestContent.listFromResponse,
+          fromCacheJson: OwnerVisitRequestContent.listFromResponse,
+          toJson: (requests) => {
+            'items': requests
+                .map((request) => request.toJson())
+                .toList(growable: false),
+          },
         ),
       ),
       withInternetInterceptor: true,

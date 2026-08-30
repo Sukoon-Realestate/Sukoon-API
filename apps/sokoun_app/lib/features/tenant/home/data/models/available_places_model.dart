@@ -3,7 +3,12 @@ import 'package:equatable/equatable.dart';
 class AvailablePlacesModel extends Equatable {
   const AvailablePlacesModel({required this.places});
 
-  const AvailablePlacesModel.initial() : places = const [];
+  const AvailablePlacesModel.initial()
+    : places = const [
+        AvailablePlaceModel.initial(),
+        AvailablePlaceModel.initial(),
+        AvailablePlaceModel.initial(),
+      ];
 
   factory AvailablePlacesModel.fromJson(Map<String, dynamic> json) {
     return AvailablePlacesModel(

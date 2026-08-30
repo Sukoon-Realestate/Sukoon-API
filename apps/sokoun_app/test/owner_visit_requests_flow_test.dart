@@ -131,6 +131,35 @@ void main() {
     expect(requests.single.status, OwnerVisitRequestStatus.pending);
   });
 
+  testWidgets('renders the O-REQ-ICON-B request card states', (tester) async {
+    configurePhoneViewport(tester);
+
+    await tester.pumpWidget(
+      buildScreen(
+        OwnerVisitRequestsScreen(initialRequests: ownerVisitRequestsFixture()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('owner-request-card-sara-nasr-city')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('owner-request-card-mohamed-jeddah')),
+      findsOneWidget,
+    );
+    expect(
+      find.byKey(const ValueKey('owner-request-chat-sara-nasr-city')),
+      findsOneWidget,
+    );
+    expect(find.text('السبت 15 يونيو · 3:00 م'), findsOneWidget);
+    expect(find.text('تم القبول'), findsOneWidget);
+    expect(find.text('قبول'), findsNWidgets(2));
+    expect(find.text('رفض'), findsNWidgets(2));
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('opens O-REQ-02 and completes the O-ACCEPT flow', (tester) async {
     configurePhoneViewport(tester);
 

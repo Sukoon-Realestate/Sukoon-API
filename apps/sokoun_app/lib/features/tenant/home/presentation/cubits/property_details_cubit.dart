@@ -18,6 +18,7 @@ class PropertyDetailsCubit extends AsyncCubit<PropertyDetailsModel> {
           toJson: (model) => model.toJson(),
         ),
       ),
+      withInternetInterceptor: true,
     );
   }
 }

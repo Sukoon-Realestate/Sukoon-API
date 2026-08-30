@@ -9,6 +9,7 @@ import 'package:sokoun_app/features/tenant/favorites/data/models/favorites_conte
 import 'package:sokoun_app/features/tenant/favorites/presentation/screens/favorites_screen.dart';
 import 'package:sokoun_app/features/tenant/favorites/presentation/widgets/favorite_property_card.dart';
 import 'package:sokoun_app/features/tenant/favorites/presentation/widgets/favorites_empty_state.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_search_results/empty_results_state.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +31,7 @@ void main() {
         .setMockMethodCallHandler(sharedPreferencesChannel, null);
   });
 
-  Widget buildScreen({FavoritesScreen screen = const FavoritesScreen()}) {
+  Widget buildScreen({Widget screen = const FavoritesScreen()}) {
     return EasyLocalization(
       supportedLocales: const [Locale('ar')],
       path: 'unused',
@@ -69,6 +70,10 @@ void main() {
 
     expect(find.byType(FavoritesScreen), findsOneWidget);
     expect(find.byType(FavoritePropertyCard), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('favorites-open-filters')),
+      findsOneWidget,
+    );
     expect(tester.takeException(), isNull);
 
     await tester.tap(find.byKey(ValueKey('favorite-remove-${item.id}')));
@@ -77,6 +82,42 @@ void main() {
     expect(find.byType(FavoritesEmptyState), findsOneWidget);
     expect(find.byType(FavoritePropertyCard), findsNothing);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('empty-state recovery actions invoke their callbacks', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(360, 690);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+
+    bool browsedProperties = false;
+    await tester.pumpWidget(
+      buildScreen(
+        screen: Scaffold(
+          body: FavoritesEmptyState(
+            onBrowseTap: () => browsedProperties = true,
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.tap(find.text('تصفّح العقارات'));
+    expect(browsedProperties, isTrue);
+
+    bool resetSearch = false;
+    await tester.pumpWidget(
+      buildScreen(
+        screen: Scaffold(
+          body: EmptyResultsState(
+            onResetSearchPressed: () => resetSearch = true,
+          ),
+        ),
+      ),
+    );
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('tenant-search-empty-reset')));
+    expect(resetSearch, isTrue);
   });
 }
 
@@ -102,6 +143,11 @@ class _FavoritesTestAssetLoader extends AssetLoader {
       'favorites_empty_description':
           'اضغط على علامة القلب في أي عقار علشان تلاقيه هنا بعدين',
       'favorites_browse_properties': 'تصفّح العقارات',
+      'filter': 'تصفية',
+      'tenant_search_results_empty_title': 'لا توجد نتائج مطابقة',
+      'tenant_search_results_empty_description':
+          'جرّب تغيير البحث أو إزالة بعض الفلاتر',
+      'tenant_search_results_reset_search': 'إعادة ضبط البحث والفلاتر',
     };
   }
 }

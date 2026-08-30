@@ -36,10 +36,8 @@ abstract final class OwnerPropertiesData {
     return response.data;
   }
 
-  static Future<OwnerPropertiesResponse> getOwnedProperties({
-    required int page,
-    required int pageSize,
-  }) async {
+  static Future<(OwnerPropertiesResponse, PaginationData)>
+  getOwnedPropertiesPage({required int page, required int pageSize}) async {
     final response = await injector<NetworkService>().callApi(
       NetworkRequest(
         method: RequestMethod.get,
@@ -49,6 +47,10 @@ abstract final class OwnerPropertiesData {
       mapper: (json) => OwnerPropertiesResponse.fromJson(json),
     );
 
-    return response.data;
+    final OwnerPropertiesResponse data = response.data;
+    final int totalPages = data.count == 0
+        ? 1
+        : (data.count + pageSize - 1) ~/ pageSize;
+    return (data, PaginationData(perPage: pageSize, totalPages: totalPages));
   }
 }

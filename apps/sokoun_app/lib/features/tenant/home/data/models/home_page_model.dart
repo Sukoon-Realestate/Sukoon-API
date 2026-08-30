@@ -1,6 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-import 'package:melos_core/core/extensions/string_extension.dart';
 
 class HomePageModel extends Equatable {
   final int count;
@@ -17,7 +15,12 @@ class HomePageModel extends Equatable {
     this.banner,
   });
 
-  factory HomePageModel.initial() => const HomePageModel(count: 0, results: []);
+  const HomePageModel.initial()
+    : count = 0,
+      next = null,
+      previous = null,
+      results = const [],
+      banner = null;
 
   factory HomePageModel.fromJson(Map<String, dynamic> json) => HomePageModel(
     count: json['count'] ?? 0,
@@ -80,17 +83,16 @@ class HomePropertyModel extends Equatable {
     required this.rate,
   });
 
-  factory HomePropertyModel.initial() => const HomePropertyModel(
-    id: '',
-    mainImage: '',
-    imagesCount: 0,
-    title: '',
-    price: '',
-    pricePeriod: '',
-    propertyType: '',
-    area: 0,
-    rate: 0,
-  );
+  const HomePropertyModel.initial()
+    : id = '',
+      mainImage = '',
+      imagesCount = 0,
+      title = '',
+      price = '',
+      pricePeriod = '',
+      propertyType = '',
+      area = 0,
+      rate = 0;
 
   factory HomePropertyModel.fromJson(Map<String, dynamic> json) =>
       HomePropertyModel(
@@ -138,38 +140,6 @@ class HomePropertyModel extends Equatable {
     area: area ?? this.area,
     rate: rate ?? this.rate,
   );
-
-  String get formattedPrice =>
-      '${(double.tryParse(price) ?? 0).toCurrency()} $pricePeriodLabel';
-
-  String get pricePeriodLabel {
-    switch (pricePeriod) {
-      case 'daily':
-        return 'ج/يوم';
-      case 'weekly':
-        return 'ج/أسبوع';
-      case 'yearly':
-        return 'ج/سنة';
-      case 'monthly':
-      default:
-        return 'ج/شهر';
-    }
-  }
-
-  String get formattedArea => '$areaم²';
-
-  String get formattedRate => rate.toStringAsFixed(1);
-
-  IconData get propertyIcon {
-    switch (propertyType) {
-      case 'studio':
-        return Icons.meeting_room_outlined;
-      case 'apartment':
-        return Icons.apartment_rounded;
-      default:
-        return Icons.home_outlined;
-    }
-  }
 
   @override
   List<Object?> get props => [

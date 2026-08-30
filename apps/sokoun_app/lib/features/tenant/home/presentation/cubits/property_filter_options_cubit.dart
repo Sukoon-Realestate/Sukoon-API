@@ -14,9 +14,12 @@ class PropertyFilterOptionsCubit
         CrudBaseParmas<PropertyFilterOptionsModel>(
           api: ApiConstants.propertyFilterOptions,
           httpRequestType: HttpRequestType.get,
+          cacheKey: 'property_filter_options',
           mapper: (json) => PropertyFilterOptionsModel.fromJson(
             json is Map<String, dynamic> ? json : const {},
           ),
+          fromCacheJson: PropertyFilterOptionsModel.fromJson,
+          toJson: (model) => model.toJson(),
         ),
       ),
       withInternetInterceptor: true,

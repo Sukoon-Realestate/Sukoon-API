@@ -4,16 +4,19 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:sokoun_app/shared_widgets/property_filter_button.dart';
 
 class FavoritesHeader extends StatelessWidget {
   const FavoritesHeader({
     super.key,
     required this.itemCount,
-    this.onSelectAllPressed,
+    required this.activeFilterCount,
+    required this.onFiltersPressed,
   });
 
   final int itemCount;
-  final VoidCallback? onSelectAllPressed;
+  final int activeFilterCount;
+  final VoidCallback onFiltersPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -55,26 +58,10 @@ class FavoritesHeader extends StatelessWidget {
             ),
           ),
           AppSize.sW8.szW,
-          TextButton(
-            onPressed: onSelectAllPressed,
-            style: TextButton.styleFrom(
-              foregroundColor: AppColors.sokoonGray,
-              disabledForegroundColor: AppColors.sokoonGray,
-              minimumSize: Size.zero,
-              padding: EdgeInsets.symmetric(
-                horizontal: AppPadding.pW4,
-                vertical: AppPadding.pH4,
-              ),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            child: AppText(
-              LocaleKeys.favoritesSelectAll,
-              color: AppColors.sokoonGray,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w700,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+          PropertyFilterButton(
+            key: const ValueKey('favorites-open-filters'),
+            activeCount: activeFilterCount,
+            onPressed: onFiltersPressed,
           ),
         ],
       ),

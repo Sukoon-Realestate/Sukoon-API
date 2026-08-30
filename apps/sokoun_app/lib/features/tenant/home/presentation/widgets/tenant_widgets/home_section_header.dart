@@ -21,27 +21,35 @@ class HomeSectionHeader extends StatelessWidget {
       textDirection: TextDirection.ltr,
       children: [
         if (actionTitle != null)
-          TextButton(
-            onPressed: onActionTap,
-            style: TextButton.styleFrom(
-              minimumSize: Size.zero,
-              padding: EdgeInsets.zero,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            child: AppText(
-              actionTitle!,
-              color: AppColors.sokoonTeal,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w700,
+          Flexible(
+            child: TextButton(
+              onPressed: onActionTap,
+              style: TextButton.styleFrom(
+                minimumSize: Size.zero,
+                padding: EdgeInsets.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: AppText(
+                actionTitle!,
+                color: AppColors.sokoonTeal,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w700,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ),
-        const Spacer(),
-        AppText(
-          title,
-          color: AppColors.sokoonNavy,
-          fontSize: 15.sp,
-          fontWeight: FontWeight.w900,
-          textAlign: TextAlign.right,
+        if (actionTitle != null) SizedBox(width: 8.w),
+        Expanded(
+          child: AppText(
+            title,
+            color: AppColors.sokoonNavy,
+            fontSize: 15.sp,
+            fontWeight: FontWeight.w900,
+            textAlign: TextAlign.right,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
       ],
     );

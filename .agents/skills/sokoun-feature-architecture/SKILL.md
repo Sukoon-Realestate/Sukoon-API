@@ -74,6 +74,19 @@ CrudBaseParmas<MyModel>(
 - Do not cache POST, PUT, PATCH, or DELETE operations through this read-cache contract.
 - For `AppPagify`, provide `cacheKey`, `cacheToJson`, and `cacheFromJson` together. Use the same three arguments on API-backed `AppDropinity` widgets. Omit the entire cache configuration when any serializer is unavailable.
 
+### API Empty States
+
+Every API-backed screen whose successful response can contain no items must use a feature-specific Lottie empty-state widget instead of the generic `NotContainData`. Treat an empty response as a valid success state, distinct from loading, an error without cache, or offline content restored from cache.
+
+- Before designing the state, read `design.md`, inspect the screen's purpose and retained controls, and inspect the closest feature empty state. Preserve useful context such as the app bar, search query, filters, or tabs; replace only the data region that is empty.
+- Put the widget in the feature's presentation widgets folder and name it for the screen or collection, such as `SearchResultsEmptyState` or `VisitsEmptyState`. Reuse an existing feature widget only when its meaning, copy, action, and role styling match.
+- Select the closest semantic generated asset from `Assets.lottie`, normally `noData`, `emptyBox`, or `notFound1`/`notFound2`; reserve `emptyCart` for cart-like flows. Render it through the generated `.lottie(...)` API, not a raw asset path, and never use error or no-internet animations for a successful empty response.
+- Follow `design.md`: use the scaffold canvas, restrained teal or role-aware accents, ScreenUtil sizing, a centered and scroll-safe layout, a short navy high-emphasis title, and concise gray supporting copy. Keep the animation subordinate to the message and avoid decorative cards or shadows that do not help comprehension.
+- Use `LocaleKeys` for the title, description, and optional CTA. Add one CTA only when the user has a useful recovery or next action, such as clearing filters, browsing properties, adding a listing, or retrying a different search; do not add a dead-end or unrelated action.
+- Respect reduced-motion settings for nonessential animation, and make the empty state accessible. When the adjacent title already explains the state, treat the Lottie as decorative rather than announcing duplicate content.
+- `StatusBuilder` automatically detects emptiness only when `T` itself is a `List`. Pass the custom widget through `emptyView` for list state. For wrapped responses, check the domain collection such as `data.results.isEmpty` inside the success builder and render the empty widget there. For `AppPagify`, pass it through `emptyListView`.
+- Test that an empty API success renders the custom empty state and its action, while an error with no valid cache still renders the exception view and non-empty cached/API data renders the normal content.
+
 ## Models and Data
 
 - Use typed immutable models rather than loose maps in presentation code.
@@ -110,6 +123,7 @@ Before handing off:
 1. Confirm data code does not import presentation code and widgets do not import screens.
 2. Confirm async requests are not started from `build` or a Cubit constructor.
 3. Confirm cacheable GETs use a stable key plus both serializers, and that screens rely on the cache result instead of mock fallback data.
-4. Confirm the screen is orchestration-focused and visual sections are separated.
-5. Run Dart formatting, focused analysis, relevant tests, and `git diff --check`.
-6. Summarize the resulting file structure and verification. Mention any intentionally omitted layer or unavailable backend/profile screen instead of adding a misleading placeholder.
+4. Confirm successful empty API data renders a contextual Lottie empty state without hiding the screen's useful controls.
+5. Confirm the screen is orchestration-focused and visual sections are separated.
+6. Run Dart formatting, focused analysis, relevant tests, and `git diff --check`.
+7. Summarize the resulting file structure and verification. Mention any intentionally omitted layer or unavailable backend/profile screen instead of adding a misleading placeholder.

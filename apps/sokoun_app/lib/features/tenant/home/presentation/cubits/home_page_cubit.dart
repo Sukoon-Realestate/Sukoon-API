@@ -4,7 +4,7 @@ import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/home_page_model.dart';
 
 class HomePageCubit extends AsyncCubit<HomePageModel> {
-  HomePageCubit() : super(HomePageModel.initial());
+  HomePageCubit() : super(const HomePageModel.initial());
 
   Future<void> getHomePage() async {
     await executeAsyncWithBaseModel(
@@ -12,9 +12,13 @@ class HomePageCubit extends AsyncCubit<HomePageModel> {
         CrudBaseParmas<HomePageModel>(
           api: ApiConstants.homePage,
           httpRequestType: HttpRequestType.get,
+          cacheKey: 'tenant_home_page',
           mapper: (json) => HomePageModel.fromJson(json),
+          fromCacheJson: HomePageModel.fromJson,
+          toJson: (model) => model.toJson(),
         ),
       ),
+      withInternetInterceptor: true,
     );
   }
 }

@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_home_screen.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
 import 'package:sokoun_app/features/tenant/visits/imports.dart';
 
 import 'helpers/home_page_test_dependencies.dart';
@@ -16,19 +18,29 @@ void main() {
   const MethodChannel sharedPreferencesChannel = MethodChannel(
     'plugins.flutter.io/shared_preferences',
   );
+  const MethodChannel connectivityChannel = MethodChannel(
+    'dev.fluttercommunity.plus/connectivity',
+  );
 
   setUpAll(() async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(sharedPreferencesChannel, (call) async {
           return call.method == 'getAll' ? <String, Object>{} : true;
         });
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(connectivityChannel, (call) async {
+          return call.method == 'check' ? <String>['wifi'] : null;
+        });
     await EasyLocalization.ensureInitialized();
+    await CacheStorage.init();
     registerHomePageTestDependencies();
   });
 
   tearDownAll(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(sharedPreferencesChannel, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(connectivityChannel, null);
   });
 
   Widget buildScreen(Widget screen) {
@@ -46,7 +58,12 @@ void main() {
             localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,
             locale: context.locale,
-            home: screen,
+            home: Builder(
+              builder: (context) => MediaQuery(
+                data: MediaQuery.of(context).copyWith(disableAnimations: true),
+                child: screen,
+              ),
+            ),
           );
         },
       ),
@@ -62,11 +79,13 @@ void main() {
   testWidgets('runs visits list detail and rating frames', (tester) async {
     configurePhoneViewport(tester);
 
-    await tester.pumpWidget(buildScreen(const TenantVisitsScreen()));
+    await tester.pumpWidget(
+      buildScreen(TenantVisitsScreen(initialVisits: _tenantVisitFixtures())),
+    );
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
-    expect(TenantVisitsContent.visits, hasLength(3));
+    expect(_tenantVisitFixtures(), hasLength(3));
     expect(find.byType(TenantVisitCard), findsNWidgets(3));
     expect(find.text('طلبات الزيارة'), findsOneWidget);
     expect(find.text('شقة مفروشة، مدينة نصر'), findsOneWidget);
@@ -108,7 +127,9 @@ void main() {
   testWidgets('filters and cancels a pending visit request', (tester) async {
     configurePhoneViewport(tester);
 
-    await tester.pumpWidget(buildScreen(const TenantVisitsScreen()));
+    await tester.pumpWidget(
+      buildScreen(TenantVisitsScreen(initialVisits: _tenantVisitFixtures())),
+    );
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
@@ -129,6 +150,65 @@ void main() {
 
     expect(find.text('لا توجد زيارات في هذه الفئة'), findsOneWidget);
     expect(find.text('تم إلغاء طلب الزيارة'), findsOneWidget);
+
+    await tester.tap(find.byKey(const ValueKey('tenant-visits-empty-action')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(TenantVisitCard), findsNWidgets(2));
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('renders the API empty state and opens property search', (
+    tester,
+  ) async {
+    configurePhoneViewport(tester);
+
+    await tester.pumpWidget(buildScreen(const TenantVisitsScreen()));
+    await tester.pumpAndSettle();
+
+    expect(find.text('لا توجد طلبات زيارة حتى الآن'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('tenant-visits-empty-action')),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.byKey(const ValueKey('tenant-visits-empty-action')));
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+
+    expect(find.byType(TenantSearchScreen), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('renders the pending T-VISIT-04 state', (tester) async {
+    configurePhoneViewport(tester);
+
+    await tester.pumpWidget(
+      buildScreen(VisitDetailsScreen(visit: _tenantVisitFixtures()[1])),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('زيارتك بانتظار التأكيد'), findsOneWidget);
+    expect(find.byKey(const ValueKey('visit-details-cancel')), findsOneWidget);
+    expect(find.byKey(const ValueKey('visit-details-open-chat')), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('renders unknown or rejected visits as a fail state', (
+    tester,
+  ) async {
+    configurePhoneViewport(tester);
+
+    await tester.pumpWidget(
+      buildScreen(VisitDetailsScreen(visit: _tenantVisitFixtures()[2])),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('تم رفض طلب الزيارة'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('visit-details-find-alternative')),
+      findsOneWidget,
+    );
     expect(tester.takeException(), isNull);
   });
 
@@ -190,7 +270,8 @@ void main() {
     expect(tester.takeException(), isNull);
 
     await tester.tap(find.byKey(const ValueKey('visit-follow-requests')));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
 
     expect(find.byType(TenantVisitsScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
@@ -203,10 +284,10 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
     await tester.tap(find.byKey(const ValueKey('tenant-open-visits')));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
 
     expect(find.byType(TenantVisitsScreen), findsOneWidget);
-    expect(find.text('شقة مفروشة، مدينة نصر'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }
@@ -234,6 +315,23 @@ class _CoreTranslationsAssetLoader extends AssetLoader {
       'tenant_visits_filter_pending': 'بانتظار',
       'tenant_visits_filter_rejected': 'مرفوضة',
       'tenant_visits_no_results': 'لا توجد زيارات في هذه الفئة',
+      'tenant_visits_empty_title': 'لا توجد طلبات زيارة حتى الآن',
+      'tenant_visits_empty_description':
+          'ستظهر هنا الزيارات التي تحجزها وآخر تحديث لحالتها.',
+      'tenant_visits_filter_empty_description':
+          'جرّب حالة أخرى أو اعرض كل طلبات الزيارة.',
+      'tenant_visits_browse_properties': 'تصفح العقارات',
+      'tenant_visits_show_all': 'عرض كل الزيارات',
+      'tenant_home_suggested_for_you': 'مقترح لك',
+      'tenant_home_view_all': 'عرض الكل',
+      'tenant_home_greeting': 'أهلاً بك',
+      'tenant_home_current_area': 'منطقتك الحالية',
+      'tenant_home_search_area_hint': 'ابحث عن منطقة',
+      'tenant_search_results_square_meters': 'م²',
+      'favorites_currency_short': 'ج.م',
+      'tenant_filter_monthly': 'شهرياً',
+      'tenant_home_empty_title': 'لا توجد عقارات مقترحة',
+      'tenant_home_empty_description': 'سنعرض لك عقارات مناسبة قريباً.',
       'tenant_visit_owner_label': 'المالك:',
       'tenant_visit_status_accepted': 'مقبول',
       'tenant_visit_status_accepted_with_check': 'مقبول ✓',
@@ -263,6 +361,8 @@ class _CoreTranslationsAssetLoader extends AssetLoader {
       'tenant_visit_back_to_search': 'ارجع للبحث',
       'tenant_visit_details_title': 'تفاصيل الزيارة',
       'tenant_visit_confirmed_heading': 'زيارتك مؤكدة',
+      'tenant_visit_pending_heading': 'زيارتك بانتظار التأكيد',
+      'tenant_visit_rejected_heading': 'تم رفض طلب الزيارة',
       'tenant_visit_contact_info': 'معلومات التواصل',
       'tenant_visit_owner_phone_confirmed': 'رقم المالك — بعد التأكيد',
       'tenant_visit_open_owner_chat': 'فتح المحادثة مع المالك',
@@ -306,4 +406,37 @@ class _CoreTranslationsAssetLoader extends AssetLoader {
       'tenant_visit_time_five_pm': '5:00 م',
     };
   }
+}
+
+List<TenantVisitContent> _tenantVisitFixtures() {
+  return const [
+    TenantVisitContent(
+      id: 'accepted-nasr-city',
+      propertyTitle: 'شقة مفروشة، مدينة نصر',
+      day: 'السبت 15 يونيو 2025',
+      time: '2:00 م',
+      status: TenantVisitStatus.accepted,
+      statusText: 'مقبول',
+      ownerName: 'أحمد محمد',
+      ownerPhone: '010****432',
+    ),
+    TenantVisitContent(
+      id: 'pending-fifth-settlement',
+      propertyTitle: 'ستوديو، التجمع الخامس',
+      day: 'غداً',
+      time: '12:00 م',
+      status: TenantVisitStatus.pending,
+      statusText: 'بانتظار الرد',
+      ownerName: 'منى علي',
+    ),
+    TenantVisitContent(
+      id: 'rejected-mohandessin',
+      propertyTitle: 'شقة، المهندسين',
+      day: 'الخميس',
+      time: '5:00 م',
+      status: TenantVisitStatus.rejected,
+      statusText: 'مرفوض',
+      ownerName: 'خالد حسن',
+    ),
+  ];
 }

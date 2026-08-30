@@ -44,6 +44,35 @@ class OwnerDashboardModel extends Equatable {
   final int pendingRequests;
   final List<OwnerDashboardPendingVisitModel> pendingVisits;
 
+  Map<String, dynamic> toJson() => {
+    'owner': owner.toJson(),
+    'visits_this_week': visitsThisWeek,
+    'active_properties': activeProperties,
+    'overall_rating': overallRating,
+    'pending_requests': pendingRequests,
+    'pending_visits': pendingVisits
+        .map((visit) => visit.toJson())
+        .toList(growable: false),
+  };
+
+  OwnerDashboardModel copyWith({
+    OwnerDashboardOwnerModel? owner,
+    int? visitsThisWeek,
+    int? activeProperties,
+    double? overallRating,
+    int? pendingRequests,
+    List<OwnerDashboardPendingVisitModel>? pendingVisits,
+  }) {
+    return OwnerDashboardModel(
+      owner: owner ?? this.owner,
+      visitsThisWeek: visitsThisWeek ?? this.visitsThisWeek,
+      activeProperties: activeProperties ?? this.activeProperties,
+      overallRating: overallRating ?? this.overallRating,
+      pendingRequests: pendingRequests ?? this.pendingRequests,
+      pendingVisits: pendingVisits ?? this.pendingVisits,
+    );
+  }
+
   @override
   List<Object?> get props => [
     owner,
@@ -79,6 +108,25 @@ class OwnerDashboardOwnerModel extends Equatable {
   final String? avatar;
   final bool isVerified;
 
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'avatar': avatar,
+    'is_verified': isVerified,
+  };
+
+  OwnerDashboardOwnerModel copyWith({
+    String? name,
+    String? avatar,
+    bool clearAvatar = false,
+    bool? isVerified,
+  }) {
+    return OwnerDashboardOwnerModel(
+      name: name ?? this.name,
+      avatar: clearAvatar ? null : avatar ?? this.avatar,
+      isVerified: isVerified ?? this.isVerified,
+    );
+  }
+
   @override
   List<Object?> get props => [name, avatar, isVerified];
 }
@@ -92,6 +140,14 @@ class OwnerDashboardPendingVisitModel extends Equatable {
     required this.propertyDistrict,
     required this.scheduledAt,
   });
+
+  const OwnerDashboardPendingVisitModel.initial()
+    : id = '',
+      tenantName = '',
+      tenantAvatar = null,
+      propertyTitle = '',
+      propertyDistrict = '',
+      scheduledAt = '';
 
   factory OwnerDashboardPendingVisitModel.fromJson(Map<String, dynamic> json) {
     return OwnerDashboardPendingVisitModel(
@@ -110,6 +166,36 @@ class OwnerDashboardPendingVisitModel extends Equatable {
   final String propertyTitle;
   final String propertyDistrict;
   final String scheduledAt;
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'tenant_name': tenantName,
+    'tenant_avatar': tenantAvatar,
+    'property_title': propertyTitle,
+    'property_district': propertyDistrict,
+    'scheduled_at': scheduledAt,
+  };
+
+  OwnerDashboardPendingVisitModel copyWith({
+    String? id,
+    String? tenantName,
+    String? tenantAvatar,
+    bool clearTenantAvatar = false,
+    String? propertyTitle,
+    String? propertyDistrict,
+    String? scheduledAt,
+  }) {
+    return OwnerDashboardPendingVisitModel(
+      id: id ?? this.id,
+      tenantName: tenantName ?? this.tenantName,
+      tenantAvatar: clearTenantAvatar
+          ? null
+          : tenantAvatar ?? this.tenantAvatar,
+      propertyTitle: propertyTitle ?? this.propertyTitle,
+      propertyDistrict: propertyDistrict ?? this.propertyDistrict,
+      scheduledAt: scheduledAt ?? this.scheduledAt,
+    );
+  }
 
   @override
   List<Object?> get props => [

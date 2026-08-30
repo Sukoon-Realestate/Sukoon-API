@@ -33,18 +33,14 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
       );
     }
 
-    final OwnerPropertiesResponse response =
-        await OwnerPropertiesData.getOwnedProperties(
-          page: page,
-          pageSize: _pageSize,
-        );
-    final int totalPages = response.count == 0
-        ? 1
-        : (response.count + _pageSize - 1) ~/ _pageSize;
-    return (
-      response.results,
-      PaginationData(perPage: _pageSize, totalPages: totalPages),
+    final (
+      OwnerPropertiesResponse response,
+      PaginationData pagination,
+    ) = await OwnerPropertiesData.getOwnedPropertiesPage(
+      page: page,
+      pageSize: _pageSize,
     );
+    return (response.results, pagination);
   }
 
   Future<void> _openAddProperty() async {
@@ -167,6 +163,18 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
                     pagifyController: _pagifyController,
                     asyncCall: _getPropertiesPage,
                     shrinkWrap: false,
+                    cacheKey: widget.initialProperties == null
+                        ? 'owner_properties'
+                        : null,
+                    cacheToJson: widget.initialProperties == null
+                        ? (property) => property.toJson()
+                        : null,
+                    cacheFromJson: widget.initialProperties == null
+                        ? OwnerPropertyContent.fromJson
+                        : null,
+                    emptyListView: OwnerPropertiesEmptyState(
+                      onAddPressed: _openAddProperty,
+                    ),
                     itemBuilder: (context, data, index, property) => Padding(
                       padding: EdgeInsets.only(bottom: 12.h),
                       child: OwnerPropertyCard(

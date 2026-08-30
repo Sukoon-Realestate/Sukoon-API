@@ -24,7 +24,7 @@ class OwnerVisitRequestFilters extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        textDirection: TextDirection.ltr,
+        textDirection: TextDirection.rtl,
         children: [
           for (int index = 0; index < filters.length; index++) ...[
             _FilterChip(

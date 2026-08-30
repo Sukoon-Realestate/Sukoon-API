@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 
@@ -37,7 +38,7 @@ class OwnerStatsGrid extends StatelessWidget {
             Expanded(
               child: OwnerStatCard(
                 value: '$visitsThisWeek',
-                label: 'زيارات هذا الأسبوع',
+                label: LocaleKeys.ownerDashboardVisitsThisWeek,
                 icon: Icons.calendar_today_outlined,
                 iconColor: AppColors.blue,
                 iconBackgroundColor: AppColors.bluePale,
@@ -47,7 +48,7 @@ class OwnerStatsGrid extends StatelessWidget {
             Expanded(
               child: OwnerStatCard(
                 value: '$activeProperties',
-                label: 'عقارات نشطة',
+                label: LocaleKeys.ownerDashboardActiveProperties,
                 icon: Icons.apartment_rounded,
                 iconColor: AppColors.sokoonTeal,
                 iconBackgroundColor: AppColors.mintLight,
@@ -62,7 +63,7 @@ class OwnerStatsGrid extends StatelessWidget {
             Expanded(
               child: OwnerStatCard(
                 value: _overallRatingLabel,
-                label: 'التقييم العام',
+                label: LocaleKeys.ownerDashboardOverallRating,
                 icon: Icons.star_outline_rounded,
                 iconColor: AppColors.gold,
                 iconBackgroundColor: AppColors.goldPale,
@@ -72,7 +73,7 @@ class OwnerStatsGrid extends StatelessWidget {
             Expanded(
               child: OwnerStatCard(
                 value: '$pendingRequests',
-                label: 'طلبات معلقة',
+                label: LocaleKeys.ownerDashboardPendingRequests,
                 icon: Icons.schedule_rounded,
                 iconColor: AppColors.amber,
                 iconBackgroundColor: AppColors.orangePale,

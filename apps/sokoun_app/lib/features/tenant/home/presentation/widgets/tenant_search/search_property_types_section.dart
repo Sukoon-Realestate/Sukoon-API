@@ -1,0 +1,36 @@
+import 'package:flutter/material.dart';
+import 'package:melos_core/core/helpers/status_builder.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/property_types_model.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_types_cubit.dart';
+
+import 'search_category_chips.dart';
+import 'search_options_empty_state.dart';
+
+class SearchPropertyTypesSection extends StatelessWidget {
+  const SearchPropertyTypesSection({
+    super.key,
+    required this.requestToTryAgainWhenError,
+    required this.selectedCategory,
+    required this.onCategorySelected,
+  });
+
+  final Future<void> requestToTryAgainWhenError;
+  final String selectedCategory;
+  final ValueChanged<PropertyTypeModel> onCategorySelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return StatusBuilder<PropertyTypesCubit, PropertyTypesModel>.withShimmer(
+      initialDataForShimmer: const PropertyTypesModel.initial(),
+      requestToTryAgainWhenError: requestToTryAgainWhenError,
+      errorType: ErrorType.defaultView,
+      builder: (data) => data.results.isEmpty
+          ? const SearchPropertyTypesEmptyState()
+          : SearchCategoryChips(
+              propertyTypes: data.results,
+              selectedCategory: selectedCategory,
+              onCategorySelected: onCategorySelected,
+            ),
+    );
+  }
+}

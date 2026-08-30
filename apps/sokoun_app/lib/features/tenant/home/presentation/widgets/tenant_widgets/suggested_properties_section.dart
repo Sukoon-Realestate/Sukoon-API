@@ -1,44 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:melos_core/core/helpers/status_builder.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:melos_core/core/extensions/string_extension.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/home_page_model.dart';
-import 'package:sokoun_app/features/tenant/home/presentation/cubits/home_page_cubit.dart';
+
+import 'tenant_suggested_properties_empty_state.dart';
 import 'tenant_property_card.dart';
 
 class SuggestedPropertiesSection extends StatelessWidget {
   const SuggestedPropertiesSection({
-    required this.requestToTryAgainWhenError,
+    required this.properties,
     required this.onPropertyPressed,
     super.key,
   });
 
-  final Future<void> requestToTryAgainWhenError;
+  final List<HomePropertyModel> properties;
   final ValueChanged<String> onPropertyPressed;
 
   @override
   Widget build(BuildContext context) {
-    return StatusBuilder<HomePageCubit, HomePageModel>.withShimmer(
-      initialDataForShimmer: HomePageModel.initial(),
-      requestToTryAgainWhenError: requestToTryAgainWhenError,
-      builder: (properties) => Column(
-        spacing: 12.h,
-        children: properties.results
-            .map(
-              (property) => GestureDetector(
-                onTap: () => onPropertyPressed(property.id),
-                behavior: HitTestBehavior.opaque,
-                child: TenantPropertyCard(
-                  title: property.title,
-                  rating: property.formattedRate,
-                  area: property.formattedArea,
-                  price: property.formattedPrice,
-                  icon: property.propertyIcon,
-                  imageUrl: property.mainImage,
-                ),
+    if (properties.isEmpty) {
+      return const TenantSuggestedPropertiesEmptyState();
+    }
+
+    return Column(
+      spacing: 12.h,
+      children: properties
+          .map(
+            (property) => GestureDetector(
+              onTap: () => onPropertyPressed(property.id),
+              behavior: HitTestBehavior.opaque,
+              child: TenantPropertyCard(
+                title: property.title,
+                rating: property.rate.toStringAsFixed(1),
+                area:
+                    '${property.area} ${LocaleKeys.tenantSearchResultsSquareMeters}',
+                price: _formattedPrice(property),
+                icon: _propertyIcon(property.propertyType),
+                imageUrl: property.mainImage,
               ),
-            )
-            .toList(),
-      ),
+            ),
+          )
+          .toList(growable: false),
     );
+  }
+
+  String _formattedPrice(HomePropertyModel property) {
+    final double price =
+        double.tryParse(property.price.replaceAll(',', '')) ?? 0;
+    return '${price.toCurrency()} ${LocaleKeys.favoritesCurrencyShort}/${_pricePeriodLabel(property.pricePeriod)}';
+  }
+
+  String _pricePeriodLabel(String pricePeriod) {
+    return switch (pricePeriod) {
+      'daily' => LocaleKeys.tenantFilterDaily,
+      'weekly' => LocaleKeys.tenantFilterWeekly,
+      'yearly' => LocaleKeys.tenantFilterYearly,
+      _ => LocaleKeys.tenantFilterMonthly,
+    };
+  }
+
+  IconData _propertyIcon(String propertyType) {
+    return switch (propertyType) {
+      'studio' => Icons.meeting_room_outlined,
+      'apartment' => Icons.apartment_rounded,
+      _ => Icons.home_outlined,
+    };
   }
 }

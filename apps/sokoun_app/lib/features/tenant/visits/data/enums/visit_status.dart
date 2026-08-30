@@ -9,6 +9,29 @@ extension TenantVisitStatusX on TenantVisitStatus {
   bool get isPending => this == TenantVisitStatus.pending;
   bool get isRejected => this == TenantVisitStatus.rejected;
 
+  static TenantVisitStatus fromApiValue(String? value) {
+    final String normalized = value?.trim().toLowerCase() ?? '';
+    switch (normalized) {
+      case 'accepted':
+      case 'approved':
+      case 'confirmed':
+      case 'مقبول':
+      case 'مؤكد':
+        return TenantVisitStatus.accepted;
+      case 'pending':
+      case 'waiting':
+      case 'awaiting_owner':
+      case 'بانتظار الرد':
+      case 'بانتظار رد المالك':
+        return TenantVisitStatus.pending;
+      case 'rejected':
+      case 'declined':
+      case 'مرفوض':
+      default:
+        return TenantVisitStatus.rejected;
+    }
+  }
+
   String get label {
     if (isAccepted) {
       return LocaleKeys.tenantVisitStatusAccepted;
@@ -25,6 +48,11 @@ extension TenantVisitFilterX on TenantVisitFilter {
   bool get isAccepted => this == TenantVisitFilter.accepted;
   bool get isPending => this == TenantVisitFilter.pending;
   bool get isRejected => this == TenantVisitFilter.rejected;
+
+  String? get apiValue {
+    if (isAll) return null;
+    return name;
+  }
 
   String get label {
     if (isAll) {

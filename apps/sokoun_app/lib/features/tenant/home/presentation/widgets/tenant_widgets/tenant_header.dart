@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -27,7 +28,7 @@ class TenantHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppText(
-                'أهلاً سارة 👋',
+                LocaleKeys.tenantHomeGreeting,
                 color: AppColors.sokoonNavy,
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w900,
@@ -36,7 +37,7 @@ class TenantHeader extends StatelessWidget {
               ),
               2.szH,
               AppText(
-                'دلوقتي في مدينة نصر',
+                LocaleKeys.tenantHomeCurrentArea,
                 color: AppColors.sokoonGray,
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w400,

@@ -21,8 +21,11 @@ class PropertySearchCubit extends AsyncCubit<PropertySearchResponseModel> {
         CrudBaseParmas<PropertySearchResponseModel>(
           api: ApiConstants.properties,
           httpRequestType: HttpRequestType.get,
+          cacheKey: _filters.cacheKey,
           queryParameters: _filters.toQueryParameters(),
           mapper: (json) => PropertySearchResponseModel.fromJson(json),
+          fromCacheJson: PropertySearchResponseModel.fromJson,
+          toJson: (model) => model.toJson(),
         ),
       ),
     );
@@ -41,8 +44,11 @@ class PropertySearchCubit extends AsyncCubit<PropertySearchResponseModel> {
       CrudBaseParmas<PropertySearchResponseModel>(
         api: ApiConstants.properties,
         httpRequestType: HttpRequestType.get,
+        cacheKey: '${nextFilters.cacheKey}_page_${nextFilters.page}',
         queryParameters: nextFilters.toQueryParameters(),
         mapper: (json) => PropertySearchResponseModel.fromJson(json),
+        fromCacheJson: PropertySearchResponseModel.fromJson,
+        toJson: (model) => model.toJson(),
       ),
     );
     result.when(

@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/status_builder.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
-import 'package:melos_core/core/widgets/app_pagify.dart';
-import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:pagify/pagify.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
@@ -15,10 +11,10 @@ import 'package:sokoun_app/features/tenant/home/data/models/property_search_mode
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_search_result_content.dart';
 import 'package:sokoun_app/features/tenant/home/data/property_search_data.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_filter_options_cubit.dart';
-import 'package:sokoun_app/shared_widgets/property_details_screen.dart';
 
 import '../widgets/tenant_filter/property_filter_label_resolver.dart';
 import '../widgets/tenant_search_results/imports.dart';
+import 'property_details_screen.dart';
 import 'tenant_filter_screen.dart';
 
 class TenantSearchResultsScreen extends StatefulWidget {
@@ -88,14 +84,18 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
   }
 
   Future<void> _openFilters() async {
-    final PropertySearchFilters? updatedFilters =
-        await Go.to<PropertySearchFilters>(
-          TenantFilterScreen(initialFilters: _filters),
-        );
-    if (updatedFilters == null || !mounted) return;
+    await Go.to<void>(
+      TenantFilterScreen(
+        initialFilters: _filters,
+        onFiltersApplied: _applyFilters,
+      ),
+    );
+  }
 
-    _queryController.text = updatedFilters.search;
-    await _search(updatedFilters);
+  Future<void> _applyFilters(PropertySearchFilters filters) async {
+    if (!mounted) return;
+    _queryController.text = filters.search;
+    await _search(filters);
   }
 
   Future<void> _search(PropertySearchFilters filters) async {
@@ -117,8 +117,8 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
     final PropertySearchFilters requestFilters = _paginatedFilters.copyWith(
       page: page,
     );
-    final PropertySearchResponseModel response =
-        await PropertySearchData.getProperties(requestFilters);
+    final (PropertySearchResponseModel response, PaginationData pagination) =
+        await PropertySearchData.getPropertiesPage(requestFilters);
 
     if (requestVersion != _searchVersion) {
       return (
@@ -131,14 +131,7 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
       setState(() => _resultCount = response.count);
     }
 
-    final int totalPages = response.count == 0
-        ? 1
-        : (response.count + requestFilters.pageSize - 1) ~/
-              requestFilters.pageSize;
-    return (
-      response.results,
-      PaginationData(perPage: requestFilters.pageSize, totalPages: totalPages),
-    );
+    return (response.results, pagination);
   }
 
   void _openDetails(PropertyDetailsModel item) {
@@ -161,6 +154,19 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
         .toList(growable: false);
   }
 
+  Future<void> _resetSearchAndFilters() async {
+    final String defaultOrdering =
+        _propertyFilterOptionsCubit.state.data.defaultOrdering;
+    PropertySearchFilters resetFilters = PropertySearchFilters.initial(
+      pageSize: _filters.pageSize,
+    );
+    if (defaultOrdering.isNotEmpty) {
+      resetFilters = resetFilters.copyWith(ordering: defaultOrdering);
+    }
+    _queryController.clear();
+    await _search(resetFilters);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<PropertyFilterOptionsCubit>.value(
@@ -172,56 +178,25 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
           >.withShimmer(
             initialDataForShimmer: const PropertyFilterOptionsModel.initial(),
             requestToTryAgainWhenError: _propertyFilterOptionsRequest,
+            errorType: ErrorType.defaultView,
             builder: (filterOptions) => Scaffold(
               backgroundColor: AppColors.scaffoldBackground,
               body: SafeArea(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ResultsSearchHeader(
-                      controller: _queryController,
-                      onChanged: _updateQuery,
-                      onSubmitted: _submitQuery,
-                      onFiltersTap: _openFilters,
-                    ),
-                    ActiveFiltersBar(
-                      filters: _activeFilters(filterOptions),
-                      onFilterRemoved: _removeFilter,
-                      onClearAll: _clearFilters,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 18.w,
-                        vertical: 10.h,
-                      ),
-                      child: AppText(
-                        _resultCount == null
-                            ? LocaleKeys.tenantSearchResultsCount
-                            : '$_resultCount ${LocaleKeys.tenantSearchResultsCount}',
-                        color: AppColors.sokoonGray,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 18.h),
-                        child: AppPagify<PropertyDetailsModel>(
-                          pagifyController: _pagifyController,
-                          asyncCall: _getPropertiesPage,
-                          shrinkWrap: false,
-                          itemBuilder: (context, data, index, item) => Padding(
-                            padding: EdgeInsets.only(bottom: 14.h),
-                            child: SearchResultCard(
-                              item: item,
-                              filterOptions: filterOptions,
-                              onDetailsTap: () => _openDetails(item),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                child: TenantSearchResultsContent(
+                  queryController: _queryController,
+                  pagifyController: _pagifyController,
+                  filterOptions: filterOptions,
+                  activeFilters: _activeFilters(filterOptions),
+                  resultCount: _resultCount,
+                  cacheKey: _paginatedFilters.cacheKey,
+                  loadPage: _getPropertiesPage,
+                  onQueryChanged: _updateQuery,
+                  onQuerySubmitted: _submitQuery,
+                  onFiltersPressed: _openFilters,
+                  onFilterRemoved: _removeFilter,
+                  onClearFiltersPressed: _clearFilters,
+                  onResetSearchPressed: _resetSearchAndFilters,
+                  onPropertyPressed: _openDetails,
                 ),
               ),
             ),

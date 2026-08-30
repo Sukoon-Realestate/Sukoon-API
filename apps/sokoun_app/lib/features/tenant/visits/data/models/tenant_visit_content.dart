@@ -1,85 +1,104 @@
 part of '../../imports.dart';
 
-class TenantVisitContent {
+class TenantVisitContent extends Equatable {
   const TenantVisitContent({
     required this.id,
     required this.propertyTitle,
-    required this.ownerName,
-    required this.dateLabel,
-    required this.status,
-    required this.detailDate,
+    required this.day,
     required this.time,
-    required this.ownerPhone,
+    required this.status,
+    required this.statusText,
+    this.ownerName = '',
+    this.ownerPhone = '',
   });
 
-  factory TenantVisitContent.initial() => const TenantVisitContent(
-    id: '',
-    propertyTitle: '',
-    ownerName: '',
-    dateLabel: '',
-    status: TenantVisitStatus.pending,
-    detailDate: '',
-    time: '',
-    ownerPhone: '',
-  );
+  const TenantVisitContent.initial()
+    : id = '',
+      propertyTitle = '',
+      day = '',
+      time = '',
+      status = TenantVisitStatus.pending,
+      statusText = '',
+      ownerName = '',
+      ownerPhone = '';
 
   factory TenantVisitContent.fromJson(Map<String, dynamic> json) {
+    final String statusText = json['status'] as String? ?? '';
     return TenantVisitContent(
-      id: json['id'] ?? '',
-      propertyTitle: json['property_title'] ?? '',
-      ownerName: json['owner_name'] ?? '',
-      dateLabel: json['date_label'] ?? '',
-      status: TenantVisitStatus.values.firstWhere(
-        (status) => status.name == json['status'],
-        orElse: () => TenantVisitStatus.pending,
-      ),
-      detailDate: json['detail_date'] ?? '',
-      time: json['time'] ?? '',
-      ownerPhone: json['owner_phone'] ?? '',
+      id: json['id'] as String? ?? '',
+      propertyTitle:
+          json['title'] as String? ?? json['property_title'] as String? ?? '',
+      day:
+          json['day'] as String? ??
+          json['detail_date'] as String? ??
+          json['date_label'] as String? ??
+          '',
+      time: json['time'] as String? ?? '',
+      status: TenantVisitStatusX.fromApiValue(statusText),
+      statusText: statusText,
+      ownerName: json['owner_name'] as String? ?? '',
+      ownerPhone: json['owner_phone'] as String? ?? '',
     );
   }
 
   final String id;
   final String propertyTitle;
-  final String ownerName;
-  final String dateLabel;
-  final TenantVisitStatus status;
-  final String detailDate;
+  final String day;
   final String time;
+  final TenantVisitStatus status;
+  final String statusText;
+  final String ownerName;
   final String ownerPhone;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'property_title': propertyTitle,
-      'owner_name': ownerName,
-      'date_label': dateLabel,
-      'status': status.name,
-      'detail_date': detailDate,
-      'time': time,
-      'owner_phone': ownerPhone,
-    };
-  }
+  String get dateLabel =>
+      [day, time].where((value) => value.trim().isNotEmpty).join(' · ');
+
+  String get detailDate => day;
+
+  String get resolvedStatusText =>
+      statusText.trim().isEmpty ? status.label : statusText;
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'title': propertyTitle,
+    'day': day,
+    'time': time,
+    'status': statusText.isEmpty ? status.name : statusText,
+    'owner_name': ownerName,
+    'owner_phone': ownerPhone,
+  };
 
   TenantVisitContent copyWith({
     String? id,
     String? propertyTitle,
-    String? ownerName,
-    String? dateLabel,
-    TenantVisitStatus? status,
-    String? detailDate,
+    String? day,
     String? time,
+    TenantVisitStatus? status,
+    String? statusText,
+    String? ownerName,
     String? ownerPhone,
   }) {
     return TenantVisitContent(
       id: id ?? this.id,
       propertyTitle: propertyTitle ?? this.propertyTitle,
-      ownerName: ownerName ?? this.ownerName,
-      dateLabel: dateLabel ?? this.dateLabel,
-      status: status ?? this.status,
-      detailDate: detailDate ?? this.detailDate,
+      day: day ?? this.day,
       time: time ?? this.time,
+      status: status ?? this.status,
+      statusText: statusText ?? this.statusText,
+      ownerName: ownerName ?? this.ownerName,
       ownerPhone: ownerPhone ?? this.ownerPhone,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    id,
+    propertyTitle,
+    day,
+    time,
+    status,
+    statusText,
+    ownerName,
+    ownerPhone,
+  ];
 }
