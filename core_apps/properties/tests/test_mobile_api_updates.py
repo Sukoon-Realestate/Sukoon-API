@@ -189,21 +189,22 @@ class TestAvailableDatesAndBooking:
         self, api_client, user, another_user, apartment_type
     ):
         property_obj = create_property(user, apartment_type)
-        other_property = create_property(
-            user, apartment_type, title="Owner's other property"
-        )
         visit_date = timezone.localdate() + timedelta(days=2)
         OwnerAvailabilitySlot.objects.create(
-            owner=user, date=visit_date, time="10:00:00"
+            owner=user, property=property_obj, date=visit_date, time="10:00:00"
         )
         OwnerAvailabilitySlot.objects.create(
-            owner=user, date=visit_date, time="11:00:00", is_enabled=False
+            owner=user,
+            property=property_obj,
+            date=visit_date,
+            time="11:00:00",
+            is_enabled=False,
         )
         OwnerAvailabilitySlot.objects.create(
-            owner=user, date=visit_date, time="12:00:00"
+            owner=user, property=property_obj, date=visit_date, time="12:00:00"
         )
         PropertyVisit.objects.create(
-            property=other_property,
+            property=property_obj,
             tenant=another_user,
             visit_date=visit_date,
             visit_time="12:00:00",
@@ -225,23 +226,33 @@ class TestAvailableDatesAndBooking:
                 "visit_date": visit_date.isoformat(),
             }
         ]
-        assert data["times"] == [
-            {
-                "time": "10:00 AM",
-                "visit_time": "10:00:00",
-                "is_available": True,
-            },
-            {
-                "time": "11:00 AM",
-                "visit_time": "11:00:00",
-                "is_available": False,
-            },
-            {
-                "time": "12:00 PM",
-                "visit_time": "12:00:00",
-                "is_available": False,
-            },
-        ]
+        response = api_client.get(
+            reverse(
+                "property-available-dates",
+                kwargs={"property_id": property_obj.id},
+            ),
+            {"date": visit_date.isoformat()},
+        )
+        assert response.status_code == status.HTTP_200_OK
+        assert response.json()["data"] == {
+            "times": [
+                {
+                    "time": "10:00 AM",
+                    "visit_time": "10:00:00",
+                    "is_available": True,
+                },
+                {
+                    "time": "11:00 AM",
+                    "visit_time": "11:00:00",
+                    "is_available": False,
+                },
+                {
+                    "time": "12:00 PM",
+                    "visit_time": "12:00:00",
+                    "is_available": False,
+                },
+            ]
+        }
 
     def test_empty_schedule_and_invalid_requested_date(
         self, api_client, user, apartment_type
@@ -253,12 +264,41 @@ class TestAvailableDatesAndBooking:
 
         response = api_client.get(url)
         assert response.status_code == status.HTTP_200_OK
-        assert response.json()["data"] == {"days": [], "times": []}
+        assert response.json()["data"] == {"days": []}
 
         response = api_client.get(
             url, {"date": (timezone.localdate() + timedelta(days=5)).isoformat()}
         )
         assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_availability_is_isolated_between_an_owners_properties(
+        self, api_client, user, apartment_type
+    ):
+        nasr_city_property = create_property(user, apartment_type)
+        other_city_property = create_property(
+            user,
+            apartment_type,
+            title="Different City Property",
+            city="Giza",
+            district="Dokki",
+        )
+        visit_date = timezone.localdate() + timedelta(days=2)
+        OwnerAvailabilitySlot.objects.create(
+            owner=user,
+            property=nasr_city_property,
+            date=visit_date,
+            time="10:00:00",
+        )
+
+        response = api_client.get(
+            reverse(
+                "property-available-dates",
+                kwargs={"property_id": other_city_property.id},
+            )
+        )
+
+        assert response.status_code == status.HTTP_200_OK
+        assert response.json()["data"] == {"days": []}
 
     def test_booking_revalidates_slot_and_prevents_owner_double_booking(
         self, auth_client, api_client, user, another_user, superuser, apartment_type
@@ -266,7 +306,10 @@ class TestAvailableDatesAndBooking:
         property_obj = create_property(another_user, apartment_type)
         visit_date = timezone.localdate() + timedelta(days=3)
         OwnerAvailabilitySlot.objects.create(
-            owner=another_user, date=visit_date, time="14:00:00"
+            owner=another_user,
+            property=property_obj,
+            date=visit_date,
+            time="14:00:00",
         )
         url = reverse("property-visit-create", kwargs={"property_id": property_obj.id})
         payload = {

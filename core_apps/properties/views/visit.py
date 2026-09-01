@@ -1,7 +1,9 @@
 import logging
+from datetime import timedelta
 
 from django.shortcuts import get_object_or_404
-from rest_framework import generics, permissions
+from django.utils import timezone
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 
 from core_apps.common.pagination import StandardResultsSetPagination
@@ -12,11 +14,17 @@ from ..models import Property, PropertyVisit
 from ..permissions import IsTenantOrPropertyOwner
 from ..serializers import (
     AvailableDatesQuerySerializer,
+    OwnerAvailabilityWeekQuerySerializer,
+    OwnerAvailabilityDayUpdateSerializer,
+    OwnerVisitCalendarQuerySerializer,
     PropertyVisitCreateSerializer,
     PropertyVisitDetailSerializer,
     PropertyVisitSerializer,
     PropertyVisitUpdateSerializer,
     TenantVisitListSerializer,
+    PropertyVisitReviewSerializer,
+    TenantVisitRequestDetailSerializer,
+    TenantVisitRequestSerializer,
 )
 from ..services import PropertyVisitService
 
@@ -51,6 +59,24 @@ class PropertyVisitCreateAPIView(generics.CreateAPIView):
         )
         serializer.save(tenant=self.request.user, property_obj=property_obj)
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        property_obj = get_object_or_404(
+            Property.objects.select_related(
+                "owner", "owner__profile", "property_type", "governorate", "city"
+            ),
+            id=self.kwargs["property_id"],
+        )
+        visit = serializer.save(tenant=request.user, property_obj=property_obj)
+        response_data = TenantVisitRequestDetailSerializer(
+            visit, context={"request": request}
+        ).data
+        return Response(
+            {"message": "Visit request submitted successfully.", **response_data},
+            status=status.HTTP_201_CREATED,
+        )
+
 
 class PropertyAvailableDatesAPIView(generics.GenericAPIView):
     """Return the property's owner's future visit availability.
@@ -73,6 +99,74 @@ class PropertyAvailableDatesAPIView(generics.GenericAPIView):
             requested_date=serializer.validated_data.get("date"),
         )
         return Response(schedule)
+
+
+class OwnerAvailabilityWeekAPIView(generics.GenericAPIView):
+    """Read or save one of the authenticated owner's property availability grids.
+
+    Request Body Example (PUT):
+    {
+        "availability_date": "2026-09-15",
+        "slots": [
+            {"time": "09:00:00", "is_enabled": true},
+            {"time": "12:00:00", "is_enabled": true}
+        ]
+    }
+
+    Empty ``slots`` clears every non-booked slot on the selected date. Booked
+    slots are always preserved and cannot be disabled.
+    """
+
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_property(self):
+        return get_object_or_404(
+            Property.objects.select_related("owner"),
+            id=self.kwargs["property_id"],
+            owner=self.request.user,
+        )
+
+    def get(self, request, *args, **kwargs):
+        serializer = OwnerAvailabilityWeekQuerySerializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        start_date = serializer.validated_data.get("start_date")
+        if start_date is None:
+            today = timezone.localdate()
+            start_date = today - timedelta(days=today.weekday())
+        return Response(
+            PropertyVisitService.get_owner_availability(self.get_property(), start_date)
+        )
+
+    def put(self, request, *args, **kwargs):
+        serializer = OwnerAvailabilityDayUpdateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        schedule = PropertyVisitService.replace_property_day_availability(
+            property_obj=self.get_property(),
+            availability_date=serializer.validated_data["availability_date"],
+            slots_data=serializer.validated_data["slots"],
+        )
+        return Response({"message": "Availability saved successfully.", **schedule})
+
+
+class OwnerVisitCalendarAPIView(generics.GenericAPIView):
+    """Return calendar indicators and the owner visits for a selected month day."""
+
+    serializer_class = OwnerVisitCalendarQuerySerializer
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.query_params)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+        calendar = PropertyVisitService.get_owner_visit_calendar(
+            owner=request.user,
+            year=data["year"],
+            month=data["month"],
+            selected_date=data.get("date"),
+        )
+        return Response(calendar)
 
 
 class TenantPropertyVisitListAPIView(generics.ListAPIView):
@@ -169,3 +263,122 @@ class PropertyVisitUpdateAPIView(generics.UpdateAPIView):
         obj = get_object_or_404(self.get_queryset(), id=self.kwargs["id"])
         self.check_object_permissions(self.request, obj)
         return obj
+
+
+class TenantVisitRequestListAPIView(generics.ListAPIView):
+    """List the authenticated tenant's visit-request screen cards.
+
+    Filters:
+    - status (e.g. ``?status=confirmed``)
+    """
+
+    serializer_class = TenantVisitRequestSerializer
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = PropertyVisitPagination
+    filterset_class = PropertyVisitFilter
+
+    def get_queryset(self):
+        return PropertyVisit.objects.filter(tenant=self.request.user).select_related(
+            "property",
+            "property__owner",
+            "property__property_type",
+            "property__governorate",
+            "property__city",
+            "review",
+        )
+
+
+class TenantVisitRequestDetailAPIView(generics.RetrieveAPIView):
+    """Return all data needed by the tenant visit-details screen."""
+
+    serializer_class = TenantVisitRequestDetailSerializer
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+    lookup_field = "id"
+
+    def get_queryset(self):
+        return PropertyVisit.objects.filter(tenant=self.request.user).select_related(
+            "property",
+            "property__owner",
+            "property__owner__profile",
+            "property__property_type",
+            "property__governorate",
+            "property__city",
+            "review",
+        )
+
+
+class PropertyVisitCancelAPIView(generics.GenericAPIView):
+    """Cancel one of the authenticated tenant's pending or confirmed visits.
+
+    Request Body Example:
+    {}
+    """
+
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        visit = get_object_or_404(
+            PropertyVisit.objects.select_related(
+                "tenant",
+                "property",
+                "property__owner",
+                "property__owner__profile",
+                "property__property_type",
+                "property__governorate",
+                "property__city",
+                "review",
+            ),
+            id=self.kwargs["id"],
+            tenant=request.user,
+        )
+        visit = PropertyVisitService.update_visit_status(
+            user=request.user,
+            visit_obj=visit,
+            status=PropertyVisit.Status.CANCELED,
+        )
+        data = TenantVisitRequestDetailSerializer(
+            visit, context={"request": request}
+        ).data
+        return Response({"message": "Visit canceled successfully.", **data})
+
+
+class PropertyVisitReviewCreateAPIView(generics.GenericAPIView):
+    """Submit the rating sheet for a completed, confirmed visit.
+
+    Request Body Example:
+    {
+        "overall_rating": 4,
+        "cleanliness_rating": 4,
+        "listing_accuracy_rating": 5,
+        "owner_interaction_rating": 4,
+        "comment": "The apartment matched the listing."
+    }
+    """
+
+    serializer_class = PropertyVisitReviewSerializer
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        visit = get_object_or_404(
+            PropertyVisit.objects.select_related("tenant", "property"),
+            id=self.kwargs["id"],
+            tenant=request.user,
+        )
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        review = PropertyVisitService.create_review(
+            tenant=request.user,
+            visit_obj=visit,
+            validated_data=serializer.validated_data,
+        )
+        return Response(
+            {
+                "message": "Visit review submitted successfully.",
+                **self.get_serializer(review).data,
+            },
+            status=status.HTTP_201_CREATED,
+        )

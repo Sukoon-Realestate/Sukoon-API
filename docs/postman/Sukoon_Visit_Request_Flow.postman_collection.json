@@ -1,0 +1,187 @@
+{
+  "info": {
+    "_postman_id": "4b731f4d-7ba5-47ba-8d5f-afdd98e0fd66",
+    "name": "Sukoon API - Visit Request Flow",
+    "description": "Import this collection into Postman and run the folders in order. Authentication uses the project's cookie-based JWT login. Before booking, set propertyId to a property owned by another user that has at least one future enabled availability slot. The booking requests automatically select the first available date and time. The review request needs a separately prepared, confirmed visit whose scheduled time has already passed; set reviewVisitId before running it. The final owner folder logs in separately and exercises the owner's calendar plus one selected property's weekly availability API; set ownerPropertyId and availabilityStartDate to a future date.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "baseUrl", "value": "http://127.0.0.1:8000", "type": "string"},
+    {"key": "tenantEmail", "value": "user@example.com", "type": "string"},
+    {"key": "tenantPassword", "value": "Testpass123!", "type": "string"},
+    {"key": "propertyId", "value": "", "type": "string"},
+    {"key": "visitId", "value": "", "type": "string"},
+    {"key": "reviewVisitId", "value": "", "type": "string"},
+    {"key": "visitDate", "value": "", "type": "string"},
+    {"key": "visitTime", "value": "", "type": "string"},
+    {"key": "invalidVisitId", "value": "00000000-0000-0000-0000-000000000000", "type": "string"},
+    {"key": "ownerEmail", "value": "owner@example.com", "type": "string"},
+    {"key": "ownerPassword", "value": "Testpass123!", "type": "string"},
+    {"key": "ownerPropertyId", "value": "", "type": "string"},
+    {"key": "availabilityStartDate", "value": "2026-09-07", "type": "string"},
+    {"key": "calendarYear", "value": "2026", "type": "string"},
+    {"key": "calendarMonth", "value": "9", "type": "string"},
+    {"key": "calendarDate", "value": "2026-09-07", "type": "string"}
+  ],
+  "item": [
+    {
+      "name": "01 - Authentication and availability",
+      "item": [
+        {
+          "name": "01 - Login tenant (stores auth cookies)",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "Accept", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"email\": \"{{tenantEmail}}\",\n  \"password\": \"{{tenantPassword}}\"\n}", "options": {"raw": {"language": "json"}}},
+            "url": "{{baseUrl}}/api/v1/auth/login/",
+            "description": "Postman retains the access and refresh cookies returned by this endpoint."
+          },
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test(\"Login returns 200\", function () { pm.response.to.have.status(200); });"]}}],
+          "response": []
+        },
+        {
+          "name": "02 - Get available dates (sets visitDate)",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": "{{baseUrl}}/api/v1/properties/{{propertyId}}/available_dates/",
+            "description": "Requires propertyId to reference another owner's property with an enabled future slot."
+          },
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test(\"Available dates return 200\", function () { pm.response.to.have.status(200); });", "const data = pm.response.json().data;", "pm.test(\"At least one available date exists\", function () { pm.expect(data.days.length).to.be.above(0); });", "if (data.days.length) {", "    pm.collectionVariables.set(\"visitDate\", data.days[0].visit_date);", "}"]}}],
+          "response": []
+        },
+        {
+          "name": "03 - Get availability for selected date",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": "{{baseUrl}}/api/v1/properties/{{propertyId}}/available_dates/?date={{visitDate}}"
+          },
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test(\"Selected-date availability returns 200\", function () { pm.response.to.have.status(200); });", "const times = pm.response.json().data.times || [];", "const availableTime = times.find(slot => slot.is_available);", "pm.test(\"A bookable time exists\", function () { pm.expect(availableTime).to.exist; });", "if (availableTime) {", "    pm.collectionVariables.set(\"visitTime\", availableTime.visit_time);", "}"]}}],
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02 - Request a visit",
+      "item": [
+        {
+          "name": "01 - Create visit request (sets visitId)",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "Accept", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"visit_date\": \"{{visitDate}}\",\n  \"visit_time\": \"{{visitTime}}\",\n  \"note\": \"I'd like to inspect the apartment.\"\n}", "options": {"raw": {"language": "json"}}},
+            "url": "{{baseUrl}}/api/v1/properties/{{propertyId}}/visits/",
+            "description": "Returns the success-screen summary, including property, owner, labels, status, and action flags."
+          },
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test(\"Visit request is created\", function () { pm.response.to.have.status(201); });", "const data = pm.response.json().data;", "pm.test(\"Response contains a pending visit\", function () { pm.expect(data.id).to.be.a(\"string\"); pm.expect(data.status).to.eql(\"pending\"); });", "pm.collectionVariables.set(\"visitId\", data.id);"]}}],
+          "response": []
+        },
+        {
+          "name": "02 - List my visit requests",
+          "request": {"method": "GET", "header": [{"key": "Accept", "value": "application/json"}], "url": "{{baseUrl}}/api/v1/properties/visits/requests/"},
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test(\"Visit-request list returns 200\", function () { pm.response.to.have.status(200); });", "const results = pm.response.json().data.results;", "pm.test(\"Created visit is listed\", function () { pm.expect(results.map(item => item.id)).to.include(pm.collectionVariables.get(\"visitId\")); });"]}}],
+          "response": []
+        },
+        {
+          "name": "03 - Filter my pending requests",
+          "request": {"method": "GET", "header": [{"key": "Accept", "value": "application/json"}], "url": "{{baseUrl}}/api/v1/properties/visits/requests/?status=pending"},
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test(\"Pending filter returns 200\", function () { pm.response.to.have.status(200); });"]}}],
+          "response": []
+        },
+        {
+          "name": "04 - Get visit request details",
+          "request": {"method": "GET", "header": [{"key": "Accept", "value": "application/json"}], "url": "{{baseUrl}}/api/v1/properties/visits/requests/{{visitId}}/"},
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test(\"Visit details return 200\", function () { pm.response.to.have.status(200); });", "pm.test(\"Pending visit keeps phone private\", function () { pm.expect(pm.response.json().data.owner.phone_number).to.eql(\"\"); });"]}}],
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "03 - Cancellation",
+      "item": [
+        {
+          "name": "01 - Cancel created request",
+          "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "Accept", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}", "options": {"raw": {"language": "json"}}}, "url": "{{baseUrl}}/api/v1/properties/visits/{{visitId}}/cancel/"},
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test(\"Cancellation returns 200\", function () { pm.response.to.have.status(200); });", "pm.test(\"Visit is cancelled\", function () { pm.expect(pm.response.json().data.status).to.eql(\"canceled\"); });"]}}],
+          "response": []
+        },
+        {
+          "name": "02 - Cancel unknown visit (404)",
+          "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "Accept", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}", "options": {"raw": {"language": "json"}}}, "url": "{{baseUrl}}/api/v1/properties/visits/{{invalidVisitId}}/cancel/"},
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test(\"Unknown visit returns 404\", function () { pm.response.to.have.status(404); });"]}}],
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "04 - Review a completed visit",
+      "item": [
+        {
+          "name": "01 - Submit review (requires reviewVisitId setup)",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "Accept", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"overall_rating\": 4,\n  \"cleanliness_rating\": 4,\n  \"listing_accuracy_rating\": 5,\n  \"owner_interaction_rating\": 4,\n  \"comment\": \"The apartment matched the listing.\"\n}", "options": {"raw": {"language": "json"}}},
+            "url": "{{baseUrl}}/api/v1/properties/visits/{{reviewVisitId}}/review/",
+            "description": "Set reviewVisitId to a visit belonging to the logged-in tenant that is confirmed and already completed."
+          },
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test(\"Review is created\", function () { pm.response.to.have.status(201); });", "pm.test(\"Review contains all scores\", function () { const data = pm.response.json().data; pm.expect(data.overall_rating).to.eql(4); pm.expect(data.cleanliness_rating).to.eql(4); });"]}}],
+          "response": []
+        },
+        {
+          "name": "02 - Invalid review score (400)",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "Accept", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"overall_rating\": 6,\n  \"cleanliness_rating\": 4,\n  \"listing_accuracy_rating\": 5,\n  \"owner_interaction_rating\": 4\n}", "options": {"raw": {"language": "json"}}},
+            "url": "{{baseUrl}}/api/v1/properties/visits/{{reviewVisitId}}/review/"
+          },
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test(\"Invalid score returns 400\", function () { pm.response.to.have.status(400); });"]}}],
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "05 - Owner calendar and availability",
+      "item": [
+        {
+          "name": "01 - Login owner (stores auth cookies)",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "Accept", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"email\": \"{{ownerEmail}}\",\n  \"password\": \"{{ownerPassword}}\"\n}", "options": {"raw": {"language": "json"}}},
+            "url": "{{baseUrl}}/api/v1/auth/login/",
+            "description": "Logs in the owner whose availability is being configured."
+          },
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test(\"Owner login returns 200\", function () { pm.response.to.have.status(200); });"]}}],
+          "response": []
+        },
+        {
+          "name": "02 - Get owner weekly availability",
+          "request": {"method": "GET", "header": [{"key": "Accept", "value": "application/json"}], "url": "{{baseUrl}}/api/v1/properties/owner/properties/{{ownerPropertyId}}/availability/?start_date={{availabilityStartDate}}"},
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test(\"Owner availability returns 200\", function () { pm.response.to.have.status(200); });", "pm.test(\"Availability returns seven days\", function () { pm.expect(pm.response.json().data.days).to.have.length(7); });"]}}],
+          "response": []
+        },
+        {
+          "name": "03 - Save owner availability for one date",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}, {"key": "Accept", "value": "application/json"}],
+            "body": {"mode": "raw", "raw": "{\n  \"availability_date\": \"{{availabilityStartDate}}\",\n  \"slots\": [\n    {\"time\": \"09:00:00\", \"is_enabled\": true},\n    {\"time\": \"12:00:00\", \"is_enabled\": true},\n    {\"time\": \"16:00:00\", \"is_enabled\": false}\n  ]\n}", "options": {"raw": {"language": "json"}}},
+            "url": "{{baseUrl}}/api/v1/properties/owner/properties/{{ownerPropertyId}}/availability/",
+            "description": "Creates or updates ownerPropertyId slots on availability_date. Omitted non-booked slots on that date are removed; booked slots remain protected."
+          },
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test(\"Availability saves successfully\", function () { pm.response.to.have.status(200); });", "const slots = pm.response.json().data.days[0].slots;", "pm.test(\"Saved slots are returned\", function () { pm.expect(slots.map(slot => slot.time)).to.include(\"09:00:00\"); });"]}}],
+          "response": []
+        },
+        {
+          "name": "04 - Get owner monthly calendar",
+          "request": {"method": "GET", "header": [{"key": "Accept", "value": "application/json"}], "url": "{{baseUrl}}/api/v1/properties/owner/calendar/?year={{calendarYear}}&month={{calendarMonth}}&date={{calendarDate}}"},
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["pm.test(\"Owner calendar returns 200\", function () { pm.response.to.have.status(200); });", "pm.test(\"Calendar includes selected date\", function () { pm.expect(pm.response.json().data.selected_date).to.eql(pm.collectionVariables.get(\"calendarDate\")); });"]}}],
+          "response": []
+        }
+      ]
+    }
+  ]
+}

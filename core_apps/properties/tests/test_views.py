@@ -659,7 +659,10 @@ class TestPropertyVisitViews:
             owner=another_user, title="Apartment Heliopolis", price=20000.00
         )
         OwnerAvailabilitySlot.objects.create(
-            owner=another_user, date="2099-07-20", time="14:00:00"
+            owner=another_user,
+            property=property_obj,
+            date="2099-07-20",
+            time="14:00:00",
         )
         url = reverse("property-visit-create", kwargs={"property_id": property_obj.id})
         data = {

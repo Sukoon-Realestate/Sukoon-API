@@ -20,8 +20,14 @@ from .views import (
     OwnerPropertyVisitListAPIView,
     PropertyVisitDetailAPIView,
     PropertyVisitUpdateAPIView,
+    PropertyVisitCancelAPIView,
+    PropertyVisitReviewCreateAPIView,
+    TenantVisitRequestDetailAPIView,
+    TenantVisitRequestListAPIView,
     AvailablePlacesAPIView,
     PropertyAvailableDatesAPIView,
+    OwnerAvailabilityWeekAPIView,
+    OwnerVisitCalendarAPIView,
     SavedPropertyCreateAPIView,
     SavedPropertyDeleteAPIView,
     SavedPropertyListAPIView,
@@ -46,6 +52,16 @@ urlpatterns = [
     path("owned/", MyPropertyListAPIView.as_view(), name="my-property-list"),
     path("saved/", SavedPropertyListAPIView.as_view(), name="saved-property-list"),
     path("owner/dashboard/", OwnerDashboardAPIView.as_view(), name="owner-dashboard"),
+    path(
+        "owner/properties/<uuid:property_id>/availability/",
+        OwnerAvailabilityWeekAPIView.as_view(),
+        name="owner-availability-week",
+    ),
+    path(
+        "owner/calendar/",
+        OwnerVisitCalendarAPIView.as_view(),
+        name="owner-visit-calendar",
+    ),
     path("<uuid:id>/", PropertyDetailAPIView.as_view(), name="property-detail"),
     path(
         "<uuid:property_id>/save/",
@@ -89,6 +105,26 @@ urlpatterns = [
         "visits/received/",
         OwnerPropertyVisitListAPIView.as_view(),
         name="owner-visit-list",
+    ),
+    path(
+        "visits/requests/",
+        TenantVisitRequestListAPIView.as_view(),
+        name="tenant-visit-request-list",
+    ),
+    path(
+        "visits/requests/<uuid:id>/",
+        TenantVisitRequestDetailAPIView.as_view(),
+        name="tenant-visit-request-detail",
+    ),
+    path(
+        "visits/<uuid:id>/cancel/",
+        PropertyVisitCancelAPIView.as_view(),
+        name="property-visit-cancel",
+    ),
+    path(
+        "visits/<uuid:id>/review/",
+        PropertyVisitReviewCreateAPIView.as_view(),
+        name="property-visit-review-create",
     ),
     path(
         "visits/<uuid:id>/",

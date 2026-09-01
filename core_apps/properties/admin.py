@@ -10,6 +10,7 @@ from .models import (
     PropertyRating,
     PropertyType,
     PropertyVisit,
+    PropertyVisitReview,
     SavedProperty,
 )
 
@@ -78,8 +79,22 @@ class PropertyAdmin(admin.ModelAdmin):
     inlines = [PropertyImageInline]
 
 
-admin.site.register(OwnerAvailabilitySlot)
+@admin.register(OwnerAvailabilitySlot)
+class OwnerAvailabilitySlotAdmin(admin.ModelAdmin):
+    list_display = ["property", "owner", "date", "time", "is_enabled"]
+    list_filter = ["is_enabled", "date"]
+    search_fields = ["property__title", "owner__email"]
+    autocomplete_fields = ["property"]
+    exclude = ["owner"]
+
+    def save_model(self, request, obj, form, change):
+        # ? Keep the legacy owner field consistent while availability is property-scoped.
+        obj.owner = obj.property.owner
+        super().save_model(request, obj, form, change)
+
+
 admin.site.register(PropertyVisit)
+admin.site.register(PropertyVisitReview)
 admin.site.register(PropertyFavorite)
 admin.site.register(SavedProperty)
 admin.site.register(PropertyRating)

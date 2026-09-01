@@ -105,7 +105,7 @@ class TestPropertyVisitService:
     def test_create_visit_service_success(self, user, another_user):
         property_obj = _create_property(owner=user, title="Sample Property")
         OwnerAvailabilitySlot.objects.create(
-            owner=user, date="2099-07-20", time="14:00:00"
+            owner=user, property=property_obj, date="2099-07-20", time="14:00:00"
         )
         validated_data = {
             "visit_date": "2099-07-20",
@@ -138,7 +138,7 @@ class TestPropertyVisitService:
     def test_create_visit_service_duplicate_fails(self, user, another_user):
         property_obj = _create_property(owner=user, title="Sample Property")
         OwnerAvailabilitySlot.objects.create(
-            owner=user, date="2099-07-20", time="14:00:00"
+            owner=user, property=property_obj, date="2099-07-20", time="14:00:00"
         )
         validated_data = {
             "visit_date": "2099-07-20",

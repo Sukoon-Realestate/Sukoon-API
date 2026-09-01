@@ -1,10 +1,13 @@
+from datetime import datetime
+
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
 
 from core_apps.profiles.serializers import CloudinarySerializerField
 from core_apps.properties.serializers.property import PropertyListSerializer
-from ..models import PropertyVisit
+from ..models import Property, PropertyVisit, PropertyVisitReview
 from ..services import PropertyVisitService
 
 
@@ -37,6 +40,13 @@ _ARABIC_MONTHS = {
 _ARABIC_VISIT_STATUS = {
     PropertyVisit.Status.PENDING: "بانتظار رد المالك",
     PropertyVisit.Status.CONFIRMED: "مؤكد",
+    PropertyVisit.Status.CANCELED: "ملغي",
+    PropertyVisit.Status.REJECTED: "مرفوض",
+}
+
+_ARABIC_REQUEST_STATUS = {
+    PropertyVisit.Status.PENDING: "بانتظار رد المالك",
+    PropertyVisit.Status.CONFIRMED: "مقبول",
     PropertyVisit.Status.CANCELED: "ملغي",
     PropertyVisit.Status.REJECTED: "مرفوض",
 }
@@ -175,3 +185,198 @@ class PropertyVisitUpdateSerializer(serializers.ModelSerializer):
 
 class AvailableDatesQuerySerializer(serializers.Serializer):
     date = serializers.DateField(required=False)
+
+
+class OwnerAvailabilityWeekQuerySerializer(serializers.Serializer):
+    start_date = serializers.DateField(required=False)
+
+
+class OwnerAvailabilitySlotInputSerializer(serializers.Serializer):
+    time = serializers.TimeField()
+    is_enabled = serializers.BooleanField(default=True)
+
+
+class OwnerAvailabilityDayUpdateSerializer(serializers.Serializer):
+    availability_date = serializers.DateField()
+    slots = OwnerAvailabilitySlotInputSerializer(many=True)
+
+    def validate(self, attrs):
+        availability_date = attrs["availability_date"]
+        now = timezone.localtime()
+        slot_times = set()
+
+        for slot in attrs["slots"]:
+            slot_time = slot["time"]
+            if slot_time in slot_times:
+                raise serializers.ValidationError(
+                    _("Each time can be submitted only once.")
+                )
+            if datetime.combine(availability_date, slot_time, now.tzinfo) <= now:
+                raise serializers.ValidationError(
+                    _("Availability slots must be in the future.")
+                )
+            slot_times.add(slot_time)
+        return attrs
+
+
+class OwnerVisitCalendarQuerySerializer(serializers.Serializer):
+    year = serializers.IntegerField(min_value=2000, max_value=2100)
+    month = serializers.IntegerField(min_value=1, max_value=12)
+    date = serializers.DateField(required=False)
+
+    def validate(self, attrs):
+        selected_date = attrs.get("date")
+        if selected_date and (
+            selected_date.year != attrs["year"] or selected_date.month != attrs["month"]
+        ):
+            raise serializers.ValidationError(
+                {"date": _("The selected date must belong to the requested month.")}
+            )
+        return attrs
+
+
+class VisitPropertySummarySerializer(serializers.ModelSerializer):
+    location = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Property
+        fields = [
+            "id",
+            "title",
+            "location",
+            "price",
+        ]
+        read_only_fields = fields
+
+    def get_location(self, obj):
+        return f"{obj.district}, {obj.city.name}"
+
+
+class VisitOwnerSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source="get_full_name", read_only=True)
+    phone_number = serializers.SerializerMethodField()
+    masked_phone_number = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = ["id", "name", "is_verified", "phone_number", "masked_phone_number"]
+        read_only_fields = fields
+
+    def _phone_number(self, obj):
+        profile = getattr(obj, "profile", None)
+        return str(profile.phone_number) if profile and profile.phone_number else ""
+
+    def get_phone_number(self, obj):
+        visit = self.context.get("visit")
+        if visit and visit.status == PropertyVisit.Status.CONFIRMED:
+            return self._phone_number(obj)
+        return ""
+
+    def get_masked_phone_number(self, obj):
+        number = self.get_phone_number(obj)
+        if len(number) <= 6:
+            return number
+        return f"{number[:3]}{'*' * (len(number) - 6)}{number[-3:]}"
+
+
+class PropertyVisitReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PropertyVisitReview
+        fields = [
+            "id",
+            "overall_rating",
+            "cleanliness_rating",
+            "listing_accuracy_rating",
+            "owner_interaction_rating",
+            "comment",
+            "created_at",
+        ]
+        read_only_fields = ["id", "created_at"]
+
+
+class TenantVisitRequestSerializer(serializers.ModelSerializer):
+    """Payload used by the tenant visit-request cards shown in the mobile app."""
+
+    property = VisitPropertySummarySerializer(read_only=True)
+    owner = serializers.SerializerMethodField()
+    day_label = serializers.SerializerMethodField()
+    time_label = serializers.SerializerMethodField()
+    status_label = serializers.SerializerMethodField()
+    actions = serializers.SerializerMethodField()
+    alternative_search_filters = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PropertyVisit
+        fields = [
+            "id",
+            "property",
+            "owner",
+            "day_label",
+            "time_label",
+            "status_label",
+            "actions",
+            "alternative_search_filters",
+        ]
+        read_only_fields = fields
+
+    def get_owner(self, obj):
+        return {
+            "id": str(obj.property.owner.id),
+            "name": obj.property.owner.get_full_name,
+        }
+
+    def get_day_label(self, obj):
+        return TenantVisitListSerializer().get_day(obj)
+
+    def get_time_label(self, obj):
+        return TenantVisitListSerializer().get_time(obj)
+
+    def get_status_label(self, obj):
+        return _ARABIC_REQUEST_STATUS.get(obj.status, obj.status)
+
+    def get_actions(self, obj):
+        scheduled_at = datetime.combine(
+            obj.visit_date, obj.visit_time, timezone.get_current_timezone()
+        )
+        was_reviewed = hasattr(obj, "review")
+        return {
+            "can_cancel": obj.status
+            in (PropertyVisit.Status.PENDING, PropertyVisit.Status.CONFIRMED),
+            "can_chat": obj.status == PropertyVisit.Status.CONFIRMED,
+            "can_review": (
+                obj.status == PropertyVisit.Status.CONFIRMED
+                and scheduled_at <= timezone.localtime()
+                and not was_reviewed
+            ),
+            "can_find_alternative": obj.status == PropertyVisit.Status.REJECTED,
+        }
+
+    def get_alternative_search_filters(self, obj):
+        if obj.status != PropertyVisit.Status.REJECTED:
+            return None
+        return {
+            "property_type": obj.property.property_type.slug,
+            "governorate": str(obj.property.governorate_id),
+            "city": str(obj.property.city_id),
+        }
+
+
+class TenantVisitRequestDetailSerializer(TenantVisitRequestSerializer):
+    owner = serializers.SerializerMethodField()
+    note = serializers.CharField(read_only=True)
+    review = PropertyVisitReviewSerializer(read_only=True)
+
+    class Meta(TenantVisitRequestSerializer.Meta):
+        fields = TenantVisitRequestSerializer.Meta.fields + [
+            "visit_date",
+            "visit_time",
+            "status",
+            "note",
+            "review",
+        ]
+
+    def get_owner(self, obj):
+        return VisitOwnerSerializer(
+            obj.property.owner,
+            context={"visit": obj},
+        ).data
