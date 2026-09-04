@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
+import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
@@ -105,7 +107,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       onPressed: () => _openNotification(notification),
                     );
                   },
-                  separatorBuilder: (context, index) => SizedBox(height: 8.h),
+                  separatorBuilder: (context, index) => 8.szH,
                   itemCount: _notifications.length,
                 ),
               ),
@@ -130,53 +132,50 @@ class _NotificationsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(20.w, 4.h, 14.w, 12.h),
-      child: Row(
-        children: [
-          Expanded(
-            child: AppText(
-              LocaleKeys.notificationsFlowTitle,
-              color: AppColors.sokoonNavy,
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w900,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+    return Row(
+      children: [
+        Expanded(
+          child: AppText(
+            LocaleKeys.notificationsFlowTitle,
+            color: AppColors.sokoonNavy,
+            fontSize: 20.sp,
+            fontWeight: FontWeight.w900,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
-          TextButton(
-            key: const ValueKey('notifications-mark-all'),
-            onPressed: hasUnread ? onMarkAllPressed : null,
-            style: TextButton.styleFrom(
-              foregroundColor: AppColors.sokoonTeal,
-              padding: EdgeInsets.symmetric(horizontal: 6.w),
-              minimumSize: Size.zero,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            child: AppText(
-              role.isOwner
-                  ? LocaleKeys.notificationsMarkAll
-                  : LocaleKeys.notificationsMarkAllRead,
-              color: hasUnread ? AppColors.sokoonTeal : AppColors.sokoonMuted,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w800,
-            ),
+        ),
+        TextButton(
+          key: const ValueKey('notifications-mark-all'),
+          onPressed: hasUnread ? onMarkAllPressed : null,
+          style: TextButton.styleFrom(
+            foregroundColor: AppColors.sokoonTeal,
+            padding: EdgeInsets.symmetric(horizontal: 6.w),
+            minimumSize: Size.zero,
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
-          IconButton(
-            key: const ValueKey('notifications-settings'),
-            tooltip: LocaleKeys.notificationSettingsTitle,
-            onPressed: () => Go.to(NotificationSettingsScreen(role: role)),
-            visualDensity: VisualDensity.compact,
-            constraints: BoxConstraints.tightFor(width: 38.r, height: 38.r),
-            padding: EdgeInsets.zero,
-            icon: Icon(
-              Icons.settings_outlined,
-              color: AppColors.sokoonNavy,
-              size: 20.r,
-            ),
+          child: AppText(
+            role.isOwner
+                ? LocaleKeys.notificationsMarkAll
+                : LocaleKeys.notificationsMarkAllRead,
+            color: hasUnread ? AppColors.sokoonTeal : AppColors.sokoonMuted,
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w800,
           ),
-        ],
-      ),
-    );
+        ),
+        IconButton(
+          key: const ValueKey('notifications-settings'),
+          tooltip: LocaleKeys.notificationSettingsTitle,
+          onPressed: () => Go.to(NotificationSettingsScreen(role: role)),
+          visualDensity: VisualDensity.compact,
+          constraints: BoxConstraints.tightFor(width: 38.r, height: 38.r),
+          padding: EdgeInsets.zero,
+          icon: Icon(
+            Icons.settings_outlined,
+            color: AppColors.sokoonNavy,
+            size: 20.r,
+          ),
+        ),
+      ],
+    ).padding(EdgeInsets.fromLTRB(20.w, 4.h, 14.w, 12.h));
   }
 }

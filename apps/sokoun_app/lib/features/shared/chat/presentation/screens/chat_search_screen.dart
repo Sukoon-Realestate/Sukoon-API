@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -65,32 +66,29 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
         body: SafeArea(
           child: Column(
             children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(14.w, 8.h, 20.w, 12.h),
-                child: Row(
-                  children: [
-                    IconButton(
-                      key: const ValueKey('chat-search-back'),
-                      onPressed: () => Go.back(),
-                      icon: Icon(
-                        Icons.arrow_back_ios_new_rounded,
-                        color: AppColors.sokoonNavy,
-                        size: 19.r,
-                      ),
+              Row(
+                children: [
+                  IconButton(
+                    key: const ValueKey('chat-search-back'),
+                    onPressed: () => Go.back(),
+                    icon: Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      color: AppColors.sokoonNavy,
+                      size: 19.r,
                     ),
-                    8.szW,
-                    Expanded(
-                      child: ChatSearchField(
-                        controller: _searchController,
-                        autofocus: false,
-                        isActive: true,
-                        onChanged: _updateQuery,
-                        onClearPressed: _clearQuery,
-                      ),
+                  ),
+                  8.szW,
+                  Expanded(
+                    child: ChatSearchField(
+                      controller: _searchController,
+                      autofocus: false,
+                      isActive: true,
+                      onChanged: _updateQuery,
+                      onClearPressed: _clearQuery,
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                ],
+              ).padding(EdgeInsets.fromLTRB(14.w, 8.h, 20.w, 12.h)),
               Expanded(
                 child: ListView(
                   padding: EdgeInsets.fromLTRB(20.w, 2.h, 20.w, 20.h),

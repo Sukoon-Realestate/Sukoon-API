@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/languages.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_list_screen.dart';
@@ -196,12 +197,10 @@ class _ProfileTabScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
-        child: Center(
-          child: Text(
-            LocaleKeys.profile,
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-        ),
+        child: Text(
+          LocaleKeys.profile,
+          style: Theme.of(context).textTheme.titleLarge,
+        ).centerWidget,
       ),
     );
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/align_helper.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/image_widgets/cached_image.dart';
@@ -50,69 +52,63 @@ class TenantPropertyCard extends StatelessWidget {
                 : Icon(icon, color: AppColors.blueGrayLight, size: 26.r),
           ),
           Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 11.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  AppText(
-                    title,
-                    color: AppColors.sokoonNavy,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w900,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  6.szH,
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.star_rounded,
-                        color: AppColors.amber,
-                        size: 14.r,
-                      ),
-                      3.szW,
-                      AppText(
-                        rating,
-                        color: AppColors.sokoonGray,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      8.szW,
-                      AppText(
-                        '·',
-                        color: AppColors.sokoonGray,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      8.szW,
-                      Expanded(
-                        child: AppText(
-                          area,
-                          color: AppColors.sokoonGray,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  Align(
-                    alignment: AlignmentDirectional.centerEnd,
-                    child: AppText(
-                      price,
-                      color: AppColors.sokoonTeal,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w900,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                AppText(
+                  title,
+                  color: AppColors.sokoonNavy,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w900,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                6.szH,
+                Row(
+                  children: [
+                    Icon(
+                      Icons.star_rounded,
+                      color: AppColors.amber,
+                      size: 14.r,
                     ),
-                  ),
-                ],
-              ),
-            ),
+                    3.szW,
+                    AppText(
+                      rating,
+                      color: AppColors.sokoonGray,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    8.szW,
+                    AppText(
+                      '·',
+                      color: AppColors.sokoonGray,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    8.szW,
+                    Expanded(
+                      child: AppText(
+                        area,
+                        color: AppColors.sokoonGray,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                AppText(
+                  price,
+                  color: AppColors.sokoonTeal,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w900,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ).endWidget,
+              ],
+            ).paddingSymmetric(horizontal: 12.w, vertical: 11.h),
           ),
         ],
       ),

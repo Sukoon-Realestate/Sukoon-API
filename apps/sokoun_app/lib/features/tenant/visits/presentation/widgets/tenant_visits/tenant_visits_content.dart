@@ -6,8 +6,6 @@ class TenantVisitsScreenContent extends StatelessWidget {
     required this.selectedFilter,
     required this.initialVisits,
     required this.pagifyController,
-    required this.cacheKey,
-    required this.loadPage,
     required this.onFilterSelected,
     required this.onVisitPressed,
     required this.onRatePressed,
@@ -17,8 +15,6 @@ class TenantVisitsScreenContent extends StatelessWidget {
   final TenantVisitFilter selectedFilter;
   final List<TenantVisitContent>? initialVisits;
   final PagifyController<TenantVisitContent>? pagifyController;
-  final String cacheKey;
-  final TenantVisitsPageLoader loadPage;
   final ValueChanged<TenantVisitFilter> onFilterSelected;
   final ValueChanged<TenantVisitContent> onVisitPressed;
   final ValueChanged<TenantVisitContent> onRatePressed;
@@ -43,8 +39,6 @@ class TenantVisitsScreenContent extends StatelessWidget {
             selectedFilter: selectedFilter,
             initialVisits: initialVisits,
             pagifyController: pagifyController,
-            cacheKey: cacheKey,
-            loadPage: loadPage,
             onFilterSelected: onFilterSelected,
             onVisitPressed: onVisitPressed,
             onRatePressed: onRatePressed,

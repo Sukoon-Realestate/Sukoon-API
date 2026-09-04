@@ -6,6 +6,8 @@ import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_search_model.dart';
 
 abstract final class PropertySearchData {
+  static String cacheKeyFor(PropertySearchFilters filters) => filters.cacheKey;
+
   static Future<(PropertySearchResponseModel, PaginationData)>
   getPropertiesPage(PropertySearchFilters filters) async {
     final response = await injector<NetworkService>().callApi(

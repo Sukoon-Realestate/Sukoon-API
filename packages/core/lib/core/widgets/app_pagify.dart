@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 import 'package:melos_core/generated/assets.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:pagify/helpers/errors.dart';
@@ -8,6 +9,7 @@ import 'package:pagify/helpers/status_stream.dart';
 import 'package:pagify/pagify.dart';
 import '../../config/language/locale_keys.g.dart';
 import '../local_db/objectbox_cache_service.dart';
+import '../shared/base_state.dart';
 import 'app_text.dart';
 import 'custom_loading.dart';
 import 'toast_messages/custom_messages.dart';
@@ -97,7 +99,11 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
               )
           ),
           errorBuilder: (e) => const ExceptionView(),
-          onError: (c, page, e) => MessageUtils.showTopMsg(e.msg),
+          onError: (c, page, e) => Messages.showToast(
+              status: BaseStatus.error,
+              title: LocaleKeys.operationFaild,
+              msg: e.msg
+          ),
           errorMapper: PagifyErrorMapper(
               errorWhenDio: (e) {
                 final String? msg = e.response?.data['message'];

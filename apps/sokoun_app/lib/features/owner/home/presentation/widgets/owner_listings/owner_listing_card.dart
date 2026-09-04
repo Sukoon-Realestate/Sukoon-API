@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_listing_content.dart';
@@ -63,10 +64,7 @@ class OwnerListingCard extends StatelessWidget {
                       textAlign: TextAlign.right,
                     ),
                     6.szH,
-                    Align(
-                      alignment: AlignmentDirectional.centerEnd,
-                      child: OwnerListingStatusBadge(status: listing.status),
-                    ),
+                    OwnerListingStatusBadge(status: listing.status).endWidget,
                     8.szH,
                     AppText(
                       listing.price,

@@ -6,6 +6,8 @@ import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:sokoun_app/features/tenant/favorites/data/models/saved_properties_response.dart';
 
 abstract final class FavoritesData {
+  static const String cacheKey = 'tenant_saved_properties';
+
   static Future<SavedPropertiesResponse> getSavedProperties({
     required int page,
   }) async {

@@ -1,19 +1,11 @@
 part of '../../../imports.dart';
 
-typedef TenantVisitsPageLoader =
-    Future<(List<TenantVisitContent>, PaginationData)> Function(
-      BuildContext context,
-      int page,
-    );
-
 class TenantVisitsList extends StatelessWidget {
   const TenantVisitsList({
     super.key,
     required this.selectedFilter,
     required this.initialVisits,
     required this.pagifyController,
-    required this.cacheKey,
-    required this.loadPage,
     required this.onFilterSelected,
     required this.onVisitPressed,
     required this.onRatePressed,
@@ -23,8 +15,6 @@ class TenantVisitsList extends StatelessWidget {
   final TenantVisitFilter selectedFilter;
   final List<TenantVisitContent>? initialVisits;
   final PagifyController<TenantVisitContent>? pagifyController;
-  final String cacheKey;
-  final TenantVisitsPageLoader loadPage;
   final ValueChanged<TenantVisitFilter> onFilterSelected;
   final ValueChanged<TenantVisitContent> onVisitPressed;
   final ValueChanged<TenantVisitContent> onRatePressed;
@@ -44,22 +34,18 @@ class TenantVisitsList extends StatelessWidget {
       return _buildInitialList(_visibleInitialVisits);
     }
 
-    return Padding(
-      padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 18.h),
-      child: AppPagify<TenantVisitContent>(
-        pagifyController: pagifyController!,
-        asyncCall: loadPage,
-        shrinkWrap: false,
-        cacheKey: cacheKey,
-        cacheToJson: (item) => item.toJson(),
-        cacheFromJson: TenantVisitContent.fromJson,
-        emptyListView: _buildEmptyState(),
-        itemBuilder: (context, data, index, visit) => Padding(
-          padding: EdgeInsets.only(bottom: 12.h),
-          child: _buildVisitCard(visit),
-        ),
-      ),
-    );
+    return AppPagify<TenantVisitContent>(
+      pagifyController: pagifyController!,
+      asyncCall: (_, page) =>
+          TenantVisitsData.getVisitsPage(page: page, filter: selectedFilter),
+      shrinkWrap: false,
+      cacheKey: TenantVisitsData.cacheKeyFor(selectedFilter),
+      cacheToJson: (item) => item.toJson(),
+      cacheFromJson: TenantVisitContent.fromJson,
+      emptyListView: _buildEmptyState(),
+      itemBuilder: (context, data, index, visit) =>
+          _buildVisitCard(visit).paddingBottom(12.h),
+    ).padding(EdgeInsets.fromLTRB(20.w, 0, 20.w, 18.h));
   }
 
   Widget _buildInitialList(List<TenantVisitContent> visits) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/chat_builder/chat_message.dart';
@@ -183,75 +184,63 @@ class _ChatThreadScreenState extends State<ChatThreadScreen> {
               Expanded(
                 child: Column(
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 10.h, bottom: 2.h),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 9.w,
-                          vertical: 3.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.scaffoldBackground,
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        child: AppText(
-                          LocaleKeys.chatToday,
-                          color: AppColors.sokoonGray,
-                          fontSize: 11.sp,
-                        ),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 9.w,
+                        vertical: 3.h,
                       ),
-                    ),
+                      decoration: BoxDecoration(
+                        color: AppColors.scaffoldBackground,
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: AppText(
+                        LocaleKeys.chatToday,
+                        color: AppColors.sokoonGray,
+                        fontSize: 11.sp,
+                      ),
+                    ).paddingOnly(top: 10.h, bottom: 2.h),
                     Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 8.h,
-                        ),
-                        child: EasyChat<List<ChatMessageContent>>(
-                          controller: _chatController,
-                          asyncCall: _loadMessages,
-                          mapper: _mapMessages,
-                          errorMapper: PagifyErrorMapper(
-                            errorWhenDio: (error) {
-                              return PagifyApiRequestException(
-                                error.message ?? '',
-                                pagifyFailure: RequestFailureData(
-                                  statusCode: error.response?.statusCode,
-                                  statusMsg: error.response?.statusMessage,
-                                ),
-                              );
-                            },
-                          ),
-                          messageAlignment: (isFromMe) => isFromMe
-                              ? MainAxisAlignment.end
-                              : MainAxisAlignment.start,
-                          rightMessageBuilder: (message) {
-                            return ChatMessageBubble(
-                              message: message,
-                              isFromMe: true,
+                      child: EasyChat<List<ChatMessageContent>>(
+                        controller: _chatController,
+                        asyncCall: _loadMessages,
+                        mapper: _mapMessages,
+                        errorMapper: PagifyErrorMapper(
+                          errorWhenDio: (error) {
+                            return PagifyApiRequestException(
+                              error.message ?? '',
+                              pagifyFailure: RequestFailureData(
+                                statusCode: error.response?.statusCode,
+                                statusMsg: error.response?.statusMessage,
+                              ),
                             );
                           },
-                          leftMessageBuilder: (message) {
-                            return ChatMessageBubble(
-                              message: message,
-                              isFromMe: false,
-                            );
-                          },
-                          loadingBuilder: const Center(
-                            child: CircularProgressIndicator(
-                              color: AppColors.sokoonTeal,
-                            ),
-                          ),
-                          emptyView: const SizedBox.shrink(),
                         ),
-                      ),
+                        messageAlignment: (isFromMe) => isFromMe
+                            ? MainAxisAlignment.end
+                            : MainAxisAlignment.start,
+                        rightMessageBuilder: (message) {
+                          return ChatMessageBubble(
+                            message: message,
+                            isFromMe: true,
+                          );
+                        },
+                        leftMessageBuilder: (message) {
+                          return ChatMessageBubble(
+                            message: message,
+                            isFromMe: false,
+                          );
+                        },
+                        loadingBuilder: const Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.sokoonTeal,
+                          ),
+                        ),
+                        emptyView: const SizedBox.shrink(),
+                      ).paddingSymmetric(horizontal: 16.w, vertical: 8.h),
                     ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 10.h),
-                      child: ChatPrivacyBanner(
-                        text: LocaleKeys.chatPhonePrivacyThread,
-                      ),
-                    ),
+                    ChatPrivacyBanner(
+                      text: LocaleKeys.chatPhonePrivacyThread,
+                    ).padding(EdgeInsets.fromLTRB(16.w, 0, 16.w, 10.h)),
                   ],
                 ),
               ),

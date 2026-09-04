@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/align_helper.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -29,70 +31,67 @@ class ChatListItem extends StatelessWidget {
     return InkWell(
       key: ValueKey('chat-${conversation.id}'),
       onTap: _openConversation,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 14.h),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _ConversationAvatar(conversation: conversation),
-            12.szW,
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: AppText(
-                          conversation.name,
-                          color: AppColors.sokoonNavy,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w900,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      if (conversation.isVerified) ...[
-                        6.szW,
-                        const ChatVerifiedBadge(),
-                      ],
-                      const Spacer(),
-                      AppText(
-                        conversation.time,
-                        color: AppColors.sokoonGray,
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w400,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _ConversationAvatar(conversation: conversation),
+          12.szW,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Flexible(
+                      child: AppText(
+                        conversation.name,
+                        color: AppColors.sokoonNavy,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w900,
                         maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
+                    ),
+                    if (conversation.isVerified) ...[
+                      6.szW,
+                      const ChatVerifiedBadge(),
                     ],
-                  ),
-                  2.szH,
-                  AppText(
-                    conversation.property,
-                    color: AppColors.sokoonGray,
-                    fontSize: 12.sp,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  3.szH,
-                  AppText(
-                    conversation.lastMessage,
-                    color: conversation.unreadCount > 0
-                        ? AppColors.sokoonNavy
-                        : AppColors.sokoonMuted,
-                    fontSize: 12.sp,
-                    fontWeight: conversation.unreadCount > 0
-                        ? FontWeight.w700
-                        : FontWeight.w400,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
+                    const Spacer(),
+                    AppText(
+                      conversation.time,
+                      color: AppColors.sokoonGray,
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w400,
+                      maxLines: 1,
+                    ),
+                  ],
+                ),
+                2.szH,
+                AppText(
+                  conversation.property,
+                  color: AppColors.sokoonGray,
+                  fontSize: 12.sp,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                3.szH,
+                AppText(
+                  conversation.lastMessage,
+                  color: conversation.unreadCount > 0
+                      ? AppColors.sokoonNavy
+                      : AppColors.sokoonMuted,
+                  fontSize: 12.sp,
+                  fontWeight: conversation.unreadCount > 0
+                      ? FontWeight.w700
+                      : FontWeight.w400,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        ],
+      ).paddingSymmetric(horizontal: 20.w, vertical: 14.h),
     );
   }
 }
@@ -114,13 +113,11 @@ class _ConversationAvatar extends StatelessWidget {
               color: AppColors.mintLight,
               shape: BoxShape.circle,
             ),
-            child: Center(
-              child: Icon(
-                Icons.person_outline_rounded,
-                color: AppColors.sokoonTeal,
-                size: 23.r,
-              ),
-            ),
+            child: Icon(
+              Icons.person_outline_rounded,
+              color: AppColors.sokoonTeal,
+              size: 23.r,
+            ).centerWidget,
           ),
           if (conversation.unreadCount > 0)
             PositionedDirectional(

@@ -26,13 +26,6 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
     }
   }
 
-  Future<(List<TenantVisitContent>, PaginationData)> _getVisitsPage(
-    BuildContext context,
-    int page,
-  ) {
-    return TenantVisitsData.getVisitsPage(page: page, filter: _selectedFilter);
-  }
-
   void _selectFilter(TenantVisitFilter filter) {
     if (filter.isSame(_selectedFilter)) return;
     setState(() => _selectedFilter = filter);
@@ -96,8 +89,6 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
             selectedFilter: _selectedFilter,
             initialVisits: _fixtureVisits,
             pagifyController: _pagifyController,
-            cacheKey: TenantVisitsData.cacheKeyFor(_selectedFilter),
-            loadPage: _getVisitsPage,
             onFilterSelected: _selectFilter,
             onVisitPressed: _openDetails,
             onRatePressed: _showRating,

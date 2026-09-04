@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -163,53 +164,50 @@ class _ReportHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 10.h),
-      child: Column(
-        children: [
-          Container(
-            width: 48.w,
-            height: 6.h,
-            decoration: BoxDecoration(
-              color: AppColors.sokoonBorder,
-              borderRadius: BorderRadius.circular(3.r),
+    return Column(
+      children: [
+        Container(
+          width: 48.w,
+          height: 6.h,
+          decoration: BoxDecoration(
+            color: AppColors.sokoonBorder,
+            borderRadius: BorderRadius.circular(3.r),
+          ),
+        ),
+        14.szH,
+        Row(
+          children: [
+            SizedBox(width: 40.r),
+            Expanded(
+              child: AppText(
+                LocaleKeys.chatReportProblemTitle,
+                color: AppColors.sokoonNavy,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w900,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
-          14.szH,
-          Row(
-            children: [
-              SizedBox(width: 40.r),
-              Expanded(
-                child: AppText(
-                  LocaleKeys.chatReportProblemTitle,
-                  color: AppColors.sokoonNavy,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w900,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+            IconButton(
+              key: const ValueKey('chat-report-close'),
+              onPressed: Go.back,
+              icon: Icon(
+                Icons.close_rounded,
+                color: AppColors.sokoonNavy,
+                size: 20.r,
               ),
-              IconButton(
-                key: const ValueKey('chat-report-close'),
-                onPressed: Go.back,
-                icon: Icon(
-                  Icons.close_rounded,
-                  color: AppColors.sokoonNavy,
-                  size: 20.r,
-                ),
-              ),
-            ],
-          ),
-          AppText(
-            LocaleKeys.chatReportReasonPrompt,
-            color: AppColors.sokoonGray,
-            fontSize: 14.sp,
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
+            ),
+          ],
+        ),
+        AppText(
+          LocaleKeys.chatReportReasonPrompt,
+          color: AppColors.sokoonGray,
+          fontSize: 14.sp,
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ).padding(EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 10.h));
   }
 }
 

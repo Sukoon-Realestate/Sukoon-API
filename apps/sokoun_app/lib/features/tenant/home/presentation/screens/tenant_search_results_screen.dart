@@ -182,7 +182,7 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
                   filterOptions: filterOptions,
                   activeFilters: _activeFilters(filterOptions),
                   resultCount: _resultCount,
-                  cacheKey: _paginatedFilters.cacheKey,
+                  cacheKey: PropertySearchData.cacheKeyFor(_paginatedFilters),
                   loadPage: _getPropertiesPage,
                   onQueryChanged: _updateQuery,
                   onQuerySubmitted: _submitQuery,

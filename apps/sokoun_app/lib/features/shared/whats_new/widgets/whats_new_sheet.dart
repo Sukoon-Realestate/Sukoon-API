@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
+import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
@@ -58,32 +60,29 @@ class WhatsNewSheet extends StatelessWidget {
                     child: Column(
                       children: [
                         _WhatsNewHeader(version: version),
-                        SizedBox(height: 20.h),
+                        20.szH,
                         const Divider(
                           height: 1,
                           thickness: 1,
                           color: AppColors.border,
                         ),
-                        SizedBox(height: 20.h),
+                        20.szH,
                         _FeaturesList(items: items),
                       ],
                     ),
                   ),
                 ),
                 const Divider(height: 1, thickness: 1, color: AppColors.border),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 8.h),
-                  child: DefaultButton(
-                    width: double.infinity,
-                    height: 50.h,
-                    borderRadius: BorderRadius.circular(50.r),
-                    color: AppColors.primary,
-                    title: LocaleKeys.whatsNewStartNow,
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.bold,
-                    onTap: Go.back,
-                  ),
-                ),
+                DefaultButton(
+                  width: double.infinity,
+                  height: 50.h,
+                  borderRadius: BorderRadius.circular(50.r),
+                  color: AppColors.primary,
+                  title: LocaleKeys.whatsNewStartNow,
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.bold,
+                  onTap: Go.back,
+                ).padding(EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 8.h)),
               ],
             ),
           ),
@@ -135,7 +134,7 @@ class _WhatsNewHeader extends StatelessWidget {
           ),
           child: AppText('🎉', fontSize: 24.sp),
         ),
-        SizedBox(height: 8.h),
+        8.szH,
         AppText(
           LocaleKeys.whatsNewTitle,
           color: AppColors.textBlack,
@@ -144,7 +143,7 @@ class _WhatsNewHeader extends StatelessWidget {
           textAlign: TextAlign.center,
           height: 1.3,
         ),
-        SizedBox(height: 4.h),
+        4.szH,
         Container(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 3.h),
           decoration: BoxDecoration(
@@ -158,7 +157,7 @@ class _WhatsNewHeader extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        SizedBox(height: 8.h),
+        8.szH,
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 280.w),
           child: AppText(
@@ -212,15 +211,10 @@ class _FeaturesList extends StatelessWidget {
     return Column(
       children: items.indexed
           .map(
-            ((int, String) entry) => Padding(
-              padding: EdgeInsets.only(
-                bottom: entry.$1 == items.length - 1 ? 0 : 16.h,
-              ),
-              child: _FeatureItem(
-                title: entry.$2,
-                visual: _visuals[entry.$1 % _visuals.length],
-              ),
-            ),
+            ((int, String) entry) => _FeatureItem(
+              title: entry.$2,
+              visual: _visuals[entry.$1 % _visuals.length],
+            ).paddingOnly(bottom: entry.$1 == items.length - 1 ? 0 : 16.h),
           )
           .toList(),
     );
@@ -248,7 +242,7 @@ class _FeatureItem extends StatelessWidget {
           ),
           child: Icon(visual.icon, size: 19.r, color: visual.foregroundColor),
         ),
-        SizedBox(width: 12.w),
+        12.szW,
         Expanded(
           child: AppText(
             title,

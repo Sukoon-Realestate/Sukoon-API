@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -71,23 +72,20 @@ class _LoginScreenState extends State<LoginScreen> {
               16.szH,
               SokoonPasswordField(controller: _passwordController),
               10.szH,
-              Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: TextButton(
-                  onPressed: () {},
-                  style: TextButton.styleFrom(
-                    minimumSize: Size.zero,
-                    padding: EdgeInsets.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  child: AppText(
-                    LocaleKeys.forgotPassword,
-                    color: AppColors.tealOrGoldBasedRole,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w700,
-                  ),
+              TextButton(
+                onPressed: () {},
+                style: TextButton.styleFrom(
+                  minimumSize: Size.zero,
+                  padding: EdgeInsets.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
-              ),
+                child: AppText(
+                  LocaleKeys.forgotPassword,
+                  color: AppColors.tealOrGoldBasedRole,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w700,
+                ),
+              ).startWidget,
               14.szH,
               AppLoadingButton(
                 asyncCall: _submit,
@@ -107,26 +105,21 @@ class _LoginScreenState extends State<LoginScreen> {
               12.szH,
               SokoonAppleSignInButton(),
               16.szH,
-              Center(
-                child: TextButton(
-                  onPressed: () {},
-                  style: TextButton.styleFrom(
-                    minimumSize: Size.zero,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 8.w,
-                      vertical: 4.h,
-                    ),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  child: AppText(
-                    LocaleKeys.signInAsVisitor,
-                    color: AppColors.sokoonGray,
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w700,
-                    decoration: TextDecoration.underline,
-                  ),
+              TextButton(
+                onPressed: () {},
+                style: TextButton.styleFrom(
+                  minimumSize: Size.zero,
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
-              ),
+                child: AppText(
+                  LocaleKeys.signInAsVisitor,
+                  color: AppColors.sokoonGray,
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w700,
+                  decoration: TextDecoration.underline,
+                ),
+              ).centerWidget,
               18.szH,
               LoginFooter(),
               24.szH,

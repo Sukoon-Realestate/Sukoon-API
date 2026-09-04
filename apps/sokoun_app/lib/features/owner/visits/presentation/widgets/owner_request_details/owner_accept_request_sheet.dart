@@ -136,16 +136,14 @@ class _OwnerSheetHandle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 36.w,
-        height: 4.h,
-        decoration: BoxDecoration(
-          color: AppColors.grayPale,
-          borderRadius: BorderRadius.circular(2.r),
-        ),
+    return Container(
+      width: 36.w,
+      height: 4.h,
+      decoration: BoxDecoration(
+        color: AppColors.grayPale,
+        borderRadius: BorderRadius.circular(2.r),
       ),
-    );
+    ).centerWidget;
   }
 }
 

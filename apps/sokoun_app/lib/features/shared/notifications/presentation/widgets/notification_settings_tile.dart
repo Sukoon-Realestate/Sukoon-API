@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/shared/notifications/data/models/notification_setting_content.dart';
 
@@ -36,7 +37,7 @@ class NotificationSettingsTile extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: 3.h),
+                3.szH,
                 AppText(
                   setting.description,
                   color: AppColors.sokoonGray,
@@ -47,7 +48,7 @@ class NotificationSettingsTile extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: 14.w),
+          14.szW,
           Switch.adaptive(
             key: ValueKey('notification-setting-${setting.id}'),
             value: setting.isEnabled,

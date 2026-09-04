@@ -145,24 +145,22 @@ class _OtpScreenState extends State<OtpScreen> {
             fontWeight: FontWeight.w700,
           ),
           14.szH,
-          Center(
-            child: TextButton(
-              onPressed: _canResend ? _resend : null,
-              style: TextButton.styleFrom(
-                minimumSize: Size.zero,
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: AppText(
-                LocaleKeys.resendCode,
-                color: _canResend
-                    ? AppColors.tealOrGoldBasedRole
-                    : AppColors.sokoonMuted,
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w700,
-              ),
+          TextButton(
+            onPressed: _canResend ? _resend : null,
+            style: TextButton.styleFrom(
+              minimumSize: Size.zero,
+              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
-          ),
+            child: AppText(
+              LocaleKeys.resendCode,
+              color: _canResend
+                  ? AppColors.tealOrGoldBasedRole
+                  : AppColors.sokoonMuted,
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w700,
+            ),
+          ).centerWidget,
         ],
       ),
     );

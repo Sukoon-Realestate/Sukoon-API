@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -43,15 +44,12 @@ class AddPropertyDropdownField extends StatelessWidget {
             child: DropdownButton<String>(
               value: items.contains(value) ? value : null,
               isExpanded: true,
-              hint: Align(
-                alignment: AlignmentDirectional.centerEnd,
-                child: AppText(
-                  'اختر',
-                  color: AppColors.sokoonMuted,
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              hint: AppText(
+                'اختر',
+                color: AppColors.sokoonMuted,
+                fontSize: 13.sp,
+                fontWeight: FontWeight.w600,
+              ).endWidget,
               icon: Icon(
                 Icons.keyboard_arrow_down_rounded,
                 color: AppColors.sokoonTeal,
@@ -68,17 +66,14 @@ class AddPropertyDropdownField extends StatelessWidget {
               selectedItemBuilder: (context) {
                 return [
                   for (final item in items)
-                    Align(
-                      alignment: AlignmentDirectional.centerEnd,
-                      child: AppText(
-                        item,
-                        color: AppColors.sokoonTeal,
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w900,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
+                    AppText(
+                      item,
+                      color: AppColors.sokoonTeal,
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w900,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ).endWidget,
                 ];
               },
               items: [

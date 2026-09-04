@@ -10,37 +10,12 @@ class OwnerPropertiesScreen extends StatefulWidget {
 }
 
 class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
-  static const int _pageSize = 10;
-
   late final PagifyController<OwnerPropertyContent> _pagifyController;
 
   @override
   void initState() {
     super.initState();
     _pagifyController = PagifyController<OwnerPropertyContent>();
-  }
-
-  Future<(List<OwnerPropertyContent>, PaginationData)> _getPropertiesPage(
-    BuildContext context,
-    int page,
-  ) async {
-    final List<OwnerPropertyContent>? initialProperties =
-        widget.initialProperties;
-    if (initialProperties != null) {
-      return (
-        page == 1 ? initialProperties : const <OwnerPropertyContent>[],
-        PaginationData(perPage: initialProperties.length, totalPages: 1),
-      );
-    }
-
-    final (
-      OwnerPropertiesResponse response,
-      PaginationData pagination,
-    ) = await OwnerPropertiesData.getOwnedPropertiesPage(
-      page: page,
-      pageSize: _pageSize,
-    );
-    return (response.results, pagination);
   }
 
   Future<void> _openAddProperty() async {
@@ -148,39 +123,17 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
         body: SafeArea(
           child: Column(
             children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 8.h),
-                child: OwnerPropertiesHeader(onAddPressed: _openAddProperty),
-              ),
+              OwnerPropertiesHeader(
+                onAddPressed: _openAddProperty,
+              ).padding(EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 8.h)),
               Expanded(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 20.h),
-                  child: AppPagify<OwnerPropertyContent>(
-                    pagifyController: _pagifyController,
-                    asyncCall: _getPropertiesPage,
-                    shrinkWrap: false,
-                    cacheKey: widget.initialProperties == null
-                        ? 'owner_properties'
-                        : null,
-                    cacheToJson: widget.initialProperties == null
-                        ? (property) => property.toJson()
-                        : null,
-                    cacheFromJson: widget.initialProperties == null
-                        ? OwnerPropertyContent.fromJson
-                        : null,
-                    emptyListView: OwnerPropertiesEmptyState(
-                      onAddPressed: _openAddProperty,
-                    ),
-                    itemBuilder: (context, data, index, property) => Padding(
-                      padding: EdgeInsets.only(bottom: 12.h),
-                      child: OwnerPropertyCard(
-                        property: property,
-                        onEditPressed: () => _openEdit(property),
-                        onActionsPressed: () => _openActions(property),
-                        onRejectedPressed: () => _openRejection(property),
-                      ),
-                    ),
-                  ),
+                child: OwnerPropertiesList(
+                  initialProperties: widget.initialProperties,
+                  pagifyController: _pagifyController,
+                  onAddPressed: _openAddProperty,
+                  onEditPressed: _openEdit,
+                  onActionsPressed: _openActions,
+                  onRejectedPressed: _openRejection,
                 ),
               ),
             ],

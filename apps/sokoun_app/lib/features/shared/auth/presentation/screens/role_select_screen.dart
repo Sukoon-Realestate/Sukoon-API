@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
@@ -32,22 +33,19 @@ class RoleSelectScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           44.szH,
-          Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: Container(
-              width: 52.r,
-              height: 52.r,
-              decoration: BoxDecoration(
-                color: AppColors.mintLight,
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              child: Icon(
-                Icons.home_outlined,
-                color: AppColors.sokoonTeal,
-                size: 24.r,
-              ),
+          Container(
+            width: 52.r,
+            height: 52.r,
+            decoration: BoxDecoration(
+              color: AppColors.mintLight,
+              borderRadius: BorderRadius.circular(16.r),
             ),
-          ),
+            child: Icon(
+              Icons.home_outlined,
+              color: AppColors.sokoonTeal,
+              size: 24.r,
+            ),
+          ).startWidget,
           24.szH,
           AppText(
             LocaleKeys.youAre,

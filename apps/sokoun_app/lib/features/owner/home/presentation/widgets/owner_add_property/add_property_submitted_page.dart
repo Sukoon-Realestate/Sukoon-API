@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/align_helper.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -22,89 +24,82 @@ class AddPropertySubmittedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 32.w),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Center(
-              child: Container(
-                width: 96.r,
-                height: 96.r,
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  color: AppColors.orangePale,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            width: 96.r,
+            height: 96.r,
+            alignment: Alignment.center,
+            decoration: const BoxDecoration(
+              color: AppColors.orangePale,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.schedule_rounded,
+              color: AppColors.amber,
+              size: 42.r,
+            ),
+          ).centerWidget,
+          16.szH,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+            decoration: BoxDecoration(
+              color: AppColors.orangePale,
+              borderRadius: BorderRadius.circular(999.r),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
                   Icons.schedule_rounded,
                   color: AppColors.amber,
-                  size: 42.r,
+                  size: 12.r,
                 ),
-              ),
-            ),
-            16.szH,
-            Center(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
-                decoration: BoxDecoration(
-                  color: AppColors.orangePale,
-                  borderRadius: BorderRadius.circular(999.r),
+                4.szW,
+                AppText(
+                  LocaleKeys.ownerPropertySubmittedStatus,
+                  color: AppColors.amber,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.schedule_rounded,
-                      color: AppColors.amber,
-                      size: 12.r,
-                    ),
-                    4.szW,
-                    AppText(
-                      LocaleKeys.ownerPropertySubmittedStatus,
-                      color: AppColors.amber,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ],
-                ),
-              ),
+              ],
             ),
-            14.szH,
-            AppText(
-              LocaleKeys.ownerPropertySubmittedTitle,
-              color: AppColors.sokoonNavy,
-              fontSize: 23.sp,
-              fontWeight: FontWeight.w900,
-              textAlign: TextAlign.center,
-            ),
-            8.szH,
-            AppText(
-              LocaleKeys.ownerPropertySubmittedDescription,
-              color: AppColors.sokoonGray,
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w400,
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            22.szH,
-            _SubmittedSummaryCard(items: summaryItems),
-            22.szH,
-            AddPropertyPrimaryButton(
-              label: LocaleKeys.ownerPropertySubmittedViewProperties,
-              onTap: () => Go.back(true),
-            ),
-            12.szH,
-            AddPropertyPrimaryButton(
-              label: LocaleKeys.ownerPropertySubmittedAddAnother,
-              isOutline: true,
-              onTap: onAddAnother,
-            ),
-          ],
-        ),
-      ),
+          ).centerWidget,
+          14.szH,
+          AppText(
+            LocaleKeys.ownerPropertySubmittedTitle,
+            color: AppColors.sokoonNavy,
+            fontSize: 23.sp,
+            fontWeight: FontWeight.w900,
+            textAlign: TextAlign.center,
+          ),
+          8.szH,
+          AppText(
+            LocaleKeys.ownerPropertySubmittedDescription,
+            color: AppColors.sokoonGray,
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w400,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+          22.szH,
+          _SubmittedSummaryCard(items: summaryItems),
+          22.szH,
+          AddPropertyPrimaryButton(
+            label: LocaleKeys.ownerPropertySubmittedViewProperties,
+            onTap: () => Go.back(true),
+          ),
+          12.szH,
+          AddPropertyPrimaryButton(
+            label: LocaleKeys.ownerPropertySubmittedAddAnother,
+            isOutline: true,
+            onTap: onAddAnother,
+          ),
+        ],
+      ).paddingSymmetric(horizontal: 32.w),
     );
   }
 }

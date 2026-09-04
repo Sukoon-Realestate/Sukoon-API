@@ -41,27 +41,23 @@ class OwnerPropertyRejectionScreen extends StatelessWidget {
                 child: ListView(
                   padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 24.h),
                   children: [
-                    Center(
-                      child: Container(
-                        width: 88.r,
-                        height: 88.r,
-                        decoration: const BoxDecoration(
-                          color: AppColors.redPale,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.error_outline_rounded,
-                          color: AppColors.red,
-                          size: 42.r,
-                        ),
+                    Container(
+                      width: 88.r,
+                      height: 88.r,
+                      decoration: const BoxDecoration(
+                        color: AppColors.redPale,
+                        shape: BoxShape.circle,
                       ),
-                    ),
+                      child: Icon(
+                        Icons.error_outline_rounded,
+                        color: AppColors.red,
+                        size: 42.r,
+                      ),
+                    ).centerWidget,
                     12.szH,
-                    Center(
-                      child: OwnerPropertyStatusBadge(
-                        status: OwnerPropertyStatus.rejected,
-                      ),
-                    ),
+                    OwnerPropertyStatusBadge(
+                      status: OwnerPropertyStatus.rejected,
+                    ).centerWidget,
                     12.szH,
                     AppText(
                       LocaleKeys.ownerPropertyRejectedHeadline,

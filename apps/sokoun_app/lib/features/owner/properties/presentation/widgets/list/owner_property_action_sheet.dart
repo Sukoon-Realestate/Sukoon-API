@@ -19,16 +19,14 @@ class OwnerPropertyActionSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Center(
-              child: Container(
-                width: 42.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: AppColors.graySoft,
-                  borderRadius: BorderRadius.circular(99.r),
-                ),
+            Container(
+              width: 42.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: AppColors.graySoft,
+                borderRadius: BorderRadius.circular(99.r),
               ),
-            ),
+            ).centerWidget,
             18.szH,
             AppText(
               LocaleKeys.ownerPropertiesOptions,

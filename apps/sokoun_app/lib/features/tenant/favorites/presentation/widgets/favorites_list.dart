@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:sokoun_app/features/tenant/favorites/data/models/favorites_content.dart';
 
 import 'favorite_property_card.dart';
@@ -40,7 +41,7 @@ class FavoritesList extends StatelessWidget {
                   onRemove: () => onFavoriteRemoved(item),
                 );
               },
-              separatorBuilder: (context, index) => SizedBox(height: 12.h),
+              separatorBuilder: (context, index) => 12.szH,
               itemCount: items.length,
             ),
     );

@@ -118,24 +118,21 @@ class VisitTimePickerField extends StatelessWidget {
               ),
               12.szW,
               Expanded(
-                child: Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Directionality(
-                    textDirection: hasValue
-                        ? TextDirection.ltr
-                        : Directionality.of(context),
-                    child: AppText(
-                      value,
-                      color: hasValue
-                          ? AppColors.sokoonNavy
-                          : AppColors.sokoonMuted,
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w600,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                child: Directionality(
+                  textDirection: hasValue
+                      ? TextDirection.ltr
+                      : Directionality.of(context),
+                  child: AppText(
+                    value,
+                    color: hasValue
+                        ? AppColors.sokoonNavy
+                        : AppColors.sokoonMuted,
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w600,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
+                ).startWidget,
               ),
               8.szW,
               Icon(

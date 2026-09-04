@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:sokoun_app/shared_widgets/back_button.dart';
 
@@ -37,9 +38,8 @@ class AuthScaffold extends StatelessWidget {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final Widget content = Padding(
-              padding: padding ?? EdgeInsets.symmetric(horizontal: 24.w),
-              child: _buildContent(),
+            final Widget content = _buildContent().padding(
+              padding ?? EdgeInsets.symmetric(horizontal: 24.w),
             );
 
             if (!isScrollable) {

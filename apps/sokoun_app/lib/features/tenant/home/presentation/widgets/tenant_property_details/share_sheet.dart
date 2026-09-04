@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -39,16 +40,14 @@ class TenantPropertyShareSheet extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Center(
-                child: Container(
-                  width: 42.w,
-                  height: 4.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.grayPale,
-                    borderRadius: BorderRadius.circular(999.r),
-                  ),
+              Container(
+                width: 42.w,
+                height: 4.h,
+                decoration: BoxDecoration(
+                  color: AppColors.grayPale,
+                  borderRadius: BorderRadius.circular(999.r),
                 ),
-              ),
+              ).centerWidget,
               18.szH,
               AppText(
                 LocaleKeys.tenantPropertyDetailsShareTitle,

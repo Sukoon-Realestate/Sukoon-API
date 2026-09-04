@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
@@ -69,39 +70,30 @@ class TenantSearchResultsContent extends StatelessWidget {
           onFilterRemoved: onFilterRemoved,
           onClearAll: onClearFiltersPressed,
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
-          child: AppText(
-            resultCount == null
-                ? LocaleKeys.tenantSearchResultsCount
-                : '$resultCount ${LocaleKeys.tenantSearchResultsCount}',
-            color: AppColors.sokoonGray,
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        AppText(
+          resultCount == null
+              ? LocaleKeys.tenantSearchResultsCount
+              : '$resultCount ${LocaleKeys.tenantSearchResultsCount}',
+          color: AppColors.sokoonGray,
+          fontSize: 13.sp,
+          fontWeight: FontWeight.w600,
+        ).paddingSymmetric(horizontal: 18.w, vertical: 10.h),
         Expanded(
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 18.h),
-            child: AppPagify<PropertyDetailsModel>(
-              pagifyController: pagifyController,
-              asyncCall: loadPage,
-              shrinkWrap: false,
-              cacheKey: cacheKey,
-              cacheToJson: (item) => item.toJson(),
-              cacheFromJson: PropertyDetailsModel.fromJson,
-              emptyListView: EmptyResultsState(
-                onResetSearchPressed: onResetSearchPressed,
-              ),
-              itemBuilder: (context, data, index, item) => Padding(
-                padding: EdgeInsets.only(bottom: 14.h),
-                child: SearchResultCard(
-                  item: item,
-                  filterOptions: filterOptions,
-                ),
-              ),
+          child: AppPagify<PropertyDetailsModel>(
+            pagifyController: pagifyController,
+            asyncCall: loadPage,
+            shrinkWrap: false,
+            cacheKey: cacheKey,
+            cacheToJson: (item) => item.toJson(),
+            cacheFromJson: PropertyDetailsModel.fromJson,
+            emptyListView: EmptyResultsState(
+              onResetSearchPressed: onResetSearchPressed,
             ),
-          ),
+            itemBuilder: (context, data, index, item) => SearchResultCard(
+              item: item,
+              filterOptions: filterOptions,
+            ).paddingBottom(14.h),
+          ).padding(EdgeInsets.fromLTRB(16.w, 0, 16.w, 18.h)),
         ),
       ],
     );

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:pagify/helpers/status_stream.dart';
 import 'package:pagify/pagify.dart';
+import 'package:sokoun_app/features/tenant/favorites/data/favorites_data.dart';
 import 'package:sokoun_app/features/tenant/favorites/data/models/favorites_content.dart';
 
 import 'favorite_property_card.dart';
@@ -60,32 +62,27 @@ class FavoritesContentView extends StatelessWidget {
                   isFiltered: activeFilterCount > 0,
                   onClearFiltersPressed: onClearFiltersPressed,
                 )
-              : Padding(
-                  padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 16.h),
-                  child: AppPagify<FavoritePropertyContent>(
-                    pagifyController: pagifyController,
-                    asyncCall: loadPage,
-                    shrinkWrap: false,
-                    cacheKey: activeFilterCount == 0
-                        ? 'tenant_saved_properties'
-                        : null,
-                    cacheToJson: (item) => item.toJson(),
-                    cacheFromJson: FavoritePropertyContent.fromJson,
-                    onUpdateStatus: onPagifyStatusChanged,
-                    emptyListView: FavoritesEmptyState(
-                      isFiltered: activeFilterCount > 0,
-                      onClearFiltersTap: onClearFiltersPressed,
-                    ),
-                    itemBuilder: (context, data, index, item) => Padding(
-                      padding: EdgeInsets.only(bottom: 12.h),
-                      child: FavoritePropertyCard(
+              : AppPagify<FavoritePropertyContent>(
+                  pagifyController: pagifyController,
+                  asyncCall: loadPage,
+                  shrinkWrap: false,
+                  cacheKey: activeFilterCount == 0
+                      ? FavoritesData.cacheKey
+                      : null,
+                  cacheToJson: (item) => item.toJson(),
+                  cacheFromJson: FavoritePropertyContent.fromJson,
+                  onUpdateStatus: onPagifyStatusChanged,
+                  emptyListView: FavoritesEmptyState(
+                    isFiltered: activeFilterCount > 0,
+                    onClearFiltersTap: onClearFiltersPressed,
+                  ),
+                  itemBuilder: (context, data, index, item) =>
+                      FavoritePropertyCard(
                         key: ValueKey(item.id),
                         item: item,
                         onRemove: () => onFavoriteRemoved(item),
-                      ),
-                    ),
-                  ),
-                ),
+                      ).paddingBottom(12.h),
+                ).padding(EdgeInsets.fromLTRB(20.w, 0, 20.w, 16.h)),
         ),
       ],
     );

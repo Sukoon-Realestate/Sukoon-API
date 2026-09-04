@@ -119,13 +119,10 @@ class OwnerRevenueScreen extends StatelessWidget {
                               transaction: transactionItems[index],
                             ),
                             if (index < transactionItems.length - 1)
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 13.h),
-                                child: const Divider(
-                                  height: 1,
-                                  color: AppColors.sokoonBorder,
-                                ),
-                              ),
+                              const Divider(
+                                height: 1,
+                                color: AppColors.sokoonBorder,
+                              ).paddingSymmetric(vertical: 13.h),
                           ],
                         ],
                       ),

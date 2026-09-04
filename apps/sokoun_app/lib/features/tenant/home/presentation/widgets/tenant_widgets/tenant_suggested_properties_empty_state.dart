@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/generated/assets.dart';
@@ -14,42 +15,39 @@ class TenantSuggestedPropertiesEmptyState extends StatelessWidget {
     final bool reduceMotion = MediaQuery.of(context).disableAnimations;
     return Semantics(
       label: LocaleKeys.tenantHomeEmptyTitle,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ExcludeSemantics(
-              child: Assets.lottie.emptyBox.lottie(
-                width: 112.r,
-                height: 96.r,
-                animate: !reduceMotion,
-                repeat: false,
-                fit: BoxFit.contain,
-                package: 'melos_core',
-              ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ExcludeSemantics(
+            child: Assets.lottie.emptyBox.lottie(
+              width: 112.r,
+              height: 96.r,
+              animate: !reduceMotion,
+              repeat: false,
+              fit: BoxFit.contain,
+              package: 'melos_core',
             ),
-            8.szH,
-            AppText(
-              LocaleKeys.tenantHomeEmptyTitle,
-              color: AppColors.sokoonNavy,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w900,
-              textAlign: TextAlign.center,
-              maxLines: 2,
-            ),
-            6.szH,
-            AppText(
-              LocaleKeys.tenantHomeEmptyDescription,
-              color: AppColors.sokoonGray,
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w500,
-              textAlign: TextAlign.center,
-              maxLines: 3,
-            ),
-          ],
-        ),
-      ),
+          ),
+          8.szH,
+          AppText(
+            LocaleKeys.tenantHomeEmptyTitle,
+            color: AppColors.sokoonNavy,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w900,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+          ),
+          6.szH,
+          AppText(
+            LocaleKeys.tenantHomeEmptyDescription,
+            color: AppColors.sokoonGray,
+            fontSize: 13.sp,
+            fontWeight: FontWeight.w500,
+            textAlign: TextAlign.center,
+            maxLines: 3,
+          ),
+        ],
+      ).paddingSymmetric(horizontal: 24.w, vertical: 12.h),
     );
   }
 }

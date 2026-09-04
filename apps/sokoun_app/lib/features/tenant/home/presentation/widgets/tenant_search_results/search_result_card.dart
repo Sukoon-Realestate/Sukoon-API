@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
@@ -46,77 +47,74 @@ class SearchResultCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           ResultImageHeader(item: item),
-          Padding(
-            padding: EdgeInsets.all(14.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AppText(
-                  item.title.isEmpty ? '••••••••••••' : item.title,
-                  color: AppColors.sokoonNavy,
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w900,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                5.szH,
-                Row(
-                  children: [
-                    Icon(
-                      Icons.location_on_outlined,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AppText(
+                item.title.isEmpty ? '••••••••••••' : item.title,
+                color: AppColors.sokoonNavy,
+                fontSize: 15.sp,
+                fontWeight: FontWeight.w900,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              5.szH,
+              Row(
+                children: [
+                  Icon(
+                    Icons.location_on_outlined,
+                    color: AppColors.sokoonGray,
+                    size: 15.r,
+                  ),
+                  4.szW,
+                  Expanded(
+                    child: AppText(
+                      item.id.isEmpty
+                          ? '••••••••••••'
+                          : [
+                              item.district,
+                              item.city.name,
+                            ].where((value) => value.isNotEmpty).join(', '),
                       color: AppColors.sokoonGray,
-                      size: 15.r,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    4.szW,
-                    Expanded(
-                      child: AppText(
-                        item.id.isEmpty
-                            ? '••••••••••••'
-                            : [
-                                item.district,
-                                item.city.name,
-                              ].where((value) => value.isNotEmpty).join(', '),
+                  ),
+                ],
+              ),
+              9.szH,
+              AmenityRow(item: item),
+              10.szH,
+              TagsRow(tags: tags),
+              12.szH,
+              Row(
+                textDirection: TextDirection.ltr,
+                children: [
+                  DetailsButton(propertyId: item.id),
+                  const Spacer(),
+                  Row(
+                    children: [
+                      AppText(
+                        '${LocaleKeys.ownerRevenueCurrency}/${labelResolver.pricePeriodLabel(item.pricePeriod)}',
                         color: AppColors.sokoonGray,
                         fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
-                ),
-                9.szH,
-                AmenityRow(item: item),
-                10.szH,
-                TagsRow(tags: tags),
-                12.szH,
-                Row(
-                  textDirection: TextDirection.ltr,
-                  children: [
-                    DetailsButton(propertyId: item.id),
-                    const Spacer(),
-                    Row(
-                      children: [
-                        AppText(
-                          '${LocaleKeys.ownerRevenueCurrency}/${labelResolver.pricePeriodLabel(item.pricePeriod)}',
-                          color: AppColors.sokoonGray,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        5.szW,
-                        AppText(
-                          item.id.isEmpty ? '••••' : item.formattedPrice,
-                          color: AppColors.sokoonTeal,
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+                      5.szW,
+                      AppText(
+                        item.id.isEmpty ? '••••' : item.formattedPrice,
+                        color: AppColors.sokoonTeal,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ],
+          ).paddingAll(14.w),
         ],
       ),
     );

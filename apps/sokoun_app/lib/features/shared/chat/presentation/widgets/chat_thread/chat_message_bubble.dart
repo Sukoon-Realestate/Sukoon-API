@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/chat_builder/chat_message.dart';
@@ -59,15 +60,12 @@ class ChatMessageBubble extends StatelessWidget {
                   ),
           ),
           3.szH,
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4.w),
-            child: AppText(
-              message.time ?? '',
-              color: AppColors.sokoonGray,
-              fontSize: 10.sp,
-              maxLines: 1,
-            ),
-          ),
+          AppText(
+            message.time ?? '',
+            color: AppColors.sokoonGray,
+            fontSize: 10.sp,
+            maxLines: 1,
+          ).paddingSymmetric(horizontal: 4.w),
         ],
       ),
     );

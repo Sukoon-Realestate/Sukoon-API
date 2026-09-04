@@ -1,6 +1,9 @@
 part of '../imports.dart';
 
 abstract final class OwnerPropertiesData {
+  static const int pageSize = 10;
+  static const String cacheKey = 'owner_properties';
+
   static Future<OwnerPropertyLocationsResponse> getGovernorates() async {
     final response = await injector<NetworkService>().callApi(
       NetworkRequest(
@@ -36,8 +39,8 @@ abstract final class OwnerPropertiesData {
     return response.data;
   }
 
-  static Future<(OwnerPropertiesResponse, PaginationData)>
-  getOwnedPropertiesPage({required int page, required int pageSize}) async {
+  static Future<(List<OwnerPropertyContent>, PaginationData)>
+  getOwnedPropertiesPage({required int page}) async {
     final response = await injector<NetworkService>().callApi(
       NetworkRequest(
         method: RequestMethod.get,
@@ -51,6 +54,9 @@ abstract final class OwnerPropertiesData {
     final int totalPages = data.count == 0
         ? 1
         : (data.count + pageSize - 1) ~/ pageSize;
-    return (data, PaginationData(perPage: pageSize, totalPages: totalPages));
+    return (
+      data.results,
+      PaginationData(perPage: pageSize, totalPages: totalPages),
+    );
   }
 }

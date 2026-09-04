@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:upgrader/upgrader.dart';
@@ -137,7 +138,7 @@ class _UpgraderDialogState extends State<UpgraderDialog> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const _UpdateIcon(),
-                    SizedBox(height: 16.h),
+                    16.szH,
                     AppText(
                       title,
                       color: AppColors.textBlack,
@@ -146,7 +147,7 @@ class _UpgraderDialogState extends State<UpgraderDialog> {
                       textAlign: TextAlign.center,
                       height: 1.3,
                     ),
-                    SizedBox(height: 8.h),
+                    8.szH,
                     AppText(
                       description,
                       color: AppColors.darkGay,
@@ -154,15 +155,15 @@ class _UpgraderDialogState extends State<UpgraderDialog> {
                       textAlign: TextAlign.center,
                       height: 1.8,
                     ),
-                    SizedBox(height: 16.h),
+                    16.szH,
                     _VersionBadge(version: widget.version),
-                    SizedBox(height: 20.h),
+                    20.szH,
                     _UpdateButton(
                       isLoading: _isOpeningStore,
                       onUpdatePressed: _openStore,
                     ),
                     if (!widget.isRequired) ...[
-                      SizedBox(height: 12.h),
+                      12.szH,
                       _LaterButton(onLaterPressed: widget.onClosePressed!),
                     ],
                   ],
@@ -234,7 +235,7 @@ class _VersionBadge extends StatelessWidget {
             color: AppColors.darkGay,
             fontSize: 11.sp,
           ),
-          SizedBox(width: 6.w),
+          6.szW,
           AppText(
             version,
             color: AppColors.primary,
@@ -285,7 +286,7 @@ class _UpdateButton extends StatelessWidget {
                         backgroundColor: AppColors.white.withValues(alpha: 0.4),
                       ),
                     ),
-                    SizedBox(width: 8.w),
+                    8.szW,
                     Flexible(
                       child: FittedBox(
                         fit: BoxFit.scaleDown,

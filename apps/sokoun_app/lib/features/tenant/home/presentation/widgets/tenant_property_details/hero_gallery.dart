@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -59,13 +60,11 @@ class TenantPropertyHeroGallery extends StatelessWidget {
               ),
             )
           else
-            Center(
-              child: Icon(
-                Icons.apartment_outlined,
-                color: AppColors.whiteAlpha40,
-                size: 62.r,
-              ),
-            ),
+            Icon(
+              Icons.apartment_outlined,
+              color: AppColors.whiteAlpha40,
+              size: 62.r,
+            ).centerWidget,
           PositionedDirectional(
             top: 14.h,
             start: 14.w,
@@ -139,17 +138,15 @@ class TenantPropertyHeroGallery extends StatelessWidget {
                       ),
                       clipBehavior: Clip.antiAlias,
                       child: showMoreOverlay
-                          ? Center(
-                              child: AppText(
-                                hasImages
-                                    ? '+${imageUrls.length - thumbCount}\n${LocaleKeys.tenantPropertyDetailsPhotos}'
-                                    : '+7\n${LocaleKeys.tenantPropertyDetailsPhotos}',
-                                color: AppColors.white,
-                                fontSize: 11.sp,
-                                fontWeight: FontWeight.w900,
-                                textAlign: TextAlign.center,
-                              ),
-                            )
+                          ? AppText(
+                              hasImages
+                                  ? '+${imageUrls.length - thumbCount}\n${LocaleKeys.tenantPropertyDetailsPhotos}'
+                                  : '+7\n${LocaleKeys.tenantPropertyDetailsPhotos}',
+                              color: AppColors.white,
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w900,
+                              textAlign: TextAlign.center,
+                            ).centerWidget
                           : hasImages
                           ? CachedImage(
                               url: imageUrls[index],

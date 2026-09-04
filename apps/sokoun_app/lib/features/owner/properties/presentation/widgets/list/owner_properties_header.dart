@@ -17,22 +17,19 @@ class OwnerPropertiesHeader extends StatelessWidget {
             key: const ValueKey('owner-properties-add'),
             onTap: onAddPressed,
             borderRadius: BorderRadius.circular(14.r),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.add_rounded, color: AppColors.white, size: 18.r),
-                  5.szW,
-                  AppText(
-                    LocaleKeys.ownerPropertiesAdd,
-                    color: AppColors.white,
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ],
-              ),
-            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.add_rounded, color: AppColors.white, size: 18.r),
+                5.szW,
+                AppText(
+                  LocaleKeys.ownerPropertiesAdd,
+                  color: AppColors.white,
+                  fontSize: 13.sp,
+                  fontWeight: FontWeight.w900,
+                ),
+              ],
+            ).paddingSymmetric(horizontal: 12.w, vertical: 10.h),
           ),
         ),
         12.szW,

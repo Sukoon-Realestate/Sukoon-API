@@ -32,7 +32,7 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
   void setSuccess(BaseModel<T> data) {
     emit(state.success(data: data.data, msg: data.msg));
     if (data.key == 'fromCache') {
-      MessageUtils.showTopMsg(data.msg);
+      Messages.showToast(status: BaseStatus.error, title: LocaleKeys.operationFaild, msg: data.msg);
     }
   }
 

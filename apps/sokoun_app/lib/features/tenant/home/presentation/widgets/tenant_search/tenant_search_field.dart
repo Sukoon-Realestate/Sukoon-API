@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 
@@ -37,26 +38,23 @@ class TenantSearchField extends StatelessWidget {
         fontSize: 14.sp,
         fontWeight: FontWeight.w600,
       ),
-      prefixIcon: Padding(
-        padding: EdgeInsetsDirectional.only(start: 8.w),
-        child: GestureDetector(
-          onTap: onSearchTap,
-          behavior: HitTestBehavior.opaque,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-            decoration: BoxDecoration(
-              color: AppColors.mintLight,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: AppText(
-              LocaleKeys.search,
-              color: AppColors.sokoonTeal,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w800,
-            ),
+      prefixIcon: GestureDetector(
+        onTap: onSearchTap,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+          decoration: BoxDecoration(
+            color: AppColors.mintLight,
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: AppText(
+            LocaleKeys.search,
+            color: AppColors.sokoonTeal,
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w800,
           ),
         ),
-      ),
+      ).paddingOnlyDirectional(start: 8.w),
       suffixIcon: Icon(
         Icons.search_rounded,
         color: AppColors.sokoonMuted,

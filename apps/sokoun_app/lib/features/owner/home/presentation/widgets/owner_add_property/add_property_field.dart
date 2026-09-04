@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
@@ -75,10 +76,7 @@ class AddPropertyField extends StatelessWidget {
                 : CrossAxisAlignment.start,
             children: [
               if (suffix != null) ...[
-                Padding(
-                  padding: EdgeInsets.only(top: maxLines == 1 ? 0 : 14.h),
-                  child: suffix!,
-                ),
+                suffix!.paddingTop(maxLines == 1 ? 0 : 14.h),
                 8.szW,
               ],
               Expanded(

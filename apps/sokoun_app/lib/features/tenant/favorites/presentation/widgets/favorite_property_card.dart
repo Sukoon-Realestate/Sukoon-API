@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/align_helper.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -43,45 +45,42 @@ class FavoritePropertyCard extends StatelessWidget {
               itemId: item.id,
               imageUrl: item.mainImage,
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AppText(
-                    item.title,
-                    color: AppColors.sokoonNavy,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w900,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  4.szH,
-                  Row(
-                    textDirection: TextDirection.rtl,
-                    children: [
-                      Expanded(
-                        child: _FavoritePropertyMeta(
-                          rating: item.ratingLabel,
-                          area: item.areaLabel,
-                        ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AppText(
+                  item.title,
+                  color: AppColors.sokoonNavy,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w900,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                4.szH,
+                Row(
+                  textDirection: TextDirection.rtl,
+                  children: [
+                    Expanded(
+                      child: _FavoritePropertyMeta(
+                        rating: item.ratingLabel,
+                        area: item.areaLabel,
                       ),
-                      8.szW,
-                      Flexible(
-                        child: AppText(
-                          '${item.price} ${LocaleKeys.favoritesCurrencyShort}',
-                          color: AppColors.sokoonTeal,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w900,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+                    ),
+                    8.szW,
+                    Flexible(
+                      child: AppText(
+                        '${item.price} ${LocaleKeys.favoritesCurrencyShort}',
+                        color: AppColors.sokoonTeal,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w900,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+                    ),
+                  ],
+                ),
+              ],
+            ).paddingSymmetric(horizontal: 16.w, vertical: 12.h),
           ],
         ),
       ),
@@ -158,13 +157,11 @@ class _FavoriteImagePlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     return ColoredBox(
       color: AppColors.grayBluePale,
-      child: Center(
-        child: Icon(
-          Icons.apartment_rounded,
-          color: AppColors.blueGrayLight,
-          size: 28.r,
-        ),
-      ),
+      child: Icon(
+        Icons.apartment_rounded,
+        color: AppColors.blueGrayLight,
+        size: 28.r,
+      ).centerWidget,
     );
   }
 }

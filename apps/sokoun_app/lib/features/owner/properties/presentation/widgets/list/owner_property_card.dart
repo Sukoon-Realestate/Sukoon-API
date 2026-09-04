@@ -189,16 +189,14 @@ class _OwnerPropertyCardAction extends StatelessWidget {
           borderRadius: BorderRadius.circular(12.r),
           child: SizedBox(
             height: 34.h,
-            child: Center(
-              child: AppText(
-                label,
-                color: foregroundColor,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w900,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
+            child: AppText(
+              label,
+              color: foregroundColor,
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w900,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ).centerWidget,
           ),
         ),
       ),

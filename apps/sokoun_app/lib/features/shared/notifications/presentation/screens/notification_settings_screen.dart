@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -93,39 +94,36 @@ class _NotificationSettingsScreenState
                         setting: _settings[index],
                         onChanged: (value) => _toggleSetting(index, value),
                       ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 0),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 14.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.mintLight,
-                          borderRadius: BorderRadius.circular(14.r),
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Icon(
-                              Icons.info_outline_rounded,
-                              color: AppColors.sokoonTeal,
-                              size: 18.r,
-                            ),
-                            10.szW,
-                            Expanded(
-                              child: AppText(
-                                LocaleKeys.notificationSettingsInfo,
-                                color: AppColors.sokoonTeal,
-                                fontSize: 12.sp,
-                                height: 1.6,
-                                maxLines: 4,
-                              ),
-                            ),
-                          ],
-                        ),
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 14.h,
                       ),
-                    ),
+                      decoration: BoxDecoration(
+                        color: AppColors.mintLight,
+                        borderRadius: BorderRadius.circular(14.r),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.info_outline_rounded,
+                            color: AppColors.sokoonTeal,
+                            size: 18.r,
+                          ),
+                          10.szW,
+                          Expanded(
+                            child: AppText(
+                              LocaleKeys.notificationSettingsInfo,
+                              color: AppColors.sokoonTeal,
+                              fontSize: 12.sp,
+                              height: 1.6,
+                              maxLines: 4,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ).paddingOnly(left: 20.w, top: 24.h, right: 20.w),
                   ],
                 ),
               ),

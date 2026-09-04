@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/shared_widgets/shared_widgets.dart';
 
@@ -15,10 +16,7 @@ class OtpHeader extends StatelessWidget {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Align(
-            alignment: AlignmentDirectional.centerStart,
-            child: const SokoonBackButton(),
-          ),
+          const SokoonBackButton().startWidget,
           AppText(
             LocaleKeys.verificationCode,
             color: AppColors.sokoonNavy,

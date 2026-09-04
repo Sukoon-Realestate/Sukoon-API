@@ -61,33 +61,29 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Center(
-                child: Container(
-                  width: 48.w,
-                  height: 5.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.sokoonBorder,
-                    borderRadius: BorderRadius.circular(999.r),
-                  ),
+              Container(
+                width: 48.w,
+                height: 5.h,
+                decoration: BoxDecoration(
+                  color: AppColors.sokoonBorder,
+                  borderRadius: BorderRadius.circular(999.r),
                 ),
-              ),
+              ).centerWidget,
               16.szH,
-              Center(
-                child: Container(
-                  width: 56.r,
-                  height: 56.r,
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                    color: AppColors.goldPale,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.star_rounded,
-                    color: AppColors.gold,
-                    size: 28.r,
-                  ),
+              Container(
+                width: 56.r,
+                height: 56.r,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  color: AppColors.goldPale,
+                  shape: BoxShape.circle,
                 ),
-              ),
+                child: Icon(
+                  Icons.star_rounded,
+                  color: AppColors.gold,
+                  size: 28.r,
+                ),
+              ).centerWidget,
               12.szH,
               AppText(
                 LocaleKeys.tenantVisitRateTitle,
