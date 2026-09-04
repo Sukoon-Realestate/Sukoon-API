@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/tenant/favorites/data/models/favorites_content.dart';
 import 'package:sokoun_app/features/tenant/favorites/presentation/screens/favorites_screen.dart';
@@ -11,11 +12,16 @@ import 'package:sokoun_app/features/tenant/favorites/presentation/widgets/favori
 import 'package:sokoun_app/features/tenant/favorites/presentation/widgets/favorites_empty_state.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_search_results/empty_results_state.dart';
 
+import 'helpers/home_page_test_dependencies.dart';
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   const MethodChannel sharedPreferencesChannel = MethodChannel(
     'plugins.flutter.io/shared_preferences',
+  );
+  const MethodChannel connectivityChannel = MethodChannel(
+    'dev.fluttercommunity.plus/connectivity',
   );
 
   setUpAll(() async {
@@ -23,13 +29,27 @@ void main() {
         .setMockMethodCallHandler(sharedPreferencesChannel, (call) async {
           return call.method == 'getAll' ? <String, Object>{} : true;
         });
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(connectivityChannel, (call) async {
+          return call.method == 'check' ? <String>['wifi'] : null;
+        });
     await EasyLocalization.ensureInitialized();
+    await CacheStorage.init();
   });
 
   tearDownAll(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(sharedPreferencesChannel, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(connectivityChannel, null);
   });
+
+  setUp(() async {
+    await injector.reset();
+    registerHomePageTestDependencies();
+  });
+
+  tearDown(() => injector.reset());
 
   Widget buildScreen({Widget screen = const FavoritesScreen()}) {
     return EasyLocalization(
@@ -84,26 +104,21 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('empty-state recovery actions invoke their callbacks', (
+  testWidgets('empty-state recovery actions navigate or update parent state', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(360, 690);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
 
-    bool browsedProperties = false;
     await tester.pumpWidget(
-      buildScreen(
-        screen: Scaffold(
-          body: FavoritesEmptyState(
-            onBrowseTap: () => browsedProperties = true,
-          ),
-        ),
-      ),
+      buildScreen(screen: const Scaffold(body: FavoritesEmptyState())),
     );
     await tester.pump();
     await tester.tap(find.text('تصفّح العقارات'));
-    expect(browsedProperties, isTrue);
+    expect(Go.navigatorKey.currentState?.canPop(), isTrue);
+    Go.back();
+    await tester.pumpAndSettle();
 
     bool resetSearch = false;
     await tester.pumpWidget(

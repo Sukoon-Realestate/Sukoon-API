@@ -5,18 +5,14 @@ class TenantVisitCard extends StatelessWidget {
     super.key,
     required this.visit,
     required this.onPressed,
-    required this.onChatPressed,
     required this.onRatePressed,
     required this.onCancelPressed,
-    required this.onAlternativePressed,
   });
 
   final TenantVisitContent visit;
   final VoidCallback onPressed;
-  final VoidCallback onChatPressed;
   final VoidCallback onRatePressed;
   final VoidCallback onCancelPressed;
-  final VoidCallback onAlternativePressed;
 
   Color get _statusColor {
     if (visit.status.isAccepted) {
@@ -127,10 +123,8 @@ class TenantVisitCard extends StatelessWidget {
               12.szH,
               _VisitCardActions(
                 visit: visit,
-                onChatPressed: onChatPressed,
                 onRatePressed: onRatePressed,
                 onCancelPressed: onCancelPressed,
-                onAlternativePressed: onAlternativePressed,
               ),
             ],
           ),
@@ -143,17 +137,19 @@ class TenantVisitCard extends StatelessWidget {
 class _VisitCardActions extends StatelessWidget {
   const _VisitCardActions({
     required this.visit,
-    required this.onChatPressed,
     required this.onRatePressed,
     required this.onCancelPressed,
-    required this.onAlternativePressed,
   });
 
   final TenantVisitContent visit;
-  final VoidCallback onChatPressed;
   final VoidCallback onRatePressed;
   final VoidCallback onCancelPressed;
-  final VoidCallback onAlternativePressed;
+
+  void _openChat() {
+    Go.to(ChatThreadScreen(conversation: ChatContent.conversations.first));
+  }
+
+  void _findAlternative() => Go.to(const TenantSearchScreen());
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +162,7 @@ class _VisitCardActions extends StatelessWidget {
               label: LocaleKeys.tenantVisitChatAction,
               backgroundColor: AppColors.bluePale,
               foregroundColor: AppColors.blue,
-              onPressed: onChatPressed,
+              onPressed: _openChat,
             ),
           ),
           8.szW,
@@ -198,7 +194,7 @@ class _VisitCardActions extends StatelessWidget {
       label: LocaleKeys.tenantVisitFindAlternative,
       backgroundColor: AppColors.sokoonTeal,
       foregroundColor: AppColors.white,
-      onPressed: onAlternativePressed,
+      onPressed: _findAlternative,
     );
   }
 }

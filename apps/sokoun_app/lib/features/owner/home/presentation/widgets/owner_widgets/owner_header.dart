@@ -14,13 +14,11 @@ class OwnerHeader extends StatelessWidget {
     required this.name,
     required this.avatarUrl,
     required this.isVerified,
-    this.onNotificationsPressed,
   });
 
   final String name;
   final String? avatarUrl;
   final bool isVerified;
-  final VoidCallback? onNotificationsPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -84,12 +82,11 @@ class OwnerHeader extends StatelessWidget {
           ),
         ),
         10.szW,
-        HomeCircleButton(
-          key: const ValueKey('owner-open-notifications'),
+        const HomeCircleButton(
+          key: ValueKey('owner-open-notifications'),
           icon: Icons.notifications_none_rounded,
           iconColor: AppColors.sokoonNavy,
           showBadge: true,
-          onPressed: onNotificationsPressed,
         ),
       ],
     );

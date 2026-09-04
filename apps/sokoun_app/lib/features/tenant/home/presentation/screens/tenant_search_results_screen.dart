@@ -14,7 +14,6 @@ import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_fil
 
 import '../widgets/tenant_filter/property_filter_label_resolver.dart';
 import '../widgets/tenant_search_results/imports.dart';
-import 'property_details_screen.dart';
 import 'tenant_filter_screen.dart';
 
 class TenantSearchResultsScreen extends StatefulWidget {
@@ -134,11 +133,6 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
     return (response.results, pagination);
   }
 
-  void _openDetails(PropertyDetailsModel item) {
-    if (item.id.isEmpty) return;
-    Go.to(PropertyDetailsScreen(propertyId: item.id));
-  }
-
   List<ActiveFilterContent> _activeFilters(
     PropertyFilterOptionsModel filterOptions,
   ) {
@@ -196,7 +190,6 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
                   onFilterRemoved: _removeFilter,
                   onClearFiltersPressed: _clearFilters,
                   onResetSearchPressed: _resetSearchAndFilters,
-                  onPropertyPressed: _openDetails,
                 ),
               ),
             ),

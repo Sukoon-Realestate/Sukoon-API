@@ -37,7 +37,6 @@ class TenantSearchResultsContent extends StatelessWidget {
     required this.onFilterRemoved,
     required this.onClearFiltersPressed,
     required this.onResetSearchPressed,
-    required this.onPropertyPressed,
   });
 
   final TextEditingController queryController;
@@ -53,7 +52,6 @@ class TenantSearchResultsContent extends StatelessWidget {
   final ValueChanged<ActiveFilterContent> onFilterRemoved;
   final VoidCallback onClearFiltersPressed;
   final VoidCallback onResetSearchPressed;
-  final ValueChanged<PropertyDetailsModel> onPropertyPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +98,6 @@ class TenantSearchResultsContent extends StatelessWidget {
                 child: SearchResultCard(
                   item: item,
                   filterOptions: filterOptions,
-                  onDetailsTap: () => onPropertyPressed(item),
                 ),
               ),
             ),

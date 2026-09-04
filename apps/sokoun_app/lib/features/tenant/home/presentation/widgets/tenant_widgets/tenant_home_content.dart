@@ -15,19 +15,11 @@ class TenantHomeContent extends StatelessWidget {
   const TenantHomeContent({
     required this.properties,
     required this.showVisitBanner,
-    required this.onNotificationsPressed,
-    required this.onSearchPressed,
-    required this.onVisitPressed,
-    required this.onPropertyPressed,
     super.key,
   });
 
   final List<HomePropertyModel> properties;
   final bool showVisitBanner;
-  final VoidCallback onNotificationsPressed;
-  final VoidCallback onSearchPressed;
-  final VoidCallback onVisitPressed;
-  final ValueChanged<String> onPropertyPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -36,24 +28,18 @@ class TenantHomeContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          TenantHeader(onNotificationsPressed: onNotificationsPressed),
+          const TenantHeader(),
           18.szH,
-          HomeSearchBox(onPressed: onSearchPressed),
+          const HomeSearchBox(),
           16.szH,
-          TenantVisitBanner(
-            onPressed: onVisitPressed,
-          ).showIf(condition: () => showVisitBanner),
+          const TenantVisitBanner().showIf(condition: () => showVisitBanner),
           18.szH,
           HomeSectionHeader(
             title: LocaleKeys.tenantHomeSuggestedForYou,
             actionTitle: LocaleKeys.tenantHomeViewAll,
-            onActionTap: onSearchPressed,
           ),
           10.szH,
-          SuggestedPropertiesSection(
-            properties: properties,
-            onPropertyPressed: onPropertyPressed,
-          ),
+          SuggestedPropertiesSection(properties: properties),
           24.szH,
         ],
       ),

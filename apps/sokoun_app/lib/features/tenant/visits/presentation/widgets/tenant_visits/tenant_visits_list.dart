@@ -16,10 +16,8 @@ class TenantVisitsList extends StatelessWidget {
     required this.loadPage,
     required this.onFilterSelected,
     required this.onVisitPressed,
-    required this.onChatPressed,
     required this.onRatePressed,
     required this.onCancelPressed,
-    required this.onBrowsePropertiesPressed,
   });
 
   final TenantVisitFilter selectedFilter;
@@ -29,10 +27,8 @@ class TenantVisitsList extends StatelessWidget {
   final TenantVisitsPageLoader loadPage;
   final ValueChanged<TenantVisitFilter> onFilterSelected;
   final ValueChanged<TenantVisitContent> onVisitPressed;
-  final VoidCallback onChatPressed;
   final ValueChanged<TenantVisitContent> onRatePressed;
   final ValueChanged<TenantVisitContent> onCancelPressed;
-  final VoidCallback onBrowsePropertiesPressed;
 
   List<TenantVisitContent> get _visibleInitialVisits {
     final List<TenantVisitContent> visits = initialVisits ?? const [];
@@ -81,19 +77,15 @@ class TenantVisitsList extends StatelessWidget {
     return TenantVisitCard(
       visit: visit,
       onPressed: () => onVisitPressed(visit),
-      onChatPressed: onChatPressed,
       onRatePressed: () => onRatePressed(visit),
       onCancelPressed: () => onCancelPressed(visit),
-      onAlternativePressed: onBrowsePropertiesPressed,
     );
   }
 
   Widget _buildEmptyState() {
     return TenantVisitsEmptyState(
       isFiltered: !selectedFilter.isAll,
-      onActionPressed: selectedFilter.isAll
-          ? onBrowsePropertiesPressed
-          : () => onFilterSelected(TenantVisitFilter.all),
+      onClearFiltersPressed: () => onFilterSelected(TenantVisitFilter.all),
     );
   }
 }

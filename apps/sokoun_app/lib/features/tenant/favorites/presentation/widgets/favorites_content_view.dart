@@ -24,9 +24,7 @@ class FavoritesContentView extends StatelessWidget {
     required this.initialItems,
     required this.pagifyController,
     required this.loadPage,
-    required this.onPropertyPressed,
     required this.onFavoriteRemoved,
-    required this.onBrowsePressed,
     required this.activeFilterCount,
     required this.onFiltersPressed,
     required this.onClearFiltersPressed,
@@ -37,9 +35,7 @@ class FavoritesContentView extends StatelessWidget {
   final List<FavoritePropertyContent>? initialItems;
   final PagifyController<FavoritePropertyContent> pagifyController;
   final FavoritesPageLoader loadPage;
-  final ValueChanged<FavoritePropertyContent> onPropertyPressed;
   final ValueChanged<FavoritePropertyContent> onFavoriteRemoved;
-  final VoidCallback onBrowsePressed;
   final int activeFilterCount;
   final VoidCallback onFiltersPressed;
   final VoidCallback onClearFiltersPressed;
@@ -60,9 +56,7 @@ class FavoritesContentView extends StatelessWidget {
           child: fixtureItems != null
               ? FavoritesList(
                   items: fixtureItems,
-                  onPropertyPressed: onPropertyPressed,
                   onFavoriteRemoved: onFavoriteRemoved,
-                  onBrowsePressed: onBrowsePressed,
                   isFiltered: activeFilterCount > 0,
                   onClearFiltersPressed: onClearFiltersPressed,
                 )
@@ -79,7 +73,6 @@ class FavoritesContentView extends StatelessWidget {
                     cacheFromJson: FavoritePropertyContent.fromJson,
                     onUpdateStatus: onPagifyStatusChanged,
                     emptyListView: FavoritesEmptyState(
-                      onBrowseTap: onBrowsePressed,
                       isFiltered: activeFilterCount > 0,
                       onClearFiltersTap: onClearFiltersPressed,
                     ),
@@ -88,7 +81,6 @@ class FavoritesContentView extends StatelessWidget {
                       child: FavoritePropertyCard(
                         key: ValueKey(item.id),
                         item: item,
-                        onPressed: () => onPropertyPressed(item),
                         onRemove: () => onFavoriteRemoved(item),
                       ),
                     ),

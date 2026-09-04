@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
 
@@ -12,12 +13,10 @@ class ChatThreadHeader extends StatelessWidget {
   const ChatThreadHeader({
     super.key,
     required this.conversation,
-    required this.onBackPressed,
     required this.onReportPressed,
   });
 
   final ConversationContent conversation;
-  final VoidCallback onBackPressed;
   final VoidCallback onReportPressed;
 
   @override
@@ -32,7 +31,7 @@ class ChatThreadHeader extends StatelessWidget {
         children: [
           IconButton(
             key: const ValueKey('chat-thread-back'),
-            onPressed: onBackPressed,
+            onPressed: Go.back,
             visualDensity: VisualDensity.compact,
             icon: Icon(
               Icons.arrow_back_ios_new_rounded,

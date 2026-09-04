@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:sokoun_app/features/owner/visits/imports.dart';
 
 class OwnerVisitRequestsTopBar extends StatelessWidget {
-  const OwnerVisitRequestsTopBar({
-    super.key,
-    this.onBackPressed,
-    required this.onCalendarPressed,
-  });
+  const OwnerVisitRequestsTopBar({super.key, required this.showBackButton});
 
-  final VoidCallback? onBackPressed;
-  final VoidCallback onCalendarPressed;
+  final bool showBackButton;
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +26,11 @@ class OwnerVisitRequestsTopBar extends StatelessWidget {
           SizedBox(
             width: 36.r,
             height: 36.r,
-            child: onBackPressed == null
+            child: !showBackButton
                 ? null
                 : IconButton(
                     key: const ValueKey('owner-requests-back'),
-                    onPressed: onBackPressed,
+                    onPressed: Go.back,
                     visualDensity: VisualDensity.compact,
                     style: IconButton.styleFrom(
                       backgroundColor: AppColors.grayBackground,
@@ -61,7 +58,7 @@ class OwnerVisitRequestsTopBar extends StatelessWidget {
             dimension: 36.r,
             child: IconButton(
               key: const ValueKey('owner-open-calendar'),
-              onPressed: onCalendarPressed,
+              onPressed: () => Go.to(const OwnerRequestsCalendarScreen()),
               tooltip: LocaleKeys.ownerCalendarTitle,
               padding: EdgeInsets.zero,
               visualDensity: VisualDensity.compact,

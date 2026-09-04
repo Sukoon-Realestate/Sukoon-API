@@ -75,10 +75,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     Go.to(NotificationDetailScreen(role: _role, notification: notification));
   }
 
-  void _openSettings() {
-    Go.to(NotificationSettingsScreen(role: _role));
-  }
-
   @override
   Widget build(BuildContext context) {
     if (_notifications.isEmpty) {
@@ -97,7 +93,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 role: _role,
                 hasUnread: _hasUnread,
                 onMarkAllPressed: _markAllAsRead,
-                onSettingsPressed: _openSettings,
               ),
               Expanded(
                 child: ListView.separated(
@@ -127,13 +122,11 @@ class _NotificationsHeader extends StatelessWidget {
     required this.role,
     required this.hasUnread,
     required this.onMarkAllPressed,
-    required this.onSettingsPressed,
   });
 
   final NotificationRole role;
   final bool hasUnread;
   final VoidCallback onMarkAllPressed;
-  final VoidCallback onSettingsPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +165,7 @@ class _NotificationsHeader extends StatelessWidget {
           IconButton(
             key: const ValueKey('notifications-settings'),
             tooltip: LocaleKeys.notificationSettingsTitle,
-            onPressed: onSettingsPressed,
+            onPressed: () => Go.to(NotificationSettingsScreen(role: role)),
             visualDensity: VisualDensity.compact,
             constraints: BoxConstraints.tightFor(width: 38.r, height: 38.r),
             padding: EdgeInsets.zero,

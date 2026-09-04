@@ -2,20 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/extensions/string_extension.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/home_page_model.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/screens/property_details_screen.dart';
 
 import 'tenant_suggested_properties_empty_state.dart';
 import 'tenant_property_card.dart';
 
 class SuggestedPropertiesSection extends StatelessWidget {
-  const SuggestedPropertiesSection({
-    required this.properties,
-    required this.onPropertyPressed,
-    super.key,
-  });
+  const SuggestedPropertiesSection({required this.properties, super.key});
 
   final List<HomePropertyModel> properties;
-  final ValueChanged<String> onPropertyPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +25,8 @@ class SuggestedPropertiesSection extends StatelessWidget {
       children: properties
           .map(
             (property) => GestureDetector(
-              onTap: () => onPropertyPressed(property.id),
+              onTap: () =>
+                  Go.to(PropertyDetailsScreen(propertyId: property.id)),
               behavior: HitTestBehavior.opaque,
               child: TenantPropertyCard(
                 title: property.title,

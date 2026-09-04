@@ -3,23 +3,30 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/image_widgets/cached_image.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_property_photos_screen.dart';
+
+import 'share_sheet.dart';
 
 class TenantPropertyHeroGallery extends StatelessWidget {
-  const TenantPropertyHeroGallery({
-    super.key,
-    required this.property,
-    required this.onBackPressed,
-    required this.onSharePressed,
-    required this.onPhotosPressed,
-  });
+  const TenantPropertyHeroGallery({super.key, required this.property});
 
   final TenantPropertyDetailsContent property;
-  final VoidCallback onBackPressed;
-  final VoidCallback onSharePressed;
-  final ValueChanged<int> onPhotosPressed;
+
+  void _openPhotos(int index) {
+    Go.to(TenantPropertyPhotosScreen(property: property, initialIndex: index));
+  }
+
+  void _showShareSheet(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: AppColors.transparent,
+      builder: (_) => TenantPropertyShareSheet(shareUrl: property.shareUrl),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,13 +76,13 @@ class TenantPropertyHeroGallery extends StatelessWidget {
                 _HeroIconButton(
                   key: const ValueKey('tenant-property-details-back'),
                   icon: Icons.arrow_back_ios_new_rounded,
-                  onPressed: onBackPressed,
+                  onPressed: Go.back,
                 ),
                 const Spacer(),
                 _HeroIconButton(
                   key: const ValueKey('tenant-property-details-share'),
                   icon: Icons.ios_share_rounded,
-                  onPressed: onSharePressed,
+                  onPressed: () => _showShareSheet(context),
                 ),
               ],
             ),
@@ -119,7 +126,7 @@ class TenantPropertyHeroGallery extends StatelessWidget {
                       ? index == thumbCount - 1 && imageUrls.length > thumbCount
                       : index == 5;
                   return GestureDetector(
-                    onTap: () => onPhotosPressed(index),
+                    onTap: () => _openPhotos(index),
                     behavior: HitTestBehavior.opaque,
                     child: Container(
                       width: index == 0 ? 64.w : 58.w,

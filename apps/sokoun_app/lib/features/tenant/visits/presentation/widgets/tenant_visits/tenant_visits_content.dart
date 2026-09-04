@@ -8,13 +8,10 @@ class TenantVisitsScreenContent extends StatelessWidget {
     required this.pagifyController,
     required this.cacheKey,
     required this.loadPage,
-    required this.onBackPressed,
     required this.onFilterSelected,
     required this.onVisitPressed,
-    required this.onChatPressed,
     required this.onRatePressed,
     required this.onCancelPressed,
-    required this.onBrowsePropertiesPressed,
   });
 
   final TenantVisitFilter selectedFilter;
@@ -22,13 +19,10 @@ class TenantVisitsScreenContent extends StatelessWidget {
   final PagifyController<TenantVisitContent>? pagifyController;
   final String cacheKey;
   final TenantVisitsPageLoader loadPage;
-  final VoidCallback onBackPressed;
   final ValueChanged<TenantVisitFilter> onFilterSelected;
   final ValueChanged<TenantVisitContent> onVisitPressed;
-  final VoidCallback onChatPressed;
   final ValueChanged<TenantVisitContent> onRatePressed;
   final ValueChanged<TenantVisitContent> onCancelPressed;
-  final VoidCallback onBrowsePropertiesPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +32,6 @@ class TenantVisitsScreenContent extends StatelessWidget {
         VisitHeader(
           title: LocaleKeys.tenantVisitsTitle,
           backKey: const ValueKey('tenant-visits-back'),
-          onBackPressed: onBackPressed,
         ),
         TenantVisitsFilters(
           selectedFilter: selectedFilter,
@@ -54,10 +47,8 @@ class TenantVisitsScreenContent extends StatelessWidget {
             loadPage: loadPage,
             onFilterSelected: onFilterSelected,
             onVisitPressed: onVisitPressed,
-            onChatPressed: onChatPressed,
             onRatePressed: onRatePressed,
             onCancelPressed: onCancelPressed,
-            onBrowsePropertiesPressed: onBrowsePropertiesPressed,
           ),
         ),
       ],

@@ -24,7 +24,6 @@ class OwnerPropertyAnalyticsScreen extends StatelessWidget {
             children: [
               OwnerPropertyTopBar(
                 title: LocaleKeys.ownerAnalyticsTitle,
-                onBackPressed: () => Go.back(),
                 trailing: Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 5.h),

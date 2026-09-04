@@ -3,18 +3,33 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
+import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_thread_screen.dart';
 
 class OwnerVisitRequestIdentityRow extends StatelessWidget {
-  const OwnerVisitRequestIdentityRow({
-    super.key,
-    required this.request,
-    required this.onChatPressed,
-  });
+  const OwnerVisitRequestIdentityRow({super.key, required this.request});
 
   final OwnerVisitRequestContent request;
-  final VoidCallback onChatPressed;
+
+  void _openChat() {
+    Go.to(
+      ChatThreadScreen(
+        conversation: ConversationContent(
+          id: 101,
+          name: request.name,
+          property: request.property,
+          lastMessage: request.tenantNote,
+          time: request.time,
+          unreadCount: 0,
+          isVerified: request.isVerified,
+          isOnline: true,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +97,7 @@ class OwnerVisitRequestIdentityRow extends StatelessWidget {
             child: IconButton(
               key: ValueKey('owner-request-chat-${request.id}'),
               tooltip: LocaleKeys.ownerVisitOpenChat,
-              onPressed: onChatPressed,
+              onPressed: _openChat,
               padding: EdgeInsets.zero,
               visualDensity: VisualDensity.compact,
               style: IconButton.styleFrom(

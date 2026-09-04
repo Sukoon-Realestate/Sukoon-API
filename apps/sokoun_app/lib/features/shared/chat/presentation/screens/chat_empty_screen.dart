@@ -7,9 +7,7 @@ import 'package:melos_core/core/widgets/app_text.dart';
 import '../widgets/imports.dart';
 
 class ChatEmptyScreen extends StatelessWidget {
-  const ChatEmptyScreen({super.key, required this.onExplorePressed});
-
-  final VoidCallback onExplorePressed;
+  const ChatEmptyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +33,7 @@ class ChatEmptyScreen extends StatelessWidget {
                   fontWeight: FontWeight.w900,
                 ),
               ),
-              Expanded(
-                child: ChatEmptyState(onExplorePressed: onExplorePressed),
-              ),
+              const Expanded(child: ChatEmptyState()),
             ],
           ),
         ),

@@ -3,21 +3,30 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:melos_core/generated/assets.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
 
 class FavoritesEmptyState extends StatelessWidget {
   const FavoritesEmptyState({
     super.key,
-    required this.onBrowseTap,
     this.isFiltered = false,
     this.onClearFiltersTap,
   });
 
-  final VoidCallback onBrowseTap;
   final bool isFiltered;
   final VoidCallback? onClearFiltersTap;
+
+  void _handleAction() {
+    if (isFiltered && onClearFiltersTap != null) {
+      onClearFiltersTap!();
+      return;
+    }
+
+    Go.to(const TenantSearchScreen());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +74,7 @@ class FavoritesEmptyState extends StatelessWidget {
             ),
             AppSize.sH20.szH,
             DefaultButton(
-              onTap: isFiltered
-                  ? (onClearFiltersTap ?? onBrowseTap)
-                  : onBrowseTap,
+              onTap: _handleAction,
               title: isFiltered
                   ? LocaleKeys.tenantSearchResultsResetSearch
                   : LocaleKeys.favoritesBrowseProperties,

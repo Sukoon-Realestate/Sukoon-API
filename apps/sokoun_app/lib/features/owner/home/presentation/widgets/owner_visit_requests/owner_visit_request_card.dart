@@ -14,14 +14,12 @@ class OwnerVisitRequestCard extends StatelessWidget {
     super.key,
     required this.request,
     required this.onPressed,
-    required this.onChatPressed,
     required this.onAcceptPressed,
     required this.onRejectPressed,
   });
 
   final OwnerVisitRequestContent request;
   final VoidCallback onPressed;
-  final VoidCallback onChatPressed;
   final VoidCallback onAcceptPressed;
   final VoidCallback onRejectPressed;
 
@@ -45,10 +43,7 @@ class OwnerVisitRequestCard extends StatelessWidget {
           ),
           child: Column(
             children: [
-              OwnerVisitRequestIdentityRow(
-                request: request,
-                onChatPressed: onChatPressed,
-              ),
+              OwnerVisitRequestIdentityRow(request: request),
               12.szH,
               OwnerVisitRequestTimeRow(
                 dateLabel: request.dateLabel.isNotEmpty

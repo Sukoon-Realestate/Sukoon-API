@@ -12,22 +12,12 @@ class TenantPropertyDetailsBody extends StatelessWidget {
     super.key,
     required this.property,
     required this.isSaved,
-    required this.onBackPressed,
-    required this.onSharePressed,
     required this.onSavedPressed,
-    required this.onPhotosPressed,
-    required this.onLocationPressed,
-    required this.onBookVisitPressed,
   });
 
   final TenantPropertyDetailsContent property;
   final bool isSaved;
-  final VoidCallback onBackPressed;
-  final VoidCallback onSharePressed;
   final VoidCallback onSavedPressed;
-  final ValueChanged<int> onPhotosPressed;
-  final VoidCallback onLocationPressed;
-  final VoidCallback onBookVisitPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -38,25 +28,22 @@ class TenantPropertyDetailsBody extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                TenantPropertyHeroGallery(
-                  property: property,
-                  onBackPressed: onBackPressed,
-                  onSharePressed: onSharePressed,
-                  onPhotosPressed: onPhotosPressed,
-                ),
-                TenantPropertyDetailsContentView(
-                  property: property,
-                  onLocationPressed: onLocationPressed,
-                ),
+                TenantPropertyHeroGallery(property: property),
+                TenantPropertyDetailsContentView(property: property),
               ],
             ),
           ),
         ),
         TenantPropertyBottomActions(
+          property: property,
           isSaved: isSaved,
-          onBookVisitPressed: onBookVisitPressed,
           onSavedPressed: onSavedPressed,
-        ).showIf(condition: () => UserModel.isTenant),
+        ),
+        // TenantPropertyBottomActions(
+        //   property: property,
+        //   isSaved: isSaved,
+        //   onSavedPressed: onSavedPressed,
+        // ).showIf(condition: () => UserModel.isTenant),
       ],
     );
   }

@@ -39,11 +39,7 @@ class OwnerPropertyActionSheet extends StatelessWidget {
             ),
             16.szH,
             for (final action in OwnerPropertyAction.values) ...[
-              _OwnerPropertyActionRow(
-                action: action,
-                property: property,
-                onPressed: () => Go.back(action),
-              ),
+              _OwnerPropertyActionRow(action: action, property: property),
               if (!action.isDelete) 10.szH,
             ],
           ],
@@ -54,15 +50,10 @@ class OwnerPropertyActionSheet extends StatelessWidget {
 }
 
 class _OwnerPropertyActionRow extends StatelessWidget {
-  const _OwnerPropertyActionRow({
-    required this.action,
-    required this.property,
-    required this.onPressed,
-  });
+  const _OwnerPropertyActionRow({required this.action, required this.property});
 
   final OwnerPropertyAction action;
   final OwnerPropertyContent property;
-  final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +62,7 @@ class _OwnerPropertyActionRow extends StatelessWidget {
       borderRadius: BorderRadius.circular(16.r),
       child: InkWell(
         key: ValueKey('owner-property-action-${action.name}'),
-        onTap: onPressed,
+        onTap: () => Go.back(action),
         borderRadius: BorderRadius.circular(16.r),
         child: Container(
           padding: EdgeInsets.all(12.w),

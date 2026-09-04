@@ -70,10 +70,7 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
       backgroundColor: AppColors.transparent,
       barrierColor: AppColors.blackAlpha50,
       builder: (context) {
-        return VisitRatingSheet(
-          propertyTitle: visit.propertyTitle,
-          onSubmitted: (rating, comment) => Go.back(true),
-        );
+        return VisitRatingSheet(propertyTitle: visit.propertyTitle);
       },
     );
 
@@ -88,12 +85,6 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
       ..showSnackBar(SnackBar(content: AppText(message)));
   }
 
-  void _openChat() {
-    Go.to(ChatThreadScreen(conversation: ChatContent.conversations.first));
-  }
-
-  void _browseProperties() => Go.to(const TenantSearchScreen());
-
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -107,13 +98,10 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
             pagifyController: _pagifyController,
             cacheKey: TenantVisitsData.cacheKeyFor(_selectedFilter),
             loadPage: _getVisitsPage,
-            onBackPressed: Go.back,
             onFilterSelected: _selectFilter,
             onVisitPressed: _openDetails,
-            onChatPressed: _openChat,
             onRatePressed: _showRating,
             onCancelPressed: _removeVisit,
-            onBrowsePropertiesPressed: _browseProperties,
           ),
         ),
       ),

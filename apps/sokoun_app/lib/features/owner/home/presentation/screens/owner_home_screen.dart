@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/status_builder.dart';
-import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_dashboard_model.dart';
 import 'package:sokoun_app/features/owner/home/presentation/cubits/owner_dashboard_cubit.dart';
-import 'package:sokoun_app/features/shared/notifications/data/enums/notification_role.dart';
-import 'package:sokoun_app/features/shared/notifications/presentation/screens/notifications_screen.dart';
 
 import '../widgets/owner_widgets/imports.dart';
 
@@ -51,12 +48,8 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
                   initialDataForShimmer: const OwnerDashboardModel.initial(),
                   requestToTryAgainWhenError: _ownerDashboardRequest,
                   errorType: ErrorType.defaultView,
-                  builder: (dashboard) => OwnerDashboardContent(
-                    dashboard: dashboard,
-                    onNotificationsPressed: () => Go.to(
-                      const NotificationsScreen(role: NotificationRole.owner),
-                    ),
-                  ),
+                  builder: (dashboard) =>
+                      OwnerDashboardContent(dashboard: dashboard),
                 ),
           ),
         ),

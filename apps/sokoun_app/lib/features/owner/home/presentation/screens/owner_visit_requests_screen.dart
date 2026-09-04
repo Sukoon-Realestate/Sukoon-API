@@ -5,8 +5,6 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/status_builder.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
-import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_thread_screen.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
 import 'package:sokoun_app/features/owner/visits/presentation/cubits/received_visits_cubit.dart';
 
@@ -136,23 +134,6 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
     );
   }
 
-  void _openChat(OwnerVisitRequestContent request) {
-    Go.to(
-      ChatThreadScreen(
-        conversation: ConversationContent(
-          id: 101,
-          name: request.name,
-          property: request.property,
-          lastMessage: request.tenantNote,
-          time: request.time,
-          unreadCount: 0,
-          isVerified: request.isVerified,
-          isOnline: true,
-        ),
-      ),
-    );
-  }
-
   void _showMessage(String message) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
@@ -198,11 +179,9 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
             requests: requests,
             visibleRequests: visibleRequests,
             selectedFilter: _selectedFilter,
-            onBackPressed: widget.showBackButton ? () => Go.back() : null,
-            onCalendarPressed: () => Go.to(const OwnerRequestsCalendarScreen()),
+            showBackButton: widget.showBackButton,
             onFilterSelected: _selectFilter,
             onRequestPressed: _openDetails,
-            onChatPressed: _openChat,
             onAcceptPressed: _acceptRequest,
             onRejectPressed: _rejectRequest,
           ),

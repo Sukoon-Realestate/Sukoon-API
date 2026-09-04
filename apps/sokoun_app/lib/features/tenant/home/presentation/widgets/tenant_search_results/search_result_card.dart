@@ -18,12 +18,10 @@ class SearchResultCard extends StatelessWidget {
     super.key,
     required this.item,
     required this.filterOptions,
-    this.onDetailsTap,
   });
 
   final PropertyDetailsModel item;
   final PropertyFilterOptionsModel filterOptions;
-  final VoidCallback? onDetailsTap;
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +93,7 @@ class SearchResultCard extends StatelessWidget {
                 Row(
                   textDirection: TextDirection.ltr,
                   children: [
-                    DetailsButton(onTap: onDetailsTap),
+                    DetailsButton(propertyId: item.id),
                     const Spacer(),
                     Row(
                       children: [

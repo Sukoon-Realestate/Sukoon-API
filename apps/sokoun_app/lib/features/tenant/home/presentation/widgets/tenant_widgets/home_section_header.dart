@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
 
 class HomeSectionHeader extends StatelessWidget {
-  const HomeSectionHeader({
-    super.key,
-    required this.title,
-    this.actionTitle,
-    this.onActionTap,
-  });
+  const HomeSectionHeader({super.key, required this.title, this.actionTitle});
 
   final String title;
   final String? actionTitle;
-  final VoidCallback? onActionTap;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +19,7 @@ class HomeSectionHeader extends StatelessWidget {
         if (actionTitle != null)
           Flexible(
             child: TextButton(
-              onPressed: onActionTap,
+              onPressed: () => Go.to(const TenantSearchScreen()),
               style: TextButton.styleFrom(
                 minimumSize: Size.zero,
                 padding: EdgeInsets.zero,

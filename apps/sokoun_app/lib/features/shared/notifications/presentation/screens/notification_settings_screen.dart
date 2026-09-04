@@ -83,7 +83,7 @@ class _NotificationSettingsScreenState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _NotificationSettingsHeader(onBackPressed: () => Go.back()),
+              const _NotificationSettingsHeader(),
               Expanded(
                 child: ListView(
                   padding: EdgeInsets.only(top: 12.h, bottom: 24.h),
@@ -138,9 +138,7 @@ class _NotificationSettingsScreenState
 }
 
 class _NotificationSettingsHeader extends StatelessWidget {
-  const _NotificationSettingsHeader({required this.onBackPressed});
-
-  final VoidCallback onBackPressed;
+  const _NotificationSettingsHeader();
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +152,7 @@ class _NotificationSettingsHeader extends StatelessWidget {
         children: [
           IconButton(
             key: const ValueKey('notification-settings-back'),
-            onPressed: onBackPressed,
+            onPressed: Go.back,
             icon: Icon(
               Icons.arrow_back_ios_new_rounded,
               color: AppColors.sokoonNavy,

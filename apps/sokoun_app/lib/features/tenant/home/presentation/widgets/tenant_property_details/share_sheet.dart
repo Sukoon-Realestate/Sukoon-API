@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 import 'share_action_row.dart';
 
 class TenantPropertyShareSheet extends StatelessWidget {
-  const TenantPropertyShareSheet({
-    super.key,
-    required this.onCopyLinkPressed,
-    required this.onSharePressed,
-    required this.onCancelPressed,
-  });
+  const TenantPropertyShareSheet({super.key, required this.shareUrl});
 
-  final VoidCallback onCopyLinkPressed;
-  final VoidCallback onSharePressed;
-  final VoidCallback onCancelPressed;
+  final String shareUrl;
+
+  Future<void> _copyLink(BuildContext context) async {
+    final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
+    await Clipboard.setData(ClipboardData(text: shareUrl));
+    Go.back();
+    messenger.showSnackBar(
+      SnackBar(content: Text(LocaleKeys.tenantPropertyDetailsLinkCopied)),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +63,7 @@ class TenantPropertyShareSheet extends StatelessWidget {
                 icon: Icons.link_rounded,
                 label: LocaleKeys.tenantPropertyDetailsCopyLink,
                 color: AppColors.sokoonTeal,
-                onActionPressed: onCopyLinkPressed,
+                onActionPressed: () => _copyLink(context),
               ),
               8.szH,
               TenantPropertyShareActionRow(
@@ -67,7 +71,7 @@ class TenantPropertyShareSheet extends StatelessWidget {
                 icon: Icons.ios_share_rounded,
                 label: LocaleKeys.tenantPropertyDetailsShare,
                 color: AppColors.blue,
-                onActionPressed: onSharePressed,
+                onActionPressed: Go.back,
               ),
               8.szH,
               TenantPropertyShareActionRow(
@@ -75,7 +79,7 @@ class TenantPropertyShareSheet extends StatelessWidget {
                 icon: Icons.close_rounded,
                 label: LocaleKeys.cancel,
                 color: AppColors.sokoonRose,
-                onActionPressed: onCancelPressed,
+                onActionPressed: Go.back,
               ),
             ],
           ),

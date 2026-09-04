@@ -7,8 +7,7 @@ import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_list_screen.dart';
 import 'package:sokoun_app/features/tenant/favorites/presentation/screens/favorites_screen.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_home_screen.dart';
-import 'package:sokoun_app/features/shared/notifications/data/enums/notification_role.dart';
-import 'package:sokoun_app/features/shared/notifications/presentation/screens/notifications_screen.dart';
+import 'package:sokoun_app/features/tenant/visits/imports.dart';
 import 'package:sokoun_app/features/owner/home/presentation/screens/owner_home_screen.dart';
 import 'package:sokoun_app/features/owner/home/presentation/screens/owner_visit_requests_screen.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
@@ -97,11 +96,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       _HomeTab(
         destination: HomeNavigationDestination(
-          icon: Assets.svgNotification,
-          selectedIcon: Assets.svgNotification,
-          label: LocaleKeys.notifications,
+          icon: Assets.svgCalendar,
+          selectedIcon: Assets.svgCalendar,
+          label: LocaleKeys.tenantVisitsTitle,
         ),
-        screen: NotificationsScreen(role: NotificationRole.tenant),
+        screen: const TenantVisitsScreen(),
       ),
       _HomeTab(
         destination: HomeNavigationDestination(

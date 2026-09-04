@@ -107,6 +107,17 @@ For an `AsyncCubit` screen, follow this lifecycle:
 
 Use the role-aware navigation approach from `home_screen.dart` only for tab containers: build typed destination/screen pairs, select the role-specific list once, render screens with `IndexedStack`, and keep the bottom-navigation widget separate. Do not apply tab-container structure to ordinary screens.
 
+### Widget Action Ownership
+
+Do not add function or callback constructor parameters by default. Before adding an `onPressed`, `onTap`, or similar parameter, decide whether the caller actually needs to choose or coordinate the action.
+
+- When a feature-specific widget always performs the same self-contained action, implement it directly in the widget. This includes fixed navigation such as a tenant visits banner that always opens `TenantVisitsScreen`. Do not pass the callback from a screen through intermediate content widgets merely to reach the leaf widget.
+- Keep the widget constructor free of an optional callback added only for hypothetical reuse or test convenience. Generalize the widget only when a real call site needs different behavior.
+- Use a callback when ownership genuinely belongs outside the widget: the action varies by caller, updates state or values held by the parent, participates in parent-level validation/submission, requires caller-only data, or belongs to a shared reusable component.
+- A feature-specific leaf widget may import its fixed destination screen and call `Go` directly. It must not import the screen that owns or renders it, which would create a circular presentation dependency.
+
+For example, prefer `const TenantVisitBanner()` with `onTap: () => Go.to(const TenantVisitsScreen())` inside the banner over threading `onVisitPressed` through `TenantHomeScreen` and `TenantHomeContent` when no caller needs to override that navigation.
+
 ## Project Conventions
 
 - Navigate through `Go`; do not introduce direct `Navigator` calls.
@@ -120,7 +131,7 @@ Use the role-aware navigation approach from `home_screen.dart` only for tab cont
 
 Before handing off:
 
-1. Confirm data code does not import presentation code and widgets do not import screens.
+1. Confirm data code does not import presentation code and widgets do not import their owning screens. A feature-specific leaf widget may import a destination screen only when it owns one fixed navigation action.
 2. Confirm async requests are not started from `build` or a Cubit constructor.
 3. Confirm cacheable GETs use a stable key plus both serializers, and that screens rely on the cache result instead of mock fallback data.
 4. Confirm successful empty API data renders a contextual Lottie empty state without hiding the screen's useful controls.

@@ -1,25 +1,20 @@
 part of '../../../imports.dart';
 
 class VisitDetailsActions extends StatelessWidget {
-  const VisitDetailsActions({
-    super.key,
-    required this.status,
-    required this.onOpenChatPressed,
-    required this.onCancelVisitPressed,
-    required this.onFindAlternativePressed,
-  });
+  const VisitDetailsActions({super.key, required this.status});
 
   final TenantVisitStatus status;
-  final VoidCallback onOpenChatPressed;
-  final VoidCallback onCancelVisitPressed;
-  final VoidCallback onFindAlternativePressed;
+
+  void _openChat() {
+    Go.to(ChatThreadScreen(conversation: ChatContent.conversations.first));
+  }
 
   @override
   Widget build(BuildContext context) {
     if (status.isRejected) {
       return DefaultButton(
         key: const ValueKey('visit-details-find-alternative'),
-        onTap: onFindAlternativePressed,
+        onTap: () => Go.to(const TenantSearchScreen()),
         title: LocaleKeys.tenantVisitFindAlternative,
         color: AppColors.sokoonTeal,
         textColor: AppColors.white,
@@ -36,7 +31,7 @@ class VisitDetailsActions extends StatelessWidget {
         if (status.isAccepted) ...[
           DefaultButton(
             key: const ValueKey('visit-details-open-chat'),
-            onTap: onOpenChatPressed,
+            onTap: _openChat,
             title: LocaleKeys.tenantVisitOpenOwnerChat,
             color: AppColors.sokoonTeal,
             textColor: AppColors.white,
@@ -49,7 +44,7 @@ class VisitDetailsActions extends StatelessWidget {
         ],
         DefaultButton(
           key: const ValueKey('visit-details-cancel'),
-          onTap: onCancelVisitPressed,
+          onTap: () => Go.back(true),
           title: status.isPending
               ? LocaleKeys.tenantVisitCancelRequest
               : LocaleKeys.tenantVisitCancelVisit,

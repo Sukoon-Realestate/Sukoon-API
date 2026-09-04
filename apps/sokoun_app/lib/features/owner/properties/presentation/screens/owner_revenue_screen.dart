@@ -28,7 +28,7 @@ class OwnerRevenueScreen extends StatelessWidget {
             children: [
               OwnerPropertyTopBar(
                 title: LocaleKeys.ownerRevenueTitle,
-                onBackPressed: showBackButton ? () => Go.back() : null,
+                showBackButton: showBackButton,
               ),
               Expanded(
                 child: ListView(

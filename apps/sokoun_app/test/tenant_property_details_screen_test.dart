@@ -7,6 +7,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
 import 'package:melos_core/core/error/failure.dart';
+import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/exeption_view.dart';
 import 'package:multiple_result/multiple_result.dart';
@@ -27,6 +28,7 @@ void main() {
           return call.method == 'getAll' ? <String, Object>{} : true;
         });
     await EasyLocalization.ensureInitialized();
+    await CacheStorage.init();
   });
 
   setUp(() async {
@@ -35,9 +37,18 @@ void main() {
     injector.registerSingleton<BaseCrudUseCase>(
       BaseCrudUseCase(repository: repository),
     );
+    await CacheStorage.write('user', const <String, dynamic>{
+      'id': 1,
+      'name': 'Tenant Test User',
+      'email': 'tenant@example.com',
+      'type': 'tenant',
+    });
   });
 
-  tearDown(() => injector.reset());
+  tearDown(() async {
+    await CacheStorage.delete('user');
+    await injector.reset();
+  });
 
   tearDownAll(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger

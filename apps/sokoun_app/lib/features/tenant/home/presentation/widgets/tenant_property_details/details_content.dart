@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/lancher_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
 
@@ -15,14 +16,16 @@ import 'price_and_rating.dart';
 import 'tag_row.dart';
 
 class TenantPropertyDetailsContentView extends StatelessWidget {
-  const TenantPropertyDetailsContentView({
-    super.key,
-    required this.property,
-    required this.onLocationPressed,
-  });
+  const TenantPropertyDetailsContentView({super.key, required this.property});
 
   final TenantPropertyDetailsContent property;
-  final VoidCallback onLocationPressed;
+
+  Future<void> _openLocation() async {
+    await LauncherHelper.launchGoogleMaps(
+      latitude: property.latitude,
+      longitude: property.longitude,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +47,7 @@ class TenantPropertyDetailsContentView extends StatelessWidget {
           8.szH,
           GestureDetector(
             key: const ValueKey('tenant-property-details-location'),
-            onTap: onLocationPressed,
+            onTap: _openLocation,
             behavior: HitTestBehavior.opaque,
             child: Row(
               children: [

@@ -6,15 +6,11 @@ class VisitConfirmationContent extends StatelessWidget {
     required this.property,
     required this.selectedDay,
     required this.selectedTime,
-    required this.onFollowRequestsPressed,
-    required this.onBackToSearchPressed,
   });
 
   final VisitPropertyContent property;
   final VisitDayContent selectedDay;
   final VisitTimeSlotContent selectedTime;
-  final VoidCallback onFollowRequestsPressed;
-  final VoidCallback onBackToSearchPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +78,7 @@ class VisitConfirmationContent extends StatelessWidget {
             24.szH,
             DefaultButton(
               key: const ValueKey('visit-follow-requests'),
-              onTap: onFollowRequestsPressed,
+              onTap: () => Go.off(const TenantVisitsScreen()),
               title: LocaleKeys.tenantVisitFollowRequests,
               color: AppColors.sokoonTeal,
               textColor: AppColors.white,
@@ -94,7 +90,7 @@ class VisitConfirmationContent extends StatelessWidget {
             12.szH,
             DefaultButton(
               key: const ValueKey('visit-back-search'),
-              onTap: onBackToSearchPressed,
+              onTap: () => Go.off(const TenantSearchScreen()),
               title: LocaleKeys.tenantVisitBackToSearch,
               color: AppColors.white,
               textColor: AppColors.sokoonNavy,

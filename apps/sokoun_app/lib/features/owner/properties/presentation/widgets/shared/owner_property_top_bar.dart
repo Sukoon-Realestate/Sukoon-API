@@ -4,12 +4,12 @@ class OwnerPropertyTopBar extends StatelessWidget {
   const OwnerPropertyTopBar({
     super.key,
     required this.title,
-    this.onBackPressed,
+    this.showBackButton = true,
     this.trailing,
   });
 
   final String title;
-  final VoidCallback? onBackPressed;
+  final bool showBackButton;
   final Widget? trailing;
 
   @override
@@ -21,11 +21,11 @@ class OwnerPropertyTopBar extends StatelessWidget {
           SizedBox(
             width: 44.r,
             height: 44.r,
-            child: onBackPressed == null
+            child: !showBackButton
                 ? null
                 : IconButton(
                     key: const ValueKey('owner-property-back'),
-                    onPressed: onBackPressed,
+                    onPressed: Go.back,
                     icon: Icon(
                       Icons.arrow_forward_ios_rounded,
                       color: AppColors.sokoonNavy,

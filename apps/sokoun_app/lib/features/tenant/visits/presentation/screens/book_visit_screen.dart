@@ -131,7 +131,6 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
                 VisitHeader(
                   title: LocaleKeys.tenantVisitBookTitle,
                   backKey: const ValueKey('book-visit-back'),
-                  onBackPressed: () => Go.back(),
                 ),
                 Expanded(
                   child: BookVisitForm(

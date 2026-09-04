@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 
@@ -12,12 +13,10 @@ class AddPropertySubmittedPage extends StatelessWidget {
   const AddPropertySubmittedPage({
     super.key,
     required this.summaryItems,
-    required this.onViewProperties,
     required this.onAddAnother,
   });
 
   final List<AddPropertySummaryContent> summaryItems;
-  final VoidCallback onViewProperties;
   final VoidCallback onAddAnother;
 
   @override
@@ -95,7 +94,7 @@ class AddPropertySubmittedPage extends StatelessWidget {
             22.szH,
             AddPropertyPrimaryButton(
               label: LocaleKeys.ownerPropertySubmittedViewProperties,
-              onTap: onViewProperties,
+              onTap: () => Go.back(true),
             ),
             12.szH,
             AddPropertyPrimaryButton(

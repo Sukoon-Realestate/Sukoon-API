@@ -3,16 +3,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
 
 import '../widgets/auth_scaffold.dart';
 import '../widgets/kyc/kyc_feature_tile.dart';
 
 class KycApprovedScreen extends StatelessWidget {
-  const KycApprovedScreen({super.key, this.onStartSearch});
-
-  final VoidCallback? onStartSearch;
+  const KycApprovedScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +86,7 @@ class KycApprovedScreen extends StatelessWidget {
           ),
           24.szH,
           DefaultButton(
-            onTap: onStartSearch,
+            onTap: () => Go.offAll(const TenantSearchScreen()),
             title: LocaleKeys.startHousingSearch,
             color: AppColors.sokoonTeal,
             textColor: AppColors.white,

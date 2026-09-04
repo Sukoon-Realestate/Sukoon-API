@@ -10,7 +10,6 @@ class AuthScaffold extends StatelessWidget {
     required this.child,
     this.showBackButton = true,
     this.backButton,
-    this.onBack,
     this.backgroundColor = AppColors.scaffoldBackground,
     this.padding,
     this.bottomNavigationBar,
@@ -22,7 +21,6 @@ class AuthScaffold extends StatelessWidget {
   final Widget child;
   final bool showBackButton;
   final Widget? backButton;
-  final VoidCallback? onBack;
   final Color backgroundColor;
   final EdgeInsetsGeometry? padding;
   final Widget? bottomNavigationBar;
@@ -72,7 +70,7 @@ class AuthScaffold extends StatelessWidget {
         20.szH,
         Align(
           alignment: backButtonAlignment,
-          child: backButton ?? SokoonBackButton(onTap: onBack),
+          child: backButton ?? const SokoonBackButton(),
         ),
         14.szH,
         child,

@@ -3,13 +3,26 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
+import 'package:sokoun_app/features/owner/home/presentation/screens/owner_listings_screen.dart';
+import 'package:sokoun_app/features/shared/notifications/data/enums/notification_role.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
 
 class NotificationsEmptyState extends StatelessWidget {
-  const NotificationsEmptyState({super.key, required this.onExplorePressed});
+  const NotificationsEmptyState({super.key, required this.role});
 
-  final VoidCallback onExplorePressed;
+  final NotificationRole role;
+
+  void _exploreProperties() {
+    if (role.isOwner) {
+      Go.off(const OwnerListingsScreen());
+      return;
+    }
+
+    Go.off(const TenantSearchScreen());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +66,7 @@ class NotificationsEmptyState extends StatelessWidget {
           28.szH,
           DefaultButton(
             key: const ValueKey('notifications-empty-explore'),
-            onTap: onExplorePressed,
+            onTap: _exploreProperties,
             title: LocaleKeys.notificationsExploreProperties,
             color: AppColors.white,
             textColor: AppColors.sokoonNavy,

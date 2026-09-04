@@ -5,10 +5,6 @@ class VisitDetailsScreen extends StatelessWidget {
 
   final TenantVisitContent visit;
 
-  void _openChat() {
-    Go.to(ChatThreadScreen(conversation: ChatContent.conversations.first));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -22,17 +18,8 @@ class VisitDetailsScreen extends StatelessWidget {
               VisitHeader(
                 title: LocaleKeys.tenantVisitDetailsTitle,
                 backKey: const ValueKey('visit-details-back'),
-                onBackPressed: () => Go.back(),
               ),
-              Expanded(
-                child: VisitDetailsContent(
-                  visit: visit,
-                  onOpenChatPressed: _openChat,
-                  onCancelVisitPressed: () => Go.back(true),
-                  onFindAlternativePressed: () =>
-                      Go.to(const TenantSearchScreen()),
-                ),
-              ),
+              Expanded(child: VisitDetailsContent(visit: visit)),
             ],
           ),
         ),

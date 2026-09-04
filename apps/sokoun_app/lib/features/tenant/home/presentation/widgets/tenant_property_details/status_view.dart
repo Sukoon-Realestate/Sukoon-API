@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 
 class TenantPropertyStatusView extends StatelessWidget {
-  const TenantPropertyStatusView({
-    super.key,
-    required this.onBackPressed,
-    required this.child,
-  });
+  const TenantPropertyStatusView({super.key, required this.child});
 
-  final VoidCallback onBackPressed;
   final Widget child;
 
   @override
@@ -18,7 +14,7 @@ class TenantPropertyStatusView extends StatelessWidget {
         Align(
           alignment: Alignment.centerLeft,
           child: IconButton(
-            onPressed: onBackPressed,
+            onPressed: Go.back,
             icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20.r),
           ),
         ),

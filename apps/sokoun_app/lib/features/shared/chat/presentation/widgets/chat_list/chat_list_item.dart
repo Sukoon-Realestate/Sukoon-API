@@ -2,26 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_restricted_screen.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_thread_screen.dart';
 
 import '../shared/chat_verified_badge.dart';
 
 class ChatListItem extends StatelessWidget {
-  const ChatListItem({
-    super.key,
-    required this.conversation,
-    required this.onPressed,
-  });
+  const ChatListItem({super.key, required this.conversation});
 
   final ConversationContent conversation;
-  final VoidCallback onPressed;
+
+  void _openConversation() {
+    if (conversation.isVerified) {
+      Go.to(ChatThreadScreen(conversation: conversation));
+      return;
+    }
+
+    Go.to(ChatRestrictedScreen(conversation: conversation));
+  }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       key: ValueKey('chat-${conversation.id}'),
-      onTap: onPressed,
+      onTap: _openConversation,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 14.h),
         child: Row(

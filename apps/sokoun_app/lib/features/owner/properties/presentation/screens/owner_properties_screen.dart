@@ -45,7 +45,7 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
 
   Future<void> _openAddProperty() async {
     final bool? shouldReturnToProperties = await Go.to<bool>(
-      OwnerAddPropertyFlowScreen(onViewProperties: () => Go.back(true)),
+      const OwnerAddPropertyFlowScreen(),
     );
     if (shouldReturnToProperties == true && mounted) {
       _showMessage(LocaleKeys.ownerPropertiesSubmittedMessage);
@@ -69,10 +69,6 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
     }
     _replaceProperty(result.property);
     _showMessage(LocaleKeys.ownerPropertiesSaved);
-  }
-
-  Future<void> _openAnalytics(OwnerPropertyContent property) {
-    return Go.to(OwnerPropertyAnalyticsScreen(property: property));
   }
 
   Future<void> _openRejection(OwnerPropertyContent property) async {
@@ -180,13 +176,8 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
                       child: OwnerPropertyCard(
                         property: property,
                         onEditPressed: () => _openEdit(property),
-                        onAnalyticsPressed: () => _openAnalytics(property),
                         onActionsPressed: () => _openActions(property),
-                        onPressed: property.status.isRejected
-                            ? () => _openRejection(property)
-                            : () => Go.to(
-                                PropertyDetailsScreen(propertyId: property.id),
-                              ),
+                        onRejectedPressed: () => _openRejection(property),
                       ),
                     ),
                   ),

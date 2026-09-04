@@ -1,18 +1,9 @@
 part of '../../../imports.dart';
 
 class VisitDetailsContent extends StatelessWidget {
-  const VisitDetailsContent({
-    super.key,
-    required this.visit,
-    required this.onOpenChatPressed,
-    required this.onCancelVisitPressed,
-    required this.onFindAlternativePressed,
-  });
+  const VisitDetailsContent({super.key, required this.visit});
 
   final TenantVisitContent visit;
-  final VoidCallback onOpenChatPressed;
-  final VoidCallback onCancelVisitPressed;
-  final VoidCallback onFindAlternativePressed;
 
   List<({String label, String value})> get _summaryRows {
     return [
@@ -45,12 +36,7 @@ class VisitDetailsContent extends StatelessWidget {
             VisitContactCard(ownerPhone: visit.ownerPhone),
           ],
           14.szH,
-          VisitDetailsActions(
-            status: visit.status,
-            onOpenChatPressed: onOpenChatPressed,
-            onCancelVisitPressed: onCancelVisitPressed,
-            onFindAlternativePressed: onFindAlternativePressed,
-          ),
+          VisitDetailsActions(status: visit.status),
         ],
       ),
     );

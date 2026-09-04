@@ -11,9 +11,7 @@ import 'package:sokoun_app/features/tenant/favorites/data/models/favorites_conte
 import 'package:sokoun_app/features/tenant/favorites/data/models/saved_properties_response.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_search_model.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_save_cubit.dart';
-import 'package:sokoun_app/features/tenant/home/presentation/screens/property_details_screen.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_filter_screen.dart';
-import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
 
 import '../widgets/imports.dart';
 
@@ -181,8 +179,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     }
   }
 
-  void _browseProperties() => Go.to(const TenantSearchScreen());
-
   List<FavoritePropertyContent>? get _visibleInitialFavorites {
     final List<FavoritePropertyContent>? favorites = _initialFavorites;
     if (favorites == null) return null;
@@ -249,11 +245,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     if (mounted) setState(() {});
   }
 
-  void _openProperty(FavoritePropertyContent item) {
-    if (item.id.isEmpty) return;
-    Go.to(PropertyDetailsScreen(propertyId: item.id));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -266,9 +257,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             initialItems: _visibleInitialFavorites,
             pagifyController: _pagifyController,
             loadPage: _getFavoritesPage,
-            onPropertyPressed: _openProperty,
             onFavoriteRemoved: _removeFavorite,
-            onBrowsePressed: _browseProperties,
             activeFilterCount: _filters.activeCount,
             onFiltersPressed: _openFilters,
             onClearFiltersPressed: _clearFilters,

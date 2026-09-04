@@ -5,16 +5,27 @@ class OwnerPropertyCard extends StatelessWidget {
     super.key,
     required this.property,
     required this.onEditPressed,
-    required this.onAnalyticsPressed,
     required this.onActionsPressed,
-    required this.onPressed,
+    required this.onRejectedPressed,
   });
 
   final OwnerPropertyContent property;
   final VoidCallback onEditPressed;
-  final VoidCallback onAnalyticsPressed;
   final VoidCallback onActionsPressed;
-  final VoidCallback onPressed;
+  final VoidCallback onRejectedPressed;
+
+  void _openAnalytics() {
+    Go.to(OwnerPropertyAnalyticsScreen(property: property));
+  }
+
+  void _openProperty() {
+    if (property.status.isRejected) {
+      onRejectedPressed();
+      return;
+    }
+
+    Go.to(PropertyDetailsScreen(propertyId: property.id));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +34,7 @@ class OwnerPropertyCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(20.r),
       child: InkWell(
         key: ValueKey('owner-property-card-${property.id}'),
-        onTap: onPressed,
+        onTap: _openProperty,
         borderRadius: BorderRadius.circular(20.r),
         child: Container(
           padding: EdgeInsets.all(16.w),
@@ -126,7 +137,7 @@ class OwnerPropertyCard extends StatelessWidget {
                     label: LocaleKeys.ownerPropertiesAnalytics,
                     foregroundColor: AppColors.sokoonTeal,
                     backgroundColor: AppColors.mintLight,
-                    onPressed: onAnalyticsPressed,
+                    onPressed: _openAnalytics,
                   ),
                   8.szW,
                   _OwnerPropertyCardAction(

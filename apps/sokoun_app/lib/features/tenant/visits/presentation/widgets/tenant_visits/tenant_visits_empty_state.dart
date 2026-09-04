@@ -4,11 +4,11 @@ class TenantVisitsEmptyState extends StatelessWidget {
   const TenantVisitsEmptyState({
     super.key,
     required this.isFiltered,
-    required this.onActionPressed,
+    required this.onClearFiltersPressed,
   });
 
   final bool isFiltered;
-  final VoidCallback onActionPressed;
+  final VoidCallback onClearFiltersPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,9 @@ class TenantVisitsEmptyState extends StatelessWidget {
               18.szH,
               DefaultButton(
                 key: const ValueKey('tenant-visits-empty-action'),
-                onTap: onActionPressed,
+                onTap: isFiltered
+                    ? onClearFiltersPressed
+                    : () => Go.to(const TenantSearchScreen()),
                 title: isFiltered
                     ? LocaleKeys.tenantVisitsShowAll
                     : LocaleKeys.tenantVisitsBrowseProperties,

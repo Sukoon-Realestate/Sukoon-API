@@ -9,7 +9,6 @@ class OwnerAvailabilityContent extends StatelessWidget {
     required this.slotState,
     required this.onDaySelected,
     required this.onTimePressed,
-    required this.onSavePressed,
   });
 
   final List<OwnerAvailabilityDayContent> days;
@@ -18,7 +17,6 @@ class OwnerAvailabilityContent extends StatelessWidget {
   final OwnerAvailabilitySlotState Function(int index) slotState;
   final ValueChanged<int> onDaySelected;
   final ValueChanged<int> onTimePressed;
-  final VoidCallback onSavePressed;
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +84,7 @@ class OwnerAvailabilityContent extends StatelessWidget {
           18.szH,
           DefaultButton(
             key: const ValueKey('owner-availability-save'),
-            onTap: onSavePressed,
+            onTap: () => Go.back(true),
             title: LocaleKeys.ownerAvailabilitySave,
             color: AppColors.sokoonTeal,
             textColor: AppColors.white,

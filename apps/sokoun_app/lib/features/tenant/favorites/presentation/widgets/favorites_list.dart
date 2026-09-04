@@ -9,17 +9,13 @@ class FavoritesList extends StatelessWidget {
   const FavoritesList({
     super.key,
     required this.items,
-    required this.onPropertyPressed,
     required this.onFavoriteRemoved,
-    required this.onBrowsePressed,
     required this.isFiltered,
     required this.onClearFiltersPressed,
   });
 
   final List<FavoritePropertyContent> items;
-  final ValueChanged<FavoritePropertyContent> onPropertyPressed;
   final void Function(FavoritePropertyContent item) onFavoriteRemoved;
-  final VoidCallback onBrowsePressed;
   final bool isFiltered;
   final VoidCallback onClearFiltersPressed;
 
@@ -30,7 +26,6 @@ class FavoritesList extends StatelessWidget {
       child: items.isEmpty
           ? FavoritesEmptyState(
               key: const ValueKey('favorites-empty'),
-              onBrowseTap: onBrowsePressed,
               isFiltered: isFiltered,
               onClearFiltersTap: onClearFiltersPressed,
             )
@@ -42,7 +37,6 @@ class FavoritesList extends StatelessWidget {
                 return FavoritePropertyCard(
                   key: ValueKey(item.id),
                   item: item,
-                  onPressed: () => onPropertyPressed(item),
                   onRemove: () => onFavoriteRemoved(item),
                 );
               },

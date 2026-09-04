@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
 
 class HomeSearchBox extends StatelessWidget {
-  const HomeSearchBox({required this.onPressed, super.key});
-
-  final VoidCallback onPressed;
+  const HomeSearchBox({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: () => Go.to(const TenantSearchScreen()),
       child: Container(
         height: 52.h,
         padding: EdgeInsetsDirectional.only(start: 16.w, end: 8.w),

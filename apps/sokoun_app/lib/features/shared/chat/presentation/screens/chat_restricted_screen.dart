@@ -68,7 +68,7 @@ class ChatRestrictedScreen extends StatelessWidget {
                         maxLines: 3,
                       ),
                       18.szH,
-                      _VerificationWarning(onVerifyPressed: _openVerification),
+                      const _VerificationWarning(),
                       20.szH,
                       DefaultButton(
                         key: const ValueKey('chat-start-kyc'),
@@ -177,9 +177,7 @@ class _RestrictedHeader extends StatelessWidget {
 }
 
 class _VerificationWarning extends StatelessWidget {
-  const _VerificationWarning({required this.onVerifyPressed});
-
-  final VoidCallback onVerifyPressed;
+  const _VerificationWarning();
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +201,7 @@ class _VerificationWarning extends StatelessWidget {
             ),
           ),
           TextButton(
-            onPressed: onVerifyPressed,
+            onPressed: () => Go.to(const KycIntroScreen()),
             style: TextButton.styleFrom(
               minimumSize: Size.zero,
               padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),

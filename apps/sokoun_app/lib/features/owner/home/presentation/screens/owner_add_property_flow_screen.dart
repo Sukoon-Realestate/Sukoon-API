@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/helpers.dart';
-import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
 
 import '../../data/models/owner_add_property_content.dart';
@@ -11,9 +10,7 @@ import '../cubits/create_property_cubit.dart';
 import '../widgets/owner_add_property/imports.dart';
 
 class OwnerAddPropertyFlowScreen extends StatefulWidget {
-  const OwnerAddPropertyFlowScreen({super.key, this.onViewProperties});
-
-  final VoidCallback? onViewProperties;
+  const OwnerAddPropertyFlowScreen({super.key});
 
   @override
   State<OwnerAddPropertyFlowScreen> createState() =>
@@ -317,7 +314,6 @@ class _OwnerAddPropertyFlowScreenState
               ),
               AddPropertySubmittedPage(
                 summaryItems: _form.submittedSummary,
-                onViewProperties: widget.onViewProperties ?? () => Go.back(),
                 onAddAnother: _resetFlow,
               ),
             ],

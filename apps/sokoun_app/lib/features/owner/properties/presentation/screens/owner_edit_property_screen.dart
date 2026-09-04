@@ -92,7 +92,6 @@ class _OwnerEditPropertyScreenState extends State<OwnerEditPropertyScreen> {
             children: [
               OwnerPropertyTopBar(
                 title: LocaleKeys.ownerPropertiesEditTitle,
-                onBackPressed: () => Go.back(),
                 trailing: TextButton(
                   key: const ValueKey('owner-edit-delete'),
                   onPressed: _delete,

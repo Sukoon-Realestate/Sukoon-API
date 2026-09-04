@@ -8,7 +8,6 @@ class OwnerRequestDetailsContent extends StatelessWidget {
     required this.isRejecting,
     required this.onAcceptPressed,
     required this.onRejectPressed,
-    required this.onChatPressed,
   });
 
   final OwnerVisitRequestContent request;
@@ -16,7 +15,23 @@ class OwnerRequestDetailsContent extends StatelessWidget {
   final bool isRejecting;
   final VoidCallback onAcceptPressed;
   final VoidCallback onRejectPressed;
-  final VoidCallback onChatPressed;
+
+  void _openChat() {
+    Go.to(
+      ChatThreadScreen(
+        conversation: ConversationContent(
+          id: 101,
+          name: request.name,
+          property: request.property,
+          lastMessage: request.tenantNote,
+          time: request.time,
+          unreadCount: 0,
+          isVerified: request.isVerified,
+          isOnline: true,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +84,7 @@ class OwnerRequestDetailsContent extends StatelessWidget {
           ],
           DefaultButton(
             key: const ValueKey('owner-request-open-chat'),
-            onTap: isUpdating ? null : onChatPressed,
+            onTap: isUpdating ? null : _openChat,
             title: LocaleKeys.ownerVisitOpenChat,
             color: AppColors.bluePale,
             textColor: AppColors.blue,

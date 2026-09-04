@@ -157,11 +157,7 @@ class _ChatThreadScreenState extends State<ChatThreadScreen> {
       useSafeArea: true,
       backgroundColor: AppColors.transparent,
       barrierColor: AppColors.blackAlpha50,
-      builder: (context) {
-        return ChatReportSheet(
-          onSubmitted: (selectedReason, details) => Go.back(true),
-        );
-      },
+      builder: (context) => const ChatReportSheet(),
     );
 
     if (submitted == true && mounted) {
@@ -182,7 +178,6 @@ class _ChatThreadScreenState extends State<ChatThreadScreen> {
             children: [
               ChatThreadHeader(
                 conversation: widget.conversation,
-                onBackPressed: () => Go.back(),
                 onReportPressed: _showReportSheet,
               ),
               Expanded(

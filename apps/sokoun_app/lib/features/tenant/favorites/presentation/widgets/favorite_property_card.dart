@@ -3,26 +3,31 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/image_widgets/cached_image.dart';
 import 'package:sokoun_app/features/tenant/favorites/data/models/favorites_content.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/screens/property_details_screen.dart';
 
 class FavoritePropertyCard extends StatelessWidget {
   const FavoritePropertyCard({
     super.key,
     required this.item,
-    required this.onPressed,
     required this.onRemove,
   });
 
   final FavoritePropertyContent item;
-  final VoidCallback onPressed;
   final VoidCallback onRemove;
+
+  void _openProperty() {
+    if (item.id.isEmpty) return;
+    Go.to(PropertyDetailsScreen(propertyId: item.id));
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: _openProperty,
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.white,

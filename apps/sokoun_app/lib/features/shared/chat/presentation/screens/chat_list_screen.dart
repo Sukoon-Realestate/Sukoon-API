@@ -5,13 +5,10 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
-import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
 
 import '../widgets/imports.dart';
 import 'chat_empty_screen.dart';
-import 'chat_restricted_screen.dart';
 import 'chat_search_screen.dart';
-import 'chat_thread_screen.dart';
 
 class ChatListScreen extends StatelessWidget {
   const ChatListScreen({
@@ -21,21 +18,10 @@ class ChatListScreen extends StatelessWidget {
 
   final List<ConversationContent> conversations;
 
-  void _openConversation(ConversationContent conversation) {
-    if (conversation.isVerified) {
-      Go.to(ChatThreadScreen(conversation: conversation));
-      return;
-    }
-
-    Go.to(ChatRestrictedScreen(conversation: conversation));
-  }
-
   @override
   Widget build(BuildContext context) {
     if (conversations.isEmpty) {
-      return ChatEmptyScreen(
-        onExplorePressed: () => Go.off(const TenantSearchScreen()),
-      );
+      return const ChatEmptyScreen();
     }
 
     return Directionality(
@@ -74,10 +60,7 @@ class ChatListScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final ConversationContent conversation =
                         conversations[index];
-                    return ChatListItem(
-                      conversation: conversation,
-                      onPressed: () => _openConversation(conversation),
-                    );
+                    return ChatListItem(conversation: conversation);
                   },
                   separatorBuilder: (context, index) => Divider(
                     height: 1.h,

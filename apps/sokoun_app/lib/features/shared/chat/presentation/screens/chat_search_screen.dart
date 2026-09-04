@@ -8,8 +8,6 @@ import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
 
 import '../widgets/imports.dart';
-import 'chat_restricted_screen.dart';
-import 'chat_thread_screen.dart';
 
 class ChatSearchScreen extends StatefulWidget {
   const ChatSearchScreen({super.key});
@@ -56,15 +54,6 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
   void _clearQuery() {
     _searchController.clear();
     setState(() => _query = '');
-  }
-
-  void _openConversation(ConversationContent conversation) {
-    if (conversation.isVerified) {
-      Go.to(ChatThreadScreen(conversation: conversation));
-      return;
-    }
-
-    Go.to(ChatRestrictedScreen(conversation: conversation));
   }
 
   @override
@@ -116,10 +105,7 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
                     ),
                     8.szH,
                     for (int index = 0; index < _results.length; index++) ...[
-                      ChatSearchResultItem(
-                        conversation: _results[index],
-                        onPressed: () => _openConversation(_results[index]),
-                      ),
+                      ChatSearchResultItem(conversation: _results[index]),
                       if (index < _results.length - 1)
                         Divider(height: 1.h, color: AppColors.sokoonBorder),
                     ],

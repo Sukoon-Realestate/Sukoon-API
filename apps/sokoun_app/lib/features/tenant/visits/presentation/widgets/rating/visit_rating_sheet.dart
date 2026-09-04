@@ -1,14 +1,9 @@
 part of '../../../imports.dart';
 
 class VisitRatingSheet extends StatefulWidget {
-  const VisitRatingSheet({
-    super.key,
-    required this.propertyTitle,
-    required this.onSubmitted,
-  });
+  const VisitRatingSheet({super.key, required this.propertyTitle});
 
   final String propertyTitle;
-  final void Function(int rating, String comment) onSubmitted;
 
   @override
   State<VisitRatingSheet> createState() => _VisitRatingSheetState();
@@ -44,9 +39,7 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
     });
   }
 
-  void _submit() {
-    widget.onSubmitted(_overallRating, _commentController.text.trim());
-  }
+  void _submit() => Go.back(true);
 
   @override
   Widget build(BuildContext context) {

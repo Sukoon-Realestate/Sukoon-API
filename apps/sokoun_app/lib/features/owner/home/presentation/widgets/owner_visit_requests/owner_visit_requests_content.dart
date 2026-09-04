@@ -16,23 +16,19 @@ class OwnerVisitRequestsContent extends StatelessWidget {
     required this.requests,
     required this.visibleRequests,
     required this.selectedFilter,
-    required this.onCalendarPressed,
+    required this.showBackButton,
     required this.onFilterSelected,
     required this.onRequestPressed,
-    required this.onChatPressed,
     required this.onAcceptPressed,
     required this.onRejectPressed,
-    this.onBackPressed,
   });
 
   final List<OwnerVisitRequestContent> requests;
   final List<OwnerVisitRequestContent> visibleRequests;
   final OwnerVisitRequestFilter selectedFilter;
-  final VoidCallback? onBackPressed;
-  final VoidCallback onCalendarPressed;
+  final bool showBackButton;
   final ValueChanged<OwnerVisitRequestFilter> onFilterSelected;
   final ValueChanged<OwnerVisitRequestContent> onRequestPressed;
-  final ValueChanged<OwnerVisitRequestContent> onChatPressed;
   final ValueChanged<OwnerVisitRequestContent> onAcceptPressed;
   final ValueChanged<OwnerVisitRequestContent> onRejectPressed;
 
@@ -47,10 +43,7 @@ class OwnerVisitRequestsContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        OwnerVisitRequestsTopBar(
-          onBackPressed: onBackPressed,
-          onCalendarPressed: onCalendarPressed,
-        ),
+        OwnerVisitRequestsTopBar(showBackButton: showBackButton),
         Container(
           padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 14.h),
           decoration: const BoxDecoration(
@@ -85,7 +78,6 @@ class OwnerVisitRequestsContent extends StatelessWidget {
                     return OwnerVisitRequestCard(
                       request: request,
                       onPressed: () => onRequestPressed(request),
-                      onChatPressed: () => onChatPressed(request),
                       onAcceptPressed: () => onAcceptPressed(request),
                       onRejectPressed: () => onRejectPressed(request),
                     );

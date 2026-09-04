@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:sokoun_app/features/shared/notifications/data/enums/notification_role.dart';
+import 'package:sokoun_app/features/shared/notifications/presentation/screens/notifications_screen.dart';
 
 class HomeCircleButton extends StatelessWidget {
   const HomeCircleButton({
@@ -9,14 +12,12 @@ class HomeCircleButton extends StatelessWidget {
     required this.iconColor,
     this.backgroundColor = AppColors.white,
     this.showBadge = false,
-    this.onPressed,
   });
 
   final IconData icon;
   final Color iconColor;
   final Color backgroundColor;
   final bool showBadge;
-  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +25,10 @@ class HomeCircleButton extends StatelessWidget {
       clipBehavior: Clip.none,
       children: [
         Semantics(
-          button: onPressed != null,
+          button: true,
           child: GestureDetector(
-            onTap: onPressed,
+            onTap: () =>
+                Go.to(const NotificationsScreen(role: NotificationRole.tenant)),
             behavior: HitTestBehavior.opaque,
             child: Container(
               width: 36.r,

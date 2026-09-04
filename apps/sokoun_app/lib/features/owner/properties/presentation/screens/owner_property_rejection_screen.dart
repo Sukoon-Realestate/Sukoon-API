@@ -36,7 +36,6 @@ class OwnerPropertyRejectionScreen extends StatelessWidget {
             children: [
               OwnerPropertyTopBar(
                 title: LocaleKeys.ownerPropertyRejectionTitle,
-                onBackPressed: () => Go.back(),
               ),
               Expanded(
                 child: ListView(

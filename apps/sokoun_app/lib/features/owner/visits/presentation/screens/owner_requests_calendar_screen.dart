@@ -34,7 +34,7 @@ class _OwnerRequestsCalendarScreenState
         body: SafeArea(
           child: Column(
             children: [
-              _OwnerCalendarHeader(onBackPressed: () => Go.back()),
+              const _OwnerCalendarHeader(),
               Expanded(
                 child: OwnerCalendarContent(
                   selectedDay: _selectedDay,
@@ -51,9 +51,7 @@ class _OwnerRequestsCalendarScreenState
 }
 
 class _OwnerCalendarHeader extends StatelessWidget {
-  const _OwnerCalendarHeader({required this.onBackPressed});
-
-  final VoidCallback onBackPressed;
+  const _OwnerCalendarHeader();
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +66,7 @@ class _OwnerCalendarHeader extends StatelessWidget {
         children: [
           IconButton(
             key: const ValueKey('owner-calendar-back'),
-            onPressed: onBackPressed,
+            onPressed: Go.back,
             visualDensity: VisualDensity.compact,
             icon: Icon(
               Icons.arrow_back_ios_new_rounded,

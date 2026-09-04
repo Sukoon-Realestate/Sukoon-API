@@ -10,9 +10,7 @@ import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import '../shared/chat_privacy_banner.dart';
 
 class ChatReportSheet extends StatefulWidget {
-  const ChatReportSheet({super.key, required this.onSubmitted});
-
-  final void Function(int selectedReason, String details) onSubmitted;
+  const ChatReportSheet({super.key});
 
   @override
   State<ChatReportSheet> createState() => _ChatReportSheetState();
@@ -45,9 +43,7 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
     super.dispose();
   }
 
-  void _submit() {
-    widget.onSubmitted(_selectedReason, _detailsController.text.trim());
-  }
+  void _submit() => Go.back(true);
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +58,7 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
           top: false,
           child: Column(
             children: [
-              _ReportHeader(onClosePressed: () => Go.back()),
+              const _ReportHeader(),
               Expanded(
                 child: SingleChildScrollView(
                   padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 20.h),
@@ -163,9 +159,7 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
 }
 
 class _ReportHeader extends StatelessWidget {
-  const _ReportHeader({required this.onClosePressed});
-
-  final VoidCallback onClosePressed;
+  const _ReportHeader();
 
   @override
   Widget build(BuildContext context) {
@@ -198,7 +192,7 @@ class _ReportHeader extends StatelessWidget {
               ),
               IconButton(
                 key: const ValueKey('chat-report-close'),
-                onPressed: onClosePressed,
+                onPressed: Go.back,
                 icon: Icon(
                   Icons.close_rounded,
                   color: AppColors.sokoonNavy,

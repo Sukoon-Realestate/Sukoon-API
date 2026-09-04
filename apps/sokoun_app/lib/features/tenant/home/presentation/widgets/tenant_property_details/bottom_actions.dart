@@ -3,19 +3,30 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
+import 'package:sokoun_app/features/tenant/visits/imports.dart';
 
 class TenantPropertyBottomActions extends StatelessWidget {
   const TenantPropertyBottomActions({
     super.key,
+    required this.property,
     required this.isSaved,
-    required this.onBookVisitPressed,
     required this.onSavedPressed,
   });
 
+  final TenantPropertyDetailsContent property;
   final bool isSaved;
-  final VoidCallback onBookVisitPressed;
   final VoidCallback onSavedPressed;
+
+  void _openBookVisit() {
+    Go.to(
+      BookVisitScreen(
+        property: VisitPropertyContent.fromPropertyDetails(property),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +42,7 @@ class TenantPropertyBottomActions extends StatelessWidget {
           Expanded(
             child: GestureDetector(
               key: const ValueKey('tenant-property-details-book-visit'),
-              onTap: onBookVisitPressed,
+              onTap: _openBookVisit,
               behavior: HitTestBehavior.opaque,
               child: Container(
                 height: 48.h,

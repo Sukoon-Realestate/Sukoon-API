@@ -80,23 +80,6 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
     );
   }
 
-  void _openChat() {
-    Go.to(
-      ChatThreadScreen(
-        conversation: ConversationContent(
-          id: 101,
-          name: request.name,
-          property: request.property,
-          lastMessage: request.tenantNote,
-          time: request.time,
-          unreadCount: 0,
-          isVerified: request.isVerified,
-          isOnline: true,
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider<OwnerVisitStatusCubit>.value(
@@ -116,7 +99,7 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
                       VisitHeader(
                         title: LocaleKeys.ownerRequestDetailsTitle,
                         backKey: const ValueKey('owner-request-details-back'),
-                        onBackPressed: isUpdating ? () {} : () => Go.back(),
+                        isBackEnabled: !isUpdating,
                       ),
                       Expanded(
                         child: OwnerRequestDetailsContent(
@@ -130,7 +113,6 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
                               _pendingStatus == OwnerVisitUpdateStatus.rejected,
                           onAcceptPressed: () => _acceptRequest(context),
                           onRejectPressed: () => _rejectRequest(context),
-                          onChatPressed: _openChat,
                         ),
                       ),
                     ],

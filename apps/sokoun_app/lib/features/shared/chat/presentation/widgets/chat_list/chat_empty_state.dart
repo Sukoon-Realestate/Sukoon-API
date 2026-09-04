@@ -3,13 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
 
 class ChatEmptyState extends StatelessWidget {
-  const ChatEmptyState({super.key, required this.onExplorePressed});
-
-  final VoidCallback onExplorePressed;
+  const ChatEmptyState({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class ChatEmptyState extends StatelessWidget {
             ),
             30.szH,
             DefaultButton(
-              onTap: onExplorePressed,
+              onTap: () => Go.off(const TenantSearchScreen()),
               title: LocaleKeys.chatExploreProperties,
               color: AppColors.sokoonTeal,
               textColor: AppColors.white,

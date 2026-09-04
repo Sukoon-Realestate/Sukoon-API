@@ -113,10 +113,10 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
             (state.data is List && (state.data as List).isEmpty)) {
           emit(state.error(errorMessage: LocaleKeys.checkInternet));
         } else {
-          MessageUtils.showTopMsg(LocaleKeys.checkInternet);
+          Messages.showToast(status: BaseStatus.error, title: LocaleKeys.operationFaild, msg: LocaleKeys.checkInternet);
         }
       } else {
-        MessageUtils.showTopMsg(LocaleKeys.theInternetConnectionIsRestored);
+        Messages.showToast(status: BaseStatus.error, title: LocaleKeys.operationFaild, msg: LocaleKeys.theInternetConnectionIsRestored);
         await _basicOperation(
           operation: operation,
           successEmitter: successEmitter,

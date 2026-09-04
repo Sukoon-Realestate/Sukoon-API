@@ -8,14 +8,9 @@ import 'owner_pending_requests_section.dart';
 import 'owner_stats_grid.dart';
 
 class OwnerDashboardContent extends StatelessWidget {
-  const OwnerDashboardContent({
-    super.key,
-    required this.dashboard,
-    required this.onNotificationsPressed,
-  });
+  const OwnerDashboardContent({super.key, required this.dashboard});
 
   final OwnerDashboardModel dashboard;
-  final VoidCallback onNotificationsPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +23,6 @@ class OwnerDashboardContent extends StatelessWidget {
             name: dashboard.owner.name,
             avatarUrl: dashboard.owner.avatar,
             isVerified: dashboard.owner.isVerified,
-            onNotificationsPressed: onNotificationsPressed,
           ),
           18.szH,
           OwnerStatsGrid(

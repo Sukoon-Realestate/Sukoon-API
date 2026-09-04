@@ -64,8 +64,6 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
     });
   }
 
-  void _saveAvailability() => Go.back(true);
-
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -78,7 +76,6 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
               VisitHeader(
                 title: LocaleKeys.ownerAvailabilityTitle,
                 backKey: const ValueKey('owner-availability-back'),
-                onBackPressed: () => Go.back(),
               ),
               Expanded(
                 child: OwnerAvailabilityContent(
@@ -88,7 +85,6 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
                   slotState: _slotState,
                   onDaySelected: _selectDay,
                   onTimePressed: _toggleSlot,
-                  onSavePressed: _saveAvailability,
                 ),
               ),
             ],
