@@ -1,7 +1,14 @@
 part of '../../imports.dart';
 
 class OwnerAvailabilityScreen extends StatefulWidget {
-  const OwnerAvailabilityScreen({super.key});
+  const OwnerAvailabilityScreen({
+    super.key,
+    required this.ownerPropertyId,
+    required this.availabilityStartDate,
+  });
+
+  final String ownerPropertyId;
+  final DateTime availabilityStartDate;
 
   @override
   State<OwnerAvailabilityScreen> createState() =>
@@ -10,32 +17,44 @@ class OwnerAvailabilityScreen extends StatefulWidget {
 
 class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
   final Map<String, OwnerAvailabilitySlotState> _slotStates = {};
-  int _selectedDayIndex = 1;
-
-  List<OwnerAvailabilityDayContent> get _days =>
-      OwnerVisitCalendarContent.availabilityDays;
-
-  List<String> get _times => OwnerVisitCalendarContent.availabilityTimes;
+  late final OwnerAvailabilityCubit _availabilityCubit;
+  late final List<OwnerAvailabilityDayContent> _days;
+  final List<OwnerAvailabilitySlotBody> _slots =
+      OwnerAvailabilityDefaults.slots;
+  late int _selectedDayIndex;
 
   @override
   void initState() {
     super.initState();
+    _availabilityCubit = OwnerAvailabilityCubit();
+    final DateTime selectedDate = DateUtils.dateOnly(
+      widget.availabilityStartDate,
+    );
+    final DateTime weekStart = selectedDate.subtract(
+      Duration(days: selectedDate.weekday - DateTime.monday),
+    );
+    _days = List<OwnerAvailabilityDayContent>.generate(
+      DateTime.daysPerWeek,
+      (index) => OwnerAvailabilityDayContent.fromDate(
+        weekStart.add(Duration(days: index)),
+      ),
+      growable: false,
+    );
+    _selectedDayIndex = selectedDate.difference(weekStart).inDays;
     _initializeSlots();
+  }
+
+  @override
+  void dispose() {
+    _availabilityCubit.close();
+    super.dispose();
   }
 
   void _initializeSlots() {
     for (int dayIndex = 0; dayIndex < _days.length; dayIndex++) {
-      for (int timeIndex = 0; timeIndex < _times.length; timeIndex++) {
-        final bool isBooked =
-            (dayIndex == 0 && timeIndex == 0) ||
-            (dayIndex == 1 && timeIndex == 5) ||
-            (dayIndex == 2 && timeIndex == 1);
-        final bool isAvailable = timeIndex % 3 == 0;
-        _slotStates[_slotKey(dayIndex, timeIndex)] = isBooked
-            ? OwnerAvailabilitySlotState.booked
-            : isAvailable
-            ? OwnerAvailabilitySlotState.available
-            : OwnerAvailabilitySlotState.unspecified;
+      for (int timeIndex = 0; timeIndex < _slots.length; timeIndex++) {
+        _slotStates[_slotKey(dayIndex, timeIndex)] =
+            OwnerAvailabilitySlotState.unspecified;
       }
     }
   }
@@ -45,6 +64,14 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
   OwnerAvailabilitySlotState _slotState(int timeIndex) {
     return _slotStates[_slotKey(_selectedDayIndex, timeIndex)] ??
         OwnerAvailabilitySlotState.unspecified;
+  }
+
+  List<OwnerAvailabilitySlotState> get _selectedSlotStates {
+    return List<OwnerAvailabilitySlotState>.generate(
+      _slots.length,
+      _slotState,
+      growable: false,
+    );
   }
 
   void _selectDay(int index) => setState(() => _selectedDayIndex = index);
@@ -64,30 +91,53 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
     });
   }
 
+  Future<void> _saveAvailability() async {
+    final OwnerAvailabilitySaveBody body = OwnerAvailabilitySaveBody(
+      availabilityDate: _days[_selectedDayIndex].date,
+      slots: List<OwnerAvailabilitySlotBody>.generate(
+        _slots.length,
+        (index) =>
+            _slots[index].copyWith(isEnabled: _slotState(index).isAvailable),
+        growable: false,
+      ),
+    );
+    final bool saved = await _availabilityCubit.saveAvailability(
+      ownerPropertyId: widget.ownerPropertyId,
+      body: body,
+    );
+    if (saved && mounted) {
+      Go.back(true);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: Column(
-            children: [
-              VisitHeader(
-                title: LocaleKeys.ownerAvailabilityTitle,
-                backKey: const ValueKey('owner-availability-back'),
-              ),
-              Expanded(
-                child: OwnerAvailabilityContent(
-                  days: _days,
-                  times: _times,
-                  selectedDayIndex: _selectedDayIndex,
-                  slotState: _slotState,
-                  onDaySelected: _selectDay,
-                  onTimePressed: _toggleSlot,
+    return BlocProvider<OwnerAvailabilityCubit>.value(
+      value: _availabilityCubit,
+      child: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Scaffold(
+          backgroundColor: AppColors.scaffoldBackground,
+          body: SafeArea(
+            child: Column(
+              children: [
+                VisitHeader(
+                  title: LocaleKeys.ownerAvailabilityTitle,
+                  backKey: const ValueKey('owner-availability-back'),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: OwnerAvailabilityContent(
+                    days: _days,
+                    slots: _slots,
+                    slotStates: _selectedSlotStates,
+                    selectedDayIndex: _selectedDayIndex,
+                    onDaySelected: _selectDay,
+                    onTimePressed: _toggleSlot,
+                    onSavePressed: _saveAvailability,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

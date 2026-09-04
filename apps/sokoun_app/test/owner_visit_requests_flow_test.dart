@@ -75,6 +75,7 @@ void main() {
     return const [
       OwnerVisitRequestContent(
         id: 'sara-nasr-city',
+        propertyId: 'owner-property-id',
         initial: 'س',
         name: 'سارة أحمد خالد',
         property: 'شقة مفروشة — مدينة نصر',
@@ -171,6 +172,112 @@ void main() {
       expect(repository.lastBody, {'status': status.name});
       expect(succeeded, isTrue);
     }
+  });
+
+  test('loads the owner calendar with year, month, and date queries', () async {
+    final OwnerCalendarCubit cubit = OwnerCalendarCubit(
+      initialDate: DateTime(2026, 9, 7),
+    );
+    addTearDown(cubit.close);
+
+    await cubit.getCalendar(date: DateTime(2026, 9, 7));
+
+    expect(repository.lastApi, 'properties/owner/calendar/');
+    expect(repository.lastMethod, HttpRequestType.get);
+    expect(repository.lastQuery, {
+      'year': 2026,
+      'month': 9,
+      'date': '2026-09-07',
+    });
+  });
+
+  test('maps the nested owner calendar response', () {
+    final OwnerVisitCalendarContent calendar =
+        OwnerVisitCalendarContent.fromJson({
+          'year': 2026,
+          'month': 9,
+          'days': [
+            {'date': '2026-09-07', 'day': 7, 'visit_count': 1},
+          ],
+          'selected_date': '2026-09-07',
+          'visits': [
+            {
+              'id': 'visit-id',
+              'tenant': {'id': 'tenant-id', 'name': 'Mahmoud Salama'},
+              'property': {
+                'id': 'property-id',
+                'title': 'Cozy Studio Near Metro Station',
+              },
+              'visit_time': '09:00:00',
+              'status': 'pending',
+            },
+          ],
+        });
+
+    expect(calendar.days.single.visitCount, 1);
+    expect(calendar.visits.single.tenant.name, 'Mahmoud Salama');
+    expect(calendar.visits.single.property.id, 'property-id');
+    expect(calendar.visits.single.visitTime, '09:00:00');
+    expect(calendar.firstPropertyId, 'property-id');
+    expect(OwnerVisitCalendarContent.fromJson(calendar.toJson()), calendar);
+  });
+
+  test('saves and maps owner property availability', () async {
+    final OwnerAvailabilityCubit cubit = OwnerAvailabilityCubit();
+    addTearDown(cubit.close);
+    const OwnerAvailabilitySaveBody body = OwnerAvailabilitySaveBody(
+      availabilityDate: '2026-09-07',
+      slots: [
+        OwnerAvailabilitySlotBody(time: '09:00:00', isEnabled: true),
+        OwnerAvailabilitySlotBody(time: '12:00:00', isEnabled: true),
+        OwnerAvailabilitySlotBody(time: '16:00:00', isEnabled: false),
+      ],
+    );
+
+    final bool saved = await cubit.saveAvailability(
+      ownerPropertyId: 'property-id',
+      body: body,
+    );
+
+    expect(saved, isTrue);
+    expect(
+      repository.lastApi,
+      'properties/owner/properties/property-id/availability/',
+    );
+    expect(repository.lastMethod, HttpRequestType.post);
+    expect(repository.lastBody, body.toJson());
+
+    final OwnerAvailabilityScheduleContent schedule =
+        OwnerAvailabilityScheduleContent.fromJson({
+          'week_start': '2026-09-07',
+          'week_end': '2026-09-13',
+          'days': [
+            {
+              'date': '2026-09-07',
+              'day': 'monday',
+              'slots': [
+                {
+                  'id': 'slot-id',
+                  'time': '09:00:00',
+                  'is_enabled': true,
+                  'state': 'available',
+                  'visit': null,
+                },
+              ],
+            },
+          ],
+        });
+
+    expect(schedule.weekEnd, '2026-09-13');
+    expect(schedule.days.single.dayName, 'monday');
+    expect(
+      schedule.days.single.slots.single.slotState,
+      OwnerAvailabilitySlotState.available,
+    );
+    expect(
+      OwnerAvailabilityScheduleContent.fromJson(schedule.toJson()),
+      schedule,
+    );
   });
 
   testWidgets('renders the O-REQ-ICON-B request card states', (tester) async {
@@ -300,11 +407,15 @@ void main() {
 
     expect(find.byType(OwnerRequestsCalendarScreen), findsOneWidget);
     expect(find.text('تقويم الزيارات'), findsOneWidget);
-    expect(find.text('يناير 2025'), findsOneWidget);
+    expect(repository.lastApi, 'properties/owner/calendar/');
+    expect(repository.lastMethod, HttpRequestType.get);
+    expect(repository.lastQuery, containsPair('year', DateTime.now().year));
+    expect(repository.lastQuery, containsPair('month', DateTime.now().month));
 
     await tester.tap(find.byKey(const ValueKey('owner-calendar-day-19')));
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(find.text('زيارات يوم 19'), findsOneWidget);
+    final String availabilityDate = repository.lastQuery!['date'] as String;
 
     final Finder availabilityButton = find.byKey(
       const ValueKey('owner-open-availability'),
@@ -315,7 +426,6 @@ void main() {
 
     expect(find.byType(OwnerAvailabilityScreen), findsOneWidget);
     expect(find.text('مواعيد الاتاحة'), findsOneWidget);
-    expect(find.text('الاثنين 15 يونيو'), findsOneWidget);
 
     await tester.tap(find.byKey(const ValueKey('owner-availability-time-1')));
     await tester.tap(find.byKey(const ValueKey('owner-availability-save')));
@@ -323,6 +433,16 @@ void main() {
 
     expect(find.byType(OwnerRequestsCalendarScreen), findsOneWidget);
     expect(find.text('تم حفظ مواعيد الإتاحة'), findsOneWidget);
+    expect(
+      repository.lastApi,
+      'properties/owner/properties/owner-property-id/availability/',
+    );
+    expect(repository.lastMethod, HttpRequestType.post);
+    expect(repository.lastBody?['availability_date'], availabilityDate);
+    expect((repository.lastBody?['slots'] as List)[1], {
+      'time': '10:00:00',
+      'is_enabled': true,
+    });
     expect(tester.takeException(), isNull);
   });
 }
@@ -331,6 +451,7 @@ class _RecordingBaseRepository implements BaseRepository {
   String lastApi = '';
   HttpRequestType? lastMethod;
   Map<String, dynamic>? lastBody;
+  Map<String, dynamic>? lastQuery;
 
   @override
   Future<Result<BaseModel<T>, Failure>> crudCall<T>(
@@ -339,6 +460,7 @@ class _RecordingBaseRepository implements BaseRepository {
     lastApi = params.api;
     lastMethod = params.httpRequestType;
     lastBody = params.body;
+    lastQuery = params.queryParameters;
     final T data = params.mapper!(null);
     return Success(BaseModel<T>(key: '', msg: '', data: data));
   }

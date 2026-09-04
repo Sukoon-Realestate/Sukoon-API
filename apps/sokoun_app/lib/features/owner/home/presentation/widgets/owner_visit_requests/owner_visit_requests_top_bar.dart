@@ -7,9 +7,14 @@ import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
 
 class OwnerVisitRequestsTopBar extends StatelessWidget {
-  const OwnerVisitRequestsTopBar({super.key, required this.showBackButton});
+  const OwnerVisitRequestsTopBar({
+    super.key,
+    required this.showBackButton,
+    required this.ownerPropertyId,
+  });
 
   final bool showBackButton;
+  final String ownerPropertyId;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +63,9 @@ class OwnerVisitRequestsTopBar extends StatelessWidget {
             dimension: 36.r,
             child: IconButton(
               key: const ValueKey('owner-open-calendar'),
-              onPressed: () => Go.to(const OwnerRequestsCalendarScreen()),
+              onPressed: () => Go.to(
+                OwnerRequestsCalendarScreen(ownerPropertyId: ownerPropertyId),
+              ),
               tooltip: LocaleKeys.ownerCalendarTitle,
               padding: EdgeInsets.zero,
               visualDensity: VisualDensity.compact,

@@ -38,12 +38,24 @@ class OwnerVisitRequestsContent extends StatelessWidget {
   int _countForFilter(OwnerVisitRequestFilter filter) =>
       requests.where((request) => filter.accepts(request.status)).length;
 
+  String get _ownerPropertyId {
+    for (final OwnerVisitRequestContent request in requests) {
+      if (request.propertyId.trim().isNotEmpty) {
+        return request.propertyId;
+      }
+    }
+    return '';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        OwnerVisitRequestsTopBar(showBackButton: showBackButton),
+        OwnerVisitRequestsTopBar(
+          showBackButton: showBackButton,
+          ownerPropertyId: _ownerPropertyId,
+        ),
         Container(
           padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 14.h),
           decoration: const BoxDecoration(

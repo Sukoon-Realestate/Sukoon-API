@@ -1,6 +1,6 @@
 part of '../../imports.dart';
 
-class OwnerVisitRequestContent {
+class OwnerVisitRequestContent extends Equatable {
   const OwnerVisitRequestContent({
     required this.id,
     required this.initial,
@@ -14,6 +14,7 @@ class OwnerVisitRequestContent {
     required this.phone,
     required this.status,
     required this.isVerified,
+    this.propertyId = '',
   });
 
   factory OwnerVisitRequestContent.initial() => const OwnerVisitRequestContent(
@@ -29,15 +30,18 @@ class OwnerVisitRequestContent {
     phone: '',
     status: OwnerVisitRequestStatus.pending,
     isVerified: false,
+    propertyId: '',
   );
 
   factory OwnerVisitRequestContent.fromJson(Map<String, dynamic> json) {
-    final Map<String, dynamic> tenant =
-        (json['tenant'] as Map?)?.cast<String, dynamic>() ??
-        (json['user'] as Map?)?.cast<String, dynamic>() ??
-        const {};
-    final Map<String, dynamic> property =
-        (json['property'] as Map?)?.cast<String, dynamic>() ?? const {};
+    final Object? tenantValue = json['tenant'] ?? json['user'];
+    final Map<String, dynamic> tenant = tenantValue is Map
+        ? tenantValue.cast<String, dynamic>()
+        : const {};
+    final Object? propertyValue = json['property'];
+    final Map<String, dynamic> property = propertyValue is Map
+        ? propertyValue.cast<String, dynamic>()
+        : const {};
     final String name =
         json['tenant_name'] ??
         json['name'] ??
@@ -59,7 +63,7 @@ class OwnerVisitRequestContent {
       property:
           json['property_title'] ??
           property['title'] ??
-          (json['property'] is String ? json['property'] : '') ??
+          (propertyValue is String ? propertyValue : '') ??
           '',
       dateLabel:
           json['date_label'] ??
@@ -71,6 +75,8 @@ class OwnerVisitRequestContent {
       phone: json['phone'] ?? tenant['phone'] ?? '',
       status: OwnerVisitRequestStatusExtension.fromName(json['status']),
       isVerified: json['is_verified'] ?? tenant['is_verified'] ?? false,
+      propertyId:
+          property['id'] as String? ?? json['property_id'] as String? ?? '',
     );
   }
 
@@ -96,6 +102,7 @@ class OwnerVisitRequestContent {
   final String phone;
   final OwnerVisitRequestStatus status;
   final bool isVerified;
+  final String propertyId;
 
   Map<String, dynamic> toJson() {
     return {
@@ -111,6 +118,7 @@ class OwnerVisitRequestContent {
       'phone': phone,
       'status': status.name,
       'is_verified': isVerified,
+      'property_id': propertyId,
     };
   }
 
@@ -127,6 +135,7 @@ class OwnerVisitRequestContent {
     String? phone,
     OwnerVisitRequestStatus? status,
     bool? isVerified,
+    String? propertyId,
   }) {
     return OwnerVisitRequestContent(
       id: id ?? this.id,
@@ -141,6 +150,24 @@ class OwnerVisitRequestContent {
       phone: phone ?? this.phone,
       status: status ?? this.status,
       isVerified: isVerified ?? this.isVerified,
+      propertyId: propertyId ?? this.propertyId,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    id,
+    initial,
+    name,
+    property,
+    dateLabel,
+    detailDate,
+    time,
+    memberSince,
+    tenantNote,
+    phone,
+    status,
+    isVerified,
+    propertyId,
+  ];
 }

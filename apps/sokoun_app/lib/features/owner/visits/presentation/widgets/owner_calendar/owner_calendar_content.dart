@@ -3,17 +3,20 @@ part of '../../../imports.dart';
 class OwnerCalendarContent extends StatelessWidget {
   const OwnerCalendarContent({
     super.key,
-    required this.selectedDay,
+    required this.calendar,
+    required this.selectedDate,
     required this.onDaySelected,
     required this.onAvailabilityPressed,
   });
 
-  final int selectedDay;
-  final ValueChanged<int> onDaySelected;
-  final VoidCallback onAvailabilityPressed;
+  final OwnerVisitCalendarContent calendar;
+  final DateTime selectedDate;
+  final ValueChanged<DateTime> onDaySelected;
+  final VoidCallback? onAvailabilityPressed;
 
   @override
   Widget build(BuildContext context) {
+    final List<int?> monthDays = calendar.monthDays;
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 24.h),
       child: Column(
@@ -54,33 +57,32 @@ class OwnerCalendarContent extends StatelessWidget {
                     childAspectRatio: 1.02,
                   ),
                   itemBuilder: (context, index) {
-                    final int? day = OwnerVisitCalendarContent.monthDays[index];
+                    final int? day = monthDays[index];
                     return OwnerCalendarDay(
                       day: day,
-                      isSelected: day == selectedDay,
-                      hasVisit:
-                          day != null &&
-                          OwnerVisitCalendarContent.daysWithVisits.contains(
-                            day,
-                          ),
-                      onPressed: day == null ? null : () => onDaySelected(day),
+                      isSelected: day == selectedDate.day,
+                      hasVisit: day != null && calendar.hasVisitsOn(day),
+                      onPressed: day == null
+                          ? null
+                          : () => onDaySelected(
+                              DateTime(calendar.year, calendar.month, day),
+                            ),
                     );
                   },
-                  itemCount: OwnerVisitCalendarContent.monthDays.length,
+                  itemCount: monthDays.length,
                 ),
               ],
             ),
           ),
           18.szH,
           AppText(
-            '${LocaleKeys.ownerCalendarVisitsOnDay} $selectedDay',
+            '${LocaleKeys.ownerCalendarVisitsOnDay} ${selectedDate.day}',
             color: AppColors.sokoonGray,
             fontSize: 13.sp,
             fontWeight: FontWeight.w800,
           ),
           12.szH,
-          for (final OwnerCalendarVisitContent visit
-              in OwnerVisitCalendarContent.visits) ...[
+          for (final OwnerCalendarVisitContent visit in calendar.visits) ...[
             OwnerCalendarVisitCard(visit: visit),
             10.szH,
           ],

@@ -15,6 +15,7 @@ class ApiConstants {
   static const String receivedPropertyVisits = 'properties/visits/received/';
   static const String ownedProperties = 'properties/owned/';
   static const String ownerDashboard = 'properties/owner/dashboard/';
+  static const String ownerCalendar = 'properties/owner/calendar/';
   static const String propertyTypes = 'properties/types/';
   static const String propertyFilterOptions = 'properties/filter-options/';
   static const String propertyGovernorates = 'properties/governorates/';
@@ -34,6 +35,9 @@ class ApiConstants {
 
   static String propertyVisitDetails(String visitId) =>
       '$tenantVisits$visitId/';
+
+  static String ownerPropertyAvailability(String propertyId) =>
+      'properties/owner/properties/$propertyId/availability/';
 
   // packages
   static const String getPackages = 'packages/';

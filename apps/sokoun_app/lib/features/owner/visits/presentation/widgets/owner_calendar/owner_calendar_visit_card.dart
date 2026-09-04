@@ -33,7 +33,7 @@ class OwnerCalendarVisitCard extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             child: AppText(
-              visit.initial,
+              visit.tenantInitial,
               color: AppColors.white,
               fontSize: 15.sp,
               fontWeight: FontWeight.w900,
@@ -45,7 +45,7 @@ class OwnerCalendarVisitCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AppText(
-                  visit.name,
+                  visit.tenant.name,
                   color: AppColors.sokoonNavy,
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w800,
@@ -54,7 +54,16 @@ class OwnerCalendarVisitCard extends StatelessWidget {
                 ),
                 3.szH,
                 AppText(
-                  visit.time,
+                  visit.property.title,
+                  color: AppColors.sokoonGray,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w500,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                3.szH,
+                AppText(
+                  _formatOwnerCalendarVisitTime(context, visit.visitTime),
                   color: AppColors.sokoonGray,
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w400,
@@ -81,4 +90,19 @@ class OwnerCalendarVisitCard extends StatelessWidget {
       ),
     );
   }
+}
+
+String _formatOwnerCalendarVisitTime(BuildContext context, String value) {
+  final List<String> parts = value.split(':');
+  if (parts.length < 2) {
+    return value;
+  }
+  final int? hour = int.tryParse(parts[0]);
+  final int? minute = int.tryParse(parts[1]);
+  if (hour == null || minute == null) {
+    return value;
+  }
+  return MaterialLocalizations.of(
+    context,
+  ).formatTimeOfDay(TimeOfDay(hour: hour, minute: minute));
 }

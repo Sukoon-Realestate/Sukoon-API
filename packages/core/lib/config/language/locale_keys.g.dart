@@ -3472,4 +3472,187 @@ abstract class LocaleKeys {
   static const String _tenantFilterShowResults = 'tenant_filter_show_results';
   static String get tenantFilterShowResults => _tenantFilterShowResults.tr();
 
+  static const String _profileMyAccount = 'profile_my_account';
+  static String get profileMyAccount => _profileMyAccount.tr();
+
+  static const String _profileOwnerTitle = 'profile_owner_title';
+  static String get profileOwnerTitle => _profileOwnerTitle.tr();
+
+  static const String _profileSummaryTitle = 'profile_summary_title';
+  static String get profileSummaryTitle => _profileSummaryTitle.tr();
+
+  static const String _profileTenantRole = 'profile_tenant_role';
+  static String get profileTenantRole => _profileTenantRole.tr();
+
+  static const String _profileOwnerRole = 'profile_owner_role';
+  static String get profileOwnerRole => _profileOwnerRole.tr();
+
+  static const String _profileTenantMemberSince = 'profile_tenant_member_since';
+  static String get profileTenantMemberSince => _profileTenantMemberSince.tr();
+
+  static const String _profileTenantSummaryMemberSince = 'profile_tenant_summary_member_since';
+  static String get profileTenantSummaryMemberSince => _profileTenantSummaryMemberSince.tr();
+
+  static const String _profileOwnerMemberSince = 'profile_owner_member_since';
+  static String get profileOwnerMemberSince => _profileOwnerMemberSince.tr();
+
+  static const String _profileVerifiedOwner = 'profile_verified_owner';
+  static String get profileVerifiedOwner => _profileVerifiedOwner.tr();
+
+  static const String _profileFallbackName = 'profile_fallback_name';
+  static String get profileFallbackName => _profileFallbackName.tr();
+
+  static const String _profileSaved = 'profile_saved';
+  static String get profileSaved => _profileSaved.tr();
+
+  static const String _profileVisits = 'profile_visits';
+  static String get profileVisits => _profileVisits.tr();
+
+  static const String _profileReviews = 'profile_reviews';
+  static String get profileReviews => _profileReviews.tr();
+
+  static const String _profileProperties = 'profile_properties';
+  static String get profileProperties => _profileProperties.tr();
+
+  static const String _profileAcceptance = 'profile_acceptance';
+  static String get profileAcceptance => _profileAcceptance.tr();
+
+  static const String _profileVisitRequests = 'profile_visit_requests';
+  static String get profileVisitRequests => _profileVisitRequests.tr();
+
+  static const String _profileVisitRequestsCount = 'profile_visit_requests_count';
+  static String get profileVisitRequestsCount => _profileVisitRequestsCount.tr();
+
+  static const String _profileContracts = 'profile_contracts';
+  static String get profileContracts => _profileContracts.tr();
+
+  static const String _profileActiveContractCount = 'profile_active_contract_count';
+  static String get profileActiveContractCount => _profileActiveContractCount.tr();
+
+  static const String _profileMyReviews = 'profile_my_reviews';
+  static String get profileMyReviews => _profileMyReviews.tr();
+
+  static const String _profileReviewsCount = 'profile_reviews_count';
+  static String get profileReviewsCount => _profileReviewsCount.tr();
+
+  static const String _profileVerificationAndPrivacy = 'profile_verification_and_privacy';
+  static String get profileVerificationAndPrivacy => _profileVerificationAndPrivacy.tr();
+
+  static const String _profileAccountData = 'profile_account_data';
+  static String get profileAccountData => _profileAccountData.tr();
+
+  static const String _profileMobile = 'profile_mobile';
+  static String get profileMobile => _profileMobile.tr();
+
+  static const String _profileLogout = 'profile_logout';
+  static String get profileLogout => _profileLogout.tr();
+
+  static const String _profileCompletion = 'profile_completion';
+  static String get profileCompletion => _profileCompletion.tr();
+
+  static const String _profileIdentityVerified = 'profile_identity_verified';
+  static String get profileIdentityVerified => _profileIdentityVerified.tr();
+
+  static const String _profileIdentityVerifiedDescription = 'profile_identity_verified_description';
+  static String get profileIdentityVerifiedDescription => _profileIdentityVerifiedDescription.tr();
+
+  static const String _profileSavedProperties = 'profile_saved_properties';
+  static String get profileSavedProperties => _profileSavedProperties.tr();
+
+  static const String _profileCompletedVisits = 'profile_completed_visits';
+  static String get profileCompletedVisits => _profileCompletedVisits.tr();
+
+  static const String _profileActiveChats = 'profile_active_chats';
+  static String get profileActiveChats => _profileActiveChats.tr();
+
+  static const String _profileVisitHistory = 'profile_visit_history';
+  static String get profileVisitHistory => _profileVisitHistory.tr();
+
+  static const String _profileIdentityVerification = 'profile_identity_verification';
+  static String get profileIdentityVerification => _profileIdentityVerification.tr();
+
+  static const String _profileCompleteStatus = 'profile_complete_status';
+  static String get profileCompleteStatus => _profileCompleteStatus.tr();
+
+  static const String _profileOwnerRatingSummary = 'profile_owner_rating_summary';
+  static String get profileOwnerRatingSummary => _profileOwnerRatingSummary.tr();
+
+  static const String _profileOwnerPhonePrivacy = 'profile_owner_phone_privacy';
+  static String get profileOwnerPhonePrivacy => _profileOwnerPhonePrivacy.tr();
+
+  static const String _profileLatestReviews = 'profile_latest_reviews';
+  static String get profileLatestReviews => _profileLatestReviews.tr();
+
+  static const String _profileReviewSaraName = 'profile_review_sara_name';
+  static String get profileReviewSaraName => _profileReviewSaraName.tr();
+
+  static const String _profileReviewSaraText = 'profile_review_sara_text';
+  static String get profileReviewSaraText => _profileReviewSaraText.tr();
+
+  static const String _profileReviewMohamedName = 'profile_review_mohamed_name';
+  static String get profileReviewMohamedName => _profileReviewMohamedName.tr();
+
+  static const String _profileReviewMohamedText = 'profile_review_mohamed_text';
+  static String get profileReviewMohamedText => _profileReviewMohamedText.tr();
+
+  static const String _profileViewPersonalProfile = 'profile_view_personal_profile';
+  static String get profileViewPersonalProfile => _profileViewPersonalProfile.tr();
+
+  static const String _profileAccountAndProfile = 'profile_account_and_profile';
+  static String get profileAccountAndProfile => _profileAccountAndProfile.tr();
+
+  static const String _profileMyProfile = 'profile_my_profile';
+  static String get profileMyProfile => _profileMyProfile.tr();
+
+  static const String _profileVerificationDocuments = 'profile_verification_documents';
+  static String get profileVerificationDocuments => _profileVerificationDocuments.tr();
+
+  static const String _profilePrivacySecurity = 'profile_privacy_security';
+  static String get profilePrivacySecurity => _profilePrivacySecurity.tr();
+
+  static const String _profilePropertyManagement = 'profile_property_management';
+  static String get profilePropertyManagement => _profilePropertyManagement.tr();
+
+  static const String _profileAnalyticsStatistics = 'profile_analytics_statistics';
+  static String get profileAnalyticsStatistics => _profileAnalyticsStatistics.tr();
+
+  static const String _profileVisitSchedule = 'profile_visit_schedule';
+  static String get profileVisitSchedule => _profileVisitSchedule.tr();
+
+  static const String _profileSupport = 'profile_support';
+  static String get profileSupport => _profileSupport.tr();
+
+  static const String _profileHelpCenter = 'profile_help_center';
+  static String get profileHelpCenter => _profileHelpCenter.tr();
+
+  static const String _profileTermsPolicies = 'profile_terms_policies';
+  static String get profileTermsPolicies => _profileTermsPolicies.tr();
+
+  static const String _profileTenantEditTitle = 'profile_tenant_edit_title';
+  static String get profileTenantEditTitle => _profileTenantEditTitle.tr();
+
+  static const String _profileOwnerEditTitle = 'profile_owner_edit_title';
+  static String get profileOwnerEditTitle => _profileOwnerEditTitle.tr();
+
+  static const String _profileSave = 'profile_save';
+  static String get profileSave => _profileSave.tr();
+
+  static const String _profileChangePhoto = 'profile_change_photo';
+  static String get profileChangePhoto => _profileChangePhoto.tr();
+
+  static const String _profileBirthDate = 'profile_birth_date';
+  static String get profileBirthDate => _profileBirthDate.tr();
+
+  static const String _profileMale = 'profile_male';
+  static String get profileMale => _profileMale.tr();
+
+  static const String _profileCairo = 'profile_cairo';
+  static String get profileCairo => _profileCairo.tr();
+
+  static const String _profileVerifiedAccount = 'profile_verified_account';
+  static String get profileVerifiedAccount => _profileVerifiedAccount.tr();
+
+  static const String _profileVerifiedAccountDescription = 'profile_verified_account_description';
+  static String get profileVerifiedAccountDescription => _profileVerifiedAccountDescription.tr();
+
 }

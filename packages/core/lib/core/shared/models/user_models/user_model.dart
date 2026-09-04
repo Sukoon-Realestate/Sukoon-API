@@ -4,25 +4,23 @@ import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:melos_core/core/shared/models/user_models/owner_model.dart';
 import 'package:melos_core/core/shared/models/user_models/tenent_model.dart';
 
-class UserModel{
+class UserModel {
   final int id;
   final String name;
+  final String phone;
   final String email;
   final String type;
 
-  UserModel({
+  const UserModel({
     required this.id,
     required this.name,
+    required this.phone,
     required this.email,
     required this.type,
   });
 
-  factory UserModel.initial() => UserModel(
-    id: 0,
-    name: '',
-    email: '',
-    type: '',
-  );
+  factory UserModel.initial() =>
+      const UserModel(id: 0, name: '', phone: '', email: '', type: '');
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     final UserType type = json['type'].toString().toUserType;
@@ -36,6 +34,7 @@ class UserModel{
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,
+    'phone': phone,
     'email': email,
     'type': type,
   };
@@ -53,7 +52,8 @@ class UserModel{
   }
 
   static UserModel? get currentUser {
-    final res = (CacheStorage.read('user', isDecoded: true) as Object?).isNotNull;
+    final res =
+        (CacheStorage.read('user', isDecoded: true) as Object?).isNotNull;
     if (res) {
       return UserModel.fromJson(CacheStorage.read('user', isDecoded: true));
     }

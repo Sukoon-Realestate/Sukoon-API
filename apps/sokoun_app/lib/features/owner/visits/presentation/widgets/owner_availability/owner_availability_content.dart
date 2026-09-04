@@ -4,19 +4,21 @@ class OwnerAvailabilityContent extends StatelessWidget {
   const OwnerAvailabilityContent({
     super.key,
     required this.days,
-    required this.times,
+    required this.slots,
+    required this.slotStates,
     required this.selectedDayIndex,
-    required this.slotState,
     required this.onDaySelected,
     required this.onTimePressed,
+    required this.onSavePressed,
   });
 
   final List<OwnerAvailabilityDayContent> days;
-  final List<String> times;
+  final List<OwnerAvailabilitySlotBody> slots;
+  final List<OwnerAvailabilitySlotState> slotStates;
   final int selectedDayIndex;
-  final OwnerAvailabilitySlotState Function(int index) slotState;
   final ValueChanged<int> onDaySelected;
   final ValueChanged<int> onTimePressed;
+  final Future<void> Function() onSavePressed;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,7 @@ class OwnerAvailabilityContent extends StatelessWidget {
           ),
           18.szH,
           AppText(
-            '${selectedDay.weekday} ${selectedDay.day} ${LocaleKeys.ownerAvailabilityMonthJune}',
+            _ownerAvailabilityDateLabel(context, selectedDay),
             color: AppColors.sokoonNavy,
             fontSize: 14.sp,
             fontWeight: FontWeight.w900,
@@ -65,13 +67,16 @@ class OwnerAvailabilityContent extends StatelessWidget {
                 spacing: 8.w,
                 runSpacing: 8.h,
                 children: [
-                  for (int index = 0; index < times.length; index++)
+                  for (int index = 0; index < slots.length; index++)
                     SizedBox(
                       width: chipWidth,
                       child: OwnerAvailabilityTimeChip(
                         key: ValueKey('owner-availability-time-$index'),
-                        label: times[index],
-                        state: slotState(index),
+                        label: _ownerAvailabilityTimeLabel(
+                          context,
+                          slots[index].time,
+                        ),
+                        state: slotStates[index],
                         onPressed: () => onTimePressed(index),
                       ),
                     ),
@@ -82,13 +87,13 @@ class OwnerAvailabilityContent extends StatelessWidget {
           18.szH,
           const OwnerAvailabilityLegend(),
           18.szH,
-          DefaultButton(
+          AppLoadingButton(
             key: const ValueKey('owner-availability-save'),
-            onTap: () => Go.back(true),
+            asyncCall: (_) => onSavePressed(),
             title: LocaleKeys.ownerAvailabilitySave,
-            color: AppColors.sokoonTeal,
+            buttonColor: AppColors.sokoonTeal,
             textColor: AppColors.white,
-            borderRadius: BorderRadius.circular(14.r),
+            borderRadius: 14.r,
             height: 52.h,
             fontSize: 14.sp,
             fontWeight: FontWeight.w900,
@@ -97,4 +102,32 @@ class OwnerAvailabilityContent extends StatelessWidget {
       ),
     );
   }
+}
+
+String _ownerAvailabilityDateLabel(
+  BuildContext context,
+  OwnerAvailabilityDayContent day,
+) {
+  final DateTime? date = day.dateValue;
+  if (date == null) {
+    return day.localizedWeekday;
+  }
+  final MaterialLocalizations localizations = MaterialLocalizations.of(context);
+  return '${day.localizedWeekday} ${localizations.formatDecimal(date.day)} '
+      '${localizations.formatMonthYear(date)}';
+}
+
+String _ownerAvailabilityTimeLabel(BuildContext context, String value) {
+  final List<String> parts = value.split(':');
+  if (parts.length < 2) {
+    return value;
+  }
+  final int? hour = int.tryParse(parts[0]);
+  final int? minute = int.tryParse(parts[1]);
+  if (hour == null || minute == null) {
+    return value;
+  }
+  return MaterialLocalizations.of(
+    context,
+  ).formatTimeOfDay(TimeOfDay(hour: hour, minute: minute));
 }

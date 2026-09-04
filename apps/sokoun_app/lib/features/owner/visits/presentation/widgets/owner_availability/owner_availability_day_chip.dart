@@ -33,7 +33,7 @@ class OwnerAvailabilityDayChip extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               AppText(
-                day.shortWeekday,
+                day.localizedShortWeekday,
                 color: isSelected ? AppColors.white : AppColors.sokoonGray,
                 fontSize: 9.sp,
                 fontWeight: FontWeight.w500,
@@ -41,7 +41,7 @@ class OwnerAvailabilityDayChip extends StatelessWidget {
               ),
               3.szH,
               AppText(
-                day.day,
+                '${day.dateValue?.day ?? ''}',
                 color: isSelected ? AppColors.white : AppColors.sokoonNavy,
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w900,
@@ -51,5 +51,33 @@ class OwnerAvailabilityDayChip extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+extension OwnerAvailabilityDayPresentation on OwnerAvailabilityDayContent {
+  String get localizedWeekday {
+    return switch (dayName) {
+      'monday' => LocaleKeys.ownerAvailabilityMonday,
+      'tuesday' => LocaleKeys.ownerAvailabilityTuesday,
+      'wednesday' => LocaleKeys.ownerAvailabilityWednesday,
+      'thursday' => LocaleKeys.ownerAvailabilityThursday,
+      'friday' => LocaleKeys.ownerAvailabilityFriday,
+      'saturday' => LocaleKeys.ownerAvailabilitySaturday,
+      'sunday' => LocaleKeys.ownerAvailabilitySunday,
+      _ => dayName,
+    };
+  }
+
+  String get localizedShortWeekday {
+    return switch (dayName) {
+      'monday' => LocaleKeys.ownerAvailabilityMondayShort,
+      'tuesday' => LocaleKeys.ownerAvailabilityTuesdayShort,
+      'wednesday' => LocaleKeys.ownerAvailabilityWednesdayShort,
+      'thursday' => LocaleKeys.ownerAvailabilityThursdayShort,
+      'friday' => LocaleKeys.ownerAvailabilityFridayShort,
+      'saturday' => LocaleKeys.ownerAvailabilitySaturdayShort,
+      'sunday' => LocaleKeys.ownerAvailabilitySundayShort,
+      _ => dayName,
+    };
   }
 }

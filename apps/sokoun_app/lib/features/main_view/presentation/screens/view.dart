@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/languages.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_list_screen.dart';
+import 'package:sokoun_app/features/shared/profile/imports.dart';
 import 'package:sokoun_app/features/tenant/favorites/presentation/screens/favorites_screen.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_home_screen.dart';
 import 'package:sokoun_app/features/tenant/visits/imports.dart';
@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _userType = widget.userType ?? UserTypeHelper.instance.currentUserType;
     // _tabs = _userType.isOwner ? _buildOwnerTabs() : _buildTenantTabs();
-    _tabs = _buildTenantTabs();
+    _tabs = _buildOwnerTabs();
     WidgetsBinding.instance.addPostFrameCallback((_) => _showLaunchDialogs());
   }
 
@@ -109,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
           selectedIcon: Assets.svgProfile,
           label: LocaleKeys.profile,
         ),
-        screen: const _ProfileTabScreen(),
+        screen: const TenantProfileScreen(),
       ),
     ];
   }
@@ -152,9 +152,9 @@ class _HomeScreenState extends State<HomeScreen> {
         destination: HomeNavigationDestination(
           icon: Assets.svgProfile,
           selectedIcon: Assets.svgProfile,
-          label: LocaleKeys.profile,
+          label: LocaleKeys.more,
         ),
-        screen: const _ProfileTabScreen(),
+        screen: const OwnerMoreScreen(),
       ),
     ];
   }
@@ -187,21 +187,4 @@ class _HomeTab {
 
   final HomeNavigationDestination destination;
   final Widget screen;
-}
-
-class _ProfileTabScreen extends StatelessWidget {
-  const _ProfileTabScreen();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.scaffoldBackground,
-      body: SafeArea(
-        child: Text(
-          LocaleKeys.profile,
-          style: Theme.of(context).textTheme.titleLarge,
-        ).centerWidget,
-      ),
-    );
-  }
 }

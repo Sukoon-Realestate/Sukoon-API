@@ -1,7 +1,14 @@
 part of '../../imports.dart';
 
 class OwnerRequestsCalendarScreen extends StatefulWidget {
-  const OwnerRequestsCalendarScreen({super.key});
+  const OwnerRequestsCalendarScreen({
+    super.key,
+    this.ownerPropertyId = '',
+    this.initialDate,
+  });
+
+  final String ownerPropertyId;
+  final DateTime? initialDate;
 
   @override
   State<OwnerRequestsCalendarScreen> createState() =>
@@ -10,12 +17,48 @@ class OwnerRequestsCalendarScreen extends StatefulWidget {
 
 class _OwnerRequestsCalendarScreenState
     extends State<OwnerRequestsCalendarScreen> {
-  int _selectedDay = 15;
+  late final OwnerCalendarCubit _calendarCubit;
+  late Future<void> _calendarRequest;
+  late DateTime _selectedDate;
 
-  void _selectDay(int day) => setState(() => _selectedDay = day);
+  @override
+  void initState() {
+    super.initState();
+    _selectedDate = DateUtils.dateOnly(widget.initialDate ?? DateTime.now());
+    _calendarCubit = OwnerCalendarCubit(initialDate: _selectedDate);
+    _calendarRequest = _calendarCubit.getCalendar(date: _selectedDate);
+  }
 
-  Future<void> _openAvailability() async {
-    final bool? saved = await Go.to<bool>(const OwnerAvailabilityScreen());
+  @override
+  void dispose() {
+    _calendarCubit.close();
+    super.dispose();
+  }
+
+  void _selectDay(DateTime date) {
+    if (DateUtils.isSameDay(date, _selectedDate)) {
+      return;
+    }
+    setState(() {
+      _selectedDate = date;
+      _calendarRequest = _calendarCubit.getCalendar(date: date);
+    });
+  }
+
+  Future<void> _openAvailability(OwnerVisitCalendarContent calendar) async {
+    final String ownerPropertyId = calendar.firstPropertyId.isNotEmpty
+        ? calendar.firstPropertyId
+        : widget.ownerPropertyId;
+    if (ownerPropertyId.isEmpty) {
+      return;
+    }
+
+    final bool? saved = await Go.to<bool>(
+      OwnerAvailabilityScreen(
+        ownerPropertyId: ownerPropertyId,
+        availabilityStartDate: calendar.selectedDateValue,
+      ),
+    );
     if (saved == true && mounted) {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
@@ -27,6 +70,27 @@ class _OwnerRequestsCalendarScreenState
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider<OwnerCalendarCubit>.value(
+      value: _calendarCubit,
+      child:
+          StatusBuilder<
+            OwnerCalendarCubit,
+            OwnerVisitCalendarContent
+          >.withShimmer(
+            initialDataForShimmer: OwnerVisitCalendarContent.initial(
+              _selectedDate,
+            ),
+            requestToTryAgainWhenError: _calendarRequest,
+            errorType: ErrorType.defaultView,
+            builder: _buildScreen,
+          ),
+    );
+  }
+
+  Widget _buildScreen(OwnerVisitCalendarContent calendar) {
+    final bool canManageAvailability =
+        calendar.firstPropertyId.isNotEmpty ||
+        widget.ownerPropertyId.trim().isNotEmpty;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -34,12 +98,15 @@ class _OwnerRequestsCalendarScreenState
         body: SafeArea(
           child: Column(
             children: [
-              const _OwnerCalendarHeader(),
+              _OwnerCalendarHeader(year: calendar.year, month: calendar.month),
               Expanded(
                 child: OwnerCalendarContent(
-                  selectedDay: _selectedDay,
+                  calendar: calendar,
+                  selectedDate: calendar.selectedDateValue,
                   onDaySelected: _selectDay,
-                  onAvailabilityPressed: _openAvailability,
+                  onAvailabilityPressed: canManageAvailability
+                      ? () => _openAvailability(calendar)
+                      : null,
                 ),
               ),
             ],
@@ -51,10 +118,16 @@ class _OwnerRequestsCalendarScreenState
 }
 
 class _OwnerCalendarHeader extends StatelessWidget {
-  const _OwnerCalendarHeader();
+  const _OwnerCalendarHeader({required this.year, required this.month});
+
+  final int year;
+  final int month;
 
   @override
   Widget build(BuildContext context) {
+    final String monthLabel = MaterialLocalizations.of(
+      context,
+    ).formatMonthYear(DateTime(year, month));
     return Container(
       height: 58.h,
       padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -84,7 +157,7 @@ class _OwnerCalendarHeader extends StatelessWidget {
             ),
           ),
           AppText(
-            LocaleKeys.ownerCalendarMonth,
+            monthLabel,
             color: AppColors.gold,
             fontSize: 13.sp,
             fontWeight: FontWeight.w800,
