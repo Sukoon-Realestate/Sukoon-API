@@ -33,6 +33,11 @@ class GenericJsonRenderer(JSONRenderer):
         status_code = response.status_code
         request = renderer_context.get("request")
 
+        # * HTTP 204 No Content must never contain a message body (RFC 9110)
+        # ? Proxies terminate connections with protocol_error if 204 has a body
+        if status_code == 204:
+            return b""
+
         # * DRF sometimes sets the data to the status code integer for empty bodies
         if data is None or data == "" or data == status_code:
             data = {}

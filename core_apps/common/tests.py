@@ -105,10 +105,23 @@ class TestGenericJsonRenderer:
             "data": {"id": 1},
         }
 
-    def test_delete_request_uses_deleted_default_message(self):
+    def test_204_no_content_returns_empty_body(self):
         factory = APIRequestFactory()
         request = factory.delete("/")
         response = Response(status=204)
+        renderer = GenericJsonRenderer()
+
+        rendered = renderer.render(
+            response.data,
+            renderer_context={"response": response, "request": request},
+        )
+
+        assert rendered == b""
+
+    def test_delete_request_uses_deleted_default_message(self):
+        factory = APIRequestFactory()
+        request = factory.delete("/")
+        response = Response(status=200)
         renderer = GenericJsonRenderer()
 
         rendered = renderer.render(
