@@ -28,6 +28,9 @@ EMAIL_HOST_PASSWORD = getenv("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = getenv("EMAIL_USE_TLS", "True") == "True"
 EMAIL_USE_SSL = getenv("EMAIL_USE_SSL", "False") == "True"
 
+_email_timeout = getenv("EMAIL_TIMEOUT")
+EMAIL_TIMEOUT = int(_email_timeout) if _email_timeout else 10
+
 DEFAULT_FROM_EMAIL = getenv("DEFAULT_FROM_EMAIL")
 
 DOMAIN = getenv("DOMAIN")

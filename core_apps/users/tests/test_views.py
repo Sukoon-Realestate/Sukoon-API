@@ -77,3 +77,21 @@ class TestPasswordResetConfirmView:
         assert b"dbttvc-38c137a0de596fcd601891f5208827ab" in res.content
         assert b"sukoon.com" in res.content
 
+
+@pytest.mark.django_db
+class TestSafePasswordChangedConfirmationEmail:
+    def test_send_suppresses_email_exceptions(self, user):
+        from unittest.mock import patch
+        from django.test import RequestFactory
+        from core_apps.users.emails import SafePasswordChangedConfirmationEmail
+
+        req = RequestFactory().get("/")
+        email_msg = SafePasswordChangedConfirmationEmail(req, {"user": user})
+        with patch.object(
+            SafePasswordChangedConfirmationEmail, "render"
+        ), patch(
+            "templated_mail.mail.BaseEmailMessage.send",
+            side_effect=OSError("SMTP connection timeout"),
+        ):
+            # Must not raise an exception
+            email_msg.send([user.email])

@@ -227,8 +227,13 @@ DJOSER = {
     "TOKEN_MODEL": None,
     "USER_CREATE_PASSWORD_RETYPE": True,
     "SEND_ACTIVATION_EMAIL": False,
-    "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
+    "PASSWORD_CHANGED_EMAIL_CONFIRMATION": getenv(
+        "PASSWORD_CHANGED_EMAIL_CONFIRMATION", "True"
+    ) == "True",
     "PASSWORD_RESET_CONFIRM_RETYPE": True,
+    "EMAIL": {
+        "password_changed_confirmation": "core_apps.users.emails.SafePasswordChangedConfirmationEmail",
+    },
     "ACTIVATION_URL": "activate/{uid}/{token}",
     "PASSWORD_RESET_CONFIRM_URL": "password-reset/{uid}/{token}",
     "DOMAIN": getenv("DOMAIN", "sukoon-app-y4j5r.ondigitalocean.app"),
