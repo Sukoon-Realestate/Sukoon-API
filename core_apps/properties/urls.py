@@ -24,6 +24,10 @@ from .views import (
     PropertyVisitReviewCreateAPIView,
     TenantVisitRequestDetailAPIView,
     TenantVisitRequestListAPIView,
+    OwnerVisitRequestListAPIView,
+    OwnerVisitRequestDetailAPIView,
+    OwnerVisitRequestRejectAPIView,
+    OwnerVisitRequestAcceptAPIView,
     AvailablePlacesAPIView,
     PropertyAvailableDatesAPIView,
     OwnerAvailabilityWeekAPIView,
@@ -61,6 +65,26 @@ urlpatterns = [
         "owner/calendar/",
         OwnerVisitCalendarAPIView.as_view(),
         name="owner-visit-calendar",
+    ),
+    path(
+        "owner/visits/requests/",
+        OwnerVisitRequestListAPIView.as_view(),
+        name="owner-visit-request-list",
+    ),
+    path(
+        "owner/visits/requests/<uuid:id>/",
+        OwnerVisitRequestDetailAPIView.as_view(),
+        name="owner-visit-request-detail",
+    ),
+    path(
+        "owner/visits/requests/<uuid:id>/reject/",
+        OwnerVisitRequestRejectAPIView.as_view(),
+        name="owner-visit-request-reject",
+    ),
+    path(
+        "owner/visits/requests/<uuid:id>/accept/",
+        OwnerVisitRequestAcceptAPIView.as_view(),
+        name="owner-visit-request-accept",
     ),
     path("<uuid:id>/", PropertyDetailAPIView.as_view(), name="property-detail"),
     path(

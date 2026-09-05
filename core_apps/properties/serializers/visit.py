@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 
 from django.contrib.auth import get_user_model
 from django.utils import timezone
@@ -222,16 +222,62 @@ class OwnerAvailabilityDayUpdateSerializer(serializers.Serializer):
 class OwnerVisitCalendarQuerySerializer(serializers.Serializer):
     year = serializers.IntegerField(min_value=2000, max_value=2100)
     month = serializers.IntegerField(min_value=1, max_value=12)
-    date = serializers.DateField(required=False)
+    day = serializers.CharField(required=False, allow_blank=True)
+    date = serializers.CharField(required=False, allow_blank=True)
 
     def validate(self, attrs):
-        selected_date = attrs.get("date")
-        if selected_date and (
-            selected_date.year != attrs["year"] or selected_date.month != attrs["month"]
-        ):
-            raise serializers.ValidationError(
-                {"date": _("The selected date must belong to the requested month.")}
-            )
+        year = attrs["year"]
+        month = attrs["month"]
+        day_raw = attrs.get("day")
+        date_raw = attrs.get("date")
+
+        selected_date = None
+
+        # Parse date parameter if provided and not empty
+        if date_raw is not None and str(date_raw).strip() != "":
+            date_str = str(date_raw).strip()
+            if date_str.isdigit():
+                day_from_date = int(date_str)
+                try:
+                    selected_date = date(year, month, day_from_date)
+                except ValueError:
+                    raise serializers.ValidationError(
+                        {"date": _("Invalid day for the specified month and year.")}
+                    )
+            else:
+                try:
+                    parsed_date = datetime.strptime(date_str, "%Y-%m-%d").date()
+                except ValueError:
+                    raise serializers.ValidationError(
+                        {"date": _("Date must be a day number (1-31) or in YYYY-MM-DD format.")}
+                    )
+                if parsed_date.year != year or parsed_date.month != month:
+                    raise serializers.ValidationError(
+                        {"date": _("The selected date must belong to the requested month.")}
+                    )
+                selected_date = parsed_date
+
+        # Parse day parameter if provided and not empty
+        if day_raw is not None and str(day_raw).strip() != "":
+            day_str = str(day_raw).strip()
+            if not day_str.isdigit():
+                raise serializers.ValidationError(
+                    {"day": _("Day must be an integer between 1 and 31.")}
+                )
+            day_num = int(day_str)
+            try:
+                date_from_day = date(year, month, day_num)
+            except ValueError:
+                raise serializers.ValidationError(
+                    {"day": _("Invalid day for the specified month and year.")}
+                )
+            if selected_date is not None and selected_date != date_from_day:
+                raise serializers.ValidationError(
+                    _("Conflicting 'date' and 'day' parameters provided.")
+                )
+            selected_date = date_from_day
+
+        attrs["date"] = selected_date
         return attrs
 
 
@@ -380,3 +426,265 @@ class TenantVisitRequestDetailSerializer(TenantVisitRequestSerializer):
             obj.property.owner,
             context={"visit": obj},
         ).data
+
+
+# ? Helper functions for formatting dates and times for the owner screens
+
+def _format_time_ar_compact(time_val):
+    hour = time_val.hour
+    minute = time_val.minute
+    period = "ص" if hour < 12 else "م"
+    hour_12 = hour % 12
+    if hour_12 == 0:
+        hour_12 = 12
+    if minute == 0:
+        return f"{hour_12}{period}"
+    return f"{hour_12}:{minute:02d}{period}"
+
+
+def _format_time_ar_clock(time_val):
+    hour = time_val.hour
+    minute = time_val.minute
+    period = "ص" if hour < 12 else "م"
+    hour_12 = hour % 12
+    if hour_12 == 0:
+        hour_12 = 12
+    return f"{hour_12}:{minute:02d} {period}"
+
+
+def _format_owner_schedule_label(visit_date, visit_time):
+    today = timezone.localdate()
+    time_str = _format_time_ar_compact(visit_time)
+    if visit_date == today:
+        return f"النهارده {time_str}"
+    if visit_date == today + timezone.timedelta(days=1):
+        return f"غداً {time_str}"
+    weekday = _ARABIC_WEEKDAYS[visit_date.weekday()]
+    return f"{weekday} {time_str}"
+
+
+def _format_full_date_ar(visit_date):
+    weekday = _ARABIC_WEEKDAYS[visit_date.weekday()]
+    month = _ARABIC_MONTHS[visit_date.month]
+    return f"{weekday} {visit_date.day} {month} {visit_date.year}"
+
+
+def _mask_phone_number(raw_number):
+    if not raw_number:
+        return ""
+    digits = str(raw_number).strip()
+    clean = digits.replace("+2", "").strip() if digits.startswith("+2") else digits
+    if len(clean) >= 7:
+        return f"{clean[:3]}****{clean[-3:]}"
+    return clean
+
+
+_OWNER_CARD_STATUS_LABEL = {
+    PropertyVisit.Status.PENDING: "جديد",
+    PropertyVisit.Status.CONFIRMED: "مقبول",
+    PropertyVisit.Status.REJECTED: "مرفوض",
+    PropertyVisit.Status.CANCELED: "ملغي",
+}
+
+_OWNER_DETAIL_STATUS_LABEL = {
+    PropertyVisit.Status.PENDING: "بانتظار رد المالك",
+    PropertyVisit.Status.CONFIRMED: "مقبول",
+    PropertyVisit.Status.REJECTED: "مرفوض",
+    PropertyVisit.Status.CANCELED: "ملغي",
+}
+
+
+class OwnerVisitTenantCardSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source="get_full_name", read_only=True)
+    avatar = CloudinarySerializerField(source="profile.avatar", read_only=True)
+
+    class Meta:
+        model = User
+        fields = ["id", "name", "avatar", "is_verified"]
+        read_only_fields = fields
+
+
+class OwnerVisitRequestCardSerializer(serializers.ModelSerializer):
+    """
+    Card serializer for the Owner Visit Requests list screen (Screen 1).
+    """
+
+    tenant = OwnerVisitTenantCardSerializer(read_only=True)
+    property = serializers.SerializerMethodField()
+    schedule_label = serializers.SerializerMethodField()
+    subtitle = serializers.SerializerMethodField()
+    status_label = serializers.SerializerMethodField()
+    actions = serializers.SerializerMethodField()
+    is_verified_tenant = serializers.BooleanField(
+        source="tenant.is_verified", read_only=True
+    )
+    verification_warning = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PropertyVisit
+        fields = [
+            "id",
+            "tenant",
+            "property",
+            "schedule_label",
+            "subtitle",
+            "status",
+            "status_label",
+            "actions",
+            "is_verified_tenant",
+            "verification_warning",
+            "created_at",
+        ]
+        read_only_fields = fields
+
+    def get_property(self, obj: PropertyVisit):
+        return {
+            "id": str(obj.property.id),
+            "title": obj.property.title,
+            "district": obj.property.district,
+        }
+
+    def get_schedule_label(self, obj: PropertyVisit) -> str:
+        return _format_owner_schedule_label(obj.visit_date, obj.visit_time)
+
+    def get_subtitle(self, obj: PropertyVisit) -> str:
+        schedule = _format_owner_schedule_label(obj.visit_date, obj.visit_time)
+        return f"{obj.property.title} · {schedule}"
+
+    def get_status_label(self, obj: PropertyVisit) -> str:
+        if obj.status == PropertyVisit.Status.PENDING:
+            return "جديد" if obj.tenant.is_verified else "انتظار"
+        return _OWNER_CARD_STATUS_LABEL.get(obj.status, obj.status)
+
+    def get_actions(self, obj: PropertyVisit):
+        is_pending = obj.status == PropertyVisit.Status.PENDING
+        is_confirmed = obj.status == PropertyVisit.Status.CONFIRMED
+        return {
+            "can_accept": is_pending,
+            "can_reject": is_pending,
+            "can_chat": is_pending or is_confirmed,
+        }
+
+    def get_verification_warning(self, obj: PropertyVisit) -> str:
+        if not obj.tenant.is_verified:
+            return "هذا المستأجر لم يوثق هويته بعد"
+        return ""
+
+
+class OwnerVisitRequestDetailSerializer(serializers.ModelSerializer):
+    """
+    Detailed serializer for the Owner Visit Request Details screen (Screen 2).
+    """
+
+    tenant = serializers.SerializerMethodField()
+    property = serializers.SerializerMethodField()
+    day_label = serializers.SerializerMethodField()
+    time_label = serializers.SerializerMethodField()
+    status_label = serializers.SerializerMethodField()
+    actions = serializers.SerializerMethodField()
+
+    class Meta:
+        model = PropertyVisit
+        fields = [
+            "id",
+            "tenant",
+            "property",
+            "visit_date",
+            "visit_time",
+            "day_label",
+            "time_label",
+            "note",
+            "status",
+            "status_label",
+            "actions",
+            "created_at",
+        ]
+        read_only_fields = fields
+
+    def get_tenant(self, obj: PropertyVisit):
+        tenant = obj.tenant
+        profile = getattr(tenant, "profile", None)
+        avatar_url = (
+            profile.avatar.url
+            if profile and getattr(profile, "avatar", None)
+            else None
+        )
+        raw_phone = (
+            str(profile.phone_number)
+            if profile and getattr(profile, "phone_number", None)
+            else ""
+        )
+        masked_phone = _mask_phone_number(raw_phone)
+        is_confirmed = obj.status == PropertyVisit.Status.CONFIRMED
+        member_year = tenant.date_joined.year if tenant.date_joined else 2024
+
+        verification_prefix = "مستأجر موثّق · " if tenant.is_verified else ""
+        membership_label = f"{verification_prefix}عضو منذ {member_year}"
+
+        phone_notice = (
+            ""
+            if is_confirmed
+            else f"رقم المستأجر {masked_phone} – يظهر بعد القبول فقط"
+            if masked_phone
+            else "رقم المستأجر – يظهر بعد القبول فقط"
+        )
+
+        return {
+            "id": str(tenant.id),
+            "name": tenant.get_full_name,
+            "avatar": avatar_url,
+            "is_verified": tenant.is_verified,
+            "member_since_year": member_year,
+            "membership_label": membership_label,
+            "phone_number": raw_phone if is_confirmed else "",
+            "masked_phone_number": masked_phone,
+            "is_phone_revealed": is_confirmed,
+            "phone_notice": phone_notice,
+        }
+
+    def get_property(self, obj: PropertyVisit):
+        return {
+            "id": str(obj.property.id),
+            "title": obj.property.title,
+            "district": obj.property.district,
+            "display_name": f"{obj.property.title} – {obj.property.district}",
+        }
+
+    def get_day_label(self, obj: PropertyVisit) -> str:
+        return _format_full_date_ar(obj.visit_date)
+
+    def get_time_label(self, obj: PropertyVisit) -> str:
+        return _format_time_ar_clock(obj.visit_time)
+
+    def get_status_label(self, obj: PropertyVisit) -> str:
+        return _OWNER_DETAIL_STATUS_LABEL.get(obj.status, obj.status)
+
+    def get_actions(self, obj: PropertyVisit):
+        is_pending = obj.status == PropertyVisit.Status.PENDING
+        is_confirmed = obj.status == PropertyVisit.Status.CONFIRMED
+        return {
+            "can_accept": is_pending,
+            "can_reject": is_pending,
+            "can_chat": is_confirmed,
+        }
+
+
+class OwnerVisitRejectSerializer(serializers.Serializer):
+    """
+    Serializer for rejecting a visit request (Screen 3 modal).
+    """
+
+    REJECTION_REASONS = [
+        ("timing_not_suitable", _("الموعد غير مناسب")),
+        ("property_currently_rented", _("العقار مؤجر حالياً")),
+        ("tenant_not_eligible", _("المستأجر لا يستوفي الشروط")),
+        ("other", _("سبب آخر")),
+    ]
+
+    reason = serializers.ChoiceField(
+        choices=REJECTION_REASONS, default="timing_not_suitable"
+    )
+    custom_reason = serializers.CharField(
+        required=False, allow_blank=True, default=""
+    )
+

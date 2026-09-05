@@ -315,8 +315,42 @@ class PropertyVisitService:
         )
 
     @staticmethod
+    @transaction.atomic
+    def accept_visit(user, visit_obj):
+        """Owner accepts a pending visit request."""
+        return PropertyVisitService.update_visit_status(
+            user=user,
+            visit_obj=visit_obj,
+            status=PropertyVisit.Status.CONFIRMED,
+        )
+
+    @staticmethod
+    @transaction.atomic
+    def reject_visit(user, visit_obj, reason=None, custom_reason=None):
+        """Owner rejects a pending visit request with an optional reason."""
+        return PropertyVisitService.update_visit_status(
+            user=user,
+            visit_obj=visit_obj,
+            status=PropertyVisit.Status.REJECTED,
+        )
+
+    @staticmethod
     def get_owner_visit_calendar(owner, year, month, selected_date=None):
         """Build monthly visit indicators and the selected-day appointment cards."""
+        arabic_months = {
+            1: "يناير",
+            2: "فبراير",
+            3: "مارس",
+            4: "أبريل",
+            5: "مايو",
+            6: "يونيو",
+            7: "يوليو",
+            8: "أغسطس",
+            9: "سبتمبر",
+            10: "أكتوبر",
+            11: "نوفمبر",
+            12: "ديسمبر",
+        }
         month_start = date(year, month, 1)
         next_month = date(year + 1, 1, 1) if month == 12 else date(year, month + 1, 1)
         visits = list(
@@ -338,9 +372,58 @@ class PropertyVisitService:
             if selected_date
             else []
         )
+
+        def _fmt_time(t):
+            h = t.hour
+            m = t.minute
+            period = "ص" if h < 12 else "م"
+            h12 = h % 12 or 12
+            return f"{h12}:{m:02d} {period}"
+
+        visits_payload = []
+        for visit in selected_visits:
+            tenant_name = visit.tenant.get_full_name
+            first_letter = tenant_name.strip()[0] if tenant_name and tenant_name.strip() else ""
+            profile = getattr(visit.tenant, "profile", None)
+            avatar_url = (
+                profile.avatar.url
+                if profile and getattr(profile, "avatar", None)
+                else None
+            )
+            status_label = (
+                "مؤكدة"
+                if visit.status == PropertyVisit.Status.CONFIRMED
+                else "معلقة"
+            )
+            visits_payload.append(
+                {
+                    "id": str(visit.id),
+                    "tenant": {
+                        "id": str(visit.tenant.id),
+                        "name": tenant_name,
+                        "initial": first_letter,
+                        "avatar": avatar_url,
+                    },
+                    "property": {
+                        "id": str(visit.property.id),
+                        "title": visit.property.title,
+                    },
+                    "visit_time": visit.visit_time.strftime("%H:%M:%S"),
+                    "time_formatted": _fmt_time(visit.visit_time),
+                    "status": visit.status,
+                    "status_label": status_label,
+                }
+            )
+
+        month_label = f"{arabic_months.get(month, '')} {year}".strip()
+        selected_date_label = (
+            f"زيارات يوم {selected_date.day}" if selected_date else None
+        )
+
         return {
             "year": year,
             "month": month,
+            "month_label": month_label,
             "days": [
                 {
                     "date": visit_date.isoformat(),
@@ -350,22 +433,8 @@ class PropertyVisitService:
                 for visit_date, count in counts.items()
             ],
             "selected_date": selected_date.isoformat() if selected_date else None,
-            "visits": [
-                {
-                    "id": str(visit.id),
-                    "tenant": {
-                        "id": str(visit.tenant.id),
-                        "name": visit.tenant.get_full_name,
-                    },
-                    "property": {
-                        "id": str(visit.property.id),
-                        "title": visit.property.title,
-                    },
-                    "visit_time": visit.visit_time.strftime("%H:%M:%S"),
-                    "status": visit.status,
-                }
-                for visit in selected_visits
-            ],
+            "selected_date_label": selected_date_label,
+            "visits": visits_payload,
         }
 
     @staticmethod

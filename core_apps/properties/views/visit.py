@@ -1,6 +1,7 @@
 import logging
 from datetime import timedelta
 
+from django.db import models
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework import generics, permissions, status
@@ -17,6 +18,9 @@ from ..serializers import (
     OwnerAvailabilityWeekQuerySerializer,
     OwnerAvailabilityDayUpdateSerializer,
     OwnerVisitCalendarQuerySerializer,
+    OwnerVisitRequestCardSerializer,
+    OwnerVisitRequestDetailSerializer,
+    OwnerVisitRejectSerializer,
     PropertyVisitCreateSerializer,
     PropertyVisitDetailSerializer,
     PropertyVisitSerializer,
@@ -382,3 +386,141 @@ class PropertyVisitReviewCreateAPIView(generics.GenericAPIView):
             },
             status=status.HTTP_201_CREATED,
         )
+
+
+class OwnerVisitRequestPagination(PropertyVisitPagination):
+    def get_paginated_response(self, data):
+        response = super().get_paginated_response(data)
+        request = getattr(self, "request", None)
+        if request and request.user.is_authenticated:
+            counts = PropertyVisit.objects.filter(
+                property__owner=request.user
+            ).aggregate(
+                new=models.Count(
+                    "id", filter=models.Q(status=PropertyVisit.Status.PENDING)
+                ),
+                pending=models.Count(
+                    "id", filter=models.Q(status=PropertyVisit.Status.PENDING)
+                ),
+                confirmed=models.Count(
+                    "id", filter=models.Q(status=PropertyVisit.Status.CONFIRMED)
+                ),
+                rejected=models.Count(
+                    "id", filter=models.Q(status=PropertyVisit.Status.REJECTED)
+                ),
+                all=models.Count("id"),
+            )
+            response.data["tabs"] = counts
+        return response
+
+
+class OwnerVisitRequestListAPIView(generics.ListAPIView):
+    """
+    API view to list all visit requests received for the authenticated owner's properties.
+    Designed for the Owner Visit Requests screen (Screen 1).
+
+    Filters:
+    - status (e.g. ?status=pending, ?status=confirmed, ?status=rejected)
+    """
+
+    serializer_class = OwnerVisitRequestCardSerializer
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = OwnerVisitRequestPagination
+    filterset_class = PropertyVisitFilter
+
+    def get_queryset(self):
+        return (
+            PropertyVisit.objects.filter(property__owner=self.request.user)
+            .select_related("tenant", "tenant__profile", "property")
+            .order_by("-created_at")
+        )
+
+
+class OwnerVisitRequestDetailAPIView(generics.RetrieveAPIView):
+    """
+    API view to retrieve single visit request details for the authenticated owner.
+    Designed for the Owner Visit Request Details screen (Screen 2).
+    """
+
+    serializer_class = OwnerVisitRequestDetailSerializer
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+    lookup_field = "id"
+
+    def get_queryset(self):
+        return (
+            PropertyVisit.objects.filter(property__owner=self.request.user)
+            .select_related("tenant", "tenant__profile", "property")
+        )
+
+
+class OwnerVisitRequestRejectAPIView(generics.GenericAPIView):
+    """
+    API view for the owner to reject a pending visit request (Screen 3).
+
+    Request Body Example (POST):
+    {
+        "reason": "timing_not_suitable",
+        "custom_reason": ""
+    }
+    """
+
+    serializer_class = OwnerVisitRejectSerializer
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        visit = get_object_or_404(
+            PropertyVisit.objects.select_related(
+                "tenant", "tenant__profile", "property"
+            ),
+            id=self.kwargs["id"],
+            property__owner=request.user,
+        )
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        reason = serializer.validated_data.get("reason")
+        custom_reason = serializer.validated_data.get("custom_reason", "")
+        visit = PropertyVisitService.reject_visit(
+            user=request.user,
+            visit_obj=visit,
+            reason=reason,
+            custom_reason=custom_reason,
+        )
+        data = OwnerVisitRequestDetailSerializer(visit).data
+        return Response(
+            {"message": "تم رفض طلب الزيارة بنجاح.", **data},
+            status=status.HTTP_200_OK,
+        )
+
+
+class OwnerVisitRequestAcceptAPIView(generics.GenericAPIView):
+    """
+    API view for the owner to accept a pending visit request (Screen 2 accept button).
+
+    Request Body Example (POST):
+    {}
+    """
+
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        visit = get_object_or_404(
+            PropertyVisit.objects.select_related(
+                "tenant", "tenant__profile", "property"
+            ),
+            id=self.kwargs["id"],
+            property__owner=request.user,
+        )
+        visit = PropertyVisitService.accept_visit(
+            user=request.user,
+            visit_obj=visit,
+        )
+        data = OwnerVisitRequestDetailSerializer(visit).data
+        return Response(
+            {"message": "تم قبول طلب الزيارة بنجاح.", **data},
+            status=status.HTTP_200_OK,
+        )
+
