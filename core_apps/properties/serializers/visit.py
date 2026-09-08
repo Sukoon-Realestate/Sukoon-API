@@ -337,7 +337,25 @@ class PropertyVisitReviewSerializer(serializers.ModelSerializer):
             "comment",
             "created_at",
         ]
-        read_only_fields = ["id", "created_at"]
+        read_only_fields = ["id", "overall_rating", "created_at"]
+
+
+class PropertyReviewItemSerializer(serializers.ModelSerializer):
+    tenant = VisitTenantSerializer(source="visit.tenant", read_only=True)
+
+    class Meta:
+        model = PropertyVisitReview
+        fields = [
+            "id",
+            "tenant",
+            "overall_rating",
+            "cleanliness_rating",
+            "listing_accuracy_rating",
+            "owner_interaction_rating",
+            "comment",
+            "created_at",
+        ]
+        read_only_fields = fields
 
 
 class TenantVisitRequestSerializer(serializers.ModelSerializer):

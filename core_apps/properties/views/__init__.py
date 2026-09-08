@@ -1,4 +1,8 @@
-from .owner_dashboard import OwnerDashboardAPIView
+from .owner_dashboard import (
+    OwnerDashboardAPIView,
+    OwnerProfileAPIView,
+    OwnerRevenuesAPIView,
+)
 from .location import (
     CityListAPIView,
     GovernorateListAPIView,
@@ -16,6 +20,8 @@ from .property import (
     PropertyNewListAPIView,
     PropertyTypeListAPIView,
     PropertyUpdateAPIView,
+    PropertyStatisticsAPIView,
+    PropertyToggleVisibilityAPIView,
 )
 from .visit import (
     PropertyAvailableDatesAPIView,
@@ -28,6 +34,7 @@ from .visit import (
     PropertyVisitUpdateAPIView,
     PropertyVisitCancelAPIView,
     PropertyVisitReviewCreateAPIView,
+    PropertyReviewListAPIView,
     TenantVisitRequestDetailAPIView,
     TenantVisitRequestListAPIView,
     OwnerVisitRequestListAPIView,

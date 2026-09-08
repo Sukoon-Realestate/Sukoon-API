@@ -51,3 +51,60 @@ class Profile(TimeStampedModel):
 
     def __str__(self):
         return f"{self.user.email} profile"
+
+
+class UserSettings(TimeStampedModel):
+    user = models.OneToOneField(
+        User,
+        verbose_name=_("User"),
+        on_delete=models.CASCADE,
+        related_name="settings",
+    )
+
+    # * Notification Settings ("الإشعارات")
+    visit_notifications = models.BooleanField(
+        _("Visit Notifications"),
+        default=True,
+        help_text=_("Notifications for property visits"),
+    )
+    new_properties_in_area = models.BooleanField(
+        _("New Properties in Area"),
+        default=True,
+        help_text=_("Alerts for new properties in user's area"),
+    )
+    owner_messages = models.BooleanField(
+        _("Owner Messages"),
+        default=True,
+        help_text=_("Notifications for messages from property owners"),
+    )
+    promotions_and_updates = models.BooleanField(
+        _("Updates and Offers"),
+        default=False,
+        help_text=_("Marketing promotions, news, and special offers"),
+    )
+
+    # * Privacy Settings ("الخصوصية")
+    always_hide_mobile_number = models.BooleanField(
+        _("Always Hide Mobile Number"),
+        default=True,
+        help_text=_("Always hide mobile number for privacy protection (fixed)"),
+    )
+    share_location_for_search = models.BooleanField(
+        _("Share My Location for Search"),
+        default=True,
+        help_text=_("Allow location access for search optimization"),
+    )
+    show_profile_in_search = models.BooleanField(
+        _("Appear in Search"),
+        default=False,
+        help_text=_("Allow account to appear in search results"),
+    )
+
+    class Meta:
+        verbose_name = _("User Settings")
+        verbose_name_plural = _("User Settings")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Settings for {self.user.email}"
+

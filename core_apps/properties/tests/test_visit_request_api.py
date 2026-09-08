@@ -2,6 +2,8 @@ from datetime import time, timedelta
 import uuid
 
 import pytest
+from django.db import connection
+from django.test.utils import CaptureQueriesContext
 from django.urls import reverse
 from django.utils import timezone
 from rest_framework import status
@@ -163,7 +165,6 @@ class TestPropertyVisitReviewAPI:
             status=PropertyVisit.Status.CONFIRMED,
         )
         payload = {
-            "overall_rating": 4,
             "cleanliness_rating": 4,
             "listing_accuracy_rating": 5,
             "owner_interaction_rating": 4,
@@ -177,7 +178,11 @@ class TestPropertyVisitReviewAPI:
         )
 
         assert response.status_code == status.HTTP_201_CREATED
-        assert PropertyVisitReview.objects.filter(visit=visit).exists()
+        data = response.json()["data"]
+        # ? (4 + 5 + 4) / 3 = 4.33 -> rounded to 4
+        assert data["overall_rating"] == 4
+        review = PropertyVisitReview.objects.get(visit=visit)
+        assert review.overall_rating == 4
         assert PropertyRating.objects.get(user=user, property=property_obj).rating == 4
 
         duplicate = auth_client.post(
@@ -186,6 +191,40 @@ class TestPropertyVisitReviewAPI:
             format="json",
         )
         assert duplicate.status_code == status.HTTP_400_BAD_REQUEST
+
+    def test_overall_rating_calculation_rounds_properly(
+        self,
+        auth_client,
+        user,
+        another_user,
+        apartment_type,
+        cairo_city,
+        cairo_governorate,
+    ):
+        property_obj = create_property(
+            another_user, apartment_type, cairo_city, cairo_governorate
+        )
+        visit = PropertyVisit.objects.create(
+            property=property_obj,
+            tenant=user,
+            visit_date=timezone.localdate() - timedelta(days=1),
+            visit_time=time(14),
+            status=PropertyVisit.Status.CONFIRMED,
+        )
+        # ? (5 + 5 + 4) / 3 = 4.67 -> rounded to 5
+        payload = {
+            "cleanliness_rating": 5,
+            "listing_accuracy_rating": 5,
+            "owner_interaction_rating": 4,
+        }
+        response = auth_client.post(
+            reverse("property-visit-review-create", kwargs={"id": visit.id}),
+            payload,
+            format="json",
+        )
+        assert response.status_code == status.HTTP_201_CREATED
+        assert response.json()["data"]["overall_rating"] == 5
+        assert PropertyVisitReview.objects.get(visit=visit).overall_rating == 5
 
     def test_rejects_review_before_visit_and_invalid_scores(
         self,
@@ -208,7 +247,6 @@ class TestPropertyVisitReviewAPI:
         )
         url = reverse("property-visit-review-create", kwargs={"id": visit.id})
         valid_payload = {
-            "overall_rating": 4,
             "cleanliness_rating": 4,
             "listing_accuracy_rating": 5,
             "owner_interaction_rating": 4,
@@ -447,3 +485,147 @@ class TestOwnerAvailabilityAndCalendarAPI:
         )
         assert availability.status_code == status.HTTP_401_UNAUTHORIZED
         assert calendar.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+@pytest.mark.django_db
+class TestPropertyReviewListAPI:
+    def test_list_reviews_happy_path_with_summary(
+        self,
+        api_client,
+        user,
+        another_user,
+        superuser,
+        apartment_type,
+        cairo_city,
+        cairo_governorate,
+    ):
+        property_obj = create_property(
+            another_user, apartment_type, cairo_city, cairo_governorate
+        )
+        # First visit and review by user
+        visit1 = PropertyVisit.objects.create(
+            property=property_obj,
+            tenant=user,
+            visit_date=timezone.localdate() - timedelta(days=2),
+            visit_time=time(10),
+            status=PropertyVisit.Status.CONFIRMED,
+        )
+        PropertyVisitReview.objects.create(
+            visit=visit1,
+            overall_rating=5,
+            cleanliness_rating=5,
+            listing_accuracy_rating=5,
+            owner_interaction_rating=4,
+            comment="Great apartment, very clean!",
+        )
+
+        # Second visit and review by superuser
+        visit2 = PropertyVisit.objects.create(
+            property=property_obj,
+            tenant=superuser,
+            visit_date=timezone.localdate() - timedelta(days=1),
+            visit_time=time(14),
+            status=PropertyVisit.Status.CONFIRMED,
+        )
+        PropertyVisitReview.objects.create(
+            visit=visit2,
+            overall_rating=4,
+            cleanliness_rating=4,
+            listing_accuracy_rating=4,
+            owner_interaction_rating=4,
+            comment="Nice host and decent place.",
+        )
+
+        url = reverse("property-review-list", kwargs={"property_id": property_obj.id})
+        response = api_client.get(url)
+
+        assert response.status_code == status.HTTP_200_OK
+        data = response.json()["data"]
+
+        # Verify summary
+        summary = data["summary"]
+        assert summary["total_reviews"] == 2
+        assert summary["average_rating"] == 4.5
+        assert summary["cleanliness_rating"] == 4.5
+        assert summary["listing_accuracy_rating"] == 4.5
+        assert summary["owner_interaction_rating"] == 4.0
+
+        # Verify results
+        results = data["results"]
+        assert len(results) == 2
+        # Most recent first
+        assert results[0]["comment"] == "Nice host and decent place."
+        assert results[0]["tenant"]["name"] == superuser.get_full_name
+        assert results[0]["overall_rating"] == 4
+
+        assert results[1]["comment"] == "Great apartment, very clean!"
+        assert results[1]["tenant"]["name"] == user.get_full_name
+        assert results[1]["overall_rating"] == 5
+
+    def test_list_reviews_empty(
+        self,
+        api_client,
+        another_user,
+        apartment_type,
+        cairo_city,
+        cairo_governorate,
+    ):
+        property_obj = create_property(
+            another_user, apartment_type, cairo_city, cairo_governorate
+        )
+        url = reverse("property-review-list", kwargs={"property_id": property_obj.id})
+        response = api_client.get(url)
+
+        assert response.status_code == status.HTTP_200_OK
+        data = response.json()["data"]
+        assert data["summary"] == {
+            "total_reviews": 0,
+            "average_rating": 0.0,
+            "cleanliness_rating": 0.0,
+            "listing_accuracy_rating": 0.0,
+            "owner_interaction_rating": 0.0,
+        }
+        assert data["results"] == []
+
+    def test_list_reviews_property_not_found(self, api_client):
+        url = reverse("property-review-list", kwargs={"property_id": uuid.uuid4()})
+        response = api_client.get(url)
+        assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    def test_list_reviews_query_count(
+        self,
+        api_client,
+        user,
+        another_user,
+        superuser,
+        apartment_type,
+        cairo_city,
+        cairo_governorate,
+    ):
+        property_obj = create_property(
+            another_user, apartment_type, cairo_city, cairo_governorate
+        )
+        for i, reviewer in enumerate([user, superuser]):
+            visit = PropertyVisit.objects.create(
+                property=property_obj,
+                tenant=reviewer,
+                visit_date=timezone.localdate() - timedelta(days=i + 1),
+                visit_time=time(11),
+                status=PropertyVisit.Status.CONFIRMED,
+            )
+            PropertyVisitReview.objects.create(
+                visit=visit,
+                overall_rating=4,
+                cleanliness_rating=4,
+                listing_accuracy_rating=4,
+                owner_interaction_rating=4,
+            )
+
+        url = reverse("property-review-list", kwargs={"property_id": property_obj.id})
+        with CaptureQueriesContext(connection) as ctx:
+            response = api_client.get(url)
+
+        assert response.status_code == status.HTTP_200_OK
+        # Queries: 1 get property, 1 aggregates, 1 count for pagination, 1 select reviews with tenant/profile
+        assert len(ctx.captured_queries) <= 5
+

@@ -12,6 +12,17 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         return obj.owner == request.user
 
 
+class IsOwner(permissions.BasePermission):
+    """
+    Custom permission to only allow the owner of an object to access it.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        owner = getattr(obj, "owner", getattr(obj, "user", None))
+        return owner == request.user
+
+
+
 class IsTenantOrPropertyOwner(permissions.BasePermission):
     """
     Custom permission to only allow tenants of a visit request or owners of the property to view/edit it.

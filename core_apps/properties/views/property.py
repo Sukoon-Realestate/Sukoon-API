@@ -32,7 +32,7 @@ from ..models import (
     PropertyVisit,
     SavedProperty,
 )
-from ..permissions import IsOwnerOrReadOnly
+from ..permissions import IsOwner, IsOwnerOrReadOnly
 from ..serializers import (
     MyPropertyListSerializer,
     AvailablePlacesQuerySerializer,
@@ -44,6 +44,8 @@ from ..serializers import (
     PropertyNewListSerializer,
     PropertySerializer,
     PropertyTypeSerializer,
+    PropertyStatisticsSerializer,
+    PropertyVisibilitySerializer,
 )
 from ..services import PropertyService
 
@@ -483,3 +485,81 @@ class PropertyImageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
                 "You are not the owner of the related property listing."
             )
         return obj
+
+
+class PropertyStatisticsAPIView(generics.RetrieveAPIView):
+    """
+    API view to retrieve detailed performance and engagement statistics for
+    an owner's property listing.
+    """
+
+    queryset = Property.objects.select_related("owner").all()
+    serializer_class = PropertyStatisticsSerializer
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    lookup_field = "id"
+
+    def get_object(self):
+        obj = get_object_or_404(self.get_queryset(), id=self.kwargs["id"])
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    def retrieve(self, request, *args, **kwargs):
+        property_obj = self.get_object()
+        period = request.query_params.get("period", "30_days")
+        data = PropertyService.get_property_statistics(property_obj, period=period)
+        serializer = self.get_serializer(data)
+        return Response(serializer.data)
+
+
+
+class PropertyToggleVisibilityAPIView(generics.GenericAPIView):
+    """
+    API view for an owner to toggle or update the visibility (hide/unhide) of
+    their property listing.
+
+    POST toggles between hidden and active/verified.
+    PATCH accepts {"is_hidden": true|false}.
+    """
+
+    queryset = Property.objects.select_related("owner").all()
+    serializer_class = PropertyVisibilitySerializer
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    lookup_field = "id"
+
+    def get_object(self):
+        obj = get_object_or_404(self.get_queryset(), id=self.kwargs["id"])
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    def post(self, request, *args, **kwargs):
+        property_obj = self.get_object()
+        is_hidden = (
+            request.data.get("is_hidden")
+            if isinstance(request.data, dict) and "is_hidden" in request.data
+            else None
+        )
+        updated_obj = PropertyService.toggle_property_visibility(
+            property_obj, is_hidden=is_hidden
+        )
+        is_now_hidden = updated_obj.status == Property.Status.HIDDEN
+        message = (
+            "Property is now hidden."
+            if is_now_hidden
+            else "Property is now visible."
+        )
+        serializer = self.get_serializer(
+            {
+                "id": updated_obj.id,
+                "title": updated_obj.title,
+                "status": updated_obj.status,
+                "is_hidden": is_now_hidden,
+                "message": message,
+            }
+        )
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def patch(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+

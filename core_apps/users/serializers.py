@@ -94,3 +94,38 @@ class FacebookAuthSerializer(serializers.Serializer):
             "blank": "Facebook access token cannot be blank.",
         }
     )
+
+
+class UserDeleteSerializer(serializers.Serializer):
+    """
+    ? Serializer for user account deletion.
+    ? Allows optional confirmation password (if user has a usable password)
+    ? and optional reason feedback.
+    """
+
+    password = serializers.CharField(
+        required=False,
+        write_only=True,
+        allow_blank=True,
+        help_text="Optional account password for verification if account has a password.",
+    )
+    reason = serializers.CharField(
+        required=False,
+        write_only=True,
+        allow_blank=True,
+        max_length=500,
+        help_text="Optional reason for deleting account.",
+    )
+
+    def validate(self, attrs):
+        request = self.context.get("request")
+        user = getattr(request, "user", None)
+        password = attrs.get("password")
+
+        # * If user has a usable password and password was submitted, verify it
+        if password and user and user.is_authenticated and user.has_usable_password():
+            if not user.check_password(password):
+                raise serializers.ValidationError({"password": "Password is incorrect."})
+
+        return attrs
+

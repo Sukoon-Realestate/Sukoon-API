@@ -6,7 +6,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from config.settings.base import AUTH_USER_MODEL
-from core_apps.profiles.models import Profile
+from core_apps.profiles.models import Profile, UserSettings
 
 logger = logging.getLogger(__name__)
 
@@ -17,6 +17,8 @@ def create_user_profile(
 ) -> None:
     if created:
         Profile.objects.create(user=instance)
-        logger.info(f"Profile created for {instance.get_full_name}")
+        UserSettings.objects.create(user=instance)
+        logger.info(f"Profile and Settings created for {instance.get_full_name}")
     else:
         logger.info(f"Profile already exists for {instance.get_full_name}")
+

@@ -11,7 +11,7 @@ from core_apps.common.pagination import StandardResultsSetPagination
 from core_apps.common.renderers import GenericJsonRenderer
 
 from ..filters import PropertyVisitFilter
-from ..models import Property, PropertyVisit
+from ..models import Property, PropertyVisit, PropertyVisitReview
 from ..permissions import IsTenantOrPropertyOwner
 from ..serializers import (
     AvailableDatesQuerySerializer,
@@ -27,6 +27,7 @@ from ..serializers import (
     PropertyVisitUpdateSerializer,
     TenantVisitListSerializer,
     PropertyVisitReviewSerializer,
+    PropertyReviewItemSerializer,
     TenantVisitRequestDetailSerializer,
     TenantVisitRequestSerializer,
 )
@@ -354,7 +355,6 @@ class PropertyVisitReviewCreateAPIView(generics.GenericAPIView):
 
     Request Body Example:
     {
-        "overall_rating": 4,
         "cleanliness_rating": 4,
         "listing_accuracy_rating": 5,
         "owner_interaction_rating": 4,
@@ -386,6 +386,88 @@ class PropertyVisitReviewCreateAPIView(generics.GenericAPIView):
             },
             status=status.HTTP_201_CREATED,
         )
+
+
+class PropertyReviewPagination(StandardResultsSetPagination):
+    page_size = 10
+    page_size_query_param = "page_size"
+    max_page_size = 50
+
+    def get_paginated_response(self, data):
+        response = super().get_paginated_response(data)
+        summary = getattr(self, "summary", None)
+        if summary is not None:
+            response.data["summary"] = summary
+        return response
+
+
+class PropertyReviewListAPIView(generics.ListAPIView):
+    """
+    API view to list all reviews and ratings for a specific property.
+    Accessible publicly without authentication.
+    """
+
+    serializer_class = PropertyReviewItemSerializer
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.AllowAny]
+    pagination_class = PropertyReviewPagination
+
+    def get_property(self):
+        if not hasattr(self, "_property_obj"):
+            self._property_obj = get_object_or_404(
+                Property.objects.only("id", "pkid"), id=self.kwargs["property_id"]
+            )
+        return self._property_obj
+
+    def get_queryset(self):
+        property_obj = self.get_property()
+        return (
+            PropertyVisitReview.objects.filter(visit__property=property_obj)
+            .select_related("visit__tenant", "visit__tenant__profile")
+            .order_by("-created_at")
+        )
+
+    def list(self, request, *args, **kwargs):
+        property_obj = self.get_property()
+        aggregates = PropertyVisitReview.objects.filter(
+            visit__property=property_obj
+        ).aggregate(
+            total_reviews=models.Count("id"),
+            avg_overall=models.Avg("overall_rating"),
+            avg_cleanliness=models.Avg("cleanliness_rating"),
+            avg_accuracy=models.Avg("listing_accuracy_rating"),
+            avg_interaction=models.Avg("owner_interaction_rating"),
+        )
+        self._review_summary = {
+            "total_reviews": aggregates["total_reviews"],
+            "average_rating": (
+                round(float(aggregates["avg_overall"]), 1)
+                if aggregates["avg_overall"] is not None
+                else 0.0
+            ),
+            "cleanliness_rating": (
+                round(float(aggregates["avg_cleanliness"]), 1)
+                if aggregates["avg_cleanliness"] is not None
+                else 0.0
+            ),
+            "listing_accuracy_rating": (
+                round(float(aggregates["avg_accuracy"]), 1)
+                if aggregates["avg_accuracy"] is not None
+                else 0.0
+            ),
+            "owner_interaction_rating": (
+                round(float(aggregates["avg_interaction"]), 1)
+                if aggregates["avg_interaction"] is not None
+                else 0.0
+            ),
+        }
+        return super().list(request, *args, **kwargs)
+
+    def paginate_queryset(self, queryset):
+        page = super().paginate_queryset(queryset)
+        if page is not None and hasattr(self, "_review_summary"):
+            self.paginator.summary = self._review_summary
+        return page
 
 
 class OwnerVisitRequestPagination(PropertyVisitPagination):

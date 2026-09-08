@@ -25,6 +25,7 @@ class Property(TimeStampedModel):
         VERIFIED = ("verified", _("Verified"))
         UNDER_REVIEW = ("under_review", _("Under Review"))
         NEEDS_REVISION = ("needs_revision", _("Needs Revision"))
+        HIDDEN = ("hidden", _("Hidden"))
 
     owner = models.ForeignKey(
         User,

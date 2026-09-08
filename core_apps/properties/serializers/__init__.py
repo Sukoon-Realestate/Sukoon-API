@@ -1,6 +1,9 @@
 from .owner_dashboard import (
     OwnerDashboardSerializer,
+    OwnerProfileSerializer,
+    OwnerRevenuesSerializer,
 )
+
 from .location import CitySerializer, GovernorateSerializer
 from .property import (
     MyPropertyListSerializer,
@@ -13,6 +16,8 @@ from .property import (
     PropertyDetailSerializer,
     AvailablePlacesQuerySerializer,
     PropertyTypeSerializer,
+    PropertyStatisticsSerializer,
+    PropertyVisibilitySerializer,
 )
 from .visit import (
     AvailableDatesQuerySerializer,
@@ -25,6 +30,7 @@ from .visit import (
     PropertyVisitUpdateSerializer,
     TenantVisitListSerializer,
     PropertyVisitReviewSerializer,
+    PropertyReviewItemSerializer,
     TenantVisitRequestDetailSerializer,
     TenantVisitRequestSerializer,
     OwnerVisitRequestCardSerializer,

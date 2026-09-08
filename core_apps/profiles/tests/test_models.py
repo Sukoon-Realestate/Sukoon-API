@@ -40,4 +40,3 @@ class TestProfileModel:
         user.profile.save()
         user.profile.refresh_from_db()
         assert str(user.profile.phone_number) == "+14155552671"
-

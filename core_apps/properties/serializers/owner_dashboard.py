@@ -75,7 +75,9 @@ class OwnerDashboardPendingVisitSerializer(serializers.ModelSerializer):
         source="tenant.profile.avatar", read_only=True
     )
     property_title = serializers.CharField(source="property.title", read_only=True)
-    property_district = serializers.CharField(source="property.district", read_only=True)
+    property_district = serializers.CharField(
+        source="property.district", read_only=True
+    )
     scheduled_at = serializers.SerializerMethodField()
 
     class Meta:
@@ -103,3 +105,97 @@ class OwnerDashboardSerializer(serializers.Serializer):
     overall_rating = serializers.FloatField(read_only=True)
     pending_requests = serializers.IntegerField(read_only=True)
     pending_visits = OwnerDashboardPendingVisitSerializer(many=True, read_only=True)
+
+
+class OwnerPropertyRevenueSerializer(serializers.Serializer):
+    id = serializers.CharField(read_only=True)
+    title = serializers.CharField(read_only=True)
+    amount = serializers.FloatField(read_only=True)
+    formatted_amount = serializers.CharField(read_only=True)
+    currency = serializers.CharField(read_only=True, default="ج")
+    status = serializers.CharField(read_only=True)
+    status_label = serializers.CharField(read_only=True)
+    status_color = serializers.CharField(read_only=True)
+    due_date = serializers.CharField(read_only=True, required=False, allow_null=True)
+
+
+class OwnerRevenueTransactionSerializer(serializers.Serializer):
+    id = serializers.CharField(read_only=True)
+    title = serializers.CharField(read_only=True)
+    date = serializers.CharField(read_only=True)
+    date_iso = serializers.CharField(read_only=True)
+    amount = serializers.FloatField(read_only=True)
+    formatted_amount = serializers.CharField(read_only=True)
+    currency = serializers.CharField(read_only=True, default="ج")
+    type = serializers.CharField(read_only=True)
+    is_credit = serializers.BooleanField(read_only=True)
+
+
+class OwnerRevenuesSerializer(serializers.Serializer):
+    total_this_month = serializers.FloatField(read_only=True)
+    formatted_total = serializers.CharField(read_only=True)
+    currency = serializers.CharField(read_only=True, default="ج")
+    percentage_change = serializers.FloatField(read_only=True)
+    comparison_text = serializers.CharField(read_only=True)
+    is_positive = serializers.BooleanField(read_only=True)
+    properties = OwnerPropertyRevenueSerializer(many=True, read_only=True)
+    recent_transactions = OwnerRevenueTransactionSerializer(many=True, read_only=True)
+
+
+# * =========================================================================
+# * Owner Profile Serializers ("ملفي الشخصي")
+# * =========================================================================
+
+
+class OwnerProfileHeaderSerializer(serializers.Serializer):
+    id = serializers.UUIDField(read_only=True)
+    full_name = serializers.CharField(read_only=True)
+    avatar = serializers.CharField(read_only=True, allow_null=True)
+    is_verified = serializers.BooleanField(read_only=True)
+    role_badge = serializers.CharField(read_only=True)
+    average_rating = serializers.FloatField(read_only=True)
+    reviews_count = serializers.IntegerField(read_only=True)
+    rating_label = serializers.CharField(read_only=True)
+    member_since_label = serializers.CharField(read_only=True)
+
+
+class OwnerProfileStatsSerializer(serializers.Serializer):
+    properties_count = serializers.IntegerField(read_only=True)
+    properties_label = serializers.CharField(read_only=True, default="عقارات")
+    reviews_count = serializers.IntegerField(read_only=True)
+    reviews_label = serializers.CharField(read_only=True, default="تقييم")
+    acceptance_rate = serializers.IntegerField(read_only=True)
+    acceptance_label = serializers.CharField(read_only=True, default="قبول")
+    formatted_acceptance_rate = serializers.CharField(read_only=True)
+
+
+class OwnerProfileAccountDetailsSerializer(serializers.Serializer):
+    name = serializers.CharField(read_only=True)
+    email = serializers.EmailField(read_only=True)
+    phone_number = serializers.CharField(read_only=True)
+    masked_phone_number = serializers.CharField(read_only=True)
+
+
+class OwnerPrivacyNoticeSerializer(serializers.Serializer):
+    icon = serializers.CharField(read_only=True, default="lock")
+    text = serializers.CharField(read_only=True)
+
+
+class OwnerRecentReviewSerializer(serializers.Serializer):
+    id = serializers.CharField(read_only=True)
+    reviewer_name = serializers.CharField(read_only=True)
+    rating = serializers.IntegerField(read_only=True)
+    comment = serializers.CharField(read_only=True)
+    created_at = serializers.DateTimeField(read_only=True)
+
+
+class OwnerProfileSerializer(serializers.Serializer):
+    """
+    Serializer for Owner Profile screen ('ملفي الشخصي').
+    """
+
+    owner = OwnerProfileHeaderSerializer(read_only=True)
+    stats = OwnerProfileStatsSerializer(read_only=True)
+    account_details = OwnerProfileAccountDetailsSerializer(read_only=True)
+    privacy_notice = OwnerPrivacyNoticeSerializer(read_only=True)
+    recent_reviews = OwnerRecentReviewSerializer(many=True, read_only=True)

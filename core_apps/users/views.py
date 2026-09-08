@@ -4,25 +4,29 @@ from django.conf import settings
 from django.shortcuts import render
 from django.views import View
 from djoser.social.views import ProviderAuthView
-from rest_framework import status
+from rest_framework import generics, permissions, status
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from core_apps.common.renderers import GenericJsonRenderer
 from core_apps.users.serializers import (
     GoogleAuthSerializer,
     AppleAuthSerializer,
     FacebookAuthSerializer,
+    UserDeleteSerializer,
 )
 from core_apps.users.services.social_auth_service import (
     authenticate_google,
     authenticate_apple,
     authenticate_facebook,
 )
+from core_apps.users.services.user_service import delete_user_account
+
 
 
 logger = logging.getLogger(__name__)
@@ -289,3 +293,52 @@ class PasswordResetConfirmView(View):
             "token": token,
         }
         return render(request, "password_reset_confirm.html", context)
+
+
+class UserDeleteAPIView(generics.DestroyAPIView):
+    """
+    Delete the authenticated user's account permanently.
+
+    Cascades deletion to Profile, UserSettings, SocialAccount,
+    Properties, Visits, Reviews, Saved Properties, Favorites, and Ratings.
+    Also clears authentication cookies.
+
+    Supports both DELETE and POST methods.
+    Optional payload:
+    {
+        "password": "current_password",
+        "reason": "optional reason for deletion"
+    }
+    """
+
+    serializer_class = UserDeleteSerializer
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+    def perform_destroy(self, instance):
+        delete_user_account(instance)
+
+    def destroy(self, request: Request, *args, **kwargs) -> Response:
+        # * Validate serializer input if payload is provided
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        instance = self.get_object()
+        self.perform_destroy(instance)
+
+        response = Response(status=status.HTTP_204_NO_CONTENT)
+
+        # * Clear authentication cookies
+        response.delete_cookie("access", path=settings.COOKIE_PATH)
+        response.delete_cookie("refresh", path=settings.COOKIE_PATH)
+        response.delete_cookie("logged_in", path=settings.COOKIE_PATH)
+
+        return response
+
+    def post(self, request: Request, *args, **kwargs) -> Response:
+        """Allow POST method as an alternative to DELETE for mobile/web clients."""
+        return self.destroy(request, *args, **kwargs)
+
