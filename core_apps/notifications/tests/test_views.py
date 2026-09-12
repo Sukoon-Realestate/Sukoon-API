@@ -180,6 +180,19 @@ class TestNotificationSettingsView:
         assert patch_res.data["property_updates"] is True
         assert patch_res.data["visit_notifications"] is False
 
+        # Partial update with only a single toggle
+        single_res = auth_client.patch(
+            NOTIFICATIONS_SETTINGS_URL,
+            {"promotions_and_updates": True},
+            format="json",
+        )
+        assert single_res.status_code == status.HTTP_200_OK
+        assert single_res.data["promotions_and_updates"] is True
+        # Verify other toggles were not modified
+        assert single_res.data["visit_notifications"] is False
+        assert single_res.data["owner_messages"] is True
+        assert single_res.data["security_alerts"] is True
+
 
 @pytest.mark.django_db
 class TestDeviceTokenViews:
