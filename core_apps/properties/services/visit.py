@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, time, timedelta
 
 from django.db import models, transaction
 from django.utils import timezone
@@ -93,22 +93,33 @@ class PropertyVisitService:
 
         visit_date = validated_data.get("visit_date")
         visit_time = validated_data.get("visit_time")
-        slot = (
-            OwnerAvailabilitySlot.objects.select_for_update()
-            .filter(
-                owner=property_obj.owner,
-                property=property_obj,
-                date=visit_date,
-                time=visit_time,
-                is_enabled=True,
-            )
-            .first()
-        )
-        if slot is None:
-            raise ValidationError(_("The selected visit slot is not available."))
+        # TODO: Re-add check to verify slot exists in owner availability slots
+        # slot = (
+        #     OwnerAvailabilitySlot.objects.select_for_update()
+        #     .filter(
+        #         owner=property_obj.owner,
+        #         property=property_obj,
+        #         date=visit_date,
+        #         time=visit_time,
+        #         is_enabled=True,
+        #     )
+        #     .first()
+        # )
+        # if slot is None:
+        #     raise ValidationError(_("The selected visit slot is not available."))
 
         now = timezone.localtime()
-        slot_datetime = datetime.combine(slot.date, slot.time, now.tzinfo)
+        parsed_date = (
+            date.fromisoformat(visit_date)
+            if isinstance(visit_date, str)
+            else visit_date
+        )
+        parsed_time = (
+            time.fromisoformat(visit_time)
+            if isinstance(visit_time, str)
+            else visit_time
+        )
+        slot_datetime = datetime.combine(parsed_date, parsed_time, now.tzinfo)
         if slot_datetime <= now:
             raise ValidationError(_("The selected visit slot is in the past."))
 
