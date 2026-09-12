@@ -33,6 +33,7 @@ LOCAL_APPS = [
     "core_apps.users",
     "core_apps.profiles",
     "core_apps.properties",
+    "core_apps.notifications",
 ]
 
 THIRD_PARTY_APPS = [
@@ -308,3 +309,14 @@ else:
         api_secret=getenv("CLOUDINARY_API_SECRET"),
         secure=True,
     )
+
+
+# * Firebase Cloud Messaging Settings
+FIREBASE_PROJECT_ID = getenv("FIREBASE_PROJECT_ID", "sokoun-99c7b")
+FIREBASE_CLIENT_EMAIL = getenv("FIREBASE_CLIENT_EMAIL")
+FIREBASE_PRIVATE_KEY = getenv("FIREBASE_PRIVATE_KEY")
+FIREBASE_CREDENTIALS_JSON = getenv("FIREBASE_CREDENTIALS_JSON")
+FIREBASE_CREDENTIALS_FILE = getenv(
+    "FIREBASE_CREDENTIALS_FILE",
+    str(BASE_DIR / "config" / "credentials" / "firebase-tenant-service-account.json"),
+)

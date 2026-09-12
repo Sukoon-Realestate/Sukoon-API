@@ -1,4 +1,5 @@
 from datetime import date, datetime, time, timedelta
+import logging
 
 from django.db import models, transaction
 from django.utils import timezone
@@ -11,6 +12,8 @@ from ..models import (
     PropertyVisit,
     PropertyVisitReview,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class PropertyVisitService:
@@ -132,9 +135,37 @@ class PropertyVisitService:
         # ).exists():
         #     raise ValidationError(_("The selected visit slot is already booked."))
 
-        return PropertyVisit.objects.create(
+        visit = PropertyVisit.objects.create(
             tenant=tenant, property=property_obj, **validated_data
         )
+
+        # * Notify property owner of new visit request (O-NOTIF-01 Item 1)
+        try:
+            from core_apps.notifications.models import Notification
+            from core_apps.notifications.services import NotificationService
+
+            tenant_name = tenant.get_full_name or tenant.email.split("@")[0]
+            NotificationService.create_notification(
+                user=property_obj.owner,
+                notification_type=Notification.NotificationType.VISIT_REQUEST,
+                title="طلب زيارة جديد!",
+                body=f"{tenant_name} تطلب زيارة {property_obj.title} - {visit.visit_date} {visit.visit_time}",
+                category="حجز زيارة",
+                icon_type="calendar",
+                data={
+                    "visit_id": str(visit.id),
+                    "property_id": str(property_obj.id),
+                    "visit_date": str(visit.visit_date),
+                    "visit_time": str(visit.visit_time),
+                    "address": f"{getattr(property_obj.city, 'name', str(property_obj.city))} - {property_obj.district or property_obj.title}",
+                    "tenant_name": tenant_name,
+                    "action_label": "عرض الزيارة",
+                },
+            )
+        except Exception as exc:
+            logger.error("Failed to notify owner of visit request: %s", exc)
+
+        return visit
 
     @staticmethod
     @transaction.atomic
@@ -175,6 +206,46 @@ class PropertyVisitService:
                 )
             visit_obj.status = status
             visit_obj.save()
+
+            # * Notify tenant on accept (T-NOTIF-01/02) or reject
+            try:
+                from core_apps.notifications.models import Notification
+                from core_apps.notifications.services import NotificationService
+
+                owner_name = visit_obj.property.owner.get_full_name or "المالك"
+                if status == PropertyVisit.Status.CONFIRMED:
+                    NotificationService.create_notification(
+                        user=visit_obj.tenant,
+                        notification_type=Notification.NotificationType.VISIT_ACCEPTED,
+                        title="تم قبول طلب زيارتك",
+                        body=f"وافق المالك {owner_name} على موعد الزيارة. يُرجى الحضور في الوقت المحدد للاطلاع على الشقة.",
+                        category="حجز زيارة",
+                        icon_type="check_circle",
+                        data={
+                            "visit_id": str(visit_obj.id),
+                            "property_id": str(visit_obj.property.id),
+                            "appointment_date": str(visit_obj.visit_date),
+                            "appointment_time": str(visit_obj.visit_time),
+                            "address": f"{getattr(visit_obj.property.city, 'name', str(visit_obj.property.city))} - {visit_obj.property.district or visit_obj.property.title}",
+                            "action_label": "عرض الزيارة",
+                        },
+                    )
+                elif status == PropertyVisit.Status.REJECTED:
+                    NotificationService.create_notification(
+                        user=visit_obj.tenant,
+                        notification_type=Notification.NotificationType.VISIT_REJECTED,
+                        title="تم رفض طلب الزيارة",
+                        body=f"نعتذر، لم يتمكن {owner_name} من قبول موعد الزيارة.",
+                        category="حجز زيارة",
+                        icon_type="cancel",
+                        data={
+                            "visit_id": str(visit_obj.id),
+                            "property_id": str(visit_obj.property.id),
+                        },
+                    )
+            except Exception as exc:
+                logger.error("Failed to notify tenant of visit status update: %s", exc)
+
             return visit_obj
 
         else:

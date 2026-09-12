@@ -77,6 +77,16 @@ class UserSettings(TimeStampedModel):
         default=True,
         help_text=_("Notifications for messages from property owners"),
     )
+    property_updates = models.BooleanField(
+        _("Property Updates"),
+        default=False,
+        help_text=_("Notifications for property price and status updates"),
+    )
+    security_alerts = models.BooleanField(
+        _("Security Alerts"),
+        default=True,
+        help_text=_("Alerts for new logins and password changes"),
+    )
     promotions_and_updates = models.BooleanField(
         _("Updates and Offers"),
         default=False,

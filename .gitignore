@@ -19,3 +19,8 @@ __pycache__/
 db.sqlite3
 *.log
 local_settings.py
+
+# Credentials and secrets
+credentials/
+config/credentials/
+*service_account*.json

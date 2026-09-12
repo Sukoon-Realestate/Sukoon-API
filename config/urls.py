@@ -32,6 +32,7 @@ urlpatterns = [
     path("api/v1/profiles/", include("core_apps.profiles.urls")),
     path("api/v1/homepage/", PropertyListAPIView.as_view(), name="property-homepage-list"),
     path("api/v1/properties/", include("core_apps.properties.urls")),
+    path("api/v1/notifications/", include("core_apps.notifications.urls")),
     path(settings.ADMIN_URL, admin.site.urls),
 ]
 

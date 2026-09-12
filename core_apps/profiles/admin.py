@@ -16,6 +16,8 @@ class UserSettingsAdmin(admin.ModelAdmin):
         "visit_notifications",
         "new_properties_in_area",
         "owner_messages",
+        "property_updates",
+        "security_alerts",
         "promotions_and_updates",
         "always_hide_mobile_number",
         "share_location_for_search",

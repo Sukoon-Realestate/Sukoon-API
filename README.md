@@ -20,6 +20,7 @@ Detailed documentation for the project structure, API design, and rules:
 2. [API Architecture & Endpoints](docs/api_architecture.md)
 3. [Database & Models Design](docs/database_models.md)
 4. [Authentication & Authorization Flow](docs/authentication.md)
+5. [Mobile Notifications & Firebase FCM Guide](docs/MOBILE_NOTIFICATIONS_README.md)
 
 ---
 
