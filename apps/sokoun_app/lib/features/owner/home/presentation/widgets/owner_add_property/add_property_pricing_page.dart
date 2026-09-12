@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -46,11 +47,11 @@ class AddPropertyPricingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AddPropertyStepShell(
-      title: 'التسعير والتفاصيل',
+      title: LocaleKeys.ownerAddPropertyPricingTitle,
       activeSegments: 4,
       segmentCount: 5,
-      progressSubtitle: 'الخطوة 4 من 5 — السعر والتفاصيل',
-      primaryLabel: 'التالي — التفاصيل الإضافية',
+      progressSubtitle: LocaleKeys.ownerAddPropertyPricingProgress,
+      primaryLabel: LocaleKeys.ownerAddPropertyNextExtra,
       onPrimaryTap: form.isPricingReady ? onNext : null,
       onBack: onBack,
       children: [
@@ -67,7 +68,7 @@ class AddPropertyPricingPage extends StatelessWidget {
           onRentalUnitChanged: onRentalUnitChanged,
         ),
         AddPropertySectionCard(
-          title: 'المرافق والخدمات',
+          title: LocaleKeys.ownerAddPropertyAmenities,
           child: AddPropertyChipWrap(
             chips: OwnerAddPropertyContent.multiSelectedChips(
               labels: OwnerAddPropertyContent.amenityOptions,
@@ -82,8 +83,8 @@ class AddPropertyPricingPage extends StatelessWidget {
         ),
         AddPropertyInfoBanner(
           text: form.isPricingReady
-              ? 'بيانات التسعير والوصف جاهزة للمتابعة'
-              : 'اكتب سعر، مدة إيجار، ووصف واضح لا يقل عن 10 أحرف',
+              ? LocaleKeys.ownerAddPropertyPricingReady
+              : LocaleKeys.ownerAddPropertyPricingRequired,
           backgroundColor: form.isPricingReady
               ? AppColors.greenPale
               : AppColors.amberPale,
@@ -119,12 +120,12 @@ class _PriceSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AddPropertySectionCard(
-      title: 'السعر',
+      title: LocaleKeys.ownerAddPropertyPrice,
       child: Column(
         children: [
           AddPropertyField(
             field: AddPropertyFieldContent(
-              label: 'السعر',
+              label: LocaleKeys.ownerAddPropertyPrice,
               value: '0',
               isFocused: true,
               textAlign: TextAlign.right,
@@ -134,7 +135,7 @@ class _PriceSection extends StatelessWidget {
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             suffix: AppText(
-              'ر.س',
+              LocaleKeys.ownerAddPropertyCurrency,
               color: AppColors.sokoonGray,
               fontSize: 13.sp,
               fontWeight: FontWeight.w700,
@@ -142,7 +143,7 @@ class _PriceSection extends StatelessWidget {
           ),
           10.szH,
           AddPropertyDropdownField(
-            label: 'تأمين الشقة',
+            label: LocaleKeys.ownerAddPropertyDeposit,
             value: form.deposit,
             items: OwnerAddPropertyContent.depositOptions,
             onChanged: onDepositChanged,
@@ -169,7 +170,7 @@ class _RentalPeriodSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AddPropertySectionCard(
-      title: 'فترة التأجير',
+      title: LocaleKeys.ownerAddPropertyRentalPeriod,
       child: Column(
         children: [
           Row(
@@ -177,8 +178,8 @@ class _RentalPeriodSection extends StatelessWidget {
             children: [
               Expanded(
                 child: AddPropertyField(
-                  field: const AddPropertyFieldContent(
-                    label: 'العدد',
+                  field: AddPropertyFieldContent(
+                    label: LocaleKeys.ownerAddPropertyCount,
                     value: '0',
                     isFocused: true,
                     textAlign: TextAlign.center,
@@ -192,7 +193,7 @@ class _RentalPeriodSection extends StatelessWidget {
               10.szW,
               Expanded(
                 child: AddPropertyDropdownField(
-                  label: 'الوحدة',
+                  label: LocaleKeys.ownerAddPropertyUnit,
                   value: form.rentalUnit,
                   items: OwnerAddPropertyContent.rentalUnitOptions,
                   onChanged: onRentalUnitChanged,
@@ -209,7 +210,9 @@ class _RentalPeriodSection extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.r),
             ),
             child: AppText(
-              'فترة التأجير: ${form.rentalDuration} ${form.rentalUnit}',
+              LocaleKeys.ownerAddPropertyRentalSummary
+                  .replaceAll('{count}', form.rentalDuration)
+                  .replaceAll('{unit}', form.rentalUnit),
               color: AppColors.sokoonTeal,
               fontSize: 12.sp,
               fontWeight: FontWeight.w700,
@@ -234,15 +237,15 @@ class _DescriptionSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AddPropertySectionCard(
-      title: 'وصف العقار',
+      title: LocaleKeys.ownerAddPropertyDescription,
       child: AddPropertyField(
-        field: const AddPropertyFieldContent(
-          label: 'الوصف',
-          value: 'اكتب وصفاً جذاباً للعقار…',
+        field: AddPropertyFieldContent(
+          label: LocaleKeys.ownerAddPropertyDescriptionLabel,
+          value: LocaleKeys.ownerAddPropertyDescriptionHint,
         ),
         controller: descriptionController,
         onChanged: onDescriptionChanged,
-        hint: 'اكتب وصفاً جذاباً للعقار…',
+        hint: LocaleKeys.ownerAddPropertyDescriptionHint,
         keyboardType: TextInputType.multiline,
         maxLines: 4,
         minLines: 4,

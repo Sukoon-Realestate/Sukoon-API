@@ -1,6 +1,6 @@
 part of '../../imports.dart';
 
-class OwnerRevenuePropertyContent {
+class OwnerRevenuePropertyContent extends Equatable {
   const OwnerRevenuePropertyContent({
     required this.id,
     required this.title,
@@ -60,9 +60,12 @@ class OwnerRevenuePropertyContent {
       status: status ?? this.status,
     );
   }
+
+  @override
+  List<Object?> get props => [id, title, amount, dueDate, status];
 }
 
-class OwnerTransactionContent {
+class OwnerTransactionContent extends Equatable {
   const OwnerTransactionContent({
     required this.id,
     required this.title,
@@ -112,6 +115,9 @@ class OwnerTransactionContent {
       amount: amount ?? this.amount,
     );
   }
+
+  @override
+  List<Object?> get props => [id, title, date, amount];
 }
 
 abstract final class OwnerRevenueContent {

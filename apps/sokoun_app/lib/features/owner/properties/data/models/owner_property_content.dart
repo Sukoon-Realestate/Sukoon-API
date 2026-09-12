@@ -1,6 +1,6 @@
 part of '../../imports.dart';
 
-class OwnerPropertyContent {
+class OwnerPropertyContent extends Equatable {
   const OwnerPropertyContent({
     required this.id,
     required this.title,
@@ -58,10 +58,7 @@ class OwnerPropertyContent {
       description: json['description'] ?? '',
       photoCount: json['photo_count'] ?? 0,
       status: OwnerPropertyStatusX.fromName(json['status']),
-      icon: IconData(
-        json['icon_code_point'] ?? Icons.apartment_rounded.codePoint,
-        fontFamily: 'MaterialIcons',
-      ),
+      icon: Icons.apartment_rounded,
     );
   }
 
@@ -93,7 +90,6 @@ class OwnerPropertyContent {
       'description': description,
       'photo_count': photoCount,
       'status': status.name,
-      'icon_code_point': icon.codePoint,
     };
   }
 
@@ -128,6 +124,23 @@ class OwnerPropertyContent {
       icon: icon ?? this.icon,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    id,
+    title,
+    mainImage,
+    location,
+    monthlyPrice,
+    views,
+    visitRequests,
+    bedrooms,
+    area,
+    description,
+    photoCount,
+    status,
+    icon,
+  ];
 }
 
 abstract final class OwnerPropertiesContent {

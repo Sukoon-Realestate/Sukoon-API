@@ -1,4 +1,6 @@
-class ConversationContent {
+import 'package:equatable/equatable.dart';
+
+class ConversationContent extends Equatable {
   const ConversationContent({
     required this.id,
     required this.name,
@@ -88,9 +90,21 @@ class ConversationContent {
       isOnline: isOnline ?? this.isOnline,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    id,
+    name,
+    property,
+    lastMessage,
+    time,
+    unreadCount,
+    isVerified,
+    isOnline,
+  ];
 }
 
-class ChatMessageContent {
+class ChatMessageContent extends Equatable {
   const ChatMessageContent({
     required this.id,
     required this.body,
@@ -143,6 +157,9 @@ class ChatMessageContent {
       type: type ?? this.type,
     );
   }
+
+  @override
+  List<Object?> get props => [id, body, time, isFromMe, type];
 }
 
 abstract final class ChatContent {

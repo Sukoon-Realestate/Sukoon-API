@@ -26,13 +26,13 @@ class OwnerVisitRequestsScreen extends StatefulWidget {
 }
 
 class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
-  static const List<OwnerVisitRequestContent> _shimmerRequests = [
+  static List<OwnerVisitRequestContent> get _shimmerRequests => [
     OwnerVisitRequestContent(
       id: 'shimmer-request-1',
-      initial: 'م',
-      name: 'اسم المستأجر بالكامل',
-      property: 'اسم العقار والمنطقة',
-      dateLabel: 'السبت، 14 سبتمبر · 04:30 م',
+      initial: LocaleKeys.ownerVisitTenantMohamedInitial,
+      name: LocaleKeys.ownerVisitTenantMohamed,
+      property: LocaleKeys.ownerVisitPropertyNasrCity,
+      dateLabel: LocaleKeys.ownerVisitDateSaturdayAtThree,
       detailDate: '',
       time: '',
       memberSince: '',
@@ -43,10 +43,10 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
     ),
     OwnerVisitRequestContent(
       id: 'shimmer-request-2',
-      initial: 'س',
-      name: 'اسم المستأجر',
-      property: 'اسم العقار المطلوب زيارته',
-      dateLabel: 'الأحد، 15 سبتمبر · 06:00 م',
+      initial: LocaleKeys.ownerVisitTenantSaraInitial,
+      name: LocaleKeys.ownerVisitTenantSara,
+      property: LocaleKeys.ownerVisitPropertyJeddahStudio,
+      dateLabel: LocaleKeys.ownerVisitDateSundayAtTwo,
       detailDate: '',
       time: '',
       memberSince: '',
@@ -57,10 +57,10 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
     ),
     OwnerVisitRequestContent(
       id: 'shimmer-request-3',
-      initial: 'أ',
-      name: 'اسم المستأجر بالكامل',
-      property: 'اسم العقار والمنطقة',
-      dateLabel: 'الإثنين، 16 سبتمبر · 02:00 م',
+      initial: LocaleKeys.ownerVisitTenantKhaledInitial,
+      name: LocaleKeys.ownerVisitTenantKhaled,
+      property: LocaleKeys.ownerVisitPropertyDammamRoom,
+      dateLabel: LocaleKeys.ownerVisitDateMondayAtEleven,
       detailDate: '',
       time: '',
       memberSince: '',

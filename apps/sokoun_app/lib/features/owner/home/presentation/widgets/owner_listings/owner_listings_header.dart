@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -25,7 +26,7 @@ class OwnerListingsHeader extends StatelessWidget {
               Icon(Icons.add_rounded, color: AppColors.white, size: 18.r),
               5.szW,
               AppText(
-                'إضافة عقار',
+                LocaleKeys.ownerPropertiesAdd,
                 color: AppColors.white,
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w900,
@@ -35,7 +36,7 @@ class OwnerListingsHeader extends StatelessWidget {
         ),
         const Spacer(),
         AppText(
-          'عقاراتي',
+          LocaleKeys.ownerPropertiesTitle,
           color: AppColors.sokoonNavy,
           fontSize: 20.sp,
           fontWeight: FontWeight.w900,

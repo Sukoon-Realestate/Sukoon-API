@@ -47,7 +47,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
   @override
   void dispose() {
-    if (_initialFavorites != null) _pagifyController.dispose();
     _saveCubit?.close();
     super.dispose();
   }

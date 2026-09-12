@@ -7,7 +7,7 @@ SHELL := /bin/bash
 
 .PHONY: help clean run apk ipa appbundle ios upgrade \
 	handlePods openXcode flutterfireSetup translations \
-	gradleFix clearGradleCache buildIos distribute \
+	architectureCheck gradleFix clearGradleCache buildIos distribute \
 	distributeAndroid fingerPrint kill sha
 
 # Show available commands
@@ -24,6 +24,7 @@ help:
 	@echo "  make openXcode"
 	@echo "  make flutterfireSetup"
 	@echo "  make translations"
+	@echo "  make architectureCheck"
 	@echo "  make gradleFix"
 	@echo "  make clearGradleCache"
 	@echo "  make buildIos"
@@ -79,6 +80,10 @@ flutterfireSetup:
 # Generate translations
 translations:
 	cd ../.. && dart run generate/strings/main.dart
+
+# Verify feature-layer architecture invariants
+architectureCheck:
+	flutter test --no-pub test/feature_architecture_test.dart
 
 # Stop Gradle and remove lock files
 gradleFix:

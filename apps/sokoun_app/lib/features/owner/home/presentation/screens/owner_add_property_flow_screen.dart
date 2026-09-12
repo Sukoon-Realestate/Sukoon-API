@@ -8,6 +8,7 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 
+import '../../data/owner_add_property_mapper.dart';
 import '../../data/models/owner_add_property_content.dart';
 import '../cubits/create_property_cubit.dart';
 import '../cubits/update_property_cubit.dart';
@@ -57,13 +58,12 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
     super.initState();
     _pageController = PageController();
     final PropertyDetailsModel? property = widget.property;
-    _form = property == null
-        ? OwnerAddPropertyFormState.initial()
-        : _formFromProperty(property);
-    _selectedGovernorate = property == null
+    final OwnerPropertyFormSeed? seed = property == null
         ? null
-        : _governorateFromProperty(property);
-    _selectedCity = property == null ? null : _cityFromProperty(property);
+        : OwnerAddPropertyMapper.fromProperty(property);
+    _form = seed?.form ?? OwnerAddPropertyFormState.initial();
+    _selectedGovernorate = seed?.governorate;
+    _selectedCity = seed?.city;
     _titleController = TextEditingController(text: _form.title);
     _streetController = TextEditingController(text: _form.street);
     _bedroomsController = TextEditingController(text: _form.bedrooms);
@@ -99,123 +99,6 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
   }
 
   bool get _isEditing => widget.property != null;
-
-  OwnerAddPropertyFormState _formFromProperty(PropertyDetailsModel property) {
-    final Set<String> amenities = property.amenityLabels
-        .where(OwnerAddPropertyContent.amenityOptions.contains)
-        .toSet();
-    if (property.isFurnished) {
-      amenities.add('مفروش');
-    }
-    final List<String> locationParts = [
-      property.district,
-      property.city.name,
-      property.city.governorateName,
-    ].where((part) => part.trim().isNotEmpty).toList(growable: false);
-
-    return OwnerAddPropertyFormState.initial().copyWith(
-      title: property.title,
-      propertyType: property.propertyTypeLabel,
-      governorate: property.city.governorateName,
-      district: property.city.name.isNotEmpty
-          ? property.city.name
-          : property.district,
-      street: property.street.isNotEmpty ? property.street : property.district,
-      bedrooms: _positiveNumberText(property.bedrooms),
-      bathrooms: _positiveNumberText(property.bathrooms),
-      space: property.space.isNotEmpty
-          ? property.space
-          : _positiveNumberText(property.area),
-      floor: property.floor.toString(),
-      buildingYear: _positiveNumberText(property.buildingYear),
-      mapQuery: locationParts.join('، '),
-      isLocationSelected: locationParts.isNotEmpty,
-      existingPhotoUrls: property.imageUrls
-          .take(OwnerAddPropertyContent.maxPhotoCount)
-          .toList(growable: false),
-      monthlyPrice: property.price,
-      deposit: _depositLabel(property.deposit),
-      rentalDuration: _positiveNumberText(property.rentalPeriod),
-      rentalUnit: _rentalUnitLabel(property.pricePeriod),
-      amenities: amenities,
-      description: property.description,
-      smokingPolicy: property.smokingAllowed ? 'مسموح' : 'ممنوع',
-      suitableFor: _suitableForLabel(property.suitableFor),
-      ownershipProofUrl: property.ownershipProof,
-    );
-  }
-
-  OwnerPropertyLocationModel? _governorateFromProperty(
-    PropertyDetailsModel property,
-  ) {
-    final String id = property.city.governorate;
-    final String name = property.city.governorateName;
-    if (id.isEmpty && name.isEmpty) {
-      return null;
-    }
-    return OwnerPropertyLocationModel(
-      id: id,
-      name: name,
-      slug: '',
-      createdAt: '',
-      updatedAt: '',
-    );
-  }
-
-  OwnerPropertyLocationModel? _cityFromProperty(PropertyDetailsModel property) {
-    if (property.city.id.isEmpty && property.city.name.isEmpty) {
-      return null;
-    }
-    return OwnerPropertyLocationModel(
-      id: property.city.id,
-      name: property.city.name,
-      slug: property.city.slug,
-      createdAt: property.city.createdAt,
-      updatedAt: property.city.updatedAt,
-    );
-  }
-
-  String _positiveNumberText(num value) => value > 0 ? '$value' : '';
-
-  String _depositLabel(String value) {
-    return const {
-          'none': 'بدون تأمين',
-          '0': 'بدون تأمين',
-          'half_month': 'نصف شهر',
-          '0.5': 'نصف شهر',
-          'one_month': 'شهر واحد',
-          '1': 'شهر واحد',
-          'two_months': 'شهرين',
-          '2': 'شهرين',
-        }[value] ??
-        (OwnerAddPropertyContent.depositOptions.contains(value) ? value : '');
-  }
-
-  String _rentalUnitLabel(String value) {
-    return const {
-          'daily': 'يوم',
-          'weekly': 'أسبوع',
-          'monthly': 'شهر',
-          'yearly': 'سنة',
-        }[value] ??
-        (OwnerAddPropertyContent.rentalUnitOptions.contains(value)
-            ? value
-            : 'شهر');
-  }
-
-  String _suitableForLabel(String value) {
-    return const {
-          'all': 'الكل',
-          'males_only': 'ولاد فقط',
-          'females_only': 'بنات فقط',
-          'families': 'عائلات',
-          'individuals': 'أفراد',
-          'shared': 'مشاركة',
-        }[value] ??
-        (OwnerAddPropertyContent.suitableForOptions.contains(value)
-            ? value
-            : '');
-  }
 
   void _updateForm(OwnerAddPropertyFormState Function() update) {
     setState(() => _form = update());
@@ -385,9 +268,12 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
         propertyId: property.id,
         form: _form,
         onSuccess: (response) {
-          updatedProperty = _mergeFormIntoProperty(
+          updatedProperty = OwnerAddPropertyMapper.mergeIntoProperty(
             original: property,
             response: response,
+            form: _form,
+            selectedGovernorate: _selectedGovernorate,
+            selectedCity: _selectedCity,
           );
           wasSubmitted = true;
         },
@@ -409,66 +295,6 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
     }
   }
 
-  PropertyDetailsModel _mergeFormIntoProperty({
-    required PropertyDetailsModel original,
-    required PropertyDetailsModel response,
-  }) {
-    final Map<String, dynamic> body = _form.toRequestBody();
-    final List<String> amenities = [
-      if (body['has_wifi'] == true) 'wifi',
-      if (body['has_elevator'] == true) 'elevator',
-      if (body['has_garage'] == true) 'garage',
-      if (body['has_security'] == true) 'security',
-      if (body['has_balcony'] == true) 'balcony',
-      if (body['has_air_conditioning'] == true) 'air_conditioning',
-      if (body['near_metro'] == true) 'near_metro',
-      if (body['has_natural_gas'] == true) 'natural_gas',
-      if (body['has_electricity_meter'] == true) 'electricity_meter',
-      if (body['has_water_meter'] == true) 'water_meter',
-    ];
-    final OwnerPropertyLocationModel? selectedCity = _selectedCity;
-    final OwnerPropertyLocationModel? selectedGovernorate =
-        _selectedGovernorate;
-    final PropertyDetailsModel property = original.copyWith(
-      mainImage: response.mainImage.isEmpty
-          ? original.mainImage
-          : response.mainImage,
-      images: response.images.isEmpty ? original.images : response.images,
-    );
-    final CityModel city = selectedCity == null
-        ? property.city
-        : property.city.copyWith(
-            id: selectedCity.id,
-            name: selectedCity.name,
-            slug: selectedCity.slug,
-            governorate: selectedGovernorate?.id,
-            governorateName: selectedGovernorate?.name,
-          );
-
-    return property.copyWith(
-      title: _form.title.trim(),
-      description: _form.description.trim(),
-      price: _form.monthlyPrice.trim(),
-      pricePeriod: body['price_period'] as String,
-      propertyType: body['property_type'] as String,
-      isFurnished: body['is_furnished'] as bool,
-      bedrooms: int.parse(_form.bedrooms),
-      bathrooms: int.parse(_form.bathrooms),
-      area: int.parse(_form.space),
-      space: _form.space.trim(),
-      floor: int.parse(_form.floor),
-      rentalPeriod: int.parse(_form.rentalDuration),
-      suitableFor: body['suitable_for'] as String,
-      smokingAllowed: body['smoking_allowed'] as bool,
-      city: city,
-      district: _form.district,
-      street: _form.street.trim(),
-      buildingYear: int.parse(_form.buildingYear),
-      deposit: body['deposit'] as String,
-      amenities: amenities,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -483,7 +309,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
               AddPropertyBasicsPage(
                 title: _isEditing
                     ? LocaleKeys.ownerPropertiesEditTitle
-                    : 'إضافة عقار جديد',
+                    : LocaleKeys.ownerAddPropertyTitle,
                 form: _form,
                 titleController: _titleController,
                 streetController: _streetController,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:sokoun_app/features/shared/auth/data/models/register.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/register.dart';
@@ -18,32 +19,23 @@ class RegisterFlowScreen extends StatefulWidget {
 }
 
 class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
-  static const String _basicInfoRoute = '/basic-info';
-  static const String _kycIntroRoute = '/kyc-intro';
-  static const String _uploadDocumentsRoute = '/upload-documents';
-  static const String _pendingReviewRoute = '/pending-review';
-  static const String _approvedRoute = '/approved';
-
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
-
-  void _pushRoute(String route) {
-    _navigatorKey.currentState?.pushNamed(route);
-  }
-
-  void _replaceRoute(String route) {
-    _navigatorKey.currentState?.pushReplacementNamed(route);
-  }
+  _RegisterFlowStep _step = _RegisterFlowStep.basicInfo;
 
   void _goBack() {
-    _navigatorKey.currentState?.pop();
+    setState(() {
+      _step = switch (_step) {
+        _RegisterFlowStep.uploadDocuments => _RegisterFlowStep.kycIntro,
+        _ => _RegisterFlowStep.basicInfo,
+      };
+    });
   }
 
   void _handleBasicInfoSubmitted() {
-    _pushRoute(_kycIntroRoute);
+    setState(() => _step = _RegisterFlowStep.kycIntro);
   }
 
   void _handleRegisterSuccess() {
-    _replaceRoute(_pendingReviewRoute);
+    setState(() => _step = _RegisterFlowStep.pendingReview);
   }
 
   String _maskedNationalId(String? value) {
@@ -60,58 +52,54 @@ class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
     final currentUserType = UserTypeHelper.instance.currentUserType;
     return BlocProvider(
       create: (_) => RegisterCubit(),
-      child: Navigator(
-        key: _navigatorKey,
-        initialRoute: _basicInfoRoute,
-        onGenerateRoute: (settings) {
-          switch (settings.name) {
-            case _basicInfoRoute:
-              return MaterialPageRoute(
-                builder: (_) => RegisterScreen(
-                  userType: currentUserType,
-                  onSubmit: _handleBasicInfoSubmitted,
-                ),
-              );
-            case _kycIntroRoute:
-              return MaterialPageRoute(
-                builder: (context) => KycIntroScreen(
-                  onBack: _goBack,
-                  onUploadDocuments: () => _pushRoute(_uploadDocumentsRoute),
-                  onSkip: () async => await context
-                      .read<RegisterCubit>()
-                      .register(onSuccess: _handleRegisterSuccess),
-                ),
-              );
-            case _uploadDocumentsRoute:
-              return MaterialPageRoute(
-                builder: (_) => KycUploadDocumentsScreen(
-                  onBack: _goBack,
-                  onRegisterSuccess: _handleRegisterSuccess,
-                ),
-              );
-            case _pendingReviewRoute:
-              return MaterialPageRoute(
-                builder: (context) {
-                  final RegisterBody body = context
-                      .read<RegisterCubit>()
-                      .registerBody;
-
-                  return KycPendingScreen(
-                    fullName: '${body.firstName} ${body.lastName}'.trim(),
-                    maskedNationalId: _maskedNationalId(body.nationalId),
-                    onBackHome: () => _replaceRoute(_approvedRoute),
-                  );
-                },
-              );
-            case _approvedRoute:
-              return MaterialPageRoute(
-                builder: (_) => const KycApprovedScreen(),
-              );
-            default:
-              return null;
-          }
-        },
+      child: Builder(
+        builder: (context) => _buildCurrentStep(context, currentUserType),
       ),
     );
   }
+
+  Widget _buildCurrentStep(BuildContext context, UserType currentUserType) {
+    return switch (_step) {
+      _RegisterFlowStep.basicInfo => RegisterScreen(
+        userType: currentUserType,
+        onSubmit: _handleBasicInfoSubmitted,
+      ),
+      _RegisterFlowStep.kycIntro => KycIntroScreen(
+        onBack: _goBack,
+        onUploadDocuments: () {
+          setState(() => _step = _RegisterFlowStep.uploadDocuments);
+        },
+        onSkip: () async => context.read<RegisterCubit>().register(
+          onSuccess: _handleRegisterSuccess,
+        ),
+      ),
+      _RegisterFlowStep.uploadDocuments => KycUploadDocumentsScreen(
+        onBack: _goBack,
+        onRegisterSuccess: _handleRegisterSuccess,
+      ),
+      _RegisterFlowStep.pendingReview => KycPendingScreen(
+        fullName: _fullName(context),
+        maskedNationalId: _maskedNationalId(
+          context.read<RegisterCubit>().registerBody.nationalId,
+        ),
+        onBackHome: () {
+          setState(() => _step = _RegisterFlowStep.approved);
+        },
+      ),
+      _RegisterFlowStep.approved => const KycApprovedScreen(),
+    };
+  }
+
+  String _fullName(BuildContext context) {
+    final RegisterBody body = context.read<RegisterCubit>().registerBody;
+    return '${body.firstName} ${body.lastName}'.trim();
+  }
+}
+
+enum _RegisterFlowStep {
+  basicInfo,
+  kycIntro,
+  uploadDocuments,
+  pendingReview,
+  approved,
 }

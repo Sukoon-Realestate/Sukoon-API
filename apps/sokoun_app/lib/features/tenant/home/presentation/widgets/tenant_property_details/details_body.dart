@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:melos_core/core/extensions/widget_extension.dart';
-import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
 
 import 'bottom_actions.dart';
@@ -39,11 +37,6 @@ class TenantPropertyDetailsBody extends StatelessWidget {
           isSaved: isSaved,
           onSavedPressed: onSavedPressed,
         ),
-        // TenantPropertyBottomActions(
-        //   property: property,
-        //   isSaved: isSaved,
-        //   onSavedPressed: onSavedPressed,
-        // ).showIf(condition: () => UserModel.isTenant),
       ],
     );
   }

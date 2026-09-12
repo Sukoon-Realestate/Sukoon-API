@@ -19,7 +19,7 @@ class KycPrivacyCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
       decoration: BoxDecoration(
-        color: const Color(0xFFF0FDF9),
+        color: AppColors.mintPale,
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(color: AppColors.tealAlpha13),
       ),

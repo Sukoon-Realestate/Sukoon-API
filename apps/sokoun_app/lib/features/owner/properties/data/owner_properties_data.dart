@@ -3,6 +3,10 @@ part of '../imports.dart';
 abstract final class OwnerPropertiesData {
   static const int pageSize = 10;
   static const String cacheKey = 'owner_properties';
+  static const String governoratesCacheKey = 'owner_property_governorates';
+
+  static String citiesCacheKey(String governorateId) =>
+      'owner_property_cities_$governorateId';
 
   static Future<OwnerPropertyLocationsResponse> getGovernorates() async {
     final response = await injector<NetworkService>().callApi(

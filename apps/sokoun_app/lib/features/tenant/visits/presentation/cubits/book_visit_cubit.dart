@@ -1,7 +1,7 @@
 part of '../../imports.dart';
 
 class BookVisitCubit extends AsyncCubit<Map<String, dynamic>> {
-  BookVisitCubit() : super({});
+  BookVisitCubit() : super(const {});
 
   Future<void> bookVisit({
     required String propertyId,

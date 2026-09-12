@@ -19,7 +19,7 @@ class ChatSearchScreen extends StatefulWidget {
 
 class _ChatSearchScreenState extends State<ChatSearchScreen> {
   late final TextEditingController _searchController;
-  String _query = 'أحمد';
+  String _query = '';
 
   List<ConversationContent> get _results {
     return ChatContent.searchConversations

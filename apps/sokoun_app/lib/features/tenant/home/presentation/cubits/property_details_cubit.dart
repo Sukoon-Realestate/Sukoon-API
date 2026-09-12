@@ -4,7 +4,7 @@ import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 
 class PropertyDetailsCubit extends AsyncCubit<PropertyDetailsModel> {
-  PropertyDetailsCubit() : super(PropertyDetailsModel.initial());
+  PropertyDetailsCubit() : super(const PropertyDetailsModel.initial());
 
   Future<void> getPropertyDetails(String id) async {
     await executeAsyncWithBaseModel(

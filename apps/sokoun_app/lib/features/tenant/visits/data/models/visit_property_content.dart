@@ -1,6 +1,6 @@
 part of '../../imports.dart';
 
-class VisitPropertyContent {
+class VisitPropertyContent extends Equatable {
   const VisitPropertyContent({
     this.id = '',
     required this.title,
@@ -48,4 +48,7 @@ class VisitPropertyContent {
       meta: meta ?? this.meta,
     );
   }
+
+  @override
+  List<Object?> get props => [id, title, meta];
 }

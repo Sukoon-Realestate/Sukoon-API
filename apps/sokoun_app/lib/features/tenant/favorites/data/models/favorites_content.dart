@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 
 class FavoritePropertyContent extends Equatable {
   const FavoritePropertyContent({
@@ -249,11 +250,11 @@ class FavoritePropertyContent extends Equatable {
 }
 
 abstract final class FavoritesContent {
-  static const List<FavoritePropertyContent> initialItems = [
+  static List<FavoritePropertyContent> get initialItems => [
     FavoritePropertyContent(
       id: '1',
       mainImage: '',
-      title: 'شقة مفروشة — مدينة نصر',
+      title: LocaleKeys.ownerPropertyNasrCityTitle,
       propertyType: 'apartment',
       isFurnished: true,
       bedrooms: 3,
@@ -268,7 +269,7 @@ abstract final class FavoritesContent {
     FavoritePropertyContent(
       id: '2',
       mainImage: '',
-      title: 'ستوديو عصري — التجمع',
+      title: LocaleKeys.favoritesModernStudioTitle,
       propertyType: 'studio',
       isFurnished: true,
       bedrooms: 1,
@@ -283,7 +284,7 @@ abstract final class FavoritesContent {
     FavoritePropertyContent(
       id: '3',
       mainImage: '',
-      title: 'شقة 3 غرف — المهندسين',
+      title: LocaleKeys.ownerPropertyMohandessinTitle,
       propertyType: 'apartment',
       isFurnished: false,
       bedrooms: 3,

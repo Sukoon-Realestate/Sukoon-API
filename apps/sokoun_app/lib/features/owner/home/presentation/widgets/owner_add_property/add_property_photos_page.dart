@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
@@ -40,19 +41,22 @@ class AddPropertyPhotosPage extends StatelessWidget {
         OwnerAddPropertyContent.minimumPhotoCount - photoCount;
 
     return AddPropertyStepShell(
-      title: 'صور العقار',
+      title: LocaleKeys.ownerPropertiesPhotos,
       activeSegments: 2,
       segmentCount: 5,
-      progressSubtitle: 'الخطوة 2 من 5 — صور العقار',
-      primaryLabel: 'التالي — فيديو العقار',
+      progressSubtitle: LocaleKeys.ownerAddPropertyPhotosProgress,
+      primaryLabel: LocaleKeys.ownerAddPropertyNextVideo,
       onPrimaryTap: isReady ? onNext : null,
       onBack: onBack,
       children: [
         AddPropertyInfoBanner(
-          title: isReady ? 'الصور جاهزة للمراجعة' : null,
+          title: isReady ? LocaleKeys.ownerAddPropertyPhotosReady : null,
           text: isReady
-              ? 'تقدر تضيف صور زيادة أو تكمل لخطوة الفيديو'
-              : 'اضغط على مربعات الإضافة لرفع $remaining صور كمان',
+              ? LocaleKeys.ownerAddPropertyPhotosReadyDescription
+              : LocaleKeys.ownerAddPropertyPhotosRemaining.replaceAll(
+                  '{count}',
+                  '$remaining',
+                ),
           backgroundColor: isReady ? AppColors.greenPale : AppColors.orangePale,
           borderColor: isReady ? AppColors.greenAlpha19 : AppColors.goldAlpha15,
           iconColor: isReady ? AppColors.green : AppColors.brown,
@@ -119,7 +123,12 @@ class _PhotoGridSection extends StatelessWidget {
         ),
         10.szH,
         AppText(
-          '$photoCount / ${OwnerAddPropertyContent.minimumPhotoCount} صور مرفوعة (الحد الأدنى ${OwnerAddPropertyContent.minimumPhotoCount})',
+          LocaleKeys.ownerAddPropertyPhotosCount
+              .replaceAll('{count}', '$photoCount')
+              .replaceAll(
+                '{minimum}',
+                '${OwnerAddPropertyContent.minimumPhotoCount}',
+              ),
           color: isReady ? AppColors.green : AppColors.sokoonGray,
           fontSize: 12.sp,
           fontWeight: FontWeight.w700,
@@ -189,7 +198,7 @@ class _PhotoTile extends StatelessWidget {
                         ),
                         4.szH,
                         AppText(
-                          'إضافة',
+                          LocaleKeys.ownerPropertiesAddPhoto,
                           color: AppColors.sokoonMuted,
                           fontSize: 10.sp,
                           fontWeight: FontWeight.w600,
@@ -233,7 +242,7 @@ class _PhotoTipsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AddPropertySectionCard(
-      title: 'نصائح للصور',
+      title: LocaleKeys.ownerAddPropertyPhotoTips,
       child: Column(
         children: [
           for (

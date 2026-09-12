@@ -27,7 +27,7 @@ class ProfileAvatar extends StatelessWidget {
   String get _initial {
     final String normalizedName = name.trim();
     if (normalizedName.isEmpty) {
-      return 'س';
+      return '?';
     }
     return normalizedName.characters.first;
   }

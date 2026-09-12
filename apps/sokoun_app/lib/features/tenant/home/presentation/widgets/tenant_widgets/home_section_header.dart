@@ -25,24 +25,24 @@ class HomeSectionHeader extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-          Flexible(
-            child: TextButton(
-              onPressed: () => Go.to(const TenantSearchScreen()),
-              style: TextButton.styleFrom(
-                minimumSize: Size.zero,
-                padding: EdgeInsets.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: AppText(
-                LocaleKeys.tenantHomeViewAll,
-                color: AppColors.sokoonTeal,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w700,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+        Flexible(
+          child: TextButton(
+            onPressed: () => Go.to(const TenantSearchScreen()),
+            style: TextButton.styleFrom(
+              minimumSize: Size.zero,
+              padding: EdgeInsets.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: AppText(
+              LocaleKeys.tenantHomeViewAll,
+              color: AppColors.sokoonTeal,
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w700,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
+        ),
       ],
     );
   }

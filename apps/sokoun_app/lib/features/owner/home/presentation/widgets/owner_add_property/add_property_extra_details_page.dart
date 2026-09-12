@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -35,17 +36,20 @@ class AddPropertyExtraDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AddPropertyStepShell(
-      title: 'تفاصيل العقار',
+      title: LocaleKeys.ownerAddPropertyDetails,
       activeSegments: 5,
       segmentCount: 5,
-      progressSubtitle: 'الخطوة 5 من 5 — التفاصيل الإضافية',
+      progressSubtitle: LocaleKeys.ownerAddPropertyExtraProgress,
       primaryLabel:
-          primaryLabel ?? (isSubmitting ? 'جار الإرسال...' : 'إرسال للمراجعة'),
+          primaryLabel ??
+          (isSubmitting
+              ? LocaleKeys.ownerAddPropertySubmitting
+              : LocaleKeys.ownerAddPropertySubmitReview),
       onPrimaryTap: form.isExtraDetailsReady && !isSubmitting ? onNext : null,
       onBack: onBack,
       children: [
         AddPropertySectionCard(
-          title: 'التدخين مسموح؟',
+          title: LocaleKeys.ownerAddPropertySmokingQuestion,
           child: AddPropertyChipWrap(
             chips: OwnerAddPropertyContent.singleSelectedChips(
               labels: OwnerAddPropertyContent.smokingOptionLabels,
@@ -55,7 +59,7 @@ class AddPropertyExtraDetailsPage extends StatelessWidget {
           ),
         ),
         AddPropertySectionCard(
-          title: 'العقار مناسب لـ',
+          title: LocaleKeys.ownerAddPropertySuitableFor,
           child: AddPropertyChipWrap(
             chips: OwnerAddPropertyContent.singleSelectedChips(
               labels: OwnerAddPropertyContent.suitableForOptions,
@@ -84,8 +88,8 @@ class _OwnershipProofSection extends StatelessWidget {
     final bool isUploaded = form.isProofUploaded;
 
     return AddPropertySectionCard(
-      title: 'إثبات ملكية العقار',
-      subtitle: 'ممكن ترفع وصل كهربا، وصل مياه، أو عقد الملكية',
+      title: LocaleKeys.ownerAddPropertyProofTitle,
+      subtitle: LocaleKeys.ownerAddPropertyProofSubtitle,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -117,7 +121,9 @@ class _OwnershipProofSection extends StatelessWidget {
                   ),
                   8.szH,
                   AppText(
-                    isUploaded ? form.proofFileName : 'ارفع إثبات الملكية',
+                    isUploaded
+                        ? form.proofFileName
+                        : LocaleKeys.ownerAddPropertyProofUpload,
                     color: AppColors.sokoonNavy,
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w800,
@@ -127,7 +133,9 @@ class _OwnershipProofSection extends StatelessWidget {
                   ),
                   4.szH,
                   AppText(
-                    isUploaded ? 'اضغط لتغيير المستند' : 'JPG · PNG',
+                    isUploaded
+                        ? LocaleKeys.ownerAddPropertyProofChange
+                        : LocaleKeys.ownerAddPropertyProofFormats,
                     color: isUploaded ? AppColors.green : AppColors.sokoonGray,
                     fontSize: 11.sp,
                     fontWeight: FontWeight.w500,
@@ -139,11 +147,11 @@ class _OwnershipProofSection extends StatelessWidget {
           10.szH,
           AddPropertyInfoBanner(
             title: form.isProofUploaded
-                ? 'تم إرفاق المستند للمراجعة'
-                : 'المستند ده للمراجعة الداخلية فقط',
+                ? LocaleKeys.ownerAddPropertyProofAttached
+                : LocaleKeys.ownerAddPropertyProofInternal,
             text: form.isProofUploaded
-                ? 'مش هيظهر للمستخدمين أو المستأجرين'
-                : 'ومش هيظهر للمستخدمين أو المستأجرين',
+                ? LocaleKeys.ownerAddPropertyProofPrivate
+                : LocaleKeys.ownerAddPropertyProofPrivateContinuation,
             backgroundColor: form.isProofUploaded
                 ? AppColors.greenPale
                 : AppColors.mintPale,

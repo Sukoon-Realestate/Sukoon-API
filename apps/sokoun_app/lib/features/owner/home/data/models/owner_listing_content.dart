@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 
 class OwnerListingStatusContent {
@@ -46,68 +47,71 @@ class OwnerListingContent {
 }
 
 abstract final class OwnerListingsContent {
-  static const verifiedStatus = OwnerListingStatusContent(
-    label: 'موثّق',
-    icon: Icons.verified_rounded,
-    backgroundColor: AppColors.goldPale,
-    foregroundColor: AppColors.gold,
-  );
+  static OwnerListingStatusContent get verifiedStatus =>
+      OwnerListingStatusContent(
+        label: LocaleKeys.ownerPropertyStatusVerified,
+        icon: Icons.verified_rounded,
+        backgroundColor: AppColors.goldPale,
+        foregroundColor: AppColors.gold,
+      );
 
-  static const pendingStatus = OwnerListingStatusContent(
-    label: 'قيد المراجعة',
-    icon: Icons.schedule_rounded,
-    backgroundColor: AppColors.orangePale,
-    foregroundColor: AppColors.amber,
-  );
+  static OwnerListingStatusContent get pendingStatus =>
+      OwnerListingStatusContent(
+        label: LocaleKeys.ownerPropertyStatusPending,
+        icon: Icons.schedule_rounded,
+        backgroundColor: AppColors.orangePale,
+        foregroundColor: AppColors.amber,
+      );
 
-  static const hiddenStatus = OwnerListingStatusContent(
-    label: 'مخفي',
-    icon: Icons.visibility_off_outlined,
-    backgroundColor: AppColors.grayBackground,
-    foregroundColor: AppColors.sokoonGray,
-  );
+  static OwnerListingStatusContent get hiddenStatus =>
+      OwnerListingStatusContent(
+        label: LocaleKeys.ownerPropertyStatusHidden,
+        icon: Icons.visibility_off_outlined,
+        backgroundColor: AppColors.grayBackground,
+        foregroundColor: AppColors.sokoonGray,
+      );
 
-  static const actions = [
+  static List<OwnerListingActionContent> get actions => [
     OwnerListingActionContent(
-      label: 'تعديل',
+      label: LocaleKeys.ownerPropertiesEdit,
       backgroundColor: AppColors.bluePale,
       foregroundColor: AppColors.blue,
     ),
     OwnerListingActionContent(
-      label: 'إحصاءات',
+      label: LocaleKeys.ownerPropertiesAnalytics,
       backgroundColor: AppColors.mintLight,
       foregroundColor: AppColors.sokoonTeal,
     ),
     OwnerListingActionContent(
-      label: 'حذف',
+      label: LocaleKeys.ownerPropertiesDelete,
       backgroundColor: AppColors.redPale,
       foregroundColor: AppColors.red,
     ),
   ];
 
-  static const listings = [
+  static List<OwnerListingContent> get listings => [
     OwnerListingContent(
-      title: 'شقة مفروشة — مدينة نصر',
+      title: LocaleKeys.ownerPropertyNasrCityTitle,
       status: verifiedStatus,
-      price: '6,500 ج/شهر',
-      views: '142 مشاهدة',
-      visits: '3 زيارة',
+      price: '6,500 ${LocaleKeys.ownerPropertiesPriceUnit}',
+      views: '142 ${LocaleKeys.ownerPropertiesViewUnit}',
+      visits: '3 ${LocaleKeys.ownerPropertiesVisitUnit}',
       icon: Icons.apartment_rounded,
     ),
     OwnerListingContent(
-      title: 'ستوديو — التجمع الخامس',
+      title: LocaleKeys.ownerPropertyStudioTitle,
       status: pendingStatus,
-      price: '4,200 ج/شهر',
-      views: '67 مشاهدة',
-      visits: '0 زيارة',
+      price: '4,200 ${LocaleKeys.ownerPropertiesPriceUnit}',
+      views: '67 ${LocaleKeys.ownerPropertiesViewUnit}',
+      visits: '0 ${LocaleKeys.ownerPropertiesVisitUnit}',
       icon: Icons.meeting_room_outlined,
     ),
     OwnerListingContent(
-      title: 'شقة 3 غرف — المهندسين',
+      title: LocaleKeys.ownerPropertyMohandessinTitle,
       status: hiddenStatus,
-      price: '8,800 ج/شهر',
-      views: '0 مشاهدة',
-      visits: '0 زيارة',
+      price: '8,800 ${LocaleKeys.ownerPropertiesPriceUnit}',
+      views: '0 ${LocaleKeys.ownerPropertiesViewUnit}',
+      visits: '0 ${LocaleKeys.ownerPropertiesVisitUnit}',
       icon: Icons.home_work_outlined,
     ),
   ];

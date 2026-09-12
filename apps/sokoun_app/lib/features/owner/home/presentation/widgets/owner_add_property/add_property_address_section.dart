@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_dropinity.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
@@ -40,7 +41,6 @@ class AddPropertyAddressSection extends StatelessWidget {
   Future<List<OwnerPropertyLocationModel>> _getCities(
     BuildContext context,
     int page,
-    String search,
   ) async {
     final OwnerPropertyLocationModel? governorate = selectedGovernorate;
     if (governorate == null) {
@@ -49,7 +49,7 @@ class AddPropertyAddressSection extends StatelessWidget {
     final OwnerPropertyLocationsResponse response =
         await OwnerPropertiesData.getCities(
           governorateId: governorate.id,
-          search: search,
+          search: '',
         );
     return response.results;
   }
@@ -59,7 +59,7 @@ class AddPropertyAddressSection extends StatelessWidget {
     final OwnerPropertyLocationModel? governorate = selectedGovernorate;
 
     return AddPropertySectionCard(
-      title: 'المنطقة والعنوان',
+      title: LocaleKeys.ownerAddPropertyAddressSection,
       child: Column(
         children: [
           AppDropinity<
@@ -69,9 +69,12 @@ class AddPropertyAddressSection extends StatelessWidget {
             key: ValueKey('owner-property-governorate-$dropdownGeneration'),
             listHeight: 220.h,
             initialValue: selectedGovernorate,
-            hint: 'اختر',
-            title: 'المحافظة',
+            hint: LocaleKeys.ownerAddPropertyChoose,
+            title: LocaleKeys.ownerAddPropertyGovernorate,
             asyncCall: _getGovernorates,
+            cacheKey: OwnerPropertiesData.governoratesCacheKey,
+            cacheToJson: (item) => item.toJson(),
+            cacheFromJson: OwnerPropertyLocationModel.fromJson,
             getLabel: (item) => item.name,
             onChanged: onGovernorateChanged,
           ),
@@ -86,8 +89,8 @@ class AddPropertyAddressSection extends StatelessWidget {
                         'owner-property-city-disabled-$dropdownGeneration',
                       ),
                       initialValue: null,
-                      hint: 'اختر',
-                      title: 'المدينة',
+                      hint: LocaleKeys.ownerAddPropertyChoose,
+                      title: LocaleKeys.ownerAddPropertyCity,
                       values: const [],
                       getLabel: (item) => item.name,
                       onChanged: onCityChanged,
@@ -95,15 +98,20 @@ class AddPropertyAddressSection extends StatelessWidget {
                   : AppDropinity<
                       List<OwnerPropertyLocationModel>,
                       OwnerPropertyLocationModel
-                    >.withApiSearchRequest(
+                    >.withApiRequest(
                       key: ValueKey(
                         'owner-property-city-${governorate.id}-$dropdownGeneration',
                       ),
                       listHeight: 220.h,
                       initialValue: selectedCity,
-                      hint: 'اختر',
-                      title: 'المدينة',
-                      asyncSearchCall: _getCities,
+                      hint: LocaleKeys.ownerAddPropertyChoose,
+                      title: LocaleKeys.ownerAddPropertyCity,
+                      asyncCall: _getCities,
+                      cacheKey: OwnerPropertiesData.citiesCacheKey(
+                        governorate.id,
+                      ),
+                      cacheToJson: (item) => item.toJson(),
+                      cacheFromJson: OwnerPropertyLocationModel.fromJson,
                       getLabel: (item) => item.name,
                       onChanged: onCityChanged,
                     ),
@@ -111,13 +119,13 @@ class AddPropertyAddressSection extends StatelessWidget {
           ),
           10.szH,
           AddPropertyField(
-            field: const AddPropertyFieldContent(
-              label: 'الشارع',
-              value: 'اكتب اسم الشارع',
+            field: AddPropertyFieldContent(
+              label: LocaleKeys.ownerAddPropertyStreet,
+              value: LocaleKeys.ownerAddPropertyStreetHint,
             ),
             controller: streetController,
             onChanged: onStreetChanged,
-            hint: 'اكتب اسم الشارع',
+            hint: LocaleKeys.ownerAddPropertyStreetHint,
           ),
         ],
       ),

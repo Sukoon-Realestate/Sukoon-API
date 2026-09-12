@@ -1,6 +1,6 @@
 part of '../../imports.dart';
 
-class OwnerPropertyEditResult {
+class OwnerPropertyEditResult extends Equatable {
   const OwnerPropertyEditResult({
     required this.property,
     required this.isDeleted,
@@ -44,4 +44,7 @@ class OwnerPropertyEditResult {
       isDeleted: isDeleted ?? this.isDeleted,
     );
   }
+
+  @override
+  List<Object?> get props => [property, isDeleted];
 }

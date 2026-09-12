@@ -19,6 +19,7 @@ class AvailablePlacesCubit extends AsyncCubit<AvailablePlacesModel> {
           toJson: (model) => model.toJson(),
         ),
       ),
+      withInternetInterceptor: true,
     );
   }
 }

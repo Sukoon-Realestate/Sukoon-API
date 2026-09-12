@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 
 import 'property_details_model.dart';
@@ -70,22 +71,22 @@ class TenantPropertyDetailsContent {
         TenantPropertyMetricContent(
           icon: Icons.bed_outlined,
           value: '${model.bedrooms}',
-          label: 'غرف',
+          label: LocaleKeys.tenantSearchResultsBeds,
         ),
         TenantPropertyMetricContent(
           icon: Icons.shower_outlined,
           value: '${model.bathrooms}',
-          label: 'حمام',
+          label: LocaleKeys.tenantSearchResultsBaths,
         ),
         TenantPropertyMetricContent(
           icon: Icons.square_foot_outlined,
           value: '${model.area}',
-          label: 'م²',
+          label: LocaleKeys.tenantSearchResultsSquareMeters,
         ),
         TenantPropertyMetricContent(
           icon: Icons.calendar_month_outlined,
           value: '${model.rentalPeriod}',
-          label: 'شهور',
+          label: LocaleKeys.tenantPropertyDetailsRentalMonths,
         ),
       ],
       description: model.description,
@@ -93,7 +94,9 @@ class TenantPropertyDetailsContent {
       photoLabels: model.photoLabels,
       nearbyPlaces: const [],
       ownerName: model.owner,
-      ownerMeta: model.isVerified ? 'مالك موثّق' : 'مالك',
+      ownerMeta: model.isVerified
+          ? LocaleKeys.tenantPropertyDetailsVerifiedOwner
+          : LocaleKeys.tenantPropertyDetailsOwner,
       imageColors: const [AppColors.tealDark, AppColors.sokoonTeal],
       imageUrls: model.imageUrls,
       latitude: model.latitude,
@@ -124,8 +127,8 @@ class TenantPropertyDetailsContent {
   final String latitude;
   final String longitude;
 
-  String get shortTitle => '$propertyType مفروشة — مدينة نصر';
-  String get shareUrl => 'https://sokoun.app/property/cairo-nasr-city-6500';
+  String get shortTitle => title;
+  String get shareUrl => 'https://sokoun.app/property/$id';
 }
 
 class TenantFilterFormState {

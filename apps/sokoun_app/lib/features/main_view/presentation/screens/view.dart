@@ -51,8 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _userType = widget.userType ?? UserTypeHelper.instance.currentUserType;
-    // _tabs = _userType.isOwner ? _buildOwnerTabs() : _buildTenantTabs();
-    _tabs = _buildTenantTabs();
+    _tabs = _userType.isOwner ? _buildOwnerTabs() : _buildTenantTabs();
     WidgetsBinding.instance.addPostFrameCallback((_) => _showLaunchDialogs());
   }
 
@@ -166,7 +165,10 @@ class _HomeScreenState extends State<HomeScreen> {
       onUpdatePressed: upgrader.sendUserToAppStore,
       child: Scaffold(
         backgroundColor: AppColors.scaffoldBackground,
-        body: _tabs.map((tab) => tab.screen).toList(growable: false)[_currentIndex],
+        body: IndexedStack(
+          index: _currentIndex,
+          children: _tabs.map((tab) => tab.screen).toList(growable: false),
+        ),
         bottomNavigationBar: HomeBottomNavigation(
           destinations: _tabs
               .map((tab) => tab.destination)

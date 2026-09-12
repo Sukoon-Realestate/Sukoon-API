@@ -438,39 +438,42 @@ class PropertyDetailsModel extends Equatable {
   String get pricePeriodLabel {
     switch (pricePeriod) {
       case 'daily':
-        return 'ج/يوم';
+        return LocaleKeys.tenantPropertyDetailsDailyPriceUnit;
       case 'weekly':
-        return 'ج/أسبوع';
+        return LocaleKeys.tenantPropertyDetailsWeeklyPriceUnit;
       case 'yearly':
-        return 'ج/سنة';
+        return LocaleKeys.tenantPropertyDetailsYearlyPriceUnit;
       case 'monthly':
       default:
-        return 'ج/شهر';
+        return LocaleKeys.tenantPropertyDetailsMonthlyPriceUnit;
     }
   }
 
   String get propertyTypeLabel {
     switch (propertyType) {
       case 'apartment':
-        return 'شقة';
+        return LocaleKeys.ownerAddPropertyApartment;
       case 'room':
-        return 'غرفة';
+        return LocaleKeys.ownerAddPropertyRoom;
       case 'duplex':
-        return 'دوبلكس';
+        return LocaleKeys.tenantPropertyDetailsDuplex;
       case 'villa':
-        return 'فيلا';
+        return LocaleKeys.ownerAddPropertyVilla;
       case 'floor':
-        return 'دور';
+        return LocaleKeys.ownerAddPropertyWholeFloor;
       case 'roof':
-        return 'روف';
+        return LocaleKeys.ownerAddPropertyRoof;
       case 'studio':
-        return 'استوديو';
+        return LocaleKeys.ownerAddPropertyStudio;
       default:
         return propertyType;
     }
   }
 
-  String get locationLabel => 'منطقة تقريبية · $district، ${city.name}';
+  String get locationLabel => LocaleKeys
+      .tenantPropertyDetailsApproximateLocation
+      .replaceAll('{district}', district)
+      .replaceAll('{city}', city.name);
 
   List<String> get imageUrls => [
     if (mainImage.isNotEmpty) mainImage,
@@ -478,7 +481,7 @@ class PropertyDetailsModel extends Equatable {
   ];
 
   List<String> get photoLabels => [
-    'الصورة الرئيسية',
+    LocaleKeys.tenantPropertyDetailsMainPhoto,
     ...images.map((image) => image.name),
   ];
 

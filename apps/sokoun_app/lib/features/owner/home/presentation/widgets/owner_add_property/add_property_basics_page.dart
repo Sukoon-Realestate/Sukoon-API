@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -42,11 +43,11 @@ class AddPropertyBasicsPage extends StatelessWidget {
     required this.onMapQueryChanged,
     required this.onLocationSelected,
     required this.onNext,
-    this.title = 'إضافة عقار جديد',
+    this.title,
     this.onBack,
   });
 
-  final String title;
+  final String? title;
   final OwnerAddPropertyFormState form;
   final TextEditingController titleController;
   final TextEditingController streetController;
@@ -77,16 +78,16 @@ class AddPropertyBasicsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AddPropertyStepShell(
-      title: title,
+      title: title ?? LocaleKeys.ownerAddPropertyTitle,
       activeSegments: 1,
       segmentCount: 5,
-      progressSubtitle: 'الخطوة 1 من 5 — معلومات العقار',
-      primaryLabel: 'التالي — الصور',
+      progressSubtitle: LocaleKeys.ownerAddPropertyBasicsProgress,
+      primaryLabel: LocaleKeys.ownerAddPropertyNextPhotos,
       onPrimaryTap: form.isBasicsReady ? onNext : null,
       onBack: onBack,
       children: [
         AddPropertySectionCard(
-          title: 'نوع العقار',
+          title: LocaleKeys.ownerAddPropertyType,
           child: AddPropertyChipWrap(
             chips: OwnerAddPropertyContent.singleSelectedChips(
               labels: OwnerAddPropertyContent.propertyTypeOptions,
@@ -96,15 +97,15 @@ class AddPropertyBasicsPage extends StatelessWidget {
           ),
         ),
         AddPropertySectionCard(
-          title: 'عنوان العقار',
+          title: LocaleKeys.ownerAddPropertyNameSection,
           child: AddPropertyField(
-            field: const AddPropertyFieldContent(
-              label: 'العنوان',
-              value: 'مثال: شقة مفروشة قريبة من المترو',
+            field: AddPropertyFieldContent(
+              label: LocaleKeys.ownerAddPropertyTitleLabel,
+              value: LocaleKeys.ownerAddPropertyTitleExample,
             ),
             controller: titleController,
             onChanged: onTitleChanged,
-            hint: 'اكتب عنواناً واضحاً للعقار',
+            hint: LocaleKeys.ownerAddPropertyTitleHint,
           ),
         ),
         AddPropertyAddressSection(
@@ -168,34 +169,34 @@ class _DetailsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final fields = [
       _NumberFieldConfig(
-        label: 'عدد الغرف',
+        label: LocaleKeys.ownerAddPropertyBedrooms,
         controller: bedroomsController,
         onChanged: onBedroomsChanged,
       ),
       _NumberFieldConfig(
-        label: 'عدد الحمامات',
+        label: LocaleKeys.ownerAddPropertyBathrooms,
         controller: bathroomsController,
         onChanged: onBathroomsChanged,
       ),
       _NumberFieldConfig(
-        label: 'المساحة (م²)',
+        label: LocaleKeys.ownerAddPropertySpace,
         controller: spaceController,
         onChanged: onSpaceChanged,
       ),
       _NumberFieldConfig(
-        label: 'الدور',
+        label: LocaleKeys.ownerAddPropertyFloor,
         controller: floorController,
         onChanged: onFloorChanged,
       ),
       _NumberFieldConfig(
-        label: 'سنة البناء',
+        label: LocaleKeys.ownerAddPropertyBuildingYear,
         controller: buildingYearController,
         onChanged: onBuildingYearChanged,
       ),
     ];
 
     return AddPropertySectionCard(
-      title: 'تفاصيل العقار',
+      title: LocaleKeys.ownerAddPropertyDetails,
       child: GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -241,8 +242,8 @@ class _MapSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AddPropertySectionCard(
-      title: 'موقع العقار على الخريطة',
-      subtitle: 'حدد موقع العقار بدقة عشان نراجع الإعلان بشكل أسرع',
+      title: LocaleKeys.ownerAddPropertyMapTitle,
+      subtitle: LocaleKeys.ownerAddPropertyMapSubtitle,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -276,7 +277,7 @@ class _MapSection extends StatelessWidget {
                     decoration: InputDecoration(
                       isCollapsed: true,
                       border: InputBorder.none,
-                      hintText: 'ابحث عن الموقع...',
+                      hintText: LocaleKeys.ownerAddPropertyMapSearch,
                       hintStyle: TextStyle(
                         color: AppColors.navyAlpha50,
                         fontSize: 12.sp,
@@ -338,8 +339,8 @@ class _MapSection extends StatelessWidget {
                   8.szW,
                   AppText(
                     form.isLocationSelected
-                        ? 'تم تحديد الموقع'
-                        : 'تحديد الموقع',
+                        ? LocaleKeys.ownerAddPropertyLocationSelected
+                        : LocaleKeys.ownerAddPropertySelectLocation,
                     color: AppColors.white,
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w900,
@@ -351,7 +352,7 @@ class _MapSection extends StatelessWidget {
           10.szH,
           if (form.isLocationSelected)
             AddPropertyInfoBanner(
-              title: 'الموقع المحدد',
+              title: LocaleKeys.ownerAddPropertySelectedLocation,
               text: form.mapQuery,
               backgroundColor: AppColors.greenPale,
               borderColor: AppColors.greenAlpha19,
@@ -359,8 +360,8 @@ class _MapSection extends StatelessWidget {
               icon: Icons.location_on_outlined,
             )
           else
-            const AddPropertyInfoBanner(
-              text: 'قد يظهر الموقع للمستأجرين بشكل تقريبي لحماية الخصوصية',
+            AddPropertyInfoBanner(
+              text: LocaleKeys.ownerAddPropertyLocationPrivacy,
               icon: Icons.shield_outlined,
             ),
         ],

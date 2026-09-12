@@ -25,7 +25,7 @@ class TenantSummaryHeaderCard extends StatelessWidget {
         gradient: const LinearGradient(
           begin: AlignmentDirectional.topStart,
           end: AlignmentDirectional.bottomEnd,
-          colors: [AppColors.sokoonTeal, Color(0xFF065F57)],
+          colors: [AppColors.sokoonTeal, AppColors.tealDark],
         ),
         borderRadius: BorderRadius.circular(20.r),
       ),

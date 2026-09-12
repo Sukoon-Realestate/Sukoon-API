@@ -1,6 +1,8 @@
 import 'dart:io';
 
-class KycDocumentUploadData {
+import 'package:equatable/equatable.dart';
+
+class KycDocumentUploadData extends Equatable {
   const KycDocumentUploadData({
     required this.nationalId,
     required this.frontIdImage,
@@ -12,9 +14,17 @@ class KycDocumentUploadData {
   final File? frontIdImage;
   final File? backIdImage;
   final File? selfieImage;
+
+  @override
+  List<Object?> get props => [
+    nationalId,
+    frontIdImage,
+    backIdImage,
+    selfieImage,
+  ];
 }
 
-class RegisterBody {
+class RegisterBody extends Equatable {
   final String firstName;
   final String lastName;
   final String phone;
@@ -118,4 +128,19 @@ class RegisterBody {
     backIdImage: backIdImage ?? this.backIdImage,
     selfieImage: selfieImage ?? this.selfieImage,
   );
+
+  @override
+  List<Object?> get props => [
+    firstName,
+    lastName,
+    phone,
+    email,
+    password,
+    rePassword,
+    userType,
+    nationalId,
+    frontIdImage,
+    backIdImage,
+    selfieImage,
+  ];
 }

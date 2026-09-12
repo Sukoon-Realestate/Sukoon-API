@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 
 class AddPropertyChipContent {
@@ -32,52 +33,66 @@ class AddPropertySummaryContent {
 }
 
 abstract final class OwnerAddPropertyContent {
-  static const propertyTypeOptions = [
-    'شقة',
-    'غرفة',
-    'استوديو',
-    'فيلا',
-    'دور',
-    'روف',
+  static List<String> get propertyTypeOptions => [
+    LocaleKeys.ownerAddPropertyApartment,
+    LocaleKeys.ownerAddPropertyRoom,
+    LocaleKeys.ownerAddPropertyStudio,
+    LocaleKeys.ownerAddPropertyVilla,
+    LocaleKeys.ownerAddPropertyWholeFloor,
+    LocaleKeys.ownerAddPropertyRoof,
   ];
 
-  static const photoTips = [
-    'صوّر كل الغرف: صالة، غرف نوم، مطبخ، حمام',
-    'استخدم إضاءة طبيعية',
-    'تأكد من خلو الصور من أي أرقام هواتف أو معلومات شخصية',
-    'الحد الأدنى 10 صور، وتقدر ترفع لحد 25 صورة',
+  static List<String> get photoTips => [
+    LocaleKeys.ownerAddPropertyPhotoTipRooms,
+    LocaleKeys.ownerAddPropertyPhotoTipLighting,
+    LocaleKeys.ownerAddPropertyPhotoTipPrivacy,
+    LocaleKeys.ownerAddPropertyPhotoTipLimits,
   ];
 
   static const minimumPhotoCount = 10;
   static const maxPhotoCount = 25;
 
-  static const depositOptions = ['بدون تأمين', 'نصف شهر', 'شهر واحد', 'شهرين'];
-
-  static const rentalUnitOptions = ['يوم', 'أسبوع', 'شهر', 'سنة'];
-
-  static const amenityOptions = [
-    'واي فاي',
-    'مفروش',
-    'جراج',
-    'أسانسير',
-    'أمن',
-    'بلكونة',
-    'تكييف',
-    'غاز طبيعي',
-    'عداد كهرباء',
-    'عداد مياه',
-    'قريب من المترو',
+  static List<String> get depositOptions => [
+    LocaleKeys.ownerAddPropertyNoDeposit,
+    LocaleKeys.ownerAddPropertyHalfMonth,
+    LocaleKeys.ownerAddPropertyOneMonth,
+    LocaleKeys.ownerAddPropertyTwoMonths,
   ];
 
-  static const smokingOptionLabels = ['مسموح', 'ممنوع', 'حسب الاتفاق'];
+  static List<String> get rentalUnitOptions => [
+    LocaleKeys.ownerAddPropertyDay,
+    LocaleKeys.ownerAddPropertyWeek,
+    LocaleKeys.ownerAddPropertyMonth,
+    LocaleKeys.ownerAddPropertyYear,
+  ];
 
-  static const suitableForOptions = [
-    'الكل',
-    'ولاد فقط',
-    'بنات فقط',
-    'عائلات',
-    'أفراد',
-    'مشاركة',
+  static List<String> get amenityOptions => [
+    LocaleKeys.ownerAddPropertyWifi,
+    LocaleKeys.ownerAddPropertyFurnished,
+    LocaleKeys.ownerAddPropertyGarage,
+    LocaleKeys.ownerAddPropertyElevator,
+    LocaleKeys.ownerAddPropertySecurity,
+    LocaleKeys.ownerAddPropertyBalcony,
+    LocaleKeys.ownerAddPropertyAirConditioning,
+    LocaleKeys.ownerAddPropertyNaturalGas,
+    LocaleKeys.ownerAddPropertyElectricityMeter,
+    LocaleKeys.ownerAddPropertyWaterMeter,
+    LocaleKeys.ownerAddPropertyNearMetro,
+  ];
+
+  static List<String> get smokingOptionLabels => [
+    LocaleKeys.ownerAddPropertyAllowed,
+    LocaleKeys.ownerAddPropertyNotAllowed,
+    LocaleKeys.ownerAddPropertyByAgreement,
+  ];
+
+  static List<String> get suitableForOptions => [
+    LocaleKeys.ownerAddPropertyEveryone,
+    LocaleKeys.ownerAddPropertyMalesOnly,
+    LocaleKeys.ownerAddPropertyFemalesOnly,
+    LocaleKeys.ownerAddPropertyFamilies,
+    LocaleKeys.ownerAddPropertyIndividuals,
+    LocaleKeys.ownerAddPropertyShared,
   ];
 
   static const tealSoft = AppColors.tealAlpha07;
@@ -255,16 +270,20 @@ class OwnerAddPropertyFormState {
 
   String get priceSummary {
     final price = monthlyPrice.trim().isEmpty ? '0' : monthlyPrice.trim();
-    return '$price ر.س/شهر';
+    return LocaleKeys.ownerAddPropertyMonthlyPrice.replaceAll('{price}', price);
   }
 
-  String get photoSummary => '$photoCount صورة';
+  String get photoSummary => LocaleKeys.ownerAddPropertyPhotoCountSummary
+      .replaceAll('{count}', '$photoCount');
 
   String get videoSummary {
     final OwnerPropertyVideoSelection? selectedVideo = video;
     return selectedVideo == null
-        ? 'تم تخطي الفيديو'
-        : 'تم رفع الفيديو (${selectedVideo.formattedDuration})';
+        ? LocaleKeys.ownerAddPropertyVideoSkipped
+        : LocaleKeys.ownerAddPropertyVideoUploadedSummary.replaceAll(
+            '{duration}',
+            selectedVideo.formattedDuration,
+          );
   }
 
   String get proofFileName {
@@ -281,14 +300,32 @@ class OwnerAddPropertyFormState {
 
   List<AddPropertySummaryContent> get submittedSummary {
     return [
-      AddPropertySummaryContent(label: 'نوع العقار', value: propertyType),
-      AddPropertySummaryContent(label: 'المنطقة', value: locationSummary),
-      AddPropertySummaryContent(label: 'السعر', value: priceSummary),
-      AddPropertySummaryContent(label: 'الصور', value: photoSummary),
-      AddPropertySummaryContent(label: 'الفيديو', value: videoSummary),
-      AddPropertySummaryContent(label: 'إثبات الملكية', value: proofFileName),
       AddPropertySummaryContent(
-        label: 'وقت الإرسال',
+        label: LocaleKeys.ownerAddPropertyType,
+        value: propertyType,
+      ),
+      AddPropertySummaryContent(
+        label: LocaleKeys.ownerAddPropertyAreaSummary,
+        value: locationSummary,
+      ),
+      AddPropertySummaryContent(
+        label: LocaleKeys.ownerAddPropertyPrice,
+        value: priceSummary,
+      ),
+      AddPropertySummaryContent(
+        label: LocaleKeys.ownerAddPropertyPhotosSummary,
+        value: photoSummary,
+      ),
+      AddPropertySummaryContent(
+        label: LocaleKeys.ownerAddPropertyVideoSummary,
+        value: videoSummary,
+      ),
+      AddPropertySummaryContent(
+        label: LocaleKeys.ownerAddPropertyProofSummary,
+        value: proofFileName,
+      ),
+      AddPropertySummaryContent(
+        label: LocaleKeys.ownerAddPropertySubmittedAtSummary,
         value: _formatSubmittedAt(submittedAt ?? DateTime.now()),
       ),
     ];
@@ -366,7 +403,13 @@ class OwnerAddPropertyFormState {
       'price': monthlyPrice.trim(),
       'price_period': _rentalUnitValue(rentalUnit),
       'property_type': _propertyTypeValue(propertyType),
-      'is_furnished': selectedAmenities.contains('مفروش'),
+      'is_furnished': _containsOption(
+        selectedAmenities,
+        localized: LocaleKeys.ownerAddPropertyFurnished,
+        apiValue: 'furnished',
+        arabic: 'مفروش',
+        english: 'Furnished',
+      ),
       'bedrooms': int.parse(bedrooms),
       'bathrooms': int.parse(bathrooms),
       'area': int.parse(space),
@@ -374,7 +417,13 @@ class OwnerAddPropertyFormState {
       'floor': int.parse(floor),
       'rental_period': int.parse(rentalDuration),
       'suitable_for': _suitableForValue(suitableFor),
-      'smoking_allowed': smokingPolicy == 'مسموح',
+      'smoking_allowed': _matchesOption(
+        smokingPolicy,
+        localized: LocaleKeys.ownerAddPropertyAllowed,
+        apiValue: 'allowed',
+        arabic: 'مسموح',
+        english: 'Allowed',
+      ),
       'country': 'Egypt',
       'city': governorate,
       'district': district,
@@ -382,16 +431,76 @@ class OwnerAddPropertyFormState {
       'building_year': int.parse(buildingYear),
       'deposit': _depositValue(deposit),
       'location': mapQuery.trim(),
-      'has_wifi': selectedAmenities.contains('واي فاي'),
-      'has_elevator': selectedAmenities.contains('أسانسير'),
-      'has_garage': selectedAmenities.contains('جراج'),
-      'has_security': selectedAmenities.contains('أمن'),
-      'has_balcony': selectedAmenities.contains('بلكونة'),
-      'has_air_conditioning': selectedAmenities.contains('تكييف'),
-      'near_metro': selectedAmenities.contains('قريب من المترو'),
-      'has_natural_gas': selectedAmenities.contains('غاز طبيعي'),
-      'has_electricity_meter': selectedAmenities.contains('عداد كهرباء'),
-      'has_water_meter': selectedAmenities.contains('عداد مياه'),
+      'has_wifi': _containsOption(
+        selectedAmenities,
+        localized: LocaleKeys.ownerAddPropertyWifi,
+        apiValue: 'wifi',
+        arabic: 'واي فاي',
+        english: 'WiFi',
+      ),
+      'has_elevator': _containsOption(
+        selectedAmenities,
+        localized: LocaleKeys.ownerAddPropertyElevator,
+        apiValue: 'elevator',
+        arabic: 'أسانسير',
+        english: 'Elevator',
+      ),
+      'has_garage': _containsOption(
+        selectedAmenities,
+        localized: LocaleKeys.ownerAddPropertyGarage,
+        apiValue: 'garage',
+        arabic: 'جراج',
+        english: 'Garage',
+      ),
+      'has_security': _containsOption(
+        selectedAmenities,
+        localized: LocaleKeys.ownerAddPropertySecurity,
+        apiValue: 'security',
+        arabic: 'أمن',
+        english: 'Security',
+      ),
+      'has_balcony': _containsOption(
+        selectedAmenities,
+        localized: LocaleKeys.ownerAddPropertyBalcony,
+        apiValue: 'balcony',
+        arabic: 'بلكونة',
+        english: 'Balcony',
+      ),
+      'has_air_conditioning': _containsOption(
+        selectedAmenities,
+        localized: LocaleKeys.ownerAddPropertyAirConditioning,
+        apiValue: 'air_conditioning',
+        arabic: 'تكييف',
+        english: 'Air conditioning',
+      ),
+      'near_metro': _containsOption(
+        selectedAmenities,
+        localized: LocaleKeys.ownerAddPropertyNearMetro,
+        apiValue: 'near_metro',
+        arabic: 'قريب من المترو',
+        english: 'Near the metro',
+      ),
+      'has_natural_gas': _containsOption(
+        selectedAmenities,
+        localized: LocaleKeys.ownerAddPropertyNaturalGas,
+        apiValue: 'natural_gas',
+        arabic: 'غاز طبيعي',
+        english: 'Natural gas',
+      ),
+      'has_electricity_meter': _containsOption(
+        selectedAmenities,
+        localized: LocaleKeys.ownerAddPropertyElectricityMeter,
+        apiValue: 'electricity_meter',
+        arabic: 'عداد كهرباء',
+        english: 'Electricity meter',
+      ),
+      'has_water_meter': _containsOption(
+        selectedAmenities,
+        localized: LocaleKeys.ownerAddPropertyWaterMeter,
+        apiValue: 'water_meter',
+        arabic: 'عداد مياه',
+        english: 'Water meter',
+      ),
       if (photos.isNotEmpty) 'main_image': photos.first,
       if (photos.length > 1) 'images': photos.skip(1).toList(growable: false),
       if (video != null) 'video': video!.file,
@@ -401,45 +510,105 @@ class OwnerAddPropertyFormState {
   }
 
   static String _propertyTypeValue(String value) {
-    return const {
+    return {
+          'apartment': 'apartment',
+          'Apartment': 'apartment',
           'شقة': 'apartment',
+          LocaleKeys.ownerAddPropertyApartment: 'apartment',
+          'room': 'room',
+          'Room': 'room',
           'غرفة': 'room',
+          LocaleKeys.ownerAddPropertyRoom: 'room',
+          'studio': 'studio',
+          'Studio': 'studio',
           'استوديو': 'studio',
+          LocaleKeys.ownerAddPropertyStudio: 'studio',
+          'villa': 'villa',
+          'Villa': 'villa',
           'فيلا': 'villa',
+          LocaleKeys.ownerAddPropertyVilla: 'villa',
+          'floor': 'floor',
+          'Whole floor': 'floor',
           'دور': 'floor',
+          LocaleKeys.ownerAddPropertyWholeFloor: 'floor',
+          'roof': 'roof',
+          'Roof': 'roof',
           'روف': 'roof',
+          LocaleKeys.ownerAddPropertyRoof: 'roof',
         }[value] ??
         value;
   }
 
   static String _rentalUnitValue(String value) {
-    return const {
+    return {
+          'daily': 'daily',
+          'Day': 'daily',
           'يوم': 'daily',
+          LocaleKeys.ownerAddPropertyDay: 'daily',
+          'weekly': 'weekly',
+          'Week': 'weekly',
           'أسبوع': 'weekly',
+          LocaleKeys.ownerAddPropertyWeek: 'weekly',
+          'monthly': 'monthly',
+          'Month': 'monthly',
           'شهر': 'monthly',
+          LocaleKeys.ownerAddPropertyMonth: 'monthly',
+          'yearly': 'yearly',
+          'Year': 'yearly',
           'سنة': 'yearly',
+          LocaleKeys.ownerAddPropertyYear: 'yearly',
         }[value] ??
         value;
   }
 
   static String _suitableForValue(String value) {
-    return const {
+    return {
+          'all': 'all',
+          'Everyone': 'all',
           'الكل': 'all',
+          LocaleKeys.ownerAddPropertyEveryone: 'all',
+          'males_only': 'males_only',
+          'Males only': 'males_only',
           'ولاد فقط': 'males_only',
+          LocaleKeys.ownerAddPropertyMalesOnly: 'males_only',
+          'females_only': 'females_only',
+          'Females only': 'females_only',
           'بنات فقط': 'females_only',
+          LocaleKeys.ownerAddPropertyFemalesOnly: 'females_only',
+          'families': 'families',
+          'Families': 'families',
           'عائلات': 'families',
+          LocaleKeys.ownerAddPropertyFamilies: 'families',
+          'individuals': 'individuals',
+          'Individuals': 'individuals',
           'أفراد': 'individuals',
+          LocaleKeys.ownerAddPropertyIndividuals: 'individuals',
+          'shared': 'shared',
+          'Shared': 'shared',
           'مشاركة': 'shared',
+          LocaleKeys.ownerAddPropertyShared: 'shared',
         }[value] ??
         value;
   }
 
   static String _depositValue(String value) {
-    return const {
+    return {
+          'none': 'none',
+          'No deposit': 'none',
           'بدون تأمين': 'none',
+          LocaleKeys.ownerAddPropertyNoDeposit: 'none',
+          'half_month': 'half_month',
+          'Half a month': 'half_month',
           'نصف شهر': 'half_month',
+          LocaleKeys.ownerAddPropertyHalfMonth: 'half_month',
+          'one_month': 'one_month',
+          'One month': 'one_month',
           'شهر واحد': 'one_month',
+          LocaleKeys.ownerAddPropertyOneMonth: 'one_month',
+          'two_months': 'two_months',
+          'Two months': 'two_months',
           'شهرين': 'two_months',
+          LocaleKeys.ownerAddPropertyTwoMonths: 'two_months',
         }[value] ??
         value;
   }
@@ -449,10 +618,45 @@ class OwnerAddPropertyFormState {
     return parsed != null && parsed > 0;
   }
 
+  static bool _containsOption(
+    Set<String> values, {
+    required String localized,
+    required String apiValue,
+    required String arabic,
+    required String english,
+  }) {
+    return values.any(
+      (value) => _matchesOption(
+        value,
+        localized: localized,
+        apiValue: apiValue,
+        arabic: arabic,
+        english: english,
+      ),
+    );
+  }
+
+  static bool _matchesOption(
+    String value, {
+    required String localized,
+    required String apiValue,
+    required String arabic,
+    required String english,
+  }) {
+    return value == localized ||
+        value == apiValue ||
+        value == arabic ||
+        value == english;
+  }
+
   static String _formatSubmittedAt(DateTime value) {
     final hour12 = value.hour % 12 == 0 ? 12 : value.hour % 12;
     final minute = value.minute.toString().padLeft(2, '0');
-    final suffix = value.hour >= 12 ? 'م' : 'ص';
-    return 'اليوم $hour12:$minute $suffix';
+    final suffix = value.hour >= 12
+        ? LocaleKeys.ownerAddPropertyPm
+        : LocaleKeys.ownerAddPropertyAm;
+    return LocaleKeys.ownerAddPropertyTodayAt
+        .replaceAll('{time}', '$hour12:$minute')
+        .replaceAll('{period}', suffix);
   }
 }

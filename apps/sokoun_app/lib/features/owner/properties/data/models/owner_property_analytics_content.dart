@@ -1,6 +1,6 @@
 part of '../../imports.dart';
 
-class OwnerPropertyAnalyticsContent {
+class OwnerPropertyAnalyticsContent extends Equatable {
   const OwnerPropertyAnalyticsContent({
     required this.views,
     required this.visitRequests,
@@ -102,4 +102,17 @@ class OwnerPropertyAnalyticsContent {
       amenitiesInterest: amenitiesInterest ?? this.amenitiesInterest,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    views,
+    visitRequests,
+    saves,
+    acceptanceRate,
+    viewHistory,
+    spaceInterest,
+    priceInterest,
+    locationInterest,
+    amenitiesInterest,
+  ];
 }

@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 import '../enums/notification_role.dart';
 
 enum AppNotificationKind {
@@ -13,7 +15,7 @@ enum AppNotificationKind {
   dailyVisibility,
 }
 
-class AppNotificationContent {
+class AppNotificationContent extends Equatable {
   const AppNotificationContent({
     required this.id,
     required this.kind,
@@ -115,6 +117,21 @@ class AppNotificationContent {
       detailLocation: detailLocation ?? this.detailLocation,
     );
   }
+
+  @override
+  List<Object?> get props => [
+    id,
+    kind,
+    title,
+    description,
+    time,
+    category,
+    isUnread,
+    detailDescription,
+    detailLabel,
+    detailDate,
+    detailLocation,
+  ];
 }
 
 abstract final class NotificationsContent {

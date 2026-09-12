@@ -13,14 +13,14 @@ import '../widgets/kyc/kyc_status_summary_card.dart';
 class KycPendingScreen extends StatelessWidget {
   const KycPendingScreen({
     super.key,
-    this.fullName = 'سارة أحمد خالد',
+    this.fullName,
     this.maskedNationalId = '29•••••••••12',
     this.submittedAt,
     this.expectedReviewTime,
     this.onBackHome,
   });
 
-  final String fullName;
+  final String? fullName;
   final String maskedNationalId;
   final String? submittedAt;
   final String? expectedReviewTime;
@@ -81,7 +81,10 @@ class KycPendingScreen extends StatelessWidget {
           24.szH,
           KycStatusSummaryCard(
             rows: [
-              KycStatusSummaryRow(label: LocaleKeys.name, value: fullName),
+              KycStatusSummaryRow(
+                label: LocaleKeys.name,
+                value: fullName ?? LocaleKeys.ownerVisitTenantSara,
+              ),
               KycStatusSummaryRow(
                 label: LocaleKeys.cardNumber,
                 value: maskedNationalId,
