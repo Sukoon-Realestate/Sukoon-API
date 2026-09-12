@@ -103,6 +103,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     final AppNotificationContent notification =
                         _notifications[index];
                     return NotificationCard(
+                      key: ValueKey(notification.id),
                       notification: notification,
                       onPressed: () => _openNotification(notification),
                     );
@@ -145,7 +146,6 @@ class _NotificationsHeader extends StatelessWidget {
           ),
         ),
         TextButton(
-          key: const ValueKey('notifications-mark-all'),
           onPressed: hasUnread ? onMarkAllPressed : null,
           style: TextButton.styleFrom(
             foregroundColor: AppColors.sokoonTeal,
@@ -163,7 +163,6 @@ class _NotificationsHeader extends StatelessWidget {
           ),
         ),
         IconButton(
-          key: const ValueKey('notifications-settings'),
           tooltip: LocaleKeys.notificationSettingsTitle,
           onPressed: () => Go.to(NotificationSettingsScreen(role: role)),
           visualDensity: VisualDensity.compact,

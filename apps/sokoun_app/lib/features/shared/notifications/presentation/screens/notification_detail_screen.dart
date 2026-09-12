@@ -114,9 +114,6 @@ class NotificationDetailScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: DefaultButton(
-                              key: const ValueKey(
-                                'notification-detail-primary',
-                              ),
                               onTap: () => Go.back(),
                               title: _primaryAction,
                               color: AppColors.sokoonTeal,
@@ -130,9 +127,6 @@ class NotificationDetailScreen extends StatelessWidget {
                           12.szW,
                           Expanded(
                             child: DefaultButton(
-                              key: const ValueKey(
-                                'notification-detail-dismiss',
-                              ),
                               onTap: () => Go.back(),
                               title: LocaleKeys.notificationDismiss,
                               color: AppColors.white,
@@ -172,7 +166,6 @@ class _NotificationDetailHeader extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            key: const ValueKey('notification-detail-back'),
             onPressed: () => Go.back(),
             icon: Icon(
               Icons.arrow_back_ios_new_rounded,

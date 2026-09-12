@@ -15,10 +15,7 @@ class VisitDetailsScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              VisitHeader(
-                title: LocaleKeys.tenantVisitDetailsTitle,
-                backKey: const ValueKey('visit-details-back'),
-              ),
+              VisitHeader(title: LocaleKeys.tenantVisitDetailsTitle),
               Expanded(child: VisitDetailsContent(visit: visit)),
             ],
           ),

@@ -28,7 +28,6 @@ class OwnerVisitRequestCard extends StatelessWidget {
     return Material(
       color: AppColors.transparent,
       child: InkWell(
-        key: ValueKey('owner-request-card-${request.id}'),
         onTap: onPressed,
         borderRadius: BorderRadius.circular(16.r),
         child: Container(

@@ -26,7 +26,6 @@ class FavoritesList extends StatelessWidget {
       duration: const Duration(milliseconds: 220),
       child: items.isEmpty
           ? FavoritesEmptyState(
-              key: const ValueKey('favorites-empty'),
               isFiltered: isFiltered,
               onClearFiltersTap: onClearFiltersPressed,
             )

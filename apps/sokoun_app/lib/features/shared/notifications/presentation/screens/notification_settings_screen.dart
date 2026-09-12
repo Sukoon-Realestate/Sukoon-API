@@ -91,6 +91,7 @@ class _NotificationSettingsScreenState
                   children: [
                     for (int index = 0; index < _settings.length; index++)
                       NotificationSettingsTile(
+                        key: ValueKey(_settings[index].id),
                         setting: _settings[index],
                         onChanged: (value) => _toggleSetting(index, value),
                       ),
@@ -149,7 +150,6 @@ class _NotificationSettingsHeader extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            key: const ValueKey('notification-settings-back'),
             onPressed: Go.back,
             icon: Icon(
               Icons.arrow_back_ios_new_rounded,

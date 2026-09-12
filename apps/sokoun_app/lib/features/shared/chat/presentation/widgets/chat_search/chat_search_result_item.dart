@@ -26,7 +26,6 @@ class ChatSearchResultItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      key: ValueKey('chat-search-result-${conversation.id}'),
       onTap: _openConversation,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

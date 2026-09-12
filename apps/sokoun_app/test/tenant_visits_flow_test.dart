@@ -91,9 +91,8 @@ void main() {
     expect(find.text('شقة مفروشة، مدينة نصر'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
-    await tester.tap(
-      find.byKey(const ValueKey('tenant-visit-accepted-nasr-city')),
-    );
+    const Key acceptedVisitKey = ValueKey('accepted-nasr-city');
+    await tester.tap(find.byKey(acceptedVisitKey));
     await tester.pumpAndSettle();
 
     expect(find.byType(VisitDetailsScreen), findsOneWidget);
@@ -101,22 +100,22 @@ void main() {
     expect(find.text('010****432'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
-    await tester.tap(find.byKey(const ValueKey('visit-details-back')));
+    await tester.tap(find.byIcon(Icons.arrow_back_ios_new_rounded));
     await tester.pumpAndSettle();
     await tester.tap(
-      find.byKey(const ValueKey('tenant-visit-rate-accepted-nasr-city')),
+      find.descendant(
+        of: find.byKey(acceptedVisitKey),
+        matching: find.text('تقييم'),
+      ),
     );
     await tester.pumpAndSettle();
 
     expect(find.byType(VisitRatingSheet), findsOneWidget);
     expect(find.text('قيّم تجربة الزيارة'), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('visit-rating-overall-5')));
-    await tester.enterText(
-      find.byKey(const ValueKey('visit-rating-comment')),
-      'تجربة ممتازة',
-    );
-    await tester.tap(find.byKey(const ValueKey('visit-rating-submit')));
+    await tester.tap(find.byIcon(Icons.star_border_rounded).at(4));
+    await tester.enterText(find.byType(TextField), 'تجربة ممتازة');
+    await tester.tap(find.text('إرسال التقييم'));
     await tester.pumpAndSettle();
 
     expect(find.byType(VisitRatingSheet), findsNothing);
@@ -133,25 +132,19 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
-    await tester.tap(
-      find.byKey(const ValueKey('tenant-visits-filter-pending')),
-    );
+    await tester.tap(find.text('بانتظار'));
     await tester.pumpAndSettle();
 
     expect(find.byType(TenantVisitCard), findsOneWidget);
     expect(find.text('ستوديو، التجمع الخامس'), findsOneWidget);
 
-    await tester.tap(
-      find.byKey(
-        const ValueKey('tenant-visit-cancel-pending-fifth-settlement'),
-      ),
-    );
+    await tester.tap(find.text('إلغاء الطلب'));
     await tester.pumpAndSettle();
 
     expect(find.text('لا توجد زيارات في هذه الفئة'), findsOneWidget);
     expect(find.text('تم إلغاء طلب الزيارة'), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('tenant-visits-empty-action')));
+    await tester.tap(find.text('عرض كل الزيارات'));
     await tester.pumpAndSettle();
 
     expect(find.byType(TenantVisitCard), findsNWidgets(2));
@@ -167,12 +160,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('لا توجد طلبات زيارة حتى الآن'), findsOneWidget);
-    expect(
-      find.byKey(const ValueKey('tenant-visits-empty-action')),
-      findsOneWidget,
-    );
+    expect(find.text('تصفح العقارات'), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('tenant-visits-empty-action')));
+    await tester.tap(find.text('تصفح العقارات'));
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
 
@@ -189,8 +179,8 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('زيارتك بانتظار التأكيد'), findsOneWidget);
-    expect(find.byKey(const ValueKey('visit-details-cancel')), findsOneWidget);
-    expect(find.byKey(const ValueKey('visit-details-open-chat')), findsNothing);
+    expect(find.text('إلغاء الطلب'), findsOneWidget);
+    expect(find.text('فتح المحادثة مع المالك'), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
@@ -205,10 +195,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('تم رفض طلب الزيارة'), findsOneWidget);
-    expect(
-      find.byKey(const ValueKey('visit-details-find-alternative')),
-      findsOneWidget,
-    );
+    expect(find.text('البحث عن بديل'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -239,11 +226,11 @@ void main() {
       findsOneWidget,
     );
 
-    final Finder todayChip = find.byKey(ValueKey('visit-day-${today.day}'));
+    final Finder todayChip = find.text(today.day.toString());
     await tester.ensureVisible(todayChip);
     await tester.pumpAndSettle();
     await tester.tap(todayChip);
-    await tester.tap(find.byKey(const ValueKey('visit-time-picker')));
+    await tester.tap(find.byType(VisitTimePickerField));
     await tester.pumpAndSettle();
 
     expect(find.byType(TimePickerDialog), findsOneWidget);
@@ -257,7 +244,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('2:00 PM'), findsOneWidget);
-    await tester.tap(find.byKey(const ValueKey('visit-confirm-request')));
+    await tester.tap(find.text('تأكيد طلب الزيارة'));
     await tester.pumpAndSettle();
 
     expect(find.byType(VisitConfirmedScreen), findsOneWidget);
@@ -269,7 +256,7 @@ void main() {
     expect(find.text('2:00 PM'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
-    await tester.tap(find.byKey(const ValueKey('visit-follow-requests')));
+    await tester.tap(find.text('متابعة طلباتي'));
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
 
@@ -283,7 +270,7 @@ void main() {
     await tester.pumpWidget(buildScreen(const TenantHomeScreen()));
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
-    await tester.tap(find.byKey(const ValueKey('tenant-open-visits')));
+    await tester.tap(find.text('عندك زيارة النهارده 3:00 م'));
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
 

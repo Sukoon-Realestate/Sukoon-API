@@ -83,7 +83,6 @@ class OwnerHeader extends StatelessWidget {
         ),
         10.szW,
         const HomeCircleButton(
-          key: ValueKey('owner-open-notifications'),
           icon: Icons.notifications_none_rounded,
           iconColor: AppColors.sokoonNavy,
           showBadge: true,

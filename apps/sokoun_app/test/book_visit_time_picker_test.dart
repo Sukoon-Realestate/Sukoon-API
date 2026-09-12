@@ -19,7 +19,7 @@ void main() {
       ),
     );
 
-    await tester.tap(find.byKey(const ValueKey('visit-time-picker')));
+    await tester.tap(find.byType(VisitTimePickerField));
     await tester.pumpAndSettle();
 
     expect(find.byType(TimePickerDialog), findsOneWidget);

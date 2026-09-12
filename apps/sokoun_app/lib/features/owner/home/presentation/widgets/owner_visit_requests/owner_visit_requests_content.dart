@@ -88,6 +88,7 @@ class OwnerVisitRequestsContent extends StatelessWidget {
                     final OwnerVisitRequestContent request =
                         visibleRequests[index];
                     return OwnerVisitRequestCard(
+                      key: ValueKey(request.id),
                       request: request,
                       onPressed: () => onRequestPressed(request),
                       onAcceptPressed: () => onAcceptPressed(request),

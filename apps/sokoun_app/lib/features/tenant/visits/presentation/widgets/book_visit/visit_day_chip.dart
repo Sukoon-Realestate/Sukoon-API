@@ -18,7 +18,6 @@ class VisitDayChip extends StatelessWidget {
       button: true,
       selected: isSelected,
       child: GestureDetector(
-        key: ValueKey('visit-day-${day.day}'),
         onTap: onPressed,
         behavior: HitTestBehavior.opaque,
         child: AnimatedContainer(

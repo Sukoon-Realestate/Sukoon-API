@@ -29,7 +29,6 @@ class ChatListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      key: ValueKey('chat-${conversation.id}'),
       onTap: _openConversation,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

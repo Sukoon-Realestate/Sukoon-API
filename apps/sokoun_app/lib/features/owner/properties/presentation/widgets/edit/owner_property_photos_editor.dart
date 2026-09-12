@@ -51,7 +51,6 @@ class OwnerPropertyPhotosEditor extends StatelessWidget {
                       top: 4.h,
                       end: 4.w,
                       child: GestureDetector(
-                        key: const ValueKey('owner-edit-remove-photo'),
                         onTap: onRemovePressed,
                         child: Container(
                           width: 24.r,
@@ -80,7 +79,6 @@ class OwnerPropertyPhotosEditor extends StatelessWidget {
                 8.szW,
               ],
               GestureDetector(
-                key: const ValueKey('owner-edit-add-photo'),
                 onTap: onAddPressed,
                 child: _PhotoTile(
                   icon: Icons.add_photo_alternate_outlined,

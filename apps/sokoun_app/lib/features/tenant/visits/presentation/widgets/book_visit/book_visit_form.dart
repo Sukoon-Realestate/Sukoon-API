@@ -75,7 +75,6 @@ class BookVisitForm extends StatelessWidget {
               border: Border.all(color: AppColors.sokoonBorder),
             ),
             child: TextField(
-              key: const ValueKey('visit-note-field'),
               controller: noteController,
               maxLines: 3,
               textAlign: TextAlign.start,
@@ -104,7 +103,6 @@ class BookVisitForm extends StatelessWidget {
             child: Opacity(
               opacity: canConfirm ? 1 : .45,
               child: AppLoadingButton(
-                key: const ValueKey('visit-confirm-request'),
                 asyncCall: onConfirmPressed,
                 title: LocaleKeys.tenantVisitConfirmRequest,
                 buttonColor: AppColors.sokoonTeal,

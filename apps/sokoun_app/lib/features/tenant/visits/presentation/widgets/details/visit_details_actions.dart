@@ -13,7 +13,6 @@ class VisitDetailsActions extends StatelessWidget {
   Widget build(BuildContext context) {
     if (status.isRejected) {
       return DefaultButton(
-        key: const ValueKey('visit-details-find-alternative'),
         onTap: () => Go.to(const TenantSearchScreen()),
         title: LocaleKeys.tenantVisitFindAlternative,
         color: AppColors.sokoonTeal,
@@ -30,7 +29,6 @@ class VisitDetailsActions extends StatelessWidget {
       children: [
         if (status.isAccepted) ...[
           DefaultButton(
-            key: const ValueKey('visit-details-open-chat'),
             onTap: _openChat,
             title: LocaleKeys.tenantVisitOpenOwnerChat,
             color: AppColors.sokoonTeal,
@@ -43,7 +41,6 @@ class VisitDetailsActions extends StatelessWidget {
           12.szH,
         ],
         DefaultButton(
-          key: const ValueKey('visit-details-cancel'),
           onTap: () => Go.back(true),
           title: status.isPending
               ? LocaleKeys.tenantVisitCancelRequest

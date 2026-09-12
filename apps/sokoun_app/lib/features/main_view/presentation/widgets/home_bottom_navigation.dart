@@ -87,7 +87,6 @@ class _HomeBottomNavigationItem extends StatelessWidget {
       selected: isSelected,
       label: destination.label,
       child: InkWell(
-        key: ValueKey('home-navigation-$index'),
         onTap: isSelected ? null : onPressed,
         child: ExcludeSemantics(
           child: Column(

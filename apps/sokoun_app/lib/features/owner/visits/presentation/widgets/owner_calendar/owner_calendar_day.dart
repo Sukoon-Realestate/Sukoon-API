@@ -23,7 +23,6 @@ class OwnerCalendarDay extends StatelessWidget {
     return Material(
       color: AppColors.transparent,
       child: InkWell(
-        key: ValueKey('owner-calendar-day-$day'),
         onTap: onPressed,
         borderRadius: BorderRadius.circular(10.r),
         child: Container(

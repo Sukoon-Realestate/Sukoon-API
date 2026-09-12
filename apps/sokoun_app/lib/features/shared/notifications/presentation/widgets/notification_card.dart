@@ -22,7 +22,6 @@ class NotificationCard extends StatelessWidget {
     return Material(
       color: AppColors.transparent,
       child: InkWell(
-        key: ValueKey('notification-card-${notification.id}'),
         onTap: onPressed,
         borderRadius: BorderRadius.circular(16.r),
         child: Ink(
@@ -72,9 +71,6 @@ class NotificationCard extends StatelessWidget {
                         if (notification.isUnread) ...[
                           8.szW,
                           Container(
-                            key: ValueKey(
-                              'notification-unread-${notification.id}',
-                            ),
                             width: 8.r,
                             height: 8.r,
                             margin: EdgeInsets.only(top: 4.h),

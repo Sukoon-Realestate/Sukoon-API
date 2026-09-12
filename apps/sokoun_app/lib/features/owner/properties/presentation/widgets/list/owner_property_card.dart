@@ -33,7 +33,6 @@ class OwnerPropertyCard extends StatelessWidget {
       color: AppColors.white,
       borderRadius: BorderRadius.circular(20.r),
       child: InkWell(
-        key: ValueKey('owner-property-card-${property.id}'),
         onTap: _openProperty,
         borderRadius: BorderRadius.circular(20.r),
         child: Container(
@@ -125,7 +124,6 @@ class OwnerPropertyCard extends StatelessWidget {
                 textDirection: TextDirection.ltr,
                 children: [
                   _OwnerPropertyCardAction(
-                    key: ValueKey('owner-property-edit-${property.id}'),
                     label: LocaleKeys.ownerPropertiesEdit,
                     foregroundColor: AppColors.blue,
                     backgroundColor: AppColors.bluePale,
@@ -133,7 +131,6 @@ class OwnerPropertyCard extends StatelessWidget {
                   ),
                   8.szW,
                   _OwnerPropertyCardAction(
-                    key: ValueKey('owner-property-analytics-${property.id}'),
                     label: LocaleKeys.ownerPropertiesAnalytics,
                     foregroundColor: AppColors.sokoonTeal,
                     backgroundColor: AppColors.mintLight,
@@ -141,7 +138,6 @@ class OwnerPropertyCard extends StatelessWidget {
                   ),
                   8.szW,
                   _OwnerPropertyCardAction(
-                    key: ValueKey('owner-property-actions-${property.id}'),
                     label: LocaleKeys.ownerPropertiesActions,
                     foregroundColor: AppColors.red,
                     backgroundColor: AppColors.redPale,
@@ -166,7 +162,6 @@ class OwnerPropertyCard extends StatelessWidget {
 
 class _OwnerPropertyCardAction extends StatelessWidget {
   const _OwnerPropertyCardAction({
-    super.key,
     required this.label,
     required this.foregroundColor,
     required this.backgroundColor,

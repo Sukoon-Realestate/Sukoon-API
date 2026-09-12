@@ -58,7 +58,6 @@ class TenantPropertyShareSheet extends StatelessWidget {
               ),
               14.szH,
               TenantPropertyShareActionRow(
-                key: const ValueKey('tenant-property-details-copy-link'),
                 icon: Icons.link_rounded,
                 label: LocaleKeys.tenantPropertyDetailsCopyLink,
                 color: AppColors.sokoonTeal,
@@ -66,7 +65,6 @@ class TenantPropertyShareSheet extends StatelessWidget {
               ),
               8.szH,
               TenantPropertyShareActionRow(
-                key: const ValueKey('tenant-property-details-share-action'),
                 icon: Icons.ios_share_rounded,
                 label: LocaleKeys.tenantPropertyDetailsShare,
                 color: AppColors.blue,
@@ -74,7 +72,6 @@ class TenantPropertyShareSheet extends StatelessWidget {
               ),
               8.szH,
               TenantPropertyShareActionRow(
-                key: const ValueKey('tenant-property-details-cancel-share'),
                 icon: Icons.close_rounded,
                 label: LocaleKeys.cancel,
                 color: AppColors.sokoonRose,

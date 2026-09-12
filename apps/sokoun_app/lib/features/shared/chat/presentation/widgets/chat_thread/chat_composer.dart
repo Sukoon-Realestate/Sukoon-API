@@ -31,7 +31,6 @@ class ChatComposer extends StatelessWidget {
         child: Row(
           children: [
             _ComposerActionButton(
-              key: const ValueKey('chat-send'),
               onPressed: onSendPressed,
               backgroundColor: AppColors.sokoonTeal,
               icon: Icons.send_rounded,
@@ -50,7 +49,6 @@ class ChatComposer extends StatelessWidget {
                 child: Row(
                   children: [
                     IconButton(
-                      key: const ValueKey('chat-voice'),
                       onPressed: onVoicePressed,
                       visualDensity: VisualDensity.compact,
                       padding: EdgeInsets.zero,
@@ -62,7 +60,6 @@ class ChatComposer extends StatelessWidget {
                     ),
                     Expanded(
                       child: TextField(
-                        key: const ValueKey('chat-message-field'),
                         controller: controller,
                         minLines: 1,
                         maxLines: 4,
@@ -92,7 +89,6 @@ class ChatComposer extends StatelessWidget {
             ),
             8.szW,
             _ComposerActionButton(
-              key: const ValueKey('chat-attachment'),
               onPressed: onAttachmentPressed,
               backgroundColor: AppColors.scaffoldBackground,
               icon: Icons.image_outlined,
@@ -107,7 +103,6 @@ class ChatComposer extends StatelessWidget {
 
 class _ComposerActionButton extends StatelessWidget {
   const _ComposerActionButton({
-    super.key,
     required this.onPressed,
     required this.backgroundColor,
     required this.icon,

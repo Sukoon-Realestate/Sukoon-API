@@ -88,7 +88,6 @@ class OwnerCalendarContent extends StatelessWidget {
           ],
           10.szH,
           DefaultButton(
-            key: const ValueKey('owner-open-availability'),
             onTap: onAvailabilityPressed,
             title: LocaleKeys.ownerCalendarManageAvailability,
             color: AppColors.gold,

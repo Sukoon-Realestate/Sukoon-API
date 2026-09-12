@@ -30,7 +30,6 @@ class ChatSearchField extends StatelessWidget {
         : AppColors.sokoonGray;
 
     return TextField(
-      key: const ValueKey('chat-search-field'),
       controller: controller,
       readOnly: readOnly,
       autofocus: autofocus,
@@ -56,7 +55,6 @@ class ChatSearchField extends StatelessWidget {
         suffixIcon: onClearPressed == null
             ? null
             : IconButton(
-                key: const ValueKey('chat-search-clear'),
                 onPressed: onClearPressed,
                 icon: Icon(
                   Icons.close_rounded,

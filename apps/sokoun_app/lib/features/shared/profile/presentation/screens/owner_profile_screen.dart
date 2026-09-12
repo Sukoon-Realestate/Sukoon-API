@@ -60,7 +60,6 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
           return Directionality(
             textDirection: TextDirection.rtl,
             child: Scaffold(
-              key: const ValueKey('O-PROFILE-01'),
               backgroundColor: AppColors.scaffoldBackground,
               body: SafeArea(
                 child: Column(
@@ -69,7 +68,6 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
                       title: LocaleKeys.profileOwnerTitle,
                       showBackButton: true,
                       trailing: IconButton(
-                        key: const ValueKey('owner-profile-edit'),
                         onPressed: state.isSuccess
                             ? () => _openEditProfile(state.data)
                             : null,

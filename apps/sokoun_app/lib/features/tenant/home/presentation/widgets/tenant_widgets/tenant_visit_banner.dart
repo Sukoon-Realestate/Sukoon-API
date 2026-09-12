@@ -15,7 +15,6 @@ class TenantVisitBanner extends StatelessWidget {
     return Semantics(
       button: true,
       child: GestureDetector(
-        key: const ValueKey('tenant-open-visits'),
         onTap: () => Go.to(const TenantVisitsScreen()),
         behavior: HitTestBehavior.opaque,
         child: Container(

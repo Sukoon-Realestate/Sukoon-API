@@ -114,7 +114,6 @@ class OwnerPropertyAnalyticsScreen extends StatelessWidget {
                     ),
                     18.szH,
                     DefaultButton(
-                      key: const ValueKey('owner-analytics-revenue'),
                       title: LocaleKeys.ownerAnalyticsOpenRevenue,
                       onTap: () => Go.to(const OwnerRevenueScreen()),
                       height: 50.h,

@@ -14,7 +14,6 @@ class ProfileLogoutButton extends StatelessWidget {
       button: true,
       label: LocaleKeys.profileLogout,
       child: InkWell(
-        key: const ValueKey('profile-logout'),
         onTap: _logout,
         borderRadius: BorderRadius.circular(16.r),
         child: Container(

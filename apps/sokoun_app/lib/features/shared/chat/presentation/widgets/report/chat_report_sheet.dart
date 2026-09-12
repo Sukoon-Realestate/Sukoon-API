@@ -68,7 +68,6 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
                     children: [
                       for (int index = 0; index < _reasons.length; index++) ...[
                         _ReportReasonTile(
-                          key: ValueKey('chat-report-reason-$index'),
                           label: _reasons[index],
                           isSelected: _selectedReason == index,
                           onPressed: () {
@@ -80,7 +79,6 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
                       if (_isOtherReason) ...[
                         12.szH,
                         TextField(
-                          key: const ValueKey('chat-report-details'),
                           controller: _detailsController,
                           minLines: 3,
                           maxLines: 4,
@@ -125,7 +123,6 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
                       ChatPrivacyBanner(text: LocaleKeys.chatReportPrivacy),
                       16.szH,
                       DefaultButton(
-                        key: const ValueKey('chat-report-submit'),
                         onTap: _submit,
                         title: LocaleKeys.chatSubmitReport,
                         color: AppColors.red,
@@ -138,7 +135,6 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
                       ),
                       6.szH,
                       TextButton(
-                        key: const ValueKey('chat-report-cancel'),
                         onPressed: () => Go.back(),
                         child: AppText(
                           LocaleKeys.cancel,
@@ -190,7 +186,6 @@ class _ReportHeader extends StatelessWidget {
               ),
             ),
             IconButton(
-              key: const ValueKey('chat-report-close'),
               onPressed: Go.back,
               icon: Icon(
                 Icons.close_rounded,
@@ -213,7 +208,6 @@ class _ReportHeader extends StatelessWidget {
 
 class _ReportReasonTile extends StatelessWidget {
   const _ReportReasonTile({
-    super.key,
     required this.label,
     required this.isSelected,
     required this.onPressed,

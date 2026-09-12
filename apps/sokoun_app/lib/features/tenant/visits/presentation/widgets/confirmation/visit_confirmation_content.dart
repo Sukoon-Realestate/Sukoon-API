@@ -74,7 +74,6 @@ class VisitConfirmationContent extends StatelessWidget {
           ),
           24.szH,
           DefaultButton(
-            key: const ValueKey('visit-follow-requests'),
             onTap: () => Go.off(const TenantVisitsScreen()),
             title: LocaleKeys.tenantVisitFollowRequests,
             color: AppColors.sokoonTeal,
@@ -86,7 +85,6 @@ class VisitConfirmationContent extends StatelessWidget {
           ),
           12.szH,
           DefaultButton(
-            key: const ValueKey('visit-back-search'),
             onTap: () => Go.off(const TenantSearchScreen()),
             title: LocaleKeys.tenantVisitBackToSearch,
             color: AppColors.white,

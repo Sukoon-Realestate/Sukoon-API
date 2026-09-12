@@ -51,7 +51,6 @@ class EmptyResultsState extends StatelessWidget {
           ),
           18.szH,
           DefaultButton(
-            key: const ValueKey('tenant-search-empty-reset'),
             onTap: onResetSearchPressed,
             title: LocaleKeys.tenantSearchResultsResetSearch,
             color: AppColors.sokoonTeal,

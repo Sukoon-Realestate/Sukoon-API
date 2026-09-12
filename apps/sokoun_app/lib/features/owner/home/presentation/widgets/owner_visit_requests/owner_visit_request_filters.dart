@@ -59,7 +59,6 @@ class _FilterChip extends StatelessWidget {
     return Material(
       color: AppColors.transparent,
       child: InkWell(
-        key: ValueKey('owner-requests-filter-${filter.name}'),
         onTap: onPressed,
         borderRadius: BorderRadius.circular(999.r),
         child: Container(

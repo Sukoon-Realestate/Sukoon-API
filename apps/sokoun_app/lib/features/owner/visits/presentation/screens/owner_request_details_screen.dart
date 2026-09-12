@@ -123,7 +123,6 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
                     children: [
                       VisitHeader(
                         title: LocaleKeys.ownerRequestDetailsTitle,
-                        backKey: const ValueKey('owner-request-details-back'),
                         isBackEnabled: !isUpdating,
                       ),
                       Expanded(

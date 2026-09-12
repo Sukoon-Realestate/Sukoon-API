@@ -56,7 +56,6 @@ class ChatAttachmentsSheet extends StatelessWidget {
             ),
             24.szH,
             DefaultButton(
-              key: const ValueKey('chat-attachment-cancel'),
               onTap: () => Go.back(),
               title: LocaleKeys.cancel,
               color: AppColors.white,
@@ -84,7 +83,6 @@ class _AttachmentAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      key: ValueKey('chat-attachment-${type.name}'),
       onTap: onPressed,
       borderRadius: BorderRadius.circular(18.r),
       child: SizedBox(

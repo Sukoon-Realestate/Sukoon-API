@@ -82,7 +82,6 @@ class VisitTimePickerField extends StatelessWidget {
       button: true,
       enabled: isEnabled,
       child: GestureDetector(
-        key: const ValueKey('visit-time-picker'),
         onTap: isEnabled ? () => _openPicker(context) : null,
         behavior: HitTestBehavior.opaque,
         child: AnimatedContainer(

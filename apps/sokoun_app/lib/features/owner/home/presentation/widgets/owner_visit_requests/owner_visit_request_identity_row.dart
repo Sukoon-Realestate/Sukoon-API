@@ -95,7 +95,6 @@ class OwnerVisitRequestIdentityRow extends StatelessWidget {
           child: SizedBox.square(
             dimension: 32.r,
             child: IconButton(
-              key: ValueKey('owner-request-chat-${request.id}'),
               tooltip: LocaleKeys.ownerVisitOpenChat,
               onPressed: _openChat,
               padding: EdgeInsets.zero,

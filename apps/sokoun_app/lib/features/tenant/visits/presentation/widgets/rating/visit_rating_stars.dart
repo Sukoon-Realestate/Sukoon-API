@@ -6,13 +6,11 @@ class VisitRatingStars extends StatelessWidget {
     required this.rating,
     required this.onRatingSelected,
     this.size = 36,
-    this.keyPrefix = 'visit-rating',
   });
 
   final int rating;
   final ValueChanged<int> onRatingSelected;
   final double size;
-  final String keyPrefix;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +20,6 @@ class VisitRatingStars extends StatelessWidget {
       children: [
         for (int star = 1; star <= 5; star++)
           IconButton(
-            key: ValueKey('$keyPrefix-$star'),
             onPressed: () => onRatingSelected(star),
             visualDensity: VisualDensity.compact,
             constraints: BoxConstraints.tightFor(

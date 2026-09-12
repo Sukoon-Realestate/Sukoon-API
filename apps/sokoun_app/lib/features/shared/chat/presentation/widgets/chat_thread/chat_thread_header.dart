@@ -30,7 +30,6 @@ class ChatThreadHeader extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            key: const ValueKey('chat-thread-back'),
             onPressed: Go.back,
             visualDensity: VisualDensity.compact,
             icon: Icon(
@@ -79,7 +78,6 @@ class ChatThreadHeader extends StatelessWidget {
           ),
           if (conversation.isVerified) ...[const ChatVerifiedBadge(), 4.szW],
           IconButton(
-            key: const ValueKey('chat-report-action'),
             tooltip: LocaleKeys.chatReportProblemTitle,
             onPressed: onReportPressed,
             visualDensity: VisualDensity.compact,

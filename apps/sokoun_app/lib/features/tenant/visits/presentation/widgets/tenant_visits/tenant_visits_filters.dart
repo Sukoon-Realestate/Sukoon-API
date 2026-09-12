@@ -15,13 +15,11 @@ class TenantVisitsFilters extends StatelessWidget {
     return SizedBox(
       height: 44.h,
       child: ListView.separated(
-        key: const ValueKey('tenant-visits-filters'),
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 20.w),
         itemBuilder: (context, index) {
           final TenantVisitFilter filter = TenantVisitFilter.values[index];
           return VisitFilterChip(
-            key: ValueKey('tenant-visits-filter-${filter.name}'),
             label: filter.label,
             isSelected: filter.isSame(selectedFilter),
             onPressed: () => onFilterSelected(filter),

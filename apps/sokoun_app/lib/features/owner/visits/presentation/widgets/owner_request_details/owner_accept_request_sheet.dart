@@ -23,7 +23,6 @@ class OwnerAcceptRequestSheet extends StatelessWidget {
             18.szH,
             _OwnerDecisionSheetHeader(
               icon: Icons.check_circle_outline_rounded,
-              titleKey: const ValueKey('owner-accept-sheet-title'),
               title: LocaleKeys.ownerAcceptTitle,
               subtitle: LocaleKeys.ownerAcceptSubtitle,
               iconColor: AppColors.green,
@@ -33,7 +32,6 @@ class OwnerAcceptRequestSheet extends StatelessWidget {
             _OwnerAcceptSummary(request: request),
             20.szH,
             DefaultButton(
-              key: const ValueKey('owner-accept-confirm'),
               onTap: () => Go.back(true),
               title: LocaleKeys.ownerAcceptConfirm,
               color: AppColors.green,
@@ -45,7 +43,6 @@ class OwnerAcceptRequestSheet extends StatelessWidget {
             ),
             12.szH,
             DefaultButton(
-              key: const ValueKey('owner-accept-cancel'),
               onTap: () => Go.back(false),
               title: LocaleKeys.ownerRequestCancel,
               color: AppColors.white,
@@ -150,7 +147,6 @@ class _OwnerSheetHandle extends StatelessWidget {
 class _OwnerDecisionSheetHeader extends StatelessWidget {
   const _OwnerDecisionSheetHeader({
     required this.icon,
-    required this.titleKey,
     required this.title,
     required this.subtitle,
     required this.iconColor,
@@ -158,7 +154,6 @@ class _OwnerDecisionSheetHeader extends StatelessWidget {
   });
 
   final IconData icon;
-  final Key titleKey;
   final String title;
   final String subtitle;
   final Color iconColor;
@@ -185,7 +180,6 @@ class _OwnerDecisionSheetHeader extends StatelessWidget {
             children: [
               AppText(
                 title,
-                key: titleKey,
                 color: AppColors.sokoonNavy,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w900,

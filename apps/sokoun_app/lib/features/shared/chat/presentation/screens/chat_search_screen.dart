@@ -69,7 +69,6 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
               Row(
                 children: [
                   IconButton(
-                    key: const ValueKey('chat-search-back'),
                     onPressed: () => Go.back(),
                     icon: Icon(
                       Icons.arrow_back_ios_new_rounded,
@@ -103,7 +102,10 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
                     ),
                     8.szH,
                     for (int index = 0; index < _results.length; index++) ...[
-                      ChatSearchResultItem(conversation: _results[index]),
+                      ChatSearchResultItem(
+                        key: ValueKey(_results[index].id),
+                        conversation: _results[index],
+                      ),
                       if (index < _results.length - 1)
                         Divider(height: 1.h, color: AppColors.sokoonBorder),
                     ],

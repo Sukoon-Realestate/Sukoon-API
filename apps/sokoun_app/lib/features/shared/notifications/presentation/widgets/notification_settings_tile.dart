@@ -50,7 +50,6 @@ class NotificationSettingsTile extends StatelessWidget {
           ),
           14.szW,
           Switch.adaptive(
-            key: ValueKey('notification-setting-${setting.id}'),
             value: setting.isEnabled,
             onChanged: onChanged,
             activeThumbColor: AppColors.white,

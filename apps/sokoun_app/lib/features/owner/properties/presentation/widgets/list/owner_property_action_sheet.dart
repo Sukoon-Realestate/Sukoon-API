@@ -59,7 +59,6 @@ class _OwnerPropertyActionRow extends StatelessWidget {
       color: AppColors.white,
       borderRadius: BorderRadius.circular(16.r),
       child: InkWell(
-        key: ValueKey('owner-property-action-${action.name}'),
         onTap: () => Go.back(action),
         borderRadius: BorderRadius.circular(16.r),
         child: Container(

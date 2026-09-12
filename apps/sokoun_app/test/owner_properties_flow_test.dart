@@ -154,7 +154,8 @@ void main() {
     await tester.tap(find.text('التالي — التفاصيل الإضافية'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('حفظ التعديلات'));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
   }
 
   test('maps the owned-properties response', () {
@@ -301,20 +302,23 @@ void main() {
     expect(find.text('شقة مفروشة — مدينة نصر'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
+    final Finder furnishedCard = find.byKey(
+      const ValueKey('nasr-city-furnished'),
+    );
     await tester.tap(
-      find.byKey(const ValueKey('owner-property-actions-nasr-city-furnished')),
+      find.descendant(of: furnishedCard, matching: find.text('إجراءات')),
     );
     await tester.pumpAndSettle();
 
     expect(find.byType(OwnerPropertyActionSheet), findsOneWidget);
     expect(find.text('خيارات العقار'), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('owner-property-action-pause')));
+    await tester.tap(find.text('إيقاف مؤقت'));
     await tester.pumpAndSettle();
     expect(find.text('تم إيقاف العقار مؤقتاً'), findsOneWidget);
 
     await tester.tap(
-      find.byKey(const ValueKey('owner-property-edit-nasr-city-furnished')),
+      find.descendant(of: furnishedCard, matching: find.text('تعديل')),
     );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
@@ -327,8 +331,9 @@ void main() {
     expect(find.text('تم حفظ تعديلات العقار'), findsOneWidget);
     expect(repository.updateRequestCount, 1);
 
-    final Finder analyticsButton = find.byKey(
-      const ValueKey('owner-property-analytics-nasr-city-furnished'),
+    final Finder analyticsButton = find.descendant(
+      of: furnishedCard,
+      matching: find.text('إحصاءات'),
     );
     await tester.ensureVisible(analyticsButton);
     await tester.tap(analyticsButton);
@@ -338,9 +343,7 @@ void main() {
     expect(find.text('إحصاءات العقار'), findsOneWidget);
     expect(find.text('1,247'), findsOneWidget);
 
-    final Finder revenueButton = find.byKey(
-      const ValueKey('owner-analytics-revenue'),
-    );
+    final Finder revenueButton = find.text('عرض الإيرادات');
     await tester.drag(find.byType(ListView), const Offset(0, -700));
     await tester.pumpAndSettle();
     await tester.tap(revenueButton);
@@ -367,18 +370,14 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(
-      find.byKey(const ValueKey('owner-property-card-nasr-city-rejected')),
-    );
+    await tester.tap(find.byKey(const ValueKey('nasr-city-rejected')));
     await tester.pumpAndSettle();
 
     expect(find.byType(OwnerPropertyRejectionScreen), findsOneWidget);
     expect(find.text('تم رفض عقارك'), findsOneWidget);
     expect(find.text('الصور غير واضحة أو لا تعبر عن العقار'), findsOneWidget);
 
-    final Finder resubmitButton = find.byKey(
-      const ValueKey('owner-property-rejection-edit-resubmit'),
-    );
+    final Finder resubmitButton = find.text('تعديل وإعادة الإرسال');
     await tester.scrollUntilVisible(resubmitButton, 260);
     await tester.drag(find.byType(ListView), const Offset(0, -140));
     await tester.pumpAndSettle();
@@ -405,7 +404,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('owner-properties-add')));
+    await tester.tap(find.text('إضافة عقار'));
     await tester.pumpAndSettle();
 
     expect(find.byType(OwnerAddPropertyFlowScreen), findsOneWidget);

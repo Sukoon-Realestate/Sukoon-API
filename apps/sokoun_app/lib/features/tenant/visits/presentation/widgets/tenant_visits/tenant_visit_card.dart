@@ -39,7 +39,6 @@ class TenantVisitCard extends StatelessWidget {
     return Material(
       color: AppColors.transparent,
       child: InkWell(
-        key: ValueKey('tenant-visit-${visit.id}'),
         onTap: onPressed,
         borderRadius: BorderRadius.circular(18.r),
         child: Ink(
@@ -158,7 +157,6 @@ class _VisitCardActions extends StatelessWidget {
         children: [
           Expanded(
             child: _VisitCardAction(
-              key: ValueKey('tenant-visit-chat-${visit.id}'),
               label: LocaleKeys.tenantVisitChatAction,
               backgroundColor: AppColors.bluePale,
               foregroundColor: AppColors.blue,
@@ -168,7 +166,6 @@ class _VisitCardActions extends StatelessWidget {
           8.szW,
           Expanded(
             child: _VisitCardAction(
-              key: ValueKey('tenant-visit-rate-${visit.id}'),
               label: LocaleKeys.tenantVisitRateAction,
               backgroundColor: AppColors.goldPale,
               foregroundColor: AppColors.gold,
@@ -181,7 +178,6 @@ class _VisitCardActions extends StatelessWidget {
 
     if (visit.status.isPending) {
       return _VisitCardAction(
-        key: ValueKey('tenant-visit-cancel-${visit.id}'),
         label: LocaleKeys.tenantVisitCancelRequest,
         backgroundColor: AppColors.redPale,
         foregroundColor: AppColors.red,
@@ -190,7 +186,6 @@ class _VisitCardActions extends StatelessWidget {
     }
 
     return _VisitCardAction(
-      key: ValueKey('tenant-visit-alternative-${visit.id}'),
       label: LocaleKeys.tenantVisitFindAlternative,
       backgroundColor: AppColors.sokoonTeal,
       foregroundColor: AppColors.white,
@@ -201,7 +196,6 @@ class _VisitCardActions extends StatelessWidget {
 
 class _VisitCardAction extends StatelessWidget {
   const _VisitCardAction({
-    super.key,
     required this.label,
     required this.backgroundColor,
     required this.foregroundColor,

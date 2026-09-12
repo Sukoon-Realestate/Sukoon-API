@@ -64,7 +64,6 @@ class _TenantProfileScreenState extends State<TenantProfileScreen> {
           return Directionality(
             textDirection: TextDirection.rtl,
             child: Scaffold(
-              key: const ValueKey('T-PROFILE-01'),
               backgroundColor: AppColors.scaffoldBackground,
               body: SafeArea(
                 child: Column(
@@ -72,7 +71,6 @@ class _TenantProfileScreenState extends State<TenantProfileScreen> {
                     ProfileScreenHeader(
                       title: LocaleKeys.profileMyAccount,
                       trailing: IconButton(
-                        key: const ValueKey('tenant-profile-summary'),
                         onPressed: state.isSuccess ? _openSummary : null,
                         style: IconButton.styleFrom(
                           backgroundColor: AppColors.white,

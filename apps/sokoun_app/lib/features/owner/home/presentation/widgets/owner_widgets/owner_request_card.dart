@@ -31,7 +31,6 @@ class OwnerRequestCard extends StatelessWidget {
     return Material(
       color: AppColors.transparent,
       child: InkWell(
-        key: ValueKey('owner-dashboard-request-$requestId'),
         onTap: _openDetails,
         borderRadius: BorderRadius.circular(20.r),
         splashFactory: InkRipple.splashFactory,

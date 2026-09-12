@@ -21,7 +21,6 @@ class ChatMessageBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      key: ValueKey('chat-message-${message.message.id}'),
       constraints: BoxConstraints(maxWidth: 285.w),
       margin: EdgeInsets.only(bottom: 8.h),
       child: Column(

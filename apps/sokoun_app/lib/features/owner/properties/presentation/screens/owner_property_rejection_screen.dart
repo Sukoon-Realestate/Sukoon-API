@@ -157,9 +157,6 @@ class _OwnerPropertyRejectionScreenState
                     ),
                     22.szH,
                     DefaultButton(
-                      key: const ValueKey(
-                        'owner-property-rejection-edit-resubmit',
-                      ),
                       title: LocaleKeys.ownerPropertyEditAndResubmit,
                       onTap: _isLoadingPropertyDetails
                           ? null
@@ -170,7 +167,6 @@ class _OwnerPropertyRejectionScreenState
                     ),
                     12.szH,
                     DefaultButton(
-                      key: const ValueKey('owner-property-rejection-support'),
                       title: LocaleKeys.ownerPropertyContactSupport,
                       onTap: () => _contactSupport(context),
                       height: 50.h,

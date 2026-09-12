@@ -34,7 +34,6 @@ class OwnerVisitRequestsTopBar extends StatelessWidget {
             child: !showBackButton
                 ? null
                 : IconButton(
-                    key: const ValueKey('owner-requests-back'),
                     onPressed: Go.back,
                     visualDensity: VisualDensity.compact,
                     style: IconButton.styleFrom(
@@ -62,7 +61,6 @@ class OwnerVisitRequestsTopBar extends StatelessWidget {
           SizedBox.square(
             dimension: 36.r,
             child: IconButton(
-              key: const ValueKey('owner-open-calendar'),
               onPressed: () => Go.to(
                 OwnerRequestsCalendarScreen(ownerPropertyId: ownerPropertyId),
               ),

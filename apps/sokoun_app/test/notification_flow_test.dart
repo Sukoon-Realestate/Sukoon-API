@@ -79,48 +79,59 @@ void main() {
     expect(NotificationsContent.forRole(NotificationRole.tenant), hasLength(5));
     expect(find.byType(NotificationCard), findsWidgets);
     expect(
-      find.byKey(const ValueKey('notification-unread-tenant-visit-accepted')),
-      findsOneWidget,
+      tester
+          .widget<NotificationCard>(
+            find.byKey(const ValueKey('tenant-visit-accepted')),
+          )
+          .notification
+          .isUnread,
+      isTrue,
     );
     expect(tester.takeException(), isNull);
 
-    await tester.tap(
-      find.byKey(const ValueKey('notification-card-tenant-visit-accepted')),
-    );
+    await tester.tap(find.byKey(const ValueKey('tenant-visit-accepted')));
     await tester.pumpAndSettle();
 
     expect(find.byType(NotificationDetailScreen), findsOneWidget);
     expect(find.text('تم قبول طلب زيارتك'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
-    await tester.tap(find.byKey(const ValueKey('notification-detail-back')));
+    await tester.tap(find.byIcon(Icons.arrow_back_ios_new_rounded));
     await tester.pumpAndSettle();
 
     expect(
-      find.byKey(const ValueKey('notification-unread-tenant-visit-accepted')),
-      findsNothing,
+      tester
+          .widget<NotificationCard>(
+            find.byKey(const ValueKey('tenant-visit-accepted')),
+          )
+          .notification
+          .isUnread,
+      isFalse,
     );
     expect(tester.takeException(), isNull);
 
-    await tester.tap(find.byKey(const ValueKey('notifications-settings')));
+    await tester.tap(find.byIcon(Icons.settings_outlined));
     await tester.pumpAndSettle();
 
     expect(find.byType(NotificationSettingsScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
-    await tester.tap(
-      find.byKey(const ValueKey('notification-setting-property-updates')),
-    );
+    await tester.tap(find.byKey(const ValueKey('property-updates')));
     await tester.pump();
     expect(tester.takeException(), isNull);
 
-    await tester.tap(find.byKey(const ValueKey('notification-settings-back')));
+    await tester.tap(find.byIcon(Icons.arrow_back_ios_new_rounded));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('notifications-mark-all')));
+    await tester.tap(find.text('تحديد الكل كمقروء'));
     await tester.pump();
 
     expect(
-      find.byKey(const ValueKey('notification-unread-tenant-new-property')),
-      findsNothing,
+      tester
+          .widget<NotificationCard>(
+            find.byKey(const ValueKey('tenant-new-property')),
+          )
+          .notification
+          .isUnread,
+      isFalse,
     );
     expect(tester.takeException(), isNull);
   });
@@ -139,18 +150,16 @@ void main() {
     expect(find.byType(NotificationCard), findsWidgets);
     expect(find.text('طلب زيارة جديد!'), findsOneWidget);
 
-    await tester.tap(
-      find.byKey(const ValueKey('notification-card-owner-visit-request')),
-    );
+    await tester.tap(find.byKey(const ValueKey('owner-visit-request')));
     await tester.pumpAndSettle();
 
     expect(find.byType(NotificationDetailScreen), findsOneWidget);
     expect(find.text('تفاصيل الطلب'), findsOneWidget);
     expect(find.text('عرض الطلب'), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('notification-detail-back')));
+    await tester.tap(find.byIcon(Icons.arrow_back_ios_new_rounded));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('notifications-settings')));
+    await tester.tap(find.byIcon(Icons.settings_outlined));
     await tester.pumpAndSettle();
 
     expect(find.byType(NotificationSettingsScreen), findsOneWidget);
@@ -182,7 +191,7 @@ void main() {
 
     await tester.pumpWidget(buildScreen(const TenantHomeScreen()));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('tenant-open-notifications')));
+    await tester.tap(find.byIcon(Icons.notifications_none_rounded));
     await tester.pumpAndSettle();
 
     expect(find.text('تم قبول طلب زيارتك'), findsOneWidget);
@@ -191,7 +200,7 @@ void main() {
     await tester.pump();
     await tester.pumpWidget(buildScreen(const OwnerHomeScreen()));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('owner-open-notifications')));
+    await tester.tap(find.byIcon(Icons.notifications_none_rounded));
     await tester.pumpAndSettle();
 
     expect(find.text('طلب زيارة جديد!'), findsOneWidget);

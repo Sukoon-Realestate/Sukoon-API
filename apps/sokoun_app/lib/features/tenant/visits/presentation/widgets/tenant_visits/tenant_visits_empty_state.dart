@@ -56,7 +56,6 @@ class TenantVisitsEmptyState extends StatelessWidget {
             ),
             18.szH,
             DefaultButton(
-              key: const ValueKey('tenant-visits-empty-action'),
               onTap: isFiltered
                   ? onClearFiltersPressed
                   : () => Go.to(const TenantSearchScreen()),

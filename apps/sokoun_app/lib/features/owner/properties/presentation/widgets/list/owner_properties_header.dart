@@ -14,7 +14,6 @@ class OwnerPropertiesHeader extends StatelessWidget {
           color: AppColors.sokoonTeal,
           borderRadius: BorderRadius.circular(14.r),
           child: InkWell(
-            key: const ValueKey('owner-properties-add'),
             onTap: onAddPressed,
             borderRadius: BorderRadius.circular(14.r),
             child: Row(

@@ -42,7 +42,6 @@ class FavoritePropertyCard extends StatelessWidget {
           children: [
             _FavoritePropertyImage(
               onRemove: onRemove,
-              itemId: item.id,
               imageUrl: item.mainImage,
             ),
             Column(
@@ -91,12 +90,10 @@ class FavoritePropertyCard extends StatelessWidget {
 class _FavoritePropertyImage extends StatelessWidget {
   const _FavoritePropertyImage({
     required this.onRemove,
-    required this.itemId,
     required this.imageUrl,
   });
 
   final VoidCallback onRemove;
-  final String itemId;
   final String imageUrl;
 
   @override
@@ -123,7 +120,6 @@ class _FavoritePropertyImage extends StatelessWidget {
                 button: true,
                 label: LocaleKeys.favoriteRemoveSemanticLabel,
                 child: GestureDetector(
-                  key: ValueKey('favorite-remove-$itemId'),
                   onTap: onRemove,
                   behavior: HitTestBehavior.opaque,
                   child: Container(

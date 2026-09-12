@@ -375,18 +375,9 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(
-      find.byKey(const ValueKey('owner-request-card-sara-nasr-city')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const ValueKey('owner-request-card-mohamed-jeddah')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const ValueKey('owner-request-chat-sara-nasr-city')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const ValueKey('sara-nasr-city')), findsOneWidget);
+    expect(find.byKey(const ValueKey('mohamed-jeddah')), findsOneWidget);
+    expect(find.byIcon(Icons.chat_bubble_outline_rounded), findsNWidgets(3));
     expect(find.text('السبت 15 يونيو · 3:00 م'), findsOneWidget);
     expect(find.text('تم القبول'), findsOneWidget);
     expect(find.text('قبول'), findsNWidgets(2));
@@ -412,9 +403,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(
-      find.byKey(const ValueKey('owner-dashboard-request-dashboard-visit-id')),
-    );
+    await tester.tap(find.byType(OwnerRequestCard));
     await tester.pumpAndSettle();
 
     expect(find.byType(OwnerRequestDetailsScreen), findsOneWidget);
@@ -436,9 +425,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    final Finder chatButton = find.byKey(
-      const ValueKey('owner-request-open-chat'),
-    );
+    final Finder chatButton = find.text('فتح المحادثة');
     await tester.ensureVisible(chatButton);
     await tester.tap(chatButton);
     await tester.pump();
@@ -462,18 +449,14 @@ void main() {
     expect(find.text('طلبات الزيارة'), findsOneWidget);
     expect(find.text('سارة أحمد خالد'), findsOneWidget);
 
-    await tester.tap(
-      find.byKey(const ValueKey('owner-request-card-sara-nasr-city')),
-    );
+    await tester.tap(find.byKey(const ValueKey('sara-nasr-city')));
     await tester.pumpAndSettle();
 
     expect(find.byType(OwnerRequestDetailsScreen), findsOneWidget);
     expect(find.text('تفاصيل الطلب'), findsOneWidget);
     expect(find.text('ملاحظة المستأجر'), findsOneWidget);
 
-    final Finder acceptButton = find.byKey(
-      const ValueKey('owner-request-accept'),
-    );
+    final Finder acceptButton = find.text('قبول الزيارة ✓');
     await tester.ensureVisible(acceptButton);
     await tester.tap(acceptButton);
     await tester.pumpAndSettle();
@@ -481,7 +464,7 @@ void main() {
     expect(find.byType(OwnerAcceptRequestSheet), findsOneWidget);
     expect(find.text('قبول طلب الزيارة'), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('owner-accept-confirm')));
+    await tester.tap(find.text('تأكيد القبول'));
     await tester.pumpAndSettle();
 
     expect(find.byType(OwnerVisitRequestsScreen), findsOneWidget);
@@ -505,14 +488,10 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await tester.tap(
-      find.byKey(const ValueKey('owner-request-card-sara-nasr-city')),
-    );
+    await tester.tap(find.byKey(const ValueKey('sara-nasr-city')));
     await tester.pumpAndSettle();
 
-    final Finder rejectButton = find.byKey(
-      const ValueKey('owner-request-reject'),
-    );
+    final Finder rejectButton = find.text('رفض الطلب');
     await tester.ensureVisible(rejectButton);
     await tester.tap(rejectButton);
     await tester.pumpAndSettle();
@@ -520,10 +499,8 @@ void main() {
     expect(find.byType(OwnerRejectRequestSheet), findsOneWidget);
     expect(find.text('رفض طلب الزيارة'), findsOneWidget);
 
-    await tester.tap(
-      find.byKey(const ValueKey('owner-reject-reason-propertyRented')),
-    );
-    await tester.tap(find.byKey(const ValueKey('owner-reject-confirm')));
+    await tester.tap(find.text('العقار مؤجر حالياً'));
+    await tester.tap(find.text('تأكيد الرفض'));
     await tester.pumpAndSettle();
 
     expect(find.byType(OwnerVisitRequestsScreen), findsOneWidget);
@@ -547,7 +524,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('owner-open-calendar')));
+    await tester.tap(find.byTooltip('تقويم الزيارات'));
     await tester.pumpAndSettle();
 
     expect(find.byType(OwnerRequestsCalendarScreen), findsOneWidget);
@@ -557,14 +534,12 @@ void main() {
     expect(repository.lastQuery, containsPair('year', DateTime.now().year));
     expect(repository.lastQuery, containsPair('month', DateTime.now().month));
 
-    await tester.tap(find.byKey(const ValueKey('owner-calendar-day-19')));
+    await tester.tap(find.text('19'));
     await tester.pumpAndSettle();
     expect(find.text('زيارات يوم 19'), findsOneWidget);
     final String availabilityDate = repository.lastQuery!['date'] as String;
 
-    final Finder availabilityButton = find.byKey(
-      const ValueKey('owner-open-availability'),
-    );
+    final Finder availabilityButton = find.text('إدارة مواعيد الإتاحة');
     await tester.ensureVisible(availabilityButton);
     await tester.tap(availabilityButton);
     await tester.pumpAndSettle();
@@ -572,8 +547,8 @@ void main() {
     expect(find.byType(OwnerAvailabilityScreen), findsOneWidget);
     expect(find.text('مواعيد الاتاحة'), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('owner-availability-time-1')));
-    await tester.tap(find.byKey(const ValueKey('owner-availability-save')));
+    await tester.tap(find.text('10:00 ص'));
+    await tester.tap(find.text('حفظ مواعيد الاتاحة'));
     await tester.pumpAndSettle();
 
     expect(find.byType(OwnerRequestsCalendarScreen), findsOneWidget);

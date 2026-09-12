@@ -59,7 +59,6 @@ class _ProfileDeleteAccountButtonState
                 button: true,
                 label: LocaleKeys.deleteAccount,
                 child: InkWell(
-                  key: const ValueKey('profile-delete-account'),
                   onTap: state.isLoading ? null : _deleteAccount,
                   borderRadius: BorderRadius.circular(16.r),
                   child: Container(
@@ -151,7 +150,6 @@ class _ProfileDeleteAccountDialog extends StatelessWidget {
       actionsAlignment: MainAxisAlignment.center,
       actions: [
         TextButton(
-          key: const ValueKey('profile-delete-cancel'),
           onPressed: () => Go.back(false),
           child: AppText(
             LocaleKeys.cancel,
@@ -161,7 +159,6 @@ class _ProfileDeleteAccountDialog extends StatelessWidget {
           ),
         ),
         FilledButton(
-          key: const ValueKey('profile-delete-confirm'),
           onPressed: () => Go.back(true),
           style: FilledButton.styleFrom(
             backgroundColor: AppColors.red,

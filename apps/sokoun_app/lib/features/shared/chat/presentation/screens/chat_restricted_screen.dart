@@ -71,7 +71,6 @@ class ChatRestrictedScreen extends StatelessWidget {
                       const _VerificationWarning(),
                       20.szH,
                       DefaultButton(
-                        key: const ValueKey('chat-start-kyc'),
                         onTap: _openVerification,
                         title: LocaleKeys.chatStartKyc,
                         color: AppColors.sokoonTeal,
@@ -124,7 +123,6 @@ class _RestrictedHeader extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            key: const ValueKey('chat-restricted-back'),
             onPressed: () => Go.back(),
             icon: Icon(
               Icons.arrow_back_ios_new_rounded,

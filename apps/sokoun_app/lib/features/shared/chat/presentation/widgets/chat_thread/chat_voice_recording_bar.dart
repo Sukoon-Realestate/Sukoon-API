@@ -34,7 +34,6 @@ class ChatVoiceRecordingBar extends StatelessWidget {
           child: Row(
             children: [
               _RecordingButton(
-                key: const ValueKey('chat-voice-send'),
                 onPressed: onSendPressed,
                 color: AppColors.sokoonTeal,
                 icon: Icons.send_rounded,
@@ -73,7 +72,6 @@ class ChatVoiceRecordingBar extends StatelessWidget {
               ),
               12.szW,
               _RecordingButton(
-                key: const ValueKey('chat-voice-cancel'),
                 onPressed: onCancelPressed,
                 color: AppColors.red,
                 icon: Icons.close_rounded,
@@ -88,7 +86,6 @@ class ChatVoiceRecordingBar extends StatelessWidget {
 
 class _RecordingButton extends StatelessWidget {
   const _RecordingButton({
-    super.key,
     required this.onPressed,
     required this.color,
     required this.icon,

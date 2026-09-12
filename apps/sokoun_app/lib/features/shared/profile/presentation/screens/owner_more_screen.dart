@@ -37,14 +37,12 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        key: const ValueKey('O-MORE-01'),
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
           child: ListView(
             padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 24.h),
             children: [
               InkWell(
-                key: const ValueKey('owner-more-profile-header'),
                 onTap: _openProfile,
                 borderRadius: BorderRadius.circular(16.r),
                 child: Padding(

@@ -220,12 +220,14 @@ class _ChatThreadScreenState extends State<ChatThreadScreen> {
                             : MainAxisAlignment.start,
                         rightMessageBuilder: (message) {
                           return ChatMessageBubble(
+                            key: ValueKey(message.message.id),
                             message: message,
                             isFromMe: true,
                           );
                         },
                         leftMessageBuilder: (message) {
                           return ChatMessageBubble(
+                            key: ValueKey(message.message.id),
                             message: message,
                             isFromMe: false,
                           );

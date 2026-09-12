@@ -14,12 +14,28 @@ import 'package:sokoun_app/features/shared/auth/presentation/screens/welcome_scr
 import '../widgets/auth_scaffold.dart';
 import '../widgets/role_select/role_option_card.dart';
 
-class RoleSelectScreen extends StatelessWidget {
-  RoleSelectScreen({super.key});
+class RoleSelectScreen extends StatefulWidget {
+  const RoleSelectScreen({super.key});
 
-  final ValueNotifier<UserType> _currentUserType = ValueNotifier(
-    UserTypeHelper.instance.currentUserType,
-  );
+  @override
+  State<RoleSelectScreen> createState() => _RoleSelectScreenState();
+}
+
+class _RoleSelectScreenState extends State<RoleSelectScreen> {
+  late final ValueNotifier<UserType> _currentUserType;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentUserType = ValueNotifier(UserTypeHelper.instance.currentUserType);
+  }
+
+  @override
+  void dispose() {
+    _currentUserType.dispose();
+    super.dispose();
+  }
+
   void _selectNewType(UserType type) {
     UserTypeHelper.instance.setUserType(type);
     _currentUserType.value = type;

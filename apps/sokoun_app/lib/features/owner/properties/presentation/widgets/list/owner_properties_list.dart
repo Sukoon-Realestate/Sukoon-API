@@ -42,6 +42,7 @@ class OwnerPropertiesList extends StatelessWidget {
       cacheFromJson: usesApi ? OwnerPropertyContent.fromJson : null,
       emptyListView: OwnerPropertiesEmptyState(onAddPressed: onAddPressed),
       itemBuilder: (context, data, index, property) => OwnerPropertyCard(
+        key: ValueKey(property.id),
         property: property,
         onEditPressed: () => onEditPressed(property),
         onActionsPressed: () => onActionsPressed(property),

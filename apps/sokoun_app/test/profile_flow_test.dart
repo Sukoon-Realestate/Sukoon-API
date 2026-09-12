@@ -227,19 +227,13 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(
-      find.byKey(const ValueKey('profile-delete-account')),
-      findsOneWidget,
-    );
-    await tester.tap(find.byKey(const ValueKey('profile-delete-account')));
+    expect(find.byType(ProfileDeleteAccountButton), findsOneWidget);
+    await tester.tap(find.byType(ProfileDeleteAccountButton));
     await tester.pumpAndSettle();
 
-    expect(
-      find.byKey(const ValueKey('profile-delete-confirm')),
-      findsOneWidget,
-    );
-    expect(find.byKey(const ValueKey('profile-delete-cancel')), findsOneWidget);
-    await tester.tap(find.byKey(const ValueKey('profile-delete-cancel')));
+    expect(find.byType(FilledButton), findsOneWidget);
+    expect(find.byType(TextButton), findsOneWidget);
+    await tester.tap(find.byType(TextButton));
     await tester.pumpAndSettle();
 
     expect(repository.lastApi, isEmpty);
@@ -253,7 +247,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const ValueKey('T-PROFILE-01')), findsOneWidget);
+    expect(find.byType(TenantProfileScreen), findsOneWidget);
     expect(find.text('Zeayd Mohammed'), findsWidgets);
     expect(find.text('2'), findsWidgets);
     await tester.drag(find.byType(ListView).last, const Offset(0, -900));
@@ -263,10 +257,10 @@ void main() {
     expect(repository.lastMethod, HttpRequestType.get);
     expect(tester.takeException(), isNull);
 
-    await tester.tap(find.byKey(const ValueKey('tenant-profile-summary')));
+    await tester.tap(find.byIcon(Icons.settings_outlined));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const ValueKey('T-SUMMARY-01')), findsOneWidget);
+    expect(find.byType(TenantAccountSummaryScreen), findsOneWidget);
     expect(find.text('Zeayd Mohammed'), findsOneWidget);
     expect(find.text('55%'), findsOneWidget);
     expect(find.text('غير مكتمل'), findsWidgets);
@@ -282,14 +276,16 @@ void main() {
     await tester.pumpWidget(buildScreen(const OwnerMoreScreen(user: owner)));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const ValueKey('O-MORE-01')), findsOneWidget);
+    expect(find.byType(OwnerMoreScreen), findsOneWidget);
     expect(find.text(owner.name), findsOneWidget);
     expect(tester.takeException(), isNull);
 
-    await tester.tap(find.byKey(const ValueKey('owner-more-profile-header')));
+    await tester.tap(
+      find.ancestor(of: find.text(owner.name), matching: find.byType(InkWell)),
+    );
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const ValueKey('O-PROFILE-01')), findsOneWidget);
+    expect(find.byType(OwnerProfileScreen), findsOneWidget);
     expect(find.text('Zeayd Mohammed'), findsWidgets);
     expect(find.text('96%'), findsOneWidget);
     expect(find.text('010****972'), findsOneWidget);
@@ -310,7 +306,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const ValueKey('T-EDIT-01')), findsOneWidget);
+    expect(find.byType(TenantEditProfileScreen), findsOneWidget);
     _expectPrefilledFields(tester, tenant);
     expect(tester.takeException(), isNull);
   });
@@ -324,7 +320,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const ValueKey('O-EDIT-P-01')), findsOneWidget);
+    expect(find.byType(OwnerEditProfileScreen), findsOneWidget);
     _expectPrefilledFields(tester, owner);
     expect(tester.takeException(), isNull);
   });
@@ -468,21 +464,19 @@ class _ProfileRepository implements BaseRepository {
 }
 
 void _expectPrefilledFields(WidgetTester tester, UserModel user) {
-  final SokoonNameField nameField = tester.widget(
-    find.byKey(const ValueKey('profile-name-field')),
-  );
+  final SokoonNameField nameField = tester.widget(find.byType(SokoonNameField));
   final SokoonPhoneField phoneField = tester.widget(
-    find.byKey(const ValueKey('profile-phone-field')),
+    find.byType(SokoonPhoneField),
   );
   final SokoonEmailField emailField = tester.widget(
-    find.byKey(const ValueKey('profile-email-field')),
+    find.byType(SokoonEmailField),
   );
 
   expect(nameField.controller.text, user.name);
   expect(phoneField.controller.text, user.phone);
   expect(emailField.controller.text, user.email);
   expect(emailField.readOnly, isTrue);
-  expect(find.byKey(const ValueKey('profile-gender-field')), findsOneWidget);
+  expect(find.byType(FormField<ProfileGender>), findsOneWidget);
 }
 
 class _ProfileTranslationsAssetLoader extends AssetLoader {

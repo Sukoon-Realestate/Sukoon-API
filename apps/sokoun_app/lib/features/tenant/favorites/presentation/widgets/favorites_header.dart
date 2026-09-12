@@ -53,7 +53,6 @@ class FavoritesHeader extends StatelessWidget {
         ),
         AppSize.sW8.szW,
         PropertyFilterButton(
-          key: const ValueKey('favorites-open-filters'),
           activeCount: activeFilterCount,
           onPressed: onFiltersPressed,
         ),

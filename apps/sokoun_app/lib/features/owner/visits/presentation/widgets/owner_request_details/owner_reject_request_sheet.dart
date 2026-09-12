@@ -33,7 +33,6 @@ class _OwnerRejectRequestSheetState extends State<OwnerRejectRequestSheet> {
             18.szH,
             _OwnerDecisionSheetHeader(
               icon: Icons.close_rounded,
-              titleKey: const ValueKey('owner-reject-sheet-title'),
               title: LocaleKeys.ownerRejectTitle,
               subtitle: LocaleKeys.ownerRejectSubtitle,
               iconColor: AppColors.red,
@@ -51,7 +50,6 @@ class _OwnerRejectRequestSheetState extends State<OwnerRejectRequestSheet> {
             ],
             18.szH,
             DefaultButton(
-              key: const ValueKey('owner-reject-confirm'),
               onTap: () => Go.back(_selectedReason),
               title: LocaleKeys.ownerRejectConfirm,
               color: AppColors.red,
@@ -84,7 +82,6 @@ class _OwnerRejectionReasonTile extends StatelessWidget {
     return Material(
       color: AppColors.transparent,
       child: InkWell(
-        key: ValueKey('owner-reject-reason-${reason.name}'),
         onTap: onPressed,
         borderRadius: BorderRadius.circular(12.r),
         child: Container(

@@ -52,7 +52,10 @@ class ChatListScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final ConversationContent conversation =
                         conversations[index];
-                    return ChatListItem(conversation: conversation);
+                    return ChatListItem(
+                      key: ValueKey(conversation.id),
+                      conversation: conversation,
+                    );
                   },
                   separatorBuilder: (context, index) => Divider(
                     height: 1.h,

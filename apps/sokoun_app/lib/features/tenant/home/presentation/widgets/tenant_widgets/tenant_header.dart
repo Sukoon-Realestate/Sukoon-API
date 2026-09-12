@@ -47,7 +47,6 @@ class TenantHeader extends StatelessWidget {
         ),
         10.szW,
         const HomeCircleButton(
-          key: ValueKey('tenant-open-notifications'),
           icon: Icons.notifications_none_rounded,
           iconColor: AppColors.sokoonNavy,
           showBadge: true,

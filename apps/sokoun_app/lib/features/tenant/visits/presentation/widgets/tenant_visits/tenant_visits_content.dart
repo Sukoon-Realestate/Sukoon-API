@@ -25,10 +25,7 @@ class TenantVisitsScreenContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        VisitHeader(
-          title: LocaleKeys.tenantVisitsTitle,
-          backKey: const ValueKey('tenant-visits-back'),
-        ),
+        VisitHeader(title: LocaleKeys.tenantVisitsTitle),
         TenantVisitsFilters(
           selectedFilter: selectedFilter,
           onFilterSelected: onFilterSelected,

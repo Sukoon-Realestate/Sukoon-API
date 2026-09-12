@@ -128,10 +128,7 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                VisitHeader(
-                  title: LocaleKeys.tenantVisitBookTitle,
-                  backKey: const ValueKey('book-visit-back'),
-                ),
+                VisitHeader(title: LocaleKeys.tenantVisitBookTitle),
                 Expanded(
                   child: BookVisitForm(
                     property: _property,

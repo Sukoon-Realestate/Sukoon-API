@@ -91,7 +91,6 @@ class _ProfileEditViewState extends State<ProfileEditView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _ProfileReadonlyField(
-              key: const ValueKey('profile-gender-field'),
               label: LocaleKeys.gender,
               value: _genderLabel,
               onTap: isSaving ? null : _pickGender,
@@ -162,7 +161,6 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        key: ValueKey(widget.userType.isOwner ? 'O-EDIT-P-01' : 'T-EDIT-01'),
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
           child: Column(
@@ -171,7 +169,6 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                 title: _title,
                 showBackButton: true,
                 trailing: TextButton(
-                  key: const ValueKey('profile-save'),
                   onPressed: isSaving ? null : _save,
                   child: isSaving
                       ? SizedBox.square(
@@ -218,7 +215,6 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       ),
                       24.szH,
                       SokoonNameField(
-                        key: const ValueKey('profile-name-field'),
                         controller: _nameController,
                         label: LocaleKeys.fullName,
                         hintText: LocaleKeys.fullNameHint,
@@ -227,14 +223,12 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       ),
                       14.szH,
                       SokoonPhoneField(
-                        key: const ValueKey('profile-phone-field'),
                         controller: _phoneController,
                         accentColor: _accentColor,
                         validator: Validators.validateEmpty,
                       ),
                       14.szH,
                       SokoonEmailField(
-                        key: const ValueKey('profile-email-field'),
                         controller: _emailController,
                         accentColor: _accentColor,
                         action: TextInputAction.done,
@@ -282,7 +276,6 @@ class _ProfileEditViewState extends State<ProfileEditView> {
 
 class _ProfileReadonlyField extends StatelessWidget {
   const _ProfileReadonlyField({
-    super.key,
     required this.label,
     required this.value,
     this.onTap,
@@ -363,13 +356,11 @@ class _ProfileGenderSheet extends StatelessWidget {
             ),
             10.szH,
             _ProfileGenderOption(
-              key: const ValueKey('profile-gender-male'),
               label: LocaleKeys.profileMale,
               onTap: () => Go.back(ProfileGender.male),
             ),
             const Divider(height: 1, color: AppColors.sokoonBorder),
             _ProfileGenderOption(
-              key: const ValueKey('profile-gender-female'),
               label: LocaleKeys.profileFemale,
               onTap: () => Go.back(ProfileGender.female),
             ),
@@ -381,11 +372,7 @@ class _ProfileGenderSheet extends StatelessWidget {
 }
 
 class _ProfileGenderOption extends StatelessWidget {
-  const _ProfileGenderOption({
-    super.key,
-    required this.label,
-    required this.onTap,
-  });
+  const _ProfileGenderOption({required this.label, required this.onTap});
 
   final String label;
   final VoidCallback onTap;

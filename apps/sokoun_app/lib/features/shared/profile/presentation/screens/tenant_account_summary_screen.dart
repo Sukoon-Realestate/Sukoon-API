@@ -33,7 +33,6 @@ class _TenantAccountSummaryScreenState
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
-          key: const ValueKey('T-SUMMARY-01'),
           backgroundColor: AppColors.scaffoldBackground,
           body: SafeArea(
             child: Column(

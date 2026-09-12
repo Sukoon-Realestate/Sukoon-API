@@ -138,7 +138,6 @@ class _OwnerCalendarHeader extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            key: const ValueKey('owner-calendar-back'),
             onPressed: Go.back,
             visualDensity: VisualDensity.compact,
             icon: Icon(

@@ -45,7 +45,6 @@ class TenantPropertyDetailsContentView extends StatelessWidget {
         ),
         8.szH,
         GestureDetector(
-          key: const ValueKey('tenant-property-details-location'),
           onTap: _openLocation,
           behavior: HitTestBehavior.opaque,
           child: Row(

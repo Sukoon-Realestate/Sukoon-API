@@ -137,6 +137,42 @@ void main() {
       }
       expect(violations, isEmpty, reason: violations.join('\n'));
     });
+
+    test('assigned widget keys represent real lifecycle identity', () {
+      final RegExp valueKey = RegExp(r'ValueKey\(([^\)]*)\)');
+      final violations = <String>[];
+      for (final File file in dartFiles.where(_isVisualPresentationFile)) {
+        final String source = file.readAsStringSync();
+        if (source.contains('UniqueKey(') || source.contains('ObjectKey(')) {
+          violations.add(
+            '${_relativePath(file)} uses unstable or object-based identity',
+          );
+        }
+        if (RegExp(r'key:\s*(?:const\s+)?Key\(').hasMatch(source)) {
+          violations.add('${_relativePath(file)} uses a decorative Key');
+        }
+
+        for (final RegExpMatch match in valueKey.allMatches(source)) {
+          final String identity = match.group(1) ?? '';
+          final bool usesDomainId = RegExp(
+            r'\.\s*id\b|\b[A-Za-z_][A-Za-z0-9_]*Id\b',
+          ).hasMatch(identity);
+          final bool resetsOwnedState =
+              identity.contains('ResetKey') ||
+              identity.contains('dropdownGeneration');
+          final bool switchesAnimatedState =
+              source.contains('AnimatedSwitcher(') &&
+              (identity.contains('update-loading') ||
+                  identity.contains('update-idle'));
+          if (!usesDomainId && !resetsOwnedState && !switchesAnimatedState) {
+            violations.add(
+              '${_relativePath(file)} uses ValueKey($identity) without stable identity',
+            );
+          }
+        }
+      }
+      expect(violations, isEmpty, reason: violations.join('\n'));
+    });
   });
 }
 

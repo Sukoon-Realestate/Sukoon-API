@@ -41,7 +41,6 @@ class TenantPropertyBottomActions extends StatelessWidget {
         children: [
           Expanded(
             child: GestureDetector(
-              key: const ValueKey('tenant-property-details-book-visit'),
               onTap: _openBookVisit,
               behavior: HitTestBehavior.opaque,
               child: Container(
@@ -62,7 +61,6 @@ class TenantPropertyBottomActions extends StatelessWidget {
           ),
           10.szW,
           GestureDetector(
-            key: const ValueKey('tenant-property-details-bottom-save'),
             onTap: onSavedPressed,
             behavior: HitTestBehavior.opaque,
             child: Container(

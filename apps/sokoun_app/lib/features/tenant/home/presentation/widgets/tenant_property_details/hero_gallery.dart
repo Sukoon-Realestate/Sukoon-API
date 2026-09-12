@@ -73,13 +73,11 @@ class TenantPropertyHeroGallery extends StatelessWidget {
               textDirection: TextDirection.ltr,
               children: [
                 _HeroIconButton(
-                  key: const ValueKey('tenant-property-details-back'),
                   icon: Icons.arrow_back_ios_new_rounded,
                   onPressed: Go.back,
                 ),
                 const Spacer(),
                 _HeroIconButton(
-                  key: const ValueKey('tenant-property-details-share'),
                   icon: Icons.ios_share_rounded,
                   onPressed: () => _showShareSheet(context),
                 ),
@@ -170,11 +168,7 @@ class TenantPropertyHeroGallery extends StatelessWidget {
 }
 
 class _HeroIconButton extends StatelessWidget {
-  const _HeroIconButton({
-    super.key,
-    required this.icon,
-    required this.onPressed,
-  });
+  const _HeroIconButton({required this.icon, required this.onPressed});
 
   final IconData icon;
   final VoidCallback onPressed;

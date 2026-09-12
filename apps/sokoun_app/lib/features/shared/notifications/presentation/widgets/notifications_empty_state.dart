@@ -64,7 +64,6 @@ class NotificationsEmptyState extends StatelessWidget {
         ),
         28.szH,
         DefaultButton(
-          key: const ValueKey('notifications-empty-explore'),
           onTap: _exploreProperties,
           title: LocaleKeys.notificationsExploreProperties,
           color: AppColors.white,

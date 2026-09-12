@@ -121,10 +121,7 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
           body: SafeArea(
             child: Column(
               children: [
-                VisitHeader(
-                  title: LocaleKeys.ownerAvailabilityTitle,
-                  backKey: const ValueKey('owner-availability-back'),
-                ),
+                VisitHeader(title: LocaleKeys.ownerAvailabilityTitle),
                 Expanded(
                   child: OwnerAvailabilityContent(
                     days: _days,

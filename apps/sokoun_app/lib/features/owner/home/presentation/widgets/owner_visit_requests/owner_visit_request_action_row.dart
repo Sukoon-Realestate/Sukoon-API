@@ -22,7 +22,6 @@ class OwnerVisitRequestActionRow extends StatelessWidget {
       children: [
         Expanded(
           child: _ActionButton(
-            key: const ValueKey('owner-request-card-accept'),
             label: LocaleKeys.ownerVisitAccept,
             backgroundColor: AppColors.sokoonTeal,
             foregroundColor: AppColors.white,
@@ -32,7 +31,6 @@ class OwnerVisitRequestActionRow extends StatelessWidget {
         8.szW,
         Expanded(
           child: _ActionButton(
-            key: const ValueKey('owner-request-card-reject'),
             label: LocaleKeys.ownerVisitReject,
             backgroundColor: AppColors.white,
             foregroundColor: AppColors.sokoonRose,
@@ -52,7 +50,6 @@ class _ActionButton extends StatelessWidget {
     required this.foregroundColor,
     required this.onPressed,
     this.borderColor,
-    super.key,
   });
 
   final String label;

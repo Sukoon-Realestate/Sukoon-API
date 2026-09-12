@@ -26,7 +26,6 @@ class ProfileScreenHeader extends StatelessWidget {
         children: [
           if (showBackButton)
             IconButton(
-              key: const ValueKey('profile-back'),
               onPressed: Go.back,
               icon: Icon(
                 Icons.arrow_forward_rounded,

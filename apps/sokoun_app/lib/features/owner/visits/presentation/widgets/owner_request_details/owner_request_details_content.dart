@@ -55,7 +55,6 @@ class OwnerRequestDetailsContent extends StatelessWidget {
           16.szH,
           if (request.actions.canAccept) ...[
             DefaultButton(
-              key: const ValueKey('owner-request-accept'),
               onTap: isUpdating ? null : onAcceptPressed,
               title: LocaleKeys.ownerVisitAcceptWithCheck,
               customChild: isAccepting
@@ -72,7 +71,6 @@ class OwnerRequestDetailsContent extends StatelessWidget {
           if (request.actions.canAccept && request.actions.canReject) 12.szH,
           if (request.actions.canReject) ...[
             DefaultButton(
-              key: const ValueKey('owner-request-reject'),
               onTap: isUpdating ? null : onRejectPressed,
               title: LocaleKeys.ownerVisitRejectRequest,
               customChild: isRejecting
@@ -89,7 +87,6 @@ class OwnerRequestDetailsContent extends StatelessWidget {
           ],
           if (request.actions.canAccept || request.actions.canReject) 12.szH,
           DefaultButton(
-            key: const ValueKey('owner-request-open-chat'),
             onTap: isUpdating || !request.actions.canChat ? null : _openChat,
             title: LocaleKeys.ownerVisitOpenChat,
             color: request.actions.canChat

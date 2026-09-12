@@ -61,6 +61,7 @@ class TenantVisitsList extends StatelessWidget {
 
   Widget _buildVisitCard(TenantVisitContent visit) {
     return TenantVisitCard(
+      key: ValueKey(visit.id),
       visit: visit,
       onPressed: () => onVisitPressed(visit),
       onRatePressed: () => onRatePressed(visit),

@@ -74,7 +74,6 @@ class TenantSearchContentView extends StatelessWidget {
               ),
               10.szW,
               PropertyFilterButton(
-                key: const ValueKey('tenant-search-open-filters'),
                 activeCount: activeFilterCount,
                 onPressed: onFiltersPressed,
               ),

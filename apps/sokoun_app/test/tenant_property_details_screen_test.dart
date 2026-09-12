@@ -83,7 +83,8 @@ void main() {
     addTearDown(tester.view.reset);
 
     await tester.pumpWidget(buildScreen());
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
 
     expect(find.byType(TenantPropertyDetailsBody), findsOneWidget);
     expect(find.byType(TenantPropertyDetailsContentView), findsOneWidget);
@@ -93,24 +94,18 @@ void main() {
     expect(repository.hasCacheSerializer, isTrue);
     expect(tester.takeException(), isNull);
 
-    await tester.tap(
-      find.byKey(const ValueKey('tenant-property-details-bottom-save')),
-    );
+    await tester.tap(find.byIcon(Icons.bookmark_border_rounded));
     await tester.pump();
 
     expect(find.byIcon(Icons.bookmark_rounded), findsOneWidget);
 
-    await tester.tap(
-      find.byKey(const ValueKey('tenant-property-details-share')),
-    );
+    await tester.tap(find.byIcon(Icons.ios_share_rounded));
     await tester.pumpAndSettle();
 
     expect(find.byType(TenantPropertyShareSheet), findsOneWidget);
     expect(find.text('مشاركة العقار'), findsOneWidget);
 
-    await tester.tap(
-      find.byKey(const ValueKey('tenant-property-details-cancel-share')),
-    );
+    await tester.tap(find.text('إلغاء'));
     await tester.pumpAndSettle();
 
     expect(find.byType(TenantPropertyShareSheet), findsNothing);
@@ -126,11 +121,13 @@ void main() {
     addTearDown(tester.view.reset);
 
     await tester.pumpWidget(buildScreen());
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
 
     expect(find.byType(TenantPropertyStatusView), findsOneWidget);
     expect(find.byType(ExceptionView), findsOneWidget);
     expect(find.byType(TenantPropertyDetailsBody), findsNothing);
+    await tester.pump(const Duration(seconds: 5));
   });
 }
 

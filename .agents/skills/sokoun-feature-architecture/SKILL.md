@@ -131,6 +131,15 @@ For an `AsyncCubit` screen, follow this lifecycle:
 
 Use the role-aware navigation approach from `home_screen.dart` only for tab containers: build typed destination/screen pairs, select the role-specific list once, render screens with `IndexedStack`, and keep the bottom-navigation widget separate. Do not apply tab-container structure to ordinary screens.
 
+### Widget Identity and Const Usage
+
+- Do not assign `Key`, `ValueKey`, `ObjectKey`, `UniqueKey`, or `GlobalKey` as decoration, as a screen marker, or only to give a widget test a selector. Tests should normally locate controls through visible content, semantics, widget type, or an ancestor/descendant relationship.
+- Retaining the conventional optional `super.key` parameter on a public reusable widget constructor is not an assigned key and remains appropriate. Create or pass an actual key only when Flutter needs stable identity across sibling reordering/replacement, state preservation, keyed animation, or imperative access that cannot be expressed through ordinary ownership.
+- When a collection or entity widget genuinely needs identity, derive a `ValueKey` from its stable domain ID. Namespace the value only when different widget kinds share the same sibling scope. Never key entity widgets by list index, localized/display text, random values, or timestamps.
+- Use `GlobalKey` only for APIs that require imperative state access, such as `FormState` or a field that must be validated or reset externally. Keep the key privately owned by the narrowest lifecycle owner and do not pass it through unrelated widgets.
+- Declare immutable widget and model constructors `const` whenever every field permits it, and use `const` at call sites for compile-time widget trees, collections, decorations, insets, icons, and empty models. Do not force `const` by replacing runtime localization, responsive values, callbacks, or other required behavior.
+- Removing a key must not break stateful-list identity, focus/form behavior, or route transitions. Adding `const` must not change ownership or lifecycle behavior.
+
 ### Widget Action Ownership
 
 Do not add function or callback constructor parameters by default. Before adding an `onPressed`, `onTap`, or similar parameter, decide whether the caller actually needs to choose or coordinate the action.
@@ -164,5 +173,6 @@ Before handing off:
 5. Confirm successful empty API data renders a contextual Lottie empty state without hiding the screen's useful controls.
 6. Confirm feature UI uses applicable core extensions without changing layout semantics.
 7. Confirm the screen is orchestration-focused and visual sections are separated.
-8. Run Dart formatting, focused analysis, relevant tests, and `git diff --check`.
-9. Summarize the resulting file structure and verification. Mention any intentionally omitted layer or unavailable backend/profile screen instead of adding a misleading placeholder.
+8. Confirm assigned widget keys serve a real identity or imperative-state need, entity keys use stable domain IDs, and const-eligible constructors and call sites use `const`.
+9. Run Dart formatting, focused analysis, relevant tests, and `git diff --check`.
+10. Summarize the resulting file structure and verification. Mention any intentionally omitted layer or unavailable backend/profile screen instead of adding a misleading placeholder.

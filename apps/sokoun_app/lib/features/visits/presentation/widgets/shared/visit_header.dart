@@ -10,12 +10,10 @@ class VisitHeader extends StatelessWidget {
   const VisitHeader({
     super.key,
     required this.title,
-    this.backKey,
     this.isBackEnabled = true,
   });
 
   final String title;
-  final Key? backKey;
   final bool isBackEnabled;
 
   @override
@@ -25,7 +23,6 @@ class VisitHeader extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-            key: backKey,
             onPressed: isBackEnabled ? Go.back : null,
             visualDensity: VisualDensity.compact,
             icon: Icon(

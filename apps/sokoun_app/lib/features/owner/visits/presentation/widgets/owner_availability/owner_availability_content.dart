@@ -42,7 +42,6 @@ class OwnerAvailabilityContent extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
                 return OwnerAvailabilityDayChip(
-                  key: ValueKey('owner-availability-day-$index'),
                   day: days[index],
                   isSelected: index == selectedDayIndex,
                   onPressed: () => onDaySelected(index),
@@ -71,7 +70,6 @@ class OwnerAvailabilityContent extends StatelessWidget {
                     SizedBox(
                       width: chipWidth,
                       child: OwnerAvailabilityTimeChip(
-                        key: ValueKey('owner-availability-time-$index'),
                         label: _ownerAvailabilityTimeLabel(
                           context,
                           slots[index].time,
@@ -88,7 +86,6 @@ class OwnerAvailabilityContent extends StatelessWidget {
           const OwnerAvailabilityLegend(),
           18.szH,
           AppLoadingButton(
-            key: const ValueKey('owner-availability-save'),
             asyncCall: (_) => onSavePressed(),
             title: LocaleKeys.ownerAvailabilitySave,
             buttonColor: AppColors.sokoonTeal,

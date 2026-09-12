@@ -105,7 +105,6 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
               14.szH,
               VisitRatingStars(
                 rating: _overallRating,
-                keyPrefix: 'visit-rating-overall',
                 onRatingSelected: (rating) {
                   setState(() => _overallRating = rating);
                 },
@@ -115,7 +114,6 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
                 _VisitRatingCriterion(
                   label: _criteria[index],
                   rating: _criteriaRatings[index],
-                  keyPrefix: 'visit-rating-criterion-$index',
                   onRatingSelected: (rating) => _updateCriterion(index, rating),
                 ),
                 if (index < _criteria.length - 1) 8.szH,
@@ -130,7 +128,6 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
                   border: Border.all(color: AppColors.sokoonBorder),
                 ),
                 child: TextField(
-                  key: const ValueKey('visit-rating-comment'),
                   controller: _commentController,
                   maxLines: 3,
                   style: TextStyle(
@@ -151,7 +148,6 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
               ),
               14.szH,
               DefaultButton(
-                key: const ValueKey('visit-rating-submit'),
                 onTap: _submit,
                 title: LocaleKeys.tenantVisitRatingSubmit,
                 color: AppColors.sokoonTeal,
@@ -173,13 +169,11 @@ class _VisitRatingCriterion extends StatelessWidget {
   const _VisitRatingCriterion({
     required this.label,
     required this.rating,
-    required this.keyPrefix,
     required this.onRatingSelected,
   });
 
   final String label;
   final int rating;
-  final String keyPrefix;
   final ValueChanged<int> onRatingSelected;
 
   @override
@@ -198,7 +192,6 @@ class _VisitRatingCriterion extends StatelessWidget {
         VisitRatingStars(
           rating: rating,
           size: 18,
-          keyPrefix: keyPrefix,
           onRatingSelected: onRatingSelected,
         ),
       ],

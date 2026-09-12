@@ -22,7 +22,6 @@ class OwnerPropertyTopBar extends StatelessWidget {
           child: !showBackButton
               ? null
               : IconButton(
-                  key: const ValueKey('owner-property-back'),
                   onPressed: Go.back,
                   icon: Icon(
                     Icons.arrow_forward_ios_rounded,

@@ -12,6 +12,7 @@ import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_list_s
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_restricted_screen.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_search_screen.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_thread_screen.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_list/chat_search_field.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_list/chat_list_item.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_attachments_sheet.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_message_bubble.dart';
@@ -85,12 +86,12 @@ void main() {
 
       expect(find.byType(ChatListItem), findsNWidgets(3));
 
-      await tester.tap(find.byKey(const ValueKey('chat-search-field')));
+      await tester.tap(find.byType(ChatSearchField));
       await tester.pumpAndSettle();
 
       expect(find.byType(ChatSearchScreen), findsOneWidget);
 
-      await tester.tap(find.byKey(const ValueKey('chat-search-result-1')));
+      await tester.tap(find.byKey(const ValueKey(1)));
       await tester.pumpAndSettle();
 
       expect(find.byType(ChatThreadScreen), findsOneWidget);
@@ -112,41 +113,36 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byKey(const ValueKey('chat-attachment')));
+    await tester.tap(find.byIcon(Icons.image_outlined));
     await tester.pumpAndSettle();
 
     expect(find.byType(ChatAttachmentsSheet), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('chat-attachment-photos')));
+    await tester.tap(find.text('الصور'));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const ValueKey('chat-message-101')), findsOneWidget);
+    expect(find.byKey(const ValueKey(101)), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('chat-voice')));
+    await tester.tap(find.byIcon(Icons.mic_none_rounded));
     await tester.pump();
 
     expect(find.byType(ChatVoiceRecordingBar), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('chat-voice-send')));
+    await tester.tap(find.byIcon(Icons.send_rounded));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const ValueKey('chat-message-102')), findsOneWidget);
+    expect(find.byKey(const ValueKey(102)), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('chat-report-action')));
+    await tester.tap(find.byIcon(Icons.more_vert_rounded));
     await tester.pumpAndSettle();
 
     expect(find.byType(ChatReportSheet), findsOneWidget);
 
-    await tester.tap(find.byKey(const ValueKey('chat-report-reason-5')));
+    await tester.tap(find.text('سبب آخر'));
     await tester.pump();
-    await tester.enterText(
-      find.byKey(const ValueKey('chat-report-details')),
-      'تفاصيل البلاغ',
-    );
-    await tester.ensureVisible(
-      find.byKey(const ValueKey('chat-report-submit')),
-    );
-    await tester.tap(find.byKey(const ValueKey('chat-report-submit')));
+    await tester.enterText(find.byType(TextField).last, 'تفاصيل البلاغ');
+    await tester.ensureVisible(find.text('إرسال البلاغ'));
+    await tester.tap(find.text('إرسال البلاغ'));
     await tester.pumpAndSettle();
 
     expect(find.byType(ChatListScreen), findsOneWidget);
@@ -166,7 +162,7 @@ void main() {
 
     await tester.pumpWidget(buildScreen(const ChatListScreen()));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('chat-3')));
+    await tester.tap(find.byKey(const ValueKey(3)));
     await tester.pumpAndSettle();
 
     expect(find.byType(ChatRestrictedScreen), findsOneWidget);

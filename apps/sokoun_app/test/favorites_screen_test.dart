@@ -90,13 +90,10 @@ void main() {
 
     expect(find.byType(FavoritesScreen), findsOneWidget);
     expect(find.byType(FavoritePropertyCard), findsOneWidget);
-    expect(
-      find.byKey(const ValueKey('favorites-open-filters')),
-      findsOneWidget,
-    );
+    expect(find.bySemanticsLabel('تصفية'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
-    await tester.tap(find.byKey(ValueKey('favorite-remove-${item.id}')));
+    await tester.tap(find.bySemanticsLabel('إزالة من المحفوظات'));
     await tester.pumpAndSettle();
 
     expect(find.byType(FavoritesEmptyState), findsOneWidget);
@@ -131,7 +128,7 @@ void main() {
       ),
     );
     await tester.pump();
-    await tester.tap(find.byKey(const ValueKey('tenant-search-empty-reset')));
+    await tester.tap(find.text('إعادة ضبط البحث والفلاتر'));
     expect(resetSearch, isTrue);
   });
 }
