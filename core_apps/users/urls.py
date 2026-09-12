@@ -8,6 +8,9 @@ from .views import (
     AppleAuthView,
     FacebookAuthView,
     UserDeleteAPIView,
+    UserRegisterAPIView,
+    VerifyEmailAPIView,
+    ResendOtpAPIView,
 )
 
 
@@ -17,6 +20,11 @@ urlpatterns = [
         CustomProviderAuthView.as_view(),
         name="provider-auth",
     ),
+    path("register/", UserRegisterAPIView.as_view(), name="user-register"),
+    path("verify/", VerifyEmailAPIView.as_view(), name="verify-email"),
+    path("verify-email/", VerifyEmailAPIView.as_view()),
+    path("verify-otp/", VerifyEmailAPIView.as_view()),
+    path("resend-otp/", ResendOtpAPIView.as_view(), name="resend-otp"),
     path("login/", CustomTokenObtainPairView.as_view(), name="login"),
     path("refresh/", CustomTokenRefreshView.as_view(), name="refresh"),
     path("logout/", LogoutAPIView.as_view()),
@@ -25,4 +33,3 @@ urlpatterns = [
     path("apple/", AppleAuthView.as_view(), name="apple-login"),
     path("facebook/", FacebookAuthView.as_view(), name="facebook-login"),
 ]
-

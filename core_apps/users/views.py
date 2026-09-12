@@ -15,18 +15,24 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from core_apps.common.renderers import GenericJsonRenderer
 from core_apps.users.serializers import (
+    CreateUserSerializer,
     GoogleAuthSerializer,
     AppleAuthSerializer,
     FacebookAuthSerializer,
     UserDeleteSerializer,
+    VerifyEmailSerializer,
+    ResendOtpSerializer,
 )
 from core_apps.users.services.social_auth_service import (
     authenticate_google,
     authenticate_apple,
     authenticate_facebook,
 )
-from core_apps.users.services.user_service import delete_user_account
-
+from core_apps.users.services.user_service import delete_user_account, register_user
+from core_apps.users.services.otp_service import (
+    verify_email_otp,
+    resend_verification_otp,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -342,3 +348,111 @@ class UserDeleteAPIView(generics.DestroyAPIView):
         """Allow POST method as an alternative to DELETE for mobile/web clients."""
         return self.destroy(request, *args, **kwargs)
 
+
+class UserRegisterAPIView(APIView):
+    """
+    Register a new user account and dispatch an email verification OTP.
+
+    request.body example:
+    {
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "john.doe@example.com",
+        "password": "StrongPassword123!",
+        "re_password": "StrongPassword123!",
+        "birth_date": "1995-05-15",
+        "phone_number": "+201234567890"
+    }
+    """
+
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def post(self, request: Request, *args, **kwargs) -> Response:
+        serializer = CreateUserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = register_user(serializer.validated_data)
+
+        return Response(
+            {
+                "message": "Registration successful. A verification code has been sent to your email.",
+                "user": {
+                    "id": str(user.id),
+                    "email": user.email,
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
+                    "is_verified": user.is_verified,
+                },
+            },
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class VerifyEmailAPIView(APIView):
+    """
+    Verify a user's email address using the 6-digit OTP received via email.
+    Upon successful verification, sets authentication cookies.
+
+    request.body example:
+    {
+        "email": "john.doe@example.com",
+        "otp": "123456"
+    }
+    """
+
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def post(self, request: Request, *args, **kwargs) -> Response:
+        serializer = VerifyEmailSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = verify_email_otp(
+            email=serializer.validated_data["email"],
+            otp=serializer.validated_data["otp"],
+        )
+
+        tokens = _issue_jwt(user)
+        response = Response(
+            {
+                "message": "Email verified successfully.",
+                "user": {
+                    "id": str(user.id),
+                    "email": user.email,
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
+                    "is_verified": user.is_verified,
+                },
+            },
+            status=status.HTTP_200_OK,
+        )
+        set_auth_cookies(response, tokens["access"], tokens["refresh"])
+        return response
+
+
+class ResendOtpAPIView(APIView):
+    """
+    Resend a new email verification OTP to an unverified user.
+
+    request.body example:
+    {
+        "email": "john.doe@example.com"
+    }
+    """
+
+    permission_classes = [AllowAny]
+    authentication_classes = []
+
+    def post(self, request: Request, *args, **kwargs) -> Response:
+        serializer = ResendOtpSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        resend_verification_otp(serializer.validated_data["email"])
+
+        return Response(
+            {
+                "message": "A new verification code has been sent to your email.",
+            },
+            status=status.HTTP_200_OK,
+        )

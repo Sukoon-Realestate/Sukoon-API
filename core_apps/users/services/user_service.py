@@ -5,6 +5,47 @@ from django.db import transaction
 logger = logging.getLogger(__name__)
 
 
+# * User registration service
+@transaction.atomic
+def register_user(validated_data: dict) -> Any:
+    """
+    ? Creates a new user instance, populates profile fields,
+    ? and generates & dispatches an email OTP verification code.
+    """
+    from django.contrib.auth import get_user_model
+    from core_apps.users.services.otp_service import create_and_send_otp
+
+    User = get_user_model()
+
+    data = validated_data.copy()
+    birth_date = data.pop("birth_date", None)
+    phone_number = data.pop("phone_number", None)
+    password = data.pop("password")
+    data.pop("re_password", None)
+
+    user = User.objects.create_user(password=password, **data)
+
+    update_fields = []
+    if hasattr(user, "profile"):
+        if birth_date:
+            user.profile.birth_date = birth_date
+            update_fields.append("birth_date")
+        if phone_number:
+            user.profile.phone_number = phone_number
+            update_fields.append("phone_number")
+        if update_fields:
+            user.profile.save(update_fields=update_fields)
+
+    create_and_send_otp(user)
+
+    logger.info(
+        "Registered user %s (%s) and dispatched verification OTP.",
+        user.id,
+        user.email,
+    )
+    return user
+
+
 # * User account deletion service
 @transaction.atomic
 def delete_user_account(user: Any) -> None:
