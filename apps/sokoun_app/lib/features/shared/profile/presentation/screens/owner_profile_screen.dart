@@ -10,67 +10,96 @@ class OwnerProfileScreen extends StatefulWidget {
 }
 
 class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
-  late UserModel _user;
+  late final OwnerProfileCubit _profileCubit;
+  late final Future<void> _profileRequest;
 
   @override
   void initState() {
     super.initState();
-    _user = widget.user;
+    _profileCubit = OwnerProfileCubit();
+    _profileRequest = _profileCubit.getProfile();
   }
 
-  Future<void> _openEditProfile() async {
+  @override
+  void dispose() {
+    _profileCubit.close();
+    super.dispose();
+  }
+
+  UserModel _editableUser(OwnerProfileContent profile) {
+    return UserModel(
+      id: widget.user.id,
+      name: profile.owner.fullName.isNotEmpty
+          ? profile.owner.fullName
+          : widget.user.name,
+      phone: profile.accountDetails.phoneNumber.isNotEmpty
+          ? profile.accountDetails.phoneNumber
+          : widget.user.phone,
+      email: profile.accountDetails.email.isNotEmpty
+          ? profile.accountDetails.email
+          : widget.user.email,
+      type: UserType.owner.name,
+    );
+  }
+
+  Future<void> _openEditProfile(OwnerProfileContent profile) async {
     final UserModel? updated = await Go.to<UserModel>(
-      OwnerEditProfileScreen(initialValue: _user),
+      OwnerEditProfileScreen(initialValue: _editableUser(profile)),
     );
     if (updated != null && mounted) {
-      setState(() => _user = updated);
+      _profileCubit.updateFromUser(updated);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        key: const ValueKey('O-PROFILE-01'),
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: Column(
-            children: [
-              ProfileScreenHeader(
-                title: LocaleKeys.profileOwnerTitle,
-                showBackButton: true,
-                trailing: IconButton(
-                  key: const ValueKey('owner-profile-edit'),
-                  onPressed: _openEditProfile,
-                  icon: Icon(
-                    Icons.edit_outlined,
-                    color: AppColors.sokoonNavy,
-                    size: 18.r,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.fromLTRB(20.w, 14.h, 20.w, 24.h),
+    return BlocProvider<OwnerProfileCubit>.value(
+      value: _profileCubit,
+      child: BlocBuilder<OwnerProfileCubit, AsyncState<OwnerProfileContent>>(
+        builder: (context, state) {
+          return Directionality(
+            textDirection: TextDirection.rtl,
+            child: Scaffold(
+              key: const ValueKey('O-PROFILE-01'),
+              backgroundColor: AppColors.scaffoldBackground,
+              body: SafeArea(
+                child: Column(
                   children: [
-                    OwnerProfileHeaderCard(user: _user),
-                    14.szH,
-                    ProfileAccountDetailsCard(user: _user),
-                    14.szH,
-                    ProfileVerificationBanner(
-                      title: '',
-                      description: LocaleKeys.profileOwnerPhonePrivacy,
-                      isPrivacy: true,
+                    ProfileScreenHeader(
+                      title: LocaleKeys.profileOwnerTitle,
+                      showBackButton: true,
+                      trailing: IconButton(
+                        key: const ValueKey('owner-profile-edit'),
+                        onPressed: state.isSuccess
+                            ? () => _openEditProfile(state.data)
+                            : null,
+                        icon: Icon(
+                          Icons.edit_outlined,
+                          color: AppColors.sokoonNavy,
+                          size: 18.r,
+                        ),
+                      ),
                     ),
-                    14.szH,
-                    const OwnerReviewsCard(),
+                    Expanded(
+                      child:
+                          StatusBuilder<
+                            OwnerProfileCubit,
+                            OwnerProfileContent
+                          >.withShimmer(
+                            initialDataForShimmer:
+                                const OwnerProfileContent.initial(),
+                            requestToTryAgainWhenError: _profileRequest,
+                            errorType: ErrorType.defaultView,
+                            builder: (profile) =>
+                                OwnerProfileContentView(profile: profile),
+                          ),
+                    ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

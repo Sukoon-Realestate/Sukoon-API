@@ -6,19 +6,29 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
+import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
+import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:sokoun_app/features/owner/home/presentation/screens/owner_add_property_flow_screen.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/add_property_video_page.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  late _OwnerPropertiesRepository repository;
 
   const MethodChannel sharedPreferencesChannel = MethodChannel(
     'plugins.flutter.io/shared_preferences',
   );
   const MethodChannel connectivityChannel = MethodChannel(
     'dev.fluttercommunity.plus/connectivity',
+  );
+  const MethodChannel connectivityStatusChannel = MethodChannel(
+    'dev.fluttercommunity.plus/connectivity_status',
   );
 
   setUpAll(() async {
@@ -30,14 +40,30 @@ void main() {
         .setMockMethodCallHandler(connectivityChannel, (call) async {
           return call.method == 'check' ? <String>['wifi'] : null;
         });
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(connectivityStatusChannel, (call) async {
+          return null;
+        });
     await EasyLocalization.ensureInitialized();
   });
+
+  setUp(() async {
+    await injector.reset();
+    repository = _OwnerPropertiesRepository();
+    injector.registerSingleton<BaseCrudUseCase>(
+      BaseCrudUseCase(repository: repository),
+    );
+  });
+
+  tearDown(() => injector.reset());
 
   tearDownAll(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(sharedPreferencesChannel, null);
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(connectivityChannel, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(connectivityStatusChannel, null);
   });
 
   Widget buildScreen(Widget screen) {
@@ -118,6 +144,19 @@ void main() {
     ];
   }
 
+  Future<void> submitEditFlow(WidgetTester tester) async {
+    await tester.tap(find.text('التالي — الصور'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('التالي — فيديو العقار'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('تخطي الفيديو'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('التالي — التفاصيل الإضافية'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('حفظ التعديلات'));
+    await tester.pumpAndSettle();
+  }
+
   test('maps the owned-properties response', () {
     final OwnerPropertiesResponse response = OwnerPropertiesResponse.fromJson({
       'count': 1,
@@ -171,6 +210,7 @@ void main() {
       (index) => File('/tmp/property-photo-$index.jpg'),
     );
     final File ownershipProof = File('/tmp/ownership-proof.png');
+    final File video = File('/tmp/property-video.mp4');
     final OwnerAddPropertyFormState form = OwnerAddPropertyFormState.initial()
         .copyWith(
           title: 'Cozy Studio',
@@ -186,6 +226,10 @@ void main() {
           mapQuery: 'مدينة نصر، القاهرة',
           isLocationSelected: true,
           photos: photos,
+          video: OwnerPropertyVideoSelection(
+            file: video,
+            duration: const Duration(seconds: 45),
+          ),
           monthlyPrice: '7000',
           deposit: 'شهر واحد',
           rentalDuration: '6',
@@ -207,9 +251,37 @@ void main() {
     expect(body['price_period'], 'monthly');
     expect(body['main_image'], same(photos.first));
     expect(body['images'], hasLength(9));
+    expect(body['video'], same(video));
+    expect(body['video_duration'], 45);
     expect(body['ownership_proof'], same(ownershipProof));
     expect(body['has_wifi'], isTrue);
     expect(body['has_elevator'], isFalse);
+    expect(OwnerAddPropertyContent.maxPhotoCount, 25);
+  });
+
+  testWidgets('places O-ADD-02V after the photos step', (tester) async {
+    configurePhoneViewport(tester);
+    final PropertyDetailsModel property = PropertyDetailsModel.fromJson(
+      repository._propertyDetailsJson('video-flow-property'),
+    );
+
+    await tester.pumpWidget(
+      buildScreen(OwnerPropertyFlowScreen(property: property)),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+
+    await tester.tap(find.text('التالي — الصور'));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    await tester.tap(find.text('التالي — فيديو العقار'));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+
+    expect(find.byType(AddPropertyVideoPage), findsOneWidget);
+    expect(find.text('فيديو العقار'), findsWidgets);
+    expect(find.text('تخطي الفيديو'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('runs O-PROPS-01b actions edit analytics and revenue', (
@@ -244,16 +316,16 @@ void main() {
     await tester.tap(
       find.byKey(const ValueKey('owner-property-edit-nasr-city-furnished')),
     );
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(repository.lastDetailsId, 'nasr-city-furnished');
     expect(find.byType(OwnerEditPropertyScreen), findsOneWidget);
     expect(find.text('تعديل العقار'), findsOneWidget);
 
-    final Finder saveButton = find.byKey(const ValueKey('owner-edit-save'));
-    await tester.ensureVisible(saveButton);
-    await tester.tap(saveButton);
-    await tester.pumpAndSettle();
+    await submitEditFlow(tester);
     expect(find.byType(OwnerPropertiesScreen), findsOneWidget);
     expect(find.text('تم حفظ تعديلات العقار'), findsOneWidget);
+    expect(repository.updateRequestCount, 1);
 
     final Finder analyticsButton = find.byKey(
       const ValueKey('owner-property-analytics-nasr-city-furnished'),
@@ -311,13 +383,12 @@ void main() {
     await tester.drag(find.byType(ListView), const Offset(0, -140));
     await tester.pumpAndSettle();
     await tester.tap(resubmitButton);
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
 
     expect(find.byType(OwnerEditPropertyScreen), findsOneWidget);
-    final Finder saveButton = find.byKey(const ValueKey('owner-edit-save'));
-    await tester.ensureVisible(saveButton);
-    await tester.tap(saveButton);
-    await tester.pumpAndSettle();
+    expect(repository.lastDetailsId, 'nasr-city-rejected');
+    await submitEditFlow(tester);
 
     expect(find.byType(OwnerPropertiesScreen), findsOneWidget);
     expect(find.text('قيد المراجعة'), findsOneWidget);
@@ -341,6 +412,85 @@ void main() {
     expect(find.text('إضافة عقار جديد'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+}
+
+class _OwnerPropertiesRepository implements BaseRepository {
+  String? lastDetailsId;
+  int updateRequestCount = 0;
+
+  @override
+  Future<Result<BaseModel<T>, Failure>> crudCall<T>(
+    CrudBaseParmas<T> params,
+  ) async {
+    final List<String> pathSegments = params.api
+        .split('/')
+        .where((segment) => segment.isNotEmpty)
+        .toList(growable: false);
+    final String propertyId = pathSegments.length > 1
+        ? pathSegments[1]
+        : 'property-id';
+    if (params.httpRequestType == HttpRequestType.get) {
+      lastDetailsId = propertyId;
+    } else if (params.httpRequestType == HttpRequestType.patch) {
+      updateRequestCount++;
+    }
+    final T data = params.mapper!(_propertyDetailsJson(propertyId));
+    return Success(BaseModel<T>(key: '', msg: '', data: data));
+  }
+
+  Map<String, dynamic> _propertyDetailsJson(String propertyId) {
+    return {
+      'id': propertyId,
+      'owner': 'owner-id',
+      'main_image': 'https://example.com/main.jpg',
+      'title': 'شقة مفروشة — مدينة نصر',
+      'description': 'شقة مفروشة بإضاءة طبيعية ومرافق متكاملة',
+      'price': '6500',
+      'price_period': 'monthly',
+      'property_type': 'apartment',
+      'is_furnished': true,
+      'bedrooms': 2,
+      'bathrooms': 1,
+      'area': 120,
+      'space': '120',
+      'floor': 3,
+      'rental_period': 6,
+      'suitable_for': 'individuals',
+      'smoking_allowed': false,
+      'country': 'Egypt',
+      'city': {
+        'id': 'cairo-city-id',
+        'name': 'القاهرة',
+        'slug': 'cairo',
+        'governorate': 'cairo-governorate-id',
+        'governorate_name': 'القاهرة',
+      },
+      'district': 'مدينة نصر',
+      'street': 'شارع النصر',
+      'building_year': 2020,
+      'deposit': 'one_month',
+      'ownership_proof': 'https://example.com/ownership-proof.jpg',
+      'latitude': '30.0444',
+      'longitude': '31.2357',
+      'amenities': ['wifi', 'garage'],
+      'images': List<Map<String, dynamic>>.generate(
+        9,
+        (index) => {
+          'id': 'image-$index',
+          'image': 'https://example.com/property-$index.jpg',
+          'name': 'image-$index',
+          'description': '',
+          'created_at': '',
+          'updated_at': '',
+        },
+      ),
+    };
+  }
+
+  @override
+  Future<Result<List<T>, Failure>> getBaseIdAndNameEntity<T extends BaseEntity>(
+    GetBaseEntityParams? param,
+  ) => throw UnimplementedError();
 }
 
 class _OwnerPropertiesAssetLoader extends AssetLoader {
@@ -394,6 +544,32 @@ class _OwnerPropertiesAssetLoader extends AssetLoader {
       'owner_properties_square_meter': 'م²',
       'owner_properties_save_changes': 'حفظ التعديلات',
       'owner_properties_preview': 'معاينة العقار',
+      'owner_property_video_title': 'فيديو العقار',
+      'owner_property_video_subtitle': 'صوّر فيديو قصير يوضح العقار للمستأجرين',
+      'owner_property_video_step_progress': 'الخطوة 3 من 5 — فيديو العقار',
+      'owner_property_video_requirements': 'متطلبات الفيديو',
+      'owner_property_video_requirement_duration':
+          'مدة الفيديو لا تزيد عن دقيقة واحدة (60 ثانية)',
+      'owner_property_video_requirement_rooms':
+          'صوّر مدخل العقار والغرف الأساسية',
+      'owner_property_video_requirement_stable': 'خلي الفيديو واضح وثابت',
+      'owner_property_video_requirement_privacy':
+          'متظهرش أرقام تليفونات أو مستندات شخصية في الفيديو',
+      'owner_property_video_maximum_duration': 'الحد الأقصى: 60 ثانية',
+      'owner_property_video_upload_or_record': 'ارفع أو صوّر فيديو للعقار',
+      'owner_property_video_record': 'تصوير فيديو',
+      'owner_property_video_upload': 'رفع فيديو',
+      'owner_property_video_preparing': 'جاري تجهيز الفيديو…',
+      'owner_property_video_uploaded': 'تم الرفع',
+      'owner_property_video_change': 'تغيير الفيديو',
+      'owner_property_video_remove': 'حذف الفيديو',
+      'owner_property_video_too_long': 'الفيديو لازم يكون أقل من دقيقة',
+      'owner_property_video_failed': 'فشل رفع الفيديو، حاول تاني',
+      'owner_property_video_privacy_hint':
+          'الفيديو هيظهر للمستأجرين بعد مراجعة سكون، '
+          'فمتظهرش فيه أي بيانات شخصية',
+      'owner_property_video_skip': 'تخطي الفيديو',
+      'owner_property_video_next_pricing': 'التالي — التسعير',
       'owner_property_nasr_city_title': 'شقة مفروشة — مدينة نصر',
       'owner_property_nasr_city_location': 'مدينة نصر، القاهرة',
       'owner_property_nasr_city_description':

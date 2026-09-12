@@ -16,6 +16,7 @@ import 'add_property_step_shell.dart';
 class AddPropertyPhotosPage extends StatelessWidget {
   const AddPropertyPhotosPage({
     super.key,
+    this.existingPhotoUrls = const [],
     required this.photos,
     required this.isReady,
     required this.onAddPhotos,
@@ -24,6 +25,7 @@ class AddPropertyPhotosPage extends StatelessWidget {
     required this.onBack,
   });
 
+  final List<String> existingPhotoUrls;
   final List<File> photos;
   final bool isReady;
   final VoidCallback onAddPhotos;
@@ -33,22 +35,23 @@ class AddPropertyPhotosPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int photoCount = photos.length;
+    final int photoCount = existingPhotoUrls.length + photos.length;
     final int remaining =
         OwnerAddPropertyContent.minimumPhotoCount - photoCount;
 
     return AddPropertyStepShell(
       title: 'صور العقار',
       activeSegments: 2,
-      progressSubtitle: 'الخطوة 2 من 4 — صور العقار',
-      primaryLabel: 'التالي — التسعير',
+      segmentCount: 5,
+      progressSubtitle: 'الخطوة 2 من 5 — صور العقار',
+      primaryLabel: 'التالي — فيديو العقار',
       onPrimaryTap: isReady ? onNext : null,
       onBack: onBack,
       children: [
         AddPropertyInfoBanner(
           title: isReady ? 'الصور جاهزة للمراجعة' : null,
           text: isReady
-              ? 'تقدر تضيف صور زيادة أو تكمل لخطوة التسعير'
+              ? 'تقدر تضيف صور زيادة أو تكمل لخطوة الفيديو'
               : 'اضغط على مربعات الإضافة لرفع $remaining صور كمان',
           backgroundColor: isReady ? AppColors.greenPale : AppColors.orangePale,
           borderColor: isReady ? AppColors.greenAlpha19 : AppColors.goldAlpha15,
@@ -59,6 +62,7 @@ class AddPropertyPhotosPage extends StatelessWidget {
               : Icons.warning_amber_rounded,
         ),
         _PhotoGridSection(
+          existingPhotoUrls: existingPhotoUrls,
           photos: photos,
           onAddPhotos: onAddPhotos,
           onRemovePhoto: onRemovePhoto,
@@ -71,18 +75,20 @@ class AddPropertyPhotosPage extends StatelessWidget {
 
 class _PhotoGridSection extends StatelessWidget {
   const _PhotoGridSection({
+    required this.existingPhotoUrls,
     required this.photos,
     required this.onAddPhotos,
     required this.onRemovePhoto,
   });
 
+  final List<String> existingPhotoUrls;
   final List<File> photos;
   final VoidCallback onAddPhotos;
   final ValueChanged<int> onRemovePhoto;
 
   @override
   Widget build(BuildContext context) {
-    final int photoCount = photos.length;
+    final int photoCount = existingPhotoUrls.length + photos.length;
     final bool isReady =
         photoCount >= OwnerAddPropertyContent.minimumPhotoCount;
 
@@ -99,9 +105,13 @@ class _PhotoGridSection extends StatelessWidget {
           ),
           itemCount: OwnerAddPropertyContent.maxPhotoCount,
           itemBuilder: (context, index) {
-            final hasPhoto = index < photoCount;
+            final bool hasExistingPhoto = index < existingPhotoUrls.length;
+            final int localPhotoIndex = index - existingPhotoUrls.length;
+            final bool hasLocalPhoto =
+                localPhotoIndex >= 0 && localPhotoIndex < photos.length;
             return _PhotoTile(
-              photo: hasPhoto ? photos[index] : null,
+              imageUrl: hasExistingPhoto ? existingPhotoUrls[index] : null,
+              photo: hasLocalPhoto ? photos[localPhotoIndex] : null,
               onAddPhotos: onAddPhotos,
               onRemovePhoto: () => onRemovePhoto(index),
             );
@@ -122,18 +132,20 @@ class _PhotoGridSection extends StatelessWidget {
 
 class _PhotoTile extends StatelessWidget {
   const _PhotoTile({
+    required this.imageUrl,
     required this.photo,
     required this.onAddPhotos,
     required this.onRemovePhoto,
   });
 
+  final String? imageUrl;
   final File? photo;
   final VoidCallback onAddPhotos;
   final VoidCallback onRemovePhoto;
 
   @override
   Widget build(BuildContext context) {
-    final bool hasPhoto = photo != null;
+    final bool hasPhoto = photo != null || imageUrl != null;
     return GestureDetector(
       onTap: hasPhoto ? null : onAddPhotos,
       behavior: HitTestBehavior.opaque,
@@ -154,7 +166,18 @@ class _PhotoTile extends StatelessWidget {
               child: hasPhoto
                   ? ClipRRect(
                       borderRadius: BorderRadius.circular(14.r),
-                      child: Image.file(photo!, fit: BoxFit.cover),
+                      child: photo != null
+                          ? Image.file(photo!, fit: BoxFit.cover)
+                          : Image.network(
+                              imageUrl!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(
+                                    Icons.broken_image_outlined,
+                                    color: AppColors.sokoonMuted,
+                                    size: 24.r,
+                                  ),
+                            ),
                     )
                   : Column(
                       mainAxisSize: MainAxisSize.min,

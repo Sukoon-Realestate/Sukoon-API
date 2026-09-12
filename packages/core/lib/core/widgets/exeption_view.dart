@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import '../../../generated/assets.dart';
 
 class ExceptionView extends StatelessWidget {
@@ -9,8 +8,8 @@ class ExceptionView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FittedBox(
-      child: Lottie.asset(
-        Assets.lottie.error1.path,
+      child: Assets.lottie.error2.lottie(
+        package: 'melos_core',
         width: size?.width,
         height: size?.height,
         fit: BoxFit.contain,

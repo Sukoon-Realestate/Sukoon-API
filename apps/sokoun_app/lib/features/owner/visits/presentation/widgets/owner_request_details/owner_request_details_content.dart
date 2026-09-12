@@ -10,7 +10,7 @@ class OwnerRequestDetailsContent extends StatelessWidget {
     required this.onRejectPressed,
   });
 
-  final OwnerVisitRequestContent request;
+  final OwnerVisitRequestDetailsContent request;
   final bool isAccepting;
   final bool isRejecting;
   final VoidCallback onAcceptPressed;
@@ -20,14 +20,14 @@ class OwnerRequestDetailsContent extends StatelessWidget {
     Go.to(
       ChatThreadScreen(
         conversation: ConversationContent(
-          id: 101,
-          name: request.name,
-          property: request.property,
-          lastMessage: request.tenantNote,
-          time: request.time,
+          id: request.id.hashCode,
+          name: request.tenant.name,
+          property: request.displayProperty,
+          lastMessage: request.note,
+          time: request.displayTime,
           unreadCount: 0,
-          isVerified: request.isVerified,
-          isOnline: true,
+          isVerified: request.tenant.isVerified,
+          isOnline: false,
         ),
       ),
     );
@@ -42,14 +42,18 @@ class OwnerRequestDetailsContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           OwnerRequestInfoCard(request: request),
-          12.szH,
-          _OwnerTenantNoteCard(note: request.tenantNote),
+          if (request.note.isNotEmpty) ...[
+            12.szH,
+            _OwnerTenantNoteCard(note: request.note),
+          ],
           12.szH,
           OwnerRequestPrivacyBanner(
-            message: LocaleKeys.ownerVisitTenantPhoneHidden,
+            message: request.tenant.displayPhoneNotice.isNotEmpty
+                ? request.tenant.displayPhoneNotice
+                : LocaleKeys.ownerVisitTenantPhoneHidden,
           ),
           16.szH,
-          if (request.status.canDecide) ...[
+          if (request.actions.canAccept) ...[
             DefaultButton(
               key: const ValueKey('owner-request-accept'),
               onTap: isUpdating ? null : onAcceptPressed,
@@ -64,7 +68,9 @@ class OwnerRequestDetailsContent extends StatelessWidget {
               fontSize: 15.sp,
               fontWeight: FontWeight.w900,
             ),
-            12.szH,
+          ],
+          if (request.actions.canAccept && request.actions.canReject) 12.szH,
+          if (request.actions.canReject) ...[
             DefaultButton(
               key: const ValueKey('owner-request-reject'),
               onTap: isUpdating ? null : onRejectPressed,
@@ -80,14 +86,18 @@ class OwnerRequestDetailsContent extends StatelessWidget {
               fontSize: 14.sp,
               fontWeight: FontWeight.w900,
             ),
-            12.szH,
           ],
+          if (request.actions.canAccept || request.actions.canReject) 12.szH,
           DefaultButton(
             key: const ValueKey('owner-request-open-chat'),
-            onTap: isUpdating ? null : _openChat,
+            onTap: isUpdating || !request.actions.canChat ? null : _openChat,
             title: LocaleKeys.ownerVisitOpenChat,
-            color: AppColors.bluePale,
-            textColor: AppColors.blue,
+            color: request.actions.canChat
+                ? AppColors.bluePale
+                : AppColors.grayBackground,
+            textColor: request.actions.canChat
+                ? AppColors.blue
+                : AppColors.sokoonMuted,
             borderRadius: BorderRadius.circular(16.r),
             height: 50.h,
             fontSize: 14.sp,

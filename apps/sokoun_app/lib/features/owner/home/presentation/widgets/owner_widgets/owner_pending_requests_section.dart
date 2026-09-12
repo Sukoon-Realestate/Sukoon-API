@@ -36,6 +36,7 @@ class OwnerPendingRequestsSection extends StatelessWidget {
                 visit.scheduledAt,
               ].where((value) => value.isNotEmpty).join(' · ');
               return OwnerRequestCard(
+                requestId: visit.id,
                 name: visit.tenantName,
                 avatarUrl: visit.tenantAvatar,
                 details: details,

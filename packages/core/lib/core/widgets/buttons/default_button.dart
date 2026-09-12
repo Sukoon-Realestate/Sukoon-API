@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../config/res/config_imports.dart';
 import '../../extensions/context_extension.dart';
 
-
 class DefaultButton extends StatelessWidget {
   final String? title;
   final Function()? onTap;
@@ -12,6 +11,7 @@ class DefaultButton extends StatelessWidget {
   final Color? borderColor;
   final BorderRadius? borderRadius;
   final EdgeInsets? margin;
+  final EdgeInsetsGeometry? padding;
   final double? width;
   final double? fontSize;
   final double? height;
@@ -30,6 +30,7 @@ class DefaultButton extends StatelessWidget {
     this.textColor,
     this.borderRadius,
     this.margin,
+    this.padding,
     this.borderColor,
     this.fontSize,
     this.width,
@@ -41,14 +42,14 @@ class DefaultButton extends StatelessWidget {
   });
 
   Widget get _defaultChild => Text(
-        title ?? 'Click!',
-        style: TextStyle(
-          color: textColor ?? AppColors.buttonText,
-          fontSize: fontSize ?? FontSize.s13,
-          fontFamily: ConstantManager.fontFamily,
-          fontWeight: fontWeight ?? FontWeightManager.medium,
-        ),
-      );
+    title ?? 'Click!',
+    style: TextStyle(
+      color: textColor ?? AppColors.buttonText,
+      fontSize: fontSize ?? FontSize.s13,
+      fontFamily: ConstantManager.fontFamily,
+      fontWeight: fontWeight ?? FontWeightManager.medium,
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -62,14 +63,11 @@ class DefaultButton extends StatelessWidget {
           surfaceTintColor: color ?? AppColors.buttonColor,
           foregroundColor: color ?? AppColors.buttonColor,
           backgroundColor: color ?? AppColors.primary,
+          padding: padding,
           shape: RoundedRectangleBorder(
-            borderRadius:
-                borderRadius ?? BorderRadius.circular(AppCircular.r5),
+            borderRadius: borderRadius ?? BorderRadius.circular(AppCircular.r5),
             side: borderColor != null
-                ? BorderSide(
-                    color: borderColor ?? Colors.grey[200]!,
-                    width: 1,
-                  )
+                ? BorderSide(color: borderColor ?? Colors.grey[200]!, width: 1)
                 : BorderSide.none,
           ),
           elevation: elevation ?? ConstantManager.zeroAsDouble,

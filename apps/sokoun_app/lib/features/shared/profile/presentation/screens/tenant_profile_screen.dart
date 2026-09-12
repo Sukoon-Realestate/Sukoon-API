@@ -10,76 +10,106 @@ class TenantProfileScreen extends StatefulWidget {
 }
 
 class _TenantProfileScreenState extends State<TenantProfileScreen> {
-  late UserModel _user;
+  late final UserModel _fallbackUser;
+  late final TenantProfileCubit _profileCubit;
+  late final Future<void> _profileRequest;
 
   @override
   void initState() {
     super.initState();
-    _user = widget.user ?? UserModel.currentUser ?? UserModel.initial();
-  }
-
-  Future<void> _openEditProfile() async {
-    final UserModel? updated = await Go.to<UserModel>(
-      TenantEditProfileScreen(initialValue: _user),
-    );
-    if (updated != null && mounted) {
-      setState(() => _user = updated);
-    }
-  }
-
-  void _openSummary() {
-    Go.to(TenantAccountSummaryScreen(user: _user));
+    _fallbackUser = widget.user ?? UserModel.currentUser ?? UserModel.initial();
+    _profileCubit = TenantProfileCubit();
+    _profileRequest = _profileCubit.getProfile();
   }
 
   @override
+  void dispose() {
+    _profileCubit.close();
+    super.dispose();
+  }
+
+  UserModel _editableUser(TenantProfileContent profile) {
+    return UserModel(
+      id: _fallbackUser.id,
+      name: profile.user.fullName.isNotEmpty
+          ? profile.user.fullName
+          : _fallbackUser.name,
+      phone: profile.accountDetails.phoneNumber.isNotEmpty
+          ? profile.accountDetails.phoneNumber
+          : _fallbackUser.phone,
+      email: profile.accountDetails.email.isNotEmpty
+          ? profile.accountDetails.email
+          : _fallbackUser.email,
+      type: UserType.tenant.name,
+    );
+  }
+
+  Future<void> _openEditProfile(TenantProfileContent profile) async {
+    final UserModel? updated = await Go.to<UserModel>(
+      TenantEditProfileScreen(initialValue: _editableUser(profile)),
+    );
+    if (updated != null && mounted) {
+      _profileCubit.updateFromUser(updated);
+    }
+  }
+
+  void _openSummary() => Go.to(const TenantAccountSummaryScreen());
+
+  @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        key: const ValueKey('T-PROFILE-01'),
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: Column(
-            children: [
-              ProfileScreenHeader(
-                title: LocaleKeys.profileMyAccount,
-                trailing: IconButton(
-                  key: const ValueKey('tenant-profile-summary'),
-                  onPressed: _openSummary,
-                  style: IconButton.styleFrom(
-                    backgroundColor: AppColors.white,
-                    side: const BorderSide(color: AppColors.sokoonBorder),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                  ),
-                  icon: Icon(
-                    Icons.settings_outlined,
-                    color: AppColors.sokoonNavy,
-                    size: 18.r,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 24.h),
+    return BlocProvider<TenantProfileCubit>.value(
+      value: _profileCubit,
+      child: BlocBuilder<TenantProfileCubit, AsyncState<TenantProfileContent>>(
+        builder: (context, state) {
+          return Directionality(
+            textDirection: TextDirection.rtl,
+            child: Scaffold(
+              key: const ValueKey('T-PROFILE-01'),
+              backgroundColor: AppColors.scaffoldBackground,
+              body: SafeArea(
+                child: Column(
                   children: [
-                    TenantProfileHeaderCard(
-                      user: _user,
-                      onEditPressed: _openEditProfile,
+                    ProfileScreenHeader(
+                      title: LocaleKeys.profileMyAccount,
+                      trailing: IconButton(
+                        key: const ValueKey('tenant-profile-summary'),
+                        onPressed: state.isSuccess ? _openSummary : null,
+                        style: IconButton.styleFrom(
+                          backgroundColor: AppColors.white,
+                          side: const BorderSide(color: AppColors.sokoonBorder),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                        ),
+                        icon: Icon(
+                          Icons.settings_outlined,
+                          color: AppColors.sokoonNavy,
+                          size: 18.r,
+                        ),
+                      ),
                     ),
-                    14.szH,
-                    const TenantProfileActions(),
-                    14.szH,
-                    ProfileAccountDetailsCard(user: _user),
-                    14.szH,
-                    const ProfileLogoutButton(),
+                    Expanded(
+                      child:
+                          StatusBuilder<
+                            TenantProfileCubit,
+                            TenantProfileContent
+                          >.withShimmer(
+                            initialDataForShimmer:
+                                const TenantProfileContent.initial(),
+                            requestToTryAgainWhenError: _profileRequest,
+                            errorType: ErrorType.defaultView,
+                            builder: (profile) => TenantProfileContentView(
+                              profile: profile,
+                              onEditPressed: () => _openEditProfile(profile),
+                            ),
+                          ),
+                    ),
                   ],
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

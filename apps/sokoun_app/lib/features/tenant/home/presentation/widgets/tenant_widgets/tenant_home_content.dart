@@ -34,10 +34,7 @@ class TenantHomeContent extends StatelessWidget {
           16.szH,
           const TenantVisitBanner().showIf(condition: () => showVisitBanner),
           18.szH,
-          HomeSectionHeader(
-            title: LocaleKeys.tenantHomeSuggestedForYou,
-            actionTitle: LocaleKeys.tenantHomeViewAll,
-          ),
+          HomeSectionHeader(),
           10.szH,
           SuggestedPropertiesSection(properties: properties),
           24.szH,

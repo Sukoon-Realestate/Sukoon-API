@@ -182,6 +182,10 @@ class PropertyDetailsModel extends Equatable {
     required this.country,
     required this.city,
     required this.district,
+    required this.street,
+    required this.buildingYear,
+    required this.deposit,
+    required this.ownershipProof,
     required this.latitude,
     required this.longitude,
     required this.amenities,
@@ -215,6 +219,10 @@ class PropertyDetailsModel extends Equatable {
       country = '',
       city = const CityModel.initial(),
       district = '',
+      street = '',
+      buildingYear = 0,
+      deposit = '',
+      ownershipProof = '',
       latitude = '',
       longitude = '',
       amenities = const [],
@@ -250,6 +258,10 @@ class PropertyDetailsModel extends Equatable {
           ? CityModel.fromJson(Map<String, dynamic>.from(json['city'] as Map))
           : const CityModel.initial(),
       district: json['district'] as String? ?? '',
+      street: json['street'] as String? ?? '',
+      buildingYear: int.tryParse('${json['building_year'] ?? ''}') ?? 0,
+      deposit: json['deposit']?.toString() ?? '',
+      ownershipProof: _propertyFileUrl(json['ownership_proof']),
       latitude: json['latitude']?.toString() ?? '',
       longitude: json['longitude']?.toString() ?? '',
       amenities:
@@ -296,6 +308,10 @@ class PropertyDetailsModel extends Equatable {
   final String country;
   final CityModel city;
   final String district;
+  final String street;
+  final int buildingYear;
+  final String deposit;
+  final String ownershipProof;
   final String latitude;
   final String longitude;
   final List<String> amenities;
@@ -328,6 +344,10 @@ class PropertyDetailsModel extends Equatable {
     'country': country,
     'city': city.toJson(),
     'district': district,
+    'street': street,
+    'building_year': buildingYear,
+    'deposit': deposit,
+    'ownership_proof': ownershipProof,
     'latitude': latitude,
     'longitude': longitude,
     'amenities': amenities,
@@ -361,6 +381,10 @@ class PropertyDetailsModel extends Equatable {
     String? country,
     CityModel? city,
     String? district,
+    String? street,
+    int? buildingYear,
+    String? deposit,
+    String? ownershipProof,
     String? latitude,
     String? longitude,
     List<String>? amenities,
@@ -393,6 +417,10 @@ class PropertyDetailsModel extends Equatable {
       country: country ?? this.country,
       city: city ?? this.city,
       district: district ?? this.district,
+      street: street ?? this.street,
+      buildingYear: buildingYear ?? this.buildingYear,
+      deposit: deposit ?? this.deposit,
+      ownershipProof: ownershipProof ?? this.ownershipProof,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       amenities: amenities ?? this.amenities,
@@ -431,11 +459,14 @@ class PropertyDetailsModel extends Equatable {
         return 'دوبلكس';
       case 'villa':
         return 'فيلا';
+      case 'floor':
+        return 'دور';
       case 'roof':
         return 'روف';
       case 'studio':
+        return 'استوديو';
       default:
-        return 'ستوديو';
+        return propertyType;
     }
   }
 
@@ -506,6 +537,10 @@ class PropertyDetailsModel extends Equatable {
     country,
     city,
     district,
+    street,
+    buildingYear,
+    deposit,
+    ownershipProof,
     latitude,
     longitude,
     amenities,
@@ -516,4 +551,12 @@ class PropertyDetailsModel extends Equatable {
     createdAt,
     updatedAt,
   ];
+}
+
+String _propertyFileUrl(dynamic value) {
+  if (value is Map) {
+    final Map<String, dynamic> file = Map<String, dynamic>.from(value);
+    return (file['url'] ?? file['file'] ?? file['image'])?.toString() ?? '';
+  }
+  return value?.toString() ?? '';
 }

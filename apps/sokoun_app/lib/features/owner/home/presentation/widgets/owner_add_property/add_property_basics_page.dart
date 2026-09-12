@@ -42,9 +42,11 @@ class AddPropertyBasicsPage extends StatelessWidget {
     required this.onMapQueryChanged,
     required this.onLocationSelected,
     required this.onNext,
+    this.title = 'إضافة عقار جديد',
     this.onBack,
   });
 
+  final String title;
   final OwnerAddPropertyFormState form;
   final TextEditingController titleController;
   final TextEditingController streetController;
@@ -75,9 +77,10 @@ class AddPropertyBasicsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AddPropertyStepShell(
-      title: 'إضافة عقار جديد',
+      title: title,
       activeSegments: 1,
-      progressSubtitle: 'الخطوة 1 من 4 — معلومات العقار',
+      segmentCount: 5,
+      progressSubtitle: 'الخطوة 1 من 5 — معلومات العقار',
       primaryLabel: 'التالي — الصور',
       onPrimaryTap: form.isBasicsReady ? onNext : null,
       onBack: onBack,

@@ -22,10 +22,9 @@ class OwnerStatsGrid extends StatelessWidget {
   String get _overallRatingLabel {
     final bool isWholeNumber =
         overallRating == overallRating.truncateToDouble();
-    final String value = isWholeNumber
+    return isWholeNumber
         ? overallRating.toInt().toString()
         : overallRating.toStringAsFixed(1);
-    return '$value★';
   }
 
   @override

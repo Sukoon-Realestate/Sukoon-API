@@ -89,35 +89,35 @@ class OwnerVisitRequestIdentityRow extends StatelessWidget {
           ),
         ),
         8.szW,
-        Semantics(
-          button: true,
-          label: LocaleKeys.ownerVisitOpenChat,
-          child: SizedBox.square(
-            dimension: 32.r,
-            child: IconButton(
-              key: ValueKey('owner-request-chat-${request.id}'),
-              tooltip: LocaleKeys.ownerVisitOpenChat,
-              onPressed: _openChat,
-              padding: EdgeInsets.zero,
-              visualDensity: VisualDensity.compact,
-              style: IconButton.styleFrom(
-                minimumSize: Size.square(32.r),
-                maximumSize: Size.square(32.r),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                backgroundColor: AppColors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.r),
-                  side: const BorderSide(color: AppColors.grayPale),
-                ),
-              ),
-              icon: Icon(
-                Icons.chat_bubble_outline_rounded,
-                color: AppColors.sokoonTeal,
-                size: 16.r,
-              ),
-            ),
-          ),
-        ),
+        // Semantics(
+        //   button: true,
+        //   label: LocaleKeys.ownerVisitOpenChat,
+        //   child: SizedBox.square(
+        //     dimension: 32.r,
+        //     child: IconButton(
+        //       key: ValueKey('owner-request-chat-${request.id}'),
+        //       tooltip: LocaleKeys.ownerVisitOpenChat,
+        //       onPressed: _openChat,
+        //       padding: EdgeInsets.zero,
+        //       visualDensity: VisualDensity.compact,
+        //       style: IconButton.styleFrom(
+        //         minimumSize: Size.square(32.r),
+        //         maximumSize: Size.square(32.r),
+        //         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        //         backgroundColor: AppColors.white,
+        //         shape: RoundedRectangleBorder(
+        //           borderRadius: BorderRadius.circular(10.r),
+        //           side: const BorderSide(color: AppColors.grayPale),
+        //         ),
+        //       ),
+        //       icon: Icon(
+        //         Icons.chat_bubble_outline_rounded,
+        //         color: AppColors.sokoonTeal,
+        //         size: 16.r,
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     );
   }

@@ -15,6 +15,9 @@ class ApiConstants {
   static const String receivedPropertyVisits = 'properties/visits/received/';
   static const String ownedProperties = 'properties/owned/';
   static const String ownerDashboard = 'properties/owner/dashboard/';
+  static const String ownerProfile = 'properties/owner/profile/';
+  static const String tenantProfile = 'profiles/my-account/';
+  static const String tenantAccountSummary = 'profiles/account-summary/';
   static const String ownerCalendar = 'properties/owner/calendar/';
   static const String propertyTypes = 'properties/types/';
   static const String propertyFilterOptions = 'properties/filter-options/';
@@ -38,6 +41,15 @@ class ApiConstants {
 
   static String ownerPropertyAvailability(String propertyId) =>
       'properties/owner/properties/$propertyId/availability/';
+
+  static String ownerVisitRequestDetails(String requestId) =>
+      'properties/owner/visits/requests/$requestId/';
+
+  static String acceptOwnerVisitRequest(String requestId) =>
+      '${ownerVisitRequestDetails(requestId)}accept/';
+
+  static String rejectOwnerVisitRequest(String requestId) =>
+      '${ownerVisitRequestDetails(requestId)}reject/';
 
   // packages
   static const String getPackages = 'packages/';
@@ -66,7 +78,7 @@ class ApiConstants {
   static const String profile = 'profile';
   static const String myPackage = 'my-package';
   static const String getWallet = 'show-wallet';
-  static const String deleteAccount = 'delete-account';
+  static const String deleteAccount = 'auth/delete-account/';
   static const String switchNotify = 'switch-notify';
   static const String sendCodeToOldPhone = 'old-phone-send-code';
   static const String checkCodeToOldPhone = 'old-phone-check-code';
@@ -75,7 +87,7 @@ class ApiConstants {
   static const String checkCodeToNewPhone = 'new-phone-check-code';
   static const String oath = 'oath';
   static const String changeLang = 'change-lang';
-  static const String editProfile = 'update-profile';
+  static const String editProfile = 'profiles/edit/';
   static const String addChild = 'add-child';
   static const String deleteChild = 'delete-child/';
   static const String opportunityChildren = 'opportunity-children/';

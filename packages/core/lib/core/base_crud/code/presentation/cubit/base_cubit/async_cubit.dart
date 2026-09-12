@@ -62,20 +62,26 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
     bool withInternetInterceptor = false,
     bool showMsgOnSuccess = false,
   }) async {
-    if (withInternetInterceptor) {
-      await _basicOperationWithInternetInterceptor(
-        operation: operation,
-        successEmitter: onSuccess,
-        onError: onError,
-      );
-    } else {
-      await _basicOperation(
-        operation: operation,
-        successEmitter: onSuccess,
-        onError: onError,
-        showMsgOnSuccess: showMsgOnSuccess,
-      );
-    }
+    await _basicOperation(
+      operation: operation,
+      successEmitter: onSuccess,
+      onError: onError,
+      showMsgOnSuccess: showMsgOnSuccess,
+    );
+    // if (withInternetInterceptor) {
+    //   await _basicOperationWithInternetInterceptor(
+    //     operation: operation,
+    //     successEmitter: onSuccess,
+    //     onError: onError,
+    //   );
+    // } else {
+    //   await _basicOperation(
+    //     operation: operation,
+    //     successEmitter: onSuccess,
+    //     onError: onError,
+    //     showMsgOnSuccess: showMsgOnSuccess,
+    //   );
+    // }
   }
 
   bool _firstRequest = true;

@@ -45,11 +45,11 @@ abstract final class OwnerAddPropertyContent {
     'صوّر كل الغرف: صالة، غرف نوم، مطبخ، حمام',
     'استخدم إضاءة طبيعية',
     'تأكد من خلو الصور من أي أرقام هواتف أو معلومات شخصية',
-    'الحد الأدنى 10 صور، الأفضل 15-20',
+    'الحد الأدنى 10 صور، وتقدر ترفع لحد 25 صورة',
   ];
 
   static const minimumPhotoCount = 10;
-  static const maxPhotoCount = 12;
+  static const maxPhotoCount = 25;
 
   static const depositOptions = ['بدون تأمين', 'نصف شهر', 'شهر واحد', 'شهرين'];
 
@@ -112,6 +112,22 @@ abstract final class OwnerAddPropertyContent {
   }
 }
 
+class OwnerPropertyVideoSelection {
+  const OwnerPropertyVideoSelection({
+    required this.file,
+    required this.duration,
+  });
+
+  final File file;
+  final Duration duration;
+
+  String get formattedDuration {
+    final String minutes = duration.inMinutes.toString().padLeft(2, '0');
+    final String seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
+  }
+}
+
 class OwnerAddPropertyFormState {
   const OwnerAddPropertyFormState({
     required this.title,
@@ -126,7 +142,9 @@ class OwnerAddPropertyFormState {
     required this.buildingYear,
     required this.mapQuery,
     required this.isLocationSelected,
+    required this.existingPhotoUrls,
     required this.photos,
+    required this.video,
     required this.monthlyPrice,
     required this.deposit,
     required this.rentalDuration,
@@ -135,6 +153,7 @@ class OwnerAddPropertyFormState {
     required this.description,
     required this.smokingPolicy,
     required this.suitableFor,
+    required this.ownershipProofUrl,
     required this.ownershipProof,
     this.submittedAt,
   });
@@ -153,7 +172,9 @@ class OwnerAddPropertyFormState {
       buildingYear: '',
       mapQuery: '',
       isLocationSelected: false,
+      existingPhotoUrls: [],
       photos: [],
+      video: null,
       monthlyPrice: '',
       deposit: '',
       rentalDuration: '',
@@ -162,6 +183,7 @@ class OwnerAddPropertyFormState {
       description: '',
       smokingPolicy: '',
       suitableFor: '',
+      ownershipProofUrl: '',
       ownershipProof: null,
     );
   }
@@ -178,7 +200,9 @@ class OwnerAddPropertyFormState {
   final String buildingYear;
   final String mapQuery;
   final bool isLocationSelected;
+  final List<String> existingPhotoUrls;
   final List<File> photos;
+  final OwnerPropertyVideoSelection? video;
   final String monthlyPrice;
   final String deposit;
   final String rentalDuration;
@@ -187,11 +211,13 @@ class OwnerAddPropertyFormState {
   final String description;
   final String smokingPolicy;
   final String suitableFor;
+  final String ownershipProofUrl;
   final File? ownershipProof;
   final DateTime? submittedAt;
 
-  int get photoCount => photos.length;
-  bool get isProofUploaded => ownershipProof != null;
+  int get photoCount => existingPhotoUrls.length + photos.length;
+  bool get isProofUploaded =>
+      ownershipProof != null || ownershipProofUrl.isNotEmpty;
 
   bool get isBasicsReady {
     return title.trim().isNotEmpty &&
@@ -234,12 +260,23 @@ class OwnerAddPropertyFormState {
 
   String get photoSummary => '$photoCount صورة';
 
+  String get videoSummary {
+    final OwnerPropertyVideoSelection? selectedVideo = video;
+    return selectedVideo == null
+        ? 'تم تخطي الفيديو'
+        : 'تم رفع الفيديو (${selectedVideo.formattedDuration})';
+  }
+
   String get proofFileName {
     final File? proof = ownershipProof;
-    if (proof == null || proof.uri.pathSegments.isEmpty) {
-      return '';
+    if (proof != null && proof.uri.pathSegments.isNotEmpty) {
+      return proof.uri.pathSegments.last;
     }
-    return proof.uri.pathSegments.last;
+    final Uri? existingProof = Uri.tryParse(ownershipProofUrl);
+    if (existingProof == null || existingProof.pathSegments.isEmpty) {
+      return ownershipProofUrl;
+    }
+    return existingProof.pathSegments.last;
   }
 
   List<AddPropertySummaryContent> get submittedSummary {
@@ -248,6 +285,7 @@ class OwnerAddPropertyFormState {
       AddPropertySummaryContent(label: 'المنطقة', value: locationSummary),
       AddPropertySummaryContent(label: 'السعر', value: priceSummary),
       AddPropertySummaryContent(label: 'الصور', value: photoSummary),
+      AddPropertySummaryContent(label: 'الفيديو', value: videoSummary),
       AddPropertySummaryContent(label: 'إثبات الملكية', value: proofFileName),
       AddPropertySummaryContent(
         label: 'وقت الإرسال',
@@ -269,7 +307,10 @@ class OwnerAddPropertyFormState {
     String? buildingYear,
     String? mapQuery,
     bool? isLocationSelected,
+    List<String>? existingPhotoUrls,
     List<File>? photos,
+    OwnerPropertyVideoSelection? video,
+    bool clearVideo = false,
     String? monthlyPrice,
     String? deposit,
     String? rentalDuration,
@@ -278,6 +319,7 @@ class OwnerAddPropertyFormState {
     String? description,
     String? smokingPolicy,
     String? suitableFor,
+    String? ownershipProofUrl,
     File? ownershipProof,
     bool clearOwnershipProof = false,
     DateTime? submittedAt,
@@ -295,7 +337,9 @@ class OwnerAddPropertyFormState {
       buildingYear: buildingYear ?? this.buildingYear,
       mapQuery: mapQuery ?? this.mapQuery,
       isLocationSelected: isLocationSelected ?? this.isLocationSelected,
+      existingPhotoUrls: existingPhotoUrls ?? this.existingPhotoUrls,
       photos: photos ?? this.photos,
+      video: clearVideo ? null : video ?? this.video,
       monthlyPrice: monthlyPrice ?? this.monthlyPrice,
       deposit: deposit ?? this.deposit,
       rentalDuration: rentalDuration ?? this.rentalDuration,
@@ -304,6 +348,9 @@ class OwnerAddPropertyFormState {
       description: description ?? this.description,
       smokingPolicy: smokingPolicy ?? this.smokingPolicy,
       suitableFor: suitableFor ?? this.suitableFor,
+      ownershipProofUrl: clearOwnershipProof
+          ? ''
+          : ownershipProofUrl ?? this.ownershipProofUrl,
       ownershipProof: clearOwnershipProof
           ? null
           : ownershipProof ?? this.ownershipProof,
@@ -345,8 +392,10 @@ class OwnerAddPropertyFormState {
       'has_natural_gas': selectedAmenities.contains('غاز طبيعي'),
       'has_electricity_meter': selectedAmenities.contains('عداد كهرباء'),
       'has_water_meter': selectedAmenities.contains('عداد مياه'),
-      'main_image': photos.first,
+      if (photos.isNotEmpty) 'main_image': photos.first,
       if (photos.length > 1) 'images': photos.skip(1).toList(growable: false),
+      if (video != null) 'video': video!.file,
+      if (video != null) 'video_duration': video!.duration.inSeconds,
       if (ownershipProof != null) 'ownership_proof': ownershipProof,
     };
   }

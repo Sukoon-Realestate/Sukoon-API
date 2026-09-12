@@ -11,6 +11,7 @@ class OwnerPropertiesScreen extends StatefulWidget {
 
 class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
   late final PagifyController<OwnerPropertyContent> _pagifyController;
+  bool _isLoadingPropertyDetails = false;
 
   @override
   void initState() {
@@ -31,27 +32,73 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
   }
 
   Future<void> _openEdit(OwnerPropertyContent property) async {
-    final OwnerPropertyEditResult? result =
-        await Go.to<OwnerPropertyEditResult>(
-          OwnerEditPropertyScreen(property: property),
-        );
-    if (result == null || !mounted) {
+    final PropertyDetailsModel? details = await _loadPropertyDetails(
+      property.id,
+    );
+    if (details == null || !mounted) {
       return;
     }
-    if (result.isDeleted) {
-      _deleteProperty(property);
+    final PropertyDetailsModel? updated = await Go.to<PropertyDetailsModel>(
+      OwnerEditPropertyScreen(property: details),
+    );
+    if (updated == null || !mounted) {
       return;
     }
-    _replaceProperty(result.property);
+    _replaceProperty(_mergePropertyDetails(property, updated));
     _showMessage(LocaleKeys.ownerPropertiesSaved);
   }
 
+  Future<PropertyDetailsModel?> _loadPropertyDetails(String propertyId) async {
+    if (_isLoadingPropertyDetails) {
+      return null;
+    }
+    setState(() => _isLoadingPropertyDetails = true);
+    final PropertyDetailsCubit cubit = PropertyDetailsCubit();
+    PropertyDetailsModel? details;
+    try {
+      await cubit.getPropertyDetails(propertyId);
+      if (cubit.state.isSuccess || cubit.state.data.id.isNotEmpty) {
+        details = cubit.state.data;
+      }
+    } finally {
+      await cubit.close();
+      if (mounted) {
+        setState(() => _isLoadingPropertyDetails = false);
+      }
+    }
+    return details;
+  }
+
+  OwnerPropertyContent _mergePropertyDetails(
+    OwnerPropertyContent property,
+    PropertyDetailsModel details,
+  ) {
+    final String location = [
+      details.district,
+      details.city.name,
+      details.city.governorateName,
+    ].where((part) => part.trim().isNotEmpty).join('، ');
+    return property.copyWith(
+      title: details.title,
+      mainImage: details.mainImage,
+      location: location.isEmpty ? property.location : location,
+      monthlyPrice: (double.tryParse(details.price) ?? 0).round(),
+      bedrooms: details.bedrooms,
+      area: details.area,
+      description: details.description,
+      photoCount: details.imageUrls.length,
+      status: property.status.isRejected
+          ? OwnerPropertyStatus.pending
+          : property.status,
+    );
+  }
+
   Future<void> _openRejection(OwnerPropertyContent property) async {
-    final OwnerPropertyContent? updated = await Go.to<OwnerPropertyContent>(
+    final PropertyDetailsModel? updated = await Go.to<PropertyDetailsModel>(
       OwnerPropertyRejectionScreen(property: property),
     );
     if (updated != null && mounted) {
-      _replaceProperty(updated);
+      _replaceProperty(_mergePropertyDetails(property, updated));
       _showMessage(LocaleKeys.ownerPropertiesResubmitted);
     }
   }
@@ -121,21 +168,36 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
       child: Scaffold(
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
-          child: Column(
+          child: Stack(
             children: [
-              OwnerPropertiesHeader(
-                onAddPressed: _openAddProperty,
-              ).padding(EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 8.h)),
-              Expanded(
-                child: OwnerPropertiesList(
-                  initialProperties: widget.initialProperties,
-                  pagifyController: _pagifyController,
-                  onAddPressed: _openAddProperty,
-                  onEditPressed: _openEdit,
-                  onActionsPressed: _openActions,
-                  onRejectedPressed: _openRejection,
-                ),
+              Column(
+                children: [
+                  OwnerPropertiesHeader(
+                    onAddPressed: _openAddProperty,
+                  ).padding(EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 8.h)),
+                  Expanded(
+                    child: OwnerPropertiesList(
+                      initialProperties: widget.initialProperties,
+                      pagifyController: _pagifyController,
+                      onAddPressed: _openAddProperty,
+                      onEditPressed: _openEdit,
+                      onActionsPressed: _openActions,
+                      onRejectedPressed: _openRejection,
+                    ),
+                  ),
+                ],
               ),
+              if (_isLoadingPropertyDetails)
+                Positioned.fill(
+                  child: ColoredBox(
+                    color: AppColors.whiteAlpha60,
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.sokoonTeal,
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),

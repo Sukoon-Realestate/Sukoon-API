@@ -82,7 +82,7 @@ class WhatsNewSheet extends StatelessWidget {
                   fontSize: 15.sp,
                   fontWeight: FontWeight.bold,
                   onTap: Go.back,
-                ).padding(EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 8.h)),
+                ).paddingSymmetric(horizontal: 20.w, vertical: 10.h),
               ],
             ),
           ),

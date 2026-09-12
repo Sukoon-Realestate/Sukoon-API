@@ -12,3 +12,4 @@ export 'add_property_primary_button.dart';
 export 'add_property_section_card.dart';
 export 'add_property_step_shell.dart';
 export 'add_property_submitted_page.dart';
+export 'add_property_video_page.dart';

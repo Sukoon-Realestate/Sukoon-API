@@ -1,23 +1,12 @@
 part of '../../../imports.dart';
 
 class OwnerReviewsCard extends StatelessWidget {
-  const OwnerReviewsCard({super.key});
+  const OwnerReviewsCard({super.key, required this.reviews});
+
+  final List<OwnerProfileReviewContent> reviews;
 
   @override
   Widget build(BuildContext context) {
-    final List<({String name, String text, int rating})> reviews = [
-      (
-        name: LocaleKeys.profileReviewSaraName,
-        text: LocaleKeys.profileReviewSaraText,
-        rating: 5,
-      ),
-      (
-        name: LocaleKeys.profileReviewMohamedName,
-        text: LocaleKeys.profileReviewMohamedText,
-        rating: 4,
-      ),
-    ];
-
     return ProfileSurfaceCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,9 +18,10 @@ class OwnerReviewsCard extends StatelessWidget {
             fontWeight: FontWeight.w900,
           ),
           4.szH,
+          if (reviews.isEmpty) const OwnerReviewsEmptyState(),
           ...reviews.indexed.map((entry) {
             final int index = entry.$1;
-            final ({String name, String text, int rating}) review = entry.$2;
+            final OwnerProfileReviewContent review = entry.$2;
             return Container(
               padding: EdgeInsets.symmetric(vertical: 10.h),
               decoration: BoxDecoration(
@@ -48,7 +38,9 @@ class OwnerReviewsCard extends StatelessWidget {
                     children: [
                       Expanded(
                         child: AppText(
-                          review.name,
+                          review.reviewerName.isNotEmpty
+                              ? review.reviewerName
+                              : LocaleKeys.profileFallbackName,
                           color: AppColors.sokoonNavy,
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w700,
@@ -59,7 +51,7 @@ class OwnerReviewsCard extends StatelessWidget {
                           5,
                           (starIndex) => Icon(
                             Icons.star_rounded,
-                            color: starIndex < review.rating
+                            color: starIndex < review.rating.round()
                                 ? AppColors.amber
                                 : AppColors.graySoft,
                             size: 13.r,
@@ -70,10 +62,18 @@ class OwnerReviewsCard extends StatelessWidget {
                   ),
                   4.szH,
                   AppText(
-                    review.text,
+                    review.comment,
                     color: AppColors.sokoonGray,
                     fontSize: 12.sp,
                   ),
+                  if (review.dateLabel.isNotEmpty) ...[
+                    4.szH,
+                    AppText(
+                      review.dateLabel,
+                      color: AppColors.sokoonGray,
+                      fontSize: 10.sp,
+                    ),
+                  ],
                 ],
               ),
             );

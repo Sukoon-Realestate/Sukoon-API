@@ -16,6 +16,7 @@ class SokoonEmailField extends StatelessWidget {
     this.onChanged,
     this.validator,
     this.action = TextInputAction.next,
+    this.readOnly = false,
   });
 
   final TextEditingController controller;
@@ -26,6 +27,7 @@ class SokoonEmailField extends StatelessWidget {
   final ValueChanged<String?>? onChanged;
   final FormFieldValidator<String?>? validator;
   final TextInputAction action;
+  final bool readOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +46,7 @@ class SokoonEmailField extends StatelessWidget {
           title: hintText,
           inputType: TextInputType.emailAddress,
           action: action,
+          readOnly: readOnly,
           borderRadius: 12.r,
           borderColor: borderColor,
           fillColor: AppColors.white,

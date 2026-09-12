@@ -20,6 +20,7 @@ class AddPropertyExtraDetailsPage extends StatelessWidget {
     required this.onNext,
     required this.onBack,
     this.isSubmitting = false,
+    this.primaryLabel,
   });
 
   final OwnerAddPropertyFormState form;
@@ -29,14 +30,17 @@ class AddPropertyExtraDetailsPage extends StatelessWidget {
   final VoidCallback onNext;
   final VoidCallback onBack;
   final bool isSubmitting;
+  final String? primaryLabel;
 
   @override
   Widget build(BuildContext context) {
     return AddPropertyStepShell(
       title: 'تفاصيل العقار',
-      activeSegments: 4,
-      progressSubtitle: 'الخطوة 4 من 4 — التفاصيل الإضافية',
-      primaryLabel: isSubmitting ? 'جار الإرسال...' : 'إرسال للمراجعة',
+      activeSegments: 5,
+      segmentCount: 5,
+      progressSubtitle: 'الخطوة 5 من 5 — التفاصيل الإضافية',
+      primaryLabel:
+          primaryLabel ?? (isSubmitting ? 'جار الإرسال...' : 'إرسال للمراجعة'),
       onPrimaryTap: form.isExtraDetailsReady && !isSubmitting ? onNext : null,
       onBack: onBack,
       children: [

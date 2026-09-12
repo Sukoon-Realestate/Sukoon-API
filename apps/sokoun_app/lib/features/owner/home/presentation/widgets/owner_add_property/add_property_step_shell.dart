@@ -17,6 +17,8 @@ class AddPropertyStepShell extends StatelessWidget {
     this.progressSubtitle,
     this.segmentCount = 4,
     this.onBack,
+    this.secondaryLabel,
+    this.onSecondaryTap,
   });
 
   final String title;
@@ -27,6 +29,8 @@ class AddPropertyStepShell extends StatelessWidget {
   final String? progressSubtitle;
   final int segmentCount;
   final VoidCallback? onBack;
+  final String? secondaryLabel;
+  final VoidCallback? onSecondaryTap;
 
   @override
   Widget build(BuildContext context) {
@@ -95,9 +99,22 @@ class AddPropertyStepShell extends StatelessWidget {
             color: AppColors.white,
             border: Border(top: BorderSide(color: AppColors.grayPale)),
           ),
-          child: AddPropertyPrimaryButton(
-            label: primaryLabel,
-            onTap: onPrimaryTap,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              AddPropertyPrimaryButton(
+                label: primaryLabel,
+                onTap: onPrimaryTap,
+              ),
+              if (secondaryLabel != null) ...[
+                10.szH,
+                AddPropertyPrimaryButton(
+                  label: secondaryLabel!,
+                  isOutline: true,
+                  onTap: onSecondaryTap,
+                ),
+              ],
+            ],
           ),
         ),
       ],

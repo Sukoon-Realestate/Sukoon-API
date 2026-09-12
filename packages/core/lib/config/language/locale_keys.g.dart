@@ -3016,6 +3016,69 @@ abstract class LocaleKeys {
   static const String _ownerPropertiesPreviewMessage = 'owner_properties_preview_message';
   static String get ownerPropertiesPreviewMessage => _ownerPropertiesPreviewMessage.tr();
 
+  static const String _ownerPropertyVideoTitle = 'owner_property_video_title';
+  static String get ownerPropertyVideoTitle => _ownerPropertyVideoTitle.tr();
+
+  static const String _ownerPropertyVideoSubtitle = 'owner_property_video_subtitle';
+  static String get ownerPropertyVideoSubtitle => _ownerPropertyVideoSubtitle.tr();
+
+  static const String _ownerPropertyVideoStepProgress = 'owner_property_video_step_progress';
+  static String get ownerPropertyVideoStepProgress => _ownerPropertyVideoStepProgress.tr();
+
+  static const String _ownerPropertyVideoRequirements = 'owner_property_video_requirements';
+  static String get ownerPropertyVideoRequirements => _ownerPropertyVideoRequirements.tr();
+
+  static const String _ownerPropertyVideoRequirementDuration = 'owner_property_video_requirement_duration';
+  static String get ownerPropertyVideoRequirementDuration => _ownerPropertyVideoRequirementDuration.tr();
+
+  static const String _ownerPropertyVideoRequirementRooms = 'owner_property_video_requirement_rooms';
+  static String get ownerPropertyVideoRequirementRooms => _ownerPropertyVideoRequirementRooms.tr();
+
+  static const String _ownerPropertyVideoRequirementStable = 'owner_property_video_requirement_stable';
+  static String get ownerPropertyVideoRequirementStable => _ownerPropertyVideoRequirementStable.tr();
+
+  static const String _ownerPropertyVideoRequirementPrivacy = 'owner_property_video_requirement_privacy';
+  static String get ownerPropertyVideoRequirementPrivacy => _ownerPropertyVideoRequirementPrivacy.tr();
+
+  static const String _ownerPropertyVideoMaximumDuration = 'owner_property_video_maximum_duration';
+  static String get ownerPropertyVideoMaximumDuration => _ownerPropertyVideoMaximumDuration.tr();
+
+  static const String _ownerPropertyVideoUploadOrRecord = 'owner_property_video_upload_or_record';
+  static String get ownerPropertyVideoUploadOrRecord => _ownerPropertyVideoUploadOrRecord.tr();
+
+  static const String _ownerPropertyVideoRecord = 'owner_property_video_record';
+  static String get ownerPropertyVideoRecord => _ownerPropertyVideoRecord.tr();
+
+  static const String _ownerPropertyVideoUpload = 'owner_property_video_upload';
+  static String get ownerPropertyVideoUpload => _ownerPropertyVideoUpload.tr();
+
+  static const String _ownerPropertyVideoPreparing = 'owner_property_video_preparing';
+  static String get ownerPropertyVideoPreparing => _ownerPropertyVideoPreparing.tr();
+
+  static const String _ownerPropertyVideoUploaded = 'owner_property_video_uploaded';
+  static String get ownerPropertyVideoUploaded => _ownerPropertyVideoUploaded.tr();
+
+  static const String _ownerPropertyVideoChange = 'owner_property_video_change';
+  static String get ownerPropertyVideoChange => _ownerPropertyVideoChange.tr();
+
+  static const String _ownerPropertyVideoRemove = 'owner_property_video_remove';
+  static String get ownerPropertyVideoRemove => _ownerPropertyVideoRemove.tr();
+
+  static const String _ownerPropertyVideoTooLong = 'owner_property_video_too_long';
+  static String get ownerPropertyVideoTooLong => _ownerPropertyVideoTooLong.tr();
+
+  static const String _ownerPropertyVideoFailed = 'owner_property_video_failed';
+  static String get ownerPropertyVideoFailed => _ownerPropertyVideoFailed.tr();
+
+  static const String _ownerPropertyVideoPrivacyHint = 'owner_property_video_privacy_hint';
+  static String get ownerPropertyVideoPrivacyHint => _ownerPropertyVideoPrivacyHint.tr();
+
+  static const String _ownerPropertyVideoNextPricing = 'owner_property_video_next_pricing';
+  static String get ownerPropertyVideoNextPricing => _ownerPropertyVideoNextPricing.tr();
+
+  static const String _ownerPropertyVideoSkip = 'owner_property_video_skip';
+  static String get ownerPropertyVideoSkip => _ownerPropertyVideoSkip.tr();
+
   static const String _ownerPropertySubmittedStatus = 'owner_property_submitted_status';
   static String get ownerPropertySubmittedStatus => _ownerPropertySubmittedStatus.tr();
 
@@ -3583,6 +3646,12 @@ abstract class LocaleKeys {
   static const String _profileLatestReviews = 'profile_latest_reviews';
   static String get profileLatestReviews => _profileLatestReviews.tr();
 
+  static const String _profileNoReviewsTitle = 'profile_no_reviews_title';
+  static String get profileNoReviewsTitle => _profileNoReviewsTitle.tr();
+
+  static const String _profileNoReviewsDescription = 'profile_no_reviews_description';
+  static String get profileNoReviewsDescription => _profileNoReviewsDescription.tr();
+
   static const String _profileReviewSaraName = 'profile_review_sara_name';
   static String get profileReviewSaraName => _profileReviewSaraName.tr();
 
@@ -3645,6 +3714,9 @@ abstract class LocaleKeys {
 
   static const String _profileMale = 'profile_male';
   static String get profileMale => _profileMale.tr();
+
+  static const String _profileFemale = 'profile_female';
+  static String get profileFemale => _profileFemale.tr();
 
   static const String _profileCairo = 'profile_cairo';
   static String get profileCairo => _profileCairo.tr();

@@ -1,9 +1,9 @@
 part of '../../imports.dart';
 
 class OwnerRequestDetailsScreen extends StatefulWidget {
-  const OwnerRequestDetailsScreen({super.key, required this.request});
+  const OwnerRequestDetailsScreen({super.key, required this.requestId});
 
-  final OwnerVisitRequestContent request;
+  final String requestId;
 
   @override
   State<OwnerRequestDetailsScreen> createState() =>
@@ -11,31 +11,40 @@ class OwnerRequestDetailsScreen extends StatefulWidget {
 }
 
 class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
+  late final OwnerRequestDetailsCubit _requestDetailsCubit;
   late final OwnerVisitStatusCubit _visitStatusCubit;
+  late final Future<void> _requestDetailsRequest;
   OwnerVisitUpdateStatus? _pendingStatus;
-
-  OwnerVisitRequestContent get request => widget.request;
 
   @override
   void initState() {
     super.initState();
+    _requestDetailsCubit = OwnerRequestDetailsCubit();
     _visitStatusCubit = OwnerVisitStatusCubit();
+    _requestDetailsRequest = _requestDetailsCubit.getRequestDetails(
+      widget.requestId,
+    );
   }
 
   @override
   void dispose() {
+    _requestDetailsCubit.close();
     _visitStatusCubit.close();
     super.dispose();
   }
 
-  Future<void> _acceptRequest(BuildContext context) async {
+  Future<void> _acceptRequest(
+    BuildContext context,
+    OwnerVisitRequestDetailsContent request,
+  ) async {
     final bool? confirmed = await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: AppColors.transparent,
       barrierColor: AppColors.blackAlpha45,
-      builder: (context) => OwnerAcceptRequestSheet(request: request),
+      builder: (context) =>
+          OwnerAcceptRequestSheet(request: request.toRequestContent()),
     );
 
     if (confirmed == true && context.mounted) {
@@ -46,7 +55,10 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
     }
   }
 
-  Future<void> _rejectRequest(BuildContext context) async {
+  Future<void> _rejectRequest(
+    BuildContext context,
+    OwnerVisitRequestDetailsContent request,
+  ) async {
     final OwnerRejectionReason? reason =
         await showModalBottomSheet<OwnerRejectionReason>(
           context: context,
@@ -71,19 +83,32 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
   }) async {
     if (_visitStatusCubit.isLoading) return;
     setState(() => _pendingStatus = status);
-    await _visitStatusCubit.updateVisitStatus(
-      visitId: request.id,
-      status: status,
-      onSuccess: () {
-        if (mounted) Go.back(resolution);
-      },
+    void onSuccess() {
+      if (mounted) Go.back(resolution);
+    }
+
+    if (status == OwnerVisitUpdateStatus.confirmed) {
+      await _visitStatusCubit.acceptVisitRequest(
+        requestId: widget.requestId,
+        onSuccess: onSuccess,
+      );
+      return;
+    }
+    await _visitStatusCubit.rejectVisitRequest(
+      requestId: widget.requestId,
+      onSuccess: onSuccess,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<OwnerVisitStatusCubit>.value(
-      value: _visitStatusCubit,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<OwnerRequestDetailsCubit>.value(
+          value: _requestDetailsCubit,
+        ),
+        BlocProvider<OwnerVisitStatusCubit>.value(value: _visitStatusCubit),
+      ],
       child: BlocBuilder<OwnerVisitStatusCubit, AsyncState<bool>>(
         builder: (context, state) {
           final bool isUpdating = state.isLoading;
@@ -102,18 +127,32 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
                         isBackEnabled: !isUpdating,
                       ),
                       Expanded(
-                        child: OwnerRequestDetailsContent(
-                          request: request,
-                          isAccepting:
-                              isUpdating &&
-                              _pendingStatus ==
-                                  OwnerVisitUpdateStatus.confirmed,
-                          isRejecting:
-                              isUpdating &&
-                              _pendingStatus == OwnerVisitUpdateStatus.rejected,
-                          onAcceptPressed: () => _acceptRequest(context),
-                          onRejectPressed: () => _rejectRequest(context),
-                        ),
+                        child:
+                            StatusBuilder<
+                              OwnerRequestDetailsCubit,
+                              OwnerVisitRequestDetailsContent
+                            >.withShimmer(
+                              initialDataForShimmer:
+                                  const OwnerVisitRequestDetailsContent.initial(),
+                              requestToTryAgainWhenError:
+                                  _requestDetailsRequest,
+                              errorType: ErrorType.defaultView,
+                              builder: (request) => OwnerRequestDetailsContent(
+                                request: request,
+                                isAccepting:
+                                    isUpdating &&
+                                    _pendingStatus ==
+                                        OwnerVisitUpdateStatus.confirmed,
+                                isRejecting:
+                                    isUpdating &&
+                                    _pendingStatus ==
+                                        OwnerVisitUpdateStatus.rejected,
+                                onAcceptPressed: () =>
+                                    _acceptRequest(context, request),
+                                onRejectPressed: () =>
+                                    _rejectRequest(context, request),
+                              ),
+                            ),
                       ),
                     ],
                   ),

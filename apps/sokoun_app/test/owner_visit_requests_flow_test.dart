@@ -10,7 +10,47 @@ import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/owner/home/presentation/screens/owner_visit_requests_screen.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_widgets/owner_request_card.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_thread_screen.dart';
+
+Map<String, dynamic> _ownerRequestDetailsResponse(String id) {
+  final bool canChat = id == 'chat-enabled';
+  return {
+    'id': id,
+    'tenant': {
+      'id': 'tenant-id',
+      'name': 'سارة أحمد خالد',
+      'avatar': '',
+      'is_verified': true,
+      'member_since_year': 2024,
+      'membership_label': 'مستأجر موثّق · عضو منذ 2024',
+      'phone_number': '',
+      'masked_phone_number': '010****432',
+      'is_phone_revealed': false,
+      'phone_notice': 'رقم المستأجر 010****432 – يظهر بعد القبول فقط',
+    },
+    'property': {
+      'id': 'owner-property-id',
+      'title': 'شقة مفروشة',
+      'district': 'مدينة نصر',
+      'display_name': 'شقة مفروشة – مدينة نصر',
+    },
+    'visit_date': '2025-06-15',
+    'visit_time': '15:00:00',
+    'day_label': 'السبت 15 يونيو 2025',
+    'time_label': '3:00 م',
+    'note': 'مهتمة بالشقة ومحتاجة تاكدي من المساحة وحالة التشطيب.',
+    'status': canChat ? 'accepted' : 'pending',
+    'status_label': canChat ? 'تم القبول' : 'بانتظار رد المالك',
+    'actions': {
+      'can_accept': !canChat,
+      'can_reject': !canChat,
+      'can_chat': canChat,
+    },
+    'created_at': '2026-09-05T18:00:00Z',
+  };
+}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -155,23 +195,68 @@ void main() {
     );
   });
 
-  test('updates a visit using the supported owner status contract', () async {
+  test('maps and serializes owner visit request details', () {
+    final OwnerVisitRequestDetailsContent request =
+        OwnerVisitRequestDetailsContent.fromJson(
+          _ownerRequestDetailsResponse('visit-id'),
+        );
+
+    expect(request.id, 'visit-id');
+    expect(request.tenant.name, 'سارة أحمد خالد');
+    expect(request.tenant.memberSinceYear, 2024);
+    expect(request.tenant.displayPhone, '010****432');
+    expect(request.property.displayName, 'شقة مفروشة – مدينة نصر');
+    expect(request.displayDate, 'السبت 15 يونيو 2025');
+    expect(request.displayTime, '3:00 م');
+    expect(request.displayStatus, 'بانتظار رد المالك');
+    expect(request.actions.canAccept, isTrue);
+    expect(request.actions.canChat, isFalse);
+    expect(OwnerVisitRequestDetailsContent.fromJson(request.toJson()), request);
+  });
+
+  test('loads owner visit request details from the owner endpoint', () async {
+    final OwnerRequestDetailsCubit cubit = OwnerRequestDetailsCubit();
+    addTearDown(cubit.close);
+
+    await cubit.getRequestDetails('visit-id');
+
+    expect(repository.lastApi, 'properties/owner/visits/requests/visit-id/');
+    expect(repository.lastMethod, HttpRequestType.get);
+    expect(repository.lastCacheKey, 'owner_visit_request_details_visit-id');
+    expect(cubit.data.tenant.name, 'سارة أحمد خالد');
+  });
+
+  test('accepts and rejects through the owner request actions', () async {
     final OwnerVisitStatusCubit cubit = OwnerVisitStatusCubit();
     addTearDown(cubit.close);
 
-    for (final OwnerVisitUpdateStatus status in OwnerVisitUpdateStatus.values) {
-      bool succeeded = false;
-      await cubit.updateVisitStatus(
-        visitId: 'visit-id',
-        status: status,
-        onSuccess: () => succeeded = true,
-      );
+    bool accepted = false;
+    await cubit.acceptVisitRequest(
+      requestId: 'visit-id',
+      onSuccess: () => accepted = true,
+    );
 
-      expect(repository.lastApi, 'properties/visits/visit-id/');
-      expect(repository.lastMethod, HttpRequestType.patch);
-      expect(repository.lastBody, {'status': status.name});
-      expect(succeeded, isTrue);
-    }
+    expect(
+      repository.lastApi,
+      'properties/owner/visits/requests/visit-id/accept/',
+    );
+    expect(repository.lastMethod, HttpRequestType.post);
+    expect(repository.lastBody, isNull);
+    expect(accepted, isTrue);
+
+    bool rejected = false;
+    await cubit.rejectVisitRequest(
+      requestId: 'visit-id',
+      onSuccess: () => rejected = true,
+    );
+
+    expect(
+      repository.lastApi,
+      'properties/owner/visits/requests/visit-id/reject/',
+    );
+    expect(repository.lastMethod, HttpRequestType.post);
+    expect(repository.lastBody, isNull);
+    expect(rejected, isTrue);
   });
 
   test('loads the owner calendar with year, month, and date queries', () async {
@@ -309,6 +394,60 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('dashboard request card opens API-backed request details', (
+    tester,
+  ) async {
+    configurePhoneViewport(tester);
+
+    await tester.pumpWidget(
+      buildScreen(
+        const Scaffold(
+          body: OwnerRequestCard(
+            requestId: 'dashboard-visit-id',
+            name: 'سارة أحمد خالد',
+            details: 'شقة مفروشة · مدينة نصر · 3:00 م',
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(
+      find.byKey(const ValueKey('owner-dashboard-request-dashboard-visit-id')),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(OwnerRequestDetailsScreen), findsOneWidget);
+    expect(
+      repository.lastApi,
+      'properties/owner/visits/requests/dashboard-visit-id/',
+    );
+    expect(repository.lastMethod, HttpRequestType.get);
+    expect(find.text('شقة مفروشة – مدينة نصر'), findsOneWidget);
+    expect(find.text('بانتظار رد المالك'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('opens chat when the request API allows chat', (tester) async {
+    configurePhoneViewport(tester);
+
+    await tester.pumpWidget(
+      buildScreen(const OwnerRequestDetailsScreen(requestId: 'chat-enabled')),
+    );
+    await tester.pumpAndSettle();
+
+    final Finder chatButton = find.byKey(
+      const ValueKey('owner-request-open-chat'),
+    );
+    await tester.ensureVisible(chatButton);
+    await tester.tap(chatButton);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+
+    expect(find.byType(ChatThreadScreen), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('opens O-REQ-02 and completes the O-ACCEPT flow', (tester) async {
     configurePhoneViewport(tester);
 
@@ -348,9 +487,12 @@ void main() {
     expect(find.byType(OwnerVisitRequestsScreen), findsOneWidget);
     expect(find.text('تم قبول طلب الزيارة'), findsOneWidget);
     expect(find.text('تم القبول'), findsNWidgets(2));
-    expect(repository.lastApi, 'properties/visits/sara-nasr-city/');
-    expect(repository.lastMethod, HttpRequestType.patch);
-    expect(repository.lastBody, {'status': 'confirmed'});
+    expect(
+      repository.lastApi,
+      'properties/owner/visits/requests/sara-nasr-city/accept/',
+    );
+    expect(repository.lastMethod, HttpRequestType.post);
+    expect(repository.lastBody, isNull);
     expect(tester.takeException(), isNull);
   });
 
@@ -387,9 +529,12 @@ void main() {
     expect(find.byType(OwnerVisitRequestsScreen), findsOneWidget);
     expect(find.text('تم رفض طلب الزيارة'), findsOneWidget);
     expect(find.text('تم الرفض'), findsOneWidget);
-    expect(repository.lastApi, 'properties/visits/sara-nasr-city/');
-    expect(repository.lastMethod, HttpRequestType.patch);
-    expect(repository.lastBody, {'status': 'rejected'});
+    expect(
+      repository.lastApi,
+      'properties/owner/visits/requests/sara-nasr-city/reject/',
+    );
+    expect(repository.lastMethod, HttpRequestType.post);
+    expect(repository.lastBody, isNull);
     expect(tester.takeException(), isNull);
   });
 
@@ -452,6 +597,7 @@ class _RecordingBaseRepository implements BaseRepository {
   HttpRequestType? lastMethod;
   Map<String, dynamic>? lastBody;
   Map<String, dynamic>? lastQuery;
+  String? lastCacheKey;
 
   @override
   Future<Result<BaseModel<T>, Failure>> crudCall<T>(
@@ -461,7 +607,18 @@ class _RecordingBaseRepository implements BaseRepository {
     lastMethod = params.httpRequestType;
     lastBody = params.body;
     lastQuery = params.queryParameters;
-    final T data = params.mapper!(null);
+    lastCacheKey = params.cacheKey;
+    final List<String> pathParts = params.api.split('/');
+    final dynamic response =
+        params.httpRequestType == HttpRequestType.get &&
+            pathParts.length > 5 &&
+            pathParts[0] == 'properties' &&
+            pathParts[1] == 'owner' &&
+            pathParts[2] == 'visits' &&
+            pathParts[3] == 'requests'
+        ? _ownerRequestDetailsResponse(pathParts[4])
+        : null;
+    final T data = params.mapper!(response);
     return Success(BaseModel<T>(key: '', msg: '', data: data));
   }
 

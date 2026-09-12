@@ -6,6 +6,8 @@ class ProfileAvatar extends StatelessWidget {
     required this.name,
     required this.accentColor,
     required this.backgroundColor,
+    this.avatarUrl,
+    this.imageFile,
     this.size = 64,
     this.useInitial = false,
     this.badgeIcon,
@@ -15,6 +17,8 @@ class ProfileAvatar extends StatelessWidget {
   final String name;
   final Color accentColor;
   final Color backgroundColor;
+  final String? avatarUrl;
+  final File? imageFile;
   final double size;
   final bool useInitial;
   final IconData? badgeIcon;
@@ -47,18 +51,26 @@ class ProfileAvatar extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             alignment: Alignment.center,
-            child: useInitial
-                ? AppText(
-                    _initial,
-                    color: AppColors.white,
-                    fontSize: (size * .36).sp,
-                    fontWeight: FontWeight.w900,
+            child: imageFile != null
+                ? ClipOval(
+                    child: Image.file(
+                      imageFile!,
+                      width: avatarSize,
+                      height: avatarSize,
+                      fit: BoxFit.cover,
+                    ),
                   )
-                : Icon(
-                    Icons.person_outline_rounded,
-                    color: accentColor,
-                    size: (size * .47).r,
-                  ),
+                : avatarUrl?.trim().isNotEmpty == true
+                ? ClipOval(
+                    child: Image.network(
+                      avatarUrl!,
+                      width: avatarSize,
+                      height: avatarSize,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, _, _) => _fallbackAvatar(),
+                    ),
+                  )
+                : _fallbackAvatar(),
           ),
           if (badgeIcon != null)
             PositionedDirectional(
@@ -89,6 +101,22 @@ class ProfileAvatar extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+
+  Widget _fallbackAvatar() {
+    if (useInitial) {
+      return AppText(
+        _initial,
+        color: AppColors.white,
+        fontSize: (size * .36).sp,
+        fontWeight: FontWeight.w900,
+      );
+    }
+    return Icon(
+      Icons.person_outline_rounded,
+      color: accentColor,
+      size: (size * .47).r,
     );
   }
 }

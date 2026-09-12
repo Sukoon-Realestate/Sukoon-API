@@ -3,13 +3,21 @@ part of '../../../imports.dart';
 class TenantSummaryHeaderCard extends StatelessWidget {
   const TenantSummaryHeaderCard({super.key, required this.user});
 
-  final UserModel user;
+  final TenantAccountSummaryUserContent user;
 
   @override
   Widget build(BuildContext context) {
-    final String userName = user.name.trim().isEmpty
-        ? LocaleKeys.profileFallbackName
-        : user.name;
+    final String userName = user.fullName.trim().isNotEmpty
+        ? user.fullName
+        : user.initial.trim().isNotEmpty
+        ? user.initial
+        : LocaleKeys.profileFallbackName;
+    final String membership = [
+      user.roleLabel,
+      user.memberSinceLabel,
+    ].where((value) => value.isNotEmpty).join(' · ');
+    final double completion =
+        (user.profileCompletionPercentage.clamp(0, 100)) / 100;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 22.h),
@@ -27,6 +35,7 @@ class TenantSummaryHeaderCard extends StatelessWidget {
             children: [
               ProfileAvatar(
                 name: userName,
+                avatarUrl: user.avatar,
                 accentColor: AppColors.sokoonTeal,
                 backgroundColor: AppColors.whiteAlpha10,
                 size: 56,
@@ -47,7 +56,9 @@ class TenantSummaryHeaderCard extends StatelessWidget {
                     ),
                     3.szH,
                     AppText(
-                      LocaleKeys.profileTenantSummaryMemberSince,
+                      membership.isNotEmpty
+                          ? membership
+                          : LocaleKeys.profileTenantSummaryMemberSince,
                       color: AppColors.whiteAlpha60,
                       fontSize: 12.sp,
                     ),
@@ -60,13 +71,15 @@ class TenantSummaryHeaderCard extends StatelessWidget {
           Row(
             children: [
               AppText(
-                LocaleKeys.profileCompletion,
+                user.profileCompletionLabel.isNotEmpty
+                    ? user.profileCompletionLabel
+                    : LocaleKeys.profileCompletion,
                 color: AppColors.whiteAlpha60,
                 fontSize: 12.sp,
               ),
               const Spacer(),
               AppText(
-                '80%',
+                '${user.profileCompletionPercentage.clamp(0, 100)}%',
                 color: AppColors.white,
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w800,
@@ -77,7 +90,7 @@ class TenantSummaryHeaderCard extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(99.r),
             child: LinearProgressIndicator(
-              value: .8,
+              value: completion,
               minHeight: 6.h,
               color: AppColors.white,
               backgroundColor: AppColors.whiteAlpha40,

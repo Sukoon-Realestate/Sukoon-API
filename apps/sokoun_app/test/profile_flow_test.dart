@@ -1,11 +1,18 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
+import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
+import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
+import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/shared/profile/imports.dart';
 import 'package:sokoun_app/shared_widgets/shared_widgets.dart';
 
@@ -30,6 +37,7 @@ void main() {
   const MethodChannel sharedPreferencesChannel = MethodChannel(
     'plugins.flutter.io/shared_preferences',
   );
+  late _ProfileRepository repository;
 
   setUpAll(() async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -43,6 +51,16 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(sharedPreferencesChannel, null);
   });
+
+  setUp(() async {
+    await injector.reset();
+    repository = _ProfileRepository();
+    injector.registerSingleton<BaseCrudUseCase>(
+      BaseCrudUseCase(repository: repository),
+    );
+  });
+
+  tearDown(() => injector.reset());
 
   Widget buildScreen(Widget screen) {
     return EasyLocalization(
@@ -72,6 +90,162 @@ void main() {
     addTearDown(tester.view.reset);
   }
 
+  test('maps and serializes the owner profile response', () {
+    final OwnerProfileContent profile = OwnerProfileContent.fromJson(
+      _ownerProfileResponse,
+    );
+
+    expect(profile.owner.fullName, 'Zeayd Mohammed');
+    expect(profile.owner.isVerified, isFalse);
+    expect(profile.stats.propertiesCount, 2);
+    expect(profile.stats.displayAcceptanceRate, '96%');
+    expect(profile.accountDetails.displayPhone, '010****972');
+    expect(profile.privacyNotice.icon, 'lock');
+    expect(profile.recentReviews, isEmpty);
+    expect(OwnerProfileContent.fromJson(profile.toJson()), profile);
+  });
+
+  test('maps and serializes the tenant profile response', () {
+    final TenantProfileContent profile = TenantProfileContent.fromJson(
+      _tenantProfileResponse,
+    );
+
+    expect(profile.user.fullName, 'Zeayd Mohammed');
+    expect(profile.user.roleLabel, 'مستأجر');
+    expect(profile.stats.visitsCount, 2);
+    expect(profile.menuItems.contracts.count, 1);
+    expect(profile.menuItems.verification.isVerified, isFalse);
+    expect(profile.accountDetails.email, 'zeyaddd@gmail.com');
+    expect(TenantProfileContent.fromJson(profile.toJson()), profile);
+  });
+
+  test('maps and serializes the tenant account summary response', () {
+    final TenantAccountSummaryContent summary =
+        TenantAccountSummaryContent.fromJson(_tenantAccountSummaryResponse);
+
+    expect(summary.user.fullName, 'Zeayd Mohammed');
+    expect(summary.user.initial, 'Z');
+    expect(summary.user.profileCompletionPercentage, 55);
+    expect(summary.identityVerification.isVerified, isFalse);
+    expect(summary.identityVerification.statusLabel, 'غير مكتمل');
+    expect(summary.stats.completedVisitsCount, 2);
+    expect(summary.shortcuts.savedProperties.label, '0 عقار');
+    expect(summary.shortcuts.identityVerification.status, 'incomplete');
+    expect(TenantAccountSummaryContent.fromJson(summary.toJson()), summary);
+  });
+
+  test('loads profile screens from their GET endpoints', () async {
+    final OwnerProfileCubit ownerCubit = OwnerProfileCubit();
+    final TenantProfileCubit tenantCubit = TenantProfileCubit();
+    final TenantAccountSummaryCubit summaryCubit = TenantAccountSummaryCubit();
+    addTearDown(ownerCubit.close);
+    addTearDown(tenantCubit.close);
+    addTearDown(summaryCubit.close);
+
+    await ownerCubit.getProfile();
+    expect(repository.lastApi, ApiConstants.ownerProfile);
+    expect(repository.lastMethod, HttpRequestType.get);
+    expect(repository.lastCacheKey, OwnerProfileContent.cacheKey);
+    expect(ownerCubit.data.owner.fullName, 'Zeayd Mohammed');
+
+    await tenantCubit.getProfile();
+    expect(repository.lastApi, ApiConstants.tenantProfile);
+    expect(repository.lastMethod, HttpRequestType.get);
+    expect(repository.lastCacheKey, TenantProfileContent.cacheKey);
+    expect(tenantCubit.data.stats.visitsCount, 2);
+
+    await summaryCubit.getSummary();
+    expect(repository.lastApi, ApiConstants.tenantAccountSummary);
+    expect(repository.lastApi, 'profiles/account-summary/');
+    expect(repository.lastMethod, HttpRequestType.get);
+    expect(repository.lastCacheKey, TenantAccountSummaryContent.cacheKey);
+    expect(summaryCubit.data.user.profileCompletionPercentage, 55);
+  });
+
+  test('serializes the typed profile edit multipart body', () {
+    final File avatar = File('/tmp/profile-avatar.jpg');
+    final ProfileEditBody body = ProfileEditBody(
+      avatar: avatar,
+      fullName: 'Zeayd Mohammed',
+      gender: ProfileGender.male.apiValue,
+      phoneNumber: '01017595972',
+    );
+
+    expect(body.toJson(), {
+      'avatar': avatar,
+      'full_name': 'Zeayd Mohammed',
+      'gender': 'male',
+      'phone_number': '01017595972',
+    });
+    expect(
+      const ProfileEditBody.initial().copyWith(fullName: 'Updated').toJson(),
+      {'full_name': 'Updated', 'gender': '', 'phone_number': ''},
+    );
+  });
+
+  test('patches the shared owner and tenant profile edit endpoint', () async {
+    final ProfileEditCubit cubit = ProfileEditCubit();
+    addTearDown(cubit.close);
+    bool wasUpdated = false;
+    const ProfileEditBody body = ProfileEditBody(
+      avatar: null,
+      fullName: 'Updated Name',
+      gender: 'female',
+      phoneNumber: '01012345678',
+    );
+
+    await cubit.editProfile(body: body, onSuccess: () => wasUpdated = true);
+
+    expect(repository.lastApi, ApiConstants.editProfile);
+    expect(repository.lastApi, 'profiles/edit/');
+    expect(repository.lastMethod, HttpRequestType.patch);
+    expect(repository.lastBody, body.toJson());
+    expect(repository.lastIsFromData, isTrue);
+    expect(wasUpdated, isTrue);
+  });
+
+  test('deletes the account through the shared auth endpoint', () async {
+    final ProfileDeleteAccountCubit cubit = ProfileDeleteAccountCubit();
+    addTearDown(cubit.close);
+    bool wasDeleted = false;
+
+    await cubit.deleteAccount(onSuccess: () => wasDeleted = true);
+
+    expect(repository.lastApi, ApiConstants.deleteAccount);
+    expect(repository.lastApi, 'auth/delete-account/');
+    expect(repository.lastMethod, HttpRequestType.delete);
+    expect(repository.lastCacheKey, isNull);
+    expect(wasDeleted, isTrue);
+  });
+
+  testWidgets('asks for confirmation before deleting an account', (
+    tester,
+  ) async {
+    configurePhoneViewport(tester);
+    await tester.pumpWidget(
+      buildScreen(const Scaffold(body: ProfileDeleteAccountButton())),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('profile-delete-account')),
+      findsOneWidget,
+    );
+    await tester.tap(find.byKey(const ValueKey('profile-delete-account')));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.byKey(const ValueKey('profile-delete-confirm')),
+      findsOneWidget,
+    );
+    expect(find.byKey(const ValueKey('profile-delete-cancel')), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('profile-delete-cancel')));
+    await tester.pumpAndSettle();
+
+    expect(repository.lastApi, isEmpty);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('renders T-PROFILE-01 and opens T-SUMMARY-01', (tester) async {
     configurePhoneViewport(tester);
     await tester.pumpWidget(
@@ -80,14 +254,26 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const ValueKey('T-PROFILE-01')), findsOneWidget);
-    expect(find.text(tenant.name), findsWidgets);
+    expect(find.text('Zeayd Mohammed'), findsWidgets);
+    expect(find.text('2'), findsWidgets);
+    await tester.drag(find.byType(ListView).last, const Offset(0, -900));
+    await tester.pumpAndSettle();
+    expect(find.byType(ProfileDeleteAccountButton), findsOneWidget);
+    expect(repository.lastApi, ApiConstants.tenantProfile);
+    expect(repository.lastMethod, HttpRequestType.get);
     expect(tester.takeException(), isNull);
 
     await tester.tap(find.byKey(const ValueKey('tenant-profile-summary')));
     await tester.pumpAndSettle();
 
     expect(find.byKey(const ValueKey('T-SUMMARY-01')), findsOneWidget);
-    expect(find.text(tenant.name), findsOneWidget);
+    expect(find.text('Zeayd Mohammed'), findsOneWidget);
+    expect(find.text('55%'), findsOneWidget);
+    expect(find.text('غير مكتمل'), findsWidgets);
+    expect(find.text('0 عقار'), findsOneWidget);
+    expect(find.text('2 زيارة'), findsOneWidget);
+    expect(repository.lastApi, ApiConstants.tenantAccountSummary);
+    expect(repository.lastMethod, HttpRequestType.get);
     expect(tester.takeException(), isNull);
   });
 
@@ -104,7 +290,14 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byKey(const ValueKey('O-PROFILE-01')), findsOneWidget);
-    expect(find.text(owner.name), findsWidgets);
+    expect(find.text('Zeayd Mohammed'), findsWidgets);
+    expect(find.text('96%'), findsOneWidget);
+    expect(find.text('010****972'), findsOneWidget);
+    await tester.drag(find.byType(ListView).last, const Offset(0, -900));
+    await tester.pumpAndSettle();
+    expect(find.byType(ProfileDeleteAccountButton), findsOneWidget);
+    expect(repository.lastApi, ApiConstants.ownerProfile);
+    expect(repository.lastMethod, HttpRequestType.get);
     expect(tester.takeException(), isNull);
   });
 
@@ -137,6 +330,143 @@ void main() {
   });
 }
 
+const Map<String, dynamic> _ownerProfileResponse = {
+  'owner': {
+    'id': '803447a0-cfcf-49bd-b9d3-d0effe1fb4f8',
+    'full_name': 'Zeayd Mohammed',
+    'avatar': null,
+    'is_verified': false,
+    'role_badge': 'مالك',
+    'average_rating': 0,
+    'reviews_count': 0,
+    'rating_label': '0.0 (0 تقييم)',
+    'member_since_label': 'عضو منذ أغسطس 2026',
+  },
+  'stats': {
+    'properties_count': 2,
+    'properties_label': 'عقارات',
+    'reviews_count': 0,
+    'reviews_label': 'تقييم',
+    'acceptance_rate': 96,
+    'acceptance_label': 'قبول',
+    'formatted_acceptance_rate': '96%',
+  },
+  'account_details': {
+    'name': 'Zeayd Mohammed',
+    'email': 'zeyaddd@gmail.com',
+    'phone_number': '01017595972',
+    'masked_phone_number': '010****972',
+  },
+  'privacy_notice': {
+    'icon': 'lock',
+    'text': 'رقمك لا يُعرض للمستأجرين – يظهر فقط بعد القبول',
+  },
+  'recent_reviews': <Map<String, dynamic>>[],
+};
+
+const Map<String, dynamic> _tenantProfileResponse = {
+  'user': {
+    'id': '803447a0-cfcf-49bd-b9d3-d0effe1fb4f8',
+    'full_name': 'Zeayd Mohammed',
+    'first_name': 'Zeayd',
+    'last_name': 'Mohammed',
+    'avatar': null,
+    'is_verified': false,
+    'verification_badge': 'غير موثّق',
+    'role_label': 'مستأجر',
+    'member_since_label': 'عضو منذ أغسطس 2026',
+    'member_since_year': 2026,
+    'member_since_month': 'أغسطس',
+  },
+  'stats': {'saved_count': 0, 'visits_count': 2, 'reviews_count': 0},
+  'menu_items': {
+    'visit_requests': {
+      'title': 'طلبات الزيارة',
+      'count': 2,
+      'subtitle': '2 طلب',
+    },
+    'contracts': {'title': 'عقودي', 'count': 1, 'subtitle': '1 عقد نشط'},
+    'reviews': {'title': 'تقييماتي', 'count': 0, 'subtitle': '0 تقييم'},
+    'verification': {
+      'title': 'التوثيق والخصوصية',
+      'is_verified': false,
+      'subtitle': 'غير موثّق',
+    },
+  },
+  'account_details': {'name': 'Zeayd Mohammed', 'email': 'zeyaddd@gmail.com'},
+};
+
+const Map<String, dynamic> _tenantAccountSummaryResponse = {
+  'user': {
+    'id': '803447a0-cfcf-49bd-b9d3-d0effe1fb4f8',
+    'full_name': 'Zeayd Mohammed',
+    'avatar': null,
+    'initial': 'Z',
+    'role_label': 'مستأجر',
+    'member_since_label': 'منذ أغسطس 2026',
+    'profile_completion_percentage': 55,
+    'profile_completion_label': 'اكتمال الملف',
+  },
+  'identity_verification': {
+    'is_verified': false,
+    'title': 'التحقق من الهوية',
+    'subtitle': 'يرجى رفع بطاقة الهوية للتحقق',
+    'status_label': 'غير مكتمل',
+  },
+  'stats': {
+    'saved_properties_count': 0,
+    'completed_visits_count': 2,
+    'active_chats_count': 0,
+  },
+  'shortcuts': {
+    'saved_properties': {
+      'title': 'العقارات المحفوظة',
+      'count': 0,
+      'label': '0 عقار',
+    },
+    'visits_history': {'title': 'سجل الزيارات', 'count': 2, 'label': '2 زيارة'},
+    'identity_verification': {
+      'title': 'التحقق من الهوية',
+      'status': 'incomplete',
+      'label': 'غير مكتمل',
+    },
+  },
+};
+
+class _ProfileRepository implements BaseRepository {
+  String lastApi = '';
+  HttpRequestType? lastMethod;
+  String? lastCacheKey;
+  Map<String, dynamic>? lastBody;
+  bool lastIsFromData = false;
+
+  @override
+  Future<Result<BaseModel<T>, Failure>> crudCall<T>(
+    CrudBaseParmas<T> params,
+  ) async {
+    lastApi = params.api;
+    lastMethod = params.httpRequestType;
+    lastCacheKey = params.cacheKey;
+    lastBody = params.body;
+    lastIsFromData = params.isFromData;
+    final dynamic response = switch (params.api) {
+      ApiConstants.ownerProfile => _ownerProfileResponse,
+      ApiConstants.tenantProfile => _tenantProfileResponse,
+      ApiConstants.tenantAccountSummary => _tenantAccountSummaryResponse,
+      ApiConstants.editProfile => const <String, dynamic>{'updated': true},
+      ApiConstants.deleteAccount => const <String, dynamic>{'deleted': true},
+      _ => null,
+    };
+    final T data = params.mapper!(response);
+    return Success(BaseModel<T>(key: '', msg: '', data: data));
+  }
+
+  @override
+  Future<Result<List<T>, Failure>> getBaseIdAndNameEntity<T extends BaseEntity>(
+    GetBaseEntityParams? param,
+  ) => throw UnimplementedError();
+}
+
 void _expectPrefilledFields(WidgetTester tester, UserModel user) {
   final SokoonNameField nameField = tester.widget(
     find.byKey(const ValueKey('profile-name-field')),
@@ -151,6 +481,8 @@ void _expectPrefilledFields(WidgetTester tester, UserModel user) {
   expect(nameField.controller.text, user.name);
   expect(phoneField.controller.text, user.phone);
   expect(emailField.controller.text, user.email);
+  expect(emailField.readOnly, isTrue);
+  expect(find.byKey(const ValueKey('profile-gender-field')), findsOneWidget);
 }
 
 class _ProfileTranslationsAssetLoader extends AssetLoader {
@@ -194,6 +526,8 @@ class _ProfileTranslationsAssetLoader extends AssetLoader {
       'profile_owner_rating_summary',
       'profile_owner_phone_privacy',
       'profile_latest_reviews',
+      'profile_no_reviews_title',
+      'profile_no_reviews_description',
       'profile_review_sara_name',
       'profile_review_sara_text',
       'profile_review_mohamed_name',
@@ -215,6 +549,7 @@ class _ProfileTranslationsAssetLoader extends AssetLoader {
       'profile_change_photo',
       'profile_birth_date',
       'profile_male',
+      'profile_female',
       'profile_cairo',
       'profile_verified_account',
       'profile_verified_account_description',
@@ -228,6 +563,10 @@ class _ProfileTranslationsAssetLoader extends AssetLoader {
       'city',
       'gender',
       'owner_properties_title',
+      'delete_account',
+      'are_you_sure_you_want_to_delete_your_account',
+      'deleting_will_remove_all_your_data',
+      'cancel',
     ];
     return {for (final String key in keys) key: 'نص'};
   }

@@ -87,15 +87,30 @@ class Helpers {
     return null;
   }
 
-  static Future<List<File>> getImages() async {
+  static Future<List<File>> getImages({int? limit}) async {
     final ImagePicker picker = ImagePicker();
-    final List<XFile> result = await picker.pickMultiImage();
+    final List<XFile> result = await picker.pickMultiImage(limit: limit);
     if (result.isNotEmpty) {
       final List<File> files = result.map((e) => File(e.path)).toList();
       return files;
     } else {
       return [];
     }
+  }
+
+  static Future<File?> getVideoFromGallery() async {
+    final XFile? video = await ImagePicker().pickVideo(
+      source: ImageSource.gallery,
+    );
+    return video == null ? null : File(video.path);
+  }
+
+  static Future<File?> recordVideo({required Duration maxDuration}) async {
+    final XFile? video = await ImagePicker().pickVideo(
+      source: ImageSource.camera,
+      maxDuration: maxDuration,
+    );
+    return video == null ? null : File(video.path);
   }
 
   static void changeStatusbarColor({

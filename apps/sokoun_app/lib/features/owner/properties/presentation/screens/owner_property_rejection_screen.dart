@@ -1,19 +1,45 @@
 part of '../../imports.dart';
 
-class OwnerPropertyRejectionScreen extends StatelessWidget {
+class OwnerPropertyRejectionScreen extends StatefulWidget {
   const OwnerPropertyRejectionScreen({super.key, required this.property});
 
   final OwnerPropertyContent property;
 
+  @override
+  State<OwnerPropertyRejectionScreen> createState() =>
+      _OwnerPropertyRejectionScreenState();
+}
+
+class _OwnerPropertyRejectionScreenState
+    extends State<OwnerPropertyRejectionScreen> {
+  bool _isLoadingPropertyDetails = false;
+
   Future<void> _editAndResubmit() async {
-    final OwnerPropertyEditResult? result =
-        await Go.to<OwnerPropertyEditResult>(
-          OwnerEditPropertyScreen(
-            property: property.copyWith(status: OwnerPropertyStatus.rejected),
-          ),
-        );
-    if (result != null && !result.isDeleted) {
-      Go.back(result.property.copyWith(status: OwnerPropertyStatus.pending));
+    if (_isLoadingPropertyDetails) {
+      return;
+    }
+    setState(() => _isLoadingPropertyDetails = true);
+    final PropertyDetailsCubit cubit = PropertyDetailsCubit();
+    PropertyDetailsModel? details;
+    try {
+      await cubit.getPropertyDetails(widget.property.id);
+      if (cubit.state.isSuccess || cubit.state.data.id.isNotEmpty) {
+        details = cubit.state.data;
+      }
+    } finally {
+      await cubit.close();
+      if (mounted) {
+        setState(() => _isLoadingPropertyDetails = false);
+      }
+    }
+    if (details == null || !mounted) {
+      return;
+    }
+    final PropertyDetailsModel? updated = await Go.to<PropertyDetailsModel>(
+      OwnerEditPropertyScreen(property: details),
+    );
+    if (updated != null) {
+      Go.back(updated);
     }
   }
 
@@ -27,6 +53,7 @@ class OwnerPropertyRejectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final OwnerPropertyContent property = widget.property;
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -134,7 +161,9 @@ class OwnerPropertyRejectionScreen extends StatelessWidget {
                         'owner-property-rejection-edit-resubmit',
                       ),
                       title: LocaleKeys.ownerPropertyEditAndResubmit,
-                      onTap: _editAndResubmit,
+                      onTap: _isLoadingPropertyDetails
+                          ? null
+                          : _editAndResubmit,
                       height: 50.h,
                       borderRadius: BorderRadius.circular(15.r),
                       fontWeight: FontWeight.w900,

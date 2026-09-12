@@ -1,9 +1,9 @@
 part of '../../../imports.dart';
 
 class ProfileAccountDetailsCard extends StatelessWidget {
-  const ProfileAccountDetailsCard({super.key, required this.user});
+  const ProfileAccountDetailsCard({super.key, required this.details});
 
-  final UserModel user;
+  final ProfileAccountDetailsContent details;
 
   @override
   Widget build(BuildContext context) {
@@ -11,16 +11,18 @@ class ProfileAccountDetailsCard extends StatelessWidget {
     final List<({String label, String value})> rows = [
       (
         label: LocaleKeys.name,
-        value: user.name.trim().isEmpty ? fallback : user.name,
+        value: details.name.trim().isEmpty ? fallback : details.name,
       ),
       (
         label: LocaleKeys.email,
-        value: user.email.trim().isEmpty ? fallback : user.email,
+        value: details.email.trim().isEmpty ? fallback : details.email,
       ),
-      (
-        label: LocaleKeys.profileMobile,
-        value: user.phone.trim().isEmpty ? fallback : _maskedPhone(user.phone),
-      ),
+      if (details.phoneNumber.isNotEmpty ||
+          details.maskedPhoneNumber.isNotEmpty)
+        (
+          label: LocaleKeys.profileMobile,
+          value: details.displayPhone.isEmpty ? fallback : details.displayPhone,
+        ),
     ];
 
     return ProfileSurfaceCard(
@@ -71,13 +73,5 @@ class ProfileAccountDetailsCard extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _maskedPhone(String phone) {
-    final String normalized = phone.trim();
-    if (normalized.length < 7) {
-      return normalized;
-    }
-    return '${normalized.substring(0, 3)}****${normalized.substring(normalized.length - 3)}';
   }
 }

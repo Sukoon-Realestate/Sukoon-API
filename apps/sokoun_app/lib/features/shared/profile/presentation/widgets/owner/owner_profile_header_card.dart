@@ -1,15 +1,17 @@
 part of '../../../imports.dart';
 
 class OwnerProfileHeaderCard extends StatelessWidget {
-  const OwnerProfileHeaderCard({super.key, required this.user});
+  const OwnerProfileHeaderCard({super.key, required this.profile});
 
-  final UserModel user;
+  final OwnerProfileContent profile;
 
   @override
   Widget build(BuildContext context) {
-    final String userName = user.name.trim().isEmpty
+    final OwnerProfileIdentityContent owner = profile.owner;
+    final OwnerProfileStatsContent stats = profile.stats;
+    final String userName = owner.fullName.trim().isEmpty
         ? LocaleKeys.profileFallbackName
-        : user.name;
+        : owner.fullName;
 
     return ProfileSurfaceCard(
       child: Column(
@@ -18,6 +20,7 @@ class OwnerProfileHeaderCard extends StatelessWidget {
             children: [
               ProfileAvatar(
                 name: userName,
+                avatarUrl: owner.avatar,
                 accentColor: AppColors.sokoonGold,
                 backgroundColor: AppColors.goldPale,
                 badgeIcon: Icons.check_rounded,
@@ -41,7 +44,10 @@ class OwnerProfileHeaderCard extends StatelessWidget {
                         ),
                         8.szW,
                         ProfileVerifiedBadge(
-                          text: LocaleKeys.profileVerifiedOwner,
+                          text: owner.roleBadge.isNotEmpty
+                              ? owner.roleBadge
+                              : LocaleKeys.profileVerifiedOwner,
+                          isVerified: owner.isVerified,
                         ),
                       ],
                     ),
@@ -55,7 +61,9 @@ class OwnerProfileHeaderCard extends StatelessWidget {
                         ),
                         4.szW,
                         AppText(
-                          LocaleKeys.profileOwnerRatingSummary,
+                          owner.ratingLabel.isNotEmpty
+                              ? owner.ratingLabel
+                              : LocaleKeys.profileOwnerRatingSummary,
                           color: AppColors.sokoonGray,
                           fontSize: 12.sp,
                         ),
@@ -63,7 +71,9 @@ class OwnerProfileHeaderCard extends StatelessWidget {
                     ),
                     2.szH,
                     AppText(
-                      LocaleKeys.profileOwnerMemberSince,
+                      owner.memberSinceLabel.isNotEmpty
+                          ? owner.memberSinceLabel
+                          : LocaleKeys.profileOwnerMemberSince,
                       color: AppColors.sokoonGray,
                       fontSize: 12.sp,
                     ),
@@ -77,9 +87,24 @@ class OwnerProfileHeaderCard extends StatelessWidget {
           12.szH,
           ProfileStatGrid(
             stats: [
-              ProfileStat(value: '3', label: LocaleKeys.profileProperties),
-              ProfileStat(value: '42', label: LocaleKeys.profileReviews),
-              ProfileStat(value: '96%', label: LocaleKeys.profileAcceptance),
+              ProfileStat(
+                value: '${stats.propertiesCount}',
+                label: stats.propertiesLabel.isNotEmpty
+                    ? stats.propertiesLabel
+                    : LocaleKeys.profileProperties,
+              ),
+              ProfileStat(
+                value: '${stats.reviewsCount}',
+                label: stats.reviewsLabel.isNotEmpty
+                    ? stats.reviewsLabel
+                    : LocaleKeys.profileReviews,
+              ),
+              ProfileStat(
+                value: stats.displayAcceptanceRate,
+                label: stats.acceptanceLabel.isNotEmpty
+                    ? stats.acceptanceLabel
+                    : LocaleKeys.profileAcceptance,
+              ),
             ],
           ),
         ],

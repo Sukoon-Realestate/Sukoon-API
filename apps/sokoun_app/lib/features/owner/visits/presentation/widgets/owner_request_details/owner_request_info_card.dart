@@ -3,7 +3,7 @@ part of '../../../imports.dart';
 class OwnerRequestInfoCard extends StatelessWidget {
   const OwnerRequestInfoCard({super.key, required this.request});
 
-  final OwnerVisitRequestContent request;
+  final OwnerVisitRequestDetailsContent request;
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +26,25 @@ class OwnerRequestInfoCard extends StatelessWidget {
                   color: AppColors.bluePale,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  Icons.person_outline_rounded,
-                  color: AppColors.blue,
-                  size: 27.r,
-                ),
+                child: request.tenant.avatar.isNotEmpty
+                    ? ClipOval(
+                        child: Image.network(
+                          request.tenant.avatar,
+                          width: 56.r,
+                          height: 56.r,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Icon(
+                            Icons.person_outline_rounded,
+                            color: AppColors.blue,
+                            size: 27.r,
+                          ),
+                        ),
+                      )
+                    : Icon(
+                        Icons.person_outline_rounded,
+                        color: AppColors.blue,
+                        size: 27.r,
+                      ),
               ),
               12.szW,
               Expanded(
@@ -41,7 +55,7 @@ class OwnerRequestInfoCard extends StatelessWidget {
                       children: [
                         Flexible(
                           child: AppText(
-                            request.name,
+                            request.tenant.name,
                             color: AppColors.sokoonNavy,
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w900,
@@ -49,21 +63,22 @@ class OwnerRequestInfoCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        if (request.isVerified) ...[
+                        if (request.tenant.isVerified) ...[
                           7.szW,
                           const OwnerVerifiedBadge(),
                         ],
                       ],
                     ),
                     4.szH,
-                    AppText(
-                      request.memberSince,
-                      color: AppColors.sokoonGray,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    if (request.tenant.membershipLabel.isNotEmpty)
+                      AppText(
+                        request.tenant.membershipLabel,
+                        color: AppColors.sokoonGray,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                   ],
                 ),
               ),
@@ -72,18 +87,65 @@ class OwnerRequestInfoCard extends StatelessWidget {
           12.szH,
           _OwnerRequestInfoRow(
             label: LocaleKeys.ownerVisitRequestedProperty,
-            value: request.property,
+            value: request.displayProperty,
           ),
           _OwnerRequestInfoRow(
             label: LocaleKeys.ownerVisitRequestDate,
-            value: request.detailDate,
+            value: request.displayDate,
           ),
           _OwnerRequestInfoRow(
             label: LocaleKeys.ownerVisitRequestTime,
-            value: request.time,
+            value: request.displayTime,
             showDivider: false,
           ),
+          8.szH,
+          _OwnerRequestStatusPill(request: request),
         ],
+      ),
+    );
+  }
+}
+
+class _OwnerRequestStatusPill extends StatelessWidget {
+  const _OwnerRequestStatusPill({required this.request});
+
+  final OwnerVisitRequestDetailsContent request;
+
+  Color get _backgroundColor {
+    if (request.status.isAccepted) return AppColors.greenPale;
+    if (request.status.isRejected) return AppColors.redPale;
+    if (request.status.isPending || request.status.isNewRequest) {
+      return AppColors.amberPale;
+    }
+    return AppColors.grayBackground;
+  }
+
+  Color get _foregroundColor {
+    if (request.status.isAccepted) return AppColors.green;
+    if (request.status.isRejected) return AppColors.red;
+    if (request.status.isPending || request.status.isNewRequest) {
+      return AppColors.amber;
+    }
+    return AppColors.sokoonGray;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 9.h),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: _backgroundColor,
+        borderRadius: BorderRadius.circular(10.r),
+      ),
+      child: AppText(
+        request.displayStatus,
+        color: _foregroundColor,
+        fontSize: 13.sp,
+        fontWeight: FontWeight.w800,
+        textAlign: TextAlign.center,
+        maxLines: 2,
       ),
     );
   }

@@ -26,6 +26,51 @@ class OwnerVisitRequestsScreen extends StatefulWidget {
 }
 
 class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
+  static const List<OwnerVisitRequestContent> _shimmerRequests = [
+    OwnerVisitRequestContent(
+      id: 'shimmer-request-1',
+      initial: 'م',
+      name: 'اسم المستأجر بالكامل',
+      property: 'اسم العقار والمنطقة',
+      dateLabel: 'السبت، 14 سبتمبر · 04:30 م',
+      detailDate: '',
+      time: '',
+      memberSince: '',
+      tenantNote: '',
+      phone: '',
+      status: OwnerVisitRequestStatus.pending,
+      isVerified: true,
+    ),
+    OwnerVisitRequestContent(
+      id: 'shimmer-request-2',
+      initial: 'س',
+      name: 'اسم المستأجر',
+      property: 'اسم العقار المطلوب زيارته',
+      dateLabel: 'الأحد، 15 سبتمبر · 06:00 م',
+      detailDate: '',
+      time: '',
+      memberSince: '',
+      tenantNote: '',
+      phone: '',
+      status: OwnerVisitRequestStatus.pending,
+      isVerified: false,
+    ),
+    OwnerVisitRequestContent(
+      id: 'shimmer-request-3',
+      initial: 'أ',
+      name: 'اسم المستأجر بالكامل',
+      property: 'اسم العقار والمنطقة',
+      dateLabel: 'الإثنين، 16 سبتمبر · 02:00 م',
+      detailDate: '',
+      time: '',
+      memberSince: '',
+      tenantNote: '',
+      phone: '',
+      status: OwnerVisitRequestStatus.pending,
+      isVerified: true,
+    ),
+  ];
+
   ReceivedVisitsCubit? _receivedVisitsCubit;
   Future<void>? _receivedVisitsRequest;
   late List<OwnerVisitRequestContent> _fixtureRequests;
@@ -66,7 +111,7 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
   Future<void> _openDetails(OwnerVisitRequestContent request) async {
     final OwnerRequestResolution? resolution =
         await Go.to<OwnerRequestResolution>(
-          OwnerRequestDetailsScreen(request: request),
+          OwnerRequestDetailsScreen(requestId: request.id),
         );
     if (resolution != null && mounted) {
       _resolveRequest(request: request, resolution: resolution);
@@ -153,10 +198,7 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
             ReceivedVisitsCubit,
             List<OwnerVisitRequestContent>
           >.withShimmer(
-            initialDataForShimmer: List<OwnerVisitRequestContent>.filled(
-              3,
-              OwnerVisitRequestContent.initial(),
-            ),
+            initialDataForShimmer: _shimmerRequests,
             requestToTryAgainWhenError: _receivedVisitsRequest!,
             errorType: ErrorType.defaultView,
             emptyView: _buildScreen(const []),

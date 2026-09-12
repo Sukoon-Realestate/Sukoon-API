@@ -47,8 +47,9 @@ class AddPropertyPricingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return AddPropertyStepShell(
       title: 'التسعير والتفاصيل',
-      activeSegments: 3,
-      progressSubtitle: 'الخطوة 3 من 4 — السعر والتفاصيل',
+      activeSegments: 4,
+      segmentCount: 5,
+      progressSubtitle: 'الخطوة 4 من 5 — السعر والتفاصيل',
       primaryLabel: 'التالي — التفاصيل الإضافية',
       onPrimaryTap: form.isPricingReady ? onNext : null,
       onBack: onBack,

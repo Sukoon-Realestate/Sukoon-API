@@ -3,18 +3,23 @@ part of '../../../imports.dart';
 class TenantProfileHeaderCard extends StatelessWidget {
   const TenantProfileHeaderCard({
     super.key,
-    required this.user,
+    required this.profile,
     required this.onEditPressed,
   });
 
-  final UserModel user;
+  final TenantProfileContent profile;
   final VoidCallback onEditPressed;
 
   @override
   Widget build(BuildContext context) {
-    final String userName = user.name.trim().isEmpty
+    final TenantProfileUserContent user = profile.user;
+    final String userName = user.fullName.trim().isEmpty
         ? LocaleKeys.profileFallbackName
-        : user.name;
+        : user.fullName;
+    final String membership = [
+      user.roleLabel,
+      user.memberSinceLabel,
+    ].where((value) => value.isNotEmpty).join(' · ');
 
     return ProfileSurfaceCard(
       child: Column(
@@ -23,6 +28,7 @@ class TenantProfileHeaderCard extends StatelessWidget {
             children: [
               ProfileAvatar(
                 name: userName,
+                avatarUrl: user.avatar,
                 accentColor: AppColors.sokoonTeal,
                 backgroundColor: AppColors.mintLight,
                 badgeIcon: Icons.edit_outlined,
@@ -46,12 +52,19 @@ class TenantProfileHeaderCard extends StatelessWidget {
                           ),
                         ),
                         8.szW,
-                        const ProfileVerifiedBadge(),
+                        ProfileVerifiedBadge(
+                          text: user.verificationBadge.isNotEmpty
+                              ? user.verificationBadge
+                              : LocaleKeys.verified,
+                          isVerified: user.isVerified,
+                        ),
                       ],
                     ),
                     4.szH,
                     AppText(
-                      LocaleKeys.profileTenantMemberSince,
+                      membership.isNotEmpty
+                          ? membership
+                          : LocaleKeys.profileTenantMemberSince,
                       color: AppColors.sokoonGray,
                       fontSize: 13.sp,
                     ),
@@ -65,9 +78,18 @@ class TenantProfileHeaderCard extends StatelessWidget {
           12.szH,
           ProfileStatGrid(
             stats: [
-              ProfileStat(value: '12', label: LocaleKeys.profileSaved),
-              ProfileStat(value: '4', label: LocaleKeys.profileVisits),
-              ProfileStat(value: '2', label: LocaleKeys.profileReviews),
+              ProfileStat(
+                value: '${profile.stats.savedCount}',
+                label: LocaleKeys.profileSaved,
+              ),
+              ProfileStat(
+                value: '${profile.stats.visitsCount}',
+                label: LocaleKeys.profileVisits,
+              ),
+              ProfileStat(
+                value: '${profile.stats.reviewsCount}',
+                label: LocaleKeys.profileReviews,
+              ),
             ],
           ),
         ],
