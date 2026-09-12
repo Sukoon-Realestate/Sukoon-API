@@ -112,13 +112,14 @@ class PropertyVisitService:
         if slot_datetime <= now:
             raise ValidationError(_("The selected visit slot is in the past."))
 
-        if PropertyVisit.objects.filter(
-            property=property_obj,
-            visit_date=visit_date,
-            visit_time=visit_time,
-            status__in=PropertyVisitService.BOOKED_STATUSES,
-        ).exists():
-            raise ValidationError(_("The selected visit slot is already booked."))
+        # TODO: Re-add check to reject booking when another visit is already booked at the same slot
+        # if PropertyVisit.objects.filter(
+        #     property=property_obj,
+        #     visit_date=visit_date,
+        #     visit_time=visit_time,
+        #     status__in=PropertyVisitService.BOOKED_STATUSES,
+        # ).exists():
+        #     raise ValidationError(_("The selected visit slot is already booked."))
 
         return PropertyVisit.objects.create(
             tenant=tenant, property=property_obj, **validated_data
