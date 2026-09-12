@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -6,7 +8,9 @@ import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:melos_core/core/widgets/buttons/default_button.dart';
+import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
+import 'package:sokoun_app/features/shared/auth/data/models/otp.dart';
+import 'package:sokoun_app/features/shared/auth/presentation/cubits/login.dart';
 
 import '../widgets/auth_scaffold.dart';
 import '../widgets/otp/otp_code_field.dart';
@@ -14,48 +18,87 @@ import '../widgets/otp/otp_header.dart';
 import '../widgets/otp/otp_resend_timer.dart';
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({
-    super.key,
-    this.maskedEmail = 'ah****@gmail.com',
-    this.onConfirm,
-    this.onResend,
-  });
+  const OtpScreen({super.key, required this.email, required this.onVerified});
 
-  final String maskedEmail;
-  final ValueChanged<String>? onConfirm;
-  final VoidCallback? onResend;
+  final String email;
+  final VoidCallback onVerified;
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
 }
 
 class _OtpScreenState extends State<OtpScreen> {
-  final _otpController = TextEditingController();
+  final TextEditingController _otpController = TextEditingController();
+  late final LoginCubit _loginCubit;
   int _timerResetKey = 0;
   bool _canResend = false;
+  bool _isResending = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loginCubit = LoginCubit();
+  }
 
   @override
   void dispose() {
     _otpController.dispose();
+    unawaited(_loginCubit.close());
     super.dispose();
   }
 
   bool get _isCodeComplete => _otpController.text.length == 6;
 
-  void _confirm() {
+  String get _maskedEmail {
+    final List<String> parts = widget.email.trim().split('@');
+    if (parts.length != 2 || parts.first.isEmpty) {
+      return widget.email;
+    }
+
+    final String localPart = parts.first;
+    final String visiblePart = localPart.length > 1
+        ? localPart.substring(0, 2)
+        : localPart;
+    return '$visiblePart****@${parts.last}';
+  }
+
+  Future<void> _confirm(BuildContext _) async {
     if (!_isCodeComplete) {
       return;
     }
 
-    widget.onConfirm?.call(_otpController.text);
+    await _loginCubit.verifyOtp(
+      body: VerifyOtpBody(email: widget.email.trim(), otp: _otpController.text),
+      onSuccess: widget.onVerified,
+    );
   }
 
-  void _resend() {
-    widget.onResend?.call();
-    setState(() {
-      _canResend = false;
-      _timerResetKey++;
-    });
+  Future<void> _resend() async {
+    if (!_canResend || _isResending) {
+      return;
+    }
+
+    setState(() => _isResending = true);
+    try {
+      await _loginCubit.resendOtp(
+        body: ResendOtpBody(email: widget.email.trim()),
+        onSuccess: () {
+          if (!mounted) {
+            return;
+          }
+
+          _otpController.clear();
+          setState(() {
+            _canResend = false;
+            _timerResetKey++;
+          });
+        },
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isResending = false);
+      }
+    }
   }
 
   @override
@@ -65,7 +108,7 @@ class _OtpScreenState extends State<OtpScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          OtpHeader(),
+          const OtpHeader(),
           36.szH,
           Container(
             width: 64.r,
@@ -90,7 +133,7 @@ class _OtpScreenState extends State<OtpScreen> {
           ),
           8.szH,
           AppText(
-            widget.maskedEmail,
+            _maskedEmail,
             color: AppColors.tealOrGoldBasedRole,
             fontSize: 14.sp,
             fontWeight: FontWeight.w700,
@@ -116,7 +159,6 @@ class _OtpScreenState extends State<OtpScreen> {
           OtpCodeField(
             controller: _otpController,
             onChanged: (_) => setState(() {}),
-            onCompleted: (_) => _confirm(),
           ),
           20.szH,
           OtpResendTimer(
@@ -131,35 +173,46 @@ class _OtpScreenState extends State<OtpScreen> {
             },
           ),
           18.szH,
-          DefaultButton(
-            onTap: _isCodeComplete ? _confirm : null,
-            title: LocaleKeys.confirmLogin,
-            color: _isCodeComplete
-                ? AppColors.tealOrGoldBasedRole
-                : AppColors.sokoonMuted,
-            textColor: AppColors.white,
-            borderRadius: BorderRadius.circular(14.r),
-            height: 52.h,
-            width: double.infinity,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w700,
+          IgnorePointer(
+            ignoring: !_isCodeComplete,
+            child: AppLoadingButton(
+              asyncCall: _confirm,
+              title: LocaleKeys.confirmLogin,
+              buttonColor: _isCodeComplete
+                  ? AppColors.tealOrGoldBasedRole
+                  : AppColors.sokoonMuted,
+              textColor: AppColors.white,
+              borderRadius: 14.r,
+              height: 52.h,
+              width: double.infinity,
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w700,
+            ),
           ),
           14.szH,
           TextButton(
-            onPressed: _canResend ? _resend : null,
+            onPressed: _canResend && !_isResending ? _resend : null,
             style: TextButton.styleFrom(
               minimumSize: Size.zero,
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
-            child: AppText(
-              LocaleKeys.resendCode,
-              color: _canResend
-                  ? AppColors.tealOrGoldBasedRole
-                  : AppColors.sokoonMuted,
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w700,
-            ),
+            child: _isResending
+                ? SizedBox.square(
+                    dimension: 16.r,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.r,
+                      color: AppColors.tealOrGoldBasedRole,
+                    ),
+                  )
+                : AppText(
+                    LocaleKeys.resendCode,
+                    color: _canResend
+                        ? AppColors.tealOrGoldBasedRole
+                        : AppColors.sokoonMuted,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w700,
+                  ),
           ).centerWidget,
         ],
       ),

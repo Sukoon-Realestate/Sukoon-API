@@ -19,7 +19,7 @@ class KycUploadDocumentsScreen extends StatefulWidget {
   });
 
   final VoidCallback? onBack;
-  final VoidCallback? onRegisterSuccess;
+  final ValueChanged<RegisterBody>? onRegisterSuccess;
 
   @override
   State<KycUploadDocumentsScreen> createState() =>

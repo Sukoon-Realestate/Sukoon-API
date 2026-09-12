@@ -9,6 +9,7 @@ import 'kyc_approved_screen.dart';
 import 'kyc_intro_screen.dart';
 import 'kyc_pending_screen.dart';
 import 'kyc_upload_documents_screen.dart';
+import 'otp_screen.dart';
 import 'register_screen.dart';
 
 class RegisterFlowScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class RegisterFlowScreen extends StatefulWidget {
 
 class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
   _RegisterFlowStep _step = _RegisterFlowStep.basicInfo;
+  String _registeredEmail = '';
 
   void _goBack() {
     setState(() {
@@ -34,7 +36,14 @@ class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
     setState(() => _step = _RegisterFlowStep.kycIntro);
   }
 
-  void _handleRegisterSuccess() {
+  void _handleRegisterSuccess(RegisterBody body) {
+    setState(() {
+      _registeredEmail = body.email;
+      _step = _RegisterFlowStep.verifyEmail;
+    });
+  }
+
+  void _handleEmailVerified() {
     setState(() => _step = _RegisterFlowStep.pendingReview);
   }
 
@@ -77,6 +86,10 @@ class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
         onBack: _goBack,
         onRegisterSuccess: _handleRegisterSuccess,
       ),
+      _RegisterFlowStep.verifyEmail => OtpScreen(
+        email: _registeredEmail,
+        onVerified: _handleEmailVerified,
+      ),
       _RegisterFlowStep.pendingReview => KycPendingScreen(
         fullName: _fullName(context),
         maskedNationalId: _maskedNationalId(
@@ -100,6 +113,7 @@ enum _RegisterFlowStep {
   basicInfo,
   kycIntro,
   uploadDocuments,
+  verifyEmail,
   pendingReview,
   approved,
 }

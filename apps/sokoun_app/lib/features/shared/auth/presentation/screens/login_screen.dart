@@ -8,6 +8,7 @@ import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
+import 'package:sokoun_app/features/main_view/presentation/screens/view.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/login.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/screens/otp_screen.dart';
 import 'package:sokoun_app/shared_widgets/shared_widgets.dart';
@@ -41,13 +42,14 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
+    final String email = _emailController.text.trim();
     await ctx.read<LoginCubit>().login(
-      email: _emailController.text,
+      email: email,
       password: _passwordController.text,
-      onSuccess: () => Go.off(
+      onSuccess: () => Go.to(
         OtpScreen(
-          // onConfirm: ,
-          // onResend: ,
+          email: email,
+          onVerified: () => Go.offAll(const HomeScreen()),
         ),
       ),
     );

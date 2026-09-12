@@ -16,7 +16,7 @@ import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_thread_screen.dart';
-import 'package:sokoun_app/features/visits/presentation/widgets/shared/visit_header.dart';
+import 'package:sokoun_app/shared_widgets/visit_header.dart';
 
 part 'data/enums/owner_visit_request_state.dart';
 part 'data/enums/owner_visit_update_status.dart';

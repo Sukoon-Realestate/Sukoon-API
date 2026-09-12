@@ -24,7 +24,7 @@ import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_thread_screen.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
-import 'package:sokoun_app/features/visits/presentation/widgets/shared/visit_header.dart';
+import 'package:sokoun_app/shared_widgets/visit_header.dart';
 
 part 'data/enums/visit_status.dart';
 part 'data/tenant_visits_data.dart';

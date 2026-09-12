@@ -2,6 +2,8 @@ class ApiConstants {
   // ---------------------- Home -----------------------------------
   // auth
   static const String login = 'auth/login/';
+  static const String verifyOtp = 'auth/verify/';
+  static const String resendOtp = 'auth/resend-otp/';
   static const String refreshToken = 'auth/refresh/';
   static const String register = 'auth/users/';
 

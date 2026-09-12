@@ -30,7 +30,7 @@ class RegisterCubit extends AsyncCubit<String> {
     );
   }
 
-  Future<void> register({void Function()? onSuccess}) async {
+  Future<void> register({void Function(RegisterBody body)? onSuccess}) async {
     final RegisterBody requestBody = _registerBody;
 
     await executeAsyncWithBaseModel(
@@ -43,7 +43,7 @@ class RegisterCubit extends AsyncCubit<String> {
           isFromData: requestBody.hasFiles,
         ),
       ),
-      onSuccess: (_) => onSuccess?.call(),
+      onSuccess: (_) => onSuccess?.call(requestBody),
     );
   }
 }
