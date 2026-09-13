@@ -72,11 +72,16 @@ void main() {
     configurePhoneViewport(tester);
 
     await tester.pumpWidget(
-      buildScreen(const NotificationsScreen(role: NotificationRole.tenant)),
+      buildScreen(
+        NotificationsScreen(
+          role: NotificationRole.tenant,
+          initialNotifications: _tenantNotifications,
+        ),
+      ),
     );
     await tester.pumpAndSettle();
 
-    expect(NotificationsContent.forRole(NotificationRole.tenant), hasLength(5));
+    expect(_tenantNotifications, hasLength(2));
     expect(find.byType(NotificationCard), findsWidgets);
     expect(
       tester
@@ -115,7 +120,7 @@ void main() {
 
     expect(find.byType(NotificationSettingsScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
-    await tester.tap(find.byKey(const ValueKey('property-updates')));
+    await tester.tap(find.byKey(const ValueKey('property_updates')));
     await tester.pump();
     expect(tester.takeException(), isNull);
 
@@ -142,11 +147,16 @@ void main() {
     configurePhoneViewport(tester);
 
     await tester.pumpWidget(
-      buildScreen(const NotificationsScreen(role: NotificationRole.owner)),
+      buildScreen(
+        NotificationsScreen(
+          role: NotificationRole.owner,
+          initialNotifications: _ownerNotifications,
+        ),
+      ),
     );
     await tester.pumpAndSettle();
 
-    expect(NotificationsContent.forRole(NotificationRole.owner), hasLength(5));
+    expect(_ownerNotifications, hasLength(1));
     expect(find.byType(NotificationCard), findsWidgets);
     expect(find.text('طلب زيارة جديد!'), findsOneWidget);
 
@@ -179,7 +189,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.byType(NotificationsEmptyScreen), findsOneWidget);
+    expect(find.byType(NotificationsEmptyScreen), findsNothing);
     expect(find.text('لا إشعارات حالياً'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
@@ -192,18 +202,28 @@ void main() {
     await tester.pumpWidget(buildScreen(const TenantHomeScreen()));
     await tester.pumpAndSettle();
     await tester.tap(find.byIcon(Icons.notifications_none_rounded));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
 
-    expect(find.text('تم قبول طلب زيارتك'), findsOneWidget);
+    expect(find.byType(NotificationsScreen), findsOneWidget);
+    expect(
+      tester.widget<NotificationsScreen>(find.byType(NotificationsScreen)).role,
+      NotificationRole.tenant,
+    );
 
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
     await tester.pumpWidget(buildScreen(const OwnerHomeScreen()));
     await tester.pumpAndSettle();
     await tester.tap(find.byIcon(Icons.notifications_none_rounded));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 200));
 
-    expect(find.text('طلب زيارة جديد!'), findsOneWidget);
+    expect(find.byType(NotificationsScreen), findsOneWidget);
+    expect(
+      tester.widget<NotificationsScreen>(find.byType(NotificationsScreen)).role,
+      NotificationRole.owner,
+    );
     expect(tester.takeException(), isNull);
   });
 }
@@ -227,6 +247,7 @@ class _NotificationTestAssetLoader extends AssetLoader {
       'notifications_empty_description':
           'ستظهر هنا إشعاراتك عند وجود تحديثات على طلباتك أو عقاراتك',
       'notifications_explore_properties': 'استكشف العقارات',
+      'notifications_owner_add_property': 'إضافة عقار',
       'notification_view_visit': 'عرض الزيارة',
       'notification_view_request': 'عرض الطلب',
       'notification_open_related': 'عرض التفاصيل',
@@ -253,3 +274,63 @@ class _NotificationTestAssetLoader extends AssetLoader {
     };
   }
 }
+
+final List<AppNotificationContent> _tenantNotifications = [
+  AppNotificationContent.fromJson({
+    'id': 'tenant-visit-accepted',
+    'notification_type': 'visit_accepted',
+    'icon_type': 'check_circle',
+    'title': 'تم قبول طلب زيارتك',
+    'body': 'المالك أحمد محمد وافق على موعد الزيارة',
+    'time_ago': 'منذ 5 دقائق',
+    'category': 'حجز زيارة',
+    'is_read': false,
+    'appointment_details': {
+      'title': 'تفاصيل الموعد',
+      'datetime_label': 'الثلاثاء 14 يناير · 3:00 م',
+      'location_label': 'مدينة نصر — شارع عباس العقاد',
+    },
+    'actions': {
+      'primary': {
+        'label': 'عرض الزيارة',
+        'action_type': 'view_visit',
+        'target_id': 'visit-1',
+      },
+    },
+  }),
+  AppNotificationContent.fromJson({
+    'id': 'tenant-new-property',
+    'notification_type': 'new_property',
+    'icon_type': 'bell',
+    'title': 'عقار جديد في منطقتك',
+    'body': 'شقة مفروشة 3 غرف',
+    'time_ago': 'منذ ساعة',
+    'category': 'عقار جديد',
+    'is_read': false,
+  }),
+];
+
+final List<AppNotificationContent> _ownerNotifications = [
+  AppNotificationContent.fromJson({
+    'id': 'owner-visit-request',
+    'notification_type': 'visit_request',
+    'icon_type': 'calendar',
+    'title': 'طلب زيارة جديد!',
+    'body': 'سارة أحمد تطلب زيارة شقة مدينة نصر',
+    'time_ago': 'منذ 5 دقائق',
+    'category': 'طلب زيارة',
+    'is_read': false,
+    'appointment_details': {
+      'title': 'تفاصيل الطلب',
+      'datetime_label': 'النهارده · 3:00 م',
+      'location_label': 'شقة مدينة نصر — شارع عباس العقاد',
+    },
+    'actions': {
+      'primary': {
+        'label': 'عرض الطلب',
+        'action_type': 'view_request',
+        'target_id': 'request-1',
+      },
+    },
+  }),
+];

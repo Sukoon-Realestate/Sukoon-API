@@ -27,6 +27,21 @@ class ApiConstants {
   static const String propertyCities = 'properties/cities/';
   static const String visits = 'visits/';
 
+  // notifications
+  static const String notifications = 'notifications/';
+  static const String notificationDevices = 'notifications/devices/';
+  static const String unregisterNotificationDevice =
+      'notifications/devices/unregister/';
+  static const String markAllNotificationsRead = 'notifications/mark-all-read/';
+  static const String unreadNotificationCount = 'notifications/unread-count/';
+  static const String notificationSettings = 'notifications/settings/';
+
+  static String notificationDetails(String notificationId) =>
+      '$notifications$notificationId/';
+
+  static String markNotificationRead(String notificationId) =>
+      '$notifications$notificationId/read/';
+
   static String propertyDetails(String propertyId) => '$properties$propertyId/';
 
   static String saveProperty(String propertyId) =>

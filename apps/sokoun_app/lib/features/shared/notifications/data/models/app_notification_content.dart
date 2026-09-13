@@ -1,120 +1,216 @@
 import 'package:equatable/equatable.dart';
 
-import '../enums/notification_role.dart';
-
-enum AppNotificationKind {
-  visitAccepted,
-  newProperty,
-  accountVerification,
-  rateVisit,
-  ownerMessage,
-  visitRequest,
-  tenantMessage,
-  propertyViews,
-  propertyVerified,
-  dailyVisibility,
-}
+import '../enums/app_notification_icon_kind.dart';
+import '../enums/app_notification_kind.dart';
+import 'notification_action_content.dart';
+import 'notification_appointment_content.dart';
+import 'notification_payload_content.dart';
 
 class AppNotificationContent extends Equatable {
   const AppNotificationContent({
     required this.id,
     required this.kind,
+    required this.iconType,
     required this.title,
     required this.description,
     required this.time,
     required this.category,
-    required this.isUnread,
-    this.detailDescription,
-    this.detailLabel,
-    this.detailDate,
-    this.detailLocation,
+    required this.isRead,
+    required this.createdAt,
+    required this.formattedTime,
+    required this.payload,
+    required this.actions,
+    this.appointmentDetails,
+    this.readAt = '',
   });
 
-  factory AppNotificationContent.initial() => const AppNotificationContent(
-    id: '',
-    kind: AppNotificationKind.visitAccepted,
-    title: '',
-    description: '',
-    time: '',
-    category: '',
-    isUnread: false,
-  );
+  const AppNotificationContent.initial()
+    : id = '',
+      kind = AppNotificationKind.unknown,
+      iconType = AppNotificationIconKind.unknown,
+      title = '',
+      description = '',
+      time = '',
+      category = '',
+      isRead = false,
+      createdAt = '',
+      readAt = '',
+      formattedTime = '',
+      payload = const NotificationPayloadContent.initial(),
+      actions = const NotificationActionsContent.initial(),
+      appointmentDetails = null;
 
   factory AppNotificationContent.fromJson(Map<String, dynamic> json) {
+    final Map<String, dynamic> payload = _jsonMap(json['data']);
+    final Map<String, dynamic> actions = _jsonMap(json['actions']);
+    final Map<String, dynamic> appointment = _jsonMap(
+      json['appointment_details'],
+    );
+    final String notificationType =
+        json['notification_type']?.toString() ?? json['kind']?.toString() ?? '';
+
     return AppNotificationContent(
-      id: json['id'] ?? '',
-      kind: AppNotificationKind.values.firstWhere(
-        (kind) => kind.name == json['kind'],
-        orElse: () => AppNotificationKind.visitAccepted,
+      id: json['id']?.toString() ?? '',
+      kind: AppNotificationKind.fromApiValue(notificationType),
+      iconType: AppNotificationIconKind.fromApiValue(json['icon_type']),
+      title: json['title']?.toString() ?? '',
+      description:
+          json['body']?.toString() ?? json['description']?.toString() ?? '',
+      time: json['time_ago']?.toString() ?? json['time']?.toString() ?? '',
+      category: json['category']?.toString() ?? '',
+      isRead:
+          _boolFromJson(json['is_read']) ||
+          (json.containsKey('is_unread') && !_boolFromJson(json['is_unread'])),
+      createdAt: json['created_at']?.toString() ?? '',
+      readAt: json['read_at']?.toString() ?? '',
+      formattedTime: json['formatted_time']?.toString() ?? '',
+      payload: NotificationPayloadContent.fromJson(payload),
+      actions: NotificationActionsContent.fromJson(actions),
+      appointmentDetails: appointment.isEmpty
+          ? null
+          : NotificationAppointmentContent.fromJson(appointment),
+    );
+  }
+
+  factory AppNotificationContent.fromPushPayload(Map<String, dynamic> json) {
+    return AppNotificationContent(
+      id: json['notification_id']?.toString() ?? '',
+      kind: AppNotificationKind.fromApiValue(json['notification_type']),
+      iconType: AppNotificationIconKind.fromApiValue(json['icon_type']),
+      title: json['title']?.toString() ?? '',
+      description: json['body']?.toString() ?? '',
+      time: '',
+      category: '',
+      isRead: false,
+      createdAt: '',
+      formattedTime: '',
+      payload: NotificationPayloadContent.fromJson(json),
+      actions: NotificationActionsContent(
+        primary: NotificationActionContent(
+          label: json['action_label']?.toString() ?? '',
+          actionType: json['action_type']?.toString() ?? '',
+          targetId: json['target_id']?.toString() ?? '',
+        ),
       ),
-      title: json['title'] ?? '',
-      description: json['description'] ?? '',
-      time: json['time'] ?? '',
-      category: json['category'] ?? '',
-      isUnread: json['is_unread'] ?? false,
-      detailDescription: json['detail_description'],
-      detailLabel: json['detail_label'],
-      detailDate: json['detail_date'],
-      detailLocation: json['detail_location'],
     );
   }
 
   final String id;
   final AppNotificationKind kind;
+  final AppNotificationIconKind iconType;
   final String title;
   final String description;
   final String time;
   final String category;
-  final bool isUnread;
-  final String? detailDescription;
-  final String? detailLabel;
-  final String? detailDate;
-  final String? detailLocation;
+  final bool isRead;
+  final String createdAt;
+  final String readAt;
+  final String formattedTime;
+  final NotificationPayloadContent payload;
+  final NotificationActionsContent actions;
+  final NotificationAppointmentContent? appointmentDetails;
 
-  bool get hasDetailCard =>
-      detailLabel != null || detailDate != null || detailLocation != null;
+  bool get isUnread => !isRead;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'kind': kind.name,
-      'title': title,
-      'description': description,
-      'time': time,
-      'category': category,
-      'is_unread': isUnread,
-      'detail_description': detailDescription,
-      'detail_label': detailLabel,
-      'detail_date': detailDate,
-      'detail_location': detailLocation,
+  AppNotificationIconKind get resolvedIconType {
+    if (iconType != AppNotificationIconKind.unknown) return iconType;
+    return switch (kind) {
+      AppNotificationKind.visitRequest => AppNotificationIconKind.calendar,
+      AppNotificationKind.visitAccepted => AppNotificationIconKind.checkCircle,
+      AppNotificationKind.visitRejected => AppNotificationIconKind.cancel,
+      AppNotificationKind.visitReview ||
+      AppNotificationKind.promotion => AppNotificationIconKind.star,
+      AppNotificationKind.newMessage => AppNotificationIconKind.chat,
+      AppNotificationKind.propertyVerified => AppNotificationIconKind.verified,
+      AppNotificationKind.propertyViews => AppNotificationIconKind.eye,
+      AppNotificationKind.dailyBump ||
+      AppNotificationKind.accountVerification =>
+        AppNotificationIconKind.warning,
+      AppNotificationKind.newProperty => AppNotificationIconKind.bell,
+      AppNotificationKind.propertyUpdate => AppNotificationIconKind.refresh,
+      AppNotificationKind.securityAlert => AppNotificationIconKind.shield,
+      AppNotificationKind.unknown => AppNotificationIconKind.unknown,
     };
   }
+
+  bool get hasDetailCard =>
+      appointmentDetails?.isEmpty == false ||
+      payload.appointmentDateTime.isNotEmpty ||
+      payload.address.isNotEmpty;
+
+  String get detailLabel => appointmentDetails?.title ?? '';
+
+  String get detailDate => appointmentDetails?.dateTimeLabel.isNotEmpty == true
+      ? appointmentDetails!.dateTimeLabel
+      : payload.appointmentDateTime;
+
+  String get detailLocation =>
+      appointmentDetails?.locationLabel.isNotEmpty == true
+      ? appointmentDetails!.locationLabel
+      : payload.address;
+
+  String get primaryActionType => actions.primary?.actionType.isNotEmpty == true
+      ? actions.primary!.actionType
+      : payload.actionType;
+
+  String get primaryTargetId {
+    if (actions.primary?.targetId.isNotEmpty == true) {
+      return actions.primary!.targetId;
+    }
+    if (payload.visitId.isNotEmpty) return payload.visitId;
+    if (payload.chatId.isNotEmpty) return payload.chatId;
+    return payload.propertyId;
+  }
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'notification_type': kind.apiValue,
+    'icon_type': resolvedIconType.apiValue,
+    'title': title,
+    'body': description,
+    'time_ago': time,
+    'category': category,
+    'is_read': isRead,
+    'created_at': createdAt,
+    'read_at': readAt,
+    'formatted_time': formattedTime,
+    'data': payload.toJson(),
+    'actions': actions.toJson(),
+    if (appointmentDetails != null)
+      'appointment_details': appointmentDetails!.toJson(),
+  };
 
   AppNotificationContent copyWith({
     String? id,
     AppNotificationKind? kind,
+    AppNotificationIconKind? iconType,
     String? title,
     String? description,
     String? time,
     String? category,
-    bool? isUnread,
-    String? detailDescription,
-    String? detailLabel,
-    String? detailDate,
-    String? detailLocation,
+    bool? isRead,
+    String? createdAt,
+    String? readAt,
+    String? formattedTime,
+    NotificationPayloadContent? payload,
+    NotificationActionsContent? actions,
+    NotificationAppointmentContent? appointmentDetails,
   }) {
     return AppNotificationContent(
       id: id ?? this.id,
       kind: kind ?? this.kind,
+      iconType: iconType ?? this.iconType,
       title: title ?? this.title,
       description: description ?? this.description,
       time: time ?? this.time,
       category: category ?? this.category,
-      isUnread: isUnread ?? this.isUnread,
-      detailDescription: detailDescription ?? this.detailDescription,
-      detailLabel: detailLabel ?? this.detailLabel,
-      detailDate: detailDate ?? this.detailDate,
-      detailLocation: detailLocation ?? this.detailLocation,
+      isRead: isRead ?? this.isRead,
+      createdAt: createdAt ?? this.createdAt,
+      readAt: readAt ?? this.readAt,
+      formattedTime: formattedTime ?? this.formattedTime,
+      payload: payload ?? this.payload,
+      actions: actions ?? this.actions,
+      appointmentDetails: appointmentDetails ?? this.appointmentDetails,
     );
   }
 
@@ -122,126 +218,28 @@ class AppNotificationContent extends Equatable {
   List<Object?> get props => [
     id,
     kind,
+    iconType,
     title,
     description,
     time,
     category,
-    isUnread,
-    detailDescription,
-    detailLabel,
-    detailDate,
-    detailLocation,
+    isRead,
+    createdAt,
+    readAt,
+    formattedTime,
+    payload,
+    actions,
+    appointmentDetails,
   ];
 }
 
-abstract final class NotificationsContent {
-  static List<AppNotificationContent> forRole(NotificationRole role) {
-    return role.isOwner ? ownerNotifications : tenantNotifications;
-  }
+Map<String, dynamic> _jsonMap(Object? value) {
+  if (value is! Map) return const {};
+  return Map<String, dynamic>.from(value);
+}
 
-  static const List<AppNotificationContent> tenantNotifications = [
-    AppNotificationContent(
-      id: 'tenant-visit-accepted',
-      kind: AppNotificationKind.visitAccepted,
-      title: 'تم قبول طلب زيارتك',
-      description: 'المالك أحمد محمد وافق على موعد الزيارة',
-      time: 'منذ 5 دقائق',
-      category: 'حجز زيارة',
-      isUnread: true,
-      detailDescription:
-          'وافق المالك أحمد محمد على موعد الزيارة. يُرجى الحضور في الوقت المحدد للاطلاع على الشقة.',
-      detailLabel: 'تفاصيل الموعد',
-      detailDate: 'الثلاثاء 14 يناير · 3:00 م',
-      detailLocation: 'مدينة نصر — شارع عباس العقاد',
-    ),
-    AppNotificationContent(
-      id: 'tenant-new-property',
-      kind: AppNotificationKind.newProperty,
-      title: 'عقار جديد في منطقتك',
-      description: 'شقة مفروشة 3 غرف — مدينة نصر 11,500 ج.م/شهر',
-      time: 'منذ ساعة',
-      category: 'عقار جديد',
-      isUnread: true,
-    ),
-    AppNotificationContent(
-      id: 'tenant-verification',
-      kind: AppNotificationKind.accountVerification,
-      title: 'أكمل توثيق حسابك',
-      description: 'وثّق هويتك عشان تستخدم الشات بدون قيود',
-      time: 'منذ يومين',
-      category: 'توثيق الحساب',
-      isUnread: false,
-    ),
-    AppNotificationContent(
-      id: 'tenant-rate-visit',
-      kind: AppNotificationKind.rateVisit,
-      title: 'قيّم تجربتك بعد الزيارة',
-      description: 'شقة مدينة نصر — اضغط لتقديم تقييمك',
-      time: 'منذ 3 أيام',
-      category: 'تقييم الزيارة',
-      isUnread: false,
-    ),
-    AppNotificationContent(
-      id: 'tenant-owner-message',
-      kind: AppNotificationKind.ownerMessage,
-      title: 'رسالة جديدة من المالك',
-      description: 'أحمد محمد: الشقة لسه متاحة، هل تريد معلومات أكتر؟',
-      time: 'منذ أسبوع',
-      category: 'رسالة جديدة',
-      isUnread: false,
-    ),
-  ];
-
-  static const List<AppNotificationContent> ownerNotifications = [
-    AppNotificationContent(
-      id: 'owner-visit-request',
-      kind: AppNotificationKind.visitRequest,
-      title: 'طلب زيارة جديد!',
-      description: 'سارة أحمد تطلب زيارة شقة مدينة نصر — النهارده 3م',
-      time: 'منذ 5 دقائق',
-      category: 'طلب زيارة',
-      isUnread: true,
-      detailDescription:
-          'طلبت سارة أحمد زيارة شقة مدينة نصر. راجع الموعد وقم بقبول الطلب أو اقتراح وقت آخر.',
-      detailLabel: 'تفاصيل الطلب',
-      detailDate: 'النهارده · 3:00 م',
-      detailLocation: 'شقة مدينة نصر — شارع عباس العقاد',
-    ),
-    AppNotificationContent(
-      id: 'owner-tenant-message',
-      kind: AppNotificationKind.tenantMessage,
-      title: 'رسالة جديدة من مستأجر',
-      description: 'محمد علي: هل الشقة لسه متاحة؟',
-      time: 'منذ ساعة',
-      category: 'رسالة جديدة',
-      isUnread: true,
-    ),
-    AppNotificationContent(
-      id: 'owner-property-views',
-      kind: AppNotificationKind.propertyViews,
-      title: 'شقتك حصلت على 50 مشاهدة',
-      description: 'شقة مفروشة، مدينة نصر — أداء متميز هذا الأسبوع',
-      time: 'اليوم 9 ص',
-      category: 'أداء العقار',
-      isUnread: false,
-    ),
-    AppNotificationContent(
-      id: 'owner-property-verified',
-      kind: AppNotificationKind.propertyVerified,
-      title: 'عقارك تم توثيقه',
-      description: 'ستوديو، التجمع الخامس — يظهر الآن في نتائج البحث',
-      time: 'أمس',
-      category: 'توثيق العقار',
-      isUnread: false,
-    ),
-    AppNotificationContent(
-      id: 'owner-daily-visibility',
-      kind: AppNotificationKind.dailyVisibility,
-      title: 'تحديث الظهور اليومي',
-      description: 'حدّث عقاراتك يومياً للحفاظ على ترتيبها في البحث',
-      time: 'منذ يومين',
-      category: 'تحديث العقار',
-      isUnread: false,
-    ),
-  ];
+bool _boolFromJson(Object? value) {
+  if (value is bool) return value;
+  if (value is num) return value != 0;
+  return value?.toString().toLowerCase() == 'true';
 }

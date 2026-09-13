@@ -49,7 +49,7 @@ class NotificationCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              NotificationIconBadge(kind: notification.kind),
+              NotificationIconBadge(iconType: notification.resolvedIconType),
               12.szW,
               Expanded(
                 child: Column(

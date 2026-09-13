@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/helpers.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
-import 'package:melos_core/core/notification/notification_service.dart';
 import 'package:melos_core/core/widgets/splash_logo.dart';
 import 'main_view/presentation/screens/view.dart';
 
@@ -22,7 +21,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _manipulateSplashData() async {
     await Helpers.getCurrentFlavor;
-    await NotificationService().saveFcmToken();
     await Future.delayed(const Duration(seconds: 2));
     Go.offAll(const HomeScreen());
   }

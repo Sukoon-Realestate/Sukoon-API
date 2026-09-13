@@ -2221,6 +2221,9 @@ abstract class LocaleKeys {
   static const String _notificationsExploreProperties = 'notifications_explore_properties';
   static String get notificationsExploreProperties => _notificationsExploreProperties.tr();
 
+  static const String _notificationsOwnerAddProperty = 'notifications_owner_add_property';
+  static String get notificationsOwnerAddProperty => _notificationsOwnerAddProperty.tr();
+
   static const String _notificationViewVisit = 'notification_view_visit';
   static String get notificationViewVisit => _notificationViewVisit.tr();
 

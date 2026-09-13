@@ -216,7 +216,9 @@ void main() {
         .copyWith(
           title: 'Cozy Studio',
           propertyType: 'استوديو',
+          governorateId: 'cairo-governorate-id',
           governorate: 'القاهرة',
+          districtId: 'nasr-city-id',
           district: 'مدينة نصر',
           street: 'شارع النصر',
           bedrooms: '1',
@@ -250,6 +252,9 @@ void main() {
     expect(form.isExtraDetailsReady, isTrue);
     expect(body['property_type'], 'studio');
     expect(body['price_period'], 'monthly');
+    expect(body['governorate'], 'cairo-governorate-id');
+    expect(body['city'], 'nasr-city-id');
+    expect(body['district'], 'nasr-city-id');
     expect(body['main_image'], same(photos.first));
     expect(body['images'], hasLength(9));
     expect(body['video'], same(video));
@@ -330,6 +335,9 @@ void main() {
     expect(find.byType(OwnerPropertiesScreen), findsOneWidget);
     expect(find.text('تم حفظ تعديلات العقار'), findsOneWidget);
     expect(repository.updateRequestCount, 1);
+    expect(repository.lastUpdateBody?['governorate'], 'cairo-governorate-id');
+    expect(repository.lastUpdateBody?['city'], 'cairo-city-id');
+    expect(repository.lastUpdateBody?['district'], 'cairo-city-id');
 
     final Finder analyticsButton = find.descendant(
       of: furnishedCard,
@@ -415,6 +423,7 @@ void main() {
 
 class _OwnerPropertiesRepository implements BaseRepository {
   String? lastDetailsId;
+  Map<String, dynamic>? lastUpdateBody;
   int updateRequestCount = 0;
 
   @override
@@ -432,6 +441,7 @@ class _OwnerPropertiesRepository implements BaseRepository {
       lastDetailsId = propertyId;
     } else if (params.httpRequestType == HttpRequestType.patch) {
       updateRequestCount++;
+      lastUpdateBody = params.body;
     }
     final T data = params.mapper!(_propertyDetailsJson(propertyId));
     return Success(BaseModel<T>(key: '', msg: '', data: data));

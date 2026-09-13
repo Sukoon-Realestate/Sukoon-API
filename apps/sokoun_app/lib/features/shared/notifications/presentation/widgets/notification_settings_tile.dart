@@ -9,10 +9,12 @@ class NotificationSettingsTile extends StatelessWidget {
   const NotificationSettingsTile({
     super.key,
     required this.setting,
+    required this.isUpdating,
     required this.onChanged,
   });
 
   final NotificationSettingContent setting;
+  final bool isUpdating;
   final ValueChanged<bool> onChanged;
 
   @override
@@ -51,7 +53,7 @@ class NotificationSettingsTile extends StatelessWidget {
           14.szW,
           Switch.adaptive(
             value: setting.isEnabled,
-            onChanged: onChanged,
+            onChanged: setting.canChange && !isUpdating ? onChanged : null,
             activeThumbColor: AppColors.white,
             activeTrackColor: AppColors.sokoonTeal,
             inactiveThumbColor: AppColors.white,

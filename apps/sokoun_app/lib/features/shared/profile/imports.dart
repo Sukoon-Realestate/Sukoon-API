@@ -27,6 +27,7 @@ import 'package:sokoun_app/features/shared/auth/presentation/screens/kyc_approve
 import 'package:sokoun_app/features/shared/auth/presentation/screens/kyc_intro_screen.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/screens/login_screen.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/screens/role_select_screen.dart';
+import 'package:sokoun_app/features/shared/notifications/data/notification_device_data.dart';
 import 'package:sokoun_app/features/tenant/favorites/presentation/screens/favorites_screen.dart';
 import 'package:sokoun_app/features/tenant/visits/imports.dart';
 import 'package:sokoun_app/shared_widgets/shared_widgets.dart';

@@ -147,7 +147,9 @@ class OwnerAddPropertyFormState {
   const OwnerAddPropertyFormState({
     required this.title,
     required this.propertyType,
+    required this.governorateId,
     required this.governorate,
+    required this.districtId,
     required this.district,
     required this.street,
     required this.bedrooms,
@@ -177,7 +179,9 @@ class OwnerAddPropertyFormState {
     return const OwnerAddPropertyFormState(
       title: '',
       propertyType: '',
+      governorateId: '',
       governorate: '',
+      districtId: '',
       district: '',
       street: '',
       bedrooms: '',
@@ -205,7 +209,9 @@ class OwnerAddPropertyFormState {
 
   final String title;
   final String propertyType;
+  final String governorateId;
   final String governorate;
+  final String districtId;
   final String district;
   final String street;
   final String bedrooms;
@@ -237,7 +243,9 @@ class OwnerAddPropertyFormState {
   bool get isBasicsReady {
     return title.trim().isNotEmpty &&
         propertyType.trim().isNotEmpty &&
+        governorateId.trim().isNotEmpty &&
         governorate.trim().isNotEmpty &&
+        districtId.trim().isNotEmpty &&
         district.trim().isNotEmpty &&
         street.trim().isNotEmpty &&
         _hasPositiveNumber(bedrooms) &&
@@ -334,7 +342,9 @@ class OwnerAddPropertyFormState {
   OwnerAddPropertyFormState copyWith({
     String? title,
     String? propertyType,
+    String? governorateId,
     String? governorate,
+    String? districtId,
     String? district,
     String? street,
     String? bedrooms,
@@ -364,7 +374,9 @@ class OwnerAddPropertyFormState {
     return OwnerAddPropertyFormState(
       title: title ?? this.title,
       propertyType: propertyType ?? this.propertyType,
+      governorateId: governorateId ?? this.governorateId,
       governorate: governorate ?? this.governorate,
+      districtId: districtId ?? this.districtId,
       district: district ?? this.district,
       street: street ?? this.street,
       bedrooms: bedrooms ?? this.bedrooms,
@@ -425,9 +437,9 @@ class OwnerAddPropertyFormState {
         english: 'Allowed',
       ),
       'country': 'Egypt',
-      'governorate': governorate,
-      'city': district,
-      'district': district,
+      'governorate': governorateId,
+      'city': districtId,
+      'district': districtId,
       'street': street.trim(),
       'building_year': int.parse(buildingYear),
       'deposit': _depositValue(deposit),

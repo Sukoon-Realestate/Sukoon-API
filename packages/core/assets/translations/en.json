@@ -744,6 +744,7 @@
   "notifications_empty_title": "No notifications right now",
   "notifications_empty_description": "Your updates about requests and properties will appear here",
   "notifications_explore_properties": "Explore properties",
+  "notifications_owner_add_property": "Add property",
   "notification_view_visit": "View visit",
   "notification_view_request": "View request",
   "notification_open_related": "Open details",

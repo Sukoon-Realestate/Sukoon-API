@@ -1,0 +1,147 @@
+import 'package:equatable/equatable.dart';
+
+class NotificationPayloadContent extends Equatable {
+  const NotificationPayloadContent({
+    required this.visitId,
+    required this.propertyId,
+    required this.chatId,
+    required this.promoUrl,
+    required this.actionType,
+    required this.actionLabel,
+    required this.visitDate,
+    required this.visitTime,
+    required this.tenantName,
+    required this.senderName,
+    required this.viewsCount,
+    required this.appointmentDate,
+    required this.appointmentTime,
+    required this.address,
+  });
+
+  const NotificationPayloadContent.initial()
+    : visitId = '',
+      propertyId = '',
+      chatId = '',
+      promoUrl = '',
+      actionType = '',
+      actionLabel = '',
+      visitDate = '',
+      visitTime = '',
+      tenantName = '',
+      senderName = '',
+      viewsCount = 0,
+      appointmentDate = '',
+      appointmentTime = '',
+      address = '';
+
+  factory NotificationPayloadContent.fromJson(Map<String, dynamic> json) {
+    return NotificationPayloadContent(
+      visitId: json['visit_id']?.toString() ?? '',
+      propertyId: json['property_id']?.toString() ?? '',
+      chatId: json['chat_id']?.toString() ?? '',
+      promoUrl: json['promo_url']?.toString() ?? '',
+      actionType: json['action_type']?.toString() ?? '',
+      actionLabel: json['action_label']?.toString() ?? '',
+      visitDate: json['visit_date']?.toString() ?? '',
+      visitTime: json['visit_time']?.toString() ?? '',
+      tenantName: json['tenant_name']?.toString() ?? '',
+      senderName: json['sender_name']?.toString() ?? '',
+      viewsCount:
+          (json['views_count'] as num?)?.toInt() ??
+          int.tryParse('${json['views_count'] ?? ''}') ??
+          0,
+      appointmentDate: json['appointment_date']?.toString() ?? '',
+      appointmentTime: json['appointment_time']?.toString() ?? '',
+      address: json['address']?.toString() ?? '',
+    );
+  }
+
+  final String visitId;
+  final String propertyId;
+  final String chatId;
+  final String promoUrl;
+  final String actionType;
+  final String actionLabel;
+  final String visitDate;
+  final String visitTime;
+  final String tenantName;
+  final String senderName;
+  final int viewsCount;
+  final String appointmentDate;
+  final String appointmentTime;
+  final String address;
+
+  String get appointmentDateTime => [
+    appointmentDate,
+    appointmentTime,
+  ].where((value) => value.trim().isNotEmpty).join(' · ');
+
+  Map<String, dynamic> toJson() => {
+    if (visitId.isNotEmpty) 'visit_id': visitId,
+    if (propertyId.isNotEmpty) 'property_id': propertyId,
+    if (chatId.isNotEmpty) 'chat_id': chatId,
+    if (promoUrl.isNotEmpty) 'promo_url': promoUrl,
+    if (actionType.isNotEmpty) 'action_type': actionType,
+    if (actionLabel.isNotEmpty) 'action_label': actionLabel,
+    if (visitDate.isNotEmpty) 'visit_date': visitDate,
+    if (visitTime.isNotEmpty) 'visit_time': visitTime,
+    if (tenantName.isNotEmpty) 'tenant_name': tenantName,
+    if (senderName.isNotEmpty) 'sender_name': senderName,
+    if (viewsCount > 0) 'views_count': viewsCount,
+    if (appointmentDate.isNotEmpty) 'appointment_date': appointmentDate,
+    if (appointmentTime.isNotEmpty) 'appointment_time': appointmentTime,
+    if (address.isNotEmpty) 'address': address,
+  };
+
+  NotificationPayloadContent copyWith({
+    String? visitId,
+    String? propertyId,
+    String? chatId,
+    String? promoUrl,
+    String? actionType,
+    String? actionLabel,
+    String? visitDate,
+    String? visitTime,
+    String? tenantName,
+    String? senderName,
+    int? viewsCount,
+    String? appointmentDate,
+    String? appointmentTime,
+    String? address,
+  }) {
+    return NotificationPayloadContent(
+      visitId: visitId ?? this.visitId,
+      propertyId: propertyId ?? this.propertyId,
+      chatId: chatId ?? this.chatId,
+      promoUrl: promoUrl ?? this.promoUrl,
+      actionType: actionType ?? this.actionType,
+      actionLabel: actionLabel ?? this.actionLabel,
+      visitDate: visitDate ?? this.visitDate,
+      visitTime: visitTime ?? this.visitTime,
+      tenantName: tenantName ?? this.tenantName,
+      senderName: senderName ?? this.senderName,
+      viewsCount: viewsCount ?? this.viewsCount,
+      appointmentDate: appointmentDate ?? this.appointmentDate,
+      appointmentTime: appointmentTime ?? this.appointmentTime,
+      address: address ?? this.address,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    visitId,
+    propertyId,
+    chatId,
+    promoUrl,
+    actionType,
+    actionLabel,
+    visitDate,
+    visitTime,
+    tenantName,
+    senderName,
+    viewsCount,
+    appointmentDate,
+    appointmentTime,
+    address,
+  ];
+}

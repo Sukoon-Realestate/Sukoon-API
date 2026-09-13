@@ -759,6 +759,7 @@
   "notificationsEmptyTitle #$ No notifications right now" : "لا إشعارات حالياً",
   "notificationsEmptyDescription #$ Your updates about requests and properties will appear here" : "ستظهر هنا إشعاراتك عند وجود تحديثات على طلباتك أو عقاراتك",
   "notificationsExploreProperties #$ Explore properties" : "استكشف العقارات",
+  "notificationsOwnerAddProperty #$ Add property" : "إضافة عقار",
   "notificationViewVisit #$ View visit" : "عرض الزيارة",
   "notificationViewRequest #$ View request" : "عرض الطلب",
   "notificationOpenRelated #$ Open details" : "عرض التفاصيل",

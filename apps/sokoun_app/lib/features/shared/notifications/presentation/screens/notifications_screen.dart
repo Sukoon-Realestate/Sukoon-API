@@ -1,25 +1,28 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/padding_extension.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
-import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:sokoun_app/features/shared/notifications/data/enums/notification_role.dart';
-import 'package:sokoun_app/features/shared/notifications/data/models/app_notification_content.dart';
+import 'package:pagify/pagify.dart';
 
-import '../widgets/imports.dart';
+import '../../data/enums/notification_role.dart';
+import '../../data/models/app_notification_content.dart';
+import '../../data/models/notification_operations_state.dart';
+import '../cubits/notifications_cubit.dart';
+import '../widgets/notifications_header.dart';
+import '../widgets/notifications_list.dart';
 import 'notification_detail_screen.dart';
-import 'notification_settings_screen.dart';
-import 'notifications_empty_screen.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key, this.role, this.initialNotifications});
 
   final NotificationRole? role;
+
+  /// A test/preview seam. Production callers leave this null to use the API.
   final List<AppNotificationContent>? initialNotifications;
 
   @override
@@ -28,153 +31,150 @@ class NotificationsScreen extends StatefulWidget {
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
   late final NotificationRole _role;
-  late List<AppNotificationContent> _notifications;
+  late final NotificationsCubit _cubit;
+  late final List<AppNotificationContent>? _fixtureNotifications;
+  PagifyController<AppNotificationContent>? _pagifyController;
 
   @override
   void initState() {
     super.initState();
     _role = _resolveRole(widget.role);
-    _notifications = List<AppNotificationContent>.of(
-      widget.initialNotifications ?? NotificationsContent.forRole(_role),
-    );
+    _cubit = NotificationsCubit();
+    final List<AppNotificationContent>? initialNotifications =
+        widget.initialNotifications;
+    _fixtureNotifications = initialNotifications == null
+        ? null
+        : List<AppNotificationContent>.of(initialNotifications);
+    if (_fixtureNotifications == null) {
+      _pagifyController = PagifyController<AppNotificationContent>();
+    } else {
+      _cubit.setUnreadCount(
+        _fixtureNotifications.where((item) => item.isUnread).length,
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    unawaited(_cubit.close());
+    super.dispose();
   }
 
   NotificationRole _resolveRole(NotificationRole? role) {
-    if (role != null) {
-      return role;
-    }
-
+    if (role != null) return role;
     return UserTypeHelper.instance.currentUserType.isOwner
         ? NotificationRole.owner
         : NotificationRole.tenant;
   }
 
-  bool get _hasUnread =>
-      _notifications.any((notification) => notification.isUnread);
-
-  void _markAllAsRead() {
-    if (!_hasUnread) {
+  Future<void> _markAllAsRead() async {
+    final List<AppNotificationContent>? fixtures = _fixtureNotifications;
+    if (fixtures != null) {
+      setState(() {
+        for (int index = 0; index < fixtures.length; index++) {
+          fixtures[index] = fixtures[index].copyWith(isRead: true);
+        }
+      });
+      _cubit.setUnreadCount(0);
       return;
     }
 
-    setState(() {
-      _notifications = _notifications
-          .map((notification) => notification.copyWith(isUnread: false))
-          .toList(growable: false);
-    });
+    final bool succeeded = await _cubit.markAllAsRead();
+    if (!succeeded || !mounted) return;
+    final PagifyController<AppNotificationContent> controller =
+        _pagifyController!;
+    final List<AppNotificationContent> notifications = controller.items;
+    for (int index = 0; index < notifications.length; index++) {
+      controller.replaceWith(
+        index,
+        notifications[index].copyWith(isRead: true),
+      );
+    }
+    await controller.refresh();
   }
 
-  void _openNotification(AppNotificationContent notification) {
-    final int index = _notifications.indexWhere(
-      (item) => item.id == notification.id,
-    );
-    if (index != -1 && notification.isUnread) {
-      setState(() {
-        _notifications[index] = notification.copyWith(isUnread: false);
-      });
+  Future<void> _openNotification(AppNotificationContent notification) async {
+    final List<AppNotificationContent>? fixtures = _fixtureNotifications;
+    if (fixtures != null) {
+      final int index = fixtures.indexWhere(
+        (item) => item.id == notification.id,
+      );
+      if (index >= 0 && notification.isUnread) {
+        setState(() {
+          fixtures[index] = notification.copyWith(isRead: true);
+        });
+        _cubit.setUnreadCount(_cubit.data.unreadCount - 1);
+      }
+      await Go.to<void>(
+        NotificationDetailScreen(
+          role: _role,
+          notification: notification.copyWith(isRead: true),
+          fetchFromApi: false,
+        ),
+      );
+      return;
     }
 
-    Go.to(NotificationDetailScreen(role: _role, notification: notification));
+    if (notification.isUnread) {
+      _replaceNotification(notification.copyWith(isRead: true));
+      unawaited(_cubit.markAsRead(notification.id));
+    }
+    await Go.to<void>(
+      NotificationDetailScreen(role: _role, notification: notification),
+    );
+    if (mounted) await _pagifyController?.refresh();
+  }
+
+  void _replaceNotification(AppNotificationContent notification) {
+    final PagifyController<AppNotificationContent>? controller =
+        _pagifyController;
+    if (controller == null) return;
+    final int index = controller.items.indexWhere(
+      (item) => item.id == notification.id,
+    );
+    if (index >= 0) controller.replaceWith(index, notification);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_notifications.isEmpty) {
-      return NotificationsEmptyScreen(role: _role);
-    }
-
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _NotificationsHeader(
-                role: _role,
-                hasUnread: _hasUnread,
-                onMarkAllPressed: _markAllAsRead,
-              ),
-              Expanded(
-                child: ListView.separated(
-                  padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 18.h),
-                  itemBuilder: (context, index) {
-                    final AppNotificationContent notification =
-                        _notifications[index];
-                    return NotificationCard(
-                      key: ValueKey(notification.id),
-                      notification: notification,
-                      onPressed: () => _openNotification(notification),
+      child: BlocProvider<NotificationsCubit>.value(
+        value: _cubit,
+        child: Scaffold(
+          backgroundColor: AppColors.scaffoldBackground,
+          body: SafeArea(
+            child:
+                BlocBuilder<
+                  NotificationsCubit,
+                  AsyncState<NotificationOperationsState>
+                >(
+                  builder: (context, state) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        NotificationsHeader(
+                          role: _role,
+                          hasUnread: state.data.unreadCount > 0,
+                          isMarkingAll: state.data.isMarkingAll,
+                          onMarkAllPressed: _markAllAsRead,
+                        ),
+                        Expanded(
+                          child: NotificationsList(
+                            role: _role,
+                            initialNotifications: _fixtureNotifications,
+                            pagifyController: _pagifyController,
+                            onNotificationPressed: _openNotification,
+                            onUnreadCountChanged: _cubit.setUnreadCount,
+                          ),
+                        ),
+                      ],
                     );
                   },
-                  separatorBuilder: (context, index) => 8.szH,
-                  itemCount: _notifications.length,
                 ),
-              ),
-            ],
           ),
         ),
       ),
     );
-  }
-}
-
-class _NotificationsHeader extends StatelessWidget {
-  const _NotificationsHeader({
-    required this.role,
-    required this.hasUnread,
-    required this.onMarkAllPressed,
-  });
-
-  final NotificationRole role;
-  final bool hasUnread;
-  final VoidCallback onMarkAllPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: AppText(
-            LocaleKeys.notificationsFlowTitle,
-            color: AppColors.sokoonNavy,
-            fontSize: 20.sp,
-            fontWeight: FontWeight.w900,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-        TextButton(
-          onPressed: hasUnread ? onMarkAllPressed : null,
-          style: TextButton.styleFrom(
-            foregroundColor: AppColors.sokoonTeal,
-            padding: EdgeInsets.symmetric(horizontal: 6.w),
-            minimumSize: Size.zero,
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          ),
-          child: AppText(
-            role.isOwner
-                ? LocaleKeys.notificationsMarkAll
-                : LocaleKeys.notificationsMarkAllRead,
-            color: hasUnread ? AppColors.sokoonTeal : AppColors.sokoonMuted,
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-        IconButton(
-          tooltip: LocaleKeys.notificationSettingsTitle,
-          onPressed: () => Go.to(NotificationSettingsScreen(role: role)),
-          visualDensity: VisualDensity.compact,
-          constraints: BoxConstraints.tightFor(width: 38.r, height: 38.r),
-          padding: EdgeInsets.zero,
-          icon: Icon(
-            Icons.settings_outlined,
-            color: AppColors.sokoonNavy,
-            size: 20.r,
-          ),
-        ),
-      ],
-    ).padding(EdgeInsets.fromLTRB(20.w, 4.h, 14.w, 12.h));
   }
 }

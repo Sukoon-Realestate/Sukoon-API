@@ -4,6 +4,7 @@ class ProfileLogoutButton extends StatelessWidget {
   const ProfileLogoutButton({super.key});
 
   Future<void> _logout() async {
+    await NotificationDeviceData.unregisterCurrentDevice();
     await UserCubit.instance.logout();
     Go.offAll(const RoleSelectScreen());
   }

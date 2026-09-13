@@ -744,6 +744,7 @@
   "notifications_empty_title": "لا إشعارات حالياً",
   "notifications_empty_description": "ستظهر هنا إشعاراتك عند وجود تحديثات على طلباتك أو عقاراتك",
   "notifications_explore_properties": "استكشف العقارات",
+  "notifications_owner_add_property": "إضافة عقار",
   "notification_view_visit": "عرض الزيارة",
   "notification_view_request": "عرض الطلب",
   "notification_open_related": "عرض التفاصيل",

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/languages.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -14,6 +16,7 @@ import 'package:sokoun_app/features/owner/home/presentation/screens/owner_visit_
 import 'package:sokoun_app/features/owner/properties/imports.dart';
 import 'package:sokoun_app/features/shared/whats_new/whats_new_service.dart';
 import 'package:sokoun_app/features/shared/whats_new/widgets/upgrader_dialog.dart';
+import 'package:sokoun_app/features/shared/notifications/presentation/notification_coordinator.dart';
 import 'package:sokoun_app/generated/assets.dart';
 import 'package:upgrader/upgrader.dart';
 
@@ -52,7 +55,10 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _userType = widget.userType ?? UserTypeHelper.instance.currentUserType;
     _tabs = _userType.isOwner ? _buildOwnerTabs() : _buildTenantTabs();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _showLaunchDialogs());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(NotificationCoordinator.start());
+      unawaited(_showLaunchDialogs());
+    });
   }
 
   Future<void> _showLaunchDialogs() async {

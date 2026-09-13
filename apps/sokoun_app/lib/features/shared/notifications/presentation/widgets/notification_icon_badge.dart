@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:sokoun_app/features/shared/notifications/data/models/app_notification_content.dart';
+import 'package:sokoun_app/features/shared/notifications/data/enums/app_notification_icon_kind.dart';
 
 class NotificationIconBadge extends StatelessWidget {
   const NotificationIconBadge({
     super.key,
-    required this.kind,
+    required this.iconType,
     this.size = 40,
     this.iconSize = 18,
   });
 
-  final AppNotificationKind kind;
+  final AppNotificationIconKind iconType;
   final double size;
   final double iconSize;
 
@@ -32,52 +32,66 @@ class NotificationIconBadge extends StatelessWidget {
   }
 
   _NotificationVisual get _visual {
-    return switch (kind) {
-      AppNotificationKind.visitAccepted => const _NotificationVisual(
+    return switch (iconType) {
+      AppNotificationIconKind.checkCircle => const _NotificationVisual(
         icon: Icons.check_circle_outline_rounded,
         color: AppColors.green,
         backgroundColor: AppColors.greenPale,
       ),
-      AppNotificationKind.newProperty => const _NotificationVisual(
+      AppNotificationIconKind.bell => const _NotificationVisual(
         icon: Icons.notifications_none_rounded,
         color: AppColors.sokoonTeal,
         backgroundColor: AppColors.mintLight,
       ),
-      AppNotificationKind.accountVerification => const _NotificationVisual(
+      AppNotificationIconKind.warning => const _NotificationVisual(
         icon: Icons.warning_amber_rounded,
         color: AppColors.amber,
         backgroundColor: AppColors.amberPale,
       ),
-      AppNotificationKind.rateVisit => const _NotificationVisual(
+      AppNotificationIconKind.star => const _NotificationVisual(
         icon: Icons.star_outline_rounded,
         color: AppColors.gold,
         backgroundColor: AppColors.goldPale,
       ),
-      AppNotificationKind.ownerMessage ||
-      AppNotificationKind.tenantMessage => const _NotificationVisual(
+      AppNotificationIconKind.chat => const _NotificationVisual(
         icon: Icons.chat_bubble_outline_rounded,
         color: AppColors.blue,
         backgroundColor: AppColors.bluePale,
       ),
-      AppNotificationKind.visitRequest => const _NotificationVisual(
+      AppNotificationIconKind.calendar => const _NotificationVisual(
         icon: Icons.calendar_month_outlined,
         color: AppColors.green,
         backgroundColor: AppColors.greenPale,
       ),
-      AppNotificationKind.propertyViews => const _NotificationVisual(
+      AppNotificationIconKind.eye => const _NotificationVisual(
         icon: Icons.visibility_outlined,
         color: AppColors.sokoonTeal,
         backgroundColor: AppColors.mintLight,
       ),
-      AppNotificationKind.propertyVerified => const _NotificationVisual(
+      AppNotificationIconKind.verified => const _NotificationVisual(
         icon: Icons.verified_outlined,
         color: AppColors.gold,
         backgroundColor: AppColors.goldPale,
       ),
-      AppNotificationKind.dailyVisibility => const _NotificationVisual(
-        icon: Icons.warning_amber_rounded,
-        color: AppColors.amber,
-        backgroundColor: AppColors.amberPale,
+      AppNotificationIconKind.cancel => const _NotificationVisual(
+        icon: Icons.cancel_outlined,
+        color: AppColors.red,
+        backgroundColor: AppColors.redPale,
+      ),
+      AppNotificationIconKind.refresh => const _NotificationVisual(
+        icon: Icons.refresh_rounded,
+        color: AppColors.sokoonTeal,
+        backgroundColor: AppColors.mintLight,
+      ),
+      AppNotificationIconKind.shield => const _NotificationVisual(
+        icon: Icons.shield_outlined,
+        color: AppColors.blue,
+        backgroundColor: AppColors.bluePale,
+      ),
+      AppNotificationIconKind.unknown => const _NotificationVisual(
+        icon: Icons.notifications_none_rounded,
+        color: AppColors.sokoonGray,
+        backgroundColor: AppColors.grayBackground,
       ),
     };
   }

@@ -216,6 +216,7 @@ class DioService implements NetworkService {
         return BaseModel.fromJson(response.data);
       }
     } on DioException catch (e) {
+      log('error is ${e.response?.data}');
       _handleIncomingResponse(
         path: networkRequest.path,
         response: e.response?.data ?? {'error' : e.toString()},

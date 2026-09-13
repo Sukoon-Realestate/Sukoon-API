@@ -1,15 +1,17 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/padding_extension.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
-import 'package:melos_core/core/navigation/navigator.dart';
-import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:sokoun_app/features/shared/notifications/data/enums/notification_role.dart';
-import 'package:sokoun_app/features/shared/notifications/data/models/notification_setting_content.dart';
+import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
+import 'package:melos_core/core/helpers/status_builder.dart';
 
-import '../widgets/notification_settings_tile.dart';
+import '../../data/enums/notification_role.dart';
+import '../../data/models/notification_setting_content.dart';
+import '../cubits/notification_settings_cubit.dart';
+import '../widgets/notification_page_header.dart';
+import '../widgets/notification_settings_content.dart';
 
 class NotificationSettingsScreen extends StatefulWidget {
   const NotificationSettingsScreen({super.key, required this.role});
@@ -23,152 +25,92 @@ class NotificationSettingsScreen extends StatefulWidget {
 
 class _NotificationSettingsScreenState
     extends State<NotificationSettingsScreen> {
-  late List<NotificationSettingContent> _settings;
-  bool _didInitializeSettings = false;
+  late final NotificationSettingsCubit _settingsCubit;
+  late final NotificationSettingUpdateCubit _updateCubit;
+  late final Future<void> _settingsRequest;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (_didInitializeSettings) {
-      return;
-    }
-
-    _settings = [
-      NotificationSettingContent(
-        id: 'visit-requests',
-        title: LocaleKeys.notificationSettingVisitRequests,
-        description: LocaleKeys.notificationSettingVisitRequestsDescription,
-        isEnabled: true,
-      ),
-      NotificationSettingContent(
-        id: 'new-messages',
-        title: LocaleKeys.notificationSettingNewMessages,
-        description: LocaleKeys.notificationSettingNewMessagesDescription,
-        isEnabled: true,
-      ),
-      NotificationSettingContent(
-        id: 'property-updates',
-        title: LocaleKeys.notificationSettingPropertyUpdates,
-        description: LocaleKeys.notificationSettingPropertyUpdatesDescription,
-        isEnabled: false,
-      ),
-      NotificationSettingContent(
-        id: 'security-alerts',
-        title: LocaleKeys.notificationSettingSecurityAlerts,
-        description: LocaleKeys.notificationSettingSecurityAlertsDescription,
-        isEnabled: true,
-      ),
-      NotificationSettingContent(
-        id: 'promotions',
-        title: LocaleKeys.notificationSettingPromotions,
-        description: LocaleKeys.notificationSettingPromotionsDescription,
-        isEnabled: false,
-      ),
-    ];
-    _didInitializeSettings = true;
+  void initState() {
+    super.initState();
+    _settingsCubit = NotificationSettingsCubit();
+    _updateCubit = NotificationSettingUpdateCubit();
+    _settingsRequest = _settingsCubit.loadSettings();
   }
 
-  void _toggleSetting(int index, bool value) {
-    setState(() {
-      _settings[index] = _settings[index].copyWith(isEnabled: value);
-    });
+  @override
+  void dispose() {
+    unawaited(_settingsCubit.close());
+    unawaited(_updateCubit.close());
+    super.dispose();
+  }
+
+  Future<void> _updateSetting(
+    NotificationSettingContent setting,
+    bool value,
+  ) async {
+    if (_updateCubit.isLoading || !setting.canChange) return;
+
+    _settingsCubit.updateSetting(setting.id, value);
+    final bool succeeded = await _updateCubit.updateSetting(
+      key: setting.id,
+      value: value,
+    );
+    if (!succeeded) {
+      _settingsCubit.updateSetting(setting.id, setting.isEnabled);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const _NotificationSettingsHeader(),
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.only(top: 12.h, bottom: 24.h),
-                  children: [
-                    for (int index = 0; index < _settings.length; index++)
-                      NotificationSettingsTile(
-                        key: ValueKey(_settings[index].id),
-                        setting: _settings[index],
-                        onChanged: (value) => _toggleSetting(index, value),
-                      ),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16.w,
-                        vertical: 14.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.mintLight,
-                        borderRadius: BorderRadius.circular(14.r),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Icon(
-                            Icons.info_outline_rounded,
-                            color: AppColors.sokoonTeal,
-                            size: 18.r,
-                          ),
-                          10.szW,
-                          Expanded(
-                            child: AppText(
-                              LocaleKeys.notificationSettingsInfo,
-                              color: AppColors.sokoonTeal,
-                              fontSize: 12.sp,
-                              height: 1.6,
-                              maxLines: 4,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ).paddingOnly(left: 20.w, top: 24.h, right: 20.w),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _NotificationSettingsHeader extends StatelessWidget {
-  const _NotificationSettingsHeader();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
-      decoration: const BoxDecoration(
-        color: AppColors.white,
-        border: Border(bottom: BorderSide(color: AppColors.sokoonBorder)),
-      ),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: Go.back,
-            icon: Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: AppColors.sokoonNavy,
-              size: 20.r,
-            ),
-          ),
-          8.szW,
-          Expanded(
-            child: AppText(
-              LocaleKeys.notificationSettingsTitle,
-              color: AppColors.sokoonNavy,
-              fontSize: 17.sp,
-              fontWeight: FontWeight.w800,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<NotificationSettingsCubit>.value(value: _settingsCubit),
+          BlocProvider<NotificationSettingUpdateCubit>.value(
+            value: _updateCubit,
           ),
         ],
+        child: Scaffold(
+          backgroundColor: AppColors.scaffoldBackground,
+          body: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                NotificationPageHeader(
+                  title: LocaleKeys.notificationSettingsTitle,
+                ),
+                Expanded(
+                  child:
+                      BlocBuilder<
+                        NotificationSettingUpdateCubit,
+                        AsyncState<String>
+                      >(
+                        builder: (context, updateState) {
+                          return StatusBuilder<
+                            NotificationSettingsCubit,
+                            NotificationSettingsContent
+                          >.withShimmer(
+                            initialDataForShimmer:
+                                const NotificationSettingsContent.initial(),
+                            requestToTryAgainWhenError: _settingsRequest,
+                            errorType: ErrorType.defaultView,
+                            builder: (settings) =>
+                                NotificationSettingsContentView(
+                                  settings: settings,
+                                  updatingKey: updateState.isLoading
+                                      ? updateState.data
+                                      : null,
+                                  onSettingChanged: _updateSetting,
+                                ),
+                          );
+                        },
+                      ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

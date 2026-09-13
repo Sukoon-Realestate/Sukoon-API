@@ -37,7 +37,9 @@ abstract final class OwnerAddPropertyMapper {
       form: OwnerAddPropertyFormState.initial().copyWith(
         title: property.title,
         propertyType: _propertyTypeLabel(property.propertyType),
+        governorateId: property.city.governorate,
         governorate: property.city.governorateName,
+        districtId: property.city.id,
         district: property.city.name.isNotEmpty
             ? property.city.name
             : property.district,

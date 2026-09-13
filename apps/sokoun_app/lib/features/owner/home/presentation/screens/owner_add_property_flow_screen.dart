@@ -147,7 +147,9 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
     _selectedCity = null;
     _updateForm(
       () => _form.copyWith(
+        governorateId: governorate.id,
         governorate: governorate.name,
+        districtId: '',
         district: '',
         mapQuery: governorate.name,
         isLocationSelected: false,
@@ -164,6 +166,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
     final query = '${city.name}، ${_form.governorate}';
     _updateForm(
       () => _form.copyWith(
+        districtId: city.id,
         district: city.name,
         mapQuery: query,
         isLocationSelected: false,
