@@ -34,7 +34,7 @@ def send_otp_email(email: str, otp: str, user_name: str = "") -> bool:
 
     ! Catches and logs all email exceptions so SMTP downtime does not crash the request.
     """
-    site_name = getattr(settings, "SITE_NAME", "Darak") or "Darak"
+    site_name = getattr(settings, "SITE_NAME", "Sukoon") or "Sukoon"
     subject = f"[{site_name}] Verify Your Email - OTP"
 
     greeting = f"Hello {user_name}," if user_name else "Hello,"

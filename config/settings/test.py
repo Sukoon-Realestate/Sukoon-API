@@ -8,7 +8,7 @@ DEBUG = False
 
 ADMIN_URL = "admin/"
 
-SITE_NAME = "Darak"
+SITE_NAME = "Sukoon"
 
 DOMAIN = "localhost"
 

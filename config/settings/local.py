@@ -14,7 +14,7 @@ DEBUG = True
 
 SECRET_KEY = getenv("SECRET_KEY", "zymJqYSgQrxHLGS1MbVPB043BbXZPlBDHAkcIVPuskhiFMj4TY8")
 
-SITE_NAME = getenv("SITE_NAME")
+SITE_NAME = getenv("SITE_NAME", "Sukoon")
 
 ADMIN_URL = getenv("DJANGO_ADMIN_URL", "admin/")
 

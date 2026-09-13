@@ -248,6 +248,7 @@ DJOSER = {
     },
 }
 
+SITE_NAME = getenv("SITE_NAME", "Sukoon")
 
 ## Social Auth Settings
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = getenv("GOOGLE_CLIENT_ID")
