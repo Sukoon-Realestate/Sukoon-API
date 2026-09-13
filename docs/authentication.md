@@ -1,6 +1,6 @@
 # Authentication & Authorization Flow
 
-Darak uses cookie-based JWT authentication combined with DRF permissions.
+Sukoon uses cookie-based JWT authentication combined with DRF permissions.
 
 ## Authentication Mechanism
 

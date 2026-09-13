@@ -1,6 +1,6 @@
-# Darak API
+# Sukoon API
 
-Darak is a premium real estate platform API built with Django and Django REST Framework.
+Sukoon is a premium real estate platform API built with Django and Django REST Framework.
 
 ## Features
 
@@ -37,7 +37,7 @@ Detailed documentation for the project structure, API design, and rules:
 1. Clone the repository:
    ```bash
    git clone <repo-url>
-   cd Darak-API
+   cd Sukoon-API
    ```
 2. Install dependencies:
    ```bash

@@ -1,6 +1,6 @@
 # Database & Models Design
 
-This document details the model specifications and database guidelines for Darak.
+This document details the model specifications and database guidelines for Sukoon.
 
 ## Core Models
 

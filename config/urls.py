@@ -12,9 +12,9 @@ from core_apps.properties.views import PropertyListAPIView
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Darak API",
+        title="Sukoon API",
         default_version="v1",
-        description="Darak Real Estate API.",
+        description="Sukoon Real Estate API.",
         contact=openapi.Contact("zeyadslama23@gmail.com"),
         license=openapi.License("MIT License"),
     ),
@@ -37,9 +37,9 @@ urlpatterns = [
 ]
 
 
-admin.site.site_header = "Darak Admin"
-admin.site.site_title = "Darak Admin Portal"
-admin.site.index_title = "Welcome To Darak Admin Portal"
+admin.site.site_header = "Sukoon Admin"
+admin.site.site_title = "Sukoon Admin Portal"
+admin.site.index_title = "Welcome To Sukoon Admin Portal"
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

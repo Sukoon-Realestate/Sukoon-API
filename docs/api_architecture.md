@@ -1,6 +1,6 @@
 # API Architecture & Endpoints
 
-This document describes the general architecture of the Darak API.
+This document describes the general architecture of the Sukoon API.
 
 ## Versioning
 All endpoints are versioned and follow the prefix `/api/v1/`.
@@ -47,4 +47,4 @@ and `HH:mm:ss` times.
 ## Response Formatting
 Every response from the API uses JSON formatting and proper HTTP status codes.
 
-For detailed development rules, please refer back to [CLAUDE.md](file:///home/demo/code/Darak/Darak-API/CLAUDE.md).
+For detailed development rules, please refer back to [CLAUDE.md](../CLAUDE.md).
