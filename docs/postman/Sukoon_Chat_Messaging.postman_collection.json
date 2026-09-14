@@ -1,0 +1,281 @@
+{
+  "info": {
+    "_postman_id": "7f8b91c2-3e4a-4d8b-9a1c-5e2d8f9b0a1c",
+    "name": "Sukoon API - Chat & Messaging",
+    "description": "Postman collection to test 1:1 real-time direct chat and messaging in Sukoon API. Includes authentication, conversation management, message history, REST message fallback, read receipts, and WebSocket payload templates.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "baseUrl", "value": "http://127.0.0.1:8000", "type": "string"},
+    {"key": "wsUrl", "value": "ws://127.0.0.1:8000", "type": "string"},
+    {"key": "userA_email", "value": "user@example.com", "type": "string"},
+    {"key": "userA_password", "value": "Testpass123!", "type": "string"},
+    {"key": "userB_email", "value": "owner@example.com", "type": "string"},
+    {"key": "userB_password", "value": "Testpass123!", "type": "string"},
+    {"key": "userB_id", "value": "", "type": "string"},
+    {"key": "conversationId", "value": "", "type": "string"},
+    {"key": "accessToken", "value": "", "type": "string"}
+  ],
+  "item": [
+    {
+      "name": "01 - Authentication",
+      "item": [
+        {
+          "name": "01 - Login User A (extracts token & sets cookies)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{userA_email}}\",\n  \"password\": \"{{userA_password}}\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": "{{baseUrl}}/api/v1/auth/login/",
+            "description": "Authenticates User A, sets cookies in Postman jar, and extracts access token for WebSocket use."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Login successful\", function () { pm.response.to.have.status(200); });",
+                  "const token = pm.cookies.get(\"access\");",
+                  "if (token) {",
+                  "    pm.collectionVariables.set(\"accessToken\", token);",
+                  "    console.log(\"Saved accessToken:\", token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "02 - Login User B (to obtain userB_id)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{userB_email}}\",\n  \"password\": \"{{userB_password}}\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": "{{baseUrl}}/api/v1/auth/login/",
+            "description": "Login as User B to query profile and set userB_id."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"User B login successful\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "03 - Get User B Profile (saves userB_id)",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": "{{baseUrl}}/api/v1/profiles/my_profile/",
+            "description": "Extracts User B's UUID from the profile response and stores it in userB_id variable."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Profile retrieved\", function () { pm.response.to.have.status(200); });",
+                  "const body = pm.response.json();",
+                  "const profile = body.data || body;",
+                  "if (profile.id) {",
+                  "    pm.collectionVariables.set(\"userB_id\", profile.id);",
+                  "    console.log(\"Saved userB_id:\", profile.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "04 - Re-login User A",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{userA_email}}\",\n  \"password\": \"{{userA_password}}\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": "{{baseUrl}}/api/v1/auth/login/",
+            "description": "Switch active session back to User A."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"User A active\", function () { pm.response.to.have.status(200); });",
+                  "const token = pm.cookies.get(\"access\");",
+                  "if (token) { pm.collectionVariables.set(\"accessToken\", token); }"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "02 - REST Conversations",
+      "item": [
+        {
+          "name": "01 - Create or Get Direct Conversation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"{{userB_id}}\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": "{{baseUrl}}/api/v1/chat/conversations/create/",
+            "description": "Start or retrieve a direct 1:1 conversation with userB_id. Automatically sets conversationId variable."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Conversation created/retrieved\", function () { pm.response.to.have.status(200); });",
+                  "const res = pm.response.json();",
+                  "const data = res.data || res;",
+                  "if (data.id) {",
+                  "    pm.collectionVariables.set(\"conversationId\", data.id);",
+                  "    console.log(\"Saved conversationId:\", data.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "02 - List Conversations",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": "{{baseUrl}}/api/v1/chat/conversations/",
+            "description": "Lists conversations for the logged in user, ordered by most recent message."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"List conversations returns 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "03 - Send Message (REST fallback)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Hello from Postman REST! Is this property still available?\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": "{{baseUrl}}/api/v1/chat/conversations/{{conversationId}}/messages/create/",
+            "description": "Send a message via HTTP REST endpoint. Atomically increments unread_count and triggers WebSocket broadcast."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Message sent 201\", function () { pm.response.to.have.status(201); });"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "04 - Get Message History",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Accept", "value": "application/json"}],
+            "url": "{{baseUrl}}/api/v1/chat/conversations/{{conversationId}}/messages/",
+            "description": "Fetch paginated message history for the conversation, ordered oldest-first."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Messages history returns 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "05 - Mark Conversation Read",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Accept", "value": "application/json"}
+            ],
+            "url": "{{baseUrl}}/api/v1/chat/conversations/{{conversationId}}/read/",
+            "description": "Resets unread_count to 0 for the requesting user and broadcasts a read receipt."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Mark read returns 200\", function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
+    }
+  ]
+}

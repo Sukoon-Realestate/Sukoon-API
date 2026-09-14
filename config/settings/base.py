@@ -34,6 +34,7 @@ LOCAL_APPS = [
     "core_apps.profiles",
     "core_apps.properties",
     "core_apps.notifications",
+    "core_apps.chat",
 ]
 
 THIRD_PARTY_APPS = [
@@ -87,13 +88,19 @@ ASGI_APPLICATION = "config.asgi.application"
 
 # ? Redis backs the channel layer so WebSocket groups work across processes/workers
 REDIS_URL = getenv("REDIS_URL", "redis://localhost:6379/0")
+USE_IN_MEMORY_CHANNEL_LAYER = (
+    getenv("USE_IN_MEMORY_CHANNEL_LAYER", "False").lower() in ("true", "1", "yes")
+)
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {"hosts": [REDIS_URL]},
+if USE_IN_MEMORY_CHANNEL_LAYER:
+    CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
+else:
+    CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels_redis.core.RedisChannelLayer",
+            "CONFIG": {"hosts": [REDIS_URL]},
+        }
     }
-}
 
 
 ## Database
@@ -230,7 +237,8 @@ DJOSER = {
     "SEND_ACTIVATION_EMAIL": False,
     "PASSWORD_CHANGED_EMAIL_CONFIRMATION": getenv(
         "PASSWORD_CHANGED_EMAIL_CONFIRMATION", "True"
-    ) == "True",
+    )
+    == "True",
     "PASSWORD_RESET_CONFIRM_RETYPE": True,
     "EMAIL": {
         "password_changed_confirmation": "core_apps.users.emails.SafePasswordChangedConfirmationEmail",

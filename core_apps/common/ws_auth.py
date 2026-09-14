@@ -22,18 +22,19 @@ def _get_user(user_id):
 
 
 class JWTCookieAuthMiddleware(BaseMiddleware):
-    """Authenticate a WebSocket from the JWT stored in the access cookie.
+    """Authenticate a WebSocket from a query string token (?token=...) or JWT cookie.
 
-    Mirrors the contract of core_apps.common.cookie_auth.CookieAuthentication:
-    the access token lives in the cookie named ``settings.COOKIE_NAME`` and the
-    user id is carried in the ``user_id`` claim.
+    Supports browser WebSocket handshakes where Authorization headers cannot be
+    set directly (query string token), as well as cookie-based auth.
     """
 
     async def __call__(self, scope, receive, send):
         from django.conf import settings
 
         scope["user"] = AnonymousUser()
-        raw_token = self._token_from_scope(scope, settings.COOKIE_NAME)
+        raw_token = self._token_from_query_string(scope) or self._token_from_cookie(
+            scope, getattr(settings, "COOKIE_NAME", "access")
+        )
 
         if raw_token:
             try:
@@ -46,7 +47,23 @@ class JWTCookieAuthMiddleware(BaseMiddleware):
         return await super().__call__(scope, receive, send)
 
     @staticmethod
-    def _token_from_scope(scope, cookie_name):
+    def _token_from_query_string(scope):
+        import urllib.parse
+
+        query_string = scope.get("query_string", b"").decode()
+        if not query_string:
+            return None
+        params = dict(
+            pair.split("=", 1) for pair in query_string.split("&") if "=" in pair
+        )
+        raw = params.get("token")
+        if raw:
+            cleaned = urllib.parse.unquote(raw).strip()
+            return cleaned or None
+        return None
+
+    @staticmethod
+    def _token_from_cookie(scope, cookie_name):
         headers = dict(scope.get("headers", []))
         cookie_header = headers.get(b"cookie")
         if not cookie_header:
@@ -59,3 +76,6 @@ class JWTCookieAuthMiddleware(BaseMiddleware):
         except UnicodeDecodeError as e:
             logger.error(f"WS cookie decode error: {e}")
             return None
+
+
+JWTAuthMiddleware = JWTCookieAuthMiddleware

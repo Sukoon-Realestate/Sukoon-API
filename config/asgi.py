@@ -20,10 +20,15 @@ from django.conf import settings  # noqa: E402
 from channels.routing import ProtocolTypeRouter, URLRouter  # noqa: E402
 from channels.security.websocket import AllowedHostsOriginValidator  # noqa: E402
 
-from core_apps.common.routing import websocket_urlpatterns  # noqa: E402
+from core_apps.common.routing import (
+    websocket_urlpatterns as common_ws_urls,
+)  # noqa: E402
+from core_apps.chat.routing import websocket_urlpatterns as chat_ws_urls  # noqa: E402
 from core_apps.common.ws_auth import JWTCookieAuthMiddleware  # noqa: E402
 
-_ws_app = JWTCookieAuthMiddleware(URLRouter(websocket_urlpatterns))
+all_ws_urlpatterns = common_ws_urls + chat_ws_urls
+
+_ws_app = JWTCookieAuthMiddleware(URLRouter(all_ws_urlpatterns))
 
 # ? Origin validator prevents cross-origin WS connections; skip in dev where ALLOWED_HOSTS
 # ? contains bare hostnames that don't match Postman/browser tool origin headers with ports.

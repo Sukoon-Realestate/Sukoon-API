@@ -24,15 +24,22 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
-    path("password-reset/<str:uid>/<str:token>/", PasswordResetConfirmView.as_view(), name="password_reset_confirm"),
+    path(
+        "password-reset/<str:uid>/<str:token>/",
+        PasswordResetConfirmView.as_view(),
+        name="password_reset_confirm",
+    ),
     path("password-reset/<str:uid>/<str:token>", PasswordResetConfirmView.as_view()),
     path("", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     path("api/v1/auth/", include("djoser.urls")),
     path("api/v1/auth/", include("core_apps.users.urls")),
     path("api/v1/profiles/", include("core_apps.profiles.urls")),
-    path("api/v1/homepage/", PropertyListAPIView.as_view(), name="property-homepage-list"),
+    path(
+        "api/v1/homepage/", PropertyListAPIView.as_view(), name="property-homepage-list"
+    ),
     path("api/v1/properties/", include("core_apps.properties.urls")),
     path("api/v1/notifications/", include("core_apps.notifications.urls")),
+    path("api/v1/chat/", include("core_apps.chat.urls")),
     path(settings.ADMIN_URL, admin.site.urls),
 ]
 
