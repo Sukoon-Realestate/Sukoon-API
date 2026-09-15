@@ -9,6 +9,8 @@ import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_restricted_screen.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_thread_screen.dart';
 
+import '../shared/chat_participant_avatar.dart';
+
 class ChatSearchResultItem extends StatelessWidget {
   const ChatSearchResultItem({super.key, required this.conversation});
 
@@ -30,19 +32,10 @@ class ChatSearchResultItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 40.r,
-            height: 40.r,
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              color: AppColors.mintLight,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.person_outline_rounded,
-              color: AppColors.sokoonTeal,
-              size: 19.r,
-            ),
+          ChatParticipantAvatar(
+            name: conversation.name,
+            avatarUrl: conversation.otherParticipant.avatarUrl,
+            size: 40.r,
           ),
           12.szW,
           Expanded(

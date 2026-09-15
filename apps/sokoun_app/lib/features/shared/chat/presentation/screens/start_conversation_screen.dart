@@ -2,14 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
+import 'package:melos_core/core/helpers/status_builder.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
-import 'package:melos_core/core/widgets/app_text.dart';
 
 import '../../data/models/chat_content.dart';
 import '../cubits/create_conversation_cubit.dart';
+import '../widgets/start_conversation/start_conversation_state_view.dart';
 import 'chat_thread_screen.dart';
 
 class StartConversationScreen extends StatefulWidget {
@@ -24,12 +23,13 @@ class StartConversationScreen extends StatefulWidget {
 
 class _StartConversationScreenState extends State<StartConversationScreen> {
   late final CreateConversationCubit _cubit;
+  late final Future<void> _createRequest;
 
   @override
   void initState() {
     super.initState();
     _cubit = CreateConversationCubit();
-    unawaited(_openConversation());
+    _createRequest = _openConversation();
   }
 
   Future<void> _openConversation() {
@@ -50,42 +50,24 @@ class _StartConversationScreenState extends State<StartConversationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: BlocProvider<CreateConversationCubit>.value(
-            value: _cubit,
-            child:
-                BlocBuilder<
-                  CreateConversationCubit,
-                  AsyncState<ConversationContent>
-                >(
-                  builder: (context, state) {
-                    if (state.isError) {
-                      return Center(
-                        child: TextButton.icon(
-                          onPressed: _openConversation,
-                          icon: const Icon(
-                            Icons.refresh_rounded,
-                            color: AppColors.sokoonTeal,
-                          ),
-                          label: AppText(
-                            LocaleKeys.operationFaild,
-                            color: AppColors.sokoonNavy,
-                          ),
-                        ),
-                      );
-                    }
-                    return const Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.sokoonTeal,
-                      ),
-                    );
-                  },
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBackground,
+      body: SafeArea(
+        child: BlocProvider<CreateConversationCubit>.value(
+          value: _cubit,
+          child:
+              StatusBuilder<
+                CreateConversationCubit,
+                ConversationContent
+              >.withShimmer(
+                initialDataForShimmer: const ConversationContent.initial(),
+                requestToTryAgainWhenError: _createRequest,
+                errorType: ErrorType.customView,
+                errorWidget: StartConversationErrorView(
+                  onRetryPressed: _openConversation,
                 ),
-          ),
+                builder: (_) => const StartConversationLoadingView(),
+              ),
         ),
       ),
     );

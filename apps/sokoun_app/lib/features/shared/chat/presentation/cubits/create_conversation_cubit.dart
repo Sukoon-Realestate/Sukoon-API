@@ -5,7 +5,7 @@ import 'package:melos_core/core/network/api_endpoints.dart';
 import '../../data/models/chat_content.dart';
 
 class CreateConversationCubit extends AsyncCubit<ConversationContent> {
-  CreateConversationCubit() : super(ConversationContent.initial());
+  CreateConversationCubit() : super(const ConversationContent.initial());
 
   Future<void> createOrGet({
     required String userId,

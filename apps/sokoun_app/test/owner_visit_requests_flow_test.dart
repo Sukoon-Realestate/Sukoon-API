@@ -9,9 +9,14 @@ import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_respon
 import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:multiple_result/multiple_result.dart';
+import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:sokoun_app/features/owner/home/presentation/screens/owner_visit_requests_screen.dart';
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_widgets/owner_request_card.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
+import 'package:sokoun_app/features/shared/chat/data/chat_data.dart';
+import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
+import 'package:sokoun_app/features/shared/chat/data/models/chat_page_response.dart';
+import 'package:sokoun_app/features/shared/chat/data/models/chat_read_content.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_thread_screen.dart';
 
 Map<String, dynamic> _ownerRequestDetailsResponse(String id) {
@@ -79,6 +84,7 @@ void main() {
     injector.registerSingleton<BaseCrudUseCase>(
       BaseCrudUseCase(repository: repository),
     );
+    injector.registerSingleton<ChatDataSource>(const _OwnerChatDataSource());
   });
 
   tearDown(() => injector.reset());
@@ -587,7 +593,7 @@ class _RecordingBaseRepository implements BaseRepository {
     final List<String> pathParts = params.api.split('/');
     final dynamic response = params.api == 'chat/conversations/create/'
         ? {
-            'id': 1,
+            'id': 'owner-conversation',
             'other_participant': {
               'id': params.body?['user_id'] ?? 'tenant-id',
               'full_name': 'سارة أحمد خالد',
@@ -615,6 +621,62 @@ class _RecordingBaseRepository implements BaseRepository {
   Future<Result<List<T>, Failure>> getBaseIdAndNameEntity<T extends BaseEntity>(
     GetBaseEntityParams? param,
   ) => throw UnimplementedError();
+}
+
+class _OwnerChatDataSource implements ChatDataSource {
+  const _OwnerChatDataSource();
+
+  @override
+  String? get conversationsCacheKey => null;
+
+  @override
+  String? messagesCacheKey(String conversationId) => null;
+
+  @override
+  Future<(List<ConversationContent>, PaginationData)> getConversationsPage({
+    required int page,
+  }) async => (
+    const <ConversationContent>[],
+    PaginationData(perPage: 20, totalPages: 1),
+  );
+
+  @override
+  Future<ChatPageResponse<ConversationContent>> getConversations({
+    required int page,
+    int pageSize = ChatData.conversationsPageSize,
+  }) async {
+    return ChatPageResponse<ConversationContent>(
+      count: 0,
+      next: null,
+      previous: null,
+      results: const [],
+      page: page,
+      pageSize: pageSize,
+    );
+  }
+
+  @override
+  Future<(List<ChatMessageContent>, PaginationData)> getMessagesPage({
+    required String conversationId,
+    required int page,
+  }) async => (
+    const <ChatMessageContent>[],
+    PaginationData(perPage: 50, totalPages: 1),
+  );
+
+  @override
+  Future<ConversationContent> createConversation(String userId) async =>
+      const ConversationContent.initial();
+
+  @override
+  Future<ChatMessageContent> sendMessage({
+    required String conversationId,
+    required String content,
+  }) async => const ChatMessageContent.initial();
+
+  @override
+  Future<ChatReadContent> markConversationAsRead(String conversationId) async =>
+      const ChatReadContent(status: 'read');
 }
 
 class _OwnerTranslationsAssetLoader extends AssetLoader {

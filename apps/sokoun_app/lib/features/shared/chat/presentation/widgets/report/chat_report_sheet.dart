@@ -82,7 +82,6 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
                           controller: _detailsController,
                           minLines: 3,
                           maxLines: 4,
-                          textDirection: TextDirection.rtl,
                           style: TextStyle(
                             color: AppColors.sokoonNavy,
                             fontSize: 14.sp,

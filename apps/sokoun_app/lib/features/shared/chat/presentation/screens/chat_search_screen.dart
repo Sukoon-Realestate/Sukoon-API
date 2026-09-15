@@ -1,24 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/padding_extension.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
-import 'package:melos_core/core/navigation/navigator.dart';
-import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
 
-import '../widgets/imports.dart';
+import '../../data/models/chat_content.dart';
+import '../widgets/chat_search/chat_search_header.dart';
+import '../widgets/chat_search/chat_search_results.dart';
 
 class ChatSearchScreen extends StatefulWidget {
-  const ChatSearchScreen({
-    super.key,
-    this.conversations = ChatContent.searchConversations,
-    this.includeFixtureProperties = true,
-  });
+  const ChatSearchScreen({super.key, required this.conversations});
 
   final List<ConversationContent> conversations;
-  final bool includeFixtureProperties;
 
   @override
   State<ChatSearchScreen> createState() => _ChatSearchScreenState();
@@ -28,11 +18,9 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
   late final TextEditingController _searchController;
   String _query = '';
 
-  List<ConversationContent> get _results {
-    return widget.conversations
-        .where((conversation) => conversation.matchesQuery(_query))
-        .toList(growable: false);
-  }
+  List<ConversationContent> get _results => widget.conversations
+      .where((conversation) => conversation.matchesQuery(_query))
+      .toList(growable: false);
 
   List<String> get _mentionedProperties {
     final List<String> properties = widget.conversations
@@ -40,17 +28,10 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
         .where((property) => property.isNotEmpty)
         .toSet()
         .toList(growable: false);
-    final List<String> source = properties.isNotEmpty
-        ? properties
-        : widget.includeFixtureProperties
-        ? ChatContent.mentionedProperties
-        : const [];
     final String normalizedQuery = _query.trim();
-    if (normalizedQuery.isEmpty) {
-      return source;
-    }
+    if (normalizedQuery.isEmpty) return properties;
 
-    return source
+    return properties
         .where((property) => property.contains(normalizedQuery))
         .toList(growable: false);
   }
@@ -58,7 +39,7 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
   @override
   void initState() {
     super.initState();
-    _searchController = TextEditingController(text: _query);
+    _searchController = TextEditingController();
   }
 
   @override
@@ -76,125 +57,25 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.white,
-        body: SafeArea(
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () => Go.back(),
-                    icon: Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      color: AppColors.sokoonNavy,
-                      size: 19.r,
-                    ),
-                  ),
-                  8.szW,
-                  Expanded(
-                    child: ChatSearchField(
-                      controller: _searchController,
-                      autofocus: false,
-                      isActive: true,
-                      onChanged: _updateQuery,
-                      onClearPressed: _clearQuery,
-                    ),
-                  ),
-                ],
-              ).padding(EdgeInsets.fromLTRB(14.w, 8.h, 20.w, 12.h)),
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.fromLTRB(20.w, 2.h, 20.w, 20.h),
-                  children: [
-                    AppText(
-                      '${LocaleKeys.chatSearchResultsFor} "$_query"',
-                      color: AppColors.sokoonGray,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w900,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    8.szH,
-                    for (int index = 0; index < _results.length; index++) ...[
-                      ChatSearchResultItem(
-                        key: _results[index].id is int
-                            ? ValueKey<int>(_results[index].id as int)
-                            : ValueKey<String>(_results[index].id.toString()),
-                        conversation: _results[index],
-                      ),
-                      if (index < _results.length - 1)
-                        Divider(height: 1.h, color: AppColors.sokoonBorder),
-                    ],
-                    if (_mentionedProperties.isNotEmpty) ...[
-                      16.szH,
-                      AppText(
-                        LocaleKeys.chatMentionedProperties,
-                        color: AppColors.sokoonGray,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w900,
-                      ),
-                      8.szH,
-                      for (final property in _mentionedProperties)
-                        _MentionedPropertyRow(property: property),
-                    ],
-                  ],
-                ),
+    return Scaffold(
+      backgroundColor: AppColors.white,
+      body: SafeArea(
+        child: Column(
+          children: [
+            ChatSearchHeader(
+              controller: _searchController,
+              onQueryChanged: _updateQuery,
+              onClearPressed: _clearQuery,
+            ),
+            Expanded(
+              child: ChatSearchResults(
+                query: _query,
+                conversations: _results,
+                mentionedProperties: _mentionedProperties,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ),
-    );
-  }
-}
-
-class _MentionedPropertyRow extends StatelessWidget {
-  const _MentionedPropertyRow({required this.property});
-
-  final String property;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 12.h),
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: AppColors.sokoonBorder)),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 36.r,
-            height: 36.r,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: AppColors.grayBluePale,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Icon(
-              Icons.apartment_rounded,
-              color: AppColors.blueGrayLight,
-              size: 16.r,
-            ),
-          ),
-          12.szW,
-          Expanded(
-            child: AppText(
-              property,
-              color: AppColors.sokoonNavy,
-              fontSize: 14.sp,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          Icon(
-            Icons.arrow_forward_ios_rounded,
-            color: AppColors.sokoonGray,
-            size: 13.r,
-          ),
-        ],
       ),
     );
   }

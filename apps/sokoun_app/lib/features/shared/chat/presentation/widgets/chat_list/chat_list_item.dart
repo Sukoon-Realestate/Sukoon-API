@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
@@ -10,6 +9,7 @@ import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_restricted_screen.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_thread_screen.dart';
 
+import '../shared/chat_participant_avatar.dart';
 import '../shared/chat_verified_badge.dart';
 
 class ChatListItem extends StatelessWidget {
@@ -124,31 +124,10 @@ class _ConversationAvatar extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          ClipOval(
-            child: conversation.otherParticipant.avatarUrl.isEmpty
-                ? DecoratedBox(
-                    decoration: const BoxDecoration(
-                      color: AppColors.mintLight,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.person_outline_rounded,
-                      color: AppColors.sokoonTeal,
-                      size: 23.r,
-                    ).centerWidget,
-                  )
-                : Image.network(
-                    conversation.otherParticipant.avatarUrl,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) =>
-                        const ColoredBox(
-                          color: AppColors.mintLight,
-                          child: Icon(
-                            Icons.person_outline_rounded,
-                            color: AppColors.sokoonTeal,
-                          ),
-                        ),
-                  ),
+          ChatParticipantAvatar(
+            name: conversation.name,
+            avatarUrl: conversation.otherParticipant.avatarUrl,
+            size: 48.r,
           ),
           if (conversation.unreadCount > 0)
             PositionedDirectional(

@@ -15,52 +15,57 @@ class ChatEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 32.h),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: 132.r,
-            height: 112.r,
-            child: Assets.lottie.noData.lottie(
-              fit: BoxFit.contain,
-              package: 'melos_core',
-              repeat: false,
+    final bool reduceMotion = MediaQuery.of(context).disableAnimations;
+    return Semantics(
+      label: LocaleKeys.chatEmptyTitle,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 32.h),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ExcludeSemantics(
+              child: Assets.lottie.noData.lottie(
+                width: 132.r,
+                height: 112.r,
+                fit: BoxFit.contain,
+                package: 'melos_core',
+                animate: !reduceMotion,
+                repeat: false,
+              ),
             ),
-          ),
-          24.szH,
-          AppText(
-            LocaleKeys.chatEmptyTitle,
-            color: AppColors.sokoonNavy,
-            fontSize: 20.sp,
-            fontWeight: FontWeight.w900,
-            textAlign: TextAlign.center,
-            maxLines: 2,
-          ),
-          10.szH,
-          AppText(
-            LocaleKeys.chatEmptyDescription,
-            color: AppColors.sokoonGray,
-            fontSize: 14.sp,
-            height: 1.7,
-            textAlign: TextAlign.center,
-            maxLines: 4,
-            overflow: TextOverflow.ellipsis,
-          ),
-          30.szH,
-          DefaultButton(
-            onTap: () => Go.off(const TenantSearchScreen()),
-            title: LocaleKeys.chatExploreProperties,
-            color: AppColors.sokoonTeal,
-            textColor: AppColors.white,
-            borderRadius: BorderRadius.circular(16.r),
-            width: double.infinity,
-            height: 52.h,
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w800,
-          ),
-        ],
+            24.szH,
+            AppText(
+              LocaleKeys.chatEmptyTitle,
+              color: AppColors.sokoonNavy,
+              fontSize: 20.sp,
+              fontWeight: FontWeight.w900,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+            ),
+            10.szH,
+            AppText(
+              LocaleKeys.chatEmptyDescription,
+              color: AppColors.sokoonGray,
+              fontSize: 14.sp,
+              height: 1.7,
+              textAlign: TextAlign.center,
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis,
+            ),
+            30.szH,
+            DefaultButton(
+              onTap: () => Go.off(const TenantSearchScreen()),
+              title: LocaleKeys.chatExploreProperties,
+              color: AppColors.sokoonTeal,
+              textColor: AppColors.white,
+              borderRadius: BorderRadius.circular(16.r),
+              width: double.infinity,
+              height: 52.h,
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w800,
+            ),
+          ],
+        ),
       ),
     ).centerWidget;
   }

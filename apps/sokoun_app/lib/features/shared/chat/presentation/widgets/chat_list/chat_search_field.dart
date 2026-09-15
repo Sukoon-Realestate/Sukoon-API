@@ -35,7 +35,6 @@ class ChatSearchField extends StatelessWidget {
       autofocus: autofocus,
       onTap: onTap,
       onChanged: onChanged,
-      textDirection: TextDirection.rtl,
       textInputAction: TextInputAction.search,
       style: TextStyle(
         color: AppColors.sokoonNavy,

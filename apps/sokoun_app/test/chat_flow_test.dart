@@ -6,18 +6,80 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/chat_builder/easy_chat.dart';
+import 'package:pagify/helpers/data_and_pagination_data.dart';
+import 'package:sokoun_app/features/shared/chat/data/chat_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
-import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_empty_screen.dart';
+import 'package:sokoun_app/features/shared/chat/data/models/chat_page_response.dart';
+import 'package:sokoun_app/features/shared/chat/data/models/chat_read_content.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_list_screen.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_restricted_screen.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_search_screen.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_thread_screen.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_list/chat_empty_state.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_list/chat_search_field.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_list/chat_list_item.dart';
-import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_attachments_sheet.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_message_bubble.dart';
-import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_voice_recording_bar.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/report/chat_report_sheet.dart';
+
+const List<ConversationContent> _conversations = [
+  ConversationContent(
+    id: 'conversation-1',
+    name: 'أحمد محمد',
+    property: 'شقة مدينة نصر',
+    lastMessage: 'ممتاز، العنوان: شارع عباس العقاد...',
+    time: '9:30 ص',
+    unreadCount: 0,
+    isVerified: true,
+    isOnline: true,
+  ),
+  ConversationContent(
+    id: 'conversation-2',
+    name: 'منى علي',
+    property: 'ستوديو التجمع',
+    lastMessage: 'متى تريد تعمل الزيارة؟',
+    time: 'أمس',
+    unreadCount: 2,
+    isVerified: true,
+    isOnline: false,
+  ),
+  ConversationContent(
+    id: 'conversation-3',
+    name: 'كريم طارق',
+    property: 'شقة المعادي',
+    lastMessage: 'الشقة متاحة للعرض طول الأسبوع',
+    time: 'الأثنين',
+    unreadCount: 0,
+    isVerified: false,
+    isOnline: false,
+  ),
+];
+
+const List<ChatMessageContent> _messages = [
+  ChatMessageContent(
+    id: 'message-1',
+    body: 'أهلاً! الشقة لسه متاحة، تحب تحجز زيارة؟',
+    time: '9:10 ص',
+    isFromMe: false,
+  ),
+  ChatMessageContent(
+    id: 'message-2',
+    body: 'أيوه عايز أزور يوم السبت الساعة 2م',
+    time: '9:12 ص',
+    isFromMe: true,
+  ),
+  ChatMessageContent(
+    id: 'message-3',
+    body: 'تمام، هينفع معايا. هبعتلك تأكيد',
+    time: '9:13 ص',
+    isFromMe: false,
+  ),
+  ChatMessageContent(
+    id: 'message-4',
+    body: 'شكراً جزيلاً',
+    time: '9:14 ص',
+    isFromMe: true,
+  ),
+];
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -46,6 +108,21 @@ void main() {
         .setMockMethodCallHandler(sharedPreferencesChannel, null);
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(connectivityChannel, null);
+  });
+
+  setUp(() async {
+    if (injector.isRegistered<ChatDataSource>()) {
+      await injector.unregister<ChatDataSource>();
+    }
+    injector.registerSingleton<ChatDataSource>(
+      const _MemoryChatDataSource(conversations: _conversations),
+    );
+  });
+
+  tearDown(() async {
+    if (injector.isRegistered<ChatDataSource>()) {
+      await injector.unregister<ChatDataSource>();
+    }
   });
 
   Widget buildScreen(Widget screen) {
@@ -77,15 +154,11 @@ void main() {
   }
 
   testWidgets(
-    'opens search and builds the selected conversation with EasyChat',
+    'opens API-backed search and builds the selected thread with EasyChat',
     (tester) async {
       configurePhoneViewport(tester);
 
-      await tester.pumpWidget(
-        buildScreen(
-          const ChatListScreen(conversations: ChatContent.conversations),
-        ),
-      );
+      await tester.pumpWidget(buildScreen(const ChatListScreen()));
       await tester.pumpAndSettle();
 
       expect(find.byType(ChatListItem), findsNWidgets(3));
@@ -95,7 +168,7 @@ void main() {
 
       expect(find.byType(ChatSearchScreen), findsOneWidget);
 
-      await tester.tap(find.byKey(const ValueKey(1)));
+      await tester.tap(find.byKey(const ValueKey('conversation-1')));
       await tester.pumpAndSettle();
 
       expect(find.byType(ChatThreadScreen), findsOneWidget);
@@ -105,37 +178,21 @@ void main() {
     },
   );
 
-  testWidgets('supports attachments, voice notes, and report submission', (
+  testWidgets('sends optimistically and handles report submission', (
     tester,
   ) async {
     configurePhoneViewport(tester);
 
     await tester.pumpWidget(
-      buildScreen(
-        ChatThreadScreen(conversation: ChatContent.conversations.first),
-      ),
+      buildScreen(ChatThreadScreen(conversation: _conversations.first)),
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byIcon(Icons.image_outlined));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(ChatAttachmentsSheet), findsOneWidget);
-
-    await tester.tap(find.text('الصور'));
-    await tester.pumpAndSettle();
-
-    expect(find.byKey(const ValueKey(101)), findsOneWidget);
-
-    await tester.tap(find.byIcon(Icons.mic_none_rounded));
+    await tester.enterText(find.byType(TextField).first, 'رسالة جديدة');
+    await tester.tap(find.byIcon(Icons.send_rounded));
     await tester.pump();
 
-    expect(find.byType(ChatVoiceRecordingBar), findsOneWidget);
-
-    await tester.tap(find.byIcon(Icons.send_rounded));
-    await tester.pumpAndSettle();
-
-    expect(find.byKey(const ValueKey(102)), findsOneWidget);
+    expect(find.text('رسالة جديدة'), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.more_vert_rounded));
     await tester.pumpAndSettle();
@@ -153,29 +210,102 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('shows the empty and restricted chat states', (tester) async {
+  testWidgets('shows the API empty and restricted chat states', (tester) async {
     configurePhoneViewport(tester);
-
-    await tester.pumpWidget(
-      buildScreen(const ChatListScreen(conversations: [])),
+    await injector.unregister<ChatDataSource>();
+    injector.registerSingleton<ChatDataSource>(
+      const _MemoryChatDataSource(conversations: []),
     );
+
+    await tester.pumpWidget(buildScreen(const ChatListScreen()));
     await tester.pumpAndSettle();
 
-    expect(find.byType(ChatEmptyScreen), findsOneWidget);
+    expect(find.byType(ChatEmptyState), findsOneWidget);
     expect(tester.takeException(), isNull);
 
-    await tester.pumpWidget(
-      buildScreen(
-        const ChatListScreen(conversations: ChatContent.conversations),
-      ),
+    await tester.pumpWidget(const SizedBox.shrink());
+    await injector.unregister<ChatDataSource>();
+    injector.registerSingleton<ChatDataSource>(
+      const _MemoryChatDataSource(conversations: _conversations),
     );
+    await tester.pumpWidget(buildScreen(const ChatListScreen()));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey(3)));
+    await tester.tap(find.byKey(const ValueKey('conversation-3')));
     await tester.pumpAndSettle();
 
     expect(find.byType(ChatRestrictedScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+}
+
+class _MemoryChatDataSource implements ChatDataSource {
+  const _MemoryChatDataSource({required this.conversations});
+
+  final List<ConversationContent> conversations;
+
+  @override
+  String? get conversationsCacheKey => null;
+
+  @override
+  String? messagesCacheKey(String conversationId) => null;
+
+  @override
+  Future<(List<ConversationContent>, PaginationData)> getConversationsPage({
+    required int page,
+  }) async {
+    return (
+      page == 1 ? conversations : const <ConversationContent>[],
+      PaginationData(perPage: conversations.length, totalPages: 1),
+    );
+  }
+
+  @override
+  Future<ChatPageResponse<ConversationContent>> getConversations({
+    required int page,
+    int pageSize = ChatData.conversationsPageSize,
+  }) async {
+    return ChatPageResponse<ConversationContent>(
+      count: conversations.length,
+      next: null,
+      previous: null,
+      results: conversations,
+      page: page,
+      pageSize: pageSize,
+    );
+  }
+
+  @override
+  Future<(List<ChatMessageContent>, PaginationData)> getMessagesPage({
+    required String conversationId,
+    required int page,
+  }) async {
+    return (
+      page == 1 ? _messages : const <ChatMessageContent>[],
+      PaginationData(perPage: _messages.length, totalPages: 1),
+    );
+  }
+
+  @override
+  Future<ConversationContent> createConversation(String userId) async =>
+      conversations.first;
+
+  @override
+  Future<ChatMessageContent> sendMessage({
+    required String conversationId,
+    required String content,
+  }) async {
+    return ChatMessageContent(
+      id: 'sent-message',
+      body: content,
+      time: '9:15 ص',
+      isFromMe: true,
+      conversationId: conversationId,
+    );
+  }
+
+  @override
+  Future<ChatReadContent> markConversationAsRead(String conversationId) async =>
+      const ChatReadContent(status: 'read');
 }
 
 class _ChatTestAssetLoader extends AssetLoader {
@@ -190,7 +320,6 @@ class _ChatTestAssetLoader extends AssetLoader {
       'notifications': 'الإشعارات',
       'favorites_navigation_account': 'الحساب',
       'verified': 'موثّق',
-      'camera': 'الكاميرا',
       'cancel': 'إلغاء',
       'chat_conversations_title': 'المحادثات',
       'chat_search_hint': 'ابحث في المحادثات…',
@@ -200,17 +329,17 @@ class _ChatTestAssetLoader extends AssetLoader {
           'ابدأ بالتحدث مع أصحاب العقارات مباشرةً من صفحة تفاصيل العقار',
       'chat_explore_properties': 'استكشف العقارات',
       'chat_search_results_for': 'نتائج البحث عن',
+      'chat_search_empty_title': 'لا توجد محادثات مطابقة',
+      'chat_search_empty_description': 'جرّب اسماً أو كلمة بحث مختلفة',
       'chat_mentioned_properties': 'عقارات مذكورة في المحادثات',
       'chat_active_now': 'نشط الآن',
       'chat_today': 'النهارده',
       'chat_phone_privacy_thread': 'رقم الموبايل مخفي في المحادثة',
       'chat_message_hint': 'اكتب رسالة…',
+      'chat_send_message': 'إرسال الرسالة',
+      'chat_messages_empty_title': 'لا توجد رسائل حتى الآن',
+      'chat_messages_empty_description': 'أرسل أول رسالة لبدء المحادثة',
       'chat_now': 'الآن',
-      'chat_send_attachment': 'إرسال مرفق',
-      'chat_photos': 'الصور',
-      'chat_file': 'ملف',
-      'chat_location': 'الموقع',
-      'chat_voice_recording': 'جارٍ التسجيل…',
       'chat_restricted_title': 'الشات محدود لحسابات موثّقة',
       'chat_restricted_description':
           'عشان تقدر تتواصل مع الملاك، لازم توثّق هويتك الأول',
@@ -230,6 +359,7 @@ class _ChatTestAssetLoader extends AssetLoader {
       'chat_report_details_hint': 'اكتب تفاصيل المشكلة…',
       'chat_report_privacy': 'تقريرك سري ولن يُشارك مع الطرف الآخر',
       'chat_submit_report': 'إرسال البلاغ',
+      'waiting_for_connection': 'جارٍ الاتصال...',
     };
   }
 }

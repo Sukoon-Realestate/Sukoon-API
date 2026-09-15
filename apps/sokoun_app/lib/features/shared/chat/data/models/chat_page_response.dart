@@ -39,6 +39,33 @@ class ChatPageResponse<T> extends Equatable {
   final int page;
   final int pageSize;
 
+  ChatPageResponse<T> copyWith({
+    int? count,
+    String? next,
+    String? previous,
+    List<T>? results,
+    int? page,
+    int? pageSize,
+  }) {
+    return ChatPageResponse<T>(
+      count: count ?? this.count,
+      next: next ?? this.next,
+      previous: previous ?? this.previous,
+      results: results ?? this.results,
+      page: page ?? this.page,
+      pageSize: pageSize ?? this.pageSize,
+    );
+  }
+
+  Map<String, dynamic> toJson(
+    Map<String, dynamic> Function(T item) itemToJson,
+  ) => {
+    'count': count,
+    'next': next,
+    'previous': previous,
+    'results': results.map(itemToJson).toList(growable: false),
+  };
+
   int get totalPages {
     if (count > 0) return math.max(1, (count / pageSize).ceil());
     return next == null ? math.max(1, page) : page + 1;
@@ -46,21 +73,4 @@ class ChatPageResponse<T> extends Equatable {
 
   @override
   List<Object?> get props => [count, next, previous, results, page, pageSize];
-}
-
-class ChatReadContent extends Equatable {
-  const ChatReadContent({required this.status});
-
-  const ChatReadContent.initial() : status = '';
-
-  factory ChatReadContent.fromJson(Map<String, dynamic> json) {
-    return ChatReadContent(status: json['status']?.toString() ?? '');
-  }
-
-  final String status;
-
-  Map<String, dynamic> toJson() => {'status': status};
-
-  @override
-  List<Object?> get props => [status];
 }

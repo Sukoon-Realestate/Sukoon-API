@@ -1513,6 +1513,12 @@ abstract class LocaleKeys {
   static const String _chatSearchResultsFor = 'chat_search_results_for';
   static String get chatSearchResultsFor => _chatSearchResultsFor.tr();
 
+  static const String _chatSearchEmptyTitle = 'chat_search_empty_title';
+  static String get chatSearchEmptyTitle => _chatSearchEmptyTitle.tr();
+
+  static const String _chatSearchEmptyDescription = 'chat_search_empty_description';
+  static String get chatSearchEmptyDescription => _chatSearchEmptyDescription.tr();
+
   static const String _chatMentionedProperties = 'chat_mentioned_properties';
   static String get chatMentionedProperties => _chatMentionedProperties.tr();
 
@@ -1527,6 +1533,15 @@ abstract class LocaleKeys {
 
   static const String _chatMessageHint = 'chat_message_hint';
   static String get chatMessageHint => _chatMessageHint.tr();
+
+  static const String _chatSendMessage = 'chat_send_message';
+  static String get chatSendMessage => _chatSendMessage.tr();
+
+  static const String _chatMessagesEmptyTitle = 'chat_messages_empty_title';
+  static String get chatMessagesEmptyTitle => _chatMessagesEmptyTitle.tr();
+
+  static const String _chatMessagesEmptyDescription = 'chat_messages_empty_description';
+  static String get chatMessagesEmptyDescription => _chatMessagesEmptyDescription.tr();
 
   static const String _chatNow = 'chat_now';
   static String get chatNow => _chatNow.tr();

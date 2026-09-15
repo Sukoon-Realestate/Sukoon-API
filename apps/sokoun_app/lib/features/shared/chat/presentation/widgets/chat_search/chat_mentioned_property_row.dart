@@ -1,0 +1,49 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/widgets/app_text.dart';
+
+class ChatMentionedPropertyRow extends StatelessWidget {
+  const ChatMentionedPropertyRow({super.key, required this.property});
+
+  final String property;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 12.h),
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: AppColors.sokoonBorder)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 36.r,
+            height: 36.r,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: AppColors.grayBluePale,
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Icon(
+              Icons.apartment_rounded,
+              color: AppColors.blueGrayLight,
+              size: 16.r,
+            ),
+          ),
+          12.szW,
+          Expanded(
+            child: AppText(
+              property,
+              color: AppColors.sokoonNavy,
+              fontSize: 14.sp,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

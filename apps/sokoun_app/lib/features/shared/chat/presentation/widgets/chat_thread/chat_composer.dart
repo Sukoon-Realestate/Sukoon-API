@@ -8,19 +8,11 @@ class ChatComposer extends StatelessWidget {
   const ChatComposer({
     super.key,
     required this.controller,
-    required this.onAttachmentPressed,
-    required this.onVoicePressed,
     required this.onSendPressed,
-    this.showAttachmentAction = true,
-    this.showVoiceAction = true,
   });
 
   final TextEditingController controller;
-  final VoidCallback onAttachmentPressed;
-  final VoidCallback onVoicePressed;
   final VoidCallback onSendPressed;
-  final bool showAttachmentAction;
-  final bool showVoiceAction;
 
   @override
   Widget build(BuildContext context) {
@@ -52,17 +44,6 @@ class ChatComposer extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    if (showVoiceAction)
-                      IconButton(
-                        onPressed: onVoicePressed,
-                        visualDensity: VisualDensity.compact,
-                        padding: EdgeInsets.zero,
-                        icon: Icon(
-                          Icons.mic_none_rounded,
-                          color: AppColors.sokoonGray,
-                          size: 18.r,
-                        ),
-                      ),
                     Expanded(
                       child: TextField(
                         controller: controller,
@@ -76,7 +57,6 @@ class ChatComposer extends StatelessWidget {
                             }) => null,
                         minLines: 1,
                         maxLines: 4,
-                        textDirection: TextDirection.rtl,
                         textInputAction: TextInputAction.send,
                         onSubmitted: (_) => onSendPressed(),
                         style: TextStyle(
@@ -100,15 +80,6 @@ class ChatComposer extends StatelessWidget {
                 ),
               ),
             ),
-            if (showAttachmentAction) ...[
-              8.szW,
-              _ComposerActionButton(
-                onPressed: onAttachmentPressed,
-                backgroundColor: AppColors.scaffoldBackground,
-                icon: Icons.image_outlined,
-                iconColor: AppColors.sokoonGray,
-              ),
-            ],
           ],
         ),
       ),
@@ -131,15 +102,19 @@ class _ComposerActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.square(
-      dimension: 38.r,
-      child: Material(
-        color: backgroundColor,
-        shape: const CircleBorder(),
-        child: InkWell(
-          onTap: onPressed,
-          customBorder: const CircleBorder(),
-          child: Icon(icon, color: iconColor, size: 18.r),
+    return Semantics(
+      button: true,
+      label: LocaleKeys.chatSendMessage,
+      child: SizedBox.square(
+        dimension: 44.r,
+        child: Material(
+          color: backgroundColor,
+          shape: const CircleBorder(),
+          child: InkWell(
+            onTap: onPressed,
+            customBorder: const CircleBorder(),
+            child: Icon(icon, color: iconColor, size: 18.r),
+          ),
         ),
       ),
     );
