@@ -38,18 +38,30 @@ class ChatThreadHeader extends StatelessWidget {
               size: 18.r,
             ),
           ),
-          Container(
+          SizedBox(
             width: 38.r,
             height: 38.r,
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              color: AppColors.mintLight,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.person_outline_rounded,
-              color: AppColors.sokoonTeal,
-              size: 18.r,
+            child: ClipOval(
+              child: conversation.otherParticipant.avatarUrl.isEmpty
+                  ? const ColoredBox(
+                      color: AppColors.mintLight,
+                      child: Icon(
+                        Icons.person_outline_rounded,
+                        color: AppColors.sokoonTeal,
+                      ),
+                    )
+                  : Image.network(
+                      conversation.otherParticipant.avatarUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const ColoredBox(
+                            color: AppColors.mintLight,
+                            child: Icon(
+                              Icons.person_outline_rounded,
+                              color: AppColors.sokoonTeal,
+                            ),
+                          ),
+                    ),
             ),
           ),
           10.szW,
@@ -65,14 +77,20 @@ class ChatThreadHeader extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                2.szH,
-                AppText(
-                  '${conversation.property} · ${LocaleKeys.chatActiveNow}',
-                  color: AppColors.sokoonGray,
-                  fontSize: 11.sp,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                if (conversation.property.isNotEmpty ||
+                    conversation.isOnline) ...[
+                  2.szH,
+                  AppText(
+                    [
+                      conversation.property,
+                      if (conversation.isOnline) LocaleKeys.chatActiveNow,
+                    ].where((value) => value.isNotEmpty).join(' · '),
+                    color: AppColors.sokoonGray,
+                    fontSize: 11.sp,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ],
             ),
           ),

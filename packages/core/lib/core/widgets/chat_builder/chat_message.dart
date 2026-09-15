@@ -1,18 +1,14 @@
-enum MessageState{pending, sent, delivered, read}
+enum MessageState { pending, sent, delivered, read }
 
-class Message{
-  final int id;
+class Message {
+  final Object id;
   final String body;
   final String type;
 
-  Message({
-    required this.id,
-    required this.type,
-    required this.body,
-  });
+  Message({required this.id, required this.type, required this.body});
 }
 
-class Sender{
+class Sender {
   final String id;
   final String name;
   final String image;
@@ -26,8 +22,7 @@ class Sender{
   });
 }
 
-
-class ChatMessages{
+class ChatMessages {
   final Message message;
   final Sender sender;
   String? time;
@@ -37,6 +32,6 @@ class ChatMessages{
     required this.message,
     required this.sender,
     this.time,
-    this.messageState
+    this.messageState,
   });
 }

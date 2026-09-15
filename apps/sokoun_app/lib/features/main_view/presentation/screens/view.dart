@@ -1,12 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/language/languages.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_list_screen.dart';
+import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
+import 'package:sokoun_app/features/shared/chat/data/models/chat_unread_content.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/cubits/chat_unread_cubit.dart';
 import 'package:sokoun_app/features/shared/profile/imports.dart';
 import 'package:sokoun_app/features/tenant/favorites/presentation/screens/favorites_screen.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_home_screen.dart';
@@ -31,10 +35,11 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   late final UserType _userType;
   late final List<_HomeTab> _tabs;
   int _currentIndex = 0;
+  late final ChatUnreadCubit _chatUnreadCubit;
 
   late final Upgrader upgrader = Upgrader(
     languageCode: Languages.currentLanguage.languageCode,
@@ -53,12 +58,35 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _chatUnreadCubit = ChatUnreadCubit();
     _userType = widget.userType ?? UserTypeHelper.instance.currentUserType;
     _tabs = _userType.isOwner ? _buildOwnerTabs() : _buildTenantTabs();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       unawaited(NotificationCoordinator.start());
+      unawaited(_chatUnreadCubit.start());
       unawaited(_showLaunchDialogs());
     });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      unawaited(_chatUnreadCubit.onAppResumed());
+      return;
+    }
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached ||
+        state == AppLifecycleState.hidden) {
+      unawaited(_chatUnreadCubit.onAppBackgrounded());
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    unawaited(_chatUnreadCubit.close());
+    super.dispose();
   }
 
   Future<void> _showLaunchDialogs() async {
@@ -98,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
           selectedIcon: Assets.svgMessage,
           label: LocaleKeys.chats,
         ),
-        screen: ChatListScreen(),
+        screen: const ChatListScreen(),
       ),
       _HomeTab(
         destination: HomeNavigationDestination(
@@ -151,7 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
           selectedIcon: Assets.svgMessage,
           label: LocaleKeys.chats,
         ),
-        screen: ChatListScreen(),
+        screen: const ChatListScreen(),
       ),
       _HomeTab(
         destination: HomeNavigationDestination(
@@ -166,22 +194,36 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return AppUpgradeAlert(
-      upgrader: upgrader,
-      onUpdatePressed: upgrader.sendUserToAppStore,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: IndexedStack(
-          index: _currentIndex,
-          children: _tabs.map((tab) => tab.screen).toList(growable: false),
-        ),
-        bottomNavigationBar: HomeBottomNavigation(
-          destinations: _tabs
-              .map((tab) => tab.destination)
-              .toList(growable: false),
-          currentIndex: _currentIndex,
-          onDestinationSelected: _selectTab,
-        ),
+    return BlocProvider<ChatUnreadCubit>.value(
+      value: _chatUnreadCubit,
+      child: BlocBuilder<ChatUnreadCubit, AsyncState<ChatUnreadContent>>(
+        builder: (context, state) {
+          final int unreadCount = state.data.count;
+          return AppUpgradeAlert(
+            upgrader: upgrader,
+            onUpdatePressed: upgrader.sendUserToAppStore,
+            child: Scaffold(
+              backgroundColor: AppColors.scaffoldBackground,
+              body: IndexedStack(
+                index: _currentIndex,
+                children: _tabs
+                    .map((tab) => tab.screen)
+                    .toList(growable: false),
+              ),
+              bottomNavigationBar: HomeBottomNavigation(
+                destinations: _tabs
+                    .map(
+                      (tab) => tab.screen is ChatListScreen
+                          ? tab.destination.copyWith(badgeCount: unreadCount)
+                          : tab.destination,
+                    )
+                    .toList(growable: false),
+                currentIndex: _currentIndex,
+                onDestinationSelected: _selectTab,
+              ),
+            ),
+          );
+        },
       ),
     );
   }

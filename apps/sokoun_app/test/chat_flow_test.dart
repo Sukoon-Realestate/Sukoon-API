@@ -81,7 +81,11 @@ void main() {
     (tester) async {
       configurePhoneViewport(tester);
 
-      await tester.pumpWidget(buildScreen(const ChatListScreen()));
+      await tester.pumpWidget(
+        buildScreen(
+          const ChatListScreen(conversations: ChatContent.conversations),
+        ),
+      );
       await tester.pumpAndSettle();
 
       expect(find.byType(ChatListItem), findsNWidgets(3));
@@ -160,7 +164,11 @@ void main() {
     expect(find.byType(ChatEmptyScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
 
-    await tester.pumpWidget(buildScreen(const ChatListScreen()));
+    await tester.pumpWidget(
+      buildScreen(
+        const ChatListScreen(conversations: ChatContent.conversations),
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey(3)));
     await tester.pumpAndSettle();

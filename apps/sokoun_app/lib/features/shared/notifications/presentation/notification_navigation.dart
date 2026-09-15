@@ -66,7 +66,7 @@ abstract final class NotificationNavigation {
       await Go.to<void>(
         ChatThreadScreen(
           conversation: ConversationContent(
-            id: int.tryParse(chatId) ?? chatId.hashCode,
+            id: chatId,
             name: notification.payload.senderName.isNotEmpty
                 ? notification.payload.senderName
                 : notification.title,
@@ -74,8 +74,17 @@ abstract final class NotificationNavigation {
             lastMessage: notification.description,
             time: notification.time,
             unreadCount: 1,
-            isVerified: false,
+            isVerified: true,
             isOnline: false,
+            otherParticipant: ChatParticipantContent(
+              id: notification.payload.senderId,
+              firstName: '',
+              lastName: '',
+              fullName: notification.payload.senderName,
+              email: '',
+              avatarUrl: '',
+              isOnline: false,
+            ),
           ),
         ),
       );

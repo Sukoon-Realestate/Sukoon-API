@@ -5,7 +5,7 @@ import 'package:melos_core/core/shared/models/user_models/owner_model.dart';
 import 'package:melos_core/core/shared/models/user_models/tenent_model.dart';
 
 class UserModel {
-  final int id;
+  final String id;
   final String name;
   final String phone;
   final String email;
@@ -20,7 +20,7 @@ class UserModel {
   });
 
   factory UserModel.initial() =>
-      const UserModel(id: 0, name: '', phone: '', email: '', type: '');
+      const UserModel(id: '0', name: '', phone: '', email: '', type: '');
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     final UserType type = json['type'].toString().toUserType;

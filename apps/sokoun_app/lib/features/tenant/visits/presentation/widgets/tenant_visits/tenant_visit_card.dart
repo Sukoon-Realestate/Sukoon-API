@@ -145,7 +145,8 @@ class _VisitCardActions extends StatelessWidget {
   final VoidCallback onCancelPressed;
 
   void _openChat() {
-    Go.to(ChatThreadScreen(conversation: ChatContent.conversations.first));
+    if (visit.ownerId.isEmpty) return;
+    Go.to(StartConversationScreen(userId: visit.ownerId));
   }
 
   void _findAlternative() => Go.to(const TenantSearchScreen());
@@ -160,7 +161,7 @@ class _VisitCardActions extends StatelessWidget {
               label: LocaleKeys.tenantVisitChatAction,
               backgroundColor: AppColors.bluePale,
               foregroundColor: AppColors.blue,
-              onPressed: _openChat,
+              onPressed: visit.ownerId.isEmpty ? null : _openChat,
             ),
           ),
           8.szW,
@@ -205,7 +206,7 @@ class _VisitCardAction extends StatelessWidget {
   final String label;
   final Color backgroundColor;
   final Color foregroundColor;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {

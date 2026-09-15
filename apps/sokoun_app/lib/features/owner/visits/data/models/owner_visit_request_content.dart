@@ -15,6 +15,7 @@ class OwnerVisitRequestContent extends Equatable {
     required this.status,
     required this.isVerified,
     this.propertyId = '',
+    this.tenantId = '',
   });
 
   factory OwnerVisitRequestContent.initial() => const OwnerVisitRequestContent(
@@ -31,6 +32,7 @@ class OwnerVisitRequestContent extends Equatable {
     status: OwnerVisitRequestStatus.pending,
     isVerified: false,
     propertyId: '',
+    tenantId: '',
   );
 
   factory OwnerVisitRequestContent.fromJson(Map<String, dynamic> json) {
@@ -77,6 +79,7 @@ class OwnerVisitRequestContent extends Equatable {
       isVerified: json['is_verified'] ?? tenant['is_verified'] ?? false,
       propertyId:
           property['id'] as String? ?? json['property_id'] as String? ?? '',
+      tenantId: tenant['id']?.toString() ?? json['tenant_id']?.toString() ?? '',
     );
   }
 
@@ -103,6 +106,7 @@ class OwnerVisitRequestContent extends Equatable {
   final OwnerVisitRequestStatus status;
   final bool isVerified;
   final String propertyId;
+  final String tenantId;
 
   Map<String, dynamic> toJson() {
     return {
@@ -119,6 +123,7 @@ class OwnerVisitRequestContent extends Equatable {
       'status': status.name,
       'is_verified': isVerified,
       'property_id': propertyId,
+      'tenant_id': tenantId,
     };
   }
 
@@ -136,6 +141,7 @@ class OwnerVisitRequestContent extends Equatable {
     OwnerVisitRequestStatus? status,
     bool? isVerified,
     String? propertyId,
+    String? tenantId,
   }) {
     return OwnerVisitRequestContent(
       id: id ?? this.id,
@@ -151,6 +157,7 @@ class OwnerVisitRequestContent extends Equatable {
       status: status ?? this.status,
       isVerified: isVerified ?? this.isVerified,
       propertyId: propertyId ?? this.propertyId,
+      tenantId: tenantId ?? this.tenantId,
     );
   }
 
@@ -169,5 +176,6 @@ class OwnerVisitRequestContent extends Equatable {
     status,
     isVerified,
     propertyId,
+    tenantId,
   ];
 }

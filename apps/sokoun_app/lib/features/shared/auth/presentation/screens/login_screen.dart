@@ -9,6 +9,8 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
 import 'package:sokoun_app/features/main_view/presentation/screens/view.dart';
+import 'package:sokoun_app/features/shared/auth/data/models/google_login.dart';
+import 'package:sokoun_app/features/shared/auth/presentation/cubits/google_login.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/login.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/screens/otp_screen.dart';
 import 'package:sokoun_app/shared_widgets/shared_widgets.dart';
@@ -55,10 +57,20 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Future<void> _submitGoogle(BuildContext context, String token) async {
+    await context.read<GoogleLoginCubit>().login(
+      body: GoogleLoginBody(token: token),
+      onSuccess: () => Go.offAll(const HomeScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => LoginCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => LoginCubit()),
+        BlocProvider(create: (context) => GoogleLoginCubit()),
+      ],
       child: AuthScaffold(
         child: Form(
           key: _formKey,
@@ -101,11 +113,15 @@ class _LoginScreenState extends State<LoginScreen> {
               20.szH,
               const LoginDivider(),
               18.szH,
-              AppGoogleSignInButton(onSuccess: (token) async {}),
+              Builder(
+                builder: (context) => AppGoogleSignInButton(
+                  onSuccess: (token) => _submitGoogle(context, token),
+                ),
+              ),
               12.szH,
-              AppFacebookSignInButton(onSuccess: (token) async {}),
+              // AppFacebookSignInButton(onSuccess: (token) async {}),
               12.szH,
-              SokoonAppleSignInButton(),
+              // SokoonAppleSignInButton(),
               16.szH,
               TextButton(
                 onPressed: () {},

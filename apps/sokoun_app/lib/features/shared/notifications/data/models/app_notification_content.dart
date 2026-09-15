@@ -80,7 +80,7 @@ class AppNotificationContent extends Equatable {
       title: json['title']?.toString() ?? '',
       description: json['body']?.toString() ?? '',
       time: '',
-      category: '',
+      category: json['category']?.toString() ?? '',
       isRead: false,
       createdAt: '',
       formattedTime: '',

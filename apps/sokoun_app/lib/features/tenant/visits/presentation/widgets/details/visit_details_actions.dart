@@ -1,17 +1,18 @@
 part of '../../../imports.dart';
 
 class VisitDetailsActions extends StatelessWidget {
-  const VisitDetailsActions({super.key, required this.status});
+  const VisitDetailsActions({super.key, required this.visit});
 
-  final TenantVisitStatus status;
+  final TenantVisitContent visit;
 
   void _openChat() {
-    Go.to(ChatThreadScreen(conversation: ChatContent.conversations.first));
+    if (visit.ownerId.isEmpty) return;
+    Go.to(StartConversationScreen(userId: visit.ownerId));
   }
 
   @override
   Widget build(BuildContext context) {
-    if (status.isRejected) {
+    if (visit.status.isRejected) {
       return DefaultButton(
         onTap: () => Go.to(const TenantSearchScreen()),
         title: LocaleKeys.tenantVisitFindAlternative,
@@ -27,9 +28,9 @@ class VisitDetailsActions extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (status.isAccepted) ...[
+        if (visit.status.isAccepted) ...[
           DefaultButton(
-            onTap: _openChat,
+            onTap: visit.ownerId.isEmpty ? null : _openChat,
             title: LocaleKeys.tenantVisitOpenOwnerChat,
             color: AppColors.sokoonTeal,
             textColor: AppColors.white,
@@ -42,7 +43,7 @@ class VisitDetailsActions extends StatelessWidget {
         ],
         DefaultButton(
           onTap: () => Go.back(true),
-          title: status.isPending
+          title: visit.status.isPending
               ? LocaleKeys.tenantVisitCancelRequest
               : LocaleKeys.tenantVisitCancelVisit,
           color: AppColors.white,

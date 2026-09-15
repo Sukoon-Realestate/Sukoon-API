@@ -17,7 +17,7 @@ class AppGoogleSignInButton extends StatelessWidget {
         await GoogleSignService.instance.init();
         final String token = await GoogleSignService.instance.authorize();
         if (token.isNotEmpty) {
-          onSuccess.call(token);
+          await onSuccess.call(token);
         }
       },
       color: AppColors.white,

@@ -11,7 +11,14 @@ import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
 import '../widgets/imports.dart';
 
 class ChatSearchScreen extends StatefulWidget {
-  const ChatSearchScreen({super.key});
+  const ChatSearchScreen({
+    super.key,
+    this.conversations = ChatContent.searchConversations,
+    this.includeFixtureProperties = true,
+  });
+
+  final List<ConversationContent> conversations;
+  final bool includeFixtureProperties;
 
   @override
   State<ChatSearchScreen> createState() => _ChatSearchScreenState();
@@ -22,18 +29,28 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
   String _query = '';
 
   List<ConversationContent> get _results {
-    return ChatContent.searchConversations
+    return widget.conversations
         .where((conversation) => conversation.matchesQuery(_query))
         .toList(growable: false);
   }
 
   List<String> get _mentionedProperties {
+    final List<String> properties = widget.conversations
+        .map((conversation) => conversation.property.trim())
+        .where((property) => property.isNotEmpty)
+        .toSet()
+        .toList(growable: false);
+    final List<String> source = properties.isNotEmpty
+        ? properties
+        : widget.includeFixtureProperties
+        ? ChatContent.mentionedProperties
+        : const [];
     final String normalizedQuery = _query.trim();
     if (normalizedQuery.isEmpty) {
-      return ChatContent.mentionedProperties;
+      return source;
     }
 
-    return ChatContent.mentionedProperties
+    return source
         .where((property) => property.contains(normalizedQuery))
         .toList(growable: false);
   }
@@ -103,22 +120,26 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
                     8.szH,
                     for (int index = 0; index < _results.length; index++) ...[
                       ChatSearchResultItem(
-                        key: ValueKey(_results[index].id),
+                        key: _results[index].id is int
+                            ? ValueKey<int>(_results[index].id as int)
+                            : ValueKey<String>(_results[index].id.toString()),
                         conversation: _results[index],
                       ),
                       if (index < _results.length - 1)
                         Divider(height: 1.h, color: AppColors.sokoonBorder),
                     ],
-                    16.szH,
-                    AppText(
-                      LocaleKeys.chatMentionedProperties,
-                      color: AppColors.sokoonGray,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w900,
-                    ),
-                    8.szH,
-                    for (final property in _mentionedProperties)
-                      _MentionedPropertyRow(property: property),
+                    if (_mentionedProperties.isNotEmpty) ...[
+                      16.szH,
+                      AppText(
+                        LocaleKeys.chatMentionedProperties,
+                        color: AppColors.sokoonGray,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w900,
+                      ),
+                      8.szH,
+                      for (final property in _mentionedProperties)
+                        _MentionedPropertyRow(property: property),
+                    ],
                   ],
                 ),
               ),

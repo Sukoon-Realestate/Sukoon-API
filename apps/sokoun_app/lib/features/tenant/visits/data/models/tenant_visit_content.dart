@@ -10,6 +10,7 @@ class TenantVisitContent extends Equatable {
     required this.statusText,
     this.ownerName = '',
     this.ownerPhone = '',
+    this.ownerId = '',
   });
 
   const TenantVisitContent.initial()
@@ -20,10 +21,15 @@ class TenantVisitContent extends Equatable {
       status = TenantVisitStatus.pending,
       statusText = '',
       ownerName = '',
-      ownerPhone = '';
+      ownerPhone = '',
+      ownerId = '';
 
   factory TenantVisitContent.fromJson(Map<String, dynamic> json) {
     final String statusText = json['status'] as String? ?? '';
+    final Object? ownerValue = json['owner'];
+    final Map<String, dynamic> owner = ownerValue is Map
+        ? Map<String, dynamic>.from(ownerValue)
+        : const {};
     return TenantVisitContent(
       id: json['id'] as String? ?? '',
       propertyTitle:
@@ -36,8 +42,14 @@ class TenantVisitContent extends Equatable {
       time: json['time'] as String? ?? '',
       status: TenantVisitStatusX.fromApiValue(statusText),
       statusText: statusText,
-      ownerName: json['owner_name'] as String? ?? '',
-      ownerPhone: json['owner_phone'] as String? ?? '',
+      ownerName:
+          json['owner_name']?.toString() ??
+          owner['full_name']?.toString() ??
+          owner['name']?.toString() ??
+          '',
+      ownerPhone:
+          json['owner_phone']?.toString() ?? owner['phone']?.toString() ?? '',
+      ownerId: json['owner_id']?.toString() ?? owner['id']?.toString() ?? '',
     );
   }
 
@@ -49,6 +61,7 @@ class TenantVisitContent extends Equatable {
   final String statusText;
   final String ownerName;
   final String ownerPhone;
+  final String ownerId;
 
   String get dateLabel =>
       [day, time].where((value) => value.trim().isNotEmpty).join(' · ');
@@ -66,6 +79,7 @@ class TenantVisitContent extends Equatable {
     'status': statusText.isEmpty ? status.name : statusText,
     'owner_name': ownerName,
     'owner_phone': ownerPhone,
+    'owner_id': ownerId,
   };
 
   TenantVisitContent copyWith({
@@ -77,6 +91,7 @@ class TenantVisitContent extends Equatable {
     String? statusText,
     String? ownerName,
     String? ownerPhone,
+    String? ownerId,
   }) {
     return TenantVisitContent(
       id: id ?? this.id,
@@ -87,6 +102,7 @@ class TenantVisitContent extends Equatable {
       statusText: statusText ?? this.statusText,
       ownerName: ownerName ?? this.ownerName,
       ownerPhone: ownerPhone ?? this.ownerPhone,
+      ownerId: ownerId ?? this.ownerId,
     );
   }
 
@@ -100,5 +116,6 @@ class TenantVisitContent extends Equatable {
     statusText,
     ownerName,
     ownerPhone,
+    ownerId,
   ];
 }

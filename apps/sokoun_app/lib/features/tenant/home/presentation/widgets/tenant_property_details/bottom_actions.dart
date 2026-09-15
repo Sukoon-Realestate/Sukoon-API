@@ -14,11 +14,15 @@ class TenantPropertyBottomActions extends StatelessWidget {
     required this.property,
     required this.isSaved,
     required this.onSavedPressed,
+    this.onChatPressed,
+    this.isOpeningChat = false,
   });
 
   final TenantPropertyDetailsContent property;
   final bool isSaved;
   final VoidCallback onSavedPressed;
+  final VoidCallback? onChatPressed;
+  final bool isOpeningChat;
 
   void _openBookVisit() {
     Go.to(
@@ -56,6 +60,40 @@ class TenantPropertyBottomActions extends StatelessWidget {
                   fontSize: 15.sp,
                   fontWeight: FontWeight.w900,
                 ),
+              ),
+            ),
+          ),
+          10.szW,
+          Semantics(
+            button: true,
+            enabled: onChatPressed != null && !isOpeningChat,
+            label: LocaleKeys.tenantVisitOpenOwnerChat,
+            child: GestureDetector(
+              onTap: isOpeningChat ? null : onChatPressed,
+              behavior: HitTestBehavior.opaque,
+              child: Container(
+                width: 48.r,
+                height: 48.r,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColors.grayBackground,
+                  borderRadius: BorderRadius.circular(14.r),
+                ),
+                child: isOpeningChat
+                    ? SizedBox.square(
+                        dimension: 19.r,
+                        child: const CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.sokoonTeal,
+                        ),
+                      )
+                    : Icon(
+                        Icons.chat_bubble_outline_rounded,
+                        color: onChatPressed == null
+                            ? AppColors.sokoonMuted
+                            : AppColors.sokoonTeal,
+                        size: 21.r,
+                      ),
               ),
             ),
           ),

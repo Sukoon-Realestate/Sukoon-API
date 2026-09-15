@@ -8,6 +8,7 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
+import 'package:melos_core/generated/assets.dart';
 
 class ChatEmptyState extends StatelessWidget {
   const ChatEmptyState({super.key});
@@ -19,18 +20,13 @@ class ChatEmptyState extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 88.r,
-            height: 88.r,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: AppColors.mintLight,
-              borderRadius: BorderRadius.circular(28.r),
-            ),
-            child: Icon(
-              Icons.chat_bubble_outline_rounded,
-              color: AppColors.sokoonTeal,
-              size: 40.r,
+          SizedBox(
+            width: 132.r,
+            height: 112.r,
+            child: Assets.lottie.noData.lottie(
+              fit: BoxFit.contain,
+              package: 'melos_core',
+              repeat: false,
             ),
           ),
           24.szH,

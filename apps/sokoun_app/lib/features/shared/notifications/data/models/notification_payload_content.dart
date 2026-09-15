@@ -5,6 +5,8 @@ class NotificationPayloadContent extends Equatable {
     required this.visitId,
     required this.propertyId,
     required this.chatId,
+    required this.messageId,
+    required this.senderId,
     required this.promoUrl,
     required this.actionType,
     required this.actionLabel,
@@ -22,6 +24,8 @@ class NotificationPayloadContent extends Equatable {
     : visitId = '',
       propertyId = '',
       chatId = '',
+      messageId = '',
+      senderId = '',
       promoUrl = '',
       actionType = '',
       actionLabel = '',
@@ -38,7 +42,12 @@ class NotificationPayloadContent extends Equatable {
     return NotificationPayloadContent(
       visitId: json['visit_id']?.toString() ?? '',
       propertyId: json['property_id']?.toString() ?? '',
-      chatId: json['chat_id']?.toString() ?? '',
+      chatId:
+          json['conversation_id']?.toString() ??
+          json['chat_id']?.toString() ??
+          '',
+      messageId: json['message_id']?.toString() ?? '',
+      senderId: json['sender_id']?.toString() ?? '',
       promoUrl: json['promo_url']?.toString() ?? '',
       actionType: json['action_type']?.toString() ?? '',
       actionLabel: json['action_label']?.toString() ?? '',
@@ -59,6 +68,8 @@ class NotificationPayloadContent extends Equatable {
   final String visitId;
   final String propertyId;
   final String chatId;
+  final String messageId;
+  final String senderId;
   final String promoUrl;
   final String actionType;
   final String actionLabel;
@@ -79,7 +90,9 @@ class NotificationPayloadContent extends Equatable {
   Map<String, dynamic> toJson() => {
     if (visitId.isNotEmpty) 'visit_id': visitId,
     if (propertyId.isNotEmpty) 'property_id': propertyId,
-    if (chatId.isNotEmpty) 'chat_id': chatId,
+    if (chatId.isNotEmpty) 'conversation_id': chatId,
+    if (messageId.isNotEmpty) 'message_id': messageId,
+    if (senderId.isNotEmpty) 'sender_id': senderId,
     if (promoUrl.isNotEmpty) 'promo_url': promoUrl,
     if (actionType.isNotEmpty) 'action_type': actionType,
     if (actionLabel.isNotEmpty) 'action_label': actionLabel,
@@ -97,6 +110,8 @@ class NotificationPayloadContent extends Equatable {
     String? visitId,
     String? propertyId,
     String? chatId,
+    String? messageId,
+    String? senderId,
     String? promoUrl,
     String? actionType,
     String? actionLabel,
@@ -113,6 +128,8 @@ class NotificationPayloadContent extends Equatable {
       visitId: visitId ?? this.visitId,
       propertyId: propertyId ?? this.propertyId,
       chatId: chatId ?? this.chatId,
+      messageId: messageId ?? this.messageId,
+      senderId: senderId ?? this.senderId,
       promoUrl: promoUrl ?? this.promoUrl,
       actionType: actionType ?? this.actionType,
       actionLabel: actionLabel ?? this.actionLabel,
@@ -132,6 +149,8 @@ class NotificationPayloadContent extends Equatable {
     visitId,
     propertyId,
     chatId,
+    messageId,
+    senderId,
     promoUrl,
     actionType,
     actionLabel,

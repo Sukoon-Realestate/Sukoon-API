@@ -11,11 +11,15 @@ class TenantPropertyDetailsBody extends StatelessWidget {
     required this.property,
     required this.isSaved,
     required this.onSavedPressed,
+    this.onChatPressed,
+    this.isOpeningChat = false,
   });
 
   final TenantPropertyDetailsContent property;
   final bool isSaved;
   final VoidCallback onSavedPressed;
+  final VoidCallback? onChatPressed;
+  final bool isOpeningChat;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +40,8 @@ class TenantPropertyDetailsBody extends StatelessWidget {
           property: property,
           isSaved: isSaved,
           onSavedPressed: onSavedPressed,
+          onChatPressed: onChatPressed,
+          isOpeningChat: isOpeningChat,
         ),
       ],
     );

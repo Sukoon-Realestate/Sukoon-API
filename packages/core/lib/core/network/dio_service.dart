@@ -23,8 +23,9 @@ import 'interceptors/log_interceptor.dart';
 import 'interceptors/unauthorized_interceptor.dart';
 import 'network_request.dart';
 import 'network_service.dart';
+import 'session_auth_service.dart';
 
-class DioService implements NetworkService {
+class DioService implements NetworkService, SessionAuthService {
   DioService({
     String initialBaseUrl = '',
     String? initialLanguageCode,
@@ -41,6 +42,7 @@ class DioService implements NetworkService {
   final Future<Directory> Function() _cookieDirectoryProvider;
   PersistCookieJar? _cookieJar;
   Future<void>? _cookieInitialization;
+  Future<bool>? _sessionRefresh;
 
   void _initDio({
     required String initialBaseUrl,
@@ -125,6 +127,67 @@ class DioService implements NetworkService {
     log('the primaryKey is $primaryKey');
     final String primary = await SecureStorage.read(primaryKey) ?? '';
     return primary;
+  }
+
+  @override
+  Future<Uri?> getBaseUri() async {
+    await _ensureCookieManager();
+    if (_dio.options.baseUrl.isEmpty) {
+      await updateBaseUrl();
+    }
+
+    final Uri? uri = Uri.tryParse(_dio.options.baseUrl);
+    if (uri == null || !uri.hasScheme || uri.host.isEmpty) {
+      return null;
+    }
+    return uri;
+  }
+
+  @override
+  Future<String?> getAccessToken() async {
+    final Uri? baseUri = await getBaseUri();
+    if (baseUri == null) return null;
+
+    final List<Cookie> cookies = await _cookieJar!.loadForRequest(baseUri);
+    for (final Cookie cookie in cookies) {
+      if (cookie.name == 'access_token' && cookie.value.isNotEmpty) {
+        return cookie.value;
+      }
+    }
+    return null;
+  }
+
+  @override
+  Future<bool> refreshSession() {
+    final Future<bool>? pendingRefresh = _sessionRefresh;
+    if (pendingRefresh != null) return pendingRefresh;
+
+    final Future<bool> refresh = _refreshSession();
+    _sessionRefresh = refresh;
+    return refresh.whenComplete(() {
+      if (identical(_sessionRefresh, refresh)) {
+        _sessionRefresh = null;
+      }
+    });
+  }
+
+  Future<bool> _refreshSession() async {
+    try {
+      final Uri? baseUri = await getBaseUri();
+      if (baseUri == null) return false;
+
+      final Uri refreshUri = baseUri.resolve(ApiConstants.refreshToken);
+      final List<Cookie> cookies = await _cookieJar!.loadForRequest(refreshUri);
+      final bool hasRefreshToken = cookies.any(
+        (cookie) => cookie.name == 'refresh_token' && cookie.value.isNotEmpty,
+      );
+      if (!hasRefreshToken) return false;
+
+      await _dio.post<void>(ApiConstants.refreshToken);
+      return (await getAccessToken())?.isNotEmpty ?? false;
+    } catch (_) {
+      return false;
+    }
   }
 
   @override
@@ -219,7 +282,7 @@ class DioService implements NetworkService {
       log('error is ${e.response?.data}');
       _handleIncomingResponse(
         path: networkRequest.path,
-        response: e.response?.data ?? {'error' : e.toString()},
+        response: e.response?.data ?? {'error': e.toString()},
       );
       return _handleError(e);
     }

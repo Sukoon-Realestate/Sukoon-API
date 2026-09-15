@@ -11,12 +11,16 @@ class ChatComposer extends StatelessWidget {
     required this.onAttachmentPressed,
     required this.onVoicePressed,
     required this.onSendPressed,
+    this.showAttachmentAction = true,
+    this.showVoiceAction = true,
   });
 
   final TextEditingController controller;
   final VoidCallback onAttachmentPressed;
   final VoidCallback onVoicePressed;
   final VoidCallback onSendPressed;
+  final bool showAttachmentAction;
+  final bool showVoiceAction;
 
   @override
   Widget build(BuildContext context) {
@@ -48,19 +52,28 @@ class ChatComposer extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    IconButton(
-                      onPressed: onVoicePressed,
-                      visualDensity: VisualDensity.compact,
-                      padding: EdgeInsets.zero,
-                      icon: Icon(
-                        Icons.mic_none_rounded,
-                        color: AppColors.sokoonGray,
-                        size: 18.r,
+                    if (showVoiceAction)
+                      IconButton(
+                        onPressed: onVoicePressed,
+                        visualDensity: VisualDensity.compact,
+                        padding: EdgeInsets.zero,
+                        icon: Icon(
+                          Icons.mic_none_rounded,
+                          color: AppColors.sokoonGray,
+                          size: 18.r,
+                        ),
                       ),
-                    ),
                     Expanded(
                       child: TextField(
                         controller: controller,
+                        maxLength: 5000,
+                        buildCounter:
+                            (
+                              _, {
+                              required currentLength,
+                              required isFocused,
+                              maxLength,
+                            }) => null,
                         minLines: 1,
                         maxLines: 4,
                         textDirection: TextDirection.rtl,
@@ -87,13 +100,15 @@ class ChatComposer extends StatelessWidget {
                 ),
               ),
             ),
-            8.szW,
-            _ComposerActionButton(
-              onPressed: onAttachmentPressed,
-              backgroundColor: AppColors.scaffoldBackground,
-              icon: Icons.image_outlined,
-              iconColor: AppColors.sokoonGray,
-            ),
+            if (showAttachmentAction) ...[
+              8.szW,
+              _ComposerActionButton(
+                onPressed: onAttachmentPressed,
+                backgroundColor: AppColors.scaffoldBackground,
+                icon: Icons.image_outlined,
+                iconColor: AppColors.sokoonGray,
+              ),
+            ],
           ],
         ),
       ),

@@ -429,7 +429,8 @@ void main() {
     await tester.ensureVisible(chatButton);
     await tester.tap(chatButton);
     await tester.pump();
-    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pump(const Duration(milliseconds: 700));
+    await tester.pump(const Duration(milliseconds: 700));
 
     expect(find.byType(ChatThreadScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
@@ -584,13 +585,26 @@ class _RecordingBaseRepository implements BaseRepository {
     lastQuery = params.queryParameters;
     lastCacheKey = params.cacheKey;
     final List<String> pathParts = params.api.split('/');
-    final dynamic response =
-        params.httpRequestType == HttpRequestType.get &&
-            pathParts.length > 5 &&
-            pathParts[0] == 'properties' &&
-            pathParts[1] == 'owner' &&
-            pathParts[2] == 'visits' &&
-            pathParts[3] == 'requests'
+    final dynamic response = params.api == 'chat/conversations/create/'
+        ? {
+            'id': 1,
+            'other_participant': {
+              'id': params.body?['user_id'] ?? 'tenant-id',
+              'full_name': 'سارة أحمد خالد',
+              'avatar': '',
+              'is_online': false,
+            },
+            'last_message': null,
+            'unread_count': 0,
+            'created_at': '2026-09-15T00:00:00Z',
+            'updated_at': '2026-09-15T00:00:00Z',
+          }
+        : params.httpRequestType == HttpRequestType.get &&
+              pathParts.length > 5 &&
+              pathParts[0] == 'properties' &&
+              pathParts[1] == 'owner' &&
+              pathParts[2] == 'visits' &&
+              pathParts[3] == 'requests'
         ? _ownerRequestDetailsResponse(pathParts[4])
         : null;
     final T data = params.mapper!(response);

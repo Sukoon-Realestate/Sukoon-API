@@ -36,7 +36,7 @@ class VisitDetailsContent extends StatelessWidget {
             VisitContactCard(ownerPhone: visit.ownerPhone),
           ],
           14.szH,
-          VisitDetailsActions(status: visit.status),
+          VisitDetailsActions(visit: visit),
         ],
       ),
     );

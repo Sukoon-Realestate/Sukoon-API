@@ -102,6 +102,7 @@ class OwnerVisitRequestDetailsContent extends Equatable {
       status: status,
       isVerified: tenant.isVerified,
       propertyId: property.id,
+      tenantId: tenant.id,
     );
   }
 

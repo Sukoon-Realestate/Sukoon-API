@@ -17,25 +17,15 @@ class OwnerRequestDetailsContent extends StatelessWidget {
   final VoidCallback onRejectPressed;
 
   void _openChat() {
-    Go.to(
-      ChatThreadScreen(
-        conversation: ConversationContent(
-          id: request.id.hashCode,
-          name: request.tenant.name,
-          property: request.displayProperty,
-          lastMessage: request.note,
-          time: request.displayTime,
-          unreadCount: 0,
-          isVerified: request.tenant.isVerified,
-          isOnline: false,
-        ),
-      ),
-    );
+    if (request.tenant.id.isEmpty) return;
+    Go.to(StartConversationScreen(userId: request.tenant.id));
   }
 
   @override
   Widget build(BuildContext context) {
     final bool isUpdating = isAccepting || isRejecting;
+    final bool canOpenChat =
+        request.actions.canChat && request.tenant.id.isNotEmpty;
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 24.h),
       child: Column(
@@ -87,14 +77,10 @@ class OwnerRequestDetailsContent extends StatelessWidget {
           ],
           if (request.actions.canAccept || request.actions.canReject) 12.szH,
           DefaultButton(
-            onTap: isUpdating || !request.actions.canChat ? null : _openChat,
+            onTap: isUpdating || !canOpenChat ? null : _openChat,
             title: LocaleKeys.ownerVisitOpenChat,
-            color: request.actions.canChat
-                ? AppColors.bluePale
-                : AppColors.grayBackground,
-            textColor: request.actions.canChat
-                ? AppColors.blue
-                : AppColors.sokoonMuted,
+            color: canOpenChat ? AppColors.bluePale : AppColors.grayBackground,
+            textColor: canOpenChat ? AppColors.blue : AppColors.sokoonMuted,
             borderRadius: BorderRadius.circular(16.r),
             height: 50.h,
             fontSize: 14.sp,

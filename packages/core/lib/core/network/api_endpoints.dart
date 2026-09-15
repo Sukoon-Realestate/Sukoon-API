@@ -2,9 +2,10 @@ class ApiConstants {
   // ---------------------- Home -----------------------------------
   // auth
   static const String login = 'auth/login/';
+  static const String googleLogin = 'auth/google/';
   static const String verifyOtp = 'auth/verify/';
   static const String resendOtp = 'auth/resend-otp/';
-  static const String refreshToken = 'auth/refresh/';
+  static const String refreshToken = 'auth/jwt/refresh/';
   static const String register = 'auth/users/';
 
   // home
@@ -41,6 +42,19 @@ class ApiConstants {
 
   static String markNotificationRead(String notificationId) =>
       '$notifications$notificationId/read/';
+
+  // chat
+  static const String chatConversations = 'chat/conversations/';
+  static const String createChatConversation = 'chat/conversations/create/';
+
+  static String chatMessages(String conversationId) =>
+      '$chatConversations$conversationId/messages/';
+
+  static String createChatMessage(String conversationId) =>
+      '$chatConversations$conversationId/messages/create/';
+
+  static String markChatConversationRead(String conversationId) =>
+      '$chatConversations$conversationId/read/';
 
   static String propertyDetails(String propertyId) => '$properties$propertyId/';
 

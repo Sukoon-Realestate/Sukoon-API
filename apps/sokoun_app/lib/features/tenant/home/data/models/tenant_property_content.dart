@@ -47,6 +47,7 @@ class TenantPropertyDetailsContent {
     required this.photoLabels,
     required this.nearbyPlaces,
     required this.ownerName,
+    required this.ownerId,
     required this.ownerMeta,
     required this.imageColors,
     required this.latitude,
@@ -94,6 +95,7 @@ class TenantPropertyDetailsContent {
       photoLabels: model.photoLabels,
       nearbyPlaces: const [],
       ownerName: model.owner,
+      ownerId: model.ownerId,
       ownerMeta: model.isVerified
           ? LocaleKeys.tenantPropertyDetailsVerifiedOwner
           : LocaleKeys.tenantPropertyDetailsOwner,
@@ -121,6 +123,7 @@ class TenantPropertyDetailsContent {
   final List<String> photoLabels;
   final List<TenantNearbyPlaceContent> nearbyPlaces;
   final String ownerName;
+  final String ownerId;
   final String ownerMeta;
   final List<Color> imageColors;
   final List<String> imageUrls;

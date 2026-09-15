@@ -56,11 +56,22 @@ class HomeNavigationDestination {
     required this.icon,
     required this.selectedIcon,
     required this.label,
+    this.badgeCount = 0,
   });
 
   final Object icon;
   final Object selectedIcon;
   final String label;
+  final int badgeCount;
+
+  HomeNavigationDestination copyWith({int? badgeCount}) {
+    return HomeNavigationDestination(
+      icon: icon,
+      selectedIcon: selectedIcon,
+      label: label,
+      badgeCount: badgeCount ?? this.badgeCount,
+    );
+  }
 }
 
 class _HomeBottomNavigationItem extends StatelessWidget {
@@ -93,7 +104,37 @@ class _HomeBottomNavigationItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildIcon(color),
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  _buildIcon(color),
+                  if (destination.badgeCount > 0)
+                    PositionedDirectional(
+                      top: -7.r,
+                      end: -11.r,
+                      child: Container(
+                        constraints: BoxConstraints(minWidth: 17.r),
+                        height: 17.r,
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.symmetric(horizontal: 4.w),
+                        decoration: BoxDecoration(
+                          color: AppColors.red,
+                          borderRadius: BorderRadius.circular(999.r),
+                          border: Border.all(color: AppColors.white),
+                        ),
+                        child: AppText(
+                          destination.badgeCount > 99
+                              ? '99+'
+                              : '${destination.badgeCount}',
+                          color: AppColors.white,
+                          fontSize: 9.sp,
+                          fontWeight: FontWeight.w800,
+                          maxLines: 1,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
               3.szH,
               AppText(
                 destination.label,

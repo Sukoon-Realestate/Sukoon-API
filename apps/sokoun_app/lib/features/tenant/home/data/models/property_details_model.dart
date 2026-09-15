@@ -163,6 +163,7 @@ class PropertyDetailsModel extends Equatable {
   const PropertyDetailsModel({
     required this.id,
     required this.owner,
+    required this.ownerId,
     required this.mainImage,
     required this.title,
     required this.description,
@@ -200,6 +201,7 @@ class PropertyDetailsModel extends Equatable {
   const PropertyDetailsModel.initial()
     : id = '',
       owner = '',
+      ownerId = '',
       mainImage = '',
       title = '',
       description = '',
@@ -234,9 +236,26 @@ class PropertyDetailsModel extends Equatable {
       updatedAt = '';
 
   factory PropertyDetailsModel.fromJson(Map<String, dynamic> json) {
+    final Object? ownerValue = json['owner'];
+    final Map<String, dynamic> ownerJson = ownerValue is Map
+        ? Map<String, dynamic>.from(ownerValue)
+        : const {};
+    final String ownerString = ownerValue is String ? ownerValue.trim() : '';
+    final bool ownerStringIsId = RegExp(
+      r'^[0-9a-fA-F]{8}-[0-9a-fA-F-]{27,}$',
+    ).hasMatch(ownerString);
+    final String ownerName =
+        ownerJson['full_name']?.toString() ??
+        ownerJson['name']?.toString() ??
+        json['owner_name']?.toString() ??
+        (ownerStringIsId ? '' : ownerString);
     return PropertyDetailsModel(
       id: json['id'] as String? ?? '',
-      owner: json['owner'] as String? ?? '',
+      owner: ownerName,
+      ownerId:
+          ownerJson['id']?.toString() ??
+          json['owner_id']?.toString() ??
+          (ownerStringIsId ? ownerString : ''),
       mainImage: json['main_image'] as String? ?? '',
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
@@ -289,6 +308,7 @@ class PropertyDetailsModel extends Equatable {
 
   final String id;
   final String owner;
+  final String ownerId;
   final String mainImage;
   final String title;
   final String description;
@@ -325,6 +345,7 @@ class PropertyDetailsModel extends Equatable {
   Map<String, dynamic> toJson() => {
     'id': id,
     'owner': owner,
+    'owner_id': ownerId,
     'main_image': mainImage,
     'title': title,
     'description': description,
@@ -362,6 +383,7 @@ class PropertyDetailsModel extends Equatable {
   PropertyDetailsModel copyWith({
     String? id,
     String? owner,
+    String? ownerId,
     String? mainImage,
     String? title,
     String? description,
@@ -398,6 +420,7 @@ class PropertyDetailsModel extends Equatable {
     return PropertyDetailsModel(
       id: id ?? this.id,
       owner: owner ?? this.owner,
+      ownerId: ownerId ?? this.ownerId,
       mainImage: mainImage ?? this.mainImage,
       title: title ?? this.title,
       description: description ?? this.description,
@@ -521,6 +544,7 @@ class PropertyDetailsModel extends Equatable {
   List<Object?> get props => [
     id,
     owner,
+    ownerId,
     mainImage,
     title,
     description,

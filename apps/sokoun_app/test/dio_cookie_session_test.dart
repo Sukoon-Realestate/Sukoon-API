@@ -121,8 +121,6 @@ void main() {
         final String? authorization = request.headers.value(
           HttpHeaders.authorizationHeader,
         );
-        final String? refreshHeader = request.headers.value('Refresh-Token');
-
         if (request.uri.path == '/auth/login/') {
           request.response.cookies
             ..add(
@@ -133,11 +131,11 @@ void main() {
             ..add(
               Cookie('refresh_token', 'server-refresh-token')
                 ..httpOnly = true
-                ..path = '/auth/refresh/',
+                ..path = '/auth/jwt/refresh/',
             );
-        } else if (request.uri.path == '/auth/refresh/' &&
+        } else if (request.uri.path == '/auth/jwt/refresh/' &&
             refreshToken == 'server-refresh-token' &&
-            refreshHeader == 'server-refresh-token') {
+            authorization == 'Bearer server-refresh-token') {
           refreshCount++;
           request.response.cookies.add(
             Cookie('access_token', 'fresh-token')

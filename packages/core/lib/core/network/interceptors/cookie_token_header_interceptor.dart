@@ -12,13 +12,11 @@ class CookieTokenHeaderInterceptor extends Interceptor {
     required PersistCookieJar cookieJar,
     this.accessCookieName = 'access_token',
     this.refreshCookieName = 'refresh_token',
-    this.refreshHeaderName = 'Refresh-Token',
   }) : _cookieJar = cookieJar;
 
   final PersistCookieJar _cookieJar;
   final String accessCookieName;
   final String refreshCookieName;
-  final String refreshHeaderName;
 
   @override
   Future<void> onRequest(
@@ -36,17 +34,15 @@ class CookieTokenHeaderInterceptor extends Interceptor {
       return null;
     }
 
-    final String? accessToken = valueFor(accessCookieName);
-    // if (accessToken.isNotNull && accessToken!.isNotEmpty) {
-    //   options.headers[HttpHeaders.authorizationHeader] = 'Bearer $accessToken';
-    // }
+    final String tokenCookieName = options.path == ApiConstants.refreshToken
+        ? refreshCookieName
+        : accessCookieName;
+    final String? token = valueFor(tokenCookieName);
 
-    options.headers[HttpHeaders.authorizationHeader] = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzg5MzIxOTMxLCJpYXQiOjE3ODkyMzU1MzEsImp0aSI6IjBhOThmZWU1NzkwYzQzYTE5YmM3NjBkYzViNDhmMjYwIiwidXNlcl9pZCI6IjgwMzQ0N2EwLWNmY2YtNDliZC1iOWQzLWQwZWZmZTFmYjRmOCJ9.rmsRqHiuXQN4GWeir552_BuhFCDm88CcljPswhcyfx4';
-    if (options.path == ApiConstants.refreshToken) {
-      final String? refreshToken = valueFor(refreshCookieName);
-      if (refreshToken != null && refreshToken.isNotEmpty) {
-        options.headers[refreshHeaderName] = refreshToken;
-      }
+    if (token.isNotNull && token!.isNotEmpty) {
+      options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
+    } else {
+      options.headers.remove(HttpHeaders.authorizationHeader);
     }
 
     handler.next(options);

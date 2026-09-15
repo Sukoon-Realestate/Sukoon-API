@@ -20,14 +20,14 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   const UserModel tenant = UserModel(
-    id: 1,
+    id: '1',
     name: 'محمد أحمد',
     phone: '01012345432',
     email: 'm.ahmed@email.com',
     type: 'tenant',
   );
   const UserModel owner = UserModel(
-    id: 2,
+    id: '2',
     name: 'أحمد محمد',
     phone: '01112345876',
     email: 'a.mohamed@email.com',

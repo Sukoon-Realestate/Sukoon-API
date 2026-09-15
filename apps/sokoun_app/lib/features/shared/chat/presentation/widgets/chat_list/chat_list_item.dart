@@ -57,7 +57,7 @@ class ChatListItem extends StatelessWidget {
                     ],
                     const Spacer(),
                     AppText(
-                      conversation.time,
+                      _displayTime(context),
                       color: AppColors.sokoonGray,
                       fontSize: 11.sp,
                       fontWeight: FontWeight.w400,
@@ -65,14 +65,16 @@ class ChatListItem extends StatelessWidget {
                     ),
                   ],
                 ),
-                2.szH,
-                AppText(
-                  conversation.property,
-                  color: AppColors.sokoonGray,
-                  fontSize: 12.sp,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                if (conversation.property.isNotEmpty) ...[
+                  2.szH,
+                  AppText(
+                    conversation.property,
+                    color: AppColors.sokoonGray,
+                    fontSize: 12.sp,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
                 3.szH,
                 AppText(
                   conversation.lastMessage,
@@ -93,6 +95,21 @@ class ChatListItem extends StatelessWidget {
       ).paddingSymmetric(horizontal: 20.w, vertical: 14.h),
     );
   }
+
+  String _displayTime(BuildContext context) {
+    final DateTime? value = conversation.lastMessageAt?.toLocal();
+    if (value == null) return conversation.time;
+    final DateTime now = DateTime.now();
+    final MaterialLocalizations localizations = MaterialLocalizations.of(
+      context,
+    );
+    if (value.year == now.year &&
+        value.month == now.month &&
+        value.day == now.day) {
+      return localizations.formatTimeOfDay(TimeOfDay.fromDateTime(value));
+    }
+    return localizations.formatShortDate(value);
+  }
 }
 
 class _ConversationAvatar extends StatelessWidget {
@@ -107,16 +124,31 @@ class _ConversationAvatar extends StatelessWidget {
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          DecoratedBox(
-            decoration: const BoxDecoration(
-              color: AppColors.mintLight,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.person_outline_rounded,
-              color: AppColors.sokoonTeal,
-              size: 23.r,
-            ).centerWidget,
+          ClipOval(
+            child: conversation.otherParticipant.avatarUrl.isEmpty
+                ? DecoratedBox(
+                    decoration: const BoxDecoration(
+                      color: AppColors.mintLight,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.person_outline_rounded,
+                      color: AppColors.sokoonTeal,
+                      size: 23.r,
+                    ).centerWidget,
+                  )
+                : Image.network(
+                    conversation.otherParticipant.avatarUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        const ColoredBox(
+                          color: AppColors.mintLight,
+                          child: Icon(
+                            Icons.person_outline_rounded,
+                            color: AppColors.sokoonTeal,
+                          ),
+                        ),
+                  ),
           ),
           if (conversation.unreadCount > 0)
             PositionedDirectional(
