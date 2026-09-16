@@ -68,6 +68,33 @@ void main() {
     },
   );
 
+  test('connects the socket before sending when it is disconnected', () async {
+    final _FakeChatRealtimeGateway realtime = _FakeChatRealtimeGateway();
+    final ChatThreadCubit cubit = ChatThreadCubit(
+      conversationId: 'conversation-uuid',
+      otherParticipantId: 'other-user-id',
+      realtimeService: realtime,
+    );
+    addTearDown(() async {
+      await cubit.close();
+      await realtime.close();
+    });
+
+    realtime.messageToEcho = _message(
+      conversationId: '1',
+      senderId: 'current-user-id',
+      content: 'Connect then send',
+    );
+
+    final ChatSendResult result = await cubit.sendTextMessage(
+      'Connect then send',
+    );
+
+    expect(realtime.connectCount, 1);
+    expect(result.isSent, isTrue);
+    expect(result.restMessage?.content, 'Connect then send');
+  });
+
   test(
     'accepts numeric conversation messages from the active participant',
     () async {
@@ -151,6 +178,7 @@ class _FakeChatRealtimeGateway implements ChatRealtimeGateway {
       StreamController<ChatRealtimeStatus>.broadcast(sync: true);
 
   ChatSocketMessage? messageToEcho;
+  int connectCount = 0;
 
   @override
   String? activeConversationId;
@@ -176,6 +204,7 @@ class _FakeChatRealtimeGateway implements ChatRealtimeGateway {
 
   @override
   Future<void> connect() async {
+    connectCount++;
     isConnected = true;
     _statuses.add(ChatRealtimeStatus.connected);
   }

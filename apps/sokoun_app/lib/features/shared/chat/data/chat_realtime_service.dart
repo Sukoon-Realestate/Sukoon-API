@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:melos_core/core/socket_service/web_socket_client.dart';
-import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 
 import 'chat_socket_data.dart';
 import 'models/chat_socket_message.dart';
@@ -93,7 +92,6 @@ final class ChatRealtimeService implements ChatRealtimeGateway {
 
   @override
   Future<void> connect() {
-    if (!UserModel.isAuthenticated) return Future<void>.value();
     if (isConnected) return Future<void>.value();
     final Future<void>? pending = _connectionRequest;
     if (pending != null) return pending;

@@ -150,7 +150,8 @@ class DioService implements NetworkService, SessionAuthService {
 
     final List<Cookie> cookies = await _cookieJar!.loadForRequest(baseUri);
     for (final Cookie cookie in cookies) {
-      if (cookie.name == 'access_token' && cookie.value.isNotEmpty) {
+      log('name isss ${cookie.name}');
+      if (cookie.name == 'access' && cookie.value.isNotEmpty) {
         return cookie.value;
       }
     }

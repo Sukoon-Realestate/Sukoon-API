@@ -49,17 +49,26 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
     _statusSubscription ??= _realtime.statuses.listen(_receiveStatus);
     _receiveStatus(_realtime.status);
 
-    if (!_shouldBeConnected || !UserModel.isAuthenticated) return;
+    if (!_shouldBeConnected) return;
     await _realtime.connect();
     await markConversationAsRead();
   }
 
   Future<ChatSendResult> sendTextMessage(String rawContent) async {
     final String content = rawContent.trim();
-    if (content.isEmpty ||
-        content.length > 5000 ||
-        !UserModel.isAuthenticated) {
+    if (content.isEmpty || content.length > 5000) {
       return const ChatSendResult.failed();
+    }
+
+    if (!_realtime.isConnected && _shouldBeConnected) {
+      try {
+        await connect();
+      } catch (error, stackTrace) {
+        log(
+          'Unable to connect the chat socket before sending: $error',
+          stackTrace: stackTrace,
+        );
+      }
     }
 
     if (_realtime.isConnected) {
@@ -95,7 +104,6 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   }
 
   Future<void> markConversationAsRead() async {
-    if (!UserModel.isAuthenticated) return;
     if (_realtime.isConnected) {
       try {
         await _realtime.markConversationAsRead(conversationId);
