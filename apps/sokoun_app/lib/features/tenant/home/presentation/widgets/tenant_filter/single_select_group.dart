@@ -31,7 +31,7 @@ class SingleSelectGroup extends StatelessWidget {
           color: AppColors.sokoonGray,
           fontSize: 12.sp,
           fontWeight: FontWeight.w600,
-          textAlign: TextAlign.right,
+          textAlign: TextAlign.start,
         ),
         8.szH,
         FilterChipWrap(

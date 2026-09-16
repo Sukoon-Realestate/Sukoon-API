@@ -158,116 +158,113 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   }
 
   Widget _buildScaffold({required bool isSaving}) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: Column(
-            children: [
-              ProfileScreenHeader(
-                title: _title,
-                showBackButton: true,
-                trailing: TextButton(
-                  onPressed: isSaving ? null : _save,
-                  child: isSaving
-                      ? SizedBox.square(
-                          dimension: 18.r,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.r,
-                            color: _accentColor,
-                          ),
-                        )
-                      : AppText(
-                          LocaleKeys.profileSave,
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBackground,
+      body: SafeArea(
+        child: Column(
+          children: [
+            ProfileScreenHeader(
+              title: _title,
+              showBackButton: true,
+              trailing: TextButton(
+                onPressed: isSaving ? null : _save,
+                child: isSaving
+                    ? SizedBox.square(
+                        dimension: 18.r,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2.r,
                           color: _accentColor,
-                          fontSize: 14.sp,
+                        ),
+                      )
+                    : AppText(
+                        LocaleKeys.profileSave,
+                        color: _accentColor,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w700,
+                      ),
+              ),
+            ),
+            Expanded(
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 28.h),
+                  children: [
+                    Column(
+                      children: [
+                        ProfileAvatar(
+                          name: _nameController.text,
+                          imageFile: _avatar,
+                          accentColor: _accentColor,
+                          backgroundColor: _accentColor,
+                          size: 88,
+                          useInitial: true,
+                          badgeIcon: Icons.camera_alt_outlined,
+                          onBadgePressed: isSaving ? null : _pickAvatar,
+                        ),
+                        8.szH,
+                        AppText(
+                          LocaleKeys.profileChangePhoto,
+                          color: _accentColor,
+                          fontSize: 13.sp,
                           fontWeight: FontWeight.w700,
                         ),
-                ),
-              ),
-              Expanded(
-                child: Form(
-                  key: _formKey,
-                  child: ListView(
-                    padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 28.h),
-                    children: [
+                      ],
+                    ),
+                    24.szH,
+                    SokoonNameField(
+                      controller: _nameController,
+                      label: LocaleKeys.fullName,
+                      hintText: LocaleKeys.fullNameHint,
+                      accentColor: _accentColor,
+                      validator: Validators.validateName,
+                    ),
+                    14.szH,
+                    SokoonPhoneField(
+                      controller: _phoneController,
+                      accentColor: _accentColor,
+                      validator: Validators.validateEmpty,
+                    ),
+                    14.szH,
+                    SokoonEmailField(
+                      controller: _emailController,
+                      accentColor: _accentColor,
+                      action: TextInputAction.done,
+                      readOnly: true,
+                    ),
+                    14.szH,
+                    if (widget.userType.isOwner)
                       Column(
                         children: [
-                          ProfileAvatar(
-                            name: _nameController.text,
-                            imageFile: _avatar,
-                            accentColor: _accentColor,
-                            backgroundColor: _accentColor,
-                            size: 88,
-                            useInitial: true,
-                            badgeIcon: Icons.camera_alt_outlined,
-                            onBadgePressed: isSaving ? null : _pickAvatar,
+                          _ProfileReadonlyField(
+                            label: LocaleKeys.city,
+                            value: LocaleKeys.profileCairo,
                           ),
-                          8.szH,
-                          AppText(
-                            LocaleKeys.profileChangePhoto,
-                            color: _accentColor,
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w700,
-                          ),
+                          14.szH,
+                          _buildGenderField(isSaving: isSaving),
                         ],
-                      ),
-                      24.szH,
-                      SokoonNameField(
-                        controller: _nameController,
-                        label: LocaleKeys.fullName,
-                        hintText: LocaleKeys.fullNameHint,
-                        accentColor: _accentColor,
-                        validator: Validators.validateName,
+                      )
+                    else ...[
+                      _ProfileReadonlyField(
+                        label: LocaleKeys.profileBirthDate,
+                        value: LocaleKeys.notSetYet,
                       ),
                       14.szH,
-                      SokoonPhoneField(
-                        controller: _phoneController,
-                        accentColor: _accentColor,
-                        validator: Validators.validateEmpty,
-                      ),
-                      14.szH,
-                      SokoonEmailField(
-                        controller: _emailController,
-                        accentColor: _accentColor,
-                        action: TextInputAction.done,
-                        readOnly: true,
-                      ),
-                      14.szH,
-                      if (widget.userType.isOwner)
-                        Column(
-                          children: [
-                            _ProfileReadonlyField(
-                              label: LocaleKeys.city,
-                              value: LocaleKeys.profileCairo,
-                            ),
-                            14.szH,
-                            _buildGenderField(isSaving: isSaving),
-                          ],
-                        )
-                      else ...[
-                        _ProfileReadonlyField(
-                          label: LocaleKeys.profileBirthDate,
-                          value: LocaleKeys.notSetYet,
-                        ),
-                        14.szH,
-                        _buildGenderField(isSaving: isSaving),
-                      ],
-                      if (widget.userType.isOwner) ...[
-                        16.szH,
-                        ProfileVerificationBanner(
-                          title: LocaleKeys.profileVerifiedAccount,
-                          description:
-                              LocaleKeys.profileVerifiedAccountDescription,
-                        ),
-                      ],
+                      _buildGenderField(isSaving: isSaving),
                     ],
-                  ),
+                    if (widget.userType.isOwner) ...[
+                      16.szH,
+                      ProfileVerificationBanner(
+                        title: LocaleKeys.profileVerifiedAccount,
+                        description:
+                            LocaleKeys.profileVerifiedAccountDescription,
+                      ),
+                    ],
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -321,7 +318,7 @@ class _ProfileReadonlyField extends StatelessWidget {
                     ),
                   ),
                   Icon(
-                    Icons.arrow_back_ios_new_rounded,
+                    Icons.arrow_forward_ios_rounded,
                     color: AppColors.sokoonGray,
                     size: 15.r,
                   ),
@@ -340,32 +337,29 @@ class _ProfileGenderSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Padding(
-        padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 24.h),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AppText(
-              LocaleKeys.gender,
-              color: AppColors.sokoonNavy,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w900,
-            ),
-            10.szH,
-            _ProfileGenderOption(
-              label: LocaleKeys.profileMale,
-              onTap: () => Go.back(ProfileGender.male),
-            ),
-            const Divider(height: 1, color: AppColors.sokoonBorder),
-            _ProfileGenderOption(
-              label: LocaleKeys.profileFemale,
-              onTap: () => Go.back(ProfileGender.female),
-            ),
-          ],
-        ),
+    return Padding(
+      padding: EdgeInsets.fromLTRB(20.w, 18.h, 20.w, 24.h),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AppText(
+            LocaleKeys.gender,
+            color: AppColors.sokoonNavy,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w900,
+          ),
+          10.szH,
+          _ProfileGenderOption(
+            label: LocaleKeys.profileMale,
+            onTap: () => Go.back(ProfileGender.male),
+          ),
+          const Divider(height: 1, color: AppColors.sokoonBorder),
+          _ProfileGenderOption(
+            label: LocaleKeys.profileFemale,
+            onTap: () => Go.back(ProfileGender.female),
+          ),
+        ],
       ),
     );
   }
@@ -388,7 +382,7 @@ class _ProfileGenderOption extends StatelessWidget {
         fontWeight: FontWeight.w700,
       ),
       trailing: Icon(
-        Icons.chevron_left_rounded,
+        Icons.chevron_right_rounded,
         color: AppColors.sokoonGray,
         size: 20.r,
       ),

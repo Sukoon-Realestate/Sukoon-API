@@ -6,8 +6,37 @@ import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 
 import 'chat_socket_data.dart';
 import 'models/chat_socket_message.dart';
+import 'models/message_params_model.dart';
+import 'socket_events.dart';
 
 enum ChatRealtimeStatus { disconnected, connecting, connected, error }
+
+abstract interface class ChatRealtimeGateway {
+  Stream<ChatSocketMessage> get messages;
+
+  Stream<ChatReadReceipt> get readReceipts;
+
+  Stream<ChatRealtimeStatus> get statuses;
+
+  ChatRealtimeStatus get status;
+
+  bool get isConnected;
+
+  String? get activeConversationId;
+
+  void setActiveConversation(String? conversationId);
+
+  Future<void> connect();
+
+  Future<void> disconnect();
+
+  Future<void> sendMessage({
+    required String conversationId,
+    required String content,
+  });
+
+  Future<void> markConversationAsRead(String conversationId);
+}
 
 class ChatReadReceipt {
   const ChatReadReceipt({required this.conversationId, required this.readerId});
@@ -24,7 +53,7 @@ class ChatReadReceipt {
 }
 
 /// Owns the one personal `/ws/chat/` connection shared by all conversations.
-final class ChatRealtimeService {
+final class ChatRealtimeService implements ChatRealtimeGateway {
   ChatRealtimeService._();
 
   static final ChatRealtimeService instance = ChatRealtimeService._();
@@ -39,18 +68,30 @@ final class ChatRealtimeService {
   WebSocketHelper<ChatSocketMessage>? _socket;
   Future<void>? _connectionRequest;
   ChatRealtimeStatus _status = ChatRealtimeStatus.disconnected;
+  @override
   String? activeConversationId;
 
+  @override
   Stream<ChatSocketMessage> get messages => _messages.stream;
+
+  @override
   Stream<ChatReadReceipt> get readReceipts => _readReceipts.stream;
+
+  @override
   Stream<ChatRealtimeStatus> get statuses => _statuses.stream;
+
+  @override
   ChatRealtimeStatus get status => _status;
+
+  @override
   bool get isConnected => _socket?.isConnected ?? false;
 
+  @override
   void setActiveConversation(String? conversationId) {
     activeConversationId = conversationId;
   }
 
+  @override
   Future<void> connect() {
     if (!UserModel.isAuthenticated) return Future<void>.value();
     if (isConnected) return Future<void>.value();
@@ -84,11 +125,13 @@ final class ChatRealtimeService {
     }
   }
 
+  @override
   Future<void> disconnect() async {
     await _socket?.disconnect();
     _setStatus(ChatRealtimeStatus.disconnected);
   }
 
+  @override
   Future<void> sendMessage({
     required String conversationId,
     required String content,
@@ -97,12 +140,15 @@ final class ChatRealtimeService {
     if (socket == null || !socket.isConnected) {
       throw const SocketNotConnectedException();
     }
-    await socket.sendMessage({
-      'conversation_id': conversationId,
-      'content': content,
-    });
+    await socket.sendMessage(
+      MessageParamsModel(
+        conversationId: conversationId,
+        content: content,
+      ).toSocketJson(),
+    );
   }
 
+  @override
   Future<void> markConversationAsRead(String conversationId) async {
     final WebSocketHelper<ChatSocketMessage>? socket = _socket;
     if (socket == null || !socket.isConnected) {
@@ -115,7 +161,7 @@ final class ChatRealtimeService {
     String event,
     Map<String, dynamic> eventData,
   ) async {
-    if (event != 'message.read') return;
+    if (event != SocketEvents.readMessage) return;
     final Object? payload = eventData['payload'];
     if (payload is! Map) return;
     _readReceipts.add(

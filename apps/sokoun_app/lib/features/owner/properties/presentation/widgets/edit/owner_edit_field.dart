@@ -34,7 +34,6 @@ class OwnerEditField extends StatelessWidget {
           controller: controller,
           keyboardType: keyboardType,
           maxLines: maxLines,
-          textDirection: TextDirection.rtl,
           inputFormatters: keyboardType == TextInputType.number
               ? [FilteringTextInputFormatter.digitsOnly]
               : null,

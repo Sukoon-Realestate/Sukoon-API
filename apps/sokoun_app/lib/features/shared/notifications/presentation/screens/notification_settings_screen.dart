@@ -62,53 +62,48 @@ class _NotificationSettingsScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<NotificationSettingsCubit>.value(value: _settingsCubit),
-          BlocProvider<NotificationSettingUpdateCubit>.value(
-            value: _updateCubit,
-          ),
-        ],
-        child: Scaffold(
-          backgroundColor: AppColors.scaffoldBackground,
-          body: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                NotificationPageHeader(
-                  title: LocaleKeys.notificationSettingsTitle,
-                ),
-                Expanded(
-                  child:
-                      BlocBuilder<
-                        NotificationSettingUpdateCubit,
-                        AsyncState<String>
-                      >(
-                        builder: (context, updateState) {
-                          return StatusBuilder<
-                            NotificationSettingsCubit,
-                            NotificationSettingsContent
-                          >.withShimmer(
-                            initialDataForShimmer:
-                                const NotificationSettingsContent.initial(),
-                            requestToTryAgainWhenError: _settingsRequest,
-                            errorType: ErrorType.defaultView,
-                            builder: (settings) =>
-                                NotificationSettingsContentView(
-                                  settings: settings,
-                                  updatingKey: updateState.isLoading
-                                      ? updateState.data
-                                      : null,
-                                  onSettingChanged: _updateSetting,
-                                ),
-                          );
-                        },
-                      ),
-                ),
-              ],
-            ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<NotificationSettingsCubit>.value(value: _settingsCubit),
+        BlocProvider<NotificationSettingUpdateCubit>.value(value: _updateCubit),
+      ],
+      child: Scaffold(
+        backgroundColor: AppColors.scaffoldBackground,
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              NotificationPageHeader(
+                title: LocaleKeys.notificationSettingsTitle,
+              ),
+              Expanded(
+                child:
+                    BlocBuilder<
+                      NotificationSettingUpdateCubit,
+                      AsyncState<String>
+                    >(
+                      builder: (context, updateState) {
+                        return StatusBuilder<
+                          NotificationSettingsCubit,
+                          NotificationSettingsContent
+                        >.withShimmer(
+                          initialDataForShimmer:
+                              const NotificationSettingsContent.initial(),
+                          requestToTryAgainWhenError: _settingsRequest,
+                          errorType: ErrorType.defaultView,
+                          builder: (settings) =>
+                              NotificationSettingsContentView(
+                                settings: settings,
+                                updatingKey: updateState.isLoading
+                                    ? updateState.data
+                                    : null,
+                                onSettingChanged: _updateSetting,
+                              ),
+                        );
+                      },
+                    ),
+              ),
+            ],
           ),
         ),
       ),

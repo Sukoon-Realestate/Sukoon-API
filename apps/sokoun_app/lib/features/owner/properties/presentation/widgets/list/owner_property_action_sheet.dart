@@ -7,41 +7,38 @@ class OwnerPropertyActionSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Container(
-        padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 24.h),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              width: 42.w,
-              height: 4.h,
-              decoration: BoxDecoration(
-                color: AppColors.graySoft,
-                borderRadius: BorderRadius.circular(99.r),
-              ),
-            ).centerWidget,
-            18.szH,
-            AppText(
-              LocaleKeys.ownerPropertiesOptions,
-              color: AppColors.sokoonNavy,
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w900,
-              textAlign: TextAlign.center,
+    return Container(
+      padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 24.h),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            width: 42.w,
+            height: 4.h,
+            decoration: BoxDecoration(
+              color: AppColors.graySoft,
+              borderRadius: BorderRadius.circular(99.r),
             ),
-            16.szH,
-            for (final action in OwnerPropertyAction.values) ...[
-              _OwnerPropertyActionRow(action: action, property: property),
-              if (!action.isDelete) 10.szH,
-            ],
+          ).centerWidget,
+          18.szH,
+          AppText(
+            LocaleKeys.ownerPropertiesOptions,
+            color: AppColors.sokoonNavy,
+            fontSize: 20.sp,
+            fontWeight: FontWeight.w900,
+            textAlign: TextAlign.center,
+          ),
+          16.szH,
+          for (final action in OwnerPropertyAction.values) ...[
+            _OwnerPropertyActionRow(action: action, property: property),
+            if (!action.isDelete) 10.szH,
           ],
-        ),
+        ],
       ),
     );
   }
@@ -92,7 +89,7 @@ class _OwnerPropertyActionRow extends StatelessWidget {
                 ),
               ),
               Icon(
-                Icons.arrow_back_ios_new_rounded,
+                Icons.arrow_forward_ios_rounded,
                 color: AppColors.sokoonMuted,
                 size: 16.r,
               ),

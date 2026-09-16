@@ -80,20 +80,17 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: TenantVisitsScreenContent(
-            selectedFilter: _selectedFilter,
-            initialVisits: _fixtureVisits,
-            pagifyController: _pagifyController,
-            onFilterSelected: _selectFilter,
-            onVisitPressed: _openDetails,
-            onRatePressed: _showRating,
-            onCancelPressed: _removeVisit,
-          ),
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBackground,
+      body: SafeArea(
+        child: TenantVisitsScreenContent(
+          selectedFilter: _selectedFilter,
+          initialVisits: _fixtureVisits,
+          pagifyController: _pagifyController,
+          onFilterSelected: _selectFilter,
+          onVisitPressed: _openDetails,
+          onRatePressed: _showRating,
+          onCancelPressed: _removeVisit,
         ),
       ),
     );

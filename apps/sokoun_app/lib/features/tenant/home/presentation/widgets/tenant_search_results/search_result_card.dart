@@ -90,7 +90,6 @@ class SearchResultCard extends StatelessWidget {
               TagsRow(tags: tags),
               12.szH,
               Row(
-                textDirection: TextDirection.ltr,
                 children: [
                   DetailsButton(propertyId: item.id),
                   const Spacer(),

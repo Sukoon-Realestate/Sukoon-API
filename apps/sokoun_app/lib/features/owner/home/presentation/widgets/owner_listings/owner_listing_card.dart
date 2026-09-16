@@ -33,7 +33,6 @@ class OwnerListingCard extends StatelessWidget {
       child: Column(
         children: [
           Row(
-            textDirection: TextDirection.ltr,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
@@ -61,7 +60,7 @@ class OwnerListingCard extends StatelessWidget {
                       fontWeight: FontWeight.w900,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.start,
                     ),
                     6.szH,
                     OwnerListingStatusBadge(status: listing.status).endWidget,
@@ -73,7 +72,7 @@ class OwnerListingCard extends StatelessWidget {
                       fontWeight: FontWeight.w900,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.start,
                     ),
                     6.szH,
                     Row(
@@ -109,7 +108,6 @@ class OwnerListingCard extends StatelessWidget {
           ),
           14.szH,
           Row(
-            textDirection: TextDirection.ltr,
             children: [
               for (
                 int index = 0;

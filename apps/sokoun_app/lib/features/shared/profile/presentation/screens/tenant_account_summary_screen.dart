@@ -30,33 +30,30 @@ class _TenantAccountSummaryScreenState
   Widget build(BuildContext context) {
     return BlocProvider<TenantAccountSummaryCubit>.value(
       value: _summaryCubit,
-      child: Directionality(
-        textDirection: TextDirection.rtl,
-        child: Scaffold(
-          backgroundColor: AppColors.scaffoldBackground,
-          body: SafeArea(
-            child: Column(
-              children: [
-                ProfileScreenHeader(
-                  title: LocaleKeys.profileSummaryTitle,
-                  showBackButton: true,
-                ),
-                Expanded(
-                  child:
-                      StatusBuilder<
-                        TenantAccountSummaryCubit,
-                        TenantAccountSummaryContent
-                      >.withShimmer(
-                        initialDataForShimmer:
-                            const TenantAccountSummaryContent.initial(),
-                        requestToTryAgainWhenError: _summaryRequest,
-                        errorType: ErrorType.defaultView,
-                        builder: (summary) =>
-                            TenantAccountSummaryContentView(summary: summary),
-                      ),
-                ),
-              ],
-            ),
+      child: Scaffold(
+        backgroundColor: AppColors.scaffoldBackground,
+        body: SafeArea(
+          child: Column(
+            children: [
+              ProfileScreenHeader(
+                title: LocaleKeys.profileSummaryTitle,
+                showBackButton: true,
+              ),
+              Expanded(
+                child:
+                    StatusBuilder<
+                      TenantAccountSummaryCubit,
+                      TenantAccountSummaryContent
+                    >.withShimmer(
+                      initialDataForShimmer:
+                          const TenantAccountSummaryContent.initial(),
+                      requestToTryAgainWhenError: _summaryRequest,
+                      errorType: ErrorType.defaultView,
+                      builder: (summary) =>
+                          TenantAccountSummaryContentView(summary: summary),
+                    ),
+              ),
+            ],
           ),
         ),
       ),

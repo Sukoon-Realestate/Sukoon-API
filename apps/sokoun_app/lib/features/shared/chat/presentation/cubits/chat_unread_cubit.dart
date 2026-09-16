@@ -5,7 +5,7 @@ import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/asy
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 
-import '../../data/chat_data.dart';
+import '../../data/chats_data.dart';
 import '../../data/chat_realtime_service.dart';
 import '../../data/chat_unread_refresh_bus.dart';
 import '../../data/models/chat_socket_message.dart';

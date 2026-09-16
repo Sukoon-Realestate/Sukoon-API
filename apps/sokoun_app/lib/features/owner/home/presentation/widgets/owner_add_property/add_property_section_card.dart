@@ -33,7 +33,7 @@ class AddPropertySectionCard extends StatelessWidget {
             color: AppColors.sokoonNavy,
             fontSize: 14.sp,
             fontWeight: FontWeight.w900,
-            textAlign: TextAlign.right,
+            textAlign: TextAlign.start,
           ),
           if (subtitle != null) ...[
             4.szH,
@@ -42,7 +42,7 @@ class AddPropertySectionCard extends StatelessWidget {
               color: AppColors.sokoonGray,
               fontSize: 11.sp,
               fontWeight: FontWeight.w400,
-              textAlign: TextAlign.right,
+              textAlign: TextAlign.start,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),

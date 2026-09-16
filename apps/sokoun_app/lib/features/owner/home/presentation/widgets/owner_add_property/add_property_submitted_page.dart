@@ -148,7 +148,6 @@ class _SummaryRow extends StatelessWidget {
     return SizedBox(
       height: 34.h,
       child: Row(
-        textDirection: TextDirection.ltr,
         children: [
           AppText(
             item.value,

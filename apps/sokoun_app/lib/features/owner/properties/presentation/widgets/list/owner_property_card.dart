@@ -51,7 +51,6 @@ class OwnerPropertyCard extends StatelessWidget {
           child: Column(
             children: [
               Row(
-                textDirection: TextDirection.ltr,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
@@ -92,7 +91,7 @@ class OwnerPropertyCard extends StatelessWidget {
                           fontWeight: FontWeight.w900,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.right,
+                          textAlign: TextAlign.start,
                         ),
                         6.szH,
                         OwnerPropertyStatusBadge(status: property.status),
@@ -103,7 +102,7 @@ class OwnerPropertyCard extends StatelessWidget {
                           color: AppColors.sokoonTeal,
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w900,
-                          textAlign: TextAlign.right,
+                          textAlign: TextAlign.start,
                         ),
                         6.szH,
                         AppText(
@@ -112,7 +111,7 @@ class OwnerPropertyCard extends StatelessWidget {
                           color: AppColors.sokoonGray,
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w400,
-                          textAlign: TextAlign.right,
+                          textAlign: TextAlign.start,
                         ),
                       ],
                     ),
@@ -121,7 +120,6 @@ class OwnerPropertyCard extends StatelessWidget {
               ),
               14.szH,
               Row(
-                textDirection: TextDirection.ltr,
                 children: [
                   _OwnerPropertyCardAction(
                     label: LocaleKeys.ownerPropertiesEdit,

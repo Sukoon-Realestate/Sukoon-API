@@ -31,7 +31,6 @@ class ActiveFiltersBar extends StatelessWidget {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          textDirection: TextDirection.ltr,
           children: [
             for (final filter in filters) ...[
               ActiveFilterChip(

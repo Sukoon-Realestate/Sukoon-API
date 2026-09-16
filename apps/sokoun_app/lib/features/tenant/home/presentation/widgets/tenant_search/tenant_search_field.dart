@@ -27,7 +27,7 @@ class TenantSearchField extends StatelessWidget {
       onChanged: (value) => onChanged?.call(value ?? ''),
       onSubmitted: (value) => onSubmitted?.call(value ?? ''),
       action: TextInputAction.search,
-      textAlign: TextAlign.right,
+      textAlign: TextAlign.start,
       title: LocaleKeys.tenantSearchFieldHint,
       borderRadius: 16.r,
       borderColor: AppColors.sokoonTeal,

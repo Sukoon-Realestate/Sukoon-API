@@ -50,7 +50,7 @@ class AddPropertyField extends StatelessWidget {
           color: AppColors.sokoonGray,
           fontSize: 12.sp,
           fontWeight: FontWeight.w600,
-          textAlign: TextAlign.right,
+          textAlign: TextAlign.start,
         ),
         6.szH,
         Container(
@@ -70,7 +70,6 @@ class AddPropertyField extends StatelessWidget {
             ),
           ),
           child: Row(
-            textDirection: TextDirection.ltr,
             crossAxisAlignment: maxLines == 1
                 ? CrossAxisAlignment.center
                 : CrossAxisAlignment.start,

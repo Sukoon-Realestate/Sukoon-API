@@ -33,25 +33,22 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: BlocProvider.value(
-        value: _ownerDashboardCubit,
-        child: Scaffold(
-          backgroundColor: AppColors.scaffoldBackground,
-          body: SafeArea(
-            child:
-                StatusBuilder<
-                  OwnerDashboardCubit,
-                  OwnerDashboardModel
-                >.withShimmer(
-                  initialDataForShimmer: const OwnerDashboardModel.initial(),
-                  requestToTryAgainWhenError: _ownerDashboardRequest,
-                  errorType: ErrorType.defaultView,
-                  builder: (dashboard) =>
-                      OwnerDashboardContent(dashboard: dashboard),
-                ),
-          ),
+    return BlocProvider.value(
+      value: _ownerDashboardCubit,
+      child: Scaffold(
+        backgroundColor: AppColors.scaffoldBackground,
+        body: SafeArea(
+          child:
+              StatusBuilder<
+                OwnerDashboardCubit,
+                OwnerDashboardModel
+              >.withShimmer(
+                initialDataForShimmer: const OwnerDashboardModel.initial(),
+                requestToTryAgainWhenError: _ownerDashboardRequest,
+                errorType: ErrorType.defaultView,
+                builder: (dashboard) =>
+                    OwnerDashboardContent(dashboard: dashboard),
+              ),
         ),
       ),
     );

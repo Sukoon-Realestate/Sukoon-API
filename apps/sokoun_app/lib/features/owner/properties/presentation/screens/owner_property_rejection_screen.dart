@@ -54,133 +54,126 @@ class _OwnerPropertyRejectionScreenState
   @override
   Widget build(BuildContext context) {
     final OwnerPropertyContent property = widget.property;
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: Column(
-            children: [
-              OwnerPropertyTopBar(
-                title: LocaleKeys.ownerPropertyRejectionTitle,
-              ),
-              Expanded(
-                child: ListView(
-                  padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 24.h),
-                  children: [
-                    Container(
-                      width: 88.r,
-                      height: 88.r,
-                      decoration: const BoxDecoration(
-                        color: AppColors.redPale,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.error_outline_rounded,
-                        color: AppColors.red,
-                        size: 42.r,
-                      ),
-                    ).centerWidget,
-                    12.szH,
-                    OwnerPropertyStatusBadge(
-                      status: OwnerPropertyStatus.rejected,
-                    ).centerWidget,
-                    12.szH,
-                    AppText(
-                      LocaleKeys.ownerPropertyRejectedHeadline,
-                      color: AppColors.sokoonNavy,
-                      fontSize: 22.sp,
-                      fontWeight: FontWeight.w900,
-                      textAlign: TextAlign.center,
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBackground,
+      body: SafeArea(
+        child: Column(
+          children: [
+            OwnerPropertyTopBar(title: LocaleKeys.ownerPropertyRejectionTitle),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 24.h),
+                children: [
+                  Container(
+                    width: 88.r,
+                    height: 88.r,
+                    decoration: const BoxDecoration(
+                      color: AppColors.redPale,
+                      shape: BoxShape.circle,
                     ),
-                    6.szH,
-                    AppText(
-                      property.title,
-                      color: AppColors.sokoonGray,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                      textAlign: TextAlign.center,
+                    child: Icon(
+                      Icons.error_outline_rounded,
+                      color: AppColors.red,
+                      size: 42.r,
                     ),
-                    20.szH,
-                    _RejectionSection(
-                      title: LocaleKeys.ownerPropertyRejectionReasons,
+                  ).centerWidget,
+                  12.szH,
+                  OwnerPropertyStatusBadge(
+                    status: OwnerPropertyStatus.rejected,
+                  ).centerWidget,
+                  12.szH,
+                  AppText(
+                    LocaleKeys.ownerPropertyRejectedHeadline,
+                    color: AppColors.sokoonNavy,
+                    fontSize: 22.sp,
+                    fontWeight: FontWeight.w900,
+                    textAlign: TextAlign.center,
+                  ),
+                  6.szH,
+                  AppText(
+                    property.title,
+                    color: AppColors.sokoonGray,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    textAlign: TextAlign.center,
+                  ),
+                  20.szH,
+                  _RejectionSection(
+                    title: LocaleKeys.ownerPropertyRejectionReasons,
+                    children: [
+                      _RejectionReason(
+                        text: LocaleKeys.ownerPropertyReasonUnclearPhotos,
+                      ),
+                      10.szH,
+                      _RejectionReason(
+                        text: LocaleKeys.ownerPropertyReasonIncompleteInfo,
+                      ),
+                    ],
+                  ),
+                  14.szH,
+                  _RejectionSection(
+                    title: LocaleKeys.ownerPropertyReviewerNotes,
+                    children: [
+                      AppText(
+                        LocaleKeys.ownerPropertyReviewerNotesDescription,
+                        color: AppColors.sokoonGray,
+                        fontSize: 13.sp,
+                        height: 1.55,
+                      ),
+                    ],
+                  ),
+                  14.szH,
+                  Container(
+                    padding: EdgeInsets.all(14.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.orangePale,
+                      borderRadius: BorderRadius.circular(16.r),
+                      border: Border.all(color: AppColors.yellowPale),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _RejectionReason(
-                          text: LocaleKeys.ownerPropertyReasonUnclearPhotos,
+                        Icon(
+                          Icons.info_outline_rounded,
+                          color: AppColors.amber,
+                          size: 21.r,
                         ),
-                        10.szH,
-                        _RejectionReason(
-                          text: LocaleKeys.ownerPropertyReasonIncompleteInfo,
+                        9.szW,
+                        Expanded(
+                          child: AppText(
+                            LocaleKeys.ownerPropertyRejectionWarning,
+                            color: AppColors.brown,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w700,
+                            height: 1.45,
+                          ),
                         ),
                       ],
                     ),
-                    14.szH,
-                    _RejectionSection(
-                      title: LocaleKeys.ownerPropertyReviewerNotes,
-                      children: [
-                        AppText(
-                          LocaleKeys.ownerPropertyReviewerNotesDescription,
-                          color: AppColors.sokoonGray,
-                          fontSize: 13.sp,
-                          height: 1.55,
-                        ),
-                      ],
-                    ),
-                    14.szH,
-                    Container(
-                      padding: EdgeInsets.all(14.w),
-                      decoration: BoxDecoration(
-                        color: AppColors.orangePale,
-                        borderRadius: BorderRadius.circular(16.r),
-                        border: Border.all(color: AppColors.yellowPale),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Icon(
-                            Icons.info_outline_rounded,
-                            color: AppColors.amber,
-                            size: 21.r,
-                          ),
-                          9.szW,
-                          Expanded(
-                            child: AppText(
-                              LocaleKeys.ownerPropertyRejectionWarning,
-                              color: AppColors.brown,
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w700,
-                              height: 1.45,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    22.szH,
-                    DefaultButton(
-                      title: LocaleKeys.ownerPropertyEditAndResubmit,
-                      onTap: _isLoadingPropertyDetails
-                          ? null
-                          : _editAndResubmit,
-                      height: 50.h,
-                      borderRadius: BorderRadius.circular(15.r),
-                      fontWeight: FontWeight.w900,
-                    ),
-                    12.szH,
-                    DefaultButton(
-                      title: LocaleKeys.ownerPropertyContactSupport,
-                      onTap: () => _contactSupport(context),
-                      height: 50.h,
-                      color: AppColors.white,
-                      textColor: AppColors.sokoonTeal,
-                      borderColor: AppColors.sokoonTeal,
-                      borderRadius: BorderRadius.circular(15.r),
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ],
-                ),
+                  ),
+                  22.szH,
+                  DefaultButton(
+                    title: LocaleKeys.ownerPropertyEditAndResubmit,
+                    onTap: _isLoadingPropertyDetails ? null : _editAndResubmit,
+                    height: 50.h,
+                    borderRadius: BorderRadius.circular(15.r),
+                    fontWeight: FontWeight.w900,
+                  ),
+                  12.szH,
+                  DefaultButton(
+                    title: LocaleKeys.ownerPropertyContactSupport,
+                    onTap: () => _contactSupport(context),
+                    height: 50.h,
+                    color: AppColors.white,
+                    textColor: AppColors.sokoonTeal,
+                    borderColor: AppColors.sokoonTeal,
+                    borderRadius: BorderRadius.circular(15.r),
+                    fontWeight: FontWeight.w900,
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

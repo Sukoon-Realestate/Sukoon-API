@@ -70,7 +70,6 @@ class TenantPropertyHeroGallery extends StatelessWidget {
             start: 14.w,
             end: 14.w,
             child: Row(
-              textDirection: TextDirection.ltr,
               children: [
                 _HeroIconButton(
                   icon: Icons.arrow_back_ios_new_rounded,

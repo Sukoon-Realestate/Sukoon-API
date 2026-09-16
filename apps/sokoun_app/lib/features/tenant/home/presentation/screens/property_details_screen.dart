@@ -10,8 +10,8 @@ import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_det
 import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_save_cubit.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/imports.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
-import 'package:sokoun_app/features/shared/chat/presentation/cubits/create_conversation_cubit.dart';
-import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_thread_screen.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/cubits/start_chat.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_screen.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 
 class PropertyDetailsScreen extends StatefulWidget {
@@ -107,33 +107,30 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          bottom: false,
-          child: MultiBlocProvider(
-            providers: [
-              BlocProvider<PropertyDetailsCubit>.value(value: _detailsCubit),
-              BlocProvider<CreateConversationCubit>.value(
-                value: _conversationCubit,
-              ),
-            ],
-            child:
-                StatusBuilder<
-                  PropertyDetailsCubit,
-                  PropertyDetailsModel
-                >.withShimmer(
-                  initialDataForShimmer: const PropertyDetailsModel.initial(),
-                  requestToTryAgainWhenError: _detailsRequest,
-                  builder: _buildDetails,
-                  errorType: ErrorType.customView,
-                  errorWidget: const TenantPropertyStatusView(
-                    child: ExceptionView(),
-                  ),
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBackground,
+      body: SafeArea(
+        bottom: false,
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider<PropertyDetailsCubit>.value(value: _detailsCubit),
+            BlocProvider<CreateConversationCubit>.value(
+              value: _conversationCubit,
+            ),
+          ],
+          child:
+              StatusBuilder<
+                PropertyDetailsCubit,
+                PropertyDetailsModel
+              >.withShimmer(
+                initialDataForShimmer: const PropertyDetailsModel.initial(),
+                requestToTryAgainWhenError: _detailsRequest,
+                builder: _buildDetails,
+                errorType: ErrorType.customView,
+                errorWidget: const TenantPropertyStatusView(
+                  child: ExceptionView(),
                 ),
-          ),
+              ),
         ),
       ),
     );

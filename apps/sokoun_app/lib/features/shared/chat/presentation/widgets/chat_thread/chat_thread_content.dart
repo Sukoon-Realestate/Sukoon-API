@@ -12,12 +12,12 @@ import 'package:pagify/pagify.dart';
 
 import '../../../data/models/chat_content.dart';
 import '../../../data/models/chat_socket_message.dart';
-import '../../cubits/chat_thread_cubit.dart';
-import '../../screens/chat_list_screen.dart';
+import '../../cubits/socket_cubit.dart';
+import '../../screens/chats_screen.dart';
+import '../chat/bottom_bar.dart';
+import '../chat/chat_view.dart';
+import '../chat/upper_view.dart';
 import '../report/chat_report_sheet.dart';
-import 'chat_composer.dart';
-import 'chat_thread_header.dart';
-import 'chat_thread_messages_view.dart';
 
 class ChatThreadContent extends StatefulWidget {
   const ChatThreadContent({super.key, required this.conversation});
@@ -41,6 +41,7 @@ class _ChatThreadContentState extends State<ChatThreadContent> {
 
   @override
   void dispose() {
+    _chatController.dispose();
     _messageController.dispose();
     super.dispose();
   }
@@ -120,17 +121,17 @@ class _ChatThreadContentState extends State<ChatThreadContent> {
         body: text,
       ),
       sender: Sender(
-        id: 'current-user',
-        name: 'current-user',
+        id: UserModel.currentUser?.id ?? '',
+        name: UserModel.currentUser?.name ?? '',
         image: '',
         isFromMe: true,
       ),
       time: LocaleKeys.chatNow,
       messageState: MessageState.pending,
     );
-    _chatController.addAtBeginning(pendingMessage);
+    _chatController.addItem(pendingMessage);
+    _chatController.moveToMaxBottom();
     _messageController.clear();
-    FocusScope.of(context).unfocus();
     unawaited(_sendMessage(text));
   }
 
@@ -184,17 +185,17 @@ class _ChatThreadContentState extends State<ChatThreadContent> {
       ],
       child: Column(
         children: [
-          ChatThreadHeader(
+          ChatUpperWidget(
             conversation: widget.conversation,
             onReportPressed: _showReportSheet,
           ),
           Expanded(
-            child: ChatThreadMessagesView(
+            child: ChatView(
               conversation: widget.conversation,
               controller: _chatController,
             ),
           ),
-          ChatComposer(
+          ChatBottomBar(
             controller: _messageController,
             onSendPressed: _sendTextMessage,
           ),

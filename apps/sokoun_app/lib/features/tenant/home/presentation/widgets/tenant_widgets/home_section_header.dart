@@ -20,7 +20,7 @@ class HomeSectionHeader extends StatelessWidget {
             color: AppColors.sokoonNavy,
             fontSize: 15.sp,
             fontWeight: FontWeight.w900,
-            textAlign: TextAlign.right,
+            textAlign: TextAlign.start,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

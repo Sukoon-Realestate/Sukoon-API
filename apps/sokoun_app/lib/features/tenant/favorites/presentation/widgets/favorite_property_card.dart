@@ -57,7 +57,6 @@ class FavoritePropertyCard extends StatelessWidget {
                 ),
                 4.szH,
                 Row(
-                  textDirection: TextDirection.rtl,
                   children: [
                     Expanded(
                       child: _FavoritePropertyMeta(
@@ -113,9 +112,9 @@ class _FavoritePropertyImage extends StatelessWidget {
                       placeHolder: const _FavoriteImagePlaceholder(),
                     ),
             ),
-            Positioned(
+            PositionedDirectional(
               top: 10.h,
-              left: 10.w,
+              end: 10.w,
               child: Semantics(
                 button: true,
                 label: LocaleKeys.favoriteRemoveSemanticLabel,
@@ -172,7 +171,6 @@ class _FavoritePropertyMeta extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
-      textDirection: TextDirection.rtl,
       children: [
         Icon(Icons.star_rounded, color: AppColors.amber, size: 12.r),
         6.szW,

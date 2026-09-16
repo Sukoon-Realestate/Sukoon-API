@@ -11,7 +11,6 @@ class HomeSectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      textDirection: TextDirection.ltr,
       children: [
         Expanded(
           child: AppText(
@@ -19,7 +18,7 @@ class HomeSectionHeader extends StatelessWidget {
             color: AppColors.sokoonNavy,
             fontSize: 15.sp,
             fontWeight: FontWeight.w900,
-            textAlign: TextAlign.right,
+            textAlign: TextAlign.start,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

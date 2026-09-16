@@ -49,7 +49,6 @@ class OwnerRequestCard extends StatelessWidget {
             ],
           ),
           child: Row(
-            textDirection: TextDirection.ltr,
             children: [
               Container(
                 width: 38.r,

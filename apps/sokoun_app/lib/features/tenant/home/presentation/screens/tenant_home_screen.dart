@@ -33,21 +33,18 @@ class _TenantHomeScreenState extends State<TenantHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: BlocProvider<HomePageCubit>.value(
-            value: _homePageCubit,
-            child: StatusBuilder<HomePageCubit, HomePageModel>.withShimmer(
-              initialDataForShimmer: const HomePageModel.initial(),
-              requestToTryAgainWhenError: _homePageRequest,
-              errorType: ErrorType.defaultView,
-              builder: (data) => TenantHomeContent(
-                properties: data.results,
-                showVisitBanner: data.banner != null,
-              ),
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBackground,
+      body: SafeArea(
+        child: BlocProvider<HomePageCubit>.value(
+          value: _homePageCubit,
+          child: StatusBuilder<HomePageCubit, HomePageModel>.withShimmer(
+            initialDataForShimmer: const HomePageModel.initial(),
+            requestToTryAgainWhenError: _homePageRequest,
+            errorType: ErrorType.defaultView,
+            builder: (data) => TenantHomeContent(
+              properties: data.results,
+              showVisitBanner: data.banner != null,
             ),
           ),
         ),

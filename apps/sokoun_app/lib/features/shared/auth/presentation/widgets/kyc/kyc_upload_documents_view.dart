@@ -182,7 +182,7 @@ class _NationalIdField extends StatelessWidget {
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           validator: validator,
           maxLength: 14,
-          textAlign: TextAlign.right,
+          textAlign: TextAlign.start,
           borderRadius: 12.r,
           fillColor: AppColors.white,
           borderColor: AppColors.grayPale,

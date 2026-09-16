@@ -14,31 +14,28 @@ class NotificationsEmptyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-                decoration: const BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: AppColors.sokoonBorder),
-                  ),
-                ),
-                child: AppText(
-                  LocaleKeys.notificationsFlowTitle,
-                  color: AppColors.sokoonNavy,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w900,
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBackground,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+              decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(color: AppColors.sokoonBorder),
                 ),
               ),
-              Expanded(child: NotificationsEmptyState(role: role)),
-            ],
-          ),
+              child: AppText(
+                LocaleKeys.notificationsFlowTitle,
+                color: AppColors.sokoonNavy,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            Expanded(child: NotificationsEmptyState(role: role)),
+          ],
         ),
       ),
     );

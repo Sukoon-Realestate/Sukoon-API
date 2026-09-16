@@ -30,7 +30,7 @@ class AddPropertyDropdownField extends StatelessWidget {
           color: AppColors.sokoonGray,
           fontSize: 12.sp,
           fontWeight: FontWeight.w600,
-          textAlign: TextAlign.right,
+          textAlign: TextAlign.start,
         ),
         6.szH,
         Container(

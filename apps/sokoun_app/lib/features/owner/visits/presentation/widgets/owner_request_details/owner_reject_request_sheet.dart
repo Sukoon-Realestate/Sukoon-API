@@ -17,50 +17,47 @@ class _OwnerRejectRequestSheetState extends State<OwnerRejectRequestSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Container(
-        padding: EdgeInsets.fromLTRB(24.w, 12.h, 24.w, 28.h),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const _OwnerSheetHandle(),
-            18.szH,
-            _OwnerDecisionSheetHeader(
-              icon: Icons.close_rounded,
-              title: LocaleKeys.ownerRejectTitle,
-              subtitle: LocaleKeys.ownerRejectSubtitle,
-              iconColor: AppColors.red,
-              iconBackgroundColor: AppColors.redPale,
+    return Container(
+      padding: EdgeInsets.fromLTRB(24.w, 12.h, 24.w, 28.h),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const _OwnerSheetHandle(),
+          18.szH,
+          _OwnerDecisionSheetHeader(
+            icon: Icons.close_rounded,
+            title: LocaleKeys.ownerRejectTitle,
+            subtitle: LocaleKeys.ownerRejectSubtitle,
+            iconColor: AppColors.red,
+            iconBackgroundColor: AppColors.redPale,
+          ),
+          18.szH,
+          for (final OwnerRejectionReason reason
+              in OwnerRejectionReason.values) ...[
+            _OwnerRejectionReasonTile(
+              reason: reason,
+              isSelected: reason.isSame(_selectedReason),
+              onPressed: () => _selectReason(reason),
             ),
-            18.szH,
-            for (final OwnerRejectionReason reason
-                in OwnerRejectionReason.values) ...[
-              _OwnerRejectionReasonTile(
-                reason: reason,
-                isSelected: reason.isSame(_selectedReason),
-                onPressed: () => _selectReason(reason),
-              ),
-              if (!reason.isOther) 8.szH,
-            ],
-            18.szH,
-            DefaultButton(
-              onTap: () => Go.back(_selectedReason),
-              title: LocaleKeys.ownerRejectConfirm,
-              color: AppColors.red,
-              textColor: AppColors.white,
-              borderRadius: BorderRadius.circular(14.r),
-              height: 52.h,
-              fontSize: 15.sp,
-              fontWeight: FontWeight.w900,
-            ),
+            if (!reason.isOther) 8.szH,
           ],
-        ),
+          18.szH,
+          DefaultButton(
+            onTap: () => Go.back(_selectedReason),
+            title: LocaleKeys.ownerRejectConfirm,
+            color: AppColors.red,
+            textColor: AppColors.white,
+            borderRadius: BorderRadius.circular(14.r),
+            height: 52.h,
+            fontSize: 15.sp,
+            fontWeight: FontWeight.w900,
+          ),
+        ],
       ),
     );
   }

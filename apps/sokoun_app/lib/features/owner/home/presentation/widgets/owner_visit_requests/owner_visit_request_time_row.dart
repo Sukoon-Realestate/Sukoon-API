@@ -19,7 +19,6 @@ class OwnerVisitRequestTimeRow extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: Row(
-        textDirection: TextDirection.rtl,
         children: [
           Icon(
             Icons.calendar_today_outlined,

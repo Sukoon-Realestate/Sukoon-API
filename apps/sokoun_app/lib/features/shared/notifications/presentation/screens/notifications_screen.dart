@@ -137,42 +137,39 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: BlocProvider<NotificationsCubit>.value(
-        value: _cubit,
-        child: Scaffold(
-          backgroundColor: AppColors.scaffoldBackground,
-          body: SafeArea(
-            child:
-                BlocBuilder<
-                  NotificationsCubit,
-                  AsyncState<NotificationOperationsState>
-                >(
-                  builder: (context, state) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        NotificationsHeader(
+    return BlocProvider<NotificationsCubit>.value(
+      value: _cubit,
+      child: Scaffold(
+        backgroundColor: AppColors.scaffoldBackground,
+        body: SafeArea(
+          child:
+              BlocBuilder<
+                NotificationsCubit,
+                AsyncState<NotificationOperationsState>
+              >(
+                builder: (context, state) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      NotificationsHeader(
+                        role: _role,
+                        hasUnread: state.data.unreadCount > 0,
+                        isMarkingAll: state.data.isMarkingAll,
+                        onMarkAllPressed: _markAllAsRead,
+                      ),
+                      Expanded(
+                        child: NotificationsList(
                           role: _role,
-                          hasUnread: state.data.unreadCount > 0,
-                          isMarkingAll: state.data.isMarkingAll,
-                          onMarkAllPressed: _markAllAsRead,
+                          initialNotifications: _fixtureNotifications,
+                          pagifyController: _pagifyController,
+                          onNotificationPressed: _openNotification,
+                          onUnreadCountChanged: _cubit.setUnreadCount,
                         ),
-                        Expanded(
-                          child: NotificationsList(
-                            role: _role,
-                            initialNotifications: _fixtureNotifications,
-                            pagifyController: _pagifyController,
-                            onNotificationPressed: _openNotification,
-                            onUnreadCountChanged: _cubit.setUnreadCount,
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-          ),
+                      ),
+                    ],
+                  );
+                },
+              ),
         ),
       ),
     );

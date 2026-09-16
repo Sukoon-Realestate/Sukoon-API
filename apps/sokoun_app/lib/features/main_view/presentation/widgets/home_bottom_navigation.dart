@@ -29,7 +29,6 @@ class HomeBottomNavigation extends StatelessWidget {
           border: Border(top: BorderSide(color: AppColors.sokoonBorder)),
         ),
         child: Row(
-          textDirection: TextDirection.ltr,
           children: destinations.indexed
               .map((entry) {
                 final int index = entry.$1;

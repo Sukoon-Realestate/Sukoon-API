@@ -21,7 +21,7 @@ class UserCubit extends Cubit<UserState> with UserUtils {
 
   Future<void> setUserLoggedIn({required UserModel user}) async {
     await Future.wait([_saveUser(user), SecureStorage.delete(_legacyTokenKey)]);
-    AppyFlyerHelper.setCustomer();
+    // AppyFlyerHelper.setCustomer();
     emit(state.copyWith(userModel: user, userStatus: UserStatus.loggedIn));
   }
 

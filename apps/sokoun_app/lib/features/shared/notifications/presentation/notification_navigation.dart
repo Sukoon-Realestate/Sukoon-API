@@ -4,7 +4,7 @@ import 'package:sokoun_app/features/owner/home/presentation/screens/owner_listin
 import 'package:sokoun_app/features/owner/properties/imports.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
-import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_thread_screen.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_screen.dart';
 import 'package:sokoun_app/features/shared/profile/imports.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/property_details_screen.dart';
 import 'package:sokoun_app/features/tenant/visits/imports.dart';

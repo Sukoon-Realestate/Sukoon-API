@@ -114,47 +114,43 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
           final bool isUpdating = state.isLoading;
           return PopScope(
             canPop: !isUpdating,
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: Scaffold(
-                backgroundColor: AppColors.scaffoldBackground,
-                body: SafeArea(
-                  child: Column(
-                    children: [
-                      VisitHeader(
-                        title: LocaleKeys.ownerRequestDetailsTitle,
-                        isBackEnabled: !isUpdating,
-                      ),
-                      Expanded(
-                        child:
-                            StatusBuilder<
-                              OwnerRequestDetailsCubit,
-                              OwnerVisitRequestDetailsContent
-                            >.withShimmer(
-                              initialDataForShimmer:
-                                  const OwnerVisitRequestDetailsContent.initial(),
-                              requestToTryAgainWhenError:
-                                  _requestDetailsRequest,
-                              errorType: ErrorType.defaultView,
-                              builder: (request) => OwnerRequestDetailsContent(
-                                request: request,
-                                isAccepting:
-                                    isUpdating &&
-                                    _pendingStatus ==
-                                        OwnerVisitUpdateStatus.confirmed,
-                                isRejecting:
-                                    isUpdating &&
-                                    _pendingStatus ==
-                                        OwnerVisitUpdateStatus.rejected,
-                                onAcceptPressed: () =>
-                                    _acceptRequest(context, request),
-                                onRejectPressed: () =>
-                                    _rejectRequest(context, request),
-                              ),
+            child: Scaffold(
+              backgroundColor: AppColors.scaffoldBackground,
+              body: SafeArea(
+                child: Column(
+                  children: [
+                    VisitHeader(
+                      title: LocaleKeys.ownerRequestDetailsTitle,
+                      isBackEnabled: !isUpdating,
+                    ),
+                    Expanded(
+                      child:
+                          StatusBuilder<
+                            OwnerRequestDetailsCubit,
+                            OwnerVisitRequestDetailsContent
+                          >.withShimmer(
+                            initialDataForShimmer:
+                                const OwnerVisitRequestDetailsContent.initial(),
+                            requestToTryAgainWhenError: _requestDetailsRequest,
+                            errorType: ErrorType.defaultView,
+                            builder: (request) => OwnerRequestDetailsContent(
+                              request: request,
+                              isAccepting:
+                                  isUpdating &&
+                                  _pendingStatus ==
+                                      OwnerVisitUpdateStatus.confirmed,
+                              isRejecting:
+                                  isUpdating &&
+                                  _pendingStatus ==
+                                      OwnerVisitUpdateStatus.rejected,
+                              onAcceptPressed: () =>
+                                  _acceptRequest(context, request),
+                              onRejectPressed: () =>
+                                  _rejectRequest(context, request),
                             ),
-                      ),
-                    ],
-                  ),
+                          ),
+                    ),
+                  ],
                 ),
               ),
             ),

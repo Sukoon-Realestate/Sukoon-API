@@ -24,7 +24,7 @@ class OwnerPropertyTopBar extends StatelessWidget {
               : IconButton(
                   onPressed: Go.back,
                   icon: Icon(
-                    Icons.arrow_forward_ios_rounded,
+                    Icons.arrow_back_ios_new_rounded,
                     color: AppColors.sokoonNavy,
                     size: 20.r,
                   ),

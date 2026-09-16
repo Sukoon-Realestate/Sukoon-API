@@ -7,7 +7,7 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_restricted_screen.dart';
-import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_thread_screen.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_screen.dart';
 
 import '../shared/chat_participant_avatar.dart';
 

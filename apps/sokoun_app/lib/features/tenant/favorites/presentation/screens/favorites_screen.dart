@@ -246,22 +246,19 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: FavoritesContentView(
-            itemCount: _visibleItemCount,
-            initialItems: _visibleInitialFavorites,
-            pagifyController: _pagifyController,
-            loadPage: _getFavoritesPage,
-            onFavoriteRemoved: _removeFavorite,
-            activeFilterCount: _filters.activeCount,
-            onFiltersPressed: _openFilters,
-            onClearFiltersPressed: _clearFilters,
-            onPagifyStatusChanged: _onPagifyStatusChanged,
-          ),
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBackground,
+      body: SafeArea(
+        child: FavoritesContentView(
+          itemCount: _visibleItemCount,
+          initialItems: _visibleInitialFavorites,
+          pagifyController: _pagifyController,
+          loadPage: _getFavoritesPage,
+          onFavoriteRemoved: _removeFavorite,
+          activeFilterCount: _filters.activeCount,
+          onFiltersPressed: _openFilters,
+          onClearFiltersPressed: _clearFilters,
+          onPagifyStatusChanged: _onPagifyStatusChanged,
         ),
       ),
     );

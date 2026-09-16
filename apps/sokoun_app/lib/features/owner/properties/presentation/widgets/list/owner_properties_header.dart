@@ -8,7 +8,6 @@ class OwnerPropertiesHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      textDirection: TextDirection.ltr,
       children: [
         Material(
           color: AppColors.sokoonTeal,
@@ -38,7 +37,7 @@ class OwnerPropertiesHeader extends StatelessWidget {
             color: AppColors.sokoonNavy,
             fontSize: 20.sp,
             fontWeight: FontWeight.w900,
-            textAlign: TextAlign.right,
+            textAlign: TextAlign.start,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

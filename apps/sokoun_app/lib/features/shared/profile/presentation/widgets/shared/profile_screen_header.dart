@@ -28,7 +28,7 @@ class ProfileScreenHeader extends StatelessWidget {
             IconButton(
               onPressed: Go.back,
               icon: Icon(
-                Icons.arrow_forward_rounded,
+                Icons.arrow_back_rounded,
                 color: AppColors.sokoonNavy,
                 size: 22.r,
               ),

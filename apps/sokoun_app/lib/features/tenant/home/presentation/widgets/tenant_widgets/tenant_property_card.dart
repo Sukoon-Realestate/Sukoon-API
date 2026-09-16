@@ -36,7 +36,6 @@ class TenantPropertyCard extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: Row(
-        textDirection: TextDirection.ltr,
         children: [
           Container(
             width: 96.w,

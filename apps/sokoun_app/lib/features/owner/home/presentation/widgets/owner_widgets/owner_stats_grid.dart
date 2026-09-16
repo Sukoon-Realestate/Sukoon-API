@@ -32,7 +32,6 @@ class OwnerStatsGrid extends StatelessWidget {
     return Column(
       children: [
         Row(
-          textDirection: TextDirection.ltr,
           children: [
             Expanded(
               child: OwnerStatCard(
@@ -57,7 +56,6 @@ class OwnerStatsGrid extends StatelessWidget {
         ),
         12.szH,
         Row(
-          textDirection: TextDirection.ltr,
           children: [
             Expanded(
               child: OwnerStatCard(

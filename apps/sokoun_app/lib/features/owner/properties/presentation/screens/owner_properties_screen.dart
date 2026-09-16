@@ -163,43 +163,40 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: Stack(
-            children: [
-              Column(
-                children: [
-                  OwnerPropertiesHeader(
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBackground,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Column(
+              children: [
+                OwnerPropertiesHeader(
+                  onAddPressed: _openAddProperty,
+                ).padding(EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 8.h)),
+                Expanded(
+                  child: OwnerPropertiesList(
+                    initialProperties: widget.initialProperties,
+                    pagifyController: _pagifyController,
                     onAddPressed: _openAddProperty,
-                  ).padding(EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 8.h)),
-                  Expanded(
-                    child: OwnerPropertiesList(
-                      initialProperties: widget.initialProperties,
-                      pagifyController: _pagifyController,
-                      onAddPressed: _openAddProperty,
-                      onEditPressed: _openEdit,
-                      onActionsPressed: _openActions,
-                      onRejectedPressed: _openRejection,
-                    ),
+                    onEditPressed: _openEdit,
+                    onActionsPressed: _openActions,
+                    onRejectedPressed: _openRejection,
                   ),
-                ],
-              ),
-              if (_isLoadingPropertyDetails)
-                Positioned.fill(
-                  child: ColoredBox(
-                    color: AppColors.whiteAlpha60,
-                    child: const Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.sokoonTeal,
-                      ),
+                ),
+              ],
+            ),
+            if (_isLoadingPropertyDetails)
+              Positioned.fill(
+                child: ColoredBox(
+                  color: AppColors.whiteAlpha60,
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.sokoonTeal,
                     ),
                   ),
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
     );

@@ -62,7 +62,7 @@ class TenantVisitBanner extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(Icons.chevron_left_rounded, color: AppColors.sokoonTeal),
+              Icon(Icons.chevron_right_rounded, color: AppColors.sokoonTeal),
             ],
           ),
         ),

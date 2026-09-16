@@ -16,7 +16,6 @@ class VisitRatingStars extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      textDirection: TextDirection.ltr,
       children: [
         for (int star = 1; star <= 5; star++)
           IconButton(

@@ -52,7 +52,6 @@ class RoleOptionCard extends StatelessWidget {
             ],
           ),
           child: Row(
-            textDirection: TextDirection.ltr,
             children: [
               Container(
                 width: 56.r,
@@ -74,7 +73,7 @@ class RoleOptionCard extends StatelessWidget {
                       color: AppColors.sokoonNavy,
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w900,
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.start,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -84,7 +83,7 @@ class RoleOptionCard extends StatelessWidget {
                       color: AppColors.sokoonGray,
                       fontSize: 13.sp,
                       fontWeight: FontWeight.w500,
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.start,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),

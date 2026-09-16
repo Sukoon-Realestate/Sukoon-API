@@ -77,7 +77,7 @@ class SuggestedAreaCard extends StatelessWidget {
               fontWeight: FontWeight.w900,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.right,
+              textAlign: TextAlign.start,
             ),
             3.szH,
             AppText(
@@ -90,7 +90,7 @@ class SuggestedAreaCard extends StatelessWidget {
               fontWeight: FontWeight.w600,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.right,
+              textAlign: TextAlign.start,
             ),
           ],
         ),

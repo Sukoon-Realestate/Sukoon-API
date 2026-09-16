@@ -212,21 +212,18 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
       requests,
     );
 
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: OwnerVisitRequestsContent(
-            requests: requests,
-            visibleRequests: visibleRequests,
-            selectedFilter: _selectedFilter,
-            showBackButton: widget.showBackButton,
-            onFilterSelected: _selectFilter,
-            onRequestPressed: _openDetails,
-            onAcceptPressed: _acceptRequest,
-            onRejectPressed: _rejectRequest,
-          ),
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBackground,
+      body: SafeArea(
+        child: OwnerVisitRequestsContent(
+          requests: requests,
+          visibleRequests: visibleRequests,
+          selectedFilter: _selectedFilter,
+          showBackButton: widget.showBackButton,
+          onFilterSelected: _selectFilter,
+          onRequestPressed: _openDetails,
+          onAcceptPressed: _acceptRequest,
+          onRejectPressed: _rejectRequest,
         ),
       ),
     );

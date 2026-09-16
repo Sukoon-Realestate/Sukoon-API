@@ -12,7 +12,7 @@ class TenantPropertyStatusView extends StatelessWidget {
     return Column(
       children: [
         Align(
-          alignment: Alignment.centerLeft,
+          alignment: AlignmentDirectional.centerStart,
           child: IconButton(
             onPressed: Go.back,
             icon: Icon(Icons.arrow_back_ios_new_rounded, size: 20.r),

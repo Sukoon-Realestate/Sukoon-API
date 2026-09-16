@@ -43,122 +43,119 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Container(
-        constraints: BoxConstraints(maxHeight: 0.92.sh),
-        padding: EdgeInsets.fromLTRB(
-          24.w,
-          10.h,
-          24.w,
-          MediaQuery.viewInsetsOf(context).bottom + 24.h,
-        ),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Container(
-                width: 48.w,
-                height: 5.h,
-                decoration: BoxDecoration(
-                  color: AppColors.sokoonBorder,
-                  borderRadius: BorderRadius.circular(999.r),
-                ),
-              ).centerWidget,
-              16.szH,
-              Container(
-                width: 56.r,
-                height: 56.r,
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  color: AppColors.goldPale,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.star_rounded,
-                  color: AppColors.gold,
-                  size: 28.r,
-                ),
-              ).centerWidget,
-              12.szH,
-              AppText(
-                LocaleKeys.tenantVisitRateTitle,
-                color: AppColors.sokoonNavy,
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w900,
-                textAlign: TextAlign.center,
-                maxLines: 2,
+    return Container(
+      constraints: BoxConstraints(maxHeight: 0.92.sh),
+      padding: EdgeInsets.fromLTRB(
+        24.w,
+        10.h,
+        24.w,
+        MediaQuery.viewInsetsOf(context).bottom + 24.h,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              width: 48.w,
+              height: 5.h,
+              decoration: BoxDecoration(
+                color: AppColors.sokoonBorder,
+                borderRadius: BorderRadius.circular(999.r),
               ),
-              4.szH,
-              AppText(
-                widget.propertyTitle,
-                color: AppColors.sokoonGray,
-                fontSize: 14.sp,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+            ).centerWidget,
+            16.szH,
+            Container(
+              width: 56.r,
+              height: 56.r,
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(
+                color: AppColors.goldPale,
+                shape: BoxShape.circle,
               ),
-              14.szH,
-              VisitRatingStars(
-                rating: _overallRating,
-                onRatingSelected: (rating) {
-                  setState(() => _overallRating = rating);
-                },
+              child: Icon(
+                Icons.star_rounded,
+                color: AppColors.gold,
+                size: 28.r,
               ),
-              12.szH,
-              for (int index = 0; index < _criteria.length; index++) ...[
-                _VisitRatingCriterion(
-                  label: _criteria[index],
-                  rating: _criteriaRatings[index],
-                  onRatingSelected: (rating) => _updateCriterion(index, rating),
+            ).centerWidget,
+            12.szH,
+            AppText(
+              LocaleKeys.tenantVisitRateTitle,
+              color: AppColors.sokoonNavy,
+              fontSize: 20.sp,
+              fontWeight: FontWeight.w900,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+            ),
+            4.szH,
+            AppText(
+              widget.propertyTitle,
+              color: AppColors.sokoonGray,
+              fontSize: 14.sp,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            14.szH,
+            VisitRatingStars(
+              rating: _overallRating,
+              onRatingSelected: (rating) {
+                setState(() => _overallRating = rating);
+              },
+            ),
+            12.szH,
+            for (int index = 0; index < _criteria.length; index++) ...[
+              _VisitRatingCriterion(
+                label: _criteria[index],
+                rating: _criteriaRatings[index],
+                onRatingSelected: (rating) => _updateCriterion(index, rating),
+              ),
+              if (index < _criteria.length - 1) 8.szH,
+            ],
+            16.szH,
+            Container(
+              height: 80.h,
+              padding: EdgeInsets.symmetric(horizontal: 14.w),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(color: AppColors.sokoonBorder),
+              ),
+              child: TextField(
+                controller: _commentController,
+                maxLines: 3,
+                style: TextStyle(
+                  color: AppColors.sokoonNavy,
+                  fontSize: 13.sp,
+                  fontFamily: ConstantManager.fontFamily,
                 ),
-                if (index < _criteria.length - 1) 8.szH,
-              ],
-              16.szH,
-              Container(
-                height: 80.h,
-                padding: EdgeInsets.symmetric(horizontal: 14.w),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(color: AppColors.sokoonBorder),
-                ),
-                child: TextField(
-                  controller: _commentController,
-                  maxLines: 3,
-                  style: TextStyle(
-                    color: AppColors.sokoonNavy,
+                decoration: InputDecoration(
+                  hintText: LocaleKeys.tenantVisitRatingCommentHint,
+                  hintStyle: TextStyle(
+                    color: AppColors.sokoonGray,
                     fontSize: 13.sp,
                     fontFamily: ConstantManager.fontFamily,
                   ),
-                  decoration: InputDecoration(
-                    hintText: LocaleKeys.tenantVisitRatingCommentHint,
-                    hintStyle: TextStyle(
-                      color: AppColors.sokoonGray,
-                      fontSize: 13.sp,
-                      fontFamily: ConstantManager.fontFamily,
-                    ),
-                    border: InputBorder.none,
-                  ),
+                  border: InputBorder.none,
                 ),
               ),
-              14.szH,
-              DefaultButton(
-                onTap: _submit,
-                title: LocaleKeys.tenantVisitRatingSubmit,
-                color: AppColors.sokoonTeal,
-                textColor: AppColors.white,
-                borderRadius: BorderRadius.circular(14.r),
-                height: 50.h,
-                fontSize: 15.sp,
-                fontWeight: FontWeight.w900,
-              ),
-            ],
-          ),
+            ),
+            14.szH,
+            DefaultButton(
+              onTap: _submit,
+              title: LocaleKeys.tenantVisitRatingSubmit,
+              color: AppColors.sokoonTeal,
+              textColor: AppColors.white,
+              borderRadius: BorderRadius.circular(14.r),
+              height: 50.h,
+              fontSize: 15.sp,
+              fontWeight: FontWeight.w900,
+            ),
+          ],
         ),
       ),
     );

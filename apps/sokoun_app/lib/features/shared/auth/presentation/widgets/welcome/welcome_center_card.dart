@@ -31,7 +31,6 @@ class WelcomeCenterCard extends StatelessWidget {
         border: Border.all(color: AppColors.sokoonBorder),
       ),
       child: Row(
-        textDirection: TextDirection.ltr,
         children: [
           Container(
             width: 40.r,

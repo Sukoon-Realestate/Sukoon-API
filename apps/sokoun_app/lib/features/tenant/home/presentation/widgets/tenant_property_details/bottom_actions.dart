@@ -41,7 +41,6 @@ class TenantPropertyBottomActions extends StatelessWidget {
         border: Border(top: BorderSide(color: AppColors.grayPale)),
       ),
       child: Row(
-        textDirection: TextDirection.ltr,
         children: [
           Expanded(
             child: GestureDetector(

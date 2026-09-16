@@ -256,7 +256,6 @@ class _MapSection extends StatelessWidget {
               border: Border.all(color: AppColors.grayPale),
             ),
             child: Row(
-              textDirection: TextDirection.ltr,
               children: [
                 Icon(
                   Icons.search_rounded,
@@ -268,7 +267,7 @@ class _MapSection extends StatelessWidget {
                   child: TextField(
                     controller: mapQueryController,
                     onChanged: onMapQueryChanged,
-                    textAlign: TextAlign.right,
+                    textAlign: TextAlign.start,
                     style: TextStyle(
                       color: AppColors.sokoonNavy,
                       fontSize: 12.sp,

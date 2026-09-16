@@ -300,116 +300,111 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: PageView(
-            controller: _pageController,
-            physics: const NeverScrollableScrollPhysics(),
-            children: [
-              AddPropertyBasicsPage(
-                title: _isEditing
-                    ? LocaleKeys.ownerPropertiesEditTitle
-                    : LocaleKeys.ownerAddPropertyTitle,
-                form: _form,
-                titleController: _titleController,
-                streetController: _streetController,
-                bedroomsController: _bedroomsController,
-                bathroomsController: _bathroomsController,
-                spaceController: _spaceController,
-                floorController: _floorController,
-                buildingYearController: _buildingYearController,
-                mapQueryController: _mapQueryController,
-                selectedGovernorate: _selectedGovernorate,
-                selectedCity: _selectedCity,
-                locationDropdownGeneration: _locationDropdownGeneration,
-                onPropertyTypeSelected: (value) =>
-                    _updateForm(() => _form.copyWith(propertyType: value)),
-                onTitleChanged: (value) =>
-                    _updateForm(() => _form.copyWith(title: value)),
-                onGovernorateChanged: _selectGovernorate,
-                onCityChanged: _selectCity,
-                onStreetChanged: (value) =>
-                    _updateForm(() => _form.copyWith(street: value)),
-                onBedroomsChanged: (value) =>
-                    _updateForm(() => _form.copyWith(bedrooms: value)),
-                onBathroomsChanged: (value) =>
-                    _updateForm(() => _form.copyWith(bathrooms: value)),
-                onSpaceChanged: (value) =>
-                    _updateForm(() => _form.copyWith(space: value)),
-                onFloorChanged: (value) =>
-                    _updateForm(() => _form.copyWith(floor: value)),
-                onBuildingYearChanged: (value) =>
-                    _updateForm(() => _form.copyWith(buildingYear: value)),
-                onMapQueryChanged: (value) => _updateForm(
-                  () => _form.copyWith(
-                    mapQuery: value,
-                    isLocationSelected: false,
-                  ),
-                ),
-                onLocationSelected: _selectLocation,
-                onBack: _isEditing ? Go.back : null,
-                onNext: () => _goToPage(1),
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBackground,
+      body: SafeArea(
+        child: PageView(
+          controller: _pageController,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            AddPropertyBasicsPage(
+              title: _isEditing
+                  ? LocaleKeys.ownerPropertiesEditTitle
+                  : LocaleKeys.ownerAddPropertyTitle,
+              form: _form,
+              titleController: _titleController,
+              streetController: _streetController,
+              bedroomsController: _bedroomsController,
+              bathroomsController: _bathroomsController,
+              spaceController: _spaceController,
+              floorController: _floorController,
+              buildingYearController: _buildingYearController,
+              mapQueryController: _mapQueryController,
+              selectedGovernorate: _selectedGovernorate,
+              selectedCity: _selectedCity,
+              locationDropdownGeneration: _locationDropdownGeneration,
+              onPropertyTypeSelected: (value) =>
+                  _updateForm(() => _form.copyWith(propertyType: value)),
+              onTitleChanged: (value) =>
+                  _updateForm(() => _form.copyWith(title: value)),
+              onGovernorateChanged: _selectGovernorate,
+              onCityChanged: _selectCity,
+              onStreetChanged: (value) =>
+                  _updateForm(() => _form.copyWith(street: value)),
+              onBedroomsChanged: (value) =>
+                  _updateForm(() => _form.copyWith(bedrooms: value)),
+              onBathroomsChanged: (value) =>
+                  _updateForm(() => _form.copyWith(bathrooms: value)),
+              onSpaceChanged: (value) =>
+                  _updateForm(() => _form.copyWith(space: value)),
+              onFloorChanged: (value) =>
+                  _updateForm(() => _form.copyWith(floor: value)),
+              onBuildingYearChanged: (value) =>
+                  _updateForm(() => _form.copyWith(buildingYear: value)),
+              onMapQueryChanged: (value) => _updateForm(
+                () =>
+                    _form.copyWith(mapQuery: value, isLocationSelected: false),
               ),
-              AddPropertyPhotosPage(
-                existingPhotoUrls: _form.existingPhotoUrls,
-                photos: _form.photos,
-                isReady: _form.isPhotosReady,
-                onAddPhotos: _addPhotos,
-                onRemovePhoto: _removePhoto,
-                onBack: () => _goToPage(0),
-                onNext: () => _goToPage(2),
+              onLocationSelected: _selectLocation,
+              onBack: _isEditing ? Go.back : null,
+              onNext: () => _goToPage(1),
+            ),
+            AddPropertyPhotosPage(
+              existingPhotoUrls: _form.existingPhotoUrls,
+              photos: _form.photos,
+              isReady: _form.isPhotosReady,
+              onAddPhotos: _addPhotos,
+              onRemovePhoto: _removePhoto,
+              onBack: () => _goToPage(0),
+              onNext: () => _goToPage(2),
+            ),
+            AddPropertyVideoPage(
+              video: _form.video,
+              onVideoSelected: _selectVideo,
+              onVideoRemoved: _removeVideo,
+              onBack: () => _goToPage(1),
+              onNext: () => _goToPage(3),
+              onSkip: () => _goToPage(3),
+            ),
+            AddPropertyPricingPage(
+              form: _form,
+              monthlyPriceController: _monthlyPriceController,
+              rentalDurationController: _rentalDurationController,
+              descriptionController: _descriptionController,
+              onMonthlyPriceChanged: (value) =>
+                  _updateForm(() => _form.copyWith(monthlyPrice: value)),
+              onDepositChanged: (value) =>
+                  _updateForm(() => _form.copyWith(deposit: value)),
+              onRentalDurationChanged: (value) =>
+                  _updateForm(() => _form.copyWith(rentalDuration: value)),
+              onRentalUnitChanged: (value) =>
+                  _updateForm(() => _form.copyWith(rentalUnit: value)),
+              onAmenityToggled: _toggleAmenity,
+              onDescriptionChanged: (value) =>
+                  _updateForm(() => _form.copyWith(description: value)),
+              onBack: () => _goToPage(2),
+              onNext: () => _goToPage(4),
+            ),
+            AddPropertyExtraDetailsPage(
+              form: _form,
+              onSmokingSelected: (value) =>
+                  _updateForm(() => _form.copyWith(smokingPolicy: value)),
+              onSuitableForSelected: (value) =>
+                  _updateForm(() => _form.copyWith(suitableFor: value)),
+              onProofUploadTap: _pickOwnershipProof,
+              onBack: () => _goToPage(3),
+              onNext: _submitForReview,
+              isSubmitting: _isSubmitting,
+              primaryLabel: _isEditing
+                  ? LocaleKeys.ownerPropertiesSaveChanges
+                  : null,
+            ),
+            if (!_isEditing)
+              AddPropertySubmittedPage(
+                summaryItems: _form.submittedSummary,
+                onAddAnother: _resetFlow,
               ),
-              AddPropertyVideoPage(
-                video: _form.video,
-                onVideoSelected: _selectVideo,
-                onVideoRemoved: _removeVideo,
-                onBack: () => _goToPage(1),
-                onNext: () => _goToPage(3),
-                onSkip: () => _goToPage(3),
-              ),
-              AddPropertyPricingPage(
-                form: _form,
-                monthlyPriceController: _monthlyPriceController,
-                rentalDurationController: _rentalDurationController,
-                descriptionController: _descriptionController,
-                onMonthlyPriceChanged: (value) =>
-                    _updateForm(() => _form.copyWith(monthlyPrice: value)),
-                onDepositChanged: (value) =>
-                    _updateForm(() => _form.copyWith(deposit: value)),
-                onRentalDurationChanged: (value) =>
-                    _updateForm(() => _form.copyWith(rentalDuration: value)),
-                onRentalUnitChanged: (value) =>
-                    _updateForm(() => _form.copyWith(rentalUnit: value)),
-                onAmenityToggled: _toggleAmenity,
-                onDescriptionChanged: (value) =>
-                    _updateForm(() => _form.copyWith(description: value)),
-                onBack: () => _goToPage(2),
-                onNext: () => _goToPage(4),
-              ),
-              AddPropertyExtraDetailsPage(
-                form: _form,
-                onSmokingSelected: (value) =>
-                    _updateForm(() => _form.copyWith(smokingPolicy: value)),
-                onSuitableForSelected: (value) =>
-                    _updateForm(() => _form.copyWith(suitableFor: value)),
-                onProofUploadTap: _pickOwnershipProof,
-                onBack: () => _goToPage(3),
-                onNext: _submitForReview,
-                isSubmitting: _isSubmitting,
-                primaryLabel: _isEditing
-                    ? LocaleKeys.ownerPropertiesSaveChanges
-                    : null,
-              ),
-              if (!_isEditing)
-                AddPropertySubmittedPage(
-                  summaryItems: _form.submittedSummary,
-                  onAddAnother: _resetFlow,
-                ),
-            ],
-          ),
+          ],
         ),
       ),
     );

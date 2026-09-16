@@ -14,11 +14,10 @@ class TenantPropertyPriceAndRating extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      textDirection: TextDirection.ltr,
       children: [
         Expanded(
           child: Align(
-            alignment: Alignment.centerLeft,
+            alignment: AlignmentDirectional.centerStart,
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Row(

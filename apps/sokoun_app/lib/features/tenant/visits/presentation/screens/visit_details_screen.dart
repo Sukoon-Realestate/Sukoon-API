@@ -7,18 +7,15 @@ class VisitDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              VisitHeader(title: LocaleKeys.tenantVisitDetailsTitle),
-              Expanded(child: VisitDetailsContent(visit: visit)),
-            ],
-          ),
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBackground,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            VisitHeader(title: LocaleKeys.tenantVisitDetailsTitle),
+            Expanded(child: VisitDetailsContent(visit: visit)),
+          ],
         ),
       ),
     );

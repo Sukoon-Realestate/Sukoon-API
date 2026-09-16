@@ -22,7 +22,6 @@ class RecentSearchRow extends StatelessWidget {
           border: Border(bottom: BorderSide(color: AppColors.sokoonBorder)),
         ),
         child: Row(
-          textDirection: TextDirection.ltr,
           children: [
             Icon(
               Icons.history_rounded,

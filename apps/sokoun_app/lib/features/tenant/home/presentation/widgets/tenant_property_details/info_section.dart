@@ -31,7 +31,7 @@ class TenantPropertyInfoSection extends StatelessWidget {
             color: AppColors.sokoonNavy,
             fontSize: 14.sp,
             fontWeight: FontWeight.w900,
-            textAlign: TextAlign.right,
+            textAlign: TextAlign.start,
           ),
           10.szH,
           child,

@@ -7,9 +7,9 @@ import 'package:melos_core/core/helpers/status_builder.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 
 import '../../data/models/chat_content.dart';
-import '../cubits/create_conversation_cubit.dart';
+import '../cubits/start_chat.dart';
 import '../widgets/start_conversation/start_conversation_state_view.dart';
-import 'chat_thread_screen.dart';
+import 'chat_screen.dart';
 
 class StartConversationScreen extends StatefulWidget {
   const StartConversationScreen({super.key, required this.userId});

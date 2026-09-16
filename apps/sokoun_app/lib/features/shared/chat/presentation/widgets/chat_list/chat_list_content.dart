@@ -10,7 +10,7 @@ import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:pagify/pagify.dart';
 
-import '../../../data/chat_data.dart';
+import '../../../data/chats_data.dart';
 import '../../../data/chat_realtime_service.dart';
 import '../../../data/chat_unread_refresh_bus.dart';
 import '../../../data/models/chat_content.dart';

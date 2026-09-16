@@ -27,7 +27,6 @@ class ResultsSearchHeader extends StatelessWidget {
         border: Border(bottom: BorderSide(color: AppColors.grayPale)),
       ),
       child: Row(
-        textDirection: TextDirection.ltr,
         children: [
           Expanded(
             child: Container(
@@ -38,7 +37,6 @@ class ResultsSearchHeader extends StatelessWidget {
                 borderRadius: BorderRadius.circular(22.r),
               ),
               child: Row(
-                textDirection: TextDirection.ltr,
                 children: [
                   Icon(
                     Icons.search_rounded,
@@ -52,7 +50,7 @@ class ResultsSearchHeader extends StatelessWidget {
                       onChanged: onChanged,
                       onSubmitted: onSubmitted,
                       textInputAction: TextInputAction.search,
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.start,
                       style: TextStyle(
                         color: AppColors.sokoonNavy,
                         fontSize: 14.sp,

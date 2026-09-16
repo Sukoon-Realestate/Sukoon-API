@@ -14,16 +14,13 @@ class VisitConfirmedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: VisitConfirmationContent(
-            property: property,
-            selectedDay: selectedDay,
-            selectedTime: selectedTime,
-          ),
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBackground,
+      body: SafeArea(
+        child: VisitConfirmationContent(
+          property: property,
+          selectedDay: selectedDay,
+          selectedTime: selectedTime,
         ),
       ),
     );

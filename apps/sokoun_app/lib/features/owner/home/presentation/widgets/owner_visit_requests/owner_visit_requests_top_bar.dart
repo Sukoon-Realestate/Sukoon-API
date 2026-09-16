@@ -26,7 +26,6 @@ class OwnerVisitRequestsTopBar extends StatelessWidget {
         border: Border(bottom: BorderSide(color: AppColors.grayPale)),
       ),
       child: Row(
-        textDirection: TextDirection.rtl,
         children: [
           SizedBox(
             width: 36.r,
@@ -43,7 +42,7 @@ class OwnerVisitRequestsTopBar extends StatelessWidget {
                       ),
                     ),
                     icon: Icon(
-                      Icons.chevron_right_rounded,
+                      Icons.arrow_back_ios_new_rounded,
                       color: AppColors.sokoonNavy,
                       size: 20.r,
                     ),

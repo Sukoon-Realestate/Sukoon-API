@@ -91,26 +91,23 @@ class _OwnerRequestsCalendarScreenState
     final bool canManageAvailability =
         calendar.firstPropertyId.isNotEmpty ||
         widget.ownerPropertyId.trim().isNotEmpty;
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: Column(
-            children: [
-              _OwnerCalendarHeader(year: calendar.year, month: calendar.month),
-              Expanded(
-                child: OwnerCalendarContent(
-                  calendar: calendar,
-                  selectedDate: calendar.selectedDateValue,
-                  onDaySelected: _selectDay,
-                  onAvailabilityPressed: canManageAvailability
-                      ? () => _openAvailability(calendar)
-                      : null,
-                ),
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBackground,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _OwnerCalendarHeader(year: calendar.year, month: calendar.month),
+            Expanded(
+              child: OwnerCalendarContent(
+                calendar: calendar,
+                selectedDate: calendar.selectedDateValue,
+                onDaySelected: _selectDay,
+                onAvailabilityPressed: canManageAvailability
+                    ? () => _openAvailability(calendar)
+                    : null,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

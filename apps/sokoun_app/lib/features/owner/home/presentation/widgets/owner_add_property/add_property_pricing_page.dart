@@ -128,7 +128,7 @@ class _PriceSection extends StatelessWidget {
               label: LocaleKeys.ownerAddPropertyPrice,
               value: '0',
               isFocused: true,
-              textAlign: TextAlign.right,
+              textAlign: TextAlign.start,
             ),
             controller: monthlyPriceController,
             onChanged: onMonthlyPriceChanged,
@@ -174,7 +174,6 @@ class _RentalPeriodSection extends StatelessWidget {
       child: Column(
         children: [
           Row(
-            textDirection: TextDirection.ltr,
             children: [
               Expanded(
                 child: AddPropertyField(
@@ -216,7 +215,7 @@ class _RentalPeriodSection extends StatelessWidget {
               color: AppColors.sokoonTeal,
               fontSize: 12.sp,
               fontWeight: FontWeight.w700,
-              textAlign: TextAlign.right,
+              textAlign: TextAlign.start,
             ),
           ),
         ],

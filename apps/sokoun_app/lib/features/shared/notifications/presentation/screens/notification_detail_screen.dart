@@ -53,40 +53,35 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: Column(
-            children: [
-              NotificationPageHeader(
-                title: LocaleKeys.notificationDetailsTitle,
-              ),
-              Expanded(
-                child: BlocProvider<NotificationDetailCubit>.value(
-                  value: _cubit,
-                  child:
-                      StatusBuilder<
-                        NotificationDetailCubit,
-                        AppNotificationContent
-                      >.withShimmer(
-                        initialDataForShimmer: widget.notification,
-                        requestToTryAgainWhenError: _detailsRequest,
-                        errorType: ErrorType.defaultView,
-                        builder: (notification) => NotificationDetailsContent(
+    return Scaffold(
+      backgroundColor: AppColors.scaffoldBackground,
+      body: SafeArea(
+        child: Column(
+          children: [
+            NotificationPageHeader(title: LocaleKeys.notificationDetailsTitle),
+            Expanded(
+              child: BlocProvider<NotificationDetailCubit>.value(
+                value: _cubit,
+                child:
+                    StatusBuilder<
+                      NotificationDetailCubit,
+                      AppNotificationContent
+                    >.withShimmer(
+                      initialDataForShimmer: widget.notification,
+                      requestToTryAgainWhenError: _detailsRequest,
+                      errorType: ErrorType.defaultView,
+                      builder: (notification) => NotificationDetailsContent(
+                        notification: notification,
+                        onPrimaryPressed: () => NotificationNavigation.open(
                           notification: notification,
-                          onPrimaryPressed: () => NotificationNavigation.open(
-                            notification: notification,
-                            role: widget.role,
-                          ),
-                          onDismissPressed: Go.back,
+                          role: widget.role,
                         ),
+                        onDismissPressed: Go.back,
                       ),
-                ),
+                    ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

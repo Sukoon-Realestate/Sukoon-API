@@ -21,7 +21,6 @@ class OwnerVisitRequestIdentityRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      textDirection: TextDirection.rtl,
       children: [
         Container(
           width: 40.r,
@@ -45,7 +44,6 @@ class OwnerVisitRequestIdentityRow extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
-                textDirection: TextDirection.rtl,
                 children: [
                   Flexible(
                     child: AppText(

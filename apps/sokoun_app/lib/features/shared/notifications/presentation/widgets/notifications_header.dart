@@ -70,6 +70,6 @@ class NotificationsHeader extends StatelessWidget {
           ),
         ),
       ],
-    ).padding(EdgeInsets.fromLTRB(20.w, 4.h, 14.w, 12.h));
+    ).padding(EdgeInsetsDirectional.fromSTEB(20.w, 4.h, 14.w, 12.h));
   }
 }

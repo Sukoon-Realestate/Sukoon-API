@@ -14,7 +14,7 @@ class FilterTextField extends StatelessWidget {
     required this.onChanged,
     this.keyboardType,
     this.inputFormatters,
-    this.textAlign = TextAlign.right,
+    this.textAlign = TextAlign.start,
   });
 
   final String label;
@@ -35,7 +35,7 @@ class FilterTextField extends StatelessWidget {
           color: AppColors.sokoonGray,
           fontSize: 12.sp,
           fontWeight: FontWeight.w600,
-          textAlign: TextAlign.right,
+          textAlign: TextAlign.start,
         ),
         6.szH,
         Container(

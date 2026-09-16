@@ -7,54 +7,51 @@ class OwnerAcceptRequestSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Container(
-        padding: EdgeInsets.fromLTRB(24.w, 12.h, 24.w, 28.h),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const _OwnerSheetHandle(),
-            18.szH,
-            _OwnerDecisionSheetHeader(
-              icon: Icons.check_circle_outline_rounded,
-              title: LocaleKeys.ownerAcceptTitle,
-              subtitle: LocaleKeys.ownerAcceptSubtitle,
-              iconColor: AppColors.green,
-              iconBackgroundColor: AppColors.greenPale,
-            ),
-            18.szH,
-            _OwnerAcceptSummary(request: request),
-            20.szH,
-            DefaultButton(
-              onTap: () => Go.back(true),
-              title: LocaleKeys.ownerAcceptConfirm,
-              color: AppColors.green,
-              textColor: AppColors.white,
-              borderRadius: BorderRadius.circular(14.r),
-              height: 52.h,
-              fontSize: 15.sp,
-              fontWeight: FontWeight.w900,
-            ),
-            12.szH,
-            DefaultButton(
-              onTap: () => Go.back(false),
-              title: LocaleKeys.ownerRequestCancel,
-              color: AppColors.white,
-              textColor: AppColors.sokoonNavy,
-              borderColor: AppColors.sokoonBorder,
-              borderRadius: BorderRadius.circular(14.r),
-              height: 48.h,
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w800,
-            ),
-          ],
-        ),
+    return Container(
+      padding: EdgeInsets.fromLTRB(24.w, 12.h, 24.w, 28.h),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const _OwnerSheetHandle(),
+          18.szH,
+          _OwnerDecisionSheetHeader(
+            icon: Icons.check_circle_outline_rounded,
+            title: LocaleKeys.ownerAcceptTitle,
+            subtitle: LocaleKeys.ownerAcceptSubtitle,
+            iconColor: AppColors.green,
+            iconBackgroundColor: AppColors.greenPale,
+          ),
+          18.szH,
+          _OwnerAcceptSummary(request: request),
+          20.szH,
+          DefaultButton(
+            onTap: () => Go.back(true),
+            title: LocaleKeys.ownerAcceptConfirm,
+            color: AppColors.green,
+            textColor: AppColors.white,
+            borderRadius: BorderRadius.circular(14.r),
+            height: 52.h,
+            fontSize: 15.sp,
+            fontWeight: FontWeight.w900,
+          ),
+          12.szH,
+          DefaultButton(
+            onTap: () => Go.back(false),
+            title: LocaleKeys.ownerRequestCancel,
+            color: AppColors.white,
+            textColor: AppColors.sokoonNavy,
+            borderColor: AppColors.sokoonBorder,
+            borderRadius: BorderRadius.circular(14.r),
+            height: 48.h,
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w800,
+          ),
+        ],
       ),
     );
   }

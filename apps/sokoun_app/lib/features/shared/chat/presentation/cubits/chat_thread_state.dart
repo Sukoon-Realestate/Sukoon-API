@@ -1,4 +1,4 @@
-part of 'chat_thread_cubit.dart';
+part of 'socket_cubit.dart';
 
 enum ChatSocketStatus { disconnected, connecting, connected, error }
 

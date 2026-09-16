@@ -492,40 +492,25 @@ To show local notification:
 ## Socket (Chat)
 
 ```dart
-final socket = ClientIOImpl(
-  url: wsUrl,
-  roomId: roomId,
-  events: EasyChatEvents(
-    messageEvents: MessageEvents(
-      receiveMsgEvent: 'receive_message',
-      sendMsgEvent: 'send_message',
-    ),
-    chatEvents: ChatEvents(
-      enterChatEvent: 'enter_chat',
-      exitChatEvent: 'exit_chat',
-    ),
-    otherEvents: ['typing', 'read'],
-  ),
-  jsonToChatMessage: (json) => ChatMessage.fromJson(json),
-  onReceiveMessage: (msg) async { /* handle message */ },
-  enableOfflineState: true,
-);
+final ChatRealtimeGateway chat = ChatRealtimeService.instance;
 
-await socket.initSocket();
-await socket.connect();
+await chat.connect();
 
 // Send message
-await socket.sendMessage({'message': text, 'room_id': roomId});
+await chat.sendMessage(conversationId: conversationId, content: text);
 
-// Emit any event
-await socket.emitEvent(event: 'typing', data: {'room_id': roomId});
+// Mark the active conversation as read
+await chat.markConversationAsRead(conversationId);
 
 // Check connection
-socket.isConnected
+chat.isConnected
 
 // Disconnect
-await socket.disconnect();
+await chat.disconnect();
 ```
+
+Sukoon chat uses raw `web_socket_channel` frames at `/ws/chat/`; do not use
+Socket.IO framing for this endpoint.
 
 ---
 
@@ -692,7 +677,7 @@ var name = json['name'] ?? '';
 Only use `var` or `final` without type when the type is 100% obvious from the right side:
 ```dart
 final result = await baseCrudUseCase.call(...);  // OK — Future result
-final socket = ClientIOImpl(...);                 // OK — type is clear from constructor
+final socket = WebSocketClientImpl<ChatSocketMessage>(...); // OK — constructor is explicit
 ```
 
 #### Rule 2 — Use `final` for everything that never changes after assignment
@@ -823,7 +808,7 @@ Future<void> completeProfile(IndividualUserModel body, void Function() onSuccess
 
 Single-argument methods may use positional:
 ```dart
-void setSocket(SocketHelper socket) => emit(socket);
+void setSocket(WebSocketHelper<ChatSocketMessage> socket) => emit(socket);
 void changeIndex(int index) { ... }
 ```
 
@@ -878,12 +863,12 @@ bool getIsLoading() => state.isLoading;
 
 ```dart
 // CORRECT
-void setSocket(SocketHelper socket) => emit(socket);
+void setSocket(WebSocketHelper<ChatSocketMessage> socket) => emit(socket);
 bool get isLoading => state.isLoading;
 String get userName => state.data.name ?? '';
 
 // WRONG — block body for a one-liner
-void setSocket(SocketHelper socket) {
+void setSocket(WebSocketHelper<ChatSocketMessage> socket) {
   emit(socket);
 }
 ```

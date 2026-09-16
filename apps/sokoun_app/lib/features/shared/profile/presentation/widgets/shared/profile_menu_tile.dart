@@ -73,7 +73,7 @@ class ProfileMenuTile extends StatelessWidget {
               8.szW,
             ],
             Icon(
-              Icons.arrow_back_ios_new_rounded,
+              Icons.arrow_forward_ios_rounded,
               color: AppColors.sokoonGray,
               size: 15.r,
             ),

@@ -5,6 +5,7 @@ import 'package:melos_core/core/network/session_auth_service.dart';
 import 'package:melos_core/core/socket_service/web_socket_client.dart';
 
 import 'models/chat_socket_message.dart';
+import 'socket_events.dart';
 
 abstract final class ChatSocketData {
   static Future<WebSocketHelper<ChatSocketMessage>> create({
@@ -30,6 +31,13 @@ abstract final class ChatSocketData {
       onDisconnect: onDisconnect,
       onReconnect: onReconnect,
       onError: onError,
+      events: const WebSocketEvents(
+        messageEvents: WebSocketMessageEvents(
+          receiveMsgEvent: SocketEvents.receiveMessage,
+          sendMsgEvent: SocketEvents.sendMessage,
+          readMsgEvent: SocketEvents.readMessage,
+        ),
+      ),
     );
   }
 

@@ -120,33 +120,30 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
   Widget build(BuildContext context) {
     return BlocProvider<BookVisitCubit>.value(
       value: _bookVisitCubit,
-      child: Directionality(
-        textDirection: TextDirection.rtl,
-        child: Scaffold(
-          backgroundColor: AppColors.scaffoldBackground,
-          body: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                VisitHeader(title: LocaleKeys.tenantVisitBookTitle),
-                Expanded(
-                  child: BookVisitForm(
-                    property: _property,
-                    days: _days,
-                    selectedDayIndex: _selectedDayIndex,
-                    selectedTime: _selectedTime,
-                    noteController: _noteController,
-                    onDaySelected: (index) {
-                      setState(() => _selectedDayIndex = index);
-                    },
-                    onTimeSelected: (time) {
-                      setState(() => _selectedTime = time);
-                    },
-                    onConfirmPressed: _confirmVisit,
-                  ),
+      child: Scaffold(
+        backgroundColor: AppColors.scaffoldBackground,
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              VisitHeader(title: LocaleKeys.tenantVisitBookTitle),
+              Expanded(
+                child: BookVisitForm(
+                  property: _property,
+                  days: _days,
+                  selectedDayIndex: _selectedDayIndex,
+                  selectedTime: _selectedTime,
+                  noteController: _noteController,
+                  onDaySelected: (index) {
+                    setState(() => _selectedDayIndex = index);
+                  },
+                  onTimeSelected: (time) {
+                    setState(() => _selectedTime = time);
+                  },
+                  onConfirmPressed: _confirmVisit,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

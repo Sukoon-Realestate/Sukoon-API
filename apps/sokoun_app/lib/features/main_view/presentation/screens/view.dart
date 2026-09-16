@@ -7,7 +7,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
-import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_list_screen.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/screens/chats_screen.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_unread_content.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/cubits/chat_unread_cubit.dart';

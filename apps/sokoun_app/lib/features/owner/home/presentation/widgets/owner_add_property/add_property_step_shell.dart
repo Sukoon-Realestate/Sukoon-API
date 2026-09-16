@@ -72,7 +72,7 @@ class AddPropertyStepShell extends StatelessWidget {
                   color: AppColors.sokoonGray,
                   fontSize: 11.sp,
                   fontWeight: FontWeight.w400,
-                  textAlign: TextAlign.right,
+                  textAlign: TextAlign.start,
                 ),
               ],
             ],
@@ -138,7 +138,6 @@ class _TopBar extends StatelessWidget {
         border: Border(bottom: BorderSide(color: AppColors.grayPale)),
       ),
       child: Row(
-        textDirection: TextDirection.ltr,
         children: [
           GestureDetector(
             onTap: onBack,

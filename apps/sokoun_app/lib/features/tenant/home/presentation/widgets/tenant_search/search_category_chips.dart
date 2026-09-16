@@ -21,7 +21,6 @@ class SearchCategoryChips extends StatelessWidget {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        textDirection: TextDirection.ltr,
         children: [
           for (int index = 0; index < propertyTypes.length; index++) ...[
             SearchChip(

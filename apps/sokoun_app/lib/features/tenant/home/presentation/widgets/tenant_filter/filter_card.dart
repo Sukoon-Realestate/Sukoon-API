@@ -27,7 +27,7 @@ class FilterCard extends StatelessWidget {
             color: AppColors.sokoonNavy,
             fontSize: 14.sp,
             fontWeight: FontWeight.w900,
-            textAlign: TextAlign.right,
+            textAlign: TextAlign.start,
           ),
           12.szH,
           child,

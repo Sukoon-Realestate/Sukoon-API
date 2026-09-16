@@ -11,7 +11,6 @@ class OwnerListingsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      textDirection: TextDirection.ltr,
       children: [
         Container(
           height: 38.h,
@@ -40,7 +39,7 @@ class OwnerListingsHeader extends StatelessWidget {
           color: AppColors.sokoonNavy,
           fontSize: 20.sp,
           fontWeight: FontWeight.w900,
-          textAlign: TextAlign.right,
+          textAlign: TextAlign.start,
         ),
       ],
     );
