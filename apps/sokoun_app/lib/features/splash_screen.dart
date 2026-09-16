@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/object.dart';
@@ -20,20 +22,23 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    _manipulateSplashData();
     super.initState();
+    unawaited(_manipulateSplashData());
   }
 
   Future<void> _manipulateSplashData() async {
-    await Helpers.getCurrentFlavor;
-    await NotificationService().saveFcmToken();
-    await Future.delayed(const Duration(seconds: 2));
-    _manipulateLoginState();
+    await Future.wait<void>([
+      Helpers.getCurrentFlavor,
+      NotificationService().saveFcmToken(),
+      Future<void>.delayed(const Duration(seconds: 2)),
+    ]);
+    await _manipulateLoginState();
   }
 
-  Future<void> _manipulateLoginState()async{
-    final result =  (await CacheStorage.read('user', isDecoded: true) as Object?).isNotNull;
-    switch(result){
+  Future<void> _manipulateLoginState() async {
+    final bool result =
+        (await CacheStorage.read('user', isDecoded: true) as Object?).isNotNull;
+    switch (result) {
       case true:
         await UserCubit.instance.init();
         Go.offAll(const HomeScreen());

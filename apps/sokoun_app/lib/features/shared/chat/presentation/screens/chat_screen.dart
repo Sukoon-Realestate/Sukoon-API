@@ -33,11 +33,21 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       otherParticipantId: widget.conversation.otherParticipant.id,
     );
     _chatThreadData = ChatThreadData(conversationId: widget.conversation.id);
-    _initialMessagesRequest = _chatThreadData.loadInitialMessages();
+    _initialMessagesRequest = _initializeChat();
     ChatUnreadRefreshBus.requestRefresh(
       removedUnreadCount: widget.conversation.unreadCount,
     );
-    unawaited(_chatThreadCubit.connect());
+  }
+
+  Future<List<ChatMessageContent>> _initializeChat() async {
+    late final List<ChatMessageContent> initialMessages;
+    await Future.wait<void>([
+      _chatThreadData.loadInitialMessages().then<void>((messages) {
+        initialMessages = messages;
+      }),
+      _chatThreadCubit.connect(),
+    ]);
+    return initialMessages;
   }
 
   @override

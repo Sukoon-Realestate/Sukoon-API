@@ -63,9 +63,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     _userType = widget.userType ?? UserTypeHelper.instance.currentUserType;
     _tabs = _userType.isOwner ? _buildOwnerTabs() : _buildTenantTabs();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      unawaited(NotificationCoordinator.start());
-      unawaited(_chatUnreadCubit.start());
-      unawaited(_showLaunchDialogs());
+      unawaited(
+        Future.wait<void>([
+          NotificationCoordinator.start(),
+          _chatUnreadCubit.start(),
+          _showLaunchDialogs(),
+        ]),
+      );
     });
   }
 

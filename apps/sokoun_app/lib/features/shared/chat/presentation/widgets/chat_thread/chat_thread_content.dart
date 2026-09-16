@@ -35,19 +35,44 @@ class ChatThreadContent extends StatefulWidget {
   State<ChatThreadContent> createState() => _ChatThreadContentState();
 }
 
-class _ChatThreadContentState extends State<ChatThreadContent> {
+class _ChatThreadContentState extends State<ChatThreadContent>
+    with WidgetsBindingObserver {
   late final PagifyController<ChatMessages> _chatController;
   late final TextEditingController _messageController;
+  Timer? _keyboardMetricsTimer;
+  bool _wasKeyboardOpen = false;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _chatController = PagifyController<ChatMessages>();
     _messageController = TextEditingController();
   }
 
   @override
+  void didChangeMetrics() {
+    _keyboardMetricsTimer?.cancel();
+    _keyboardMetricsTimer = Timer(
+      const Duration(milliseconds: 100),
+      _handleKeyboardMetricsSettled,
+    );
+  }
+
+  void _handleKeyboardMetricsSettled() {
+    if (!mounted) return;
+
+    final bool isKeyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
+    if (isKeyboardOpen && !_wasKeyboardOpen) {
+      _chatController.moveToMaxBottom();
+    }
+    _wasKeyboardOpen = isKeyboardOpen;
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _keyboardMetricsTimer?.cancel();
     _messageController.dispose();
     super.dispose();
   }
