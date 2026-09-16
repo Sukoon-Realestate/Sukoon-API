@@ -7,6 +7,7 @@ class ApiConstants {
   static const String resendOtp = 'auth/resend-otp/';
   static const String refreshToken = 'auth/jwt/refresh/';
   static const String register = 'auth/users/';
+  static const String currentUser = 'auth/users/me/';
 
   // home
   static const String homePage = 'homepage';

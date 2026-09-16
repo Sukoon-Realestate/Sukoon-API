@@ -1,60 +1,37 @@
-import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
-import 'package:melos_core/core/network/api_endpoints.dart';
-import 'package:sokoun_app/features/shared/auth/data/models/otp.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
+import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
+import 'package:sokoun_app/features/shared/auth/data/auth_session_data.dart';
 
-class LoginCubit extends AsyncCubit<Map<String, dynamic>> {
-  LoginCubit() : super(const {});
+class LoginCubit extends AsyncCubit<UserModel> {
+  LoginCubit() : super(UserModel.initial()) {
+    _authSessionData = AuthSessionData(baseCrudUseCase: baseCrudUseCase);
+  }
+
+  late final AuthSessionData _authSessionData;
 
   Future<void> login({
     required String email,
     required String password,
     required void Function() onSuccess,
   }) async {
-    await executeAsyncWithBaseModel(
-      showMsgOnSuccess: true,
-      operation: () => baseCrudUseCase.call(
-        CrudBaseParmas(
-          api: ApiConstants.login,
-          httpRequestType: HttpRequestType.post,
-          body: {'email': email, 'password': password},
-        ),
-      ),
-      onSuccess: (_) => onSuccess(),
-    );
-  }
+    UserModel? authenticatedUser;
 
-  Future<void> verifyOtp({
-    required VerifyOtpBody body,
-    required void Function() onSuccess,
-  }) async {
     await executeAsyncWithBaseModel(
       showMsgOnSuccess: true,
-      operation: () => baseCrudUseCase.call(
-        CrudBaseParmas(
-          api: ApiConstants.verifyOtp,
-          httpRequestType: HttpRequestType.post,
-          body: body.toJson(),
-        ),
+      operation: () => _authSessionData.loginWithCredentials(
+        email: email,
+        password: password,
       ),
-      onSuccess: (_) => onSuccess(),
+      onSuccess: (response) => authenticatedUser = response.data,
     );
-  }
 
-  Future<void> resendOtp({
-    required ResendOtpBody body,
-    required void Function() onSuccess,
-  }) async {
-    await executeAsyncWithBaseModel(
-      showMsgOnSuccess: true,
-      operation: () => baseCrudUseCase.call(
-        CrudBaseParmas(
-          api: ApiConstants.resendOtp,
-          httpRequestType: HttpRequestType.post,
-          body: body.toJson(),
-        ),
-      ),
-      onSuccess: (_) => onSuccess(),
-    );
+    final UserModel? user = authenticatedUser;
+    if (user == null) {
+      return;
+    }
+
+    await UserCubit.instance.setUserLoggedIn(user: user);
+    onSuccess();
   }
 }

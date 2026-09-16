@@ -58,7 +58,7 @@ class ChatComposer extends StatelessWidget {
                         minLines: 1,
                         maxLines: 4,
                         textInputAction: TextInputAction.send,
-                        onSubmitted: (_) => onSendPressed(),
+                        onEditingComplete: onSendPressed,
                         style: TextStyle(
                           color: AppColors.sokoonNavy,
                           fontSize: 14.sp,

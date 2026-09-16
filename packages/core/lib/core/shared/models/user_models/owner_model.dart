@@ -11,7 +11,7 @@ class OwnerModel extends UserModel {
 
   factory OwnerModel.fromJson(Map<String, dynamic> json) {
     return OwnerModel(
-      id: json['id'],
+      id: json['id']?.toString() ?? '',
       name: json['name'] ?? '',
       phone: json['phone'] ?? '',
       email: json['email'] ?? '',

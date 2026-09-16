@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 
 import '../../data/chat_unread_refresh_bus.dart';
+import '../../data/chat_thread_data.dart';
 import '../../data/models/chat_content.dart';
 import '../cubits/socket_cubit.dart';
 import '../widgets/chat_thread/chat_thread_content.dart';
@@ -20,6 +21,8 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   late final SocketCubit _chatThreadCubit;
+  late final ChatThreadData _chatThreadData;
+  late final Future<List<ChatMessageContent>> _initialMessagesRequest;
 
   @override
   void initState() {
@@ -29,6 +32,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       conversationId: widget.conversation.id,
       otherParticipantId: widget.conversation.otherParticipant.id,
     );
+    _chatThreadData = ChatThreadData(conversationId: widget.conversation.id);
+    _initialMessagesRequest = _chatThreadData.loadInitialMessages();
     ChatUnreadRefreshBus.requestRefresh(
       removedUnreadCount: widget.conversation.unreadCount,
     );
@@ -56,7 +61,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
           bottom: false,
-          child: ChatThreadContent(conversation: widget.conversation),
+          child: ChatThreadContent(
+            conversation: widget.conversation,
+            initialMessagesRequest: _initialMessagesRequest,
+            messagesCacheKey: _chatThreadData.messagesCacheKey,
+          ),
         ),
       ),
     );

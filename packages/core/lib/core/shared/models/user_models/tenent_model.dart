@@ -11,7 +11,7 @@ class TenantModel extends UserModel {
 
   factory TenantModel.fromJson(Map<String, dynamic> json) {
     return TenantModel(
-      id: json['id'],
+      id: json['id']?.toString() ?? '',
       name: json['name'] ?? '',
       phone: json['phone'] ?? '',
       email: json['email'] ?? '',

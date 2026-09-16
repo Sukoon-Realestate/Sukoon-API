@@ -57,7 +57,7 @@ class UserCubit extends Cubit<UserState> with UserUtils {
       'cookie session exists: $hasSessionCookies',
     );
     if (hasSessionCookies && userMap != null) {
-      AppyFlyerHelper.setCustomer();
+      // AppyFlyerHelper.setCustomer();
       emit(
         state.copyWith(
           userModel: UserModel.fromJson(userMap),

@@ -8,6 +8,7 @@ import 'package:melos_core/core/navigation/navigator.dart';
 
 import '../../data/models/chat_content.dart';
 import '../cubits/start_chat.dart';
+import '../widgets/chat_status_builder.dart';
 import '../widgets/start_conversation/start_conversation_state_view.dart';
 import 'chat_screen.dart';
 
@@ -22,13 +23,13 @@ class StartConversationScreen extends StatefulWidget {
 }
 
 class _StartConversationScreenState extends State<StartConversationScreen> {
-  late final CreateConversationCubit _cubit;
+  late final ChatCubit _cubit;
   late final Future<void> _createRequest;
 
   @override
   void initState() {
     super.initState();
-    _cubit = CreateConversationCubit();
+    _cubit = ChatCubit();
     _createRequest = _openConversation();
   }
 
@@ -37,7 +38,7 @@ class _StartConversationScreenState extends State<StartConversationScreen> {
       userId: widget.userId,
       onSuccess: (conversation) {
         if (!mounted) return;
-        Go.off(ChatThreadScreen(conversation: conversation));
+        Go.off(ChatScreen(conversation: conversation));
       },
     );
   }
@@ -53,21 +54,17 @@ class _StartConversationScreenState extends State<StartConversationScreen> {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
-        child: BlocProvider<CreateConversationCubit>.value(
+        child: BlocProvider<ChatCubit>.value(
           value: _cubit,
-          child:
-              StatusBuilder<
-                CreateConversationCubit,
-                ConversationContent
-              >.withShimmer(
-                initialDataForShimmer: const ConversationContent.initial(),
-                requestToTryAgainWhenError: _createRequest,
-                errorType: ErrorType.customView,
-                errorWidget: StartConversationErrorView(
-                  onRetryPressed: _openConversation,
-                ),
-                builder: (_) => const StartConversationLoadingView(),
-              ),
+          child: ChatStatusBuilder<ChatCubit, ConversationContent>(
+            initialData: const ConversationContent.initial(),
+            request: _createRequest,
+            errorType: ErrorType.customView,
+            errorWidget: StartConversationErrorView(
+              onRetryPressed: _openConversation,
+            ),
+            builder: (_) => const StartConversationLoadingView(),
+          ),
         ),
       ),
     );

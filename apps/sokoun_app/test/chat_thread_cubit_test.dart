@@ -95,6 +95,43 @@ void main() {
     expect(result.restMessage?.content, 'Connect then send');
   });
 
+  test('queues messages while disconnected and sends them in order', () async {
+    final _FakeChatRealtimeGateway realtime = _FakeChatRealtimeGateway()
+      ..canConnect = false
+      ..echoSentMessages = true;
+    final ChatThreadCubit cubit = ChatThreadCubit(
+      conversationId: 'conversation-uuid',
+      otherParticipantId: 'other-user-id',
+      realtimeService: realtime,
+    );
+    addTearDown(() async {
+      await cubit.close();
+      await realtime.close();
+    });
+
+    final ChatSendResult first = await cubit.sendTextMessage(
+      'First',
+      localMessageId: 'local-first',
+    );
+    final ChatSendResult second = await cubit.sendTextMessage(
+      'Second',
+      localMessageId: 'local-second',
+    );
+
+    expect(first.isQueued, isTrue);
+    expect(second.isQueued, isTrue);
+    expect(cubit.queuedMessageCount, 2);
+    expect(realtime.sentContents, isEmpty);
+
+    realtime.setConnected(true);
+    await pumpEventQueue();
+
+    expect(realtime.sentContents, <String>['First', 'Second']);
+    expect(cubit.queuedMessageCount, 0);
+    expect(cubit.state.queuedMessageCount, 0);
+    expect(cubit.state.confirmedLocalMessageId, 'local-second');
+  });
+
   test(
     'accepts numeric conversation messages from the active participant',
     () async {
@@ -179,6 +216,10 @@ class _FakeChatRealtimeGateway implements ChatRealtimeGateway {
 
   ChatSocketMessage? messageToEcho;
   int connectCount = 0;
+  int _sentMessageCount = 0;
+  bool canConnect = true;
+  bool echoSentMessages = false;
+  final List<String> sentContents = [];
 
   @override
   String? activeConversationId;
@@ -205,8 +246,7 @@ class _FakeChatRealtimeGateway implements ChatRealtimeGateway {
   @override
   Future<void> connect() async {
     connectCount++;
-    isConnected = true;
-    _statuses.add(ChatRealtimeStatus.connected);
+    setConnected(canConnect);
   }
 
   @override
@@ -223,8 +263,31 @@ class _FakeChatRealtimeGateway implements ChatRealtimeGateway {
     required String conversationId,
     required String content,
   }) async {
-    final ChatSocketMessage? echoedMessage = messageToEcho;
+    sentContents.add(content);
+    final ChatSocketMessage? echoedMessage = echoSentMessages
+        ? ChatSocketMessage(
+            id: 'message-${++_sentMessageCount}',
+            conversationId: conversationId,
+            sender: const ChatSocketSender(
+              id: 'current-user-id',
+              name: 'Current User',
+              avatarUrl: '',
+              isOnline: true,
+            ),
+            content: content,
+            createdAt: DateTime(2026),
+          )
+        : messageToEcho;
     if (echoedMessage != null) _messages.add(echoedMessage);
+  }
+
+  void setConnected(bool connected) {
+    isConnected = connected;
+    _statuses.add(
+      connected
+          ? ChatRealtimeStatus.connected
+          : ChatRealtimeStatus.disconnected,
+    );
   }
 
   @override

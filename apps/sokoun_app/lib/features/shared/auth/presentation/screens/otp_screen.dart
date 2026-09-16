@@ -10,7 +10,7 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
 import 'package:sokoun_app/features/shared/auth/data/models/otp.dart';
-import 'package:sokoun_app/features/shared/auth/presentation/cubits/login.dart';
+import 'package:sokoun_app/features/shared/auth/presentation/cubits/otp.dart';
 
 import '../widgets/auth_scaffold.dart';
 import '../widgets/otp/otp_code_field.dart';
@@ -29,7 +29,7 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
   final TextEditingController _otpController = TextEditingController();
-  late final LoginCubit _loginCubit;
+  late final OtpCubit _otpCubit;
   int _timerResetKey = 0;
   bool _canResend = false;
   bool _isResending = false;
@@ -37,13 +37,13 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   void initState() {
     super.initState();
-    _loginCubit = LoginCubit();
+    _otpCubit = OtpCubit();
   }
 
   @override
   void dispose() {
     _otpController.dispose();
-    unawaited(_loginCubit.close());
+    unawaited(_otpCubit.close());
     super.dispose();
   }
 
@@ -67,7 +67,7 @@ class _OtpScreenState extends State<OtpScreen> {
       return;
     }
 
-    await _loginCubit.verifyOtp(
+    await _otpCubit.verifyOtp(
       body: VerifyOtpBody(email: widget.email.trim(), otp: _otpController.text),
       onSuccess: widget.onVerified,
     );
@@ -80,7 +80,7 @@ class _OtpScreenState extends State<OtpScreen> {
 
     setState(() => _isResending = true);
     try {
-      await _loginCubit.resendOtp(
+      await _otpCubit.resendOtp(
         body: ResendOtpBody(email: widget.email.trim()),
         onSuccess: () {
           if (!mounted) {

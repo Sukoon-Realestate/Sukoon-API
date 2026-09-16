@@ -196,34 +196,31 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return BlocProvider<ChatUnreadCubit>.value(
       value: _chatUnreadCubit,
-      child: BlocBuilder<ChatUnreadCubit, AsyncState<ChatUnreadContent>>(
-        builder: (context, state) {
-          final int unreadCount = state.data.count;
-          return AppUpgradeAlert(
-            upgrader: upgrader,
-            onUpdatePressed: upgrader.sendUserToAppStore,
-            child: Scaffold(
-              backgroundColor: AppColors.scaffoldBackground,
-              body: IndexedStack(
-                index: _currentIndex,
-                children: _tabs
-                    .map((tab) => tab.screen)
-                    .toList(growable: false),
+      child: AppUpgradeAlert(
+        upgrader: upgrader,
+        onUpdatePressed: upgrader.sendUserToAppStore,
+        child: Scaffold(
+          backgroundColor: AppColors.scaffoldBackground,
+          body: IndexedStack(
+            index: _currentIndex,
+            children: _tabs.map((tab) => tab.screen).toList(growable: false),
+          ),
+          bottomNavigationBar:
+              BlocSelector<ChatUnreadCubit, AsyncState<ChatUnreadContent>, int>(
+                selector: (state) => state.data.count,
+                builder: (context, unreadCount) => HomeBottomNavigation(
+                  destinations: _tabs
+                      .map(
+                        (tab) => tab.screen is ChatListScreen
+                            ? tab.destination.copyWith(badgeCount: unreadCount)
+                            : tab.destination,
+                      )
+                      .toList(growable: false),
+                  currentIndex: _currentIndex,
+                  onDestinationSelected: _selectTab,
+                ),
               ),
-              bottomNavigationBar: HomeBottomNavigation(
-                destinations: _tabs
-                    .map(
-                      (tab) => tab.screen is ChatListScreen
-                          ? tab.destination.copyWith(badgeCount: unreadCount)
-                          : tab.destination,
-                    )
-                    .toList(growable: false),
-                currentIndex: _currentIndex,
-                onDestinationSelected: _selectTab,
-              ),
-            ),
-          );
-        },
+        ),
       ),
     );
   }

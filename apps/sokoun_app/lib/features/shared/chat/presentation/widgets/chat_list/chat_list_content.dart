@@ -18,7 +18,7 @@ import '../../../data/models/chat_socket_message.dart';
 import '../../screens/chat_search_screen.dart';
 import '../shared/chat_privacy_banner.dart';
 import 'chat_empty_state.dart';
-import 'chat_list_item.dart';
+import '../chat_list_tile.dart';
 import 'chat_search_field.dart';
 
 class ChatListContent extends StatefulWidget {
@@ -94,7 +94,7 @@ class _ChatListContentState extends State<ChatListContent> {
             itemBuilder: (context, data, index, conversation) => Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ChatListItem(
+                ChatListTile(
                   key: ValueKey<String>(conversation.id),
                   conversation: conversation,
                 ),

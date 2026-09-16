@@ -22,10 +22,14 @@ class ChatThreadMessagesView extends StatefulWidget {
     super.key,
     required this.conversation,
     required this.controller,
+    required this.initialMessagesRequest,
+    required this.messagesCacheKey,
   });
 
   final ConversationContent conversation;
   final PagifyController<ChatMessages> controller;
+  final Future<List<ChatMessageContent>> initialMessagesRequest;
+  final String? messagesCacheKey;
 
   @override
   State<ChatThreadMessagesView> createState() => _ChatThreadMessagesViewState();
@@ -36,33 +40,25 @@ class ChatView extends ChatThreadMessagesView {
     super.key,
     required super.conversation,
     required super.controller,
+    required super.initialMessagesRequest,
+    required super.messagesCacheKey,
   });
 }
 
 class _ChatThreadMessagesViewState extends State<ChatThreadMessagesView> {
-  late final ChatDataSource _dataSource;
   PaginationData _pagination = PaginationData(
     perPage: ChatData.messagesPageSize,
     totalPages: 1,
   );
 
-  @override
-  void initState() {
-    super.initState();
-    _dataSource = ChatData.source;
-  }
-
-  Future<List<ChatMessageContent>> _loadMessages(
-    BuildContext context,
-    int currentPage,
-  ) async {
-    final (List<ChatMessageContent>, PaginationData) page = await _dataSource
-        .getMessagesPage(
-          conversationId: widget.conversation.id,
-          page: currentPage,
-        );
-    _pagination = page.$2;
-    return page.$1;
+  Future<List<ChatMessageContent>> _loadMessages(BuildContext _, int _) async {
+    final List<ChatMessageContent> messages =
+        await widget.initialMessagesRequest;
+    _pagination = PaginationData(
+      perPage: ChatData.messagesPageSize,
+      totalPages: 1,
+    );
+    return messages;
   }
 
   PagifyData<ChatMessages> _mapMessages(List<ChatMessageContent> response) {
@@ -140,9 +136,6 @@ class _ChatThreadMessagesViewState extends State<ChatThreadMessagesView> {
 
   @override
   Widget build(BuildContext context) {
-    final String? cacheKey = _dataSource.messagesCacheKey(
-      widget.conversation.id,
-    );
     return Column(
       children: [
         const ChatDayLabel(),
@@ -160,8 +153,7 @@ class _ChatThreadMessagesViewState extends State<ChatThreadMessagesView> {
                 ),
               ),
             ),
-            messageAlignment: (isFromMe) =>
-                isFromMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+            messageAlignment: (isFromMe) => _messageAlignment(isFromMe),
             rightMessageBuilder: (message) => ChatMessageBubble(
               key: ValueKey<String>(message.message.id.toString()),
               message: message,
@@ -176,9 +168,13 @@ class _ChatThreadMessagesViewState extends State<ChatThreadMessagesView> {
               child: CircularProgressIndicator(color: AppColors.sokoonTeal),
             ),
             emptyView: const ChatMessagesEmptyState(),
-            cacheKey: cacheKey,
-            cacheToJson: cacheKey == null ? null : _messageToJson,
-            cacheFromJson: cacheKey == null ? null : _messageFromJson,
+            cacheKey: widget.messagesCacheKey,
+            cacheToJson: widget.messagesCacheKey == null
+                ? null
+                : _messageToJson,
+            cacheFromJson: widget.messagesCacheKey == null
+                ? null
+                : _messageFromJson,
           ).paddingSymmetric(horizontal: 16.w, vertical: 8.h),
         ),
         ChatPrivacyBanner(
@@ -186,5 +182,13 @@ class _ChatThreadMessagesViewState extends State<ChatThreadMessagesView> {
         ).padding(EdgeInsets.fromLTRB(16.w, 0, 16.w, 10.h)),
       ],
     );
+  }
+
+  MainAxisAlignment _messageAlignment(bool isFromMe) {
+    final bool isRtl = Directionality.of(context) == TextDirection.rtl;
+    if (isRtl) {
+      return isFromMe ? MainAxisAlignment.start : MainAxisAlignment.end;
+    }
+    return isFromMe ? MainAxisAlignment.end : MainAxisAlignment.start;
   }
 }

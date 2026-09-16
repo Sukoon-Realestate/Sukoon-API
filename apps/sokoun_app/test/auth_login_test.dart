@@ -7,16 +7,15 @@ import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 import 'package:multiple_result/multiple_result.dart';
-import 'package:sokoun_app/features/shared/auth/data/models/google_login.dart';
-import 'package:sokoun_app/features/shared/auth/presentation/cubits/google_login.dart';
+import 'package:sokoun_app/features/shared/auth/presentation/cubits/login.dart';
 
 void main() {
-  late _GoogleLoginRepository repository;
+  late _LoginRepository repository;
   late _RecordingUserCubit userCubit;
 
   setUp(() async {
     await injector.reset();
-    repository = _GoogleLoginRepository();
+    repository = _LoginRepository();
     userCubit = _RecordingUserCubit();
     injector
       ..registerSingleton<BaseCrudUseCase>(
@@ -28,26 +27,23 @@ void main() {
   tearDown(() => injector.reset());
 
   test(
-    'posts the Google token, fetches the current user, and caches it',
+    'logs in, fetches the current user, caches it, then completes',
     () async {
-      final GoogleLoginCubit cubit = GoogleLoginCubit();
+      final LoginCubit cubit = LoginCubit();
       addTearDown(cubit.close);
       bool completed = false;
 
       await cubit.login(
-        body: const GoogleLoginBody(token: 'google-id-token'),
+        email: 'user@example.com',
+        password: 'password',
         onSuccess: () => completed = true,
       );
 
-      expect(ApiConstants.googleLogin, 'auth/google/');
       expect(ApiConstants.currentUser, 'auth/users/me/');
-      expect(repository.apis, [
-        ApiConstants.googleLogin,
-        ApiConstants.currentUser,
-      ]);
+      expect(repository.apis, [ApiConstants.login, ApiConstants.currentUser]);
       expect(repository.methods, [HttpRequestType.post, HttpRequestType.get]);
       expect(repository.bodies, [
-        {'token': 'google-id-token'},
+        {'email': 'user@example.com', 'password': 'password'},
         null,
       ]);
       expect(userCubit.cachedUser?.id, '17');
@@ -58,7 +54,7 @@ void main() {
   );
 }
 
-class _GoogleLoginRepository implements BaseRepository {
+class _LoginRepository implements BaseRepository {
   final List<String> apis = [];
   final List<HttpRequestType> methods = [];
   final List<Map<String, dynamic>?> bodies = [];
@@ -70,7 +66,7 @@ class _GoogleLoginRepository implements BaseRepository {
     apis.add(params.api);
     methods.add(params.httpRequestType);
     bodies.add(params.body);
-    if (params.api == ApiConstants.googleLogin) {
+    if (params.api == ApiConstants.login) {
       return Success(
         BaseModel<T>(key: '', msg: '', data: const <String, dynamic>{} as T),
       );

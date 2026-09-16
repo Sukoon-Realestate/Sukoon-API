@@ -159,6 +159,7 @@ final class ChatRealtimeService implements ChatRealtimeGateway {
     String event,
     Map<String, dynamic> eventData,
   ) async {
+    log('the data is $eventData');
     if (event != SocketEvents.readMessage) return;
     final Object? payload = eventData['payload'];
     if (payload is! Map) return;

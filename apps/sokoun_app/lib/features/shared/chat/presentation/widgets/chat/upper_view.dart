@@ -14,11 +14,13 @@ class ChatThreadHeader extends StatelessWidget {
   const ChatThreadHeader({
     super.key,
     required this.conversation,
-    required this.onReportPressed,
+    this.onReportPressed,
+    this.showReportAction = true,
   });
 
   final ConversationContent conversation;
-  final VoidCallback onReportPressed;
+  final VoidCallback? onReportPressed;
+  final bool showReportAction;
 
   @override
   Widget build(BuildContext context) {
@@ -75,16 +77,17 @@ class ChatThreadHeader extends StatelessWidget {
             ),
           ),
           if (conversation.isVerified) ...[const ChatVerifiedBadge(), 4.szW],
-          IconButton(
-            tooltip: LocaleKeys.chatReportProblemTitle,
-            onPressed: onReportPressed,
-            visualDensity: VisualDensity.compact,
-            icon: Icon(
-              Icons.more_vert_rounded,
-              color: AppColors.sokoonGray,
-              size: 20.r,
+          if (showReportAction)
+            IconButton(
+              tooltip: LocaleKeys.chatReportProblemTitle,
+              onPressed: onReportPressed,
+              visualDensity: VisualDensity.compact,
+              icon: Icon(
+                Icons.more_vert_rounded,
+                color: AppColors.sokoonGray,
+                size: 20.r,
+              ),
             ),
-          ),
         ],
       ),
     );
@@ -95,6 +98,7 @@ class ChatUpperWidget extends ChatThreadHeader {
   const ChatUpperWidget({
     super.key,
     required super.conversation,
-    required super.onReportPressed,
+    super.onReportPressed,
+    super.showReportAction,
   });
 }

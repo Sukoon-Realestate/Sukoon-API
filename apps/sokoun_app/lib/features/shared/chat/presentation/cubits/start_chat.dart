@@ -30,3 +30,5 @@ class CreateConversationCubit extends AsyncCubit<ConversationContent> {
 
 /// Reference-style name for the cubit that creates or resolves a chat.
 class StartChatCubit extends CreateConversationCubit {}
+
+class ChatCubit extends StartChatCubit {}

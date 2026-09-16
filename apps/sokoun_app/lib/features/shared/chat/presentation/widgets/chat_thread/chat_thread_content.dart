@@ -20,9 +20,16 @@ import '../chat/upper_view.dart';
 import '../report/chat_report_sheet.dart';
 
 class ChatThreadContent extends StatefulWidget {
-  const ChatThreadContent({super.key, required this.conversation});
+  const ChatThreadContent({
+    super.key,
+    required this.conversation,
+    required this.initialMessagesRequest,
+    required this.messagesCacheKey,
+  });
 
   final ConversationContent conversation;
+  final Future<List<ChatMessageContent>> initialMessagesRequest;
+  final String? messagesCacheKey;
 
   @override
   State<ChatThreadContent> createState() => _ChatThreadContentState();
@@ -41,12 +48,14 @@ class _ChatThreadContentState extends State<ChatThreadContent> {
 
   @override
   void dispose() {
-    _chatController.dispose();
     _messageController.dispose();
     super.dispose();
   }
 
-  Future<void> _receiveSocketMessage(ChatSocketMessage message) async {
+  Future<void> _receiveSocketMessage(
+    ChatSocketMessage message, {
+    String? localMessageId,
+  }) async {
     if (!mounted) return;
 
     final ChatMessages chatMessage = _toSocketChatMessage(message);
@@ -59,17 +68,25 @@ class _ChatThreadContentState extends State<ChatThreadContent> {
       return;
     }
 
-    final int pendingMessageIndex = currentMessages.indexWhere(
-      (item) =>
-          chatMessage.sender.isFromMe &&
-          item.sender.isFromMe &&
-          item.messageState == MessageState.pending &&
-          item.message.body == message.content,
-    );
+    int pendingMessageIndex = localMessageId == null
+        ? -1
+        : currentMessages.indexWhere(
+            (item) => item.message.id.toString() == localMessageId,
+          );
+    if (pendingMessageIndex < 0) {
+      pendingMessageIndex = currentMessages.indexWhere(
+        (item) =>
+            chatMessage.sender.isFromMe &&
+            item.sender.isFromMe &&
+            item.messageState == MessageState.pending &&
+            item.message.body == message.content,
+      );
+    }
     if (pendingMessageIndex >= 0) {
       _chatController.replaceWith(pendingMessageIndex, chatMessage);
     } else {
-      _chatController.addAtBeginning(chatMessage);
+      _chatController.addItem(chatMessage);
+      _chatController.moveToMaxBottom();
     }
 
     if (!chatMessage.sender.isFromMe) {
@@ -87,9 +104,7 @@ class _ChatThreadContentState extends State<ChatThreadContent> {
   }
 
   ChatMessages _toSocketChatMessage(ChatSocketMessage content) {
-    final String currentUserId = UserModel.currentUser?.id ?? '';
-    final bool isFromMe =
-        currentUserId.isNotEmpty && content.sender.id == currentUserId;
+    final bool isFromMe = content.isFromMe;
     final DateTime? createdAt = content.createdAt?.toLocal();
     final String time = createdAt == null
         ? LocaleKeys.chatNow
@@ -132,16 +147,19 @@ class _ChatThreadContentState extends State<ChatThreadContent> {
     _chatController.addItem(pendingMessage);
     _chatController.moveToMaxBottom();
     _messageController.clear();
-    unawaited(_sendMessage(text));
+    unawaited(
+      _sendMessage(text, localMessageId: pendingMessage.message.id.toString()),
+    );
   }
 
-  Future<void> _sendMessage(String text) async {
+  Future<void> _sendMessage(
+    String text, {
+    required String localMessageId,
+  }) async {
     final ChatSendResult result = await context
         .read<ChatThreadCubit>()
-        .sendTextMessage(text);
-    final ChatSocketMessage? restMessage = result.restMessage;
-    if (restMessage != null) await _receiveSocketMessage(restMessage);
-    if (!result.isSent && mounted) {
+        .sendTextMessage(text, localMessageId: localMessageId);
+    if (!result.isSent && !result.isQueued && mounted) {
       MessageUtils.showSnackBar(
         LocaleKeys.waitingForConnection,
         context: context,
@@ -174,7 +192,14 @@ class _ChatThreadContentState extends State<ChatThreadContent> {
               current.receivedMessageRevision,
           listener: (context, state) {
             final ChatSocketMessage? message = state.receivedMessage;
-            if (message != null) unawaited(_receiveSocketMessage(message));
+            if (message != null) {
+              unawaited(
+                _receiveSocketMessage(
+                  message,
+                  localMessageId: state.confirmedLocalMessageId,
+                ),
+              );
+            }
           },
         ),
         BlocListener<ChatThreadCubit, ChatThreadState>(
@@ -193,6 +218,8 @@ class _ChatThreadContentState extends State<ChatThreadContent> {
             child: ChatView(
               conversation: widget.conversation,
               controller: _chatController,
+              initialMessagesRequest: widget.initialMessagesRequest,
+              messagesCacheKey: widget.messagesCacheKey,
             ),
           ),
           ChatBottomBar(

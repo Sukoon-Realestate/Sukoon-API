@@ -12,7 +12,6 @@ import 'package:sokoun_app/features/main_view/presentation/screens/view.dart';
 import 'package:sokoun_app/features/shared/auth/data/models/google_login.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/google_login.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/login.dart';
-import 'package:sokoun_app/features/shared/auth/presentation/screens/otp_screen.dart';
 import 'package:sokoun_app/shared_widgets/shared_widgets.dart';
 
 import '../widgets/auth_scaffold.dart';
@@ -44,16 +43,10 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    final String email = _emailController.text.trim();
     await ctx.read<LoginCubit>().login(
-      email: email,
+      email: _emailController.text.trim(),
       password: _passwordController.text,
-      onSuccess: () => Go.to(
-        OtpScreen(
-          email: email,
-          onVerified: () => Go.offAll(const HomeScreen()),
-        ),
-      ),
+      onSuccess: () => Go.offAll(const HomeScreen()),
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 
 class ChatSocketMessage extends Equatable {
   const ChatSocketMessage({
@@ -39,6 +40,11 @@ class ChatSocketMessage extends Equatable {
   final ChatSocketSender sender;
   final String content;
   final DateTime? createdAt;
+
+  bool get isFromMe {
+    final String currentUserId = UserModel.currentUser?.id ?? '';
+    return currentUserId.isNotEmpty && sender.id == currentUserId;
+  }
 
   Map<String, dynamic> toJson() => {
     'id': id,

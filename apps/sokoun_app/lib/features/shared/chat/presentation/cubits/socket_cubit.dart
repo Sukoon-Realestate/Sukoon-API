@@ -14,13 +14,25 @@ import '../../data/models/chat_socket_message.dart';
 
 part 'chat_thread_state.dart';
 
+enum ChatSendStatus { sent, queued, failed }
+
 class ChatSendResult {
-  const ChatSendResult({required this.isSent, this.restMessage});
+  const ChatSendResult.sent({this.restMessage}) : status = ChatSendStatus.sent;
 
-  const ChatSendResult.failed() : isSent = false, restMessage = null;
+  const ChatSendResult.queued()
+    : status = ChatSendStatus.queued,
+      restMessage = null;
 
-  final bool isSent;
+  const ChatSendResult.failed()
+    : status = ChatSendStatus.failed,
+      restMessage = null;
+
+  final ChatSendStatus status;
   final ChatSocketMessage? restMessage;
+
+  bool get isSent => status == ChatSendStatus.sent;
+
+  bool get isQueued => status == ChatSendStatus.queued;
 }
 
 class ChatThreadCubit extends Cubit<ChatThreadState> {
@@ -28,19 +40,28 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
     required this.conversationId,
     this.otherParticipantId = '',
     ChatRealtimeGateway? realtimeService,
+    ChatDataSource? dataSource,
   }) : _realtime = realtimeService ?? ChatRealtimeService.instance,
+       _dataSource = dataSource ?? ChatData.source,
        super(const ChatThreadState.initial());
 
   static const Duration _confirmationTimeout = Duration(seconds: 5);
+  static const Duration _queueRetryDelay = Duration(seconds: 5);
 
   final String conversationId;
   final String otherParticipantId;
   final ChatRealtimeGateway _realtime;
-  final Map<String, List<Completer<ChatSocketMessage>>> _confirmations = {};
+  final ChatDataSource _dataSource;
+  final List<_QueuedChatMessage> _outbox = [];
+  final Map<String, List<_SocketConfirmation>> _confirmations = {};
   StreamSubscription<ChatSocketMessage>? _messageSubscription;
   StreamSubscription<ChatReadReceipt>? _readSubscription;
   StreamSubscription<ChatRealtimeStatus>? _statusSubscription;
+  Future<void>? _outboxFlush;
+  Timer? _queueRetryTimer;
   bool _shouldBeConnected = true;
+
+  int get queuedMessageCount => _outbox.length;
 
   Future<void> connect() async {
     _realtime.setActiveConversation(conversationId);
@@ -54,11 +75,22 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
     await markConversationAsRead();
   }
 
-  Future<ChatSendResult> sendTextMessage(String rawContent) async {
+  Future<ChatSendResult> sendTextMessage(
+    String rawContent, {
+    String? localMessageId,
+  }) async {
     final String content = rawContent.trim();
     if (content.isEmpty || content.length > 5000) {
       return const ChatSendResult.failed();
     }
+
+    final _QueuedChatMessage queuedMessage = _QueuedChatMessage(
+      localMessageId:
+          localMessageId ?? 'local-${DateTime.now().microsecondsSinceEpoch}',
+      content: content,
+    );
+    _outbox.add(queuedMessage);
+    _emitQueuedMessageCount();
 
     if (!_realtime.isConnected && _shouldBeConnected) {
       try {
@@ -71,36 +103,10 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
       }
     }
 
-    if (_realtime.isConnected) {
-      final Completer<ChatSocketMessage> confirmation =
-          Completer<ChatSocketMessage>();
-      (_confirmations[content] ??= []).add(confirmation);
-      try {
-        await _realtime.sendMessage(
-          conversationId: conversationId,
-          content: content,
-        );
-        final ChatSocketMessage confirmedMessage = await confirmation.future
-            .timeout(_confirmationTimeout);
-        return ChatSendResult(isSent: true, restMessage: confirmedMessage);
-      } catch (_) {
-        _removeConfirmation(content, confirmation);
-      }
-    }
+    if (!_realtime.isConnected) return const ChatSendResult.queued();
 
-    try {
-      final ChatMessageContent message = await ChatData.sendMessage(
-        conversationId: conversationId,
-        content: content,
-      );
-      return ChatSendResult(
-        isSent: true,
-        restMessage: _socketMessageFromRest(message),
-      );
-    } catch (error, stackTrace) {
-      log('Unable to send chat message: $error', stackTrace: stackTrace);
-      return const ChatSendResult.failed();
-    }
+    await _flushOutbox();
+    return queuedMessage.result ?? const ChatSendResult.queued();
   }
 
   Future<void> markConversationAsRead() async {
@@ -115,7 +121,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
     }
 
     try {
-      await ChatData.markConversationAsRead(conversationId);
+      await _dataSource.markConversationAsRead(conversationId);
       ChatUnreadRefreshBus.requestRefresh();
     } catch (error, stackTrace) {
       log('Unable to mark chat as read: $error', stackTrace: stackTrace);
@@ -148,20 +154,19 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
       ChatRealtimeStatus.error => ChatSocketStatus.error,
     };
     emit(state.copyWith(status: mappedStatus));
+    if (status == ChatRealtimeStatus.connected && _outbox.isNotEmpty) {
+      _queueRetryTimer?.cancel();
+      unawaited(_flushOutbox());
+    }
   }
 
   void _receiveMessage(ChatSocketMessage message) {
     if (isClosed) return;
-    final bool confirmsPendingMessage = _confirmOutgoingMessage(message);
-    if (!confirmsPendingMessage && !_isMessageFromActiveConversation(message)) {
+    final String? localMessageId = _confirmOutgoingMessage(message);
+    if (localMessageId == null && !_isMessageFromActiveConversation(message)) {
       return;
     }
-    emit(
-      state.copyWith(
-        receivedMessage: message,
-        receivedMessageRevision: state.receivedMessageRevision + 1,
-      ),
-    );
+    _emitReceivedMessage(message, localMessageId: localMessageId);
   }
 
   void _receiveReadReceipt(ChatReadReceipt receipt) {
@@ -169,27 +174,134 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
     emit(state.copyWith(readReceiptRevision: state.readReceiptRevision + 1));
   }
 
-  bool _confirmOutgoingMessage(ChatSocketMessage message) {
+  String? _confirmOutgoingMessage(ChatSocketMessage message) {
     final String currentUserId = UserModel.currentUser?.id ?? '';
     if (currentUserId.isEmpty || message.sender.id != currentUserId) {
-      return false;
+      return null;
     }
-    final List<Completer<ChatSocketMessage>>? pending =
-        _confirmations[message.content];
-    if (pending == null || pending.isEmpty) return false;
-    final Completer<ChatSocketMessage> confirmation = pending.removeAt(0);
+    final List<_SocketConfirmation>? pending = _confirmations[message.content];
+    if (pending == null || pending.isEmpty) return null;
+    final _SocketConfirmation confirmation = pending.removeAt(0);
     if (pending.isEmpty) _confirmations.remove(message.content);
-    if (!confirmation.isCompleted) confirmation.complete(message);
-    return true;
+    if (!confirmation.completer.isCompleted) {
+      confirmation.completer.complete(message);
+    }
+    return confirmation.localMessageId;
   }
 
-  void _removeConfirmation(
-    String content,
-    Completer<ChatSocketMessage> confirmation,
-  ) {
-    final List<Completer<ChatSocketMessage>>? pending = _confirmations[content];
+  void _removeConfirmation(String content, _SocketConfirmation confirmation) {
+    final List<_SocketConfirmation>? pending = _confirmations[content];
     pending?.remove(confirmation);
     if (pending?.isEmpty ?? false) _confirmations.remove(content);
+  }
+
+  Future<void> _flushOutbox() async {
+    final Future<void>? activeFlush = _outboxFlush;
+    if (activeFlush != null) {
+      await activeFlush;
+      return;
+    }
+
+    final Future<void> flush = _drainOutbox();
+    _outboxFlush = flush;
+    try {
+      await flush;
+    } finally {
+      if (identical(_outboxFlush, flush)) _outboxFlush = null;
+    }
+  }
+
+  Future<void> _drainOutbox() async {
+    while (_outbox.isNotEmpty && _realtime.isConnected && !isClosed) {
+      final _QueuedChatMessage queuedMessage = _outbox.first;
+      final ChatSendResult result = await _deliverQueuedMessage(queuedMessage);
+      if (!result.isSent) {
+        _scheduleQueueRetry();
+        return;
+      }
+
+      queuedMessage.result = result;
+      _outbox.removeAt(0);
+      _emitQueuedMessageCount();
+    }
+  }
+
+  Future<ChatSendResult> _deliverQueuedMessage(
+    _QueuedChatMessage queuedMessage,
+  ) async {
+    final Completer<ChatSocketMessage> completer =
+        Completer<ChatSocketMessage>();
+    final _SocketConfirmation confirmation = _SocketConfirmation(
+      localMessageId: queuedMessage.localMessageId,
+      completer: completer,
+    );
+    (_confirmations[queuedMessage.content] ??= []).add(confirmation);
+
+    try {
+      await _realtime.sendMessage(
+        conversationId: conversationId,
+        content: queuedMessage.content,
+      );
+      final ChatSocketMessage confirmedMessage = await completer.future.timeout(
+        _confirmationTimeout,
+      );
+      return ChatSendResult.sent(restMessage: confirmedMessage);
+    } catch (socketError, socketStackTrace) {
+      _removeConfirmation(queuedMessage.content, confirmation);
+      if (isClosed || !_realtime.isConnected) {
+        log(
+          'Chat message remains queued until the socket reconnects: '
+          '$socketError',
+          stackTrace: socketStackTrace,
+        );
+        return const ChatSendResult.queued();
+      }
+    }
+
+    try {
+      final ChatMessageContent message = await _dataSource.sendMessage(
+        conversationId: conversationId,
+        content: queuedMessage.content,
+      );
+      final ChatSocketMessage restMessage = _socketMessageFromRest(message);
+      _emitReceivedMessage(
+        restMessage,
+        localMessageId: queuedMessage.localMessageId,
+      );
+      return ChatSendResult.sent(restMessage: restMessage);
+    } catch (error, stackTrace) {
+      log('Unable to send queued chat message: $error', stackTrace: stackTrace);
+      return const ChatSendResult.queued();
+    }
+  }
+
+  void _emitReceivedMessage(
+    ChatSocketMessage message, {
+    String? localMessageId,
+  }) {
+    if (isClosed) return;
+    emit(
+      state.copyWith(
+        receivedMessage: message,
+        confirmedLocalMessageId: localMessageId,
+        receivedMessageRevision: state.receivedMessageRevision + 1,
+      ),
+    );
+  }
+
+  void _emitQueuedMessageCount() {
+    if (isClosed) return;
+    emit(state.copyWith(queuedMessageCount: _outbox.length));
+  }
+
+  void _scheduleQueueRetry() {
+    if (!_shouldBeConnected || _outbox.isEmpty || isClosed) return;
+    _queueRetryTimer?.cancel();
+    _queueRetryTimer = Timer(_queueRetryDelay, () async {
+      if (!_shouldBeConnected || _outbox.isEmpty || isClosed) return;
+      if (!_realtime.isConnected) await _realtime.connect();
+      if (_realtime.isConnected) await _flushOutbox();
+    });
   }
 
   ChatSocketMessage _socketMessageFromRest(ChatMessageContent message) {
@@ -226,17 +338,20 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   @override
   Future<void> close() async {
     _shouldBeConnected = false;
+    _queueRetryTimer?.cancel();
     if (_realtime.activeConversationId == conversationId) {
       _realtime.setActiveConversation(null);
     }
     await _messageSubscription?.cancel();
     await _readSubscription?.cancel();
     await _statusSubscription?.cancel();
-    for (final List<Completer<ChatSocketMessage>> confirmations
+    for (final List<_SocketConfirmation> confirmations
         in _confirmations.values) {
-      for (final Completer<ChatSocketMessage> confirmation in confirmations) {
-        if (!confirmation.isCompleted) {
-          confirmation.completeError(StateError('Chat thread was closed.'));
+      for (final _SocketConfirmation confirmation in confirmations) {
+        if (!confirmation.completer.isCompleted) {
+          confirmation.completer.completeError(
+            StateError('Chat thread was closed.'),
+          );
         }
       }
     }
@@ -245,11 +360,30 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   }
 }
 
+class _QueuedChatMessage {
+  _QueuedChatMessage({required this.localMessageId, required this.content});
+
+  final String localMessageId;
+  final String content;
+  ChatSendResult? result;
+}
+
+class _SocketConfirmation {
+  const _SocketConfirmation({
+    required this.localMessageId,
+    required this.completer,
+  });
+
+  final String localMessageId;
+  final Completer<ChatSocketMessage> completer;
+}
+
 /// Reference-style name for the realtime cubit used by a single chat screen.
 class SocketCubit extends ChatThreadCubit {
   SocketCubit({
     required super.conversationId,
     super.otherParticipantId,
     super.realtimeService,
+    super.dataSource,
   });
 }

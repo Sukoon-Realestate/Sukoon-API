@@ -1,24 +1,34 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/chat_builder/easy_chat.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_data.dart';
+import 'package:sokoun_app/features/shared/chat/data/chat_realtime_service.dart';
+import 'package:sokoun_app/features/shared/chat/data/chat_thread_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_page_response.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_read_content.dart';
+import 'package:sokoun_app/features/shared/chat/data/models/chat_socket_message.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/cubits/socket_cubit.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_list_screen.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_restricted_screen.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_search_screen.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_thread_screen.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/screens/previous_chat_screen.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_list/chat_empty_state.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_list/chat_search_field.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_list/chat_list_item.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_message_bubble.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_thread_content.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/report/chat_report_sheet.dart';
 
 const List<ConversationContent> _conversations = [
@@ -81,6 +91,8 @@ const List<ChatMessageContent> _messages = [
   ),
 ];
 
+int _messagesRequestCount = 0;
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -101,6 +113,7 @@ void main() {
           return call.method == 'check' ? <String>['wifi'] : null;
         });
     await EasyLocalization.ensureInitialized();
+    await CacheStorage.init();
   });
 
   tearDownAll(() {
@@ -111,18 +124,27 @@ void main() {
   });
 
   setUp(() async {
+    _messagesRequestCount = 0;
     if (injector.isRegistered<ChatDataSource>()) {
       await injector.unregister<ChatDataSource>();
     }
     injector.registerSingleton<ChatDataSource>(
       const _MemoryChatDataSource(conversations: _conversations),
     );
+    await CacheStorage.write('user', const <String, dynamic>{
+      'id': 'f9cf1cdf-50bc-4136-a042-2302ec1513b2',
+      'name': 'Current User',
+      'phone': '',
+      'email': '',
+      'type': 'tenant',
+    });
   });
 
   tearDown(() async {
     if (injector.isRegistered<ChatDataSource>()) {
       await injector.unregister<ChatDataSource>();
     }
+    await CacheStorage.delete('user');
   });
 
   Widget buildScreen(Widget screen) {
@@ -161,7 +183,7 @@ void main() {
       await tester.pumpWidget(buildScreen(const ChatListScreen()));
       await tester.pumpAndSettle();
 
-      expect(find.byType(ChatListItem), findsNWidgets(3));
+      expect(find.byType(ChatListTile), findsNWidgets(3));
 
       await tester.tap(find.byType(ChatSearchField));
       await tester.pumpAndSettle();
@@ -171,7 +193,7 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('conversation-1')));
       await tester.pumpAndSettle();
 
-      expect(find.byType(ChatThreadScreen), findsOneWidget);
+      expect(find.byType(ChatScreen), findsOneWidget);
       expect(find.byType(EasyChat<List<ChatMessageContent>>), findsOneWidget);
       expect(find.byType(ChatMessageBubble), findsNWidgets(4));
       expect(tester.takeException(), isNull);
@@ -188,11 +210,13 @@ void main() {
     );
     await tester.pumpAndSettle();
 
+    expect(_messagesRequestCount, 1);
     await tester.enterText(find.byType(TextField).first, 'رسالة جديدة');
     await tester.tap(find.byIcon(Icons.send_rounded));
     await tester.pump();
 
     expect(find.text('رسالة جديدة'), findsOneWidget);
+    expect(_messagesRequestCount, 1);
 
     await tester.tap(find.byIcon(Icons.more_vert_rounded));
     await tester.pumpAndSettle();
@@ -207,6 +231,119 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(ChatListScreen), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('loads message history once for each ChatScreen entry', (
+    tester,
+  ) async {
+    configurePhoneViewport(tester);
+
+    await tester.pumpWidget(
+      buildScreen(ChatScreen(conversation: _conversations.first)),
+    );
+    await tester.pumpAndSettle();
+    expect(_messagesRequestCount, 1);
+
+    await tester.pump();
+    expect(_messagesRequestCount, 1);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+    await tester.pumpWidget(
+      buildScreen(ChatScreen(conversation: _conversations.first)),
+    );
+    await tester.pumpAndSettle();
+    expect(_messagesRequestCount, 2);
+  });
+
+  testWidgets('renders current-user message.new on the physical right', (
+    tester,
+  ) async {
+    configurePhoneViewport(tester);
+    final _MemoryChatRealtimeGateway realtime = _MemoryChatRealtimeGateway();
+    final ChatThreadCubit cubit = ChatThreadCubit(
+      conversationId: _conversations.first.id,
+      otherParticipantId: 'other-user-id',
+      realtimeService: realtime,
+      dataSource: ChatData.source,
+    );
+    addTearDown(() async {
+      await cubit.close();
+      await realtime.close();
+    });
+    final ChatThreadData chatThreadData = ChatThreadData(
+      conversationId: _conversations.first.id,
+      dataSource: ChatData.source,
+    );
+    final Future<List<ChatMessageContent>> initialMessagesRequest =
+        chatThreadData.loadInitialMessages();
+
+    await tester.pumpWidget(
+      buildScreen(
+        BlocProvider<ChatThreadCubit>.value(
+          value: cubit,
+          child: Scaffold(
+            body: ChatThreadContent(
+              conversation: _conversations.first,
+              initialMessagesRequest: initialMessagesRequest,
+              messagesCacheKey: chatThreadData.messagesCacheKey,
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await cubit.connect();
+
+    final ChatSocketMessage ownMessage = ChatSocketMessage.fromJson(const {
+      'id': 'socket-own-message',
+      'conversation': 'conversation-1',
+      'sender': {
+        'id': 'f9cf1cdf-50bc-4136-a042-2302ec1513b2',
+        'full_name': 'Current User',
+        'avatar_url': '',
+        'is_online': true,
+      },
+      'content': 'Own socket message',
+      'created_at': '2026-09-16T10:00:00Z',
+    });
+    expect(ownMessage.isFromMe, isTrue);
+
+    realtime.addMessage(ownMessage);
+    await tester.pumpAndSettle();
+
+    final Finder messageText = find.text('Own socket message');
+    final Finder messageBubble = find.ancestor(
+      of: messageText,
+      matching: find.byType(ChatMessageBubble),
+    );
+    expect(messageText, findsOneWidget);
+    expect(messageBubble, findsOneWidget);
+    expect(tester.widget<ChatMessageBubble>(messageBubble).isFromMe, isTrue);
+
+    final Rect contentRect = tester.getRect(find.byType(ChatThreadContent));
+    expect(
+      tester.getCenter(messageBubble).dx,
+      greaterThan(contentRect.center.dx),
+    );
+    expect(_messagesRequestCount, 1);
+  });
+
+  testWidgets('previous chat loads history without composer actions', (
+    tester,
+  ) async {
+    configurePhoneViewport(tester);
+
+    await tester.pumpWidget(
+      buildScreen(PreviousChatScreen(conversation: _conversations.first)),
+    );
+    await tester.pumpAndSettle();
+
+    expect(_messagesRequestCount, 1);
+    expect(find.byType(EasyChat<List<ChatMessageContent>>), findsOneWidget);
+    expect(find.byIcon(Icons.send_rounded), findsNothing);
+    expect(find.byIcon(Icons.more_vert_rounded), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
@@ -279,6 +416,7 @@ class _MemoryChatDataSource implements ChatDataSource {
     required String conversationId,
     required int page,
   }) async {
+    _messagesRequestCount++;
     return (
       page == 1 ? _messages : const <ChatMessageContent>[],
       PaginationData(perPage: _messages.length, totalPages: 1),
@@ -361,5 +499,70 @@ class _ChatTestAssetLoader extends AssetLoader {
       'chat_submit_report': 'إرسال البلاغ',
       'waiting_for_connection': 'جارٍ الاتصال...',
     };
+  }
+}
+
+class _MemoryChatRealtimeGateway implements ChatRealtimeGateway {
+  final StreamController<ChatSocketMessage> _messages =
+      StreamController<ChatSocketMessage>.broadcast(sync: true);
+  final StreamController<ChatReadReceipt> _readReceipts =
+      StreamController<ChatReadReceipt>.broadcast(sync: true);
+  final StreamController<ChatRealtimeStatus> _statuses =
+      StreamController<ChatRealtimeStatus>.broadcast(sync: true);
+
+  @override
+  String? activeConversationId;
+
+  @override
+  bool isConnected = false;
+
+  @override
+  Stream<ChatSocketMessage> get messages => _messages.stream;
+
+  @override
+  Stream<ChatReadReceipt> get readReceipts => _readReceipts.stream;
+
+  @override
+  ChatRealtimeStatus get status => isConnected
+      ? ChatRealtimeStatus.connected
+      : ChatRealtimeStatus.disconnected;
+
+  @override
+  Stream<ChatRealtimeStatus> get statuses => _statuses.stream;
+
+  void addMessage(ChatSocketMessage message) => _messages.add(message);
+
+  @override
+  Future<void> connect() async {
+    isConnected = true;
+    _statuses.add(ChatRealtimeStatus.connected);
+  }
+
+  @override
+  Future<void> disconnect() async {
+    isConnected = false;
+    _statuses.add(ChatRealtimeStatus.disconnected);
+  }
+
+  @override
+  Future<void> markConversationAsRead(String conversationId) async {}
+
+  @override
+  Future<void> sendMessage({
+    required String conversationId,
+    required String content,
+  }) async {}
+
+  @override
+  void setActiveConversation(String? conversationId) {
+    activeConversationId = conversationId;
+  }
+
+  Future<void> close() async {
+    await Future.wait([
+      _messages.close(),
+      _readReceipts.close(),
+      _statuses.close(),
+    ]);
   }
 }

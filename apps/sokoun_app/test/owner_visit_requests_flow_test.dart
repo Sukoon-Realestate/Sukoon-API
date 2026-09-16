@@ -17,7 +17,7 @@ import 'package:sokoun_app/features/shared/chat/data/chat_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_page_response.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_read_content.dart';
-import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_thread_screen.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_screen.dart';
 
 Map<String, dynamic> _ownerRequestDetailsResponse(String id) {
   final bool canChat = id == 'chat-enabled';
@@ -438,7 +438,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 700));
     await tester.pump(const Duration(milliseconds: 700));
 
-    expect(find.byType(ChatThreadScreen), findsOneWidget);
+    expect(find.byType(ChatScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

@@ -105,7 +105,7 @@ final class ChatApiDataSource implements ChatDataSource {
     );
     final ChatPageResponse<ChatMessageContent> pageResponse = response.data;
     return (
-      pageResponse.results,
+      pageResponse.results.reversed.toList(),
       PaginationData(
         perPage: ChatData.messagesPageSize,
         totalPages: pageResponse.totalPages,

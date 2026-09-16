@@ -18,7 +18,7 @@ class ChatSearchResultItem extends StatelessWidget {
 
   void _openConversation() {
     if (conversation.isVerified) {
-      Go.to(ChatThreadScreen(conversation: conversation));
+      Go.to(ChatScreen(conversation: conversation));
       return;
     }
 
