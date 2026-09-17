@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/shared/notifications/data/enums/notification_role.dart';
 import 'package:sokoun_app/features/shared/notifications/presentation/widgets/notification_bell_button.dart';
@@ -14,6 +15,14 @@ class TenantHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final UserModel? user = UserModel.currentUser;
+    final String userName = user?.name.trim() ?? '';
+    final String greeting = [
+      LocaleKeys.welcome,
+      if (userName.isNotEmpty) userName,
+      '👋',
+    ].join(' ');
+
     return Row(
       children: [
         const HomeAvatar(
@@ -27,7 +36,7 @@ class TenantHeader extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppText(
-                LocaleKeys.tenantHomeGreeting,
+                greeting,
                 color: AppColors.sokoonNavy,
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w900,

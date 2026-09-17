@@ -20,7 +20,6 @@ class OwnerDashboardContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           OwnerHeader(
-            name: dashboard.owner.name,
             avatarUrl: dashboard.owner.avatar,
             isVerified: dashboard.owner.isVerified,
           ),
