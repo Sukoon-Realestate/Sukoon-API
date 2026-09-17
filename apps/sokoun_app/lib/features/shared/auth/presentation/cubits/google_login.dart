@@ -5,11 +5,7 @@ import 'package:sokoun_app/features/shared/auth/data/auth_session_data.dart';
 import 'package:sokoun_app/features/shared/auth/data/models/google_login.dart';
 
 class GoogleLoginCubit extends AsyncCubit<UserModel> {
-  GoogleLoginCubit() : super(UserModel.initial()) {
-    _authSessionData = AuthSessionData(baseCrudUseCase: baseCrudUseCase);
-  }
-
-  late final AuthSessionData _authSessionData;
+  GoogleLoginCubit() : super(UserModel.initial());
 
   Future<void> login({
     required GoogleLoginBody body,
@@ -19,7 +15,7 @@ class GoogleLoginCubit extends AsyncCubit<UserModel> {
 
     await executeAsyncWithBaseModel(
       showMsgOnSuccess: true,
-      operation: () => _authSessionData.loginWithGoogle(body: body),
+      operation: () => AuthSessionData.loginWithGoogle(body: body),
       onSuccess: (response) => authenticatedUser = response.data,
     );
 

@@ -1,13 +1,29 @@
 part of '../imports.dart';
 
-abstract final class TenantVisitsData {
-  static const int _fallbackPageSize = 20;
+abstract interface class TenantVisitsDataSource {
+  String cacheKeyFor(TenantVisitFilter filter);
 
-  static String cacheKeyFor(TenantVisitFilter filter) {
+  Future<(List<TenantVisitContent>, PaginationData)> getVisitsPage({
+    required int page,
+    required TenantVisitFilter filter,
+  });
+
+  Future<TenantVisitsResponse> getVisits({
+    required int page,
+    required TenantVisitFilter filter,
+  });
+}
+
+final class TenantVisitsApiDataSource implements TenantVisitsDataSource {
+  const TenantVisitsApiDataSource();
+
+  @override
+  String cacheKeyFor(TenantVisitFilter filter) {
     return 'tenant_visits_${filter.name}';
   }
 
-  static Future<(List<TenantVisitContent>, PaginationData)> getVisitsPage({
+  @override
+  Future<(List<TenantVisitContent>, PaginationData)> getVisitsPage({
     required int page,
     required TenantVisitFilter filter,
   }) async {
@@ -18,13 +34,16 @@ abstract final class TenantVisitsData {
     return (
       response.results,
       PaginationData(
-        perPage: response.perPage < 1 ? _fallbackPageSize : response.perPage,
+        perPage: response.perPage < 1
+            ? TenantVisitsData._fallbackPageSize
+            : response.perPage,
         totalPages: response.totalPages < 1 ? 1 : response.totalPages,
       ),
     );
   }
 
-  static Future<TenantVisitsResponse> getVisits({
+  @override
+  Future<TenantVisitsResponse> getVisits({
     required int page,
     required TenantVisitFilter filter,
   }) async {
@@ -45,4 +64,26 @@ abstract final class TenantVisitsData {
 
     return response.data;
   }
+}
+
+abstract final class TenantVisitsData {
+  static const int _fallbackPageSize = 20;
+
+  static TenantVisitsDataSource get source =>
+      injector.isRegistered<TenantVisitsDataSource>()
+      ? injector<TenantVisitsDataSource>()
+      : const TenantVisitsApiDataSource();
+
+  static String cacheKeyFor(TenantVisitFilter filter) =>
+      source.cacheKeyFor(filter);
+
+  static Future<(List<TenantVisitContent>, PaginationData)> getVisitsPage({
+    required int page,
+    required TenantVisitFilter filter,
+  }) => source.getVisitsPage(page: page, filter: filter);
+
+  static Future<TenantVisitsResponse> getVisits({
+    required int page,
+    required TenantVisitFilter filter,
+  }) => source.getVisits(page: page, filter: filter);
 }

@@ -10,11 +10,23 @@ import 'package:melos_core/core/notification/notification_service.dart';
 
 import 'models/notification_device_body.dart';
 
-abstract final class NotificationDeviceData {
-  static StreamSubscription<String>? _tokenRefreshSubscription;
-  static bool _isRegistering = false;
+abstract interface class NotificationDeviceDataSource {
+  Future<void> start();
 
-  static Future<void> start() async {
+  Future<void> registerCurrentDevice();
+
+  Future<void> registerToken(String token);
+
+  Future<void> unregisterCurrentDevice();
+}
+
+final class NotificationDeviceApiDataSource
+    implements NotificationDeviceDataSource {
+  StreamSubscription<String>? _tokenRefreshSubscription;
+  bool _isRegistering = false;
+
+  @override
+  Future<void> start() async {
     try {
       await registerCurrentDevice();
       _tokenRefreshSubscription ??= injector<NotificationService>()
@@ -25,7 +37,8 @@ abstract final class NotificationDeviceData {
     }
   }
 
-  static Future<void> registerCurrentDevice() async {
+  @override
+  Future<void> registerCurrentDevice() async {
     try {
       final NetworkService networkService = injector<NetworkService>();
       if (!await networkService.hasSessionCookies()) return;
@@ -38,7 +51,8 @@ abstract final class NotificationDeviceData {
     }
   }
 
-  static Future<void> registerToken(String token) async {
+  @override
+  Future<void> registerToken(String token) async {
     if (_isRegistering || token.trim().isEmpty) return;
     try {
       final NetworkService networkService = injector<NetworkService>();
@@ -64,7 +78,8 @@ abstract final class NotificationDeviceData {
     }
   }
 
-  static Future<void> unregisterCurrentDevice() async {
+  @override
+  Future<void> unregisterCurrentDevice() async {
     await _tokenRefreshSubscription?.cancel();
     _tokenRefreshSubscription = null;
 
@@ -87,12 +102,12 @@ abstract final class NotificationDeviceData {
     }
   }
 
-  static Map<String, dynamic> _mapResponse(dynamic json) {
+  Map<String, dynamic> _mapResponse(dynamic json) {
     if (json is! Map) return const {};
     return Map<String, dynamic>.from(json);
   }
 
-  static void _logDeviceFailure(
+  void _logDeviceFailure(
     String operation,
     Object error,
     StackTrace stackTrace,
@@ -103,4 +118,24 @@ abstract final class NotificationDeviceData {
       stackTrace: stackTrace,
     );
   }
+}
+
+abstract final class NotificationDeviceData {
+  static final NotificationDeviceDataSource _defaultSource =
+      NotificationDeviceApiDataSource();
+
+  static NotificationDeviceDataSource get source =>
+      injector.isRegistered<NotificationDeviceDataSource>()
+      ? injector<NotificationDeviceDataSource>()
+      : _defaultSource;
+
+  static Future<void> start() => source.start();
+
+  static Future<void> registerCurrentDevice() => source.registerCurrentDevice();
+
+  static Future<void> registerToken(String token) =>
+      source.registerToken(token);
+
+  static Future<void> unregisterCurrentDevice() =>
+      source.unregisterCurrentDevice();
 }

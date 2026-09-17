@@ -7,8 +7,23 @@ import 'package:melos_core/core/socket_service/web_socket_client.dart';
 import 'models/chat_socket_message.dart';
 import 'socket_events.dart';
 
-abstract final class ChatSocketData {
-  static Future<WebSocketHelper<ChatSocketMessage>> create({
+abstract interface class ChatSocketDataSource {
+  Future<WebSocketHelper<ChatSocketMessage>> create({
+    required Future<void> Function(ChatSocketMessage message) onReceiveMessage,
+    Future<void> Function(String event, Map<String, dynamic> data)?
+    onReceiveAnyEvent,
+    SocketCallback? onConnect,
+    SocketDisconnectCallback? onDisconnect,
+    SocketCallback? onReconnect,
+    SocketErrorCallback? onError,
+  });
+}
+
+final class ChatSocketApiDataSource implements ChatSocketDataSource {
+  const ChatSocketApiDataSource();
+
+  @override
+  Future<WebSocketHelper<ChatSocketMessage>> create({
     required Future<void> Function(ChatSocketMessage message) onReceiveMessage,
     Future<void> Function(String event, Map<String, dynamic> data)?
     onReceiveAnyEvent,
@@ -41,7 +56,7 @@ abstract final class ChatSocketData {
     );
   }
 
-  static Future<Uri> _resolveSocketUri(SessionAuthService sessionAuth) async {
+  Future<Uri> _resolveSocketUri(SessionAuthService sessionAuth) async {
     final String configuredUrl =
         (await SecureStorage.read(
           SecureLocalVariableKeys.socetIoUrl,
@@ -65,7 +80,7 @@ abstract final class ChatSocketData {
     );
   }
 
-  static Uri _withSocketScheme(Uri uri) {
+  Uri _withSocketScheme(Uri uri) {
     final String scheme = switch (uri.scheme) {
       'https' => 'wss',
       'http' => 'ws',
@@ -73,4 +88,28 @@ abstract final class ChatSocketData {
     };
     return uri.replace(scheme: scheme, query: null, fragment: null);
   }
+}
+
+abstract final class ChatSocketData {
+  static ChatSocketDataSource get source =>
+      injector.isRegistered<ChatSocketDataSource>()
+      ? injector<ChatSocketDataSource>()
+      : const ChatSocketApiDataSource();
+
+  static Future<WebSocketHelper<ChatSocketMessage>> create({
+    required Future<void> Function(ChatSocketMessage message) onReceiveMessage,
+    Future<void> Function(String event, Map<String, dynamic> data)?
+    onReceiveAnyEvent,
+    SocketCallback? onConnect,
+    SocketDisconnectCallback? onDisconnect,
+    SocketCallback? onReconnect,
+    SocketErrorCallback? onError,
+  }) => source.create(
+    onReceiveMessage: onReceiveMessage,
+    onReceiveAnyEvent: onReceiveAnyEvent,
+    onConnect: onConnect,
+    onDisconnect: onDisconnect,
+    onReconnect: onReconnect,
+    onError: onError,
+  );
 }

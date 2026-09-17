@@ -4,11 +4,7 @@ import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 import 'package:sokoun_app/features/shared/auth/data/auth_session_data.dart';
 
 class LoginCubit extends AsyncCubit<UserModel> {
-  LoginCubit() : super(UserModel.initial()) {
-    _authSessionData = AuthSessionData(baseCrudUseCase: baseCrudUseCase);
-  }
-
-  late final AuthSessionData _authSessionData;
+  LoginCubit() : super(UserModel.initial());
 
   Future<void> login({
     required String email,
@@ -19,7 +15,7 @@ class LoginCubit extends AsyncCubit<UserModel> {
 
     await executeAsyncWithBaseModel(
       showMsgOnSuccess: true,
-      operation: () => _authSessionData.loginWithCredentials(
+      operation: () => AuthSessionData.loginWithCredentials(
         email: email,
         password: password,
       ),

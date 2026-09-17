@@ -1,3 +1,4 @@
+import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
 import 'package:melos_core/core/error/failure.dart';
@@ -6,12 +7,21 @@ import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/shared/auth/data/models/google_login.dart';
 
-class AuthSessionData {
-  const AuthSessionData({required BaseCrudUseCase baseCrudUseCase})
-    : _baseCrudUseCase = baseCrudUseCase;
+abstract interface class AuthSessionDataSource {
+  Future<Result<BaseModel<UserModel>, Failure>> loginWithCredentials({
+    required String email,
+    required String password,
+  });
 
-  final BaseCrudUseCase _baseCrudUseCase;
+  Future<Result<BaseModel<UserModel>, Failure>> loginWithGoogle({
+    required GoogleLoginBody body,
+  });
+}
 
+final class AuthSessionApiDataSource implements AuthSessionDataSource {
+  const AuthSessionApiDataSource();
+
+  @override
   Future<Result<BaseModel<UserModel>, Failure>> loginWithCredentials({
     required String email,
     required String password,
@@ -22,6 +32,7 @@ class AuthSessionData {
     );
   }
 
+  @override
   Future<Result<BaseModel<UserModel>, Failure>> loginWithGoogle({
     required GoogleLoginBody body,
   }) async {
@@ -35,8 +46,9 @@ class AuthSessionData {
     required String api,
     required Map<String, dynamic> body,
   }) async {
+    final BaseCrudUseCase baseCrudUseCase = injector<BaseCrudUseCase>();
     final Result<BaseModel<Object?>, Failure> authenticationResult =
-        await _baseCrudUseCase.call<Object?>(
+        await baseCrudUseCase.call<Object?>(
           CrudBaseParmas<Object?>(
             api: api,
             httpRequestType: HttpRequestType.post,
@@ -48,7 +60,7 @@ class AuthSessionData {
       return Result.error(authenticationFailure);
     }
 
-    return _baseCrudUseCase.call<UserModel>(
+    return baseCrudUseCase.call<UserModel>(
       CrudBaseParmas<UserModel>(
         api: ApiConstants.currentUser,
         httpRequestType: HttpRequestType.get,
@@ -69,4 +81,20 @@ class AuthSessionData {
         : data;
     return UserModel.fromJson(userJson);
   }
+}
+
+abstract final class AuthSessionData {
+  static AuthSessionDataSource get source =>
+      injector.isRegistered<AuthSessionDataSource>()
+      ? injector<AuthSessionDataSource>()
+      : const AuthSessionApiDataSource();
+
+  static Future<Result<BaseModel<UserModel>, Failure>> loginWithCredentials({
+    required String email,
+    required String password,
+  }) => source.loginWithCredentials(email: email, password: password);
+
+  static Future<Result<BaseModel<UserModel>, Failure>> loginWithGoogle({
+    required GoogleLoginBody body,
+  }) => source.loginWithGoogle(body: body);
 }

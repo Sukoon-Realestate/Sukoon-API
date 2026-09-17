@@ -5,11 +5,24 @@ import 'package:melos_core/core/network/network_service.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_search_model.dart';
 
-abstract final class PropertySearchData {
-  static String cacheKeyFor(PropertySearchFilters filters) => filters.cacheKey;
+abstract interface class PropertySearchDataSource {
+  String cacheKeyFor(PropertySearchFilters filters);
 
-  static Future<(PropertySearchResponseModel, PaginationData)>
-  getPropertiesPage(PropertySearchFilters filters) async {
+  Future<(PropertySearchResponseModel, PaginationData)> getPropertiesPage(
+    PropertySearchFilters filters,
+  );
+}
+
+final class PropertySearchApiDataSource implements PropertySearchDataSource {
+  const PropertySearchApiDataSource();
+
+  @override
+  String cacheKeyFor(PropertySearchFilters filters) => filters.cacheKey;
+
+  @override
+  Future<(PropertySearchResponseModel, PaginationData)> getPropertiesPage(
+    PropertySearchFilters filters,
+  ) async {
     final response = await injector<NetworkService>().callApi(
       NetworkRequest(
         method: RequestMethod.get,
@@ -28,4 +41,18 @@ abstract final class PropertySearchData {
       PaginationData(perPage: filters.pageSize, totalPages: totalPages),
     );
   }
+}
+
+abstract final class PropertySearchData {
+  static PropertySearchDataSource get source =>
+      injector.isRegistered<PropertySearchDataSource>()
+      ? injector<PropertySearchDataSource>()
+      : const PropertySearchApiDataSource();
+
+  static String cacheKeyFor(PropertySearchFilters filters) =>
+      source.cacheKeyFor(filters);
+
+  static Future<(PropertySearchResponseModel, PaginationData)>
+  getPropertiesPage(PropertySearchFilters filters) =>
+      source.getPropertiesPage(filters);
 }

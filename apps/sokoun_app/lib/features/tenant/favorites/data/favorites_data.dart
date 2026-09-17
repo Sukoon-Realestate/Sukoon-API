@@ -5,17 +5,33 @@ import 'package:melos_core/core/network/network_service.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:sokoun_app/features/tenant/favorites/data/models/saved_properties_response.dart';
 
-abstract final class FavoritesData {
-  static const String cacheKey = 'tenant_saved_properties';
+abstract interface class FavoritesDataSource {
+  String get cacheKey;
 
-  static Future<SavedPropertiesResponse> getSavedProperties({
+  Future<SavedPropertiesResponse> getSavedProperties({required int page});
+
+  Future<(SavedPropertiesResponse, PaginationData)> getSavedPropertiesPage({
+    required int page,
+  });
+}
+
+final class FavoritesApiDataSource implements FavoritesDataSource {
+  const FavoritesApiDataSource();
+
+  @override
+  String get cacheKey => FavoritesData.cacheKey;
+
+  @override
+  Future<SavedPropertiesResponse> getSavedProperties({
     required int page,
   }) async {
     return (await getSavedPropertiesPage(page: page)).$1;
   }
 
-  static Future<(SavedPropertiesResponse, PaginationData)>
-  getSavedPropertiesPage({required int page}) async {
+  @override
+  Future<(SavedPropertiesResponse, PaginationData)> getSavedPropertiesPage({
+    required int page,
+  }) async {
     final response = await injector<NetworkService>().callApi(
       NetworkRequest(
         method: RequestMethod.get,
@@ -36,4 +52,21 @@ abstract final class FavoritesData {
       ),
     );
   }
+}
+
+abstract final class FavoritesData {
+  static const String cacheKey = 'tenant_saved_properties';
+
+  static FavoritesDataSource get source =>
+      injector.isRegistered<FavoritesDataSource>()
+      ? injector<FavoritesDataSource>()
+      : const FavoritesApiDataSource();
+
+  static Future<SavedPropertiesResponse> getSavedProperties({
+    required int page,
+  }) => source.getSavedProperties(page: page);
+
+  static Future<(SavedPropertiesResponse, PaginationData)>
+  getSavedPropertiesPage({required int page}) =>
+      source.getSavedPropertiesPage(page: page);
 }
