@@ -5,6 +5,7 @@ import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import 'package:melos_core/core/extensions/num.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -197,13 +198,14 @@ class Helpers {
                         if (currentImage != null) {
                           final croppedImage = await _cropImage(sourcePath: currentImage.path);
                           if(croppedImage != null){
-                            final bool isSafe = await NsfwDetectorHelper.isSafe(croppedImage)??false;
-                            if(isSafe){
-                              image = File(croppedImage.path);
-                            }else{
-                              MessageUtils.showSnackBar(
-                                  LocaleKeys.thisImageHasSensitiveContentPleaseRechooseAnotherImage);
-                            }
+                            image = File(croppedImage.path);
+                            // final bool isSafe = await NsfwDetectorHelper.isSafe(croppedImage)??false;
+                            // if(isSafe){
+                            //   image = File(croppedImage.path);
+                            // }else{
+                            //   MessageUtils.showSnackBar(
+                            //       LocaleKeys.thisImageHasSensitiveContentPleaseRechooseAnotherImage);
+                            // }
                           }
                         }
                         Go.back();
@@ -223,13 +225,14 @@ class Helpers {
                         if (currentImage != null) {
                           final croppedImage = await _cropImage(sourcePath: currentImage.path);
                           if(croppedImage != null){
+                            image = File(croppedImage.path);
                             final bool isSafe = await NsfwDetectorHelper.isSafe(croppedImage)??false;
-                            if(isSafe){
-                              image = File(croppedImage.path);
-                            }else{
-                              MessageUtils.showSnackBar(
-                                  LocaleKeys.thisImageHasSensitiveContentPleaseRechooseAnotherImage);
-                            }
+                            // if(isSafe){
+                            //   image = File(croppedImage.path);
+                            // }else{
+                            //   MessageUtils.showSnackBar(
+                            //       LocaleKeys.thisImageHasSensitiveContentPleaseRechooseAnotherImage);
+                            // }
                           }
                         }
                         Go.back();
@@ -249,13 +252,14 @@ class Helpers {
                         if (currentImage != null) {
                           final croppedImage = await _cropImage(sourcePath: currentImage.path);
                           if(croppedImage != null){
-                            final bool isSafe = await NsfwDetectorHelper.isSafe(croppedImage)??false;
-                            if(isSafe){
-                              image = File(croppedImage.path);
-                            }else{
-                              MessageUtils.showSnackBar(
-                                  LocaleKeys.thisImageHasSensitiveContentPleaseRechooseAnotherImage);
-                            }
+                            image = File(croppedImage.path);
+                            // final bool isSafe = await NsfwDetectorHelper.isSafe(croppedImage)??false;
+                            // if(isSafe){
+                            //   image = File(croppedImage.path);
+                            // }else{
+                            //   MessageUtils.showSnackBar(
+                            //       LocaleKeys.thisImageHasSensitiveContentPleaseRechooseAnotherImage);
+                            // }
                           }
                         }
                         Go.back();

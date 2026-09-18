@@ -205,10 +205,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         onUpdatePressed: upgrader.sendUserToAppStore,
         child: Scaffold(
           backgroundColor: AppColors.scaffoldBackground,
-          body: IndexedStack(
-            index: _currentIndex,
-            children: _tabs.map((tab) => tab.screen).toList(growable: false),
-          ),
+          body: _tabs.map((tab) => tab.screen).toList(growable: false)[_currentIndex],
           bottomNavigationBar:
               BlocSelector<ChatUnreadCubit, AsyncState<ChatUnreadContent>, int>(
                 selector: (state) => state.data.count,
