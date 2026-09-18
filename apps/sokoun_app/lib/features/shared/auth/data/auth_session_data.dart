@@ -21,6 +21,8 @@ abstract interface class AuthSessionDataSource {
 final class AuthSessionApiDataSource implements AuthSessionDataSource {
   const AuthSessionApiDataSource();
 
+  static const String _currentUserCacheKey = 'auth_current_user';
+
   @override
   Future<Result<BaseModel<UserModel>, Failure>> loginWithCredentials({
     required String email,
@@ -64,7 +66,10 @@ final class AuthSessionApiDataSource implements AuthSessionDataSource {
       CrudBaseParmas<UserModel>(
         api: ApiConstants.currentUser,
         httpRequestType: HttpRequestType.get,
+        cacheKey: _currentUserCacheKey,
         mapper: _mapCurrentUser,
+        fromCacheJson: _mapCurrentUser,
+        toJson: _serializeCurrentUser,
       ),
     );
   }
@@ -81,6 +86,11 @@ final class AuthSessionApiDataSource implements AuthSessionDataSource {
         : data;
     return UserModel.fromJson(userJson);
   }
+
+  static Map<String, dynamic> _serializeCurrentUser(UserModel user) => {
+    ...user.toJson(),
+    'full_name': user.name,
+  };
 }
 
 abstract final class AuthSessionData {

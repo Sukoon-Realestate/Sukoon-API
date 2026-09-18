@@ -1,8 +1,10 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart' show injector;
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
 import 'package:melos_core/core/error/failure.dart';
+import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
@@ -10,8 +12,27 @@ import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/login.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   late _LoginRepository repository;
   late _RecordingUserCubit userCubit;
+  const MethodChannel sharedPreferencesChannel = MethodChannel(
+    'plugins.flutter.io/shared_preferences',
+  );
+
+  setUpAll(() async {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(sharedPreferencesChannel, (call) async {
+          return call.method == 'getAll' ? <String, Object>{} : true;
+        });
+    await CacheStorage.init();
+    await CacheStorage.write('current_user_type', 'tenant');
+  });
+
+  tearDownAll(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(sharedPreferencesChannel, null);
+  });
 
   setUp(() async {
     await injector.reset();
@@ -49,6 +70,9 @@ void main() {
       expect(userCubit.cachedUser?.id, '17');
       expect(userCubit.cachedUser?.email, 'user@example.com');
       expect(userCubit.cachedUser?.type, 'tenant');
+      expect(repository.currentUserCacheKey, 'auth_current_user');
+      expect(repository.cachedUserJson?['full_name'], 'Test User');
+      expect(repository.restoredUser?.name, 'Test User');
       expect(completed, isTrue);
     },
   );
@@ -58,6 +82,9 @@ class _LoginRepository implements BaseRepository {
   final List<String> apis = [];
   final List<HttpRequestType> methods = [];
   final List<Map<String, dynamic>?> bodies = [];
+  String? currentUserCacheKey;
+  Map<String, dynamic>? cachedUserJson;
+  UserModel? restoredUser;
 
   @override
   Future<Result<BaseModel<T>, Failure>> crudCall<T>(
@@ -75,10 +102,14 @@ class _LoginRepository implements BaseRepository {
     final T user = params.mapper!(const <String, dynamic>{
       'id': 17,
       'name': 'Test User',
+      'full_name': 'Test User',
       'phone': '01000000000',
       'email': 'user@example.com',
       'type': 'tenant',
     });
+    currentUserCacheKey = params.cacheKey;
+    cachedUserJson = params.toJson!(user);
+    restoredUser = params.fromCacheJson!(cachedUserJson!) as UserModel;
     return Success(BaseModel<T>(key: '', msg: '', data: user));
   }
 

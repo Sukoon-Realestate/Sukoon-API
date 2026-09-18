@@ -91,15 +91,6 @@ class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
     _goToStep(_RegisterFlowStep.pendingReview);
   }
 
-  String _maskedNationalId(String? value) {
-    final String nationalId = value ?? '';
-    if (nationalId.length < 4) {
-      return nationalId;
-    }
-
-    return '${nationalId.substring(0, 2)}*********${nationalId.substring(nationalId.length - 2)}';
-  }
-
   @override
   Widget build(BuildContext context) {
     final currentUserType = UserTypeHelper.instance.currentUserType;
@@ -137,19 +128,17 @@ class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
         onBack: _goBack,
         onUploadDocuments: () => _goToStep(_RegisterFlowStep.uploadDocuments),
         onSkip: () async {
-          context.read<RegisterCubit>()..removeDocs()..register(
-            onSuccess: _handleRegisterSuccess,
-          );
-        }
+          context.read<RegisterCubit>()
+            ..removeDocs()
+            ..register(onSuccess: _handleRegisterSuccess);
+        },
       ),
       KycUploadDocumentsScreen(
         onBack: _goBack,
         onRegisterSuccess: _handleRegisterSuccess,
       ),
       OtpScreen(email: _registeredEmail, onVerified: _handleEmailVerified),
-      KycPendingScreen(
-        fullName: _fullName(context),
-      ),
+      KycPendingScreen(fullName: _fullName(context)),
 
       const KycApprovedScreen(),
     ];

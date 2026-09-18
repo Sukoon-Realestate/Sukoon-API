@@ -1267,6 +1267,9 @@ abstract class LocaleKeys {
   static const String _waitingForConnection = 'waiting_for_connection';
   static String get waitingForConnection => _waitingForConnection.tr();
 
+  static const String _chatQueuedMessages = 'chat_queued_messages';
+  static String get chatQueuedMessages => _chatQueuedMessages.tr();
+
   static const String _chargeWallet = 'charge_wallet';
   static String get chargeWallet => _chargeWallet.tr();
 

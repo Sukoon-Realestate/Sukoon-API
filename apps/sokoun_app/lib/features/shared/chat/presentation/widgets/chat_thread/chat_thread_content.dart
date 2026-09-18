@@ -18,6 +18,7 @@ import '../chat/bottom_bar.dart';
 import '../chat/chat_view.dart';
 import '../chat/upper_view.dart';
 import '../report/chat_report_sheet.dart';
+import 'chat_queued_messages_banner.dart';
 
 class ChatThreadContent extends StatefulWidget {
   const ChatThreadContent({
@@ -240,11 +241,23 @@ class _ChatThreadContentState extends State<ChatThreadContent>
             onReportPressed: _showReportSheet,
           ),
           Expanded(
-            child: ChatView(
-              conversation: widget.conversation,
-              controller: _chatController,
-              initialMessagesRequest: widget.initialMessagesRequest,
-              messagesCacheKey: widget.messagesCacheKey,
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: ChatView(
+                    conversation: widget.conversation,
+                    controller: _chatController,
+                    initialMessagesRequest: widget.initialMessagesRequest,
+                    messagesCacheKey: widget.messagesCacheKey,
+                  ),
+                ),
+                const PositionedDirectional(
+                  top: 0,
+                  start: 0,
+                  end: 0,
+                  child: ChatQueuedMessagesBanner(),
+                ),
+              ],
             ),
           ),
           ChatBottomBar(

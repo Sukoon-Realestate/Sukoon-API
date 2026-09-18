@@ -167,6 +167,10 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
 
     expect(find.byType(TenantSearchScreen), findsOneWidget);
+    final EditableText searchInput = tester.widget<EditableText>(
+      find.byType(EditableText).first,
+    );
+    expect(searchInput.controller.text, isEmpty);
     expect(tester.takeException(), isNull);
   });
 

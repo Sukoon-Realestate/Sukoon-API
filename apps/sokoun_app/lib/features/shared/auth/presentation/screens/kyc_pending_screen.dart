@@ -26,6 +26,21 @@ class KycPendingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<KycStatusSummaryRow> summaryRows = [
+      if (_hasValue(fullName))
+        KycStatusSummaryRow(label: LocaleKeys.name, value: fullName!.trim()),
+      if (_hasValue(submittedAt))
+        KycStatusSummaryRow(
+          label: LocaleKeys.submittedAt,
+          value: submittedAt!.trim(),
+        ),
+      if (_hasValue(expectedReviewTime))
+        KycStatusSummaryRow(
+          label: LocaleKeys.expected,
+          value: expectedReviewTime!.trim(),
+        ),
+    ];
+
     return AuthScaffold(
       padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 24.h),
       child: Column(
@@ -77,23 +92,10 @@ class KycPendingScreen extends StatelessWidget {
             height: 1.45,
           ),
           24.szH,
-          KycStatusSummaryCard(
-            rows: [
-              KycStatusSummaryRow(
-                label: LocaleKeys.name,
-                value: fullName ?? LocaleKeys.ownerVisitTenantSara,
-              ),
-              KycStatusSummaryRow(
-                label: LocaleKeys.submittedAt,
-                value: submittedAt ?? LocaleKeys.today941Am,
-              ),
-              KycStatusSummaryRow(
-                label: LocaleKeys.expected,
-                value: expectedReviewTime ?? LocaleKeys.within24Hours,
-              ),
-            ],
-          ),
-          24.szH,
+          if (summaryRows.isNotEmpty) ...[
+            KycStatusSummaryCard(rows: summaryRows),
+            24.szH,
+          ],
           DefaultButton(
             onTap: () => Go.offAll(LoginScreen()),
             title: LocaleKeys.ok,
@@ -109,4 +111,6 @@ class KycPendingScreen extends StatelessWidget {
       ),
     );
   }
+
+  bool _hasValue(String? value) => value?.trim().isNotEmpty ?? false;
 }

@@ -8,6 +8,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
+import 'package:melos_core/core/helpers/user_type/user_enum.dart';
+import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/chat_builder/easy_chat.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
@@ -28,6 +30,7 @@ import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_list/c
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_list/chat_search_field.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_list/chat_list_item.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_message_bubble.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_queued_messages_banner.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_thread_content.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/report/chat_report_sheet.dart';
 
@@ -131,6 +134,7 @@ void main() {
     injector.registerSingleton<ChatDataSource>(
       const _MemoryChatDataSource(conversations: _conversations),
     );
+    await UserTypeHelper.instance.setUserType(UserType.tenant);
     await CacheStorage.write('user', const <String, dynamic>{
       'id': 'f9cf1cdf-50bc-4136-a042-2302ec1513b2',
       'name': 'Current User',
@@ -330,6 +334,55 @@ void main() {
     expect(_messagesRequestCount, 1);
   });
 
+  testWidgets('shows queued messages while the chat is offline', (
+    tester,
+  ) async {
+    configurePhoneViewport(tester);
+    final _MemoryChatRealtimeGateway realtime = _MemoryChatRealtimeGateway(
+      canConnect: false,
+    );
+    final ChatThreadCubit cubit = ChatThreadCubit(
+      conversationId: _conversations.first.id,
+      otherParticipantId: 'other-user-id',
+      realtimeService: realtime,
+      dataSource: ChatData.source,
+    );
+    addTearDown(() async {
+      await cubit.close();
+      await realtime.close();
+    });
+    final ChatThreadData chatThreadData = ChatThreadData(
+      conversationId: _conversations.first.id,
+      dataSource: ChatData.source,
+    );
+
+    await tester.pumpWidget(
+      buildScreen(
+        BlocProvider<ChatThreadCubit>.value(
+          value: cubit,
+          child: Scaffold(
+            body: ChatThreadContent(
+              conversation: _conversations.first,
+              initialMessagesRequest: chatThreadData.loadInitialMessages(),
+              messagesCacheKey: chatThreadData.messagesCacheKey,
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField).first, 'رسالة بدون اتصال');
+    await tester.tap(find.byIcon(Icons.send_rounded));
+    await tester.pump();
+
+    expect(cubit.state.queuedMessageCount, 1);
+    expect(find.byType(ChatQueuedMessagesBanner), findsOneWidget);
+    expect(find.text('سيتم إرسال الرسائل عند عودة الاتصال'), findsOneWidget);
+    expect(find.byIcon(Icons.schedule_send_rounded), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('previous chat loads history without composer actions', (
     tester,
   ) async {
@@ -498,11 +551,15 @@ class _ChatTestAssetLoader extends AssetLoader {
       'chat_report_privacy': 'تقريرك سري ولن يُشارك مع الطرف الآخر',
       'chat_submit_report': 'إرسال البلاغ',
       'waiting_for_connection': 'جارٍ الاتصال...',
+      'chat_queued_messages': 'سيتم إرسال الرسائل عند عودة الاتصال',
     };
   }
 }
 
 class _MemoryChatRealtimeGateway implements ChatRealtimeGateway {
+  _MemoryChatRealtimeGateway({this.canConnect = true});
+
+  final bool canConnect;
   final StreamController<ChatSocketMessage> _messages =
       StreamController<ChatSocketMessage>.broadcast(sync: true);
   final StreamController<ChatReadReceipt> _readReceipts =
@@ -534,6 +591,11 @@ class _MemoryChatRealtimeGateway implements ChatRealtimeGateway {
 
   @override
   Future<void> connect() async {
+    if (!canConnect) {
+      isConnected = false;
+      _statuses.add(ChatRealtimeStatus.disconnected);
+      return;
+    }
     isConnected = true;
     _statuses.add(ChatRealtimeStatus.connected);
   }

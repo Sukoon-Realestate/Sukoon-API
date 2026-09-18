@@ -63,16 +63,15 @@ void main() {
       final violations = <String>[];
       for (final File file in dartFiles) {
         final String source = file.readAsStringSync();
-        int offset = 0;
-        while (true) {
-          final int index = source.indexOf('StatusBuilder<', offset);
-          if (index < 0) break;
+        for (final RegExpMatch match in RegExp(
+          r'\bStatusBuilder<',
+        ).allMatches(source)) {
+          final int index = match.start;
           final int end = (index + 300).clamp(0, source.length);
           final String callSite = source.substring(index, end);
           if (!RegExp(r'>\s*\.withShimmer\s*\(').hasMatch(callSite)) {
             violations.add('${_relativePath(file)}:$index');
           }
-          offset = index + 1;
         }
       }
       expect(violations, isEmpty, reason: violations.join('\n'));
@@ -88,12 +87,21 @@ void main() {
           'cacheKey:',
           'fromCacheJson:',
           'toJson:',
-          'withInternetInterceptor:',
         ];
         for (final String token in requiredTokens) {
           if (!source.contains(token)) {
             violations.add('${_relativePath(file)} misses $token');
           }
+        }
+
+        final String featureSource = dartFiles
+            .where((candidate) => _featureName(candidate) == _featureName(file))
+            .map((candidate) => candidate.readAsStringSync())
+            .join('\n');
+        if (!featureSource.contains('withInternetInterceptor:')) {
+          violations.add(
+            '${_relativePath(file)} misses a feature reconnect contract',
+          );
         }
       }
       expect(violations, isEmpty, reason: violations.join('\n'));
@@ -194,3 +202,11 @@ bool _isVisualPresentationFile(File file) =>
 String _relativePath(File file) => file.path
     .replaceFirst('${Directory.current.path}/', '')
     .replaceAll('\\', '/');
+
+String _featureName(File file) {
+  final String path = _relativePath(file);
+  final List<String> segments = path.split('/features/');
+  return segments.length == 2
+      ? segments.last.split('/').take(2).join('/')
+      : path;
+}

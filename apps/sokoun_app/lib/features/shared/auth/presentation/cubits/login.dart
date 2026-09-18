@@ -15,6 +15,7 @@ class LoginCubit extends AsyncCubit<UserModel> {
 
     await executeAsyncWithBaseModel(
       showMsgOnSuccess: true,
+      withInternetInterceptor: true,
       operation: () => AuthSessionData.loginWithCredentials(
         email: email,
         password: password,

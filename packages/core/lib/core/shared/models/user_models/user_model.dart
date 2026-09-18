@@ -1,8 +1,12 @@
+import 'dart:developer';
+
 import 'package:melos_core/core/extensions/object.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:melos_core/core/shared/models/user_models/owner_model.dart';
 import 'package:melos_core/core/shared/models/user_models/tenent_model.dart';
+
+import '../../../helpers/user_type/user_type_helper.dart';
 
 class UserModel {
   final String id;
@@ -23,7 +27,8 @@ class UserModel {
       const UserModel(id: '0', name: '', phone: '', email: '', type: '');
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    final UserType type = json['type'].toString().toUserType;
+    log('the user model is $json');
+    final UserType type = UserTypeHelper.instance.currentUserType;
     if (type.isTenant) {
       return TenantModel.fromJson(json);
     } else {
