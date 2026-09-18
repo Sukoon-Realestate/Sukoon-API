@@ -1,6 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 
 abstract class LocaleKeys {
+  static const String _ok = 'ok';
+  static String get ok => _ok.tr();
+
   static const String _welcome = 'welcome';
   static String get welcome => _welcome.tr();
 

@@ -4,8 +4,10 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
+import 'package:sokoun_app/features/shared/auth/presentation/screens/login_screen.dart';
 
 import '../widgets/auth_scaffold.dart';
 import '../widgets/kyc/kyc_status_summary_card.dart';
@@ -14,17 +16,13 @@ class KycPendingScreen extends StatelessWidget {
   const KycPendingScreen({
     super.key,
     this.fullName,
-    this.maskedNationalId = '29•••••••••12',
     this.submittedAt,
     this.expectedReviewTime,
-    this.onBackHome,
   });
 
   final String? fullName;
-  final String maskedNationalId;
   final String? submittedAt;
   final String? expectedReviewTime;
-  final VoidCallback? onBackHome;
 
   @override
   Widget build(BuildContext context) {
@@ -86,10 +84,6 @@ class KycPendingScreen extends StatelessWidget {
                 value: fullName ?? LocaleKeys.ownerVisitTenantSara,
               ),
               KycStatusSummaryRow(
-                label: LocaleKeys.cardNumber,
-                value: maskedNationalId,
-              ),
-              KycStatusSummaryRow(
                 label: LocaleKeys.submittedAt,
                 value: submittedAt ?? LocaleKeys.today941Am,
               ),
@@ -101,8 +95,8 @@ class KycPendingScreen extends StatelessWidget {
           ),
           24.szH,
           DefaultButton(
-            onTap: onBackHome,
-            title: LocaleKeys.returnHome,
+            onTap: () => Go.offAll(LoginScreen()),
+            title: LocaleKeys.ok,
             color: AppColors.sokoonTeal,
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(14.r),

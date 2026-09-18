@@ -19,18 +19,21 @@ class SokoonBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox.square(
-      dimension: 36.r,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(color: borderColor),
-        ),
-        child: IconButton(
-          onPressed: onTap ?? () => Go.back(),
-          padding: EdgeInsets.zero,
-          icon: Icon(icon, color: AppColors.sokoonNavy, size: 16.r),
+    return Visibility(
+      visible: Navigator.canPop(context),
+      child: SizedBox.square(
+        dimension: 36.r,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(color: borderColor),
+          ),
+          child: IconButton(
+            onPressed: onTap ?? () => Go.back(),
+            padding: EdgeInsets.zero,
+            icon: Icon(icon, color: AppColors.sokoonNavy, size: 16.r),
+          ),
         ),
       ),
     );

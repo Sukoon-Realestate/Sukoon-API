@@ -20,31 +20,75 @@ class RegisterFlowScreen extends StatefulWidget {
 }
 
 class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
-  _RegisterFlowStep _step = _RegisterFlowStep.basicInfo;
+  late final PageController _pageController;
+  final List<_RegisterFlowStep> _stepHistory = [_RegisterFlowStep.basicInfo];
+  _RegisterFlowStep _currentStep = _RegisterFlowStep.basicInfo;
   String _registeredEmail = '';
 
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _goToStep(_RegisterFlowStep step) {
+    if (_stepHistory.last != step) {
+      _stepHistory.add(step);
+    }
+    _animateToStep(step);
+  }
+
   void _goBack() {
-    setState(() {
-      _step = switch (_step) {
-        _RegisterFlowStep.uploadDocuments => _RegisterFlowStep.kycIntro,
-        _ => _RegisterFlowStep.basicInfo,
-      };
-    });
+    if (_stepHistory.length <= 1) {
+      return;
+    }
+
+    _stepHistory.removeLast();
+    _animateToStep(_stepHistory.last);
+  }
+
+  void _animateToStep(_RegisterFlowStep step) {
+    if (!mounted || !_pageController.hasClients) {
+      return;
+    }
+
+    _pageController.animateToPage(
+      step.index,
+      duration: const Duration(milliseconds: 280),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  void _handlePageChanged(int index) {
+    final _RegisterFlowStep step = _RegisterFlowStep.values[index];
+    if (_currentStep == step) {
+      return;
+    }
+
+    setState(() => _currentStep = step);
   }
 
   void _handleBasicInfoSubmitted() {
-    setState(() => _step = _RegisterFlowStep.kycIntro);
+    _goToStep(_RegisterFlowStep.kycIntro);
   }
 
   void _handleRegisterSuccess(RegisterBody body) {
-    setState(() {
-      _registeredEmail = body.email;
-      _step = _RegisterFlowStep.verifyEmail;
-    });
+    if (!mounted) {
+      return;
+    }
+
+    setState(() => _registeredEmail = body.email);
+    _goToStep(_RegisterFlowStep.verifyEmail);
   }
 
   void _handleEmailVerified() {
-    setState(() => _step = _RegisterFlowStep.pendingReview);
+    _goToStep(_RegisterFlowStep.pendingReview);
   }
 
   String _maskedNationalId(String? value) {
@@ -62,50 +106,77 @@ class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
     return BlocProvider(
       create: (_) => RegisterCubit(),
       child: Builder(
-        builder: (context) => _buildCurrentStep(context, currentUserType),
+        builder: (context) => PopScope(
+          canPop: _currentStep == _RegisterFlowStep.basicInfo,
+          onPopInvokedWithResult: (didPop, _) {
+            if (!didPop) {
+              _goBack();
+            }
+          },
+          child: PageView(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            onPageChanged: _handlePageChanged,
+            children: [
+              for (final Widget step in _buildSteps(context, currentUserType))
+                _KeepAlivePage(child: step),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildCurrentStep(BuildContext context, UserType currentUserType) {
-    return switch (_step) {
-      _RegisterFlowStep.basicInfo => RegisterScreen(
+  List<Widget> _buildSteps(BuildContext context, UserType currentUserType) {
+    return [
+      RegisterScreen(
         userType: currentUserType,
         onSubmit: _handleBasicInfoSubmitted,
       ),
-      _RegisterFlowStep.kycIntro => KycIntroScreen(
+      KycIntroScreen(
         onBack: _goBack,
-        onUploadDocuments: () {
-          setState(() => _step = _RegisterFlowStep.uploadDocuments);
-        },
+        onUploadDocuments: () => _goToStep(_RegisterFlowStep.uploadDocuments),
         onSkip: () async => context.read<RegisterCubit>().register(
           onSuccess: _handleRegisterSuccess,
         ),
       ),
-      _RegisterFlowStep.uploadDocuments => KycUploadDocumentsScreen(
+      KycUploadDocumentsScreen(
         onBack: _goBack,
         onRegisterSuccess: _handleRegisterSuccess,
       ),
-      _RegisterFlowStep.verifyEmail => OtpScreen(
-        email: _registeredEmail,
-        onVerified: _handleEmailVerified,
-      ),
-      _RegisterFlowStep.pendingReview => KycPendingScreen(
+      OtpScreen(email: _registeredEmail, onVerified: _handleEmailVerified),
+      KycPendingScreen(
         fullName: _fullName(context),
-        maskedNationalId: _maskedNationalId(
-          context.read<RegisterCubit>().registerBody.nationalId,
-        ),
-        onBackHome: () {
-          setState(() => _step = _RegisterFlowStep.approved);
-        },
       ),
-      _RegisterFlowStep.approved => const KycApprovedScreen(),
-    };
+
+      const KycApprovedScreen(),
+    ];
   }
 
   String _fullName(BuildContext context) {
     final RegisterBody body = context.read<RegisterCubit>().registerBody;
     return '${body.firstName} ${body.lastName}'.trim();
+  }
+}
+
+class _KeepAlivePage extends StatefulWidget {
+  const _KeepAlivePage({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_KeepAlivePage> createState() => _KeepAlivePageState();
+}
+
+class _KeepAlivePageState extends State<_KeepAlivePage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
   }
 }
 

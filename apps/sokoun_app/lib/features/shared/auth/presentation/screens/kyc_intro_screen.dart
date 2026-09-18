@@ -6,6 +6,7 @@ import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/object.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 
 import '../widgets/auth_scaffold.dart';
@@ -55,13 +56,13 @@ class KycIntroScreen extends StatelessWidget {
               ),
               10.szH,
               if (!onSkip.isNull)
-                DefaultButton(
-                  onTap: () async => await onSkip!(),
+                AppLoadingButton(
+                  asyncCall: (c) async => await onSkip!(),
                   title: LocaleKeys.skip,
-                  color: AppColors.white,
+                  buttonColor: AppColors.whiteGreyColor,
                   textColor: AppColors.sokoonTeal,
-                  borderColor: AppColors.grayPale,
-                  borderRadius: BorderRadius.circular(14.r),
+                  // borderColor: AppColors.grayPale,
+                  borderRadius: 14.r,
                   height: 48.h,
                   width: double.infinity,
                   fontSize: 15.sp,

@@ -1,4 +1,5 @@
 {
+    "Ok": "تمام",
     "Welcome": "مرحباََ",
     "passValidation #$ Password must be at least 8 characters long": "كلمة المرور يجب ان تكون على الاقل 8 احرف",
     "passRequiredValidation #$ Password is required": "كلمة المرور مطلوبة",

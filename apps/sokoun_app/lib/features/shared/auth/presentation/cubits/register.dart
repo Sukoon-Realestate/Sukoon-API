@@ -5,8 +5,8 @@ import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/asy
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:sokoun_app/features/shared/auth/data/models/register.dart';
 
-class RegisterCubit extends AsyncCubit<String> {
-  RegisterCubit() : super('');
+class RegisterCubit extends AsyncCubit<Map<String, dynamic>> {
+  RegisterCubit() : super({});
 
   RegisterBody _registerBody = RegisterBody.initial();
 

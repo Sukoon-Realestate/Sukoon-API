@@ -32,7 +32,8 @@ class _SplashScreenState extends State<SplashScreen> {
       NotificationService().saveFcmToken(),
       Future<void>.delayed(const Duration(seconds: 2)),
     ]);
-    await _manipulateLoginState();
+    Go.offAll(RoleSelectScreen());
+    // await _manipulateLoginState();
   }
 
   Future<void> _manipulateLoginState() async {
