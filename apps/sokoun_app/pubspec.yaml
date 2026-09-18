@@ -23,6 +23,7 @@ dependencies:
   flutter_facebook_auth: 7.1.6
   url_launcher: ^6.3.2
   multiple_result: ^5.2.0
+  rename_app:
 
 
   firebase_core: ^4.3.0
