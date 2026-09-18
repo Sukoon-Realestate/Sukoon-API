@@ -1,48 +1,18 @@
 part of '../../../imports.dart';
 
 class OwnerPropertiesHeader extends StatelessWidget {
-  const OwnerPropertiesHeader({super.key, required this.onAddPressed});
-
-  final VoidCallback onAddPressed;
+  const OwnerPropertiesHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Material(
-          color: AppColors.sokoonTeal,
-          borderRadius: BorderRadius.circular(14.r),
-          child: InkWell(
-            onTap: onAddPressed,
-            borderRadius: BorderRadius.circular(14.r),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.add_rounded, color: AppColors.white, size: 18.r),
-                5.szW,
-                AppText(
-                  LocaleKeys.ownerPropertiesAdd,
-                  color: AppColors.white,
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w900,
-                ),
-              ],
-            ).paddingSymmetric(horizontal: 12.w, vertical: 10.h),
-          ),
-        ),
-        12.szW,
-        Expanded(
-          child: AppText(
-            LocaleKeys.ownerPropertiesTitle,
-            color: AppColors.sokoonNavy,
-            fontSize: 20.sp,
-            fontWeight: FontWeight.w900,
-            textAlign: TextAlign.start,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ],
+    return AppText(
+      LocaleKeys.ownerPropertiesTitle,
+      color: AppColors.sokoonNavy,
+      fontSize: 20.sp,
+      fontWeight: FontWeight.w900,
+      textAlign: TextAlign.start,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
     );
   }
 }

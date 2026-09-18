@@ -170,9 +170,7 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
           children: [
             Column(
               children: [
-                OwnerPropertiesHeader(
-                  onAddPressed: _openAddProperty,
-                ).padding(EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 8.h)),
+                OwnerPropertiesHeader().padding(EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 8.h)),
                 Expanded(
                   child: OwnerPropertiesList(
                     initialProperties: widget.initialProperties,
