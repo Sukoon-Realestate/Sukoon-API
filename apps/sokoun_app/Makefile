@@ -41,23 +41,23 @@ clean:
 
 # Run the app
 run:
-	flutter run --flavor production
+	flutter run --flavor dev
 
 # Build Android APK
 apk:
-	flutter build apk --split-per-abi --flavor production
+	flutter build apk --split-per-abi --flavor prod
 
 # Build Android App Bundle
 appbundle:
-	flutter build appbundle --flavor production
+	flutter build appbundle --flavor prod
 
 # Build iOS IPA
 ipa:
-	flutter build ipa --flavor production
+	flutter build ipa --flavor prod
 
 # Build iOS application without IPA
 ios:
-	flutter build ios --flavor production
+	flutter build ios --flavor prod
 
 # Upgrade Flutter packages
 upgrade:

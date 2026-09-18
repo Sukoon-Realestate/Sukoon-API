@@ -38,4 +38,5 @@ dev_dependencies:
     sdk: flutter
 
 flutter:
+  default-flavor: dev
   uses-material-design: true
