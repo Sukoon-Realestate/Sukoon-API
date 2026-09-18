@@ -4,6 +4,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/status_builder.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_dashboard_model.dart';
 import 'package:sokoun_app/features/owner/home/presentation/cubits/owner_dashboard_cubit.dart';
+import 'package:sokoun_app/shared_widgets/retry_view.dart';
 
 import '../widgets/owner_widgets/imports.dart';
 
@@ -16,13 +17,19 @@ class OwnerHomeScreen extends StatefulWidget {
 
 class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
   late final OwnerDashboardCubit _ownerDashboardCubit;
-  late final Future<void> _ownerDashboardRequest;
+  late Future<void> _ownerDashboardRequest;
 
   @override
   void initState() {
     super.initState();
     _ownerDashboardCubit = OwnerDashboardCubit();
     _ownerDashboardRequest = _ownerDashboardCubit.getDashboard();
+  }
+
+  Future<void> _refreshDashboard() async {
+    final Future<void> request = _ownerDashboardCubit.getDashboard();
+    _ownerDashboardRequest = request;
+    await request;
   }
 
   @override
@@ -45,9 +52,12 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
               >.withShimmer(
                 initialDataForShimmer: const OwnerDashboardModel.initial(),
                 requestToTryAgainWhenError: _ownerDashboardRequest,
-                errorType: ErrorType.defaultView,
-                builder: (dashboard) =>
-                    OwnerDashboardContent(dashboard: dashboard),
+                errorType: ErrorType.customView,
+                errorWidget: AppRetryView(onRetry: _refreshDashboard),
+                builder: (dashboard) => OwnerDashboardContent(
+                  dashboard: dashboard,
+                  onRequestResolved: _refreshDashboard,
+                ),
               ),
         ),
       ),

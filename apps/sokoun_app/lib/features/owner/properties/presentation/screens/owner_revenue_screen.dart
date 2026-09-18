@@ -3,22 +3,21 @@ part of '../../imports.dart';
 class OwnerRevenueScreen extends StatelessWidget {
   const OwnerRevenueScreen({
     super.key,
-    this.properties,
-    this.transactions,
+    required this.properties,
+    required this.transactions,
+    required this.totalThisMonth,
+    required this.growthLabel,
     this.showBackButton = true,
   });
 
-  final List<OwnerRevenuePropertyContent>? properties;
-  final List<OwnerTransactionContent>? transactions;
+  final List<OwnerRevenuePropertyContent> properties;
+  final List<OwnerTransactionContent> transactions;
+  final int totalThisMonth;
+  final String growthLabel;
   final bool showBackButton;
 
   @override
   Widget build(BuildContext context) {
-    final List<OwnerRevenuePropertyContent> propertyItems =
-        properties ?? OwnerRevenueContent.properties();
-    final List<OwnerTransactionContent> transactionItems =
-        transactions ?? OwnerRevenueContent.transactions();
-
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
@@ -50,7 +49,7 @@ class OwnerRevenueScreen extends StatelessWidget {
                         ),
                         8.szH,
                         AppText(
-                          '21,500 ${LocaleKeys.ownerRevenueCurrency}',
+                          '${_formatNumber(totalThisMonth)} ${LocaleKeys.ownerRevenueCurrency}',
                           color: AppColors.white,
                           fontSize: 30.sp,
                           fontWeight: FontWeight.w900,
@@ -66,7 +65,7 @@ class OwnerRevenueScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(99.r),
                           ),
                           child: AppText(
-                            LocaleKeys.ownerRevenueGrowth,
+                            growthLabel,
                             color: AppColors.white,
                             fontSize: 11.sp,
                             fontWeight: FontWeight.w700,
@@ -83,13 +82,9 @@ class OwnerRevenueScreen extends StatelessWidget {
                     fontWeight: FontWeight.w900,
                   ),
                   10.szH,
-                  for (
-                    int index = 0;
-                    index < propertyItems.length;
-                    index++
-                  ) ...[
-                    OwnerRevenuePropertyCard(item: propertyItems[index]),
-                    if (index < propertyItems.length - 1) 10.szH,
+                  for (int index = 0; index < properties.length; index++) ...[
+                    OwnerRevenuePropertyCard(item: properties[index]),
+                    if (index < properties.length - 1) 10.szH,
                   ],
                   22.szH,
                   AppText(
@@ -110,13 +105,11 @@ class OwnerRevenueScreen extends StatelessWidget {
                       children: [
                         for (
                           int index = 0;
-                          index < transactionItems.length;
+                          index < transactions.length;
                           index++
                         ) ...[
-                          OwnerTransactionRow(
-                            transaction: transactionItems[index],
-                          ),
-                          if (index < transactionItems.length - 1)
+                          OwnerTransactionRow(transaction: transactions[index]),
+                          if (index < transactions.length - 1)
                             const Divider(
                               height: 1,
                               color: AppColors.sokoonBorder,
@@ -131,6 +124,13 @@ class OwnerRevenueScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  String _formatNumber(int value) {
+    return value.toString().replaceAllMapped(
+      RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
+      (match) => '${match[1]},',
     );
   }
 }

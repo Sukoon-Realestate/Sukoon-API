@@ -61,7 +61,6 @@ abstract final class OwnerAddPropertyContent {
 
   static List<String> get rentalUnitOptions => [
     LocaleKeys.ownerAddPropertyDay,
-    LocaleKeys.ownerAddPropertyWeek,
     LocaleKeys.ownerAddPropertyMonth,
     LocaleKeys.ownerAddPropertyYear,
   ];
@@ -143,6 +142,46 @@ class OwnerPropertyVideoSelection {
   }
 }
 
+class OwnerPropertyPhotoDraft {
+  const OwnerPropertyPhotoDraft({
+    this.file,
+    this.existingId = '',
+    this.existingUrl = '',
+    this.name = '',
+    this.description = '',
+  });
+
+  final File? file;
+  final String existingId;
+  final String existingUrl;
+  final String name;
+  final String description;
+
+  bool get isExisting => existingUrl.trim().isNotEmpty;
+  bool get canRemove => !isExisting;
+  bool get isMetadataReady =>
+      isExisting || (name.trim().isNotEmpty && description.trim().isNotEmpty);
+  String get id => isExisting
+      ? (existingId.isNotEmpty ? existingId : existingUrl)
+      : file?.path ?? '';
+
+  OwnerPropertyPhotoDraft copyWith({
+    File? file,
+    String? existingId,
+    String? existingUrl,
+    String? name,
+    String? description,
+  }) {
+    return OwnerPropertyPhotoDraft(
+      file: file ?? this.file,
+      existingId: existingId ?? this.existingId,
+      existingUrl: existingUrl ?? this.existingUrl,
+      name: name ?? this.name,
+      description: description ?? this.description,
+    );
+  }
+}
+
 class OwnerAddPropertyFormState {
   const OwnerAddPropertyFormState({
     required this.title,
@@ -159,8 +198,7 @@ class OwnerAddPropertyFormState {
     required this.buildingYear,
     required this.mapQuery,
     required this.isLocationSelected,
-    required this.existingPhotoUrls,
-    required this.photos,
+    required this.photoDrafts,
     required this.video,
     required this.monthlyPrice,
     required this.deposit,
@@ -191,8 +229,7 @@ class OwnerAddPropertyFormState {
       buildingYear: '',
       mapQuery: '',
       isLocationSelected: false,
-      existingPhotoUrls: [],
-      photos: [],
+      photoDrafts: [],
       video: null,
       monthlyPrice: '',
       deposit: '',
@@ -221,8 +258,7 @@ class OwnerAddPropertyFormState {
   final String buildingYear;
   final String mapQuery;
   final bool isLocationSelected;
-  final List<String> existingPhotoUrls;
-  final List<File> photos;
+  final List<OwnerPropertyPhotoDraft> photoDrafts;
   final OwnerPropertyVideoSelection? video;
   final String monthlyPrice;
   final String deposit;
@@ -236,7 +272,15 @@ class OwnerAddPropertyFormState {
   final File? ownershipProof;
   final DateTime? submittedAt;
 
-  int get photoCount => existingPhotoUrls.length + photos.length;
+  int get photoCount => photoDrafts.length;
+  List<String> get existingPhotoUrls => photoDrafts
+      .where((photo) => photo.isExisting)
+      .map((photo) => photo.existingUrl)
+      .toList(growable: false);
+  List<File> get photos => photoDrafts
+      .map((photo) => photo.file)
+      .whereType<File>()
+      .toList(growable: false);
   bool get isProofUploaded =>
       ownershipProof != null || ownershipProofUrl.isNotEmpty;
 
@@ -257,7 +301,8 @@ class OwnerAddPropertyFormState {
   }
 
   bool get isPhotosReady =>
-      photoCount >= OwnerAddPropertyContent.minimumPhotoCount;
+      photoCount >= OwnerAddPropertyContent.minimumPhotoCount &&
+      photoDrafts.every((photo) => photo.isMetadataReady);
 
   bool get isPricingReady {
     return _hasPositiveNumber(monthlyPrice) &&
@@ -324,6 +369,15 @@ class OwnerAddPropertyFormState {
         label: LocaleKeys.ownerAddPropertyPhotosSummary,
         value: photoSummary,
       ),
+      for (int index = 0; index < photoDrafts.length; index++)
+        if (photoDrafts[index].name.trim().isNotEmpty ||
+            photoDrafts[index].description.trim().isNotEmpty)
+          AddPropertySummaryContent(
+            label:
+                '${LocaleKeys.ownerAddPropertyPhotoNumber.replaceAll('{number}', '${index + 1}')} '
+                '${photoDrafts[index].name.trim()}',
+            value: photoDrafts[index].description.trim(),
+          ),
       AddPropertySummaryContent(
         label: LocaleKeys.ownerAddPropertyVideoSummary,
         value: videoSummary,
@@ -354,8 +408,7 @@ class OwnerAddPropertyFormState {
     String? buildingYear,
     String? mapQuery,
     bool? isLocationSelected,
-    List<String>? existingPhotoUrls,
-    List<File>? photos,
+    List<OwnerPropertyPhotoDraft>? photoDrafts,
     OwnerPropertyVideoSelection? video,
     bool clearVideo = false,
     String? monthlyPrice,
@@ -386,8 +439,7 @@ class OwnerAddPropertyFormState {
       buildingYear: buildingYear ?? this.buildingYear,
       mapQuery: mapQuery ?? this.mapQuery,
       isLocationSelected: isLocationSelected ?? this.isLocationSelected,
-      existingPhotoUrls: existingPhotoUrls ?? this.existingPhotoUrls,
-      photos: photos ?? this.photos,
+      photoDrafts: photoDrafts ?? this.photoDrafts,
       video: clearVideo ? null : video ?? this.video,
       monthlyPrice: monthlyPrice ?? this.monthlyPrice,
       deposit: deposit ?? this.deposit,

@@ -9,6 +9,7 @@ import 'package:sokoun_app/features/owner/visits/imports.dart';
 import 'package:sokoun_app/features/owner/visits/presentation/cubits/received_visits_cubit.dart';
 
 import '../widgets/owner_visit_requests/imports.dart';
+import 'package:sokoun_app/shared_widgets/retry_view.dart';
 
 class OwnerVisitRequestsScreen extends StatefulWidget {
   const OwnerVisitRequestsScreen({
@@ -72,9 +73,12 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
   ];
 
   ReceivedVisitsCubit? _receivedVisitsCubit;
+  late final OwnerVisitStatusCubit _visitStatusCubit;
   Future<void>? _receivedVisitsRequest;
   late List<OwnerVisitRequestContent> _fixtureRequests;
   OwnerVisitRequestFilter _selectedFilter = OwnerVisitRequestFilter.all;
+  String? _updatingRequestId;
+  OwnerVisitUpdateStatus? _pendingStatus;
 
   List<OwnerVisitRequestContent> _visibleRequests(
     List<OwnerVisitRequestContent> requests,
@@ -87,6 +91,7 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
   @override
   void initState() {
     super.initState();
+    _visitStatusCubit = OwnerVisitStatusCubit();
     final List<OwnerVisitRequestContent>? initialRequests =
         widget.initialRequests;
     if (initialRequests == null) {
@@ -101,7 +106,16 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
   @override
   void dispose() {
     _receivedVisitsCubit?.close();
+    _visitStatusCubit.close();
     super.dispose();
+  }
+
+  Future<void> _retryRequests() async {
+    final ReceivedVisitsCubit? cubit = _receivedVisitsCubit;
+    if (cubit == null) return;
+    final Future<void> request = cubit.getReceivedVisits();
+    _receivedVisitsRequest = request;
+    await request;
   }
 
   void _selectFilter(OwnerVisitRequestFilter filter) {
@@ -128,28 +142,64 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
       builder: (context) => OwnerAcceptRequestSheet(request: request),
     );
     if (confirmed == true && mounted) {
-      _resolveRequest(
+      await _updateRequestStatus(
         request: request,
+        status: OwnerVisitUpdateStatus.confirmed,
         resolution: OwnerRequestResolution.accepted,
       );
     }
   }
 
   Future<void> _rejectRequest(OwnerVisitRequestContent request) async {
-    final OwnerRejectionReason? reason =
-        await showModalBottomSheet<OwnerRejectionReason>(
-          context: context,
-          isScrollControlled: true,
-          useSafeArea: true,
-          backgroundColor: AppColors.transparent,
-          barrierColor: AppColors.blackAlpha45,
-          builder: (context) => const OwnerRejectRequestSheet(),
-        );
-    if (reason != null && mounted) {
-      _resolveRequest(
+    final bool? confirmed = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: AppColors.transparent,
+      barrierColor: AppColors.blackAlpha45,
+      builder: (context) => const OwnerRejectRequestSheet(),
+    );
+    if (confirmed == true && mounted) {
+      await _updateRequestStatus(
         request: request,
+        status: OwnerVisitUpdateStatus.rejected,
         resolution: OwnerRequestResolution.rejected,
       );
+    }
+  }
+
+  Future<void> _updateRequestStatus({
+    required OwnerVisitRequestContent request,
+    required OwnerVisitUpdateStatus status,
+    required OwnerRequestResolution resolution,
+  }) async {
+    if (_updatingRequestId != null || _visitStatusCubit.isLoading) return;
+    setState(() {
+      _updatingRequestId = request.id;
+      _pendingStatus = status;
+    });
+
+    bool succeeded = false;
+    void onSuccess() => succeeded = true;
+    if (status == OwnerVisitUpdateStatus.confirmed) {
+      await _visitStatusCubit.acceptVisitRequest(
+        requestId: request.id,
+        onSuccess: onSuccess,
+      );
+    } else {
+      await _visitStatusCubit.rejectVisitRequest(
+        requestId: request.id,
+        onSuccess: onSuccess,
+      );
+    }
+
+    if (!mounted) return;
+    setState(() {
+      _updatingRequestId = null;
+      _pendingStatus = null;
+    });
+    if (succeeded) {
+      _resolveRequest(request: request, resolution: resolution);
     }
   }
 
@@ -200,7 +250,8 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
           >.withShimmer(
             initialDataForShimmer: _shimmerRequests,
             requestToTryAgainWhenError: _receivedVisitsRequest!,
-            errorType: ErrorType.defaultView,
+            errorType: ErrorType.customView,
+            errorWidget: AppRetryView(onRetry: _retryRequests),
             emptyView: _buildScreen(const []),
             builder: _buildScreen,
           ),
@@ -224,6 +275,8 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
           onRequestPressed: _openDetails,
           onAcceptPressed: _acceptRequest,
           onRejectPressed: _rejectRequest,
+          updatingRequestId: _updatingRequestId,
+          pendingStatus: _pendingStatus,
         ),
       ),
     );

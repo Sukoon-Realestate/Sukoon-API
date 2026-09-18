@@ -13,7 +13,7 @@ class OwnerRequestDetailsScreen extends StatefulWidget {
 class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
   late final OwnerRequestDetailsCubit _requestDetailsCubit;
   late final OwnerVisitStatusCubit _visitStatusCubit;
-  late final Future<void> _requestDetailsRequest;
+  late Future<void> _requestDetailsRequest;
   OwnerVisitUpdateStatus? _pendingStatus;
 
   @override
@@ -31,6 +31,14 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
     _requestDetailsCubit.close();
     _visitStatusCubit.close();
     super.dispose();
+  }
+
+  Future<void> _retryRequestDetails() async {
+    final Future<void> request = _requestDetailsCubit.getRequestDetails(
+      widget.requestId,
+    );
+    _requestDetailsRequest = request;
+    await request;
   }
 
   Future<void> _acceptRequest(
@@ -59,17 +67,16 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
     BuildContext context,
     OwnerVisitRequestDetailsContent request,
   ) async {
-    final OwnerRejectionReason? reason =
-        await showModalBottomSheet<OwnerRejectionReason>(
-          context: context,
-          isScrollControlled: true,
-          useSafeArea: true,
-          backgroundColor: AppColors.transparent,
-          barrierColor: AppColors.blackAlpha45,
-          builder: (context) => const OwnerRejectRequestSheet(),
-        );
+    final bool? confirmed = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: AppColors.transparent,
+      barrierColor: AppColors.blackAlpha45,
+      builder: (context) => const OwnerRejectRequestSheet(),
+    );
 
-    if (reason != null && context.mounted) {
+    if (confirmed == true && context.mounted) {
       await _updateVisitStatus(
         status: OwnerVisitUpdateStatus.rejected,
         resolution: OwnerRequestResolution.rejected,
@@ -83,7 +90,9 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
   }) async {
     if (_visitStatusCubit.isLoading) return;
     setState(() => _pendingStatus = status);
+    bool succeeded = false;
     void onSuccess() {
+      succeeded = true;
       if (mounted) Go.back(resolution);
     }
 
@@ -92,12 +101,13 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
         requestId: widget.requestId,
         onSuccess: onSuccess,
       );
-      return;
+    } else {
+      await _visitStatusCubit.rejectVisitRequest(
+        requestId: widget.requestId,
+        onSuccess: onSuccess,
+      );
     }
-    await _visitStatusCubit.rejectVisitRequest(
-      requestId: widget.requestId,
-      onSuccess: onSuccess,
-    );
+    if (!succeeded && mounted) setState(() => _pendingStatus = null);
   }
 
   @override
@@ -132,7 +142,10 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
                             initialDataForShimmer:
                                 const OwnerVisitRequestDetailsContent.initial(),
                             requestToTryAgainWhenError: _requestDetailsRequest,
-                            errorType: ErrorType.defaultView,
+                            errorType: ErrorType.customView,
+                            errorWidget: AppRetryView(
+                              onRetry: _retryRequestDetails,
+                            ),
                             builder: (request) => OwnerRequestDetailsContent(
                               request: request,
                               isAccepting:

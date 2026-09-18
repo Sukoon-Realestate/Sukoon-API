@@ -5,18 +5,12 @@ class OwnerPropertyCard extends StatelessWidget {
     super.key,
     required this.property,
     required this.onEditPressed,
-    required this.onActionsPressed,
     required this.onRejectedPressed,
   });
 
   final OwnerPropertyContent property;
   final VoidCallback onEditPressed;
-  final VoidCallback onActionsPressed;
   final VoidCallback onRejectedPressed;
-
-  void _openAnalytics() {
-    Go.to(OwnerPropertyAnalyticsScreen(property: property));
-  }
 
   void _openProperty() {
     if (property.status.isRejected) {
@@ -126,20 +120,6 @@ class OwnerPropertyCard extends StatelessWidget {
                     foregroundColor: AppColors.blue,
                     backgroundColor: AppColors.bluePale,
                     onPressed: onEditPressed,
-                  ),
-                  8.szW,
-                  _OwnerPropertyCardAction(
-                    label: LocaleKeys.ownerPropertiesAnalytics,
-                    foregroundColor: AppColors.sokoonTeal,
-                    backgroundColor: AppColors.mintLight,
-                    onPressed: _openAnalytics,
-                  ),
-                  8.szW,
-                  _OwnerPropertyCardAction(
-                    label: LocaleKeys.ownerPropertiesActions,
-                    foregroundColor: AppColors.red,
-                    backgroundColor: AppColors.redPale,
-                    onPressed: onActionsPressed,
                   ),
                 ],
               ),

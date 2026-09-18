@@ -16,6 +16,7 @@ import 'package:sokoun_app/features/owner/home/presentation/screens/owner_add_pr
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/add_property_video_page.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
+import 'package:sokoun_app/shared_widgets/retry_view.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -228,7 +229,17 @@ void main() {
           buildingYear: '2020',
           mapQuery: 'مدينة نصر، القاهرة',
           isLocationSelected: true,
-          photos: photos,
+          photoDrafts: photos
+              .asMap()
+              .entries
+              .map(
+                (entry) => OwnerPropertyPhotoDraft(
+                  file: entry.value,
+                  name: 'Photo ${entry.key + 1}',
+                  description: 'Property photo ${entry.key + 1}',
+                ),
+              )
+              .toList(growable: false),
           video: OwnerPropertyVideoSelection(
             file: video,
             duration: const Duration(seconds: 45),
@@ -263,6 +274,59 @@ void main() {
     expect(body['has_wifi'], isTrue);
     expect(body['has_elevator'], isFalse);
     expect(OwnerAddPropertyContent.maxPhotoCount, 25);
+    expect(OwnerAddPropertyContent.rentalUnitOptions, isNot(contains('أسبوع')));
+  });
+
+  test('requires metadata for every newly selected photo', () {
+    final List<OwnerPropertyPhotoDraft> incomplete = List.generate(
+      OwnerAddPropertyContent.minimumPhotoCount,
+      (index) =>
+          OwnerPropertyPhotoDraft(file: File('/tmp/new-photo-$index.jpg')),
+    );
+    final OwnerAddPropertyFormState form = OwnerAddPropertyFormState.initial()
+        .copyWith(photoDrafts: incomplete);
+
+    expect(form.isPhotosReady, isFalse);
+    expect(
+      form
+          .copyWith(
+            photoDrafts: incomplete
+                .asMap()
+                .entries
+                .map(
+                  (entry) => entry.value.copyWith(
+                    name: 'Photo ${entry.key + 1}',
+                    description: 'Description ${entry.key + 1}',
+                  ),
+                )
+                .toList(growable: false),
+          )
+          .isPhotosReady,
+      isTrue,
+    );
+  });
+
+  testWidgets('retry view invokes its recoverable request', (tester) async {
+    configurePhoneViewport(tester);
+    int retryCount = 0;
+
+    await tester.pumpWidget(
+      buildScreen(
+        Scaffold(
+          body: AppRetryView(
+            onRetry: () async {
+              retryCount++;
+            },
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('app-retry-button')));
+    await tester.pumpAndSettle();
+
+    expect(retryCount, 1);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('places O-ADD-02V after the photos step', (tester) async {
@@ -290,7 +354,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('runs O-PROPS-01b actions edit analytics and revenue', (
+  testWidgets('keeps only API-backed property actions available', (
     tester,
   ) async {
     configurePhoneViewport(tester);
@@ -310,17 +374,14 @@ void main() {
     final Finder furnishedCard = find.byKey(
       const ValueKey('nasr-city-furnished'),
     );
-    await tester.tap(
+    expect(
       find.descendant(of: furnishedCard, matching: find.text('إجراءات')),
+      findsNothing,
     );
-    await tester.pumpAndSettle();
-
-    expect(find.byType(OwnerPropertyActionSheet), findsOneWidget);
-    expect(find.text('خيارات العقار'), findsOneWidget);
-
-    await tester.tap(find.text('إيقاف مؤقت'));
-    await tester.pumpAndSettle();
-    expect(find.text('تم إيقاف العقار مؤقتاً'), findsOneWidget);
+    expect(
+      find.descendant(of: furnishedCard, matching: find.text('إحصاءات')),
+      findsNothing,
+    );
 
     await tester.tap(
       find.descendant(of: furnishedCard, matching: find.text('تعديل')),
@@ -339,27 +400,6 @@ void main() {
     expect(repository.lastUpdateBody?['city'], 'cairo-city-id');
     expect(repository.lastUpdateBody?['district'], 'cairo-city-id');
 
-    final Finder analyticsButton = find.descendant(
-      of: furnishedCard,
-      matching: find.text('إحصاءات'),
-    );
-    await tester.ensureVisible(analyticsButton);
-    await tester.tap(analyticsButton);
-    await tester.pumpAndSettle();
-
-    expect(find.byType(OwnerPropertyAnalyticsScreen), findsOneWidget);
-    expect(find.text('إحصاءات العقار'), findsOneWidget);
-    expect(find.text('1,247'), findsOneWidget);
-
-    final Finder revenueButton = find.text('عرض الإيرادات');
-    await tester.drag(find.byType(ListView), const Offset(0, -700));
-    await tester.pumpAndSettle();
-    await tester.tap(revenueButton);
-    await tester.pumpAndSettle();
-
-    expect(find.byType(OwnerRevenueScreen), findsOneWidget);
-    expect(find.text('الإيرادات'), findsOneWidget);
-    expect(find.text('21,500 ج'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -383,7 +423,14 @@ void main() {
 
     expect(find.byType(OwnerPropertyRejectionScreen), findsOneWidget);
     expect(find.text('تم رفض عقارك'), findsOneWidget);
-    expect(find.text('الصور غير واضحة أو لا تعبر عن العقار'), findsOneWidget);
+    expect(
+      find.text(
+        'تفاصيل المراجعة غير متاحة حالياً. حدّث بيانات العقار وأرسله للمراجعة مرة أخرى.',
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('الصور غير واضحة أو لا تعبر عن العقار'), findsNothing);
+    expect(find.text('تواصل مع الدعم'), findsNothing);
 
     final Finder resubmitButton = find.text('تعديل وإعادة الإرسال');
     await tester.scrollUntilVisible(resubmitButton, 260);
@@ -721,6 +768,8 @@ class _OwnerPropertiesAssetLoader extends AssetLoader {
           'شقة واسعة من ثلاث غرف بإطلالة هادئة',
       'owner_property_rejection_title': 'سبب الرفض',
       'owner_property_rejected_headline': 'تم رفض عقارك',
+      'owner_property_rejection_details_unavailable':
+          'تفاصيل المراجعة غير متاحة حالياً. حدّث بيانات العقار وأرسله للمراجعة مرة أخرى.',
       'owner_property_rejection_reasons': 'أسباب الرفض',
       'owner_property_reason_unclear_photos':
           'الصور غير واضحة أو لا تعبر عن العقار',

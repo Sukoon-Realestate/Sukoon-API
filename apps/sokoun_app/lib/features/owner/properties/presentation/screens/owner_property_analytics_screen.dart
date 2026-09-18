@@ -4,16 +4,15 @@ class OwnerPropertyAnalyticsScreen extends StatelessWidget {
   const OwnerPropertyAnalyticsScreen({
     super.key,
     required this.property,
-    this.analytics,
+    required this.analytics,
   });
 
   final OwnerPropertyContent property;
-  final OwnerPropertyAnalyticsContent? analytics;
+  final OwnerPropertyAnalyticsContent analytics;
 
   @override
   Widget build(BuildContext context) {
-    final OwnerPropertyAnalyticsContent content =
-        analytics ?? OwnerPropertyAnalyticsContent.prototype();
+    final OwnerPropertyAnalyticsContent content = analytics;
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
@@ -109,14 +108,6 @@ class OwnerPropertyAnalyticsScreen extends StatelessWidget {
                         value: content.amenitiesInterest,
                       ),
                     ],
-                  ),
-                  18.szH,
-                  DefaultButton(
-                    title: LocaleKeys.ownerAnalyticsOpenRevenue,
-                    onTap: () => Go.to(const OwnerRevenueScreen()),
-                    height: 50.h,
-                    borderRadius: BorderRadius.circular(15.r),
-                    fontWeight: FontWeight.w900,
                   ),
                 ],
               ),

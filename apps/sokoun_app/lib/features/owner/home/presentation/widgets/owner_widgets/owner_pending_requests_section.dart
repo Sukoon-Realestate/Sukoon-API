@@ -8,9 +8,14 @@ import 'owner_pending_requests_empty_state.dart';
 import 'owner_request_card.dart';
 
 class OwnerPendingRequestsSection extends StatelessWidget {
-  const OwnerPendingRequestsSection({super.key, required this.pendingVisits});
+  const OwnerPendingRequestsSection({
+    super.key,
+    required this.pendingVisits,
+    required this.onRequestResolved,
+  });
 
   final List<OwnerDashboardPendingVisitModel> pendingVisits;
+  final Future<void> Function() onRequestResolved;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +46,7 @@ class OwnerPendingRequestsSection extends StatelessWidget {
                 name: visit.tenantName,
                 avatarUrl: visit.tenantAvatar,
                 details: details,
+                onRequestResolved: onRequestResolved,
               );
             },
           ),

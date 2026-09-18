@@ -40,6 +40,9 @@ abstract class LocaleKeys {
   static const String _checkInternet = 'check_internet';
   static String get checkInternet => _checkInternet.tr();
 
+  static const String _ownerRetryAction = 'owner_retry_action';
+  static String get ownerRetryAction => _ownerRetryAction.tr();
+
   static const String _errorExeptionNoconnection = 'error_exeption_noconnection';
   static String get errorExeptionNoconnection => _errorExeptionNoconnection.tr();
 
@@ -2695,6 +2698,9 @@ abstract class LocaleKeys {
   static const String _ownerRejectSubtitle = 'owner_reject_subtitle';
   static String get ownerRejectSubtitle => _ownerRejectSubtitle.tr();
 
+  static const String _ownerRejectConfirmation = 'owner_reject_confirmation';
+  static String get ownerRejectConfirmation => _ownerRejectConfirmation.tr();
+
   static const String _ownerRejectReasonInconvenientTime = 'owner_reject_reason_inconvenient_time';
   static String get ownerRejectReasonInconvenientTime => _ownerRejectReasonInconvenientTime.tr();
 
@@ -3051,6 +3057,33 @@ abstract class LocaleKeys {
 
   static const String _ownerAddPropertyPhotosCount = 'owner_add_property_photos_count';
   static String get ownerAddPropertyPhotosCount => _ownerAddPropertyPhotosCount.tr();
+
+  static const String _ownerAddPropertyPhotoMetadataRequired = 'owner_add_property_photo_metadata_required';
+  static String get ownerAddPropertyPhotoMetadataRequired => _ownerAddPropertyPhotoMetadataRequired.tr();
+
+  static const String _ownerAddPropertyPhotoNumber = 'owner_add_property_photo_number';
+  static String get ownerAddPropertyPhotoNumber => _ownerAddPropertyPhotoNumber.tr();
+
+  static const String _ownerAddPropertyPhotoName = 'owner_add_property_photo_name';
+  static String get ownerAddPropertyPhotoName => _ownerAddPropertyPhotoName.tr();
+
+  static const String _ownerAddPropertyPhotoNameHint = 'owner_add_property_photo_name_hint';
+  static String get ownerAddPropertyPhotoNameHint => _ownerAddPropertyPhotoNameHint.tr();
+
+  static const String _ownerAddPropertyPhotoNameRequired = 'owner_add_property_photo_name_required';
+  static String get ownerAddPropertyPhotoNameRequired => _ownerAddPropertyPhotoNameRequired.tr();
+
+  static const String _ownerAddPropertyPhotoDescription = 'owner_add_property_photo_description';
+  static String get ownerAddPropertyPhotoDescription => _ownerAddPropertyPhotoDescription.tr();
+
+  static const String _ownerAddPropertyPhotoDescriptionHint = 'owner_add_property_photo_description_hint';
+  static String get ownerAddPropertyPhotoDescriptionHint => _ownerAddPropertyPhotoDescriptionHint.tr();
+
+  static const String _ownerAddPropertyPhotoDescriptionRequired = 'owner_add_property_photo_description_required';
+  static String get ownerAddPropertyPhotoDescriptionRequired => _ownerAddPropertyPhotoDescriptionRequired.tr();
+
+  static const String _ownerAddPropertyExistingPhotoPreserved = 'owner_add_property_existing_photo_preserved';
+  static String get ownerAddPropertyExistingPhotoPreserved => _ownerAddPropertyExistingPhotoPreserved.tr();
 
   static const String _ownerAddPropertyPhotoTips = 'owner_add_property_photo_tips';
   static String get ownerAddPropertyPhotoTips => _ownerAddPropertyPhotoTips.tr();
@@ -3495,6 +3528,9 @@ abstract class LocaleKeys {
 
   static const String _ownerPropertyRejectedHeadline = 'owner_property_rejected_headline';
   static String get ownerPropertyRejectedHeadline => _ownerPropertyRejectedHeadline.tr();
+
+  static const String _ownerPropertyRejectionDetailsUnavailable = 'owner_property_rejection_details_unavailable';
+  static String get ownerPropertyRejectionDetailsUnavailable => _ownerPropertyRejectionDetailsUnavailable.tr();
 
   static const String _ownerPropertyRejectionReasons = 'owner_property_rejection_reasons';
   static String get ownerPropertyRejectionReasons => _ownerPropertyRejectionReasons.tr();

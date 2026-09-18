@@ -16,12 +16,16 @@ class OwnerVisitRequestCard extends StatelessWidget {
     required this.onPressed,
     required this.onAcceptPressed,
     required this.onRejectPressed,
+    this.isAccepting = false,
+    this.isRejecting = false,
   });
 
   final OwnerVisitRequestContent request;
-  final VoidCallback onPressed;
-  final VoidCallback onAcceptPressed;
-  final VoidCallback onRejectPressed;
+  final VoidCallback? onPressed;
+  final VoidCallback? onAcceptPressed;
+  final VoidCallback? onRejectPressed;
+  final bool isAccepting;
+  final bool isRejecting;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +58,8 @@ class OwnerVisitRequestCard extends StatelessWidget {
                 OwnerVisitRequestActionRow(
                   onAcceptPressed: onAcceptPressed,
                   onRejectPressed: onRejectPressed,
+                  isAccepting: isAccepting,
+                  isRejecting: isRejecting,
                 ),
               ],
               if (!request.status.canDecide) ...[

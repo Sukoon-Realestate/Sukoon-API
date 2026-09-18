@@ -21,6 +21,8 @@ class OwnerVisitRequestsContent extends StatelessWidget {
     required this.onRequestPressed,
     required this.onAcceptPressed,
     required this.onRejectPressed,
+    this.updatingRequestId,
+    this.pendingStatus,
   });
 
   final List<OwnerVisitRequestContent> requests;
@@ -31,6 +33,8 @@ class OwnerVisitRequestsContent extends StatelessWidget {
   final ValueChanged<OwnerVisitRequestContent> onRequestPressed;
   final ValueChanged<OwnerVisitRequestContent> onAcceptPressed;
   final ValueChanged<OwnerVisitRequestContent> onRejectPressed;
+  final String? updatingRequestId;
+  final OwnerVisitUpdateStatus? pendingStatus;
 
   int get _pendingCount =>
       requests.where((request) => request.status.canDecide).length;
@@ -87,12 +91,25 @@ class OwnerVisitRequestsContent extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final OwnerVisitRequestContent request =
                         visibleRequests[index];
+                    final bool isUpdating = updatingRequestId == request.id;
                     return OwnerVisitRequestCard(
                       key: ValueKey(request.id),
                       request: request,
-                      onPressed: () => onRequestPressed(request),
-                      onAcceptPressed: () => onAcceptPressed(request),
-                      onRejectPressed: () => onRejectPressed(request),
+                      onPressed: isUpdating
+                          ? null
+                          : () => onRequestPressed(request),
+                      onAcceptPressed: isUpdating
+                          ? null
+                          : () => onAcceptPressed(request),
+                      onRejectPressed: isUpdating
+                          ? null
+                          : () => onRejectPressed(request),
+                      isAccepting:
+                          isUpdating &&
+                          pendingStatus == OwnerVisitUpdateStatus.confirmed,
+                      isRejecting:
+                          isUpdating &&
+                          pendingStatus == OwnerVisitUpdateStatus.rejected,
                     );
                   },
                   separatorBuilder: (context, index) => 12.szH,

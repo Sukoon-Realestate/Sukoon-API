@@ -5,6 +5,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
@@ -43,27 +44,31 @@ class ChatEmptyState extends StatelessWidget {
               maxLines: 2,
             ),
             10.szH,
-            AppText(
-              LocaleKeys.chatEmptyDescription,
-              color: AppColors.sokoonGray,
-              fontSize: 14.sp,
-              height: 1.7,
-              textAlign: TextAlign.center,
-              maxLines: 4,
-              overflow: TextOverflow.ellipsis,
-            ),
-            30.szH,
-            DefaultButton(
-              onTap: () => Go.off(const TenantSearchScreen()),
-              title: LocaleKeys.chatExploreProperties,
-              color: AppColors.sokoonTeal,
-              textColor: AppColors.white,
-              borderRadius: BorderRadius.circular(16.r),
-              width: double.infinity,
-              height: 52.h,
-              fontSize: 15.sp,
-              fontWeight: FontWeight.w800,
-            ),
+            if(UserModel.isTenant)
+              ...[
+                AppText(
+                  LocaleKeys.chatEmptyDescription,
+                  color: AppColors.sokoonGray,
+                  fontSize: 14.sp,
+                  height: 1.7,
+                  textAlign: TextAlign.center,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                30.szH,
+                DefaultButton(
+                  onTap: () => Go.off(const TenantSearchScreen()),
+                  title: LocaleKeys.chatExploreProperties,
+                  color: AppColors.sokoonTeal,
+                  textColor: AppColors.white,
+                  borderRadius: BorderRadius.circular(16.r),
+                  width: double.infinity,
+                  height: 52.h,
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w800,
+                ),
+              ]
+
           ],
         ),
       ),

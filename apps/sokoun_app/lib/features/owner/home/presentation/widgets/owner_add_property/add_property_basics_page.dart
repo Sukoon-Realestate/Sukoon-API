@@ -289,29 +289,6 @@ class _MapSection extends StatelessWidget {
             ),
           ),
           12.szH,
-          Container(
-            height: 140.h,
-            decoration: BoxDecoration(
-              color: AppColors.mintPale,
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Positioned.fill(
-                  child: CustomPaint(painter: _MapPatternPainter()),
-                ),
-                Icon(
-                  Icons.location_on_rounded,
-                  color: form.isLocationSelected
-                      ? AppColors.green
-                      : AppColors.sokoonTeal,
-                  size: 34.r,
-                ),
-              ],
-            ),
-          ),
-          12.szH,
           GestureDetector(
             onTap: onLocationSelected,
             behavior: HitTestBehavior.opaque,
@@ -331,7 +308,7 @@ class _MapSection extends StatelessWidget {
                   Icon(
                     form.isLocationSelected
                         ? Icons.check_circle_outline_rounded
-                        : Icons.my_location_rounded,
+                        : Icons.location_on_outlined,
                     color: AppColors.white,
                     size: 17.r,
                   ),
@@ -379,38 +356,4 @@ class _NumberFieldConfig {
   final String label;
   final TextEditingController controller;
   final ValueChanged<String> onChanged;
-}
-
-class _MapPatternPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final roadPaint = Paint()
-      ..color = AppColors.whiteAlpha60
-      ..strokeWidth = 2
-      ..style = PaintingStyle.stroke;
-    final blockPaint = Paint()
-      ..color = AppColors.tealAlpha07
-      ..style = PaintingStyle.fill;
-
-    for (double x = -20; x < size.width; x += 46) {
-      canvas.drawLine(Offset(x, 0), Offset(x + 54, size.height), roadPaint);
-    }
-    for (double y = 18; y < size.height; y += 42) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y - 18), roadPaint);
-    }
-    for (double x = 18; x < size.width; x += 70) {
-      for (double y = 18; y < size.height; y += 54) {
-        canvas.drawRRect(
-          RRect.fromRectAndRadius(
-            Rect.fromLTWH(x, y, 22, 14),
-            Radius.circular(4.r),
-          ),
-          blockPaint,
-        );
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

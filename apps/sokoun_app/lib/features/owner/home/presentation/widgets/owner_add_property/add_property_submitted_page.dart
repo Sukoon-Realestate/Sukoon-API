@@ -24,9 +24,8 @@ class AddPropertySubmittedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 24.h),
         children: [
           Container(
             width: 96.r,
@@ -99,7 +98,7 @@ class AddPropertySubmittedPage extends StatelessWidget {
             onTap: onAddAnother,
           ),
         ],
-      ).paddingSymmetric(horizontal: 32.w),
+      ),
     );
   }
 }
@@ -145,25 +144,37 @@ class _SummaryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 34.h,
+    return ConstrainedBox(
+      constraints: BoxConstraints(minHeight: 40.h),
       child: Row(
         children: [
-          AppText(
-            item.value,
-            color: AppColors.sokoonNavy,
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w900,
+          Expanded(
+            flex: 3,
+            child: AppText(
+              item.value,
+              color: AppColors.sokoonNavy,
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w900,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.start,
+            ),
           ),
-          const Spacer(),
-          AppText(
-            item.label,
-            color: AppColors.sokoonGray,
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w400,
+          10.szW,
+          Expanded(
+            flex: 2,
+            child: AppText(
+              item.label,
+              color: AppColors.sokoonGray,
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w400,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.end,
+            ),
           ),
         ],
-      ),
+      ).paddingSymmetric(vertical: 4.h),
     );
   }
 }

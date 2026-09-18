@@ -10,10 +10,14 @@ class OwnerVisitRequestActionRow extends StatelessWidget {
     super.key,
     required this.onAcceptPressed,
     required this.onRejectPressed,
+    this.isAccepting = false,
+    this.isRejecting = false,
   });
 
-  final VoidCallback onAcceptPressed;
-  final VoidCallback onRejectPressed;
+  final VoidCallback? onAcceptPressed;
+  final VoidCallback? onRejectPressed;
+  final bool isAccepting;
+  final bool isRejecting;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +29,7 @@ class OwnerVisitRequestActionRow extends StatelessWidget {
             backgroundColor: AppColors.sokoonTeal,
             foregroundColor: AppColors.white,
             onPressed: onAcceptPressed,
+            isLoading: isAccepting,
           ),
         ),
         8.szW,
@@ -35,6 +40,7 @@ class OwnerVisitRequestActionRow extends StatelessWidget {
             foregroundColor: AppColors.sokoonRose,
             borderColor: AppColors.sokoonRose,
             onPressed: onRejectPressed,
+            isLoading: isRejecting,
           ),
         ),
       ],
@@ -48,14 +54,16 @@ class _ActionButton extends StatelessWidget {
     required this.backgroundColor,
     required this.foregroundColor,
     required this.onPressed,
+    this.isLoading = false,
     this.borderColor,
   });
 
   final String label;
   final Color backgroundColor;
   final Color foregroundColor;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color? borderColor;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -72,13 +80,21 @@ class _ActionButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(10.r),
             border: Border.all(color: borderColor ?? backgroundColor),
           ),
-          child: AppText(
-            label,
-            color: foregroundColor,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w900,
-            textAlign: TextAlign.center,
-          ),
+          child: isLoading
+              ? SizedBox.square(
+                  dimension: 18.r,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: foregroundColor,
+                  ),
+                )
+              : AppText(
+                  label,
+                  color: foregroundColor,
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w900,
+                  textAlign: TextAlign.center,
+                ),
         ),
       ),
     );

@@ -391,6 +391,37 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('list accept action uses the owner request API', (tester) async {
+    configurePhoneViewport(tester);
+
+    await tester.pumpWidget(
+      buildScreen(
+        OwnerVisitRequestsScreen(initialRequests: ownerVisitRequestsFixture()),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    final Finder requestCard = find.byKey(const ValueKey('sara-nasr-city'));
+    await tester.tap(
+      find.descendant(of: requestCard, matching: find.text('قبول')),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('تأكيد القبول'));
+    await tester.pumpAndSettle();
+
+    expect(
+      repository.lastApi,
+      'properties/owner/visits/requests/sara-nasr-city/accept/',
+    );
+    expect(repository.lastMethod, HttpRequestType.post);
+    expect(repository.lastBody, isNull);
+    expect(
+      find.descendant(of: requestCard, matching: find.text('تم القبول')),
+      findsOneWidget,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('dashboard request card opens API-backed request details', (
     tester,
   ) async {
@@ -506,7 +537,6 @@ void main() {
     expect(find.byType(OwnerRejectRequestSheet), findsOneWidget);
     expect(find.text('رفض طلب الزيارة'), findsOneWidget);
 
-    await tester.tap(find.text('العقار مؤجر حالياً'));
     await tester.tap(find.text('تأكيد الرفض'));
     await tester.pumpAndSettle();
 

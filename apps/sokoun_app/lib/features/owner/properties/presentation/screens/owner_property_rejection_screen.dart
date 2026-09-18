@@ -43,14 +43,6 @@ class _OwnerPropertyRejectionScreenState
     }
   }
 
-  void _contactSupport(BuildContext context) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(content: AppText(LocaleKeys.ownerPropertySupportMessage)),
-      );
-  }
-
   @override
   Widget build(BuildContext context) {
     final OwnerPropertyContent property = widget.property;
@@ -98,29 +90,19 @@ class _OwnerPropertyRejectionScreenState
                     textAlign: TextAlign.center,
                   ),
                   20.szH,
-                  _RejectionSection(
-                    title: LocaleKeys.ownerPropertyRejectionReasons,
-                    children: [
-                      _RejectionReason(
-                        text: LocaleKeys.ownerPropertyReasonUnclearPhotos,
-                      ),
-                      10.szH,
-                      _RejectionReason(
-                        text: LocaleKeys.ownerPropertyReasonIncompleteInfo,
-                      ),
-                    ],
-                  ),
-                  14.szH,
-                  _RejectionSection(
-                    title: LocaleKeys.ownerPropertyReviewerNotes,
-                    children: [
-                      AppText(
-                        LocaleKeys.ownerPropertyReviewerNotesDescription,
-                        color: AppColors.sokoonGray,
-                        fontSize: 13.sp,
-                        height: 1.55,
-                      ),
-                    ],
+                  Container(
+                    padding: EdgeInsets.all(16.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(18.r),
+                      border: Border.all(color: AppColors.sokoonBorder),
+                    ),
+                    child: AppText(
+                      LocaleKeys.ownerPropertyRejectionDetailsUnavailable,
+                      color: AppColors.sokoonGray,
+                      fontSize: 13.sp,
+                      height: 1.55,
+                    ),
                   ),
                   14.szH,
                   Container(
@@ -159,88 +141,12 @@ class _OwnerPropertyRejectionScreenState
                     borderRadius: BorderRadius.circular(15.r),
                     fontWeight: FontWeight.w900,
                   ),
-                  12.szH,
-                  DefaultButton(
-                    title: LocaleKeys.ownerPropertyContactSupport,
-                    onTap: () => _contactSupport(context),
-                    height: 50.h,
-                    color: AppColors.white,
-                    textColor: AppColors.sokoonTeal,
-                    borderColor: AppColors.sokoonTeal,
-                    borderRadius: BorderRadius.circular(15.r),
-                    fontWeight: FontWeight.w900,
-                  ),
                 ],
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _RejectionSection extends StatelessWidget {
-  const _RejectionSection({required this.title, required this.children});
-
-  final String title;
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: AppColors.sokoonBorder),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          AppText(
-            title,
-            color: AppColors.sokoonNavy,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w900,
-          ),
-          12.szH,
-          ...children,
-        ],
-      ),
-    );
-  }
-}
-
-class _RejectionReason extends StatelessWidget {
-  const _RejectionReason({required this.text});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          width: 7.r,
-          height: 7.r,
-          margin: EdgeInsets.only(top: 6.h),
-          decoration: const BoxDecoration(
-            color: AppColors.red,
-            shape: BoxShape.circle,
-          ),
-        ),
-        9.szW,
-        Expanded(
-          child: AppText(
-            text,
-            color: AppColors.sokoonGray,
-            fontSize: 13.sp,
-            height: 1.45,
-          ),
-        ),
-      ],
     );
   }
 }

@@ -55,9 +55,7 @@ abstract final class OwnerAddPropertyMapper {
         buildingYear: _positiveNumberText(property.buildingYear),
         mapQuery: locationParts.join('، '),
         isLocationSelected: locationParts.isNotEmpty,
-        existingPhotoUrls: property.imageUrls
-            .take(OwnerAddPropertyContent.maxPhotoCount)
-            .toList(growable: false),
+        photoDrafts: _photoDraftsFromProperty(property),
         monthlyPrice: property.price,
         deposit: _depositLabel(property.deposit),
         rentalDuration: _positiveNumberText(property.rentalPeriod),
@@ -212,6 +210,28 @@ abstract final class OwnerAddPropertyMapper {
       (OwnerAddPropertyContent.rentalUnitOptions.contains(value)
           ? value
           : LocaleKeys.ownerAddPropertyMonth);
+
+  static List<OwnerPropertyPhotoDraft> _photoDraftsFromProperty(
+    PropertyDetailsModel property,
+  ) {
+    final List<OwnerPropertyPhotoDraft> photos = [
+      if (property.mainImage.trim().isNotEmpty)
+        OwnerPropertyPhotoDraft(existingUrl: property.mainImage),
+      ...property.images
+          .where((image) => image.image.trim().isNotEmpty)
+          .map(
+            (image) => OwnerPropertyPhotoDraft(
+              existingId: image.id,
+              existingUrl: image.image,
+              name: image.name,
+              description: image.description,
+            ),
+          ),
+    ];
+    return photos
+        .take(OwnerAddPropertyContent.maxPhotoCount)
+        .toList(growable: false);
+  }
 
   static String _suitableForLabel(String value) =>
       {

@@ -15,15 +15,21 @@ class OwnerRequestCard extends StatelessWidget {
     required this.name,
     required this.details,
     this.avatarUrl,
+    this.onRequestResolved,
   });
 
   final String requestId;
   final String name;
   final String details;
   final String? avatarUrl;
+  final Future<void> Function()? onRequestResolved;
 
-  void _openDetails() {
-    Go.to(OwnerRequestDetailsScreen(requestId: requestId));
+  Future<void> _openDetails() async {
+    final OwnerRequestResolution? resolution =
+        await Go.to<OwnerRequestResolution>(
+          OwnerRequestDetailsScreen(requestId: requestId),
+        );
+    if (resolution != null) await onRequestResolved?.call();
   }
 
   @override
@@ -101,37 +107,18 @@ class OwnerRequestCard extends StatelessWidget {
                 ),
               ),
               8.szW,
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  DefaultButton(
-                    onTap: _openDetails,
-                    title: LocaleKeys.ownerDashboardAccept,
-                    color: AppColors.emerald,
-                    textColor: AppColors.white,
-                    borderRadius: BorderRadius.circular(10.r),
-                    padding: EdgeInsets.symmetric(horizontal: 5.w),
-                    width: 58.w,
-                    height: 32.h,
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w900,
-                    isFitted: false,
-                  ),
-                  6.szW,
-                  DefaultButton(
-                    onTap: _openDetails,
-                    title: LocaleKeys.ownerDashboardReject,
-                    color: AppColors.redPale,
-                    textColor: AppColors.red,
-                    borderRadius: BorderRadius.circular(10.r),
-                    padding: EdgeInsets.symmetric(horizontal: 5.w),
-                    width: 58.w,
-                    height: 32.h,
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w900,
-                    isFitted: false,
-                  ),
-                ],
+              DefaultButton(
+                onTap: _openDetails,
+                title: LocaleKeys.ownerRequestDetailsTitle,
+                color: AppColors.bluePale,
+                textColor: AppColors.blue,
+                borderRadius: BorderRadius.circular(10.r),
+                padding: EdgeInsets.symmetric(horizontal: 8.w),
+                width: 90.w,
+                height: 32.h,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w900,
+                isFitted: false,
               ),
             ],
           ),

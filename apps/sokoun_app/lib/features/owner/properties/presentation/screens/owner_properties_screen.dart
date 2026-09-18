@@ -103,43 +103,6 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
     }
   }
 
-  Future<void> _openActions(OwnerPropertyContent property) async {
-    final OwnerPropertyAction? action =
-        await showModalBottomSheet<OwnerPropertyAction>(
-          context: context,
-          useSafeArea: true,
-          isScrollControlled: true,
-          backgroundColor: AppColors.transparent,
-          barrierColor: AppColors.blackAlpha45,
-          builder: (context) => OwnerPropertyActionSheet(property: property),
-        );
-    if (action == null || !mounted) {
-      return;
-    }
-    if (action.isEdit) {
-      await _openEdit(property);
-      return;
-    }
-    if (action.isPause) {
-      final OwnerPropertyStatus nextStatus = property.status.isHidden
-          ? OwnerPropertyStatus.verified
-          : OwnerPropertyStatus.hidden;
-      _replaceProperty(property.copyWith(status: nextStatus));
-      _showMessage(
-        nextStatus.isHidden
-            ? LocaleKeys.ownerPropertiesPausedMessage
-            : LocaleKeys.ownerPropertiesReactivatedMessage,
-      );
-      return;
-    }
-    if (action.isMarkRented) {
-      _replaceProperty(property.copyWith(status: OwnerPropertyStatus.rented));
-      _showMessage(LocaleKeys.ownerPropertiesMarkedRentedMessage);
-      return;
-    }
-    _deleteProperty(property);
-  }
-
   void _replaceProperty(OwnerPropertyContent property) {
     final int index = _pagifyController.items.indexWhere(
       (item) => item.id == property.id,
@@ -148,11 +111,6 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
       return;
     }
     _pagifyController.replaceWith(index, property);
-  }
-
-  void _deleteProperty(OwnerPropertyContent property) {
-    _pagifyController.removeWhere((item) => item.id == property.id);
-    _showMessage(LocaleKeys.ownerPropertiesDeletedMessage);
   }
 
   void _showMessage(String message) {
@@ -170,14 +128,15 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
           children: [
             Column(
               children: [
-                OwnerPropertiesHeader().padding(EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 8.h)),
+                OwnerPropertiesHeader(
+                  onAddPressed: _openAddProperty,
+                ).padding(EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 8.h)),
                 Expanded(
                   child: OwnerPropertiesList(
                     initialProperties: widget.initialProperties,
                     pagifyController: _pagifyController,
                     onAddPressed: _openAddProperty,
                     onEditPressed: _openEdit,
-                    onActionsPressed: _openActions,
                     onRejectedPressed: _openRejection,
                   ),
                 ),

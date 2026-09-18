@@ -27,20 +27,6 @@ class OwnerPropertyAnalyticsContent extends Equatable {
     );
   }
 
-  factory OwnerPropertyAnalyticsContent.prototype() {
-    return const OwnerPropertyAnalyticsContent(
-      views: 1247,
-      visitRequests: 23,
-      saves: 84,
-      acceptanceRate: 78,
-      viewHistory: [40, 65, 50, 80, 60, 90, 70, 85, 55, 95, 75, 88, 65, 100],
-      spaceInterest: 78,
-      priceInterest: 65,
-      locationInterest: 55,
-      amenitiesInterest: 42,
-    );
-  }
-
   factory OwnerPropertyAnalyticsContent.fromJson(Map<String, dynamic> json) {
     return OwnerPropertyAnalyticsContent(
       views: json['views'] ?? 0,

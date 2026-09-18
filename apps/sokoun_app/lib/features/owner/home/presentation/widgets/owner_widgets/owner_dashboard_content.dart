@@ -8,9 +8,14 @@ import 'owner_pending_requests_section.dart';
 import 'owner_stats_grid.dart';
 
 class OwnerDashboardContent extends StatelessWidget {
-  const OwnerDashboardContent({super.key, required this.dashboard});
+  const OwnerDashboardContent({
+    super.key,
+    required this.dashboard,
+    required this.onRequestResolved,
+  });
 
   final OwnerDashboardModel dashboard;
+  final Future<void> Function() onRequestResolved;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +36,10 @@ class OwnerDashboardContent extends StatelessWidget {
             pendingRequests: dashboard.pendingRequests,
           ),
           18.szH,
-          OwnerPendingRequestsSection(pendingVisits: dashboard.pendingVisits),
+          OwnerPendingRequestsSection(
+            pendingVisits: dashboard.pendingVisits,
+            onRequestResolved: onRequestResolved,
+          ),
           24.szH,
         ],
       ),
