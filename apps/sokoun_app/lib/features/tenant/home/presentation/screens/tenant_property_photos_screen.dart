@@ -51,25 +51,12 @@ class _TenantPropertyPhotosScreenState
       backgroundColor: AppColors.slate,
       body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                TenantPhotoCircleIconButton(
-                  icon: Icons.favorite_border_rounded,
-                  onTap: () {},
-                ),
-                8.szW,
-                TenantPhotoCircleIconButton(
-                  icon: Icons.share_outlined,
-                  onTap: () {},
-                ),
-                const Spacer(),
-                TenantPhotoCircleIconButton(
-                  icon: Icons.close_rounded,
-                  onTap: Go.back,
-                ),
-              ],
-            ).paddingSymmetric(horizontal: 16.w, vertical: 10.h),
+            TenantPhotoCircleIconButton(
+              icon: Icons.close_rounded,
+              onTap: Go.back,
+            ).paddingAll(20.r),
             Expanded(
               child: Container(
                 height: 280.h,
