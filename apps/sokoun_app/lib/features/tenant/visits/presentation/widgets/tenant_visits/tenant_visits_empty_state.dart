@@ -29,6 +29,7 @@ class TenantVisitsEmptyState extends StatelessWidget {
           children: [
             ExcludeSemantics(
               child: Assets.lottie.emptyBox.lottie(
+                package: 'melos_core',
                 width: 132.r,
                 height: 112.r,
                 animate: !reduceMotion,
