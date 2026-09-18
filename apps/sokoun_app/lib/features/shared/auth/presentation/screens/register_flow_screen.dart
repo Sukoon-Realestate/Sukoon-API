@@ -136,9 +136,11 @@ class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
       KycIntroScreen(
         onBack: _goBack,
         onUploadDocuments: () => _goToStep(_RegisterFlowStep.uploadDocuments),
-        onSkip: () async => context.read<RegisterCubit>().register(
-          onSuccess: _handleRegisterSuccess,
-        ),
+        onSkip: () async {
+          context.read<RegisterCubit>()..removeDocs()..register(
+            onSuccess: _handleRegisterSuccess,
+          );
+        }
       ),
       KycUploadDocumentsScreen(
         onBack: _goBack,

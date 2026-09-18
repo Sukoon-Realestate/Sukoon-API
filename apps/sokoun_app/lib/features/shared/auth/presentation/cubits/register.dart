@@ -30,6 +30,15 @@ class RegisterCubit extends AsyncCubit<Map<String, dynamic>> {
     );
   }
 
+  void removeDocs(){
+    _registerBody.copyWith(
+      nationalId: null,
+      frontIdImage: null,
+      backIdImage: null,
+      selfieImage: null,
+    );
+  }
+
   Future<void> register({void Function(RegisterBody body)? onSuccess}) async {
     final RegisterBody requestBody = _registerBody;
 
