@@ -1,8 +1,9 @@
 'use client';
 
 import React from 'react';
-import { Bell, User, Menu } from 'lucide-react';
+import { Bell, User, Menu, LogOut } from 'lucide-react';
 import { useSidebar } from './AppLayout';
+import { useAuth } from '@/context/AuthContext';
 
 interface HeaderProps {
   title: string;
@@ -16,6 +17,7 @@ export const Header: React.FC<HeaderProps> = ({
   lastUpdated = '9:41 ص',
 }) => {
   const { toggleMobileMenu } = useSidebar();
+  const { logout } = useAuth();
 
   return (
     <header className="h-16 bg-white border-b border-slate-200/80 px-4 sm:px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs">
@@ -50,7 +52,7 @@ export const Header: React.FC<HeaderProps> = ({
         )}
       </div>
 
-      {/* Timestamp & Notification bell (Right in RTL layout) */}
+      {/* Timestamp & Notification bell & Logout (Right in RTL layout) */}
       <div className="flex items-center gap-2 sm:gap-3 shrink-0">
         <span className="hidden sm:inline text-xs text-slate-400 font-semibold">
           آخر تحديث: {lastUpdated}
@@ -59,8 +61,15 @@ export const Header: React.FC<HeaderProps> = ({
           <Bell className="w-5 h-5" />
           <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white"></span>
         </button>
+        <button
+          type="button"
+          onClick={logout}
+          title="تسجيل الخروج"
+          className="p-1.5 rounded-full text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+        >
+          <LogOut className="w-5 h-5" />
+        </button>
       </div>
     </header>
   );
 };
-

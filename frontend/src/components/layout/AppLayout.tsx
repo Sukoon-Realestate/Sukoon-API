@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, createContext, useContext } from 'react';
+import { usePathname } from 'next/navigation';
 import { Sidebar } from './Sidebar';
 
 interface SidebarContextType {
@@ -19,9 +20,14 @@ export const useSidebar = () => useContext(SidebarContext);
 
 export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const pathname = usePathname();
 
   const toggleMobileMenu = () => setIsMobileOpen((prev) => !prev);
   const closeMobileMenu = () => setIsMobileOpen(false);
+
+  if (pathname === '/login') {
+    return <>{children}</>;
+  }
 
   return (
     <SidebarContext.Provider value={{ isMobileOpen, toggleMobileMenu, closeMobileMenu }}>
