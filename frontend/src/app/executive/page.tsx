@@ -23,7 +23,7 @@ export default function ExecutiveDashboardPage() {
         lastUpdated="9:41 ص"
       />
 
-      <div className="p-8 max-w-7xl mx-auto w-full space-y-8">
+      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-8">
         {/* Top 5 Metrics Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {executiveMetrics.map((metric, idx) => (

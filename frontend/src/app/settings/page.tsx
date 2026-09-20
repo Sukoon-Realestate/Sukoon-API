@@ -50,7 +50,7 @@ export default function PlatformSettingsPage() {
         lastUpdated="9:41 ص"
       />
 
-      <div className="p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
         {/* Top Grid: Verification & Property Settings */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: Verification Settings (6 cols) */}

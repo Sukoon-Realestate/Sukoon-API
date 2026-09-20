@@ -24,7 +24,7 @@ export default function PropertiesManagementPage() {
         subtitle="متابعة كل العقارات المعروضة، المراجعة وإجراءات الموافقة والرفض"
       />
 
-      <div className="p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
         {/* Search & Filter Bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="w-full sm:w-auto text-lg font-extrabold text-slate-800">

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Cairo } from 'next/font/google';
 import './globals.css';
-import { Sidebar } from '@/components/layout/Sidebar';
+import { AppLayout } from '@/components/layout/AppLayout';
 
 const cairo = Cairo({
   subsets: ['arabic', 'latin'],
@@ -22,10 +22,7 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" className={`${cairo.variable} h-full antialiased`}>
       <body className="min-h-full flex bg-[#F3F5F8] text-slate-800 font-sans">
-        <Sidebar />
-        <main className="flex-1 min-w-0 flex flex-col min-h-screen">
-          {children}
-        </main>
+        <AppLayout>{children}</AppLayout>
       </body>
     </html>
   );
