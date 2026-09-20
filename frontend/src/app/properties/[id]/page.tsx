@@ -3,18 +3,12 @@
 import React from 'react';
 import { useParams } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
-import { StatusBadge } from '@/components/ui/StatusBadge';
 import {
   Building2,
   ShieldCheck,
-  Eye,
-  Calendar,
   EyeOff,
   Trash2,
   Download,
-  CheckCircle2,
-  Clock,
-  Send,
 } from 'lucide-react';
 import { mockProperties } from '@/data/mockData';
 

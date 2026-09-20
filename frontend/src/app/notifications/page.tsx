@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { Header } from '@/components/layout/Header';
-import { Send, Calendar, Bell } from 'lucide-react';
 import { mockPushCampaigns } from '@/data/mockData';
 
 export default function PushNotificationsPage() {

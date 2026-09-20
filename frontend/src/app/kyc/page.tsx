@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { StatusBadge } from '@/components/ui/StatusBadge';
-import { ShieldCheck, Eye, AlertTriangle, User } from 'lucide-react';
+import { Eye, AlertTriangle, User } from 'lucide-react';
 import { mockKycRequests, kycMetrics } from '@/data/mockData';
 
 export default function KycReviewQueuePage() {

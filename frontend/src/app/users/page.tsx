@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { StatusBadge } from '@/components/ui/StatusBadge';
-import { Search, Filter, Eye, UserX, CheckCircle } from 'lucide-react';
+import { Search, Filter, Eye, UserX } from 'lucide-react';
 import { mockUsers, userDistributionData } from '@/data/mockData';
 
 export default function UserManagementPage() {

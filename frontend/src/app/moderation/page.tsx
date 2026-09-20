@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
-import { ShieldBan, Image as ImageIcon, FileText, Trash2, Eye } from 'lucide-react';
+import { Image as ImageIcon, FileText, Trash2, Eye } from 'lucide-react';
 import { mockModerationItems, moderationMetrics } from '@/data/mockData';
 
 export default function ContentModerationPage() {

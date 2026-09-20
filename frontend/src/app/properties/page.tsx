@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
-import { StatusBadge } from '@/components/ui/StatusBadge';
 import { Search, Filter, Building2, Eye, XCircle } from 'lucide-react';
 import { mockProperties, propertyMetrics } from '@/data/mockData';
 

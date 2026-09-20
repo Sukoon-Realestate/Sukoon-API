@@ -1,14 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import {
   Building2,
-  CheckCircle2,
-  XCircle,
   AlertTriangle,
-  Eye,
   Check,
   X,
   RotateCcw,

@@ -3,8 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
-import { StatusBadge } from '@/components/ui/StatusBadge';
-import { User, CheckCircle2, Eye, UserCheck } from 'lucide-react';
+import { User, Eye, UserCheck } from 'lucide-react';
 import { mockSuspendedUsers, suspendedUsersMetrics } from '@/data/mockData';
 
 export default function SuspendedUsersPage() {
@@ -24,7 +23,7 @@ export default function SuspendedUsersPage() {
         lastUpdated="9:41 ص"
       />
 
-      <div className="p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
         {/* Top 3 Stat Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs text-center">

@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { StatusBadge } from '@/components/ui/StatusBadge';
-import { Search, ShieldAlert, Eye, UserX, AlertTriangle } from 'lucide-react';
+import { Search, ShieldAlert, Eye, UserX } from 'lucide-react';
 import { mockReports } from '@/data/mockData';
 
 export default function ReportsQueuePage() {

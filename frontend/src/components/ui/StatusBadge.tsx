@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ShieldCheck, Clock, XCircle, UserCheck, AlertTriangle } from 'lucide-react';
+import { ShieldCheck, Clock, XCircle } from 'lucide-react';
 
 interface StatusBadgeProps {
   type: 'userType' | 'userStatus' | 'kycStatus' | 'automation' | 'role';

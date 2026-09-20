@@ -2,10 +2,8 @@
 
 import React, { useState } from 'react';
 import { Header } from '@/components/layout/Header';
-import { StatusBadge } from '@/components/ui/StatusBadge';
 import {
   User,
-  ShieldCheck,
   FileText,
   AlertTriangle,
   Check,
