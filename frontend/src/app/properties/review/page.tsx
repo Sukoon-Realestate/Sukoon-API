@@ -157,7 +157,7 @@ export default function PropertyReviewQueuePage() {
                     onClick={() => setSelectedPropertyId(item.id)}
                     className={`p-4 rounded-xl border flex items-center justify-between transition-all cursor-pointer ${
                       isSelected
-                        ? 'border-teal-500 bg-teal-50/40 dark:bg-teal-500/10 shadow-[var(--shadow-card)]'
+                        ? 'border-teal-500 bg-teal-500/10 dark:bg-teal-500/20 shadow-[var(--shadow-card)] ring-1 ring-teal-500/30'
                         : 'border-[var(--card-border)] bg-[var(--card-bg)] hover:bg-[var(--table-row-hover)]'
                     }`}
                   >
