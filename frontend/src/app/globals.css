@@ -1,17 +1,100 @@
 @import "tailwindcss";
 
+/* ===========================
+   * Light Theme (Default)
+   =========================== */
 :root {
   --background: #f3f5f8;
   --foreground: #1e293b;
-  --sidebar-bg: #161f28;
-  --sidebar-border: #232d39;
-  --sidebar-active: #0d9488;
+  --text-muted: #64748b;
+  --text-subtle: #94a3b8;
+
   --card-bg: #ffffff;
   --card-border: #e2e8f0;
-  --primary-teal: #0d9488;
-  --primary-teal-hover: #0f766e;
+  --card-hover: #f8fafc;
+  --surface-elevated: #ffffff;
+
+  --sidebar-bg: #161f28;
+  --sidebar-border: #232d39;
+  --sidebar-text: #94a3b8;
+  --sidebar-active: #0d9488;
+  --sidebar-hover: rgba(30, 41, 59, 0.4);
+
+  --header-bg: #ffffff;
+  --header-border: rgba(226, 232, 240, 0.8);
+
+  --primary: #0d9488;
+  --primary-hover: #0f766e;
+  --primary-subtle: #f0fdfa;
+  --primary-text: #0d7c66;
+
+  --input-bg: #ffffff;
+  --input-border: #e2e8f0;
+  --input-focus-ring: rgba(13, 148, 136, 0.3);
+
+  --table-header-bg: rgba(248, 250, 252, 0.8);
+  --table-row-hover: rgba(248, 250, 252, 0.7);
+  --table-border: #f1f5f9;
+
+  --badge-bg-muted: #f1f5f9;
+  --divider: #f1f5f9;
+
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-thumb-hover: #94a3b8;
+
+  --shadow-card: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-card-hover: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
 }
 
+/* ===========================
+   * Dark Theme
+   =========================== */
+.dark {
+  --background: #0f1419;
+  --foreground: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-subtle: #64748b;
+
+  --card-bg: #1a2332;
+  --card-border: #2a3544;
+  --card-hover: #1e2a3a;
+  --surface-elevated: #1e2a3a;
+
+  --sidebar-bg: #0c1117;
+  --sidebar-border: #1a2332;
+  --sidebar-text: #94a3b8;
+  --sidebar-active: #14b8a6;
+  --sidebar-hover: rgba(30, 41, 59, 0.6);
+
+  --header-bg: #1a2332;
+  --header-border: rgba(42, 53, 68, 0.8);
+
+  --primary: #14b8a6;
+  --primary-hover: #0d9488;
+  --primary-subtle: rgba(20, 184, 166, 0.1);
+  --primary-text: #2dd4bf;
+
+  --input-bg: #1e2a3a;
+  --input-border: #2a3544;
+  --input-focus-ring: rgba(20, 184, 166, 0.3);
+
+  --table-header-bg: rgba(26, 35, 50, 0.8);
+  --table-row-hover: rgba(30, 42, 58, 0.7);
+  --table-border: #1e2a3a;
+
+  --badge-bg-muted: #1e2a3a;
+  --divider: #1e2a3a;
+
+  --scrollbar-thumb: #2a3544;
+  --scrollbar-thumb-hover: #3a4554;
+
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 4px 12px -2px rgba(0, 0, 0, 0.4);
+}
+
+/* ===========================
+   * Base Styles
+   =========================== */
 body {
   background-color: var(--background);
   color: var(--foreground);
@@ -21,7 +104,23 @@ body {
   padding: 0;
 }
 
-/* Custom scrollbar for clean UI */
+/* ===========================
+   * Theme Transition
+   ? Applied only during theme switch via JS class toggle to avoid
+   ? animating on initial page load
+   =========================== */
+html.theme-transitioning,
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition: background-color 400ms ease, color 300ms ease,
+    border-color 300ms ease, box-shadow 300ms ease, fill 300ms ease,
+    stroke 300ms ease !important;
+}
+
+/* ===========================
+   * Custom Scrollbar
+   =========================== */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -30,16 +129,219 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--scrollbar-thumb);
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--scrollbar-thumb-hover);
 }
 
-/* Smooth transitions */
-* {
-  transition-property: color, background-color, border-color, box-shadow, transform;
+/* ===========================
+   * Base Transitions (interactive elements only)
+   =========================== */
+a, button, input, select, textarea,
+[role="button"] {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
+}
+
+/* ===========================
+   * Keyframe Animations
+   =========================== */
+
+/* ? Cards and sections fade up into view */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ? Metric cards scale in with a pop */
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ? Sidebar nav items slide in from the side (RTL-aware: from left) */
+@keyframes slideInFromSide {
+  from {
+    opacity: 0;
+    transform: translateX(-16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ? Mobile drawer slides in */
+@keyframes slideInDrawer {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* ? Backdrop fades in */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ? Bar chart bars grow from bottom */
+@keyframes barGrow {
+  from {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+  to {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+}
+
+/* ? Login page ambient glow pulse */
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.08;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.18;
+    transform: scale(1.08);
+  }
+}
+
+/* ? Login logo breathing */
+@keyframes breathe {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(13, 148, 136, 0);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 0 20px 4px rgba(13, 148, 136, 0.15);
+  }
+}
+
+/* ? Notification dot pulse */
+@keyframes pulseDot {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.6);
+    opacity: 0.5;
+  }
+}
+
+/* ? Subtle shimmer for loading states */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ===========================
+   * Animation Utility Classes
+   =========================== */
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-slideInFromSide {
+  animation: slideInFromSide 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-slideInDrawer {
+  animation: slideInDrawer 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease both;
+}
+
+.animate-barGrow {
+  animation: barGrow 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-pulseGlow {
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+.animate-breathe {
+  animation: breathe 3s ease-in-out infinite;
+}
+
+.animate-pulseDot {
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+/* ===========================
+   * Hover Utility Enhancements
+   =========================== */
+.hover-lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* ===========================
+   * Dark-mode specific overrides for status badges
+   ? Slightly more vivid backgrounds for contrast on dark surfaces
+   =========================== */
+.dark .badge-emerald {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #6ee7b7;
+  border-color: rgba(16, 185, 129, 0.25);
+}
+.dark .badge-rose {
+  background-color: rgba(244, 63, 94, 0.15);
+  color: #fda4af;
+  border-color: rgba(244, 63, 94, 0.25);
+}
+.dark .badge-amber {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #fcd34d;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+.dark .badge-blue {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #93c5fd;
+  border-color: rgba(59, 130, 246, 0.25);
+}
+.dark .badge-teal {
+  background-color: rgba(20, 184, 166, 0.15);
+  color: #5eead4;
+  border-color: rgba(20, 184, 166, 0.25);
+}
+.dark .badge-slate {
+  background-color: rgba(100, 116, 139, 0.2);
+  color: #cbd5e1;
+  border-color: rgba(100, 116, 139, 0.3);
 }

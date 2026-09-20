@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { Header } from '@/components/layout/Header';
@@ -22,8 +22,8 @@ export default function AdminRolesPage() {
         {/* Top Section: Roles & Admins */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: Roles & Permissions (6 cols) */}
-          <div className="lg:col-span-6 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-            <h3 className="font-extrabold text-slate-800 text-base border-b border-slate-100 pb-3">
+          <div className="lg:col-span-6 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-4">
+            <h3 className="font-extrabold text-[var(--foreground)] text-base border-b border-[var(--divider)] pb-3">
               الأدوار والصلاحيات
             </h3>
 
@@ -31,17 +31,17 @@ export default function AdminRolesPage() {
               {mockAdminRoles.map((role) => (
                 <div
                   key={role.id}
-                  className="p-3.5 rounded-xl border border-slate-100 bg-slate-50/50 hover:border-slate-200 transition-all flex items-center justify-between"
+                  className="p-3.5 rounded-xl border border-[var(--divider)] bg-slate-50/50 hover:border-slate-200 transition-all flex items-center justify-between"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <span className={`w-2 h-2 rounded-full ${role.color}`}></span>
-                      <h4 className="font-bold text-slate-900 text-sm">
+                      <h4 className="font-bold text-[var(--foreground)] text-sm">
                         {role.name}
                       </h4>
                     </div>
                     {role.subtext && (
-                      <p className="text-xs text-slate-400 font-medium">
+                      <p className="text-xs text-[var(--text-subtle)] font-medium">
                         {role.subtext}
                       </p>
                     )}
@@ -50,7 +50,7 @@ export default function AdminRolesPage() {
                         {role.badges.map((badge, idx) => (
                           <span
                             key={idx}
-                            className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-500 border border-slate-200/60"
+                            className="px-2 py-0.5 rounded text-[10px] font-bold bg-[var(--badge-bg-muted)] text-[var(--text-muted)] border border-slate-200/60"
                           >
                             {badge}
                           </span>
@@ -61,15 +61,15 @@ export default function AdminRolesPage() {
 
                   <div className="flex items-center gap-3 text-xs">
                     <div className="text-center px-2">
-                      <span className="font-extrabold text-slate-900 text-sm block leading-none">
+                      <span className="font-extrabold text-[var(--foreground)] text-sm block leading-none">
                         {role.userCount}
                       </span>
-                      <span className="text-[10px] text-slate-400 font-medium">
+                      <span className="text-[10px] text-[var(--text-subtle)] font-medium">
                         مستخدم
                       </span>
                     </div>
 
-                    <button className="px-3 py-1 bg-slate-100 hover:bg-slate-200/80 text-slate-700 font-bold rounded-lg border border-slate-200/80 transition-colors text-xs">
+                    <button className="px-3 py-1 bg-[var(--badge-bg-muted)] hover:bg-[var(--card-hover)]/80 text-[var(--foreground)] font-bold rounded-lg border border-[var(--card-border)] transition-colors text-xs">
                       تعديل
                     </button>
                   </div>
@@ -79,9 +79,9 @@ export default function AdminRolesPage() {
           </div>
 
           {/* Right Column: Current Admins (6 cols) */}
-          <div className="lg:col-span-6 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="font-extrabold text-slate-800 text-base">
+          <div className="lg:col-span-6 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-4">
+            <div className="flex items-center justify-between border-b border-[var(--divider)] pb-3">
+              <h3 className="font-extrabold text-[var(--foreground)] text-base">
                 المشرفون الحاليون
               </h3>
 
@@ -91,7 +91,7 @@ export default function AdminRolesPage() {
               </button>
             </div>
 
-            <div className="divide-y divide-slate-100 space-y-3">
+            <div className="divide-y divide-[var(--divider)] space-y-3">
               {mockAdminUsers.map((admin) => (
                 <div
                   key={admin.id}
@@ -104,17 +104,17 @@ export default function AdminRolesPage() {
                       <User className="w-4 h-4" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-slate-900 text-sm">
+                      <h4 className="font-bold text-[var(--foreground)] text-sm">
                         {admin.name}
                       </h4>
-                      <p className="text-xs text-slate-400 font-medium">
+                      <p className="text-xs text-[var(--text-subtle)] font-medium">
                         {admin.roleName} • {admin.timeAgo}
                       </p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2 text-xs font-bold">
-                    <button className="px-2.5 py-1 text-slate-600 hover:text-slate-900 bg-slate-50 hover:bg-slate-100 rounded-lg border border-slate-200/60 transition-colors">
+                    <button className="px-2.5 py-1 text-[var(--text-muted)] hover:text-[var(--foreground)] bg-[var(--card-hover)] hover:bg-[var(--badge-bg-muted)] rounded-lg border border-slate-200/60 transition-colors">
                       تعديل الدور
                     </button>
                     <button className="px-2.5 py-1 text-rose-500 hover:text-rose-700 bg-rose-50 hover:bg-rose-100/80 rounded-lg border border-rose-100 transition-colors">
@@ -128,15 +128,15 @@ export default function AdminRolesPage() {
         </div>
 
         {/* Bottom Section: Permissions Matrix */}
-        <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-          <h3 className="font-extrabold text-slate-800 text-base border-b border-slate-100 pb-3">
+        <div className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-4">
+          <h3 className="font-extrabold text-[var(--foreground)] text-base border-b border-[var(--divider)] pb-3">
             مصفوفة الصلاحيات
           </h3>
 
           <div className="overflow-x-auto">
             <table className="w-full text-right border-collapse">
               <thead>
-                <tr className="bg-slate-50/80 text-slate-500 text-xs font-bold border-b border-slate-200/80">
+                <tr className="bg-[var(--table-header-bg)] text-[var(--text-muted)] text-xs font-bold border-b border-[var(--card-border)]">
                   <th className="py-3 px-6">الإجراء</th>
                   <th className="py-3 px-4 text-center">مالك النظام</th>
                   <th className="py-3 px-4 text-center">مشرف رئيسي</th>
@@ -145,10 +145,10 @@ export default function AdminRolesPage() {
                   <th className="py-3 px-4 text-center">دعم</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-xs">
+              <tbody className="divide-y divide-[var(--divider)] text-xs">
                 {mockPermissionsMatrix.map((row, idx) => (
                   <tr key={idx} className="hover:bg-slate-50/50 transition-colors">
-                    <td className="py-4 px-6 font-bold text-slate-800">
+                    <td className="py-4 px-6 font-bold text-[var(--foreground)]">
                       {row.action}
                     </td>
 

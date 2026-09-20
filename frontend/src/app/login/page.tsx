@@ -42,14 +42,16 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen w-full bg-[#161F28] text-slate-100 flex items-center justify-center p-4 relative overflow-hidden font-sans dir-rtl">
       {/* Ambient background glow effects */}
-      <div className="absolute -top-40 -right-40 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div className="absolute -top-40 -right-40 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl pointer-events-none animate-pulseGlow"></div>
+      <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none animate-pulseGlow" style={{ animationDelay: '2s' }}></div>
+      {/* ? Third subtle glow for depth */}
+      <div className="absolute top-1/2 left-1/3 w-64 h-64 bg-teal-400/5 rounded-full blur-3xl pointer-events-none animate-pulseGlow" style={{ animationDelay: '1s' }}></div>
 
       {/* Main Glassmorphic Login Card */}
-      <div className="w-full max-w-md bg-slate-900/90 border border-slate-800/90 rounded-3xl p-8 sm:p-10 shadow-2xl backdrop-blur-xl relative z-10 space-y-6">
+      <div className="w-full max-w-md bg-slate-900/90 border border-slate-800/90 rounded-3xl p-8 sm:p-10 shadow-2xl backdrop-blur-xl relative z-10 space-y-6 animate-scaleIn">
         {/* Brand Header */}
         <div className="text-center space-y-3">
-          <div className="w-16 h-16 rounded-2xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-teal-400 mx-auto shadow-inner">
+          <div className="w-16 h-16 rounded-2xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-teal-400 mx-auto shadow-inner animate-breathe">
             <ShieldCheck className="w-9 h-9 stroke-[2.2]" />
           </div>
 
@@ -65,7 +67,7 @@ export default function AdminLoginPage() {
 
         {/* Error Alert */}
         {errorMsg && (
-          <div className="bg-rose-500/15 border border-rose-500/30 rounded-xl p-3.5 text-xs text-rose-300 text-center font-bold">
+          <div className="bg-rose-500/15 border border-rose-500/30 rounded-xl p-3.5 text-xs text-rose-300 text-center font-bold animate-fadeInUp">
             {errorMsg}
           </div>
         )}
@@ -73,7 +75,7 @@ export default function AdminLoginPage() {
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Email Input */}
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 animate-fadeInUp" style={{ animationDelay: '100ms' }}>
             <label className="text-xs font-bold text-slate-300 block">
               البريد الإلكتروني
             </label>
@@ -90,7 +92,7 @@ export default function AdminLoginPage() {
           </div>
 
           {/* Password Input */}
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 animate-fadeInUp" style={{ animationDelay: '150ms' }}>
             <label className="text-xs font-bold text-slate-300 block">
               كلمة المرور
             </label>
@@ -119,7 +121,7 @@ export default function AdminLoginPage() {
           </div>
 
           {/* Remember Me & Forgot Password */}
-          <div className="flex items-center justify-between text-xs pt-1">
+          <div className="flex items-center justify-between text-xs pt-1 animate-fadeInUp" style={{ animationDelay: '200ms' }}>
             <label className="flex items-center gap-2 text-slate-400 cursor-pointer select-none">
               <input
                 type="checkbox"
@@ -146,7 +148,8 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full py-3.5 bg-[#0D7C66] hover:bg-[#0B6856] text-white font-black text-sm rounded-xl shadow-lg shadow-teal-900/40 transition-all flex items-center justify-center gap-2 disabled:opacity-50 mt-2"
+            className="w-full py-3.5 bg-[#0D7C66] hover:bg-[#0B6856] active:scale-[0.98] text-white font-black text-sm rounded-xl shadow-lg shadow-teal-900/40 transition-all flex items-center justify-center gap-2 disabled:opacity-50 mt-2 animate-fadeInUp"
+            style={{ animationDelay: '250ms' }}
           >
             {isSubmitting ? (
               <span>جاري تسجيل الدخول...</span>
@@ -171,7 +174,8 @@ export default function AdminLoginPage() {
         <button
           type="button"
           onClick={handleQuickDemo}
-          className="w-full py-3 bg-slate-800/90 hover:bg-slate-800 text-teal-400 font-extrabold text-xs rounded-xl border border-teal-500/20 hover:border-teal-500/40 transition-all flex items-center justify-center gap-2"
+          className="w-full py-3 bg-slate-800/90 hover:bg-slate-800 active:scale-[0.98] text-teal-400 font-extrabold text-xs rounded-xl border border-teal-500/20 hover:border-teal-500/40 transition-all flex items-center justify-center gap-2 animate-fadeInUp"
+          style={{ animationDelay: '300ms' }}
         >
           <span>دخول سريع كـ Admin (تجريبي)</span>
           <ArrowLeft className="w-3.5 h-3.5" />

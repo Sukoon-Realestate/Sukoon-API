@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { Header } from '@/components/layout/Header';
@@ -41,12 +41,12 @@ export default function FinancialTransactionsPage() {
                 placeholder="بحث برقم المعاملة..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-4 pr-10 py-2 bg-white rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all placeholder:text-slate-400"
+                className="w-full pl-4 pr-10 py-2 bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all placeholder:text-[var(--text-subtle)]"
               />
-              <Search className="w-4 h-4 text-slate-400 absolute right-3.5 top-3" />
+              <Search className="w-4 h-4 text-[var(--text-subtle)] absolute right-3.5 top-3" />
             </div>
 
-            <button className="flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-xs">
+            <button className="flex items-center gap-2 bg-[var(--card-bg)] px-4 py-2 rounded-xl border border-[var(--card-border)] text-xs font-bold text-[var(--foreground)] hover:bg-[var(--card-hover)] transition-colors shadow-[var(--shadow-card)]">
               <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
               <span>تصدير Excel</span>
             </button>
@@ -59,7 +59,7 @@ export default function FinancialTransactionsPage() {
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
                 activeTab === 'all'
                   ? 'bg-teal-700 text-white'
-                  : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+                  : 'bg-[var(--card-bg)] text-[var(--text-muted)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
               }`}
             >
               الكل
@@ -69,7 +69,7 @@ export default function FinancialTransactionsPage() {
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
                 activeTab === 'paid'
                   ? 'bg-teal-700 text-white'
-                  : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+                  : 'bg-[var(--card-bg)] text-[var(--text-muted)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
               }`}
             >
               مدفوع
@@ -79,7 +79,7 @@ export default function FinancialTransactionsPage() {
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
                 activeTab === 'pending'
                   ? 'bg-teal-700 text-white'
-                  : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+                  : 'bg-[var(--card-bg)] text-[var(--text-muted)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
               }`}
             >
               معلق
@@ -89,7 +89,7 @@ export default function FinancialTransactionsPage() {
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
                 activeTab === 'refunded'
                   ? 'bg-teal-700 text-white'
-                  : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+                  : 'bg-[var(--card-bg)] text-[var(--text-muted)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
               }`}
             >
               مسترد
@@ -98,11 +98,11 @@ export default function FinancialTransactionsPage() {
         </div>
 
         {/* Transactions Table Container */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+        <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-right border-collapse">
               <thead>
-                <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-500 text-xs font-bold">
+                <tr className="bg-[var(--table-header-bg)] border-b border-slate-200 text-[var(--text-muted)] text-xs font-bold">
                   <th className="py-4 px-6">TXN ID</th>
                   <th className="py-4 px-6">الوصف</th>
                   <th className="py-4 px-6">المالك</th>
@@ -111,22 +111,22 @@ export default function FinancialTransactionsPage() {
                   <th className="py-4 px-6">الحالة</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-xs">
+              <tbody className="divide-y divide-[var(--divider)] text-xs">
                 {filteredTxns.map((txn) => (
                   <tr
                     key={txn.id}
-                    className="hover:bg-slate-50/70 transition-colors"
+                    className="hover:bg-[var(--table-row-hover)] transition-colors"
                   >
-                    <td className="py-4 px-6 font-mono font-bold text-slate-800 dir-ltr text-right">
+                    <td className="py-4 px-6 font-mono font-bold text-[var(--foreground)] dir-ltr text-right">
                       {txn.id}
                     </td>
-                    <td className="py-4 px-6 font-bold text-slate-800">
+                    <td className="py-4 px-6 font-bold text-[var(--foreground)]">
                       {txn.description}
                     </td>
-                    <td className="py-4 px-6 text-slate-500 font-medium">
+                    <td className="py-4 px-6 text-[var(--text-muted)] font-medium">
                       {txn.landlord}
                     </td>
-                    <td className="py-4 px-6 text-slate-700 font-semibold">
+                    <td className="py-4 px-6 text-[var(--foreground)] font-semibold">
                       {txn.tenant}
                     </td>
                     <td

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
@@ -57,51 +57,51 @@ export default function SupportTicketDetailPage() {
       <div className="p-8 max-w-7xl mx-auto w-full space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: Ticket Info (4 cols) */}
-          <div className="lg:col-span-4 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4 text-xs">
-            <h3 className="font-extrabold text-slate-800 text-sm border-b border-slate-100 pb-3">
+          <div className="lg:col-span-4 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-4 text-xs">
+            <h3 className="font-extrabold text-[var(--foreground)] text-sm border-b border-[var(--divider)] pb-3">
               معلومات التذكرة
             </h3>
 
             <div className="flex items-center justify-between">
-              <span className="text-slate-400 font-medium">رقم التذكرة</span>
+              <span className="text-[var(--text-subtle)] font-medium">رقم التذكرة</span>
               <span className="font-bold font-mono text-teal-700 dir-ltr text-sm">
                 {ticket.id}
               </span>
             </div>
 
-            <div className="flex items-center justify-between border-t border-slate-100 pt-3">
-              <span className="text-slate-400 font-medium">الموضوع</span>
-              <span className="font-bold text-slate-800">{ticket.subject}</span>
+            <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
+              <span className="text-[var(--text-subtle)] font-medium">الموضوع</span>
+              <span className="font-bold text-[var(--foreground)]">{ticket.subject}</span>
             </div>
 
-            <div className="flex items-center justify-between border-t border-slate-100 pt-3">
-              <span className="text-slate-400 font-medium">المستخدم</span>
-              <span className="font-bold text-slate-800">{ticket.user}</span>
+            <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
+              <span className="text-[var(--text-subtle)] font-medium">المستخدم</span>
+              <span className="font-bold text-[var(--foreground)]">{ticket.user}</span>
             </div>
 
-            <div className="flex items-center justify-between border-t border-slate-100 pt-3">
-              <span className="text-slate-400 font-medium">النوع</span>
+            <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
+              <span className="text-[var(--text-subtle)] font-medium">النوع</span>
               <StatusBadge type="userType" value={ticket.userType} />
             </div>
 
-            <div className="flex items-center justify-between border-t border-slate-100 pt-3">
-              <span className="text-slate-400 font-medium">الأولوية</span>
+            <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
+              <span className="text-[var(--text-subtle)] font-medium">الأولوية</span>
               <span className="font-bold text-rose-600">{ticket.priority}</span>
             </div>
 
-            <div className="flex items-center justify-between border-t border-slate-100 pt-3">
-              <span className="text-slate-400 font-medium">الحالة</span>
+            <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
+              <span className="text-[var(--text-subtle)] font-medium">الحالة</span>
               <span className="font-bold text-teal-700">{ticket.status}</span>
             </div>
 
-            <div className="flex items-center justify-between border-t border-slate-100 pt-3">
-              <span className="text-slate-400 font-medium">وقت الفتح</span>
-              <span className="font-bold text-slate-800">{ticket.timeAgo}</span>
+            <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
+              <span className="text-[var(--text-subtle)] font-medium">وقت الفتح</span>
+              <span className="font-bold text-[var(--foreground)]">{ticket.timeAgo}</span>
             </div>
 
-            <div className="flex items-center justify-between border-t border-slate-100 pt-3">
-              <span className="text-slate-400 font-medium">المسند إلى</span>
-              <span className="font-bold text-slate-800">
+            <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
+              <span className="text-[var(--text-subtle)] font-medium">المسند إلى</span>
+              <span className="font-bold text-[var(--foreground)]">
                 {ticket.assignedTo || 'دينا حسام'}
               </span>
             </div>
@@ -110,8 +110,8 @@ export default function SupportTicketDetailPage() {
           {/* Right Column: Chat Conversation & Internal Notes (8 cols) */}
           <div className="lg:col-span-8 space-y-6">
             {/* User Conversation Card */}
-            <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-              <h3 className="font-extrabold text-slate-800 text-sm border-b border-slate-100 pb-3">
+            <div className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-4">
+              <h3 className="font-extrabold text-[var(--foreground)] text-sm border-b border-[var(--divider)] pb-3">
                 المحادثة مع المستخدم
               </h3>
 
@@ -127,13 +127,13 @@ export default function SupportTicketDetailPage() {
                     <div
                       className={`max-w-md p-4 rounded-2xl text-xs font-semibold leading-relaxed shadow-2xs ${
                         msg.sender === 'user'
-                          ? 'bg-teal-50 text-slate-800 rounded-tr-none border border-teal-100'
-                          : 'bg-slate-100 text-slate-700 rounded-tl-none border border-slate-200/60'
+                          ? 'bg-teal-50 text-[var(--foreground)] rounded-tr-none border border-teal-100'
+                          : 'bg-[var(--badge-bg-muted)] text-[var(--foreground)] rounded-tl-none border border-slate-200/60'
                       }`}
                     >
                       {msg.text}
                     </div>
-                    <span className="text-[10px] text-slate-400 mt-1 px-1">
+                    <span className="text-[10px] text-[var(--text-subtle)] mt-1 px-1">
                       {msg.time}
                     </span>
                   </div>
@@ -147,7 +147,7 @@ export default function SupportTicketDetailPage() {
                   value={newReply}
                   onChange={(e) => setNewReply(e.target.value)}
                   placeholder="اكتب رداً..."
-                  className="flex-1 p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 placeholder:text-slate-400 resize-none"
+                  className="flex-1 p-3 bg-[var(--card-hover)] border border-[var(--card-border)] rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 placeholder:text-[var(--text-subtle)] resize-none"
                 ></textarea>
                 <button
                   onClick={handleSendMessage}
@@ -160,8 +160,8 @@ export default function SupportTicketDetailPage() {
             </div>
 
             {/* Internal Notes Box */}
-            <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-              <h3 className="font-extrabold text-slate-800 text-sm border-b border-slate-100 pb-3">
+            <div className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-4">
+              <h3 className="font-extrabold text-[var(--foreground)] text-sm border-b border-[var(--divider)] pb-3">
                 ملاحظات داخلية (لا تُشارك مع المستخدم)
               </h3>
 
@@ -170,11 +170,11 @@ export default function SupportTicketDetailPage() {
                 value={internalNote}
                 onChange={(e) => setInternalNote(e.target.value)}
                 placeholder="ملاحظات الفريق الداخلي..."
-                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 placeholder:text-slate-400 resize-none"
+                className="w-full p-3 bg-[var(--card-hover)] border border-[var(--card-border)] rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 placeholder:text-[var(--text-subtle)] resize-none"
               ></textarea>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                <button className="py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs rounded-xl shadow-xs transition-colors flex items-center justify-center gap-2">
+                <button className="py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs rounded-xl shadow-[var(--shadow-card)] transition-colors flex items-center justify-center gap-2">
                   <CheckCircle className="w-4 h-4" />
                   <span>إغلاق كـ محلول</span>
                 </button>

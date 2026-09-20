@@ -32,7 +32,7 @@ export default function OverviewDashboardPage() {
         {/* Top 4 Metrics Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {overviewMetrics.map((metric, idx) => (
-            <MetricCard key={idx} metric={metric} />
+            <MetricCard key={idx} metric={metric} delay={idx * 80} />
           ))}
         </div>
 
@@ -49,23 +49,23 @@ export default function OverviewDashboardPage() {
           </div>
 
           {/* User Distribution Card */}
-          <div className="lg:col-span-5 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs flex flex-col justify-between">
+          <div className="lg:col-span-5 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex flex-col justify-between animate-fadeInUp" style={{ animationDelay: '100ms' }}>
             <div>
-              <h3 className="font-bold text-slate-800 text-base mb-6">
+              <h3 className="font-bold text-[var(--foreground)] text-base mb-6">
                 توزيع المستخدمين
               </h3>
 
               {/* Tenants Row */}
               <div className="mb-6 space-y-2">
                 <div className="flex items-center justify-between text-sm font-bold">
-                  <span className="text-slate-800">مستأجرون</span>
-                  <span className="text-slate-500 font-medium">
+                  <span className="text-[var(--foreground)]">مستأجرون</span>
+                  <span className="text-[var(--text-muted)] font-medium">
                     {userDistributionData.tenants.toLocaleString()}
                   </span>
                 </div>
-                <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden p-0.5">
+                <div className="h-3 w-full bg-[var(--badge-bg-muted)] rounded-full overflow-hidden p-0.5">
                   <div
-                    className="h-full bg-blue-600 rounded-full transition-all duration-500"
+                    className="h-full bg-blue-600 dark:bg-blue-500 rounded-full transition-all duration-700 ease-out"
                     style={{ width: `${tenantPercent}%` }}
                   ></div>
                 </div>
@@ -74,23 +74,23 @@ export default function OverviewDashboardPage() {
               {/* Landlords Row */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm font-bold">
-                  <span className="text-slate-800">ملاك</span>
-                  <span className="text-slate-500 font-medium">
+                  <span className="text-[var(--foreground)]">ملاك</span>
+                  <span className="text-[var(--text-muted)] font-medium">
                     {userDistributionData.landlords.toLocaleString()}
                   </span>
                 </div>
-                <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden p-0.5">
+                <div className="h-3 w-full bg-[var(--badge-bg-muted)] rounded-full overflow-hidden p-0.5">
                   <div
-                    className="h-full bg-amber-500 rounded-full transition-all duration-500"
+                    className="h-full bg-amber-500 dark:bg-amber-400 rounded-full transition-all duration-700 ease-out"
                     style={{ width: `${landlordPercent}%` }}
                   ></div>
                 </div>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500 mt-6">
+            <div className="pt-4 border-t border-[var(--divider)] flex items-center justify-between text-xs text-[var(--text-muted)] mt-6">
               <span>إجمالي المستخدمين المسجلين:</span>
-              <span className="font-bold text-slate-800">
+              <span className="font-bold text-[var(--foreground)]">
                 {userDistributionData.total.toLocaleString()} مستخدم
               </span>
             </div>

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { Header } from '@/components/layout/Header';
@@ -27,38 +27,38 @@ export default function FinancialDashboardPage() {
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
         {/* Top 4 Stat Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-amber-500 mb-1 dir-ltr font-mono">
               {financialMetrics.avgRent}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               متوسط الإيجار
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-blue-600 mb-1 font-mono">
               {financialMetrics.activeTransactions}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               معاملات نشطة
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-teal-600 mb-1 dir-ltr font-mono">
               {financialMetrics.platformFees}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               رسوم المنصة
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-emerald-600 mb-1 dir-ltr font-mono">
               {financialMetrics.totalRevenueMonth}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               إجمالي الإيرادات هذا الشهر
             </div>
           </div>
@@ -77,8 +77,8 @@ export default function FinancialDashboardPage() {
           </div>
 
           {/* Revenue Breakdown Card (5 cols) */}
-          <div className="lg:col-span-5 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-6">
-            <h3 className="font-extrabold text-slate-800 text-base border-b border-slate-100 pb-3">
+          <div className="lg:col-span-5 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-6">
+            <h3 className="font-extrabold text-[var(--foreground)] text-base border-b border-[var(--divider)] pb-3">
               توزيع الإيرادات
             </h3>
 
@@ -86,12 +86,12 @@ export default function FinancialDashboardPage() {
               {/* Row 1: Platform Fees */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold">
-                  <span className="text-slate-700">رسوم المنصة (5%)</span>
-                  <span className="text-slate-500 font-mono">
+                  <span className="text-[var(--foreground)]">رسوم المنصة (5%)</span>
+                  <span className="text-[var(--text-muted)] font-mono">
                     {revenueBreakdownData.platformFees.value}
                   </span>
                 </div>
-                <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden p-0.5">
+                <div className="h-3 w-full bg-[var(--badge-bg-muted)] rounded-full overflow-hidden p-0.5">
                   <div className="h-full bg-teal-600 rounded-full w-[45%]"></div>
                 </div>
               </div>
@@ -99,12 +99,12 @@ export default function FinancialDashboardPage() {
               {/* Row 2: Managed Rentals */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold">
-                  <span className="text-slate-700">إيجارات مُدارة</span>
-                  <span className="text-slate-500 font-mono">
+                  <span className="text-[var(--foreground)]">إيجارات مُدارة</span>
+                  <span className="text-[var(--text-muted)] font-mono">
                     {revenueBreakdownData.managedRentals.value}
                   </span>
                 </div>
-                <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden p-0.5">
+                <div className="h-3 w-full bg-[var(--badge-bg-muted)] rounded-full overflow-hidden p-0.5">
                   <div className="h-full bg-blue-600 rounded-full w-[85%]"></div>
                 </div>
               </div>
@@ -112,12 +112,12 @@ export default function FinancialDashboardPage() {
               {/* Row 3: KYC Fees */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold">
-                  <span className="text-slate-700">رسوم توثيق</span>
-                  <span className="text-slate-500 font-mono">
+                  <span className="text-[var(--foreground)]">رسوم توثيق</span>
+                  <span className="text-[var(--text-muted)] font-mono">
                     {revenueBreakdownData.kycFees.value}
                   </span>
                 </div>
-                <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden p-0.5">
+                <div className="h-3 w-full bg-[var(--badge-bg-muted)] rounded-full overflow-hidden p-0.5">
                   <div className="h-full bg-amber-500 rounded-full w-[30%]"></div>
                 </div>
               </div>

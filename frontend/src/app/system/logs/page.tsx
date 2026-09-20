@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { Header } from '@/components/layout/Header';
@@ -41,9 +41,9 @@ export default function SystemAuditLogsPage() {
               placeholder="بحث في السجل..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-4 pr-10 py-2 bg-white rounded-full border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-[#0D7C66] transition-all placeholder:text-slate-400"
+              className="w-full pl-4 pr-10 py-2 bg-[var(--card-bg)] rounded-full border border-[var(--card-border)] text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-[#0D7C66] transition-all placeholder:text-[var(--text-subtle)]"
             />
-            <Search className="w-4 h-4 text-slate-400 absolute right-3.5 top-2.5" />
+            <Search className="w-4 h-4 text-[var(--text-subtle)] absolute right-3.5 top-2.5" />
           </div>
 
           {/* Filter Pills */}
@@ -52,8 +52,8 @@ export default function SystemAuditLogsPage() {
               onClick={() => setActiveTab('all')}
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                 activeTab === 'all'
-                  ? 'bg-[#0D7C66] text-white shadow-xs'
-                  : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/80'
+                  ? 'bg-[#0D7C66] text-white shadow-[var(--shadow-card)]'
+                  : 'bg-[var(--card-bg)] text-[var(--text-muted)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
               }`}
             >
               كل الإجراءات
@@ -62,8 +62,8 @@ export default function SystemAuditLogsPage() {
               onClick={() => setActiveTab('kyc')}
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                 activeTab === 'kyc'
-                  ? 'bg-[#0D7C66] text-white shadow-xs'
-                  : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/80'
+                  ? 'bg-[#0D7C66] text-white shadow-[var(--shadow-card)]'
+                  : 'bg-[var(--card-bg)] text-[var(--text-muted)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
               }`}
             >
               KYC
@@ -72,8 +72,8 @@ export default function SystemAuditLogsPage() {
               onClick={() => setActiveTab('props')}
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                 activeTab === 'props'
-                  ? 'bg-[#0D7C66] text-white shadow-xs'
-                  : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/80'
+                  ? 'bg-[#0D7C66] text-white shadow-[var(--shadow-card)]'
+                  : 'bg-[var(--card-bg)] text-[var(--text-muted)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
               }`}
             >
               عقارات
@@ -82,8 +82,8 @@ export default function SystemAuditLogsPage() {
               onClick={() => setActiveTab('users')}
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                 activeTab === 'users'
-                  ? 'bg-[#0D7C66] text-white shadow-xs'
-                  : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/80'
+                  ? 'bg-[#0D7C66] text-white shadow-[var(--shadow-card)]'
+                  : 'bg-[var(--card-bg)] text-[var(--text-muted)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
               }`}
             >
               مستخدمون
@@ -92,25 +92,25 @@ export default function SystemAuditLogsPage() {
               onClick={() => setActiveTab('system')}
               className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                 activeTab === 'system'
-                  ? 'bg-[#0D7C66] text-white shadow-xs'
-                  : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200/80'
+                  ? 'bg-[#0D7C66] text-white shadow-[var(--shadow-card)]'
+                  : 'bg-[var(--card-bg)] text-[var(--text-muted)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
               }`}
             >
               نظام
             </button>
-            <button className="flex items-center gap-1.5 bg-white px-4 py-1.5 rounded-full border border-slate-200/80 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors shadow-xs">
-              <Download className="w-3.5 h-3.5 text-slate-500" />
+            <button className="flex items-center gap-1.5 bg-[var(--card-bg)] px-4 py-1.5 rounded-full border border-[var(--card-border)] text-xs font-bold text-[var(--foreground)] hover:bg-[var(--card-hover)] transition-colors shadow-[var(--shadow-card)]">
+              <Download className="w-3.5 h-3.5 text-[var(--text-muted)]" />
               <span>تصدير CSV</span>
             </button>
           </div>
         </div>
 
         {/* Audit Log Table Container */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+        <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-right border-collapse">
               <thead>
-                <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-500 text-xs font-bold">
+                <tr className="bg-[var(--table-header-bg)] border-b border-slate-200 text-[var(--text-muted)] text-xs font-bold">
                   <th className="py-4 px-6">الوقت</th>
                   <th className="py-4 px-6">الإجراء</th>
                   <th className="py-4 px-6">النوع</th>
@@ -118,16 +118,16 @@ export default function SystemAuditLogsPage() {
                   <th className="py-4 px-6">المشرف</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-xs">
+              <tbody className="divide-y divide-[var(--divider)] text-xs">
                 {filteredLogs.map((log) => (
                   <tr
                     key={log.id}
-                    className="hover:bg-slate-50/70 transition-colors"
+                    className="hover:bg-[var(--table-row-hover)] transition-colors"
                   >
-                    <td className="py-4 px-6 font-mono text-slate-400 font-semibold dir-ltr text-right">
+                    <td className="py-4 px-6 font-mono text-[var(--text-subtle)] font-semibold dir-ltr text-right">
                       {log.time}
                     </td>
-                    <td className="py-4 px-6 font-bold text-slate-800">
+                    <td className="py-4 px-6 font-bold text-[var(--foreground)]">
                       {log.action}
                     </td>
                     <td className="py-4 px-6">
@@ -157,7 +157,7 @@ export default function SystemAuditLogsPage() {
                         </span>
                       )}
                       {log.typeBadge === 'بلاغ' && (
-                        <span className="px-2.5 py-0.5 rounded text-[11px] font-bold bg-slate-100 text-slate-700">
+                        <span className="px-2.5 py-0.5 rounded text-[11px] font-bold bg-[var(--badge-bg-muted)] text-[var(--foreground)]">
                           بلاغ
                         </span>
                       )}
@@ -167,10 +167,10 @@ export default function SystemAuditLogsPage() {
                         </span>
                       )}
                     </td>
-                    <td className="py-4 px-6 text-slate-600 font-medium">
+                    <td className="py-4 px-6 text-[var(--text-muted)] font-medium">
                       {log.target}
                     </td>
-                    <td className="py-4 px-6 font-bold text-slate-800">
+                    <td className="py-4 px-6 font-bold text-[var(--foreground)]">
                       {log.operator}
                     </td>
                   </tr>

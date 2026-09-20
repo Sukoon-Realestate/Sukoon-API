@@ -31,36 +31,36 @@ export default function ReportsQueuePage() {
         subtitle="مراجعة البلاغات الصادرة من المستخدمين والنظام والتحقق الإداري"
       />
 
-      <div className="p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
         {/* Top Control Bar: Tabs & Search */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 animate-fadeInUp">
           <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto">
             <button
               onClick={() => setActiveTab('active')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-[var(--shadow-card)] ${
                 activeTab === 'active'
-                  ? 'bg-rose-600 text-white shadow-rose-200'
-                  : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'
+                  ? 'bg-rose-600 text-white'
+                  : 'bg-[var(--card-bg)] text-[var(--foreground)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
               }`}
             >
               بلاغات نشطة (31)
             </button>
             <button
               onClick={() => setActiveTab('suspended')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-[var(--shadow-card)] ${
                 activeTab === 'suspended'
                   ? 'bg-amber-600 text-white'
-                  : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'
+                  : 'bg-[var(--card-bg)] text-[var(--foreground)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
               }`}
             >
               موقوف مؤقتاً
             </button>
             <button
               onClick={() => setActiveTab('banned')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-xs ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-[var(--shadow-card)] ${
                 activeTab === 'banned'
-                  ? 'bg-slate-800 text-white'
-                  : 'bg-white text-slate-700 hover:bg-slate-50 border border-slate-200'
+                  ? 'bg-slate-800 dark:bg-slate-600 text-white'
+                  : 'bg-[var(--card-bg)] text-[var(--foreground)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
               }`}
             >
               محظور نهائياً
@@ -73,26 +73,26 @@ export default function ReportsQueuePage() {
               placeholder="بحث..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-4 pr-10 py-2 bg-white rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/30 focus:border-rose-500 transition-all placeholder:text-slate-400"
+              className="w-full pl-4 pr-10 py-2 bg-[var(--input-bg)] rounded-xl border border-[var(--input-border)] text-sm text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-rose-500/30 focus:border-rose-500 transition-all placeholder:text-[var(--text-subtle)]"
             />
-            <Search className="w-4 h-4 text-slate-400 absolute right-3.5 top-3" />
+            <Search className="w-4 h-4 text-[var(--text-subtle)] absolute right-3.5 top-3" />
           </div>
         </div>
 
         {/* AI System Warning Banner */}
-        <div className="bg-amber-50/80 border border-amber-200/80 rounded-2xl p-4 flex items-center gap-3 text-amber-900 text-xs font-semibold shadow-xs">
-          <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0" />
+        <div className="bg-amber-50/80 dark:bg-amber-500/10 border border-amber-200/80 dark:border-amber-500/20 rounded-2xl p-4 flex items-center gap-3 text-amber-900 dark:text-amber-300 text-xs font-semibold shadow-[var(--shadow-card)] animate-fadeInUp" style={{ animationDelay: '50ms' }}>
+          <ShieldAlert className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
           <span>
             النظام الآلي يكشف البريد المزعج والاحتيال واللغة المسيئة. كل البلاغات تحتاج مراجعة بشرية قبل اتخاذ إجراء.
           </span>
         </div>
 
         {/* Reports Data Table */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+        <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] overflow-hidden animate-fadeInUp" style={{ animationDelay: '100ms' }}>
           <div className="overflow-x-auto">
             <table className="w-full text-right border-collapse">
               <thead>
-                <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-500 text-xs font-bold">
+                <tr className="bg-[var(--table-header-bg)] border-b border-[var(--card-border)] text-[var(--text-muted)] text-xs font-bold">
                   <th className="py-4 px-6">المستخدم المُبلّغ عنه</th>
                   <th className="py-4 px-6">النوع</th>
                   <th className="py-4 px-6">سبب البلاغ</th>
@@ -102,26 +102,26 @@ export default function ReportsQueuePage() {
                   <th className="py-4 px-6 text-center">إجراء</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-sm">
+              <tbody className="divide-y divide-[var(--table-border)] text-sm">
                 {filteredReports.length > 0 ? (
                   filteredReports.map((report) => (
                     <tr
                       key={report.id}
-                      className="hover:bg-slate-50/70 transition-colors"
+                      className="hover:bg-[var(--table-row-hover)] transition-colors"
                     >
-                      <td className="py-4 px-6 font-bold text-slate-800">
+                      <td className="py-4 px-6 font-bold text-[var(--foreground)]">
                         {report.reportedUser}
                       </td>
                       <td className="py-4 px-6">
                         <StatusBadge type="userType" value={report.userType} />
                       </td>
-                      <td className="py-4 px-6 text-slate-700 font-medium">
+                      <td className="py-4 px-6 text-[var(--foreground)] font-medium">
                         {report.reason}
                       </td>
-                      <td className="py-4 px-6 text-slate-500 font-medium text-xs">
+                      <td className="py-4 px-6 text-[var(--text-muted)] font-medium text-xs">
                         {report.reporter}
                       </td>
-                      <td className="py-4 px-6 text-xs text-slate-400 font-medium">
+                      <td className="py-4 px-6 text-xs text-[var(--text-subtle)] font-medium">
                         {report.date}
                       </td>
                       <td className="py-4 px-6">
@@ -151,7 +151,7 @@ export default function ReportsQueuePage() {
                   <tr>
                     <td
                       colSpan={7}
-                      className="py-12 text-center text-slate-400 font-medium"
+                      className="py-12 text-center text-[var(--text-subtle)] font-medium"
                     >
                       لا توجد بلاغات تطابق البحث الحالي.
                     </td>

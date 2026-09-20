@@ -18,56 +18,57 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   const getIcon = (type: ActivityItem['iconType']) => {
     switch (type) {
       case 'check':
-        return <CheckCircle2 className="w-5 h-5 text-emerald-500" />;
+        return <CheckCircle2 className="w-5 h-5 text-emerald-500 dark:text-emerald-400" />;
       case 'alert':
-        return <AlertTriangle className="w-5 h-5 text-rose-500" />;
+        return <AlertTriangle className="w-5 h-5 text-rose-500 dark:text-rose-400" />;
       case 'building':
-        return <Building2 className="w-5 h-5 text-amber-500" />;
+        return <Building2 className="w-5 h-5 text-amber-500 dark:text-amber-400" />;
       case 'user':
-        return <User className="w-5 h-5 text-blue-500" />;
+        return <User className="w-5 h-5 text-blue-500 dark:text-blue-400" />;
       case 'shield':
-        return <ShieldCheck className="w-5 h-5 text-teal-500" />;
+        return <ShieldCheck className="w-5 h-5 text-teal-500 dark:text-teal-400" />;
       default:
-        return <CheckCircle2 className="w-5 h-5 text-emerald-500" />;
+        return <CheckCircle2 className="w-5 h-5 text-emerald-500 dark:text-emerald-400" />;
     }
   };
 
   const getIconBg = (type: ActivityItem['iconType']) => {
     switch (type) {
       case 'check':
-        return 'bg-emerald-50 border-emerald-100';
+        return 'bg-emerald-50 border-emerald-100 dark:bg-emerald-500/10 dark:border-emerald-500/20';
       case 'alert':
-        return 'bg-rose-50 border-rose-100';
+        return 'bg-rose-50 border-rose-100 dark:bg-rose-500/10 dark:border-rose-500/20';
       case 'building':
-        return 'bg-amber-50 border-amber-100';
+        return 'bg-amber-50 border-amber-100 dark:bg-amber-500/10 dark:border-amber-500/20';
       case 'user':
-        return 'bg-blue-50 border-blue-100';
+        return 'bg-blue-50 border-blue-100 dark:bg-blue-500/10 dark:border-blue-500/20';
       case 'shield':
-        return 'bg-teal-50 border-teal-100';
+        return 'bg-teal-50 border-teal-100 dark:bg-teal-500/10 dark:border-teal-500/20';
       default:
-        return 'bg-emerald-50 border-emerald-100';
+        return 'bg-emerald-50 border-emerald-100 dark:bg-emerald-500/10 dark:border-emerald-500/20';
     }
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
-      <div className="p-6 pb-4 flex items-center justify-between border-b border-slate-100">
-        <h3 className="font-bold text-slate-800 text-base">آخر الأنشطة</h3>
+    <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] overflow-hidden animate-fadeInUp">
+      <div className="p-6 pb-4 flex items-center justify-between border-b border-[var(--divider)]">
+        <h3 className="font-bold text-[var(--foreground)] text-base">آخر الأنشطة</h3>
         {showViewAll && (
           <Link
             href="/activities"
-            className="text-xs font-bold text-teal-700 hover:text-teal-800 hover:underline"
+            className="text-xs font-bold text-[var(--primary-text)] hover:underline"
           >
             عرض الكل
           </Link>
         )}
       </div>
 
-      <div className="divide-y divide-slate-100">
-        {activities.map((item) => (
+      <div className="divide-y divide-[var(--divider)]">
+        {activities.map((item, idx) => (
           <div
             key={item.id}
-            className="px-6 py-4 flex items-center justify-between hover:bg-slate-50/70 transition-colors"
+            className="px-6 py-4 flex items-center justify-between hover:bg-[var(--card-hover)] transition-colors animate-fadeInUp"
+            style={{ animationDelay: `${idx * 80}ms` }}
           >
             <div className="flex items-center gap-3.5">
               <div
@@ -79,13 +80,13 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
               </div>
 
               <div>
-                <p className="text-sm font-semibold text-slate-800">{item.title}</p>
+                <p className="text-sm font-semibold text-[var(--foreground)]">{item.title}</p>
               </div>
             </div>
 
             <div className="flex items-center gap-3 shrink-0">
               {item.role && <StatusBadge type="role" value={item.role} />}
-              <span className="text-xs text-slate-400 font-medium">{item.time}</span>
+              <span className="text-xs text-[var(--text-subtle)] font-medium">{item.time}</span>
             </div>
           </div>
         ))}

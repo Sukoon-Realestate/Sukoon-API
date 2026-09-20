@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { useParams } from 'next/navigation';
@@ -30,13 +30,13 @@ export default function PropertyDetailPage() {
       <div className="p-8 max-w-7xl mx-auto w-full space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: Property Preview Card (4 cols) */}
-          <div className="lg:col-span-4 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs flex flex-col items-center">
+          <div className="lg:col-span-4 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex flex-col items-center">
             {/* Property Image Placeholder */}
-            <div className="w-full h-44 rounded-2xl bg-slate-100 border border-slate-200/80 flex items-center justify-center text-slate-400 mb-5">
+            <div className="w-full h-44 rounded-2xl bg-[var(--badge-bg-muted)] border border-[var(--card-border)] flex items-center justify-center text-[var(--text-subtle)] mb-5">
               <Building2 className="w-16 h-16 text-slate-300" />
             </div>
 
-            <h3 className="text-lg font-extrabold text-slate-900 mb-2 text-center">
+            <h3 className="text-lg font-extrabold text-[var(--foreground)] mb-2 text-center">
               {property.title}
             </h3>
 
@@ -48,43 +48,43 @@ export default function PropertyDetailPage() {
             </div>
 
             {/* Property Specs List */}
-            <div className="w-full space-y-4 border-t border-slate-100 pt-5 text-right text-xs">
+            <div className="w-full space-y-4 border-t border-[var(--divider)] pt-5 text-right text-xs">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 font-medium">المالك</span>
-                <span className="font-bold text-slate-800">{property.owner}</span>
+                <span className="text-[var(--text-subtle)] font-medium">المالك</span>
+                <span className="font-bold text-[var(--foreground)]">{property.owner}</span>
               </div>
 
-              <div className="flex items-center justify-between border-t border-slate-100 pt-3">
-                <span className="text-slate-400 font-medium">السعر</span>
+              <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
+                <span className="text-[var(--text-subtle)] font-medium">السعر</span>
                 <span className="font-extrabold text-teal-700 dir-ltr text-sm font-mono">
                   {property.price}/شهر
                 </span>
               </div>
 
-              <div className="flex items-center justify-between border-t border-slate-100 pt-3">
-                <span className="text-slate-400 font-medium">المساحة</span>
-                <span className="font-bold text-slate-800 dir-ltr">
+              <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
+                <span className="text-[var(--text-subtle)] font-medium">المساحة</span>
+                <span className="font-bold text-[var(--foreground)] dir-ltr">
                   {property.area || '90 م²'}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between border-t border-slate-100 pt-3">
-                <span className="text-slate-400 font-medium">الغرف</span>
-                <span className="font-bold text-slate-800">
+              <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
+                <span className="text-[var(--text-subtle)] font-medium">الغرف</span>
+                <span className="font-bold text-[var(--foreground)]">
                   {property.rooms || 3} غرف
                 </span>
               </div>
 
-              <div className="flex items-center justify-between border-t border-slate-100 pt-3">
-                <span className="text-slate-400 font-medium">تاريخ الإضافة</span>
-                <span className="font-bold text-slate-800">
+              <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
+                <span className="text-[var(--text-subtle)] font-medium">تاريخ الإضافة</span>
+                <span className="font-bold text-[var(--foreground)]">
                   {property.createdDate || '1 مايو 2025'}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between border-t border-slate-100 pt-3">
-                <span className="text-slate-400 font-medium">آخر تحديث</span>
-                <span className="font-bold text-slate-800">
+              <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
+                <span className="text-[var(--text-subtle)] font-medium">آخر تحديث</span>
+                <span className="font-bold text-[var(--foreground)]">
                   {property.lastUpdated || 'اليوم'}
                 </span>
               </div>
@@ -95,49 +95,49 @@ export default function PropertyDetailPage() {
           <div className="lg:col-span-8 space-y-6">
             {/* Top 3 Stat Cards */}
             <div className="grid grid-cols-3 gap-4">
-              <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+              <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
                 <div className="text-2xl font-black text-blue-600 mb-1">
                   1,247
                 </div>
-                <div className="text-xs font-semibold text-slate-400">
+                <div className="text-xs font-semibold text-[var(--text-subtle)]">
                   مشاهدات
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+              <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
                 <div className="text-2xl font-black text-emerald-600 mb-1">
                   23
                 </div>
-                <div className="text-xs font-semibold text-slate-400">
+                <div className="text-xs font-semibold text-[var(--text-subtle)]">
                   طلبات زيارة
                 </div>
               </div>
 
-              <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
-                <div className="text-2xl font-black text-slate-900 mb-1">
+              <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
+                <div className="text-2xl font-black text-[var(--foreground)] mb-1">
                   0
                 </div>
-                <div className="text-xs font-semibold text-slate-400">
+                <div className="text-xs font-semibold text-[var(--text-subtle)]">
                   بلاغات
                 </div>
               </div>
             </div>
 
             {/* Audit Log Card */}
-            <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs">
-              <h4 className="font-bold text-slate-800 text-base mb-6">
+            <div className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)]">
+              <h4 className="font-bold text-[var(--foreground)] text-base mb-6">
                 سجل المراجعة
               </h4>
 
-              <div className="space-y-4 divide-y divide-slate-100">
+              <div className="space-y-4 divide-y divide-[var(--divider)]">
                 <div className="flex items-center justify-between pt-1">
                   <div className="flex items-center gap-3">
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                    <span className="text-sm font-semibold text-slate-700">
+                    <span className="text-sm font-semibold text-[var(--foreground)]">
                       تم قبول العقار
                     </span>
                   </div>
-                  <span className="text-xs text-slate-400 font-medium">
+                  <span className="text-xs text-[var(--text-subtle)] font-medium">
                     1 مايو 9:30 ص • أحمد العدل
                   </span>
                 </div>
@@ -145,11 +145,11 @@ export default function PropertyDetailPage() {
                 <div className="flex items-center justify-between pt-3">
                   <div className="flex items-center gap-3">
                     <span className="w-2.5 h-2.5 rounded-full bg-teal-500"></span>
-                    <span className="text-sm font-semibold text-slate-700">
+                    <span className="text-sm font-semibold text-[var(--foreground)]">
                       مراجعة أولية آلية – لم تُكتشف مشاكل
                     </span>
                   </div>
-                  <span className="text-xs text-slate-400 font-medium">
+                  <span className="text-xs text-[var(--text-subtle)] font-medium">
                     1 مايو 9:20 ص • النظام
                   </span>
                 </div>
@@ -157,11 +157,11 @@ export default function PropertyDetailPage() {
                 <div className="flex items-center justify-between pt-3">
                   <div className="flex items-center gap-3">
                     <span className="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
-                    <span className="text-sm font-semibold text-slate-700">
+                    <span className="text-sm font-semibold text-[var(--foreground)]">
                       إرسال العقار من المالك
                     </span>
                   </div>
-                  <span className="text-xs text-slate-400 font-medium">
+                  <span className="text-xs text-[var(--text-subtle)] font-medium">
                     1 مايو 9:00 ص • أحمد محمد
                   </span>
                 </div>
@@ -180,8 +180,8 @@ export default function PropertyDetailPage() {
                 <span>حذف</span>
               </button>
 
-              <button className="py-4 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-sm rounded-2xl border border-slate-200/80 transition-all flex items-center justify-center gap-2">
-                <Download className="w-4 h-4 text-slate-500" />
+              <button className="py-4 bg-[var(--badge-bg-muted)] hover:bg-[var(--card-hover)] text-[var(--foreground)] font-extrabold text-sm rounded-2xl border border-[var(--card-border)] transition-all flex items-center justify-center gap-2">
+                <Download className="w-4 h-4 text-[var(--text-muted)]" />
                 <span>تصدير</span>
               </button>
             </div>

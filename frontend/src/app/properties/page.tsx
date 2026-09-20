@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -26,7 +26,7 @@ export default function PropertiesManagementPage() {
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
         {/* Search & Filter Bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="w-full sm:w-auto text-lg font-extrabold text-slate-800">
+          <div className="w-full sm:w-auto text-lg font-extrabold text-[var(--foreground)]">
             إدارة العقارات
           </div>
 
@@ -37,12 +37,12 @@ export default function PropertiesManagementPage() {
                 placeholder="بحث في العقارات..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-4 pr-10 py-2.5 bg-white rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all placeholder:text-slate-400"
+                className="w-full pl-4 pr-10 py-2.5 bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all placeholder:text-[var(--text-subtle)]"
               />
-              <Search className="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5" />
+              <Search className="w-4 h-4 text-[var(--text-subtle)] absolute right-3.5 top-3.5" />
             </div>
 
-            <button className="flex items-center gap-2 bg-white px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-teal-700 hover:bg-slate-50 transition-colors shadow-xs">
+            <button className="flex items-center gap-2 bg-[var(--card-bg)] px-4 py-2.5 rounded-xl border border-[var(--card-border)] text-sm font-semibold text-teal-700 hover:bg-[var(--card-hover)] transition-colors shadow-[var(--shadow-card)]">
               <Filter className="w-4 h-4" />
               <span>فلتر</span>
             </button>
@@ -51,45 +51,45 @@ export default function PropertiesManagementPage() {
 
         {/* 4 Metric Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
-            <div className="text-2xl font-black text-slate-900 mb-1">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
+            <div className="text-2xl font-black text-[var(--foreground)] mb-1">
               {propertyMetrics.total.toLocaleString()}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               إجمالي العقارات
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-emerald-600 mb-1">
               {propertyMetrics.active}
             </div>
-            <div className="text-xs font-semibold text-slate-400">نشط</div>
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">نشط</div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-amber-500 mb-1">
               {propertyMetrics.pending}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               قيد المراجعة
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-rose-500 mb-1">
               {propertyMetrics.rejected}
             </div>
-            <div className="text-xs font-semibold text-slate-400">مرفوض</div>
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">مرفوض</div>
           </div>
         </div>
 
         {/* Properties Data Table */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+        <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-right border-collapse">
               <thead>
-                <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-500 text-xs font-bold">
+                <tr className="bg-[var(--table-header-bg)] border-b border-slate-200 text-[var(--text-muted)] text-xs font-bold">
                   <th className="py-4 px-6">العقار</th>
                   <th className="py-4 px-6">المالك</th>
                   <th className="py-4 px-6">النوع</th>
@@ -99,19 +99,19 @@ export default function PropertiesManagementPage() {
                   <th className="py-4 px-6 text-center">إجراء</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-sm">
+              <tbody className="divide-y divide-[var(--divider)] text-sm">
                 {filteredProperties.map((prop) => (
                   <tr
                     key={prop.id}
-                    className="hover:bg-slate-50/70 transition-colors"
+                    className="hover:bg-[var(--table-row-hover)] transition-colors"
                   >
-                    <td className="py-4 px-6 font-bold text-slate-800 flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0">
+                    <td className="py-4 px-6 font-bold text-[var(--foreground)] flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-[var(--badge-bg-muted)] text-[var(--text-muted)] flex items-center justify-center shrink-0">
                         <Building2 className="w-4 h-4" />
                       </div>
                       <span>{prop.title}</span>
                     </td>
-                    <td className="py-4 px-6 text-slate-600 font-medium text-xs">
+                    <td className="py-4 px-6 text-[var(--text-muted)] font-medium text-xs">
                       {prop.owner}
                     </td>
                     <td className="py-4 px-6">
@@ -139,7 +139,7 @@ export default function PropertiesManagementPage() {
                     <td className="py-4 px-6 font-bold text-teal-700 text-xs dir-ltr text-right">
                       {prop.price}
                     </td>
-                    <td className="py-4 px-6 text-slate-500 text-xs font-medium">
+                    <td className="py-4 px-6 text-[var(--text-muted)] text-xs font-medium">
                       {prop.views}
                     </td>
                     <td className="py-4 px-6">

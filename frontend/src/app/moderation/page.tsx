@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -26,47 +26,47 @@ export default function ContentModerationPage() {
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
         {/* Top 4 Stat Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-rose-500 mb-1">
               {moderationMetrics.suspiciousImages}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               صور مشبوهة
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-amber-500 mb-1">
               {moderationMetrics.misleadingDesc}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               أوصاف مضللة
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-rose-500 mb-1">
               {moderationMetrics.phoneNumInPhotos}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               أرقام هواتف في صور
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-amber-500 mb-1">
               {moderationMetrics.inappropriateContent}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               محتوى غير لائق
             </div>
           </div>
         </div>
 
         {/* Content Moderation List Container */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 space-y-6">
+        <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] p-6 space-y-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <h3 className="font-extrabold text-slate-800 text-base">
+            <h3 className="font-extrabold text-[var(--foreground)] text-base">
               محتوى مشبوه بانتظار المراجعة
             </h3>
 
@@ -77,7 +77,7 @@ export default function ContentModerationPage() {
                 className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
                   activeTab === 'all'
                     ? 'bg-teal-700 text-white'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
                 }`}
               >
                 الكل
@@ -87,7 +87,7 @@ export default function ContentModerationPage() {
                 className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
                   activeTab === 'texts'
                     ? 'bg-teal-700 text-white'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
                 }`}
               >
                 نصوص
@@ -97,7 +97,7 @@ export default function ContentModerationPage() {
                 className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
                   activeTab === 'images'
                     ? 'bg-teal-700 text-white'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
                 }`}
               >
                 صور
@@ -106,14 +106,14 @@ export default function ContentModerationPage() {
           </div>
 
           {/* List Items */}
-          <div className="divide-y divide-slate-100 space-y-2">
+          <div className="divide-y divide-[var(--divider)] space-y-2">
             {filteredItems.map((item) => (
               <div
                 key={item.id}
-                className="py-4 px-3 flex flex-col sm:flex-row items-center justify-between gap-4 hover:bg-slate-50/70 rounded-xl transition-colors"
+                className="py-4 px-3 flex flex-col sm:flex-row items-center justify-between gap-4 hover:bg-[var(--table-row-hover)] rounded-xl transition-colors"
               >
                 <div className="flex items-center gap-4 w-full sm:w-auto">
-                  <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[var(--badge-bg-muted)] text-[var(--text-muted)] flex items-center justify-center shrink-0">
                     {item.type === 'صور' ? (
                       <ImageIcon className="w-5 h-5" />
                     ) : (
@@ -122,10 +122,10 @@ export default function ContentModerationPage() {
                   </div>
 
                   <div>
-                    <h4 className="font-bold text-slate-900 text-sm">
+                    <h4 className="font-bold text-[var(--foreground)] text-sm">
                       {item.title}
                     </h4>
-                    <p className="text-xs text-slate-400 mt-0.5">
+                    <p className="text-xs text-[var(--text-subtle)] mt-0.5">
                       {item.reason}
                     </p>
                   </div>

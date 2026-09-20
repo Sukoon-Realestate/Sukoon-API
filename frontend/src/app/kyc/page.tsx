@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -28,47 +28,47 @@ export default function KycReviewQueuePage() {
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
         {/* Top 4 Stat Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-rose-500 mb-1">
               {kycMetrics.rejectedToday}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               مرفوض اليوم
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-emerald-600 mb-1">
               {kycMetrics.acceptedToday}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               مقبول اليوم
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-blue-600 mb-1">
               {kycMetrics.reviewedToday}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               مراجع اليوم
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-amber-500 mb-1">
               {kycMetrics.pendingReview}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               انتظار المراجعة
             </div>
           </div>
         </div>
 
         {/* Queue Table Container */}
-        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 space-y-6">
+        <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] p-6 space-y-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <h3 className="font-extrabold text-slate-800 text-base">
+            <h3 className="font-extrabold text-[var(--foreground)] text-base">
               قائمة طلبات التوثيق
             </h3>
 
@@ -79,7 +79,7 @@ export default function KycReviewQueuePage() {
                 className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
                   activeTab === 'all'
                     ? 'bg-teal-700 text-white'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
                 }`}
               >
                 كل الطلبات
@@ -89,7 +89,7 @@ export default function KycReviewQueuePage() {
                 className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
                   activeTab === 'pending'
                     ? 'bg-teal-700 text-white'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
                 }`}
               >
                 مُعلّق
@@ -99,7 +99,7 @@ export default function KycReviewQueuePage() {
                 className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
                   activeTab === 'tenants'
                     ? 'bg-teal-700 text-white'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
                 }`}
               >
                 مستأجرون
@@ -109,7 +109,7 @@ export default function KycReviewQueuePage() {
                 className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
                   activeTab === 'landlords'
                     ? 'bg-teal-700 text-white'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
                 }`}
               >
                 ملاك
@@ -121,7 +121,7 @@ export default function KycReviewQueuePage() {
           <div className="overflow-x-auto">
             <table className="w-full text-right border-collapse">
               <thead>
-                <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-500 text-xs font-bold">
+                <tr className="bg-[var(--table-header-bg)] border-b border-slate-200 text-[var(--text-muted)] text-xs font-bold">
                   <th className="py-4 px-6">المستخدم</th>
                   <th className="py-4 px-6">النوع</th>
                   <th className="py-4 px-6">البطاقة</th>
@@ -129,14 +129,14 @@ export default function KycReviewQueuePage() {
                   <th className="py-4 px-6 text-center">إجراء</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-sm">
+              <tbody className="divide-y divide-[var(--divider)] text-sm">
                 {filteredRequests.map((req) => (
                   <tr
                     key={req.id}
-                    className="hover:bg-slate-50/70 transition-colors"
+                    className="hover:bg-[var(--table-row-hover)] transition-colors"
                   >
-                    <td className="py-4 px-6 font-bold text-slate-800 flex items-center gap-2">
-                      <User className="w-4 h-4 text-slate-400" />
+                    <td className="py-4 px-6 font-bold text-[var(--foreground)] flex items-center gap-2">
+                      <User className="w-4 h-4 text-[var(--text-subtle)]" />
                       <span>{req.user}</span>
                       {req.hasWarning && (
                         <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />
@@ -145,7 +145,7 @@ export default function KycReviewQueuePage() {
                     <td className="py-4 px-6">
                       <StatusBadge type="userType" value={req.type} />
                     </td>
-                    <td className="py-4 px-6 font-mono text-xs text-slate-500 font-semibold dir-ltr text-right">
+                    <td className="py-4 px-6 font-mono text-xs text-[var(--text-muted)] font-semibold dir-ltr text-right">
                       {req.nationalIdMask}
                     </td>
                     <td className="py-4 px-6 text-xs text-amber-600 font-bold">

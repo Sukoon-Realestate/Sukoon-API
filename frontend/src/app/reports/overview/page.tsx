@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -31,38 +31,38 @@ export default function ReportsOverviewPage() {
       <div className="p-8 max-w-7xl mx-auto w-full space-y-6">
         {/* Top 4 Stat Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-blue-600 mb-1">
               {reportsOverviewMetrics.avgResolutionTime}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               متوسط وقت الحل
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-amber-500 mb-1">
               {reportsOverviewMetrics.activeDisputes}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               خلافات نشطة
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-emerald-600 mb-1">
               {reportsOverviewMetrics.solvedToday}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               حُلت اليوم
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-rose-500 mb-1">
               {reportsOverviewMetrics.openTickets}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               تذاكر مفتوحة
             </div>
           </div>
@@ -71,9 +71,9 @@ export default function ReportsOverviewPage() {
         {/* Main Section Split */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Main Table Column (8 cols) */}
-          <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 space-y-6">
+          <div className="lg:col-span-8 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] p-6 space-y-6">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <h3 className="font-extrabold text-slate-800 text-base">
+              <h3 className="font-extrabold text-[var(--foreground)] text-base">
                 سجل التذاكر • Ticket ID
               </h3>
 
@@ -84,7 +84,7 @@ export default function ReportsOverviewPage() {
                   className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
                     activeTab === 'all'
                       ? 'bg-teal-700 text-white'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
                   }`}
                 >
                   كل التذاكر
@@ -94,7 +94,7 @@ export default function ReportsOverviewPage() {
                   className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
                     activeTab === 'disputes'
                       ? 'bg-teal-700 text-white'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
                   }`}
                 >
                   خلافات
@@ -104,7 +104,7 @@ export default function ReportsOverviewPage() {
                   className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
                     activeTab === 'props'
                       ? 'bg-teal-700 text-white'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
                   }`}
                 >
                   بلاغات عقارات
@@ -114,7 +114,7 @@ export default function ReportsOverviewPage() {
                   className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
                     activeTab === 'users'
                       ? 'bg-teal-700 text-white'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
                   }`}
                 >
                   بلاغات مستخدمين
@@ -126,7 +126,7 @@ export default function ReportsOverviewPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-right border-collapse">
                 <thead>
-                  <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-500 text-xs font-bold">
+                  <tr className="bg-[var(--table-header-bg)] border-b border-slate-200 text-[var(--text-muted)] text-xs font-bold">
                     <th className="py-4 px-4">Ticket ID</th>
                     <th className="py-4 px-4">الموضوع</th>
                     <th className="py-4 px-4">المُبلِّغ</th>
@@ -135,23 +135,23 @@ export default function ReportsOverviewPage() {
                     <th className="py-4 px-4">المراجع</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-xs">
+                <tbody className="divide-y divide-[var(--divider)] text-xs">
                   {filteredTickets.map((ticket) => (
                     <tr
                       key={ticket.id}
-                      className="hover:bg-slate-50/70 transition-colors"
+                      className="hover:bg-[var(--table-row-hover)] transition-colors"
                     >
                       <td className="py-4 px-4 font-mono font-bold text-teal-700 dir-ltr text-right">
                         <Link href="/support/SUP-201" className="hover:underline">
                           {ticket.id}
                         </Link>
                       </td>
-                      <td className="py-4 px-4 font-bold text-slate-800">
+                      <td className="py-4 px-4 font-bold text-[var(--foreground)]">
                         {ticket.subject}
                       </td>
-                      <td className="py-4 px-4 text-slate-600">{ticket.reporter}</td>
+                      <td className="py-4 px-4 text-[var(--text-muted)]">{ticket.reporter}</td>
                       <td className="py-4 px-4">
-                        <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 text-slate-700">
+                        <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-[var(--badge-bg-muted)] text-[var(--foreground)]">
                           {ticket.type}
                         </span>
                       </td>
@@ -170,10 +170,10 @@ export default function ReportsOverviewPage() {
                           </span>
                         )}
                         {ticket.status === 'مغلق' && (
-                          <span className="text-slate-400 font-bold">مغلق</span>
+                          <span className="text-[var(--text-subtle)] font-bold">مغلق</span>
                         )}
                       </td>
-                      <td className="py-4 px-4 text-slate-500 font-medium">
+                      <td className="py-4 px-4 text-[var(--text-muted)] font-medium">
                         {ticket.reviewer}
                       </td>
                     </tr>
@@ -186,8 +186,8 @@ export default function ReportsOverviewPage() {
           {/* Right Sidebar Column (4 cols) */}
           <div className="lg:col-span-4 space-y-6">
             {/* Dispute Reasons Card */}
-            <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-              <h3 className="font-extrabold text-slate-800 text-sm border-b border-slate-100 pb-3">
+            <div className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-4">
+              <h3 className="font-extrabold text-[var(--foreground)] text-sm border-b border-[var(--divider)] pb-3">
                 توزيع أسباب الخلافات – Dispute Reason
               </h3>
 
@@ -195,12 +195,12 @@ export default function ReportsOverviewPage() {
                 {disputeReasonsData.map((item, idx) => (
                   <div key={idx} className="space-y-1.5">
                     <div className="flex items-center justify-between font-bold">
-                      <span className="text-slate-700">{item.title}</span>
-                      <span className="text-slate-500 font-medium">
+                      <span className="text-[var(--foreground)]">{item.title}</span>
+                      <span className="text-[var(--text-muted)] font-medium">
                         {item.count} حالة
                       </span>
                     </div>
-                    <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-2 w-full bg-[var(--badge-bg-muted)] rounded-full overflow-hidden">
                       <div
                         className={`h-full ${item.color} rounded-full`}
                         style={{ width: `${(item.count / 15) * 100}%` }}
@@ -212,8 +212,8 @@ export default function ReportsOverviewPage() {
             </div>
 
             {/* Booking Log Card */}
-            <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-              <h3 className="font-extrabold text-slate-800 text-sm border-b border-slate-100 pb-3">
+            <div className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-4">
+              <h3 className="font-extrabold text-[var(--foreground)] text-sm border-b border-[var(--divider)] pb-3">
                 سجل الحجوزات – Booking Log
               </h3>
 
@@ -224,10 +224,10 @@ export default function ReportsOverviewPage() {
                     className="flex items-center justify-between py-1.5 border-b border-slate-50"
                   >
                     <div>
-                      <div className="font-mono font-bold text-slate-800 dir-ltr text-right text-[11px]">
+                      <div className="font-mono font-bold text-[var(--foreground)] dir-ltr text-right text-[11px]">
                         {log.id}
                       </div>
-                      <div className="text-slate-500 font-medium">{log.title}</div>
+                      <div className="text-[var(--text-muted)] font-medium">{log.title}</div>
                     </div>
 
                     <div>

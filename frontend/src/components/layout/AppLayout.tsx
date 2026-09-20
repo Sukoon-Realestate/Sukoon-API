@@ -31,7 +31,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
 
   return (
     <SidebarContext.Provider value={{ isMobileOpen, toggleMobileMenu, closeMobileMenu }}>
-      <div className="min-h-full flex bg-[#F3F5F8] text-slate-800 font-sans w-full overflow-x-hidden">
+      <div className="min-h-full flex bg-[var(--background)] text-[var(--foreground)] font-sans w-full overflow-x-hidden">
         <Sidebar isMobileOpen={isMobileOpen} onCloseMobile={closeMobileMenu} />
         <main className="flex-1 min-w-0 flex flex-col min-h-screen">
           {children}

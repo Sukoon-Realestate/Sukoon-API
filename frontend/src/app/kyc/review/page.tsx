@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { Header } from '@/components/layout/Header';
@@ -25,16 +25,16 @@ export default function IndividualKycReviewPage() {
       <div className="p-8 max-w-7xl mx-auto w-full space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: User Info Card (3.5 cols) */}
-          <div className="lg:col-span-4 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs flex flex-col items-center">
+          <div className="lg:col-span-4 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex flex-col items-center">
             <div className="w-20 h-20 rounded-full bg-teal-50 border border-teal-200 flex items-center justify-center text-teal-700 text-2xl font-bold mb-3 shadow-inner">
               <User className="w-10 h-10" />
             </div>
 
-            <h3 className="text-lg font-extrabold text-slate-900 mb-0.5">
+            <h3 className="text-lg font-extrabold text-[var(--foreground)] mb-0.5">
               سارة أحمد خالد
             </h3>
 
-            <p className="text-xs text-slate-400 font-semibold mb-3">
+            <p className="text-xs text-[var(--text-subtle)] font-semibold mb-3">
               مستأجر • عضو منذ 2024
             </p>
 
@@ -45,45 +45,45 @@ export default function IndividualKycReviewPage() {
             </div>
 
             {/* Info details */}
-            <div className="w-full space-y-4 border-t border-slate-100 pt-5 text-right text-xs">
+            <div className="w-full space-y-4 border-t border-[var(--divider)] pt-5 text-right text-xs">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 font-medium">رقم الهاتف</span>
-                <span className="font-bold text-slate-800 font-mono dir-ltr">
+                <span className="text-[var(--text-subtle)] font-medium">رقم الهاتف</span>
+                <span className="font-bold text-[var(--foreground)] font-mono dir-ltr">
                   01******432
                 </span>
               </div>
 
-              <div className="flex items-center justify-between border-t border-slate-100 pt-3">
-                <span className="text-slate-400 font-medium">البريد</span>
-                <span className="font-bold text-slate-800 font-mono text-[11px] dir-ltr">
+              <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
+                <span className="text-[var(--text-subtle)] font-medium">البريد</span>
+                <span className="font-bold text-[var(--foreground)] font-mono text-[11px] dir-ltr">
                   sara@gmail.com
                 </span>
               </div>
 
-              <div className="flex items-center justify-between border-t border-slate-100 pt-3">
-                <span className="text-slate-400 font-medium">تاريخ التسجيل</span>
-                <span className="font-bold text-slate-800">1 يناير 2024</span>
+              <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
+                <span className="text-[var(--text-subtle)] font-medium">تاريخ التسجيل</span>
+                <span className="font-bold text-[var(--foreground)]">1 يناير 2024</span>
               </div>
 
-              <div className="flex items-center justify-between border-t border-slate-100 pt-3">
-                <span className="text-slate-400 font-medium">عدد الطلبات</span>
-                <span className="font-bold text-slate-800">3 طلبات زيارة</span>
+              <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
+                <span className="text-[var(--text-subtle)] font-medium">عدد الطلبات</span>
+                <span className="font-bold text-[var(--foreground)]">3 طلبات زيارة</span>
               </div>
             </div>
           </div>
 
           {/* Middle Column: Uploaded Documents (5 cols) */}
-          <div className="lg:col-span-5 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-5">
-            <h3 className="font-extrabold text-slate-800 text-base mb-2">
+          <div className="lg:col-span-5 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-5">
+            <h3 className="font-extrabold text-[var(--foreground)] text-base mb-2">
               المستندات المرفوعة
             </h3>
 
             {/* Doc 1 */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-500">
+              <label className="text-xs font-bold text-[var(--text-muted)]">
                 وجه البطاقة القومية
               </label>
-              <div className="w-full h-36 rounded-2xl bg-slate-100 border border-slate-200 flex flex-col items-center justify-center text-slate-400">
+              <div className="w-full h-36 rounded-2xl bg-[var(--badge-bg-muted)] border border-[var(--card-border)] flex flex-col items-center justify-center text-[var(--text-subtle)]">
                 <FileText className="w-10 h-10 text-slate-300 mb-1" />
                 <span className="text-xs font-semibold">صورة البطاقة الأمامية</span>
               </div>
@@ -91,10 +91,10 @@ export default function IndividualKycReviewPage() {
 
             {/* Doc 2 */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-500">
+              <label className="text-xs font-bold text-[var(--text-muted)]">
                 ظهر البطاقة القومية
               </label>
-              <div className="w-full h-36 rounded-2xl bg-slate-100 border border-slate-200 flex flex-col items-center justify-center text-slate-400">
+              <div className="w-full h-36 rounded-2xl bg-[var(--badge-bg-muted)] border border-[var(--card-border)] flex flex-col items-center justify-center text-[var(--text-subtle)]">
                 <FileText className="w-10 h-10 text-slate-300 mb-1" />
                 <span className="text-xs font-semibold">صورة البطاقة الخلفية</span>
               </div>
@@ -102,10 +102,10 @@ export default function IndividualKycReviewPage() {
 
             {/* Doc 3 */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-500">
+              <label className="text-xs font-bold text-[var(--text-muted)]">
                 صورة السيلفي
               </label>
-              <div className="w-full h-36 rounded-2xl bg-slate-100 border border-slate-200 flex flex-col items-center justify-center text-slate-400">
+              <div className="w-full h-36 rounded-2xl bg-[var(--badge-bg-muted)] border border-[var(--card-border)] flex flex-col items-center justify-center text-[var(--text-subtle)]">
                 <User className="w-10 h-10 text-slate-300 mb-1" />
                 <span className="text-xs font-semibold">صورة سيلفي مباشرة</span>
               </div>
@@ -121,17 +121,17 @@ export default function IndividualKycReviewPage() {
           {/* Right Column: Decision & History Log (3.5 cols) */}
           <div className="lg:col-span-3 space-y-6">
             {/* Decision Card */}
-            <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-              <h3 className="font-extrabold text-slate-800 text-base mb-2">
+            <div className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-4">
+              <h3 className="font-extrabold text-[var(--foreground)] text-base mb-2">
                 قرار التوثيق
               </h3>
 
-              <button className="w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-sm rounded-xl shadow-xs transition-colors flex items-center justify-center gap-2">
+              <button className="w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-sm rounded-xl shadow-[var(--shadow-card)] transition-colors flex items-center justify-center gap-2">
                 <Check className="w-4 h-4" />
                 <span>قبول التوثيق ✓</span>
               </button>
 
-              <button className="w-full py-3.5 bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-sm rounded-xl shadow-xs transition-colors flex items-center justify-center gap-2">
+              <button className="w-full py-3.5 bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-sm rounded-xl shadow-[var(--shadow-card)] transition-colors flex items-center justify-center gap-2">
                 <X className="w-4 h-4" />
                 <span>رفض ✗</span>
               </button>
@@ -142,7 +142,7 @@ export default function IndividualKycReviewPage() {
               </button>
 
               <div className="pt-2">
-                <label className="text-xs font-bold text-slate-400 block mb-1">
+                <label className="text-xs font-bold text-[var(--text-subtle)] block mb-1">
                   ملاحظات داخلية (اختياري)
                 </label>
                 <textarea
@@ -150,7 +150,7 @@ export default function IndividualKycReviewPage() {
                   value={internalNote}
                   onChange={(e) => setInternalNote(e.target.value)}
                   placeholder="اكتب ملاحظاتك..."
-                  className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 placeholder:text-slate-400 resize-none"
+                  className="w-full p-3 bg-[var(--card-hover)] border border-[var(--card-border)] rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 placeholder:text-[var(--text-subtle)] resize-none"
                 ></textarea>
               </div>
             </div>

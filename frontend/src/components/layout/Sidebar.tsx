@@ -153,21 +153,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
   const sidebarContent = (
     <div className="flex flex-col h-full">
       {/* Brand Header */}
-      <div className="p-6 flex items-center justify-between border-b border-slate-800/60">
+      <div className="p-6 flex items-center justify-between border-b border-[var(--sidebar-border)]">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-teal-600/20 border border-teal-500/40 flex items-center justify-center text-teal-400 shadow-inner">
+          <div className="w-10 h-10 rounded-full bg-teal-600/20 border border-teal-500/40 flex items-center justify-center text-teal-400 shadow-inner animate-breathe">
             <ShieldCheck className="w-6 h-6" />
           </div>
           <div>
             <h1 className="font-bold text-white text-lg leading-tight">سكون – Admin</h1>
-            <p className="text-xs text-slate-400">لوحة الإدارة المركزية</p>
+            <p className="text-xs text-[var(--sidebar-text)]">لوحة الإدارة المركزية</p>
           </div>
         </div>
 
         {onCloseMobile && (
           <button
             onClick={onCloseMobile}
-            className="lg:hidden p-1.5 text-slate-400 hover:text-white rounded-lg transition-colors"
+            className="lg:hidden p-1.5 text-[var(--sidebar-text)] hover:text-white rounded-lg transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -180,8 +180,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
           <Link
             href="/"
             onClick={onCloseMobile}
-            className={`flex-1 text-center py-1.5 rounded-lg ${
-              pathname === '/' ? 'bg-teal-600 text-white font-bold shadow-sm' : 'text-slate-400 hover:text-white'
+            className={`flex-1 text-center py-1.5 rounded-lg transition-all duration-200 ${
+              pathname === '/' ? 'bg-[var(--sidebar-active)] text-white font-bold shadow-sm' : 'text-[var(--sidebar-text)] hover:text-white'
             }`}
           >
             الرئيسية
@@ -189,8 +189,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
           <Link
             href="/executive"
             onClick={onCloseMobile}
-            className={`flex-1 text-center py-1.5 rounded-lg ${
-              pathname === '/executive' ? 'bg-teal-600 text-white font-bold shadow-sm' : 'text-slate-400 hover:text-white'
+            className={`flex-1 text-center py-1.5 rounded-lg transition-all duration-200 ${
+              pathname === '/executive' ? 'bg-[var(--sidebar-active)] text-white font-bold shadow-sm' : 'text-[var(--sidebar-text)] hover:text-white'
             }`}
           >
             التنفيذية
@@ -200,21 +200,22 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
 
       {/* Navigation Links */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {navItems.map((item) => {
+        {navItems.map((item, idx) => {
           const Icon = item.icon;
           return (
             <Link
               key={item.href}
               href={item.href}
               onClick={onCloseMobile}
-              className={`flex items-center justify-between px-3.5 py-2 rounded-xl font-medium text-xs transition-all duration-150 ${
+              className={`flex items-center justify-between px-3.5 py-2 rounded-xl font-medium text-xs transition-all duration-200 group animate-slideInFromSide ${
                 item.active
-                  ? 'bg-teal-600/15 text-teal-400 border-r-4 border-teal-500 font-bold'
-                  : 'text-slate-400 hover:bg-slate-800/40 hover:text-slate-200'
+                  ? 'bg-[var(--sidebar-active)]/15 text-teal-400 border-r-4 border-[var(--sidebar-active)] font-bold'
+                  : 'text-[var(--sidebar-text)] hover:bg-[var(--sidebar-hover)] hover:text-slate-200'
               }`}
+              style={{ animationDelay: `${idx * 25}ms` }}
             >
               <div className="flex items-center gap-3">
-                <Icon className={`w-4 h-4 ${item.active ? 'text-teal-400' : 'text-slate-400'}`} />
+                <Icon className={`w-4 h-4 transition-transform duration-200 group-hover:scale-110 ${item.active ? 'text-teal-400' : 'text-[var(--sidebar-text)]'}`} />
                 <span>{item.title}</span>
               </div>
               {item.badge && (
@@ -228,7 +229,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
       </nav>
 
       {/* Footer Info */}
-      <div className="p-4 border-t border-slate-800/60 text-xs text-slate-500 text-center">
+      <div className="p-4 border-t border-[var(--sidebar-border)] text-xs text-[var(--sidebar-text)] text-center">
         سكون Real Estate v1.0.0
       </div>
     </div>
@@ -237,7 +238,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
   return (
     <>
       {/* Desktop Fixed Sidebar */}
-      <aside className="hidden lg:flex w-64 bg-[#161F28] text-slate-300 min-h-screen flex-col border-l border-slate-800 shrink-0">
+      <aside className="hidden lg:flex w-64 bg-[var(--sidebar-bg)] text-slate-300 min-h-screen flex-col border-l border-[var(--sidebar-border)] shrink-0">
         {sidebarContent}
       </aside>
 
@@ -246,11 +247,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
         <div className="fixed inset-0 z-50 flex lg:hidden">
           {/* Backdrop */}
           <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs animate-fadeIn"
             onClick={onCloseMobile}
           />
           {/* Drawer Panel */}
-          <aside className="relative w-72 max-w-[80vw] bg-[#161F28] text-slate-300 h-full flex flex-col shadow-2xl border-l border-slate-800 z-10">
+          <aside className="relative w-72 max-w-[80vw] bg-[var(--sidebar-bg)] text-slate-300 h-full flex flex-col shadow-2xl border-l border-[var(--sidebar-border)] z-10 animate-slideInDrawer">
             {sidebarContent}
           </aside>
         </div>
@@ -258,4 +259,3 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
     </>
   );
 };
-

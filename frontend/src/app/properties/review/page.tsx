@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { Header } from '@/components/layout/Header';
@@ -40,38 +40,38 @@ export default function PropertyReviewQueuePage() {
       <div className="p-8 max-w-7xl mx-auto w-full space-y-6">
         {/* Top 4 Metric Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-blue-600 mb-1">
               {propertyMetrics.openReports}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               بلاغات نشطة
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-rose-500 mb-1">
               {propertyMetrics.rejectedToday}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               مرفوض اليوم
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-emerald-600 mb-1">
               {propertyMetrics.acceptedToday}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               مقبول اليوم
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-amber-500 mb-1">
               {propertyMetrics.pending}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
               بانتظار المراجعة
             </div>
           </div>
@@ -80,9 +80,9 @@ export default function PropertyReviewQueuePage() {
         {/* Main 2 Column Split Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: Pending Property List (7 cols) */}
-          <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 space-y-6">
+          <div className="lg:col-span-7 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] p-6 space-y-6">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-              <h3 className="font-extrabold text-slate-800 text-base">
+              <h3 className="font-extrabold text-[var(--foreground)] text-base">
                 قائمة العقارات المعلقة
               </h3>
 
@@ -92,7 +92,7 @@ export default function PropertyReviewQueuePage() {
                   className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${
                     filterTag === 'all'
                       ? 'bg-teal-700 text-white'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
                   }`}
                 >
                   كل العقارات
@@ -102,7 +102,7 @@ export default function PropertyReviewQueuePage() {
                   className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${
                     filterTag === 'images'
                       ? 'bg-teal-700 text-white'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
                   }`}
                 >
                   تحتاج صور
@@ -112,7 +112,7 @@ export default function PropertyReviewQueuePage() {
                   className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${
                     filterTag === 'highRisk'
                       ? 'bg-teal-700 text-white'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
                   }`}
                 >
                   عالي الخطر
@@ -130,20 +130,20 @@ export default function PropertyReviewQueuePage() {
                     onClick={() => setSelectedPropertyId(item.id)}
                     className={`p-4 rounded-xl border flex items-center justify-between transition-all cursor-pointer ${
                       isSelected
-                        ? 'border-teal-500 bg-teal-50/40 shadow-xs'
-                        : 'border-slate-200/80 bg-white hover:bg-slate-50/60'
+                        ? 'border-teal-500 bg-teal-50/40 shadow-[var(--shadow-card)]'
+                        : 'border-[var(--card-border)] bg-[var(--card-bg)] hover:bg-[var(--table-row-hover)]'
                     }`}
                   >
                     <div className="flex items-center gap-3.5">
-                      <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-500 flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 rounded-xl bg-[var(--badge-bg-muted)] text-[var(--text-muted)] flex items-center justify-center shrink-0">
                         <Building2 className="w-5 h-5" />
                       </div>
 
                       <div>
-                        <h4 className="font-bold text-slate-900 text-sm">
+                        <h4 className="font-bold text-[var(--foreground)] text-sm">
                           {item.title}
                         </h4>
-                        <p className="text-xs text-slate-400 mt-0.5">
+                        <p className="text-xs text-[var(--text-subtle)] mt-0.5">
                           {item.owner} • {item.imagesCount} صور • {item.time}
                         </p>
                       </div>
@@ -177,9 +177,9 @@ export default function PropertyReviewQueuePage() {
           </div>
 
           {/* Right Column: Verification Checklist Panel (5 cols) */}
-          <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200/80 shadow-xs p-6 space-y-6">
-            <div className="border-b border-slate-100 pb-3">
-              <h3 className="font-extrabold text-slate-800 text-base leading-tight">
+          <div className="lg:col-span-5 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] p-6 space-y-6">
+            <div className="border-b border-[var(--divider)] pb-3">
+              <h3 className="font-extrabold text-[var(--foreground)] text-base leading-tight">
                 قائمة التحقق – {selectedProperty.title}
               </h3>
             </div>
@@ -193,7 +193,7 @@ export default function PropertyReviewQueuePage() {
                 >
                   <span
                     className={`font-semibold ${
-                      check.passed ? 'text-slate-700' : 'text-rose-500'
+                      check.passed ? 'text-[var(--foreground)]' : 'text-rose-500'
                     }`}
                   >
                     {check.title}
@@ -213,7 +213,7 @@ export default function PropertyReviewQueuePage() {
 
             {/* Risk Flags Box */}
             <div className="space-y-2 bg-rose-50/50 border border-rose-100 rounded-xl p-3.5 text-xs text-rose-800">
-              <div className="font-bold text-slate-700 mb-1">Risk Flags:</div>
+              <div className="font-bold text-[var(--foreground)] mb-1">Risk Flags:</div>
               {propertyRiskFlags.map((flag, idx) => (
                 <div key={idx} className="flex items-center gap-2 font-medium">
                   <AlertTriangle className="w-3.5 h-3.5 text-rose-500 shrink-0" />
@@ -224,12 +224,12 @@ export default function PropertyReviewQueuePage() {
 
             {/* Decision Action Buttons */}
             <div className="space-y-2.5 pt-2">
-              <button className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-sm rounded-xl shadow-xs transition-colors flex items-center justify-center gap-2">
+              <button className="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-sm rounded-xl shadow-[var(--shadow-card)] transition-colors flex items-center justify-center gap-2">
                 <Check className="w-4 h-4" />
                 <span>قبول العقار ✓</span>
               </button>
 
-              <button className="w-full py-3 bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-sm rounded-xl shadow-xs transition-colors flex items-center justify-center gap-2">
+              <button className="w-full py-3 bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-sm rounded-xl shadow-[var(--shadow-card)] transition-colors flex items-center justify-center gap-2">
                 <X className="w-4 h-4" />
                 <span>رفض ✗</span>
               </button>

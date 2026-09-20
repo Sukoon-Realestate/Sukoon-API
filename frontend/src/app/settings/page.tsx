@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState } from 'react';
 import { Header } from '@/components/layout/Header';
@@ -54,15 +54,15 @@ export default function PlatformSettingsPage() {
         {/* Top Grid: Verification & Property Settings */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: Verification Settings (6 cols) */}
-          <div className="lg:col-span-6 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-            <h3 className="font-extrabold text-slate-800 text-base border-b border-slate-100 pb-3">
+          <div className="lg:col-span-6 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-4">
+            <h3 className="font-extrabold text-[var(--foreground)] text-base border-b border-[var(--divider)] pb-3">
               إعدادات التوثيق
             </h3>
 
             <div className="space-y-4 text-xs">
               {/* Item 1 */}
               <div className="flex items-center justify-between py-1">
-                <span className="font-bold text-slate-700">
+                <span className="font-bold text-[var(--foreground)]">
                   مدة المراجعة القصوى (ساعات)
                 </span>
                 <button
@@ -73,7 +73,7 @@ export default function PlatformSettingsPage() {
                   }`}
                 >
                   <div
-                    className={`w-5 h-5 rounded-full bg-white shadow-xs transition-transform ${
+                    className={`w-5 h-5 rounded-full bg-[var(--card-bg)] shadow-[var(--shadow-card)] transition-transform ${
                       maxReviewHours ? 'translate-x-[-18px]' : 'translate-x-0'
                     }`}
                   ></div>
@@ -81,8 +81,8 @@ export default function PlatformSettingsPage() {
               </div>
 
               {/* Item 2 */}
-              <div className="flex items-center justify-between py-1 border-t border-slate-100 pt-3">
-                <span className="font-bold text-slate-700">
+              <div className="flex items-center justify-between py-1 border-t border-[var(--divider)] pt-3">
+                <span className="font-bold text-[var(--foreground)]">
                   مستندات مطلوبة للمستأجر
                 </span>
                 <button
@@ -93,7 +93,7 @@ export default function PlatformSettingsPage() {
                   }`}
                 >
                   <div
-                    className={`w-5 h-5 rounded-full bg-white shadow-xs transition-transform ${
+                    className={`w-5 h-5 rounded-full bg-[var(--card-bg)] shadow-[var(--shadow-card)] transition-transform ${
                       tenantDocsRequired ? 'translate-x-[-18px]' : 'translate-x-0'
                     }`}
                   ></div>
@@ -101,8 +101,8 @@ export default function PlatformSettingsPage() {
               </div>
 
               {/* Item 3 */}
-              <div className="flex items-center justify-between py-1 border-t border-slate-100 pt-3">
-                <span className="font-bold text-slate-700">
+              <div className="flex items-center justify-between py-1 border-t border-[var(--divider)] pt-3">
+                <span className="font-bold text-[var(--foreground)]">
                   مستندات مطلوبة للمالك
                 </span>
                 <button
@@ -113,7 +113,7 @@ export default function PlatformSettingsPage() {
                   }`}
                 >
                   <div
-                    className={`w-5 h-5 rounded-full bg-white shadow-xs transition-transform ${
+                    className={`w-5 h-5 rounded-full bg-[var(--card-bg)] shadow-[var(--shadow-card)] transition-transform ${
                       landlordDocsRequired ? 'translate-x-[-18px]' : 'translate-x-0'
                     }`}
                   ></div>
@@ -121,8 +121,8 @@ export default function PlatformSettingsPage() {
               </div>
 
               {/* Item 4 */}
-              <div className="flex items-center justify-between py-1 border-t border-slate-100 pt-3">
-                <span className="font-bold text-slate-700">
+              <div className="flex items-center justify-between py-1 border-t border-[var(--divider)] pt-3">
+                <span className="font-bold text-[var(--foreground)]">
                   تفعيل التوثيق الآلي
                 </span>
                 <button
@@ -133,7 +133,7 @@ export default function PlatformSettingsPage() {
                   }`}
                 >
                   <div
-                    className={`w-5 h-5 rounded-full bg-white shadow-xs transition-transform ${
+                    className={`w-5 h-5 rounded-full bg-[var(--card-bg)] shadow-[var(--shadow-card)] transition-transform ${
                       autoVerification ? 'translate-x-[-18px]' : 'translate-x-0'
                     }`}
                   ></div>
@@ -143,15 +143,15 @@ export default function PlatformSettingsPage() {
           </div>
 
           {/* Right Column: Property Settings (6 cols) */}
-          <div className="lg:col-span-6 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-            <h3 className="font-extrabold text-slate-800 text-base border-b border-slate-100 pb-3">
+          <div className="lg:col-span-6 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-4">
+            <h3 className="font-extrabold text-[var(--foreground)] text-base border-b border-[var(--divider)] pb-3">
               إعدادات العقارات
             </h3>
 
             <div className="space-y-4 text-xs">
               {/* Item 1 */}
               <div className="flex items-center justify-between py-1">
-                <span className="font-bold text-slate-700">
+                <span className="font-bold text-[var(--foreground)]">
                   الحد الأقصى للصور
                 </span>
                 <button
@@ -162,7 +162,7 @@ export default function PlatformSettingsPage() {
                   }`}
                 >
                   <div
-                    className={`w-5 h-5 rounded-full bg-white shadow-xs transition-transform ${
+                    className={`w-5 h-5 rounded-full bg-[var(--card-bg)] shadow-[var(--shadow-card)] transition-transform ${
                       maxPhotosLimit ? 'translate-x-[-18px]' : 'translate-x-0'
                     }`}
                   ></div>
@@ -170,8 +170,8 @@ export default function PlatformSettingsPage() {
               </div>
 
               {/* Item 2 */}
-              <div className="flex items-center justify-between py-1 border-t border-slate-100 pt-3">
-                <span className="font-bold text-slate-700">
+              <div className="flex items-center justify-between py-1 border-t border-[var(--divider)] pt-3">
+                <span className="font-bold text-[var(--foreground)]">
                   مدة المراجعة (أيام)
                 </span>
                 <button
@@ -182,7 +182,7 @@ export default function PlatformSettingsPage() {
                   }`}
                 >
                   <div
-                    className={`w-5 h-5 rounded-full bg-white shadow-xs transition-transform ${
+                    className={`w-5 h-5 rounded-full bg-[var(--card-bg)] shadow-[var(--shadow-card)] transition-transform ${
                       reviewPeriodDays ? 'translate-x-[-18px]' : 'translate-x-0'
                     }`}
                   ></div>
@@ -190,8 +190,8 @@ export default function PlatformSettingsPage() {
               </div>
 
               {/* Item 3 */}
-              <div className="flex items-center justify-between py-1 border-t border-slate-100 pt-3">
-                <span className="font-bold text-slate-700">
+              <div className="flex items-center justify-between py-1 border-t border-[var(--divider)] pt-3">
+                <span className="font-bold text-[var(--foreground)]">
                   تفعيل الموقع التقريبي
                 </span>
                 <button
@@ -202,7 +202,7 @@ export default function PlatformSettingsPage() {
                   }`}
                 >
                   <div
-                    className={`w-5 h-5 rounded-full bg-white shadow-xs transition-transform ${
+                    className={`w-5 h-5 rounded-full bg-[var(--card-bg)] shadow-[var(--shadow-card)] transition-transform ${
                       approxLocation ? 'translate-x-[-18px]' : 'translate-x-0'
                     }`}
                   ></div>
@@ -210,8 +210,8 @@ export default function PlatformSettingsPage() {
               </div>
 
               {/* Item 4 */}
-              <div className="flex items-center justify-between py-1 border-t border-slate-100 pt-3">
-                <span className="font-bold text-slate-700">
+              <div className="flex items-center justify-between py-1 border-t border-[var(--divider)] pt-3">
+                <span className="font-bold text-[var(--foreground)]">
                   إخفاء الأرقام افتراضياً
                 </span>
                 <button
@@ -222,7 +222,7 @@ export default function PlatformSettingsPage() {
                   }`}
                 >
                   <div
-                    className={`w-5 h-5 rounded-full bg-white shadow-xs transition-transform ${
+                    className={`w-5 h-5 rounded-full bg-[var(--card-bg)] shadow-[var(--shadow-card)] transition-transform ${
                       hidePhoneDefault ? 'translate-x-[-18px]' : 'translate-x-0'
                     }`}
                   ></div>
@@ -233,8 +233,8 @@ export default function PlatformSettingsPage() {
         </div>
 
         {/* Bottom Section: Admins Management */}
-        <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-5">
-          <h3 className="font-extrabold text-slate-800 text-base border-b border-slate-100 pb-3">
+        <div className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-5">
+          <h3 className="font-extrabold text-[var(--foreground)] text-base border-b border-[var(--divider)] pb-3">
             إدارة المشرفين
           </h3>
 
@@ -242,13 +242,13 @@ export default function PlatformSettingsPage() {
             {admins.map((adm) => (
               <div
                 key={adm.id}
-                className="flex items-center justify-between border-b border-slate-100 pb-3"
+                className="flex items-center justify-between border-b border-[var(--divider)] pb-3"
               >
                 <div>
-                  <h4 className="font-bold text-slate-900 text-sm">
+                  <h4 className="font-bold text-[var(--foreground)] text-sm">
                     {adm.name}
                   </h4>
-                  <p className="text-xs text-slate-400 font-medium">
+                  <p className="text-xs text-[var(--text-subtle)] font-medium">
                     {adm.role}
                   </p>
                 </div>

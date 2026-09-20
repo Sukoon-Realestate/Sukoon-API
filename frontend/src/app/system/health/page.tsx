@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { Header } from '@/components/layout/Header';
@@ -30,15 +30,15 @@ export default function SystemHealthPage() {
         {/* Top 4 Stat Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Card 1: Uptime */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs flex items-center justify-between">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex items-center justify-between">
             <div className="space-y-1">
-              <span className="text-2xl font-black text-slate-900 tracking-tight block">
+              <span className="text-2xl font-black text-[var(--foreground)] tracking-tight block">
                 {mockSystemHealthMetrics.uptime}
               </span>
-              <p className="text-xs font-bold text-slate-700">
+              <p className="text-xs font-bold text-[var(--foreground)]">
                 {mockSystemHealthMetrics.uptimeSub}
               </p>
-              <span className="text-[10px] text-slate-400 font-medium block">
+              <span className="text-[10px] text-[var(--text-subtle)] font-medium block">
                 آخر 30 يوم
               </span>
             </div>
@@ -48,15 +48,15 @@ export default function SystemHealthPage() {
           </div>
 
           {/* Card 2: Response Time */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs flex items-center justify-between">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex items-center justify-between">
             <div className="space-y-1">
-              <span className="text-2xl font-black text-slate-900 tracking-tight block">
+              <span className="text-2xl font-black text-[var(--foreground)] tracking-tight block">
                 {mockSystemHealthMetrics.responseTime}
               </span>
-              <p className="text-xs font-bold text-slate-700">
+              <p className="text-xs font-bold text-[var(--foreground)]">
                 {mockSystemHealthMetrics.responseSub}
               </p>
-              <span className="text-[10px] text-slate-400 font-medium block">
+              <span className="text-[10px] text-[var(--text-subtle)] font-medium block">
                 متوسط API
               </span>
             </div>
@@ -66,15 +66,15 @@ export default function SystemHealthPage() {
           </div>
 
           {/* Card 3: Today's Errors */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs flex items-center justify-between">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex items-center justify-between">
             <div className="space-y-1">
-              <span className="text-2xl font-black text-slate-900 tracking-tight block">
+              <span className="text-2xl font-black text-[var(--foreground)] tracking-tight block">
                 {mockSystemHealthMetrics.errorsToday}
               </span>
-              <p className="text-xs font-bold text-slate-700">
+              <p className="text-xs font-bold text-[var(--foreground)]">
                 {mockSystemHealthMetrics.errorsSub}
               </p>
-              <span className="text-[10px] text-slate-400 font-medium block">
+              <span className="text-[10px] text-[var(--text-subtle)] font-medium block">
                 أخطاء 5xx
               </span>
             </div>
@@ -84,15 +84,15 @@ export default function SystemHealthPage() {
           </div>
 
           {/* Card 4: Database Status */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs flex items-center justify-between">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex items-center justify-between">
             <div className="space-y-1">
               <span className="text-2xl font-black text-emerald-600 tracking-tight block">
                 {mockSystemHealthMetrics.dbStatus}
               </span>
-              <p className="text-xs font-bold text-slate-700">
+              <p className="text-xs font-bold text-[var(--foreground)]">
                 {mockSystemHealthMetrics.dbSub}
               </p>
-              <span className="text-[10px] text-slate-400 font-medium block">
+              <span className="text-[10px] text-[var(--text-subtle)] font-medium block">
                 اتصال مستقر
               </span>
             </div>
@@ -105,9 +105,9 @@ export default function SystemHealthPage() {
         {/* Middle Section: Audit Log & API Performance */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Audit Log Table (6 cols) */}
-          <div className="lg:col-span-6 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="font-extrabold text-slate-800 text-base">
+          <div className="lg:col-span-6 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-4">
+            <div className="flex items-center justify-between border-b border-[var(--divider)] pb-3">
+              <h3 className="font-extrabold text-[var(--foreground)] text-base">
                 سجل التدقيق – Admin Actions
               </h3>
               <button className="text-xs text-teal-600 font-bold hover:underline flex items-center gap-1">
@@ -116,14 +116,14 @@ export default function SystemHealthPage() {
               </button>
             </div>
 
-            <div className="divide-y divide-slate-100 space-y-3">
+            <div className="divide-y divide-[var(--divider)] space-y-3">
               {mockAuditLogs.slice(0, 6).map((log) => (
                 <div
                   key={log.id}
                   className="pt-3 first:pt-0 flex items-center justify-between text-xs"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="font-mono text-slate-400 font-semibold dir-ltr">
+                    <span className="font-mono text-[var(--text-subtle)] font-semibold dir-ltr">
                       {log.time}
                     </span>
                     {log.typeBadge === 'KYC' && (
@@ -152,35 +152,35 @@ export default function SystemHealthPage() {
                       </span>
                     )}
                     {log.typeBadge === 'بلاغ' && (
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[var(--badge-bg-muted)] text-[var(--foreground)]">
                         بلاغ
                       </span>
                     )}
 
-                    <span className="font-bold text-slate-800">
+                    <span className="font-bold text-[var(--foreground)]">
                       {log.action}
                     </span>
                   </div>
 
-                  <span className="text-slate-400 font-medium">{log.operator}</span>
+                  <span className="text-[var(--text-subtle)] font-medium">{log.operator}</span>
                 </div>
               ))}
             </div>
           </div>
 
           {/* API Performance Bar Chart (6 cols) */}
-          <div className="lg:col-span-6 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-4">
+          <div className="lg:col-span-6 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-4">
             <div>
-              <h3 className="font-extrabold text-slate-800 text-base">
+              <h3 className="font-extrabold text-[var(--foreground)] text-base">
                 أداء API – الساعة الأخيرة
               </h3>
-              <p className="text-xs text-slate-400 font-medium mt-0.5">
+              <p className="text-xs text-[var(--text-subtle)] font-medium mt-0.5">
                 متوسط وقت استجابة API خلال الساعة الماضية
               </p>
             </div>
 
             {/* Bar Chart Visualization */}
-            <div className="h-44 pt-6 flex items-end justify-between gap-1.5 border-b border-slate-100 pb-2">
+            <div className="h-44 pt-6 flex items-end justify-between gap-1.5 border-b border-[var(--divider)] pb-2">
               {mockApiPerformanceData.map((item, idx) => (
                 <div
                   key={idx}
