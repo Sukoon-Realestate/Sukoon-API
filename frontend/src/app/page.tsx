@@ -5,6 +5,7 @@ import { Header } from '@/components/layout/Header';
 import { MetricCard } from '@/components/ui/MetricCard';
 import { BarChartComponent } from '@/components/ui/BarChartComponent';
 import { ActivityFeed } from '@/components/ui/ActivityFeed';
+import { QuickActionsToolbar } from '@/components/ui/QuickActionsToolbar';
 import {
   overviewMetrics,
   monthlyUserChartData,
@@ -29,6 +30,9 @@ export default function OverviewDashboardPage() {
       />
 
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-8">
+        {/* Admin Quick Toolbar */}
+        <QuickActionsToolbar />
+
         {/* Top 4 Metrics Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {overviewMetrics.map((metric, idx) => (

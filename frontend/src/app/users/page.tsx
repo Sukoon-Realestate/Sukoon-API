@@ -6,6 +6,9 @@ import { Header } from '@/components/layout/Header';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { useToast } from '@/components/ui/Toast';
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { Pagination } from '@/components/ui/Pagination';
 import { Search, Filter, Eye, UserX, CheckCircle2 } from 'lucide-react';
 import { mockUsers, userDistributionData, UserItem } from '@/data/mockData';
 
@@ -16,6 +19,8 @@ export default function UserManagementPage() {
   const [selectedUserToSuspend, setSelectedUserToSuspend] = useState<UserItem | null>(null);
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
   const [roleFilter, setRoleFilter] = useState<'all' | 'مستأجر' | 'مالك'>('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const { showToast } = useToast();
 
   const filteredUsers = usersList.filter((user) => {
@@ -35,6 +40,11 @@ export default function UserManagementPage() {
     if (activeTab === 'suspended') return user.status === 'موقوف';
     return true;
   });
+
+  const paginatedUsers = filteredUsers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   const handleToggleSuspend = () => {
     if (!selectedUserToSuspend) return;
@@ -56,6 +66,13 @@ export default function UserManagementPage() {
     );
   };
 
+  const handleResetFilters = () => {
+    setSearchQuery('');
+    setRoleFilter('all');
+    setActiveTab('all');
+    setCurrentPage(1);
+  };
+
   return (
     <div className="flex-1 flex flex-col pb-12">
       <Header
@@ -64,6 +81,7 @@ export default function UserManagementPage() {
       />
 
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+        <Breadcrumbs />
         {/* Search & Filter Bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 animate-fadeInUp">
           <div className="w-full sm:w-auto text-lg font-extrabold text-[var(--foreground)]">
@@ -215,8 +233,8 @@ export default function UserManagementPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--table-border)] text-sm">
-                {filteredUsers.length > 0 ? (
-                  filteredUsers.map((user) => (
+                {paginatedUsers.length > 0 ? (
+                  paginatedUsers.map((user) => (
                     <tr
                       key={user.id}
                       className="hover:bg-[var(--table-row-hover)] transition-colors"
@@ -243,14 +261,14 @@ export default function UserManagementPage() {
                         <div className="flex items-center justify-center gap-2">
                           <Link
                             href={`/users/${user.id}`}
-                            className="inline-flex items-center gap-1 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                            className="inline-flex items-center gap-1 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer btn-press"
                           >
                             <Eye className="w-3.5 h-3.5" />
                             <span>عرض</span>
                           </Link>
                           <button
                             onClick={() => setSelectedUserToSuspend(user)}
-                            className={`inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                            className={`inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer btn-press ${
                               user.status === 'موقوف'
                                 ? 'bg-emerald-100 hover:bg-emerald-200 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400'
                                 : 'bg-rose-100 hover:bg-rose-200 text-rose-700 dark:bg-rose-500/15 dark:text-rose-400'
@@ -274,17 +292,31 @@ export default function UserManagementPage() {
                   ))
                 ) : (
                   <tr>
-                    <td
-                      colSpan={7}
-                      className="py-12 text-center text-[var(--text-subtle)] font-medium"
-                    >
-                      لا يوجد مستخدمون يطابقون خيارات البحث أو التصفية الحالية.
+                    <td colSpan={7} className="p-0 border-0">
+                      <EmptyState
+                        title="لم نجد أي مستخدم يطابق معايير البحث"
+                        description="تأكد من كتابة الاسم أو البريد بشكل صحيح، أو أعد ضبط خيارات التصفية النشطة."
+                        onReset={handleResetFilters}
+                      />
                     </td>
                   </tr>
                 )}
               </tbody>
             </table>
           </div>
+
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(filteredUsers.length / itemsPerPage)}
+            totalItems={filteredUsers.length}
+            itemsPerPage={itemsPerPage}
+            onPageChange={setCurrentPage}
+            onItemsPerPageChange={(size) => {
+              setItemsPerPage(size);
+              setCurrentPage(1);
+            }}
+          />
         </div>
       </div>
 

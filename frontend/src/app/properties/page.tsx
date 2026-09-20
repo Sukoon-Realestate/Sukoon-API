@@ -5,6 +5,9 @@ import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { useToast } from '@/components/ui/Toast';
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { Pagination } from '@/components/ui/Pagination';
 import { Search, Filter, Building2, Eye, XCircle, CheckCircle2 } from 'lucide-react';
 import { mockProperties, propertyMetrics, PropertyItem } from '@/data/mockData';
 
@@ -14,6 +17,8 @@ export default function PropertiesManagementPage() {
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
   const [typeFilter, setTypeFilter] = useState<'all' | 'شقة' | 'ستوديو' | 'غرفة' | 'فيلا'>('all');
   const [selectedPropertyToReject, setSelectedPropertyToReject] = useState<PropertyItem | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const { showToast } = useToast();
 
   const filteredProperties = propertiesList.filter((prop) => {
@@ -27,12 +32,23 @@ export default function PropertiesManagementPage() {
     return true;
   });
 
+  const paginatedProperties = filteredProperties.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   const handleConfirmReject = () => {
     if (!selectedPropertyToReject) return;
     setPropertiesList((prev) =>
       prev.map((p) => (p.id === selectedPropertyToReject.id ? { ...p, status: 'مرفوض' } : p))
     );
     showToast(`تم رفض إدراج العقار "${selectedPropertyToReject.title}"`, 'error');
+  };
+
+  const handleResetFilters = () => {
+    setSearchQuery('');
+    setTypeFilter('all');
+    setCurrentPage(1);
   };
 
   return (
@@ -43,6 +59,7 @@ export default function PropertiesManagementPage() {
       />
 
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+        <Breadcrumbs />
         {/* Search & Filter Bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="w-full sm:w-auto text-lg font-extrabold text-[var(--foreground)]">
@@ -146,73 +163,98 @@ export default function PropertiesManagementPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--divider)] text-sm">
-                {filteredProperties.map((prop) => (
-                  <tr
-                    key={prop.id}
-                    className="hover:bg-[var(--table-row-hover)] transition-colors"
-                  >
-                    <td className="py-4 px-6 font-bold text-[var(--foreground)] flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-[var(--badge-bg-muted)] text-[var(--text-muted)] flex items-center justify-center shrink-0">
-                        <Building2 className="w-4 h-4" />
-                      </div>
-                      <span>{prop.title}</span>
-                    </td>
-                    <td className="py-4 px-6 text-[var(--text-muted)] font-medium text-xs">
-                      {prop.owner}
-                    </td>
-                    <td className="py-4 px-6">
-                      <span className="bg-teal-50 text-teal-700 dark:bg-teal-500/10 dark:text-teal-400 border border-teal-200/60 text-xs font-bold px-2.5 py-0.5 rounded-full">
-                        {prop.type}
-                      </span>
-                    </td>
-                    <td className="py-4 px-6">
-                      {prop.status === 'مقبول' && (
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600 border border-emerald-200">
-                          مقبول ✓
+                {paginatedProperties.length > 0 ? (
+                  paginatedProperties.map((prop) => (
+                    <tr
+                      key={prop.id}
+                      className="hover:bg-[var(--table-row-hover)] transition-colors"
+                    >
+                      <td className="py-4 px-6 font-bold text-[var(--foreground)] flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-[var(--badge-bg-muted)] text-[var(--text-muted)] flex items-center justify-center shrink-0">
+                          <Building2 className="w-4 h-4" />
+                        </div>
+                        <span>{prop.title}</span>
+                      </td>
+                      <td className="py-4 px-6 text-[var(--text-muted)] font-medium text-xs">
+                        {prop.owner}
+                      </td>
+                      <td className="py-4 px-6">
+                        <span className="bg-teal-50 text-teal-700 dark:bg-teal-500/10 dark:text-teal-400 border border-teal-200/60 text-xs font-bold px-2.5 py-0.5 rounded-full">
+                          {prop.type}
                         </span>
-                      )}
-                      {prop.status === 'قيد المراجعة' && (
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200">
-                          قيد المراجعة ⏱
-                        </span>
-                      )}
-                      {prop.status === 'مرفوض' && (
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200">
-                          مرفوض ✗
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-4 px-6 font-bold text-teal-700 dark:text-teal-400 text-xs dir-ltr text-right">
-                      {prop.price}
-                    </td>
-                    <td className="py-4 px-6 text-[var(--text-muted)] text-xs font-medium">
-                      {prop.views}
-                    </td>
-                    <td className="py-4 px-6">
-                      <div className="flex items-center justify-center gap-2">
-                        <Link
-                          href={`/properties/review`}
-                          className="inline-flex items-center gap-1 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
-                        >
-                          <Eye className="w-3.5 h-3.5" />
-                          <span>مراجعة</span>
-                        </Link>
-                        {prop.status !== 'مرفوض' && (
-                          <button
-                            onClick={() => setSelectedPropertyToReject(prop)}
-                            className="inline-flex items-center gap-1 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
-                          >
-                            <XCircle className="w-3.5 h-3.5" />
-                            <span>رفض</span>
-                          </button>
+                      </td>
+                      <td className="py-4 px-6">
+                        {prop.status === 'مقبول' && (
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600 border border-emerald-200">
+                            مقبول ✓
+                          </span>
                         )}
-                      </div>
+                        {prop.status === 'قيد المراجعة' && (
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200">
+                            قيد المراجعة ⏱
+                          </span>
+                        )}
+                        {prop.status === 'مرفوض' && (
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200">
+                            مرفوض ✗
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-4 px-6 font-bold text-teal-700 dark:text-teal-400 text-xs dir-ltr text-right">
+                        {prop.price}
+                      </td>
+                      <td className="py-4 px-6 text-[var(--text-muted)] text-xs font-medium">
+                        {prop.views}
+                      </td>
+                      <td className="py-4 px-6">
+                        <div className="flex items-center justify-center gap-2">
+                          <Link
+                            href={`/properties/review`}
+                            className="inline-flex items-center gap-1 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer btn-press"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                            <span>مراجعة</span>
+                          </Link>
+                          {prop.status !== 'مرفوض' && (
+                            <button
+                              onClick={() => setSelectedPropertyToReject(prop)}
+                              className="inline-flex items-center gap-1 bg-rose-50 hover:bg-rose-100 text-rose-600 dark:bg-rose-500/15 dark:text-rose-400 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer btn-press"
+                            >
+                              <XCircle className="w-3.5 h-3.5" />
+                              <span>رفض</span>
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={7} className="p-0 border-0">
+                      <EmptyState
+                        title="لم نجد أي عقار يطابق خيارات البحث"
+                        description="جرب البحث باسم العقار، اسم المالك، أو تغيير الفئة لتسريع العثور على الإدراج المطلوب."
+                        onReset={handleResetFilters}
+                      />
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
+
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(filteredProperties.length / itemsPerPage)}
+            totalItems={filteredProperties.length}
+            itemsPerPage={itemsPerPage}
+            onPageChange={setCurrentPage}
+            onItemsPerPageChange={(size) => {
+              setItemsPerPage(size);
+              setCurrentPage(1);
+            }}
+          />
         </div>
       </div>
 
