@@ -16,7 +16,11 @@ import {
   ClipboardList,
   Headphones,
   DollarSign,
-  UserCheck,
+  Receipt,
+  BarChart3,
+  ShieldBan,
+  BellRing,
+  History,
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
@@ -63,6 +67,13 @@ export const Sidebar: React.FC = () => {
       active: pathname === '/properties/review' || pathname.startsWith('/properties/prop-1'),
     },
     {
+      title: 'مراجعة المحتوى',
+      href: '/moderation',
+      icon: ShieldBan,
+      badge: '14',
+      active: pathname === '/moderation',
+    },
+    {
       title: 'طابور البلاغات',
       href: '/users/reports',
       icon: ShieldAlert,
@@ -83,10 +94,34 @@ export const Sidebar: React.FC = () => {
       active: pathname === '/reports/overview' || pathname === '/reports',
     },
     {
+      title: 'التحليلات والتقارير',
+      href: '/analytics',
+      icon: BarChart3,
+      active: pathname === '/analytics',
+    },
+    {
       title: 'الإيرادات والمالية',
       href: '/financials',
       icon: DollarSign,
       active: pathname === '/financials',
+    },
+    {
+      title: 'سجل المعاملات',
+      href: '/financials/transactions',
+      icon: Receipt,
+      active: pathname === '/financials/transactions',
+    },
+    {
+      title: 'الإشعارات المدفوعة',
+      href: '/notifications',
+      icon: BellRing,
+      active: pathname === '/notifications',
+    },
+    {
+      title: 'سجل النشاط',
+      href: '/system/logs',
+      icon: History,
+      active: pathname === '/system/logs',
     },
     {
       title: 'الأدوار',
@@ -145,7 +180,7 @@ export const Sidebar: React.FC = () => {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl font-medium text-xs transition-all duration-150 ${
+              className={`flex items-center justify-between px-3.5 py-2 rounded-xl font-medium text-xs transition-all duration-150 ${
                 item.active
                   ? 'bg-teal-600/15 text-teal-400 border-r-4 border-teal-500 font-bold'
                   : 'text-slate-400 hover:bg-slate-800/40 hover:text-slate-200'

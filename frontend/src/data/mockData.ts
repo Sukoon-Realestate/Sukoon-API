@@ -103,6 +103,42 @@ export interface OverviewTicket {
   reviewer: string;
 }
 
+export interface TransactionItem {
+  id: string;
+  description: string;
+  landlord: string;
+  tenant: string;
+  amount: string;
+  isPositive: boolean;
+  status: 'مدفوع' | 'معلق' | 'مسترد';
+}
+
+export interface ModerationItem {
+  id: string;
+  title: string;
+  reason: string;
+  riskLevel: 'عالي' | 'متوسط' | 'منخفض';
+  type: 'صور' | 'نصوص';
+}
+
+export interface NotificationCampaign {
+  id: string;
+  title: string;
+  timeAgo: string;
+  body: string;
+  openRate: string;
+  recipientCount: string;
+}
+
+export interface SystemAuditLog {
+  id: string;
+  time: string;
+  action: string;
+  typeBadge: 'KYC' | 'عقار' | 'مستخدم' | 'دور' | 'دعم' | 'بلاغ' | 'نظام';
+  target: string;
+  operator: string;
+}
+
 export const overviewMetrics: DashboardMetric[] = [
   {
     title: 'إجمالي المستخدمين',
@@ -169,6 +205,191 @@ export const executiveMetrics: DashboardMetric[] = [
     change: '+7%',
     isPositive: true,
     icon: 'alert',
+  },
+];
+
+export const analyticsMetrics = {
+  visitRequests: '1,847',
+  visitRequestsChange: '+23%',
+  completedVisits: '1,204',
+  completedVisitsChange: '+15%',
+  avgRating: '4.7 ★',
+  avgRatingChange: '+0.2',
+  retentionRate: '78%',
+  retentionRateChange: '-2%',
+  topRegions: [
+    { name: 'مدينة نصر', count: 380 },
+    { name: 'التجمع الخامس', count: 265 },
+    { name: 'المهندسين', count: 198 },
+    { name: 'المعادي', count: 154 },
+  ],
+  kycBreakdown: [
+    { label: 'موثّق', count: 1920, pct: '67%', color: 'bg-emerald-500' },
+    { label: 'معلّق', count: 487, pct: '17%', color: 'bg-amber-500' },
+    { label: 'مرفوض', count: 143, pct: '5%', color: 'bg-rose-500' },
+    { label: 'جديد (بدون توثيق)', count: 297, pct: '11%', color: 'bg-slate-400' },
+  ],
+  propertyActivity: [
+    { label: 'عرض متاح', count: 890, color: 'bg-emerald-500' },
+    { label: 'قيد المراجعة', count: 234, color: 'bg-amber-500' },
+    { label: 'مؤجر', count: 512, color: 'bg-blue-600' },
+    { label: 'مخفي', count: 67, color: 'bg-slate-400' },
+  ],
+};
+
+export const moderationMetrics = {
+  suspiciousImages: 14,
+  misleadingDesc: 8,
+  phoneNumInPhotos: 6,
+  inappropriateContent: 3,
+};
+
+export const mockTransactions: TransactionItem[] = [
+  {
+    id: 'TXN-8821',
+    description: 'إيجار شهري – شقة نصر',
+    landlord: 'أحمد محمد',
+    tenant: 'سارة أحمد',
+    amount: '+6,500 ج',
+    isPositive: true,
+    status: 'مدفوع',
+  },
+  {
+    id: 'TXN-8820',
+    description: 'رسوم توثيق KYC',
+    landlord: '–',
+    tenant: 'محمد علي',
+    amount: '+50 ج',
+    isPositive: true,
+    status: 'مدفوع',
+  },
+  {
+    id: 'TXN-8819',
+    description: 'إيجار – ستوديو تجمع',
+    landlord: 'نادر طارق',
+    tenant: 'نورا كمال',
+    amount: '+4,200 ج',
+    isPositive: true,
+    status: 'معلق',
+  },
+  {
+    id: 'TXN-8818',
+    description: 'استرداد – إلغاء زيارة',
+    landlord: '–',
+    tenant: 'كريم سالم',
+    amount: '-200 ج',
+    isPositive: false,
+    status: 'مسترد',
+  },
+];
+
+export const mockModerationItems: ModerationItem[] = [
+  {
+    id: 'mod-1',
+    title: 'شقة مدينة نصر',
+    reason: 'رقم هاتف ظاهر في صورة • أحمد محمد',
+    riskLevel: 'عالي',
+    type: 'صور',
+  },
+  {
+    id: 'mod-2',
+    title: 'ستوديو التجمع',
+    reason: 'وصف غير دقيق – مساحة مبالغ فيها • نادر طارق',
+    riskLevel: 'متوسط',
+    type: 'نصوص',
+  },
+  {
+    id: 'mod-3',
+    title: 'غرفة المعادي',
+    reason: 'صورة غير واضحة • كريم سالم',
+    riskLevel: 'منخفض',
+    type: 'صور',
+  },
+];
+
+export const mockPushCampaigns: NotificationCampaign[] = [
+  {
+    id: 'nc-1',
+    title: 'عروض الصيف!',
+    timeAgo: 'النهاردة 9:00 ص',
+    body: 'احجز زيارتك واستمتع بخصم 20%',
+    openRate: '34% فتح',
+    recipientCount: '2,847 وصل',
+  },
+  {
+    id: 'nc-2',
+    title: 'عقارات جديدة!',
+    timeAgo: 'أمس 3:00 م',
+    body: 'شقق جديدة في مدينة نصر',
+    openRate: '28% فتح',
+    recipientCount: '1,924 وصل',
+  },
+  {
+    id: 'nc-3',
+    title: 'تذكير توثيق',
+    timeAgo: 'قبل 3 أيام',
+    body: 'وثّق هويتك وابدأ التواصل',
+    openRate: '45% فتح',
+    recipientCount: '923 وصل',
+  },
+];
+
+export const mockAuditLogs: SystemAuditLog[] = [
+  {
+    id: 'log-1',
+    time: '09:41:23',
+    action: 'قبول توثيق هوية – سارة أحمد خالد',
+    typeBadge: 'KYC',
+    target: 'مستأجر',
+    operator: 'سلمى رشدي',
+  },
+  {
+    id: 'log-2',
+    time: '09:35:10',
+    action: 'رفض عقار – كريم سالم فاروق',
+    typeBadge: 'عقار',
+    target: 'مالك',
+    operator: 'أحمد العدل',
+  },
+  {
+    id: 'log-3',
+    time: '09:20:04',
+    action: 'إيقاف حساب طارق محمد – لغة مسيئة',
+    typeBadge: 'مستخدم',
+    target: 'مستأجر',
+    operator: 'أحمد العدل',
+  },
+  {
+    id: 'log-4',
+    time: '09:10:55',
+    action: 'تغيير دور دينا حسام ⬅ دعم عملاء',
+    typeBadge: 'دور',
+    target: 'Admin',
+    operator: 'أحمد العدل',
+  },
+  {
+    id: 'log-5',
+    time: '08:55:30',
+    action: 'حل تذكرة SUP-199 – مشكلة صور',
+    typeBadge: 'دعم',
+    target: 'مالك',
+    operator: 'سلمى رشدي',
+  },
+  {
+    id: 'log-6',
+    time: '08:44:18',
+    action: 'رفض بلاغ على شقة المعادي – غير مؤكد',
+    typeBadge: 'بلاغ',
+    target: 'عقار',
+    operator: 'كريم فاروق',
+  },
+  {
+    id: 'log-7',
+    time: '08:30:00',
+    action: 'إرسال إشعار – عروض الصيف 2,847 مستخدم',
+    typeBadge: 'نظام',
+    target: 'الكل',
+    operator: 'أحمد العدل',
   },
 ];
 
@@ -345,20 +566,6 @@ export const mockUsers: UserItem[] = [
     reportsAgainst: 0,
     lastActive: 'منذ ساعة',
   },
-  {
-    id: 'noura-mohamed',
-    name: 'نورا محمد عمر',
-    type: 'مستأجر',
-    email: 'noura@example.com',
-    status: 'نشط',
-    kycStatus: 'قيد المراجعة',
-    regDate: '10 يناير 2026',
-    phone: '01298765432',
-    visitRequests: 5,
-    rating: 4.5,
-    reportsAgainst: 1,
-    lastActive: 'منذ 3 ساعات',
-  },
 ];
 
 export const mockSuspendedUsers: UserItem[] = [
@@ -386,18 +593,6 @@ export const mockSuspendedUsers: UserItem[] = [
     suspendedDate: '10 يونيو',
     suspendedBy: 'سلمى رشدي',
   },
-  {
-    id: 'hoda-mahmoud',
-    name: 'هدى محمود',
-    type: 'مستأجر',
-    email: 'hoda@example.com',
-    status: 'موقوف',
-    kycStatus: 'قيد المراجعة',
-    regDate: '20 فبراير 2025',
-    suspensionReason: 'معلومات مضللة',
-    suspendedDate: '28 مايو',
-    suspendedBy: 'أحمد العدل',
-  },
 ];
 
 export const mockProperties: PropertyItem[] = [
@@ -416,27 +611,6 @@ export const mockProperties: PropertyItem[] = [
     rooms: 3,
     createdDate: '1 مايو 2025',
     lastUpdated: 'اليوم',
-    auditLogs: [
-      { title: 'تم قبول العقار', date: '1 مايو 9:30 ص', actor: 'أحمد العدل', status: 'accepted' },
-      { title: 'مراجعة أولية آلية – لم تُكتشف مشاكل', date: '1 مايو 9:20 ص', actor: 'النظام', status: 'pending' },
-      { title: 'إرسال العقار من المالك', date: '1 مايو 9:00 ص', actor: 'أحمد محمد', status: 'sent' },
-    ],
-  },
-  {
-    id: 'prop-2',
-    title: 'ستوديو، التجمع الخامس',
-    owner: 'منى علي',
-    type: 'ستوديو',
-    status: 'قيد المراجعة',
-    price: '7,500 ج',
-    views: 0,
-    imagesCount: 4,
-    time: 'منذ 4 ساعات',
-    riskLevel: 'متوسط الخطر',
-    area: '60 م²',
-    rooms: 1,
-    createdDate: '3 مايو 2025',
-    lastUpdated: 'منذ 4 ساعات',
   },
 ];
 
@@ -451,26 +625,6 @@ export const mockSupportTickets: SupportTicket[] = [
     timeAgo: 'منذ 1 ساعة',
     assignedTo: 'دينا حسام',
   },
-  {
-    id: 'SUP-200',
-    subject: 'عقاري مش ظاهر في البحث',
-    user: 'أحمد محمد',
-    userType: 'مالك',
-    priority: 'متوسط',
-    status: 'قيد المعالجة',
-    timeAgo: 'منذ 3 ساعات',
-    assignedTo: 'سلمى رشدي',
-  },
-  {
-    id: 'SUP-199',
-    subject: 'مشكلة في رفع صور العقار',
-    user: 'منى طارق',
-    userType: 'مالك',
-    priority: 'منخفض',
-    status: 'مفتوح',
-    timeAgo: 'أمس',
-    assignedTo: 'أحمد العدل',
-  },
 ];
 
 export const mockOverviewTickets: OverviewTicket[] = [
@@ -480,30 +634,6 @@ export const mockOverviewTickets: OverviewTicket[] = [
     reporter: 'سارة أحمد',
     type: 'خلاف',
     status: 'مفتوح',
-    reviewer: 'أحمد العدل',
-  },
-  {
-    id: 'TKT-0080',
-    subject: 'رقم هاتف ظاهر في صور عقار',
-    reporter: 'النظام الآلي',
-    type: 'بلاغ عقار',
-    status: 'قيد المراجعة',
-    reviewer: 'سلمى رشدي',
-  },
-  {
-    id: 'TKT-0079',
-    subject: 'مستخدم يرسل رسائل مسيئة',
-    reporter: 'محمد علي',
-    type: 'بلاغ مستخدم',
-    status: 'محلول',
-    reviewer: 'سلمى رشدي',
-  },
-  {
-    id: 'TKT-0078',
-    subject: 'عقار غير موجود فعلياً',
-    reporter: 'نورا كمال',
-    type: 'بلاغ عقار',
-    status: 'مغلق',
     reviewer: 'أحمد العدل',
   },
 ];
@@ -543,15 +673,6 @@ export const mockKycRequests: KycRequest[] = [
     type: 'مستأجر',
     nationalIdMask: '29...12',
     waitTime: '2 ساعة',
-    status: 'انتظار المراجعة',
-  },
-  {
-    id: 'kyc-2',
-    user: 'أحمد محمد إبراهيم',
-    type: 'مالك',
-    nationalIdMask: '28...34',
-    waitTime: '4 ساعات',
-    hasWarning: true,
     status: 'انتظار المراجعة',
   },
 ];
