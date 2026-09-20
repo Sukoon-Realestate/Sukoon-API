@@ -138,9 +138,9 @@ export default function IndividualKycReviewPage() {
             </div>
 
             {/* Confidential Warning */}
-            <div className="bg-rose-50 border border-rose-200/60 rounded-xl p-3.5 flex items-center justify-center gap-2 text-rose-700 text-xs font-bold text-center">
-              <AlertTriangle className="w-4 h-4 shrink-0" />
-              <span>هذه البيانات سرية – للمراجع فقط</span>
+            <div className="bg-rose-100/70 dark:bg-rose-950/40 border-2 border-rose-300 dark:border-rose-800/80 rounded-2xl p-4 flex items-center justify-center gap-2 text-[#881337] dark:text-[#fecdd3] text-xs font-black text-center shadow-xs">
+              <AlertTriangle className="w-4 h-4 shrink-0 text-[#e11d48] dark:text-[#fb7185]" />
+              <span>هذه البيانات سرية وخاصة بالنظام – للمراجع المعيّن فقط</span>
             </div>
           </div>
 

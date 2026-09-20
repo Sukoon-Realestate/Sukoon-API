@@ -178,17 +178,17 @@ export default function PropertyReviewQueuePage() {
 
                     <div className="flex items-center gap-3">
                       {item.riskLevel === 'عالي الخطر' && (
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200">
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200/80 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30">
                           عالي الخطر
                         </span>
                       )}
                       {item.riskLevel === 'متوسط الخطر' && (
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200">
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200/80 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30">
                           متوسط الخطر
                         </span>
                       )}
                       {item.riskLevel === 'منخفض الخطر' && (
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600 border border-emerald-200">
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30">
                           منخفض الخطر
                         </span>
                       )}
@@ -249,11 +249,14 @@ export default function PropertyReviewQueuePage() {
             </div>
 
             {/* Risk Flags Box */}
-            <div className="space-y-2 bg-rose-50/50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/20 rounded-xl p-3.5 text-xs text-rose-800 dark:text-rose-300">
-              <div className="font-bold mb-1">ملاحظات المخاطر (Risk Flags):</div>
+            <div className="space-y-2 bg-rose-100/70 dark:bg-rose-950/40 border-2 border-rose-300 dark:border-rose-800/80 rounded-2xl p-4 text-xs shadow-xs">
+              <div className="font-black text-[#9f1239] dark:text-[#fecdd3] text-xs sm:text-sm mb-2 flex items-center gap-1.5">
+                <AlertTriangle className="w-4 h-4 text-[#e11d48] dark:text-[#fb7185] shrink-0" />
+                <span>ملاحظات المخاطر (Risk Flags):</span>
+              </div>
               {propertyRiskFlags.map((flag, idx) => (
-                <div key={idx} className="flex items-center gap-2 font-medium">
-                  <AlertTriangle className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                <div key={idx} className="flex items-center gap-2 font-black text-[#881337] dark:text-[#ffe4e6] text-xs pr-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#e11d48] dark:bg-[#fb7185] shrink-0"></span>
                   <span>{flag}</span>
                 </div>
               ))}
