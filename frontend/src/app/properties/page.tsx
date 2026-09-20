@@ -1,0 +1,170 @@
+'use client';
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { Header } from '@/components/layout/Header';
+import { StatusBadge } from '@/components/ui/StatusBadge';
+import { Search, Filter, Building2, Eye, XCircle } from 'lucide-react';
+import { mockProperties, propertyMetrics } from '@/data/mockData';
+
+export default function PropertiesManagementPage() {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredProperties = mockProperties.filter(
+    (prop) =>
+      prop.title.includes(searchQuery) ||
+      prop.owner.includes(searchQuery) ||
+      prop.type.includes(searchQuery)
+  );
+
+  return (
+    <div className="flex-1 flex flex-col pb-12">
+      <Header
+        title="إدارة العقارات"
+        subtitle="متابعة كل العقارات المعروضة، المراجعة وإجراءات الموافقة والرفض"
+      />
+
+      <div className="p-8 max-w-7xl mx-auto w-full space-y-6">
+        {/* Search & Filter Bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="w-full sm:w-auto text-lg font-extrabold text-slate-800">
+            إدارة العقارات
+          </div>
+
+          <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="relative flex-1 sm:w-80">
+              <input
+                type="text"
+                placeholder="بحث في العقارات..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-4 pr-10 py-2.5 bg-white rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all placeholder:text-slate-400"
+              />
+              <Search className="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5" />
+            </div>
+
+            <button className="flex items-center gap-2 bg-white px-4 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-teal-700 hover:bg-slate-50 transition-colors shadow-xs">
+              <Filter className="w-4 h-4" />
+              <span>فلتر</span>
+            </button>
+          </div>
+        </div>
+
+        {/* 4 Metric Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+            <div className="text-2xl font-black text-slate-900 mb-1">
+              {propertyMetrics.total.toLocaleString()}
+            </div>
+            <div className="text-xs font-semibold text-slate-400">
+              إجمالي العقارات
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+            <div className="text-2xl font-black text-emerald-600 mb-1">
+              {propertyMetrics.active}
+            </div>
+            <div className="text-xs font-semibold text-slate-400">نشط</div>
+          </div>
+
+          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+            <div className="text-2xl font-black text-amber-500 mb-1">
+              {propertyMetrics.pending}
+            </div>
+            <div className="text-xs font-semibold text-slate-400">
+              قيد المراجعة
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs text-center">
+            <div className="text-2xl font-black text-rose-500 mb-1">
+              {propertyMetrics.rejected}
+            </div>
+            <div className="text-xs font-semibold text-slate-400">مرفوض</div>
+          </div>
+        </div>
+
+        {/* Properties Data Table */}
+        <div className="bg-white rounded-2xl border border-slate-200/80 shadow-xs overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-right border-collapse">
+              <thead>
+                <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-500 text-xs font-bold">
+                  <th className="py-4 px-6">العقار</th>
+                  <th className="py-4 px-6">المالك</th>
+                  <th className="py-4 px-6">النوع</th>
+                  <th className="py-4 px-6">الحالة</th>
+                  <th className="py-4 px-6">السعر</th>
+                  <th className="py-4 px-6">المشاهدات</th>
+                  <th className="py-4 px-6 text-center">إجراء</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-sm">
+                {filteredProperties.map((prop) => (
+                  <tr
+                    key={prop.id}
+                    className="hover:bg-slate-50/70 transition-colors"
+                  >
+                    <td className="py-4 px-6 font-bold text-slate-800 flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0">
+                        <Building2 className="w-4 h-4" />
+                      </div>
+                      <span>{prop.title}</span>
+                    </td>
+                    <td className="py-4 px-6 text-slate-600 font-medium text-xs">
+                      {prop.owner}
+                    </td>
+                    <td className="py-4 px-6">
+                      <span className="bg-teal-50 text-teal-700 border border-teal-200/60 text-xs font-bold px-2.5 py-0.5 rounded-full">
+                        {prop.type}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6">
+                      {prop.status === 'مقبول' && (
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600 border border-emerald-200">
+                          مقبول ✓
+                        </span>
+                      )}
+                      {prop.status === 'قيد المراجعة' && (
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200">
+                          قيد المراجعة ⏱
+                        </span>
+                      )}
+                      {prop.status === 'مرفوض' && (
+                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200">
+                          مرفوض ✗
+                        </span>
+                      )}
+                    </td>
+                    <td className="py-4 px-6 font-bold text-teal-700 text-xs dir-ltr text-right">
+                      {prop.price}
+                    </td>
+                    <td className="py-4 px-6 text-slate-500 text-xs font-medium">
+                      {prop.views}
+                    </td>
+                    <td className="py-4 px-6">
+                      <div className="flex items-center justify-center gap-2">
+                        <Link
+                          href={`/properties/${prop.id}`}
+                          className="inline-flex items-center gap-1 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                          <span>مراجعة</span>
+                        </Link>
+                        <button className="inline-flex items-center gap-1 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors">
+                          <XCircle className="w-3.5 h-3.5" />
+                          <span>رفض</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

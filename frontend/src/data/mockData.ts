@@ -20,7 +20,7 @@ export interface UserItem {
   name: string;
   type: 'مستأجر' | 'مالك';
   email: string;
-  status: 'نشط' | 'قيد المراجعة' | 'موقوف';
+  status: 'نشط' | 'قيد المراجعة' | 'موقوف' | 'محظور';
   kycStatus: 'موثق' | 'قيد المراجعة' | 'مرفوض';
   regDate: string;
   phone?: string;
@@ -28,6 +28,9 @@ export interface UserItem {
   rating?: number;
   reportsAgainst?: number;
   lastActive?: string;
+  suspensionReason?: string;
+  suspendedBy?: string;
+  suspendedDate?: string;
   activityLog?: Array<{
     id: string;
     title: string;
@@ -45,6 +48,39 @@ export interface ReportItem {
   date: string;
   automationLevel: 'عالي' | 'تلقائي' | 'منخفض';
   status: 'نشط' | 'موقوف مؤقتاً' | 'محظور نهائياً';
+}
+
+export interface PropertyItem {
+  id: string;
+  title: string;
+  owner: string;
+  type: 'شقة' | 'ستوديو' | 'غرفة' | 'فيلا';
+  status: 'مقبول' | 'قيد المراجعة' | 'مرفوض';
+  price: string;
+  views: number;
+  imagesCount?: number;
+  time?: string;
+  riskLevel?: 'عالي الخطر' | 'متوسط الخطر' | 'منخفض الخطر';
+  area?: string;
+  rooms?: number;
+  createdDate?: string;
+  lastUpdated?: string;
+  auditLogs?: Array<{
+    title: string;
+    date: string;
+    actor: string;
+    status: 'accepted' | 'pending' | 'sent';
+  }>;
+}
+
+export interface KycRequest {
+  id: string;
+  user: string;
+  type: 'مستأجر' | 'مالك';
+  nationalIdMask: string;
+  waitTime: string;
+  hasWarning?: boolean;
+  status: 'انتظار المراجعة' | 'مقبول' | 'مرفوض';
 }
 
 export const overviewMetrics: DashboardMetric[] = [
@@ -115,6 +151,29 @@ export const executiveMetrics: DashboardMetric[] = [
     icon: 'alert',
   },
 ];
+
+export const propertyMetrics = {
+  total: 1203,
+  active: 890,
+  pending: 234,
+  rejected: 79,
+  openReports: 31,
+  rejectedToday: 12,
+  acceptedToday: 89,
+};
+
+export const suspendedUsersMetrics = {
+  tempSuspended: 43,
+  permanentlyBanned: 12,
+  pendingDecision: 8,
+};
+
+export const kycMetrics = {
+  pendingReview: 487,
+  reviewedToday: 124,
+  acceptedToday: 108,
+  rejectedToday: 16,
+};
 
 export const userDistributionData = {
   total: 2847,
@@ -257,6 +316,177 @@ export const mockUsers: UserItem[] = [
     rating: 3.2,
     reportsAgainst: 4,
     lastActive: 'منذ يومين',
+  },
+];
+
+export const mockSuspendedUsers: UserItem[] = [
+  {
+    id: 'tarek-mohamed',
+    name: 'طارق محمد علي',
+    type: 'مستأجر',
+    email: 'tarek@example.com',
+    status: 'موقوف',
+    kycStatus: 'قيد المراجعة',
+    regDate: '3 مايو 2025',
+    suspensionReason: 'لغة مسيئة',
+    suspendedDate: '3 يونيو',
+    suspendedBy: 'أحمد العدل',
+  },
+  {
+    id: 'karim-salem',
+    name: 'كريم سالم',
+    type: 'مالك',
+    email: 'karim.s@example.com',
+    status: 'محظور',
+    kycStatus: 'مرفوض',
+    regDate: '15 يناير 2025',
+    suspensionReason: 'احتيال',
+    suspendedDate: '10 يونيو',
+    suspendedBy: 'سلمى رشدي',
+  },
+  {
+    id: 'hoda-mahmoud',
+    name: 'هدى محمود',
+    type: 'مستأجر',
+    email: 'hoda@example.com',
+    status: 'موقوف',
+    kycStatus: 'قيد المراجعة',
+    regDate: '20 فبراير 2025',
+    suspensionReason: 'معلومات مضللة',
+    suspendedDate: '28 مايو',
+    suspendedBy: 'أحمد العدل',
+  },
+];
+
+export const mockProperties: PropertyItem[] = [
+  {
+    id: 'prop-1',
+    title: 'شقة مفروشة، مدينة نصر',
+    owner: 'أحمد محمد إبراهيم',
+    type: 'شقة',
+    status: 'مقبول',
+    price: '12,000 ج',
+    views: 540,
+    imagesCount: 6,
+    time: 'منذ 2 ساعة',
+    riskLevel: 'عالي الخطر',
+    area: '90 م²',
+    rooms: 3,
+    createdDate: '1 مايو 2025',
+    lastUpdated: 'اليوم',
+    auditLogs: [
+      { title: 'تم قبول العقار', date: '1 مايو 9:30 ص', actor: 'أحمد العدل', status: 'accepted' },
+      { title: 'مراجعة أولية آلية – لم تُكتشف مشاكل', date: '1 مايو 9:20 ص', actor: 'النظام', status: 'pending' },
+      { title: 'إرسال العقار من المالك', date: '1 مايو 9:00 ص', actor: 'أحمد محمد', status: 'sent' },
+    ],
+  },
+  {
+    id: 'prop-2',
+    title: 'ستوديو، التجمع الخامس',
+    owner: 'منى علي',
+    type: 'ستوديو',
+    status: 'قيد المراجعة',
+    price: '7,500 ج',
+    views: 0,
+    imagesCount: 4,
+    time: 'منذ 4 ساعات',
+    riskLevel: 'متوسط الخطر',
+    area: '60 م²',
+    rooms: 1,
+    createdDate: '3 مايو 2025',
+    lastUpdated: 'منذ 4 ساعات',
+  },
+  {
+    id: 'prop-3',
+    title: 'غرفة، المعادي',
+    owner: 'كريم سالم',
+    type: 'غرفة',
+    status: 'مرفوض',
+    price: '4,000 ج',
+    views: 120,
+    imagesCount: 9,
+    time: 'منذ 6 ساعات',
+    riskLevel: 'منخفض الخطر',
+    area: '25 م²',
+    rooms: 1,
+    createdDate: '28 أبريل 2025',
+    lastUpdated: 'منذ يوم',
+  },
+  {
+    id: 'prop-4',
+    title: 'شقة، المهندسين',
+    owner: 'نادر طارق',
+    type: 'شقة',
+    status: 'مقبول',
+    price: '15,000 ج',
+    views: 325,
+    imagesCount: 3,
+    time: 'منذ يوم',
+    riskLevel: 'عالي الخطر',
+    area: '140 م²',
+    rooms: 3,
+    createdDate: '10 أبريل 2025',
+    lastUpdated: 'أمس',
+  },
+];
+
+export const propertyVerificationChecklist = [
+  { id: 'c1', title: 'صور واضحة (9-10 صور)', passed: false },
+  { id: 'c2', title: 'عنوان العقار مكتمل', passed: true },
+  { id: 'c3', title: 'السعر منطقي للمنطقة', passed: true },
+  { id: 'c4', title: 'لا يوجد رقم هاتف في الصور', passed: false },
+  { id: 'c5', title: 'وصف غير مضلل', passed: true },
+  { id: 'c6', title: 'بيانات المالك موثقة', passed: true },
+  { id: 'c7', title: 'الموقع الجغرافي صحيح', passed: true },
+];
+
+export const propertyRiskFlags = [
+  'رقم هاتف محتمل في صورة 3',
+  'عدد الصور أقل من المطلوب',
+];
+
+export const mockKycRequests: KycRequest[] = [
+  {
+    id: 'kyc-1',
+    user: 'سارة أحمد خالد',
+    type: 'مستأجر',
+    nationalIdMask: '29...12',
+    waitTime: '2 ساعة',
+    status: 'انتظار المراجعة',
+  },
+  {
+    id: 'kyc-2',
+    user: 'أحمد محمد إبراهيم',
+    type: 'مالك',
+    nationalIdMask: '28...34',
+    waitTime: '4 ساعات',
+    hasWarning: true,
+    status: 'انتظار المراجعة',
+  },
+  {
+    id: 'kyc-3',
+    user: 'نورا عمر طارق',
+    type: 'مستأجر',
+    nationalIdMask: '30...56',
+    waitTime: '6 ساعات',
+    status: 'انتظار المراجعة',
+  },
+  {
+    id: 'kyc-4',
+    user: 'كريم سالم فاروق',
+    type: 'مالك',
+    nationalIdMask: '27...78',
+    waitTime: '8 ساعات',
+    status: 'انتظار المراجعة',
+  },
+  {
+    id: 'kyc-5',
+    user: 'منى حسام علي',
+    type: 'مستأجر',
+    nationalIdMask: '29...90',
+    waitTime: 'يوم',
+    hasWarning: true,
+    status: 'انتظار المراجعة',
   },
 ];
 
