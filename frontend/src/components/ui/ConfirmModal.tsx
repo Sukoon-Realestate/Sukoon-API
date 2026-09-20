@@ -55,35 +55,35 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
       <div
-        className="relative w-full max-w-md bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-2xl p-6 space-y-5 animate-scaleIn text-right"
+        className="relative w-full max-w-md bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-2xl p-6 space-y-5 animate-scaleIn text-right glass-card"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
-          className="absolute top-4 left-4 p-1 rounded-lg text-[var(--text-subtle)] hover:bg-[var(--card-hover)] transition-colors"
+          className="absolute top-4 left-4 p-1.5 rounded-xl text-[var(--text-subtle)] hover:bg-[var(--card-hover)] transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-3">
-          <div className="p-3 rounded-full bg-[var(--card-hover)] shrink-0">
+        <div className="flex items-center gap-3.5">
+          <div className="w-12 h-12 rounded-2xl bg-[var(--card-hover)] border border-[var(--card-border)] shrink-0 flex items-center justify-center">
             {getIcon()}
           </div>
           <div>
-            <h3 className="font-extrabold text-base text-[var(--foreground)]">{title}</h3>
-            <p className="text-xs text-[var(--text-subtle)] mt-0.5">{message}</p>
+            <h3 className="font-black text-base text-[var(--foreground)] leading-tight">{title}</h3>
+            <p className="text-xs font-semibold text-[var(--text-muted)] mt-1">{message}</p>
           </div>
         </div>
 
         {children && <div className="pt-2">{children}</div>}
 
-        <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--divider)]">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-[var(--divider)]">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 bg-[var(--badge-bg-muted)] hover:bg-[var(--card-hover)] text-[var(--foreground)] text-xs font-bold rounded-xl transition-colors"
+            className="px-4 py-2 bg-[var(--badge-bg-muted)] hover:bg-[var(--card-hover)] text-[var(--foreground)] text-xs font-bold rounded-xl transition-all cursor-pointer btn-press border border-[var(--card-border)]"
           >
             {cancelText}
           </button>
@@ -93,7 +93,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
               onConfirm();
               onClose();
             }}
-            className={`px-5 py-2 text-xs font-extrabold rounded-xl transition-all shadow-sm ${getButtonBg()}`}
+            className={`px-5 py-2 text-xs font-extrabold rounded-xl transition-all shadow-md cursor-pointer btn-press ${getButtonBg()}`}
           >
             {confirmText}
           </button>

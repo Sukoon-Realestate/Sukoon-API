@@ -345,3 +345,55 @@ a, button, input, select, textarea,
   color: #cbd5e1;
   border-color: rgba(100, 116, 139, 0.3);
 }
+
+/* ===========================
+   * Advanced UI Utilities & Glassmorphism
+   =========================== */
+.glass-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-card:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+.btn-press:active {
+  transform: scale(0.97);
+}
+
+.glow-teal-sm {
+  box-shadow: 0 0 16px -2px rgba(20, 184, 166, 0.25);
+}
+
+.glow-rose-sm {
+  box-shadow: 0 0 16px -2px rgba(244, 63, 94, 0.25);
+}
+
+.glow-amber-sm {
+  box-shadow: 0 0 16px -2px rgba(245, 158, 11, 0.25);
+}
+
+.glow-blue-sm {
+  box-shadow: 0 0 16px -2px rgba(59, 130, 246, 0.25);
+}
+
+.accent-line-top {
+  position: relative;
+  overflow: hidden;
+}
+
+.accent-line-top::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #14b8a6, #0d9488, #06b6d4);
+  border-radius: 3px 3px 0 0;
+}
+

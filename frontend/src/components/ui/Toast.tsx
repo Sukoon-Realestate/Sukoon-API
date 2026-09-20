@@ -39,26 +39,37 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`pointer-events-auto flex items-center justify-between gap-3 px-4 py-3 rounded-2xl shadow-xl border backdrop-blur-md animate-fadeInUp text-xs font-bold transition-all ${
+            className={`pointer-events-auto relative overflow-hidden flex items-center justify-between gap-3 px-4 py-3.5 rounded-2xl shadow-2xl border backdrop-blur-md animate-fadeInUp text-xs font-extrabold transition-all ${
               toast.type === 'success'
-                ? 'bg-emerald-900/90 text-emerald-100 border-emerald-700/50'
+                ? 'bg-emerald-950/95 text-emerald-100 border-emerald-600/50 glow-teal-sm'
                 : toast.type === 'error'
-                ? 'bg-rose-900/90 text-rose-100 border-rose-700/50'
-                : 'bg-slate-900/90 text-slate-100 border-slate-700/50'
+                ? 'bg-rose-950/95 text-rose-100 border-rose-600/50 glow-rose-sm'
+                : 'bg-slate-950/95 text-slate-100 border-slate-700/50 glow-blue-sm'
             }`}
           >
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2.5">
               {toast.type === 'success' && <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />}
               {toast.type === 'error' && <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />}
-              {toast.type === 'info' && <Info className="w-4 h-4 text-teal-400 shrink-0" />}
-              <span>{toast.message}</span>
+              {toast.type === 'info' && <Info className="w-4 h-4 text-cyan-400 shrink-0" />}
+              <span className="leading-snug">{toast.message}</span>
             </div>
             <button
               onClick={() => removeToast(toast.id)}
-              className="p-1 hover:opacity-75 transition-opacity"
+              className="p-1 hover:opacity-75 transition-opacity cursor-pointer shrink-0"
             >
               <X className="w-3.5 h-3.5" />
             </button>
+
+            {/* Bottom animated progress bar */}
+            <div
+              className={`absolute bottom-0 left-0 right-0 h-0.5 animate-barGrow ${
+                toast.type === 'success'
+                  ? 'bg-emerald-400'
+                  : toast.type === 'error'
+                  ? 'bg-rose-400'
+                  : 'bg-cyan-400'
+              }`}
+            ></div>
           </div>
         ))}
       </div>

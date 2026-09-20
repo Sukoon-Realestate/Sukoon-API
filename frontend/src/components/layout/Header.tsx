@@ -89,12 +89,13 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Main title (Centered) */}
-      <div className="text-center flex-1 mx-2 sm:mx-4 min-w-0">
-        <h2 className="text-sm sm:text-lg font-black text-[var(--foreground)] tracking-tight truncate">
-          {title}
+      <div className="text-center flex-1 mx-2 sm:mx-4 min-w-0 flex flex-col items-center">
+        <h2 className="text-sm sm:text-base font-black text-[var(--foreground)] tracking-tight truncate flex items-center justify-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+          <span>{title}</span>
         </h2>
         {subtitle && (
-          <p className="hidden md:block text-[11px] text-[var(--text-subtle)] font-medium truncate">
+          <p className="hidden md:block text-[11px] text-[var(--text-muted)] font-bold truncate">
             {subtitle}
           </p>
         )}
