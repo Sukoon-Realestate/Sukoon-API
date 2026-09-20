@@ -106,16 +106,16 @@ class _LoginScreenState extends State<LoginScreen> {
               20.szH,
               const LoginDivider(),
               18.szH,
-              Builder(
-                builder: (context) => AppGoogleSignInButton(
-                  onSuccess: (token) => _submitGoogle(context, token),
-                ),
-              ),
-              12.szH,
+              // Builder(
+              //   builder: (context) => AppGoogleSignInButton(
+              //     onSuccess: (token) => _submitGoogle(context, token),
+              //   ),
+              // ),
+              // 12.szH,
               // AppFacebookSignInButton(onSuccess: (token) async {}),
-              12.szH,
+              // 12.szH,
               // SokoonAppleSignInButton(),
-              16.szH,
+              // 16.szH,
               TextButton(
                 onPressed: () {},
                 style: TextButton.styleFrom(

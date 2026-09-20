@@ -20,8 +20,8 @@ import 'package:melos_core/core/shared/bloc_observer.dart';
 import 'package:melos_core/core/widgets/exeption_view.dart';
 import 'package:sokoun_app/app.dart';
 
-import 'firebase_options.dart' as dev;
-import 'firebase_options_dev.dart' as prod;
+import 'firebase_options.dart' as prod;
+import 'firebase_options_dev.dart' as dev;
 
 void main() async {
   Helpers.changeStatusbarColor(statusBarColor: AppColors.white);
@@ -41,9 +41,9 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  if (kReleaseMode) {
+  if (kDebugMode) {
     ErrorWidget.builder = (FlutterErrorDetails details) {
-      if (FireStoreService.isInitialized && kReleaseMode) {
+      if (FireStoreService.isInitialized && kDebugMode) {
         FireStoreService.instance.storeError(details.exceptionAsString());
       }
 
@@ -81,13 +81,10 @@ Future<bool> fetchBaseUrl() async {
         minimumFetchInterval: Duration.zero,
       ),
     );
-    await remoteConfig.setDefaults(const <String, dynamic>{
-      SecureLocalVariableKeys.minAppVersionKey: '',
-    });
 
     await remoteConfig.fetchAndActivate();
 
-    if (kReleaseMode) {
+    if (kDebugMode) {
       final bool fireStoreAvailabilityVal = remoteConfig.getBool(
         SecureLocalVariableKeys.fireStoreAvailabilityKey,
       );

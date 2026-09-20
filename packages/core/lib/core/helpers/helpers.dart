@@ -42,7 +42,7 @@ class Helpers {
     return ConstantManager.bundleId;
   }
 
-  static late AppFlavor currentFlavor;
+  static AppFlavor currentFlavor = AppFlavor.none;
   static Future<void> get getCurrentFlavor async{
     final PackageInfo packageInfo = await PackageInfo.fromPlatform();
 
