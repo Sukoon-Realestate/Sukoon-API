@@ -1,18 +1,25 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { StatusBadge } from '@/components/ui/StatusBadge';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { useToast } from '@/components/ui/Toast';
 import { Send, CheckCircle, AlertOctagon } from 'lucide-react';
 import { mockSupportTickets } from '@/data/mockData';
 
 export default function SupportTicketDetailPage() {
   const params = useParams();
   const ticketId = (params?.id as string) || 'SUP-201';
+  const { showToast } = useToast();
 
-  const ticket =
+  const initialTicket =
     mockSupportTickets.find((t) => t.id === ticketId) || mockSupportTickets[0];
+
+  const [ticket, setTicket] = useState(initialTicket);
+  const [showCloseModal, setShowCloseModal] = useState(false);
+  const [showEscalateModal, setShowEscalateModal] = useState(false);
 
   const [messages, setMessages] = useState([
     {
@@ -43,7 +50,18 @@ export default function SupportTicketDetailPage() {
         time: 'الآن',
       },
     ]);
+    showToast('تم إرسال الرد للمستخدم بنجاح', 'success');
     setNewReply('');
+  };
+
+  const handleCloseTicket = () => {
+    setTicket((prev) => ({ ...prev, status: 'محلول' }));
+    showToast(`تم إغلاق التذكرة ${ticket.id} كـ "محلول" بنجاح`, 'success');
+  };
+
+  const handleEscalateTicket = () => {
+    setTicket((prev) => ({ ...prev, priority: 'عالي', status: 'قيد المعالجة' }));
+    showToast(`تم تصعيد التذكرة ${ticket.id} إلى المشرف المباشر`, 'info');
   };
 
   return (
@@ -54,7 +72,7 @@ export default function SupportTicketDetailPage() {
         lastUpdated="9:41 ص"
       />
 
-      <div className="p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: Ticket Info (4 cols) */}
           <div className="lg:col-span-4 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-4 text-xs">
@@ -64,7 +82,7 @@ export default function SupportTicketDetailPage() {
 
             <div className="flex items-center justify-between">
               <span className="text-[var(--text-subtle)] font-medium">رقم التذكرة</span>
-              <span className="font-bold font-mono text-teal-700 dir-ltr text-sm">
+              <span className="font-bold font-mono text-teal-700 dark:text-teal-400 dir-ltr text-sm">
                 {ticket.id}
               </span>
             </div>
@@ -86,12 +104,12 @@ export default function SupportTicketDetailPage() {
 
             <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
               <span className="text-[var(--text-subtle)] font-medium">الأولوية</span>
-              <span className="font-bold text-rose-600">{ticket.priority}</span>
+              <span className="font-bold text-rose-600 dark:text-rose-400">{ticket.priority}</span>
             </div>
 
             <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
               <span className="text-[var(--text-subtle)] font-medium">الحالة</span>
-              <span className="font-bold text-teal-700">{ticket.status}</span>
+              <span className="font-bold text-teal-700 dark:text-teal-400">{ticket.status}</span>
             </div>
 
             <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
@@ -127,8 +145,8 @@ export default function SupportTicketDetailPage() {
                     <div
                       className={`max-w-md p-4 rounded-2xl text-xs font-semibold leading-relaxed shadow-2xs ${
                         msg.sender === 'user'
-                          ? 'bg-teal-50 text-[var(--foreground)] rounded-tr-none border border-teal-100'
-                          : 'bg-[var(--badge-bg-muted)] text-[var(--foreground)] rounded-tl-none border border-slate-200/60'
+                          ? 'bg-teal-50 dark:bg-teal-500/10 text-[var(--foreground)] rounded-tr-none border border-teal-100 dark:border-teal-500/20'
+                          : 'bg-[var(--badge-bg-muted)] text-[var(--foreground)] rounded-tl-none border border-[var(--card-border)]'
                       }`}
                     >
                       {msg.text}
@@ -147,11 +165,11 @@ export default function SupportTicketDetailPage() {
                   value={newReply}
                   onChange={(e) => setNewReply(e.target.value)}
                   placeholder="اكتب رداً..."
-                  className="flex-1 p-3 bg-[var(--card-hover)] border border-[var(--card-border)] rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 placeholder:text-[var(--text-subtle)] resize-none"
+                  className="flex-1 p-3 bg-[var(--card-hover)] border border-[var(--card-border)] rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 placeholder:text-[var(--text-subtle)] resize-none text-[var(--foreground)]"
                 ></textarea>
                 <button
                   onClick={handleSendMessage}
-                  className="h-full px-5 bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5 shrink-0 py-4"
+                  className="h-full px-5 bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5 shrink-0 py-4 cursor-pointer"
                 >
                   <Send className="w-3.5 h-3.5" />
                   <span>إرسال</span>
@@ -170,17 +188,23 @@ export default function SupportTicketDetailPage() {
                 value={internalNote}
                 onChange={(e) => setInternalNote(e.target.value)}
                 placeholder="ملاحظات الفريق الداخلي..."
-                className="w-full p-3 bg-[var(--card-hover)] border border-[var(--card-border)] rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 placeholder:text-[var(--text-subtle)] resize-none"
+                className="w-full p-3 bg-[var(--card-hover)] border border-[var(--card-border)] rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 placeholder:text-[var(--text-subtle)] resize-none text-[var(--foreground)]"
               ></textarea>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-                <button className="py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs rounded-xl shadow-[var(--shadow-card)] transition-colors flex items-center justify-center gap-2">
+                <button
+                  onClick={() => setShowCloseModal(true)}
+                  className="py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs rounded-xl shadow-[var(--shadow-card)] transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                >
                   <CheckCircle className="w-4 h-4" />
                   <span>إغلاق كـ محلول</span>
                 </button>
 
-                <button className="py-3 bg-amber-500/15 hover:bg-amber-500/25 text-amber-800 font-extrabold text-xs rounded-xl border border-amber-200/60 transition-colors flex items-center justify-center gap-2">
-                  <AlertOctagon className="w-4 h-4 text-amber-600" />
+                <button
+                  onClick={() => setShowEscalateModal(true)}
+                  className="py-3 bg-amber-500/15 hover:bg-amber-500/25 text-amber-800 dark:text-amber-300 font-extrabold text-xs rounded-xl border border-amber-200/60 dark:border-amber-500/30 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <AlertOctagon className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                   <span>تصعيد</span>
                 </button>
               </div>
@@ -188,6 +212,29 @@ export default function SupportTicketDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Close Confirm Modal */}
+      <ConfirmModal
+        isOpen={showCloseModal}
+        onClose={() => setShowCloseModal(false)}
+        onConfirm={handleCloseTicket}
+        title={`إغلاق التذكرة ${ticket.id}`}
+        message="هل قمت بحل المشكلة بالكامل وتأكيد ذلك مع المستخدم؟"
+        variant="success"
+        confirmText="تأكيد الإغلاق"
+      />
+
+      {/* Escalate Confirm Modal */}
+      <ConfirmModal
+        isOpen={showEscalateModal}
+        onClose={() => setShowEscalateModal(false)}
+        onConfirm={handleEscalateTicket}
+        title={`تصعيد التذكرة ${ticket.id}`}
+        message="سيتم رفع أولوية التذكرة وتنبيه مشرف المستوى الأعلى."
+        variant="warning"
+        confirmText="تصعيد التذكرة"
+      />
     </div>
   );
 }
+

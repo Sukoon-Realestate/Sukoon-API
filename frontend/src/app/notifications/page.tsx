@@ -1,7 +1,8 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import { Header } from '@/components/layout/Header';
+import { useToast } from '@/components/ui/Toast';
 import { mockPushCampaigns } from '@/data/mockData';
 
 export default function PushNotificationsPage() {
@@ -9,9 +10,13 @@ export default function PushNotificationsPage() {
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
   const [campaigns, setCampaigns] = useState(mockPushCampaigns);
+  const { showToast } = useToast();
 
   const handleSendNow = () => {
-    if (!title.trim() || !body.trim()) return;
+    if (!title.trim() || !body.trim()) {
+      showToast('الرجاء كتابة عنوان ونص الإشعار قبل الإرسال', 'error');
+      return;
+    }
     setCampaigns((prev) => [
       {
         id: `nc-${Date.now()}`,
@@ -19,12 +24,21 @@ export default function PushNotificationsPage() {
         timeAgo: 'الآن',
         body,
         openRate: '0% فتح',
-        recipientCount: '2,847 وصل',
+        recipientCount: audience === 'all' ? '2,847 وصل' : audience === 'tenants' ? '1,924 وصل' : '923 وصل',
       },
       ...prev,
     ]);
+    showToast(`تم إرسال الإشعار بنجاح إلى الفئة المختارة (${audience})`, 'success');
     setTitle('');
     setBody('');
+  };
+
+  const handleSchedule = () => {
+    if (!title.trim() || !body.trim()) {
+      showToast('الرجاء كتابة عنوان ونص الإشعار لجدولته', 'error');
+      return;
+    }
+    showToast(`تم جدولة إرسال الإشعار غداً الساعة 10:00 ص`, 'info');
   };
 
   return (
@@ -52,7 +66,7 @@ export default function PushNotificationsPage() {
                 <button
                   type="button"
                   onClick={() => setAudience('all')}
-                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
+                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                     audience === 'all'
                       ? 'bg-[#0D7C66] text-white shadow-[var(--shadow-card)]'
                       : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
@@ -63,7 +77,7 @@ export default function PushNotificationsPage() {
                 <button
                   type="button"
                   onClick={() => setAudience('tenants')}
-                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
+                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                     audience === 'tenants'
                       ? 'bg-[#0D7C66] text-white shadow-[var(--shadow-card)]'
                       : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
@@ -74,7 +88,7 @@ export default function PushNotificationsPage() {
                 <button
                   type="button"
                   onClick={() => setAudience('landlords')}
-                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
+                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                     audience === 'landlords'
                       ? 'bg-[#0D7C66] text-white shadow-[var(--shadow-card)]'
                       : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
@@ -85,7 +99,7 @@ export default function PushNotificationsPage() {
                 <button
                   type="button"
                   onClick={() => setAudience('verified')}
-                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
+                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
                     audience === 'verified'
                       ? 'bg-[#0D7C66] text-white shadow-[var(--shadow-card)]'
                       : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
@@ -106,7 +120,7 @@ export default function PushNotificationsPage() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="مثال: عروض الصيف على سكون!"
-                className="w-full p-3 bg-[var(--input-bg)] border border-[var(--card-border)] rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-[#0D7C66] placeholder:text-[var(--text-subtle)]"
+                className="w-full p-3 bg-[var(--input-bg)] border border-[var(--card-border)] rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-[#0D7C66] placeholder:text-[var(--text-subtle)] text-[var(--foreground)]"
               />
             </div>
 
@@ -120,7 +134,7 @@ export default function PushNotificationsPage() {
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
                 placeholder="نص الإشعار..."
-                className="w-full p-3 bg-[var(--input-bg)] border border-[var(--card-border)] rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-[#0D7C66] placeholder:text-[var(--text-subtle)] resize-none"
+                className="w-full p-3 bg-[var(--input-bg)] border border-[var(--card-border)] rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-[#0D7C66] placeholder:text-[var(--text-subtle)] resize-none text-[var(--foreground)]"
               ></textarea>
             </div>
 
@@ -129,14 +143,15 @@ export default function PushNotificationsPage() {
               <button
                 type="button"
                 onClick={handleSendNow}
-                className="py-3.5 bg-[#0D7C66] hover:bg-[#0B6856] text-white font-extrabold text-sm rounded-xl shadow-[var(--shadow-card)] transition-colors flex items-center justify-center gap-2"
+                className="py-3.5 bg-[#0D7C66] hover:bg-[#0B6856] text-white font-extrabold text-sm rounded-xl shadow-[var(--shadow-card)] transition-colors flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>إرسال الآن</span>
               </button>
 
               <button
                 type="button"
-                className="py-3.5 bg-[var(--card-hover)] hover:bg-[var(--badge-bg-muted)] text-[var(--foreground)] font-extrabold text-sm rounded-xl border border-[var(--card-border)] transition-colors flex items-center justify-center gap-2"
+                onClick={handleSchedule}
+                className="py-3.5 bg-[var(--card-hover)] hover:bg-[var(--badge-bg-muted)] text-[var(--foreground)] font-extrabold text-sm rounded-xl border border-[var(--card-border)] transition-colors flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>جدولة</span>
               </button>

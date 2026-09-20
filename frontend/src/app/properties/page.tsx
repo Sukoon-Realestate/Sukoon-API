@@ -1,20 +1,39 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
-import { Search, Filter, Building2, Eye, XCircle } from 'lucide-react';
-import { mockProperties, propertyMetrics } from '@/data/mockData';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { useToast } from '@/components/ui/Toast';
+import { Search, Filter, Building2, Eye, XCircle, CheckCircle2 } from 'lucide-react';
+import { mockProperties, propertyMetrics, PropertyItem } from '@/data/mockData';
 
 export default function PropertiesManagementPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [propertiesList, setPropertiesList] = useState<PropertyItem[]>(mockProperties);
+  const [showFilterDrawer, setShowFilterDrawer] = useState(false);
+  const [typeFilter, setTypeFilter] = useState<'all' | 'شقة' | 'ستوديو' | 'غرفة' | 'فيلا'>('all');
+  const [selectedPropertyToReject, setSelectedPropertyToReject] = useState<PropertyItem | null>(null);
+  const { showToast } = useToast();
 
-  const filteredProperties = mockProperties.filter(
-    (prop) =>
+  const filteredProperties = propertiesList.filter((prop) => {
+    const matchesSearch =
       prop.title.includes(searchQuery) ||
       prop.owner.includes(searchQuery) ||
-      prop.type.includes(searchQuery)
-  );
+      prop.type.includes(searchQuery);
+
+    if (!matchesSearch) return false;
+    if (typeFilter !== 'all' && prop.type !== typeFilter) return false;
+    return true;
+  });
+
+  const handleConfirmReject = () => {
+    if (!selectedPropertyToReject) return;
+    setPropertiesList((prev) =>
+      prev.map((p) => (p.id === selectedPropertyToReject.id ? { ...p, status: 'مرفوض' } : p))
+    );
+    showToast(`تم رفض إدراج العقار "${selectedPropertyToReject.title}"`, 'error');
+  };
 
   return (
     <div className="flex-1 flex flex-col pb-12">
@@ -37,15 +56,42 @@ export default function PropertiesManagementPage() {
                 placeholder="بحث في العقارات..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-4 pr-10 py-2.5 bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all placeholder:text-[var(--text-subtle)]"
+                className="w-full pl-4 pr-10 py-2.5 bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all placeholder:text-[var(--text-subtle)] text-[var(--foreground)]"
               />
               <Search className="w-4 h-4 text-[var(--text-subtle)] absolute right-3.5 top-3.5" />
             </div>
 
-            <button className="flex items-center gap-2 bg-[var(--card-bg)] px-4 py-2.5 rounded-xl border border-[var(--card-border)] text-sm font-semibold text-teal-700 hover:bg-[var(--card-hover)] transition-colors shadow-[var(--shadow-card)]">
-              <Filter className="w-4 h-4" />
-              <span>فلتر</span>
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => setShowFilterDrawer(!showFilterDrawer)}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-colors shadow-[var(--shadow-card)] cursor-pointer ${
+                  showFilterDrawer || typeFilter !== 'all'
+                    ? 'bg-teal-700 text-white border-teal-800'
+                    : 'bg-[var(--card-bg)] text-teal-700 hover:bg-[var(--card-hover)] border-[var(--card-border)]'
+                }`}
+              >
+                <Filter className="w-4 h-4" />
+                <span>تصفية ({typeFilter === 'all' ? 'الكل' : typeFilter})</span>
+              </button>
+
+              {/* Filter Dropdown */}
+              {showFilterDrawer && (
+                <div className="absolute top-12 left-0 w-48 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-xl p-3 z-30 animate-fadeInUp">
+                  <p className="text-xs font-bold text-[var(--text-muted)] mb-2 px-1">نوع العقار:</p>
+                  <div className="space-y-1">
+                    {(['all', 'شقة', 'ستوديو', 'غرفة', 'فيلا'] as const).map((t) => (
+                      <button
+                        key={t}
+                        onClick={() => { setTypeFilter(t); setShowFilterDrawer(false); }}
+                        className={`w-full text-right px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${typeFilter === t ? 'bg-teal-500/15 text-teal-600' : 'text-[var(--foreground)] hover:bg-[var(--card-hover)]'}`}
+                      >
+                        {t === 'all' ? 'جميع الأنواع' : t}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -89,7 +135,7 @@ export default function PropertiesManagementPage() {
           <div className="overflow-x-auto">
             <table className="w-full text-right border-collapse">
               <thead>
-                <tr className="bg-[var(--table-header-bg)] border-b border-slate-200 text-[var(--text-muted)] text-xs font-bold">
+                <tr className="bg-[var(--table-header-bg)] border-b border-[var(--card-border)] text-[var(--text-muted)] text-xs font-bold">
                   <th className="py-4 px-6">العقار</th>
                   <th className="py-4 px-6">المالك</th>
                   <th className="py-4 px-6">النوع</th>
@@ -115,7 +161,7 @@ export default function PropertiesManagementPage() {
                       {prop.owner}
                     </td>
                     <td className="py-4 px-6">
-                      <span className="bg-teal-50 text-teal-700 border border-teal-200/60 text-xs font-bold px-2.5 py-0.5 rounded-full">
+                      <span className="bg-teal-50 text-teal-700 dark:bg-teal-500/10 dark:text-teal-400 border border-teal-200/60 text-xs font-bold px-2.5 py-0.5 rounded-full">
                         {prop.type}
                       </span>
                     </td>
@@ -136,7 +182,7 @@ export default function PropertiesManagementPage() {
                         </span>
                       )}
                     </td>
-                    <td className="py-4 px-6 font-bold text-teal-700 text-xs dir-ltr text-right">
+                    <td className="py-4 px-6 font-bold text-teal-700 dark:text-teal-400 text-xs dir-ltr text-right">
                       {prop.price}
                     </td>
                     <td className="py-4 px-6 text-[var(--text-muted)] text-xs font-medium">
@@ -145,16 +191,21 @@ export default function PropertiesManagementPage() {
                     <td className="py-4 px-6">
                       <div className="flex items-center justify-center gap-2">
                         <Link
-                          href={`/properties/${prop.id}`}
-                          className="inline-flex items-center gap-1 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors"
+                          href={`/properties/review`}
+                          className="inline-flex items-center gap-1 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
                         >
                           <Eye className="w-3.5 h-3.5" />
                           <span>مراجعة</span>
                         </Link>
-                        <button className="inline-flex items-center gap-1 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors">
-                          <XCircle className="w-3.5 h-3.5" />
-                          <span>رفض</span>
-                        </button>
+                        {prop.status !== 'مرفوض' && (
+                          <button
+                            onClick={() => setSelectedPropertyToReject(prop)}
+                            className="inline-flex items-center gap-1 bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                          >
+                            <XCircle className="w-3.5 h-3.5" />
+                            <span>رفض</span>
+                          </button>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -164,6 +215,18 @@ export default function PropertiesManagementPage() {
           </div>
         </div>
       </div>
+
+      {/* Reject Modal */}
+      <ConfirmModal
+        isOpen={!!selectedPropertyToReject}
+        onClose={() => setSelectedPropertyToReject(null)}
+        onConfirm={handleConfirmReject}
+        title={`رفض إدراج العقار: ${selectedPropertyToReject?.title}`}
+        message="هل أنت تأكد من رفض إدراج هذا العقار؟ سيتم إخطار المالك بالأسباب."
+        variant="danger"
+        confirmText="تأكيد الرفض"
+      />
     </div>
   );
 }
+

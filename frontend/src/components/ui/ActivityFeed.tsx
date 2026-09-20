@@ -55,7 +55,7 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
         <h3 className="font-bold text-[var(--foreground)] text-base">آخر الأنشطة</h3>
         {showViewAll && (
           <Link
-            href="/activities"
+            href="/system/logs"
             className="text-xs font-bold text-[var(--primary-text)] hover:underline"
           >
             عرض الكل

@@ -1,7 +1,9 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import { Header } from '@/components/layout/Header';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { useToast } from '@/components/ui/Toast';
 import {
   User,
   FileText,
@@ -13,6 +15,22 @@ import {
 
 export default function IndividualKycReviewPage() {
   const [internalNote, setInternalNote] = useState('');
+  const [status, setStatus] = useState<'قيد المراجعة' | 'مقبول' | 'مرفوض' | 'إعادة رفع'>('قيد المراجعة');
+  const [modalType, setModalType] = useState<'approve' | 'reject' | 'reupload' | null>(null);
+  const { showToast } = useToast();
+
+  const handleConfirmDecision = () => {
+    if (modalType === 'approve') {
+      setStatus('مقبول');
+      showToast('تمت الموافقة على توثيق هوية سارة أحمد بنجاح', 'success');
+    } else if (modalType === 'reject') {
+      setStatus('مرفوض');
+      showToast('تم رفض طلب التوثيق وتثبيت الحالة في النظام', 'error');
+    } else if (modalType === 'reupload') {
+      setStatus('إعادة رفع');
+      showToast('تم إرسال طلب إعادة رفع المستندات إلى سارة أحمد', 'info');
+    }
+  };
 
   return (
     <div className="flex-1 flex flex-col pb-12">
@@ -22,7 +40,7 @@ export default function IndividualKycReviewPage() {
         lastUpdated="9:41 ص"
       />
 
-      <div className="p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: User Info Card (3.5 cols) */}
           <div className="lg:col-span-4 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex flex-col items-center">
@@ -39,8 +57,16 @@ export default function IndividualKycReviewPage() {
             </p>
 
             <div className="mb-6">
-              <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200">
-                قيد المراجعة ⏱
+              <span className={`px-3 py-1 rounded-full text-xs font-bold border ${
+                status === 'مقبول' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' :
+                status === 'مرفوض' ? 'bg-rose-50 text-rose-600 border-rose-200' :
+                status === 'إعادة رفع' ? 'bg-blue-50 text-blue-600 border-blue-200' :
+                'bg-amber-50 text-amber-600 border-amber-200'
+              }`}>
+                {status === 'مقبول' ? 'موثّق ومقبول ✓' :
+                 status === 'مرفوض' ? 'طلب مرفوض ✗' :
+                 status === 'إعادة رفع' ? 'طلب إعادة رفع ⏱' :
+                 'قيد المراجعة ⏱'}
               </span>
             </div>
 
@@ -49,7 +75,7 @@ export default function IndividualKycReviewPage() {
               <div className="flex items-center justify-between">
                 <span className="text-[var(--text-subtle)] font-medium">رقم الهاتف</span>
                 <span className="font-bold text-[var(--foreground)] font-mono dir-ltr">
-                  01******432
+                  01012345432
                 </span>
               </div>
 
@@ -83,9 +109,9 @@ export default function IndividualKycReviewPage() {
               <label className="text-xs font-bold text-[var(--text-muted)]">
                 وجه البطاقة القومية
               </label>
-              <div className="w-full h-36 rounded-2xl bg-[var(--badge-bg-muted)] border border-[var(--card-border)] flex flex-col items-center justify-center text-[var(--text-subtle)]">
-                <FileText className="w-10 h-10 text-slate-300 mb-1" />
-                <span className="text-xs font-semibold">صورة البطاقة الأمامية</span>
+              <div className="w-full h-36 rounded-2xl bg-[var(--badge-bg-muted)] border border-[var(--card-border)] flex flex-col items-center justify-center text-[var(--text-subtle)] hover:border-teal-500/50 transition-colors cursor-pointer">
+                <FileText className="w-10 h-10 text-teal-600 dark:text-teal-400 mb-1" />
+                <span className="text-xs font-semibold">صورة البطاقة الأمامية (معاينة)</span>
               </div>
             </div>
 
@@ -94,9 +120,9 @@ export default function IndividualKycReviewPage() {
               <label className="text-xs font-bold text-[var(--text-muted)]">
                 ظهر البطاقة القومية
               </label>
-              <div className="w-full h-36 rounded-2xl bg-[var(--badge-bg-muted)] border border-[var(--card-border)] flex flex-col items-center justify-center text-[var(--text-subtle)]">
-                <FileText className="w-10 h-10 text-slate-300 mb-1" />
-                <span className="text-xs font-semibold">صورة البطاقة الخلفية</span>
+              <div className="w-full h-36 rounded-2xl bg-[var(--badge-bg-muted)] border border-[var(--card-border)] flex flex-col items-center justify-center text-[var(--text-subtle)] hover:border-teal-500/50 transition-colors cursor-pointer">
+                <FileText className="w-10 h-10 text-teal-600 dark:text-teal-400 mb-1" />
+                <span className="text-xs font-semibold">صورة البطاقة الخلفية (معاينة)</span>
               </div>
             </div>
 
@@ -105,9 +131,9 @@ export default function IndividualKycReviewPage() {
               <label className="text-xs font-bold text-[var(--text-muted)]">
                 صورة السيلفي
               </label>
-              <div className="w-full h-36 rounded-2xl bg-[var(--badge-bg-muted)] border border-[var(--card-border)] flex flex-col items-center justify-center text-[var(--text-subtle)]">
-                <User className="w-10 h-10 text-slate-300 mb-1" />
-                <span className="text-xs font-semibold">صورة سيلفي مباشرة</span>
+              <div className="w-full h-36 rounded-2xl bg-[var(--badge-bg-muted)] border border-[var(--card-border)] flex flex-col items-center justify-center text-[var(--text-subtle)] hover:border-teal-500/50 transition-colors cursor-pointer">
+                <User className="w-10 h-10 text-teal-600 dark:text-teal-400 mb-1" />
+                <span className="text-xs font-semibold">صورة سيلفي مباشرة (معاينة)</span>
               </div>
             </div>
 
@@ -126,17 +152,26 @@ export default function IndividualKycReviewPage() {
                 قرار التوثيق
               </h3>
 
-              <button className="w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-sm rounded-xl shadow-[var(--shadow-card)] transition-colors flex items-center justify-center gap-2">
+              <button
+                onClick={() => setModalType('approve')}
+                className="w-full py-3.5 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-sm rounded-xl shadow-[var(--shadow-card)] transition-colors flex items-center justify-center gap-2 cursor-pointer"
+              >
                 <Check className="w-4 h-4" />
                 <span>قبول التوثيق ✓</span>
               </button>
 
-              <button className="w-full py-3.5 bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-sm rounded-xl shadow-[var(--shadow-card)] transition-colors flex items-center justify-center gap-2">
+              <button
+                onClick={() => setModalType('reject')}
+                className="w-full py-3.5 bg-rose-500 hover:bg-rose-600 text-white font-extrabold text-sm rounded-xl shadow-[var(--shadow-card)] transition-colors flex items-center justify-center gap-2 cursor-pointer"
+              >
                 <X className="w-4 h-4" />
                 <span>رفض ✗</span>
               </button>
 
-              <button className="w-full py-3.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 font-extrabold text-sm rounded-xl border border-amber-200/60 transition-colors flex items-center justify-center gap-2">
+              <button
+                onClick={() => setModalType('reupload')}
+                className="w-full py-3.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 font-extrabold text-sm rounded-xl border border-amber-200/60 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+              >
                 <RotateCcw className="w-4 h-4 text-amber-600" />
                 <span>طلب إعادة رفع</span>
               </button>
@@ -174,13 +209,39 @@ export default function IndividualKycReviewPage() {
 
                 <div className="flex items-center gap-3">
                   <span className="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0"></span>
-                  <span>قيد المراجعة البشرية</span>
+                  <span>الحالة الحالية: {status}</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Decision Confirm Modal */}
+      <ConfirmModal
+        isOpen={!!modalType}
+        onClose={() => setModalType(null)}
+        onConfirm={handleConfirmDecision}
+        title={
+          modalType === 'approve'
+            ? 'تأكيد قبول توثيق الهوية'
+            : modalType === 'reject'
+            ? 'تأكيد رفض طلب التوثيق'
+            : 'طلب إعادة رفع المستندات'
+        }
+        message={
+          modalType === 'approve'
+            ? 'هل تحققت من مطابقة جميع المستندات وتود منح شارة "حساب موثق" لسارة أحمد؟'
+            : modalType === 'reject'
+            ? 'هل أنت تأكد من رفض هذا الطلب بسبب عدم تطابق البيانات أو تلف الصورة؟'
+            : 'سيتم إرسال تنبيه للمستخدم لإعادة التقاط صور أوضح للهوية الوطنية.'
+        }
+        variant={modalType === 'approve' ? 'success' : modalType === 'reject' ? 'danger' : 'warning'}
+        confirmText={
+          modalType === 'approve' ? 'قبول واعتماد' : modalType === 'reject' ? 'تأكيد الرفض' : 'إرسال طلب'
+        }
+      />
     </div>
   );
 }
+

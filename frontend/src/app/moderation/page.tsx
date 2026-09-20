@@ -1,19 +1,30 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { useToast } from '@/components/ui/Toast';
 import { Image as ImageIcon, FileText, Trash2, Eye } from 'lucide-react';
-import { mockModerationItems, moderationMetrics } from '@/data/mockData';
+import { mockModerationItems, moderationMetrics, ModerationItem } from '@/data/mockData';
 
 export default function ContentModerationPage() {
   const [activeTab, setActiveTab] = useState<'all' | 'texts' | 'images'>('all');
+  const [items, setItems] = useState<ModerationItem[]>(mockModerationItems);
+  const [selectedToDelete, setSelectedToDelete] = useState<ModerationItem | null>(null);
+  const { showToast } = useToast();
 
-  const filteredItems = mockModerationItems.filter((item) => {
+  const filteredItems = items.filter((item) => {
     if (activeTab === 'texts') return item.type === 'نصوص';
     if (activeTab === 'images') return item.type === 'صور';
     return true;
   });
+
+  const handleDeleteItem = () => {
+    if (!selectedToDelete) return;
+    setItems((prev) => prev.filter((i) => i.id !== selectedToDelete.id));
+    showToast(`تم حذف المحتوى المخالف "${selectedToDelete.title}" بنجاح`, 'success');
+  };
 
   return (
     <div className="flex-1 flex flex-col pb-12">
@@ -74,7 +85,7 @@ export default function ContentModerationPage() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setActiveTab('all')}
-                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
+                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
                   activeTab === 'all'
                     ? 'bg-teal-700 text-white'
                     : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
@@ -84,7 +95,7 @@ export default function ContentModerationPage() {
               </button>
               <button
                 onClick={() => setActiveTab('texts')}
-                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
+                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
                   activeTab === 'texts'
                     ? 'bg-teal-700 text-white'
                     : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
@@ -94,7 +105,7 @@ export default function ContentModerationPage() {
               </button>
               <button
                 onClick={() => setActiveTab('images')}
-                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
+                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
                   activeTab === 'images'
                     ? 'bg-teal-700 text-white'
                     : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
@@ -107,65 +118,86 @@ export default function ContentModerationPage() {
 
           {/* List Items */}
           <div className="divide-y divide-[var(--divider)] space-y-2">
-            {filteredItems.map((item) => (
-              <div
-                key={item.id}
-                className="py-4 px-3 flex flex-col sm:flex-row items-center justify-between gap-4 hover:bg-[var(--table-row-hover)] rounded-xl transition-colors"
-              >
-                <div className="flex items-center gap-4 w-full sm:w-auto">
-                  <div className="w-10 h-10 rounded-xl bg-[var(--badge-bg-muted)] text-[var(--text-muted)] flex items-center justify-center shrink-0">
-                    {item.type === 'صور' ? (
-                      <ImageIcon className="w-5 h-5" />
-                    ) : (
-                      <FileText className="w-5 h-5" />
+            {filteredItems.length > 0 ? (
+              filteredItems.map((item) => (
+                <div
+                  key={item.id}
+                  className="py-4 px-3 flex flex-col sm:flex-row items-center justify-between gap-4 hover:bg-[var(--table-row-hover)] rounded-xl transition-colors"
+                >
+                  <div className="flex items-center gap-4 w-full sm:w-auto">
+                    <div className="w-10 h-10 rounded-xl bg-[var(--badge-bg-muted)] text-[var(--text-muted)] flex items-center justify-center shrink-0">
+                      {item.type === 'صور' ? (
+                        <ImageIcon className="w-5 h-5 text-amber-500" />
+                      ) : (
+                        <FileText className="w-5 h-5 text-blue-500" />
+                      )}
+                    </div>
+
+                    <div>
+                      <h4 className="font-bold text-[var(--foreground)] text-sm">
+                        {item.title}
+                      </h4>
+                      <p className="text-xs text-[var(--text-subtle)] mt-0.5">
+                        {item.reason}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
+                    {item.riskLevel === 'عالي' && (
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200">
+                        عالي
+                      </span>
                     )}
-                  </div>
+                    {item.riskLevel === 'متوسط' && (
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200">
+                        متوسط
+                      </span>
+                    )}
+                    {item.riskLevel === 'منخفض' && (
+                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600 border border-emerald-200">
+                        منخفض
+                      </span>
+                    )}
 
-                  <div>
-                    <h4 className="font-bold text-[var(--foreground)] text-sm">
-                      {item.title}
-                    </h4>
-                    <p className="text-xs text-[var(--text-subtle)] mt-0.5">
-                      {item.reason}
-                    </p>
+                    <Link
+                      href="/properties/review"
+                      className="inline-flex items-center gap-1 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                    >
+                      <Eye className="w-3.5 h-3.5" />
+                      <span>مراجعة</span>
+                    </Link>
+
+                    <button
+                      onClick={() => setSelectedToDelete(item)}
+                      className="inline-flex items-center gap-1 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                      <span>حذف</span>
+                    </button>
                   </div>
                 </div>
-
-                <div className="flex items-center gap-3 w-full sm:w-auto justify-end">
-                  {item.riskLevel === 'عالي' && (
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-50 text-rose-600 border border-rose-200">
-                      عالي
-                    </span>
-                  )}
-                  {item.riskLevel === 'متوسط' && (
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-50 text-amber-600 border border-amber-200">
-                      متوسط
-                    </span>
-                  )}
-                  {item.riskLevel === 'منخفض' && (
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-600 border border-emerald-200">
-                      منخفض
-                    </span>
-                  )}
-
-                  <Link
-                    href="/properties/review"
-                    className="inline-flex items-center gap-1 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors"
-                  >
-                    <Eye className="w-3.5 h-3.5" />
-                    <span>مراجعة</span>
-                  </Link>
-
-                  <button className="inline-flex items-center gap-1 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors">
-                    <Trash2 className="w-3.5 h-3.5" />
-                    <span>حذف</span>
-                  </button>
-                </div>
+              ))
+            ) : (
+              <div className="py-8 text-center text-xs text-[var(--text-subtle)] font-semibold">
+                لا يوجد محتوى مشبوه بانتظار المراجعة.
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>
+
+      {/* Delete Modal */}
+      <ConfirmModal
+        isOpen={!!selectedToDelete}
+        onClose={() => setSelectedToDelete(null)}
+        onConfirm={handleDeleteItem}
+        title={`حذف المحتوى المخالف: ${selectedToDelete?.title}`}
+        message="هل أنت تأكد من إزالة هذا المحتوى من منصة سكون وتنبيه الناشر؟"
+        variant="danger"
+        confirmText="تأكيد الحذف"
+      />
     </div>
   );
 }
+

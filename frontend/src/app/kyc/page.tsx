@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -153,8 +153,8 @@ export default function KycReviewQueuePage() {
                     </td>
                     <td className="py-4 px-6 text-center">
                       <Link
-                        href="/users/sara-ahmed"
-                        className="inline-flex items-center gap-1 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-4 py-1.5 rounded-lg transition-colors"
+                        href="/kyc/review"
+                        className="inline-flex items-center gap-1 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-4 py-1.5 rounded-lg transition-colors cursor-pointer"
                       >
                         <Eye className="w-3.5 h-3.5" />
                         <span>مراجعة</span>

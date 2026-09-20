@@ -4,14 +4,21 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { StatusBadge } from '@/components/ui/StatusBadge';
-import { Search, Filter, Eye, UserX } from 'lucide-react';
-import { mockUsers, userDistributionData } from '@/data/mockData';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { useToast } from '@/components/ui/Toast';
+import { Search, Filter, Eye, UserX, CheckCircle2 } from 'lucide-react';
+import { mockUsers, userDistributionData, UserItem } from '@/data/mockData';
 
 export default function UserManagementPage() {
   const [activeTab, setActiveTab] = useState<'all' | 'verified' | 'pending' | 'suspended'>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [usersList, setUsersList] = useState<UserItem[]>(mockUsers);
+  const [selectedUserToSuspend, setSelectedUserToSuspend] = useState<UserItem | null>(null);
+  const [showFilterDrawer, setShowFilterDrawer] = useState(false);
+  const [roleFilter, setRoleFilter] = useState<'all' | 'مستأجر' | 'مالك'>('all');
+  const { showToast } = useToast();
 
-  const filteredUsers = mockUsers.filter((user) => {
+  const filteredUsers = usersList.filter((user) => {
     // Search filter
     const matchesSearch =
       user.name.includes(searchQuery) ||
@@ -19,12 +26,35 @@ export default function UserManagementPage() {
 
     if (!matchesSearch) return false;
 
+    // Role filter
+    if (roleFilter !== 'all' && user.type !== roleFilter) return false;
+
     // Tab filter
     if (activeTab === 'verified') return user.kycStatus === 'موثق';
     if (activeTab === 'pending') return user.kycStatus === 'قيد المراجعة';
     if (activeTab === 'suspended') return user.status === 'موقوف';
     return true;
   });
+
+  const handleToggleSuspend = () => {
+    if (!selectedUserToSuspend) return;
+    const isCurrentlySuspended = selectedUserToSuspend.status === 'موقوف';
+
+    setUsersList((prev) =>
+      prev.map((u) =>
+        u.id === selectedUserToSuspend.id
+          ? { ...u, status: isCurrentlySuspended ? 'نشط' : 'موقوف' }
+          : u
+      )
+    );
+
+    showToast(
+      isCurrentlySuspended
+        ? `تم إلغاء إيقاف حساب ${selectedUserToSuspend.name} بنجاح`
+        : `تم إيقاف حساب ${selectedUserToSuspend.name} بنجاح`,
+      isCurrentlySuspended ? 'success' : 'error'
+    );
+  };
 
   return (
     <div className="flex-1 flex flex-col pb-12">
@@ -52,10 +82,46 @@ export default function UserManagementPage() {
               <Search className="w-4 h-4 text-[var(--text-subtle)] absolute right-3.5 top-3.5" />
             </div>
 
-            <button className="flex items-center gap-2 bg-[var(--card-bg)] px-4 py-2.5 rounded-xl border border-[var(--card-border)] text-sm font-semibold text-[var(--primary-text)] hover:bg-[var(--card-hover)] transition-colors shadow-[var(--shadow-card)]">
-              <Filter className="w-4 h-4" />
-              <span>فلتر</span>
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => setShowFilterDrawer(!showFilterDrawer)}
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-colors shadow-[var(--shadow-card)] cursor-pointer ${
+                  showFilterDrawer || roleFilter !== 'all'
+                    ? 'bg-teal-700 text-white border-teal-800'
+                    : 'bg-[var(--card-bg)] text-[var(--primary-text)] border-[var(--card-border)] hover:bg-[var(--card-hover)]'
+                }`}
+              >
+                <Filter className="w-4 h-4" />
+                <span>تصفية ({roleFilter === 'all' ? 'الكل' : roleFilter})</span>
+              </button>
+
+              {/* Filter Dropdown Drawer */}
+              {showFilterDrawer && (
+                <div className="absolute top-12 left-0 w-52 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-xl p-3 z-30 animate-fadeInUp">
+                  <p className="text-xs font-bold text-[var(--text-muted)] mb-2 px-1">تصفية حسب نوع الحساب:</p>
+                  <div className="space-y-1">
+                    <button
+                      onClick={() => { setRoleFilter('all'); setShowFilterDrawer(false); }}
+                      className={`w-full text-right px-3 py-2 rounded-xl text-xs font-bold transition-colors ${roleFilter === 'all' ? 'bg-teal-500/15 text-teal-600' : 'text-[var(--foreground)] hover:bg-[var(--card-hover)]'}`}
+                    >
+                      الكل (مستأجرين وملاك)
+                    </button>
+                    <button
+                      onClick={() => { setRoleFilter('مستأجر'); setShowFilterDrawer(false); }}
+                      className={`w-full text-right px-3 py-2 rounded-xl text-xs font-bold transition-colors ${roleFilter === 'مستأجر' ? 'bg-teal-500/15 text-teal-600' : 'text-[var(--foreground)] hover:bg-[var(--card-hover)]'}`}
+                    >
+                      مستأجرون فقط
+                    </button>
+                    <button
+                      onClick={() => { setRoleFilter('مالك'); setShowFilterDrawer(false); }}
+                      className={`w-full text-right px-3 py-2 rounded-xl text-xs font-bold transition-colors ${roleFilter === 'مالك' ? 'bg-teal-500/15 text-teal-600' : 'text-[var(--foreground)] hover:bg-[var(--card-hover)]'}`}
+                    >
+                      ملاك فقط
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -64,7 +130,7 @@ export default function UserManagementPage() {
           {/* Card 1: الكل */}
           <button
             onClick={() => setActiveTab('all')}
-            className={`p-5 rounded-2xl border text-center transition-all animate-scaleIn ${
+            className={`p-5 rounded-2xl border text-center transition-all animate-scaleIn cursor-pointer ${
               activeTab === 'all'
                 ? 'bg-teal-700 text-white border-teal-800 shadow-md scale-[1.02]'
                 : 'bg-[var(--card-bg)] text-[var(--foreground)] border-[var(--card-border)] hover:border-[var(--text-subtle)] shadow-[var(--shadow-card)]'
@@ -81,7 +147,7 @@ export default function UserManagementPage() {
           {/* Card 2: موثق */}
           <button
             onClick={() => setActiveTab('verified')}
-            className={`p-5 rounded-2xl border text-center transition-all animate-scaleIn ${
+            className={`p-5 rounded-2xl border text-center transition-all animate-scaleIn cursor-pointer ${
               activeTab === 'verified'
                 ? 'bg-emerald-700 text-white border-emerald-800 shadow-md scale-[1.02]'
                 : 'bg-[var(--card-bg)] text-[var(--foreground)] border-[var(--card-border)] hover:border-[var(--text-subtle)] shadow-[var(--shadow-card)]'
@@ -99,7 +165,7 @@ export default function UserManagementPage() {
           {/* Card 3: معلق */}
           <button
             onClick={() => setActiveTab('pending')}
-            className={`p-5 rounded-2xl border text-center transition-all animate-scaleIn ${
+            className={`p-5 rounded-2xl border text-center transition-all animate-scaleIn cursor-pointer ${
               activeTab === 'pending'
                 ? 'bg-amber-600 text-white border-amber-700 shadow-md scale-[1.02]'
                 : 'bg-[var(--card-bg)] text-[var(--foreground)] border-[var(--card-border)] hover:border-[var(--text-subtle)] shadow-[var(--shadow-card)]'
@@ -117,7 +183,7 @@ export default function UserManagementPage() {
           {/* Card 4: موقوف */}
           <button
             onClick={() => setActiveTab('suspended')}
-            className={`p-5 rounded-2xl border text-center transition-all animate-scaleIn ${
+            className={`p-5 rounded-2xl border text-center transition-all animate-scaleIn cursor-pointer ${
               activeTab === 'suspended'
                 ? 'bg-rose-600 text-white border-rose-700 shadow-md scale-[1.02]'
                 : 'bg-[var(--card-bg)] text-[var(--foreground)] border-[var(--card-border)] hover:border-[var(--text-subtle)] shadow-[var(--shadow-card)]'
@@ -177,14 +243,30 @@ export default function UserManagementPage() {
                         <div className="flex items-center justify-center gap-2">
                           <Link
                             href={`/users/${user.id}`}
-                            className="inline-flex items-center gap-1 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors"
+                            className="inline-flex items-center gap-1 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
                           >
                             <Eye className="w-3.5 h-3.5" />
                             <span>عرض</span>
                           </Link>
-                          <button className="inline-flex items-center gap-1 bg-rose-100 hover:bg-rose-200 text-rose-700 dark:bg-rose-500/15 dark:hover:bg-rose-500/25 dark:text-rose-400 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors">
-                            <UserX className="w-3.5 h-3.5" />
-                            <span>إيقاف</span>
+                          <button
+                            onClick={() => setSelectedUserToSuspend(user)}
+                            className={`inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer ${
+                              user.status === 'موقوف'
+                                ? 'bg-emerald-100 hover:bg-emerald-200 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400'
+                                : 'bg-rose-100 hover:bg-rose-200 text-rose-700 dark:bg-rose-500/15 dark:text-rose-400'
+                            }`}
+                          >
+                            {user.status === 'موقوف' ? (
+                              <>
+                                <CheckCircle2 className="w-3.5 h-3.5" />
+                                <span>تنشيط</span>
+                              </>
+                            ) : (
+                              <>
+                                <UserX className="w-3.5 h-3.5" />
+                                <span>إيقاف</span>
+                              </>
+                            )}
                           </button>
                         </div>
                       </td>
@@ -205,6 +287,26 @@ export default function UserManagementPage() {
           </div>
         </div>
       </div>
+
+      {/* Suspend Confirm Modal */}
+      <ConfirmModal
+        isOpen={!!selectedUserToSuspend}
+        onClose={() => setSelectedUserToSuspend(null)}
+        onConfirm={handleToggleSuspend}
+        title={
+          selectedUserToSuspend?.status === 'موقوف'
+            ? `إلغاء إيقاف حساب ${selectedUserToSuspend?.name}`
+            : `تأكيد إيقاف حساب ${selectedUserToSuspend?.name}`
+        }
+        message={
+          selectedUserToSuspend?.status === 'موقوف'
+            ? 'هل أنت تأكد من رغبتك في إعادة تفعيل حساب المستخدم وتمكينه من استخدام المنصة؟'
+            : 'هل أنت تأكد من رغبتك في إيقاف حساب المستخدم؟ لن يتمكن من تسجيل الدخول حتى إلغاء الإيقاف.'
+        }
+        variant={selectedUserToSuspend?.status === 'موقوف' ? 'success' : 'danger'}
+        confirmText={selectedUserToSuspend?.status === 'موقوف' ? 'تنشيط الحساب' : 'إيقاف الحساب'}
+      />
     </div>
   );
 }
+

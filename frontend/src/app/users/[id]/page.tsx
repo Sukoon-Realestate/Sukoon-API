@@ -1,9 +1,11 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'next/navigation';
 import { Header } from '@/components/layout/Header';
 import { StatusBadge } from '@/components/ui/StatusBadge';
+import { ConfirmModal } from '@/components/ui/ConfirmModal';
+import { useToast } from '@/components/ui/Toast';
 import {
   User,
   ShieldCheck,
@@ -20,9 +22,30 @@ import { mockUsers } from '@/data/mockData';
 export default function UserProfilePage() {
   const params = useParams();
   const userId = params?.id as string;
+  const { showToast } = useToast();
 
   // Find user by ID or default to Sara
-  const user = mockUsers.find((u) => u.id === userId) || mockUsers[0];
+  const initialUser = mockUsers.find((u) => u.id === userId) || mockUsers[0];
+  const [user, setUser] = useState(initialUser);
+  const [showWarnModal, setShowWarnModal] = useState(false);
+  const [showSuspendModal, setShowSuspendModal] = useState(false);
+
+  const handleSendWarning = () => {
+    showToast(`تم إرسال تحذير إداري إلى ${user.name} بنجاح`, 'info');
+  };
+
+  const handleToggleSuspend = () => {
+    const isSuspended = user.status === 'موقوف';
+    setUser((prev) => ({ ...prev, status: isSuspended ? 'نشط' : 'موقوف' }));
+    showToast(
+      isSuspended ? `تم تنشيط حساب ${user.name}` : `تم إيقاف حساب ${user.name} مؤقتاً`,
+      isSuspended ? 'success' : 'error'
+    );
+  };
+
+  const handleExportData = () => {
+    showToast(`جاري تجهيز وتنزيل ملف بيانات ${user.name}...`, 'success');
+  };
 
   return (
     <div className="flex-1 flex flex-col pb-12">
@@ -81,7 +104,7 @@ export default function UserProfilePage() {
               <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
                 <span className="text-[var(--text-subtle)] font-medium">توثيق الهوية</span>
                 <span className="font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
-                  موثّق <ShieldCheck className="w-3.5 h-3.5" />
+                  {user.kycStatus} <ShieldCheck className="w-3.5 h-3.5" />
                 </span>
               </div>
             </div>
@@ -187,17 +210,28 @@ export default function UserProfilePage() {
 
             {/* Action Buttons Bar */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
-              <button className="py-4 bg-amber-500 hover:bg-amber-600 active:scale-[0.98] text-white font-extrabold text-sm rounded-2xl shadow-sm transition-all flex items-center justify-center gap-2">
+              <button
+                onClick={() => setShowWarnModal(true)}
+                className="py-4 bg-amber-500 hover:bg-amber-600 active:scale-[0.98] text-white font-extrabold text-sm rounded-2xl shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
                 <AlertOctagon className="w-4 h-4" />
-                <span>تحذير</span>
+                <span>إرسال تحذير</span>
               </button>
 
-              <button className="py-4 bg-rose-500 hover:bg-rose-600 active:scale-[0.98] text-white font-extrabold text-sm rounded-2xl shadow-sm transition-all flex items-center justify-center gap-2">
+              <button
+                onClick={() => setShowSuspendModal(true)}
+                className={`py-4 active:scale-[0.98] text-white font-extrabold text-sm rounded-2xl shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
+                  user.status === 'موقوف' ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-rose-500 hover:bg-rose-600'
+                }`}
+              >
                 <UserX className="w-4 h-4" />
-                <span>إيقاف مؤقت</span>
+                <span>{user.status === 'موقوف' ? 'إلغاء الإيقاف' : 'إيقاف مؤقت'}</span>
               </button>
 
-              <button className="py-4 bg-[var(--badge-bg-muted)] hover:bg-[var(--card-hover)] active:scale-[0.98] text-[var(--foreground)] font-extrabold text-sm rounded-2xl border border-[var(--card-border)] transition-all flex items-center justify-center gap-2">
+              <button
+                onClick={handleExportData}
+                className="py-4 bg-[var(--badge-bg-muted)] hover:bg-[var(--card-hover)] active:scale-[0.98] text-[var(--foreground)] font-extrabold text-sm rounded-2xl border border-[var(--card-border)] transition-all flex items-center justify-center gap-2 cursor-pointer"
+              >
                 <Download className="w-4 h-4 text-[var(--text-muted)]" />
                 <span>تصدير البيانات</span>
               </button>
@@ -205,6 +239,29 @@ export default function UserProfilePage() {
           </div>
         </div>
       </div>
+
+      {/* Warning Modal */}
+      <ConfirmModal
+        isOpen={showWarnModal}
+        onClose={() => setShowWarnModal(false)}
+        onConfirm={handleSendWarning}
+        title={`إرسال تحذير إداري إلى ${user.name}`}
+        message="سيتم إرسال إشعار تحذيري رسمي إلى حساب المستخدم والبريد الإلكتروني المسجل."
+        variant="warning"
+        confirmText="إرسال التحذير"
+      />
+
+      {/* Suspend Modal */}
+      <ConfirmModal
+        isOpen={showSuspendModal}
+        onClose={() => setShowSuspendModal(false)}
+        onConfirm={handleToggleSuspend}
+        title={user.status === 'موقوف' ? `تنشيط حساب ${user.name}` : `إيقاف حساب ${user.name}`}
+        message={user.status === 'موقوف' ? 'هل تريد إعادة تفعيل حساب المستخدم؟' : 'هل أنت تأكد من رغبتك في إيقاف حساب هذا المستخدم مؤقتاً؟'}
+        variant={user.status === 'موقوف' ? 'success' : 'danger'}
+        confirmText={user.status === 'موقوف' ? 'تنشيط' : 'إيقاف مؤقت'}
+      />
     </div>
   );
 }
+

@@ -4,6 +4,7 @@ import './globals.css';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
+import { ToastProvider } from '@/components/ui/Toast';
 
 const cairo = Cairo({
   subsets: ['arabic', 'latin'],
@@ -45,9 +46,11 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex bg-[var(--background)] text-[var(--foreground)] font-sans">
         <ThemeProvider>
-          <AuthProvider>
-            <AppLayout>{children}</AppLayout>
-          </AuthProvider>
+          <ToastProvider>
+            <AuthProvider>
+              <AppLayout>{children}</AppLayout>
+            </AuthProvider>
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>

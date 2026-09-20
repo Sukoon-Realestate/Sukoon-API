@@ -1,15 +1,17 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { Users, Building2, Clock, TrendingUp, Calendar, AlertTriangle } from 'lucide-react';
 import { DashboardMetric } from '@/data/mockData';
 
 interface MetricCardProps {
   metric: DashboardMetric;
   delay?: number;
+  href?: string;
 }
 
-export const MetricCard: React.FC<MetricCardProps> = ({ metric, delay = 0 }) => {
+export const MetricCard: React.FC<MetricCardProps> = ({ metric, delay = 0, href }) => {
   const getIcon = () => {
     switch (metric.icon) {
       case 'users':
@@ -48,9 +50,30 @@ export const MetricCard: React.FC<MetricCardProps> = ({ metric, delay = 0 }) => 
     }
   };
 
+  const getDefaultHref = () => {
+    if (href) return href;
+    switch (metric.icon) {
+      case 'users':
+        return '/users';
+      case 'building':
+        return '/properties';
+      case 'clock':
+        return '/kyc';
+      case 'revenue':
+        return '/financials';
+      case 'calendar':
+        return '/analytics';
+      case 'alert':
+        return '/users/reports';
+      default:
+        return '/';
+    }
+  };
+
   return (
-    <div
-      className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] hover-lift animate-scaleIn"
+    <Link
+      href={getDefaultHref()}
+      className="block bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] hover-lift animate-scaleIn transition-all hover:border-teal-500/50 cursor-pointer"
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className="flex items-center justify-between mb-3">
@@ -75,6 +98,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({ metric, delay = 0 }) => 
         </div>
         <div className="text-xs font-medium text-[var(--text-muted)]">{metric.title}</div>
       </div>
-    </div>
+    </Link>
   );
 };
+

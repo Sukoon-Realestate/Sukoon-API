@@ -1,10 +1,14 @@
-﻿'use client';
+'use client';
 
 import React, { useState } from 'react';
 import { Header } from '@/components/layout/Header';
-import { Plus } from 'lucide-react';
+import { useToast } from '@/components/ui/Toast';
+import { Plus, Save, Check } from 'lucide-react';
 
 export default function PlatformSettingsPage() {
+  const { showToast } = useToast();
+  const [isSaving, setIsSaving] = useState(false);
+
   // Verification Settings Toggles
   const [maxReviewHours, setMaxReviewHours] = useState(true);
   const [tenantDocsRequired, setTenantDocsRequired] = useState(false);
@@ -19,12 +23,21 @@ export default function PlatformSettingsPage() {
 
   // Admins List
   const [admins, setAdmins] = useState([
-    { id: '1', name: 'أحمد العدل', role: 'مشرف رئيسي', badge: 'مالك', badgeColor: 'bg-emerald-100 text-emerald-800' },
-    { id: '2', name: 'سلمى رشدي', role: 'مراجع KYC', badge: 'مراجع', badgeColor: 'bg-teal-100 text-teal-800' },
+    { id: '1', name: 'أحمد العدل', role: 'مشرف رئيسي', badge: 'مالك', badgeColor: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300' },
+    { id: '2', name: 'سلمى رشدي', role: 'مراجع KYC', badge: 'مراجع', badgeColor: 'bg-teal-100 text-teal-800 dark:bg-teal-500/20 dark:text-teal-300' },
   ]);
+
+  const handleSaveAllSettings = () => {
+    setIsSaving(true);
+    setTimeout(() => {
+      setIsSaving(false);
+      showToast('تم حفظ جميع إعدادات وضوابط المنصة بنجاح', 'success');
+    }, 600);
+  };
 
   const handleRemoveAdmin = (id: string) => {
     setAdmins((prev) => prev.filter((a) => a.id !== id));
+    showToast('تم حذف المشرف بنجاح', 'info');
   };
 
   const handleAddAdmin = () => {
@@ -37,9 +50,10 @@ export default function PlatformSettingsPage() {
         name: newName,
         role: 'مراجع جديد',
         badge: 'مراجع',
-        badgeColor: 'bg-teal-100 text-teal-800',
+        badgeColor: 'bg-teal-100 text-teal-800 dark:bg-teal-500/20 dark:text-teal-300',
       },
     ]);
+    showToast(`تمت إضافة المشرف ${newName} بنجاح`, 'success');
   };
 
   return (
@@ -51,6 +65,22 @@ export default function PlatformSettingsPage() {
       />
 
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+        {/* Save Floating Header Bar */}
+        <div className="flex items-center justify-between bg-[var(--card-bg)] p-4 rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] animate-fadeInUp">
+          <div>
+            <h3 className="font-extrabold text-sm text-[var(--foreground)]">إعدادات النظام العامة</h3>
+            <p className="text-xs text-[var(--text-subtle)]">قم بتعديل الضوابط ثم انقر حفظ التغييرات</p>
+          </div>
+          <button
+            onClick={handleSaveAllSettings}
+            disabled={isSaving}
+            className="px-6 py-2.5 bg-teal-700 hover:bg-teal-800 text-white font-extrabold text-xs rounded-xl shadow-md transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+          >
+            <Save className="w-4 h-4" />
+            <span>{isSaving ? 'جاري الحفظ...' : 'حفظ التغييرات'}</span>
+          </button>
+        </div>
+
         {/* Top Grid: Verification & Property Settings */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: Verification Settings (6 cols) */}
@@ -63,18 +93,18 @@ export default function PlatformSettingsPage() {
               {/* Item 1 */}
               <div className="flex items-center justify-between py-1">
                 <span className="font-bold text-[var(--foreground)]">
-                  مدة المراجعة القصوى (ساعات)
+                  مدة المراجعة القصوى (24 ساعة)
                 </span>
                 <button
                   type="button"
                   onClick={() => setMaxReviewHours(!maxReviewHours)}
-                  className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
-                    maxReviewHours ? 'bg-[#0D7C66]' : 'bg-slate-200'
+                  className={`w-11 h-6 rounded-full transition-colors relative p-0.5 cursor-pointer ${
+                    maxReviewHours ? 'bg-teal-600' : 'bg-slate-300 dark:bg-slate-700'
                   }`}
                 >
                   <div
-                    className={`w-5 h-5 rounded-full bg-[var(--card-bg)] shadow-[var(--shadow-card)] transition-transform ${
-                      maxReviewHours ? 'translate-x-[-18px]' : 'translate-x-0'
+                    className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${
+                      maxReviewHours ? 'translate-x-[-20px]' : 'translate-x-0'
                     }`}
                   ></div>
                 </button>
@@ -88,13 +118,13 @@ export default function PlatformSettingsPage() {
                 <button
                   type="button"
                   onClick={() => setTenantDocsRequired(!tenantDocsRequired)}
-                  className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
-                    tenantDocsRequired ? 'bg-[#0D7C66]' : 'bg-slate-200'
+                  className={`w-11 h-6 rounded-full transition-colors relative p-0.5 cursor-pointer ${
+                    tenantDocsRequired ? 'bg-teal-600' : 'bg-slate-300 dark:bg-slate-700'
                   }`}
                 >
                   <div
-                    className={`w-5 h-5 rounded-full bg-[var(--card-bg)] shadow-[var(--shadow-card)] transition-transform ${
-                      tenantDocsRequired ? 'translate-x-[-18px]' : 'translate-x-0'
+                    className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${
+                      tenantDocsRequired ? 'translate-x-[-20px]' : 'translate-x-0'
                     }`}
                   ></div>
                 </button>
@@ -108,13 +138,13 @@ export default function PlatformSettingsPage() {
                 <button
                   type="button"
                   onClick={() => setLandlordDocsRequired(!landlordDocsRequired)}
-                  className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
-                    landlordDocsRequired ? 'bg-[#0D7C66]' : 'bg-slate-200'
+                  className={`w-11 h-6 rounded-full transition-colors relative p-0.5 cursor-pointer ${
+                    landlordDocsRequired ? 'bg-teal-600' : 'bg-slate-300 dark:bg-slate-700'
                   }`}
                 >
                   <div
-                    className={`w-5 h-5 rounded-full bg-[var(--card-bg)] shadow-[var(--shadow-card)] transition-transform ${
-                      landlordDocsRequired ? 'translate-x-[-18px]' : 'translate-x-0'
+                    className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${
+                      landlordDocsRequired ? 'translate-x-[-20px]' : 'translate-x-0'
                     }`}
                   ></div>
                 </button>
@@ -128,13 +158,13 @@ export default function PlatformSettingsPage() {
                 <button
                   type="button"
                   onClick={() => setAutoVerification(!autoVerification)}
-                  className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
-                    autoVerification ? 'bg-[#0D7C66]' : 'bg-slate-200'
+                  className={`w-11 h-6 rounded-full transition-colors relative p-0.5 cursor-pointer ${
+                    autoVerification ? 'bg-teal-600' : 'bg-slate-300 dark:bg-slate-700'
                   }`}
                 >
                   <div
-                    className={`w-5 h-5 rounded-full bg-[var(--card-bg)] shadow-[var(--shadow-card)] transition-transform ${
-                      autoVerification ? 'translate-x-[-18px]' : 'translate-x-0'
+                    className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${
+                      autoVerification ? 'translate-x-[-20px]' : 'translate-x-0'
                     }`}
                   ></div>
                 </button>
@@ -152,18 +182,18 @@ export default function PlatformSettingsPage() {
               {/* Item 1 */}
               <div className="flex items-center justify-between py-1">
                 <span className="font-bold text-[var(--foreground)]">
-                  الحد الأقصى للصور
+                  الحد الأقصى للصور (10 صور)
                 </span>
                 <button
                   type="button"
                   onClick={() => setMaxPhotosLimit(!maxPhotosLimit)}
-                  className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
-                    maxPhotosLimit ? 'bg-[#0D7C66]' : 'bg-slate-200'
+                  className={`w-11 h-6 rounded-full transition-colors relative p-0.5 cursor-pointer ${
+                    maxPhotosLimit ? 'bg-teal-600' : 'bg-slate-300 dark:bg-slate-700'
                   }`}
                 >
                   <div
-                    className={`w-5 h-5 rounded-full bg-[var(--card-bg)] shadow-[var(--shadow-card)] transition-transform ${
-                      maxPhotosLimit ? 'translate-x-[-18px]' : 'translate-x-0'
+                    className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${
+                      maxPhotosLimit ? 'translate-x-[-20px]' : 'translate-x-0'
                     }`}
                   ></div>
                 </button>
@@ -177,13 +207,13 @@ export default function PlatformSettingsPage() {
                 <button
                   type="button"
                   onClick={() => setReviewPeriodDays(!reviewPeriodDays)}
-                  className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
-                    reviewPeriodDays ? 'bg-[#0D7C66]' : 'bg-slate-200'
+                  className={`w-11 h-6 rounded-full transition-colors relative p-0.5 cursor-pointer ${
+                    reviewPeriodDays ? 'bg-teal-600' : 'bg-slate-300 dark:bg-slate-700'
                   }`}
                 >
                   <div
-                    className={`w-5 h-5 rounded-full bg-[var(--card-bg)] shadow-[var(--shadow-card)] transition-transform ${
-                      reviewPeriodDays ? 'translate-x-[-18px]' : 'translate-x-0'
+                    className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${
+                      reviewPeriodDays ? 'translate-x-[-20px]' : 'translate-x-0'
                     }`}
                   ></div>
                 </button>
@@ -197,13 +227,13 @@ export default function PlatformSettingsPage() {
                 <button
                   type="button"
                   onClick={() => setApproxLocation(!approxLocation)}
-                  className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
-                    approxLocation ? 'bg-[#0D7C66]' : 'bg-slate-200'
+                  className={`w-11 h-6 rounded-full transition-colors relative p-0.5 cursor-pointer ${
+                    approxLocation ? 'bg-teal-600' : 'bg-slate-300 dark:bg-slate-700'
                   }`}
                 >
                   <div
-                    className={`w-5 h-5 rounded-full bg-[var(--card-bg)] shadow-[var(--shadow-card)] transition-transform ${
-                      approxLocation ? 'translate-x-[-18px]' : 'translate-x-0'
+                    className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${
+                      approxLocation ? 'translate-x-[-20px]' : 'translate-x-0'
                     }`}
                   ></div>
                 </button>
@@ -217,13 +247,13 @@ export default function PlatformSettingsPage() {
                 <button
                   type="button"
                   onClick={() => setHidePhoneDefault(!hidePhoneDefault)}
-                  className={`w-11 h-6 rounded-full transition-colors relative p-0.5 ${
-                    hidePhoneDefault ? 'bg-[#0D7C66]' : 'bg-slate-200'
+                  className={`w-11 h-6 rounded-full transition-colors relative p-0.5 cursor-pointer ${
+                    hidePhoneDefault ? 'bg-teal-600' : 'bg-slate-300 dark:bg-slate-700'
                   }`}
                 >
                   <div
-                    className={`w-5 h-5 rounded-full bg-[var(--card-bg)] shadow-[var(--shadow-card)] transition-transform ${
-                      hidePhoneDefault ? 'translate-x-[-18px]' : 'translate-x-0'
+                    className={`w-5 h-5 rounded-full bg-white shadow-md transition-transform ${
+                      hidePhoneDefault ? 'translate-x-[-20px]' : 'translate-x-0'
                     }`}
                   ></div>
                 </button>
@@ -262,7 +292,7 @@ export default function PlatformSettingsPage() {
                   <button
                     type="button"
                     onClick={() => handleRemoveAdmin(adm.id)}
-                    className="px-3 py-1 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-xs rounded-lg border border-rose-100 transition-colors"
+                    className="px-3 py-1 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 text-rose-600 font-bold text-xs rounded-lg border border-rose-100 dark:border-rose-500/20 transition-colors cursor-pointer"
                   >
                     حذف
                   </button>
@@ -275,7 +305,7 @@ export default function PlatformSettingsPage() {
             <button
               type="button"
               onClick={handleAddAdmin}
-              className="w-full sm:w-auto px-6 py-3.5 bg-teal-50/80 hover:bg-teal-100 text-[#0D7C66] font-extrabold text-xs rounded-xl border border-teal-100 transition-colors flex items-center justify-center gap-2"
+              className="w-full sm:w-auto px-6 py-3.5 bg-teal-50 dark:bg-teal-500/10 hover:bg-teal-100 text-teal-700 dark:text-teal-400 font-extrabold text-xs rounded-xl border border-teal-100 dark:border-teal-500/20 transition-colors flex items-center justify-center gap-2 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>إضافة مشرف جديد</span>
@@ -286,3 +316,4 @@ export default function PlatformSettingsPage() {
     </div>
   );
 }
+
