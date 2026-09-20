@@ -12,38 +12,39 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   title,
   subtitle,
-  lastUpdated = 'اليوم 9:41 ص',
+  lastUpdated = '9:41 ص',
 }) => {
   return (
-    <header className="h-20 bg-white border-b border-slate-200/80 px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs">
-      <div>
-        <h2 className="text-xl font-extrabold text-slate-800 leading-snug flex items-center gap-2">
-          {title}
-        </h2>
-        {subtitle && <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>}
+    <header className="h-16 bg-white border-b border-slate-200/80 px-8 flex items-center justify-between sticky top-0 z-30 shadow-xs">
+      {/* User profile info (Left in RTL layout) */}
+      <div className="flex items-center gap-2">
+        <div className="w-8 h-8 rounded-full bg-teal-50 flex items-center justify-center text-teal-600 border border-teal-100">
+          <User className="w-4 h-4" />
+        </div>
+        <span className="px-3 py-1 bg-[#0D7C66] text-white text-xs font-bold rounded-full shadow-xs">
+          Admin
+        </span>
       </div>
 
-      <div className="flex items-center gap-4">
-        {/* Last Updated badge */}
-        <div className="hidden sm:flex items-center gap-1.5 text-xs text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200/60">
-          <RefreshCw className="w-3.5 h-3.5 text-slate-400" />
-          <span>آخر تحديث: {lastUpdated}</span>
-        </div>
+      {/* Main title (Centered) */}
+      <div className="text-center flex-1 mx-4">
+        <h2 className="text-lg font-black text-slate-800 tracking-tight">
+          {title}
+        </h2>
+        {subtitle && <p className="text-[11px] text-slate-400 font-medium">{subtitle}</p>}
+      </div>
 
-        {/* Notification Bell */}
-        <button className="relative w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200/80 flex items-center justify-center text-slate-600 transition-colors">
+      {/* Timestamp & Notification bell (Right in RTL layout) */}
+      <div className="flex items-center gap-3">
+        <span className="text-xs text-slate-400 font-semibold">
+          آخر تحديث: {lastUpdated}
+        </span>
+        <button className="relative p-1.5 rounded-full hover:bg-slate-100 text-slate-600 transition-colors">
           <Bell className="w-5 h-5" />
-          <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white"></span>
+          <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white"></span>
         </button>
-
-        {/* Admin User Chip */}
-        <div className="flex items-center gap-2 bg-slate-100/90 pl-3 pr-1 py-1 rounded-full border border-slate-200/80">
-          <div className="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-            <User className="w-4 h-4" />
-          </div>
-          <span className="text-sm font-semibold text-slate-700 ml-1">Admin</span>
-        </div>
       </div>
     </header>
   );
 };
+

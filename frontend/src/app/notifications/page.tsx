@@ -46,17 +46,17 @@ export default function PushNotificationsPage() {
 
             {/* Target Audience */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-slate-500">
+              <label className="text-xs font-bold text-slate-400">
                 الجمهور المستهدف
               </label>
-              <div className="flex items-center gap-2 overflow-x-auto">
+              <div className="flex items-center gap-2 overflow-x-auto pb-1">
                 <button
                   type="button"
                   onClick={() => setAudience('all')}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
+                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                     audience === 'all'
-                      ? 'bg-teal-700 text-white'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      ? 'bg-[#0D7C66] text-white shadow-xs'
+                      : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
                   }`}
                 >
                   كل المستخدمين
@@ -64,10 +64,10 @@ export default function PushNotificationsPage() {
                 <button
                   type="button"
                   onClick={() => setAudience('tenants')}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
+                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                     audience === 'tenants'
-                      ? 'bg-teal-700 text-white'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      ? 'bg-[#0D7C66] text-white shadow-xs'
+                      : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
                   }`}
                 >
                   مستأجرون
@@ -75,10 +75,10 @@ export default function PushNotificationsPage() {
                 <button
                   type="button"
                   onClick={() => setAudience('landlords')}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
+                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                     audience === 'landlords'
-                      ? 'bg-teal-700 text-white'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      ? 'bg-[#0D7C66] text-white shadow-xs'
+                      : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
                   }`}
                 >
                   ملاك
@@ -86,20 +86,20 @@ export default function PushNotificationsPage() {
                 <button
                   type="button"
                   onClick={() => setAudience('verified')}
-                  className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
+                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all whitespace-nowrap ${
                     audience === 'verified'
-                      ? 'bg-teal-700 text-white'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      ? 'bg-[#0D7C66] text-white shadow-xs'
+                      : 'bg-slate-100 text-slate-500 hover:bg-slate-200'
                   }`}
                 >
-                  موثقون فقط
+                  موثّقون فقط
                 </button>
               </div>
             </div>
 
             {/* Notification Title Input */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-500">
+              <label className="text-xs font-bold text-slate-400">
                 عنوان الإشعار
               </label>
               <input
@@ -107,13 +107,13 @@ export default function PushNotificationsPage() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="مثال: عروض الصيف على سكون!"
-                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 placeholder:text-slate-400"
+                className="w-full p-3 bg-slate-50/70 border border-slate-200/80 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-[#0D7C66] placeholder:text-slate-400"
               />
             </div>
 
             {/* Notification Body Textarea */}
             <div className="space-y-1.5">
-              <label className="text-xs font-bold text-slate-500">
+              <label className="text-xs font-bold text-slate-400">
                 نص الإشعار
               </label>
               <textarea
@@ -121,7 +121,7 @@ export default function PushNotificationsPage() {
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
                 placeholder="نص الإشعار..."
-                className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 placeholder:text-slate-400 resize-none"
+                className="w-full p-3 bg-slate-50/70 border border-slate-200/80 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-[#0D7C66] placeholder:text-slate-400 resize-none"
               ></textarea>
             </div>
 
@@ -130,17 +130,15 @@ export default function PushNotificationsPage() {
               <button
                 type="button"
                 onClick={handleSendNow}
-                className="py-3.5 bg-teal-700 hover:bg-teal-800 text-white font-extrabold text-xs rounded-xl shadow-xs transition-colors flex items-center justify-center gap-2"
+                className="py-3.5 bg-[#0D7C66] hover:bg-[#0B6856] text-white font-extrabold text-sm rounded-xl shadow-xs transition-colors flex items-center justify-center gap-2"
               >
-                <Send className="w-4 h-4" />
                 <span>إرسال الآن</span>
               </button>
 
               <button
                 type="button"
-                className="py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-extrabold text-xs rounded-xl border border-slate-200/80 transition-colors flex items-center justify-center gap-2"
+                className="py-3.5 bg-slate-50 hover:bg-slate-100 text-slate-700 font-extrabold text-sm rounded-xl border border-slate-200/80 transition-colors flex items-center justify-center gap-2"
               >
-                <Calendar className="w-4 h-4 text-slate-500" />
                 <span>جدولة</span>
               </button>
             </div>
@@ -148,33 +146,29 @@ export default function PushNotificationsPage() {
 
           {/* Right Column: Sent Notifications History (6 cols) */}
           <div className="lg:col-span-6 bg-white rounded-2xl p-6 border border-slate-200/80 shadow-xs space-y-5">
-            <h3 className="font-extrabold text-slate-800 text-base border-b border-slate-100 pb-3">
+            <h3 className="font-black text-slate-800 text-base border-b border-slate-100 pb-3">
               سجل الإشعارات المرسلة
             </h3>
 
             <div className="divide-y divide-slate-100 space-y-4">
               {campaigns.map((camp) => (
-                <div key={camp.id} className="pt-4 first:pt-0 space-y-2">
+                <div key={camp.id} className="pt-4 first:pt-0 space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <h4 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                      <Bell className="w-4 h-4 text-teal-600" />
-                      <span>{camp.title}</span>
+                    <h4 className="font-extrabold text-slate-900 text-sm">
+                      {camp.title}
                     </h4>
                     <span className="text-[11px] text-slate-400 font-medium">
                       {camp.timeAgo}
                     </span>
                   </div>
 
-                  <p className="text-xs text-slate-600 font-medium leading-relaxed">
+                  <p className="text-xs text-slate-400 font-medium leading-relaxed">
                     {camp.body}
                   </p>
 
-                  <div className="flex items-center gap-4 text-xs font-bold pt-1">
-                    <span className="text-emerald-600">{camp.openRate}</span>
-                    <span className="text-slate-400 font-normal">•</span>
-                    <span className="text-slate-500 font-medium">
-                      {camp.recipientCount}
-                    </span>
+                  <div className="flex items-center gap-3 text-xs font-bold pt-1">
+                    <span className="text-emerald-500">{camp.openRate}</span>
+                    <span className="text-slate-400 font-normal">{camp.recipientCount}</span>
                   </div>
                 </div>
               ))}

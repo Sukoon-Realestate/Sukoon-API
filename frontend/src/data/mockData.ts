@@ -139,6 +139,33 @@ export interface SystemAuditLog {
   operator: string;
 }
 
+export interface AdminRoleItem {
+  id: string;
+  name: string;
+  userCount: number;
+  badges: string[];
+  subtext?: string;
+  color: string;
+}
+
+export interface AdminUserItem {
+  id: string;
+  name: string;
+  roleName: string;
+  timeAgo: string;
+  avatarColor: string;
+}
+
+export interface PermissionMatrixRow {
+  action: string;
+  systemOwner: boolean;
+  mainAdmin: boolean;
+  kycReviewer: boolean;
+  propertyReviewer: boolean;
+  support: boolean;
+}
+
+
 export const overviewMetrics: DashboardMetric[] = [
   {
     title: 'إجمالي المستخدمين',
@@ -717,3 +744,150 @@ export const reportTrendData = [
   { day: 27, value: 29 },
   { day: 30, value: 31, isCurrent: true },
 ];
+
+export const mockAdminRoles: AdminRoleItem[] = [
+  {
+    id: 'role-1',
+    name: 'مالك النظام',
+    userCount: 1,
+    badges: [],
+    subtext: 'كل الصلاحيات',
+    color: 'bg-emerald-500',
+  },
+  {
+    id: 'role-2',
+    name: 'مشرف رئيسي',
+    userCount: 2,
+    badges: ['KYC', 'عقارات', 'مستخدمون', 'تقارير'],
+    color: 'bg-blue-500',
+  },
+  {
+    id: 'role-3',
+    name: 'مراجع KYC',
+    userCount: 3,
+    badges: ['فقط KYC'],
+    color: 'bg-emerald-500',
+  },
+  {
+    id: 'role-4',
+    name: 'مراجع عقارات',
+    userCount: 2,
+    badges: ['عقارات فقط'],
+    color: 'bg-amber-500',
+  },
+  {
+    id: 'role-5',
+    name: 'دعم العملاء',
+    userCount: 4,
+    badges: ['تذاكر دعم'],
+    color: 'bg-slate-400',
+  },
+];
+
+export const mockAdminUsers: AdminUserItem[] = [
+  {
+    id: 'admin-1',
+    name: 'أحمد العدل',
+    roleName: 'مشرف رئيسي',
+    timeAgo: 'الآن',
+    avatarColor: 'bg-blue-100 text-blue-600',
+  },
+  {
+    id: 'admin-2',
+    name: 'سلمى رشدي',
+    roleName: 'مراجع KYC',
+    timeAgo: 'منذ 5 دقائق',
+    avatarColor: 'bg-emerald-100 text-emerald-600',
+  },
+  {
+    id: 'admin-3',
+    name: 'كريم فاروق',
+    roleName: 'مراجع عقارات',
+    timeAgo: 'أمس',
+    avatarColor: 'bg-amber-100 text-amber-600',
+  },
+  {
+    id: 'admin-4',
+    name: 'دينا حسام',
+    roleName: 'دعم العملاء',
+    timeAgo: 'منذ 20 دقيقة',
+    avatarColor: 'bg-slate-100 text-slate-600',
+  },
+];
+
+export const mockPermissionsMatrix: PermissionMatrixRow[] = [
+  {
+    action: 'مراجعة KYC',
+    systemOwner: true,
+    mainAdmin: true,
+    kycReviewer: true,
+    propertyReviewer: false,
+    support: false,
+  },
+  {
+    action: 'قبول/رفض عقارات',
+    systemOwner: true,
+    mainAdmin: true,
+    kycReviewer: false,
+    propertyReviewer: true,
+    support: false,
+  },
+  {
+    action: 'إيقاف مستخدم',
+    systemOwner: true,
+    mainAdmin: true,
+    kycReviewer: false,
+    propertyReviewer: false,
+    support: false,
+  },
+  {
+    action: 'حل التذاكر',
+    systemOwner: true,
+    mainAdmin: true,
+    kycReviewer: false,
+    propertyReviewer: false,
+    support: true,
+  },
+  {
+    action: 'تعديل الأدوار',
+    systemOwner: true,
+    mainAdmin: false,
+    kycReviewer: false,
+    propertyReviewer: false,
+    support: false,
+  },
+];
+
+export const mockSystemHealthMetrics = {
+  uptime: '99.8%',
+  uptimeSub: 'آخر 30 يوم',
+  responseTime: '142ms',
+  responseSub: 'متوسط API',
+  errorsToday: '3',
+  errorsSub: 'أخطاء 5xx',
+  dbStatus: 'طبيعي',
+  dbSub: 'اتصال مستقر',
+};
+
+export const mockApiPerformanceData = [
+  { hour: '12:00', ms: 120, height: '40%' },
+  { hour: '12:05', ms: 140, height: '55%' },
+  { hour: '12:10', ms: 180, height: '80%' },
+  { hour: '12:15', ms: 135, height: '50%' },
+  { hour: '12:20', ms: 210, height: '95%' },
+  { hour: '12:25', ms: 160, height: '70%' },
+  { hour: '12:30', ms: 142, height: '58%' },
+  { hour: '12:35', ms: 175, height: '75%' },
+  { hour: '12:40', ms: 130, height: '48%' },
+  { hour: '12:45', ms: 150, height: '62%' },
+  { hour: '12:50', ms: 195, height: '88%' },
+  { hour: '12:55', ms: 142, height: '58%' },
+];
+
+export const mockInternalAdminNotes = [
+  'قاعدة البيانات تعمل بكفاءة 99.8%',
+  'خادم CDN مستقر – لا توجد مشاكل',
+  'النسخ الاحتياطي اليومي: مكتمل 03:00',
+  'تحديث الأمان القادم: الأحد 2:00 ص',
+];
+

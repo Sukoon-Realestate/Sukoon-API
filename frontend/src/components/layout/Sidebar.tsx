@@ -21,6 +21,7 @@ import {
   ShieldBan,
   BellRing,
   History,
+  Activity,
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
@@ -128,6 +129,12 @@ export const Sidebar: React.FC = () => {
       href: '/roles',
       icon: Shield,
       active: pathname === '/roles',
+    },
+    {
+      title: 'صحة النظام',
+      href: '/system/health',
+      icon: Activity,
+      active: pathname === '/system/health',
     },
     {
       title: 'النظام',
