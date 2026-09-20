@@ -83,6 +83,26 @@ export interface KycRequest {
   status: 'انتظار المراجعة' | 'مقبول' | 'مرفوض';
 }
 
+export interface SupportTicket {
+  id: string;
+  subject: string;
+  user: string;
+  userType: 'مستأجر' | 'مالك';
+  priority: 'عالي' | 'متوسط' | 'منخفض';
+  status: 'مفتوح' | 'قيد المعالجة' | 'محلول' | 'مغلق';
+  timeAgo: string;
+  assignedTo?: string;
+}
+
+export interface OverviewTicket {
+  id: string;
+  subject: string;
+  reporter: string;
+  type: 'خلاف' | 'بلاغ عقار' | 'بلاغ مستخدم';
+  status: 'مفتوح' | 'قيد المراجعة' | 'محلول' | 'مغلق';
+  reviewer: string;
+}
+
 export const overviewMetrics: DashboardMetric[] = [
   {
     title: 'إجمالي المستخدمين',
@@ -175,6 +195,42 @@ export const kycMetrics = {
   rejectedToday: 16,
 };
 
+export const supportMetrics = {
+  avgResolutionTime: '4.2h',
+  solvedToday: 45,
+  inProgress: 18,
+  openTickets: 31,
+};
+
+export const reportsOverviewMetrics = {
+  avgResolutionTime: '4.2 ساعة',
+  activeDisputes: 7,
+  solvedToday: 18,
+  openTickets: 31,
+};
+
+export const financialMetrics = {
+  totalRevenueMonth: '248,500 ج',
+  platformFees: '12,425 ج',
+  activeTransactions: '1,203',
+  avgRent: '6,200 ج',
+};
+
+export const revenueBreakdownData = {
+  platformFees: { value: '12,425 ج', percent: 5 },
+  managedRentals: { value: '211,225 ج', percent: 85 },
+  kycFees: { value: '24,850 ج', percent: 10 },
+};
+
+export const sixMonthRevenueTrend = [
+  { month: 'أبريل', value: 180000 },
+  { month: 'مايو', value: 195000 },
+  { month: 'يونيو', value: 210000 },
+  { month: 'يوليو', value: 225000 },
+  { month: 'أغسطس', value: 238000 },
+  { month: 'سبتمبر', value: 248500, isCurrent: true },
+];
+
 export const userDistributionData = {
   total: 2847,
   tenants: 1924,
@@ -259,12 +315,12 @@ export const mockUsers: UserItem[] = [
     id: 'sara-ahmed',
     name: 'سارة أحمد خالد',
     type: 'مستأجر',
-    email: 'sara@example.com',
+    email: 'sara@gmail.com',
     status: 'نشط',
-    kycStatus: 'موثق',
-    regDate: '14 يناير 2026',
-    phone: '01012345432',
-    visitRequests: 12,
+    kycStatus: 'قيد المراجعة',
+    regDate: '1 يناير 2024',
+    phone: '01******432',
+    visitRequests: 3,
     rating: 4.7,
     reportsAgainst: 0,
     lastActive: 'منذ 5 دقائق',
@@ -302,20 +358,6 @@ export const mockUsers: UserItem[] = [
     rating: 4.5,
     reportsAgainst: 1,
     lastActive: 'منذ 3 ساعات',
-  },
-  {
-    id: 'karim-tarek',
-    name: 'كريم طارق سالم',
-    type: 'مالك',
-    email: 'karim@example.com',
-    status: 'موقوف',
-    kycStatus: 'مرفوض',
-    regDate: '8 يناير 2026',
-    phone: '01511223344',
-    visitRequests: 2,
-    rating: 3.2,
-    reportsAgainst: 4,
-    lastActive: 'منذ يومين',
   },
 ];
 
@@ -396,38 +438,87 @@ export const mockProperties: PropertyItem[] = [
     createdDate: '3 مايو 2025',
     lastUpdated: 'منذ 4 ساعات',
   },
+];
+
+export const mockSupportTickets: SupportTicket[] = [
   {
-    id: 'prop-3',
-    title: 'غرفة، المعادي',
-    owner: 'كريم سالم',
-    type: 'غرفة',
-    status: 'مرفوض',
-    price: '4,000 ج',
-    views: 120,
-    imagesCount: 9,
-    time: 'منذ 6 ساعات',
-    riskLevel: 'منخفض الخطر',
-    area: '25 م²',
-    rooms: 1,
-    createdDate: '28 أبريل 2025',
-    lastUpdated: 'منذ يوم',
+    id: 'SUP-201',
+    subject: 'مشكلة في تأكيد الزيارة',
+    user: 'سارة أحمد',
+    userType: 'مستأجر',
+    priority: 'عالي',
+    status: 'مفتوح',
+    timeAgo: 'منذ 1 ساعة',
+    assignedTo: 'دينا حسام',
   },
   {
-    id: 'prop-4',
-    title: 'شقة، المهندسين',
-    owner: 'نادر طارق',
-    type: 'شقة',
-    status: 'مقبول',
-    price: '15,000 ج',
-    views: 325,
-    imagesCount: 3,
-    time: 'منذ يوم',
-    riskLevel: 'عالي الخطر',
-    area: '140 م²',
-    rooms: 3,
-    createdDate: '10 أبريل 2025',
-    lastUpdated: 'أمس',
+    id: 'SUP-200',
+    subject: 'عقاري مش ظاهر في البحث',
+    user: 'أحمد محمد',
+    userType: 'مالك',
+    priority: 'متوسط',
+    status: 'قيد المعالجة',
+    timeAgo: 'منذ 3 ساعات',
+    assignedTo: 'سلمى رشدي',
   },
+  {
+    id: 'SUP-199',
+    subject: 'مشكلة في رفع صور العقار',
+    user: 'منى طارق',
+    userType: 'مالك',
+    priority: 'منخفض',
+    status: 'مفتوح',
+    timeAgo: 'أمس',
+    assignedTo: 'أحمد العدل',
+  },
+];
+
+export const mockOverviewTickets: OverviewTicket[] = [
+  {
+    id: 'TKT-0081',
+    subject: 'مالك رفض رد الأمانة',
+    reporter: 'سارة أحمد',
+    type: 'خلاف',
+    status: 'مفتوح',
+    reviewer: 'أحمد العدل',
+  },
+  {
+    id: 'TKT-0080',
+    subject: 'رقم هاتف ظاهر في صور عقار',
+    reporter: 'النظام الآلي',
+    type: 'بلاغ عقار',
+    status: 'قيد المراجعة',
+    reviewer: 'سلمى رشدي',
+  },
+  {
+    id: 'TKT-0079',
+    subject: 'مستخدم يرسل رسائل مسيئة',
+    reporter: 'محمد علي',
+    type: 'بلاغ مستخدم',
+    status: 'محلول',
+    reviewer: 'سلمى رشدي',
+  },
+  {
+    id: 'TKT-0078',
+    subject: 'عقار غير موجود فعلياً',
+    reporter: 'نورا كمال',
+    type: 'بلاغ عقار',
+    status: 'مغلق',
+    reviewer: 'أحمد العدل',
+  },
+];
+
+export const disputeReasonsData = [
+  { title: 'رد الأمانة', count: 12, color: 'bg-rose-500' },
+  { title: 'دقة المعلومات', count: 8, color: 'bg-amber-500' },
+  { title: 'إلغاء الزيارة', count: 6, color: 'bg-blue-500' },
+  { title: 'التواصل', count: 5, color: 'bg-teal-500' },
+];
+
+export const bookingLogData = [
+  { id: 'BK-441', title: 'شقة نصر', status: 'مكتمل' },
+  { id: 'BK-440', title: 'ستوديو تجمع', status: 'ملغي' },
+  { id: 'BK-439', title: 'غرفة معادي', status: 'مكتمل' },
 ];
 
 export const propertyVerificationChecklist = [
@@ -463,31 +554,6 @@ export const mockKycRequests: KycRequest[] = [
     hasWarning: true,
     status: 'انتظار المراجعة',
   },
-  {
-    id: 'kyc-3',
-    user: 'نورا عمر طارق',
-    type: 'مستأجر',
-    nationalIdMask: '30...56',
-    waitTime: '6 ساعات',
-    status: 'انتظار المراجعة',
-  },
-  {
-    id: 'kyc-4',
-    user: 'كريم سالم فاروق',
-    type: 'مالك',
-    nationalIdMask: '27...78',
-    waitTime: '8 ساعات',
-    status: 'انتظار المراجعة',
-  },
-  {
-    id: 'kyc-5',
-    user: 'منى حسام علي',
-    type: 'مستأجر',
-    nationalIdMask: '29...90',
-    waitTime: 'يوم',
-    hasWarning: true,
-    status: 'انتظار المراجعة',
-  },
 ];
 
 export const mockReports: ReportItem[] = [
@@ -499,36 +565,6 @@ export const mockReports: ReportItem[] = [
     reporter: 'سارة أحمد',
     date: 'منذ 1 ساعة',
     automationLevel: 'عالي',
-    status: 'نشط',
-  },
-  {
-    id: 'rep-2',
-    reportedUser: 'محمود حسن',
-    userType: 'مستأجر',
-    reason: 'لغة مسيئة',
-    reporter: 'النظام الآلي',
-    date: 'منذ 3 ساعات',
-    automationLevel: 'تلقائي',
-    status: 'نشط',
-  },
-  {
-    id: 'rep-3',
-    reportedUser: 'نورا عمر',
-    userType: 'مستأجر',
-    reason: 'معلومات مضللة',
-    reporter: 'خالد فاروق',
-    date: 'منذ 5 ساعات',
-    automationLevel: 'منخفض',
-    status: 'نشط',
-  },
-  {
-    id: 'rep-4',
-    reportedUser: 'طارق محمد',
-    userType: 'مالك',
-    reason: 'رقم هاتف ظاهر',
-    reporter: 'النظام الآلي',
-    date: 'أمس',
-    automationLevel: 'تلقائي',
     status: 'نشط',
   },
 ];

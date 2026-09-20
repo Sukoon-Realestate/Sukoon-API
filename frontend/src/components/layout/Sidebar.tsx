@@ -14,6 +14,9 @@ import {
   ShieldAlert,
   UserX,
   ClipboardList,
+  Headphones,
+  DollarSign,
+  UserCheck,
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
@@ -44,7 +47,7 @@ export const Sidebar: React.FC = () => {
       href: '/kyc',
       icon: ShieldCheck,
       badge: '487',
-      active: pathname === '/kyc',
+      active: pathname === '/kyc' || pathname === '/kyc/review',
     },
     {
       title: 'إدارة العقارات',
@@ -67,10 +70,23 @@ export const Sidebar: React.FC = () => {
       active: pathname === '/users/reports',
     },
     {
-      title: 'التقارير',
-      href: '/reports',
+      title: 'دعم العملاء',
+      href: '/support',
+      icon: Headphones,
+      badge: '31',
+      active: pathname.startsWith('/support'),
+    },
+    {
+      title: 'التقارير والتذاكر',
+      href: '/reports/overview',
       icon: FileText,
-      active: pathname === '/reports',
+      active: pathname === '/reports/overview' || pathname === '/reports',
+    },
+    {
+      title: 'الإيرادات والمالية',
+      href: '/financials',
+      icon: DollarSign,
+      active: pathname === '/financials',
     },
     {
       title: 'الأدوار',
