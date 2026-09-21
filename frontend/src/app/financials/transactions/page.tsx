@@ -1,34 +1,54 @@
-﻿'use client';
+'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/layout/Header';
 import { Search, FileSpreadsheet } from 'lucide-react';
-import { mockTransactions } from '@/data/mockData';
+import { fetchTransactions } from '@/lib/api/financials';
+import { TransactionItem } from '@/lib/api/types';
 
 export default function FinancialTransactionsPage() {
   const [activeTab, setActiveTab] = useState<'all' | 'paid' | 'pending' | 'refunded'>('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [transactions, setTransactions] = useState<TransactionItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const filteredTxns = mockTransactions.filter((txn) => {
-    const matchesSearch =
-      txn.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      txn.description.includes(searchQuery) ||
-      txn.tenant.includes(searchQuery);
+  useEffect(() => {
+    let isCancelled = false;
+    async function loadTransactions() {
+      setIsLoading(true);
+      try {
+        const res = await fetchTransactions({
+          status: activeTab,
+          search: searchQuery.trim() || undefined,
+        });
+        if (!isCancelled) {
+          setTransactions(res.results || []);
+        }
+      } catch (err) {
+        console.error('Failed to load transactions:', err);
+      } finally {
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
+      }
+    }
 
-    if (!matchesSearch) return false;
+    const timer = setTimeout(() => {
+      loadTransactions();
+    }, 300);
 
-    if (activeTab === 'paid') return txn.status === 'مدفوع';
-    if (activeTab === 'pending') return txn.status === 'معلق';
-    if (activeTab === 'refunded') return txn.status === 'مسترد';
-    return true;
-  });
+    return () => {
+      isCancelled = true;
+      clearTimeout(timer);
+    };
+  }, [activeTab, searchQuery]);
 
   return (
     <div className="flex-1 flex flex-col pb-12">
       <Header
         title="سجل المعاملات المالية"
         subtitle="تتبع التحويلات الملاية، إيجارات المنصة ورسوم التوثيق والاسترداد"
-        lastUpdated="9:41 ص"
+        lastUpdated="محدث الآن"
       />
 
       <div className="p-8 max-w-7xl mx-auto w-full space-y-6">
@@ -41,12 +61,12 @@ export default function FinancialTransactionsPage() {
                 placeholder="بحث برقم المعاملة..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-4 pr-10 py-2 bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all placeholder:text-[var(--text-subtle)]"
+                className="w-full pl-4 pr-10 py-2 bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all placeholder:text-[var(--text-subtle)] text-[var(--foreground)]"
               />
               <Search className="w-4 h-4 text-[var(--text-subtle)] absolute right-3.5 top-3" />
             </div>
 
-            <button className="flex items-center gap-2 bg-[var(--card-bg)] px-4 py-2 rounded-xl border border-[var(--card-border)] text-xs font-bold text-[var(--foreground)] hover:bg-[var(--card-hover)] transition-colors shadow-[var(--shadow-card)]">
+            <button className="flex items-center gap-2 bg-[var(--card-bg)] px-4 py-2 rounded-xl border border-[var(--card-border)] text-xs font-bold text-[var(--foreground)] hover:bg-[var(--card-hover)] transition-colors shadow-[var(--shadow-card)] cursor-pointer">
               <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
               <span>تصدير Excel</span>
             </button>
@@ -56,7 +76,7 @@ export default function FinancialTransactionsPage() {
           <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto justify-end">
             <button
               onClick={() => setActiveTab('all')}
-              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
+              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
                 activeTab === 'all'
                   ? 'bg-teal-700 text-white'
                   : 'bg-[var(--card-bg)] text-[var(--text-muted)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
@@ -66,7 +86,7 @@ export default function FinancialTransactionsPage() {
             </button>
             <button
               onClick={() => setActiveTab('paid')}
-              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
+              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
                 activeTab === 'paid'
                   ? 'bg-teal-700 text-white'
                   : 'bg-[var(--card-bg)] text-[var(--text-muted)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
@@ -76,7 +96,7 @@ export default function FinancialTransactionsPage() {
             </button>
             <button
               onClick={() => setActiveTab('pending')}
-              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
+              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
                 activeTab === 'pending'
                   ? 'bg-teal-700 text-white'
                   : 'bg-[var(--card-bg)] text-[var(--text-muted)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
@@ -86,7 +106,7 @@ export default function FinancialTransactionsPage() {
             </button>
             <button
               onClick={() => setActiveTab('refunded')}
-              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors ${
+              className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
                 activeTab === 'refunded'
                   ? 'bg-teal-700 text-white'
                   : 'bg-[var(--card-bg)] text-[var(--text-muted)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
@@ -112,43 +132,57 @@ export default function FinancialTransactionsPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--divider)] text-xs">
-                {filteredTxns.map((txn) => (
-                  <tr
-                    key={txn.id}
-                    className="hover:bg-[var(--table-row-hover)] transition-colors"
-                  >
-                    <td className="py-4 px-6 font-mono font-bold text-[var(--foreground)] dir-ltr text-right">
-                      {txn.id}
-                    </td>
-                    <td className="py-4 px-6 font-bold text-[var(--foreground)]">
-                      {txn.description}
-                    </td>
-                    <td className="py-4 px-6 text-[var(--text-muted)] font-medium">
-                      {txn.landlord}
-                    </td>
-                    <td className="py-4 px-6 text-[var(--foreground)] font-semibold">
-                      {txn.tenant}
-                    </td>
-                    <td
-                      className={`py-4 px-6 font-extrabold font-mono dir-ltr text-right text-sm ${
-                        txn.isPositive ? 'text-emerald-600' : 'text-rose-600'
-                      }`}
-                    >
-                      {txn.amount}
-                    </td>
-                    <td className="py-4 px-6 font-bold">
-                      {txn.status === 'مدفوع' && (
-                        <span className="text-emerald-600">مدفوع</span>
-                      )}
-                      {txn.status === 'معلق' && (
-                        <span className="text-amber-500">معلق</span>
-                      )}
-                      {txn.status === 'مسترد' && (
-                        <span className="text-rose-600">مسترد</span>
-                      )}
+                {isLoading ? (
+                  <tr>
+                    <td colSpan={6} className="py-8 text-center text-[var(--text-subtle)] font-medium">
+                      جاري تحميل المعاملات...
                     </td>
                   </tr>
-                ))}
+                ) : transactions.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="py-8 text-center text-[var(--text-subtle)] font-medium">
+                      لا توجد معاملات مطابقة
+                    </td>
+                  </tr>
+                ) : (
+                  transactions.map((txn) => (
+                    <tr
+                      key={txn.id}
+                      className="hover:bg-[var(--table-row-hover)] transition-colors"
+                    >
+                      <td className="py-4 px-6 font-mono font-bold text-[var(--foreground)] dir-ltr text-right">
+                        {txn.id}
+                      </td>
+                      <td className="py-4 px-6 font-bold text-[var(--foreground)]">
+                        {txn.description}
+                      </td>
+                      <td className="py-4 px-6 text-[var(--text-muted)] font-medium">
+                        {txn.landlord}
+                      </td>
+                      <td className="py-4 px-6 text-[var(--foreground)] font-semibold">
+                        {txn.tenant}
+                      </td>
+                      <td
+                        className={`py-4 px-6 font-extrabold font-mono dir-ltr text-right text-sm ${
+                          txn.isPositive ? 'text-emerald-600' : 'text-rose-600'
+                        }`}
+                      >
+                        {txn.amount}
+                      </td>
+                      <td className="py-4 px-6 font-bold">
+                        {txn.status === 'مدفوع' && (
+                          <span className="text-emerald-600">مدفوع</span>
+                        )}
+                        {txn.status === 'معلق' && (
+                          <span className="text-amber-500">معلق</span>
+                        )}
+                        {txn.status === 'مسترد' && (
+                          <span className="text-rose-600">مسترد</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

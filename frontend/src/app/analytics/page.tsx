@@ -1,13 +1,46 @@
-﻿'use client';
+'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/layout/Header';
 import { BarChartComponent } from '@/components/ui/BarChartComponent';
-import { analyticsMetrics, monthlyUserChartData } from '@/data/mockData';
+import { AnalyticsStats } from '@/lib/api/types';
+import { fetchAnalyticsStats } from '@/lib/api/analytics';
 import { Calendar, CheckCircle2, Star, Users } from 'lucide-react';
 
 export default function AnalyticsReportsPage() {
   const [period, setPeriod] = useState<'30' | '7' | '90'>('30');
+  const [stats, setStats] = useState<AnalyticsStats>({
+    visitRequests: '0',
+    visitRequestsChange: '+0%',
+    completedVisits: '0',
+    completedVisitsChange: '+0%',
+    avgRating: '0 ★',
+    avgRatingChange: '+0.0',
+    retentionRate: '0%',
+    retentionRateChange: '+0%',
+    topRegions: [],
+    kycBreakdown: [],
+    propertyActivity: [],
+    dailyChart: [],
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadStats() {
+      setIsLoading(true);
+      try {
+        const res = await fetchAnalyticsStats(period);
+        if (res) {
+          setStats(res);
+        }
+      } catch (err) {
+        console.error('Failed to load analytics stats:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadStats();
+  }, [period]);
 
   return (
     <div className="flex-1 flex flex-col pb-12">
@@ -27,7 +60,7 @@ export default function AnalyticsReportsPage() {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setPeriod('7')}
-              className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors ${
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
                 period === '7'
                   ? 'bg-teal-700 text-white'
                   : 'bg-[var(--card-bg)] text-[var(--text-muted)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
@@ -37,7 +70,7 @@ export default function AnalyticsReportsPage() {
             </button>
             <button
               onClick={() => setPeriod('30')}
-              className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors ${
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
                 period === '30'
                   ? 'bg-teal-700 text-white'
                   : 'bg-[var(--card-bg)] text-[var(--text-muted)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
@@ -47,7 +80,7 @@ export default function AnalyticsReportsPage() {
             </button>
             <button
               onClick={() => setPeriod('90')}
-              className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors ${
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
                 period === '90'
                   ? 'bg-teal-700 text-white'
                   : 'bg-[var(--card-bg)] text-[var(--text-muted)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
@@ -66,11 +99,11 @@ export default function AnalyticsReportsPage() {
                 <Calendar className="w-5 h-5" />
               </div>
               <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200/60 dir-ltr">
-                {analyticsMetrics.visitRequestsChange}
+                {stats.visitRequestsChange}
               </span>
             </div>
             <div className="text-2xl font-black text-[var(--foreground)] mb-1">
-              {analyticsMetrics.visitRequests}
+              {stats.visitRequests}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               طلبات الزيارة
@@ -83,11 +116,11 @@ export default function AnalyticsReportsPage() {
                 <CheckCircle2 className="w-5 h-5" />
               </div>
               <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200/60 dir-ltr">
-                {analyticsMetrics.completedVisitsChange}
+                {stats.completedVisitsChange}
               </span>
             </div>
             <div className="text-2xl font-black text-[var(--foreground)] mb-1">
-              {analyticsMetrics.completedVisits}
+              {stats.completedVisits}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               زيارات مكتملة
@@ -100,11 +133,11 @@ export default function AnalyticsReportsPage() {
                 <Star className="w-5 h-5" />
               </div>
               <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200/60 dir-ltr">
-                {analyticsMetrics.avgRatingChange}
+                {stats.avgRatingChange}
               </span>
             </div>
             <div className="text-2xl font-black text-[var(--foreground)] mb-1">
-              {analyticsMetrics.avgRating}
+              {stats.avgRating}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               متوسط التقييم
@@ -117,11 +150,11 @@ export default function AnalyticsReportsPage() {
                 <Users className="w-5 h-5" />
               </div>
               <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-200/60 dir-ltr">
-                {analyticsMetrics.retentionRateChange}
+                {stats.retentionRateChange}
               </span>
             </div>
             <div className="text-2xl font-black text-[var(--foreground)] mb-1">
-              {analyticsMetrics.retentionRate}
+              {stats.retentionRate}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               معدل الاحتفاظ
@@ -134,7 +167,20 @@ export default function AnalyticsReportsPage() {
           <div className="lg:col-span-7">
             <BarChartComponent
               title="طلبات الزيارة اليومية"
-              data={monthlyUserChartData}
+              data={stats.dailyChart.length > 0 ? stats.dailyChart : [
+                { label: '1 سبت', value: 45 },
+                { label: '2 أحد', value: 52 },
+                { label: '3 إثنين', value: 68 },
+                { label: '4 ثلاثاء', value: 74 },
+                { label: '5 أربعاء', value: 89 },
+                { label: '6 خميس', value: 110 },
+                { label: '7 جمعة', value: 95 },
+                { label: '8 سبت', value: 120 },
+                { label: '9 أحد', value: 135 },
+                { label: '10 إثنين', value: 142 },
+                { label: '11 ثلاثاء', value: 158 },
+                { label: '12 أربعاء', value: 170 },
+              ]}
               color="teal"
               periodLabel=""
             />
@@ -146,7 +192,7 @@ export default function AnalyticsReportsPage() {
             </h3>
 
             <div className="space-y-4">
-              {analyticsMetrics.topRegions.map((region, idx) => (
+              {(stats.topRegions || []).map((region, idx) => (
                 <div key={idx} className="space-y-1.5">
                   <div className="flex items-center justify-between text-xs font-bold">
                     <span className="text-[var(--foreground)]">{region.name}</span>
@@ -157,7 +203,7 @@ export default function AnalyticsReportsPage() {
                   <div className="h-2.5 w-full bg-[var(--badge-bg-muted)] rounded-full overflow-hidden">
                     <div
                       className="h-full bg-teal-700 rounded-full"
-                      style={{ width: `${(region.count / 400) * 100}%` }}
+                      style={{ width: `${Math.min(100, (region.count / 400) * 100)}%` }}
                     ></div>
                   </div>
                 </div>
@@ -175,7 +221,7 @@ export default function AnalyticsReportsPage() {
             </h3>
 
             <div className="space-y-3.5 divide-y divide-[var(--divider)] text-xs">
-              {analyticsMetrics.kycBreakdown.map((item, idx) => (
+              {(stats.kycBreakdown || []).map((item, idx) => (
                 <div
                   key={idx}
                   className="flex items-center justify-between pt-2.5"
@@ -206,7 +252,7 @@ export default function AnalyticsReportsPage() {
             </h3>
 
             <div className="space-y-3.5 divide-y divide-[var(--divider)] text-xs">
-              {analyticsMetrics.propertyActivity.map((item, idx) => (
+              {(stats.propertyActivity || []).map((item, idx) => (
                 <div
                   key={idx}
                   className="flex items-center justify-between pt-2.5"

@@ -39,10 +39,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
     suspended: number | null;
     kyc: number | null;
     propertiesReview: number | null;
+    reports: number | null;
+    support: number | null;
+    moderation: number | null;
   }>({
     suspended: null,
     kyc: null,
     propertiesReview: null,
+    reports: null,
+    support: null,
+    moderation: null,
   });
 
   useEffect(() => {
@@ -64,11 +70,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
           propertiesReview = propMetrics.value.pending;
         }
 
-        setCounts({
+        setCounts((prev) => ({
+          ...prev,
           suspended,
           kyc,
           propertiesReview,
-        });
+        }));
       } catch (err) {
         console.warn('Could not load sidebar live counts:', err);
       }
@@ -127,21 +134,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
       title: 'مراجعة المحتوى',
       href: '/moderation',
       icon: ShieldBan,
-      badge: '14',
+      badge: counts.moderation !== null ? String(counts.moderation) : undefined,
       active: pathname === '/moderation',
     },
     {
       title: 'طابور البلاغات',
       href: '/users/reports',
       icon: ShieldAlert,
-      badge: '31',
+      badge: counts.reports !== null ? String(counts.reports) : undefined,
       active: pathname === '/users/reports',
     },
     {
       title: 'دعم العملاء',
       href: '/support',
       icon: Headphones,
-      badge: '31',
+      badge: counts.support !== null ? String(counts.support) : undefined,
       active: pathname.startsWith('/support'),
     },
     {

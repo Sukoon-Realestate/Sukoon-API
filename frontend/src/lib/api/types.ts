@@ -231,3 +231,177 @@ export interface PropertyDetail {
   createdDate: string;
   lastUpdated: string;
 }
+
+export interface ModerationItem {
+  id: string;
+  rawId?: string;
+  property_id?: string;
+  title: string;
+  reason: string;
+  riskLevel: 'عالي' | 'متوسط' | 'منخفض';
+  type: 'صور' | 'نصوص';
+}
+
+export interface ModerationMetrics {
+  suspiciousImages: number;
+  misleadingDesc: number;
+  phoneNumInPhotos: number;
+  inappropriateContent: number;
+}
+
+export interface SupportTicket {
+  id: string;
+  rawId?: string;
+  subject: string;
+  user: string;
+  userType: 'مستأجر' | 'مالك';
+  priority: 'عالي' | 'متوسط' | 'منخفض';
+  status: 'مفتوح' | 'قيد المعالجة' | 'محلول' | 'مغلق';
+  statusRaw?: string;
+  timeAgo: string;
+  assignedTo?: string;
+  notes?: string;
+}
+
+export interface SupportMetrics {
+  avgResolutionTime: string;
+  solvedToday: number;
+  inProgress: number;
+  openTickets: number;
+}
+
+export interface OverviewTicket {
+  id: string;
+  rawId?: string;
+  subject: string;
+  reporter: string;
+  type: 'خلاف' | 'بلاغ عقار' | 'بلاغ مستخدم';
+  status: 'مفتوح' | 'قيد المراجعة' | 'محلول' | 'مغلق';
+  reviewer: string;
+}
+
+export interface ReportsOverviewStats {
+  metrics: {
+    avgResolutionTime: string;
+    activeDisputes: number;
+    solvedToday: number;
+    openTickets: number;
+  };
+  tickets: OverviewTicket[];
+  disputeReasons: Array<{
+    title: string;
+    count: number;
+    color: string;
+  }>;
+  bookingLog: Array<{
+    id: string;
+    title: string;
+    status: 'مكتمل' | 'ملغي';
+  }>;
+}
+
+export interface ReportMetrics {
+  active: number;
+  suspended: number;
+  banned: number;
+  dismissed: number;
+  total: number;
+}
+
+export interface AnalyticsStats {
+  visitRequests: string;
+  visitRequestsChange: string;
+  completedVisits: string;
+  completedVisitsChange: string;
+  avgRating: string;
+  avgRatingChange: string;
+  retentionRate: string;
+  retentionRateChange: string;
+  topRegions: Array<{
+    name: string;
+    count: number;
+  }>;
+  kycBreakdown: Array<{
+    label: string;
+    count: number;
+    pct: string;
+    color: string;
+  }>;
+  propertyActivity: Array<{
+    label: string;
+    count: number;
+    color: string;
+  }>;
+  dailyChart: Array<{
+    label: string;
+    value: number;
+  }>;
+}
+
+export interface FinancialSummary {
+  metrics: {
+    avgRent: string;
+    activeTransactions: string;
+    platformFees: string;
+    totalRevenueMonth: string;
+  };
+  revenueBreakdown: {
+    platformFees: { value: string; percent: number };
+    managedRentals: { value: string; percent: number };
+    kycFees: { value: string; percent: number };
+  };
+  sixMonthTrend: Array<{
+    month: string;
+    value: number;
+    isCurrent?: boolean;
+  }>;
+}
+
+export interface TransactionItem {
+  id: string;
+  description: string;
+  landlord: string;
+  tenant: string;
+  amount: string;
+  isPositive: boolean;
+  status: 'مدفوع' | 'معلق' | 'مسترد';
+}
+
+export interface AuditLogItem {
+  id: string;
+  time: string;
+  action: string;
+  typeBadge: 'KYC' | 'عقار' | 'مستخدم' | 'دور' | 'دعم' | 'بلاغ' | 'نظام';
+  target: string;
+  operator: string;
+}
+
+export interface SystemHealth {
+  metrics: {
+    uptime: string;
+    uptimeSub: string;
+    responseTime: string;
+    responseSub: string;
+    errorsToday: string;
+    errorsSub: string;
+    dbStatus: string;
+    dbSub: string;
+  };
+  auditLogs: AuditLogItem[];
+  apiPerformanceData: Array<{
+    hour: string;
+    ms: number;
+    height: string;
+  }>;
+  internalAdminNotes: string[];
+}
+
+export interface PushCampaign {
+  id: string;
+  title: string;
+  timeAgo: string;
+  body: string;
+  openRate: string;
+  recipientCount: string;
+}
+

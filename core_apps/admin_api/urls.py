@@ -12,6 +12,10 @@ from .views import (
     AdminKYCRejectAPIView,
     AdminReportListAPIView,
     AdminReportActionAPIView,
+    AdminReportMetricsAPIView,
+    AdminSupportTicketsListAPIView,
+    AdminSupportMetricsAPIView,
+    AdminReportsOverviewAPIView,
     AdminStaffListAPIView,
     AdminRolesSummaryAPIView,
     AdminStaffInviteAPIView,
@@ -23,6 +27,16 @@ from .views import (
     AdminPropertyApproveAPIView,
     AdminPropertyRejectAPIView,
     AdminPropertyRevisionAPIView,
+    AdminModerationListAPIView,
+    AdminModerationMetricsAPIView,
+    AdminModerationDeleteAPIView,
+    AdminAnalyticsStatsAPIView,
+    AdminFinancialSummaryAPIView,
+    AdminTransactionListAPIView,
+    AdminSystemHealthAPIView,
+    AdminAuditLogsAPIView,
+    AdminPushCampaignsAPIView,
+    AdminSendPushNotificationAPIView,
 )
 
 urlpatterns = [
@@ -60,10 +74,33 @@ urlpatterns = [
     path("properties/<uuid:property_id>/revision/", AdminPropertyRevisionAPIView.as_view(), name="admin-property-revision"),
     path("properties/<str:property_id>/revision/", AdminPropertyRevisionAPIView.as_view(), name="admin-property-revision-str"),
 
+    # Content Moderation
+    path("moderation/", AdminModerationListAPIView.as_view(), name="admin-moderation-list"),
+    path("moderation/metrics/", AdminModerationMetricsAPIView.as_view(), name="admin-moderation-metrics"),
+    path("moderation/<uuid:property_id>/delete/", AdminModerationDeleteAPIView.as_view(), name="admin-moderation-delete"),
+    path("moderation/<str:property_id>/delete/", AdminModerationDeleteAPIView.as_view(), name="admin-moderation-delete-str"),
+
     # User Reports & Violations
     path("reports/", AdminReportListAPIView.as_view(), name="admin-reports-list"),
+    path("reports/metrics/", AdminReportMetricsAPIView.as_view(), name="admin-reports-metrics"),
+    path("reports/overview/", AdminReportsOverviewAPIView.as_view(), name="admin-reports-overview"),
     path("reports/<uuid:report_id>/action/", AdminReportActionAPIView.as_view(), name="admin-report-action"),
     path("reports/<str:report_id>/action/", AdminReportActionAPIView.as_view(), name="admin-report-action-str"),
+
+    # Support Tickets & Customer Support
+    path("support/", AdminSupportTicketsListAPIView.as_view(), name="admin-support-list"),
+    path("support/metrics/", AdminSupportMetricsAPIView.as_view(), name="admin-support-metrics"),
+
+    # Analytics & Reports
+    path("analytics/", AdminAnalyticsStatsAPIView.as_view(), name="admin-analytics-stats"),
+
+    # Financials & System
+    path("financials/summary/", AdminFinancialSummaryAPIView.as_view(), name="admin-financials-summary"),
+    path("financials/transactions/", AdminTransactionListAPIView.as_view(), name="admin-financials-transactions"),
+    path("system/health/", AdminSystemHealthAPIView.as_view(), name="admin-system-health"),
+    path("system/logs/", AdminAuditLogsAPIView.as_view(), name="admin-system-logs"),
+    path("system/notifications/", AdminPushCampaignsAPIView.as_view(), name="admin-system-notifications"),
+    path("system/notifications/send/", AdminSendPushNotificationAPIView.as_view(), name="admin-system-notifications-send"),
 
     # Staff Roles & Permissions
     path("staff/", AdminStaffListAPIView.as_view(), name="admin-staff-list"),

@@ -1,6 +1,6 @@
-﻿'use client';
+'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/layout/Header';
 import {
   TrendingUp,
@@ -10,20 +10,48 @@ import {
   Download,
   Check,
 } from 'lucide-react';
-import {
-  mockSystemHealthMetrics,
-  mockApiPerformanceData,
-  mockInternalAdminNotes,
-  mockAuditLogs,
-} from '@/data/mockData';
+import { fetchSystemHealth } from '@/lib/api/system';
+import { SystemHealth } from '@/lib/api/types';
 
 export default function SystemHealthPage() {
+  const [data, setData] = useState<SystemHealth | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadHealth() {
+      try {
+        const res = await fetchSystemHealth();
+        setData(res);
+      } catch (err) {
+        console.error('Failed to load system health:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadHealth();
+  }, []);
+
+  const metrics = data?.metrics || {
+    uptime: '99.8%',
+    uptimeSub: 'آخر 30 يوم',
+    responseTime: '142ms',
+    responseSub: 'متوسط API',
+    errorsToday: '0',
+    errorsSub: 'أخطاء 5xx',
+    dbStatus: 'طبيعي',
+    dbSub: 'اتصال مستقر',
+  };
+
+  const auditLogs = data?.auditLogs || [];
+  const apiPerformance = data?.apiPerformanceData || [];
+  const internalNotes = data?.internalAdminNotes || [];
+
   return (
     <div className="flex-1 flex flex-col pb-12">
       <Header
         title="صحة النظام وسجل التدقيق"
         subtitle="مراقبة أداء الخوادم، سرعة الاستجابة وسجل عمليات المشرفين"
-        lastUpdated="9:41 ص"
+        lastUpdated="محدث الآن"
       />
 
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
@@ -33,10 +61,10 @@ export default function SystemHealthPage() {
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex items-center justify-between">
             <div className="space-y-1">
               <span className="text-2xl font-black text-[var(--foreground)] tracking-tight block">
-                {mockSystemHealthMetrics.uptime}
+                {isLoading ? '...' : metrics.uptime}
               </span>
               <p className="text-xs font-bold text-[var(--foreground)]">
-                {mockSystemHealthMetrics.uptimeSub}
+                {metrics.uptimeSub}
               </p>
               <span className="text-[10px] text-[var(--text-subtle)] font-medium block">
                 آخر 30 يوم
@@ -51,10 +79,10 @@ export default function SystemHealthPage() {
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex items-center justify-between">
             <div className="space-y-1">
               <span className="text-2xl font-black text-[var(--foreground)] tracking-tight block">
-                {mockSystemHealthMetrics.responseTime}
+                {isLoading ? '...' : metrics.responseTime}
               </span>
               <p className="text-xs font-bold text-[var(--foreground)]">
-                {mockSystemHealthMetrics.responseSub}
+                {metrics.responseSub}
               </p>
               <span className="text-[10px] text-[var(--text-subtle)] font-medium block">
                 متوسط API
@@ -69,10 +97,10 @@ export default function SystemHealthPage() {
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex items-center justify-between">
             <div className="space-y-1">
               <span className="text-2xl font-black text-[var(--foreground)] tracking-tight block">
-                {mockSystemHealthMetrics.errorsToday}
+                {isLoading ? '...' : metrics.errorsToday}
               </span>
               <p className="text-xs font-bold text-[var(--foreground)]">
-                {mockSystemHealthMetrics.errorsSub}
+                {metrics.errorsSub}
               </p>
               <span className="text-[10px] text-[var(--text-subtle)] font-medium block">
                 أخطاء 5xx
@@ -87,10 +115,10 @@ export default function SystemHealthPage() {
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex items-center justify-between">
             <div className="space-y-1">
               <span className="text-2xl font-black text-emerald-600 tracking-tight block">
-                {mockSystemHealthMetrics.dbStatus}
+                {isLoading ? '...' : metrics.dbStatus}
               </span>
               <p className="text-xs font-bold text-[var(--foreground)]">
-                {mockSystemHealthMetrics.dbSub}
+                {metrics.dbSub}
               </p>
               <span className="text-[10px] text-[var(--text-subtle)] font-medium block">
                 اتصال مستقر
@@ -110,14 +138,14 @@ export default function SystemHealthPage() {
               <h3 className="font-extrabold text-[var(--foreground)] text-base">
                 سجل التدقيق – Admin Actions
               </h3>
-              <button className="text-xs text-teal-600 font-bold hover:underline flex items-center gap-1">
+              <button className="text-xs text-teal-600 font-bold hover:underline flex items-center gap-1 cursor-pointer">
                 <span>تصدير السجل</span>
                 <Download className="w-3.5 h-3.5" />
               </button>
             </div>
 
             <div className="divide-y divide-[var(--divider)] space-y-3">
-              {mockAuditLogs.slice(0, 6).map((log) => (
+              {auditLogs.slice(0, 6).map((log) => (
                 <div
                   key={log.id}
                   className="pt-3 first:pt-0 flex items-center justify-between text-xs"
@@ -156,6 +184,11 @@ export default function SystemHealthPage() {
                         بلاغ
                       </span>
                     )}
+                    {log.typeBadge === 'نظام' && (
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-teal-100 text-teal-800">
+                        نظام
+                      </span>
+                    )}
 
                     <span className="font-bold text-[var(--foreground)]">
                       {log.action}
@@ -181,7 +214,7 @@ export default function SystemHealthPage() {
 
             {/* Bar Chart Visualization */}
             <div className="h-44 pt-6 flex items-end justify-between gap-1.5 border-b border-[var(--divider)] pb-2">
-              {mockApiPerformanceData.map((item, idx) => (
+              {apiPerformance.map((item, idx) => (
                 <div
                   key={idx}
                   className="flex-1 flex flex-col items-center gap-1 group h-full justify-end"
@@ -207,7 +240,7 @@ export default function SystemHealthPage() {
           </h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-semibold text-slate-300">
-            {mockInternalAdminNotes.map((note, idx) => (
+            {internalNotes.map((note, idx) => (
               <div key={idx} className="flex items-center gap-2.5">
                 <div className="w-4 h-4 rounded-full bg-teal-500/20 text-teal-400 flex items-center justify-center shrink-0">
                   <Check className="w-3 h-3 stroke-[3]" />

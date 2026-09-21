@@ -7,17 +7,23 @@ import { StatusBadge } from '@/components/ui/StatusBadge';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { useToast } from '@/components/ui/Toast';
 import { Send, CheckCircle, AlertOctagon } from 'lucide-react';
-import { mockSupportTickets } from '@/data/mockData';
+import { SupportTicket } from '@/lib/api/types';
 
 export default function SupportTicketDetailPage() {
   const params = useParams();
   const ticketId = (params?.id as string) || 'SUP-201';
   const { showToast } = useToast();
 
-  const initialTicket =
-    mockSupportTickets.find((t) => t.id === ticketId) || mockSupportTickets[0];
-
-  const [ticket, setTicket] = useState(initialTicket);
+  const [ticket, setTicket] = useState<SupportTicket>({
+    id: ticketId,
+    subject: 'مشكلة في تأكيد الزيارة',
+    user: 'سارة أحمد',
+    userType: 'مستأجر',
+    priority: 'عالي',
+    status: 'مفتوح',
+    timeAgo: 'منذ ساعة',
+    assignedTo: 'دينا حسام',
+  });
   const [showCloseModal, setShowCloseModal] = useState(false);
   const [showEscalateModal, setShowEscalateModal] = useState(false);
 

@@ -50,3 +50,116 @@ class TestAdminViews:
         url = reverse("admin-staff-list")
         res = api_client.get(url)
         assert res.status_code == status.HTTP_200_OK
+
+    def test_moderation_list_view(self, api_client, superuser):
+        api_client.force_authenticate(user=superuser)
+        url = reverse("admin-moderation-list")
+        res = api_client.get(url)
+        assert res.status_code == status.HTTP_200_OK
+
+    def test_moderation_metrics_view(self, api_client, superuser):
+        api_client.force_authenticate(user=superuser)
+        url = reverse("admin-moderation-metrics")
+        res = api_client.get(url)
+        assert res.status_code == status.HTTP_200_OK
+
+    def test_reports_metrics_view(self, api_client, superuser):
+        api_client.force_authenticate(user=superuser)
+        url = reverse("admin-reports-metrics")
+        res = api_client.get(url)
+        assert res.status_code == status.HTTP_200_OK
+
+    def test_reports_overview_view(self, api_client, superuser):
+        api_client.force_authenticate(user=superuser)
+        url = reverse("admin-reports-overview")
+        res = api_client.get(url)
+        assert res.status_code == status.HTTP_200_OK
+
+    def test_support_list_view(self, api_client, superuser):
+        api_client.force_authenticate(user=superuser)
+        url = reverse("admin-support-list")
+        res = api_client.get(url)
+        assert res.status_code == status.HTTP_200_OK
+
+    def test_support_metrics_view(self, api_client, superuser):
+        api_client.force_authenticate(user=superuser)
+        url = reverse("admin-support-metrics")
+        res = api_client.get(url)
+        assert res.status_code == status.HTTP_200_OK
+
+    def test_analytics_stats_view(self, api_client, superuser):
+        api_client.force_authenticate(user=superuser)
+        url = reverse("admin-analytics-stats")
+        res = api_client.get(url)
+        assert res.status_code == status.HTTP_200_OK
+
+    def test_financial_summary_unauthenticated_returns_401(self, api_client):
+        url = reverse("admin-financials-summary")
+        res = api_client.get(url)
+        assert res.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_financial_summary_view(self, api_client, superuser):
+        api_client.force_authenticate(user=superuser)
+        url = reverse("admin-financials-summary")
+        res = api_client.get(url)
+        assert res.status_code == status.HTTP_200_OK
+        assert "metrics" in res.data
+        assert "revenueBreakdown" in res.data
+        assert "sixMonthTrend" in res.data
+
+    def test_financial_transactions_view(self, api_client, superuser):
+        api_client.force_authenticate(user=superuser)
+        url = reverse("admin-financials-transactions")
+        res = api_client.get(url, {"status": "paid"})
+        assert res.status_code == status.HTTP_200_OK
+        assert "results" in res.data
+
+    def test_system_health_unauthenticated_returns_401(self, api_client):
+        url = reverse("admin-system-health")
+        res = api_client.get(url)
+        assert res.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_system_health_view(self, api_client, superuser):
+        api_client.force_authenticate(user=superuser)
+        url = reverse("admin-system-health")
+        res = api_client.get(url)
+        assert res.status_code == status.HTTP_200_OK
+        assert "metrics" in res.data
+        assert "auditLogs" in res.data
+        assert "apiPerformanceData" in res.data
+
+    def test_system_logs_view(self, api_client, superuser):
+        api_client.force_authenticate(user=superuser)
+        url = reverse("admin-system-logs")
+        res = api_client.get(url, {"type": "kyc"})
+        assert res.status_code == status.HTTP_200_OK
+        assert "results" in res.data
+
+    def test_push_campaigns_view(self, api_client, superuser):
+        api_client.force_authenticate(user=superuser)
+        url = reverse("admin-system-notifications")
+        res = api_client.get(url)
+        assert res.status_code == status.HTTP_200_OK
+
+    def test_send_push_notification_valid(self, api_client, superuser):
+        api_client.force_authenticate(user=superuser)
+        url = reverse("admin-system-notifications-send")
+        payload = {
+            "title": "إشعار اختبار",
+            "body": "نص إشعار تجريبي",
+            "audience": "all",
+        }
+        res = api_client.post(url, payload, format="json")
+        assert res.status_code == status.HTTP_201_CREATED
+        assert res.data["title"] == "إشعار اختبار"
+
+    def test_send_push_notification_invalid_body_returns_400(self, api_client, superuser):
+        api_client.force_authenticate(user=superuser)
+        url = reverse("admin-system-notifications-send")
+        payload = {
+            "title": "",
+            "body": "",
+        }
+        res = api_client.post(url, payload, format="json")
+        assert res.status_code == status.HTTP_400_BAD_REQUEST
+

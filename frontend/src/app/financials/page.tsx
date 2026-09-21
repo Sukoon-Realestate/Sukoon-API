@@ -1,27 +1,56 @@
-﻿'use client';
+'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/layout/Header';
 import { BarChartComponent } from '@/components/ui/BarChartComponent';
-import {
-  financialMetrics,
-  revenueBreakdownData,
-  sixMonthRevenueTrend,
-} from '@/data/mockData';
+import { fetchFinancialSummary } from '@/lib/api/financials';
+import { FinancialSummary } from '@/lib/api/types';
 
 export default function FinancialDashboardPage() {
-  const chartData = sixMonthRevenueTrend.map((item, idx) => ({
-    day: idx + 1,
-    value: item.value,
-    isCurrent: item.isCurrent,
-  }));
+  const [data, setData] = useState<FinancialSummary | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadSummary() {
+      try {
+        const res = await fetchFinancialSummary();
+        setData(res);
+      } catch (err) {
+        console.error('Failed to load financial summary:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadSummary();
+  }, []);
+
+  const chartData = data?.sixMonthTrend
+    ? data.sixMonthTrend.map((item, idx) => ({
+        day: idx + 1,
+        value: item.value,
+        isCurrent: item.isCurrent,
+      }))
+    : [];
+
+  const metrics = data?.metrics || {
+    avgRent: '–',
+    activeTransactions: '–',
+    platformFees: '–',
+    totalRevenueMonth: '–',
+  };
+
+  const revenueBreakdown = data?.revenueBreakdown || {
+    platformFees: { value: '–', percent: 5 },
+    managedRentals: { value: '–', percent: 85 },
+    kycFees: { value: '–', percent: 10 },
+  };
 
   return (
     <div className="flex-1 flex flex-col pb-12">
       <Header
         title="لوحة الإيرادات والمالية"
         subtitle="متابعة الإيرادات الشهيرة، رسوم المنصة والمعاملات الملاية"
-        lastUpdated="9:41 ص"
+        lastUpdated="محدث الآن"
       />
 
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
@@ -29,7 +58,7 @@ export default function FinancialDashboardPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-amber-500 mb-1 dir-ltr font-mono">
-              {financialMetrics.avgRent}
+              {isLoading ? '...' : metrics.avgRent}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               متوسط الإيجار
@@ -38,7 +67,7 @@ export default function FinancialDashboardPage() {
 
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-blue-600 mb-1 font-mono">
-              {financialMetrics.activeTransactions}
+              {isLoading ? '...' : metrics.activeTransactions}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               معاملات نشطة
@@ -47,7 +76,7 @@ export default function FinancialDashboardPage() {
 
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-teal-600 mb-1 dir-ltr font-mono">
-              {financialMetrics.platformFees}
+              {isLoading ? '...' : metrics.platformFees}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               رسوم المنصة
@@ -56,7 +85,7 @@ export default function FinancialDashboardPage() {
 
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-emerald-600 mb-1 dir-ltr font-mono">
-              {financialMetrics.totalRevenueMonth}
+              {isLoading ? '...' : metrics.totalRevenueMonth}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               إجمالي الإيرادات هذا الشهر
@@ -88,11 +117,14 @@ export default function FinancialDashboardPage() {
                 <div className="flex items-center justify-between text-xs font-bold">
                   <span className="text-[var(--foreground)]">رسوم المنصة (5%)</span>
                   <span className="text-[var(--text-muted)] font-mono">
-                    {revenueBreakdownData.platformFees.value}
+                    {revenueBreakdown.platformFees.value}
                   </span>
                 </div>
                 <div className="h-3 w-full bg-[var(--badge-bg-muted)] rounded-full overflow-hidden p-0.5">
-                  <div className="h-full bg-teal-600 rounded-full w-[45%]"></div>
+                  <div
+                    className="h-full bg-teal-600 rounded-full transition-all duration-500"
+                    style={{ width: `${revenueBreakdown.platformFees.percent}%` }}
+                  ></div>
                 </div>
               </div>
 
@@ -101,11 +133,14 @@ export default function FinancialDashboardPage() {
                 <div className="flex items-center justify-between text-xs font-bold">
                   <span className="text-[var(--foreground)]">إيجارات مُدارة</span>
                   <span className="text-[var(--text-muted)] font-mono">
-                    {revenueBreakdownData.managedRentals.value}
+                    {revenueBreakdown.managedRentals.value}
                   </span>
                 </div>
                 <div className="h-3 w-full bg-[var(--badge-bg-muted)] rounded-full overflow-hidden p-0.5">
-                  <div className="h-full bg-blue-600 rounded-full w-[85%]"></div>
+                  <div
+                    className="h-full bg-blue-600 rounded-full transition-all duration-500"
+                    style={{ width: `${revenueBreakdown.managedRentals.percent}%` }}
+                  ></div>
                 </div>
               </div>
 
@@ -114,11 +149,14 @@ export default function FinancialDashboardPage() {
                 <div className="flex items-center justify-between text-xs font-bold">
                   <span className="text-[var(--foreground)]">رسوم توثيق</span>
                   <span className="text-[var(--text-muted)] font-mono">
-                    {revenueBreakdownData.kycFees.value}
+                    {revenueBreakdown.kycFees.value}
                   </span>
                 </div>
                 <div className="h-3 w-full bg-[var(--badge-bg-muted)] rounded-full overflow-hidden p-0.5">
-                  <div className="h-full bg-amber-500 rounded-full w-[30%]"></div>
+                  <div
+                    className="h-full bg-amber-500 rounded-full transition-all duration-500"
+                    style={{ width: `${revenueBreakdown.kycFees.percent}%` }}
+                  ></div>
                 </div>
               </div>
             </div>

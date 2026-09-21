@@ -24,3 +24,18 @@ export async function takeReportAction(
     body: JSON.stringify({ action, notes }),
   });
 }
+
+export async function fetchReportMetrics(): Promise<{
+  active: number;
+  suspended: number;
+  banned: number;
+  dismissed: number;
+  total: number;
+}> {
+  return apiClient('/api/v1/admin/reports/metrics/');
+}
+
+export async function fetchReportsOverview(): Promise<import('./types').ReportsOverviewStats> {
+  return apiClient('/api/v1/admin/reports/overview/');
+}
+

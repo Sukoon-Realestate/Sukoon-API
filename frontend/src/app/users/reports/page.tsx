@@ -6,27 +6,45 @@ import { Header } from '@/components/layout/Header';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { useToast } from '@/components/ui/Toast';
 import { Search, ShieldAlert, Eye, UserX } from 'lucide-react';
-import { fetchReports, takeReportAction } from '@/lib/api/reports';
-import { ReportItem } from '@/lib/api/types';
-import { mockReports } from '@/data/mockData';
+import { fetchReports, fetchReportMetrics, takeReportAction } from '@/lib/api/reports';
+import { ReportItem, ReportMetrics } from '@/lib/api/types';
 
 export default function ReportsQueuePage() {
   const [activeTab, setActiveTab] = useState<'active' | 'suspended' | 'banned'>('active');
   const [searchQuery, setSearchQuery] = useState('');
-  const [reports, setReports] = useState<ReportItem[]>(mockReports as any);
+  const [reports, setReports] = useState<ReportItem[]>([]);
+  const [metrics, setMetrics] = useState<ReportMetrics>({
+    active: 0,
+    suspended: 0,
+    banned: 0,
+    dismissed: 0,
+    total: 0,
+  });
   const [isLoading, setIsLoading] = useState(false);
   const { showToast } = useToast();
+
+  useEffect(() => {
+    async function loadMetrics() {
+      try {
+        const res = await fetchReportMetrics();
+        if (res) setMetrics(res);
+      } catch (err) {
+        console.error('Failed to load report metrics:', err);
+      }
+    }
+    loadMetrics();
+  }, []);
 
   useEffect(() => {
     async function loadReports() {
       setIsLoading(true);
       try {
         const res = await fetchReports({ status: activeTab });
-        if (res && res.results && res.results.length > 0) {
+        if (res?.results) {
           setReports(res.results);
         }
       } catch (err) {
-        console.warn('Failed to load reports from API, using fallback:', err);
+        console.error('Failed to load reports from API:', err);
       } finally {
         setIsLoading(false);
       }
@@ -81,7 +99,7 @@ export default function ReportsQueuePage() {
                   : 'bg-[var(--card-bg)] text-[var(--foreground)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
               }`}
             >
-              بلاغات نشطة ({reports.filter(r => r.status === 'نشط' || r.status === 'active').length || 31})
+              بلاغات نشطة ({metrics.active})
             </button>
             <button
               onClick={() => setActiveTab('suspended')}
@@ -91,7 +109,7 @@ export default function ReportsQueuePage() {
                   : 'bg-[var(--card-bg)] text-[var(--foreground)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
               }`}
             >
-              موقوف مؤقتاً
+              موقوف مؤقتاً ({metrics.suspended})
             </button>
             <button
               onClick={() => setActiveTab('banned')}
@@ -101,7 +119,7 @@ export default function ReportsQueuePage() {
                   : 'bg-[var(--card-bg)] text-[var(--foreground)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
               }`}
             >
-              محظور نهائياً
+              محظور نهائياً ({metrics.banned})
             </button>
           </div>
 

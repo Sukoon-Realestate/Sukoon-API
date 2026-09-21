@@ -1,19 +1,44 @@
-﻿'use client';
+'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
-import {
-  reportsOverviewMetrics,
-  mockOverviewTickets,
-  disputeReasonsData,
-  bookingLogData,
-} from '@/data/mockData';
+import { OverviewTicket, ReportsOverviewStats } from '@/lib/api/types';
+import { fetchReportsOverview } from '@/lib/api/reports';
 
 export default function ReportsOverviewPage() {
   const [activeTab, setActiveTab] = useState<'all' | 'disputes' | 'props' | 'users'>('all');
+  const [data, setData] = useState<ReportsOverviewStats>({
+    metrics: {
+      avgResolutionTime: '4.2 ساعة',
+      activeDisputes: 0,
+      solvedToday: 0,
+      openTickets: 0,
+    },
+    tickets: [],
+    disputeReasons: [],
+    bookingLog: [],
+  });
+  const [isLoading, setIsLoading] = useState(true);
 
-  const filteredTickets = mockOverviewTickets.filter((t) => {
+  useEffect(() => {
+    async function loadData() {
+      setIsLoading(true);
+      try {
+        const res = await fetchReportsOverview();
+        if (res) {
+          setData(res);
+        }
+      } catch (err) {
+        console.error('Failed to load reports overview:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
+  const filteredTickets = (data.tickets || []).filter((t) => {
     if (activeTab === 'disputes') return t.type === 'خلاف';
     if (activeTab === 'props') return t.type === 'بلاغ عقار';
     if (activeTab === 'users') return t.type === 'بلاغ مستخدم';
@@ -33,7 +58,7 @@ export default function ReportsOverviewPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-blue-600 mb-1">
-              {reportsOverviewMetrics.avgResolutionTime}
+              {data.metrics.avgResolutionTime}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               متوسط وقت الحل
@@ -42,7 +67,7 @@ export default function ReportsOverviewPage() {
 
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-amber-500 mb-1">
-              {reportsOverviewMetrics.activeDisputes}
+              {data.metrics.activeDisputes}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               خلافات نشطة
@@ -51,7 +76,7 @@ export default function ReportsOverviewPage() {
 
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-emerald-600 mb-1">
-              {reportsOverviewMetrics.solvedToday}
+              {data.metrics.solvedToday}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               حُلت اليوم
@@ -60,7 +85,7 @@ export default function ReportsOverviewPage() {
 
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-rose-500 mb-1">
-              {reportsOverviewMetrics.openTickets}
+              {data.metrics.openTickets}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               تذاكر مفتوحة
@@ -192,7 +217,7 @@ export default function ReportsOverviewPage() {
               </h3>
 
               <div className="space-y-3.5 text-xs">
-                {disputeReasonsData.map((item, idx) => (
+                {(data.disputeReasons || []).map((item, idx) => (
                   <div key={idx} className="space-y-1.5">
                     <div className="flex items-center justify-between font-bold">
                       <span className="text-[var(--foreground)]">{item.title}</span>
@@ -203,7 +228,7 @@ export default function ReportsOverviewPage() {
                     <div className="h-2 w-full bg-[var(--badge-bg-muted)] rounded-full overflow-hidden">
                       <div
                         className={`h-full ${item.color} rounded-full`}
-                        style={{ width: `${(item.count / 15) * 100}%` }}
+                        style={{ width: `${Math.min(100, (item.count / Math.max(1, data.metrics.openTickets || 10)) * 100)}%` }}
                       ></div>
                     </div>
                   </div>
@@ -218,7 +243,7 @@ export default function ReportsOverviewPage() {
               </h3>
 
               <div className="space-y-3 text-xs">
-                {bookingLogData.map((log) => (
+                {(data.bookingLog || []).map((log) => (
                   <div
                     key={log.id}
                     className="flex items-center justify-between py-1.5 border-b border-slate-50"

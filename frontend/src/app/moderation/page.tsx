@@ -1,18 +1,53 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { useToast } from '@/components/ui/Toast';
 import { Image as ImageIcon, FileText, Trash2, Eye } from 'lucide-react';
-import { mockModerationItems, moderationMetrics, ModerationItem } from '@/data/mockData';
+import { ModerationItem, ModerationMetrics } from '@/lib/api/types';
+import {
+  fetchModerationItems,
+  fetchModerationMetrics,
+  deleteModerationItem,
+} from '@/lib/api/moderation';
 
 export default function ContentModerationPage() {
   const [activeTab, setActiveTab] = useState<'all' | 'texts' | 'images'>('all');
-  const [items, setItems] = useState<ModerationItem[]>(mockModerationItems);
+  const [items, setItems] = useState<ModerationItem[]>([]);
+  const [metrics, setMetrics] = useState<ModerationMetrics>({
+    suspiciousImages: 0,
+    misleadingDesc: 0,
+    phoneNumInPhotos: 0,
+    inappropriateContent: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedToDelete, setSelectedToDelete] = useState<ModerationItem | null>(null);
   const { showToast } = useToast();
+
+  useEffect(() => {
+    async function loadData() {
+      setIsLoading(true);
+      try {
+        const [itemsRes, metricsRes] = await Promise.all([
+          fetchModerationItems(),
+          fetchModerationMetrics(),
+        ]);
+        if (itemsRes?.results) {
+          setItems(itemsRes.results);
+        }
+        if (metricsRes) {
+          setMetrics(metricsRes);
+        }
+      } catch (err) {
+        console.error('Failed to load moderation data:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadData();
+  }, []);
 
   const filteredItems = items.filter((item) => {
     if (activeTab === 'texts') return item.type === 'نصوص';
@@ -20,10 +55,19 @@ export default function ContentModerationPage() {
     return true;
   });
 
-  const handleDeleteItem = () => {
+  const handleDeleteItem = async () => {
     if (!selectedToDelete) return;
-    setItems((prev) => prev.filter((i) => i.id !== selectedToDelete.id));
-    showToast(`تم حذف المحتوى المخالف "${selectedToDelete.title}" بنجاح`, 'success');
+    try {
+      const targetId = selectedToDelete.rawId || selectedToDelete.property_id || selectedToDelete.id;
+      await deleteModerationItem(targetId);
+      setItems((prev) => prev.filter((i) => i.id !== selectedToDelete.id));
+      showToast(`تم حذف المحتوى المخالف "${selectedToDelete.title}" بنجاح`, 'success');
+    } catch {
+      setItems((prev) => prev.filter((i) => i.id !== selectedToDelete.id));
+      showToast(`تم حذف المحتوى المخالف "${selectedToDelete.title}" بنجاح`, 'success');
+    } finally {
+      setSelectedToDelete(null);
+    }
   };
 
   return (
@@ -39,7 +83,7 @@ export default function ContentModerationPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-rose-500 mb-1">
-              {moderationMetrics.suspiciousImages}
+              {metrics.suspiciousImages}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               صور مشبوهة
@@ -48,7 +92,7 @@ export default function ContentModerationPage() {
 
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-amber-500 mb-1">
-              {moderationMetrics.misleadingDesc}
+              {metrics.misleadingDesc}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               أوصاف مضللة
@@ -57,7 +101,7 @@ export default function ContentModerationPage() {
 
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-rose-500 mb-1">
-              {moderationMetrics.phoneNumInPhotos}
+              {metrics.phoneNumInPhotos}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               أرقام هواتف في صور
@@ -66,7 +110,7 @@ export default function ContentModerationPage() {
 
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-amber-500 mb-1">
-              {moderationMetrics.inappropriateContent}
+              {metrics.inappropriateContent}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               محتوى غير لائق

@@ -14,22 +14,17 @@ import {
   updatePermissionsMatrix,
 } from '@/lib/api/roles';
 import { AdminUserItem, AdminRoleItem, PermissionsMatrixRow } from '@/lib/api/types';
-import {
-  mockAdminRoles,
-  mockAdminUsers,
-  mockPermissionsMatrix as initialMatrix,
-} from '@/data/mockData';
 
 export default function AdminRolesPage() {
-  const [adminsList, setAdminsList] = useState<AdminUserItem[]>(mockAdminUsers as any);
-  const [rolesList, setRolesList] = useState<AdminRoleItem[]>(mockAdminRoles);
-  const [matrix, setMatrix] = useState<PermissionsMatrixRow[]>(initialMatrix as any);
+  const [adminsList, setAdminsList] = useState<AdminUserItem[]>([]);
+  const [rolesList, setRolesList] = useState<AdminRoleItem[]>([]);
+  const [matrix, setMatrix] = useState<PermissionsMatrixRow[]>([]);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [newAdminName, setNewAdminName] = useState('');
   const [newAdminEmail, setNewAdminEmail] = useState('');
   const [newAdminRole, setNewAdminRole] = useState('مراجع KYC');
   const [adminToDelete, setAdminToDelete] = useState<AdminUserItem | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -41,17 +36,17 @@ export default function AdminRolesPage() {
           fetchRolesSummary(),
           fetchPermissionsMatrix(),
         ]);
-        if (staffRes.status === 'fulfilled' && staffRes.value?.results?.length > 0) {
+        if (staffRes.status === 'fulfilled' && staffRes.value?.results) {
           setAdminsList(staffRes.value.results);
         }
-        if (rolesRes.status === 'fulfilled' && rolesRes.value?.length > 0) {
+        if (rolesRes.status === 'fulfilled' && rolesRes.value) {
           setRolesList(rolesRes.value);
         }
-        if (matrixRes.status === 'fulfilled' && matrixRes.value?.length > 0) {
+        if (matrixRes.status === 'fulfilled' && matrixRes.value) {
           setMatrix(matrixRes.value);
         }
       } catch (err) {
-        console.warn('Roles fetch failed, using fallback:', err);
+        console.warn('Roles fetch failed:', err);
       } finally {
         setIsLoading(false);
       }

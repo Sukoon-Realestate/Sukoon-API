@@ -1,36 +1,54 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/layout/Header';
 import { useToast } from '@/components/ui/Toast';
-import { mockPushCampaigns } from '@/data/mockData';
+import { fetchPushCampaigns, sendPushNotification } from '@/lib/api/system';
+import { PushCampaign } from '@/lib/api/types';
 
 export default function PushNotificationsPage() {
   const [audience, setAudience] = useState<'all' | 'tenants' | 'landlords' | 'verified'>('all');
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
-  const [campaigns, setCampaigns] = useState(mockPushCampaigns);
+  const [campaigns, setCampaigns] = useState<PushCampaign[]>([]);
+  const [isSending, setIsSending] = useState(false);
   const { showToast } = useToast();
 
-  const handleSendNow = () => {
+  useEffect(() => {
+    async function loadCampaigns() {
+      try {
+        const res = await fetchPushCampaigns();
+        setCampaigns(res || []);
+      } catch (err) {
+        console.error('Failed to load campaigns:', err);
+      }
+    }
+    loadCampaigns();
+  }, []);
+
+  const handleSendNow = async () => {
     if (!title.trim() || !body.trim()) {
       showToast('الرجاء كتابة عنوان ونص الإشعار قبل الإرسال', 'error');
       return;
     }
-    setCampaigns((prev) => [
-      {
-        id: `nc-${Date.now()}`,
+
+    setIsSending(true);
+    try {
+      const created = await sendPushNotification({
         title,
-        timeAgo: 'الآن',
         body,
-        openRate: '0% فتح',
-        recipientCount: audience === 'all' ? '2,847 وصل' : audience === 'tenants' ? '1,924 وصل' : '923 وصل',
-      },
-      ...prev,
-    ]);
-    showToast(`تم إرسال الإشعار بنجاح إلى الفئة المختارة (${audience})`, 'success');
-    setTitle('');
-    setBody('');
+        audience,
+      });
+      setCampaigns((prev) => [created, ...prev]);
+      showToast(`تم إرسال الإشعار بنجاح إلى الفئة المختارة (${audience})`, 'success');
+      setTitle('');
+      setBody('');
+    } catch (err) {
+      console.error('Failed to send push notification:', err);
+      showToast('حدث خطأ أثناء إرسال الإشعار', 'error');
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const handleSchedule = () => {
@@ -46,7 +64,7 @@ export default function PushNotificationsPage() {
       <Header
         title="إدارة الإشعارات المدفوعة"
         subtitle="إنشاء حملات الإشعارات، الاستهداف وفحص معدلات الفتح والتفاعل"
-        lastUpdated="9:41 ص"
+        lastUpdated="محدث الآن"
       />
 
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
@@ -142,10 +160,11 @@ export default function PushNotificationsPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
               <button
                 type="button"
+                disabled={isSending}
                 onClick={handleSendNow}
-                className="py-3.5 bg-[#0D7C66] hover:bg-[#0B6856] text-white font-extrabold text-sm rounded-xl shadow-[var(--shadow-card)] transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                className="py-3.5 bg-[#0D7C66] hover:bg-[#0B6856] text-white font-extrabold text-sm rounded-xl shadow-[var(--shadow-card)] transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
-                <span>إرسال الآن</span>
+                <span>{isSending ? 'جاري الإرسال...' : 'إرسال الآن'}</span>
               </button>
 
               <button
@@ -165,27 +184,33 @@ export default function PushNotificationsPage() {
             </h3>
 
             <div className="divide-y divide-[var(--divider)] space-y-4">
-              {campaigns.map((camp) => (
-                <div key={camp.id} className="pt-4 first:pt-0 space-y-1.5">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-extrabold text-[var(--foreground)] text-sm">
-                      {camp.title}
-                    </h4>
-                    <span className="text-[11px] text-[var(--text-subtle)] font-medium">
-                      {camp.timeAgo}
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-[var(--text-subtle)] font-medium leading-relaxed">
-                    {camp.body}
-                  </p>
-
-                  <div className="flex items-center gap-3 text-xs font-bold pt-1">
-                    <span className="text-emerald-500">{camp.openRate}</span>
-                    <span className="text-[var(--text-subtle)] font-normal">{camp.recipientCount}</span>
-                  </div>
+              {campaigns.length === 0 ? (
+                <div className="text-xs text-[var(--text-subtle)] py-4 text-center">
+                  لا توجد حملات إشعارات سابقة
                 </div>
-              ))}
+              ) : (
+                campaigns.map((camp) => (
+                  <div key={camp.id} className="pt-4 first:pt-0 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-extrabold text-[var(--foreground)] text-sm">
+                        {camp.title}
+                      </h4>
+                      <span className="text-[11px] text-[var(--text-subtle)] font-medium">
+                        {camp.timeAgo}
+                      </span>
+                    </div>
+
+                    <p className="text-xs text-[var(--text-subtle)] font-medium leading-relaxed">
+                      {camp.body}
+                    </p>
+
+                    <div className="flex items-center gap-3 text-xs font-bold pt-1">
+                      <span className="text-emerald-500">{camp.openRate}</span>
+                      <span className="text-[var(--text-subtle)] font-normal">{camp.recipientCount}</span>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>

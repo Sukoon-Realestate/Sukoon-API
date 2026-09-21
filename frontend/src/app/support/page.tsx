@@ -1,20 +1,53 @@
-﻿'use client';
+'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { StatusBadge } from '@/components/ui/StatusBadge';
-import { mockSupportTickets, supportMetrics } from '@/data/mockData';
+import { SupportTicket, SupportMetrics } from '@/lib/api/types';
+import { fetchSupportTickets, fetchSupportMetrics } from '@/lib/api/support';
 
 export default function SupportTicketsPage() {
   const [activeTab, setActiveTab] = useState<'all' | 'high' | 'landlord' | 'tenant'>('all');
-
-  const filteredTickets = mockSupportTickets.filter((t) => {
-    if (activeTab === 'high') return t.priority === 'عالي';
-    if (activeTab === 'landlord') return t.userType === 'مالك';
-    if (activeTab === 'tenant') return t.userType === 'مستأجر';
-    return true;
+  const [tickets, setTickets] = useState<SupportTicket[]>([]);
+  const [metrics, setMetrics] = useState<SupportMetrics>({
+    avgResolutionTime: '4.2h',
+    solvedToday: 0,
+    inProgress: 0,
+    openTickets: 0,
   });
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadMetrics() {
+      try {
+        const res = await fetchSupportMetrics();
+        if (res) setMetrics(res);
+      } catch (err) {
+        console.error('Failed to load support metrics:', err);
+      }
+    }
+    loadMetrics();
+  }, []);
+
+  useEffect(() => {
+    async function loadTickets() {
+      setIsLoading(true);
+      try {
+        const res = await fetchSupportTickets({ tab: activeTab });
+        if (res?.results) {
+          setTickets(res.results);
+        }
+      } catch (err) {
+        console.error('Failed to load support tickets:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadTickets();
+  }, [activeTab]);
+
+  const filteredTickets = tickets;
 
   return (
     <div className="flex-1 flex flex-col pb-12">
@@ -29,7 +62,7 @@ export default function SupportTicketsPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-blue-600 mb-1">
-              {supportMetrics.avgResolutionTime}
+              {metrics.avgResolutionTime}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               متوسط الحل
@@ -38,7 +71,7 @@ export default function SupportTicketsPage() {
 
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-emerald-600 mb-1">
-              {supportMetrics.solvedToday}
+              {metrics.solvedToday}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               محلولة اليوم
@@ -47,7 +80,7 @@ export default function SupportTicketsPage() {
 
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-amber-500 mb-1">
-              {supportMetrics.inProgress}
+              {metrics.inProgress}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               قيد المعالجة
@@ -56,7 +89,7 @@ export default function SupportTicketsPage() {
 
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-rose-500 mb-1">
-              {supportMetrics.openTickets}
+              {metrics.openTickets}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               مفتوحة
