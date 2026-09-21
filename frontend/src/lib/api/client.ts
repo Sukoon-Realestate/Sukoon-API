@@ -81,5 +81,18 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
     return {} as T;
   }
 
-  return response.json();
+  const json = await response.json();
+
+  // ? GenericJsonRenderer wraps all responses: GET → {"data": payload}, others → {"message": "...", "data": payload}
+  // Unwrap automatically so callers always receive the raw payload.
+  if (
+    json !== null &&
+    typeof json === 'object' &&
+    'data' in json &&
+    Object.keys(json).every((k) => k === 'data' || k === 'message')
+  ) {
+    return json.data as T;
+  }
+
+  return json as T;
 }
