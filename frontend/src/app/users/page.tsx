@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { StatusBadge } from '@/components/ui/StatusBadge';
@@ -10,60 +10,73 @@ import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Pagination } from '@/components/ui/Pagination';
 import { Search, Filter, Eye, UserX, CheckCircle2 } from 'lucide-react';
-import { mockUsers, userDistributionData, UserItem } from '@/data/mockData';
+import { fetchUsers, suspendUser, unsuspendUser } from '@/lib/api/users';
+import { UserItem } from '@/lib/api/types';
 
 export default function UserManagementPage() {
   const [activeTab, setActiveTab] = useState<'all' | 'verified' | 'pending' | 'suspended'>('all');
   const [searchQuery, setSearchQuery] = useState('');
-  const [usersList, setUsersList] = useState<UserItem[]>(mockUsers);
+  const [usersList, setUsersList] = useState<UserItem[]>([]);
   const [selectedUserToSuspend, setSelectedUserToSuspend] = useState<UserItem | null>(null);
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
   const [roleFilter, setRoleFilter] = useState<'all' | 'مستأجر' | 'مالك'>('all');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [totalCount, setTotalCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const { showToast } = useToast();
 
-  const filteredUsers = usersList.filter((user) => {
-    // Search filter
-    const matchesSearch =
-      user.name.includes(searchQuery) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase());
+  const loadUsers = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const params: any = {
+        page: currentPage,
+        page_size: itemsPerPage,
+      };
+      if (searchQuery.trim()) params.search = searchQuery.trim();
+      if (roleFilter !== 'all') params.role = roleFilter;
+      if (activeTab === 'verified') params.kyc_status = 'verified';
+      if (activeTab === 'pending') params.kyc_status = 'pending';
+      if (activeTab === 'suspended') params.status = 'suspended';
 
-    if (!matchesSearch) return false;
+      const response = await fetchUsers(params);
+      if (response && response.results) {
+        setUsersList(response.results);
+        setTotalCount(response.count);
+      } else {
+        setUsersList([]);
+        setTotalCount(0);
+      }
+    } catch (err) {
+      console.error('API fetch users failed:', err);
+      setUsersList([]);
+      setTotalCount(0);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentPage, itemsPerPage, searchQuery, roleFilter, activeTab]);
 
-    // Role filter
-    if (roleFilter !== 'all' && user.type !== roleFilter) return false;
+  useEffect(() => {
+    loadUsers();
+  }, [loadUsers]);
 
-    // Tab filter
-    if (activeTab === 'verified') return user.kycStatus === 'موثق';
-    if (activeTab === 'pending') return user.kycStatus === 'قيد المراجعة';
-    if (activeTab === 'suspended') return user.status === 'موقوف';
-    return true;
-  });
-
-  const paginatedUsers = filteredUsers.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  const handleToggleSuspend = () => {
+  const handleConfirmSuspend = async () => {
     if (!selectedUserToSuspend) return;
-    const isCurrentlySuspended = selectedUserToSuspend.status === 'موقوف';
-
-    setUsersList((prev) =>
-      prev.map((u) =>
-        u.id === selectedUserToSuspend.id
-          ? { ...u, status: isCurrentlySuspended ? 'نشط' : 'موقوف' }
-          : u
-      )
-    );
-
-    showToast(
-      isCurrentlySuspended
-        ? `تم إلغاء إيقاف حساب ${selectedUserToSuspend.name} بنجاح`
-        : `تم إيقاف حساب ${selectedUserToSuspend.name} بنجاح`,
-      isCurrentlySuspended ? 'success' : 'error'
-    );
+    try {
+      const isSuspended = selectedUserToSuspend.status === 'موقوف';
+      if (isSuspended) {
+        await unsuspendUser(selectedUserToSuspend.id);
+        showToast(`تم رفع الإيقاف عن حساب ${selectedUserToSuspend.name} بنجاح`, 'success');
+      } else {
+        await suspendUser(selectedUserToSuspend.id);
+        showToast(`تم إيقاف حساب ${selectedUserToSuspend.name} بنجاح`, 'error');
+      }
+      loadUsers();
+    } catch {
+      showToast('حدث خطأ أثناء تحديث حالة المستخدم', 'error');
+    } finally {
+      setSelectedUserToSuspend(null);
+    }
   };
 
   const handleResetFilters = () => {
@@ -77,268 +90,247 @@ export default function UserManagementPage() {
     <div className="flex-1 flex flex-col pb-12">
       <Header
         title="إدارة المستخدمين"
-        subtitle="قائمة المستخدمين المسجلين، حالة التوثيق والإجراءات الإدارية"
+        subtitle="متابعة الحسابات، تفاصيل التوثيق، صلاحيات الوصول والإجراءات الإدارية"
       />
 
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
-        <Breadcrumbs />
-        {/* Search & Filter Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 animate-fadeInUp">
-          <div className="w-full sm:w-auto text-lg font-extrabold text-[var(--foreground)]">
-            إدارة المستخدمين
-          </div>
+        <Breadcrumbs items={[{ label: 'الرئيسية', href: '/' }, { label: 'المستخدمون' }]} />
 
-          <div className="flex items-center gap-3 w-full sm:w-auto">
-            <div className="relative flex-1 sm:w-80">
-              <input
-                type="text"
-                placeholder="بحث باسم أو بريد..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-4 pr-10 py-2.5 bg-[var(--input-bg)] rounded-xl border border-[var(--input-border)] text-sm text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--input-focus-ring)] focus:border-[var(--primary)] transition-all placeholder:text-[var(--text-subtle)]"
-              />
-              <Search className="w-4 h-4 text-[var(--text-subtle)] absolute right-3.5 top-3.5" />
-            </div>
-
-            <div className="relative">
+        {/* Search & Tabs Controls */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+          {/* Tab Navigation */}
+          <div className="flex items-center gap-1.5 p-1 bg-slate-900/80 rounded-2xl border border-slate-800 self-start">
+            {[
+              { id: 'all', label: 'الكل' },
+              { id: 'verified', label: 'موثقون' },
+              { id: 'pending', label: 'قيد المراجعة' },
+              { id: 'suspended', label: 'موقوفون' },
+            ].map((tab) => (
               <button
-                onClick={() => setShowFilterDrawer(!showFilterDrawer)}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-semibold transition-colors shadow-[var(--shadow-card)] cursor-pointer ${
-                  showFilterDrawer || roleFilter !== 'all'
-                    ? 'bg-teal-700 text-white border-teal-800'
-                    : 'bg-[var(--card-bg)] text-[var(--primary-text)] border-[var(--card-border)] hover:bg-[var(--card-hover)]'
+                key={tab.id}
+                onClick={() => {
+                  setActiveTab(tab.id as any);
+                  setCurrentPage(1);
+                }}
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  activeTab === tab.id
+                    ? 'bg-teal-600 text-white shadow-sm'
+                    : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                <Filter className="w-4 h-4" />
-                <span>تصفية ({roleFilter === 'all' ? 'الكل' : roleFilter})</span>
+                {tab.label}
               </button>
+            ))}
+          </div>
 
-              {/* Filter Dropdown Drawer */}
-              {showFilterDrawer && (
-                <div className="absolute top-12 left-0 w-52 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-xl p-3 z-30 animate-fadeInUp">
-                  <p className="text-xs font-bold text-[var(--text-muted)] mb-2 px-1">تصفية حسب نوع الحساب:</p>
-                  <div className="space-y-1">
-                    <button
-                      onClick={() => { setRoleFilter('all'); setShowFilterDrawer(false); }}
-                      className={`w-full text-right px-3 py-2 rounded-xl text-xs font-bold transition-colors ${roleFilter === 'all' ? 'bg-teal-500/15 text-teal-600' : 'text-[var(--foreground)] hover:bg-[var(--card-hover)]'}`}
-                    >
-                      الكل (مستأجرين وملاك)
-                    </button>
-                    <button
-                      onClick={() => { setRoleFilter('مستأجر'); setShowFilterDrawer(false); }}
-                      className={`w-full text-right px-3 py-2 rounded-xl text-xs font-bold transition-colors ${roleFilter === 'مستأجر' ? 'bg-teal-500/15 text-teal-600' : 'text-[var(--foreground)] hover:bg-[var(--card-hover)]'}`}
-                    >
-                      مستأجرون فقط
-                    </button>
-                    <button
-                      onClick={() => { setRoleFilter('مالك'); setShowFilterDrawer(false); }}
-                      className={`w-full text-right px-3 py-2 rounded-xl text-xs font-bold transition-colors ${roleFilter === 'مالك' ? 'bg-teal-500/15 text-teal-600' : 'text-[var(--foreground)] hover:bg-[var(--card-hover)]'}`}
-                    >
-                      ملاك فقط
-                    </button>
-                  </div>
-                </div>
-              )}
+          {/* Search Input & Filter Toggle */}
+          <div className="flex items-center gap-3">
+            <div className="relative flex-1 sm:w-64">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
+                placeholder="بحث بالاسم أو البريد..."
+                className="w-full pl-4 pr-10 py-2.5 bg-slate-900/90 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-teal-500/50"
+              />
+              <Search className="w-4 h-4 text-slate-400 absolute right-3 top-3" />
             </div>
+
+            <button
+              onClick={() => setShowFilterDrawer(!showFilterDrawer)}
+              className={`p-2.5 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 text-xs font-bold ${
+                showFilterDrawer || roleFilter !== 'all'
+                  ? 'bg-teal-500/15 border-teal-500/30 text-teal-400'
+                  : 'bg-slate-900/90 border-slate-800 text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              <Filter className="w-4 h-4" />
+              <span>تصفية</span>
+            </button>
           </div>
         </div>
 
-        {/* Tab Cards (Interactive Metric Filters) */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {/* Card 1: الكل */}
-          <button
-            onClick={() => setActiveTab('all')}
-            className={`p-5 rounded-2xl border text-center transition-all animate-scaleIn cursor-pointer ${
-              activeTab === 'all'
-                ? 'bg-teal-700 text-white border-teal-800 shadow-md scale-[1.02]'
-                : 'bg-[var(--card-bg)] text-[var(--foreground)] border-[var(--card-border)] hover:border-[var(--text-subtle)] shadow-[var(--shadow-card)]'
-            }`}
-          >
-            <div className="text-2xl font-black mb-1">
-              {userDistributionData.total.toLocaleString()}
+        {/* Filter Drawer */}
+        {showFilterDrawer && (
+          <div className="p-4 bg-slate-900/60 border border-slate-800 rounded-2xl flex flex-wrap items-center justify-between gap-4 animate-fadeIn">
+            <div className="flex items-center gap-4">
+              <span className="text-xs text-slate-400 font-bold">نوع المستخدم:</span>
+              <div className="flex items-center gap-2">
+                {['all', 'مستأجر', 'مالك'].map((r) => (
+                  <button
+                    key={r}
+                    onClick={() => {
+                      setRoleFilter(r as any);
+                      setCurrentPage(1);
+                    }}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      roleFilter === r
+                        ? 'bg-teal-500/20 text-teal-400 border border-teal-500/30'
+                        : 'bg-slate-800/60 text-slate-400 hover:text-slate-200 border border-slate-700/40'
+                    }`}
+                  >
+                    {r === 'all' ? 'جميع الأدوار' : r}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className={`text-xs font-semibold ${activeTab === 'all' ? 'text-teal-100' : 'text-[var(--text-muted)]'}`}>
-              الكل
-            </div>
-          </button>
 
-          {/* Card 2: موثق */}
-          <button
-            onClick={() => setActiveTab('verified')}
-            className={`p-5 rounded-2xl border text-center transition-all animate-scaleIn cursor-pointer ${
-              activeTab === 'verified'
-                ? 'bg-emerald-700 text-white border-emerald-800 shadow-md scale-[1.02]'
-                : 'bg-[var(--card-bg)] text-[var(--foreground)] border-[var(--card-border)] hover:border-[var(--text-subtle)] shadow-[var(--shadow-card)]'
-            }`}
-            style={{ animationDelay: '50ms' }}
-          >
-            <div className={`text-2xl font-black mb-1 ${activeTab === 'verified' ? 'text-white' : 'text-emerald-600 dark:text-emerald-400'}`}>
-              {userDistributionData.verified.toLocaleString()}
-            </div>
-            <div className={`text-xs font-semibold ${activeTab === 'verified' ? 'text-emerald-100' : 'text-[var(--text-muted)]'}`}>
-              موثّق
-            </div>
-          </button>
+            <button
+              onClick={handleResetFilters}
+              className="text-xs text-slate-400 hover:text-rose-400 font-bold transition-colors cursor-pointer"
+            >
+              إعادة تعيين
+            </button>
+          </div>
+        )}
 
-          {/* Card 3: معلق */}
-          <button
-            onClick={() => setActiveTab('pending')}
-            className={`p-5 rounded-2xl border text-center transition-all animate-scaleIn cursor-pointer ${
-              activeTab === 'pending'
-                ? 'bg-amber-600 text-white border-amber-700 shadow-md scale-[1.02]'
-                : 'bg-[var(--card-bg)] text-[var(--foreground)] border-[var(--card-border)] hover:border-[var(--text-subtle)] shadow-[var(--shadow-card)]'
-            }`}
-            style={{ animationDelay: '100ms' }}
-          >
-            <div className={`text-2xl font-black mb-1 ${activeTab === 'pending' ? 'text-white' : 'text-amber-500 dark:text-amber-400'}`}>
-              {userDistributionData.pending}
+        {/* Users Table Card */}
+        <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-[var(--shadow-card)] overflow-hidden">
+          {isLoading ? (
+            <div className="p-12 text-center text-slate-400 text-xs font-bold space-y-3">
+              <div className="w-8 h-8 border-2 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+              <p>جاري تحميل بيانات المستخدمين من الخادم...</p>
             </div>
-            <div className={`text-xs font-semibold ${activeTab === 'pending' ? 'text-amber-100' : 'text-[var(--text-muted)]'}`}>
-              معلّق
-            </div>
-          </button>
-
-          {/* Card 4: موقوف */}
-          <button
-            onClick={() => setActiveTab('suspended')}
-            className={`p-5 rounded-2xl border text-center transition-all animate-scaleIn cursor-pointer ${
-              activeTab === 'suspended'
-                ? 'bg-rose-600 text-white border-rose-700 shadow-md scale-[1.02]'
-                : 'bg-[var(--card-bg)] text-[var(--foreground)] border-[var(--card-border)] hover:border-[var(--text-subtle)] shadow-[var(--shadow-card)]'
-            }`}
-            style={{ animationDelay: '150ms' }}
-          >
-            <div className={`text-2xl font-black mb-1 ${activeTab === 'suspended' ? 'text-white' : 'text-rose-500 dark:text-rose-400'}`}>
-              {userDistributionData.suspended}
-            </div>
-            <div className={`text-xs font-semibold ${activeTab === 'suspended' ? 'text-rose-100' : 'text-[var(--text-muted)]'}`}>
-              موقوف
-            </div>
-          </button>
-        </div>
-
-        {/* Users Table */}
-        <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] overflow-hidden animate-fadeInUp" style={{ animationDelay: '200ms' }}>
-          <div className="overflow-x-auto">
-            <table className="w-full text-right border-collapse">
-              <thead>
-                <tr className="bg-[var(--table-header-bg)] border-b border-[var(--card-border)] text-[var(--text-muted)] text-xs font-bold">
-                  <th className="py-4 px-6">الاسم</th>
-                  <th className="py-4 px-6">النوع</th>
-                  <th className="py-4 px-6">البريد</th>
-                  <th className="py-4 px-6">الحالة</th>
-                  <th className="py-4 px-6">التوثيق</th>
-                  <th className="py-4 px-6">تاريخ التسجيل</th>
-                  <th className="py-4 px-6 text-center">إجراء</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[var(--table-border)] text-sm">
-                {paginatedUsers.length > 0 ? (
-                  paginatedUsers.map((user) => (
+          ) : usersList.length === 0 ? (
+            <EmptyState
+              title="لا يوجد مستخدمون"
+              description="لم يتم العثور على أي مستخدمين يطابقون معايير البحث الحالية."
+              actionLabel="إعادة ضبط الفلاتر"
+              onAction={handleResetFilters}
+            />
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-right text-xs">
+                <thead className="bg-slate-900/60 border-b border-[var(--card-border)] text-slate-400 font-bold">
+                  <tr>
+                    <th className="py-3.5 px-4">المستخدم</th>
+                    <th className="py-3.5 px-4">النوع</th>
+                    <th className="py-3.5 px-4">حالة الحساب</th>
+                    <th className="py-3.5 px-4">حالة التوثيق (KYC)</th>
+                    <th className="py-3.5 px-4">تاريخ التسجيل</th>
+                    <th className="py-3.5 px-4">رقم الهاتف</th>
+                    <th className="py-3.5 px-4">الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[var(--border-subtle)] font-medium">
+                  {usersList.map((user) => (
                     <tr
                       key={user.id}
-                      className="hover:bg-[var(--table-row-hover)] transition-colors"
+                      className="hover:bg-slate-800/40 transition-colors group"
                     >
-                      <td className="py-4 px-6 font-bold text-[var(--foreground)]">
-                        {user.name}
+                      <td className="py-3.5 px-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center font-black text-teal-400 text-xs shrink-0">
+                            {user.name.charAt(0)}
+                          </div>
+                          <div>
+                            <Link
+                              href={`/users/${user.id}`}
+                              className="font-bold text-white hover:text-teal-400 transition-colors"
+                            >
+                              {user.name}
+                            </Link>
+                            <div className="text-[11px] text-slate-400 font-mono">
+                              {user.email}
+                            </div>
+                          </div>
+                        </div>
                       </td>
-                      <td className="py-4 px-6">
-                        <StatusBadge type="userType" value={user.type} />
+
+                      <td className="py-3.5 px-4">
+                        <span
+                          className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                            user.type === 'مالك'
+                              ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
+                              : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+                          }`}
+                        >
+                          {user.type}
+                        </span>
                       </td>
-                      <td className="py-4 px-6 text-[var(--text-muted)] font-mono text-xs dir-ltr text-right">
-                        {user.email}
+
+                      <td className="py-3.5 px-4">
+                        <StatusBadge status={user.status} />
                       </td>
-                      <td className="py-4 px-6">
-                        <StatusBadge type="userStatus" value={user.status} />
+
+                      <td className="py-3.5 px-4">
+                        <StatusBadge status={user.kycStatus} />
                       </td>
-                      <td className="py-4 px-6">
-                        <StatusBadge type="kycStatus" value={user.kycStatus} />
-                      </td>
-                      <td className="py-4 px-6 text-xs font-medium text-[var(--text-muted)]">
+
+                      <td className="py-3.5 px-4 text-slate-400 font-mono">
                         {user.regDate}
                       </td>
-                      <td className="py-4 px-6">
-                        <div className="flex items-center justify-center gap-2">
+
+                      <td className="py-3.5 px-4 text-slate-400 font-mono dir-ltr text-right">
+                        {user.phone || '–'}
+                      </td>
+
+                      <td className="py-3.5 px-4">
+                        <div className="flex items-center gap-1.5">
                           <Link
                             href={`/users/${user.id}`}
-                            className="inline-flex items-center gap-1 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer btn-press"
+                            className="p-1.5 text-slate-400 hover:text-teal-400 hover:bg-slate-800 rounded-lg transition-colors"
+                            title="عرض التفاصيل"
                           >
-                            <Eye className="w-3.5 h-3.5" />
-                            <span>عرض</span>
+                            <Eye className="w-4 h-4" />
                           </Link>
                           <button
                             onClick={() => setSelectedUserToSuspend(user)}
-                            className={`inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer btn-press ${
+                            className={`p-1.5 rounded-lg transition-colors ${
                               user.status === 'موقوف'
-                                ? 'bg-emerald-100 hover:bg-emerald-200 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400'
-                                : 'bg-rose-100 hover:bg-rose-200 text-rose-700 dark:bg-rose-500/15 dark:text-rose-400'
+                                ? 'text-emerald-400 hover:bg-emerald-500/10'
+                                : 'text-slate-400 hover:text-rose-400 hover:bg-slate-800'
                             }`}
+                            title={user.status === 'موقوف' ? 'إلغاء الإيقاف' : 'إيقاف الحساب'}
                           >
                             {user.status === 'موقوف' ? (
-                              <>
-                                <CheckCircle2 className="w-3.5 h-3.5" />
-                                <span>تنشيط</span>
-                              </>
+                              <CheckCircle2 className="w-4 h-4" />
                             ) : (
-                              <>
-                                <UserX className="w-3.5 h-3.5" />
-                                <span>إيقاف</span>
-                              </>
+                              <UserX className="w-4 h-4" />
                             )}
                           </button>
                         </div>
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={7} className="p-0 border-0">
-                      <EmptyState
-                        title="لم نجد أي مستخدم يطابق معايير البحث"
-                        description="تأكد من كتابة الاسم أو البريد بشكل صحيح، أو أعد ضبط خيارات التصفية النشطة."
-                        onReset={handleResetFilters}
-                      />
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
 
           {/* Pagination */}
-          <Pagination
-            currentPage={currentPage}
-            totalPages={Math.ceil(filteredUsers.length / itemsPerPage)}
-            totalItems={filteredUsers.length}
-            itemsPerPage={itemsPerPage}
-            onPageChange={setCurrentPage}
-            onItemsPerPageChange={(size) => {
-              setItemsPerPage(size);
-              setCurrentPage(1);
-            }}
-          />
+          {!isLoading && totalCount > itemsPerPage && (
+            <div className="p-4 border-t border-[var(--card-border)] bg-slate-950/20">
+              <Pagination
+                currentPage={currentPage}
+                totalItems={totalCount}
+                pageSize={itemsPerPage}
+                onPageChange={(p) => setCurrentPage(p)}
+              />
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Suspend Confirm Modal */}
-      <ConfirmModal
-        isOpen={!!selectedUserToSuspend}
-        onClose={() => setSelectedUserToSuspend(null)}
-        onConfirm={handleToggleSuspend}
-        title={
-          selectedUserToSuspend?.status === 'موقوف'
-            ? `إلغاء إيقاف حساب ${selectedUserToSuspend?.name}`
-            : `تأكيد إيقاف حساب ${selectedUserToSuspend?.name}`
-        }
-        message={
-          selectedUserToSuspend?.status === 'موقوف'
-            ? 'هل أنت تأكد من رغبتك في إعادة تفعيل حساب المستخدم وتمكينه من استخدام المنصة؟'
-            : 'هل أنت تأكد من رغبتك في إيقاف حساب المستخدم؟ لن يتمكن من تسجيل الدخول حتى إلغاء الإيقاف.'
-        }
-        variant={selectedUserToSuspend?.status === 'موقوف' ? 'success' : 'danger'}
-        confirmText={selectedUserToSuspend?.status === 'موقوف' ? 'تنشيط الحساب' : 'إيقاف الحساب'}
-      />
+      {/* Confirmation Modal */}
+      {selectedUserToSuspend && (
+        <ConfirmModal
+          isOpen={Boolean(selectedUserToSuspend)}
+          title={
+            selectedUserToSuspend.status === 'موقوف'
+              ? 'تأكيد تفعيل الحساب'
+              : 'تأكيد إيقاف الحساب'
+          }
+          description={`هل أنت متأكد من تغيير حالة حساب المستخدم "${selectedUserToSuspend.name}"؟`}
+          confirmLabel={selectedUserToSuspend.status === 'موقوف' ? 'تفعيل' : 'إيقاف'}
+          confirmVariant={selectedUserToSuspend.status === 'موقوف' ? 'primary' : 'danger'}
+          onConfirm={handleConfirmSuspend}
+          onCancel={() => setSelectedUserToSuspend(null)}
+        />
+      )}
     </div>
   );
 }
-

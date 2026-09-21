@@ -8,7 +8,9 @@ interface EmptyStateProps {
   description?: string;
   icon?: React.ReactNode;
   onReset?: () => void;
+  onAction?: () => void;
   resetText?: string;
+  actionLabel?: string;
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
@@ -16,8 +18,12 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   description = 'جرب تغيير كلمات البحث أو إعادة ضبط الفلاتر المطبقة لعرض جميع البيانات المتاحة.',
   icon,
   onReset,
+  onAction,
   resetText = 'إعادة ضبط الفلاتر',
+  actionLabel,
 }) => {
+  const handleAction = onReset || onAction;
+  const buttonText = actionLabel || resetText;
   return (
     <div className="p-8 sm:p-12 text-center bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-[var(--shadow-card)] animate-fadeIn flex flex-col items-center justify-center my-4">
       <div className="w-16 h-16 rounded-3xl bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20 flex items-center justify-center mb-4 glow-teal-sm animate-breathe">
@@ -31,13 +37,13 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         {description}
       </p>
 
-      {onReset && (
+      {handleAction && (
         <button
-          onClick={onReset}
+          onClick={handleAction}
           className="inline-flex items-center gap-2 px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer btn-press"
         >
           <RefreshCw className="w-4 h-4" />
-          <span>{resetText}</span>
+          <span>{buttonText}</span>
         </button>
       )}
     </div>

@@ -1,10 +1,22 @@
-PIPENV := $(shell command -v pipenv 2>/dev/null || echo $(HOME)/Library/Python/3.9/bin/pipenv)
+PIPENV ?= pipenv
 
 test:
 	$(PIPENV) run pytest
 
 test-cov:
 	$(PIPENV) run pytest --cov=core_apps --cov-report=term-missing
+
+dev:
+	$(PIPENV) run python scripts/dev.py
+
+dev-seed:
+	$(PIPENV) run python scripts/dev.py --seed
+
+dev-reset:
+	$(PIPENV) run python scripts/dev.py --reset
+
+seed:
+	$(PIPENV) run python manage.py seed_db --settings=config.settings.local_sqlite
 
 run:
 	$(PIPENV) run uvicorn config.asgi:application --reload --host 127.0.0.1 --port 8000

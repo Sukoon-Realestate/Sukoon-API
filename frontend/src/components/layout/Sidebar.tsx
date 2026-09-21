@@ -1,8 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { fetchDashboardStats } from '@/lib/api/dashboard';
+import { fetchAdminPropertyMetrics } from '@/lib/api/properties';
 import {
   LayoutDashboard,
   Users,
@@ -33,6 +35,46 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseMobile }) => {
   const pathname = usePathname();
+  const [counts, setCounts] = useState<{
+    suspended: number | null;
+    kyc: number | null;
+    propertiesReview: number | null;
+  }>({
+    suspended: null,
+    kyc: null,
+    propertiesReview: null,
+  });
+
+  useEffect(() => {
+    async function loadCounts() {
+      try {
+        const [dashStats, propMetrics] = await Promise.allSettled([
+          fetchDashboardStats(),
+          fetchAdminPropertyMetrics(),
+        ]);
+        let suspended = null;
+        let kyc = null;
+        let propertiesReview = null;
+
+        if (dashStats.status === 'fulfilled' && dashStats.value?.user_distribution) {
+          suspended = dashStats.value.user_distribution.suspended;
+          kyc = dashStats.value.user_distribution.pending;
+        }
+        if (propMetrics.status === 'fulfilled' && propMetrics.value) {
+          propertiesReview = propMetrics.value.pending;
+        }
+
+        setCounts({
+          suspended,
+          kyc,
+          propertiesReview,
+        });
+      } catch (err) {
+        console.warn('Could not load sidebar live counts:', err);
+      }
+    }
+    loadCounts();
+  }, []);
 
   const section1 = [
     {
@@ -45,20 +87,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
       title: 'المستخدمون',
       href: '/users',
       icon: Users,
-      active: pathname === '/users' || pathname.startsWith('/users/sara'),
+      active:
+        pathname === '/users' ||
+        (pathname.startsWith('/users/') &&
+          !pathname.startsWith('/users/suspended') &&
+          !pathname.startsWith('/users/reports')),
     },
     {
       title: 'الموقوفون والمحظورون',
       href: '/users/suspended',
       icon: UserX,
-      badge: '43',
+      badge: counts.suspended !== null ? String(counts.suspended) : undefined,
       active: pathname === '/users/suspended',
     },
     {
       title: 'التوثيق KYC',
       href: '/kyc',
       icon: ShieldCheck,
-      badge: '487',
+      badge: counts.kyc !== null ? String(counts.kyc) : undefined,
       active: pathname === '/kyc' || pathname === '/kyc/review',
     },
     {
@@ -71,8 +117,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseM
       title: 'مراجعة العقارات',
       href: '/properties/review',
       icon: ClipboardList,
-      badge: '234',
-      active: pathname === '/properties/review' || pathname.startsWith('/properties/prop-1'),
+      badge: counts.propertiesReview !== null ? String(counts.propertiesReview) : undefined,
+      active: pathname === '/properties/review',
     },
   ];
 

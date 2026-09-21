@@ -92,10 +92,8 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             if access_token and refresh_token:
                 set_auth_cookies(token_res, access_token, refresh_token)
 
-                # * remove the access and refresh tokens from the response body
-                token_res.data.pop("access", None)
-                token_res.data.pop("refresh", None)
-
+                token_res.data["access"] = access_token
+                token_res.data["refresh"] = refresh_token
                 token_res.data["message"] = "Logged in Successfully"
 
             else:

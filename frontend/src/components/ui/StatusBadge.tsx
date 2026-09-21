@@ -2,131 +2,142 @@ import React from 'react';
 import { ShieldCheck, Clock, XCircle, CheckCircle2, AlertTriangle, User, Building2, ShieldAlert } from 'lucide-react';
 
 interface StatusBadgeProps {
-  type: 'userType' | 'userStatus' | 'kycStatus' | 'automation' | 'role';
-  value: string;
+  type?: 'userType' | 'userStatus' | 'kycStatus' | 'automation' | 'role';
+  value?: string;
+  status?: string;
 }
 
-export const StatusBadge: React.FC<StatusBadgeProps> = ({ type, value }) => {
-  if (type === 'userType') {
-    if (value === 'مستأجر') {
+export const StatusBadge: React.FC<StatusBadgeProps> = ({ type, value, status }) => {
+  const val = value || status || '';
+  let resolvedType = type;
+
+  if (!resolvedType) {
+    if (val === 'مستأجر' || val === 'مالك') resolvedType = 'userType';
+    else if (val === 'نشط' || val === 'موقوف' || val === 'محظور') resolvedType = 'userStatus';
+    else if (val === 'موثق' || val === 'موثّق' || val === 'انتظار المراجعة' || val === 'approved' || val === 'rejected' || val === 'pending') resolvedType = 'kycStatus';
+    else resolvedType = 'userStatus';
+  }
+
+  if (resolvedType === 'userType') {
+    if (val === 'مستأجر') {
       return (
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200/80 dark:bg-blue-500/15 dark:text-blue-300 dark:border-blue-500/30">
           <User className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
-          {value}
+          {val}
         </span>
       );
     }
     return (
       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200/80 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30">
         <Building2 className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-        {value}
+        {val}
       </span>
     );
   }
 
-  if (type === 'userStatus') {
-    if (value === 'نشط') {
+  if (resolvedType === 'userStatus') {
+    if (val === 'نشط') {
       return (
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          {value}
+          {val}
         </span>
       );
     }
-    if (value === 'قيد المراجعة') {
+    if (val === 'قيد المراجعة') {
       return (
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200/80 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30">
           <Clock className="w-3.5 h-3.5" />
-          {value}
+          {val}
         </span>
       );
     }
     return (
       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200/80 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30">
         <XCircle className="w-3.5 h-3.5" />
-        {value}
+        {val}
       </span>
     );
   }
 
-  if (type === 'kycStatus') {
-    if (value === 'موثق' || value === 'موثّق') {
+  if (resolvedType === 'kycStatus') {
+    if (val === 'موثق' || val === 'موثّق' || val === 'approved') {
       return (
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-          {value}
+          {val === 'approved' ? 'مقبول' : val}
         </span>
       );
     }
-    if (value === 'قيد المراجعة') {
+    if (val === 'قيد المراجعة' || val === 'انتظار المراجعة' || val === 'pending') {
       return (
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200/80 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30">
           <Clock className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-          {value}
+          {val === 'pending' ? 'انتظار المراجعة' : val}
         </span>
       );
     }
     return (
       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200/80 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30">
         <ShieldAlert className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
-        {value}
+        {val === 'rejected' ? 'مرفوض' : val}
       </span>
     );
   }
 
-  if (type === 'automation') {
-    if (value === 'عالي') {
+  if (resolvedType === 'automation') {
+    if (val === 'عالي') {
       return (
         <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200/80 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30">
           <AlertTriangle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" />
-          {value}
+          {val}
         </span>
       );
     }
-    if (value === 'تلقائي') {
+    if (val === 'تلقائي') {
       return (
         <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200/80 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30">
           <Clock className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
-          {value}
+          {val}
         </span>
       );
     }
     return (
       <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200/80 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30">
         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
-        {value}
+        {val}
       </span>
     );
   }
 
-  if (type === 'role') {
-    if (value === 'مستأجر') {
+  if (resolvedType === 'role') {
+    if (val === 'مستأجر') {
       return (
         <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-500/15 dark:text-slate-300 dark:border-slate-500/20">
-          {value}
+          {val}
         </span>
       );
     }
-    if (value === 'عقار') {
+    if (val === 'عقار') {
       return (
         <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/20">
-          {value}
+          {val}
         </span>
       );
     }
-    if (value === 'مالك') {
+    if (val === 'مالك') {
       return (
         <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200 dark:bg-blue-500/15 dark:text-blue-300 dark:border-blue-500/20">
-          {value}
+          {val}
         </span>
       );
     }
     return (
       <span className="px-2.5 py-1 rounded-lg text-xs font-bold bg-teal-100 text-teal-800 border border-teal-200 dark:bg-teal-500/15 dark:text-teal-300 dark:border-teal-500/20">
-        {value}
+        {val}
       </span>
     );
   }
 
-  return <span className="px-2.5 py-1 text-xs font-bold bg-[var(--badge-bg-muted)] text-[var(--text-muted)] border border-[var(--card-border)] rounded-lg">{value}</span>;
+  return <span className="px-2.5 py-1 text-xs font-bold bg-[var(--badge-bg-muted)] text-[var(--text-muted)] border border-[var(--card-border)] rounded-lg">{val}</span>;
 };

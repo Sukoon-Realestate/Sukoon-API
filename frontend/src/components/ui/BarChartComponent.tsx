@@ -1,8 +1,9 @@
 import React from 'react';
 import { BarChart3, TrendingUp } from 'lucide-react';
 
-interface ChartBarData {
-  day: number;
+export interface ChartBarData {
+  day?: number;
+  label?: string;
   value: number;
   isCurrent?: boolean;
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
@@ -8,41 +8,88 @@ import { useToast } from '@/components/ui/Toast';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { Pagination } from '@/components/ui/Pagination';
-import { Search, Filter, Building2, Eye, XCircle, CheckCircle2 } from 'lucide-react';
-import { mockProperties, propertyMetrics, PropertyItem } from '@/data/mockData';
+import { Search, Filter, Building2, Eye, XCircle } from 'lucide-react';
+import {
+  fetchAdminProperties,
+  fetchAdminPropertyMetrics,
+  rejectProperty,
+} from '@/lib/api/properties';
+import { PropertyItem, PropertyMetrics } from '@/lib/api/types';
 
 export default function PropertiesManagementPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [propertiesList, setPropertiesList] = useState<PropertyItem[]>(mockProperties);
+  const [propertiesList, setPropertiesList] = useState<PropertyItem[]>([]);
+  const [metrics, setMetrics] = useState<PropertyMetrics>({
+    total: 0,
+    active: 0,
+    pending: 0,
+    rejected: 0,
+    acceptedToday: 0,
+    rejectedToday: 0,
+    openReports: 0,
+  });
   const [showFilterDrawer, setShowFilterDrawer] = useState(false);
   const [typeFilter, setTypeFilter] = useState<'all' | 'شقة' | 'ستوديو' | 'غرفة' | 'فيلا'>('all');
   const [selectedPropertyToReject, setSelectedPropertyToReject] = useState<PropertyItem | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [totalCount, setTotalCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const { showToast } = useToast();
 
-  const filteredProperties = propertiesList.filter((prop) => {
-    const matchesSearch =
-      prop.title.includes(searchQuery) ||
-      prop.owner.includes(searchQuery) ||
-      prop.type.includes(searchQuery);
+  const loadData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const params: any = {
+        page: currentPage,
+        page_size: itemsPerPage,
+      };
+      if (searchQuery.trim()) params.search = searchQuery.trim();
+      if (typeFilter !== 'all') params.property_type = typeFilter;
 
-    if (!matchesSearch) return false;
-    if (typeFilter !== 'all' && prop.type !== typeFilter) return false;
-    return true;
-  });
+      const [propsRes, metricsRes] = await Promise.allSettled([
+        fetchAdminProperties(params),
+        fetchAdminPropertyMetrics(),
+      ]);
 
-  const paginatedProperties = filteredProperties.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+      if (propsRes.status === 'fulfilled' && propsRes.value?.results) {
+        setPropertiesList(propsRes.value.results);
+        setTotalCount(propsRes.value.count);
+      } else {
+        setPropertiesList([]);
+        setTotalCount(0);
+      }
 
-  const handleConfirmReject = () => {
+      if (metricsRes.status === 'fulfilled' && metricsRes.value) {
+        setMetrics(metricsRes.value);
+      }
+    } catch (err) {
+      console.error('Failed to load properties data:', err);
+      setPropertiesList([]);
+      setTotalCount(0);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentPage, itemsPerPage, searchQuery, typeFilter]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  const handleConfirmReject = async () => {
     if (!selectedPropertyToReject) return;
-    setPropertiesList((prev) =>
-      prev.map((p) => (p.id === selectedPropertyToReject.id ? { ...p, status: 'مرفوض' } : p))
-    );
-    showToast(`تم رفض إدراج العقار "${selectedPropertyToReject.title}"`, 'error');
+    try {
+      await rejectProperty(selectedPropertyToReject.id);
+      setPropertiesList((prev) =>
+        prev.map((p) => (p.id === selectedPropertyToReject.id ? { ...p, status: 'مرفوض' } : p))
+      );
+      showToast(`تم رفض إدراج العقار "${selectedPropertyToReject.title}"`, 'error');
+      loadData();
+    } catch {
+      showToast('حدث خطأ أثناء رفض العقار', 'error');
+    } finally {
+      setSelectedPropertyToReject(null);
+    }
   };
 
   const handleResetFilters = () => {
@@ -56,10 +103,12 @@ export default function PropertiesManagementPage() {
       <Header
         title="إدارة العقارات"
         subtitle="متابعة كل العقارات المعروضة، المراجعة وإجراءات الموافقة والرفض"
+        lastUpdated="محدث الآن"
       />
 
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
-        <Breadcrumbs />
+        <Breadcrumbs items={[{ label: 'الرئيسية', href: '/' }, { label: 'إدارة العقارات' }]} />
+
         {/* Search & Filter Bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="w-full sm:w-auto text-lg font-extrabold text-[var(--foreground)]">
@@ -70,9 +119,12 @@ export default function PropertiesManagementPage() {
             <div className="relative flex-1 sm:w-80">
               <input
                 type="text"
-                placeholder="بحث في العقارات..."
+                placeholder="بحث في العقارات، المالك، المدينة..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setCurrentPage(1);
+                }}
                 className="w-full pl-4 pr-10 py-2.5 bg-[var(--card-bg)] rounded-xl border border-[var(--card-border)] text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition-all placeholder:text-[var(--text-subtle)] text-[var(--foreground)]"
               />
               <Search className="w-4 h-4 text-[var(--text-subtle)] absolute right-3.5 top-3.5" />
@@ -99,8 +151,16 @@ export default function PropertiesManagementPage() {
                     {(['all', 'شقة', 'ستوديو', 'غرفة', 'فيلا'] as const).map((t) => (
                       <button
                         key={t}
-                        onClick={() => { setTypeFilter(t); setShowFilterDrawer(false); }}
-                        className={`w-full text-right px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${typeFilter === t ? 'bg-teal-500/15 text-teal-600' : 'text-[var(--foreground)] hover:bg-[var(--card-hover)]'}`}
+                        onClick={() => {
+                          setTypeFilter(t);
+                          setShowFilterDrawer(false);
+                          setCurrentPage(1);
+                        }}
+                        className={`w-full text-right px-3 py-1.5 rounded-xl text-xs font-bold transition-colors ${
+                          typeFilter === t
+                            ? 'bg-teal-500/15 text-teal-600'
+                            : 'text-[var(--foreground)] hover:bg-[var(--card-hover)]'
+                        }`}
                       >
                         {t === 'all' ? 'جميع الأنواع' : t}
                       </button>
@@ -116,7 +176,7 @@ export default function PropertiesManagementPage() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-[var(--foreground)] mb-1">
-              {propertyMetrics.total.toLocaleString()}
+              {metrics.total.toLocaleString()}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               إجمالي العقارات
@@ -125,14 +185,14 @@ export default function PropertiesManagementPage() {
 
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-emerald-600 mb-1">
-              {propertyMetrics.active}
+              {metrics.active}
             </div>
-            <div className="text-xs font-semibold text-[var(--text-subtle)]">نشط</div>
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">نشط ومقبول</div>
           </div>
 
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-amber-500 mb-1">
-              {propertyMetrics.pending}
+              {metrics.pending}
             </div>
             <div className="text-xs font-semibold text-[var(--text-subtle)]">
               قيد المراجعة
@@ -141,9 +201,9 @@ export default function PropertiesManagementPage() {
 
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-rose-500 mb-1">
-              {propertyMetrics.rejected}
+              {metrics.rejected}
             </div>
-            <div className="text-xs font-semibold text-[var(--text-subtle)]">مرفوض</div>
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">مرفوض / مخفي</div>
           </div>
         </div>
 
@@ -163,8 +223,15 @@ export default function PropertiesManagementPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--divider)] text-sm">
-                {paginatedProperties.length > 0 ? (
-                  paginatedProperties.map((prop) => (
+                {isLoading ? (
+                  <tr>
+                    <td colSpan={7} className="py-12 text-center text-slate-400">
+                      <div className="w-8 h-8 border-2 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                      <p className="text-xs font-bold">جاري تحميل قائمة العقارات من الخادم...</p>
+                    </td>
+                  </tr>
+                ) : propertiesList.length > 0 ? (
+                  propertiesList.map((prop) => (
                     <tr
                       key={prop.id}
                       className="hover:bg-[var(--table-row-hover)] transition-colors"
@@ -173,10 +240,15 @@ export default function PropertiesManagementPage() {
                         <div className="w-8 h-8 rounded-lg bg-[var(--badge-bg-muted)] text-[var(--text-muted)] flex items-center justify-center shrink-0">
                           <Building2 className="w-4 h-4" />
                         </div>
-                        <span>{prop.title}</span>
+                        <Link
+                          href={`/properties/${prop.id}`}
+                          className="hover:text-teal-400 transition-colors"
+                        >
+                          {prop.title}
+                        </Link>
                       </td>
                       <td className="py-4 px-6 text-[var(--text-muted)] font-medium text-xs">
-                        {prop.owner}
+                        {prop.owner || '—'}
                       </td>
                       <td className="py-4 px-6">
                         <span className="bg-teal-50 text-teal-700 dark:bg-teal-500/10 dark:text-teal-400 border border-teal-200/60 text-xs font-bold px-2.5 py-0.5 rounded-full">
@@ -199,17 +271,22 @@ export default function PropertiesManagementPage() {
                             مرفوض ✗
                           </span>
                         )}
+                        {prop.status === 'تعديل' && (
+                          <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200/80 dark:bg-blue-500/15 dark:text-blue-300 dark:border-blue-500/30">
+                            طلب تعديل ↻
+                          </span>
+                        )}
                       </td>
                       <td className="py-4 px-6 font-bold text-teal-700 dark:text-teal-400 text-xs dir-ltr text-right">
                         {prop.price}
                       </td>
                       <td className="py-4 px-6 text-[var(--text-muted)] text-xs font-medium">
-                        {prop.views}
+                        {prop.views || 0}
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center justify-center gap-2">
                           <Link
-                            href={`/properties/review`}
+                            href={`/properties/review?id=${prop.id}`}
                             className="inline-flex items-center gap-1 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer btn-press shadow-xs"
                           >
                             <Eye className="w-3.5 h-3.5" />
@@ -246,8 +323,8 @@ export default function PropertiesManagementPage() {
           {/* Pagination */}
           <Pagination
             currentPage={currentPage}
-            totalPages={Math.ceil(filteredProperties.length / itemsPerPage)}
-            totalItems={filteredProperties.length}
+            totalPages={Math.max(1, Math.ceil(totalCount / itemsPerPage))}
+            totalItems={totalCount}
             itemsPerPage={itemsPerPage}
             onPageChange={setCurrentPage}
             onItemsPerPageChange={(size) => {
@@ -264,11 +341,10 @@ export default function PropertiesManagementPage() {
         onClose={() => setSelectedPropertyToReject(null)}
         onConfirm={handleConfirmReject}
         title={`رفض إدراج العقار: ${selectedPropertyToReject?.title}`}
-        message="هل أنت تأكد من رفض إدراج هذا العقار؟ سيتم إخطار المالك بالأسباب."
+        message="هل أنت تأكد من رفض إدراج هذا العقار؟ سيتم إخفاؤه وإخطار المالك بالأسباب."
         variant="danger"
         confirmText="تأكيد الرفض"
       />
     </div>
   );
 }
-

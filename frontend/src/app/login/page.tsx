@@ -32,11 +32,14 @@ export default function AdminLoginPage() {
   };
 
   const handleQuickDemo = async () => {
-    setEmail('admin@sukoon.app');
-    setPassword('admin123');
+    setEmail('admin@sukoon.com');
+    setPassword('password123');
     setIsSubmitting(true);
-    await login('admin@sukoon.app', 'admin123');
+    const ok = await login('admin@sukoon.com', 'password123');
     setIsSubmitting(false);
+    if (!ok) {
+      setErrorMsg('فشل تسجيل الدخول كـ Admin. تأكد من تشغيل الخادم وتوليد البيانات الأولية.');
+    }
   };
 
   return (
@@ -84,7 +87,7 @@ export default function AdminLoginPage() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@sukoon.app"
+                placeholder="admin@sukoon.com"
                 className="w-full pl-4 pr-11 py-3 bg-slate-800/80 border border-slate-700/80 rounded-xl text-xs text-white focus:outline-none focus:ring-2 focus:ring-teal-500/40 focus:border-[#0D7C66] transition-all placeholder:text-slate-500 dir-ltr text-right"
               />
               <Mail className="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5" />

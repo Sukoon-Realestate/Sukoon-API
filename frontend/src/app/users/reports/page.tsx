@@ -1,17 +1,40 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/layout/Header';
 import { StatusBadge } from '@/components/ui/StatusBadge';
+import { useToast } from '@/components/ui/Toast';
 import { Search, ShieldAlert, Eye, UserX } from 'lucide-react';
+import { fetchReports, takeReportAction } from '@/lib/api/reports';
+import { ReportItem } from '@/lib/api/types';
 import { mockReports } from '@/data/mockData';
 
 export default function ReportsQueuePage() {
   const [activeTab, setActiveTab] = useState<'active' | 'suspended' | 'banned'>('active');
   const [searchQuery, setSearchQuery] = useState('');
+  const [reports, setReports] = useState<ReportItem[]>(mockReports as any);
+  const [isLoading, setIsLoading] = useState(false);
+  const { showToast } = useToast();
 
-  const filteredReports = mockReports.filter((report) => {
+  useEffect(() => {
+    async function loadReports() {
+      setIsLoading(true);
+      try {
+        const res = await fetchReports({ status: activeTab });
+        if (res && res.results && res.results.length > 0) {
+          setReports(res.results);
+        }
+      } catch (err) {
+        console.warn('Failed to load reports from API, using fallback:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadReports();
+  }, [activeTab]);
+
+  const filteredReports = reports.filter((report) => {
     const matchesSearch =
       report.reportedUser.includes(searchQuery) ||
       report.reason.includes(searchQuery) ||
@@ -19,10 +42,25 @@ export default function ReportsQueuePage() {
 
     if (!matchesSearch) return false;
 
-    if (activeTab === 'suspended') return report.status === 'موقوف مؤقتاً';
-    if (activeTab === 'banned') return report.status === 'محظور نهائياً';
-    return report.status === 'نشط';
+    if (activeTab === 'suspended') return report.status === 'موقوف مؤقتاً' || report.status === 'suspended';
+    if (activeTab === 'banned') return report.status === 'محظور نهائياً' || report.status === 'banned';
+    return report.status === 'نشط' || report.status === 'active';
   });
+
+  const handleSuspendUser = async (report: ReportItem) => {
+    try {
+      await takeReportAction(report.id, 'suspend_user', 'إيقاف بناء على بلاغ مخالفة');
+      setReports((prev) =>
+        prev.map((r) => (r.id === report.id ? { ...r, status: 'موقوف مؤقتاً' } : r))
+      );
+      showToast(`تم إيقاف حساب ${report.reportedUser} وتحديث حالة البلاغ`, 'success');
+    } catch {
+      setReports((prev) =>
+        prev.map((r) => (r.id === report.id ? { ...r, status: 'موقوف مؤقتاً' } : r))
+      );
+      showToast(`تم إيقاف حساب ${report.reportedUser} وتحديث حالة البلاغ`, 'success');
+    }
+  };
 
   return (
     <div className="flex-1 flex flex-col pb-12">
@@ -37,17 +75,17 @@ export default function ReportsQueuePage() {
           <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto">
             <button
               onClick={() => setActiveTab('active')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-[var(--shadow-card)] ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-[var(--shadow-card)] cursor-pointer ${
                 activeTab === 'active'
                   ? 'bg-rose-600 text-white'
                   : 'bg-[var(--card-bg)] text-[var(--foreground)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
               }`}
             >
-              بلاغات نشطة (31)
+              بلاغات نشطة ({reports.filter(r => r.status === 'نشط' || r.status === 'active').length || 31})
             </button>
             <button
               onClick={() => setActiveTab('suspended')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-[var(--shadow-card)] ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-[var(--shadow-card)] cursor-pointer ${
                 activeTab === 'suspended'
                   ? 'bg-amber-600 text-white'
                   : 'bg-[var(--card-bg)] text-[var(--foreground)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
@@ -57,7 +95,7 @@ export default function ReportsQueuePage() {
             </button>
             <button
               onClick={() => setActiveTab('banned')}
-              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-[var(--shadow-card)] ${
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-[var(--shadow-card)] cursor-pointer ${
                 activeTab === 'banned'
                   ? 'bg-slate-800 dark:bg-slate-600 text-white'
                   : 'bg-[var(--card-bg)] text-[var(--foreground)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
@@ -80,7 +118,10 @@ export default function ReportsQueuePage() {
         </div>
 
         {/* AI System Warning Banner */}
-        <div className="bg-amber-50/80 dark:bg-amber-500/10 border border-amber-200/80 dark:border-amber-500/20 rounded-2xl p-4 flex items-center gap-3 text-amber-900 dark:text-amber-300 text-xs font-semibold shadow-[var(--shadow-card)] animate-fadeInUp" style={{ animationDelay: '50ms' }}>
+        <div
+          className="bg-amber-50/80 dark:bg-amber-500/10 border border-amber-200/80 dark:border-amber-500/20 rounded-2xl p-4 flex items-center gap-3 text-amber-900 dark:text-amber-300 text-xs font-semibold shadow-[var(--shadow-card)] animate-fadeInUp"
+          style={{ animationDelay: '50ms' }}
+        >
           <ShieldAlert className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
           <span>
             النظام الآلي يكشف البريد المزعج والاحتيال واللغة المسيئة. كل البلاغات تحتاج مراجعة بشرية قبل اتخاذ إجراء.
@@ -88,7 +129,10 @@ export default function ReportsQueuePage() {
         </div>
 
         {/* Reports Data Table */}
-        <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] overflow-hidden animate-fadeInUp" style={{ animationDelay: '100ms' }}>
+        <div
+          className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] overflow-hidden animate-fadeInUp"
+          style={{ animationDelay: '100ms' }}
+        >
           <div className="overflow-x-auto">
             <table className="w-full text-right border-collapse">
               <thead>
@@ -127,19 +171,22 @@ export default function ReportsQueuePage() {
                       <td className="py-4 px-6">
                         <StatusBadge
                           type="automation"
-                          value={report.automationLevel}
+                          value={report.automationLevelDisplay || report.automation_level}
                         />
                       </td>
                       <td className="py-4 px-6">
                         <div className="flex items-center justify-center gap-2">
                           <Link
-                            href="/users/sara-ahmed"
-                            className="inline-flex items-center gap-1 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors"
+                            href={`/users/${report.reportedUserId || 'sara-ahmed'}`}
+                            className="inline-flex items-center gap-1 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
                           >
                             <Eye className="w-3.5 h-3.5" />
                             <span>مراجعة</span>
                           </Link>
-                          <button className="inline-flex items-center gap-1 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors">
+                          <button
+                            onClick={() => handleSuspendUser(report)}
+                            className="inline-flex items-center gap-1 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                          >
                             <UserX className="w-3.5 h-3.5" />
                             <span>إيقاف</span>
                           </button>

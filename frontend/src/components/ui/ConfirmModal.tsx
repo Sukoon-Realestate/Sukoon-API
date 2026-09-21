@@ -5,31 +5,47 @@ import { AlertTriangle, CheckCircle2, X, Info } from 'lucide-react';
 
 interface ConfirmModalProps {
   isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
+  onClose?: () => void;
+  onCancel?: () => void;
+  onConfirm: () => void | Promise<void>;
   title: string;
-  message: string;
+  message?: string;
+  description?: string;
   confirmText?: string;
+  confirmLabel?: string;
   cancelText?: string;
-  variant?: 'danger' | 'success' | 'warning' | 'info';
+  cancelLabel?: string;
+  variant?: 'danger' | 'success' | 'warning' | 'info' | string;
+  confirmVariant?: 'danger' | 'success' | 'warning' | 'info' | string;
   children?: React.ReactNode;
 }
 
 export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   isOpen,
   onClose,
+  onCancel,
   onConfirm,
   title,
   message,
-  confirmText = 'تأكيد الإجراء',
-  cancelText = 'إلغاء',
-  variant = 'danger',
+  description,
+  confirmText,
+  confirmLabel,
+  cancelText,
+  cancelLabel,
+  variant,
+  confirmVariant,
   children,
 }) => {
   if (!isOpen) return null;
 
+  const handleClose = onClose || onCancel || (() => {});
+  const finalMessage = message || description || '';
+  const finalConfirmText = confirmText || confirmLabel || 'تأكيد الإجراء';
+  const finalCancelText = cancelText || cancelLabel || 'إلغاء';
+  const finalVariant = (variant || confirmVariant || 'danger') as 'danger' | 'success' | 'warning' | 'info';
+
   const getIcon = () => {
-    switch (variant) {
+    switch (finalVariant) {
       case 'danger':
         return <AlertTriangle className="w-6 h-6 text-rose-500" />;
       case 'success':
@@ -42,7 +58,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   };
 
   const getButtonBg = () => {
-    switch (variant) {
+    switch (finalVariant) {
       case 'danger':
         return 'bg-rose-500 hover:bg-rose-600 text-white';
       case 'success':
@@ -61,7 +77,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <button
-          onClick={onClose}
+          onClick={handleClose}
           className="absolute top-4 left-4 p-1.5 rounded-xl text-[var(--text-subtle)] hover:bg-[var(--card-hover)] transition-colors cursor-pointer"
         >
           <X className="w-5 h-5" />
@@ -73,7 +89,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           </div>
           <div>
             <h3 className="font-black text-base text-[var(--foreground)] leading-tight">{title}</h3>
-            <p className="text-xs font-semibold text-[var(--text-muted)] mt-1">{message}</p>
+            <p className="text-xs font-semibold text-[var(--text-muted)] mt-1">{finalMessage}</p>
           </div>
         </div>
 
@@ -82,20 +98,20 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
         <div className="flex items-center justify-end gap-3 pt-4 border-t border-[var(--divider)]">
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             className="px-4 py-2 bg-[var(--badge-bg-muted)] hover:bg-[var(--card-hover)] text-[var(--foreground)] text-xs font-bold rounded-xl transition-all cursor-pointer btn-press border border-[var(--card-border)]"
           >
-            {cancelText}
+            {finalCancelText}
           </button>
           <button
             type="button"
             onClick={() => {
               onConfirm();
-              onClose();
+              handleClose();
             }}
             className={`px-5 py-2 text-xs font-extrabold rounded-xl transition-all shadow-md cursor-pointer btn-press ${getButtonBg()}`}
           >
-            {confirmText}
+            {finalConfirmText}
           </button>
         </div>
       </div>

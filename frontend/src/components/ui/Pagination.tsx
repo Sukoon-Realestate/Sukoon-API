@@ -5,9 +5,10 @@ import { ChevronRight, ChevronLeft } from 'lucide-react';
 
 interface PaginationProps {
   currentPage: number;
-  totalPages: number;
+  totalPages?: number;
   totalItems: number;
-  itemsPerPage: number;
+  itemsPerPage?: number;
+  pageSize?: number;
   onPageChange: (page: number) => void;
   onItemsPerPageChange?: (size: number) => void;
 }
@@ -17,24 +18,27 @@ export const Pagination: React.FC<PaginationProps> = ({
   totalPages,
   totalItems,
   itemsPerPage,
+  pageSize,
   onPageChange,
   onItemsPerPageChange,
 }) => {
-  const startItem = totalItems === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
-  const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+  const finalItemsPerPage = itemsPerPage || pageSize || 10;
+  const finalTotalPages = totalPages || Math.max(1, Math.ceil(totalItems / finalItemsPerPage));
+  const startItem = totalItems === 0 ? 0 : (currentPage - 1) * finalItemsPerPage + 1;
+  const endItem = Math.min(currentPage * finalItemsPerPage, totalItems);
 
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
-    if (totalPages <= 5) {
-      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    if (finalTotalPages <= 5) {
+      for (let i = 1; i <= finalTotalPages; i++) pages.push(i);
     } else {
       pages.push(1);
       if (currentPage > 3) pages.push('...');
       const start = Math.max(2, currentPage - 1);
-      const end = Math.min(totalPages - 1, currentPage + 1);
+      const end = Math.min(finalTotalPages - 1, currentPage + 1);
       for (let i = start; i <= end; i++) pages.push(i);
-      if (currentPage < totalPages - 2) pages.push('...');
-      pages.push(totalPages);
+      if (currentPage < finalTotalPages - 2) pages.push('...');
+      pages.push(finalTotalPages);
     }
     return pages;
   };
@@ -100,7 +104,7 @@ export const Pagination: React.FC<PaginationProps> = ({
 
         <button
           onClick={() => onPageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
+          disabled={currentPage === finalTotalPages}
           className="p-1.5 rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] text-[var(--foreground)] hover:bg-[var(--card-hover)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
           title="الصفحة التالية"
         >

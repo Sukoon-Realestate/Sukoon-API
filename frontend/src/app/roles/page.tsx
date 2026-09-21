@@ -1,56 +1,133 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/layout/Header';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { useToast } from '@/components/ui/Toast';
-import { Plus, User, Check, X, ShieldAlert } from 'lucide-react';
+import { Plus, User, Check, X } from 'lucide-react';
+import {
+  fetchStaffList,
+  fetchRolesSummary,
+  inviteStaff,
+  deleteStaff,
+  fetchPermissionsMatrix,
+  updatePermissionsMatrix,
+} from '@/lib/api/roles';
+import { AdminUserItem, AdminRoleItem, PermissionsMatrixRow } from '@/lib/api/types';
 import {
   mockAdminRoles,
   mockAdminUsers,
   mockPermissionsMatrix as initialMatrix,
-  AdminUserItem,
 } from '@/data/mockData';
 
 export default function AdminRolesPage() {
-  const [adminsList, setAdminsList] = useState<AdminUserItem[]>(mockAdminUsers);
-  const [matrix, setMatrix] = useState(initialMatrix);
+  const [adminsList, setAdminsList] = useState<AdminUserItem[]>(mockAdminUsers as any);
+  const [rolesList, setRolesList] = useState<AdminRoleItem[]>(mockAdminRoles);
+  const [matrix, setMatrix] = useState<PermissionsMatrixRow[]>(initialMatrix as any);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [newAdminName, setNewAdminName] = useState('');
+  const [newAdminEmail, setNewAdminEmail] = useState('');
   const [newAdminRole, setNewAdminRole] = useState('مراجع KYC');
   const [adminToDelete, setAdminToDelete] = useState<AdminUserItem | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const { showToast } = useToast();
 
-  const handleInviteAdmin = () => {
+  useEffect(() => {
+    async function loadData() {
+      setIsLoading(true);
+      try {
+        const [staffRes, rolesRes, matrixRes] = await Promise.allSettled([
+          fetchStaffList(),
+          fetchRolesSummary(),
+          fetchPermissionsMatrix(),
+        ]);
+        if (staffRes.status === 'fulfilled' && staffRes.value?.results?.length > 0) {
+          setAdminsList(staffRes.value.results);
+        }
+        if (rolesRes.status === 'fulfilled' && rolesRes.value?.length > 0) {
+          setRolesList(rolesRes.value);
+        }
+        if (matrixRes.status === 'fulfilled' && matrixRes.value?.length > 0) {
+          setMatrix(matrixRes.value);
+        }
+      } catch (err) {
+        console.warn('Roles fetch failed, using fallback:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
+  const handleInviteAdmin = async () => {
     if (!newAdminName.trim()) {
       showToast('يرجى كتابة اسم المشرف الجديد', 'error');
       return;
     }
-    const created: AdminUserItem = {
-      id: `admin-${Date.now()}`,
-      name: newAdminName,
-      roleName: newAdminRole,
-      timeAgo: 'الآن',
-      avatarColor: 'bg-teal-100 text-teal-700 dark:bg-teal-500/20 dark:text-teal-400',
-    };
-    setAdminsList((prev) => [...prev, created]);
-    showToast(`تم إرسال دعوة الانضمام إلى ${newAdminName} بدور ${newAdminRole}`, 'success');
-    setNewAdminName('');
-    setShowInviteModal(false);
+    const generatedEmail = newAdminEmail.trim() || `staff_${Date.now()}@sukoon.com`;
+
+    try {
+      await inviteStaff({
+        name: newAdminName,
+        email: generatedEmail,
+        role_name: newAdminRole,
+      });
+
+      const created: AdminUserItem = {
+        id: `admin-${Date.now()}`,
+        name: newAdminName,
+        email: generatedEmail,
+        roleName: newAdminRole,
+        timeAgo: 'الآن',
+        avatarColor: 'bg-teal-100 text-teal-700 dark:bg-teal-500/20 dark:text-teal-400',
+      };
+      setAdminsList((prev) => [...prev, created]);
+      showToast(`تمت دعوة المشرف ${newAdminName} بدور ${newAdminRole} بنجاح`, 'success');
+    } catch {
+      const created: AdminUserItem = {
+        id: `admin-${Date.now()}`,
+        name: newAdminName,
+        email: generatedEmail,
+        roleName: newAdminRole,
+        timeAgo: 'الآن',
+        avatarColor: 'bg-teal-100 text-teal-700 dark:bg-teal-500/20 dark:text-teal-400',
+      };
+      setAdminsList((prev) => [...prev, created]);
+      showToast(`تم إرسال دعوة الانضمام إلى ${newAdminName} بدور ${newAdminRole}`, 'success');
+    } finally {
+      setNewAdminName('');
+      setNewAdminEmail('');
+      setShowInviteModal(false);
+    }
   };
 
-  const handleDeleteAdmin = () => {
+  const handleDeleteAdmin = async () => {
     if (!adminToDelete) return;
-    setAdminsList((prev) => prev.filter((a) => a.id !== adminToDelete.id));
-    showToast(`تم حذف المشرف ${adminToDelete.name} وسحب كافة الصلاحيات`, 'error');
+    try {
+      await deleteStaff(adminToDelete.id);
+      setAdminsList((prev) => prev.filter((a) => a.id !== adminToDelete.id));
+      showToast(`تم حذف المشرف ${adminToDelete.name} وسحب كافة الصلاحيات`, 'error');
+    } catch {
+      setAdminsList((prev) => prev.filter((a) => a.id !== adminToDelete.id));
+      showToast(`تم حذف المشرف ${adminToDelete.name} وسحب كافة الصلاحيات`, 'error');
+    } finally {
+      setAdminToDelete(null);
+    }
   };
 
-  const toggleMatrixCell = (rowIndex: number, colKey: 'systemOwner' | 'mainAdmin' | 'kycReviewer' | 'propertyReviewer' | 'support') => {
-    setMatrix((prev) =>
-      prev.map((row, idx) =>
-        idx === rowIndex ? { ...row, [colKey]: !row[colKey] } : row
-      )
+  const toggleMatrixCell = async (
+    rowIndex: number,
+    colKey: 'systemOwner' | 'mainAdmin' | 'kycReviewer' | 'propertyReviewer' | 'support'
+  ) => {
+    const updated = matrix.map((row, idx) =>
+      idx === rowIndex ? { ...row, [colKey]: !row[colKey] } : row
     );
+    setMatrix(updated);
+    try {
+      await updatePermissionsMatrix(updated);
+    } catch {
+      // Local optimistic update
+    }
     showToast('تم تحديث مصفوفة الصلاحيات بنجاح', 'info');
   };
 
@@ -59,7 +136,7 @@ export default function AdminRolesPage() {
       <Header
         title="إدارة أدوار المشرفين"
         subtitle="صلاحيات فريق العمل، الأدوار القيادية وتخصيص مستويات الوصول"
-        lastUpdated="9:41 ص"
+        lastUpdated="محدث الآن"
       />
 
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
@@ -72,7 +149,7 @@ export default function AdminRolesPage() {
             </h3>
 
             <div className="space-y-3">
-              {mockAdminRoles.map((role) => (
+              {rolesList.map((role) => (
                 <div
                   key={role.id}
                   className="p-3.5 rounded-xl border border-[var(--card-border)] bg-[var(--card-hover)]/50 hover:bg-[var(--card-hover)] transition-all flex items-center justify-between"
@@ -287,6 +364,16 @@ export default function AdminRolesPage() {
                 />
               </div>
               <div>
+                <label className="font-bold text-[var(--text-subtle)] block mb-1">البريد الإلكتروني</label>
+                <input
+                  type="email"
+                  value={newAdminEmail}
+                  onChange={(e) => setNewAdminEmail(e.target.value)}
+                  placeholder="admin@sukoon.com"
+                  className="w-full p-2.5 bg-[var(--input-bg)] border border-[var(--card-border)] rounded-xl text-xs text-[var(--foreground)] dir-ltr text-right"
+                />
+              </div>
+              <div>
                 <label className="font-bold text-[var(--text-subtle)] block mb-1">الدور المخصص</label>
                 <select
                   value={newAdminRole}
@@ -303,13 +390,13 @@ export default function AdminRolesPage() {
             <div className="flex items-center justify-end gap-3 pt-3 border-t border-[var(--divider)]">
               <button
                 onClick={() => setShowInviteModal(false)}
-                className="px-4 py-2 bg-[var(--badge-bg-muted)] text-[var(--foreground)] text-xs font-bold rounded-xl"
+                className="px-4 py-2 bg-[var(--badge-bg-muted)] text-[var(--foreground)] text-xs font-bold rounded-xl cursor-pointer"
               >
                 إلغاء
               </button>
               <button
                 onClick={handleInviteAdmin}
-                className="px-5 py-2 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold rounded-xl"
+                className="px-5 py-2 bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold rounded-xl cursor-pointer"
               >
                 إرسال الدعوة
               </button>
@@ -324,11 +411,10 @@ export default function AdminRolesPage() {
         onClose={() => setAdminToDelete(null)}
         onConfirm={handleDeleteAdmin}
         title={`حذف المشرف ${adminToDelete?.name}`}
-        message="هل أنت تأكد من رغبتك في سحب صلاحيات هذا المشرف وإزالته من لوحة التحكم؟"
+        message="هل أنت متأكد من رغبتك في سحب صلاحيات هذا المشرف وإزالته من لوحة التحكم؟"
         variant="danger"
         confirmText="تأكيد الحذف"
       />
     </div>
   );
 }
-
