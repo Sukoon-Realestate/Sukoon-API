@@ -1,4 +1,11 @@
-from .dashboard_service import get_dashboard_overview_stats
+from .dashboard_service import (
+    get_dashboard_overview_stats,
+    get_executive_dashboard_stats,
+)
+from .settings_service import (
+    get_platform_settings,
+    update_platform_settings,
+)
 from .user_service import (
     get_admin_users_queryset,
     get_admin_user_detail,
@@ -44,6 +51,9 @@ from .analytics_service import get_analytics_stats
 
 __all__ = [
     "get_dashboard_overview_stats",
+    "get_executive_dashboard_stats",
+    "get_platform_settings",
+    "update_platform_settings",
     "get_admin_users_queryset",
     "get_admin_user_detail",
     "suspend_user",

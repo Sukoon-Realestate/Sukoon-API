@@ -163,3 +163,40 @@ class TestAdminViews:
         res = api_client.post(url, payload, format="json")
         assert res.status_code == status.HTTP_400_BAD_REQUEST
 
+    def test_executive_dashboard_unauthenticated_returns_401(self, api_client):
+        url = reverse("admin-executive-dashboard")
+        res = api_client.get(url)
+        assert res.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_executive_dashboard_view(self, api_client, superuser):
+        api_client.force_authenticate(user=superuser)
+        url = reverse("admin-executive-dashboard")
+        res = api_client.get(url)
+        assert res.status_code == status.HTTP_200_OK
+        assert "executiveMetrics" in res.data
+        assert "monthlyUserChartData" in res.data
+        assert "reportTrendData" in res.data
+        assert "userDistribution" in res.data
+        assert "executiveActivities" in res.data
+
+    def test_platform_settings_unauthenticated_returns_401(self, api_client):
+        url = reverse("admin-settings")
+        res = api_client.get(url)
+        assert res.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_platform_settings_get_and_post(self, api_client, superuser):
+        api_client.force_authenticate(user=superuser)
+        url = reverse("admin-settings")
+        
+        # GET
+        get_res = api_client.get(url)
+        assert get_res.status_code == status.HTTP_200_OK
+        assert "maxReviewHours" in get_res.data
+
+        # POST
+        post_res = api_client.post(url, {"maxReviewHours": False, "tenantDocsRequired": True}, format="json")
+        assert post_res.status_code == status.HTTP_200_OK
+        assert post_res.data["maxReviewHours"] is False
+        assert post_res.data["tenantDocsRequired"] is True
+
+

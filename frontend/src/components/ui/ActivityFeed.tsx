@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { CheckCircle2, AlertTriangle, Building2, User, ShieldCheck, Clock, ArrowRight } from 'lucide-react';
-import { ActivityItem } from '@/data/mockData';
+import { ActivityItem } from '@/lib/api/types';
 import { StatusBadge } from './StatusBadge';
 
 interface ActivityFeedProps {

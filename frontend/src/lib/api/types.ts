@@ -10,7 +10,7 @@ export interface DashboardMetric {
   value: string;
   change: string;
   isPositive: boolean;
-  icon: 'users' | 'building' | 'clock' | 'alert';
+  icon: 'users' | 'building' | 'clock' | 'alert' | 'calendar' | 'revenue';
 }
 
 export interface UserDistribution {
@@ -36,6 +36,25 @@ export interface DashboardStatsResponse {
   user_distribution: UserDistribution;
   chart_data: Array<{ label: string; value: number }>;
   recent_activities: ActivityItem[];
+}
+
+export interface ExecutiveDashboardStats {
+  executiveMetrics: DashboardMetric[];
+  monthlyUserChartData: Array<{ day: number; value: number; isCurrent?: boolean }>;
+  reportTrendData: Array<{ day: number; value: number; isCurrent?: boolean }>;
+  userDistribution: UserDistribution;
+  executiveActivities: ActivityItem[];
+}
+
+export interface PlatformSettings {
+  maxReviewHours: boolean;
+  tenantDocsRequired: boolean;
+  landlordDocsRequired: boolean;
+  autoVerification: boolean;
+  maxPhotosLimit: boolean;
+  reviewPeriodDays: boolean;
+  approxLocation: boolean;
+  hidePhoneDefault: boolean;
 }
 
 export interface UserItem {

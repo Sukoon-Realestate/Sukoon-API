@@ -1,6 +1,8 @@
 from django.urls import path
 from .views import (
     AdminDashboardStatsView,
+    AdminExecutiveDashboardStatsView,
+    AdminPlatformSettingsAPIView,
     AdminUserListAPIView,
     AdminUserDetailAPIView,
     AdminUserSuspendAPIView,
@@ -42,6 +44,8 @@ from .views import (
 urlpatterns = [
     # Dashboard stats
     path("dashboard/", AdminDashboardStatsView.as_view(), name="admin-dashboard-stats"),
+    path("dashboard/executive/", AdminExecutiveDashboardStatsView.as_view(), name="admin-executive-dashboard"),
+    path("settings/", AdminPlatformSettingsAPIView.as_view(), name="admin-settings"),
     
     # User management
     path("users/", AdminUserListAPIView.as_view(), name="admin-users-list"),

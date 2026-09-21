@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Users, Building2, Clock, TrendingUp, TrendingDown, Calendar, AlertTriangle, ArrowUpRight, ArrowDownRight } from 'lucide-react';
-import { DashboardMetric } from '@/data/mockData';
+import { DashboardMetric } from '@/lib/api/types';
 
 interface MetricCardProps {
   metric: DashboardMetric;

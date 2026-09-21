@@ -1,4 +1,8 @@
-from .dashboard import AdminDashboardStatsView
+from .dashboard import (
+    AdminDashboardStatsView,
+    AdminExecutiveDashboardStatsView,
+)
+from .settings import AdminPlatformSettingsAPIView
 from .users import (
     AdminUserListAPIView,
     AdminUserDetailAPIView,
@@ -54,6 +58,8 @@ from .system import (
 
 __all__ = [
     "AdminDashboardStatsView",
+    "AdminExecutiveDashboardStatsView",
+    "AdminPlatformSettingsAPIView",
     "AdminUserListAPIView",
     "AdminUserDetailAPIView",
     "AdminUserSuspendAPIView",

@@ -1,32 +1,65 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/layout/Header';
 import { MetricCard } from '@/components/ui/MetricCard';
 import { BarChartComponent } from '@/components/ui/BarChartComponent';
 import { ActivityFeed } from '@/components/ui/ActivityFeed';
 import { UserCheck } from 'lucide-react';
-import {
-  executiveMetrics,
-  monthlyUserChartData,
-  reportTrendData,
-  userDistributionData,
-  executiveRecentActivities,
-} from '@/data/mockData';
+import { fetchExecutiveDashboardStats } from '@/lib/api/dashboard';
+import { ExecutiveDashboardStats } from '@/lib/api/types';
 
 export default function ExecutiveDashboardPage() {
+  const [data, setData] = useState<ExecutiveDashboardStats | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadStats() {
+      try {
+        const res = await fetchExecutiveDashboardStats();
+        setData(res);
+      } catch (err) {
+        console.error('Failed to load executive dashboard stats:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadStats();
+  }, []);
+
+  const metrics = data?.executiveMetrics || [
+    { title: 'المستخدمون النشطون', value: '–', change: '0%', isPositive: true, icon: 'users' },
+    { title: 'عقارات نشطة', value: '–', change: '0%', isPositive: true, icon: 'building' },
+    { title: 'طلبات الزيارة اليوم', value: '–', change: '0%', isPositive: true, icon: 'calendar' },
+    { title: 'توثيق معلق', value: '–', change: '0%', isPositive: false, icon: 'clock' },
+    { title: 'بلاغات مفتوحة', value: '–', change: '0%', isPositive: true, icon: 'alert' },
+  ];
+
+  const userDistribution = data?.userDistribution || {
+    total: 0,
+    tenants: 0,
+    landlords: 0,
+    verified: 0,
+    pending: 0,
+    suspended: 0,
+  };
+
+  const monthlyUserChartData = data?.monthlyUserChartData || [];
+  const reportTrendData = data?.reportTrendData || [];
+  const activities = data?.executiveActivities || [];
+
   return (
     <div className="flex-1 flex flex-col pb-12">
       <Header
         title="لوحة التحكم التنفيذية"
         subtitle="نظرة عامة على مؤشرات الأداء والأنشطة الإدارية الحية"
-        lastUpdated="9:41 ص"
+        lastUpdated="محدث الآن"
       />
 
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-8">
         {/* Top 5 Metrics Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          {executiveMetrics.map((metric, idx) => (
+          {metrics.map((metric, idx) => (
             <MetricCard key={idx} metric={metric} delay={idx * 80} />
           ))}
         </div>
@@ -76,7 +109,7 @@ export default function ExecutiveDashboardPage() {
                     إجمالي المستخدمين
                   </span>
                   <span className="font-black text-[var(--foreground)] text-base">
-                    {userDistributionData.total.toLocaleString()}
+                    {isLoading ? '...' : userDistribution.total.toLocaleString()}
                   </span>
                 </div>
 
@@ -85,14 +118,14 @@ export default function ExecutiveDashboardPage() {
                     مستأجرون
                   </span>
                   <span className="font-bold text-[var(--foreground)] text-sm">
-                    {userDistributionData.tenants.toLocaleString()}
+                    {isLoading ? '...' : userDistribution.tenants.toLocaleString()}
                   </span>
                 </div>
 
                 <div className="flex items-center justify-between pt-3">
                   <span className="text-xs font-semibold text-[var(--text-muted)]">ملاك</span>
                   <span className="font-bold text-[var(--foreground)] text-sm">
-                    {userDistributionData.landlords.toLocaleString()}
+                    {isLoading ? '...' : userDistribution.landlords.toLocaleString()}
                   </span>
                 </div>
 
@@ -101,7 +134,7 @@ export default function ExecutiveDashboardPage() {
                     موثّقون
                   </span>
                   <span className="font-bold text-emerald-600 dark:text-emerald-400 text-sm">
-                    {userDistributionData.verified.toLocaleString()}
+                    {isLoading ? '...' : userDistribution.verified.toLocaleString()}
                   </span>
                 </div>
               </div>
@@ -110,7 +143,7 @@ export default function ExecutiveDashboardPage() {
 
           {/* Activity Feed (Right Column) */}
           <div className="lg:col-span-8">
-            <ActivityFeed activities={executiveRecentActivities} showViewAll={true} />
+            <ActivityFeed activities={activities} showViewAll={true} />
           </div>
         </div>
       </div>

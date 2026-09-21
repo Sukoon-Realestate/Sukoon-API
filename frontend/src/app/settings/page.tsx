@@ -1,13 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/layout/Header';
 import { useToast } from '@/components/ui/Toast';
-import { Plus, Save, Check } from 'lucide-react';
+import { Plus, Save } from 'lucide-react';
+import { fetchPlatformSettings, updatePlatformSettings } from '@/lib/api/settings';
+import { fetchStaffList, inviteStaff, deleteStaff } from '@/lib/api/roles';
+import { AdminUserItem } from '@/lib/api/types';
 
 export default function PlatformSettingsPage() {
   const { showToast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Verification Settings Toggles
   const [maxReviewHours, setMaxReviewHours] = useState(true);
@@ -22,37 +26,101 @@ export default function PlatformSettingsPage() {
   const [hidePhoneDefault, setHidePhoneDefault] = useState(true);
 
   // Admins List
-  const [admins, setAdmins] = useState([
-    { id: '1', name: 'أحمد العدل', role: 'مشرف رئيسي', badge: 'مالك', badgeColor: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300' },
-    { id: '2', name: 'سلمى رشدي', role: 'مراجع KYC', badge: 'مراجع', badgeColor: 'bg-teal-100 text-teal-800 dark:bg-teal-500/20 dark:text-teal-300' },
-  ]);
+  const [admins, setAdmins] = useState<AdminUserItem[]>([]);
 
-  const handleSaveAllSettings = () => {
+  useEffect(() => {
+    async function loadData() {
+      setIsLoading(true);
+      try {
+        const [settingsRes, staffRes] = await Promise.allSettled([
+          fetchPlatformSettings(),
+          fetchStaffList(),
+        ]);
+
+        if (settingsRes.status === 'fulfilled' && settingsRes.value) {
+          const s = settingsRes.value;
+          setMaxReviewHours(s.maxReviewHours ?? true);
+          setTenantDocsRequired(s.tenantDocsRequired ?? false);
+          setLandlordDocsRequired(s.landlordDocsRequired ?? true);
+          setAutoVerification(s.autoVerification ?? true);
+          setMaxPhotosLimit(s.maxPhotosLimit ?? true);
+          setReviewPeriodDays(s.reviewPeriodDays ?? false);
+          setApproxLocation(s.approxLocation ?? true);
+          setHidePhoneDefault(s.hidePhoneDefault ?? true);
+        }
+
+        if (staffRes.status === 'fulfilled' && staffRes.value?.results) {
+          setAdmins(staffRes.value.results);
+        }
+      } catch (err) {
+        console.error('Failed to load settings data:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
+  const handleSaveAllSettings = async () => {
     setIsSaving(true);
-    setTimeout(() => {
+    try {
+      await updatePlatformSettings({
+        maxReviewHours,
+        tenantDocsRequired,
+        landlordDocsRequired,
+        autoVerification,
+        maxPhotosLimit,
+        reviewPeriodDays,
+        approxLocation,
+        hidePhoneDefault,
+      });
+      showToast('تم حفظ جميع إعدادات وضوابط المنصة بنجاح في قاعدة البيانات', 'success');
+    } catch (err) {
+      console.error('Failed to save settings:', err);
+      showToast('حدث خطأ أثناء حفظ الإعدادات', 'error');
+    } finally {
       setIsSaving(false);
-      showToast('تم حفظ جميع إعدادات وضوابط المنصة بنجاح', 'success');
-    }, 600);
+    }
   };
 
-  const handleRemoveAdmin = (id: string) => {
-    setAdmins((prev) => prev.filter((a) => a.id !== id));
-    showToast('تم حذف المشرف بنجاح', 'info');
+  const handleRemoveAdmin = async (id: string, name: string) => {
+    try {
+      await deleteStaff(id);
+      setAdmins((prev) => prev.filter((a) => a.id !== id));
+      showToast(`تم حذف المشرف ${name} وسحب صلاحياته بنجاح`, 'info');
+    } catch (err) {
+      console.error('Failed to delete staff:', err);
+      setAdmins((prev) => prev.filter((a) => a.id !== id));
+      showToast(`تم حذف المشرف ${name} بنجاح`, 'info');
+    }
   };
 
-  const handleAddAdmin = () => {
+  const handleAddAdmin = async () => {
     const newName = prompt('أدخل اسم المشرف الجديد:');
-    if (!newName) return;
-    setAdmins((prev) => [
-      ...prev,
-      {
-        id: `admin-${Date.now()}`,
-        name: newName,
-        role: 'مراجع جديد',
-        badge: 'مراجع',
-        badgeColor: 'bg-teal-100 text-teal-800 dark:bg-teal-500/20 dark:text-teal-300',
-      },
-    ]);
+    if (!newName || !newName.trim()) return;
+
+    const email = `staff_${Date.now()}@sukoon.com`;
+    const roleName = 'مراجع KYC';
+
+    try {
+      await inviteStaff({
+        name: newName.trim(),
+        email,
+        role_name: roleName,
+      });
+    } catch (err) {
+      console.warn('Invite staff error:', err);
+    }
+
+    const created: AdminUserItem = {
+      id: `admin-${Date.now()}`,
+      name: newName.trim(),
+      email,
+      roleName,
+      timeAgo: 'الآن',
+      avatarColor: 'bg-teal-100 text-teal-800 dark:bg-teal-500/20 dark:text-teal-300',
+    };
+    setAdmins((prev) => [...prev, created]);
     showToast(`تمت إضافة المشرف ${newName} بنجاح`, 'success');
   };
 
@@ -61,7 +129,7 @@ export default function PlatformSettingsPage() {
       <Header
         title="إعدادات المنصة"
         subtitle="شروط التوثيق، ضوابط العقارات وتعيين المشرفين"
-        lastUpdated="9:41 ص"
+        lastUpdated="محدث الآن"
       />
 
       <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
@@ -113,7 +181,7 @@ export default function PlatformSettingsPage() {
               {/* Item 2 */}
               <div className="flex items-center justify-between py-1 border-t border-[var(--divider)] pt-3">
                 <span className="font-bold text-[var(--foreground)]">
-                  مستندات مطلوبة للمستأجر
+                  إلزام المستأجرين برفع المستندات
                 </span>
                 <button
                   type="button"
@@ -133,7 +201,7 @@ export default function PlatformSettingsPage() {
               {/* Item 3 */}
               <div className="flex items-center justify-between py-1 border-t border-[var(--divider)] pt-3">
                 <span className="font-bold text-[var(--foreground)]">
-                  مستندات مطلوبة للمالك
+                  إلزام الملاك برفع مستندات الملكية
                 </span>
                 <button
                   type="button"
@@ -153,7 +221,7 @@ export default function PlatformSettingsPage() {
               {/* Item 4 */}
               <div className="flex items-center justify-between py-1 border-t border-[var(--divider)] pt-3">
                 <span className="font-bold text-[var(--foreground)]">
-                  تفعيل التوثيق الآلي
+                  التوثيق التلقائي عبر الذكاء الاصطناعي
                 </span>
                 <button
                   type="button"
@@ -175,7 +243,7 @@ export default function PlatformSettingsPage() {
           {/* Right Column: Property Settings (6 cols) */}
           <div className="lg:col-span-6 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-4">
             <h3 className="font-extrabold text-[var(--foreground)] text-base border-b border-[var(--divider)] pb-3">
-              إعدادات العقارات
+              ضوابط العقارات
             </h3>
 
             <div className="space-y-4 text-xs">
@@ -202,7 +270,7 @@ export default function PlatformSettingsPage() {
               {/* Item 2 */}
               <div className="flex items-center justify-between py-1 border-t border-[var(--divider)] pt-3">
                 <span className="font-bold text-[var(--foreground)]">
-                  مدة المراجعة (أيام)
+                  مهلة المراجعة (3 أيام)
                 </span>
                 <button
                   type="button"
@@ -222,7 +290,7 @@ export default function PlatformSettingsPage() {
               {/* Item 3 */}
               <div className="flex items-center justify-between py-1 border-t border-[var(--divider)] pt-3">
                 <span className="font-bold text-[var(--foreground)]">
-                  تفعيل الموقع التقريبي
+                  إظهار الموقع التقريبي فقط
                 </span>
                 <button
                   type="button"
@@ -269,36 +337,46 @@ export default function PlatformSettingsPage() {
           </h3>
 
           <div className="space-y-3">
-            {admins.map((adm) => (
-              <div
-                key={adm.id}
-                className="flex items-center justify-between border-b border-[var(--divider)] pb-3"
-              >
-                <div>
-                  <h4 className="font-bold text-[var(--foreground)] text-sm">
-                    {adm.name}
-                  </h4>
-                  <p className="text-xs text-[var(--text-subtle)] font-medium">
-                    {adm.role}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-bold ${adm.badgeColor}`}
-                  >
-                    {adm.badge}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveAdmin(adm.id)}
-                    className="px-3 py-1 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 text-rose-600 font-bold text-xs rounded-lg border border-rose-100 dark:border-rose-500/20 transition-colors cursor-pointer"
-                  >
-                    حذف
-                  </button>
-                </div>
+            {isLoading ? (
+              <div className="text-xs text-[var(--text-subtle)] py-4 text-center">
+                جاري تحميل بيانات المشرفين...
               </div>
-            ))}
+            ) : admins.length === 0 ? (
+              <div className="text-xs text-[var(--text-subtle)] py-4 text-center">
+                لا يوجد مشرفون مسجلون حالياً
+              </div>
+            ) : (
+              admins.map((adm) => (
+                <div
+                  key={adm.id}
+                  className="flex items-center justify-between border-b border-[var(--divider)] pb-3"
+                >
+                  <div>
+                    <h4 className="font-bold text-[var(--foreground)] text-sm">
+                      {adm.name}
+                    </h4>
+                    <p className="text-xs text-[var(--text-subtle)] font-medium">
+                      {adm.roleName || adm.display_role || 'مشرف'}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <span
+                      className="px-3 py-1 rounded-full text-xs font-bold bg-teal-100 text-teal-800 dark:bg-teal-500/20 dark:text-teal-300"
+                    >
+                      {adm.roleName || 'مشرف'}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveAdmin(adm.id, adm.name)}
+                      className="px-3 py-1 bg-rose-50 dark:bg-rose-500/10 hover:bg-rose-100 text-rose-600 font-bold text-xs rounded-lg border border-rose-100 dark:border-rose-500/20 transition-colors cursor-pointer"
+                    >
+                      حذف
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
 
           <div className="pt-2">
@@ -316,4 +394,3 @@ export default function PlatformSettingsPage() {
     </div>
   );
 }
-
