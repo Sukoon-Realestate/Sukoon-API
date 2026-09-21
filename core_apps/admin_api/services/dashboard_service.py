@@ -287,15 +287,15 @@ def _format_time_ago(dt):
     if not dt:
         return "الآن"
     delta = timezone.now() - dt
-    if delta.seconds < 60:
-        return "منذ لحظات"
-    if delta.seconds < 3600:
-        mins = delta.seconds // 60
-        return f"منذ {mins} دقيقة"
-    if delta.days == 0:
-        hours = delta.seconds // 3600
-        return f"منذ {hours} ساعة"
+    if delta.days > 1:
+        return f"منذ {delta.days} يوم"
     if delta.days == 1:
         return "أمس"
-    return f"منذ {delta.days} يوم"
+    hours = delta.seconds // 3600
+    if hours > 0:
+        return f"منذ {hours} ساعة"
+    mins = delta.seconds // 60
+    if mins > 0:
+        return f"منذ {mins} دقيقة"
+    return "منذ لحظات"
 

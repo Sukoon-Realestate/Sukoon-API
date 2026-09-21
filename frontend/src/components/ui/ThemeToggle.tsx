@@ -6,6 +6,23 @@ import { useTheme } from '@/context/ThemeContext';
 
 export const ThemeToggle: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <button
+        type="button"
+        aria-label="تبديل المظهر"
+        className="relative p-1.5 rounded-full hover:bg-[var(--card-hover)] text-[var(--text-muted)] transition-all duration-200 group"
+      >
+        <div className="relative w-5 h-5" />
+      </button>
+    );
+  }
 
   return (
     <button

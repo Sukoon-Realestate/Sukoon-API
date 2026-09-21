@@ -165,7 +165,7 @@ export default function KycReviewQueuePage() {
             ) : (
               <table className="w-full text-right border-collapse text-xs">
                 <thead>
-                  <tr className="bg-slate-900/60 border-b border-[var(--card-border)] text-slate-400 font-bold">
+                  <tr className="bg-[var(--table-header-bg)] border-b border-[var(--card-border)] text-[var(--text-muted)] font-bold">
                     <th className="py-3.5 px-4">المستخدم</th>
                     <th className="py-3.5 px-4">النوع</th>
                     <th className="py-3.5 px-4">البطاقة</th>
@@ -177,10 +177,10 @@ export default function KycReviewQueuePage() {
                   {filteredRequests.map((req) => (
                     <tr
                       key={req.id}
-                      className="hover:bg-slate-800/40 transition-colors"
+                      className="hover:bg-[var(--table-row-hover)] transition-colors"
                     >
-                      <td className="py-3.5 px-4 font-bold text-white flex items-center gap-2">
-                        <User className="w-4 h-4 text-slate-400" />
+                      <td className="py-3.5 px-4 font-bold text-[var(--foreground)] flex items-center gap-2">
+                        <User className="w-4 h-4 text-[var(--text-subtle)]" />
                         <span>{req.user}</span>
                         {req.hasWarning && (
                           <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />
@@ -189,7 +189,7 @@ export default function KycReviewQueuePage() {
                       <td className="py-3.5 px-4">
                         <StatusBadge status={req.type} />
                       </td>
-                      <td className="py-3.5 px-4 font-mono text-xs text-slate-400 font-semibold dir-ltr text-right">
+                      <td className="py-3.5 px-4 font-mono text-xs text-[var(--text-muted)] font-semibold dir-ltr text-right">
                         {req.nationalIdMask || '–'}
                       </td>
                       <td className="py-3.5 px-4">

@@ -104,21 +104,21 @@ export default function OverviewDashboardPage() {
             style={{ animationDelay: '100ms' }}
           >
             <div>
-              <h3 className="font-bold text-[var(--foreground)] text-base mb-6">
+              <h3 className="font-extrabold text-[var(--foreground)] text-base mb-6">
                 توزيع المستخدمين
               </h3>
 
               {/* Tenants Row */}
               <div className="mb-6 space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold">
-                  <span className="text-slate-400">مستأجرون</span>
-                  <span className="text-white font-extrabold">
+                  <span className="text-[var(--text-muted)] font-bold">مستأجرون</span>
+                  <span className="text-[var(--foreground)] font-black text-sm">
                     {distribution.tenants.toLocaleString('en-US')}
                   </span>
                 </div>
-                <div className="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden">
+                <div className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/50 rounded-full h-3 overflow-hidden p-0.5">
                   <div
-                    className="bg-blue-500 h-2.5 rounded-full transition-all duration-1000"
+                    className="bg-gradient-to-r from-blue-600 via-indigo-500 to-cyan-500 h-2 rounded-full transition-all duration-1000 shadow-sm shadow-blue-500/20"
                     style={{ width: `${tenantPercent}%` }}
                   ></div>
                 </div>
@@ -127,14 +127,14 @@ export default function OverviewDashboardPage() {
               {/* Landlords Row */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold">
-                  <span className="text-slate-400">ملاك</span>
-                  <span className="text-white font-extrabold">
+                  <span className="text-[var(--text-muted)] font-bold">ملاك</span>
+                  <span className="text-[var(--foreground)] font-black text-sm">
                     {distribution.landlords.toLocaleString('en-US')}
                   </span>
                 </div>
-                <div className="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden">
+                <div className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/50 rounded-full h-3 overflow-hidden p-0.5">
                   <div
-                    className="bg-amber-500 h-2.5 rounded-full transition-all duration-1000"
+                    className="bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 h-2 rounded-full transition-all duration-1000 shadow-sm shadow-amber-500/20"
                     style={{ width: `${landlordPercent}%` }}
                   ></div>
                 </div>
@@ -142,22 +142,22 @@ export default function OverviewDashboardPage() {
             </div>
 
             {/* Bottom Status Tags */}
-            <div className="pt-6 mt-6 border-t border-[var(--border-subtle)] grid grid-cols-3 gap-2 text-center text-xs">
-              <div className="bg-slate-900/50 p-2.5 rounded-xl border border-slate-800/80">
-                <div className="text-[10px] text-slate-400 font-bold mb-0.5">موثقون</div>
-                <div className="font-black text-emerald-400">
+            <div className="pt-6 mt-6 border-t border-[var(--divider)] grid grid-cols-3 gap-2 text-center text-xs">
+              <div className="bg-emerald-50/90 dark:bg-slate-900/50 p-3 rounded-2xl border border-emerald-200/90 dark:border-slate-800 transition-transform hover:scale-105">
+                <div className="text-[11px] text-emerald-800 dark:text-emerald-300 font-extrabold mb-0.5">موثقون</div>
+                <div className="text-base font-black text-emerald-700 dark:text-emerald-400">
                   {distribution.verified.toLocaleString('en-US')}
                 </div>
               </div>
-              <div className="bg-slate-900/50 p-2.5 rounded-xl border border-slate-800/80">
-                <div className="text-[10px] text-slate-400 font-bold mb-0.5">قيد التوثيق</div>
-                <div className="font-black text-amber-400">
+              <div className="bg-amber-50/90 dark:bg-slate-900/50 p-3 rounded-2xl border border-amber-200/90 dark:border-slate-800 transition-transform hover:scale-105">
+                <div className="text-[11px] text-amber-800 dark:text-amber-300 font-extrabold mb-0.5">قيد التوثيق</div>
+                <div className="text-base font-black text-amber-700 dark:text-amber-400">
                   {distribution.pending.toLocaleString('en-US')}
                 </div>
               </div>
-              <div className="bg-slate-900/50 p-2.5 rounded-xl border border-slate-800/80">
-                <div className="text-[10px] text-slate-400 font-bold mb-0.5">موقوفون</div>
-                <div className="font-black text-rose-400">
+              <div className="bg-rose-50/90 dark:bg-slate-900/50 p-3 rounded-2xl border border-rose-200/90 dark:border-slate-800 transition-transform hover:scale-105">
+                <div className="text-[11px] text-rose-800 dark:text-rose-300 font-extrabold mb-0.5">موقوفون</div>
+                <div className="text-base font-black text-rose-700 dark:text-rose-400">
                   {distribution.suspended.toLocaleString('en-US')}
                 </div>
               </div>

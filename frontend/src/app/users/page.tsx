@@ -97,9 +97,10 @@ export default function UserManagementPage() {
         <Breadcrumbs items={[{ label: 'الرئيسية', href: '/' }, { label: 'المستخدمون' }]} />
 
         {/* Search & Tabs Controls */}
+        {/* Search & Tabs Controls */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
           {/* Tab Navigation */}
-          <div className="flex items-center gap-1.5 p-1 bg-slate-900/80 rounded-2xl border border-slate-800 self-start">
+          <div className="flex items-center gap-1.5 p-1 bg-slate-200/70 dark:bg-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 self-start">
             {[
               { id: 'all', label: 'الكل' },
               { id: 'verified', label: 'موثقون' },
@@ -115,7 +116,7 @@ export default function UserManagementPage() {
                 className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   activeTab === tab.id
                     ? 'bg-teal-600 text-white shadow-sm'
-                    : 'text-slate-400 hover:text-slate-200'
+                    : 'text-[var(--text-muted)] hover:text-[var(--foreground)]'
                 }`}
               >
                 {tab.label}
@@ -134,17 +135,17 @@ export default function UserManagementPage() {
                   setCurrentPage(1);
                 }}
                 placeholder="بحث بالاسم أو البريد..."
-                className="w-full pl-4 pr-10 py-2.5 bg-slate-900/90 border border-slate-800 rounded-xl text-xs text-white placeholder-slate-500 focus:outline-none focus:border-teal-500/50"
+                className="w-full pl-4 pr-10 py-2.5 bg-[var(--input-bg)] border border-[var(--input-border)] rounded-xl text-xs text-[var(--foreground)] placeholder-[var(--text-subtle)] focus:outline-none focus:border-teal-500/50"
               />
-              <Search className="w-4 h-4 text-slate-400 absolute right-3 top-3" />
+              <Search className="w-4 h-4 text-[var(--text-subtle)] absolute right-3 top-3" />
             </div>
 
             <button
               onClick={() => setShowFilterDrawer(!showFilterDrawer)}
               className={`p-2.5 rounded-xl border transition-all cursor-pointer flex items-center gap-1.5 text-xs font-bold ${
                 showFilterDrawer || roleFilter !== 'all'
-                  ? 'bg-teal-500/15 border-teal-500/30 text-teal-400'
-                  : 'bg-slate-900/90 border-slate-800 text-slate-400 hover:text-slate-200'
+                  ? 'bg-teal-500/15 border-teal-500/30 text-teal-600 dark:text-teal-400'
+                  : 'bg-[var(--card-bg)] border-[var(--card-border)] text-[var(--text-muted)] hover:text-[var(--foreground)]'
               }`}
             >
               <Filter className="w-4 h-4" />
@@ -155,9 +156,9 @@ export default function UserManagementPage() {
 
         {/* Filter Drawer */}
         {showFilterDrawer && (
-          <div className="p-4 bg-slate-900/60 border border-slate-800 rounded-2xl flex flex-wrap items-center justify-between gap-4 animate-fadeIn">
+          <div className="p-4 bg-[var(--card-hover)] border border-[var(--card-border)] rounded-2xl flex flex-wrap items-center justify-between gap-4 animate-fadeIn">
             <div className="flex items-center gap-4">
-              <span className="text-xs text-slate-400 font-bold">نوع المستخدم:</span>
+              <span className="text-xs text-[var(--text-muted)] font-bold">نوع المستخدم:</span>
               <div className="flex items-center gap-2">
                 {['all', 'مستأجر', 'مالك'].map((r) => (
                   <button
@@ -168,8 +169,8 @@ export default function UserManagementPage() {
                     }}
                     className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                       roleFilter === r
-                        ? 'bg-teal-500/20 text-teal-400 border border-teal-500/30'
-                        : 'bg-slate-800/60 text-slate-400 hover:text-slate-200 border border-slate-700/40'
+                        ? 'bg-teal-600 text-white shadow-xs'
+                        : 'bg-[var(--card-bg)] text-[var(--text-muted)] hover:text-[var(--foreground)] border border-[var(--card-border)]'
                     }`}
                   >
                     {r === 'all' ? 'جميع الأدوار' : r}
@@ -180,7 +181,7 @@ export default function UserManagementPage() {
 
             <button
               onClick={handleResetFilters}
-              className="text-xs text-slate-400 hover:text-rose-400 font-bold transition-colors cursor-pointer"
+              className="text-xs text-[var(--text-muted)] hover:text-rose-500 font-bold transition-colors cursor-pointer"
             >
               إعادة تعيين
             </button>
@@ -190,7 +191,7 @@ export default function UserManagementPage() {
         {/* Users Table Card */}
         <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-[var(--shadow-card)] overflow-hidden">
           {isLoading ? (
-            <div className="p-12 text-center text-slate-400 text-xs font-bold space-y-3">
+            <div className="p-12 text-center text-[var(--text-muted)] text-xs font-bold space-y-3">
               <div className="w-8 h-8 border-2 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
               <p>جاري تحميل بيانات المستخدمين من الخادم...</p>
             </div>
@@ -204,7 +205,7 @@ export default function UserManagementPage() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-right text-xs">
-                <thead className="bg-slate-900/60 border-b border-[var(--card-border)] text-slate-400 font-bold">
+                <thead className="bg-[var(--table-header-bg)] border-b border-[var(--card-border)] text-[var(--text-muted)] font-bold">
                   <tr>
                     <th className="py-3.5 px-4">المستخدم</th>
                     <th className="py-3.5 px-4">النوع</th>
@@ -215,25 +216,25 @@ export default function UserManagementPage() {
                     <th className="py-3.5 px-4">الإجراءات</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[var(--border-subtle)] font-medium">
+                <tbody className="divide-y divide-[var(--divider)] font-medium">
                   {usersList.map((user) => (
                     <tr
                       key={user.id}
-                      className="hover:bg-slate-800/40 transition-colors group"
+                      className="hover:bg-[var(--table-row-hover)] transition-colors group"
                     >
                       <td className="py-3.5 px-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center font-black text-teal-400 text-xs shrink-0">
+                          <div className="w-9 h-9 rounded-xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center font-black text-teal-600 dark:text-teal-400 text-xs shrink-0">
                             {user.name.charAt(0)}
                           </div>
                           <div>
                             <Link
                               href={`/users/${user.id}`}
-                              className="font-bold text-white hover:text-teal-400 transition-colors"
+                              className="font-bold text-[var(--foreground)] hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
                             >
                               {user.name}
                             </Link>
-                            <div className="text-[11px] text-slate-400 font-mono">
+                            <div className="text-[11px] text-[var(--text-subtle)] font-mono">
                               {user.email}
                             </div>
                           </div>
@@ -244,8 +245,8 @@ export default function UserManagementPage() {
                         <span
                           className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
                             user.type === 'مالك'
-                              ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20'
-                              : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+                              ? 'bg-amber-100 text-amber-800 border border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20'
+                              : 'bg-blue-100 text-blue-800 border border-blue-200 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20'
                           }`}
                         >
                           {user.type}
@@ -260,11 +261,11 @@ export default function UserManagementPage() {
                         <StatusBadge status={user.kycStatus} />
                       </td>
 
-                      <td className="py-3.5 px-4 text-slate-400 font-mono">
+                      <td className="py-3.5 px-4 text-[var(--text-muted)] font-mono">
                         {user.regDate}
                       </td>
 
-                      <td className="py-3.5 px-4 text-slate-400 font-mono dir-ltr text-right">
+                      <td className="py-3.5 px-4 text-[var(--text-muted)] font-mono dir-ltr text-right">
                         {user.phone || '–'}
                       </td>
 
@@ -272,7 +273,7 @@ export default function UserManagementPage() {
                         <div className="flex items-center gap-1.5">
                           <Link
                             href={`/users/${user.id}`}
-                            className="p-1.5 text-slate-400 hover:text-teal-400 hover:bg-slate-800 rounded-lg transition-colors"
+                            className="p-1.5 text-[var(--text-muted)] hover:text-teal-600 hover:bg-[var(--card-hover)] rounded-lg transition-colors"
                             title="عرض التفاصيل"
                           >
                             <Eye className="w-4 h-4" />
@@ -281,8 +282,8 @@ export default function UserManagementPage() {
                             onClick={() => setSelectedUserToSuspend(user)}
                             className={`p-1.5 rounded-lg transition-colors ${
                               user.status === 'موقوف'
-                                ? 'text-emerald-400 hover:bg-emerald-500/10'
-                                : 'text-slate-400 hover:text-rose-400 hover:bg-slate-800'
+                                ? 'text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10'
+                                : 'text-[var(--text-muted)] hover:text-rose-600 hover:bg-[var(--card-hover)]'
                             }`}
                             title={user.status === 'موقوف' ? 'إلغاء الإيقاف' : 'إيقاف الحساب'}
                           >

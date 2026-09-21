@@ -57,32 +57,32 @@ export const BarChartComponent: React.FC<BarChartProps> = ({
         </div>
 
         {/* Bars visualization */}
-        <div className="h-40 flex items-end justify-between gap-1.5 pt-6 pb-2 px-1">
+        <div className="h-40 flex items-end justify-between gap-2 pt-6 pb-2 px-1">
           {data.map((item, idx) => {
             const heightPercent = (item.value / maxValue) * 100;
 
-            let barBg = 'bg-teal-500/20 hover:bg-teal-500/40 dark:bg-teal-500/25 dark:hover:bg-teal-500/45';
+            let barBg = '';
             if (color === 'red') {
               barBg = item.isCurrent
-                ? 'bg-gradient-to-t from-rose-600 to-rose-400 text-white shadow-xs glow-rose-sm'
-                : 'bg-rose-500/20 hover:bg-rose-500/40 dark:bg-rose-500/25 dark:hover:bg-rose-500/45';
+                ? 'bg-gradient-to-t from-rose-600 via-rose-500 to-amber-400 text-white shadow-md shadow-rose-500/30 ring-2 ring-rose-400/40'
+                : 'bg-gradient-to-t from-rose-500/60 to-rose-400/80 hover:from-rose-600 hover:to-rose-500 dark:bg-rose-500/30 dark:hover:bg-rose-500/50';
             } else {
               barBg = item.isCurrent
-                ? 'bg-gradient-to-t from-teal-700 to-teal-500 text-white shadow-xs glow-teal-sm'
-                : 'bg-teal-500/20 hover:bg-teal-500/40 dark:bg-teal-500/25 dark:hover:bg-teal-500/45';
+                ? 'bg-gradient-to-t from-teal-700 via-teal-500 to-emerald-400 text-white shadow-md shadow-teal-500/30 ring-2 ring-teal-400/40'
+                : 'bg-gradient-to-t from-teal-600/55 to-teal-400/75 hover:from-teal-600 hover:to-teal-500 dark:bg-teal-500/30 dark:hover:bg-teal-500/50';
             }
 
             return (
               <div key={idx} className="flex-1 flex flex-col items-center gap-1 group relative h-full justify-end">
                 {/* Tooltip */}
-                <div className="opacity-0 group-hover:opacity-100 transition-all duration-200 absolute -top-9 bg-slate-900 text-white text-[10px] font-bold px-2 py-1 rounded-lg shadow-lg pointer-events-none z-20 whitespace-nowrap transform -translate-y-1 group-hover:translate-y-0">
+                <div className="opacity-0 group-hover:opacity-100 transition-all duration-200 absolute -top-9 bg-slate-900 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-lg pointer-events-none z-20 whitespace-nowrap transform -translate-y-1 group-hover:translate-y-0">
                   {item.value}
                 </div>
 
                 <div
-                  className={`w-full rounded-t-md transition-all duration-300 animate-barGrow ${barBg}`}
+                  className={`w-full rounded-t-lg transition-all duration-300 animate-barGrow ${barBg}`}
                   style={{
-                    height: `${Math.max(heightPercent, 8)}%`,
+                    height: `${Math.max(heightPercent, 10)}%`,
                     animationDelay: `${idx * 25}ms`,
                   }}
                 ></div>

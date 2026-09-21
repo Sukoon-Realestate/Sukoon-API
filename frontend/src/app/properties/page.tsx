@@ -323,8 +323,8 @@ export default function PropertiesManagementPage() {
           {/* Pagination */}
           <Pagination
             currentPage={currentPage}
-            totalPages={Math.max(1, Math.ceil(totalCount / itemsPerPage))}
-            totalItems={totalCount}
+            totalPages={Math.max(1, Math.ceil((totalCount || 0) / (itemsPerPage || 10)))}
+            totalItems={totalCount || 0}
             itemsPerPage={itemsPerPage}
             onPageChange={setCurrentPage}
             onItemsPerPageChange={(size) => {

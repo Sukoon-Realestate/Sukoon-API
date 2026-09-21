@@ -33,17 +33,17 @@ export const ActivityFeed: React.FC<ActivityFeedProps> = ({
   const getIconBg = (type: ActivityItem['iconType']) => {
     switch (type) {
       case 'check':
-        return 'bg-emerald-500/10 border-emerald-200/80 dark:border-emerald-500/30 glow-teal-sm';
+        return 'bg-emerald-100/90 border-emerald-200/90 dark:bg-emerald-500/10 dark:border-emerald-500/30 glow-teal-sm';
       case 'alert':
-        return 'bg-rose-500/10 border-rose-200/80 dark:border-rose-500/30 glow-rose-sm';
+        return 'bg-rose-100/90 border-rose-200/90 dark:bg-rose-500/10 dark:border-rose-500/30 glow-rose-sm';
       case 'building':
-        return 'bg-amber-500/10 border-amber-200/80 dark:border-amber-500/30 glow-amber-sm';
+        return 'bg-amber-100/90 border-amber-200/90 dark:bg-amber-500/10 dark:border-amber-500/30 glow-amber-sm';
       case 'user':
-        return 'bg-blue-500/10 border-blue-200/80 dark:border-blue-500/30 glow-blue-sm';
+        return 'bg-blue-100/90 border-blue-200/90 dark:bg-blue-500/10 dark:border-blue-500/30 glow-blue-sm';
       case 'shield':
-        return 'bg-teal-500/10 border-teal-200/80 dark:border-teal-500/30 glow-teal-sm';
+        return 'bg-teal-100/90 border-teal-200/90 dark:bg-teal-500/10 dark:border-teal-500/30 glow-teal-sm';
       default:
-        return 'bg-emerald-500/10 border-emerald-200/80 dark:border-emerald-500/30';
+        return 'bg-emerald-100/90 border-emerald-200/90 dark:bg-emerald-500/10 dark:border-emerald-500/30';
     }
   };
 

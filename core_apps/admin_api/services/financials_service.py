@@ -114,11 +114,11 @@ def get_transactions_list(status_filter=None, search=None):
     for visit in visits:
         prop_title = visit.property.title if visit.property else "عقار"
         landlord_name = (
-            visit.property.owner.get_full_name()
+            visit.property.owner.get_full_name
             if visit.property and visit.property.owner
             else "–"
         )
-        tenant_name = visit.tenant.get_full_name() if visit.tenant else "مستأجر"
+        tenant_name = visit.tenant.get_full_name if visit.tenant else "مستأجر"
         price_val = visit.property.price if (visit.property and visit.property.price) else 4500
 
         # Status mapping
@@ -155,7 +155,7 @@ def get_transactions_list(status_filter=None, search=None):
 
     for sub in kyc_subs:
         user_name = (
-            sub.profile.user.get_full_name()
+            sub.profile.user.get_full_name
             if (sub.profile and sub.profile.user)
             else "مستخدم"
         )

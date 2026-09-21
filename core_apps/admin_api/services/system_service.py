@@ -101,9 +101,9 @@ def get_audit_logs(type_filter=None, search=None):
         .order_by("-updated_at")[:20]
     )
     for kyc in kyc_items:
-        u_name = kyc.profile.user.get_full_name() if (kyc.profile and kyc.profile.user) else "مستخدم"
+        u_name = kyc.profile.user.get_full_name if (kyc.profile and kyc.profile.user) else "مستخدم"
         action_verb = "قبول توثيق هوية" if kyc.status == KYCSubmission.Status.APPROVED else "رفض توثيق هوية"
-        op_name = kyc.reviewer.get_full_name() if kyc.reviewer else "مشرف النظام"
+        op_name = kyc.reviewer.get_full_name if kyc.reviewer else "مشرف النظام"
         t_str = kyc.updated_at.strftime("%H:%M:%S") if kyc.updated_at else "09:41:23"
 
         logs.append({
@@ -149,8 +149,8 @@ def get_audit_logs(type_filter=None, search=None):
     )
     for rep in reports:
         t_str = rep.updated_at.strftime("%H:%M:%S") if rep.updated_at else "08:44:18"
-        op_name = rep.reviewed_by.get_full_name() if rep.reviewed_by else "مشرف التقارير"
-        u_name = rep.reported_user.get_full_name() if rep.reported_user else "مستخدم"
+        op_name = rep.reviewed_by.get_full_name if rep.reviewed_by else "مشرف التقارير"
+        u_name = rep.reported_user.get_full_name if rep.reported_user else "مستخدم"
 
         logs.append({
             "id": f"log-rep-{rep.id}",

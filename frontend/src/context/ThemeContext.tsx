@@ -17,16 +17,17 @@ const ThemeContext = createContext<ThemeContextType>({
 export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>(() => {
-    // ? Read from localStorage on init (SSR-safe)
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('sukoon_theme') as Theme | null;
-      if (stored === 'light' || stored === 'dark') return stored;
-      // ? Fall back to system preference
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+  const [theme, setTheme] = useState<Theme>('light');
+
+  useEffect(() => {
+    // ? Read from localStorage or system preference on client mount (SSR-safe)
+    const stored = localStorage.getItem('sukoon_theme') as Theme | null;
+    if (stored === 'light' || stored === 'dark') {
+      setTheme(stored);
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      setTheme('dark');
     }
-    return 'light';
-  });
+  }, []);
 
   // * Apply theme class to <html> and persist
   useEffect(() => {

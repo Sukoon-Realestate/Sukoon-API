@@ -14,36 +14,45 @@ interface PaginationProps {
 }
 
 export const Pagination: React.FC<PaginationProps> = ({
-  currentPage,
+  currentPage = 1,
   totalPages,
-  totalItems,
+  totalItems = 0,
   itemsPerPage,
   pageSize,
   onPageChange,
   onItemsPerPageChange,
 }) => {
-  const finalItemsPerPage = itemsPerPage || pageSize || 10;
-  const finalTotalPages = totalPages || Math.max(1, Math.ceil(totalItems / finalItemsPerPage));
-  const startItem = totalItems === 0 ? 0 : (currentPage - 1) * finalItemsPerPage + 1;
-  const endItem = Math.min(currentPage * finalItemsPerPage, totalItems);
+  const safeTotalItems = Number.isFinite(totalItems) ? Math.max(0, totalItems) : 0;
+  if (safeTotalItems === 0) return null;
+
+  const finalItemsPerPage = Math.max(1, Number.isFinite(itemsPerPage) && itemsPerPage ? itemsPerPage : (pageSize || 10));
+  const calculatedTotalPages = Math.max(1, Math.ceil(safeTotalItems / finalItemsPerPage));
+  const finalTotalPages = Number.isFinite(totalPages) && (totalPages as number) > 0
+    ? (totalPages as number)
+    : calculatedTotalPages;
+
+  const validCurrentPage = Number.isFinite(currentPage) ? Math.max(1, Math.min(currentPage, finalTotalPages)) : 1;
+  const startItem = (validCurrentPage - 1) * finalItemsPerPage + 1;
+  const endItem = Math.min(validCurrentPage * finalItemsPerPage, safeTotalItems);
 
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
+    if (!Number.isFinite(finalTotalPages) || finalTotalPages <= 1) {
+      return [1];
+    }
     if (finalTotalPages <= 5) {
       for (let i = 1; i <= finalTotalPages; i++) pages.push(i);
     } else {
       pages.push(1);
-      if (currentPage > 3) pages.push('...');
-      const start = Math.max(2, currentPage - 1);
-      const end = Math.min(finalTotalPages - 1, currentPage + 1);
+      if (validCurrentPage > 3) pages.push('...');
+      const start = Math.max(2, validCurrentPage - 1);
+      const end = Math.min(finalTotalPages - 1, validCurrentPage + 1);
       for (let i = start; i <= end; i++) pages.push(i);
-      if (currentPage < finalTotalPages - 2) pages.push('...');
+      if (validCurrentPage < finalTotalPages - 2) pages.push('...');
       pages.push(finalTotalPages);
     }
-    return pages;
+    return pages.filter((p) => typeof p === 'string' || Number.isFinite(p));
   };
-
-  if (totalItems === 0) return null;
 
   return (
     <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border-t border-[var(--divider)] bg-[var(--card-bg)] text-xs font-bold text-[var(--text-muted)] rounded-b-2xl">
@@ -75,8 +84,8 @@ export const Pagination: React.FC<PaginationProps> = ({
       <div className="flex items-center gap-1">
         {/* Next page in RTL means ChevronRight */}
         <button
-          onClick={() => onPageChange(currentPage - 1)}
-          disabled={currentPage === 1}
+          onClick={() => onPageChange(validCurrentPage - 1)}
+          disabled={validCurrentPage <= 1}
           className="p-1.5 rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] text-[var(--foreground)] hover:bg-[var(--card-hover)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
           title="الصفحة السابقة"
         >
@@ -85,11 +94,11 @@ export const Pagination: React.FC<PaginationProps> = ({
 
         {getPageNumbers().map((page, idx) => (
           <React.Fragment key={idx}>
-            {typeof page === 'number' ? (
+            {typeof page === 'number' && Number.isFinite(page) ? (
               <button
                 onClick={() => onPageChange(page)}
                 className={`w-8 h-8 rounded-lg text-xs font-extrabold transition-all cursor-pointer ${
-                  currentPage === page
+                  validCurrentPage === page
                     ? 'bg-teal-600 text-white shadow-xs glow-teal-sm'
                     : 'bg-[var(--card-bg)] border border-[var(--card-border)] text-[var(--foreground)] hover:bg-[var(--card-hover)]'
                 }`}
@@ -103,8 +112,8 @@ export const Pagination: React.FC<PaginationProps> = ({
         ))}
 
         <button
-          onClick={() => onPageChange(currentPage + 1)}
-          disabled={currentPage === finalTotalPages}
+          onClick={() => onPageChange(validCurrentPage + 1)}
+          disabled={validCurrentPage >= finalTotalPages}
           className="p-1.5 rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] text-[var(--foreground)] hover:bg-[var(--card-hover)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
           title="الصفحة التالية"
         >
