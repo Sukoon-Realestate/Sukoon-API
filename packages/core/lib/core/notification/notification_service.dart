@@ -9,6 +9,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../../config/res/config_imports.dart';
 
 part 'navigation_types.dart';
+part 'notification_payload.dart';
 part 'notification_routes.dart';
 
 Future<void> backgroundHandler(RemoteMessage message) async {
