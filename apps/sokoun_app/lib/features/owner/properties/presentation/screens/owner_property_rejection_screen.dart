@@ -12,13 +12,21 @@ class OwnerPropertyRejectionScreen extends StatefulWidget {
 
 class _OwnerPropertyRejectionScreenState
     extends State<OwnerPropertyRejectionScreen> {
-  bool _isLoadingPropertyDetails = false;
+  final ValueNotifier<bool> _isLoadingPropertyDetails = ValueNotifier<bool>(
+    false,
+  );
+
+  @override
+  void dispose() {
+    _isLoadingPropertyDetails.dispose();
+    super.dispose();
+  }
 
   Future<void> _editAndResubmit() async {
-    if (_isLoadingPropertyDetails) {
+    if (_isLoadingPropertyDetails.value) {
       return;
     }
-    setState(() => _isLoadingPropertyDetails = true);
+    _isLoadingPropertyDetails.value = true;
     final PropertyDetailsCubit cubit = PropertyDetailsCubit();
     PropertyDetailsModel? details;
     try {
@@ -29,7 +37,7 @@ class _OwnerPropertyRejectionScreenState
     } finally {
       await cubit.close();
       if (mounted) {
-        setState(() => _isLoadingPropertyDetails = false);
+        _isLoadingPropertyDetails.value = false;
       }
     }
     if (details == null || !mounted) {
@@ -134,12 +142,15 @@ class _OwnerPropertyRejectionScreenState
                     ),
                   ),
                   22.szH,
-                  DefaultButton(
-                    title: LocaleKeys.ownerPropertyEditAndResubmit,
-                    onTap: _isLoadingPropertyDetails ? null : _editAndResubmit,
-                    height: 50.h,
-                    borderRadius: BorderRadius.circular(15.r),
-                    fontWeight: FontWeight.w900,
+                  ValueListenableBuilder<bool>(
+                    valueListenable: _isLoadingPropertyDetails,
+                    builder: (context, isLoading, _) => DefaultButton(
+                      title: LocaleKeys.ownerPropertyEditAndResubmit,
+                      onTap: isLoading ? null : _editAndResubmit,
+                      height: 50.h,
+                      borderRadius: BorderRadius.circular(15.r),
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
                 ],
               ),

@@ -1,9 +1,14 @@
 part of '../../imports.dart';
 
 class OwnerPropertiesScreen extends StatefulWidget {
-  const OwnerPropertiesScreen({super.key, this.initialProperties});
+  const OwnerPropertiesScreen({
+    super.key,
+    this.initialProperties,
+    this.errorViewBuilder = buildAppRequestErrorView,
+  });
 
   final List<OwnerPropertyContent>? initialProperties;
+  final AppRequestErrorViewBuilder errorViewBuilder;
 
   @override
   State<OwnerPropertiesScreen> createState() => _OwnerPropertiesScreenState();
@@ -11,12 +16,20 @@ class OwnerPropertiesScreen extends StatefulWidget {
 
 class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
   late final PagifyController<OwnerPropertyContent> _pagifyController;
-  bool _isLoadingPropertyDetails = false;
+  final ValueNotifier<bool> _isLoadingPropertyDetails = ValueNotifier<bool>(
+    false,
+  );
 
   @override
   void initState() {
     super.initState();
     _pagifyController = PagifyController<OwnerPropertyContent>();
+  }
+
+  @override
+  void dispose() {
+    _isLoadingPropertyDetails.dispose();
+    super.dispose();
   }
 
   Future<void> _openAddProperty() async {
@@ -49,10 +62,10 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
   }
 
   Future<PropertyDetailsModel?> _loadPropertyDetails(String propertyId) async {
-    if (_isLoadingPropertyDetails) {
+    if (_isLoadingPropertyDetails.value) {
       return null;
     }
-    setState(() => _isLoadingPropertyDetails = true);
+    _isLoadingPropertyDetails.value = true;
     final PropertyDetailsCubit cubit = PropertyDetailsCubit();
     PropertyDetailsModel? details;
     try {
@@ -63,7 +76,7 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
     } finally {
       await cubit.close();
       if (mounted) {
-        setState(() => _isLoadingPropertyDetails = false);
+        _isLoadingPropertyDetails.value = false;
       }
     }
     return details;
@@ -124,36 +137,41 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
-        child: Stack(
-          children: [
-            Column(
-              children: [
-                OwnerPropertiesHeader(
+        child: ValueListenableBuilder<bool>(
+          valueListenable: _isLoadingPropertyDetails,
+          child: Column(
+            children: [
+              OwnerPropertiesHeader(
+                onAddPressed: _openAddProperty,
+              ).padding(EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 8.h)),
+              Expanded(
+                child: OwnerPropertiesList(
+                  initialProperties: widget.initialProperties,
+                  pagifyController: _pagifyController,
                   onAddPressed: _openAddProperty,
-                ).padding(EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 8.h)),
-                Expanded(
-                  child: OwnerPropertiesList(
-                    initialProperties: widget.initialProperties,
-                    pagifyController: _pagifyController,
-                    onAddPressed: _openAddProperty,
-                    onEditPressed: _openEdit,
-                    onRejectedPressed: _openRejection,
-                  ),
+                  onEditPressed: _openEdit,
+                  onRejectedPressed: _openRejection,
+                  errorViewBuilder: widget.errorViewBuilder,
                 ),
-              ],
-            ),
-            if (_isLoadingPropertyDetails)
-              Positioned.fill(
-                child: ColoredBox(
-                  color: AppColors.whiteAlpha60,
-                  child: const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.sokoonTeal,
+              ),
+            ],
+          ),
+          builder: (context, isLoading, child) => Stack(
+            children: [
+              child!,
+              if (isLoading)
+                Positioned.fill(
+                  child: ColoredBox(
+                    color: AppColors.whiteAlpha60,
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.sokoonTeal,
+                      ),
                     ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );

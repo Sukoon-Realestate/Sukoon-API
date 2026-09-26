@@ -29,7 +29,7 @@ class TenantFilterScreen extends StatefulWidget {
 }
 
 class _TenantFilterScreenState extends State<TenantFilterScreen> {
-  late PropertySearchFilters _filters;
+  late final ValueNotifier<PropertySearchFilters> _filters;
   late final TextEditingController _cityController;
   late final TextEditingController _districtController;
   late final TextEditingController _minPriceController;
@@ -40,11 +40,11 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
   @override
   void initState() {
     super.initState();
-    _filters = widget.initialFilters;
-    _cityController = TextEditingController(text: _filters.city);
-    _districtController = TextEditingController(text: _filters.district);
-    _minPriceController = TextEditingController(text: _filters.priceMin);
-    _maxPriceController = TextEditingController(text: _filters.priceMax);
+    _filters = ValueNotifier<PropertySearchFilters>(widget.initialFilters);
+    _cityController = TextEditingController(text: _filters.value.city);
+    _districtController = TextEditingController(text: _filters.value.district);
+    _minPriceController = TextEditingController(text: _filters.value.priceMin);
+    _maxPriceController = TextEditingController(text: _filters.value.priceMax);
     _propertyFilterOptionsCubit = PropertyFilterOptionsCubit();
     _propertyFilterOptionsRequest = _propertyFilterOptionsCubit
         .getFilterOptions();
@@ -56,6 +56,7 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
     _districtController.dispose();
     _minPriceController.dispose();
     _maxPriceController.dispose();
+    _filters.dispose();
     _propertyFilterOptionsCubit.close();
     super.dispose();
   }
@@ -65,22 +66,20 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
         _propertyFilterOptionsCubit.state.data.defaultOrdering;
     final PropertySearchFilters clearedFilters = widget.initialFilters
         .clearFilters();
-    setState(() {
-      _filters = defaultOrdering.isEmpty
-          ? clearedFilters
-          : clearedFilters.copyWith(ordering: defaultOrdering);
-      _cityController.clear();
-      _districtController.clear();
-      _minPriceController.clear();
-      _maxPriceController.clear();
-    });
+    _cityController.clear();
+    _districtController.clear();
+    _minPriceController.clear();
+    _maxPriceController.clear();
+    _filters.value = defaultOrdering.isEmpty
+        ? clearedFilters
+        : clearedFilters.copyWith(ordering: defaultOrdering);
   }
 
   void _updateFilters(PropertySearchFilters filters) =>
-      setState(() => _filters = filters);
+      _filters.value = filters;
 
   Future<void> _apply() async {
-    final PropertySearchFilters filters = _filters.copyWith(page: 1);
+    final PropertySearchFilters filters = _filters.value.copyWith(page: 1);
     Go.back();
     await widget.onFiltersApplied(filters);
   }
@@ -97,32 +96,36 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
             initialDataForShimmer: const PropertyFilterOptionsModel.initial(),
             requestToTryAgainWhenError: _propertyFilterOptionsRequest,
             errorType: ErrorType.defaultView,
-            builder: (filterOptions) => Scaffold(
-              backgroundColor: AppColors.scaffoldBackground,
-              body: SafeArea(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    FilterTopBar(
-                      activeCount: _filters.activeCount,
-                      onReset: _reset,
-                    ),
-                    Expanded(
-                      child: TenantFilterContent(
-                        filters: _filters,
-                        filterOptions: filterOptions,
-                        cityController: _cityController,
-                        districtController: _districtController,
-                        minPriceController: _minPriceController,
-                        maxPriceController: _maxPriceController,
-                        onFiltersChanged: _updateFilters,
+            builder: (filterOptions) =>
+                ValueListenableBuilder<PropertySearchFilters>(
+                  valueListenable: _filters,
+                  builder: (context, filters, _) => Scaffold(
+                    backgroundColor: AppColors.scaffoldBackground,
+                    body: SafeArea(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          FilterTopBar(
+                            activeCount: filters.activeCount,
+                            onReset: _reset,
+                          ),
+                          Expanded(
+                            child: TenantFilterContent(
+                              filters: filters,
+                              filterOptions: filterOptions,
+                              cityController: _cityController,
+                              districtController: _districtController,
+                              minPriceController: _minPriceController,
+                              maxPriceController: _maxPriceController,
+                              onFiltersChanged: _updateFilters,
+                            ),
+                          ),
+                          FilterApplyBar(onApplyPressed: _apply),
+                        ],
                       ),
                     ),
-                    FilterApplyBar(onApplyPressed: _apply),
-                  ],
+                  ),
                 ),
-              ),
-            ),
           ),
     );
   }

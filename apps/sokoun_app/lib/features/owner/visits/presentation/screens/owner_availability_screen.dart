@@ -16,6 +16,7 @@ class OwnerAvailabilityScreen extends StatefulWidget {
 }
 
 class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
+  // Day and slot changes intentionally recompose the complete schedule grid.
   final Map<String, OwnerAvailabilitySlotState> _slotStates = {};
   late final OwnerAvailabilityCubit _availabilityCubit;
   late final List<OwnerAvailabilityDayContent> _days;

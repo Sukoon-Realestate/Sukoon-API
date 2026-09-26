@@ -9,17 +9,19 @@ import 'package:sokoun_app/features/owner/visits/imports.dart';
 import 'package:sokoun_app/features/owner/visits/presentation/cubits/received_visits_cubit.dart';
 
 import '../widgets/owner_visit_requests/imports.dart';
-import 'package:sokoun_app/shared_widgets/retry_view.dart';
+import 'package:sokoun_app/shared_widgets/request_error_view.dart';
 
 class OwnerVisitRequestsScreen extends StatefulWidget {
   const OwnerVisitRequestsScreen({
     super.key,
     this.initialRequests,
     this.showBackButton = true,
+    this.errorViewBuilder = buildAppRequestErrorView,
   });
 
   final List<OwnerVisitRequestContent>? initialRequests;
   final bool showBackButton;
+  final AppRequestErrorViewBuilder errorViewBuilder;
 
   @override
   State<OwnerVisitRequestsScreen> createState() =>
@@ -27,6 +29,7 @@ class OwnerVisitRequestsScreen extends StatefulWidget {
 }
 
 class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
+  // Filter and request mutations recompose the header, actions, and list.
   static List<OwnerVisitRequestContent> get _shimmerRequests => [
     OwnerVisitRequestContent(
       id: 'shimmer-request-1',
@@ -251,7 +254,14 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
             initialDataForShimmer: _shimmerRequests,
             requestToTryAgainWhenError: _receivedVisitsRequest!,
             errorType: ErrorType.customView,
-            errorWidget: AppRetryView(onRetry: _retryRequests),
+            errorWidget:
+                CubitRequestErrorView<
+                  ReceivedVisitsCubit,
+                  List<OwnerVisitRequestContent>
+                >(
+                  onRetry: _retryRequests,
+                  errorViewBuilder: widget.errorViewBuilder,
+                ),
             emptyView: _buildScreen(const []),
             builder: _buildScreen,
           ),

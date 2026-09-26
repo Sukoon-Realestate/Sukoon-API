@@ -8,6 +8,7 @@ class OwnerPropertiesList extends StatelessWidget {
     required this.onAddPressed,
     required this.onEditPressed,
     required this.onRejectedPressed,
+    required this.errorViewBuilder,
   });
 
   final List<OwnerPropertyContent>? initialProperties;
@@ -15,6 +16,7 @@ class OwnerPropertiesList extends StatelessWidget {
   final VoidCallback onAddPressed;
   final ValueChanged<OwnerPropertyContent> onEditPressed;
   final ValueChanged<OwnerPropertyContent> onRejectedPressed;
+  final AppRequestErrorViewBuilder errorViewBuilder;
 
   Future<(List<OwnerPropertyContent>, PaginationData)> _loadPage(int page) {
     final List<OwnerPropertyContent>? fixtures = initialProperties;
@@ -39,8 +41,10 @@ class OwnerPropertiesList extends StatelessWidget {
       cacheToJson: usesApi ? (property) => property.toJson() : null,
       cacheFromJson: usesApi ? OwnerPropertyContent.fromJson : null,
       emptyListView: OwnerPropertiesEmptyState(onAddPressed: onAddPressed),
-      errorBuilder: (_) =>
-          AppRetryView(onRetry: () async => pagifyController.refresh()),
+      errorBuilder: (error) => errorViewBuilder(
+        error: error,
+        onRetry: () async => pagifyController.refresh(),
+      ),
       itemBuilder: (context, data, index, property) => OwnerPropertyCard(
         key: ValueKey(property.id),
         property: property,

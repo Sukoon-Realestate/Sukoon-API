@@ -14,7 +14,8 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
   late final OwnerRequestDetailsCubit _requestDetailsCubit;
   late final OwnerVisitStatusCubit _visitStatusCubit;
   late Future<void> _requestDetailsRequest;
-  OwnerVisitUpdateStatus? _pendingStatus;
+  final ValueNotifier<OwnerVisitUpdateStatus?> _pendingStatus =
+      ValueNotifier<OwnerVisitUpdateStatus?>(null);
 
   @override
   void initState() {
@@ -30,6 +31,7 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
   void dispose() {
     _requestDetailsCubit.close();
     _visitStatusCubit.close();
+    _pendingStatus.dispose();
     super.dispose();
   }
 
@@ -89,7 +91,7 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
     required OwnerRequestResolution resolution,
   }) async {
     if (_visitStatusCubit.isLoading) return;
-    setState(() => _pendingStatus = status);
+    _pendingStatus.value = status;
     bool succeeded = false;
     void onSuccess() {
       succeeded = true;
@@ -107,7 +109,7 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
         onSuccess: onSuccess,
       );
     }
-    if (!succeeded && mounted) setState(() => _pendingStatus = null);
+    if (!succeeded && mounted) _pendingStatus.value = null;
   }
 
   @override
@@ -134,34 +136,40 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
                       isBackEnabled: !isUpdating,
                     ),
                     Expanded(
-                      child:
-                          StatusBuilder<
-                            OwnerRequestDetailsCubit,
-                            OwnerVisitRequestDetailsContent
-                          >.withShimmer(
-                            initialDataForShimmer:
-                                const OwnerVisitRequestDetailsContent.initial(),
-                            requestToTryAgainWhenError: _requestDetailsRequest,
-                            errorType: ErrorType.customView,
-                            errorWidget: AppRetryView(
-                              onRetry: _retryRequestDetails,
+                      child: ValueListenableBuilder<OwnerVisitUpdateStatus?>(
+                        valueListenable: _pendingStatus,
+                        builder: (context, pendingStatus, _) =>
+                            StatusBuilder<
+                              OwnerRequestDetailsCubit,
+                              OwnerVisitRequestDetailsContent
+                            >.withShimmer(
+                              initialDataForShimmer:
+                                  const OwnerVisitRequestDetailsContent.initial(),
+                              requestToTryAgainWhenError:
+                                  _requestDetailsRequest,
+                              errorType: ErrorType.customView,
+                              errorWidget:
+                                  CubitRequestErrorView<
+                                    OwnerRequestDetailsCubit,
+                                    OwnerVisitRequestDetailsContent
+                                  >(onRetry: _retryRequestDetails),
+                              builder: (request) => OwnerRequestDetailsContent(
+                                request: request,
+                                isAccepting:
+                                    isUpdating &&
+                                    pendingStatus ==
+                                        OwnerVisitUpdateStatus.confirmed,
+                                isRejecting:
+                                    isUpdating &&
+                                    pendingStatus ==
+                                        OwnerVisitUpdateStatus.rejected,
+                                onAcceptPressed: () =>
+                                    _acceptRequest(context, request),
+                                onRejectPressed: () =>
+                                    _rejectRequest(context, request),
+                              ),
                             ),
-                            builder: (request) => OwnerRequestDetailsContent(
-                              request: request,
-                              isAccepting:
-                                  isUpdating &&
-                                  _pendingStatus ==
-                                      OwnerVisitUpdateStatus.confirmed,
-                              isRejecting:
-                                  isUpdating &&
-                                  _pendingStatus ==
-                                      OwnerVisitUpdateStatus.rejected,
-                              onAcceptPressed: () =>
-                                  _acceptRequest(context, request),
-                              onRejectPressed: () =>
-                                  _rejectRequest(context, request),
-                            ),
-                          ),
+                      ),
                     ),
                   ],
                 ),

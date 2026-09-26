@@ -5,7 +5,6 @@ import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:sokoun_app/features/shared/auth/data/models/register.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/register.dart';
 
-import 'kyc_approved_screen.dart';
 import 'kyc_intro_screen.dart';
 import 'kyc_pending_screen.dart';
 import 'kyc_upload_documents_screen.dart';
@@ -23,7 +22,7 @@ class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
   late final PageController _pageController;
   final List<_RegisterFlowStep> _stepHistory = [_RegisterFlowStep.basicInfo];
   _RegisterFlowStep _currentStep = _RegisterFlowStep.basicInfo;
-  String _registeredEmail = '';
+  final ValueNotifier<String> _registeredEmail = ValueNotifier<String>('');
 
   @override
   void initState() {
@@ -34,6 +33,7 @@ class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
   @override
   void dispose() {
     _pageController.dispose();
+    _registeredEmail.dispose();
     super.dispose();
   }
 
@@ -71,6 +71,7 @@ class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
       return;
     }
 
+    // The active step controls the whole flow page and its back behavior.
     setState(() => _currentStep = step);
   }
 
@@ -83,7 +84,7 @@ class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
       return;
     }
 
-    setState(() => _registeredEmail = body.email);
+    _registeredEmail.value = body.email;
     _goToStep(_RegisterFlowStep.verifyEmail);
   }
 
@@ -128,19 +129,22 @@ class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
         onBack: _goBack,
         onUploadDocuments: () => _goToStep(_RegisterFlowStep.uploadDocuments),
         onSkip: () async {
-          context.read<RegisterCubit>()
-            ..removeDocs()
-            ..register(onSuccess: _handleRegisterSuccess);
+          context.read<RegisterCubit>().removeDocs();
+          await context.read<RegisterCubit>().register(
+            onSuccess: _handleRegisterSuccess,
+          );
         },
       ),
       KycUploadDocumentsScreen(
         onBack: _goBack,
         onRegisterSuccess: _handleRegisterSuccess,
       ),
-      OtpScreen(email: _registeredEmail, onVerified: _handleEmailVerified),
+      ValueListenableBuilder<String>(
+        valueListenable: _registeredEmail,
+        builder: (context, registeredEmail, _) =>
+            OtpScreen(email: registeredEmail, onVerified: _handleEmailVerified),
+      ),
       KycPendingScreen(fullName: _fullName(context)),
-
-      const KycApprovedScreen(),
     ];
   }
 

@@ -5,7 +5,11 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/helpers.dart';
+import 'package:melos_core/core/helpers/user_type/user_enum.dart';
+import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
 import 'package:sokoun_app/features/main_view/presentation/screens/view.dart';
@@ -18,6 +22,8 @@ import '../widgets/auth_scaffold.dart';
 import '../widgets/login/login_divider.dart';
 import '../widgets/login/login_footer.dart';
 import '../widgets/login/login_header.dart';
+import 'forgot_password_screen.dart';
+import 'register_flow_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -80,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
               SokoonPasswordField(controller: _passwordController),
               10.szH,
               TextButton(
-                onPressed: () {},
+                onPressed: () => Go.to(const ForgotPasswordScreen()),
                 style: TextButton.styleFrom(
                   minimumSize: Size.zero,
                   padding: EdgeInsets.zero,
@@ -116,21 +122,22 @@ class _LoginScreenState extends State<LoginScreen> {
               // 12.szH,
               // SokoonAppleSignInButton(),
               // 16.szH,
-              TextButton(
-                onPressed: () {},
-                style: TextButton.styleFrom(
-                  minimumSize: Size.zero,
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-                child: AppText(
-                  LocaleKeys.signInAsVisitor,
-                  color: AppColors.sokoonGray,
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w700,
-                  decoration: TextDecoration.underline,
-                ),
-              ).centerWidget,
+              if(UserTypeHelper.instance.currentUserType.isTenant)
+                TextButton(
+                  onPressed: () => Go.offAll(const HomeScreen()),
+                  style: TextButton.styleFrom(
+                    minimumSize: Size.zero,
+                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: AppText(
+                    LocaleKeys.signInAsVisitor,
+                    color: AppColors.sokoonGray,
+                    fontSize: 13.sp,
+                    fontWeight: FontWeight.w700,
+                    decoration: TextDecoration.underline,
+                  ),
+                ).centerWidget,
               18.szH,
               LoginFooter(),
               24.szH,

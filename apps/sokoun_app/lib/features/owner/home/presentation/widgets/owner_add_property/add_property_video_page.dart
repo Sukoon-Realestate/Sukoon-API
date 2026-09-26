@@ -42,9 +42,14 @@ class _AddPropertyVideoPageState extends State<AddPropertyVideoPage> {
 
   VideoPlayerController? _videoController;
   String? _previewPath;
-  String? _validationMessage;
-  bool _isPickingVideo = false;
   int _previewGeneration = 0;
+  final ValueNotifier<
+    ({String? validationMessage, bool isPickingVideo, int revision})
+  >
+  _uiState =
+      ValueNotifier<
+        ({String? validationMessage, bool isPickingVideo, int revision})
+      >((validationMessage: null, isPickingVideo: false, revision: 0));
 
   @override
   void initState() {
@@ -65,7 +70,23 @@ class _AddPropertyVideoPageState extends State<AddPropertyVideoPage> {
   void dispose() {
     _previewGeneration++;
     _videoController?.dispose();
+    _uiState.dispose();
     super.dispose();
+  }
+
+  void _updateUi({
+    String? validationMessage,
+    bool clearValidation = false,
+    bool? isPickingVideo,
+  }) {
+    final current = _uiState.value;
+    _uiState.value = (
+      validationMessage: clearValidation
+          ? null
+          : validationMessage ?? current.validationMessage,
+      isPickingVideo: isPickingVideo ?? current.isPickingVideo,
+      revision: current.revision + 1,
+    );
   }
 
   Future<void> _setPreview(OwnerPropertyVideoSelection? selection) async {
@@ -76,7 +97,7 @@ class _AddPropertyVideoPageState extends State<AddPropertyVideoPage> {
       _previewPath = null;
       await previousController?.dispose();
       if (mounted && generation == _previewGeneration) {
-        setState(() {});
+        _updateUi();
       }
       return;
     }
@@ -89,9 +110,7 @@ class _AddPropertyVideoPageState extends State<AddPropertyVideoPage> {
     } catch (_) {
       await controller.dispose();
       if (mounted && generation == _previewGeneration) {
-        setState(
-          () => _validationMessage = LocaleKeys.ownerPropertyVideoFailed,
-        );
+        _updateUi(validationMessage: LocaleKeys.ownerPropertyVideoFailed);
       }
       return;
     }
@@ -103,18 +122,15 @@ class _AddPropertyVideoPageState extends State<AddPropertyVideoPage> {
     _previewPath = selection.file.path;
     await previousController?.dispose();
     if (mounted) {
-      setState(() {});
+      _updateUi();
     }
   }
 
   Future<void> _pickVideo({required bool fromCamera}) async {
-    if (_isPickingVideo) {
+    if (_uiState.value.isPickingVideo) {
       return;
     }
-    setState(() {
-      _isPickingVideo = true;
-      _validationMessage = null;
-    });
+    _updateUi(isPickingVideo: true, clearValidation: true);
 
     try {
       final File? file = fromCamera
@@ -139,9 +155,7 @@ class _AddPropertyVideoPageState extends State<AddPropertyVideoPage> {
       final Duration duration = controller.value.duration;
       if (duration > _maximumDuration) {
         await controller.dispose();
-        setState(() {
-          _validationMessage = LocaleKeys.ownerPropertyVideoTooLong;
-        });
+        _updateUi(validationMessage: LocaleKeys.ownerPropertyVideoTooLong);
         return;
       }
 
@@ -154,13 +168,11 @@ class _AddPropertyVideoPageState extends State<AddPropertyVideoPage> {
       );
     } catch (_) {
       if (mounted) {
-        setState(() {
-          _validationMessage = LocaleKeys.ownerPropertyVideoFailed;
-        });
+        _updateUi(validationMessage: LocaleKeys.ownerPropertyVideoFailed);
       }
     } finally {
       if (mounted) {
-        setState(() => _isPickingVideo = false);
+        _updateUi(isPickingVideo: false);
       }
     }
   }
@@ -176,12 +188,12 @@ class _AddPropertyVideoPageState extends State<AddPropertyVideoPage> {
       await controller.play();
     }
     if (mounted) {
-      setState(() {});
+      _updateUi();
     }
   }
 
   void _removeVideo() {
-    setState(() => _validationMessage = null);
+    _updateUi(clearValidation: true);
     widget.onVideoRemoved();
   }
 
@@ -221,15 +233,20 @@ class _AddPropertyVideoPageState extends State<AddPropertyVideoPage> {
           ],
         ),
         const _VideoRequirementsCard(),
-        _VideoUploadCard(
-          video: video,
-          controller: _videoController,
-          isPickingVideo: _isPickingVideo,
-          validationMessage: _validationMessage,
-          onRecordPressed: () => _pickVideo(fromCamera: true),
-          onUploadPressed: () => _pickVideo(fromCamera: false),
-          onPlayPressed: _togglePlayback,
-          onRemovePressed: _removeVideo,
+        ValueListenableBuilder<
+          ({String? validationMessage, bool isPickingVideo, int revision})
+        >(
+          valueListenable: _uiState,
+          builder: (context, uiState, _) => _VideoUploadCard(
+            video: video,
+            controller: _videoController,
+            isPickingVideo: uiState.isPickingVideo,
+            validationMessage: uiState.validationMessage,
+            onRecordPressed: () => _pickVideo(fromCamera: true),
+            onUploadPressed: () => _pickVideo(fromCamera: false),
+            onPlayPressed: _togglePlayback,
+            onRemovePressed: _removeVideo,
+          ),
         ),
         AddPropertyInfoBanner(
           text: LocaleKeys.ownerPropertyVideoPrivacyHint,

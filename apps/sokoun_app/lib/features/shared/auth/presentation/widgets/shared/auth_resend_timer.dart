@@ -1,5 +1,4 @@
 import 'package:easy_timer_count/easy_timer_count.dart';
-import 'package:easy_timer_count/helpers/separator.dart';
 import 'package:easy_timer_count/helpers/time.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,15 +6,13 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
-class OtpResendTimer extends StatelessWidget {
-  const OtpResendTimer({
+class AuthResendTimer extends StatelessWidget {
+  const AuthResendTimer({
     super.key,
-    required this.timerResetKey,
     required this.canResend,
     required this.onTimerEnds,
   });
 
-  final int timerResetKey;
   final bool canResend;
   final VoidCallback onTimerEnds;
 
@@ -32,14 +29,10 @@ class OtpResendTimer extends StatelessWidget {
     }
 
     return EasyTimerCount.builder(
-      key: ValueKey(timerResetKey),
-      duration: EasyTime(seconds: 45),
-      separatorType: SeparatorType.none,
+      duration: EasyTime(minutes: 1),
       onTimerStarts: (_) {},
       onTimerEnds: (_) => onTimerEnds(),
       builder: (timeString) {
-        final seconds = _secondsFromTimer(timeString);
-
         return Text.rich(
           TextSpan(
             text: '${LocaleKeys.resendAfter} ',
@@ -51,7 +44,7 @@ class OtpResendTimer extends StatelessWidget {
             ),
             children: [
               TextSpan(
-                text: '$seconds ${LocaleKeys.seconds}',
+                text: timeString,
                 style: TextStyle(
                   color: AppColors.tealOrGoldBasedRole,
                   fontWeight: FontWeight.w800,
@@ -63,17 +56,5 @@ class OtpResendTimer extends StatelessWidget {
         );
       },
     );
-  }
-
-  String _secondsFromTimer(String timeString) {
-    final digits = RegExp(r'\d+').allMatches(timeString).map((match) {
-      return int.tryParse(match.group(0) ?? '') ?? 0;
-    }).toList();
-
-    if (digits.isEmpty) {
-      return '0';
-    }
-
-    return digits.last.toString().padLeft(2, '0');
   }
 }

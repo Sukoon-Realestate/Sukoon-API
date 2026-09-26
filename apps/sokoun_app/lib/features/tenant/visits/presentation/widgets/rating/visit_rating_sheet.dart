@@ -11,8 +11,10 @@ class VisitRatingSheet extends StatefulWidget {
 
 class _VisitRatingSheetState extends State<VisitRatingSheet> {
   late final TextEditingController _commentController;
-  late List<int> _criteriaRatings;
-  int _overallRating = 0;
+  final ValueNotifier<List<int>> _criteriaRatings = ValueNotifier<List<int>>(
+    <int>[4, 4, 4],
+  );
+  final ValueNotifier<int> _overallRating = ValueNotifier<int>(0);
 
   List<String> get _criteria => [
     LocaleKeys.tenantVisitRatingCleanliness,
@@ -24,19 +26,20 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
   void initState() {
     super.initState();
     _commentController = TextEditingController();
-    _criteriaRatings = [4, 4, 4];
   }
 
   @override
   void dispose() {
     _commentController.dispose();
+    _criteriaRatings.dispose();
+    _overallRating.dispose();
     super.dispose();
   }
 
   void _updateCriterion(int index, int rating) {
-    setState(() {
-      _criteriaRatings[index] = rating;
-    });
+    final List<int> ratings = List<int>.of(_criteriaRatings.value);
+    ratings[index] = rating;
+    _criteriaRatings.value = ratings;
   }
 
   void _submit() => Go.back(true);
@@ -101,21 +104,30 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
               overflow: TextOverflow.ellipsis,
             ),
             14.szH,
-            VisitRatingStars(
-              rating: _overallRating,
-              onRatingSelected: (rating) {
-                setState(() => _overallRating = rating);
-              },
+            ValueListenableBuilder<int>(
+              valueListenable: _overallRating,
+              builder: (context, overallRating, _) => VisitRatingStars(
+                rating: overallRating,
+                onRatingSelected: (rating) => _overallRating.value = rating,
+              ),
             ),
             12.szH,
-            for (int index = 0; index < _criteria.length; index++) ...[
-              _VisitRatingCriterion(
-                label: _criteria[index],
-                rating: _criteriaRatings[index],
-                onRatingSelected: (rating) => _updateCriterion(index, rating),
+            ValueListenableBuilder<List<int>>(
+              valueListenable: _criteriaRatings,
+              builder: (context, criteriaRatings, _) => Column(
+                children: [
+                  for (int index = 0; index < _criteria.length; index++) ...[
+                    _VisitRatingCriterion(
+                      label: _criteria[index],
+                      rating: criteriaRatings[index],
+                      onRatingSelected: (rating) =>
+                          _updateCriterion(index, rating),
+                    ),
+                    if (index < _criteria.length - 1) 8.szH,
+                  ],
+                ],
               ),
-              if (index < _criteria.length - 1) 8.szH,
-            ],
+            ),
             16.szH,
             Container(
               height: 80.h,

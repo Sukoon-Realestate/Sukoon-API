@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/language/languages.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/helpers.dart';
 import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chats_screen.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_unread_content.dart';
@@ -22,6 +24,7 @@ import 'package:sokoun_app/features/shared/whats_new/whats_new_service.dart';
 import 'package:sokoun_app/features/shared/whats_new/widgets/upgrader_dialog.dart';
 import 'package:sokoun_app/features/shared/notifications/presentation/notification_coordinator.dart';
 import 'package:sokoun_app/generated/assets.dart';
+import 'package:sokoun_app/shared_widgets/request_error_view.dart';
 import 'package:upgrader/upgrader.dart';
 
 import '../widgets/home_bottom_navigation.dart';
@@ -103,7 +106,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       return;
     }
 
-    setState(() => _currentIndex = index);
+    if(_currentIndex != 0 && !UserModel.isAuthenticated){
+      Helpers.showUnAuthSheet();
+
+    }else{
+      setState(() => _currentIndex = index);
+    }
   }
 
   List<_HomeTab> _buildTenantTabs() {
@@ -159,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           selectedIcon: Assets.svgHome,
           label: LocaleKeys.home,
         ),
-        screen: OwnerHomeScreen(),
+        screen: OwnerHomeScreen(errorViewBuilder: buildAppRequestErrorView),
       ),
       _HomeTab(
         destination: HomeNavigationDestination(
@@ -167,7 +175,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           selectedIcon: Assets.svgBuilding,
           label: LocaleKeys.notificationsOwnerPropertiesNavigation,
         ),
-        screen: OwnerPropertiesScreen(),
+        screen: OwnerPropertiesScreen(
+          errorViewBuilder: buildAppRequestErrorView,
+        ),
       ),
       _HomeTab(
         destination: HomeNavigationDestination(
@@ -175,7 +185,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           selectedIcon: Assets.svgCalendar,
           label: LocaleKeys.notificationsOwnerRequestsNavigation,
         ),
-        screen: OwnerVisitRequestsScreen(showBackButton: false),
+        screen: OwnerVisitRequestsScreen(
+          showBackButton: false,
+          errorViewBuilder: buildAppRequestErrorView,
+        ),
       ),
       _HomeTab(
         destination: HomeNavigationDestination(
@@ -205,7 +218,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         onUpdatePressed: upgrader.sendUserToAppStore,
         child: Scaffold(
           backgroundColor: AppColors.scaffoldBackground,
-          body: _tabs.map((tab) => tab.screen).toList(growable: false)[_currentIndex],
+          body: _tabs
+              .map((tab) => tab.screen)
+              .toList(growable: false)[_currentIndex],
           bottomNavigationBar:
               BlocSelector<ChatUnreadCubit, AsyncState<ChatUnreadContent>, int>(
                 selector: (state) => state.data.count,

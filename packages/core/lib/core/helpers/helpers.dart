@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:sokoun_app/shared_widgets/shared_widgets.dart';
 
 import '../../config/language/languages.dart';
 import '../../config/language/locale_keys.g.dart';
@@ -65,6 +66,17 @@ class Helpers {
         asyncCall: (context) async => await Phoenix.rebirth(context),
         btnTitle: LocaleKeys.updateAvailableUpdateNow,
         upperWidget: Lottie.asset(Assets.lottie.loading4)
+    );
+  }
+
+  static Future<T?> showUnAuthSheet<T>() {
+    return showModalBottomSheet<T>(
+      context: Go.context,
+      useRootNavigator: true,
+      isScrollControlled: true,
+      backgroundColor: AppColors.transparent,
+      barrierColor: AppColors.blackAlpha50,
+      builder: (_) => const UnauthenticatedSheet(),
     );
   }
 

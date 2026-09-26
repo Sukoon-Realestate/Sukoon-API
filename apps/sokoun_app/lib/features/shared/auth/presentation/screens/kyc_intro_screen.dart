@@ -61,7 +61,6 @@ class KycIntroScreen extends StatelessWidget {
                   title: LocaleKeys.skip,
                   buttonColor: AppColors.whiteGreyColor,
                   textColor: AppColors.sokoonTeal,
-                  // borderColor: AppColors.grayPale,
                   borderRadius: 14.r,
                   height: 48.h,
                   width: double.infinity,

@@ -22,21 +22,31 @@ class TenantSearchScreen extends StatefulWidget {
 }
 
 class _TenantSearchScreenState extends State<TenantSearchScreen> {
-  late TenantSearchFormState _form;
+  late final ValueNotifier<
+    ({
+      TenantSearchFormState form,
+      int activeFilterCount,
+      Future<void>? availablePlacesRequest,
+    })
+  >
+  _viewState;
   late PropertySearchFilters _filters;
   late final TextEditingController _searchController;
   late final PropertyTypesCubit _propertyTypesCubit;
   late final Future<void> _propertyTypesRequest;
   late final AvailablePlacesCubit _availablePlacesCubit;
   late final TenantRecentSearchesCubit _recentSearchesCubit;
-  Future<void>? _availablePlacesRequest;
 
   @override
   void initState() {
     super.initState();
-    _form = const TenantSearchFormState.initial();
     _searchController = TextEditingController();
     _filters = PropertySearchFilters.initial();
+    _viewState = ValueNotifier((
+      form: const TenantSearchFormState.initial(),
+      activeFilterCount: _filters.activeCount,
+      availablePlacesRequest: null,
+    ));
     _propertyTypesCubit = PropertyTypesCubit();
     _propertyTypesRequest = _propertyTypesCubit.getPropertyTypes();
     _availablePlacesCubit = AvailablePlacesCubit();
@@ -47,6 +57,7 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
   @override
   void dispose() {
     _searchController.dispose();
+    _viewState.dispose();
     _propertyTypesCubit.close();
     _availablePlacesCubit.close();
     _recentSearchesCubit.close();
@@ -54,48 +65,60 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
   }
 
   void _updateQuery(String value) {
-    setState(() {
-      _filters = _filters.copyWith(search: value, page: 1);
-      if (_form.selectedArea != null) {
-        _form = _form.copyWith(clearSelectedArea: true);
-      }
-    });
+    _filters = _filters.copyWith(search: value, page: 1);
+    final current = _viewState.value;
+    if (current.form.selectedArea != null) {
+      _viewState.value = (
+        form: current.form.copyWith(clearSelectedArea: true),
+        activeFilterCount: current.activeFilterCount,
+        availablePlacesRequest: current.availablePlacesRequest,
+      );
+    }
   }
 
   void _selectCategory(PropertyTypeModel propertyType) {
     final Future<void> request = _availablePlacesCubit.getAvailablePlaces(
       propertyType.id,
     );
-    setState(() {
-      _form = _form.copyWith(
+    _filters = _filters.copyWith(propertyType: propertyType.slug, page: 1);
+    _viewState.value = (
+      form: _viewState.value.form.copyWith(
         selectedCategory: propertyType.slug,
         clearSelectedArea: true,
-      );
-      _filters = _filters.copyWith(propertyType: propertyType.slug, page: 1);
-      _availablePlacesRequest = request;
-    });
+      ),
+      activeFilterCount: _filters.activeCount,
+      availablePlacesRequest: request,
+    );
   }
 
   void _selectArea(AvailablePlaceModel area) {
     final String query = area.searchQuery;
     _searchController.text = query;
-    setState(() {
-      _form = _form.copyWith(selectedArea: query);
-      _filters = _filters.copyWith(search: query, page: 1);
-    });
+    _filters = _filters.copyWith(search: query, page: 1);
+    final current = _viewState.value;
+    _viewState.value = (
+      form: current.form.copyWith(selectedArea: query),
+      activeFilterCount: current.activeFilterCount,
+      availablePlacesRequest: current.availablePlacesRequest,
+    );
   }
 
   Future<void> _selectRecent(RecentSearchContent search) async {
     _searchController.text = search.title;
-    _form = _form.copyWith(clearSelectedArea: true);
+    final current = _viewState.value;
+    _viewState.value = (
+      form: current.form.copyWith(clearSelectedArea: true),
+      activeFilterCount: current.activeFilterCount,
+      availablePlacesRequest: current.availablePlacesRequest,
+    );
     await _submitSearch(search.title);
   }
 
   Future<void> _submitSearch([String? submittedQuery]) async {
     final String query = (submittedQuery ?? _searchController.text).trim();
     if (query.isEmpty &&
-        _form.selectedCategory.isEmpty &&
-        _form.selectedArea == null) {
+        _viewState.value.form.selectedCategory.isEmpty &&
+        _viewState.value.form.selectedArea == null) {
       return;
     }
 
@@ -108,7 +131,7 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
       TenantSearchResultsScreen(
         initialFilters: _filters.copyWith(
           search: query,
-          propertyType: _form.selectedCategory,
+          propertyType: _viewState.value.form.selectedCategory,
           page: 1,
         ),
       ),
@@ -120,7 +143,7 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
       TenantFilterScreen(
         initialFilters: _filters.copyWith(
           search: _searchController.text.trim(),
-          propertyType: _form.selectedCategory,
+          propertyType: _viewState.value.form.selectedCategory,
           page: 1,
         ),
         onFiltersApplied: _applyFilters,
@@ -131,13 +154,16 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
   Future<void> _applyFilters(PropertySearchFilters filters) async {
     if (!mounted) return;
     _searchController.text = filters.search;
-    setState(() {
-      _filters = filters;
-      _form = _form.copyWith(
+    _filters = filters;
+    final current = _viewState.value;
+    _viewState.value = (
+      form: current.form.copyWith(
         selectedCategory: filters.propertyType,
         clearSelectedArea: true,
-      );
-    });
+      ),
+      activeFilterCount: filters.activeCount,
+      availablePlacesRequest: current.availablePlacesRequest,
+    );
     if (filters.search.isNotEmpty) {
       await _recentSearchesCubit.addRecentSearch(filters.search);
     }
@@ -156,26 +182,36 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
         ),
       ],
       child: BlocBuilder<TenantRecentSearchesCubit, List<RecentSearchContent>>(
-        builder: (context, recentSearches) => Scaffold(
-          backgroundColor: AppColors.scaffoldBackground,
-          body: SafeArea(
-            child: TenantSearchContentView(
-              searchController: _searchController,
-              form: _form,
-              recentSearches: recentSearches,
-              propertyTypesRequest: _propertyTypesRequest,
-              availablePlacesRequest: _availablePlacesRequest,
-              onQueryChanged: _updateQuery,
-              onQuerySubmitted: _submitSearch,
-              onSearchPressed: _submitSearch,
-              onCategorySelected: _selectCategory,
-              onAreaSelected: _selectArea,
-              onRecentSearchSelected: _selectRecent,
-              onFiltersPressed: _openFilters,
-              activeFilterCount: _filters.activeCount,
+        builder: (context, recentSearches) =>
+            ValueListenableBuilder<
+              ({
+                TenantSearchFormState form,
+                int activeFilterCount,
+                Future<void>? availablePlacesRequest,
+              })
+            >(
+              valueListenable: _viewState,
+              builder: (context, viewState, _) => Scaffold(
+                backgroundColor: AppColors.scaffoldBackground,
+                body: SafeArea(
+                  child: TenantSearchContentView(
+                    searchController: _searchController,
+                    form: viewState.form,
+                    recentSearches: recentSearches,
+                    propertyTypesRequest: _propertyTypesRequest,
+                    availablePlacesRequest: viewState.availablePlacesRequest,
+                    onQueryChanged: _updateQuery,
+                    onQuerySubmitted: _submitSearch,
+                    onSearchPressed: _submitSearch,
+                    onCategorySelected: _selectCategory,
+                    onAreaSelected: _selectArea,
+                    onRecentSearchSelected: _selectRecent,
+                    onFiltersPressed: _openFilters,
+                    activeFilterCount: viewState.activeFilterCount,
+                  ),
+                ),
+              ),
             ),
-          ),
-        ),
       ),
     );
   }

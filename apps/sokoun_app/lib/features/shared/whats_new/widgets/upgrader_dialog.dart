@@ -85,19 +85,25 @@ class UpgraderDialog extends StatefulWidget {
 }
 
 class _UpgraderDialogState extends State<UpgraderDialog> {
-  bool _isOpeningStore = false;
+  final ValueNotifier<bool> _isOpeningStore = ValueNotifier<bool>(false);
 
   Future<void> _openStore() async {
-    if (_isOpeningStore) return;
+    if (_isOpeningStore.value) return;
 
-    setState(() => _isOpeningStore = true);
+    _isOpeningStore.value = true;
     try {
       await widget.onUpdatePressed();
     } finally {
       if (mounted) {
-        setState(() => _isOpeningStore = false);
+        _isOpeningStore.value = false;
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _isOpeningStore.dispose();
+    super.dispose();
   }
 
   @override
@@ -158,9 +164,12 @@ class _UpgraderDialogState extends State<UpgraderDialog> {
                     16.szH,
                     _VersionBadge(version: widget.version),
                     20.szH,
-                    _UpdateButton(
-                      isLoading: _isOpeningStore,
-                      onUpdatePressed: _openStore,
+                    ValueListenableBuilder<bool>(
+                      valueListenable: _isOpeningStore,
+                      builder: (context, isOpeningStore, _) => _UpdateButton(
+                        isLoading: isOpeningStore,
+                        onUpdatePressed: _openStore,
+                      ),
                     ),
                     if (!widget.isRequired) ...[
                       12.szH,

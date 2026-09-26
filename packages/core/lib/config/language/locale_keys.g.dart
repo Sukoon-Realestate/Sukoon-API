@@ -325,6 +325,63 @@ abstract class LocaleKeys {
   static const String _forgotPassword = 'forgot_password';
   static String get forgotPassword => _forgotPassword.tr();
 
+  static const String _recoverPasswordTitle = 'recover_password_title';
+  static String get recoverPasswordTitle => _recoverPasswordTitle.tr();
+
+  static const String _forgotPasswordDescription = 'forgot_password_description';
+  static String get forgotPasswordDescription => _forgotPasswordDescription.tr();
+
+  static const String _forgotPasswordEmailHint = 'forgot_password_email_hint';
+  static String get forgotPasswordEmailHint => _forgotPasswordEmailHint.tr();
+
+  static const String _sendRecoveryLink = 'send_recovery_link';
+  static String get sendRecoveryLink => _sendRecoveryLink.tr();
+
+  static const String _rememberedPassword = 'remembered_password';
+  static String get rememberedPassword => _rememberedPassword.tr();
+
+  static const String _recoveryLinkValidTitle = 'recovery_link_valid_title';
+  static String get recoveryLinkValidTitle => _recoveryLinkValidTitle.tr();
+
+  static const String _recoverySecurityHint = 'recovery_security_hint';
+  static String get recoverySecurityHint => _recoverySecurityHint.tr();
+
+  static const String _checkYourEmail = 'check_your_email';
+  static String get checkYourEmail => _checkYourEmail.tr();
+
+  static const String _resetLinkSent = 'reset_link_sent';
+  static String get resetLinkSent => _resetLinkSent.tr();
+
+  static const String _resetLinkSentDescription = 'reset_link_sent_description';
+  static String get resetLinkSentDescription => _resetLinkSentDescription.tr();
+
+  static const String _openYourEmail = 'open_your_email';
+  static String get openYourEmail => _openYourEmail.tr();
+
+  static const String _lookForSokoonEmail = 'look_for_sokoon_email';
+  static String get lookForSokoonEmail => _lookForSokoonEmail.tr();
+
+  static const String _tapTheLink = 'tap_the_link';
+  static String get tapTheLink => _tapTheLink.tr();
+
+  static const String _resetLinkValidFor15Minutes = 'reset_link_valid_for_1_5_minutes';
+  static String get resetLinkValidFor15Minutes => _resetLinkValidFor15Minutes.tr();
+
+  static const String _createNewPassword = 'create_new_password';
+  static String get createNewPassword => _createNewPassword.tr();
+
+  static const String _minimumEightCharacters = 'minimum_eight_characters';
+  static String get minimumEightCharacters => _minimumEightCharacters.tr();
+
+  static const String _emailNotReceived = 'email_not_received';
+  static String get emailNotReceived => _emailNotReceived.tr();
+
+  static const String _checkSpamFirst = 'check_spam_first';
+  static String get checkSpamFirst => _checkSpamFirst.tr();
+
+  static const String _resend = 'resend';
+  static String get resend => _resend.tr();
+
   static const String _or = 'or';
   static String get or => _or.tr();
 
@@ -381,6 +438,12 @@ abstract class LocaleKeys {
 
   static const String _signInAsVisitor = 'sign_in_as_visitor';
   static String get signInAsVisitor => _signInAsVisitor.tr();
+
+  static const String _unauthenticatedSheetTitle = 'unauthenticated_sheet_title';
+  static String get unauthenticatedSheetTitle => _unauthenticatedSheetTitle.tr();
+
+  static const String _unauthenticatedSheetDescription = 'unauthenticated_sheet_description';
+  static String get unauthenticatedSheetDescription => _unauthenticatedSheetDescription.tr();
 
   static const String _pleaseEnterYourMobileNumberToRegisterOrSkipToRegisterAndViewSomeApplicationData = 'please_enter_your_mobile_number_to_register_or_skip_to_register_and_view_some_application_data';
   static String get pleaseEnterYourMobileNumberToRegisterOrSkipToRegisterAndViewSomeApplicationData => _pleaseEnterYourMobileNumberToRegisterOrSkipToRegisterAndViewSomeApplicationData.tr();
@@ -870,9 +933,6 @@ abstract class LocaleKeys {
 
   static const String _pleaseEnterTheVerificationCodeSentTo = 'please_enter_the_verification_code_sent_to';
   static String get pleaseEnterTheVerificationCodeSentTo => _pleaseEnterTheVerificationCodeSentTo.tr();
-
-  static const String _resend = 'resend';
-  static String get resend => _resend.tr();
 
   static const String _pleaseEnterANewMobileNumber = 'please_enter_a_new_mobile_number';
   static String get pleaseEnterANewMobileNumber => _pleaseEnterANewMobileNumber.tr();

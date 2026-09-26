@@ -16,6 +16,7 @@ class AppLoadingButton extends StatelessWidget {
   final Color? textColor;
   final Color? buttonColor;
   final FontWeight? fontWeight;
+  final Widget? icon;
 
   const AppLoadingButton({
     super.key,
@@ -28,6 +29,7 @@ class AppLoadingButton extends StatelessWidget {
     this.textColor,
     this.buttonColor,
     this.fontWeight,
+    this.icon,
   });
 
   @override
@@ -44,14 +46,20 @@ class AppLoadingButton extends StatelessWidget {
         ).paddingAll(3.r),
       ),
       idleWidget: FittedBox(
-        child: AppText(
-          title,
-          fontSize: fontSize ?? 14.sp,
-          fontWeight: fontWeight ?? FontWeight.bold,
-          color: textColor ?? Colors.white,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (icon != null) ...[icon!, SizedBox(width: 8.w)],
+            AppText(
+              title,
+              fontSize: fontSize ?? 14.sp,
+              fontWeight: fontWeight ?? FontWeight.bold,
+              color: textColor ?? Colors.white,
+            ),
+          ],
         ),
       ),
-      call: asyncCall
+      call: asyncCall,
     );
   }
 }

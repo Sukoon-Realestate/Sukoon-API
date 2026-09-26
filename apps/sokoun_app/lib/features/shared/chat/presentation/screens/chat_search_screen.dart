@@ -16,19 +16,20 @@ class ChatSearchScreen extends StatefulWidget {
 
 class _ChatSearchScreenState extends State<ChatSearchScreen> {
   late final TextEditingController _searchController;
-  String _query = '';
 
-  List<ConversationContent> get _results => widget.conversations
-      .where((conversation) => conversation.matchesQuery(_query))
+  final ValueNotifier<String> _query = ValueNotifier<String>('');
+
+  List<ConversationContent> _results(String query) => widget.conversations
+      .where((conversation) => conversation.matchesQuery(query))
       .toList(growable: false);
 
-  List<String> get _mentionedProperties {
+  List<String> _mentionedProperties(String query) {
     final List<String> properties = widget.conversations
         .map((conversation) => conversation.property.trim())
         .where((property) => property.isNotEmpty)
         .toSet()
         .toList(growable: false);
-    final String normalizedQuery = _query.trim();
+    final String normalizedQuery = query.trim();
     if (normalizedQuery.isEmpty) return properties;
 
     return properties
@@ -45,14 +46,15 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
   @override
   void dispose() {
     _searchController.dispose();
+    _query.dispose();
     super.dispose();
   }
 
-  void _updateQuery(String value) => setState(() => _query = value);
+  void _updateQuery(String value) => _query.value = value;
 
   void _clearQuery() {
     _searchController.clear();
-    setState(() => _query = '');
+    _query.value = '';
   }
 
   @override
@@ -68,10 +70,13 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
               onClearPressed: _clearQuery,
             ),
             Expanded(
-              child: ChatSearchResults(
-                query: _query,
-                conversations: _results,
-                mentionedProperties: _mentionedProperties,
+              child: ValueListenableBuilder<String>(
+                valueListenable: _query,
+                builder: (context, query, _) => ChatSearchResults(
+                  query: query,
+                  conversations: _results(query),
+                  mentionedProperties: _mentionedProperties(query),
+                ),
               ),
             ),
           ],

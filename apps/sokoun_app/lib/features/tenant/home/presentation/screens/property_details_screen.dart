@@ -28,8 +28,11 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   late final PropertySaveCubit _saveCubit;
   late final CreateConversationCubit _conversationCubit;
   late final Future<void> _detailsRequest;
-  bool? _savedOverride;
-  bool _isUpdatingSaved = false;
+  final ValueNotifier<({bool? savedOverride, bool isUpdating})> _savedState =
+      ValueNotifier<({bool? savedOverride, bool isUpdating})>((
+        savedOverride: null,
+        isUpdating: false,
+      ));
 
   @override
   void initState() {
@@ -45,26 +48,29 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
     _detailsCubit.close();
     _saveCubit.close();
     _conversationCubit.close();
+    _savedState.dispose();
     super.dispose();
   }
 
   Future<void> _toggleSaved(TenantPropertyDetailsContent property) async {
-    if (_isUpdatingSaved) return;
+    final ({bool? savedOverride, bool isUpdating}) savedState =
+        _savedState.value;
+    if (savedState.isUpdating) return;
 
-    final bool currentValue = _savedOverride ?? property.isSaved;
+    final bool currentValue = savedState.savedOverride ?? property.isSaved;
     final bool nextValue = !currentValue;
     final String propertyId = property.id.isEmpty
         ? widget.propertyId
         : property.id;
 
-    setState(() {
-      _savedOverride = nextValue;
-      _isUpdatingSaved = true;
-    });
+    _savedState.value = (savedOverride: nextValue, isUpdating: true);
 
     void rollbackSavedState(String _) {
       if (!mounted) return;
-      setState(() => _savedOverride = currentValue);
+      _savedState.value = (
+        savedOverride: currentValue,
+        isUpdating: _savedState.value.isUpdating,
+      );
     }
 
     if (nextValue) {
@@ -79,7 +85,10 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
       );
     }
     if (!mounted) return;
-    setState(() => _isUpdatingSaved = false);
+    _savedState.value = (
+      savedOverride: _savedState.value.savedOverride,
+      isUpdating: false,
+    );
   }
 
   Widget _buildDetails(PropertyDetailsModel data) {
@@ -89,19 +98,23 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
       CreateConversationCubit,
       AsyncState<ConversationContent>
     >(
-      builder: (context, conversationState) => TenantPropertyDetailsBody(
-        property: property,
-        isSaved: _savedOverride ?? property.isSaved,
-        onSavedPressed: () => _toggleSaved(property),
-        isOpeningChat: conversationState.isLoading,
-        onChatPressed: property.ownerId.isEmpty
-            ? null
-            : () => _conversationCubit.createOrGet(
-                userId: property.ownerId,
-                onSuccess: (conversation) =>
-                    Go.to(ChatThreadScreen(conversation: conversation)),
-              ),
-      ),
+      builder: (context, conversationState) =>
+          ValueListenableBuilder<({bool? savedOverride, bool isUpdating})>(
+            valueListenable: _savedState,
+            builder: (context, savedState, _) => TenantPropertyDetailsBody(
+              property: property,
+              isSaved: savedState.savedOverride ?? property.isSaved,
+              onSavedPressed: () => _toggleSaved(property),
+              isOpeningChat: conversationState.isLoading,
+              onChatPressed: property.ownerId.isEmpty
+                  ? null
+                  : () => _conversationCubit.createOrGet(
+                      userId: property.ownerId,
+                      onSuccess: (conversation) =>
+                          Go.to(ChatThreadScreen(conversation: conversation)),
+                    ),
+            ),
+          ),
     );
   }
 

@@ -10,6 +10,7 @@ class TenantVisitsScreen extends StatefulWidget {
 }
 
 class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
+  // Filter and fixture mutations replace the filters and visit list together.
   PagifyController<TenantVisitContent>? _pagifyController;
   late final List<TenantVisitContent>? _fixtureVisits;
   TenantVisitFilter _selectedFilter = TenantVisitFilter.all;

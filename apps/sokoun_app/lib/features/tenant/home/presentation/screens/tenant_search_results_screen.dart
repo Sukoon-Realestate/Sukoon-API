@@ -33,7 +33,7 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
   late final PagifyController<PropertyDetailsModel> _pagifyController;
   late final PropertyFilterOptionsCubit _propertyFilterOptionsCubit;
   late final Future<void> _propertyFilterOptionsRequest;
-  int? _resultCount;
+  final ValueNotifier<int?> _resultCount = ValueNotifier<int?>(null);
   int _searchVersion = 0;
 
   @override
@@ -51,12 +51,13 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
   @override
   void dispose() {
     _queryController.dispose();
+    _resultCount.dispose();
     _propertyFilterOptionsCubit.close();
     super.dispose();
   }
 
   void _updateQuery(String value) {
-    setState(() => _filters = _filters.copyWith(search: value, page: 1));
+    _filters = _filters.copyWith(search: value, page: 1);
   }
 
   Future<void> _submitQuery(String value) async {
@@ -98,12 +99,13 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
   }
 
   Future<void> _search(PropertySearchFilters filters) async {
+    // A submitted search replaces filters, cache identity, and list together.
     setState(() {
       _filters = filters;
       _paginatedFilters = filters.copyWith(page: 1);
-      _resultCount = null;
       _searchVersion++;
     });
+    _resultCount.value = null;
     _pagifyController.clear();
     await _pagifyController.refresh();
   }
@@ -127,7 +129,7 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
     }
 
     if (page == 1 && mounted) {
-      setState(() => _resultCount = response.count);
+      _resultCount.value = response.count;
     }
 
     return (response.results, pagination);

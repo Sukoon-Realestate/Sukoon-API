@@ -10,13 +10,16 @@ import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
 import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:melos_core/core/widgets/exeption_view.dart';
 import 'package:multiple_result/multiple_result.dart';
+import 'package:pagify/helpers/errors.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:sokoun_app/features/owner/home/presentation/screens/owner_add_property_flow_screen.dart';
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/add_property_video_page.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import 'package:sokoun_app/shared_widgets/retry_view.dart';
+import 'package:sokoun_app/shared_widgets/request_error_view.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -327,6 +330,43 @@ void main() {
 
     expect(retryCount, 1);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('request error view uses retry only for no internet', (
+    tester,
+  ) async {
+    configurePhoneViewport(tester);
+
+    await tester.pumpWidget(
+      buildScreen(
+        Scaffold(
+          body: AppRequestErrorView(
+            error: PagifyNetworkException('offline'),
+            onRetry: () async {},
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AppRetryView), findsOneWidget);
+    expect(find.byType(ExceptionView), findsNothing);
+  });
+
+  testWidgets('request error view uses the exception view for server errors', (
+    tester,
+  ) async {
+    configurePhoneViewport(tester);
+
+    await tester.pumpWidget(
+      buildScreen(
+        AppRequestErrorView(error: Exception('server'), onRetry: () async {}),
+      ),
+    );
+    await tester.pump();
+
+    expect(find.byType(AppRetryView), findsNothing);
+    expect(find.byType(ExceptionView), findsOneWidget);
   });
 
   testWidgets('places O-ADD-02V after the photos step', (tester) async {

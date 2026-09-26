@@ -18,7 +18,7 @@ class OwnerRequestsCalendarScreen extends StatefulWidget {
 class _OwnerRequestsCalendarScreenState
     extends State<OwnerRequestsCalendarScreen> {
   late final OwnerCalendarCubit _calendarCubit;
-  late Future<void> _calendarRequest;
+  late final ValueNotifier<Future<void>> _calendarRequest;
   late DateTime _selectedDate;
 
   @override
@@ -26,12 +26,15 @@ class _OwnerRequestsCalendarScreenState
     super.initState();
     _selectedDate = DateUtils.dateOnly(widget.initialDate ?? DateTime.now());
     _calendarCubit = OwnerCalendarCubit(initialDate: _selectedDate);
-    _calendarRequest = _calendarCubit.getCalendar(date: _selectedDate);
+    _calendarRequest = ValueNotifier<Future<void>>(
+      _calendarCubit.getCalendar(date: _selectedDate),
+    );
   }
 
   @override
   void dispose() {
     _calendarCubit.close();
+    _calendarRequest.dispose();
     super.dispose();
   }
 
@@ -39,10 +42,8 @@ class _OwnerRequestsCalendarScreenState
     if (DateUtils.isSameDay(date, _selectedDate)) {
       return;
     }
-    setState(() {
-      _selectedDate = date;
-      _calendarRequest = _calendarCubit.getCalendar(date: date);
-    });
+    _selectedDate = date;
+    _calendarRequest.value = _calendarCubit.getCalendar(date: date);
   }
 
   Future<void> _openAvailability(OwnerVisitCalendarContent calendar) async {
@@ -72,18 +73,21 @@ class _OwnerRequestsCalendarScreenState
   Widget build(BuildContext context) {
     return BlocProvider<OwnerCalendarCubit>.value(
       value: _calendarCubit,
-      child:
-          StatusBuilder<
-            OwnerCalendarCubit,
-            OwnerVisitCalendarContent
-          >.withShimmer(
-            initialDataForShimmer: OwnerVisitCalendarContent.initial(
-              _selectedDate,
+      child: ValueListenableBuilder<Future<void>>(
+        valueListenable: _calendarRequest,
+        builder: (context, calendarRequest, _) =>
+            StatusBuilder<
+              OwnerCalendarCubit,
+              OwnerVisitCalendarContent
+            >.withShimmer(
+              initialDataForShimmer: OwnerVisitCalendarContent.initial(
+                _selectedDate,
+              ),
+              requestToTryAgainWhenError: calendarRequest,
+              errorType: ErrorType.defaultView,
+              builder: _buildScreen,
             ),
-            requestToTryAgainWhenError: _calendarRequest,
-            errorType: ErrorType.defaultView,
-            builder: _buildScreen,
-          ),
+      ),
     );
   }
 

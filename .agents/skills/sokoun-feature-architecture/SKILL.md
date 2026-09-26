@@ -41,7 +41,19 @@ features/<feature_name>/
 
 ## Cubit Boundary
 
-Create a Cubit when the work calls an API or local database, consumes realtime events, or exposes state shared by multiple widgets/screens. Keep local tab indices, toggles, controllers, animation state, and other single-screen UI state in a `StatefulWidget`.
+Create a Cubit when the work calls an API or local database, consumes realtime events, or exposes state shared by multiple widgets/screens. Keep local tab indices, toggles, controllers, animation state, and other single-screen UI state owned by the narrowest applicable widget.
+
+### Local Rebuild Scope
+
+Do not use `setState` as the default for every local UI change. Choose the state mechanism by ownership and the smallest region that must rebuild:
+
+- Use a widget-owned `ValueNotifier<T>` with `ValueListenableBuilder<T>` for focused local changes such as a selected item, toggle, validation message, progress flag, or other value that affects only a small subtree. Initialize the notifier once, dispose it with its owner, and update `.value` without wrapping the change in `setState`.
+- Use a Cubit when multiple widgets or screens must independently observe or mutate the same state, or when the state already belongs to a feature Cubit. Do not pass a `ValueNotifier` through unrelated presentation layers as a substitute for shared state.
+- Use `setState` only when one change intentionally recomposes a large, coherent part of the screen and splitting it into smaller listenable regions would obscure the flow. Typical valid cases include replacing a whole step in a screen-owned flow or switching the root tab body and navigation selection together.
+- Keep controllers, focus nodes, and animation controllers in their lifecycle owner. A `ValueNotifier` does not remove the need to dispose those resources.
+- Scope each `ValueListenableBuilder` around the dependent subtree rather than the whole screen. When several values must change atomically for the same subtree, use one immutable local state object or record instead of nested builders or several sequential notifications.
+
+Before adding or retaining `setState`, identify which widgets depend on the changed value. If the affected region is small, use a local notifier; if independent consumers share the state, use a Cubit; retain `setState` only for a deliberately broad screen recomposition.
 
 For remote state:
 
@@ -174,5 +186,6 @@ Before handing off:
 6. Confirm feature UI uses applicable core extensions without changing layout semantics.
 7. Confirm the screen is orchestration-focused and visual sections are separated.
 8. Confirm assigned widget keys serve a real identity or imperative-state need, entity keys use stable domain IDs, and const-eligible constructors and call sites use `const`.
-9. Run Dart formatting, focused analysis, relevant tests, and `git diff --check`.
-10. Summarize the resulting file structure and verification. Mention any intentionally omitted layer or unavailable backend/profile screen instead of adding a misleading placeholder.
+9. Audit every added or retained `setState`: focused local rebuilds use a disposed `ValueNotifier`, independently shared state uses a Cubit, and any remaining `setState` deliberately rebuilds a large coherent screen region.
+10. Run Dart formatting, focused analysis, relevant tests, and `git diff --check`.
+11. Summarize the resulting file structure and verification. Mention any intentionally omitted layer or unavailable backend/profile screen instead of adding a misleading placeholder.

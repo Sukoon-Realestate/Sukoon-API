@@ -204,7 +204,7 @@ class WebSocketClientImpl<MessageModel>
 
       if (event == events.messageEvents.receiveMsgEvent) {
         final dynamic payload = eventData['payload'];
-        log('the payoad is $payload');
+        log('the payload is $payload');
         if (payload is! Map) {
           throw const FormatException('message.new is missing its payload.');
         }

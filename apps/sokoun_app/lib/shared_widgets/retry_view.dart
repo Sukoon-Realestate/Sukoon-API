@@ -16,16 +16,22 @@ class AppRetryView extends StatefulWidget {
 }
 
 class _AppRetryViewState extends State<AppRetryView> {
-  bool _isRetrying = false;
+  final ValueNotifier<bool> _isRetrying = ValueNotifier<bool>(false);
 
   Future<void> _retry() async {
-    if (_isRetrying) return;
-    setState(() => _isRetrying = true);
+    if (_isRetrying.value) return;
+    _isRetrying.value = true;
     try {
       await widget.onRetry();
     } finally {
-      if (mounted) setState(() => _isRetrying = false);
+      if (mounted) _isRetrying.value = false;
     }
+  }
+
+  @override
+  void dispose() {
+    _isRetrying.dispose();
+    super.dispose();
   }
 
   @override
@@ -57,23 +63,26 @@ class _AppRetryViewState extends State<AppRetryView> {
               textAlign: TextAlign.center,
             ),
             18.szH,
-            DefaultButton(
-              key: const ValueKey('app-retry-button'),
-              onTap: _isRetrying ? null : _retry,
-              title: LocaleKeys.ownerRetryAction,
-              width: 160.w,
-              color: AppColors.sokoonTeal,
-              textColor: AppColors.white,
-              borderRadius: BorderRadius.circular(12.r),
-              customChild: _isRetrying
-                  ? SizedBox.square(
-                      dimension: 18.r,
-                      child: const CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: AppColors.white,
-                      ),
-                    )
-                  : null,
+            ValueListenableBuilder<bool>(
+              valueListenable: _isRetrying,
+              builder: (context, isRetrying, _) => DefaultButton(
+                key: const ValueKey('app-retry-button'),
+                onTap: isRetrying ? null : _retry,
+                title: LocaleKeys.ownerRetryAction,
+                width: 160.w,
+                color: AppColors.sokoonTeal,
+                textColor: AppColors.white,
+                borderRadius: BorderRadius.circular(12.r),
+                customChild: isRetrying
+                    ? SizedBox.square(
+                        dimension: 18.r,
+                        child: const CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: AppColors.white,
+                        ),
+                      )
+                    : null,
+              ),
             ),
           ],
         ),

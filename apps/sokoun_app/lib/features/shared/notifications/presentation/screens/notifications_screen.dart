@@ -32,7 +32,7 @@ class NotificationsScreen extends StatefulWidget {
 class _NotificationsScreenState extends State<NotificationsScreen> {
   late final NotificationRole _role;
   late final NotificationsCubit _cubit;
-  late final List<AppNotificationContent>? _fixtureNotifications;
+  late final ValueNotifier<List<AppNotificationContent>?> _fixtureNotifications;
   PagifyController<AppNotificationContent>? _pagifyController;
 
   @override
@@ -42,20 +42,23 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     _cubit = NotificationsCubit();
     final List<AppNotificationContent>? initialNotifications =
         widget.initialNotifications;
-    _fixtureNotifications = initialNotifications == null
-        ? null
-        : List<AppNotificationContent>.of(initialNotifications);
-    if (_fixtureNotifications == null) {
+    _fixtureNotifications = ValueNotifier<List<AppNotificationContent>?>(
+      initialNotifications == null
+          ? null
+          : List<AppNotificationContent>.of(initialNotifications),
+    );
+    if (_fixtureNotifications.value == null) {
       _pagifyController = PagifyController<AppNotificationContent>();
     } else {
       _cubit.setUnreadCount(
-        _fixtureNotifications.where((item) => item.isUnread).length,
+        _fixtureNotifications.value!.where((item) => item.isUnread).length,
       );
     }
   }
 
   @override
   void dispose() {
+    _fixtureNotifications.dispose();
     unawaited(_cubit.close());
     super.dispose();
   }
@@ -68,13 +71,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
   Future<void> _markAllAsRead() async {
-    final List<AppNotificationContent>? fixtures = _fixtureNotifications;
+    final List<AppNotificationContent>? fixtures = _fixtureNotifications.value;
     if (fixtures != null) {
-      setState(() {
-        for (int index = 0; index < fixtures.length; index++) {
-          fixtures[index] = fixtures[index].copyWith(isRead: true);
-        }
-      });
+      _fixtureNotifications.value = fixtures
+          .map((notification) => notification.copyWith(isRead: true))
+          .toList(growable: false);
       _cubit.setUnreadCount(0);
       return;
     }
@@ -94,15 +95,16 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
   Future<void> _openNotification(AppNotificationContent notification) async {
-    final List<AppNotificationContent>? fixtures = _fixtureNotifications;
+    final List<AppNotificationContent>? fixtures = _fixtureNotifications.value;
     if (fixtures != null) {
       final int index = fixtures.indexWhere(
         (item) => item.id == notification.id,
       );
       if (index >= 0 && notification.isUnread) {
-        setState(() {
-          fixtures[index] = notification.copyWith(isRead: true);
-        });
+        final List<AppNotificationContent> updated =
+            List<AppNotificationContent>.of(fixtures);
+        updated[index] = notification.copyWith(isRead: true);
+        _fixtureNotifications.value = updated;
         _cubit.setUnreadCount(_cubit.data.unreadCount - 1);
       }
       await Go.to<void>(
@@ -158,13 +160,20 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         onMarkAllPressed: _markAllAsRead,
                       ),
                       Expanded(
-                        child: NotificationsList(
-                          role: _role,
-                          initialNotifications: _fixtureNotifications,
-                          pagifyController: _pagifyController,
-                          onNotificationPressed: _openNotification,
-                          onUnreadCountChanged: _cubit.setUnreadCount,
-                        ),
+                        child:
+                            ValueListenableBuilder<
+                              List<AppNotificationContent>?
+                            >(
+                              valueListenable: _fixtureNotifications,
+                              builder: (context, fixtureNotifications, _) =>
+                                  NotificationsList(
+                                    role: _role,
+                                    initialNotifications: fixtureNotifications,
+                                    pagifyController: _pagifyController,
+                                    onNotificationPressed: _openNotification,
+                                    onUnreadCountChanged: _cubit.setUnreadCount,
+                                  ),
+                            ),
                       ),
                     ],
                   );

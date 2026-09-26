@@ -25,6 +25,7 @@ class FavoritesScreen extends StatefulWidget {
 }
 
 class _FavoritesScreenState extends State<FavoritesScreen> {
+  // Count, filters, and visible items form one screen-wide content projection.
   late final PagifyController<FavoritePropertyContent> _pagifyController;
   late final PropertySaveCubit? _saveCubit;
   late final List<FavoritePropertyContent>? _initialFavorites;

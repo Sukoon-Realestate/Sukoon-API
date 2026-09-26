@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -44,7 +45,7 @@ class TenantSearchResultsContent extends StatelessWidget {
   final PagifyController<PropertyDetailsModel> pagifyController;
   final PropertyFilterOptionsModel filterOptions;
   final List<ActiveFilterContent> activeFilters;
-  final int? resultCount;
+  final ValueListenable<int?> resultCount;
   final String cacheKey;
   final PropertySearchPageLoader loadPage;
   final ValueChanged<String> onQueryChanged;
@@ -70,14 +71,17 @@ class TenantSearchResultsContent extends StatelessWidget {
           onFilterRemoved: onFilterRemoved,
           onClearAll: onClearFiltersPressed,
         ),
-        AppText(
-          resultCount == null
-              ? LocaleKeys.tenantSearchResultsCount
-              : '$resultCount ${LocaleKeys.tenantSearchResultsCount}',
-          color: AppColors.sokoonGray,
-          fontSize: 13.sp,
-          fontWeight: FontWeight.w600,
-        ).paddingSymmetric(horizontal: 18.w, vertical: 10.h),
+        ValueListenableBuilder<int?>(
+          valueListenable: resultCount,
+          builder: (context, count, _) => AppText(
+            count == null
+                ? LocaleKeys.tenantSearchResultsCount
+                : '$count ${LocaleKeys.tenantSearchResultsCount}',
+            color: AppColors.sokoonGray,
+            fontSize: 13.sp,
+            fontWeight: FontWeight.w600,
+          ).paddingSymmetric(horizontal: 18.w, vertical: 10.h),
+        ),
         Expanded(
           child: AppPagify<PropertyDetailsModel>(
             pagifyController: pagifyController,

@@ -22,8 +22,10 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   late final TextEditingController _phoneController;
   late final TextEditingController _emailController;
   late final ProfileEditCubit _editCubit;
-  File? _avatar;
-  ProfileGender _gender = ProfileGender.unspecified;
+  final ValueNotifier<File?> _avatar = ValueNotifier<File?>(null);
+  final ValueNotifier<ProfileGender> _gender = ValueNotifier<ProfileGender>(
+    ProfileGender.unspecified,
+  );
 
   Color get _accentColor =>
       widget.userType.isOwner ? AppColors.sokoonGold : AppColors.sokoonTeal;
@@ -46,20 +48,22 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     _nameController.dispose();
     _phoneController.dispose();
     _emailController.dispose();
+    _avatar.dispose();
+    _gender.dispose();
     _editCubit.close();
     super.dispose();
   }
 
-  String get _genderLabel {
-    if (_gender.isMale) return LocaleKeys.profileMale;
-    if (_gender.isFemale) return LocaleKeys.profileFemale;
+  String _genderLabel(ProfileGender gender) {
+    if (gender.isMale) return LocaleKeys.profileMale;
+    if (gender.isFemale) return LocaleKeys.profileFemale;
     return LocaleKeys.notSetYet;
   }
 
   Future<void> _pickAvatar() async {
     final File? avatar = await Helpers.getImageFromCameraOrDevice();
     if (avatar != null && mounted) {
-      setState(() => _avatar = avatar);
+      _avatar.value = avatar;
     }
   }
 
@@ -75,14 +79,14 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     );
     if (gender != null && mounted) {
       _genderFieldKey.currentState?.didChange(gender);
-      setState(() => _gender = gender);
+      _gender.value = gender;
     }
   }
 
   Widget _buildGenderField({required bool isSaving}) {
     return FormField<ProfileGender>(
       key: _genderFieldKey,
-      initialValue: _gender,
+      initialValue: _gender.value,
       validator: (gender) => gender == null || gender.isUnspecified
           ? LocaleKeys.pleaseEnterTheGender
           : null,
@@ -90,10 +94,13 @@ class _ProfileEditViewState extends State<ProfileEditView> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _ProfileReadonlyField(
-              label: LocaleKeys.gender,
-              value: _genderLabel,
-              onTap: isSaving ? null : _pickGender,
+            ValueListenableBuilder<ProfileGender>(
+              valueListenable: _gender,
+              builder: (context, gender, _) => _ProfileReadonlyField(
+                label: LocaleKeys.gender,
+                value: _genderLabel(gender),
+                onTap: isSaving ? null : _pickGender,
+              ),
             ),
             if (field.hasError) ...[
               6.szH,
@@ -117,9 +124,9 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     bool wasUpdated = false;
     await _editCubit.editProfile(
       body: ProfileEditBody(
-        avatar: _avatar,
+        avatar: _avatar.value,
         fullName: _nameController.text.trim(),
-        gender: _gender.apiValue,
+        gender: _gender.value.apiValue,
         phoneNumber: _phoneController.text.trim(),
       ),
       onSuccess: () => wasUpdated = true,
@@ -190,26 +197,29 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                 child: ListView(
                   padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 28.h),
                   children: [
-                    Column(
-                      children: [
-                        ProfileAvatar(
-                          name: _nameController.text,
-                          imageFile: _avatar,
-                          accentColor: _accentColor,
-                          backgroundColor: _accentColor,
-                          size: 88,
-                          useInitial: true,
-                          badgeIcon: Icons.camera_alt_outlined,
-                          onBadgePressed: isSaving ? null : _pickAvatar,
-                        ),
-                        8.szH,
-                        AppText(
-                          LocaleKeys.profileChangePhoto,
-                          color: _accentColor,
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ],
+                    ValueListenableBuilder<File?>(
+                      valueListenable: _avatar,
+                      builder: (context, avatar, _) => Column(
+                        children: [
+                          ProfileAvatar(
+                            name: _nameController.text,
+                            imageFile: avatar,
+                            accentColor: _accentColor,
+                            backgroundColor: _accentColor,
+                            size: 88,
+                            useInitial: true,
+                            badgeIcon: Icons.camera_alt_outlined,
+                            onBadgePressed: isSaving ? null : _pickAvatar,
+                          ),
+                          8.szH,
+                          AppText(
+                            LocaleKeys.profileChangePhoto,
+                            color: _accentColor,
+                            fontSize: 13.sp,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ],
+                      ),
                     ),
                     24.szH,
                     SokoonNameField(

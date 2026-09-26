@@ -10,84 +10,94 @@ class OwnerMoreScreen extends StatefulWidget {
 }
 
 class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
-  late UserModel _user;
+  late final ValueNotifier<UserModel> _user;
 
   @override
   void initState() {
     super.initState();
-    _user = widget.user ?? UserModel.currentUser ?? UserModel.initial();
+    _user = ValueNotifier<UserModel>(
+      widget.user ?? UserModel.currentUser ?? UserModel.initial(),
+    );
+  }
+
+  @override
+  void dispose() {
+    _user.dispose();
+    super.dispose();
   }
 
   Future<void> _openProfile() async {
-    await Go.to(OwnerProfileScreen(user: _user));
+    await Go.to(OwnerProfileScreen(user: _user.value));
     if (!mounted) {
       return;
     }
-    setState(() {
-      _user = UserModel.currentUser ?? _user;
-    });
+    _user.value = UserModel.currentUser ?? _user.value;
   }
 
   @override
   Widget build(BuildContext context) {
-    final String userName = _user.name.trim().isEmpty
-        ? LocaleKeys.profileFallbackName
-        : _user.name;
-
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: ListView(
           padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 24.h),
           children: [
-            InkWell(
-              onTap: _openProfile,
-              borderRadius: BorderRadius.circular(16.r),
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 2.h),
-                child: Row(
-                  children: [
-                    ProfileAvatar(
-                      name: userName,
-                      accentColor: AppColors.sokoonGold,
-                      backgroundColor: AppColors.goldPale,
-                      size: 52,
-                    ),
-                    12.szW,
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
+            ValueListenableBuilder<UserModel>(
+              valueListenable: _user,
+              builder: (context, user, _) {
+                final String userName = user.name.trim().isEmpty
+                    ? LocaleKeys.profileFallbackName
+                    : user.name;
+                return InkWell(
+                  onTap: _openProfile,
+                  borderRadius: BorderRadius.circular(16.r),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 2.h),
+                    child: Row(
+                      children: [
+                        ProfileAvatar(
+                          name: userName,
+                          accentColor: AppColors.sokoonGold,
+                          backgroundColor: AppColors.goldPale,
+                          size: 52,
+                        ),
+                        12.szW,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Flexible(
-                                child: AppText(
-                                  userName,
-                                  color: AppColors.sokoonNavy,
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w900,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                              Row(
+                                children: [
+                                  Flexible(
+                                    child: AppText(
+                                      userName,
+                                      color: AppColors.sokoonNavy,
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w900,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  7.szW,
+                                  ProfileVerifiedBadge(
+                                    text: LocaleKeys.profileVerifiedOwner,
+                                  ),
+                                ],
                               ),
-                              7.szW,
-                              ProfileVerifiedBadge(
-                                text: LocaleKeys.profileVerifiedOwner,
+                              3.szH,
+                              AppText(
+                                LocaleKeys.profileViewPersonalProfile,
+                                color: AppColors.sokoonGray,
+                                fontSize: 12.sp,
                               ),
                             ],
                           ),
-                          3.szH,
-                          AppText(
-                            LocaleKeys.profileViewPersonalProfile,
-                            color: AppColors.sokoonGray,
-                            fontSize: 12.sp,
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             ),
             22.szH,
             OwnerMoreSection(

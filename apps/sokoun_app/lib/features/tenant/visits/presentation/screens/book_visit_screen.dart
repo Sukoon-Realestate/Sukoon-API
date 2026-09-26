@@ -14,8 +14,11 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
   late final List<VisitDayContent> _days;
   late final TextEditingController _noteController;
   late final BookVisitCubit _bookVisitCubit;
-  int _selectedDayIndex = 0;
-  TimeOfDay? _selectedTime;
+  final ValueNotifier<({int dayIndex, TimeOfDay? time})> _selection =
+      ValueNotifier<({int dayIndex, TimeOfDay? time})>((
+        dayIndex: 0,
+        time: null,
+      ));
 
   @override
   void initState() {
@@ -65,24 +68,26 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
   @override
   void dispose() {
     _noteController.dispose();
+    _selection.dispose();
     _bookVisitCubit.close();
     super.dispose();
   }
 
   void _clearTimeAfterConflict() {
     if (!mounted) return;
-    setState(() => _selectedTime = null);
+    _selection.value = (dayIndex: _selection.value.dayIndex, time: null);
   }
 
   Future<void> _confirmVisit(BuildContext context) async {
-    final TimeOfDay? selectedTimeOfDay = _selectedTime;
+    final ({int dayIndex, TimeOfDay? time}) selection = _selection.value;
+    final TimeOfDay? selectedTimeOfDay = selection.time;
     if (_days.isEmpty ||
         selectedTimeOfDay == null ||
-        _selectedDayIndex >= _days.length) {
+        selection.dayIndex >= _days.length) {
       return;
     }
 
-    final VisitDayContent selectedDay = _days[_selectedDayIndex];
+    final VisitDayContent selectedDay = _days[selection.dayIndex];
     final String displayTime = BookVisitBody.formatDisplayTime(
       hour: selectedTimeOfDay.hour,
       minute: selectedTimeOfDay.minute,
@@ -128,20 +133,26 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
             children: [
               VisitHeader(title: LocaleKeys.tenantVisitBookTitle),
               Expanded(
-                child: BookVisitForm(
-                  property: _property,
-                  days: _days,
-                  selectedDayIndex: _selectedDayIndex,
-                  selectedTime: _selectedTime,
-                  noteController: _noteController,
-                  onDaySelected: (index) {
-                    setState(() => _selectedDayIndex = index);
-                  },
-                  onTimeSelected: (time) {
-                    setState(() => _selectedTime = time);
-                  },
-                  onConfirmPressed: _confirmVisit,
-                ),
+                child:
+                    ValueListenableBuilder<({int dayIndex, TimeOfDay? time})>(
+                      valueListenable: _selection,
+                      builder: (context, selection, _) => BookVisitForm(
+                        property: _property,
+                        days: _days,
+                        selectedDayIndex: selection.dayIndex,
+                        selectedTime: selection.time,
+                        noteController: _noteController,
+                        onDaySelected: (index) => _selection.value = (
+                          dayIndex: index,
+                          time: selection.time,
+                        ),
+                        onTimeSelected: (time) => _selection.value = (
+                          dayIndex: selection.dayIndex,
+                          time: time,
+                        ),
+                        onConfirmPressed: _confirmVisit,
+                      ),
+                    ),
               ),
             ],
           ),

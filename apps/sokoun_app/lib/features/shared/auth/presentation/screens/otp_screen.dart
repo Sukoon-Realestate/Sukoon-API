@@ -15,7 +15,7 @@ import 'package:sokoun_app/features/shared/auth/presentation/cubits/otp.dart';
 import '../widgets/auth_scaffold.dart';
 import '../widgets/otp/otp_code_field.dart';
 import '../widgets/otp/otp_header.dart';
-import '../widgets/otp/otp_resend_timer.dart';
+import '../widgets/shared/auth_resend_timer.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key, required this.email, required this.onVerified});
@@ -30,9 +30,13 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
   final TextEditingController _otpController = TextEditingController();
   late final OtpCubit _otpCubit;
-  int _timerResetKey = 0;
-  bool _canResend = false;
-  bool _isResending = false;
+  final ValueNotifier<({bool canResend, bool isResending, bool isCodeComplete})>
+  _uiState =
+      ValueNotifier<({bool canResend, bool isResending, bool isCodeComplete})>((
+        canResend: false,
+        isResending: false,
+        isCodeComplete: false,
+      ));
 
   @override
   void initState() {
@@ -43,11 +47,10 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   void dispose() {
     _otpController.dispose();
+    _uiState.dispose();
     unawaited(_otpCubit.close());
     super.dispose();
   }
-
-  bool get _isCodeComplete => _otpController.text.length == 6;
 
   String get _maskedEmail {
     final List<String> parts = widget.email.trim().split('@');
@@ -63,7 +66,7 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   Future<void> _confirm(BuildContext _) async {
-    if (!_isCodeComplete) {
+    if (!_uiState.value.isCodeComplete) {
       return;
     }
 
@@ -74,11 +77,15 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   Future<void> _resend() async {
-    if (!_canResend || _isResending) {
+    if (!_uiState.value.canResend || _uiState.value.isResending) {
       return;
     }
 
-    setState(() => _isResending = true);
+    _uiState.value = (
+      canResend: _uiState.value.canResend,
+      isResending: true,
+      isCodeComplete: _uiState.value.isCodeComplete,
+    );
     try {
       await _otpCubit.resendOtp(
         body: ResendOtpBody(email: widget.email.trim()),
@@ -88,15 +95,20 @@ class _OtpScreenState extends State<OtpScreen> {
           }
 
           _otpController.clear();
-          setState(() {
-            _canResend = false;
-            _timerResetKey++;
-          });
+          _uiState.value = (
+            canResend: false,
+            isResending: _uiState.value.isResending,
+            isCodeComplete: false,
+          );
         },
       );
     } finally {
       if (mounted) {
-        setState(() => _isResending = false);
+        _uiState.value = (
+          canResend: _uiState.value.canResend,
+          isResending: false,
+          isCodeComplete: _uiState.value.isCodeComplete,
+        );
       }
     }
   }
@@ -156,64 +168,86 @@ class _OtpScreenState extends State<OtpScreen> {
             ),
           ),
           26.szH,
-          OtpCodeField(
-            controller: _otpController,
-            onChanged: (_) => setState(() {}),
-          ),
-          20.szH,
-          OtpResendTimer(
-            timerResetKey: _timerResetKey,
-            canResend: _canResend,
-            onTimerEnds: () {
-              if (mounted) {
-                setState(() {
-                  _canResend = true;
-                });
-              }
-            },
-          ),
-          18.szH,
-          IgnorePointer(
-            ignoring: !_isCodeComplete,
-            child: AppLoadingButton(
-              asyncCall: _confirm,
-              title: LocaleKeys.confirmLogin,
-              buttonColor: _isCodeComplete
-                  ? AppColors.tealOrGoldBasedRole
-                  : AppColors.sokoonMuted,
-              textColor: AppColors.white,
-              borderRadius: 14.r,
-              height: 52.h,
-              width: double.infinity,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          14.szH,
-          TextButton(
-            onPressed: _canResend && !_isResending ? _resend : null,
-            style: TextButton.styleFrom(
-              minimumSize: Size.zero,
-              padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            child: _isResending
-                ? SizedBox.square(
-                    dimension: 16.r,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.r,
-                      color: AppColors.tealOrGoldBasedRole,
-                    ),
-                  )
-                : AppText(
-                    LocaleKeys.resendCode,
-                    color: _canResend
+          ValueListenableBuilder<
+            ({bool canResend, bool isResending, bool isCodeComplete})
+          >(
+            valueListenable: _uiState,
+            builder: (context, uiState, _) => Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                OtpCodeField(
+                  controller: _otpController,
+                  onChanged: (_) {
+                    _uiState.value = (
+                      canResend: uiState.canResend,
+                      isResending: uiState.isResending,
+                      isCodeComplete: _otpController.text.length == 6,
+                    );
+                  },
+                ),
+                20.szH,
+                AuthResendTimer(
+                  canResend: uiState.canResend,
+                  onTimerEnds: () {
+                    if (mounted) {
+                      _uiState.value = (
+                        canResend: true,
+                        isResending: _uiState.value.isResending,
+                        isCodeComplete: _uiState.value.isCodeComplete,
+                      );
+                    }
+                  },
+                ),
+                18.szH,
+                IgnorePointer(
+                  ignoring: !uiState.isCodeComplete,
+                  child: AppLoadingButton(
+                    asyncCall: _confirm,
+                    title: LocaleKeys.confirmLogin,
+                    buttonColor: uiState.isCodeComplete
                         ? AppColors.tealOrGoldBasedRole
                         : AppColors.sokoonMuted,
-                    fontSize: 13.sp,
+                    textColor: AppColors.white,
+                    borderRadius: 14.r,
+                    height: 52.h,
+                    width: double.infinity,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w700,
                   ),
-          ).centerWidget,
+                ),
+                14.szH,
+                TextButton(
+                  onPressed: uiState.canResend && !uiState.isResending
+                      ? _resend
+                      : null,
+                  style: TextButton.styleFrom(
+                    minimumSize: Size.zero,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 4.h,
+                    ),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: uiState.isResending
+                      ? SizedBox.square(
+                          dimension: 16.r,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.r,
+                            color: AppColors.tealOrGoldBasedRole,
+                          ),
+                        )
+                      : AppText(
+                          LocaleKeys.resendCode,
+                          color: uiState.canResend
+                              ? AppColors.tealOrGoldBasedRole
+                              : AppColors.sokoonMuted,
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.w700,
+                        ),
+                ).centerWidget,
+              ],
+            ),
+          ),
         ],
       ),
     );

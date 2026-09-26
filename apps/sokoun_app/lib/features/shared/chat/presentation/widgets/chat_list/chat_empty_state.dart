@@ -4,6 +4,8 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/user_type/user_enum.dart';
+import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -44,7 +46,7 @@ class ChatEmptyState extends StatelessWidget {
               maxLines: 2,
             ),
             10.szH,
-            if(UserModel.isTenant)
+            if(UserTypeHelper.instance.currentUserType.isTenant)
               ...[
                 AppText(
                   LocaleKeys.chatEmptyDescription,

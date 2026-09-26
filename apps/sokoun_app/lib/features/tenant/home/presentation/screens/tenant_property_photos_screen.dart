@@ -28,21 +28,29 @@ class TenantPropertyPhotosScreen extends StatefulWidget {
 
 class _TenantPropertyPhotosScreenState
     extends State<TenantPropertyPhotosScreen> {
-  late int _selectedIndex;
+  late final ValueNotifier<int> _selectedIndex;
 
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.initialIndex
-        .clamp(0, widget.property.photoLabels.length - 1)
-        .toInt();
+    _selectedIndex = ValueNotifier<int>(
+      widget.initialIndex
+          .clamp(0, widget.property.photoLabels.length - 1)
+          .toInt(),
+    );
+  }
+
+  @override
+  void dispose() {
+    _selectedIndex.dispose();
+    super.dispose();
   }
 
   void _move(int delta) {
-    final next = (_selectedIndex + delta)
+    final int next = (_selectedIndex.value + delta)
         .clamp(0, widget.property.photoLabels.length - 1)
         .toInt();
-    setState(() => _selectedIndex = next);
+    _selectedIndex.value = next;
   }
 
   @override
@@ -58,103 +66,109 @@ class _TenantPropertyPhotosScreenState
               onTap: Go.back,
             ).paddingAll(20.r),
             Expanded(
-              child: Container(
-                height: 280.h,
-                margin: EdgeInsets.symmetric(horizontal: 18.w),
-                decoration: BoxDecoration(
-                  color: AppColors.slateDark,
-                  borderRadius: BorderRadius.circular(24.r),
-                ),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    if (widget.property.imageUrls.isNotEmpty)
-                      Positioned.fill(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(24.r),
-                          child: CachedImage(
-                            url:
-                                widget.property.imageUrls[_selectedIndex
-                                    .clamp(
-                                      0,
-                                      widget.property.imageUrls.length - 1,
-                                    )
-                                    .toInt()],
-                            fit: BoxFit.cover,
-                            height: 280.h,
-                          ),
-                        ),
-                      )
-                    else
-                      Icon(
-                        Icons.apartment_outlined,
-                        color: AppColors.whiteAlpha40,
-                        size: 58.r,
-                      ),
-                    PositionedDirectional(
-                      start: 12.w,
-                      child: TenantPhotoNavButton(
-                        icon: Icons.chevron_left_rounded,
-                        onTap: () => _move(-1),
-                      ),
-                    ),
-                    PositionedDirectional(
-                      end: 12.w,
-                      child: TenantPhotoNavButton(
-                        icon: Icons.chevron_right_rounded,
-                        onTap: () => _move(1),
-                      ),
-                    ),
-                  ],
-                ),
-              ).centerWidget,
-            ),
-            Column(
-              children: [
-                AppText(
-                  '${_selectedIndex + 1} / ${widget.property.photoLabels.length} — ${widget.property.photoLabels[_selectedIndex]}',
-                  color: AppColors.white,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w900,
-                  textAlign: TextAlign.center,
-                ),
-                14.szH,
-                SizedBox(
-                  height: 40.h,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    reverse: true,
-                    itemBuilder: (context, index) {
-                      final isSelected = index == _selectedIndex;
-                      return GestureDetector(
-                        onTap: () => setState(() => _selectedIndex = index),
-                        behavior: HitTestBehavior.opaque,
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 180),
-                          width: isSelected ? 42.w : 34.w,
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? AppColors.sokoonTeal
-                                : AppColors.slateGray,
-                            borderRadius: BorderRadius.circular(12.r),
-                            border: isSelected
-                                ? Border.all(color: AppColors.white)
-                                : null,
-                          ),
-                          child: Icon(
-                            Icons.image_outlined,
-                            color: AppColors.whiteAlpha60,
-                            size: 16.r,
-                          ),
-                        ),
-                      );
-                    },
-                    separatorBuilder: (context, index) => 8.szW,
-                    itemCount: widget.property.photoLabels.length,
+              child: ValueListenableBuilder<int>(
+                valueListenable: _selectedIndex,
+                builder: (context, selectedIndex, _) => Container(
+                  height: 280.h,
+                  margin: EdgeInsets.symmetric(horizontal: 18.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.slateDark,
+                    borderRadius: BorderRadius.circular(24.r),
                   ),
-                ),
-              ],
-            ).paddingSymmetric(horizontal: 18.w, vertical: 16.h),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      if (widget.property.imageUrls.isNotEmpty)
+                        Positioned.fill(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(24.r),
+                            child: CachedImage(
+                              url:
+                                  widget.property.imageUrls[selectedIndex
+                                      .clamp(
+                                        0,
+                                        widget.property.imageUrls.length - 1,
+                                      )
+                                      .toInt()],
+                              fit: BoxFit.cover,
+                              height: 280.h,
+                            ),
+                          ),
+                        )
+                      else
+                        Icon(
+                          Icons.apartment_outlined,
+                          color: AppColors.whiteAlpha40,
+                          size: 58.r,
+                        ),
+                      PositionedDirectional(
+                        start: 12.w,
+                        child: TenantPhotoNavButton(
+                          icon: Icons.chevron_left_rounded,
+                          onTap: () => _move(-1),
+                        ),
+                      ),
+                      PositionedDirectional(
+                        end: 12.w,
+                        child: TenantPhotoNavButton(
+                          icon: Icons.chevron_right_rounded,
+                          onTap: () => _move(1),
+                        ),
+                      ),
+                    ],
+                  ),
+                ).centerWidget,
+              ),
+            ),
+            ValueListenableBuilder<int>(
+              valueListenable: _selectedIndex,
+              builder: (context, selectedIndex, _) => Column(
+                children: [
+                  AppText(
+                    '${selectedIndex + 1} / ${widget.property.photoLabels.length} — ${widget.property.photoLabels[selectedIndex]}',
+                    color: AppColors.white,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w900,
+                    textAlign: TextAlign.center,
+                  ),
+                  14.szH,
+                  SizedBox(
+                    height: 40.h,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      reverse: true,
+                      itemBuilder: (context, index) {
+                        final bool isSelected = index == selectedIndex;
+                        return GestureDetector(
+                          onTap: () => _selectedIndex.value = index,
+                          behavior: HitTestBehavior.opaque,
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 180),
+                            width: isSelected ? 42.w : 34.w,
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? AppColors.sokoonTeal
+                                  : AppColors.slateGray,
+                              borderRadius: BorderRadius.circular(12.r),
+                              border: isSelected
+                                  ? Border.all(color: AppColors.white)
+                                  : null,
+                            ),
+                            child: Icon(
+                              Icons.image_outlined,
+                              color: AppColors.whiteAlpha60,
+                              size: 16.r,
+                            ),
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context, index) => 8.szW,
+                      itemCount: widget.property.photoLabels.length,
+                    ),
+                  ),
+                ],
+              ).paddingSymmetric(horizontal: 18.w, vertical: 16.h),
+            ),
           ],
         ),
       ),

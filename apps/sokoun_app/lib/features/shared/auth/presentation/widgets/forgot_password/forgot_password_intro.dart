@@ -1,0 +1,47 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/align_helper.dart';
+import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/widgets/app_text.dart';
+
+class ForgotPasswordIntro extends StatelessWidget {
+  const ForgotPasswordIntro({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final Color accentColor = AppColors.tealOrGoldBasedRole;
+
+    return Column(
+      children: [
+        Container(
+          width: 80.r,
+          height: 80.r,
+          decoration: BoxDecoration(
+            color: AppColors.tealOrGoldAlphaBasedRole,
+            borderRadius: BorderRadius.circular(24.r),
+          ),
+          child: Icon(Icons.lock_reset_rounded, color: accentColor, size: 38.r),
+        ).centerWidget,
+        20.szH,
+        AppText(
+          LocaleKeys.forgotPassword,
+          color: AppColors.sokoonNavy,
+          fontSize: 20.sp,
+          fontWeight: FontWeight.w900,
+          textAlign: TextAlign.center,
+        ),
+        8.szH,
+        AppText(
+          LocaleKeys.forgotPasswordDescription,
+          color: AppColors.sokoonGray,
+          fontSize: 13.sp,
+          fontWeight: FontWeight.w500,
+          textAlign: TextAlign.center,
+          height: 1.7,
+        ),
+      ],
+    );
+  }
+}

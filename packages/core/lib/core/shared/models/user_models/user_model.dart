@@ -44,13 +44,13 @@ class UserModel {
     'type': type,
   };
 
-  static bool get isTenant {
-    return currentUser is TenantModel;
-  }
-
-  static bool get isOwner {
-    return currentUser is OwnerModel;
-  }
+  // static bool get isTenant {
+  //   return currentUser is TenantModel;
+  // }
+  //
+  // static bool get isOwner {
+  //   return currentUser is OwnerModel;
+  // }
 
   static bool get isAuthenticated {
     return currentUser.isNotNull;
