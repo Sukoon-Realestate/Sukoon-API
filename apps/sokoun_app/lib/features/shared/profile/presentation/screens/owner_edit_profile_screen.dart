@@ -9,7 +9,7 @@ class OwnerEditProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProfileEditView(
       initialValue: initialValue,
-      userType: UserType.owner,
+      workspace: AppWorkspace.owner,
     );
   }
 }

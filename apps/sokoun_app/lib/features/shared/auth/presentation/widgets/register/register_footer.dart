@@ -45,7 +45,7 @@ class _RegisterFooterState extends State<RegisterFooter> {
             text: LocaleKeys.login,
             recognizer: _loginRecognizer,
             style: TextStyle(
-              color: AppColors.tealOrGoldBasedRole,
+              color: AppColors.sokoonTeal,
               fontWeight: FontWeight.w800,
             ),
           ),

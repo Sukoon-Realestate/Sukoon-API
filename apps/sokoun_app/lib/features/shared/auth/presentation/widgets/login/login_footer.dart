@@ -45,7 +45,7 @@ class _LoginFooterState extends State<LoginFooter> {
             text: LocaleKeys.signUp,
             recognizer: _signUpRecognizer,
             style: TextStyle(
-              color: AppColors.tealOrGoldBasedRole,
+              color: AppColors.sokoonTeal,
               fontWeight: FontWeight.w800,
             ),
           ),

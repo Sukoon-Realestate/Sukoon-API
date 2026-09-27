@@ -33,7 +33,7 @@ class ForgotPasswordForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color accentColor = AppColors.tealOrGoldBasedRole;
+    final Color accentColor = AppColors.sokoonTeal;
 
     return Form(
       key: formKey,

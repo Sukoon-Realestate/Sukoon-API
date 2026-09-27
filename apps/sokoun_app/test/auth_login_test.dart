@@ -6,10 +6,12 @@ import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_respon
 import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
+import 'package:melos_core/core/network/network_service.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/login.dart';
+import 'package:sokoun_app/features/shared/auth/data/auth_session_data.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -70,10 +72,31 @@ void main() {
       expect(userCubit.cachedUser?.id, '17');
       expect(userCubit.cachedUser?.email, 'user@example.com');
       expect(userCubit.cachedUser?.type, 'tenant');
-      expect(repository.currentUserCacheKey, 'auth_current_user');
-      expect(repository.cachedUserJson?['full_name'], 'Test User');
-      expect(repository.restoredUser?.name, 'Test User');
+      expect(repository.currentUserCacheKey, isNull);
+      expect(repository.cachedUserJson, isNull);
+      expect(repository.restoredUser, isNull);
+      expect(userCubit.cachedUser?.name, 'Test User');
       expect(completed, isTrue);
+    },
+  );
+
+  test(
+    'failed fresh identity lookup clears the provisional cookie session',
+    () async {
+      repository.currentUserFailure = const Failure('Cannot load account');
+      final _SessionNetwork network = _SessionNetwork();
+      injector.registerSingleton<NetworkService>(network);
+
+      final result = await const AuthSessionApiDataSource()
+          .loginWithCredentials(
+            email: 'user@example.com',
+            password: 'password',
+          );
+
+      expect(result.tryGetError(), repository.currentUserFailure);
+      expect(network.cookiesCleared, isTrue);
+      expect(userCubit.cachedUser, isNull);
+      expect(repository.currentUserCacheKey, isNull);
     },
   );
 }
@@ -85,6 +108,7 @@ class _LoginRepository implements BaseRepository {
   String? currentUserCacheKey;
   Map<String, dynamic>? cachedUserJson;
   UserModel? restoredUser;
+  Failure? currentUserFailure;
 
   @override
   Future<Result<BaseModel<T>, Failure>> crudCall<T>(
@@ -99,6 +123,8 @@ class _LoginRepository implements BaseRepository {
       );
     }
 
+    if (currentUserFailure != null) return Error(currentUserFailure!);
+
     final T user = params.mapper!(const <String, dynamic>{
       'id': 17,
       'name': 'Test User',
@@ -108,8 +134,10 @@ class _LoginRepository implements BaseRepository {
       'type': 'tenant',
     });
     currentUserCacheKey = params.cacheKey;
-    cachedUserJson = params.toJson!(user);
-    restoredUser = params.fromCacheJson!(cachedUserJson!) as UserModel;
+    cachedUserJson = params.toJson?.call(user);
+    restoredUser = cachedUserJson == null
+        ? null
+        : params.fromCacheJson?.call(cachedUserJson!) as UserModel?;
     return Success(BaseModel<T>(key: '', msg: '', data: user));
   }
 
@@ -117,6 +145,16 @@ class _LoginRepository implements BaseRepository {
   Future<Result<List<T>, Failure>> getBaseIdAndNameEntity<T extends BaseEntity>(
     GetBaseEntityParams? param,
   ) => throw UnimplementedError();
+}
+
+class _SessionNetwork implements NetworkService {
+  bool cookiesCleared = false;
+
+  @override
+  Future<void> clearSessionCookies() async => cookiesCleared = true;
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 class _RecordingUserCubit extends UserCubit {

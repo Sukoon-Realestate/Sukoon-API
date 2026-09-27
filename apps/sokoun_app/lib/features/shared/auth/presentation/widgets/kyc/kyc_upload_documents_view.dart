@@ -299,7 +299,7 @@ class _KycUploadSubmitBar extends StatelessWidget {
             AppLoadingButton(
               asyncCall: (_) => onSubmit(),
               title: LocaleKeys.nextReviewData,
-              buttonColor: AppColors.tealOrGoldBasedRole,
+              buttonColor: AppColors.sokoonTeal,
               textColor: AppColors.white,
               borderRadius: 14.r,
               height: 52.h,

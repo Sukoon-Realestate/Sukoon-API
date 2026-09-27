@@ -7,6 +7,10 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
 import 'package:sokoun_app/features/tenant/visits/imports.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
+import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
+import 'package:sokoun_app/features/main_view/data/enums/workspace_tab.dart';
+import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
 
 class TenantPropertyBottomActions extends StatelessWidget {
   const TenantPropertyBottomActions({
@@ -24,7 +28,30 @@ class TenantPropertyBottomActions extends StatelessWidget {
   final VoidCallback? onChatPressed;
   final bool isOpeningChat;
 
+  bool get _isOwnProperty =>
+      property.ownerId.isNotEmpty &&
+      property.ownerId == UserModel.currentUser?.id;
+
   void _openBookVisit() {
+    if (_isOwnProperty) {
+      WorkspaceNavigation.open(
+        workspace: AppWorkspace.owner,
+        tab: WorkspaceTab.properties,
+      );
+      return;
+    }
+    if (!WorkspaceNavigation.isAuthenticated) {
+      WorkspaceNavigation.open(
+        workspace: AppWorkspace.tenant,
+        showLoginSheet: true,
+        detail: () => Go.to(
+          BookVisitScreen(
+            property: VisitPropertyContent.fromPropertyDetails(property),
+          ),
+        ),
+      );
+      return;
+    }
     Go.to(
       BookVisitScreen(
         property: VisitPropertyContent.fromPropertyDetails(property),
@@ -54,7 +81,9 @@ class TenantPropertyBottomActions extends StatelessWidget {
                   borderRadius: BorderRadius.circular(14.r),
                 ),
                 child: AppText(
-                  LocaleKeys.tenantVisitBookTitle,
+                  _isOwnProperty
+                      ? LocaleKeys.workspaceManageProperty
+                      : LocaleKeys.tenantVisitBookTitle,
                   color: AppColors.white,
                   fontSize: 15.sp,
                   fontWeight: FontWeight.w900,
@@ -63,39 +92,40 @@ class TenantPropertyBottomActions extends StatelessWidget {
             ),
           ),
           10.szW,
-          Semantics(
-            button: true,
-            enabled: onChatPressed != null && !isOpeningChat,
-            label: LocaleKeys.tenantVisitOpenOwnerChat,
-            child: GestureDetector(
-              onTap: isOpeningChat ? null : onChatPressed,
-              behavior: HitTestBehavior.opaque,
-              child: Container(
-                width: 48.r,
-                height: 48.r,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: AppColors.grayBackground,
-                  borderRadius: BorderRadius.circular(14.r),
-                ),
-                child: isOpeningChat
-                    ? SizedBox.square(
-                        dimension: 19.r,
-                        child: const CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: AppColors.sokoonTeal,
+          if (!_isOwnProperty)
+            Semantics(
+              button: true,
+              enabled: onChatPressed != null && !isOpeningChat,
+              label: LocaleKeys.tenantVisitOpenOwnerChat,
+              child: GestureDetector(
+                onTap: isOpeningChat ? null : onChatPressed,
+                behavior: HitTestBehavior.opaque,
+                child: Container(
+                  width: 48.r,
+                  height: 48.r,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: AppColors.grayBackground,
+                    borderRadius: BorderRadius.circular(14.r),
+                  ),
+                  child: isOpeningChat
+                      ? SizedBox.square(
+                          dimension: 19.r,
+                          child: const CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.sokoonTeal,
+                          ),
+                        )
+                      : Icon(
+                          Icons.chat_bubble_outline_rounded,
+                          color: onChatPressed == null
+                              ? AppColors.sokoonMuted
+                              : AppColors.sokoonTeal,
+                          size: 21.r,
                         ),
-                      )
-                    : Icon(
-                        Icons.chat_bubble_outline_rounded,
-                        color: onChatPressed == null
-                            ? AppColors.sokoonMuted
-                            : AppColors.sokoonTeal,
-                        size: 21.r,
-                      ),
+                ),
               ),
             ),
-          ),
           10.szW,
           GestureDetector(
             onTap: onSavedPressed,

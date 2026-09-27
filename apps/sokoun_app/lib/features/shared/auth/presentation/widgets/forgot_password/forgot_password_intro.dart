@@ -11,7 +11,7 @@ class ForgotPasswordIntro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color accentColor = AppColors.tealOrGoldBasedRole;
+    final Color accentColor = AppColors.sokoonTeal;
 
     return Column(
       children: [
@@ -19,7 +19,7 @@ class ForgotPasswordIntro extends StatelessWidget {
           width: 80.r,
           height: 80.r,
           decoration: BoxDecoration(
-            color: AppColors.tealOrGoldAlphaBasedRole,
+            color: AppColors.mintLight,
             borderRadius: BorderRadius.circular(24.r),
           ),
           child: Icon(Icons.lock_reset_rounded, color: accentColor, size: 38.r),

@@ -35,8 +35,8 @@ class OtpCodeField extends StatelessWidget {
     );
 
     final activeTheme = defaultTheme.copyDecorationWith(
-      color: AppColors.tealOrGoldAlphaBasedRole,
-      border: Border.all(color: AppColors.tealOrGoldBasedRole, width: 1.5),
+      color: AppColors.mintLight,
+      border: Border.all(color: AppColors.sokoonTeal, width: 1.5),
       borderRadius: BorderRadius.circular(12.r),
     );
 

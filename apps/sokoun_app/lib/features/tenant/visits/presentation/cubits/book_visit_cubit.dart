@@ -5,6 +5,7 @@ class BookVisitCubit extends AsyncCubit<Map<String, dynamic>> {
 
   Future<void> bookVisit({
     required String propertyId,
+    String ownerId = '',
     required String visitDate,
     required int visitHour,
     required int visitMinute,
@@ -12,6 +13,11 @@ class BookVisitCubit extends AsyncCubit<Map<String, dynamic>> {
     required void Function() onSuccess,
     void Function(String message)? onError,
   }) async {
+    if (ownerId.isNotEmpty && ownerId == UserModel.currentUser?.id) {
+      setError(errorMessage: LocaleKeys.workspaceSelfActionBlocked);
+      onError?.call(LocaleKeys.workspaceSelfActionBlocked);
+      return;
+    }
     final BookVisitBody body = BookVisitBody.fromTime(
       visitDate: visitDate,
       hour: visitHour,

@@ -13,6 +13,9 @@ import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/cubits/start_chat.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_screen.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
+import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
+import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
 
 class PropertyDetailsScreen extends StatefulWidget {
   const PropertyDetailsScreen({super.key, required this.propertyId});
@@ -53,6 +56,15 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   }
 
   Future<void> _toggleSaved(TenantPropertyDetailsContent property) async {
+    if (!WorkspaceNavigation.isAuthenticated) {
+      await WorkspaceNavigation.open(
+        workspace: AppWorkspace.tenant,
+        showLoginSheet: true,
+        detail: () =>
+            Go.to(PropertyDetailsScreen(propertyId: widget.propertyId)),
+      );
+      return;
+    }
     final ({bool? savedOverride, bool isUpdating}) savedState =
         _savedState.value;
     if (savedState.isUpdating) return;
@@ -106,15 +118,30 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
               isSaved: savedState.savedOverride ?? property.isSaved,
               onSavedPressed: () => _toggleSaved(property),
               isOpeningChat: conversationState.isLoading,
-              onChatPressed: property.ownerId.isEmpty
+              onChatPressed:
+                  property.ownerId.isEmpty ||
+                      property.ownerId == UserModel.currentUser?.id
                   ? null
-                  : () => _conversationCubit.createOrGet(
-                      userId: property.ownerId,
-                      onSuccess: (conversation) =>
-                          Go.to(ChatThreadScreen(conversation: conversation)),
-                    ),
+                  : () => _openChat(property),
             ),
           ),
+    );
+  }
+
+  Future<void> _openChat(TenantPropertyDetailsContent property) async {
+    if (!WorkspaceNavigation.isAuthenticated) {
+      await WorkspaceNavigation.open(
+        workspace: AppWorkspace.tenant,
+        showLoginSheet: true,
+        detail: () =>
+            Go.to(PropertyDetailsScreen(propertyId: widget.propertyId)),
+      );
+      return;
+    }
+    await _conversationCubit.createOrGet(
+      userId: property.ownerId,
+      onSuccess: (conversation) =>
+          Go.to(ChatThreadScreen(conversation: conversation)),
     );
   }
 

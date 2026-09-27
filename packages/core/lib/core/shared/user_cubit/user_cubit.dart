@@ -9,6 +9,7 @@ import '../../helpers/nsfw_detector.dart';
 import '../../local_db/objectbox_cache_service.dart';
 import '../../network/interceptors/log_interceptor.dart';
 import '../../network/network_service.dart';
+import '../../network/account_session.dart';
 import '../models/user_models/user_model.dart';
 part 'user_state.dart';
 part 'user_utils.dart';
@@ -20,12 +21,14 @@ class UserCubit extends Cubit<UserState> with UserUtils {
   UserCubit() : super(UserState.initial());
 
   Future<void> setUserLoggedIn({required UserModel user}) async {
+    AccountSession.begin(user.id);
     await Future.wait([_saveUser(user), SecureStorage.delete(_legacyTokenKey)]);
     // AppyFlyerHelper.setCustomer();
     emit(state.copyWith(userModel: user, userStatus: UserStatus.loggedIn));
   }
 
   Future<void> logout() async {
+    AccountSession.end();
     try {
       await injector<NetworkService>().clearSessionCookies();
     } finally {
@@ -41,6 +44,13 @@ class UserCubit extends Cubit<UserState> with UserUtils {
 
   Future<void> updateUser(UserModel user) async {
     await _saveUser(user);
+    for (final String key in [
+      'tenant_profile',
+      'owner_profile',
+      'tenant_account_summary',
+    ]) {
+      ObjectBoxCacheService.remove(key);
+    }
     emit(state.copyWith(userModel: user));
   }
 
@@ -56,19 +66,25 @@ class UserCubit extends Cubit<UserState> with UserUtils {
       'Cached user exists: ${userMap != null}, '
       'cookie session exists: $hasSessionCookies',
     );
-    if (hasSessionCookies && userMap != null) {
+    final UserModel? cachedUser = userMap == null
+        ? null
+        : UserModel.fromJson(userMap);
+    if (hasSessionCookies &&
+        cachedUser != null &&
+        cachedUser.id.isNotEmpty &&
+        cachedUser.id != '0') {
+      AccountSession.begin(cachedUser.id);
       // AppyFlyerHelper.setCustomer();
       emit(
-        state.copyWith(
-          userModel: UserModel.fromJson(userMap),
-          userStatus: UserStatus.loggedIn,
-        ),
+        state.copyWith(userModel: cachedUser, userStatus: UserStatus.loggedIn),
       );
       return true;
     }
     if (userMap != null) {
       await CacheStorage.delete(_userKey);
     }
+    AccountSession.end();
+    emit(UserState.initial());
     return false;
   }
 

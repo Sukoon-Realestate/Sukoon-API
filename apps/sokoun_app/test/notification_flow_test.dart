@@ -16,6 +16,8 @@ import 'package:sokoun_app/features/shared/notifications/presentation/screens/no
 import 'package:sokoun_app/features/shared/notifications/presentation/widgets/notification_card.dart';
 
 import 'helpers/home_page_test_dependencies.dart';
+import 'helpers/account_test_dependencies.dart';
+import 'package:melos_core/core/helpers/cache_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +32,9 @@ void main() {
           return call.method == 'getAll' ? <String, Object>{} : true;
         });
     await EasyLocalization.ensureInitialized();
+    await CacheStorage.init();
     registerHomePageTestDependencies();
+    await registerAuthenticatedTestAccount();
   });
 
   tearDownAll(() {

@@ -126,12 +126,12 @@ class _OtpScreenState extends State<OtpScreen> {
             width: 64.r,
             height: 64.r,
             decoration: BoxDecoration(
-              color: AppColors.tealOrGoldAlphaBasedRole,
+              color: AppColors.mintLight,
               borderRadius: BorderRadius.circular(18.r),
             ),
             child: Icon(
               Icons.mail_outline_rounded,
-              color: AppColors.tealOrGoldBasedRole,
+              color: AppColors.sokoonTeal,
               size: 30.r,
             ),
           ).centerWidget,
@@ -146,7 +146,7 @@ class _OtpScreenState extends State<OtpScreen> {
           8.szH,
           AppText(
             _maskedEmail,
-            color: AppColors.tealOrGoldBasedRole,
+            color: AppColors.sokoonTeal,
             fontSize: 14.sp,
             fontWeight: FontWeight.w700,
             textAlign: TextAlign.center,
@@ -205,7 +205,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     asyncCall: _confirm,
                     title: LocaleKeys.confirmLogin,
                     buttonColor: uiState.isCodeComplete
-                        ? AppColors.tealOrGoldBasedRole
+                        ? AppColors.sokoonTeal
                         : AppColors.sokoonMuted,
                     textColor: AppColors.white,
                     borderRadius: 14.r,
@@ -233,13 +233,13 @@ class _OtpScreenState extends State<OtpScreen> {
                           dimension: 16.r,
                           child: CircularProgressIndicator(
                             strokeWidth: 2.r,
-                            color: AppColors.tealOrGoldBasedRole,
+                            color: AppColors.sokoonTeal,
                           ),
                         )
                       : AppText(
                           LocaleKeys.resendCode,
                           color: uiState.canResend
-                              ? AppColors.tealOrGoldBasedRole
+                              ? AppColors.sokoonTeal
                               : AppColors.sokoonMuted,
                           fontSize: 13.sp,
                           fontWeight: FontWeight.w700,

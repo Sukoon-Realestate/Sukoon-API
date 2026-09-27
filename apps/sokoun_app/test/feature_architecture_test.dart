@@ -82,6 +82,9 @@ void main() {
       for (final File file in dartFiles) {
         final String source = file.readAsStringSync();
         if (!source.contains('httpRequestType: HttpRequestType.get')) continue;
+        // Authentication must establish identity from the server. A cached /me
+        // fallback could sign a new session into the previous account's data.
+        if (file.path.endsWith('/auth/data/auth_session_data.dart')) continue;
 
         const requiredTokens = <String>[
           'cacheKey:',

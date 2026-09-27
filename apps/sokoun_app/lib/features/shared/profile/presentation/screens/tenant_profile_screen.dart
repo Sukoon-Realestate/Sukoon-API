@@ -13,6 +13,7 @@ class _TenantProfileScreenState extends State<TenantProfileScreen> {
   late final UserModel _fallbackUser;
   late final TenantProfileCubit _profileCubit;
   late final Future<void> _profileRequest;
+  StreamSubscription<UserState>? _accountSubscription;
 
   @override
   void initState() {
@@ -20,10 +21,19 @@ class _TenantProfileScreenState extends State<TenantProfileScreen> {
     _fallbackUser = widget.user ?? UserModel.currentUser ?? UserModel.initial();
     _profileCubit = TenantProfileCubit();
     _profileRequest = _profileCubit.getProfile();
+    if (injector.isRegistered<UserCubit>()) {
+      _accountSubscription = UserCubit.instance.stream.listen((state) {
+        if (state.userStatus == UserStatus.loggedIn) {
+          _profileCubit.updateFromUser(state.userModel);
+          unawaited(_profileCubit.getProfile());
+        }
+      });
+    }
   }
 
   @override
   void dispose() {
+    unawaited(_accountSubscription?.cancel());
     _profileCubit.close();
     super.dispose();
   }
@@ -40,7 +50,7 @@ class _TenantProfileScreenState extends State<TenantProfileScreen> {
       email: profile.accountDetails.email.isNotEmpty
           ? profile.accountDetails.email
           : _fallbackUser.email,
-      type: UserType.tenant.name,
+      type: _fallbackUser.type,
     );
   }
 

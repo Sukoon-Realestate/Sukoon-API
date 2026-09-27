@@ -1,18 +1,13 @@
-import 'dart:developer';
-
 import 'package:melos_core/core/extensions/object.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
-import 'package:melos_core/core/helpers/user_type/user_enum.dart';
-import 'package:melos_core/core/shared/models/user_models/owner_model.dart';
-import 'package:melos_core/core/shared/models/user_models/tenent_model.dart';
-
-import '../../../helpers/user_type/user_type_helper.dart';
 
 class UserModel {
   final String id;
   final String name;
   final String phone;
   final String email;
+
+  /// Legacy server metadata, never an authorization or workspace selection.
   final String type;
 
   const UserModel({
@@ -20,21 +15,30 @@ class UserModel {
     required this.name,
     required this.phone,
     required this.email,
-    required this.type,
+    this.type = '',
   });
 
   factory UserModel.initial() =>
       const UserModel(id: '0', name: '', phone: '', email: '', type: '');
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
-    log('the user model is $json');
-    final UserType type = UserTypeHelper.instance.currentUserType;
-    if (type.isTenant) {
-      return TenantModel.fromJson(json);
-    } else {
-      return OwnerModel.fromJson(json);
-    }
+    return UserModel(
+      id: json['id']?.toString() ?? '',
+      name: json['full_name']?.toString() ?? json['name']?.toString() ?? '',
+      phone:
+          json['phone']?.toString() ?? json['phone_number']?.toString() ?? '',
+      email: json['email']?.toString() ?? '',
+      type: json['type']?.toString() ?? '',
+    );
   }
+
+  UserModel copyWith({String? name, String? phone, String? email}) => UserModel(
+    id: id,
+    name: name ?? this.name,
+    phone: phone ?? this.phone,
+    email: email ?? this.email,
+    type: type,
+  );
 
   Map<String, dynamic> toJson() => {
     'id': id,
@@ -43,14 +47,6 @@ class UserModel {
     'email': email,
     'type': type,
   };
-
-  // static bool get isTenant {
-  //   return currentUser is TenantModel;
-  // }
-  //
-  // static bool get isOwner {
-  //   return currentUser is OwnerModel;
-  // }
 
   static bool get isAuthenticated {
     return currentUser.isNotNull;

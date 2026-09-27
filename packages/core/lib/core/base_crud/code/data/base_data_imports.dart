@@ -1,4 +1,3 @@
-
 import 'package:injectable/injectable.dart';
 import 'package:multiple_result/multiple_result.dart';
 
@@ -8,6 +7,7 @@ import '../../../extensions/object.dart';
 import '../../../local_db/objectbox_cache_service.dart';
 import '../../../network/network_request.dart';
 import '../../../network/network_service.dart';
+import '../../../network/account_session.dart';
 import '../domain/base_domain_imports.dart';
 import '../domain/usecases/pagination_response.dart';
 

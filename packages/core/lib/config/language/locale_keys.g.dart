@@ -1,6 +1,45 @@
 import 'package:easy_localization/easy_localization.dart';
 
 abstract class LocaleKeys {
+  static const String _workspaceTenant = 'workspace_tenant';
+  static String get workspaceTenant => _workspaceTenant.tr();
+
+  static const String _workspaceOwner = 'workspace_owner';
+  static String get workspaceOwner => _workspaceOwner.tr();
+
+  static const String _workspaceSwitch = 'workspace_switch';
+  static String get workspaceSwitch => _workspaceSwitch.tr();
+
+  static const String _workspaceSwitchToOwner = 'workspace_switch_to_owner';
+  static String get workspaceSwitchToOwner => _workspaceSwitchToOwner.tr();
+
+  static const String _workspaceSwitchToTenant = 'workspace_switch_to_tenant';
+  static String get workspaceSwitchToTenant => _workspaceSwitchToTenant.tr();
+
+  static const String _workspaceAccountDescription = 'workspace_account_description';
+  static String get workspaceAccountDescription => _workspaceAccountDescription.tr();
+
+  static const String _workspaceManageProperty = 'workspace_manage_property';
+  static String get workspaceManageProperty => _workspaceManageProperty.tr();
+
+  static const String _workspaceSelfActionBlocked = 'workspace_self_action_blocked';
+  static String get workspaceSelfActionBlocked => _workspaceSelfActionBlocked.tr();
+
+  static const String _workspaceAllNotifications = 'workspace_all_notifications';
+  static String get workspaceAllNotifications => _workspaceAllNotifications.tr();
+
+  static const String _workspaceDiscardTitle = 'workspace_discard_title';
+  static String get workspaceDiscardTitle => _workspaceDiscardTitle.tr();
+
+  static const String _workspaceDiscardMessage = 'workspace_discard_message';
+  static String get workspaceDiscardMessage => _workspaceDiscardMessage.tr();
+
+  static const String _workspaceStay = 'workspace_stay';
+  static String get workspaceStay => _workspaceStay.tr();
+
+  static const String _workspaceDiscard = 'workspace_discard';
+  static String get workspaceDiscard => _workspaceDiscard.tr();
+
   static const String _ok = 'ok';
   static String get ok => _ok.tr();
 

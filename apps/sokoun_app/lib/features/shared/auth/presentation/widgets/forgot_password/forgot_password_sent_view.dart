@@ -51,7 +51,7 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
 
   @override
   Widget build(BuildContext context) {
-    final Color accentColor = AppColors.tealOrGoldBasedRole;
+    final Color accentColor = AppColors.sokoonTeal;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -60,7 +60,7 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
           width: 96.r,
           height: 96.r,
           decoration: BoxDecoration(
-            color: AppColors.tealOrGoldAlphaBasedRole,
+            color: AppColors.mintLight,
             borderRadius: BorderRadius.circular(28.r),
           ),
           child: Stack(
@@ -231,7 +231,7 @@ class _RecoveryStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color accentColor = AppColors.tealOrGoldBasedRole;
+    final Color accentColor = AppColors.sokoonTeal;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,7 +241,7 @@ class _RecoveryStep extends StatelessWidget {
           height: 34.r,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: AppColors.tealOrGoldAlphaBasedRole,
+            color: AppColors.mintLight,
             shape: BoxShape.circle,
           ),
           child: AppText(

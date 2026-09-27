@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,6 @@ import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/extensions/seperator_helper.dart';
-import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/core/helpers/status_builder.dart';
 import 'package:melos_core/core/helpers/helpers.dart';
@@ -25,12 +25,13 @@ import 'package:sokoun_app/features/owner/properties/imports.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/screens/kyc_approved_screen.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/screens/kyc_intro_screen.dart';
-import 'package:sokoun_app/features/shared/auth/presentation/screens/login_screen.dart';
-import 'package:sokoun_app/features/shared/auth/presentation/screens/role_select_screen.dart';
+import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
+import 'package:sokoun_app/features/main_view/presentation/widgets/workspace_switcher.dart';
 import 'package:sokoun_app/features/shared/notifications/data/notification_device_data.dart';
 import 'package:sokoun_app/features/tenant/favorites/presentation/screens/favorites_screen.dart';
 import 'package:sokoun_app/features/tenant/visits/imports.dart';
 import 'package:sokoun_app/shared_widgets/shared_widgets.dart';
+import 'package:sokoun_app/shared_widgets/unsaved_changes_guard.dart';
 
 part 'data/enums/profile_gender.dart';
 part 'data/models/owner_profile_content.dart';

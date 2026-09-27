@@ -11,6 +11,7 @@ import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_sear
 import 'package:sokoun_app/features/tenant/visits/imports.dart';
 
 import 'helpers/home_page_test_dependencies.dart';
+import 'helpers/account_test_dependencies.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +35,7 @@ void main() {
     await EasyLocalization.ensureInitialized();
     await CacheStorage.init();
     registerHomePageTestDependencies();
+    await registerAuthenticatedTestAccount();
   });
 
   tearDownAll(() {

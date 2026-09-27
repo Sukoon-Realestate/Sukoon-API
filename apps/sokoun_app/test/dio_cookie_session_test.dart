@@ -3,9 +3,53 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/core/network/dio_service.dart';
+import 'package:melos_core/core/network/account_session.dart';
 import 'package:melos_core/core/network/network_request.dart';
 
 void main() {
+  setUp(AccountSession.end);
+  tearDown(AccountSession.end);
+
+  test(
+    'a rejected signed-in session expires even with no refresh cookie',
+    () async {
+      final Directory cookieDirectory = await Directory.systemTemp.createTemp(
+        'sokoun_cookie_expiry_test_',
+      );
+      final HttpServer server = await HttpServer.bind(
+        InternetAddress.loopbackIPv4,
+        0,
+      );
+      addTearDown(() async {
+        await server.close(force: true);
+        await cookieDirectory.delete(recursive: true);
+      });
+      server.listen((request) async {
+        request.response
+          ..statusCode = HttpStatus.unauthorized
+          ..headers.contentType = ContentType.json
+          ..write(jsonEncode({'message': 'Session expired'}));
+        await request.response.close();
+      });
+      final DioService service = DioService(
+        initialBaseUrl: 'http://${server.address.host}:${server.port}/',
+        initialLanguageCode: 'en',
+        cookieDirectoryProvider: () async => cookieDirectory,
+      );
+      AccountSession.begin('expired-account');
+      final Future<void> expired = AccountSession.expired.first;
+      await expectLater(
+        service.callApi<bool>(
+          NetworkRequest(method: RequestMethod.get, path: 'protected/'),
+        ),
+        throwsA(anything),
+      );
+      await expired.timeout(const Duration(seconds: 2));
+      expect(AccountSession.userId, isNull);
+      expect(await service.hasSessionCookies(), isFalse);
+    },
+  );
+
   test(
     'persists backend cookies, restores them, and clears the session',
     () async {

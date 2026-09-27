@@ -8,6 +8,10 @@ import 'package:melos_core/core/helpers/helpers.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/screens/login_screen.dart';
 import 'package:sokoun_app/shared_widgets/unauthenticated_sheet.dart';
+import 'package:sokoun_app/features/main_view/presentation/screens/view.dart';
+import 'package:sokoun_app/features/main_view/presentation/widgets/home_bottom_navigation.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'helpers/home_page_test_dependencies.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +27,14 @@ void main() {
         });
     await EasyLocalization.ensureInitialized();
     await CacheStorage.init();
-    await CacheStorage.write('current_user_type', 'tenant');
+    registerHomePageTestDependencies();
+    PackageInfo.setMockInitialValues(
+      appName: 'Sokoun',
+      packageName: 'test.sokoun',
+      version: '1.0.0',
+      buildNumber: '1',
+      buildSignature: '',
+    );
   });
 
   tearDownAll(() {
@@ -31,7 +42,7 @@ void main() {
         .setMockMethodCallHandler(sharedPreferencesChannel, null);
   });
 
-  testWidgets('visitor entry presents the gate when signed out', (
+  testWidgets('visitor can browse but private tabs present the sign-in gate', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(390, 844);
@@ -47,6 +58,12 @@ void main() {
     await tester.tap(visitorButton);
     await tester.pumpAndSettle();
 
+    expect(find.byType(HomeScreen), findsOneWidget);
+    expect(find.byType(UnauthenticatedSheet), findsNothing);
+    tester
+        .widget<HomeBottomNavigation>(find.byType(HomeBottomNavigation))
+        .onDestinationSelected(1);
+    await tester.pumpAndSettle();
     expect(find.byType(UnauthenticatedSheet), findsOneWidget);
   });
 
@@ -61,7 +78,8 @@ void main() {
             body: Builder(
               builder: (context) => TextButton(
                 onPressed: () async {
-                  final sheetResult = Helpers.showUnAuthSheet<UnauthenticatedSheetAction>();
+                  final sheetResult =
+                      Helpers.showUnAuthSheet<UnauthenticatedSheetAction>();
                   selectedAction = await sheetResult;
                 },
                 child: const Text('Open visitor gate'),

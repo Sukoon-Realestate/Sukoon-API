@@ -10,12 +10,12 @@ class ForgotPasswordSecurityHint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color accentColor = AppColors.tealOrGoldBasedRole;
+    final Color accentColor = AppColors.sokoonTeal;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
       decoration: BoxDecoration(
-        color: AppColors.tealOrGoldAlphaBasedRole,
+        color: AppColors.mintLight,
         borderRadius: BorderRadius.circular(14.r),
         border: Border.all(color: accentColor.withValues(alpha: .2)),
       ),

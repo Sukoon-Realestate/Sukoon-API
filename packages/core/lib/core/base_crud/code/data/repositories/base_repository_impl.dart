@@ -12,28 +12,45 @@ class BaseRepositoryImpl implements BaseRepository {
 
   @override
   Future<Result<List<T>, Failure>> getBaseIdAndNameEntity<T extends BaseEntity>(
-      GetBaseEntityParams? param) async {
+    GetBaseEntityParams? param,
+  ) async {
     return await baseRemoteDataSource
         .getData<T>(param)
         .handleCallbackWithFailure();
   }
 
   @override
-  Future<Result<BaseModel<T>, Failure>> crudCall<T>(CrudBaseParmas<T> params) async {
-    if (params.mapper.isNotNull && params.toJson.isNotNull && params.httpRequestType == HttpRequestType.get) {
+  Future<Result<BaseModel<T>, Failure>> crudCall<T>(
+    CrudBaseParmas<T> params,
+  ) async {
+    if (params.mapper.isNotNull &&
+        params.toJson.isNotNull &&
+        params.httpRequestType == HttpRequestType.get) {
       return await _crudCallWithCache(params);
     }
-    return await baseRemoteDataSource.crudCall<T>(params).handleCallbackWithFailure();
+    return await baseRemoteDataSource
+        .crudCall<T>(params)
+        .handleCallbackWithFailure();
   }
 
   Future<Result<BaseModel<T>, Failure>> _crudCallWithCache<T>(
-      CrudBaseParmas<T> params) {
-    return baseRemoteDataSource.crudCall<T>(params).handleCallbackWithCache(
-      cacheKey: params.cacheKey ?? params.api,
-      fromCacheJson: params.fromCacheJson ?? (json) => params.mapper!(json),
-      toJson: params.toJson!,
-      onSave: baseLocalDataSource.save,
-      onRead: baseLocalDataSource.read,
-    );
+    CrudBaseParmas<T> params,
+  ) {
+    final int generation = AccountSession.generation;
+    return baseRemoteDataSource
+        .crudCall<T>(params)
+        .handleCallbackWithCache(
+          cacheKey: params.cacheKey ?? params.api,
+          fromCacheJson: params.fromCacheJson ?? (json) => params.mapper!(json),
+          toJson: params.toJson!,
+          onSave: (key, json) {
+            if (generation == AccountSession.generation) {
+              baseLocalDataSource.save(key, json);
+            }
+          },
+          onRead: (key) => generation == AccountSession.generation
+              ? baseLocalDataSource.read(key)
+              : null,
+        );
   }
 }

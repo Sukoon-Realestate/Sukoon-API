@@ -9,7 +9,7 @@ class TenantEditProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProfileEditView(
       initialValue: initialValue,
-      userType: UserType.tenant,
+      workspace: AppWorkspace.tenant,
     );
   }
 }

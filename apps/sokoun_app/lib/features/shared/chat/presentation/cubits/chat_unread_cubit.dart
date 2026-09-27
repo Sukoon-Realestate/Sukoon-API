@@ -4,6 +4,7 @@ import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
+import 'package:melos_core/core/network/account_session.dart';
 
 import '../../data/chats_data.dart';
 import '../../data/chat_realtime_service.dart';
@@ -15,6 +16,7 @@ class ChatUnreadCubit extends AsyncCubit<ChatUnreadContent> {
   ChatUnreadCubit() : super(const ChatUnreadContent.initial());
 
   StreamSubscription<int>? _refreshSubscription;
+  final int _sessionGeneration = AccountSession.generation;
   StreamSubscription<ChatSocketMessage>? _messageSubscription;
 
   Future<void> start() async {
@@ -61,6 +63,7 @@ class ChatUnreadCubit extends AsyncCubit<ChatUnreadContent> {
   }
 
   void _handleIncomingMessage(ChatSocketMessage message) {
+    if (_sessionGeneration != AccountSession.generation) return;
     final String currentUserId = UserModel.currentUser?.id ?? '';
     if (message.sender.id == currentUserId ||
         message.conversationId ==
@@ -77,13 +80,19 @@ class ChatUnreadCubit extends AsyncCubit<ChatUnreadContent> {
     ]);
   }
 
-  Future<void> onAppBackgrounded() => ChatRealtimeService.instance.disconnect();
+  Future<void> onAppBackgrounded() async {
+    if (_sessionGeneration == AccountSession.generation) {
+      await ChatRealtimeService.instance.disconnect();
+    }
+  }
 
   @override
   Future<void> close() async {
     await _refreshSubscription?.cancel();
     await _messageSubscription?.cancel();
-    await ChatRealtimeService.instance.disconnect();
+    if (_sessionGeneration == AccountSession.generation) {
+      await ChatRealtimeService.instance.disconnect();
+    }
     return super.close();
   }
 }

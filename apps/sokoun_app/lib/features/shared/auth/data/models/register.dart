@@ -31,7 +31,6 @@ class RegisterBody extends Equatable {
   final String email;
   final String password;
   final String rePassword;
-  final String? userType;
   final String? nationalId;
   final File? frontIdImage;
   final File? backIdImage;
@@ -44,7 +43,6 @@ class RegisterBody extends Equatable {
     required this.email,
     required this.password,
     required this.rePassword,
-    this.userType,
     this.nationalId,
     this.frontIdImage,
     this.backIdImage,
@@ -67,7 +65,6 @@ class RegisterBody extends Equatable {
     email: json['email'] ?? '',
     password: json['password'] ?? '',
     rePassword: json['re_password'] ?? '',
-    userType: json['type'],
     nationalId: json['national_id'],
   );
 
@@ -84,9 +81,6 @@ class RegisterBody extends Equatable {
       're_password': rePassword,
     };
 
-    if (userType != null && userType!.isNotEmpty) {
-      body['type'] = userType;
-    }
     if (nationalId != null && nationalId!.isNotEmpty) {
       body['national_id'] = nationalId;
     }
@@ -110,7 +104,6 @@ class RegisterBody extends Equatable {
     String? email,
     String? password,
     String? rePassword,
-    String? userType,
     String? nationalId,
     File? frontIdImage,
     File? backIdImage,
@@ -122,7 +115,6 @@ class RegisterBody extends Equatable {
     email: email ?? this.email,
     password: password ?? this.password,
     rePassword: rePassword ?? this.rePassword,
-    userType: userType ?? this.userType,
     nationalId: nationalId ?? this.nationalId,
     frontIdImage: frontIdImage ?? this.frontIdImage,
     backIdImage: backIdImage ?? this.backIdImage,
@@ -137,7 +129,6 @@ class RegisterBody extends Equatable {
     email,
     password,
     rePassword,
-    userType,
     nationalId,
     frontIdImage,
     backIdImage,

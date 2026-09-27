@@ -43,7 +43,6 @@ class _ProfileDeleteAccountButtonState
 
     await NotificationDeviceData.unregisterCurrentDevice();
     await UserCubit.instance.logout();
-    if (mounted) Go.offAll(const LoginScreen());
   }
 
   @override

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:melos_core/core/socket_service/web_socket_client.dart';
+import 'package:melos_core/core/network/account_session.dart';
 
 import 'chat_socket_data.dart';
 import 'models/chat_socket_message.dart';
@@ -66,6 +67,7 @@ final class ChatRealtimeService implements ChatRealtimeGateway {
 
   WebSocketHelper<ChatSocketMessage>? _socket;
   Future<void>? _connectionRequest;
+  int _connectionVersion = 0;
   ChatRealtimeStatus _status = ChatRealtimeStatus.disconnected;
   @override
   String? activeConversationId;
@@ -104,29 +106,55 @@ final class ChatRealtimeService implements ChatRealtimeGateway {
   }
 
   Future<void> _connect() async {
+    final int generation = AccountSession.generation;
+    final int connectionVersion = _connectionVersion;
+    bool isCurrentConnection() =>
+        generation == AccountSession.generation &&
+        connectionVersion == _connectionVersion;
+    void updateStatus(ChatRealtimeStatus status) {
+      if (isCurrentConnection()) _setStatus(status);
+    }
+
     _setStatus(ChatRealtimeStatus.connecting);
     try {
       final WebSocketHelper<ChatSocketMessage> socket =
           _socket ??
           await ChatSocketData.create(
-            onReceiveMessage: (message) async => _messages.add(message),
-            onReceiveAnyEvent: _receiveEvent,
-            onConnect: () => _setStatus(ChatRealtimeStatus.connected),
-            onReconnect: () => _setStatus(ChatRealtimeStatus.connected),
-            onDisconnect: (_, _) => _setStatus(ChatRealtimeStatus.disconnected),
-            onError: _handleError,
+            onReceiveMessage: (message) async {
+              if (isCurrentConnection()) _messages.add(message);
+            },
+            onReceiveAnyEvent: (event, data) async {
+              if (isCurrentConnection()) await _receiveEvent(event, data);
+            },
+            onConnect: () => updateStatus(ChatRealtimeStatus.connected),
+            onReconnect: () => updateStatus(ChatRealtimeStatus.connected),
+            onDisconnect: (_, _) =>
+                updateStatus(ChatRealtimeStatus.disconnected),
+            onError: (error, stackTrace) async {
+              if (isCurrentConnection()) await _handleError(error, stackTrace);
+            },
           );
+      if (!isCurrentConnection()) {
+        await socket.disconnect();
+        return;
+      }
       _socket = socket;
       await socket.connect();
     } catch (error, stackTrace) {
-      await _handleError(error, stackTrace);
+      if (isCurrentConnection()) await _handleError(error, stackTrace);
     }
   }
 
   @override
   Future<void> disconnect() async {
-    await _socket?.disconnect();
-    _setStatus(ChatRealtimeStatus.disconnected);
+    final int version = ++_connectionVersion;
+    final WebSocketHelper<ChatSocketMessage>? socket = _socket;
+    _socket = null;
+    _connectionRequest = null;
+    await socket?.disconnect();
+    if (version == _connectionVersion && _socket == null) {
+      _setStatus(ChatRealtimeStatus.disconnected);
+    }
   }
 
   @override

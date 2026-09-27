@@ -4,6 +4,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/shared/notifications/data/enums/notification_role.dart';
 import 'package:sokoun_app/features/shared/notifications/presentation/screens/notifications_screen.dart';
+import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
 
 class HomeCircleButton extends StatelessWidget {
   const HomeCircleButton({
@@ -27,8 +28,16 @@ class HomeCircleButton extends StatelessWidget {
         Semantics(
           button: true,
           child: GestureDetector(
-            onTap: () =>
-                Go.to(const NotificationsScreen(role: NotificationRole.tenant)),
+            onTap: () {
+              if (WorkspaceNavigation.isAuthenticated) {
+                Go.to(const NotificationsScreen(role: NotificationRole.tenant));
+              } else {
+                WorkspaceNavigation.open(
+                  showLoginSheet: true,
+                  detail: () => Go.to(const NotificationsScreen()),
+                );
+              }
+            },
             behavior: HitTestBehavior.opaque,
             child: Container(
               width: 36.r,

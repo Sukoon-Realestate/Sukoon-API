@@ -1,6 +1,8 @@
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 
 import '../../data/models/chat_content.dart';
 
@@ -12,6 +14,10 @@ class CreateConversationCubit extends AsyncCubit<ConversationContent> {
     required void Function(ConversationContent conversation) onSuccess,
   }) async {
     if (isLoading || userId.trim().isEmpty) return;
+    if (userId == UserModel.currentUser?.id) {
+      setError(errorMessage: LocaleKeys.workspaceSelfActionBlocked);
+      return;
+    }
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<ConversationContent>(

@@ -5,7 +5,6 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/validators.dart';
-import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:melos_core/core/widgets/first_validation_error_form.dart';
 import 'package:sokoun_app/features/shared/auth/data/models/register.dart';
@@ -17,13 +16,8 @@ import '../widgets/register/register_footer.dart';
 import '../widgets/register/register_header.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({
-    super.key,
-    this.userType = UserType.tenant,
-    this.onSubmit,
-  });
+  const RegisterScreen({super.key, this.onSubmit});
 
-  final UserType userType;
   final VoidCallback? onSubmit;
 
   @override
@@ -63,7 +57,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       email: _emailController.text.trim(),
       password: _passwordController.text,
       rePassword: _confirmPasswordController.text,
-      userType: widget.userType.name,
     );
 
     context.read<RegisterCubit>().updateRegisterBody(body);
@@ -174,7 +167,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               DefaultButton(
                 onTap: submit,
                 title: LocaleKeys.createAccount,
-                color: AppColors.tealOrGoldBasedRole,
+                color: AppColors.sokoonTeal,
                 textColor: AppColors.white,
                 borderRadius: BorderRadius.circular(14.r),
                 height: 52.h,

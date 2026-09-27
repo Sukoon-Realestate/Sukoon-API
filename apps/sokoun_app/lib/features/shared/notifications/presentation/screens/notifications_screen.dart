@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
-import 'package:melos_core/core/helpers/user_type/user_enum.dart';
-import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
+import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
+import 'package:sokoun_app/features/main_view/presentation/cubits/workspace_cubit.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:pagify/pagify.dart';
 
@@ -65,7 +65,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   NotificationRole _resolveRole(NotificationRole? role) {
     if (role != null) return role;
-    return UserTypeHelper.instance.currentUserType.isOwner
+    return injector.isRegistered<WorkspaceCubit>() &&
+            WorkspaceCubit.instance.state.isOwner
         ? NotificationRole.owner
         : NotificationRole.tenant;
   }

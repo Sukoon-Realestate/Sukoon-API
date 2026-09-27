@@ -16,6 +16,7 @@ import '../extensions/object.dart';
 import '../helpers/cache_service.dart';
 import '../helpers/helpers.dart';
 import 'api_endpoints.dart';
+import 'account_session.dart';
 import 'extensions.dart';
 import 'fire_store.dart';
 import 'interceptors/cookie_token_header_interceptor.dart';
@@ -112,7 +113,10 @@ class DioService implements NetworkService, SessionAuthService {
 
             return cookies.isNotEmpty;
           },
-          onSessionExpired: cookieJar.deleteAll,
+          onSessionExpired: () async {
+            await cookieJar.deleteAll();
+            AccountSession.notifyExpired();
+          },
         ),
       );
   }
@@ -240,6 +244,7 @@ class DioService implements NetworkService, SessionAuthService {
     NetworkRequest networkRequest, {
     Model Function(dynamic json)? mapper,
   }) async {
+    final int generation = AccountSession.generation;
     try {
       await _ensureCookieManager();
       if (_dio.options.baseUrl.isNull || _dio.options.baseUrl.isEmpty) {
@@ -269,6 +274,10 @@ class DioService implements NetworkService, SessionAuthService {
         ),
       );
 
+      if (generation != AccountSession.generation) {
+        throw UnauthorizedException(LocaleKeys.unauthorized);
+      }
+
       _handleIncomingResponse(
         path: networkRequest.path,
         response: response.data,
@@ -279,6 +288,13 @@ class DioService implements NetworkService, SessionAuthService {
         return BaseModel.fromJson(response.data);
       }
     } on DioException catch (e) {
+      if (e.response?.statusCode == HttpStatus.unauthorized &&
+          generation == AccountSession.generation &&
+          AccountSession.userId != null) {
+        // A session can expire without leaving any refresh cookies behind.
+        await clearSessionCookies();
+        AccountSession.notifyExpired();
+      }
       log('error is ${e.response?.data}');
       _handleIncomingResponse(
         path: networkRequest.path,
@@ -308,6 +324,12 @@ class DioService implements NetworkService, SessionAuthService {
           case HttpStatus.locked:
             throw BlockedException(
               error.response?.data['message'] ?? LocaleKeys.unauthorized,
+            );
+          case HttpStatus.forbidden:
+            throw ForbiddenException(
+              error.response?.data['message'] ??
+                  error.response?.data['detail'] ??
+                  LocaleKeys.unauthorized,
             );
           case HttpStatus.notFound:
             throw NotFoundException(LocaleKeys.notFound);

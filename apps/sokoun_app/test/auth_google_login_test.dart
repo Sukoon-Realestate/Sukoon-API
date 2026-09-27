@@ -74,9 +74,10 @@ void main() {
       expect(userCubit.cachedUser?.id, '17');
       expect(userCubit.cachedUser?.email, 'user@example.com');
       expect(userCubit.cachedUser?.type, 'tenant');
-      expect(repository.currentUserCacheKey, 'auth_current_user');
-      expect(repository.cachedUserJson?['full_name'], 'Test User');
-      expect(repository.restoredUser?.name, 'Test User');
+      expect(repository.currentUserCacheKey, isNull);
+      expect(repository.cachedUserJson, isNull);
+      expect(repository.restoredUser, isNull);
+      expect(userCubit.cachedUser?.name, 'Test User');
       expect(completed, isTrue);
     },
   );
@@ -112,8 +113,10 @@ class _GoogleLoginRepository implements BaseRepository {
       'type': 'tenant',
     });
     currentUserCacheKey = params.cacheKey;
-    cachedUserJson = params.toJson!(user);
-    restoredUser = params.fromCacheJson!(cachedUserJson!) as UserModel;
+    cachedUserJson = params.toJson?.call(user);
+    restoredUser = cachedUserJson == null
+        ? null
+        : params.fromCacheJson?.call(cachedUserJson!) as UserModel?;
     return Success(BaseModel<T>(key: '', msg: '', data: user));
   }
 

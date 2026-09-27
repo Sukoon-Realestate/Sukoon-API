@@ -4,6 +4,7 @@ import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_respon
 import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
+import 'package:melos_core/core/network/network_service.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/shared/auth/data/models/google_login.dart';
 
@@ -20,8 +21,6 @@ abstract interface class AuthSessionDataSource {
 
 final class AuthSessionApiDataSource implements AuthSessionDataSource {
   const AuthSessionApiDataSource();
-
-  static const String _currentUserCacheKey = 'auth_current_user';
 
   @override
   Future<Result<BaseModel<UserModel>, Failure>> loginWithCredentials({
@@ -62,16 +61,18 @@ final class AuthSessionApiDataSource implements AuthSessionDataSource {
       return Result.error(authenticationFailure);
     }
 
-    return baseCrudUseCase.call<UserModel>(
+    final result = await baseCrudUseCase.call<UserModel>(
       CrudBaseParmas<UserModel>(
         api: ApiConstants.currentUser,
         httpRequestType: HttpRequestType.get,
-        cacheKey: _currentUserCacheKey,
         mapper: _mapCurrentUser,
-        fromCacheJson: _mapCurrentUser,
-        toJson: _serializeCurrentUser,
       ),
     );
+    if (result.tryGetError() != null &&
+        injector.isRegistered<NetworkService>()) {
+      await injector<NetworkService>().clearSessionCookies();
+    }
+    return result;
   }
 
   static UserModel _mapCurrentUser(dynamic json) {
@@ -84,13 +85,12 @@ final class AuthSessionApiDataSource implements AuthSessionDataSource {
     final Map<String, dynamic> userJson = nestedUser is Map
         ? Map<String, dynamic>.from(nestedUser)
         : data;
-    return UserModel.fromJson(userJson);
+    final UserModel user = UserModel.fromJson(userJson);
+    if (user.id.isEmpty || user.id == '0') {
+      throw const FormatException('Missing authenticated account ID');
+    }
+    return user;
   }
-
-  static Map<String, dynamic> _serializeCurrentUser(UserModel user) => {
-    ...user.toJson(),
-    'full_name': user.name,
-  };
 }
 
 abstract final class AuthSessionData {

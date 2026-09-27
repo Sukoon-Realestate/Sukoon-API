@@ -30,7 +30,7 @@ class NotificationsHeader extends StatelessWidget {
       children: [
         Expanded(
           child: AppText(
-            LocaleKeys.notificationsFlowTitle,
+            LocaleKeys.workspaceAllNotifications,
             color: AppColors.sokoonNavy,
             fontSize: 20.sp,
             fontWeight: FontWeight.w900,

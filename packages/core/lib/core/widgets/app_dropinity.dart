@@ -9,6 +9,7 @@ import '../../config/language/locale_keys.g.dart';
 import '../../config/res/config_imports.dart';
 import '../extensions/padding_extension.dart';
 import '../local_db/objectbox_cache_service.dart';
+import '../network/account_session.dart';
 import 'app_text.dart';
 import 'custom_loading.dart';
 
@@ -188,10 +189,15 @@ class _AppDropinityState<FullResponse, Model>
             widget.cacheToJson != null &&
             widget.cacheFromJson != null;
 
-        void onSaveCache(String key, List<Map<String, dynamic>> items) =>
+        final int generation = AccountSession.generation;
+        void onSaveCache(String key, List<Map<String, dynamic>> items) {
+          if (mounted && generation == AccountSession.generation) {
             ObjectBoxCacheService.save(key, {'items': items});
+          }
+        }
 
         List<Map<String, dynamic>>? onReadCache(String key) {
+          if (!mounted || generation != AccountSession.generation) return null;
           final cached = ObjectBoxCacheService.read(key);
           if (cached == null) return null;
           return (cached['items'] as List?)?.cast<Map<String, dynamic>>();

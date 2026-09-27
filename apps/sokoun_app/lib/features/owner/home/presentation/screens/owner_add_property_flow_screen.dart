@@ -7,6 +7,7 @@ import 'package:melos_core/core/helpers/helpers.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
+import 'package:sokoun_app/shared_widgets/unsaved_changes_guard.dart';
 
 import '../../data/owner_add_property_mapper.dart';
 import '../../data/models/owner_add_property_content.dart';
@@ -40,6 +41,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
   OwnerPropertyLocationModel? _selectedCity;
   int _locationDropdownGeneration = 0;
   final ValueNotifier<bool> _isSubmitting = ValueNotifier<bool>(false);
+  bool _hasChanges = false;
 
   late final TextEditingController _titleController;
   late final TextEditingController _streetController;
@@ -107,6 +109,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
   OwnerAddPropertyFormState get _form => _formNotifier.value;
 
   void _updateForm(OwnerAddPropertyFormState Function() update) {
+    _hasChanges = true;
     _formNotifier.value = update();
   }
 
@@ -133,6 +136,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
   }
 
   void _resetFlow() {
+    _hasChanges = false;
     _selectedGovernorate = null;
     _selectedCity = null;
     _locationDropdownGeneration++;
@@ -312,6 +316,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
       return;
     }
     _isSubmitting.value = false;
+    if (wasSubmitted) _hasChanges = false;
     if (wasSubmitted && !_isEditing) {
       _formNotifier.value = _form.copyWith(submittedAt: DateTime.now());
     }
@@ -326,8 +331,9 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<bool>(
       valueListenable: _isSubmitting,
-      builder: (context, isSubmitting, _) => PopScope(
-        canPop: !isSubmitting,
+      builder: (context, isSubmitting, _) => UnsavedChangesGuard(
+        hasChanges: () => _hasChanges,
+        isSaving: () => _isSubmitting.value,
         child: Scaffold(
           backgroundColor: AppColors.scaffoldBackground,
           body: SafeArea(
@@ -377,7 +383,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
                       ),
                     ),
                     onLocationSelected: _selectLocation,
-                    onBack: () => Go.back(),
+                    onBack: () => Go.mayPop,
                     onNext: () => _goToPage(1),
                   ),
                 ),

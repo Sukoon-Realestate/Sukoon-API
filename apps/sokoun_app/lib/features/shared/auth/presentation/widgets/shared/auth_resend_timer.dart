@@ -46,7 +46,7 @@ class AuthResendTimer extends StatelessWidget {
               TextSpan(
                 text: timeString,
                 style: TextStyle(
-                  color: AppColors.tealOrGoldBasedRole,
+                  color: AppColors.sokoonTeal,
                   fontWeight: FontWeight.w800,
                 ),
               ),

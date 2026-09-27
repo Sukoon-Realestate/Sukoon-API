@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:melos_core/core/helpers/user_type/user_enum.dart';
-import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:sokoun_app/features/shared/auth/data/models/register.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/register.dart';
 
@@ -94,7 +92,6 @@ class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUserType = UserTypeHelper.instance.currentUserType;
     return BlocProvider(
       create: (_) => RegisterCubit(),
       child: Builder(
@@ -110,7 +107,7 @@ class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
             physics: const NeverScrollableScrollPhysics(),
             onPageChanged: _handlePageChanged,
             children: [
-              for (final Widget step in _buildSteps(context, currentUserType))
+              for (final Widget step in _buildSteps(context))
                 _KeepAlivePage(child: step),
             ],
           ),
@@ -119,12 +116,9 @@ class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
     );
   }
 
-  List<Widget> _buildSteps(BuildContext context, UserType currentUserType) {
+  List<Widget> _buildSteps(BuildContext context) {
     return [
-      RegisterScreen(
-        userType: currentUserType,
-        onSubmit: _handleBasicInfoSubmitted,
-      ),
+      RegisterScreen(onSubmit: _handleBasicInfoSubmitted),
       KycIntroScreen(
         onBack: _goBack,
         onUploadDocuments: () => _goToStep(_RegisterFlowStep.uploadDocuments),

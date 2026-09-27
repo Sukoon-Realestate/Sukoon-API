@@ -9,6 +9,7 @@ import 'package:pagify/helpers/status_stream.dart';
 import 'package:pagify/pagify.dart';
 import '../../config/language/locale_keys.g.dart';
 import '../local_db/objectbox_cache_service.dart';
+import '../network/account_session.dart';
 import '../shared/base_state.dart';
 import 'app_text.dart';
 import 'custom_loading.dart';
@@ -85,6 +86,7 @@ class AppPagify<T> extends StatefulWidget {
 }
 
 class _AppPagifyState<T> extends State<AppPagify<T>> {
+  final int _sessionGeneration = AccountSession.generation;
   @override
   void dispose() {
     widget.pagifyController.dispose();
@@ -98,10 +100,16 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
         widget.cacheToJson != null &&
         widget.cacheFromJson != null;
 
-    void onSaveCache(String key, List<Map<String, dynamic>> items) =>
+    void onSaveCache(String key, List<Map<String, dynamic>> items) {
+      if (mounted && _sessionGeneration == AccountSession.generation) {
         ObjectBoxCacheService.save(key, {'items': items});
+      }
+    }
 
     List<Map<String, dynamic>>? onReadCache(String key) {
+      if (!mounted || _sessionGeneration != AccountSession.generation) {
+        return null;
+      }
       final cached = ObjectBoxCacheService.read(key);
       if (cached == null) return null;
       return (cached['items'] as List?)?.cast<Map<String, dynamic>>();

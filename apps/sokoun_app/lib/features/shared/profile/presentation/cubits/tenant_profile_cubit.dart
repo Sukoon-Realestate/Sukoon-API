@@ -27,6 +27,8 @@ class TenantProfileCubit extends AsyncCubit<TenantProfileContent> {
         accountDetails: data.accountDetails.copyWith(
           name: user.name,
           email: user.email,
+          phoneNumber: user.phone,
+          maskedPhoneNumber: ProfileAccountDetailsContent.maskPhone(user.phone),
         ),
       ),
     );

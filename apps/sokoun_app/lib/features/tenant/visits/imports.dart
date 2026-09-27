@@ -13,6 +13,7 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/network/network_request.dart';
 import 'package:melos_core/core/network/network_service.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
@@ -24,6 +25,8 @@ import 'package:sokoun_app/features/shared/chat/presentation/screens/start_conve
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
 import 'package:sokoun_app/shared_widgets/visit_header.dart';
+import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
+import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
 
 part 'data/enums/visit_status.dart';
 part 'data/tenant_visits_data.dart';

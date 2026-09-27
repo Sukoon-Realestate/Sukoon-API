@@ -26,7 +26,7 @@ class ProfileScreenHeader extends StatelessWidget {
         children: [
           if (showBackButton)
             IconButton(
-              onPressed: Go.back,
+              onPressed: () => Go.mayPop,
               icon: Icon(
                 Icons.arrow_back_rounded,
                 color: AppColors.sokoonNavy,

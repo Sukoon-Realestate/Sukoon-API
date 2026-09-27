@@ -22,6 +22,7 @@ import 'package:sokoun_app/app.dart';
 
 import 'firebase_options.dart' as prod;
 import 'firebase_options_dev.dart' as dev;
+import 'features/main_view/data/workspace_preferences.dart';
 
 void main() async {
   Helpers.changeStatusbarColor(statusBarColor: AppColors.white);
@@ -33,6 +34,7 @@ void main() async {
     ObjectBoxCacheService.init(),
     ScreenUtil.ensureScreenSize(),
   ]);
+  await WorkspacePreferences.migrateLegacy();
   await _initializeFirebaseApp();
   await fetchBaseUrl();
   await NsfwDetectorHelper.init();

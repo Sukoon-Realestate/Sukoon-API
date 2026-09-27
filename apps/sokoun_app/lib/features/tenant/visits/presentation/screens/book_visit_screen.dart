@@ -79,6 +79,14 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
   }
 
   Future<void> _confirmVisit(BuildContext context) async {
+    if (!WorkspaceNavigation.isAuthenticated) {
+      await WorkspaceNavigation.open(
+        workspace: AppWorkspace.tenant,
+        showLoginSheet: true,
+        detail: () => Go.to(BookVisitScreen(property: _property)),
+      );
+      return;
+    }
     final ({int dayIndex, TimeOfDay? time}) selection = _selection.value;
     final TimeOfDay? selectedTimeOfDay = selection.time;
     if (_days.isEmpty ||
@@ -102,6 +110,7 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
 
     await context.read<BookVisitCubit>().bookVisit(
       propertyId: _property.id,
+      ownerId: _property.ownerId,
       visitDate: selectedDay.visitDate,
       visitHour: selectedTimeOfDay.hour,
       visitMinute: selectedTimeOfDay.minute,

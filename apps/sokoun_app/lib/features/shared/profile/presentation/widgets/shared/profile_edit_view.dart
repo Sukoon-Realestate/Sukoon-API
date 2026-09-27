@@ -4,11 +4,11 @@ class ProfileEditView extends StatefulWidget {
   const ProfileEditView({
     super.key,
     required this.initialValue,
-    required this.userType,
+    required this.workspace,
   });
 
   final UserModel initialValue;
-  final UserType userType;
+  final AppWorkspace workspace;
 
   @override
   State<ProfileEditView> createState() => _ProfileEditViewState();
@@ -28,9 +28,9 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   );
 
   Color get _accentColor =>
-      widget.userType.isOwner ? AppColors.sokoonGold : AppColors.sokoonTeal;
+      widget.workspace.isOwner ? AppColors.sokoonGold : AppColors.sokoonTeal;
 
-  String get _title => widget.userType.isOwner
+  String get _title => widget.workspace.isOwner
       ? LocaleKeys.profileOwnerEditTitle
       : LocaleKeys.profileTenantEditTitle;
 
@@ -133,13 +133,10 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     );
     if (!wasUpdated || !mounted) return;
 
-    final UserModel updatedUser = UserModel.fromJson({
-      ...widget.initialValue.toJson(),
-      'name': _nameController.text.trim(),
-      'phone': _phoneController.text.trim(),
-      'email': widget.initialValue.email,
-      'type': widget.userType.name,
-    });
+    final UserModel updatedUser = widget.initialValue.copyWith(
+      name: _nameController.text.trim(),
+      phone: _phoneController.text.trim(),
+    );
     await UserCubit.instance.updateUser(updatedUser);
 
     if (!mounted) {
@@ -159,7 +156,15 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     return BlocProvider<ProfileEditCubit>.value(
       value: _editCubit,
       child: BlocBuilder<ProfileEditCubit, AsyncState<Map<String, dynamic>>>(
-        builder: (context, state) => _buildScaffold(isSaving: state.isLoading),
+        builder: (context, state) => UnsavedChangesGuard(
+          hasChanges: () =>
+              _nameController.text.trim() != widget.initialValue.name ||
+              _phoneController.text.trim() != widget.initialValue.phone ||
+              _avatar.value != null ||
+              !_gender.value.isUnspecified,
+          isSaving: () => _editCubit.isLoading,
+          child: _buildScaffold(isSaving: state.isLoading),
+        ),
       ),
     );
   }
@@ -243,7 +248,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       readOnly: true,
                     ),
                     14.szH,
-                    if (widget.userType.isOwner)
+                    if (widget.workspace.isOwner)
                       Column(
                         children: [
                           _ProfileReadonlyField(
@@ -261,14 +266,6 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       ),
                       14.szH,
                       _buildGenderField(isSaving: isSaving),
-                    ],
-                    if (widget.userType.isOwner) ...[
-                      16.szH,
-                      ProfileVerificationBanner(
-                        title: LocaleKeys.profileVerifiedAccount,
-                        description:
-                            LocaleKeys.profileVerifiedAccountDescription,
-                      ),
                     ],
                   ],
                 ),

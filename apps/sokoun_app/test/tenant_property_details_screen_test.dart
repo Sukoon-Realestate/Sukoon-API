@@ -13,6 +13,7 @@ import 'package:melos_core/core/widgets/exeption_view.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/imports.dart';
 import 'package:sokoun_app/shared_widgets/property_details_screen.dart';
+import 'helpers/account_test_dependencies.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -43,6 +44,7 @@ void main() {
       'email': 'tenant@example.com',
       'type': 'tenant',
     });
+    await registerAuthenticatedTestAccount();
   });
 
   tearDown(() async {

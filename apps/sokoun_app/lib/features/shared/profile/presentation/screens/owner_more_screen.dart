@@ -11,6 +11,7 @@ class OwnerMoreScreen extends StatefulWidget {
 
 class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
   late final ValueNotifier<UserModel> _user;
+  StreamSubscription<UserState>? _accountSubscription;
 
   @override
   void initState() {
@@ -18,10 +19,18 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
     _user = ValueNotifier<UserModel>(
       widget.user ?? UserModel.currentUser ?? UserModel.initial(),
     );
+    if (injector.isRegistered<UserCubit>()) {
+      _accountSubscription = UserCubit.instance.stream.listen((state) {
+        if (state.userStatus == UserStatus.loggedIn) {
+          _user.value = state.userModel;
+        }
+      });
+    }
   }
 
   @override
   void dispose() {
+    unawaited(_accountSubscription?.cancel());
     _user.dispose();
     super.dispose();
   }
@@ -42,6 +51,10 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
         child: ListView(
           padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 24.h),
           children: [
+            const WorkspaceSwitcher(
+              workspace: AppWorkspace.owner,
+              asAction: true,
+            ),
             ValueListenableBuilder<UserModel>(
               valueListenable: _user,
               builder: (context, user, _) {
@@ -77,10 +90,6 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                  ),
-                                  7.szW,
-                                  ProfileVerifiedBadge(
-                                    text: LocaleKeys.profileVerifiedOwner,
                                   ),
                                 ],
                               ),

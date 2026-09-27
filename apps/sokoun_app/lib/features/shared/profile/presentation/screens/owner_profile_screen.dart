@@ -12,16 +12,26 @@ class OwnerProfileScreen extends StatefulWidget {
 class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
   late final OwnerProfileCubit _profileCubit;
   late final Future<void> _profileRequest;
+  StreamSubscription<UserState>? _accountSubscription;
 
   @override
   void initState() {
     super.initState();
     _profileCubit = OwnerProfileCubit();
     _profileRequest = _profileCubit.getProfile();
+    if (injector.isRegistered<UserCubit>()) {
+      _accountSubscription = UserCubit.instance.stream.listen((state) {
+        if (state.userStatus == UserStatus.loggedIn) {
+          _profileCubit.updateFromUser(state.userModel);
+          unawaited(_profileCubit.getProfile());
+        }
+      });
+    }
   }
 
   @override
   void dispose() {
+    unawaited(_accountSubscription?.cancel());
     _profileCubit.close();
     super.dispose();
   }
@@ -38,7 +48,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
       email: profile.accountDetails.email.isNotEmpty
           ? profile.accountDetails.email
           : widget.user.email,
-      type: UserType.owner.name,
+      type: widget.user.type,
     );
   }
 

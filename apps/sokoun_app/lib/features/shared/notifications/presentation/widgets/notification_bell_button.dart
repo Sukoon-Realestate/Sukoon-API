@@ -13,6 +13,7 @@ import '../../data/enums/notification_role.dart';
 import '../../data/models/unread_notifications_content.dart';
 import '../cubits/unread_notifications_cubit.dart';
 import '../screens/notifications_screen.dart';
+import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
 
 class NotificationBellButton extends StatefulWidget {
   const NotificationBellButton({super.key, required this.role});
@@ -25,21 +26,34 @@ class NotificationBellButton extends StatefulWidget {
 
 class _NotificationBellButtonState extends State<NotificationBellButton> {
   late final UnreadNotificationsCubit _cubit;
+  bool _ownsCubit = false;
 
   @override
   void initState() {
     super.initState();
-    _cubit = UnreadNotificationsCubit()..watchRefreshRequests();
-    unawaited(_cubit.loadUnreadCount());
+    try {
+      _cubit = context.read<UnreadNotificationsCubit>();
+    } on ProviderNotFoundException {
+      _ownsCubit = true;
+      _cubit = UnreadNotificationsCubit()..watchRefreshRequests();
+      unawaited(_cubit.loadUnreadCount());
+    }
   }
 
   @override
   void dispose() {
-    unawaited(_cubit.close());
+    if (_ownsCubit) unawaited(_cubit.close());
     super.dispose();
   }
 
   Future<void> _openNotifications() async {
+    if (!WorkspaceNavigation.isAuthenticated) {
+      await WorkspaceNavigation.open(
+        showLoginSheet: true,
+        detail: () => Go.to<void>(const NotificationsScreen()),
+      );
+      return;
+    }
     await Go.to<void>(NotificationsScreen(role: widget.role));
     if (mounted) unawaited(_cubit.loadUnreadCount());
   }

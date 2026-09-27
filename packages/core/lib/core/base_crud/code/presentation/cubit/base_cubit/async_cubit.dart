@@ -6,6 +6,7 @@ import 'package:multiple_result/multiple_result.dart';
 import '../../../../../../config/language/locale_keys.g.dart';
 import '../../../../../../config/res/config_imports.dart';
 import '../../../../../error/failure.dart';
+import '../../../../../network/account_session.dart';
 import '../../../../../extensions/object.dart';
 import '../../../../../shared/base_state.dart';
 import '../../../../../widgets/toast_messages/custom_messages.dart';
@@ -32,7 +33,11 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
   void setSuccess(BaseModel<T> data) {
     emit(state.success(data: data.data, msg: data.msg));
     if (data.key == 'fromCache') {
-      Messages.showToast(status: BaseStatus.error, title: LocaleKeys.operationFaild, msg: data.msg);
+      Messages.showToast(
+        status: BaseStatus.error,
+        title: LocaleKeys.operationFaild,
+        msg: data.msg,
+      );
     }
   }
 
@@ -119,10 +124,18 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
             (state.data is List && (state.data as List).isEmpty)) {
           emit(state.error(errorMessage: LocaleKeys.checkInternet));
         } else {
-          Messages.showToast(status: BaseStatus.error, title: LocaleKeys.operationFaild, msg: LocaleKeys.checkInternet);
+          Messages.showToast(
+            status: BaseStatus.error,
+            title: LocaleKeys.operationFaild,
+            msg: LocaleKeys.checkInternet,
+          );
         }
       } else {
-        Messages.showToast(status: BaseStatus.error, title: LocaleKeys.operationFaild, msg: LocaleKeys.theInternetConnectionIsRestored);
+        Messages.showToast(
+          status: BaseStatus.error,
+          title: LocaleKeys.operationFaild,
+          msg: LocaleKeys.theInternetConnectionIsRestored,
+        );
         await _basicOperation(
           operation: operation,
           successEmitter: successEmitter,
@@ -170,7 +183,9 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
     bool showMsgOnSuccess = false,
   }) async {
     setLoading();
+    final int generation = AccountSession.generation;
     final result = await operation();
+    if (isClosed || generation != AccountSession.generation) return;
     result.when(
       (success) {
         if (showMsgOnSuccess && success.msg.isNotEmpty) {

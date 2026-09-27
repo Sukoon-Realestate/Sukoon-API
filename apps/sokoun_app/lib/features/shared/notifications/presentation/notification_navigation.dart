@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/owner/home/presentation/screens/owner_listings_screen.dart';
@@ -13,9 +15,41 @@ import 'package:url_launcher/url_launcher.dart';
 import '../data/enums/app_notification_kind.dart';
 import '../data/enums/notification_role.dart';
 import '../data/models/app_notification_content.dart';
+import '../data/notification_destination.dart';
+import 'screens/notification_detail_screen.dart';
+import 'screens/notifications_screen.dart';
+import 'package:melos_core/config/res/config_imports.dart';
+import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
+import 'package:sokoun_app/features/main_view/presentation/cubits/workspace_cubit.dart';
+import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
 
 abstract final class NotificationNavigation {
   static Future<void> open({
+    required AppNotificationContent notification,
+    NotificationRole? role,
+  }) async {
+    if (notification.primaryActionType == 'dismiss') {
+      Go.back();
+      return;
+    }
+    final NotificationDestination target = NotificationDestination.resolve(
+      notification,
+    );
+    await WorkspaceNavigation.open(
+      workspace: target.workspace,
+      tab: target.tab,
+      detail: () => unawaited(
+        _openNotification(
+          notification: notification,
+          role: WorkspaceCubit.instance.state.isOwner
+              ? NotificationRole.owner
+              : NotificationRole.tenant,
+        ),
+      ),
+    );
+  }
+
+  static Future<void> _openNotification({
     required AppNotificationContent notification,
     required NotificationRole role,
   }) async {
@@ -33,8 +67,8 @@ abstract final class NotificationNavigation {
       return;
     }
 
-    if (notification.kind == AppNotificationKind.visitAccepted ||
-        actionType == 'view_visit') {
+    if (notification.kind == AppNotificationKind.visitAccepted &&
+        targetId.isNotEmpty) {
       await Go.to<void>(
         VisitDetailsScreen(
           visit: TenantVisitContent(
@@ -96,7 +130,7 @@ abstract final class NotificationNavigation {
         context: Go.context,
         useSafeArea: true,
         isScrollControlled: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.transparent,
         builder: (_) => VisitRatingSheet(propertyTitle: notification.title),
       );
       return;
@@ -125,6 +159,11 @@ abstract final class NotificationNavigation {
       return;
     }
 
+    if (notification.kind == AppNotificationKind.propertyVerified) {
+      await Go.to<void>(const OwnerPropertiesScreen());
+      return;
+    }
+
     if (notification.kind == AppNotificationKind.accountVerification ||
         notification.kind == AppNotificationKind.securityAlert) {
       await Go.to<void>(
@@ -145,13 +184,20 @@ abstract final class NotificationNavigation {
     final String propertyId = notification.payload.propertyId.isNotEmpty
         ? notification.payload.propertyId
         : targetId;
-    if (propertyId.isNotEmpty) {
+    if (propertyId.isNotEmpty &&
+        (notification.kind == AppNotificationKind.newProperty ||
+            notification.kind == AppNotificationKind.propertyUpdate ||
+            notification.kind == AppNotificationKind.visitRejected)) {
       await Go.to<void>(PropertyDetailsScreen(propertyId: propertyId));
       return;
     }
 
-    if (role.isOwner) {
-      await Go.to<void>(const OwnerListingsScreen());
+    if (notification.id.isNotEmpty) {
+      await Go.to<void>(
+        NotificationDetailScreen(role: role, notification: notification),
+      );
+    } else {
+      await Go.to<void>(const NotificationsScreen());
     }
   }
 }

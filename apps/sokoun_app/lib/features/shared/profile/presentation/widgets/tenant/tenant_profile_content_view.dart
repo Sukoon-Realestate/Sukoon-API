@@ -15,6 +15,7 @@ class TenantProfileContentView extends StatelessWidget {
     return ListView(
       padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 24.h),
       children: [
+        const WorkspaceSwitcher(workspace: AppWorkspace.tenant, asAction: true),
         TenantProfileHeaderCard(profile: profile, onEditPressed: onEditPressed),
         14.szH,
         TenantProfileActions(menuItems: profile.menuItems),
