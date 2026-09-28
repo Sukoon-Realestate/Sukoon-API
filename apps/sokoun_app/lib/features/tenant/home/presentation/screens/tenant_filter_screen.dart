@@ -95,6 +95,7 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
           >.withShimmer(
             initialDataForShimmer: const PropertyFilterOptionsModel.initial(),
             requestToTryAgainWhenError: _propertyFilterOptionsRequest,
+            onRetry: _propertyFilterOptionsCubit.getFilterOptions,
             errorType: ErrorType.defaultView,
             builder: (filterOptions) =>
                 ValueListenableBuilder<PropertySearchFilters>(

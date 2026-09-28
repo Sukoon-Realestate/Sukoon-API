@@ -90,6 +90,7 @@ class _NotificationSettingsScreenState
                           initialDataForShimmer:
                               const NotificationSettingsContent.initial(),
                           requestToTryAgainWhenError: _settingsRequest,
+                          onRetry: _settingsCubit.loadSettings,
                           errorType: ErrorType.defaultView,
                           builder: (settings) =>
                               NotificationSettingsContentView(

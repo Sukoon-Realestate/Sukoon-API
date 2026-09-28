@@ -41,6 +41,7 @@ class _TenantHomeScreenState extends State<TenantHomeScreen> {
           child: StatusBuilder<HomePageCubit, HomePageModel>.withShimmer(
             initialDataForShimmer: const HomePageModel.initial(),
             requestToTryAgainWhenError: _homePageRequest,
+            onRetry: _homePageCubit.getHomePage,
             errorType: ErrorType.defaultView,
             builder: (data) => TenantHomeContent(
               properties: data.results,

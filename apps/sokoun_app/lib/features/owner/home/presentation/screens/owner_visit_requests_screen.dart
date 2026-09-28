@@ -9,19 +9,16 @@ import 'package:sokoun_app/features/owner/visits/imports.dart';
 import 'package:sokoun_app/features/owner/visits/presentation/cubits/received_visits_cubit.dart';
 
 import '../widgets/owner_visit_requests/imports.dart';
-import 'package:sokoun_app/shared_widgets/request_error_view.dart';
 
 class OwnerVisitRequestsScreen extends StatefulWidget {
   const OwnerVisitRequestsScreen({
     super.key,
     this.initialRequests,
     this.showBackButton = true,
-    this.errorViewBuilder = buildAppRequestErrorView,
   });
 
   final List<OwnerVisitRequestContent>? initialRequests;
   final bool showBackButton;
-  final AppRequestErrorViewBuilder errorViewBuilder;
 
   @override
   State<OwnerVisitRequestsScreen> createState() =>
@@ -253,15 +250,7 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
           >.withShimmer(
             initialDataForShimmer: _shimmerRequests,
             requestToTryAgainWhenError: _receivedVisitsRequest!,
-            errorType: ErrorType.customView,
-            errorWidget:
-                CubitRequestErrorView<
-                  ReceivedVisitsCubit,
-                  List<OwnerVisitRequestContent>
-                >(
-                  onRetry: _retryRequests,
-                  errorViewBuilder: widget.errorViewBuilder,
-                ),
+            onRetry: _retryRequests,
             emptyView: _buildScreen(const []),
             builder: _buildScreen,
           ),

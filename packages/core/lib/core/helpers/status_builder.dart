@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/extensions/object.dart';
 import '../base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import '../shared/base_state.dart';
@@ -8,6 +9,7 @@ import '../widgets/custom_loading.dart';
 import '../widgets/custom_shimmer.dart';
 import '../widgets/exeption_view.dart';
 import '../widgets/not_contain_data.dart';
+import '../widgets/retry_view.dart';
 
 enum LoadingType { loadingIndicator, shimmer }
 
@@ -32,12 +34,14 @@ class StatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
   final Widget? emptyView;
   final T? initialDataForShimmer;
   final Future<void> requestToTryAgainWhenError;
+  final Future<void> Function() onRetry;
 
   const StatusBuilder({
     super.key,
     required this.builder,
     required this.requestToTryAgainWhenError,
-    this.errorType = ErrorType.withData,
+    required this.onRetry,
+    this.errorType = ErrorType.defaultView,
     this.errorWidget,
     this.emptyView,
   }) : loadingType = LoadingType.loadingIndicator,
@@ -47,7 +51,8 @@ class StatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
     super.key,
     required this.builder,
     required this.requestToTryAgainWhenError,
-    this.errorType = ErrorType.withData,
+    required this.onRetry,
+    this.errorType = ErrorType.defaultView,
     required this.initialDataForShimmer,
     this.errorWidget,
     this.emptyView,
@@ -98,14 +103,18 @@ class StatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
     }
   }
 
-  Widget _errorView(T data) {
+  Widget _errorView(AsyncState<T> state) {
+    if (state.msg?.trim() == LocaleKeys.checkInternet.trim()) {
+      return AppRetryView(onRetry: onRetry);
+    }
+
     if (errorType.isWithData) {
-      return builder.call(data);
+      return builder.call(state.data);
     } else if (errorType.isCustomView && errorWidget.isNotNull) {
       return errorWidget!;
     }
 
-    return ExceptionView();
+    return const ExceptionView();
   }
 
   @override
@@ -114,7 +123,7 @@ class StatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
       builder: (context, state) => state.status.when(
         onLoading: () => _loadingView,
         onSuccess: () => _successView(state.data),
-        onError: () => _errorView(state.data),
+        onError: () => _errorView(state),
         // onLoadingMore: () {
         //   return _buildCircularLoading();
         // },

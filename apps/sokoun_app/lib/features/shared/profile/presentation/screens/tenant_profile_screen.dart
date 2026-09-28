@@ -103,6 +103,7 @@ class _TenantProfileScreenState extends State<TenantProfileScreen> {
                           initialDataForShimmer:
                               const TenantProfileContent.initial(),
                           requestToTryAgainWhenError: _profileRequest,
+                          onRetry: _profileCubit.getProfile,
                           errorType: ErrorType.defaultView,
                           builder: (profile) => TenantProfileContentView(
                             profile: profile,

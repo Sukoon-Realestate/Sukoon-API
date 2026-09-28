@@ -69,6 +69,12 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
                     >.withShimmer(
                       initialDataForShimmer: widget.notification,
                       requestToTryAgainWhenError: _detailsRequest,
+                      onRetry: () => _cubit.load(
+                        notificationId: widget.notification.id,
+                        fixture: widget.fetchFromApi
+                            ? null
+                            : widget.notification,
+                      ),
                       errorType: ErrorType.defaultView,
                       builder: (notification) => NotificationDetailsContent(
                         notification: notification,

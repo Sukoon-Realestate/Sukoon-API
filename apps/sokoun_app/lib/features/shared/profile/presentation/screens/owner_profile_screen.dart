@@ -95,6 +95,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
                           initialDataForShimmer:
                               const OwnerProfileContent.initial(),
                           requestToTryAgainWhenError: _profileRequest,
+                          onRetry: _profileCubit.getProfile,
                           errorType: ErrorType.defaultView,
                           builder: (profile) =>
                               OwnerProfileContentView(profile: profile),

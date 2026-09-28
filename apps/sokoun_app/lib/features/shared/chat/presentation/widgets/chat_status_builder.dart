@@ -6,14 +6,16 @@ class ChatStatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
   const ChatStatusBuilder({
     super.key,
     required this.request,
+    required this.onRetry,
     required this.initialData,
     required this.builder,
     this.emptyView,
-    this.errorType = ErrorType.withData,
+    this.errorType = ErrorType.defaultView,
     this.errorWidget,
   });
 
   final Future<void> request;
+  final Future<void> Function() onRetry;
   final T initialData;
   final Widget Function(T data) builder;
   final Widget? emptyView;
@@ -24,6 +26,7 @@ class ChatStatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return StatusBuilder<C, T>.withShimmer(
       requestToTryAgainWhenError: request,
+      onRetry: onRetry,
       initialDataForShimmer: initialData,
       emptyView: emptyView,
       errorType: errorType,

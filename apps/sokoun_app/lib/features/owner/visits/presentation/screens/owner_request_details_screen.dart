@@ -147,12 +147,7 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
                                   const OwnerVisitRequestDetailsContent.initial(),
                               requestToTryAgainWhenError:
                                   _requestDetailsRequest,
-                              errorType: ErrorType.customView,
-                              errorWidget:
-                                  CubitRequestErrorView<
-                                    OwnerRequestDetailsCubit,
-                                    OwnerVisitRequestDetailsContent
-                                  >(onRetry: _retryRequestDetails),
+                              onRetry: _retryRequestDetails,
                               builder: (request) => OwnerRequestDetailsContent(
                                 request: request,
                                 isAccepting:

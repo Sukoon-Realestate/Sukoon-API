@@ -165,6 +165,8 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
               >.withShimmer(
                 initialDataForShimmer: const PropertyDetailsModel.initial(),
                 requestToTryAgainWhenError: _detailsRequest,
+                onRetry: () =>
+                    _detailsCubit.getPropertyDetails(widget.propertyId),
                 builder: _buildDetails,
                 errorType: ErrorType.customView,
                 errorWidget: const TenantPropertyStatusView(

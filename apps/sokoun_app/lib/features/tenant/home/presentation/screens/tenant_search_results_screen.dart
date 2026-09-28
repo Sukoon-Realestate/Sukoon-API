@@ -174,6 +174,7 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
           >.withShimmer(
             initialDataForShimmer: const PropertyFilterOptionsModel.initial(),
             requestToTryAgainWhenError: _propertyFilterOptionsRequest,
+            onRetry: _propertyFilterOptionsCubit.getFilterOptions,
             errorType: ErrorType.defaultView,
             builder: (filterOptions) => Scaffold(
               backgroundColor: AppColors.scaffoldBackground,

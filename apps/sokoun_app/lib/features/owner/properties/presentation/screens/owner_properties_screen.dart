@@ -1,14 +1,9 @@
 part of '../../imports.dart';
 
 class OwnerPropertiesScreen extends StatefulWidget {
-  const OwnerPropertiesScreen({
-    super.key,
-    this.initialProperties,
-    this.errorViewBuilder = buildAppRequestErrorView,
-  });
+  const OwnerPropertiesScreen({super.key, this.initialProperties});
 
   final List<OwnerPropertyContent>? initialProperties;
-  final AppRequestErrorViewBuilder errorViewBuilder;
 
   @override
   State<OwnerPropertiesScreen> createState() => _OwnerPropertiesScreenState();
@@ -151,7 +146,6 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
                   onAddPressed: _openAddProperty,
                   onEditPressed: _openEdit,
                   onRejectedPressed: _openRejection,
-                  errorViewBuilder: widget.errorViewBuilder,
                 ),
               ),
             ],

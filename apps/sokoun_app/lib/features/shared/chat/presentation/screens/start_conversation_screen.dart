@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/helpers/status_builder.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 
 import '../../data/models/chat_content.dart';
@@ -59,10 +58,7 @@ class _StartConversationScreenState extends State<StartConversationScreen> {
           child: ChatStatusBuilder<ChatCubit, ConversationContent>(
             initialData: const ConversationContent.initial(),
             request: _createRequest,
-            errorType: ErrorType.customView,
-            errorWidget: StartConversationErrorView(
-              onRetryPressed: _openConversation,
-            ),
+            onRetry: _openConversation,
             builder: (_) => const StartConversationLoadingView(),
           ),
         ),

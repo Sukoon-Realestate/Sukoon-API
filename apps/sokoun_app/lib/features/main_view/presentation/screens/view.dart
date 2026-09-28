@@ -22,7 +22,6 @@ import 'package:sokoun_app/features/shared/whats_new/widgets/upgrader_dialog.dar
 import 'package:sokoun_app/features/shared/notifications/presentation/notification_coordinator.dart';
 import 'package:sokoun_app/features/shared/notifications/presentation/cubits/unread_notifications_cubit.dart';
 import 'package:sokoun_app/generated/assets.dart';
-import 'package:sokoun_app/shared_widgets/request_error_view.dart';
 import 'package:upgrader/upgrader.dart';
 
 import '../widgets/home_bottom_navigation.dart';
@@ -229,7 +228,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           selectedIcon: Assets.svgHome,
           label: LocaleKeys.home,
         ),
-        screen: OwnerHomeScreen(errorViewBuilder: buildAppRequestErrorView),
+        screen: const OwnerHomeScreen(),
       ),
       _HomeTab(
         tab: WorkspaceTab.properties,
@@ -238,9 +237,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           selectedIcon: Assets.svgBuilding,
           label: LocaleKeys.notificationsOwnerPropertiesNavigation,
         ),
-        screen: OwnerPropertiesScreen(
-          errorViewBuilder: buildAppRequestErrorView,
-        ),
+        screen: const OwnerPropertiesScreen(),
       ),
       _HomeTab(
         tab: WorkspaceTab.requests,
@@ -249,10 +246,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           selectedIcon: Assets.svgCalendar,
           label: LocaleKeys.notificationsOwnerRequestsNavigation,
         ),
-        screen: OwnerVisitRequestsScreen(
-          showBackButton: false,
-          errorViewBuilder: buildAppRequestErrorView,
-        ),
+        screen: const OwnerVisitRequestsScreen(showBackButton: false),
       ),
       _HomeTab(
         tab: WorkspaceTab.messages,

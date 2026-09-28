@@ -19,7 +19,6 @@ import 'package:melos_core/generated/assets.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:pagify/pagify.dart';
 import 'package:sokoun_app/features/owner/home/presentation/screens/owner_add_property_flow_screen.dart';
-import 'package:sokoun_app/shared_widgets/request_error_view.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_details_cubit.dart';
 import 'package:sokoun_app/shared_widgets/property_details_screen.dart';

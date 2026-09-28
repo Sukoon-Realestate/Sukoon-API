@@ -84,6 +84,7 @@ class _OwnerRequestsCalendarScreenState
                 _selectedDate,
               ),
               requestToTryAgainWhenError: calendarRequest,
+              onRetry: () => _calendarCubit.getCalendar(date: _selectedDate),
               errorType: ErrorType.defaultView,
               builder: _buildScreen,
             ),

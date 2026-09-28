@@ -66,7 +66,6 @@ class _AppRetryViewState extends State<AppRetryView> {
             ValueListenableBuilder<bool>(
               valueListenable: _isRetrying,
               builder: (context, isRetrying, _) => DefaultButton(
-                key: const ValueKey('app-retry-button'),
                 onTap: isRetrying ? null : _retry,
                 title: LocaleKeys.ownerRetryAction,
                 width: 160.w,

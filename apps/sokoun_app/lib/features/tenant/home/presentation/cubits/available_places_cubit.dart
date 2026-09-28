@@ -6,7 +6,16 @@ import 'package:sokoun_app/features/tenant/home/data/models/available_places_mod
 class AvailablePlacesCubit extends AsyncCubit<AvailablePlacesModel> {
   AvailablePlacesCubit() : super(const AvailablePlacesModel.initial());
 
+  String? _propertyTypeId;
+
+  Future<void> retry() async {
+    final String? propertyTypeId = _propertyTypeId;
+    if (propertyTypeId == null) return;
+    await getAvailablePlaces(propertyTypeId);
+  }
+
   Future<void> getAvailablePlaces(String propertyTypeId) async {
+    _propertyTypeId = propertyTypeId;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<AvailablePlacesModel>(

@@ -48,6 +48,7 @@ class _TenantAccountSummaryScreenState
                       initialDataForShimmer:
                           const TenantAccountSummaryContent.initial(),
                       requestToTryAgainWhenError: _summaryRequest,
+                      onRetry: _summaryCubit.getSummary,
                       errorType: ErrorType.defaultView,
                       builder: (summary) =>
                           TenantAccountSummaryContentView(summary: summary),
