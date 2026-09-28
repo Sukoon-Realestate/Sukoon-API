@@ -37,26 +37,64 @@ class WorkspaceSwitcher extends StatelessWidget {
     }
     return Semantics(
       label: LocaleKeys.workspaceSwitch,
-      child: Wrap(
-        spacing: 8.w,
-        children: AppWorkspace.values
-            .map(
-              (item) => ChoiceChip(
-                selected: workspace == item,
-                onSelected: workspace == item ? null : (_) => _switch(item),
-                selectedColor: item.isOwner
-                    ? AppColors.goldPale
-                    : AppColors.mintLight,
-                label: AppText(
-                  item.isOwner
-                      ? LocaleKeys.workspaceOwner
-                      : LocaleKeys.workspaceTenant,
-                  fontSize: 12.sp,
-                  color: AppColors.sokoonNavy,
-                ),
-              ),
-            )
-            .toList(growable: false),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 4.w),
+        decoration: const ShapeDecoration(
+          color: AppColors.grayBackground,
+          shape: StadiumBorder(side: BorderSide(color: AppColors.sokoonBorder)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 4.w,
+          children: AppWorkspace.values
+              .map((item) {
+                final bool isSelected = workspace == item;
+                final Color foregroundColor = isSelected
+                    ? AppColors.white
+                    : AppColors.sokoonGray;
+
+                return Flexible(
+                  child: ChoiceChip(
+                    selected: isSelected,
+                    onSelected: (_) {
+                      if (!isSelected) _switch(item);
+                    },
+                    showCheckmark: false,
+                    shape: const StadiumBorder(),
+                    side: BorderSide.none,
+                    backgroundColor: AppColors.transparent,
+                    selectedColor: item.isOwner
+                        ? AppColors.sokoonNavy
+                        : AppColors.sokoonTeal,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 6.w,
+                      vertical: 4.h,
+                    ),
+                    labelPadding: EdgeInsets.symmetric(horizontal: 4.w),
+                    materialTapTargetSize: MaterialTapTargetSize.padded,
+                    visualDensity: VisualDensity.standard,
+                    avatar: Icon(
+                      item.isOwner ? Icons.key_rounded : Icons.home_outlined,
+                      color: isSelected && item.isOwner
+                          ? AppColors.sokoonGold
+                          : foregroundColor,
+                      size: 16.r,
+                    ),
+                    label: AppText(
+                      item.isOwner
+                          ? LocaleKeys.workspaceOwner
+                          : LocaleKeys.workspaceTenant,
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w700,
+                      color: foregroundColor,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                );
+              })
+              .toList(growable: false),
+        ),
       ),
     );
   }

@@ -51,10 +51,6 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
         child: ListView(
           padding: EdgeInsets.fromLTRB(20.w, 16.h, 20.w, 24.h),
           children: [
-            const WorkspaceSwitcher(
-              workspace: AppWorkspace.owner,
-              asAction: true,
-            ),
             ValueListenableBuilder<UserModel>(
               valueListenable: _user,
               builder: (context, user, _) {
