@@ -21,21 +21,18 @@ class OwnerVisitRequestFilters extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          for (int index = 0; index < filters.length; index++) ...[
-            _FilterChip(
-              filter: filters[index],
-              count: countForFilter(filters[index]),
-              isSelected: filters[index].isSame(selectedFilter),
-              onPressed: () => onFilterSelected(filters[index]),
-            ),
-            if (index < filters.length - 1) 8.szW,
-          ],
+    return Row(
+      children: [
+        for (int index = 0; index < filters.length; index++) ...[
+          _FilterChip(
+            filter: filters[index],
+            count: countForFilter(filters[index]),
+            isSelected: filters[index].isSame(selectedFilter),
+            onPressed: () => onFilterSelected(filters[index]),
+          ),
+          if (index < filters.length - 1) 8.szW,
         ],
-      ),
+      ],
     );
   }
 }
@@ -55,48 +52,52 @@ class _FilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: AppColors.transparent,
-      child: InkWell(
-        onTap: onPressed,
-        borderRadius: BorderRadius.circular(999.r),
-        child: Container(
-          height: 36.h,
-          padding: EdgeInsets.symmetric(horizontal: 13.w),
-          decoration: BoxDecoration(
-            color: isSelected ? AppColors.sokoonTeal : AppColors.white,
-            borderRadius: BorderRadius.circular(999.r),
-            border: Border.all(
-              color: isSelected ? AppColors.sokoonTeal : AppColors.grayPale,
-            ),
-          ),
-          child: Row(
-            children: [
-              AppText(
-                filter.label,
-                color: isSelected ? AppColors.white : AppColors.sokoonNavy,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w700,
+    return Expanded(
+      child: Material(
+        color: AppColors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(999.r),
+          child: Container(
+            height: 36.h,
+            padding: EdgeInsets.symmetric(horizontal: 13.w),
+            decoration: BoxDecoration(
+              color: isSelected ? AppColors.sokoonTeal : AppColors.white,
+              borderRadius: BorderRadius.circular(999.r),
+              border: Border.all(
+                color: isSelected ? AppColors.sokoonTeal : AppColors.grayPale,
               ),
-              if (count > 0) ...[
-                6.szW,
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? AppColors.whiteAlpha40
-                        : AppColors.grayPale,
-                    borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: FittedBox(
+              child: Row(
+                children: [
+                  AppText(
+                    filter.label,
+                    color: isSelected ? AppColors.white : AppColors.sokoonNavy,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w700,
                   ),
-                  child: AppText(
-                    '$count',
-                    color: isSelected ? AppColors.white : AppColors.sokoonGray,
-                    fontSize: 10.sp,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ],
-            ],
+                  if (count > 0) ...[
+                    6.szW,
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? AppColors.whiteAlpha40
+                            : AppColors.grayPale,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: AppText(
+                        '$count',
+                        color: isSelected ? AppColors.white : AppColors.sokoonGray,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
           ),
         ),
       ),

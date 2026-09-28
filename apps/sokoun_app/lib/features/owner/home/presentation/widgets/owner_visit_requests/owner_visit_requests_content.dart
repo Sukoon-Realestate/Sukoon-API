@@ -89,8 +89,7 @@ class OwnerVisitRequestsContent extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 20.h),
                   itemCount: visibleRequests.length,
                   itemBuilder: (context, index) {
-                    final OwnerVisitRequestContent request =
-                        visibleRequests[index];
+                    final OwnerVisitRequestContent request = visibleRequests[index];
                     final bool isUpdating = updatingRequestId == request.id;
                     return OwnerVisitRequestCard(
                       key: ValueKey(request.id),
