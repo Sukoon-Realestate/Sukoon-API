@@ -17,10 +17,14 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/network/account_session.dart';
+import 'package:melos_core/core/network/network_request.dart';
+import 'package:melos_core/core/network/network_service.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/shared/route_observer.dart';
 import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
+import 'package:sokoun_app/features/main_view/data/workspace_preferences.dart';
 import 'package:sokoun_app/features/main_view/presentation/cubits/workspace_cubit.dart';
 import 'package:sokoun_app/features/main_view/presentation/screens/view.dart';
 import 'package:sokoun_app/features/main_view/presentation/widgets/home_bottom_navigation.dart';
@@ -33,6 +37,7 @@ import 'package:sokoun_app/features/shared/chat/data/models/chat_unread_content.
 import 'package:sokoun_app/features/shared/notifications/presentation/notification_push_handler.dart';
 import 'package:sokoun_app/features/shared/profile/imports.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_home_screen.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/cubits/home_page_cubit.dart';
 import 'package:sokoun_app/shared_widgets/unsaved_changes_guard.dart';
 
 import 'package:melos_core/core/widgets/notification_permission_view.dart';
@@ -57,6 +62,9 @@ void main() {
   const MethodChannel connectivityStatus = MethodChannel(
     'dev.fluttercommunity.plus/connectivity_status',
   );
+  const MethodChannel secureStorage = MethodChannel(
+    'plugins.it_nomads.com/flutter_secure_storage',
+  );
 
   setUpAll(() async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -65,6 +73,8 @@ void main() {
           (call) async => call.method == 'getAll' ? <String, Object>{} : true,
         );
     await CacheStorage.init();
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(secureStorage, (_) async => null);
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
           connectivity,
@@ -108,6 +118,10 @@ void main() {
     WorkspaceNavigation.clearPending();
     await injector.reset();
   });
+  tearDownAll(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(secureStorage, null);
+  });
 
   testWidgets('authenticated home explains notifications once after launch', (
     tester,
@@ -141,6 +155,85 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pumpAndSettle();
   });
+
+  for (final bool hasCachedUser in [false, true]) {
+    testWidgets(
+      'home caches account and restores owner workspace with ${hasCachedUser ? 'cached identity' : 'login cookies only'}',
+      (tester) async {
+        _phone(tester);
+        if (hasCachedUser) {
+          await registerAuthenticatedTestAccount();
+        } else {
+          injector.registerSingleton<UserCubit>(
+            UserCubit(),
+            dispose: (cubit) => cubit.close(),
+          );
+          final NetworkService fallback = injector<NetworkService>();
+          await injector.unregister<NetworkService>();
+          injector.registerSingleton<NetworkService>(
+            _CookieSessionNetwork(fallback),
+          );
+        }
+        await WorkspacePreferences.write('1', AppWorkspace.owner);
+        injector.registerSingleton<DevicePermissionDataSource>(
+          _HomePermissionSource()..seen = true,
+        );
+        await tester.pumpWidget(_app(const HomeScreen(), 'en'));
+        await tester.pumpAndSettle();
+
+        expect(accountRepository.profileRequests, 1);
+        expect(UserModel.currentUser?.email, 'refreshed@example.com');
+        expect(UserCubit.instance.isUserLoggedIn, isTrue);
+        expect(WorkspaceCubit.instance.userId, '1');
+        expect(WorkspaceCubit.instance.state, AppWorkspace.owner);
+        expect(find.byType(OwnerHomeScreen), findsOneWidget);
+
+        await tester.pumpWidget(_app(const HomeScreen(), 'en'));
+        await tester.pumpAndSettle();
+        expect(accountRepository.profileRequests, 1);
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pumpAndSettle();
+      },
+    );
+  }
+
+  testWidgets(
+    'cookie-only login restarts home requests under the saved account',
+    (tester) async {
+      _phone(tester);
+      injector.registerSingleton<UserCubit>(
+        UserCubit(),
+        dispose: (cubit) => cubit.close(),
+      );
+      final NetworkService fallback = injector<NetworkService>();
+      await injector.unregister<NetworkService>();
+      injector.registerSingleton<NetworkService>(
+        _CookieSessionNetwork(fallback),
+      );
+      injector.registerSingleton<DevicePermissionDataSource>(
+        _HomePermissionSource()..seen = true,
+      );
+      accountRepository.homeGate = Completer<void>();
+
+      await tester.pumpWidget(_app(const HomeScreen(), 'en'));
+      await tester.pumpAndSettle();
+
+      expect(accountRepository.profileRequests, 1);
+      expect(accountRepository.homeRequests, 2);
+      final HomePageCubit home = tester
+          .element(find.byType(RefreshIndicator))
+          .read<HomePageCubit>();
+      expect(home.state.isSuccess, isTrue);
+      expect(UserModel.currentUser?.id, '1');
+      accountRepository.homeGate!.complete();
+      await tester.pumpAndSettle();
+      expect(home.state.isSuccess, isTrue);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+    },
+  );
 
   testWidgets('guest home never asks for notification permission', (
     tester,
@@ -571,21 +664,28 @@ class _AccountStatsRepository implements BaseRepository {
     'reviews_count': 0,
   };
   int profileRequests = 0;
+  int homeRequests = 0;
   Completer<void>? profileGate;
+  Completer<void>? homeGate;
 
   @override
   Future<Result<BaseModel<T>, Failure>> crudCall<T>(
     CrudBaseParmas<T> params,
   ) async {
     final Map<String, dynamic> response;
-    if (params.api == ApiConstants.tenantProfile) {
+    if (params.api == ApiConstants.getAccData) {
       profileRequests++;
       await profileGate?.future;
       response = {
         'user': {'id': '1', 'full_name': 'Test account'},
+        'account_details': {'email': 'refreshed@example.com'},
         'stats': stats,
       };
     } else {
+      if (params.api == ApiConstants.homePage) {
+        homeRequests++;
+        if (homeRequests == 1) await homeGate?.future;
+      }
       return fallback.crudCall(params);
     }
     expectSync(params.httpRequestType, HttpRequestType.get);
@@ -598,4 +698,25 @@ class _AccountStatsRepository implements BaseRepository {
   Future<Result<List<T>, Failure>> getBaseIdAndNameEntity<T extends BaseEntity>(
     GetBaseEntityParams? param,
   ) => fallback.getBaseIdAndNameEntity<T>(param);
+}
+
+class _CookieSessionNetwork implements NetworkService {
+  _CookieSessionNetwork(this.fallback);
+
+  final NetworkService fallback;
+
+  @override
+  Future<bool> hasSessionCookies() async => true;
+
+  @override
+  Future<void> clearSessionCookies() => fallback.clearSessionCookies();
+
+  @override
+  Future<void> updateBaseUrl() => fallback.updateBaseUrl();
+
+  @override
+  Future<BaseModel<T>> callApi<T>(
+    NetworkRequest request, {
+    T Function(dynamic)? mapper,
+  }) => fallback.callApi<T>(request, mapper: mapper);
 }

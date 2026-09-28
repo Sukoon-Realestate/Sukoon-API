@@ -1384,6 +1384,24 @@ abstract class LocaleKeys {
   static const String _changeLanguage = 'change_language';
   static String get changeLanguage => _changeLanguage.tr();
 
+  static const String _languageSelectionTitle = 'language_selection_title';
+  static String get languageSelectionTitle => _languageSelectionTitle.tr();
+
+  static const String _languageSelectionSubtitle = 'language_selection_subtitle';
+  static String get languageSelectionSubtitle => _languageSelectionSubtitle.tr();
+
+  static const String _languageArabicName = 'language_arabic_name';
+  static String get languageArabicName => _languageArabicName.tr();
+
+  static const String _languageArabicTranslation = 'language_arabic_translation';
+  static String get languageArabicTranslation => _languageArabicTranslation.tr();
+
+  static const String _languageEnglishNativeName = 'language_english_native_name';
+  static String get languageEnglishNativeName => _languageEnglishNativeName.tr();
+
+  static const String _languageEnglishTranslation = 'language_english_translation';
+  static String get languageEnglishTranslation => _languageEnglishTranslation.tr();
+
   static const String _choosePaymentMethod = 'choose_payment_method';
   static String get choosePaymentMethod => _choosePaymentMethod.tr();
 

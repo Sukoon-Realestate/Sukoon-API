@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../config/res/config_imports.dart';
-import '../../helpers/apps_flyer/apps_flyer_helper.dart';
 import '../../helpers/cache_service.dart';
 import '../../helpers/nsfw_detector.dart';
 import '../../local_db/objectbox_cache_service.dart';
@@ -21,8 +20,12 @@ class UserCubit extends Cubit<UserState> with UserUtils {
   UserCubit() : super(UserState.initial());
 
   Future<void> setUserLoggedIn({required UserModel user}) async {
-    AccountSession.begin(user.id);
+    if (AccountSession.userId != user.id) {
+      AccountSession.begin(user.id);
+    }
+    final int generation = AccountSession.generation;
     await Future.wait([_saveUser(user), SecureStorage.delete(_legacyTokenKey)]);
+    if (isClosed || generation != AccountSession.generation) return;
     // AppyFlyerHelper.setCustomer();
     emit(state.copyWith(userModel: user, userStatus: UserStatus.loggedIn));
   }

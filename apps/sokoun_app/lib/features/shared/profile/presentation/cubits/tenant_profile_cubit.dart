@@ -5,6 +5,20 @@ class TenantProfileCubit extends AsyncCubit<TenantProfileContent> {
 
   Future<void>? _profileRequest;
 
+  void setProfile(TenantProfileContent profile) {
+    ObjectBoxCacheService.save(TenantProfileContent.cacheKey, profile.toJson());
+    emit(state.success(data: profile));
+  }
+
+  void restoreCachedProfile() {
+    final Map<String, dynamic>? cached = ObjectBoxCacheService.read(
+      TenantProfileContent.cacheKey,
+    );
+    if (cached != null) {
+      emit(state.success(data: TenantProfileContent.fromJson(cached)));
+    }
+  }
+
   Future<void> getProfile() {
     if (isClosed) return Future<void>.value();
     return _profileRequest ??= _loadProfile().whenComplete(
@@ -16,7 +30,7 @@ class TenantProfileCubit extends AsyncCubit<TenantProfileContent> {
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<TenantProfileContent>(
-          api: ApiConstants.tenantProfile,
+          api: ApiConstants.getAccData,
           httpRequestType: HttpRequestType.get,
           cacheKey: TenantProfileContent.cacheKey,
           mapper: (json) =>

@@ -82,9 +82,15 @@ void main() {
       for (final File file in dartFiles) {
         final String source = file.readAsStringSync();
         if (!source.contains('httpRequestType: HttpRequestType.get')) continue;
-        // Authentication must establish identity from the server. A cached /me
+        // Authentication must establish identity from the server. A cached
         // fallback could sign a new session into the previous account's data.
-        if (file.path.endsWith('/auth/data/auth_session_data.dart')) continue;
+        // Main-view account loading now finalizes login through UserCubit.
+        if (file.path.endsWith('/auth/data/auth_session_data.dart') ||
+            file.path.endsWith(
+              '/main_view/presentation/cubits/account_cubit.dart',
+            )) {
+          continue;
+        }
 
         const requiredTokens = <String>[
           'cacheKey:',

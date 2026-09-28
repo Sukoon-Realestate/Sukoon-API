@@ -1,4 +1,3 @@
-import 'package:melos_core/core/extensions/object.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
 
 class UserModel {
@@ -22,13 +21,27 @@ class UserModel {
       const UserModel(id: '0', name: '', phone: '', email: '', type: '');
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    final Map<String, dynamic> user = json['user'] is Map
+        ? Map<String, dynamic>.from(json['user'] as Map)
+        : json;
+    final Map<String, dynamic> details = json['account_details'] is Map
+        ? Map<String, dynamic>.from(json['account_details'] as Map)
+        : const {};
     return UserModel(
-      id: json['id']?.toString() ?? '',
-      name: json['full_name']?.toString() ?? json['name']?.toString() ?? '',
+      id: user['id']?.toString() ?? '',
+      name:
+          user['full_name']?.toString() ??
+          user['name']?.toString() ??
+          details['name']?.toString() ??
+          '',
       phone:
-          json['phone']?.toString() ?? json['phone_number']?.toString() ?? '',
-      email: json['email']?.toString() ?? '',
-      type: json['type']?.toString() ?? '',
+          user['phone']?.toString() ??
+          user['phone_number']?.toString() ??
+          details['phone_number']?.toString() ??
+          details['phone']?.toString() ??
+          '',
+      email: user['email']?.toString() ?? details['email']?.toString() ?? '',
+      type: user['type']?.toString() ?? '',
     );
   }
 
@@ -48,17 +61,13 @@ class UserModel {
     'type': type,
   };
 
-  static bool get isAuthenticated {
-    return currentUser.isNotNull;
-  }
+  static bool get isAuthenticated => currentUser != null;
 
   static UserModel? get currentUser {
-    final res =
-        (CacheStorage.read('user', isDecoded: true) as Object?).isNotNull;
-    if (res) {
-      return UserModel.fromJson(CacheStorage.read('user', isDecoded: true));
-    }
-
-    return null;
+    final Map<String, dynamic>? json = CacheStorage.read(
+      'user',
+      isDecoded: true,
+    );
+    return json == null ? null : UserModel.fromJson(json);
   }
 }

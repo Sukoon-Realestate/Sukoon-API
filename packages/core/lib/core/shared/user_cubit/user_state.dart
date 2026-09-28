@@ -1,7 +1,5 @@
 part of 'user_cubit.dart';
 
-
-
 enum UserStatus {
   loggedIn,
   loggedOut,

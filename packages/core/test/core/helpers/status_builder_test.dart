@@ -44,6 +44,42 @@ void main() {
         .setMockMethodCallHandler(preferencesChannel, null);
   });
 
+  testWidgets('loading more preserves the mounted scroll view and its offset', (
+    tester,
+  ) async {
+    final controller = ScrollController();
+    addTearDown(controller.dispose);
+    await tester.pumpWidget(
+      _screen(
+        cubit: cubit,
+        onRetry: () async {},
+        builder: (data) => ListView(
+          controller: controller,
+          children: List.generate(
+            30,
+            (index) => SizedBox(height: 100, child: Text('$data $index')),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    controller.jumpTo(400);
+    await tester.pump();
+    final scrollable = tester.state(find.byType(Scrollable));
+
+    cubit.setLoadingMore();
+    await tester.pump();
+    expect(tester.state(find.byType(Scrollable)), same(scrollable));
+    expect(controller.offset, 400);
+
+    cubit.showSuccess();
+    await tester.pump();
+    expect(tester.state(find.byType(Scrollable)), same(scrollable));
+    expect(controller.offset, 400);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox.shrink());
+  });
+
   for (final bool withShimmer in [false, true]) {
     testWidgets(
       'offline errors offer a working retry (shimmer: $withShimmer)',
@@ -158,6 +194,7 @@ Widget _screen({
   required _StatusCubit cubit,
   required Future<void> Function() onRetry,
   bool withShimmer = true,
+  Widget Function(String)? builder,
 }) {
   final Future<void> initialRequest = Future<void>.value();
   return EasyLocalization(
@@ -179,12 +216,12 @@ Widget _screen({
                     initialDataForShimmer: '',
                     requestToTryAgainWhenError: initialRequest,
                     onRetry: onRetry,
-                    builder: (data) => Text(data),
+                    builder: builder ?? (data) => Text(data),
                   )
                 : StatusBuilder<_StatusCubit, String>(
                     requestToTryAgainWhenError: initialRequest,
                     onRetry: onRetry,
-                    builder: (data) => Text(data),
+                    builder: builder ?? (data) => Text(data),
                   ),
           ),
         ),

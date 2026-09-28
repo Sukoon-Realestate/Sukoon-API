@@ -26,16 +26,19 @@ extension BasseStatusExt on BaseStatus {
     required T Function() onSuccess,
     required T Function() onLoading,
     required T Function() onError,
+    required T Function() onLoadMore,
   }) {
     switch (this) {
       case BaseStatus.initial:
         return onInitial?.call() ?? onLoading();
       case BaseStatus.loading:
         return onLoading();
-      case BaseStatus.success:case BaseStatus.loadingMore:
+      case BaseStatus.success:
         return onSuccess();
       case BaseStatus.error:
         return onError();
+      case BaseStatus.loadingMore:
+        return onLoadMore();
     }
   }
 }

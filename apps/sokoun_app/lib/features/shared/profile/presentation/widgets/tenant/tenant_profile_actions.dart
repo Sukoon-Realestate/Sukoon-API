@@ -12,6 +12,20 @@ class TenantProfileActions extends StatelessWidget {
         ProfileSurfaceCard(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
           child: ProfileMenuTile(
+            icon: Icons.language_rounded,
+            label: LocaleKeys.changeLanguage,
+            subtitle: context.locale == Languages.arabic.locale
+                ? LocaleKeys.languageArabicName
+                : LocaleKeys.languageEnglishNativeName,
+            iconColor: AppColors.sokoonTeal,
+            iconBackgroundColor: AppColors.mintLight,
+            onTap: () => Go.to(const LanguageSelectionScreen()),
+          ),
+        ),
+        8.szH,
+        ProfileSurfaceCard(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
+          child: ProfileMenuTile(
             icon: Icons.description_outlined,
             label: menuItems.contracts.title.isNotEmpty
                 ? menuItems.contracts.title

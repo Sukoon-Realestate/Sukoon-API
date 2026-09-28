@@ -50,7 +50,7 @@ void main() {
   tearDown(() => injector.reset());
 
   test(
-    'logs in, fetches the current user, caches it, then completes',
+    'logs in and leaves the shared account cache to the main view',
     () async {
       final LoginCubit cubit = LoginCubit();
       addTearDown(cubit.close);
@@ -69,13 +69,14 @@ void main() {
         {'email': 'user@example.com', 'password': 'password'},
         null,
       ]);
-      expect(userCubit.cachedUser?.id, '17');
-      expect(userCubit.cachedUser?.email, 'user@example.com');
-      expect(userCubit.cachedUser?.type, 'tenant');
+      expect(userCubit.cachedUser, isNull);
+      expect(cubit.data.id, '17');
+      expect(cubit.data.email, 'user@example.com');
+      expect(cubit.data.type, 'tenant');
       expect(repository.currentUserCacheKey, isNull);
       expect(repository.cachedUserJson, isNull);
       expect(repository.restoredUser, isNull);
-      expect(userCubit.cachedUser?.name, 'Test User');
+      expect(cubit.data.name, 'Test User');
       expect(completed, isTrue);
     },
   );

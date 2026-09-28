@@ -124,9 +124,8 @@ class StatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
         onLoading: () => _loadingView,
         onSuccess: () => _successView(state.data),
         onError: () => _errorView(state),
-        // onLoadingMore: () {
-        //   return _buildCircularLoading();
-        // },
+        // Keep the content mounted; its scroll view owns the loading footer.
+        onLoadMore: () => _successView(state.data),
       ),
     );
   }

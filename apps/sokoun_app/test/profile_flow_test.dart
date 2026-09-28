@@ -64,11 +64,12 @@ void main() {
 
   Widget buildScreen(Widget screen) {
     return EasyLocalization(
-      supportedLocales: const [Locale('ar')],
+      supportedLocales: const [Locale('ar'), Locale('en')],
       path: 'unused',
       assetLoader: const _ProfileTranslationsAssetLoader(),
       startLocale: const Locale('ar'),
       fallbackLocale: const Locale('ar'),
+      saveLocale: false,
       child: ScreenUtilInit(
         designSize: Size(ScreenSizes.width, ScreenSizes.height),
         builder: (context, _) {
@@ -149,7 +150,7 @@ void main() {
     expect(ownerCubit.data.owner.fullName, 'Zeayd Mohammed');
 
     await tenantCubit.getProfile();
-    expect(repository.lastApi, ApiConstants.tenantProfile);
+    expect(repository.lastApi, ApiConstants.getAccData);
     expect(repository.lastMethod, HttpRequestType.get);
     expect(repository.lastCacheKey, TenantProfileContent.cacheKey);
     expect(tenantCubit.data.stats.visitsCount, 2);
@@ -253,7 +254,7 @@ void main() {
     await tester.drag(find.byType(ListView).last, const Offset(0, -900));
     await tester.pumpAndSettle();
     expect(find.byType(ProfileDeleteAccountButton), findsOneWidget);
-    expect(repository.lastApi, ApiConstants.tenantProfile);
+    expect(repository.lastApi, ApiConstants.getAccData);
     expect(repository.lastMethod, HttpRequestType.get);
     expect(tester.takeException(), isNull);
 
@@ -296,6 +297,42 @@ void main() {
     expect(repository.lastMethod, HttpRequestType.get);
     expect(tester.takeException(), isNull);
   });
+
+  for (final bool isOwner in [false, true]) {
+    testWidgets('${isOwner ? 'owner' : 'tenant'} profile changes language', (
+      tester,
+    ) async {
+      configurePhoneViewport(tester);
+      await tester.pumpWidget(
+        buildScreen(
+          isOwner
+              ? const OwnerMoreScreen(user: owner)
+              : const TenantProfileScreen(user: tenant),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byIcon(Icons.language_rounded));
+      await tester.pumpAndSettle();
+      expect(find.byType(LanguageSelectionScreen), findsOneWidget);
+      await tester.tap(find.text('English'));
+      await tester.pump();
+      await tester.tap(find.text('تأكيد'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(LanguageSelectionScreen), findsNothing);
+      expect(Go.context.locale, const Locale('en'));
+      expect(find.text('Change language'), findsOneWidget);
+      expect(
+        find.text(
+          isOwner
+              ? 'English profile_account_and_profile'
+              : 'English profile_my_account',
+        ),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    });
+  }
 
   testWidgets('T-EDIT-01 prefills registration fields from initialValue', (
     tester,
@@ -447,7 +484,7 @@ class _ProfileRepository implements BaseRepository {
     lastIsFromData = params.isFromData;
     final dynamic response = switch (params.api) {
       ApiConstants.ownerProfile => _ownerProfileResponse,
-      ApiConstants.tenantProfile => _tenantProfileResponse,
+      ApiConstants.getAccData => _tenantProfileResponse,
       ApiConstants.tenantAccountSummary => _tenantAccountSummaryResponse,
       ApiConstants.editProfile => const <String, dynamic>{'updated': true},
       ApiConstants.deleteAccount => const <String, dynamic>{'deleted': true},
@@ -485,6 +522,14 @@ class _ProfileTranslationsAssetLoader extends AssetLoader {
   @override
   Future<Map<String, dynamic>> load(String path, Locale locale) async {
     const List<String> keys = [
+      'change_language',
+      'language_selection_title',
+      'language_selection_subtitle',
+      'language_arabic_name',
+      'language_arabic_translation',
+      'language_english_native_name',
+      'language_english_translation',
+      'confirm',
       'profile_my_account',
       'profile_owner_title',
       'profile_summary_title',
@@ -562,6 +607,14 @@ class _ProfileTranslationsAssetLoader extends AssetLoader {
       'deleting_will_remove_all_your_data',
       'cancel',
     ];
-    return {for (final String key in keys) key: 'نص'};
+    return {
+      for (final String key in keys)
+        key: locale.languageCode == 'ar' ? 'نص' : 'English $key',
+      'language_english_native_name': 'English',
+      'confirm': locale.languageCode == 'ar' ? 'تأكيد' : 'Confirm',
+      'change_language': locale.languageCode == 'ar'
+          ? 'تغيير اللغة'
+          : 'Change language',
+    };
   }
 }

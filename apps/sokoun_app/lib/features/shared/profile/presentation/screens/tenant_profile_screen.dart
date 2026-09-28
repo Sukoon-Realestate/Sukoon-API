@@ -75,6 +75,8 @@ class _TenantProfileScreenState extends State<TenantProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // LocaleKeys getters resolve strings without subscribing this screen.
+    Localizations.localeOf(context);
     return BlocProvider<TenantProfileCubit>.value(
       value: _profileCubit,
       child: BlocBuilder<TenantProfileCubit, AsyncState<TenantProfileContent>>(

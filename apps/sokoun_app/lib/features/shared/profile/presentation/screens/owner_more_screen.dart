@@ -45,6 +45,8 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // LocaleKeys getters resolve strings without subscribing this screen.
+    Localizations.localeOf(context);
     return Scaffold(
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
@@ -126,6 +128,13 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
                   label: LocaleKeys.profilePrivacySecurity,
                   color: AppColors.blue,
                   backgroundColor: AppColors.bluePale,
+                ),
+                OwnerMoreItem(
+                  icon: Icons.language_rounded,
+                  label: LocaleKeys.changeLanguage,
+                  color: AppColors.sokoonTeal,
+                  backgroundColor: AppColors.mintLight,
+                  onTap: () => Go.to(const LanguageSelectionScreen()),
                 ),
               ],
             ),

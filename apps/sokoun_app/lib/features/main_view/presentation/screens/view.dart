@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/language/languages.dart';
@@ -30,6 +31,7 @@ import '../widgets/home_bottom_navigation.dart';
 import '../../data/enums/app_workspace.dart';
 import '../../data/enums/workspace_tab.dart';
 import '../cubits/workspace_cubit.dart';
+import '../cubits/account_cubit.dart';
 import '../workspace_navigation.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -59,6 +61,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   late final ChatUnreadCubit _chatUnreadCubit;
   late final UnreadNotificationsCubit _notificationUnreadCubit;
   late final TenantProfileCubit _tenantProfileCubit;
+  late final AccountCubit _accountCubit;
+  late final Future<void> _accountRequest;
 
   late final Upgrader upgrader = Upgrader(
     languageCode: Languages.currentLanguage.languageCode,
@@ -89,25 +93,26 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     _notificationUnreadCubit = UnreadNotificationsCubit()
       ..watchRefreshRequests();
     _tenantProfileCubit = TenantProfileCubit();
+    if (WorkspaceNavigation.isAuthenticated) {
+      _tenantProfileCubit.restoreCachedProfile();
+    }
+    _accountCubit = AccountCubit();
+    _accountRequest = _accountCubit.getAccount(
+      onProfileLoaded: _tenantProfileCubit.setProfile,
+    );
     final List<_HomeTab> ownerTabs = _buildOwnerTabs();
     _allTabs = [
       ..._buildTenantTabs(),
-      ownerTabs[0],
-      ownerTabs[1],
-      ownerTabs[2],
-      ownerTabs[4],
+      ...ownerTabs..removeAt(3)
+      // ownerTabs[0],
+      // ownerTabs[1],
+      // ownerTabs[2],
+      // ownerTabs[4],
     ];
     WorkspaceNavigation.attach(_applyWorkspace);
-    unawaited(_refreshTenantProfile());
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      unawaited(
-        Future.wait<void>([
-          _chatUnreadCubit.start(),
-          _notificationUnreadCubit.loadUnreadCount(),
-          _showLaunchDialogs(),
-        ]),
-      );
+      unawaited(_initializeAccountFeatures());
     });
   }
 
@@ -132,7 +137,24 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     unawaited(_chatUnreadCubit.close());
     unawaited(_notificationUnreadCubit.close());
     unawaited(_tenantProfileCubit.close());
+    unawaited(_accountCubit.close());
     super.dispose();
+  }
+
+  Future<void> _initializeAccountFeatures() async {
+    await _accountRequest;
+    if (!mounted) return;
+    final String? userId = WorkspaceNavigation.isAuthenticated
+        ? UserCubit.instance.user.id
+        : null;
+    final bool accountChanged = _workspaceCubit.userId != userId;
+    _workspaceCubit.initialize(userId);
+    if (accountChanged) setState(() {});
+    await Future.wait<void>([
+      _chatUnreadCubit.start(),
+      _notificationUnreadCubit.loadUnreadCount(),
+      _showLaunchDialogs(),
+    ]);
   }
 
   Future<void> _refreshTenantProfile() async {
@@ -171,7 +193,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       return;
     }
     setState(() => _selectedTabs[_workspace] = index);
-    unawaited(_refreshTenantProfile());
   }
 
   Future<void> _applyWorkspace(
@@ -311,6 +332,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    context.locale;
     return MultiBlocProvider(
       providers: [
         BlocProvider<WorkspaceCubit>.value(value: _workspaceCubit),
@@ -330,6 +352,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             child: Scaffold(
               backgroundColor: AppColors.scaffoldBackground,
               body: IndexedStack(
+                // Recreate account-owned tab state after cookie-only login.
+                key: ValueKey(_workspaceCubit.userId),
                 index: bodyIndex,
                 children: List<Widget>.generate(
                   _allTabs.length,
