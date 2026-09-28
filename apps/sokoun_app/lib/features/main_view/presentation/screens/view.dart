@@ -58,6 +58,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       .toList(growable: false);
   late final ChatUnreadCubit _chatUnreadCubit;
   late final UnreadNotificationsCubit _notificationUnreadCubit;
+  late final TenantProfileCubit _tenantProfileCubit;
 
   late final Upgrader upgrader = Upgrader(
     languageCode: Languages.currentLanguage.languageCode,
@@ -87,6 +88,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     _chatUnreadCubit = ChatUnreadCubit();
     _notificationUnreadCubit = UnreadNotificationsCubit()
       ..watchRefreshRequests();
+    _tenantProfileCubit = TenantProfileCubit();
     final List<_HomeTab> ownerTabs = _buildOwnerTabs();
     _allTabs = [
       ..._buildTenantTabs(),
@@ -96,6 +98,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       ownerTabs[4],
     ];
     WorkspaceNavigation.attach(_applyWorkspace);
+    unawaited(_refreshTenantProfile());
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       unawaited(
@@ -112,6 +115,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       unawaited(_chatUnreadCubit.onAppResumed());
+      unawaited(_refreshTenantProfile());
       return;
     }
     if (state == AppLifecycleState.paused ||
@@ -127,7 +131,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     unawaited(_chatUnreadCubit.close());
     unawaited(_notificationUnreadCubit.close());
+    unawaited(_tenantProfileCubit.close());
     super.dispose();
+  }
+
+  Future<void> _refreshTenantProfile() async {
+    if (!_workspace.isTenant || !WorkspaceNavigation.isAuthenticated) return;
+    await _tenantProfileCubit.getProfile();
   }
 
   Future<void> _showLaunchDialogs() async {
@@ -161,6 +171,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       return;
     }
     setState(() => _selectedTabs[_workspace] = index);
+    unawaited(_refreshTenantProfile());
   }
 
   Future<void> _applyWorkspace(
@@ -176,8 +187,27 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       if (index >= 0) _selectedTabs[target] = index;
     }
     await _workspaceCubit.switchTo(target);
-    if (mounted) setState(() {});
+    if (mounted) {
+      setState(() {});
+      unawaited(_refreshTenantProfile());
+    }
   }
+
+  List<HomeNavigationDestination> _navigationDestinations({
+    required int unreadCount,
+    required TenantProfileStatsContent stats,
+  }) => _tabs
+      .map((tab) {
+        final int badgeCount = switch (tab.tab) {
+          WorkspaceTab.messages => unreadCount,
+          WorkspaceTab.saved when _workspace.isTenant => stats.savedCount,
+          WorkspaceTab.visits when _workspace.isTenant => stats.visitsCount,
+          WorkspaceTab.profile when _workspace.isTenant => stats.reviewsCount,
+          _ => 0,
+        };
+        return tab.destination.copyWith(badgeCount: badgeCount);
+      })
+      .toList(growable: false);
 
   List<_HomeTab> _buildTenantTabs() {
     return [
@@ -288,6 +318,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         BlocProvider<UnreadNotificationsCubit>.value(
           value: _notificationUnreadCubit,
         ),
+        BlocProvider<TenantProfileCubit>.value(value: _tenantProfileCubit),
       ],
       child: BlocBuilder<WorkspaceCubit, AppWorkspace>(
         builder: (context, workspace) {
@@ -314,19 +345,22 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                     int
                   >(
                     selector: (state) => state.data.count,
-                    builder: (context, unreadCount) => HomeBottomNavigation(
-                      destinations: _tabs
-                          .map(
-                            (tab) => tab.screen is ChatListScreen
-                                ? tab.destination.copyWith(
-                                    badgeCount: unreadCount,
-                                  )
-                                : tab.destination,
-                          )
-                          .toList(growable: false),
-                      currentIndex: _currentIndex,
-                      onDestinationSelected: _selectTab,
-                    ),
+                    builder: (context, unreadCount) =>
+                        BlocSelector<
+                          TenantProfileCubit,
+                          AsyncState<TenantProfileContent>,
+                          TenantProfileStatsContent
+                        >(
+                          selector: (state) => state.data.stats,
+                          builder: (context, stats) => HomeBottomNavigation(
+                            destinations: _navigationDestinations(
+                              unreadCount: unreadCount,
+                              stats: stats,
+                            ),
+                            currentIndex: _currentIndex,
+                            onDestinationSelected: _selectTab,
+                          ),
+                        ),
                   ),
             ),
           );

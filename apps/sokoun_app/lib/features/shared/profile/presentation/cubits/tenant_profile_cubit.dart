@@ -3,7 +3,16 @@ part of '../../imports.dart';
 class TenantProfileCubit extends AsyncCubit<TenantProfileContent> {
   TenantProfileCubit() : super(const TenantProfileContent.initial());
 
-  Future<void> getProfile() async {
+  Future<void>? _profileRequest;
+
+  Future<void> getProfile() {
+    if (isClosed) return Future<void>.value();
+    return _profileRequest ??= _loadProfile().whenComplete(
+      () => _profileRequest = null,
+    );
+  }
+
+  Future<void> _loadProfile() async {
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<TenantProfileContent>(

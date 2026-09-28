@@ -96,6 +96,7 @@ class _HomeBottomNavigationItem extends StatelessWidget {
       button: true,
       selected: isSelected,
       label: destination.label,
+      value: destination.badgeCount > 0 ? '${destination.badgeCount}' : null,
       child: InkWell(
         onTap: isSelected ? null : onPressed,
         child: ExcludeSemantics(

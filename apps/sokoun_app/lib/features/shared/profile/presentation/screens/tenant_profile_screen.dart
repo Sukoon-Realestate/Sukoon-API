@@ -13,14 +13,22 @@ class _TenantProfileScreenState extends State<TenantProfileScreen> {
   late final UserModel _fallbackUser;
   late final TenantProfileCubit _profileCubit;
   late final Future<void> _profileRequest;
+  bool _ownsProfileCubit = false;
   StreamSubscription<UserState>? _accountSubscription;
 
   @override
   void initState() {
     super.initState();
     _fallbackUser = widget.user ?? UserModel.currentUser ?? UserModel.initial();
-    _profileCubit = TenantProfileCubit();
-    _profileRequest = _profileCubit.getProfile();
+    try {
+      _profileCubit = context.read<TenantProfileCubit>();
+    } on ProviderNotFoundException {
+      _ownsProfileCubit = true;
+      _profileCubit = TenantProfileCubit();
+    }
+    _profileRequest = _profileCubit.state.isSuccess
+        ? Future<void>.value()
+        : _profileCubit.getProfile();
     if (injector.isRegistered<UserCubit>()) {
       _accountSubscription = UserCubit.instance.stream.listen((state) {
         if (state.userStatus == UserStatus.loggedIn) {
@@ -34,7 +42,7 @@ class _TenantProfileScreenState extends State<TenantProfileScreen> {
   @override
   void dispose() {
     unawaited(_accountSubscription?.cancel());
-    _profileCubit.close();
+    if (_ownsProfileCubit) unawaited(_profileCubit.close());
     super.dispose();
   }
 

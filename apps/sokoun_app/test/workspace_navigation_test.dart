@@ -7,6 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
+import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
+import 'package:melos_core/core/error/failure.dart';
+import 'package:melos_core/core/network/api_endpoints.dart';
+import 'package:multiple_result/multiple_result.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
@@ -24,7 +29,9 @@ import 'package:sokoun_app/features/owner/home/presentation/screens/owner_home_s
 import 'package:sokoun_app/features/owner/visits/imports.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/screens/login_screen.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/cubits/chat_unread_cubit.dart';
+import 'package:sokoun_app/features/shared/chat/data/models/chat_unread_content.dart';
 import 'package:sokoun_app/features/shared/notifications/presentation/notification_push_handler.dart';
+import 'package:sokoun_app/features/shared/profile/imports.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_home_screen.dart';
 import 'package:sokoun_app/shared_widgets/unsaved_changes_guard.dart';
 
@@ -40,6 +47,7 @@ final Map<String, Map<String, dynamic>> _translations = {};
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  late _AccountStatsRepository accountRepository;
   const MethodChannel preferences = MethodChannel(
     'plugins.flutter.io/shared_preferences',
   );
@@ -88,6 +96,13 @@ void main() {
     AccountSession.end();
     WorkspaceNavigation.clearPending();
     registerHomePageTestDependencies();
+    accountRepository = _AccountStatsRepository(
+      injector<BaseCrudUseCase>().repository,
+    );
+    await injector.unregister<BaseCrudUseCase>();
+    injector.registerSingleton<BaseCrudUseCase>(
+      BaseCrudUseCase(repository: accountRepository),
+    );
   });
   tearDown(() async {
     WorkspaceNavigation.clearPending();
@@ -140,9 +155,136 @@ void main() {
     expect(permissions.requests, 0);
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pumpAndSettle();
+    expect(accountRepository.profileRequests, 0);
+  });
+
+  test('coalesces simultaneous my-account requests', () async {
+    accountRepository.profileGate = Completer<void>();
+    final TenantProfileCubit cubit = TenantProfileCubit();
+    addTearDown(cubit.close);
+
+    final Future<void> first = cubit.getProfile();
+    final Future<void> second = cubit.getProfile();
+    expect(second, same(first));
+    expect(accountRepository.profileRequests, 1);
+
+    accountRepository.profileGate!.complete();
+    await Future.wait([first, second]);
+    expect(cubit.state.isSuccess, isTrue);
+    await cubit.getProfile();
+    expect(accountRepository.profileRequests, 2);
+  });
+
+  testWidgets('standalone tenant profile owns and closes its cubit', (
+    tester,
+  ) async {
+    _phone(tester);
+    await registerAuthenticatedTestAccount();
+    await tester.pumpWidget(_app(const TenantProfileScreen(), 'en'));
+    await tester.pumpAndSettle();
+    final TenantProfileCubit profile = tester
+        .element(find.byType(TenantProfileContentView))
+        .read<TenantProfileCubit>();
+    expect(accountRepository.profileRequests, 1);
+    expect(profile.state.isSuccess, isTrue);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+    expect(profile.isClosed, isTrue);
   });
 
   for (final String language in ['en', 'ar']) {
+    testWidgets(
+      'shows and refreshes my-account badges only in tenant workspace in $language',
+      (tester) async {
+        _phone(tester);
+        await registerAuthenticatedTestAccount();
+        accountRepository.stats = {
+          'saved_count': 120,
+          'visits_count': 4,
+          'reviews_count': 2,
+        };
+        await tester.pumpWidget(_app(const HomeScreen(), language));
+        await tester.pumpAndSettle();
+        tester
+            .element(find.byType(HomeBottomNavigation))
+            .read<ChatUnreadCubit>()
+            .updateData(const ChatUnreadContent(count: 7));
+        await tester.pumpAndSettle();
+
+        HomeBottomNavigation navigation() => tester
+            .widget<HomeBottomNavigation>(find.byType(HomeBottomNavigation));
+        List<int> badgeCounts() => navigation().destinations
+            .map((destination) => destination.badgeCount)
+            .toList();
+        final Finder bottomBar = find.byType(HomeBottomNavigation);
+        expect(badgeCounts(), [0, 120, 7, 4, 2]);
+        expect(
+          find.descendant(of: bottomBar, matching: find.text('99+')),
+          findsOneWidget,
+        );
+        expect(find.byType(TenantProfileScreen), findsNothing);
+        expect(accountRepository.profileRequests, 1);
+        final TenantProfileCubit sharedProfile = tester
+            .element(bottomBar)
+            .read<TenantProfileCubit>();
+
+        accountRepository.stats = {
+          'saved_count': 6,
+          'visits_count': 5,
+          'reviews_count': 3,
+        };
+        navigation().onDestinationSelected(4);
+        await tester.pumpAndSettle();
+        expect(find.byType(TenantProfileScreen), findsOneWidget);
+        expect(badgeCounts(), [0, 6, 7, 5, 3]);
+        expect(accountRepository.profileRequests, 2);
+        expect(
+          tester
+              .element(find.byType(TenantProfileContentView))
+              .read<TenantProfileCubit>(),
+          same(sharedProfile),
+        );
+
+        unawaited(WorkspaceNavigation.open(workspace: AppWorkspace.owner));
+        await tester.pumpAndSettle();
+        expect(badgeCounts(), [0, 0, 0, 7, 0]);
+        expect(accountRepository.profileRequests, 2);
+        expect(sharedProfile.isClosed, isFalse);
+
+        accountRepository.stats = {
+          'saved_count': 0,
+          'visits_count': 0,
+          'reviews_count': 0,
+        };
+        unawaited(WorkspaceNavigation.open(workspace: AppWorkspace.tenant));
+        await tester.pumpAndSettle();
+        expect(badgeCounts(), [0, 0, 7, 0, 0]);
+        expect(accountRepository.profileRequests, 3);
+        expect(
+          find.descendant(of: bottomBar, matching: find.text('0')),
+          findsNothing,
+        );
+
+        accountRepository.stats = {
+          'saved_count': 3,
+          'visits_count': 2,
+          'reviews_count': 1,
+        };
+        tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+        tester.binding.handleAppLifecycleStateChanged(
+          AppLifecycleState.resumed,
+        );
+        await tester.pumpAndSettle();
+        expect(badgeCounts(), [0, 3, 7, 2, 1]);
+        expect(accountRepository.profileRequests, 4);
+        expect(tester.takeException(), isNull);
+
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pumpAndSettle();
+        expect(sharedProfile.isClosed, isTrue);
+      },
+    );
+
     testWidgets(
       'switches workspace, retains tab state and shares one session in $language',
       (tester) async {
@@ -417,4 +559,43 @@ class _HomePermissionSource implements DevicePermissionDataSource {
 
   @override
   Future<bool> openSettings() async => true;
+}
+
+class _AccountStatsRepository implements BaseRepository {
+  _AccountStatsRepository(this.fallback);
+
+  final BaseRepository fallback;
+  Map<String, dynamic> stats = const {
+    'saved_count': 0,
+    'visits_count': 0,
+    'reviews_count': 0,
+  };
+  int profileRequests = 0;
+  Completer<void>? profileGate;
+
+  @override
+  Future<Result<BaseModel<T>, Failure>> crudCall<T>(
+    CrudBaseParmas<T> params,
+  ) async {
+    final Map<String, dynamic> response;
+    if (params.api == ApiConstants.tenantProfile) {
+      profileRequests++;
+      await profileGate?.future;
+      response = {
+        'user': {'id': '1', 'full_name': 'Test account'},
+        'stats': stats,
+      };
+    } else {
+      return fallback.crudCall(params);
+    }
+    expectSync(params.httpRequestType, HttpRequestType.get);
+    return Success(
+      BaseModel<T>(key: '', msg: '', data: params.mapper!(response)),
+    );
+  }
+
+  @override
+  Future<Result<List<T>, Failure>> getBaseIdAndNameEntity<T extends BaseEntity>(
+    GetBaseEntityParams? param,
+  ) => fallback.getBaseIdAndNameEntity<T>(param);
 }
