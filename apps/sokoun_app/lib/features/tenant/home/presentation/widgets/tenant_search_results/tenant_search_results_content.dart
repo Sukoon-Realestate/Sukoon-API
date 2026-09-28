@@ -85,6 +85,7 @@ class TenantSearchResultsContent extends StatelessWidget {
         Expanded(
           child: AppPagify<PropertyDetailsModel>(
             pagifyController: pagifyController,
+            disposeController: false,
             asyncCall: loadPage,
             shrinkWrap: false,
             cacheKey: cacheKey,

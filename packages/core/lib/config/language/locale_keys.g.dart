@@ -4258,4 +4258,118 @@ abstract class LocaleKeys {
   static const String _profileVerifiedAccountDescription = 'profile_verified_account_description';
   static String get profileVerifiedAccountDescription => _profileVerifiedAccountDescription.tr();
 
+  static const String _tenantPropertyPhotoSave = 'tenant_property_photo_save';
+  static String get tenantPropertyPhotoSave => _tenantPropertyPhotoSave.tr();
+
+  static const String _tenantPropertyPhotoSaving = 'tenant_property_photo_saving';
+  static String get tenantPropertyPhotoSaving => _tenantPropertyPhotoSaving.tr();
+
+  static const String _tenantPropertyPhotoSaved = 'tenant_property_photo_saved';
+  static String get tenantPropertyPhotoSaved => _tenantPropertyPhotoSaved.tr();
+
+  static const String _tenantPropertyPhotoPermissionDenied = 'tenant_property_photo_permission_denied';
+  static String get tenantPropertyPhotoPermissionDenied => _tenantPropertyPhotoPermissionDenied.tr();
+
+  static const String _tenantPropertyPhotoStorageFull = 'tenant_property_photo_storage_full';
+  static String get tenantPropertyPhotoStorageFull => _tenantPropertyPhotoStorageFull.tr();
+
+  static const String _tenantPropertyPhotoUnsupportedFormat = 'tenant_property_photo_unsupported_format';
+  static String get tenantPropertyPhotoUnsupportedFormat => _tenantPropertyPhotoUnsupportedFormat.tr();
+
+  static const String _tenantPropertyPhotoSaveFailed = 'tenant_property_photo_save_failed';
+  static String get tenantPropertyPhotoSaveFailed => _tenantPropertyPhotoSaveFailed.tr();
+
+  static const String _permissionNotNow = 'permission_not_now';
+  static String get permissionNotNow => _permissionNotNow.tr();
+
+  static const String _locationPermissionTitle = 'location_permission_title';
+  static String get locationPermissionTitle => _locationPermissionTitle.tr();
+
+  static const String _locationPermissionDescription = 'location_permission_description';
+  static String get locationPermissionDescription => _locationPermissionDescription.tr();
+
+  static const String _locationPermissionNearbyTitle = 'location_permission_nearby_title';
+  static String get locationPermissionNearbyTitle => _locationPermissionNearbyTitle.tr();
+
+  static const String _locationPermissionNearbyDescription = 'location_permission_nearby_description';
+  static String get locationPermissionNearbyDescription => _locationPermissionNearbyDescription.tr();
+
+  static const String _locationPermissionMapTitle = 'location_permission_map_title';
+  static String get locationPermissionMapTitle => _locationPermissionMapTitle.tr();
+
+  static const String _locationPermissionMapDescription = 'location_permission_map_description';
+  static String get locationPermissionMapDescription => _locationPermissionMapDescription.tr();
+
+  static const String _locationPermissionAllow = 'location_permission_allow';
+  static String get locationPermissionAllow => _locationPermissionAllow.tr();
+
+  static const String _notificationPermissionTitle = 'notification_permission_title';
+  static String get notificationPermissionTitle => _notificationPermissionTitle.tr();
+
+  static const String _notificationPermissionDescription = 'notification_permission_description';
+  static String get notificationPermissionDescription => _notificationPermissionDescription.tr();
+
+  static const String _notificationPermissionVisitsTitle = 'notification_permission_visits_title';
+  static String get notificationPermissionVisitsTitle => _notificationPermissionVisitsTitle.tr();
+
+  static const String _notificationPermissionVisitsDescription = 'notification_permission_visits_description';
+  static String get notificationPermissionVisitsDescription => _notificationPermissionVisitsDescription.tr();
+
+  static const String _notificationPermissionMessagesTitle = 'notification_permission_messages_title';
+  static String get notificationPermissionMessagesTitle => _notificationPermissionMessagesTitle.tr();
+
+  static const String _notificationPermissionMessagesDescription = 'notification_permission_messages_description';
+  static String get notificationPermissionMessagesDescription => _notificationPermissionMessagesDescription.tr();
+
+  static const String _notificationPermissionPropertiesTitle = 'notification_permission_properties_title';
+  static String get notificationPermissionPropertiesTitle => _notificationPermissionPropertiesTitle.tr();
+
+  static const String _notificationPermissionPropertiesDescription = 'notification_permission_properties_description';
+  static String get notificationPermissionPropertiesDescription => _notificationPermissionPropertiesDescription.tr();
+
+  static const String _permissionSettingsTitle = 'permission_settings_title';
+  static String get permissionSettingsTitle => _permissionSettingsTitle.tr();
+
+  static const String _permissionOpenSettings = 'permission_open_settings';
+  static String get permissionOpenSettings => _permissionOpenSettings.tr();
+
+  static const String _notificationPermissionBlocked = 'notification_permission_blocked';
+  static String get notificationPermissionBlocked => _notificationPermissionBlocked.tr();
+
+  static const String _locationPermissionBlocked = 'location_permission_blocked';
+  static String get locationPermissionBlocked => _locationPermissionBlocked.tr();
+
+  static const String _permissionRestricted = 'permission_restricted';
+  static String get permissionRestricted => _permissionRestricted.tr();
+
+  static const String _permissionDenied = 'permission_denied';
+  static String get permissionDenied => _permissionDenied.tr();
+
+  static const String _permissionUnavailable = 'permission_unavailable';
+  static String get permissionUnavailable => _permissionUnavailable.tr();
+
+  static const String _permissionSettingsUnavailable = 'permission_settings_unavailable';
+  static String get permissionSettingsUnavailable => _permissionSettingsUnavailable.tr();
+
+  static const String _deviceNotificationsTitle = 'device_notifications_title';
+  static String get deviceNotificationsTitle => _deviceNotificationsTitle.tr();
+
+  static const String _deviceNotificationsEnabled = 'device_notifications_enabled';
+  static String get deviceNotificationsEnabled => _deviceNotificationsEnabled.tr();
+
+  static const String _deviceNotificationsDisabled = 'device_notifications_disabled';
+  static String get deviceNotificationsDisabled => _deviceNotificationsDisabled.tr();
+
+  static const String _useMyLocation = 'use_my_location';
+  static String get useMyLocation => _useMyLocation.tr();
+
+  static const String _currentLocationLoading = 'current_location_loading';
+  static String get currentLocationLoading => _currentLocationLoading.tr();
+
+  static const String _locationServicesDisabled = 'location_services_disabled';
+  static String get locationServicesDisabled => _locationServicesDisabled.tr();
+
+  static const String _currentLocationUnavailable = 'current_location_unavailable';
+  static String get currentLocationUnavailable => _currentLocationUnavailable.tr();
+
 }

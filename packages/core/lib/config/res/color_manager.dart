@@ -7,6 +7,7 @@ abstract class AppColors {
   static const Color nearBlack = Color(0xFF0A0A0A);
   static const Color charcoal = Color(0xFF1A1A1A);
   static const Color shadowBlack04 = Color(0x0A000000);
+  static const Color shadowBlack14 = Color(0x23000000);
   static const Color shadowBlack20 = Color(0x33000000);
   static const Color shadowBlack30 = Color(0x4D000000);
   static const Color blackAlpha35 = Color(0x59000000);
@@ -21,7 +22,9 @@ abstract class AppColors {
 
   static const Color teal = Color(0xFF0F766E);
   static const Color tealAlpha03 = Color(0x080F766E);
+  static const Color tealAlpha06 = Color(0x100F766E);
   static const Color tealAlpha07 = Color(0x120F766E);
+  static const Color tealAlpha08 = Color(0x140F766E);
   static const Color tealAlpha09 = Color(0x180F766E);
   static const Color tealAlpha13 = Color(0x200F766E);
   static const Color tealAlpha19 = Color(0x300F766E);
@@ -33,6 +36,7 @@ abstract class AppColors {
 
   static const Color green = Color(0xFF16A34A);
   static const Color greenAlpha06 = Color(0x1016A34A);
+  static const Color greenAlpha08 = Color(0x1416A34A);
   static const Color greenAlpha09 = Color(0x1816A34A);
   static const Color greenAlpha19 = Color(0x3016A34A);
   static const Color emerald = Color(0xFF22C55E);
@@ -64,10 +68,13 @@ abstract class AppColors {
   static const Color offWhite = Color(0xFFFAFAF8);
 
   static const Color blue = Color(0xFF2563EB);
+  static const Color blueAlpha06 = Color(0x102563EB);
+  static const Color blueAlpha19 = Color(0x302563EB);
   static const Color bluePale = Color(0xFFEEF5FF);
   static const Color facebookBlue = Color(0xFF1877F2);
 
   static const Color gold = Color(0xFFD6A84F);
+  static const Color goldAlpha08 = Color(0x14D6A84F);
   static const Color goldAlpha15 = Color(0x25D6A84F);
   static const Color goldPale = Color(0xFFFFF8E7);
   static const Color amber = Color(0xFFF59E0B);

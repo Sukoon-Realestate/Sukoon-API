@@ -51,6 +51,7 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
   @override
   void dispose() {
     _queryController.dispose();
+    _pagifyController.dispose();
     _resultCount.dispose();
     _propertyFilterOptionsCubit.close();
     super.dispose();

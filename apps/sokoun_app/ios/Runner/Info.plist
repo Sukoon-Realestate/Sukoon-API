@@ -35,10 +35,14 @@
     <true/>
     <key>NSCameraUsageDescription</key>
     <string>سكون يحتاج الكاميرا لتصوير صور وفيديو العقار.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>سكون يستخدم موقعك عند اختيار استخدام موقعي للبحث عن عقارات في منطقتك.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>سكون يحتاج الميكروفون لتسجيل صوت فيديو العقار.</string>
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>سكون يحتاج الوصول للصور لاختيار صور وفيديو العقار.</string>
+    <string>سكون يحتاج الوصول للصور لاختيار صور وفيديو العقار وحفظ الصور في ألبوم سكون.</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>سكون يحتاج إضافة الصور لحفظ صور العقارات في ألبوم سكون.</string>
     <key>FacebookAppID</key>
     <string>000000000000000</string>
     <key>FacebookClientToken</key>

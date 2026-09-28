@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
@@ -9,6 +10,7 @@ import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/image_widgets/cached_image.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
 
+import '../cubits/property_photo_save_cubit.dart';
 import '../widgets/tenant_property_photos/imports.dart';
 
 class TenantPropertyPhotosScreen extends StatefulWidget {
@@ -55,6 +57,7 @@ class _TenantPropertyPhotosScreenState
 
   @override
   Widget build(BuildContext context) {
+    final List<String> imageUrls = widget.property.imageUrls;
     return Scaffold(
       backgroundColor: AppColors.slate,
       body: SafeArea(
@@ -78,17 +81,14 @@ class _TenantPropertyPhotosScreenState
                   child: Stack(
                     alignment: Alignment.center,
                     children: [
-                      if (widget.property.imageUrls.isNotEmpty)
+                      if (imageUrls.isNotEmpty)
                         Positioned.fill(
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(24.r),
                             child: CachedImage(
                               url:
-                                  widget.property.imageUrls[selectedIndex
-                                      .clamp(
-                                        0,
-                                        widget.property.imageUrls.length - 1,
-                                      )
+                                  imageUrls[selectedIndex
+                                      .clamp(0, imageUrls.length - 1)
                                       .toInt()],
                               fit: BoxFit.cover,
                               height: 280.h,
@@ -100,6 +100,20 @@ class _TenantPropertyPhotosScreenState
                           Icons.apartment_outlined,
                           color: AppColors.whiteAlpha40,
                           size: 58.r,
+                        ),
+                      if (imageUrls.isNotEmpty)
+                        PositionedDirectional(
+                          top: 12.h,
+                          end: 12.w,
+                          child: BlocProvider(
+                            create: (_) => PropertyPhotoSaveCubit(),
+                            child: TenantPropertyPhotoSaveButton(
+                              imageUrl:
+                                  imageUrls[selectedIndex
+                                      .clamp(0, imageUrls.length - 1)
+                                      .toInt()],
+                            ),
+                          ),
                         ),
                       PositionedDirectional(
                         start: 12.w,

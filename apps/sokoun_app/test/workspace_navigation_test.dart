@@ -28,6 +28,11 @@ import 'package:sokoun_app/features/shared/notifications/presentation/notificati
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_home_screen.dart';
 import 'package:sokoun_app/shared_widgets/unsaved_changes_guard.dart';
 
+import 'package:melos_core/core/widgets/notification_permission_view.dart';
+import 'package:melos_core/core/widgets/permissions/permission_actions.dart';
+import 'package:sokoun_app/features/shared/permissions/data/device_permission_data.dart';
+import 'package:sokoun_app/features/shared/permissions/data/enums/device_permission.dart';
+
 import 'helpers/account_test_dependencies.dart';
 import 'helpers/home_page_test_dependencies.dart';
 
@@ -87,6 +92,54 @@ void main() {
   tearDown(() async {
     WorkspaceNavigation.clearPending();
     await injector.reset();
+  });
+
+  testWidgets('authenticated home explains notifications once after launch', (
+    tester,
+  ) async {
+    _phone(tester);
+    await registerAuthenticatedTestAccount();
+    final permissions = _HomePermissionSource();
+    injector.registerSingleton<DevicePermissionDataSource>(permissions);
+    await tester.pumpWidget(_app(const HomeScreen(), 'en'));
+    await tester.pumpAndSettle();
+    expect(find.byType(NotificationPermissionView), findsOneWidget);
+    expect(permissions.requests, 0);
+    final skip = find
+        .descendant(
+          of: find.byType(PermissionActions),
+          matching: find.byType(ElevatedButton),
+        )
+        .last;
+    await tester.ensureVisible(skip);
+    await tester.tap(skip);
+    await tester.pumpAndSettle();
+    expect(permissions.seen, isTrue);
+    expect(permissions.requests, 0);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+    await tester.pumpWidget(_app(const HomeScreen(), 'en'));
+    await tester.pumpAndSettle();
+    expect(find.byType(NotificationPermissionView), findsNothing);
+    expect(permissions.requests, 0);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('guest home never asks for notification permission', (
+    tester,
+  ) async {
+    _phone(tester);
+    final permissions = _HomePermissionSource();
+    injector.registerSingleton<DevicePermissionDataSource>(permissions);
+    await tester.pumpWidget(_app(const HomeScreen(), 'en'));
+    await tester.pumpAndSettle();
+    expect(find.byType(NotificationPermissionView), findsNothing);
+    expect(permissions.seen, isFalse);
+    expect(permissions.requests, 0);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
   });
 
   for (final String language in ['en', 'ar']) {
@@ -344,4 +397,24 @@ class _Translations extends AssetLoader {
   @override
   Future<Map<String, dynamic>> load(String path, Locale locale) async =>
       _translations[locale.languageCode]!;
+}
+
+class _HomePermissionSource implements DevicePermissionDataSource {
+  bool seen = false;
+  int requests = 0;
+  @override
+  bool get hasSeenNotificationPrompt => seen;
+  @override
+  Future<void> markNotificationPromptSeen() async => seen = true;
+  @override
+  Future<DevicePermissionStatus> status(DevicePermission permission) async =>
+      DevicePermissionStatus.denied;
+  @override
+  Future<DevicePermissionStatus> request(DevicePermission permission) async {
+    requests++;
+    return DevicePermissionStatus.granted;
+  }
+
+  @override
+  Future<bool> openSettings() async => true;
 }

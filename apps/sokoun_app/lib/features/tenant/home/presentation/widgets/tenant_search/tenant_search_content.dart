@@ -14,6 +14,8 @@ import 'recent_search_row.dart';
 import 'search_property_types_section.dart';
 import 'search_section_title.dart';
 import 'tenant_search_field.dart';
+import 'use_current_location_button.dart';
+import '../../../data/models/current_location_area.dart';
 
 class TenantSearchContentView extends StatelessWidget {
   const TenantSearchContentView({
@@ -31,6 +33,7 @@ class TenantSearchContentView extends StatelessWidget {
     required this.onRecentSearchSelected,
     required this.onFiltersPressed,
     required this.activeFilterCount,
+    required this.onCurrentAreaResolved,
   });
 
   final TextEditingController searchController;
@@ -46,6 +49,7 @@ class TenantSearchContentView extends StatelessWidget {
   final ValueChanged<RecentSearchContent> onRecentSearchSelected;
   final VoidCallback onFiltersPressed;
   final int activeFilterCount;
+  final ValueChanged<CurrentLocationArea> onCurrentAreaResolved;
 
   @override
   Widget build(BuildContext context) {
@@ -79,6 +83,7 @@ class TenantSearchContentView extends StatelessWidget {
               ),
             ],
           ),
+          UseCurrentLocationButton(onAreaResolved: onCurrentAreaResolved),
           14.szH,
           SearchPropertyTypesSection(
             requestToTryAgainWhenError: propertyTypesRequest,

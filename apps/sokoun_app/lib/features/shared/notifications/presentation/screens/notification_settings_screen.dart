@@ -12,6 +12,7 @@ import '../../data/models/notification_setting_content.dart';
 import '../cubits/notification_settings_cubit.dart';
 import '../widgets/notification_page_header.dart';
 import '../widgets/notification_settings_content.dart';
+import '../widgets/device_notification_permission_tile.dart';
 
 class NotificationSettingsScreen extends StatefulWidget {
   const NotificationSettingsScreen({super.key, required this.role});
@@ -76,6 +77,7 @@ class _NotificationSettingsScreenState
               NotificationPageHeader(
                 title: LocaleKeys.notificationSettingsTitle,
               ),
+              const DeviceNotificationPermissionTile(),
               Expanded(
                 child:
                     BlocBuilder<

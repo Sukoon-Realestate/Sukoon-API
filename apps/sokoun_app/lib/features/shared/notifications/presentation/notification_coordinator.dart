@@ -13,10 +13,9 @@ abstract final class NotificationCoordinator {
   static Future<void>? _pushSetup;
 
   static Future<void> start() async {
-    await Future.wait([
-      _pushSetup ??= _setupPushNotifications(),
-      NotificationDeviceData.start(),
-    ]);
+    // Registration may wait on the API; it must not delay launch dialogs.
+    unawaited(NotificationDeviceData.start());
+    await (_pushSetup ??= _setupPushNotifications());
   }
 
   static Future<void> _setupPushNotifications() async {

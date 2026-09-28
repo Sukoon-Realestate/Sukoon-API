@@ -20,6 +20,8 @@ import 'package:sokoun_app/features/owner/properties/imports.dart';
 import 'package:sokoun_app/features/shared/whats_new/whats_new_service.dart';
 import 'package:sokoun_app/features/shared/whats_new/widgets/upgrader_dialog.dart';
 import 'package:sokoun_app/features/shared/notifications/presentation/notification_coordinator.dart';
+import 'package:sokoun_app/features/shared/permissions/data/enums/device_permission.dart';
+import 'package:sokoun_app/features/shared/permissions/presentation/device_permission_flow.dart';
 import 'package:sokoun_app/features/shared/notifications/presentation/cubits/unread_notifications_cubit.dart';
 import 'package:sokoun_app/generated/assets.dart';
 import 'package:upgrader/upgrader.dart';
@@ -98,10 +100,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       if (!mounted) return;
       unawaited(
         Future.wait<void>([
-          NotificationCoordinator.start(),
           _chatUnreadCubit.start(),
           _notificationUnreadCubit.loadUnreadCount(),
-          WorkspaceNavigation.resumePending(),
           _showLaunchDialogs(),
         ]),
       );
@@ -131,8 +131,18 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   Future<void> _showLaunchDialogs() async {
-    if (!mounted) return;
+    await Future.wait<void>([
+      WorkspaceNavigation.resumePending(),
+      NotificationCoordinator.start(),
+    ]);
+    if (!mounted || ModalRoute.of(context)?.isCurrent != true) return;
     await WhatsNewService.showIfNeeded(upgrader: upgrader);
+    if (!mounted || !WorkspaceNavigation.isAuthenticated) return;
+    await DevicePermissionFlow.ensureGranted(
+      context,
+      DevicePermission.notifications,
+      promptOnce: true,
+    );
   }
 
   void _selectTab(int index) {

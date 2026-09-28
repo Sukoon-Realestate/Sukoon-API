@@ -34,6 +34,9 @@ class AppPagify<T> extends StatefulWidget {
   )
   itemBuilder;
   final PagifyController<T> pagifyController;
+
+  /// Set to false when the caller owns and disposes the controller.
+  final bool disposeController;
   final FutureOr<void> Function(PagifyAsyncCallStatus)? onUpdateStatus;
   final bool shrinkWrap;
   final Widget? emptyListView;
@@ -59,6 +62,7 @@ class AppPagify<T> extends StatefulWidget {
     required this.asyncCall,
     required this.itemBuilder,
     required this.pagifyController,
+    this.disposeController = true,
     this.physics,
     this.scrollController,
     this.rankingType = Ranking.listView,
@@ -89,7 +93,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
   final int _sessionGeneration = AccountSession.generation;
   @override
   void dispose() {
-    widget.pagifyController.dispose();
+    if (widget.disposeController) widget.pagifyController.dispose();
     super.dispose();
   }
 

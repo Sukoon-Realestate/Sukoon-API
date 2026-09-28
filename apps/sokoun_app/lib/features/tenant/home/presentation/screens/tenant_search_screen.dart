@@ -13,6 +13,7 @@ import 'package:sokoun_app/features/tenant/home/presentation/cubits/tenant_recen
 import '../widgets/tenant_search/imports.dart';
 import 'tenant_filter_screen.dart';
 import 'tenant_search_results_screen.dart';
+import '../../data/models/current_location_area.dart';
 
 class TenantSearchScreen extends StatefulWidget {
   const TenantSearchScreen({super.key});
@@ -114,6 +115,24 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
     await _submitSearch(search.title);
   }
 
+  Future<void> _searchCurrentArea(CurrentLocationArea area) async {
+    final query = area.searchQuery;
+    _searchController.text = query;
+    _filters = _filters.copyWith(
+      search: query,
+      city: '',
+      district: '',
+      page: 1,
+    );
+    final current = _viewState.value;
+    _viewState.value = (
+      form: current.form.copyWith(selectedArea: query),
+      activeFilterCount: _filters.activeCount,
+      availablePlacesRequest: current.availablePlacesRequest,
+    );
+    await _submitSearch(query);
+  }
+
   Future<void> _submitSearch([String? submittedQuery]) async {
     final String query = (submittedQuery ?? _searchController.text).trim();
     if (query.isEmpty &&
@@ -208,6 +227,7 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
                     onRecentSearchSelected: _selectRecent,
                     onFiltersPressed: _openFilters,
                     activeFilterCount: viewState.activeFilterCount,
+                    onCurrentAreaResolved: _searchCurrentArea,
                   ),
                 ),
               ),

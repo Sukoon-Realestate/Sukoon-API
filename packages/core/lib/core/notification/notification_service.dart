@@ -33,25 +33,6 @@ class NotificationService {
   Stream<String> get onTokenRefresh =>
       FirebaseMessaging.instance.onTokenRefresh;
 
-  Future<bool> _requestPermissions() async {
-    bool? result;
-    if (Platform.isIOS) {
-      result = await _flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin
-          >()
-          ?.requestPermissions(alert: true, badge: true, sound: true);
-    } else {
-      result = await _flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin
-          >()
-          ?.requestNotificationsPermission();
-      await _createAndroidChannel();
-    }
-    return result ?? false;
-  }
-
   Future<void> _createAndroidChannel() async {
     await _flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
@@ -121,15 +102,6 @@ class NotificationService {
     );
   }
 
-  Future<void> _registerNotification() async {
-    final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-    await firebaseMessaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-  }
-
   void _handleNotificationsTap(RemoteMessage? message) async {
     if (message == null) return;
     NotificationNavigator._instance?.onRoutingMessage(message);
@@ -158,13 +130,14 @@ class NotificationService {
     void Function(RemoteMessage message)? onForegroundMessage,
   }) async {
     if (_isConfigured) return;
+    // Native permission is requested by the app's explanation flow. Listeners
+    // and notification routing must work even when that prompt is skipped.
+    await _initLocalNotification();
+    if (Platform.isAndroid) await _createAndroidChannel();
     await Future.wait([
       _setForegroundNotificationOptions(),
-      _registerNotification(),
-      _requestPermissions(),
       NotificationNavigator._instance!.init(),
     ]);
-    await _initLocalNotification();
     _configureNotification(onForegroundMessage: onForegroundMessage);
     _isConfigured = true;
   }
