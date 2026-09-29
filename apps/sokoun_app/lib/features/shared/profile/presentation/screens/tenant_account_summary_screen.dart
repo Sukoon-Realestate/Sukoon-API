@@ -31,32 +31,23 @@ class _TenantAccountSummaryScreenState
     return BlocProvider<TenantAccountSummaryCubit>.value(
       value: _summaryCubit,
       child: AppScaffold(
-        showBackButton: false,
+        title: LocaleKeys.profileSummaryTitle,
+        showBackButton: true,
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
-          child: Column(
-            children: [
-              ProfileScreenHeader(
-                title: LocaleKeys.profileSummaryTitle,
-                showBackButton: true,
+          child:
+              StatusBuilder<
+                TenantAccountSummaryCubit,
+                TenantAccountSummaryContent
+              >.withShimmer(
+                initialDataForShimmer:
+                    const TenantAccountSummaryContent.initial(),
+                requestToTryAgainWhenError: _summaryRequest,
+                onRetry: _summaryCubit.getSummary,
+                errorType: ErrorType.defaultView,
+                builder: (summary) =>
+                    TenantAccountSummaryContentView(summary: summary),
               ),
-              Expanded(
-                child:
-                    StatusBuilder<
-                      TenantAccountSummaryCubit,
-                      TenantAccountSummaryContent
-                    >.withShimmer(
-                      initialDataForShimmer:
-                          const TenantAccountSummaryContent.initial(),
-                      requestToTryAgainWhenError: _summaryRequest,
-                      onRetry: _summaryCubit.getSummary,
-                      errorType: ErrorType.defaultView,
-                      builder: (summary) =>
-                          TenantAccountSummaryContentView(summary: summary),
-                    ),
-              ),
-            ],
-          ),
         ),
       ),
     );

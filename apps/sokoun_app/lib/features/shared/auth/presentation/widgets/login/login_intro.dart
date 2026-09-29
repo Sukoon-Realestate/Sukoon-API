@@ -7,8 +7,8 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
-class LoginHeader extends StatelessWidget {
-  const LoginHeader({super.key});
+class LoginIntro extends StatelessWidget {
+  const LoginIntro({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,14 +24,6 @@ class LoginHeader extends StatelessWidget {
           child: AppLogoWidget(color: AppColors.white, size: 32.r),
         ),
         12.szH,
-        AppText(
-          LocaleKeys.login,
-          style: AppTextStyles.bold.copyWith(
-            color: AppColors.sokoonNavy,
-            fontSize: 22.sp,
-          ),
-          textAlign: TextAlign.center,
-        ),
         4.szH,
         AppText(
           LocaleKeys.welcomeBackToSokoon,

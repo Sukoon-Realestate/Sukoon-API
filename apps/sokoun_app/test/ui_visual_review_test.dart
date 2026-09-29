@@ -12,6 +12,10 @@ import 'package:melos_core/config/language/languages.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/screens/welcome_screen.dart';
+import 'package:sokoun_app/features/shared/profile/imports.dart';
+import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat/chat_participant_title.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/widgets/report/chat_report_button.dart';
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_widgets/owner_stats_grid.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_widgets/tenant_property_card.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
@@ -57,13 +61,40 @@ void main() {
 
   for (final String locale in ['ar', 'en']) {
     for (final double width in [390.0, 1024.0]) {
-      for (final String subject in ['welcome', 'discovery', 'dashboard']) {
+      for (final String subject in [
+        'welcome',
+        'discovery',
+        'dashboard',
+        'language',
+        'chat_header',
+      ]) {
         testWidgets('$subject $locale at $width', (tester) async {
           tester.view.physicalSize = Size(width, width > 600 ? 768 : 844);
           tester.view.devicePixelRatio = 1;
           addTearDown(tester.view.reset);
           final Widget screen = switch (subject) {
             'welcome' => const WelcomeScreen(),
+            'language' => const LanguageSelectionScreen(),
+            'chat_header' => AppScaffold(
+              titleWidget: ChatParticipantTitle(
+                conversation: ConversationContent(
+                  id: 'review-chat',
+                  name: locale == 'ar' ? 'أحمد محمد' : 'Ahmed Mohamed',
+                  property: locale == 'ar'
+                      ? 'شقة بالمعادي'
+                      : 'Apartment in Maadi',
+                  lastMessage: '',
+                  time: '',
+                  unreadCount: 0,
+                  isVerified: true,
+                  isOnline: true,
+                ),
+              ),
+              toolbarHeight: 72,
+              onBack: () {},
+              actions: const [ChatReportButton()],
+              body: const SizedBox.expand(),
+            ),
             'dashboard' => AppScaffold(
               showBackButton: false,
               contentWidth: SokounContentWidth.wide,

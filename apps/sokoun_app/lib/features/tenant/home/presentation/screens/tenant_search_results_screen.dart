@@ -1,3 +1,4 @@
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -180,9 +181,10 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
             onRetry: _propertyFilterOptionsCubit.getFilterOptions,
             errorType: ErrorType.defaultView,
             builder: (filterOptions) => AppScaffold(
-              showBackButton: false,
-              contentWidth: SokounContentWidth.wide,
+              title: LocaleKeys.searchResult,
+              showBackButton: true,
               backgroundColor: AppColors.scaffoldBackground,
+              contentWidth: SokounContentWidth.wide,
               body: SafeArea(
                 child: TenantSearchResultsContent(
                   queryController: _queryController,

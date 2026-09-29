@@ -82,48 +82,41 @@ class _TenantProfileScreenState extends State<TenantProfileScreen> {
       child: BlocBuilder<TenantProfileCubit, AsyncState<TenantProfileContent>>(
         builder: (context, state) {
           return AppScaffold(
+            title: LocaleKeys.profileMyAccount,
             showBackButton: false,
+            actions: [
+              IconButton(
+                onPressed: state.isSuccess ? _openSummary : null,
+                style: IconButton.styleFrom(
+                  backgroundColor: AppColors.white,
+                  side: const BorderSide(color: AppColors.sokoonBorder),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                ),
+                icon: Icon(
+                  Icons.settings_outlined,
+                  color: AppColors.sokoonNavy,
+                  size: 18.r,
+                ),
+              ),
+            ],
             backgroundColor: AppColors.scaffoldBackground,
             body: SafeArea(
-              child: Column(
-                children: [
-                  ProfileScreenHeader(
-                    title: LocaleKeys.profileMyAccount,
-                    trailing: IconButton(
-                      onPressed: state.isSuccess ? _openSummary : null,
-                      style: IconButton.styleFrom(
-                        backgroundColor: AppColors.white,
-                        side: const BorderSide(color: AppColors.sokoonBorder),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                      ),
-                      icon: Icon(
-                        Icons.settings_outlined,
-                        color: AppColors.sokoonNavy,
-                        size: 18.r,
-                      ),
+              child:
+                  StatusBuilder<
+                    TenantProfileCubit,
+                    TenantProfileContent
+                  >.withShimmer(
+                    initialDataForShimmer: const TenantProfileContent.initial(),
+                    requestToTryAgainWhenError: _profileRequest,
+                    onRetry: _profileCubit.getProfile,
+                    errorType: ErrorType.defaultView,
+                    builder: (profile) => TenantProfileContentView(
+                      profile: profile,
+                      onEditPressed: () => _openEditProfile(profile),
                     ),
                   ),
-                  Expanded(
-                    child:
-                        StatusBuilder<
-                          TenantProfileCubit,
-                          TenantProfileContent
-                        >.withShimmer(
-                          initialDataForShimmer:
-                              const TenantProfileContent.initial(),
-                          requestToTryAgainWhenError: _profileRequest,
-                          onRetry: _profileCubit.getProfile,
-                          errorType: ErrorType.defaultView,
-                          builder: (profile) => TenantProfileContentView(
-                            profile: profile,
-                            onEditPressed: () => _openEditProfile(profile),
-                          ),
-                        ),
-                  ),
-                ],
-              ),
             ),
           );
         },

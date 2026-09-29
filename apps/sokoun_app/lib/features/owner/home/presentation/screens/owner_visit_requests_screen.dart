@@ -267,14 +267,30 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
     );
 
     return AppScaffold(
-      showBackButton: false,
+      title: LocaleKeys.ownerVisitsTitle,
+      showBackButton: widget.showBackButton,
+      actions: [
+        IconButton(
+          tooltip: LocaleKeys.ownerCalendarTitle,
+          onPressed: () => Go.to(
+            OwnerRequestsCalendarScreen(
+              ownerPropertyId:
+                  requests
+                      .where((request) => request.propertyId.trim().isNotEmpty)
+                      .firstOrNull
+                      ?.propertyId ??
+                  '',
+            ),
+          ),
+          icon: const Icon(Icons.calendar_month_outlined),
+        ),
+      ],
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: OwnerVisitRequestsContent(
           requests: requests,
           visibleRequests: visibleRequests,
           selectedFilter: _selectedFilter,
-          showBackButton: widget.showBackButton,
           onFilterSelected: _selectFilter,
           onRequestPressed: _openDetails,
           onAcceptPressed: _acceptRequest,

@@ -15,7 +15,6 @@ import 'package:sokoun_app/features/shared/auth/presentation/cubits/otp.dart';
 
 import '../widgets/auth_scaffold.dart';
 import '../widgets/otp/otp_code_field.dart';
-import '../widgets/otp/otp_header.dart';
 import '../widgets/shared/auth_resend_timer.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -117,11 +116,11 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     return AuthScaffold(
-      showBackButton: false,
+      showBackButton: true,
+      title: LocaleKeys.verificationCode,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const OtpHeader(),
           36.szH,
           Container(
             width: 64.r,

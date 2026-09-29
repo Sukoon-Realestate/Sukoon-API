@@ -8,17 +8,10 @@ class VisitDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      showBackButton: false,
+      title: LocaleKeys.tenantVisitDetailsTitle,
+      showBackButton: true,
       backgroundColor: AppColors.scaffoldBackground,
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            VisitHeader(title: LocaleKeys.tenantVisitDetailsTitle),
-            Expanded(child: VisitDetailsContent(visit: visit)),
-          ],
-        ),
-      ),
+      body: SafeArea(child: VisitDetailsContent(visit: visit)),
     );
   }
 }

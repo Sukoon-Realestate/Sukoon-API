@@ -135,36 +135,24 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
     return BlocProvider<BookVisitCubit>.value(
       value: _bookVisitCubit,
       child: AppScaffold(
-        showBackButton: false,
+        title: LocaleKeys.tenantVisitBookTitle,
+        showBackButton: true,
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              VisitHeader(title: LocaleKeys.tenantVisitBookTitle),
-              Expanded(
-                child:
-                    ValueListenableBuilder<({int dayIndex, TimeOfDay? time})>(
-                      valueListenable: _selection,
-                      builder: (context, selection, _) => BookVisitForm(
-                        property: _property,
-                        days: _days,
-                        selectedDayIndex: selection.dayIndex,
-                        selectedTime: selection.time,
-                        noteController: _noteController,
-                        onDaySelected: (index) => _selection.value = (
-                          dayIndex: index,
-                          time: selection.time,
-                        ),
-                        onTimeSelected: (time) => _selection.value = (
-                          dayIndex: selection.dayIndex,
-                          time: time,
-                        ),
-                        onConfirmPressed: _confirmVisit,
-                      ),
-                    ),
-              ),
-            ],
+          child: ValueListenableBuilder<({int dayIndex, TimeOfDay? time})>(
+            valueListenable: _selection,
+            builder: (context, selection, _) => BookVisitForm(
+              property: _property,
+              days: _days,
+              selectedDayIndex: selection.dayIndex,
+              selectedTime: selection.time,
+              noteController: _noteController,
+              onDaySelected: (index) =>
+                  _selection.value = (dayIndex: index, time: selection.time),
+              onTimeSelected: (time) =>
+                  _selection.value = (dayIndex: selection.dayIndex, time: time),
+              onConfirmPressed: _confirmVisit,
+            ),
           ),
         ),
       ),

@@ -14,8 +14,8 @@ import 'home_avatar.dart';
 import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
 import 'package:sokoun_app/features/main_view/presentation/widgets/workspace_switcher.dart';
 
-class TenantHeader extends StatelessWidget {
-  const TenantHeader({super.key});
+class TenantHomeAppBarTitle extends StatelessWidget {
+  const TenantHomeAppBarTitle({super.key});
 
   @override
   Widget build(BuildContext context) => StreamBuilder<UserState>(
@@ -44,6 +44,7 @@ class TenantHeader extends StatelessWidget {
         10.szW,
         Expanded(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppText(

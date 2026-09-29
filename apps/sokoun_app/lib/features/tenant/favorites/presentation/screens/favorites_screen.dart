@@ -1,3 +1,4 @@
+import 'package:sokoun_app/shared_widgets/property_filter_button.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
@@ -254,9 +255,16 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      showBackButton: false,
-      contentWidth: SokounContentWidth.wide,
+      title: LocaleKeys.favoritesTitle,
+      showBackButton: true,
+      actions: [
+        PropertyFilterButton(
+          activeCount: _filters.activeCount,
+          onPressed: _openFilters,
+        ),
+      ],
       backgroundColor: AppColors.scaffoldBackground,
+      contentWidth: SokounContentWidth.wide,
       body: SafeArea(
         child: FavoritesContentView(
           itemCount: _visibleItemCount,
@@ -265,7 +273,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           loadPage: _getFavoritesPage,
           onFavoriteRemoved: _removeFavorite,
           activeFilterCount: _filters.activeCount,
-          onFiltersPressed: _openFilters,
           onClearFiltersPressed: _clearFilters,
           onPagifyStatusChanged: _onPagifyStatusChanged,
         ),

@@ -26,7 +26,6 @@ class AddPropertyVideoPage extends StatefulWidget {
     required this.onVideoRemoved,
     required this.onNext,
     required this.onSkip,
-    required this.onBack,
   });
 
   final OwnerPropertyVideoSelection? video;
@@ -34,7 +33,6 @@ class AddPropertyVideoPage extends StatefulWidget {
   final VoidCallback onVideoRemoved;
   final VoidCallback onNext;
   final VoidCallback onSkip;
-  final VoidCallback onBack;
 
   @override
   State<AddPropertyVideoPage> createState() => _AddPropertyVideoPageState();
@@ -205,7 +203,6 @@ class _AddPropertyVideoPageState extends State<AddPropertyVideoPage> {
     final OwnerPropertyVideoSelection? video = widget.video;
 
     return AddPropertyStepShell(
-      title: LocaleKeys.ownerPropertyVideoTitle,
       activeSegments: 3,
       segmentCount: 5,
       progressSubtitle: LocaleKeys.ownerPropertyVideoStepProgress,
@@ -213,7 +210,6 @@ class _AddPropertyVideoPageState extends State<AddPropertyVideoPage> {
       onPrimaryTap: video == null ? null : widget.onNext,
       secondaryLabel: LocaleKeys.ownerPropertyVideoSkip,
       onSecondaryTap: widget.onSkip,
-      onBack: widget.onBack,
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

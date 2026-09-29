@@ -18,7 +18,7 @@ import 'package:sokoun_app/shared_widgets/shared_widgets.dart';
 import '../widgets/auth_scaffold.dart';
 import '../widgets/login/login_divider.dart';
 import '../widgets/login/login_footer.dart';
-import '../widgets/login/login_header.dart';
+import '../widgets/login/login_intro.dart';
 import 'forgot_password_screen.dart';
 import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
 
@@ -68,12 +68,13 @@ class _LoginScreenState extends State<LoginScreen> {
         BlocProvider(create: (context) => GoogleLoginCubit()),
       ],
       child: AuthScaffold(
+        title: LocaleKeys.login,
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const LoginHeader(),
+              const LoginIntro(),
               24.szH,
               SokoonEmailField(
                 controller: _emailController,

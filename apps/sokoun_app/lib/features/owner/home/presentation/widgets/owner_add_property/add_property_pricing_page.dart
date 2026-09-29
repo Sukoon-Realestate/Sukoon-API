@@ -29,7 +29,6 @@ class AddPropertyPricingPage extends StatelessWidget {
     required this.onAmenityToggled,
     required this.onDescriptionChanged,
     required this.onNext,
-    required this.onBack,
   });
 
   final OwnerAddPropertyFormState form;
@@ -43,18 +42,15 @@ class AddPropertyPricingPage extends StatelessWidget {
   final ValueChanged<String> onAmenityToggled;
   final ValueChanged<String> onDescriptionChanged;
   final VoidCallback onNext;
-  final VoidCallback onBack;
 
   @override
   Widget build(BuildContext context) {
     return AddPropertyStepShell(
-      title: LocaleKeys.ownerAddPropertyPricingTitle,
       activeSegments: 4,
       segmentCount: 5,
       progressSubtitle: LocaleKeys.ownerAddPropertyPricingProgress,
       primaryLabel: LocaleKeys.ownerAddPropertyNextExtra,
       onPrimaryTap: form.isPricingReady ? onNext : null,
-      onBack: onBack,
       children: [
         _PriceSection(
           form: form,

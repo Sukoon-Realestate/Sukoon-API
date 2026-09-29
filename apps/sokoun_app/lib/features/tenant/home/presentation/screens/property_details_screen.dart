@@ -1,3 +1,4 @@
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -150,9 +151,10 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      showBackButton: false,
-      contentWidth: SokounContentWidth.wide,
+      title: LocaleKeys.tenantFilterPropertyDetails,
+      showBackButton: true,
       backgroundColor: AppColors.scaffoldBackground,
+      contentWidth: SokounContentWidth.wide,
       body: SafeArea(
         bottom: false,
         child: MultiBlocProvider(
@@ -173,9 +175,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                     _detailsCubit.getPropertyDetails(widget.propertyId),
                 builder: _buildDetails,
                 errorType: ErrorType.customView,
-                errorWidget: const TenantPropertyStatusView(
-                  child: ExceptionView(),
-                ),
+                errorWidget: const ExceptionView(),
               ),
         ),
       ),

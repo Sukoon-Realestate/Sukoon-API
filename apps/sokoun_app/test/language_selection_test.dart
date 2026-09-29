@@ -106,7 +106,13 @@ void main() {
     await openPicker(tester);
     await tester.tap(find.text('English'));
     await tester.pump();
-    await tester.tap(find.byIcon(Icons.arrow_back_rounded));
+    await tester.tap(
+      find.byTooltip(
+        MaterialLocalizations.of(
+          tester.element(find.byType(LanguageSelectionScreen)),
+        ).backButtonTooltip,
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(Go.context.locale, const Locale('ar'));

@@ -5,7 +5,6 @@ export 'filter_location_section.dart';
 export 'filter_price_range_section.dart';
 export 'filter_property_details_section.dart';
 export 'filter_text_field.dart';
-export 'filter_top_bar.dart';
 export 'single_select_group.dart';
 export 'switch_row.dart';
 export 'tenant_filter_content.dart';

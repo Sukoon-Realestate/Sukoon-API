@@ -48,7 +48,8 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      showBackButton: false,
+      title: LocaleKeys.languageSelectionTitle,
+      showBackButton: true,
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: Stack(
@@ -62,7 +63,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const LanguageSelectionHeader(),
+                      const LanguageSelectionIntro(),
                       32.szH,
                       ValueListenableBuilder<Languages>(
                         valueListenable: _selectedLanguage,
@@ -99,19 +100,6 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                       ),
                     ],
                   ).paddingSymmetric(horizontal: 24.w, vertical: 64.h),
-                ),
-              ),
-            ),
-            PositionedDirectional(
-              top: 12.h,
-              start: 16.w,
-              child: IconButton(
-                onPressed: () => Go.back(),
-                tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-                icon: Icon(
-                  Icons.arrow_back_rounded,
-                  color: AppColors.sokoonNavy,
-                  size: 22.r,
                 ),
               ),
             ),

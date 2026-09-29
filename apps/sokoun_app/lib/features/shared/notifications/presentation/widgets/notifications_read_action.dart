@@ -4,14 +4,12 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
-import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 import '../../data/enums/notification_role.dart';
-import '../screens/notification_settings_screen.dart';
 
-class NotificationsHeader extends StatelessWidget {
-  const NotificationsHeader({
+class NotificationsReadAction extends StatelessWidget {
+  const NotificationsReadAction({
     super.key,
     required this.role,
     required this.hasUnread,
@@ -30,32 +28,6 @@ class NotificationsHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: AppText(
-                LocaleKeys.workspaceAllNotifications,
-                style: AppTextStyles.bold.copyWith(
-                  color: AppColors.sokoonNavy,
-                  fontSize: 20.sp,
-                ),
-              ),
-            ),
-            IconButton(
-              tooltip: LocaleKeys.notificationSettingsTitle,
-              onPressed: isMarkingAll
-                  ? null
-                  : () => Go.to(NotificationSettingsScreen(role: role)),
-              icon: Icon(
-                Icons.settings_outlined,
-                color: isMarkingAll
-                    ? AppColors.sokoonMuted
-                    : AppColors.sokoonNavy,
-                size: 22.r,
-              ),
-            ),
-          ],
-        ),
         TextButton(
           onPressed: canMarkAll ? onMarkAllPressed : null,
           style: TextButton.styleFrom(

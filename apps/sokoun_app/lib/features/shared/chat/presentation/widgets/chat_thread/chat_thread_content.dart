@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
-import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/widgets/chat_builder/chat_message.dart';
 import 'package:melos_core/core/widgets/toast_messages/custom_messages.dart';
@@ -13,11 +11,8 @@ import 'package:pagify/pagify.dart';
 import '../../../data/models/chat_content.dart';
 import '../../../data/models/chat_socket_message.dart';
 import '../../cubits/socket_cubit.dart';
-import '../../screens/chats_screen.dart';
 import '../chat/bottom_bar.dart';
 import '../chat/chat_view.dart';
-import '../chat/upper_view.dart';
-import '../report/chat_report_sheet.dart';
 import 'chat_queued_messages_banner.dart';
 
 class ChatThreadContent extends StatefulWidget {
@@ -193,21 +188,6 @@ class _ChatThreadContentState extends State<ChatThreadContent>
     }
   }
 
-  Future<void> _showReportSheet() async {
-    final bool? submitted = await showModalBottomSheet<bool>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      backgroundColor: AppColors.transparent,
-      barrierColor: AppColors.blackAlpha50,
-      builder: (context) => const ChatReportSheet(),
-    );
-
-    if (submitted == true && mounted) {
-      Go.off(const ChatListScreen());
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
@@ -236,10 +216,6 @@ class _ChatThreadContentState extends State<ChatThreadContent>
       ],
       child: Column(
         children: [
-          ChatUpperWidget(
-            conversation: widget.conversation,
-            onReportPressed: _showReportSheet,
-          ),
           Expanded(
             child: Stack(
               children: [

@@ -11,7 +11,6 @@ import 'package:melos_core/core/helpers/status_builder.dart';
 import '../../data/enums/notification_role.dart';
 import '../../data/models/notification_setting_content.dart';
 import '../cubits/notification_settings_cubit.dart';
-import '../widgets/notification_page_header.dart';
 import '../widgets/notification_settings_content.dart';
 import '../widgets/device_notification_permission_tile.dart';
 
@@ -70,15 +69,13 @@ class _NotificationSettingsScreenState
         BlocProvider<NotificationSettingUpdateCubit>.value(value: _updateCubit),
       ],
       child: AppScaffold(
-        showBackButton: false,
+        title: LocaleKeys.notificationSettingsTitle,
+        showBackButton: true,
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              NotificationPageHeader(
-                title: LocaleKeys.notificationSettingsTitle,
-              ),
               const DeviceNotificationPermissionTile(),
               Expanded(
                 child:

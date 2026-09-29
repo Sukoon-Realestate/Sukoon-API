@@ -1,3 +1,4 @@
+import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -44,9 +45,17 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
     return BlocProvider.value(
       value: _ownerDashboardCubit,
       child: AppScaffold(
+        titleWidget:
+            BlocBuilder<OwnerDashboardCubit, AsyncState<OwnerDashboardModel>>(
+              builder: (context, state) => OwnerHomeAppBarTitle(
+                avatarUrl: state.data.owner.avatar,
+                isVerified: state.data.owner.isVerified,
+              ),
+            ),
         showBackButton: false,
-        contentWidth: SokounContentWidth.wide,
+        toolbarHeight: 96 + MediaQuery.textScalerOf(context).scale(38),
         backgroundColor: AppColors.scaffoldBackground,
+        contentWidth: SokounContentWidth.wide,
         body: SafeArea(
           child:
               StatusBuilder<

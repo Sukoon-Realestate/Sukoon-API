@@ -102,78 +102,27 @@ class _OwnerRequestsCalendarScreenState
         calendar.firstPropertyId.isNotEmpty ||
         widget.ownerPropertyId.trim().isNotEmpty;
     return AppScaffold(
-      showBackButton: false,
-      contentWidth: SokounContentWidth.wide,
+      title: LocaleKeys.ownerCalendarTitle,
+      showBackButton: true,
+      actions: [
+        AppText(
+          MaterialLocalizations.of(
+            context,
+          ).formatMonthYear(DateTime(calendar.year, calendar.month)),
+          style: AppTextStyles.extraBold13.copyWith(color: AppColors.gold),
+        ).paddingSymmetric(horizontal: 12),
+      ],
       backgroundColor: AppColors.scaffoldBackground,
+      contentWidth: SokounContentWidth.wide,
       body: SafeArea(
-        child: Column(
-          children: [
-            _OwnerCalendarHeader(year: calendar.year, month: calendar.month),
-            Expanded(
-              child: OwnerCalendarContent(
-                calendar: calendar,
-                selectedDate: calendar.selectedDateValue,
-                onDaySelected: _selectDay,
-                onAvailabilityPressed: canManageAvailability
-                    ? () => _openAvailability(calendar)
-                    : null,
-              ),
-            ),
-          ],
+        child: OwnerCalendarContent(
+          calendar: calendar,
+          selectedDate: calendar.selectedDateValue,
+          onDaySelected: _selectDay,
+          onAvailabilityPressed: canManageAvailability
+              ? () => _openAvailability(calendar)
+              : null,
         ),
-      ),
-    );
-  }
-}
-
-class _OwnerCalendarHeader extends StatelessWidget {
-  const _OwnerCalendarHeader({required this.year, required this.month});
-
-  final int year;
-  final int month;
-
-  @override
-  Widget build(BuildContext context) {
-    final String monthLabel = MaterialLocalizations.of(
-      context,
-    ).formatMonthYear(DateTime(year, month));
-    return Container(
-      height: 58.h,
-      padding: EdgeInsets.symmetric(horizontal: 12.w),
-      decoration: const BoxDecoration(
-        color: AppColors.white,
-        border: Border(bottom: BorderSide(color: AppColors.sokoonBorder)),
-      ),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: Go.back,
-            visualDensity: VisualDensity.compact,
-            icon: Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: AppColors.sokoonNavy,
-              size: 20.r,
-            ),
-          ),
-          4.szW,
-          Expanded(
-            child: AppText(
-              LocaleKeys.ownerCalendarTitle,
-              style: AppTextStyles.bold.copyWith(
-                color: AppColors.sokoonNavy,
-                fontSize: 18.sp,
-              ),
-            ),
-          ),
-          AppText(
-            monthLabel,
-            style: AppTextStyles.extraBold13.copyWith(
-              color: AppColors.gold,
-              fontSize: 13.sp,
-              height: 1.45,
-            ),
-          ),
-        ],
       ),
     );
   }

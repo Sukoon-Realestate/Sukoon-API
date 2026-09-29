@@ -7,12 +7,14 @@ class SokoonBackButton extends StatelessWidget {
   const SokoonBackButton({
     super.key,
     this.onTap,
+    this.enabled = true,
     this.backgroundColor = AppColors.white,
     this.borderColor = AppColors.sokoonBorder,
     this.icon = Icons.arrow_back_ios_new_rounded,
   });
 
   final VoidCallback? onTap;
+  final bool enabled;
   final Color backgroundColor;
   final Color borderColor;
   final IconData icon;
@@ -20,7 +22,7 @@ class SokoonBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Visibility(
-      visible: Navigator.canPop(context),
+      visible: Navigator.canPop(context) || onTap != null,
       child: SizedBox.square(
         dimension: 48.r,
         child: DecoratedBox(
@@ -31,7 +33,7 @@ class SokoonBackButton extends StatelessWidget {
           ),
           child: IconButton(
             tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-            onPressed: onTap ?? () => Go.back(),
+            onPressed: enabled ? onTap ?? () => Go.mayPop : null,
             padding: EdgeInsets.zero,
             icon: Icon(icon, color: AppColors.sokoonNavy, size: 16.r),
           ),

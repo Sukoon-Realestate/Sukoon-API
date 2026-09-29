@@ -5,10 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
-import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
-import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:pagify/pagify.dart';
 
 import '../../../data/chats_data.dart';
@@ -65,13 +63,6 @@ class _ChatListContentState extends State<ChatListContent> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppText(
-          LocaleKeys.chatConversationsTitle,
-          style: AppTextStyles.bold.copyWith(
-            color: AppColors.sokoonNavy,
-            fontSize: 20.sp,
-          ),
-        ).padding(EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 12.h)),
         ChatSearchField(
           readOnly: true,
           onTap: _openSearch,

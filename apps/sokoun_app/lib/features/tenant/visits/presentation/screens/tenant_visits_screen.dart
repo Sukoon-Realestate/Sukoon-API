@@ -84,7 +84,8 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      showBackButton: false,
+      title: LocaleKeys.tenantVisitsTitle,
+      showBackButton: true,
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: TenantVisitsScreenContent(

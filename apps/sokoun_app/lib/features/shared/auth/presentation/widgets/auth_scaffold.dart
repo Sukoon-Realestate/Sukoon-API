@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
-import 'package:sokoun_app/shared_widgets/back_button.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
 
@@ -12,37 +10,42 @@ class AuthScaffold extends StatelessWidget {
     super.key,
     required this.child,
     this.showBackButton = true,
+    this.title,
+    this.onBack,
     this.backButton,
     this.backgroundColor = AppColors.scaffoldBackground,
     this.padding,
     this.bottomNavigationBar,
     this.isScrollable = true,
     this.resizeToAvoidBottomInset = true,
-    this.backButtonAlignment = AlignmentDirectional.centerEnd,
   });
 
   final Widget child;
   final bool showBackButton;
+  final String? title;
+  final VoidCallback? onBack;
   final Widget? backButton;
   final Color backgroundColor;
   final EdgeInsetsGeometry? padding;
   final Widget? bottomNavigationBar;
   final bool isScrollable;
   final bool resizeToAvoidBottomInset;
-  final AlignmentGeometry backButtonAlignment;
 
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      showBackButton: false,
+      title: title,
+      showBackButton: showBackButton,
+      onBack: onBack,
+      backButton: backButton,
+      backgroundColor: backgroundColor,
       contentWidth: SokounContentWidth.form,
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-      backgroundColor: backgroundColor,
       bottomBar: bottomNavigationBar,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final Widget content = _buildContent().padding(
+            final Widget content = child.padding(
               padding ?? EdgeInsets.symmetric(horizontal: 24.w),
             );
 
@@ -60,25 +63,6 @@ class AuthScaffold extends StatelessWidget {
           },
         ),
       ),
-    );
-  }
-
-  Widget _buildContent() {
-    if (!showBackButton && backButton == null) {
-      return child;
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        20.szH,
-        Align(
-          alignment: backButtonAlignment,
-          child: backButton ?? const SokoonBackButton(),
-        ),
-        14.szH,
-        child,
-      ],
     );
   }
 }

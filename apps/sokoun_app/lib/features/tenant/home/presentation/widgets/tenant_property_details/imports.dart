@@ -10,5 +10,4 @@ export 'ownership_verified_banner.dart';
 export 'price_and_rating.dart';
 export 'share_action_row.dart';
 export 'share_sheet.dart';
-export 'status_view.dart';
 export 'tag_row.dart';

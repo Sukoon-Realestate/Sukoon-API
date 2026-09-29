@@ -14,7 +14,6 @@ import 'package:melos_core/core/widgets/validation_helper.dart';
 import 'package:sokoun_app/features/shared/auth/data/models/kyc_upload_documents_data.dart';
 
 import '../auth_scaffold.dart';
-import 'kyc_flow_header.dart';
 import 'kyc_privacy_card.dart';
 import 'kyc_progress_bar.dart';
 import 'kyc_upload_tile.dart';
@@ -54,13 +53,14 @@ class KycUploadDocumentsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AuthScaffold(
-      showBackButton: false,
+      showBackButton: true,
       isScrollable: false,
       padding: EdgeInsets.zero,
       bottomNavigationBar: _KycUploadSubmitBar(onSubmit: onSubmit),
+      onBack: onBack,
+      title: LocaleKeys.uploadDocumentsTitle,
       child: Column(
         children: [
-          KycFlowHeader(title: LocaleKeys.uploadDocumentsTitle, onBack: onBack),
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.all(16.w),

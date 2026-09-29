@@ -127,47 +127,36 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
           return PopScope(
             canPop: !isUpdating,
             child: AppScaffold(
-              showBackButton: false,
+              title: LocaleKeys.ownerRequestDetailsTitle,
+              showBackButton: true,
+              isBackEnabled: !isUpdating,
               backgroundColor: AppColors.scaffoldBackground,
               body: SafeArea(
-                child: Column(
-                  children: [
-                    VisitHeader(
-                      title: LocaleKeys.ownerRequestDetailsTitle,
-                      isBackEnabled: !isUpdating,
-                    ),
-                    Expanded(
-                      child: ValueListenableBuilder<OwnerVisitUpdateStatus?>(
-                        valueListenable: _pendingStatus,
-                        builder: (context, pendingStatus, _) =>
-                            StatusBuilder<
-                              OwnerRequestDetailsCubit,
-                              OwnerVisitRequestDetailsContent
-                            >.withShimmer(
-                              initialDataForShimmer:
-                                  const OwnerVisitRequestDetailsContent.initial(),
-                              requestToTryAgainWhenError:
-                                  _requestDetailsRequest,
-                              onRetry: _retryRequestDetails,
-                              builder: (request) => OwnerRequestDetailsContent(
-                                request: request,
-                                isAccepting:
-                                    isUpdating &&
-                                    pendingStatus ==
-                                        OwnerVisitUpdateStatus.confirmed,
-                                isRejecting:
-                                    isUpdating &&
-                                    pendingStatus ==
-                                        OwnerVisitUpdateStatus.rejected,
-                                onAcceptPressed: () =>
-                                    _acceptRequest(context, request),
-                                onRejectPressed: () =>
-                                    _rejectRequest(context, request),
-                              ),
-                            ),
+                child: ValueListenableBuilder<OwnerVisitUpdateStatus?>(
+                  valueListenable: _pendingStatus,
+                  builder: (context, pendingStatus, _) =>
+                      StatusBuilder<
+                        OwnerRequestDetailsCubit,
+                        OwnerVisitRequestDetailsContent
+                      >.withShimmer(
+                        initialDataForShimmer:
+                            const OwnerVisitRequestDetailsContent.initial(),
+                        requestToTryAgainWhenError: _requestDetailsRequest,
+                        onRetry: _retryRequestDetails,
+                        builder: (request) => OwnerRequestDetailsContent(
+                          request: request,
+                          isAccepting:
+                              isUpdating &&
+                              pendingStatus == OwnerVisitUpdateStatus.confirmed,
+                          isRejecting:
+                              isUpdating &&
+                              pendingStatus == OwnerVisitUpdateStatus.rejected,
+                          onAcceptPressed: () =>
+                              _acceptRequest(context, request),
+                          onRejectPressed: () =>
+                              _rejectRequest(context, request),
+                        ),
                       ),
-                    ),
-                  ],
                 ),
               ),
             ),

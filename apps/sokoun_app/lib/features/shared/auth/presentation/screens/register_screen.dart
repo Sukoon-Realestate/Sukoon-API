@@ -14,7 +14,7 @@ import 'package:sokoun_app/shared_widgets/shared_widgets.dart';
 
 import '../widgets/auth_scaffold.dart';
 import '../widgets/register/register_footer.dart';
-import '../widgets/register/register_header.dart';
+import '../widgets/register/register_intro.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key, this.onSubmit});
@@ -111,6 +111,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return AuthScaffold(
+      title: LocaleKeys.createAccount,
       child: FirstValidationErrorForm(
         validationFields: _validationFields,
         onValid: _submit,
@@ -118,7 +119,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const RegisterHeader(),
+              const RegisterIntro(),
               26.szH,
               SokoonNameField(
                 key: _firstNameFieldKey,

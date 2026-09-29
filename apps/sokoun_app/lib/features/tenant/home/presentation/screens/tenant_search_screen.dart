@@ -1,3 +1,4 @@
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -217,7 +218,8 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
             >(
               valueListenable: _viewState,
               builder: (context, viewState, _) => AppScaffold(
-                showBackButton: false,
+                title: LocaleKeys.tenantSearchTitle,
+                showBackButton: true,
                 backgroundColor: AppColors.scaffoldBackground,
                 body: SafeArea(
                   child: TenantSearchContentView(

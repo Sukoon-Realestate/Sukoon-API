@@ -12,7 +12,6 @@ import 'package:sokoun_app/features/tenant/home/data/tenant_home_data.dart';
 import 'home_search_box.dart';
 import 'home_section_header.dart';
 import 'home_property_item.dart';
-import 'tenant_header.dart';
 import 'tenant_suggested_properties_empty_state.dart';
 import 'tenant_visit_banner.dart';
 
@@ -73,8 +72,6 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const TenantHeader(),
-            SizedBox(height: 16.h),
             const HomeSearchBox(),
             ValueListenableBuilder<bool>(
               valueListenable: _showBanner,

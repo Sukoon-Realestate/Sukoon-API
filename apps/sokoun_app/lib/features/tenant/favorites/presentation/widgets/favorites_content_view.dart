@@ -1,3 +1,7 @@
+import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
@@ -10,7 +14,6 @@ import 'package:sokoun_app/features/tenant/favorites/data/models/favorites_conte
 
 import 'favorite_property_card.dart';
 import 'favorites_empty_state.dart';
-import 'favorites_header.dart';
 import 'favorites_list.dart';
 
 typedef FavoritesPageLoader =
@@ -28,7 +31,6 @@ class FavoritesContentView extends StatelessWidget {
     required this.loadPage,
     required this.onFavoriteRemoved,
     required this.activeFilterCount,
-    required this.onFiltersPressed,
     required this.onClearFiltersPressed,
     required this.onPagifyStatusChanged,
   });
@@ -39,7 +41,6 @@ class FavoritesContentView extends StatelessWidget {
   final FavoritesPageLoader loadPage;
   final ValueChanged<FavoritePropertyContent> onFavoriteRemoved;
   final int activeFilterCount;
-  final VoidCallback onFiltersPressed;
   final VoidCallback onClearFiltersPressed;
   final ValueChanged<PagifyAsyncCallStatus> onPagifyStatusChanged;
 
@@ -49,11 +50,10 @@ class FavoritesContentView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        FavoritesHeader(
-          itemCount: itemCount,
-          activeFilterCount: activeFilterCount,
-          onFiltersPressed: onFiltersPressed,
-        ),
+        AppText(
+          '$itemCount ${LocaleKeys.favoritesSavedPropertiesCount}',
+          style: AppTextStyles.regular12.copyWith(color: AppColors.sokoonGray),
+        ).paddingSymmetric(horizontal: 20, vertical: 12),
         Expanded(
           child: fixtureItems != null
               ? FavoritesList(

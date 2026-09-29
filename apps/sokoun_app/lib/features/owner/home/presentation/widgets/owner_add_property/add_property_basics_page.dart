@@ -44,11 +44,8 @@ class AddPropertyBasicsPage extends StatelessWidget {
     required this.onMapQueryChanged,
     required this.onLocationSelected,
     required this.onNext,
-    this.title,
-    this.onBack,
   });
 
-  final String? title;
   final OwnerAddPropertyFormState form;
   final TextEditingController titleController;
   final TextEditingController streetController;
@@ -74,18 +71,15 @@ class AddPropertyBasicsPage extends StatelessWidget {
   final ValueChanged<String> onMapQueryChanged;
   final VoidCallback onLocationSelected;
   final VoidCallback onNext;
-  final VoidCallback? onBack;
 
   @override
   Widget build(BuildContext context) {
     return AddPropertyStepShell(
-      title: title ?? LocaleKeys.ownerAddPropertyTitle,
       activeSegments: 1,
       segmentCount: 5,
       progressSubtitle: LocaleKeys.ownerAddPropertyBasicsProgress,
       primaryLabel: LocaleKeys.ownerAddPropertyNextPhotos,
       onPrimaryTap: form.isBasicsReady ? onNext : null,
-      onBack: onBack,
       children: [
         AddPropertySectionCard(
           title: LocaleKeys.ownerAddPropertyType,

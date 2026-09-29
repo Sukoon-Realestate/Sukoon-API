@@ -174,112 +174,105 @@ class _ProfileEditViewState extends State<ProfileEditView> {
 
   Widget _buildScaffold({required bool isSaving}) {
     return AppScaffold(
-      showBackButton: false,
+      title: _title,
+      showBackButton: true,
+      actions: [
+        TextButton(
+          onPressed: isSaving ? null : _save,
+          child: isSaving
+              ? SizedBox.square(
+                  dimension: 18.r,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2.r,
+                    color: _accentColor,
+                  ),
+                )
+              : AppText(
+                  LocaleKeys.profileSave,
+                  style: AppTextStyles.bold14.copyWith(
+                    color: _accentColor,
+                    fontSize: 14.sp,
+                    height: 1.45,
+                  ),
+                ),
+        ),
+      ],
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
-        child: Column(
-          children: [
-            ProfileScreenHeader(
-              title: _title,
-              showBackButton: true,
-              trailing: TextButton(
-                onPressed: isSaving ? null : _save,
-                child: isSaving
-                    ? SizedBox.square(
-                        dimension: 18.r,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2.r,
-                          color: _accentColor,
-                        ),
-                      )
-                    : AppText(
-                        LocaleKeys.profileSave,
-                        style: AppTextStyles.bold14.copyWith(
-                          color: _accentColor,
-                          fontSize: 14.sp,
-                          height: 1.45,
-                        ),
-                      ),
-              ),
-            ),
-            Expanded(
-              child: Form(
-                key: _formKey,
-                child: ListView(
-                  padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 28.h),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 28.h),
+            children: [
+              ValueListenableBuilder<File?>(
+                valueListenable: _avatar,
+                builder: (context, avatar, _) => Column(
                   children: [
-                    ValueListenableBuilder<File?>(
-                      valueListenable: _avatar,
-                      builder: (context, avatar, _) => Column(
-                        children: [
-                          ProfileAvatar(
-                            name: _nameController.text,
-                            imageFile: avatar,
-                            accentColor: _accentColor,
-                            backgroundColor: _accentColor,
-                            size: 88,
-                            useInitial: true,
-                            badgeIcon: Icons.camera_alt_outlined,
-                            onBadgePressed: isSaving ? null : _pickAvatar,
-                          ),
-                          8.szH,
-                          AppText(
-                            LocaleKeys.profileChangePhoto,
-                            style: AppTextStyles.bold13.copyWith(
-                              color: _accentColor,
-                              fontSize: 13.sp,
-                              height: 1.45,
-                            ),
-                          ),
-                        ],
+                    ProfileAvatar(
+                      name: _nameController.text,
+                      imageFile: avatar,
+                      accentColor: _accentColor,
+                      backgroundColor: _accentColor,
+                      size: 88,
+                      useInitial: true,
+                      badgeIcon: Icons.camera_alt_outlined,
+                      onBadgePressed: isSaving ? null : _pickAvatar,
+                    ),
+                    8.szH,
+                    AppText(
+                      LocaleKeys.profileChangePhoto,
+                      style: AppTextStyles.bold13.copyWith(
+                        color: _accentColor,
+                        fontSize: 13.sp,
+                        height: 1.45,
                       ),
                     ),
-                    24.szH,
-                    SokoonNameField(
-                      controller: _nameController,
-                      label: LocaleKeys.fullName,
-                      hintText: LocaleKeys.fullNameHint,
-                      accentColor: _accentColor,
-                      validator: Validators.validateName,
-                    ),
-                    14.szH,
-                    SokoonPhoneField(
-                      controller: _phoneController,
-                      accentColor: _accentColor,
-                      validator: Validators.validateEmpty,
-                    ),
-                    14.szH,
-                    SokoonEmailField(
-                      controller: _emailController,
-                      accentColor: _accentColor,
-                      action: TextInputAction.done,
-                      readOnly: true,
-                    ),
-                    14.szH,
-                    if (widget.workspace.isOwner)
-                      Column(
-                        children: [
-                          _ProfileReadonlyField(
-                            label: LocaleKeys.city,
-                            value: LocaleKeys.profileCairo,
-                          ),
-                          14.szH,
-                          _buildGenderField(isSaving: isSaving),
-                        ],
-                      )
-                    else ...[
-                      _ProfileReadonlyField(
-                        label: LocaleKeys.profileBirthDate,
-                        value: LocaleKeys.notSetYet,
-                      ),
-                      14.szH,
-                      _buildGenderField(isSaving: isSaving),
-                    ],
                   ],
                 ),
               ),
-            ),
-          ],
+              24.szH,
+              SokoonNameField(
+                controller: _nameController,
+                label: LocaleKeys.fullName,
+                hintText: LocaleKeys.fullNameHint,
+                accentColor: _accentColor,
+                validator: Validators.validateName,
+              ),
+              14.szH,
+              SokoonPhoneField(
+                controller: _phoneController,
+                accentColor: _accentColor,
+                validator: Validators.validateEmpty,
+              ),
+              14.szH,
+              SokoonEmailField(
+                controller: _emailController,
+                accentColor: _accentColor,
+                action: TextInputAction.done,
+                readOnly: true,
+              ),
+              14.szH,
+              if (widget.workspace.isOwner)
+                Column(
+                  children: [
+                    _ProfileReadonlyField(
+                      label: LocaleKeys.city,
+                      value: LocaleKeys.profileCairo,
+                    ),
+                    14.szH,
+                    _buildGenderField(isSaving: isSaving),
+                  ],
+                )
+              else ...[
+                _ProfileReadonlyField(
+                  label: LocaleKeys.profileBirthDate,
+                  value: LocaleKeys.notSetYet,
+                ),
+                14.szH,
+                _buildGenderField(isSaving: isSaving),
+              ],
+            ],
+          ),
         ),
       ),
     );

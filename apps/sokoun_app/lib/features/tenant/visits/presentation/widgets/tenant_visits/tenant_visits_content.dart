@@ -25,7 +25,6 @@ class TenantVisitsScreenContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        VisitHeader(title: LocaleKeys.tenantVisitsTitle),
         TenantVisitsFilters(
           selectedFilter: selectedFilter,
           onFilterSelected: onFilterSelected,

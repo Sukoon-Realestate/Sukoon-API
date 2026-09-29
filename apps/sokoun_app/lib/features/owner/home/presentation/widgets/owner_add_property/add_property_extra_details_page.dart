@@ -20,7 +20,6 @@ class AddPropertyExtraDetailsPage extends StatelessWidget {
     required this.onSuitableForSelected,
     required this.onProofUploadTap,
     required this.onNext,
-    required this.onBack,
     this.isSubmitting = false,
     this.primaryLabel,
   });
@@ -30,14 +29,12 @@ class AddPropertyExtraDetailsPage extends StatelessWidget {
   final ValueChanged<String> onSuitableForSelected;
   final VoidCallback onProofUploadTap;
   final VoidCallback onNext;
-  final VoidCallback onBack;
   final bool isSubmitting;
   final String? primaryLabel;
 
   @override
   Widget build(BuildContext context) {
     return AddPropertyStepShell(
-      title: LocaleKeys.ownerAddPropertyDetails,
       activeSegments: 5,
       segmentCount: 5,
       progressSubtitle: LocaleKeys.ownerAddPropertyExtraProgress,
@@ -47,7 +44,6 @@ class AddPropertyExtraDetailsPage extends StatelessWidget {
               ? LocaleKeys.ownerAddPropertySubmitting
               : LocaleKeys.ownerAddPropertySubmitReview),
       onPrimaryTap: form.isExtraDetailsReady && !isSubmitting ? onNext : null,
-      onBack: onBack,
       children: [
         AddPropertySectionCard(
           title: LocaleKeys.ownerAddPropertySmokingQuestion,

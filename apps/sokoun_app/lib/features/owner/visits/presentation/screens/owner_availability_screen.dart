@@ -116,24 +116,18 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
     return BlocProvider<OwnerAvailabilityCubit>.value(
       value: _availabilityCubit,
       child: AppScaffold(
-        showBackButton: false,
+        title: LocaleKeys.ownerAvailabilityTitle,
+        showBackButton: true,
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
-          child: Column(
-            children: [
-              VisitHeader(title: LocaleKeys.ownerAvailabilityTitle),
-              Expanded(
-                child: OwnerAvailabilityContent(
-                  days: _days,
-                  slots: _slots,
-                  slotStates: _selectedSlotStates,
-                  selectedDayIndex: _selectedDayIndex,
-                  onDaySelected: _selectDay,
-                  onTimePressed: _toggleSlot,
-                  onSavePressed: _saveAvailability,
-                ),
-              ),
-            ],
+          child: OwnerAvailabilityContent(
+            days: _days,
+            slots: _slots,
+            slotStates: _selectedSlotStates,
+            selectedDayIndex: _selectedDayIndex,
+            onDaySelected: _selectDay,
+            onTimePressed: _toggleSlot,
+            onSavePressed: _saveAvailability,
           ),
         ),
       ),

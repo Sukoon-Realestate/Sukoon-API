@@ -68,42 +68,34 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
       child: BlocBuilder<OwnerProfileCubit, AsyncState<OwnerProfileContent>>(
         builder: (context, state) {
           return AppScaffold(
-            showBackButton: false,
+            title: LocaleKeys.profileOwnerTitle,
+            showBackButton: true,
+            actions: [
+              IconButton(
+                onPressed: state.isSuccess
+                    ? () => _openEditProfile(state.data)
+                    : null,
+                icon: Icon(
+                  Icons.edit_outlined,
+                  color: AppColors.sokoonNavy,
+                  size: 18.r,
+                ),
+              ),
+            ],
             backgroundColor: AppColors.scaffoldBackground,
             body: SafeArea(
-              child: Column(
-                children: [
-                  ProfileScreenHeader(
-                    title: LocaleKeys.profileOwnerTitle,
-                    showBackButton: true,
-                    trailing: IconButton(
-                      onPressed: state.isSuccess
-                          ? () => _openEditProfile(state.data)
-                          : null,
-                      icon: Icon(
-                        Icons.edit_outlined,
-                        color: AppColors.sokoonNavy,
-                        size: 18.r,
-                      ),
-                    ),
+              child:
+                  StatusBuilder<
+                    OwnerProfileCubit,
+                    OwnerProfileContent
+                  >.withShimmer(
+                    initialDataForShimmer: const OwnerProfileContent.initial(),
+                    requestToTryAgainWhenError: _profileRequest,
+                    onRetry: _profileCubit.getProfile,
+                    errorType: ErrorType.defaultView,
+                    builder: (profile) =>
+                        OwnerProfileContentView(profile: profile),
                   ),
-                  Expanded(
-                    child:
-                        StatusBuilder<
-                          OwnerProfileCubit,
-                          OwnerProfileContent
-                        >.withShimmer(
-                          initialDataForShimmer:
-                              const OwnerProfileContent.initial(),
-                          requestToTryAgainWhenError: _profileRequest,
-                          onRetry: _profileCubit.getProfile,
-                          errorType: ErrorType.defaultView,
-                          builder: (profile) =>
-                              OwnerProfileContentView(profile: profile),
-                        ),
-                  ),
-                ],
-              ),
             ),
           );
         },

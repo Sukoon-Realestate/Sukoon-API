@@ -126,7 +126,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
 
-    expect(find.byType(TenantPropertyStatusView), findsOneWidget);
+    expect(find.byType(AppBar), findsOneWidget);
     expect(find.byType(ExceptionView), findsOneWidget);
     expect(find.byType(TenantPropertyDetailsBody), findsNothing);
     await tester.pump(const Duration(seconds: 5));

@@ -1,9 +1,11 @@
+import '../widgets/chat_list/chat_search_field.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 
 import '../../data/models/chat_content.dart';
-import '../widgets/chat_search/chat_search_header.dart';
 import '../widgets/chat_search/chat_search_results.dart';
 
 class ChatSearchScreen extends StatefulWidget {
@@ -61,16 +63,19 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      showBackButton: false,
+      title: LocaleKeys.search,
+      showBackButton: true,
       backgroundColor: AppColors.white,
       body: SafeArea(
         child: Column(
           children: [
-            ChatSearchHeader(
+            ChatSearchField(
               controller: _searchController,
-              onQueryChanged: _updateQuery,
+              autofocus: false,
+              isActive: true,
+              onChanged: _updateQuery,
               onClearPressed: _clearQuery,
-            ),
+            ).paddingAll(16),
             Expanded(
               child: ValueListenableBuilder<String>(
                 valueListenable: _query,

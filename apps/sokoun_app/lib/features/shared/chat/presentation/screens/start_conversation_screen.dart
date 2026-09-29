@@ -1,3 +1,4 @@
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'dart:async';
 
@@ -52,7 +53,8 @@ class _StartConversationScreenState extends State<StartConversationScreen> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      showBackButton: false,
+      title: LocaleKeys.chatConversationsTitle,
+      showBackButton: true,
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: BlocProvider<ChatCubit>.value(

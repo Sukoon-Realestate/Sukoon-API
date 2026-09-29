@@ -11,7 +11,6 @@ import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 
 import '../widgets/auth_scaffold.dart';
-import '../widgets/kyc/kyc_flow_header.dart';
 import '../widgets/kyc/kyc_privacy_card.dart';
 import '../widgets/kyc/kyc_progress_bar.dart';
 import '../widgets/kyc/kyc_requirement_tile.dart';
@@ -31,7 +30,7 @@ class KycIntroScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AuthScaffold(
-      showBackButton: false,
+      showBackButton: true,
       isScrollable: false,
       padding: EdgeInsets.zero,
       bottomNavigationBar: SafeArea(
@@ -76,9 +75,10 @@ class KycIntroScreen extends StatelessWidget {
           ),
         ),
       ),
+      onBack: onBack,
+      title: LocaleKeys.identityVerification,
       child: Column(
         children: [
-          KycFlowHeader(title: LocaleKeys.identityVerification, onBack: onBack),
           Expanded(
             child: SingleChildScrollView(
               padding: EdgeInsets.all(16.w),

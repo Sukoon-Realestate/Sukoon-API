@@ -1,7 +1,7 @@
 part of '../../../imports.dart';
 
-class LanguageSelectionHeader extends StatelessWidget {
-  const LanguageSelectionHeader({super.key});
+class LanguageSelectionIntro extends StatelessWidget {
+  const LanguageSelectionIntro({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +28,6 @@ class LanguageSelectionHeader extends StatelessWidget {
           ),
         ),
         24.szH,
-        AppText(
-          LocaleKeys.languageSelectionTitle,
-          style: AppTextStyles.bold.copyWith(
-            color: AppColors.sokoonNavy,
-            fontSize: 22.sp,
-            height: 1.5,
-          ),
-          textAlign: TextAlign.center,
-        ),
         8.szH,
         AppText(
           LocaleKeys.languageSelectionSubtitle,

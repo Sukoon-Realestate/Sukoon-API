@@ -26,7 +26,7 @@ import 'package:sokoun_app/features/tenant/visits/imports.dart';
 import 'package:sokoun_app/features/shared/profile/imports.dart';
 import 'package:sokoun_app/features/shared/notifications/data/models/app_notification_content.dart';
 import 'package:sokoun_app/features/shared/notifications/presentation/widgets/notification_card.dart';
-import 'package:sokoun_app/features/shared/notifications/presentation/widgets/notifications_header.dart';
+import 'package:sokoun_app/features/shared/notifications/presentation/widgets/notifications_read_action.dart';
 import 'package:sokoun_app/features/shared/notifications/data/enums/notification_role.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/conversation_content.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_card.dart';
@@ -151,7 +151,6 @@ void main() {
                   onPhotoNameChanged: (_, _) {},
                   onPhotoDescriptionChanged: (_, _) {},
                   onNext: () {},
-                  onBack: () {},
                 ),
               ),
               'video' => page(
@@ -159,7 +158,6 @@ void main() {
                   video: null,
                   onVideoSelected: (_) {},
                   onVideoRemoved: () {},
-                  onBack: () {},
                   onNext: () {},
                   onSkip: () {},
                 ),
@@ -210,7 +208,7 @@ void main() {
               'notifications' => scroll(
                 Column(
                   children: [
-                    NotificationsHeader(
+                    NotificationsReadAction(
                       role: NotificationRole.tenant,
                       hasUnread: true,
                       isMarkingAll: false,

@@ -16,6 +16,9 @@ class AppScaffold extends StatelessWidget {
     this.bottomBar,
     this.showBackButton = true,
     this.backButton,
+    this.onBack,
+    this.isBackEnabled = true,
+    this.toolbarHeight,
     this.backgroundColor = AppColors.scaffoldBackground,
     this.resizeToAvoidBottomInset,
     this.contentWidth = SokounContentWidth.readable,
@@ -28,6 +31,9 @@ class AppScaffold extends StatelessWidget {
   final Widget? bottomBar;
   final bool showBackButton;
   final Widget? backButton;
+  final VoidCallback? onBack;
+  final bool isBackEnabled;
+  final double? toolbarHeight;
   final Color backgroundColor;
   final bool? resizeToAvoidBottomInset;
   final SokounContentWidth contentWidth;
@@ -67,12 +73,18 @@ class AppScaffold extends StatelessWidget {
       elevation: 0,
       scrolledUnderElevation: 0,
       centerTitle: true,
+      toolbarHeight: toolbarHeight,
       leadingWidth: 60.w,
       leading: showBackButton || backButton != null
-          ? Center(child: backButton ?? const SokoonBackButton())
+          ? Center(
+              child:
+                  backButton ??
+                  SokoonBackButton(onTap: onBack, enabled: isBackEnabled),
+            )
           : null,
       title: titleWidget ?? _buildTitle(),
       actions: actions,
+      actionsPadding: EdgeInsetsDirectional.only(end: 8.w),
     );
   }
 

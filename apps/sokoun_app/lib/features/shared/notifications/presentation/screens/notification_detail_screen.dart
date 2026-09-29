@@ -13,7 +13,6 @@ import '../../data/models/app_notification_content.dart';
 import '../cubits/notification_detail_cubit.dart';
 import '../notification_navigation.dart';
 import '../widgets/notification_details_content.dart';
-import '../widgets/notification_page_header.dart';
 
 class NotificationDetailScreen extends StatefulWidget {
   const NotificationDetailScreen({
@@ -55,41 +54,33 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      showBackButton: false,
+      title: LocaleKeys.notificationDetailsTitle,
+      showBackButton: true,
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
-        child: Column(
-          children: [
-            NotificationPageHeader(title: LocaleKeys.notificationDetailsTitle),
-            Expanded(
-              child: BlocProvider<NotificationDetailCubit>.value(
-                value: _cubit,
-                child:
-                    StatusBuilder<
-                      NotificationDetailCubit,
-                      AppNotificationContent
-                    >.withShimmer(
-                      initialDataForShimmer: widget.notification,
-                      requestToTryAgainWhenError: _detailsRequest,
-                      onRetry: () => _cubit.load(
-                        notificationId: widget.notification.id,
-                        fixture: widget.fetchFromApi
-                            ? null
-                            : widget.notification,
-                      ),
-                      errorType: ErrorType.defaultView,
-                      builder: (notification) => NotificationDetailsContent(
-                        notification: notification,
-                        onPrimaryPressed: () => NotificationNavigation.open(
-                          notification: notification,
-                          role: widget.role,
-                        ),
-                        onDismissPressed: Go.back,
-                      ),
-                    ),
+        child: BlocProvider<NotificationDetailCubit>.value(
+          value: _cubit,
+          child:
+              StatusBuilder<
+                NotificationDetailCubit,
+                AppNotificationContent
+              >.withShimmer(
+                initialDataForShimmer: widget.notification,
+                requestToTryAgainWhenError: _detailsRequest,
+                onRetry: () => _cubit.load(
+                  notificationId: widget.notification.id,
+                  fixture: widget.fetchFromApi ? null : widget.notification,
+                ),
+                errorType: ErrorType.defaultView,
+                builder: (notification) => NotificationDetailsContent(
+                  notification: notification,
+                  onPrimaryPressed: () => NotificationNavigation.open(
+                    notification: notification,
+                    role: widget.role,
+                  ),
+                  onDismissPressed: Go.back,
+                ),
               ),
-            ),
-          ],
         ),
       ),
     );

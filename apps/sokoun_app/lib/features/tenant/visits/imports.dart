@@ -27,7 +27,6 @@ import 'package:pagify/pagify.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/start_conversation_screen.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
-import 'package:sokoun_app/shared_widgets/visit_header.dart';
 import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
 import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
 

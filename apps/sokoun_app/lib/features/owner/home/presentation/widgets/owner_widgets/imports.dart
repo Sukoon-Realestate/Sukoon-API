@@ -1,7 +1,7 @@
 export 'home_avatar.dart';
 export 'home_circle_button.dart';
 export 'home_section_header.dart';
-export 'owner_header.dart';
+export 'owner_home_app_bar_title.dart';
 export 'owner_dashboard_content.dart';
 export 'owner_pending_requests_empty_state.dart';
 export 'owner_pending_requests_section.dart';

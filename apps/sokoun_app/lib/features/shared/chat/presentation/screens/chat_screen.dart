@@ -1,3 +1,5 @@
+import '../widgets/report/chat_report_button.dart';
+import '../widgets/chat/chat_participant_title.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'dart:async';
 
@@ -68,9 +70,12 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     return BlocProvider<ChatThreadCubit>.value(
       value: _chatThreadCubit,
       child: AppScaffold(
-        showBackButton: false,
-        resizeToAvoidBottomInset: true,
+        titleWidget: ChatParticipantTitle(conversation: widget.conversation),
+        showBackButton: true,
+        toolbarHeight: 56 + MediaQuery.textScalerOf(context).scale(16),
+        actions: const [ChatReportButton()],
         backgroundColor: AppColors.scaffoldBackground,
+        resizeToAvoidBottomInset: true,
         body: SafeArea(
           bottom: false,
           child: ChatThreadContent(

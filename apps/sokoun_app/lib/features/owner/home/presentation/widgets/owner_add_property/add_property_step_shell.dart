@@ -12,26 +12,22 @@ import 'add_property_primary_button.dart';
 class AddPropertyStepShell extends StatelessWidget {
   const AddPropertyStepShell({
     super.key,
-    required this.title,
     required this.children,
     required this.primaryLabel,
     required this.activeSegments,
     this.onPrimaryTap,
     this.progressSubtitle,
     this.segmentCount = 4,
-    this.onBack,
     this.secondaryLabel,
     this.onSecondaryTap,
   });
 
-  final String title;
   final List<Widget> children;
   final String primaryLabel;
   final VoidCallback? onPrimaryTap;
   final int activeSegments;
   final String? progressSubtitle;
   final int segmentCount;
-  final VoidCallback? onBack;
   final String? secondaryLabel;
   final VoidCallback? onSecondaryTap;
 
@@ -40,7 +36,6 @@ class AddPropertyStepShell extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _TopBar(title: title, onBack: onBack),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
           decoration: const BoxDecoration(
@@ -119,63 +114,6 @@ class AddPropertyStepShell extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _TopBar extends StatelessWidget {
-  const _TopBar({required this.title, this.onBack});
-
-  final String title;
-  final VoidCallback? onBack;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(minHeight: 64.h),
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      decoration: const BoxDecoration(
-        color: AppColors.white,
-        border: Border(bottom: BorderSide(color: AppColors.grayPale)),
-      ),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: onBack,
-            behavior: HitTestBehavior.opaque,
-            child: Container(
-              width: 48.r,
-              height: 48.r,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: AppColors.grayBackground,
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Icon(
-                Icons.chevron_left_rounded,
-                color: AppColors.sokoonNavy,
-                size: 22.r,
-              ),
-            ),
-          ),
-          8.szW,
-          Expanded(
-            child: AppText(
-              title,
-              style: AppTextStyles.bold16.copyWith(
-                color: AppColors.sokoonNavy,
-                fontSize: 16.sp,
-                height: 1.45,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          8.szW,
-          SizedBox(width: 48.r),
-        ],
-      ),
     );
   }
 }

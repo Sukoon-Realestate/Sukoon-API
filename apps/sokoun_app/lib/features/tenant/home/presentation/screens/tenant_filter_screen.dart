@@ -1,3 +1,7 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'dart:async';
 
@@ -104,16 +108,48 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
                 ValueListenableBuilder<PropertySearchFilters>(
                   valueListenable: _filters,
                   builder: (context, filters, _) => AppScaffold(
-                    showBackButton: false,
+                    title: LocaleKeys.tenantFilterTitle,
+                    titleWidget: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Flexible(
+                          child: AppText(
+                            LocaleKeys.tenantFilterTitle,
+                            style: AppTextStyles.extraBold.copyWith(
+                              fontSize: 16.sp,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        SizedBox(width: 8.w),
+                        Badge(
+                          label: AppText(
+                            '${filters.activeCount}',
+                            style: AppTextStyles.regular10.copyWith(
+                              color: AppColors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    showBackButton: true,
+                    actions: [
+                      TextButton(
+                        onPressed: _reset,
+                        child: AppText(
+                          LocaleKeys.tenantFilterReset,
+                          style: AppTextStyles.bold13.copyWith(
+                            color: AppColors.sokoonTeal,
+                          ),
+                        ),
+                      ),
+                    ],
                     backgroundColor: AppColors.scaffoldBackground,
                     body: SafeArea(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          FilterTopBar(
-                            activeCount: filters.activeCount,
-                            onReset: _reset,
-                          ),
                           Expanded(
                             child: TenantFilterContent(
                               filters: filters,

@@ -487,7 +487,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('إضافة عقار'));
+    await tester.tap(find.byTooltip('إضافة عقار'));
     await tester.pumpAndSettle();
 
     expect(find.byType(OwnerAddPropertyFlowScreen), findsOneWidget);

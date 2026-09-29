@@ -1,3 +1,5 @@
+import 'notification_settings_screen.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'dart:async';
 
@@ -14,7 +16,7 @@ import '../../data/enums/notification_role.dart';
 import '../../data/models/app_notification_content.dart';
 import '../../data/models/notification_operations_state.dart';
 import '../cubits/notifications_cubit.dart';
-import '../widgets/notifications_header.dart';
+import '../widgets/notifications_read_action.dart';
 import '../widgets/notifications_list.dart';
 import 'notification_detail_screen.dart';
 
@@ -144,7 +146,24 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     return BlocProvider<NotificationsCubit>.value(
       value: _cubit,
       child: AppScaffold(
-        showBackButton: false,
+        title: LocaleKeys.workspaceAllNotifications,
+        showBackButton: true,
+        actions: [
+          BlocSelector<
+            NotificationsCubit,
+            AsyncState<NotificationOperationsState>,
+            bool
+          >(
+            selector: (state) => state.data.isMarkingAll,
+            builder: (context, isMarkingAll) => IconButton(
+              tooltip: LocaleKeys.notificationSettingsTitle,
+              onPressed: isMarkingAll
+                  ? null
+                  : () => Go.to(NotificationSettingsScreen(role: _role)),
+              icon: const Icon(Icons.settings_outlined),
+            ),
+          ),
+        ],
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
           child:
@@ -156,7 +175,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      NotificationsHeader(
+                      NotificationsReadAction(
                         role: _role,
                         hasUnread: state.data.unreadCount > 0,
                         isMarkingAll: state.data.isMarkingAll,

@@ -1,3 +1,4 @@
+import '../widgets/chat/chat_participant_title.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -7,7 +8,6 @@ import 'package:pagify/pagify.dart';
 import '../../data/chat_thread_data.dart';
 import '../../data/models/chat_content.dart';
 import '../widgets/chat/chat_view.dart';
-import '../widgets/chat/upper_view.dart';
 
 /// Read-only history: no socket connection and no composer.
 class PreviousChatScreen extends StatefulWidget {
@@ -35,25 +35,17 @@ class _PreviousChatScreenState extends State<PreviousChatScreen> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      showBackButton: false,
+      titleWidget: ChatParticipantTitle(conversation: widget.conversation),
+      showBackButton: true,
+      toolbarHeight: 56 + MediaQuery.textScalerOf(context).scale(16),
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         bottom: false,
-        child: Column(
-          children: [
-            ChatUpperWidget(
-              conversation: widget.conversation,
-              showReportAction: false,
-            ),
-            Expanded(
-              child: ChatView(
-                conversation: widget.conversation,
-                controller: _chatController,
-                initialMessagesRequest: _initialMessagesRequest,
-                messagesCacheKey: _chatThreadData.messagesCacheKey,
-              ),
-            ),
-          ],
+        child: ChatView(
+          conversation: widget.conversation,
+          controller: _chatController,
+          initialMessagesRequest: _initialMessagesRequest,
+          messagesCacheKey: _chatThreadData.messagesCacheKey,
         ),
       ),
     );

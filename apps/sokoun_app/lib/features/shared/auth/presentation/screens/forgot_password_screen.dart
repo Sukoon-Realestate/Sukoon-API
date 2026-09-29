@@ -8,7 +8,6 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/forgot_password.dart';
 
 import '../widgets/auth_scaffold.dart';
-import '../widgets/forgot_password/forgot_password_app_bar.dart';
 import '../widgets/forgot_password/forgot_password_form.dart';
 import '../widgets/forgot_password/forgot_password_sent_view.dart';
 
@@ -120,18 +119,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           }
         },
         child: AuthScaffold(
-          showBackButton: false,
+          showBackButton: true,
           isScrollable: false,
           padding: EdgeInsets.zero,
           backgroundColor: AppColors.offWhite,
+          onBack: _handleBack,
+          title: uiState.emailSent
+              ? LocaleKeys.checkYourEmail
+              : LocaleKeys.recoverPasswordTitle,
           child: Column(
             children: [
-              ForgotPasswordAppBar(
-                title: uiState.emailSent
-                    ? LocaleKeys.checkYourEmail
-                    : LocaleKeys.recoverPasswordTitle,
-                onBack: _handleBack,
-              ),
               Expanded(
                 child: SingleChildScrollView(
                   keyboardDismissBehavior:

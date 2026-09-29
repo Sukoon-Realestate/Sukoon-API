@@ -21,7 +21,6 @@ class AddPropertyPhotosPage extends StatelessWidget {
     required this.onPhotoNameChanged,
     required this.onPhotoDescriptionChanged,
     required this.onNext,
-    required this.onBack,
   });
 
   final List<OwnerPropertyPhotoDraft> photos;
@@ -32,7 +31,6 @@ class AddPropertyPhotosPage extends StatelessWidget {
   final void Function(int index, String value) onPhotoNameChanged;
   final void Function(int index, String value) onPhotoDescriptionChanged;
   final VoidCallback onNext;
-  final VoidCallback onBack;
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +39,11 @@ class AddPropertyPhotosPage extends StatelessWidget {
     final bool hasEnoughPhotos = remaining <= 0;
 
     return AddPropertyStepShell(
-      title: LocaleKeys.ownerPropertiesPhotos,
       activeSegments: 2,
       segmentCount: 5,
       progressSubtitle: LocaleKeys.ownerAddPropertyPhotosProgress,
       primaryLabel: LocaleKeys.ownerAddPropertyNextVideo,
       onPrimaryTap: isReady ? onNext : null,
-      onBack: onBack,
       children: [
         AddPropertyInfoBanner(
           title: isReady ? LocaleKeys.ownerAddPropertyPhotosReady : null,

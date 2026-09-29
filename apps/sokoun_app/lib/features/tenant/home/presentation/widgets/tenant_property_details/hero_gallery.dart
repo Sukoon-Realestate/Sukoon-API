@@ -62,11 +62,6 @@ class TenantPropertyHeroGallery extends StatelessWidget {
             end: 14.w,
             child: Row(
               children: [
-                _HeroIconButton(
-                  icon: Icons.arrow_back_ios_new_rounded,
-                  tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-                  onPressed: Go.back,
-                ),
                 const Spacer(),
                 _HeroIconButton(
                   icon: Icons.ios_share_rounded,

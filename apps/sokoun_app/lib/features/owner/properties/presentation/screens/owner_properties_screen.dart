@@ -132,27 +132,26 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
   @override
   Widget build(BuildContext context) {
     return AppScaffold(
-      showBackButton: false,
-      contentWidth: SokounContentWidth.wide,
+      title: LocaleKeys.ownerPropertiesTitle,
+      showBackButton: true,
+      actions: [
+        IconButton(
+          tooltip: LocaleKeys.ownerPropertiesAdd,
+          onPressed: _openAddProperty,
+          icon: const Icon(Icons.add_rounded),
+        ),
+      ],
       backgroundColor: AppColors.scaffoldBackground,
+      contentWidth: SokounContentWidth.wide,
       body: SafeArea(
         child: ValueListenableBuilder<bool>(
           valueListenable: _isLoadingPropertyDetails,
-          child: Column(
-            children: [
-              OwnerPropertiesHeader(
-                onAddPressed: _openAddProperty,
-              ).padding(EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 8.h)),
-              Expanded(
-                child: OwnerPropertiesList(
-                  initialProperties: widget.initialProperties,
-                  pagifyController: _pagifyController,
-                  onAddPressed: _openAddProperty,
-                  onEditPressed: _openEdit,
-                  onRejectedPressed: _openRejection,
-                ),
-              ),
-            ],
+          child: OwnerPropertiesList(
+            initialProperties: widget.initialProperties,
+            pagifyController: _pagifyController,
+            onAddPressed: _openAddProperty,
+            onEditPressed: _openEdit,
+            onRejectedPressed: _openRejection,
           ),
           builder: (context, isLoading, child) => Stack(
             children: [
