@@ -1,3 +1,4 @@
+import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -142,7 +143,7 @@ class _TenantPropertyPhotosScreenState
                     '${selectedIndex + 1} / ${widget.property.photoLabels.length} — ${widget.property.photoLabels[selectedIndex]}',
                     color: AppColors.white,
                     fontSize: 14.sp,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                     textAlign: TextAlign.center,
                   ),
                   14.szH,
@@ -157,7 +158,10 @@ class _TenantPropertyPhotosScreenState
                           onTap: () => _selectedIndex.value = index,
                           behavior: HitTestBehavior.opaque,
                           child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 180),
+                            duration: SokounMotion.duration(
+                              context,
+                              milliseconds: 180,
+                            ),
                             width: isSelected ? 42.w : 34.w,
                             decoration: BoxDecoration(
                               color: isSelected

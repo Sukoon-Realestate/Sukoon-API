@@ -4,6 +4,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/svg_pic.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 
 class HomeBottomNavigation extends StatelessWidget {
   const HomeBottomNavigation({
@@ -22,7 +23,7 @@ class HomeBottomNavigation extends StatelessWidget {
     return SafeArea(
       top: false,
       child: Container(
-        height: 70.h,
+        constraints: BoxConstraints(minHeight: 76.h),
         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
         decoration: const BoxDecoration(
           color: AppColors.white,
@@ -90,7 +91,7 @@ class _HomeBottomNavigationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color color = isSelected
         ? AppColors.sokoonTeal
-        : AppColors.sokoonMuted;
+        : AppColors.sokoonGray;
 
     return Semantics(
       button: true,
@@ -104,36 +105,47 @@ class _HomeBottomNavigationItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  _buildIcon(color),
-                  if (destination.badgeCount > 0)
-                    PositionedDirectional(
-                      top: -7.r,
-                      end: -11.r,
-                      child: Container(
-                        constraints: BoxConstraints(minWidth: 17.r),
-                        height: 17.r,
-                        alignment: Alignment.center,
-                        padding: EdgeInsets.symmetric(horizontal: 4.w),
-                        decoration: BoxDecoration(
-                          color: AppColors.red,
-                          borderRadius: BorderRadius.circular(999.r),
-                          border: Border.all(color: AppColors.white),
-                        ),
-                        child: AppText(
-                          destination.badgeCount > 99
-                              ? '99+'
-                              : '${destination.badgeCount}',
-                          color: AppColors.white,
-                          fontSize: 9.sp,
-                          fontWeight: FontWeight.w800,
-                          maxLines: 1,
+              AnimatedContainer(
+                duration: SokounMotion.duration(context),
+                curve: SokounMotion.curve,
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? AppColors.mintLight
+                      : AppColors.transparent,
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    _buildIcon(color),
+                    if (destination.badgeCount > 0)
+                      PositionedDirectional(
+                        top: -7.r,
+                        end: -11.r,
+                        child: Container(
+                          constraints: BoxConstraints(minWidth: 17.r),
+                          height: 17.r,
+                          alignment: Alignment.center,
+                          padding: EdgeInsets.symmetric(horizontal: 4.w),
+                          decoration: BoxDecoration(
+                            color: AppColors.red,
+                            borderRadius: BorderRadius.circular(999.r),
+                            border: Border.all(color: AppColors.white),
+                          ),
+                          child: AppText(
+                            destination.badgeCount > 99
+                                ? '99+'
+                                : '${destination.badgeCount}',
+                            color: AppColors.white,
+                            fontSize: 9.sp,
+                            fontWeight: FontWeight.w800,
+                            maxLines: 1,
+                          ),
                         ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
               3.szH,
               AppText(
@@ -141,7 +153,7 @@ class _HomeBottomNavigationItem extends StatelessWidget {
                 color: color,
                 fontSize: 11.sp,
                 fontWeight: FontWeight.w600,
-                maxLines: 1,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
               ),

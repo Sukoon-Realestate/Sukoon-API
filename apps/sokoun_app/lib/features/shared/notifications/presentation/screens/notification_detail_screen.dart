@@ -1,3 +1,4 @@
+import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -53,7 +54,8 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
+      showBackButton: false,
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: Column(

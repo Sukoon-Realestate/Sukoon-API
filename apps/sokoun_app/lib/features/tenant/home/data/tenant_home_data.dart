@@ -1,0 +1,72 @@
+import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
+import 'package:melos_core/core/network/api_endpoints.dart';
+import 'package:pagify/helpers/data_and_pagination_data.dart';
+import 'package:pagify/helpers/errors.dart';
+import 'models/home_page_model.dart';
+import 'package:melos_core/core/local_db/objectbox_cache_service.dart';
+
+/// Endpoint paging metadata only; AppPagify owns collection and scroll state.
+class TenantHomeData {
+  static const String cacheKey = 'tenant_home_properties';
+
+  HomePageModel? readCachedPage() {
+    final json = ObjectBoxCacheService.read('tenant_home_page');
+    if (json == null) return null;
+    return HomePageModel.fromJson(json);
+  }
+
+  final Map<int, int> _serverPages = {1: 1};
+  int _generation = 0;
+
+  Future<(HomePageModel, PaginationData)> getPage({required int page}) async {
+    if (page == 1) {
+      _generation++;
+      _serverPages
+        ..clear()
+        ..[1] = 1;
+    }
+    final int generation = _generation;
+    final int serverPage = _serverPages[page] ?? page;
+    final result = await injector<BaseCrudUseCase>().call(
+      CrudBaseParmas<HomePageModel>(
+        api: ApiConstants.homePage,
+        httpRequestType: HttpRequestType.get,
+        queryParameters: {'page': serverPage},
+        cacheKey: serverPage == 1
+            ? 'tenant_home_page'
+            : 'tenant_home_page_$serverPage',
+        mapper: (json) => HomePageModel.fromJson(json),
+        fromCacheJson: HomePageModel.fromJson,
+        toJson: (model) => model.toJson(),
+      ),
+    );
+    final HomePageModel model = result.when(
+      (response) => response.data,
+      (failure) => throw PagifyApiRequestException(
+        failure.message,
+        pagifyFailure: RequestFailureData(
+          statusCode: null,
+          statusMsg: failure.message,
+        ),
+      ),
+    );
+    final String? next = model.next;
+    final int? nextPage = next == null
+        ? null
+        : int.tryParse(Uri.tryParse(next)?.queryParameters['page'] ?? '');
+    final bool hasMore =
+        next?.trim().isNotEmpty == true &&
+        (nextPage == null || nextPage > serverPage);
+    if (generation == _generation && hasMore) {
+      _serverPages[page + 1] = nextPage ?? serverPage + 1;
+    }
+    return (
+      model,
+      PaginationData(
+        perPage: model.results.isEmpty ? 20 : model.results.length,
+        totalPages: hasMore ? page + 1 : page,
+      ),
+    );
+  }
+}

@@ -30,7 +30,7 @@ class TenantPropertyOwnershipVerifiedBanner extends StatelessWidget {
               LocaleKeys.tenantPropertyDetailsOwnershipVerified,
               color: AppColors.green,
               fontSize: 13.sp,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
             ),
           ),
         ],

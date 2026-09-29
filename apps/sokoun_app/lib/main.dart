@@ -39,10 +39,15 @@ void main() async {
   await fetchBaseUrl();
   await NsfwDetectorHelper.init();
   setUpServiceLocator();
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  final display =
+      WidgetsBinding.instance.platformDispatcher.views.first.display;
+  final bool isTablet =
+      display.size.shortestSide / display.devicePixelRatio >= 600;
+  await SystemChrome.setPreferredOrientations(
+    isTablet
+        ? []
+        : [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
+  );
   if (kDebugMode) {
     ErrorWidget.builder = (FlutterErrorDetails details) {
       if (FireStoreService.isInitialized && kDebugMode) {

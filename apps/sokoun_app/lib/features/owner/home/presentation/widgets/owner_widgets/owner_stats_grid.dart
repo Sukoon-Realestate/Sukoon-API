@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
 
 import 'owner_stat_card.dart';
 
@@ -29,54 +29,38 @@ class OwnerStatsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return SokounAdaptiveGrid(
+      minimumWidth: 144,
+      maximumColumns: 4,
+      gap: 12,
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: OwnerStatCard(
-                value: '$visitsThisWeek',
-                label: LocaleKeys.ownerDashboardVisitsThisWeek,
-                icon: Icons.calendar_today_outlined,
-                iconColor: AppColors.blue,
-                iconBackgroundColor: AppColors.bluePale,
-              ),
-            ),
-            12.szW,
-            Expanded(
-              child: OwnerStatCard(
-                value: '$activeProperties',
-                label: LocaleKeys.ownerDashboardActiveProperties,
-                icon: Icons.apartment_rounded,
-                iconColor: AppColors.sokoonTeal,
-                iconBackgroundColor: AppColors.mintLight,
-              ),
-            ),
-          ],
+        OwnerStatCard(
+          value: '$pendingRequests',
+          label: LocaleKeys.ownerDashboardPendingRequests,
+          icon: Icons.schedule_rounded,
+          iconColor: AppColors.amber,
+          iconBackgroundColor: AppColors.orangePale,
         ),
-        12.szH,
-        Row(
-          children: [
-            Expanded(
-              child: OwnerStatCard(
-                value: _overallRatingLabel,
-                label: LocaleKeys.ownerDashboardOverallRating,
-                icon: Icons.star_outline_rounded,
-                iconColor: AppColors.gold,
-                iconBackgroundColor: AppColors.goldPale,
-              ),
-            ),
-            12.szW,
-            Expanded(
-              child: OwnerStatCard(
-                value: '$pendingRequests',
-                label: LocaleKeys.ownerDashboardPendingRequests,
-                icon: Icons.schedule_rounded,
-                iconColor: AppColors.amber,
-                iconBackgroundColor: AppColors.orangePale,
-              ),
-            ),
-          ],
+        OwnerStatCard(
+          value: '$visitsThisWeek',
+          label: LocaleKeys.ownerDashboardVisitsThisWeek,
+          icon: Icons.calendar_today_outlined,
+          iconColor: AppColors.blue,
+          iconBackgroundColor: AppColors.bluePale,
+        ),
+        OwnerStatCard(
+          value: '$activeProperties',
+          label: LocaleKeys.ownerDashboardActiveProperties,
+          icon: Icons.apartment_rounded,
+          iconColor: AppColors.sokoonTeal,
+          iconBackgroundColor: AppColors.mintLight,
+        ),
+        OwnerStatCard(
+          value: _overallRatingLabel,
+          label: LocaleKeys.ownerDashboardOverallRating,
+          icon: Icons.star_outline_rounded,
+          iconColor: AppColors.gold,
+          iconBackgroundColor: AppColors.goldPale,
         ),
       ],
     );

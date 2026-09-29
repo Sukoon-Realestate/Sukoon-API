@@ -25,7 +25,7 @@ class OwnerAnalyticsBarChart extends StatelessWidget {
             LocaleKeys.ownerAnalyticsViewsLastFourteenDays,
             color: AppColors.sokoonNavy,
             fontSize: 15.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
           ),
           18.szH,
           SizedBox(
@@ -36,7 +36,10 @@ class OwnerAnalyticsBarChart extends StatelessWidget {
                 for (int index = 0; index < values.length; index++) ...[
                   Expanded(
                     child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 250),
+                      duration: SokounMotion.duration(
+                        context,
+                        milliseconds: 250,
+                      ),
                       height: (values[index] / maximum) * 112.h,
                       decoration: BoxDecoration(
                         color: index == values.length - 1

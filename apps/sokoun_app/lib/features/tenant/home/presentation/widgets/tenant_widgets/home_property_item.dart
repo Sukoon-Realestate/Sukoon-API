@@ -1,0 +1,43 @@
+import 'package:flutter/material.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:melos_core/core/extensions/string_extension.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/home_page_model.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/screens/property_details_screen.dart';
+import 'tenant_property_card.dart';
+
+class HomePropertyItem extends StatelessWidget {
+  const HomePropertyItem({super.key, required this.property});
+  final HomePropertyModel property;
+
+  @override
+  Widget build(BuildContext context) {
+    final double price =
+        double.tryParse(property.price.replaceAll(',', '')) ?? 0;
+    final String period = switch (property.pricePeriod) {
+      'daily' => LocaleKeys.tenantFilterDaily,
+      'weekly' => LocaleKeys.tenantFilterWeekly,
+      'yearly' => LocaleKeys.tenantFilterYearly,
+      _ => LocaleKeys.tenantFilterMonthly,
+    };
+    return Semantics(
+      button: true,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: property.id.isEmpty
+            ? null
+            : () => Go.to(PropertyDetailsScreen(propertyId: property.id)),
+        child: TenantPropertyCard(
+          title: property.title,
+          rating: property.rate.toStringAsFixed(1),
+          area:
+              '${property.area} ${LocaleKeys.tenantSearchResultsSquareMeters}',
+          price:
+              '${price.toCurrency()} ${LocaleKeys.favoritesCurrencyShort}/$period',
+          icon: Icons.apartment_outlined,
+          imageUrl: property.mainImage,
+        ),
+      ),
+    );
+  }
+}

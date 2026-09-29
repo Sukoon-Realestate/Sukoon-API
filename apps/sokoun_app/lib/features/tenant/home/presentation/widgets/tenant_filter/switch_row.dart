@@ -30,7 +30,7 @@ class SwitchRow extends StatelessWidget {
                 title,
                 color: AppColors.sokoonNavy,
                 fontSize: 13.sp,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w700,
               ),
               3.szH,
               AppText(

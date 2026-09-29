@@ -1,3 +1,5 @@
+import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
+import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -247,7 +249,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
+      showBackButton: false,
+      contentWidth: SokounContentWidth.wide,
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: FavoritesContentView(

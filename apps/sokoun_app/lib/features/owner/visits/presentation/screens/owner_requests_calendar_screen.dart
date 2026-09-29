@@ -96,7 +96,9 @@ class _OwnerRequestsCalendarScreenState
     final bool canManageAvailability =
         calendar.firstPropertyId.isNotEmpty ||
         widget.ownerPropertyId.trim().isNotEmpty;
-    return Scaffold(
+    return AppScaffold(
+      showBackButton: false,
+      contentWidth: SokounContentWidth.wide,
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: Column(
@@ -154,7 +156,7 @@ class _OwnerCalendarHeader extends StatelessWidget {
               LocaleKeys.ownerCalendarTitle,
               color: AppColors.sokoonNavy,
               fontSize: 18.sp,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
             ),
           ),
           AppText(

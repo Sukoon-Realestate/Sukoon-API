@@ -42,7 +42,7 @@ class OwnerAnalyticsMetricCard extends StatelessWidget {
             value,
             color: AppColors.sokoonNavy,
             fontSize: 21.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w800,
           ),
           2.szH,
           AppText(

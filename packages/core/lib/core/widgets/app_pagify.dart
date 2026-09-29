@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
-import 'package:melos_core/generated/assets.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:pagify/helpers/errors.dart';
 import 'package:pagify/helpers/status_stream.dart';
@@ -15,10 +13,17 @@ import 'app_text.dart';
 import 'custom_loading.dart';
 import 'exeption_view.dart';
 
-enum Ranking { listView, gridView }
+enum Ranking { listView, gridView, adaptiveGrid }
 
 class AppPagify<T> extends StatefulWidget {
   final ScrollPhysics? physics;
+
+  /// Natural-height rows for cards that must accommodate larger text.
+  final double minimumItemWidth;
+  final int maximumColumns;
+  final double gridSpacing;
+  final int crossAxisCount;
+  final double childAspectRatio;
   final Ranking rankingType;
   final ScrollController? scrollController;
   final Future<(List<T>, PaginationData)> Function(
@@ -64,6 +69,11 @@ class AppPagify<T> extends StatefulWidget {
     required this.pagifyController,
     this.disposeController = true,
     this.physics,
+    this.minimumItemWidth = 320,
+    this.maximumColumns = 3,
+    this.gridSpacing = 16,
+    this.crossAxisCount = 2,
+    this.childAspectRatio = 1,
     this.scrollController,
     this.rankingType = Ranking.listView,
     this.onUpdateStatus,
@@ -91,14 +101,60 @@ class AppPagify<T> extends StatefulWidget {
 
 class _AppPagifyState<T> extends State<AppPagify<T>> {
   final int _sessionGeneration = AccountSession.generation;
+  int _requestGeneration = 0;
+
+  Future<(List<T>, PaginationData)> _loadPage(BuildContext context, int page) {
+    if (page == 1) _requestGeneration++;
+    final int generation = _requestGeneration;
+    final completer = Completer<(List<T>, PaginationData)>();
+    bool active() =>
+        mounted &&
+        generation == _requestGeneration &&
+        _sessionGeneration == AccountSession.generation;
+    // Pagify 0.3 does not cancel requests on disposal or refresh. Abandoned
+    // futures intentionally stop delivering results (as a cancelled operation
+    // does), so its disposed state can never receive a late success or error.
+    Future<void> request() async {
+      try {
+        final result = await widget.asyncCall(context, page);
+        if (active()) completer.complete(result);
+      } catch (error, stack) {
+        if (active()) {
+          completer.completeError(
+            error is Exception ? error : Exception(error.toString()),
+            stack,
+          );
+        }
+      }
+    }
+
+    unawaited(request());
+    return completer.future;
+  }
+
   @override
   void dispose() {
+    _requestGeneration++;
     if (widget.disposeController) widget.pagifyController.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) => _buildCollection(context, constraints),
+  );
+
+  Widget _buildCollection(BuildContext context, BoxConstraints constraints) {
+    final double scale = (MediaQuery.textScalerOf(context).scale(14) / 14)
+        .clamp(1, 2);
+    final int columns =
+        widget.rankingType == Ranking.adaptiveGrid &&
+            constraints.hasBoundedWidth
+        ? ((constraints.maxWidth + widget.gridSpacing) /
+                  (widget.minimumItemWidth * scale + widget.gridSpacing))
+              .floor()
+              .clamp(1, widget.maximumColumns)
+        : 1;
     final hasCacheConfig =
         widget.cacheKey != null &&
         widget.cacheToJson != null &&
@@ -119,13 +175,15 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
       return (cached['items'] as List?)?.cast<Map<String, dynamic>>();
     }
 
-    if (widget.rankingType == Ranking.listView) {
+    if (widget.rankingType != Ranking.gridView) {
       return Pagify<(List<T>, PaginationData), T>.listView(
         key: widget.key,
         isReverse: widget.isReverse,
         physics: widget.physics,
         cacheExtent: widget.cacheExtent,
-        itemExtent: widget.itemExtent,
+        itemExtent: widget.rankingType == Ranking.adaptiveGrid
+            ? null
+            : widget.itemExtent,
         noConnectionText: widget.noConnectionText,
         onLoading: widget.onLoading,
         onError:
@@ -136,6 +194,8 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
               msg: error.msg,
             ),
         onSuccess: widget.onSuccess,
+        listenToNetworkConnectivityChanges:
+            widget.onConnectivityChanged != null,
         onConnectivityChanged: widget.onConnectivityChanged,
         onUpdateStatus: widget.onUpdateStatus,
         shrinkWrap: widget.shrinkWrap,
@@ -150,7 +210,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
               ),
             ),
         controller: widget.pagifyController,
-        asyncCall: widget.asyncCall,
+        asyncCall: _loadPage,
         loadingBuilder:
             widget.loadingBuilder ?? CustomLoading.showLoadingView(),
         mapper: (data) => PagifyData(
@@ -180,30 +240,71 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
         cacheFromJson: hasCacheConfig ? widget.cacheFromJson : null,
         onSaveCache: hasCacheConfig ? onSaveCache : null,
         onReadCache: hasCacheConfig ? onReadCache : null,
-        itemBuilder: widget.itemBuilder,
+        itemBuilder: widget.rankingType != Ranking.adaptiveGrid
+            ? widget.itemBuilder
+            : (context, data, index, item) {
+                if (index % columns != 0) return const SizedBox.shrink();
+                return Padding(
+                  padding: EdgeInsets.only(bottom: widget.gridSpacing),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      for (int column = 0; column < columns; column++) ...[
+                        if (column > 0) SizedBox(width: widget.gridSpacing),
+                        Expanded(
+                          child: index + column < data.length
+                              ? widget.itemBuilder(
+                                  context,
+                                  data,
+                                  index + column,
+                                  data[index + column],
+                                )
+                              : const SizedBox.shrink(),
+                        ),
+                      ],
+                    ],
+                  ),
+                );
+              },
       );
     } else {
       return Pagify<(List<T>, PaginationData), T>.gridView(
         key: widget.key,
-        onUpdateStatus: widget.onUpdateStatus,
-        controller: widget.pagifyController,
-        asyncCall: widget.asyncCall,
+        isReverse: widget.isReverse,
         physics: widget.physics,
-        errorBuilder: (e) => Column(
-          children: [
-            Lottie.asset(Assets.lottie.notFound2.path),
-            AppText(LocaleKeys.notFound),
-          ],
-        ),
+        cacheExtent: widget.cacheExtent,
+        noConnectionText: widget.noConnectionText,
+        onLoading: widget.onLoading,
+        onError:
+            widget.onError ??
+            (context, page, error) => Messages.showToast(
+              status: BaseStatus.error,
+              title: LocaleKeys.operationFaild,
+              msg: error.msg,
+            ),
+        onSuccess: widget.onSuccess,
+        listenToNetworkConnectivityChanges:
+            widget.onConnectivityChanged != null,
+        onConnectivityChanged: widget.onConnectivityChanged,
+        onUpdateStatus: widget.onUpdateStatus,
+        crossAxisCount: widget.crossAxisCount,
+        childAspectRatio: widget.childAspectRatio,
+        mainAxisSpacing: widget.gridSpacing,
+        crossAxisSpacing: widget.gridSpacing,
         emptyListView:
             widget.emptyListView ??
-            Column(
-              children: [
-                Lottie.asset(Assets.lottie.notFound2.path),
-                AppText(LocaleKeys.notFound),
-              ],
+            Center(
+              child: Column(
+                children: [
+                  // Lottie.asset(Assets.lottie.notFound2.path),
+                  AppText(LocaleKeys.notFound),
+                ],
+              ),
             ),
-        loadingBuilder: CustomLoading.showLoadingView(),
+        controller: widget.pagifyController,
+        asyncCall: _loadPage,
+        loadingBuilder:
+            widget.loadingBuilder ?? CustomLoading.showLoadingView(),
         mapper: (data) => PagifyData(
           data: data.$1,
           paginationData: PaginationData(
@@ -211,9 +312,21 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
             totalPages: data.$2.totalPages,
           ),
         ),
-        errorMapper: PagifyErrorMapper(
-          errorWhenDio: (error) => error.response?.data['message'],
-        ),
+        errorBuilder: widget.errorBuilder ?? (error) => const ExceptionView(),
+        errorMapper:
+            widget.errorMapper ??
+            PagifyErrorMapper(
+              errorWhenDio: (e) {
+                final String? msg = e.response?.data['message'];
+                return PagifyApiRequestException(
+                  msg ?? 'network error occur',
+                  pagifyFailure: RequestFailureData(
+                    statusCode: e.response?.statusCode,
+                    statusMsg: e.response?.statusMessage,
+                  ),
+                );
+              },
+            ),
         cacheKey: widget.cacheKey,
         cacheToJson: hasCacheConfig ? widget.cacheToJson : null,
         cacheFromJson: hasCacheConfig ? widget.cacheFromJson : null,

@@ -21,7 +21,7 @@ class VisitContactCard extends StatelessWidget {
             LocaleKeys.tenantVisitContactInfo,
             color: AppColors.sokoonNavy,
             fontSize: 14.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
           ),
           10.szH,
           Container(
@@ -51,7 +51,7 @@ class VisitContactCard extends StatelessWidget {
                         ownerPhone,
                         color: AppColors.green,
                         fontSize: 15.sp,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w700,
                       ),
                     ],
                   ),

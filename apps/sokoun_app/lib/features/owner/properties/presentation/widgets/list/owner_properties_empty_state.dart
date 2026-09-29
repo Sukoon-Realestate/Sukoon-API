@@ -28,7 +28,7 @@ class OwnerPropertiesEmptyState extends StatelessWidget {
             LocaleKeys.ownerPropertiesEmptyTitle,
             color: AppColors.sokoonNavy,
             fontSize: 18.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
             textAlign: TextAlign.center,
             maxLines: 2,
           ),

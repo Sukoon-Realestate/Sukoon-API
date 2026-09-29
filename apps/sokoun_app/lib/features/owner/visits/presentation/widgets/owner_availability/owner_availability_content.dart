@@ -36,19 +36,20 @@ class OwnerAvailabilityContent extends StatelessWidget {
             fontWeight: FontWeight.w400,
           ),
           16.szH,
-          SizedBox(
-            height: 60.h,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return OwnerAvailabilityDayChip(
-                  day: days[index],
-                  isSelected: index == selectedDayIndex,
-                  onPressed: () => onDaySelected(index),
-                );
-              },
-              separatorBuilder: (context, index) => 6.szW,
-              itemCount: days.length,
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                for (int index = 0; index < days.length; index++) ...[
+                  if (index > 0) 6.szW,
+                  OwnerAvailabilityDayChip(
+                    day: days[index],
+                    isSelected: selectedDayIndex == index,
+                    onPressed: () => onDaySelected(index),
+                  ),
+                ],
+              ],
             ),
           ),
           18.szH,
@@ -56,12 +57,20 @@ class OwnerAvailabilityContent extends StatelessWidget {
             _ownerAvailabilityDateLabel(context, selectedDay),
             color: AppColors.sokoonNavy,
             fontSize: 14.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
           ),
           12.szH,
           LayoutBuilder(
             builder: (context, constraints) {
-              final double chipWidth = (constraints.maxWidth - 24.w) / 4;
+              final int columns = SokounLayout.columns(
+                context,
+                constraints.maxWidth,
+                minimumWidth: 76,
+                maximum: 6,
+                gap: 8,
+              );
+              final double chipWidth =
+                  (constraints.maxWidth - (columns - 1) * 8) / columns;
               return Wrap(
                 spacing: 8.w,
                 runSpacing: 8.h,
@@ -93,7 +102,7 @@ class OwnerAvailabilityContent extends StatelessWidget {
             borderRadius: 14.r,
             height: 52.h,
             fontSize: 14.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
           ),
         ],
       ),

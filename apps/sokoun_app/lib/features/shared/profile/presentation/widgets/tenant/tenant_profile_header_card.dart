@@ -39,19 +39,18 @@ class TenantProfileHeaderCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    Wrap(
+                      spacing: 8.w,
+                      runSpacing: 4.h,
                       children: [
-                        Flexible(
-                          child: AppText(
-                            userName,
-                            color: AppColors.sokoonNavy,
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w900,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                        AppText(
+                          userName,
+                          color: AppColors.sokoonNavy,
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w700,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        8.szW,
                         ProfileVerifiedBadge(
                           text: user.verificationBadge.isNotEmpty
                               ? user.verificationBadge

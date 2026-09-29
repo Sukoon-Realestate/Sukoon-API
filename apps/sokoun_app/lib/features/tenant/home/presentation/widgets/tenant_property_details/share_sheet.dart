@@ -51,7 +51,7 @@ class TenantPropertyShareSheet extends StatelessWidget {
               LocaleKeys.tenantPropertyDetailsShareTitle,
               color: AppColors.sokoonNavy,
               fontSize: 16.sp,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
               textAlign: TextAlign.start,
             ),
             14.szH,

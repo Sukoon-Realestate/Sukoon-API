@@ -17,6 +17,7 @@ import 'package:sokoun_app/features/shared/notifications/data/notification_devic
 import 'package:sokoun_app/features/shared/chat/data/chat_realtime_service.dart';
 import 'features/splash_screen.dart';
 import 'package:toastification/toastification.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_theme.dart';
 
 class Sokoon extends StatefulWidget {
   const Sokoon({super.key});
@@ -78,6 +79,10 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
       designSize: Size(ScreenSizes.width, ScreenSizes.height),
       minTextAdapt: true,
       splitScreenMode: true,
+      // Layouts adapt to their constraints; controls retain logical dimensions.
+      enableScaleWH: () => false,
+      enableScaleText: () => false,
+      fontSizeResolver: (size, _) => size.toDouble(),
       builder: (ctx, child) {
         return BlocProvider(
           create: (context) => injector<UserCubit>(),
@@ -85,7 +90,7 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
               title: ConstantManager.projectName,
-              theme: ThemeData(fontFamily: ConstantManager.fontFamily),
+              theme: SokounTheme.light,
               localizationsDelegates: context.localizationDelegates,
               supportedLocales: context.supportedLocales,
               locale: context.locale,

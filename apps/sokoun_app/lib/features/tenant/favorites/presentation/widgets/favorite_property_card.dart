@@ -33,7 +33,7 @@ class FavoritePropertyCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: AppColors.white,
-          borderRadius: BorderRadius.circular(24.r),
+          borderRadius: BorderRadius.circular(16.r),
           border: Border.all(color: AppColors.sokoonBorder),
         ),
         clipBehavior: Clip.antiAlias,
@@ -51,7 +51,7 @@ class FavoritePropertyCard extends StatelessWidget {
                   item.title,
                   color: AppColors.sokoonNavy,
                   fontSize: 14.sp,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w700,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -70,7 +70,7 @@ class FavoritePropertyCard extends StatelessWidget {
                         '${item.price} ${LocaleKeys.favoritesCurrencyShort}',
                         color: AppColors.sokoonTeal,
                         fontSize: 14.sp,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w700,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -97,8 +97,8 @@ class _FavoritePropertyImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 128.h,
+    return AspectRatio(
+      aspectRatio: 1.8,
       child: ColoredBox(
         color: AppColors.grayBluePale,
         child: Stack(
@@ -122,8 +122,8 @@ class _FavoritePropertyImage extends StatelessWidget {
                   onTap: onRemove,
                   behavior: HitTestBehavior.opaque,
                   child: Container(
-                    width: 32.r,
-                    height: 32.r,
+                    width: 48.r,
+                    height: 48.r,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       color: AppColors.white.withValues(alpha: .9),

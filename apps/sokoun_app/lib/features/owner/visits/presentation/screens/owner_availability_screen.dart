@@ -115,7 +115,8 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
   Widget build(BuildContext context) {
     return BlocProvider<OwnerAvailabilityCubit>.value(
       value: _availabilityCubit,
-      child: Scaffold(
+      child: AppScaffold(
+        showBackButton: false,
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
           child: Column(

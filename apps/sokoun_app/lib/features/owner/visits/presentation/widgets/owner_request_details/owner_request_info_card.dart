@@ -58,7 +58,7 @@ class OwnerRequestInfoCard extends StatelessWidget {
                             request.tenant.name,
                             color: AppColors.sokoonNavy,
                             fontSize: 16.sp,
-                            fontWeight: FontWeight.w900,
+                            fontWeight: FontWeight.w700,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),

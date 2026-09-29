@@ -80,7 +80,10 @@ class _FilterChip extends StatelessWidget {
                   if (count > 0) ...[
                     6.szW,
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 6.w,
+                        vertical: 1.h,
+                      ),
                       decoration: BoxDecoration(
                         color: isSelected
                             ? AppColors.whiteAlpha40
@@ -89,9 +92,11 @@ class _FilterChip extends StatelessWidget {
                       ),
                       child: AppText(
                         '$count',
-                        color: isSelected ? AppColors.white : AppColors.sokoonGray,
+                        color: isSelected
+                            ? AppColors.white
+                            : AppColors.sokoonGray,
                         fontSize: 10.sp,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ],

@@ -37,7 +37,7 @@ class OwnerAcceptRequestSheet extends StatelessWidget {
             borderRadius: BorderRadius.circular(14.r),
             height: 52.h,
             fontSize: 15.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
           ),
           12.szH,
           DefaultButton(
@@ -179,7 +179,7 @@ class _OwnerDecisionSheetHeader extends StatelessWidget {
                 title,
                 color: AppColors.sokoonNavy,
                 fontSize: 16.sp,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w700,
               ),
               3.szH,
               AppText(

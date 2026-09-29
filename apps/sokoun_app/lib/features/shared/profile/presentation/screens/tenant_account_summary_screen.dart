@@ -30,7 +30,8 @@ class _TenantAccountSummaryScreenState
   Widget build(BuildContext context) {
     return BlocProvider<TenantAccountSummaryCubit>.value(
       value: _summaryCubit,
-      child: Scaffold(
+      child: AppScaffold(
+        showBackButton: false,
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
           child: Column(

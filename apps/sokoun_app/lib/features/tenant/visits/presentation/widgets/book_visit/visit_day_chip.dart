@@ -21,8 +21,10 @@ class VisitDayChip extends StatelessWidget {
         onTap: onPressed,
         behavior: HitTestBehavior.opaque,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 180),
-          width: 66.w,
+          duration: SokounMotion.duration(context, milliseconds: 180),
+          width:
+              76.w *
+              (MediaQuery.textScalerOf(context).scale(14) / 14).clamp(1, 2),
           padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
           decoration: BoxDecoration(
             color: isSelected ? AppColors.sokoonTeal : AppColors.white,
@@ -32,6 +34,7 @@ class VisitDayChip extends StatelessWidget {
             ),
           ),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               AppText(
@@ -47,7 +50,7 @@ class VisitDayChip extends StatelessWidget {
                 day.day,
                 color: isSelected ? AppColors.white : AppColors.sokoonNavy,
                 fontSize: 19.sp,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w700,
               ),
             ],
           ),

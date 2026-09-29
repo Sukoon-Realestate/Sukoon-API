@@ -182,7 +182,7 @@ class _ReportHeader extends StatelessWidget {
                 LocaleKeys.chatReportProblemTitle,
                 color: AppColors.sokoonNavy,
                 fontSize: 18.sp,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w700,
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

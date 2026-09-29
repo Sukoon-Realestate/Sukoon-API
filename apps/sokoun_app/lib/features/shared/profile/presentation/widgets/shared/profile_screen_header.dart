@@ -40,7 +40,7 @@ class ProfileScreenHeader extends StatelessWidget {
               title,
               color: AppColors.sokoonNavy,
               fontSize: showBackButton ? 17.sp : 21.sp,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
               textAlign: showBackButton ? TextAlign.center : TextAlign.start,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

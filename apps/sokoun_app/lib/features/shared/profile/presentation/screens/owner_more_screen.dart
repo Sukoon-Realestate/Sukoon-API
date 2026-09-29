@@ -47,7 +47,8 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
   Widget build(BuildContext context) {
     // LocaleKeys getters resolve strings without subscribing this screen.
     Localizations.localeOf(context);
-    return Scaffold(
+    return AppScaffold(
+      showBackButton: false,
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: ListView(
@@ -84,7 +85,7 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
                                       userName,
                                       color: AppColors.sokoonNavy,
                                       fontSize: 16.sp,
-                                      fontWeight: FontWeight.w900,
+                                      fontWeight: FontWeight.w700,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),

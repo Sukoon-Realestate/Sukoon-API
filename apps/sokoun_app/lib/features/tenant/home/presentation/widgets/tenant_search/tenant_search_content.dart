@@ -62,7 +62,7 @@ class TenantSearchContentView extends StatelessWidget {
             LocaleKeys.tenantSearchTitle,
             color: AppColors.sokoonNavy,
             fontSize: 20.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
             textAlign: TextAlign.start,
           ),
           14.szH,

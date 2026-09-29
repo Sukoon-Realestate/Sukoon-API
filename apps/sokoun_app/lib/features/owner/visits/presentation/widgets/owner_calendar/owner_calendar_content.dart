@@ -95,7 +95,7 @@ class OwnerCalendarContent extends StatelessWidget {
             borderRadius: BorderRadius.circular(14.r),
             height: 50.h,
             fontSize: 14.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
           ),
         ],
       ),

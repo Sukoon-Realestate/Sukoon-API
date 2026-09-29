@@ -110,7 +110,7 @@ class ProfileAvatar extends StatelessWidget {
         _initial,
         color: AppColors.white,
         fontSize: (size * .36).sp,
-        fontWeight: FontWeight.w900,
+        fontWeight: FontWeight.w700,
       );
     }
     return Icon(

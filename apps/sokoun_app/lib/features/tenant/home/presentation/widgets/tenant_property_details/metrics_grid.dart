@@ -45,7 +45,7 @@ class _MetricCard extends StatelessWidget {
             metric.value,
             color: AppColors.sokoonNavy,
             fontSize: 14.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w800,
           ),
           3.szH,
           AppText(

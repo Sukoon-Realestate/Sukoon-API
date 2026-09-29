@@ -39,7 +39,7 @@ class TenantPropertyDetailsContentView extends StatelessWidget {
           property.title,
           color: AppColors.sokoonNavy,
           fontSize: 19.sp,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
           textAlign: TextAlign.start,
           maxLines: 2,
         ),

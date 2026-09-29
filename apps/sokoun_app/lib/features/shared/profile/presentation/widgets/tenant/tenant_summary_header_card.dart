@@ -50,7 +50,7 @@ class TenantSummaryHeaderCard extends StatelessWidget {
                       userName,
                       color: AppColors.white,
                       fontSize: 18.sp,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w700,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

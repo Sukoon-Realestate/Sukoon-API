@@ -1,3 +1,4 @@
+import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -33,7 +34,7 @@ class RoleOptionCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(20.r),
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 180),
+          duration: SokounMotion.duration(context, milliseconds: 180),
           width: double.infinity,
           padding: EdgeInsets.symmetric(horizontal: 22.w, vertical: 24.h),
           decoration: BoxDecoration(
@@ -72,7 +73,7 @@ class RoleOptionCard extends StatelessWidget {
                       title,
                       color: AppColors.sokoonNavy,
                       fontSize: 18.sp,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w700,
                       textAlign: TextAlign.start,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

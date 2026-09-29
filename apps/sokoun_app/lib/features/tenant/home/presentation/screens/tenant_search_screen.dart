@@ -1,3 +1,4 @@
+import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -210,7 +211,8 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
               })
             >(
               valueListenable: _viewState,
-              builder: (context, viewState, _) => Scaffold(
+              builder: (context, viewState, _) => AppScaffold(
+                showBackButton: false,
                 backgroundColor: AppColors.scaffoldBackground,
                 body: SafeArea(
                   child: TenantSearchContentView(

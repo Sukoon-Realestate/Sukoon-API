@@ -71,7 +71,7 @@ class AddPropertyDropdownField extends StatelessWidget {
                       item,
                       color: AppColors.sokoonTeal,
                       fontSize: 15.sp,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w700,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ).endWidget,

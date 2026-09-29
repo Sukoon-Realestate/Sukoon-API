@@ -14,7 +14,9 @@ class OwnerPropertyAnalyticsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final OwnerPropertyAnalyticsContent content = analytics;
 
-    return Scaffold(
+    return AppScaffold(
+      showBackButton: false,
+      contentWidth: SokounContentWidth.wide,
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: Column(

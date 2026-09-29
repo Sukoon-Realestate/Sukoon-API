@@ -126,7 +126,8 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
           final bool isUpdating = state.isLoading;
           return PopScope(
             canPop: !isUpdating,
-            child: Scaffold(
+            child: AppScaffold(
+              showBackButton: false,
               backgroundColor: AppColors.scaffoldBackground,
               body: SafeArea(
                 child: Column(

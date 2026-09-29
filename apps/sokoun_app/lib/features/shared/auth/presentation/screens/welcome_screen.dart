@@ -1,3 +1,4 @@
+import 'package:melos_core/core/widgets/app_logo_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -34,18 +35,14 @@ class WelcomeScreen extends StatelessWidget {
               color: content.headerIconBackgroundColor,
               borderRadius: BorderRadius.circular(16.r),
             ),
-            child: Icon(
-              content.headerIcon,
-              color: content.headerIconColor,
-              size: 30.r,
-            ),
+            child: AppLogoWidget(color: content.headerIconColor, size: 36.r),
           ).centerWidget,
           18.szH,
           AppText(
             content.title,
             color: AppColors.sokoonNavy,
             fontSize: 24.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
             textAlign: TextAlign.center,
           ),
           8.szH,
@@ -75,9 +72,8 @@ class WelcomeScreen extends StatelessWidget {
           TextButton(
             onPressed: () => Go.offAll(const LoginScreen()),
             style: TextButton.styleFrom(
-              minimumSize: Size.zero,
+              minimumSize: const Size(48, 48),
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
             child: AppText(
               content.loginButtonTitle,

@@ -7,7 +7,8 @@ class VisitDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
+      showBackButton: false,
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: Column(

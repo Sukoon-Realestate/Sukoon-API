@@ -33,7 +33,7 @@ class OwnerPendingRequestsEmptyState extends StatelessWidget {
             LocaleKeys.ownerDashboardNoPendingTitle,
             color: AppColors.sokoonNavy,
             fontSize: 15.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
             textAlign: TextAlign.center,
             maxLines: 2,
           ),

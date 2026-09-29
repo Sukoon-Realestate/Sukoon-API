@@ -19,7 +19,7 @@ class HomeSectionHeader extends StatelessWidget {
             LocaleKeys.tenantHomeSuggestedForYou,
             color: AppColors.sokoonNavy,
             fontSize: 15.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
             textAlign: TextAlign.start,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

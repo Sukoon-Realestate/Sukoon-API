@@ -33,7 +33,7 @@ class OwnerRejectRequestSheet extends StatelessWidget {
             borderRadius: BorderRadius.circular(14.r),
             height: 52.h,
             fontSize: 15.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
           ),
         ],
       ),

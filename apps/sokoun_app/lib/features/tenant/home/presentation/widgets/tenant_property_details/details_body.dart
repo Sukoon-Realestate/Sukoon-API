@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
 
 import 'bottom_actions.dart';
 import 'details_content.dart';
@@ -27,12 +28,38 @@ class TenantPropertyDetailsBody extends StatelessWidget {
       children: [
         Expanded(
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                TenantPropertyHeroGallery(property: property),
-                TenantPropertyDetailsContentView(property: property),
-              ],
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final bool wide =
+                    constraints.maxWidth >= SokounLayout.detailBreakpoint &&
+                    MediaQuery.textScalerOf(context).scale(14) <= 21;
+                final Widget gallery = TenantPropertyHeroGallery(
+                  property: property,
+                );
+                final Widget details = TenantPropertyDetailsContentView(
+                  property: property,
+                );
+                return wide
+                    ? Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: gallery,
+                              ),
+                            ),
+                          ),
+                          Expanded(child: details),
+                        ],
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [gallery, details],
+                      );
+              },
             ),
           ),
         ),

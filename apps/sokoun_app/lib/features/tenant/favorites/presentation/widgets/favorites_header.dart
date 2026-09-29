@@ -33,7 +33,7 @@ class FavoritesHeader extends StatelessWidget {
                 LocaleKeys.favoritesTitle,
                 color: AppColors.sokoonNavy,
                 fontSize: 20.sp,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w700,
                 textAlign: TextAlign.start,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

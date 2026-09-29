@@ -1,3 +1,5 @@
+import 'package:sokoun_app/shared_widgets/sokoun_action_footer.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -51,7 +53,8 @@ class AddPropertyStepShell extends StatelessWidget {
                 children: [
                   for (int index = 0; index < segmentCount; index++) ...[
                     Expanded(
-                      child: Container(
+                      child: AnimatedContainer(
+                        duration: SokounMotion.duration(context),
                         height: 4.h,
                         decoration: BoxDecoration(
                           color: index < activeSegments
@@ -93,12 +96,7 @@ class AddPropertyStepShell extends StatelessWidget {
             ),
           ),
         ),
-        Container(
-          padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 16.h),
-          decoration: const BoxDecoration(
-            color: AppColors.white,
-            border: Border(top: BorderSide(color: AppColors.grayPale)),
-          ),
+        SokounActionFooter(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -131,7 +129,7 @@ class _TopBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 52.h,
+      constraints: BoxConstraints(minHeight: 64.h),
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       decoration: const BoxDecoration(
         color: AppColors.white,
@@ -143,8 +141,8 @@ class _TopBar extends StatelessWidget {
             onTap: onBack,
             behavior: HitTestBehavior.opaque,
             child: Container(
-              width: 36.r,
-              height: 36.r,
+              width: 48.r,
+              height: 48.r,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: AppColors.grayBackground,
@@ -163,14 +161,14 @@ class _TopBar extends StatelessWidget {
               title,
               color: AppColors.sokoonNavy,
               fontSize: 16.sp,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
           ),
           8.szW,
-          SizedBox(width: 36.r),
+          SizedBox(width: 48.r),
         ],
       ),
     );

@@ -41,19 +41,20 @@ class BookVisitForm extends StatelessWidget {
               fontSize: 12.sp,
             )
           else
-            SizedBox(
-              height: 74.h,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return VisitDayChip(
-                    day: days[index],
-                    isSelected: selectedDayIndex == index,
-                    onPressed: () => onDaySelected(index),
-                  );
-                },
-                separatorBuilder: (context, index) => 8.szW,
-                itemCount: days.length,
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  for (int index = 0; index < days.length; index++) ...[
+                    if (index > 0) 8.szW,
+                    VisitDayChip(
+                      day: days[index],
+                      isSelected: selectedDayIndex == index,
+                      onPressed: () => onDaySelected(index),
+                    ),
+                  ],
+                ],
               ),
             ),
           20.szH,
@@ -67,7 +68,7 @@ class BookVisitForm extends StatelessWidget {
           _BookVisitSectionTitle(LocaleKeys.tenantVisitNoteLabel),
           10.szH,
           Container(
-            height: 80.h,
+            constraints: BoxConstraints(minHeight: 80.h),
             padding: EdgeInsets.symmetric(horizontal: 14.w),
             decoration: BoxDecoration(
               color: AppColors.white,
@@ -110,7 +111,7 @@ class BookVisitForm extends StatelessWidget {
                 borderRadius: 14.r,
                 height: 50.h,
                 fontSize: 15.sp,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),
@@ -131,7 +132,7 @@ class _BookVisitSectionTitle extends StatelessWidget {
       title,
       color: AppColors.sokoonNavy,
       fontSize: 14.sp,
-      fontWeight: FontWeight.w900,
+      fontWeight: FontWeight.w700,
       maxLines: 1,
     );
   }

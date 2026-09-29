@@ -23,7 +23,7 @@ class OwnerStatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 118.h,
+      constraints: BoxConstraints(minHeight: 148.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -42,20 +42,20 @@ class OwnerStatCard extends StatelessWidget {
             ),
             child: Icon(icon, color: iconColor, size: 18.r),
           ),
-          const Spacer(),
+          14.szH,
           AppText(
             value,
             color: AppColors.sokoonNavy,
-            fontSize: 20.sp,
-            fontWeight: FontWeight.w900,
+            fontSize: 24.sp,
+            fontWeight: FontWeight.w800,
           ),
           2.szH,
           AppText(
             label,
             color: AppColors.sokoonGray,
-            fontSize: 12.sp,
+            fontSize: 13.sp,
             fontWeight: FontWeight.w400,
-            maxLines: 1,
+            maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
         ],

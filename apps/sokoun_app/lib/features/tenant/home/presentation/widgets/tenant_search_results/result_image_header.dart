@@ -14,8 +14,8 @@ class ResultImageHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int photoCount = item.imageUrls.length;
-    return SizedBox(
-      height: 140.h,
+    return AspectRatio(
+      aspectRatio: 1.8,
       child: Stack(
         children: [
           Positioned.fill(

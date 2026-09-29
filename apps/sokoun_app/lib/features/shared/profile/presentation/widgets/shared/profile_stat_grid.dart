@@ -50,7 +50,7 @@ class ProfileStatGrid extends StatelessWidget {
                       stat.value,
                       color: valueColor,
                       fontSize: withCards ? 22.sp : 16.sp,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w700,
                       textAlign: TextAlign.center,
                     ),
                     3.szH,

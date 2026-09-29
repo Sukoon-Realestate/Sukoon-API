@@ -1,3 +1,4 @@
+import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -100,7 +101,8 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
             builder: (filterOptions) =>
                 ValueListenableBuilder<PropertySearchFilters>(
                   valueListenable: _filters,
-                  builder: (context, filters, _) => Scaffold(
+                  builder: (context, filters, _) => AppScaffold(
+                    showBackButton: false,
                     backgroundColor: AppColors.scaffoldBackground,
                     body: SafeArea(
                       child: Column(

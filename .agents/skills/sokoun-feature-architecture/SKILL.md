@@ -174,6 +174,22 @@ For example, prefer `const TenantVisitBanner()` with `onTap: () => Go.to(const T
 - Keep a raw `Padding`, `SizedBox`, `Align`, or collection transformation when it needs behavior the extension does not preserve. Do not force an extension when it would change constraints, const behavior, directionality, keys, or readability.
 - Preserve unrelated working-tree changes and avoid editing generated outputs unless the repository's established generator owns the change.
 
+## UI and UX Quality — Required Nine-Point Review
+
+Apply these nine rules to new screens and substantial UI refactors. For a project-wide review, inventory every screen first, group related flows, and record the coverage and verification. Read `design.md` for the current visual system.
+
+1. **Review the UI and its presentation.** Check the actual rendered screen, hierarchy, spacing, alignment, copy, navigation, and loading/empty/error/success states. Inspect both tenant and owner entry points when relevant.
+2. **Make the result professional and product-specific.** Preserve Sokoun's Arabic-first navy, teal, and gold identity. Prefer useful information, authentic property media, restrained surfaces, and clear actions. Avoid generic decorative gradients, unrelated icons, fabricated metrics, and interchangeable template compositions.
+3. **Implement the findings.** Fix the hierarchy, consistency, or usability issues identified in the review; do not stop at an audit when changes are requested. Keep changes within the authorized product scope.
+4. **Use purposeful animation.** Animate selection, progress, expansion, and feedback where motion clarifies a change. Use `SokounMotion.duration` for app-owned transitions, respect reduced motion and accessible navigation, and pause inactive tab tickers. Do not add perpetual decoration.
+5. **Refactor widgets for clarity and smooth interaction.** Extract distinct sections, keep natural heights for text, prevent duplicate submissions, preserve controller/focus lifecycles, and provide clear disabled/loading states. Improve reusable controls before duplicating styling locally.
+6. **Share scaffolds and repeated layout patterns.** Use `AppScaffold` for ordinary screens, `AuthScaffold` for authentication, `SokounContent` for width constraints, and `SokounActionFooter` for repeated fixed actions. Keep full-screen media and the root navigation shell specialized. Extract shared patterns only when their ownership and behavior match.
+7. **Review typography deliberately.** Keep Tajawal unless a specific replacement is justified and verified in both Arabic and English. Use the documented type hierarchy, regular body text, semibold/bold headings, and stronger weight sparingly for metrics. Preserve system text scaling; do not use `FittedBox` to squeeze essential text.
+8. **Adapt to phones, tablets, and iPads.** Use local `LayoutBuilder` constraints rather than multiplying every dimension by viewport width. Apply the shared form/readable/wide caps, navigation breakpoint, natural-height adaptive grids, and two-column details where useful. Check portrait, landscape, split-view widths, RTL/LTR, keyboard insets, and large text; preserve state when the layout changes.
+9. **Improve the surrounding UX where evidence supports it.** Check touch targets, semantic labels, contrast, action priority, scroll behavior, validation, state restoration, real data, and contextual recovery. Preserve API/cache/session behavior. Verify representative screens at 320, 390, 600, 768, 1024, and 1366 logical pixels and text scales 1, 1.3, and 2; add behavior tests for changed interactions and capture rendered comparisons for substantial visual changes. State any device/backend coverage limits honestly.
+
+Use `SokounTheme` for app-wide defaults. Cross-app core control changes should be opt-in through `AppControlTheme` when they would otherwise restyle the landing page. API collections continue to use `AppPagify`; use its natural-height adaptive grid mode for responsive property cards rather than introducing another pagination owner.
+
 ## Completion Check
 
 Before handing off:
@@ -189,3 +205,4 @@ Before handing off:
 9. Audit every added or retained `setState`: focused local rebuilds use a disposed `ValueNotifier`, independently shared state uses a Cubit, and any remaining `setState` deliberately rebuilds a large coherent screen region.
 10. Run Dart formatting, focused analysis, relevant tests, and `git diff --check`.
 11. Summarize the resulting file structure and verification. Mention any intentionally omitted layer or unavailable backend/profile screen instead of adding a misleading placeholder.
+12. Complete the applicable nine-point UI/UX review above and report rendered, responsive, and interaction checks alongside architecture checks.

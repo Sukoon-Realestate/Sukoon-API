@@ -1,3 +1,5 @@
+import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
+import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

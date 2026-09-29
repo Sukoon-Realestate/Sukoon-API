@@ -56,7 +56,7 @@ class KycApprovedScreen extends StatelessWidget {
             LocaleKeys.kycApprovedTitle,
             color: AppColors.sokoonNavy,
             fontSize: 24.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
             textAlign: TextAlign.center,
           ),
           8.szH,

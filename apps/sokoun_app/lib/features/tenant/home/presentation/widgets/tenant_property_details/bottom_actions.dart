@@ -1,10 +1,12 @@
+import 'package:sokoun_app/shared_widgets/sokoun_action_footer.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
+import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
-import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
 import 'package:sokoun_app/features/tenant/visits/imports.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
@@ -61,34 +63,19 @@ class TenantPropertyBottomActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 18.h),
-      decoration: const BoxDecoration(
-        color: AppColors.white,
-        border: Border(top: BorderSide(color: AppColors.grayPale)),
-      ),
+    return SokounActionFooter(
       child: Row(
         children: [
           Expanded(
-            child: GestureDetector(
+            child: DefaultButton(
               onTap: _openBookVisit,
-              behavior: HitTestBehavior.opaque,
-              child: Container(
-                height: 48.h,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: AppColors.sokoonTeal,
-                  borderRadius: BorderRadius.circular(14.r),
-                ),
-                child: AppText(
-                  _isOwnProperty
-                      ? LocaleKeys.workspaceManageProperty
-                      : LocaleKeys.tenantVisitBookTitle,
-                  color: AppColors.white,
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
+              title: _isOwnProperty
+                  ? LocaleKeys.workspaceManageProperty
+                  : LocaleKeys.tenantVisitBookTitle,
+              isFitted: false,
+              minHeight: 48.h,
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+              borderRadius: BorderRadius.circular(12.r),
             ),
           ),
           10.szW,
@@ -127,17 +114,17 @@ class TenantPropertyBottomActions extends StatelessWidget {
               ),
             ),
           10.szW,
-          GestureDetector(
-            onTap: onSavedPressed,
-            behavior: HitTestBehavior.opaque,
-            child: Container(
-              width: 48.r,
-              height: 48.r,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: AppColors.grayBackground,
-                borderRadius: BorderRadius.circular(14.r),
-              ),
+          IconButton(
+            tooltip: LocaleKeys.favoritesNavigationSaved,
+            onPressed: onSavedPressed,
+            isSelected: isSaved,
+            style: IconButton.styleFrom(
+              backgroundColor: AppColors.grayBackground,
+              minimumSize: Size(48.r, 48.r),
+            ),
+            icon: AnimatedScale(
+              scale: isSaved ? 1.08 : 1,
+              duration: SokounMotion.duration(context, milliseconds: 180),
               child: Icon(
                 isSaved
                     ? Icons.bookmark_rounded

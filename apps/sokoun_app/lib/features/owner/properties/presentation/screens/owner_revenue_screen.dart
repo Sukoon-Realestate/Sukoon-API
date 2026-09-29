@@ -18,7 +18,9 @@ class OwnerRevenueScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
+      showBackButton: false,
+      contentWidth: SokounContentWidth.wide,
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: Column(
@@ -52,7 +54,7 @@ class OwnerRevenueScreen extends StatelessWidget {
                           '${_formatNumber(totalThisMonth)} ${LocaleKeys.ownerRevenueCurrency}',
                           color: AppColors.white,
                           fontSize: 30.sp,
-                          fontWeight: FontWeight.w900,
+                          fontWeight: FontWeight.w800,
                         ),
                         8.szH,
                         Container(
@@ -79,7 +81,7 @@ class OwnerRevenueScreen extends StatelessWidget {
                     LocaleKeys.ownerRevenueProperties,
                     color: AppColors.sokoonNavy,
                     fontSize: 16.sp,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w800,
                   ),
                   10.szH,
                   for (int index = 0; index < properties.length; index++) ...[
@@ -91,7 +93,7 @@ class OwnerRevenueScreen extends StatelessWidget {
                     LocaleKeys.ownerRevenueLatestTransactions,
                     color: AppColors.sokoonNavy,
                     fontSize: 16.sp,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w800,
                   ),
                   10.szH,
                   Container(

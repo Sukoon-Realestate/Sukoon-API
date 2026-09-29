@@ -36,7 +36,7 @@ class OwnerCalendarVisitCard extends StatelessWidget {
               visit.tenantInitial,
               color: AppColors.white,
               fontSize: 15.sp,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
             ),
           ),
           12.szW,

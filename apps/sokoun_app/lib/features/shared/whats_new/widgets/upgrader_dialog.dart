@@ -1,3 +1,4 @@
+import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -281,7 +282,7 @@ class _UpdateButton extends StatelessWidget {
           ),
         ),
         child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
+          duration: SokounMotion.duration(context, milliseconds: 200),
           child: isLoading
               ? Row(
                   key: const ValueKey('update-loading'),

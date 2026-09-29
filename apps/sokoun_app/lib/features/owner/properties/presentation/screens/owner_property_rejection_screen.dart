@@ -54,7 +54,8 @@ class _OwnerPropertyRejectionScreenState
   @override
   Widget build(BuildContext context) {
     final OwnerPropertyContent property = widget.property;
-    return Scaffold(
+    return AppScaffold(
+      showBackButton: false,
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: Column(
@@ -86,7 +87,7 @@ class _OwnerPropertyRejectionScreenState
                     LocaleKeys.ownerPropertyRejectedHeadline,
                     color: AppColors.sokoonNavy,
                     fontSize: 22.sp,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                     textAlign: TextAlign.center,
                   ),
                   6.szH,
@@ -149,7 +150,7 @@ class _OwnerPropertyRejectionScreenState
                       onTap: isLoading ? null : _editAndResubmit,
                       height: 50.h,
                       borderRadius: BorderRadius.circular(15.r),
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ],

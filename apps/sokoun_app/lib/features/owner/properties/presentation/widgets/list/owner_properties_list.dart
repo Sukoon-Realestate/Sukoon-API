@@ -33,6 +33,7 @@ class OwnerPropertiesList extends StatelessWidget {
     final bool usesApi = initialProperties == null;
     return AppPagify<OwnerPropertyContent>(
       pagifyController: pagifyController,
+      rankingType: Ranking.adaptiveGrid,
       asyncCall: (_, page) => _loadPage(page),
       shrinkWrap: false,
       cacheKey: usesApi ? OwnerPropertiesData.cacheKey : null,
@@ -44,7 +45,7 @@ class OwnerPropertiesList extends StatelessWidget {
         property: property,
         onEditPressed: () => onEditPressed(property),
         onRejectedPressed: () => onRejectedPressed(property),
-      ).paddingBottom(12.h),
+      ),
     ).padding(EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 20.h));
   }
 }

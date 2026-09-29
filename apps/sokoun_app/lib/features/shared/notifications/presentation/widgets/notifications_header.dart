@@ -26,47 +26,48 @@ class NotificationsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool canMarkAll = hasUnread && !isMarkingAll;
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: AppText(
-            LocaleKeys.workspaceAllNotifications,
-            color: AppColors.sokoonNavy,
-            fontSize: 20.sp,
-            fontWeight: FontWeight.w900,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: AppText(
+                LocaleKeys.workspaceAllNotifications,
+                color: AppColors.sokoonNavy,
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            IconButton(
+              tooltip: LocaleKeys.notificationSettingsTitle,
+              onPressed: isMarkingAll
+                  ? null
+                  : () => Go.to(NotificationSettingsScreen(role: role)),
+              icon: Icon(
+                Icons.settings_outlined,
+                color: isMarkingAll
+                    ? AppColors.sokoonMuted
+                    : AppColors.sokoonNavy,
+                size: 22.r,
+              ),
+            ),
+          ],
         ),
         TextButton(
           onPressed: canMarkAll ? onMarkAllPressed : null,
           style: TextButton.styleFrom(
             foregroundColor: AppColors.sokoonTeal,
             padding: EdgeInsets.symmetric(horizontal: 6.w),
-            minimumSize: Size.zero,
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            minimumSize: const Size(48, 48),
           ),
           child: AppText(
             role.isOwner
                 ? LocaleKeys.notificationsMarkAll
                 : LocaleKeys.notificationsMarkAllRead,
             color: canMarkAll ? AppColors.sokoonTeal : AppColors.sokoonMuted,
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-        IconButton(
-          tooltip: LocaleKeys.notificationSettingsTitle,
-          onPressed: isMarkingAll
-              ? null
-              : () => Go.to(NotificationSettingsScreen(role: role)),
-          visualDensity: VisualDensity.compact,
-          constraints: BoxConstraints.tightFor(width: 38.r, height: 38.r),
-          padding: EdgeInsets.zero,
-          icon: Icon(
-            Icons.settings_outlined,
-            color: isMarkingAll ? AppColors.sokoonMuted : AppColors.sokoonNavy,
-            size: 20.r,
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ],

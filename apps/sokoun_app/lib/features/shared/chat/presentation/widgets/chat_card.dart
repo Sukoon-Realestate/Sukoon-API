@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
@@ -7,7 +8,6 @@ import 'package:melos_core/core/widgets/app_text.dart';
 
 import '../../data/models/chat_content.dart';
 import 'shared/chat_participant_avatar.dart';
-import 'shared/chat_verified_badge.dart';
 
 class ChatCard extends StatelessWidget {
   const ChatCard({super.key, required this.conversation});
@@ -27,29 +27,36 @@ class ChatCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Flexible(
+                  Expanded(
                     child: AppText(
                       conversation.name,
                       color: AppColors.sokoonNavy,
                       fontSize: 14.sp,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.w700,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   if (conversation.isVerified) ...[
                     6.szW,
-                    const ChatVerifiedBadge(),
+                    Tooltip(
+                      message: LocaleKeys.verified,
+                      child: Icon(
+                        Icons.verified_rounded,
+                        color: AppColors.sokoonTeal,
+                        size: 18.r,
+                      ),
+                    ),
                   ],
-                  const Spacer(),
-                  AppText(
-                    _displayTime(context),
-                    color: AppColors.sokoonGray,
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w400,
-                    maxLines: 1,
-                  ),
                 ],
+              ),
+              4.szH,
+              AppText(
+                _displayTime(context),
+                color: AppColors.sokoonGray,
+                fontSize: 11.sp,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
               if (conversation.property.isNotEmpty) ...[
                 2.szH,
@@ -119,18 +126,20 @@ class _ConversationAvatar extends StatelessWidget {
               top: -4.h,
               end: -4.w,
               child: Container(
-                width: 20.r,
-                height: 20.r,
+                constraints: BoxConstraints(minWidth: 20.r, minHeight: 20.r),
+                padding: EdgeInsets.all(4.r),
                 alignment: Alignment.center,
                 decoration: const BoxDecoration(
                   color: AppColors.red,
-                  shape: BoxShape.circle,
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
                 ),
                 child: AppText(
-                  '${conversation.unreadCount}',
+                  conversation.unreadCount > 99
+                      ? '99+'
+                      : '${conversation.unreadCount}',
                   color: AppColors.white,
                   fontSize: 10.sp,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w700,
                   textAlign: TextAlign.center,
                 ),
               ),

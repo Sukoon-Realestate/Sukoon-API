@@ -25,6 +25,16 @@ void main() {
         .setMockMethodCallHandler(sharedPreferencesChannel, (call) async {
           return call.method == 'getAll' ? <String, Object>{} : true;
         });
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel('dev.fluttercommunity.plus/connectivity'),
+          (_) async => ['wifi'],
+        );
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel('dev.fluttercommunity.plus/connectivity_status'),
+          (_) async => null,
+        );
     await EasyLocalization.ensureInitialized();
     await CacheStorage.init();
     registerHomePageTestDependencies();

@@ -33,7 +33,7 @@ class ChatSearchResults extends StatelessWidget {
           '${LocaleKeys.chatSearchResultsFor} "$query"',
           color: AppColors.sokoonGray,
           fontSize: 12.sp,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -55,7 +55,7 @@ class ChatSearchResults extends StatelessWidget {
               LocaleKeys.chatMentionedProperties,
               color: AppColors.sokoonGray,
               fontSize: 12.sp,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
             ),
             8.szH,
             for (final String property in mentionedProperties)

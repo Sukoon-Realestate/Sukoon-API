@@ -1,3 +1,4 @@
+import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -142,7 +143,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Widget build(BuildContext context) {
     return BlocProvider<NotificationsCubit>.value(
       value: _cubit,
-      child: Scaffold(
+      child: AppScaffold(
+        showBackButton: false,
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
           child:

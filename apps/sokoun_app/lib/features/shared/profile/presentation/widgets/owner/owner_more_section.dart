@@ -31,7 +31,7 @@ class OwnerMoreSection extends StatelessWidget {
           title,
           color: AppColors.sokoonGray,
           fontSize: 12.sp,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
         ),
         7.szH,
         ProfileSurfaceCard(

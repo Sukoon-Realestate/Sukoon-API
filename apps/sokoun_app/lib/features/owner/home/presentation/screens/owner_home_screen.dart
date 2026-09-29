@@ -1,4 +1,5 @@
-import 'package:easy_localization/easy_localization.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
+import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -42,7 +43,9 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: _ownerDashboardCubit,
-      child: Scaffold(
+      child: AppScaffold(
+        showBackButton: false,
+        contentWidth: SokounContentWidth.wide,
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
           child:

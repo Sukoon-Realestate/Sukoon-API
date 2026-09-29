@@ -83,7 +83,7 @@ class _SummaryCard extends StatelessWidget {
             value,
             color: valueColor,
             fontSize: 20.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
           ),
         ],
       ),

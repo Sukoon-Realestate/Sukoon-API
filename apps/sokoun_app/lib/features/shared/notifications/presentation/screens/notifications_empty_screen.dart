@@ -1,3 +1,4 @@
+import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -14,7 +15,8 @@ class NotificationsEmptyScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
+      showBackButton: false,
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: Column(
@@ -31,7 +33,7 @@ class NotificationsEmptyScreen extends StatelessWidget {
                 LocaleKeys.notificationsFlowTitle,
                 color: AppColors.sokoonNavy,
                 fontSize: 18.sp,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w700,
               ),
             ),
             Expanded(child: NotificationsEmptyState(role: role)),

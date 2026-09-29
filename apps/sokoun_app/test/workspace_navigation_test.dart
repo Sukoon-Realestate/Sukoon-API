@@ -1,3 +1,5 @@
+import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_widgets/tenant_home_content.dart';
+import 'package:sokoun_app/features/main_view/presentation/widgets/home_navigation_rail.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -37,7 +39,8 @@ import 'package:sokoun_app/features/shared/chat/data/models/chat_unread_content.
 import 'package:sokoun_app/features/shared/notifications/presentation/notification_push_handler.dart';
 import 'package:sokoun_app/features/shared/profile/imports.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_home_screen.dart';
-import 'package:sokoun_app/features/tenant/home/presentation/cubits/home_page_cubit.dart';
+import 'package:melos_core/core/widgets/app_pagify.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/home_page_model.dart';
 import 'package:sokoun_app/shared_widgets/unsaved_changes_guard.dart';
 
 import 'package:melos_core/core/widgets/notification_permission_view.dart';
@@ -221,14 +224,16 @@ void main() {
 
       expect(accountRepository.profileRequests, 1);
       expect(accountRepository.homeRequests, 2);
-      final HomePageCubit home = tester
-          .element(find.byType(RefreshIndicator))
-          .read<HomePageCubit>();
-      expect(home.state.isSuccess, isTrue);
+      final home = tester
+          .widget<AppPagify<HomePropertyModel>>(
+            find.byType(AppPagify<HomePropertyModel>),
+          )
+          .pagifyController;
+      expect(home.isSuccess, isTrue);
       expect(UserModel.currentUser?.id, '1');
       accountRepository.homeGate!.complete();
       await tester.pumpAndSettle();
-      expect(home.state.isSuccess, isTrue);
+      expect(home.isSuccess, isTrue);
       expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox.shrink());
       await tester.pumpAndSettle();
@@ -392,7 +397,16 @@ void main() {
         );
         expect(find.byType(TenantHomeScreen), findsOneWidget);
         expect(find.byType(OwnerHomeScreen, skipOffstage: false), findsNothing);
-        final State tenantState = tester.state(find.byType(TenantHomeScreen));
+        final State tenantState = tester.state(find.byType(TenantHomeContent));
+        tester.view.physicalSize = const Size(1024, 768);
+        await tester.pumpAndSettle();
+        expect(find.byType(HomeNavigationRail), findsOneWidget);
+        expect(find.byType(HomeBottomNavigation), findsNothing);
+        expect(tester.state(find.byType(TenantHomeContent)), same(tenantState));
+        tester.view.physicalSize = const Size(390, 844);
+        await tester.pumpAndSettle();
+        expect(find.byType(HomeNavigationRail), findsNothing);
+        expect(tester.state(find.byType(TenantHomeContent)), same(tenantState));
         final ChatUnreadCubit unread = tester
             .element(find.byType(HomeBottomNavigation))
             .read<ChatUnreadCubit>();
@@ -422,7 +436,7 @@ void main() {
           EnginePhase.sendSemanticsUpdate,
           const Duration(seconds: 5),
         );
-        expect(tester.state(find.byType(TenantHomeScreen)), same(tenantState));
+        expect(tester.state(find.byType(TenantHomeContent)), same(tenantState));
         tester
             .widget<HomeBottomNavigation>(find.byType(HomeBottomNavigation))
             .onDestinationSelected(1);
@@ -610,6 +624,9 @@ Widget _app(Widget home, String language) => EasyLocalization(
   assetLoader: const _Translations(),
   child: ScreenUtilInit(
     designSize: const Size(360, 690),
+    enableScaleWH: () => false,
+    enableScaleText: () => false,
+    fontSizeResolver: (size, _) => size.toDouble(),
     builder: (context, _) => MaterialApp(
       navigatorKey: Go.navigatorKey,
       navigatorObservers: [AppNavigationObserver.instance],

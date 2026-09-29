@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/shared_widgets/back_button.dart';
+import 'sokoun_layout.dart';
 
 class AppScaffold extends StatelessWidget {
   const AppScaffold({
@@ -16,6 +17,7 @@ class AppScaffold extends StatelessWidget {
     this.backButton,
     this.backgroundColor = AppColors.scaffoldBackground,
     this.resizeToAvoidBottomInset,
+    this.contentWidth = SokounContentWidth.readable,
   });
 
   final Widget body;
@@ -27,6 +29,7 @@ class AppScaffold extends StatelessWidget {
   final Widget? backButton;
   final Color backgroundColor;
   final bool? resizeToAvoidBottomInset;
+  final SokounContentWidth contentWidth;
 
   bool get _hasAppBar =>
       showBackButton ||
@@ -41,8 +44,17 @@ class AppScaffold extends StatelessWidget {
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       backgroundColor: backgroundColor,
       appBar: _hasAppBar ? _buildAppBar() : null,
-      body: body,
-      bottomNavigationBar: bottomBar,
+      body: SokounContent(width: contentWidth, child: body),
+      bottomNavigationBar: bottomBar == null
+          ? null
+          : Padding(
+              padding: EdgeInsets.only(
+                bottom: resizeToAvoidBottomInset == false
+                    ? 0
+                    : MediaQuery.viewInsetsOf(context).bottom,
+              ),
+              child: SokounContent(width: contentWidth, child: bottomBar!),
+            ),
     );
   }
 

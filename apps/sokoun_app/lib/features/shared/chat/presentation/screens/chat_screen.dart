@@ -1,3 +1,4 @@
+import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -66,7 +67,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return BlocProvider<ChatThreadCubit>.value(
       value: _chatThreadCubit,
-      child: Scaffold(
+      child: AppScaffold(
+        showBackButton: false,
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(

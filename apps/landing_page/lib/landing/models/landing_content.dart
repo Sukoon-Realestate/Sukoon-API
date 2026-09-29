@@ -143,7 +143,7 @@ abstract final class LandingContent {
       title: LocaleKeys.landingFeatureManageVisitsTitle,
       items: [
         LocaleKeys.landingFeatureAcceptRejectRequests,
-        LocaleKeys.landingFeatureOpenTenantChat,
+        LocaleKeys.landingFeatureOpenChat,
         LocaleKeys.landingFeatureManageAppointments,
       ],
     ),

@@ -85,6 +85,7 @@ class TenantSearchResultsContent extends StatelessWidget {
         Expanded(
           child: AppPagify<PropertyDetailsModel>(
             pagifyController: pagifyController,
+            rankingType: Ranking.adaptiveGrid,
             disposeController: false,
             asyncCall: loadPage,
             shrinkWrap: false,
@@ -94,10 +95,8 @@ class TenantSearchResultsContent extends StatelessWidget {
             emptyListView: EmptyResultsState(
               onResetSearchPressed: onResetSearchPressed,
             ),
-            itemBuilder: (context, data, index, item) => SearchResultCard(
-              item: item,
-              filterOptions: filterOptions,
-            ).paddingBottom(14.h),
+            itemBuilder: (context, data, index, item) =>
+                SearchResultCard(item: item, filterOptions: filterOptions),
           ).padding(EdgeInsets.fromLTRB(16.w, 0, 16.w, 18.h)),
         ),
       ],

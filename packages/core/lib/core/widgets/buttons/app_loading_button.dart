@@ -5,6 +5,7 @@ import '../../../config/res/config_imports.dart';
 import '../../extensions/padding_extension.dart';
 import '../app_text.dart';
 import 'custom_app_buttons/loading_button.dart';
+import 'app_control_theme.dart';
 
 class AppLoadingButton extends StatelessWidget {
   final Future<void> Function(BuildContext context) asyncCall;
@@ -34,9 +35,30 @@ class AppLoadingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppControlTheme? controls = Theme.of(
+      context,
+    ).extension<AppControlTheme>();
+    final Widget label = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (icon != null) ...[icon!, SizedBox(width: 8.w)],
+        Flexible(
+          child: AppText(
+            title,
+            textAlign: TextAlign.center,
+            fontSize: fontSize ?? 14.sp,
+            fontWeight: fontWeight ?? FontWeight.bold,
+            color: textColor ?? Colors.white,
+          ),
+        ),
+      ],
+    );
     return LoadingButton(
-      borderRadius: borderRadius ?? ConstantManager.buttonBorderRadiusNumber,
-      height: height ?? 45.h,
+      borderRadius:
+          borderRadius ??
+          controls?.radius ??
+          ConstantManager.buttonBorderRadiusNumber,
+      height: height ?? controls?.minimumHeight ?? 45.h,
       width: width ?? double.infinity,
       btnColor: buttonColor ?? AppColors.primary,
       loadingWidget: SizedBox.square(
@@ -45,20 +67,7 @@ class AppLoadingButton extends StatelessWidget {
           color: Colors.white,
         ).paddingAll(3.r),
       ),
-      idleWidget: FittedBox(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (icon != null) ...[icon!, SizedBox(width: 8.w)],
-            AppText(
-              title,
-              fontSize: fontSize ?? 14.sp,
-              fontWeight: fontWeight ?? FontWeight.bold,
-              color: textColor ?? Colors.white,
-            ),
-          ],
-        ),
-      ),
+      idleWidget: controls == null ? FittedBox(child: label) : label,
       call: asyncCall,
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../config/res/config_imports.dart';
 import '../../extensions/context_extension.dart';
+import 'app_control_theme.dart';
 
 class DefaultButton extends StatelessWidget {
   final String? title;
@@ -59,22 +60,34 @@ class DefaultButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppControlTheme? controls = Theme.of(
+      context,
+    ).extension<AppControlTheme>();
+    final bool grow = controls != null;
     return SizedBox(
-      width: width ?? context.width * .9,
-      height: height ?? (minHeight == null ? AppSize.sH45 : null),
+      width: width ?? (grow ? double.infinity : context.width * .9),
+      height: grow ? null : height ?? (minHeight == null ? AppSize.sH45 : null),
       child: ConstrainedBox(
-        constraints: BoxConstraints(minHeight: minHeight ?? 0),
+        constraints: BoxConstraints(
+          minHeight: grow
+              ? (height ?? minHeight ?? controls.minimumHeight).clamp(
+                  controls.minimumHeight,
+                  double.infinity,
+                )
+              : minHeight ?? 0,
+        ),
         child: ElevatedButton(
-          onPressed: onTap,
+          onPressed: disabled == true ? null : onTap,
           style: ElevatedButton.styleFrom(
             splashFactory: InkRipple.splashFactory,
             surfaceTintColor: color ?? AppColors.buttonColor,
-            foregroundColor: color ?? AppColors.buttonColor,
+            foregroundColor: textColor ?? AppColors.buttonText,
             backgroundColor: color ?? AppColors.primary,
             padding: padding,
             shape: RoundedRectangleBorder(
               borderRadius:
-                  borderRadius ?? BorderRadius.circular(AppCircular.r5),
+                  borderRadius ??
+                  BorderRadius.circular(controls?.radius ?? AppCircular.r5),
               side: borderColor != null
                   ? BorderSide(
                       color: borderColor ?? Colors.grey[200]!,
@@ -84,7 +97,7 @@ class DefaultButton extends StatelessWidget {
             ),
             elevation: elevation ?? ConstantManager.zeroAsDouble,
           ),
-          child: isFitted
+          child: isFitted && !grow
               ? FittedBox(child: customChild ?? _defaultChild)
               : customChild ?? _defaultChild,
         ),

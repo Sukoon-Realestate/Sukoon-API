@@ -94,7 +94,7 @@ class AddPropertyField extends StatelessWidget {
                           color: fieldTextColor,
                           fontSize: field.isFocused ? 16.sp : 13.sp,
                           fontWeight: field.isFocused
-                              ? FontWeight.w900
+                              ? FontWeight.w700
                               : FontWeight.w500,
                         ),
                         decoration: InputDecoration(
@@ -116,7 +116,7 @@ class AddPropertyField extends StatelessWidget {
                         color: fieldTextColor,
                         fontSize: field.isFocused ? 16.sp : 13.sp,
                         fontWeight: field.isFocused
-                            ? FontWeight.w900
+                            ? FontWeight.w700
                             : FontWeight.w400,
                         textAlign: field.textAlign,
                         maxLines: 1,

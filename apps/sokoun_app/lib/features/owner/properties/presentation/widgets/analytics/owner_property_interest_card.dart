@@ -21,7 +21,7 @@ class OwnerPropertyInterestCard extends StatelessWidget {
             LocaleKeys.ownerAnalyticsTopInterests,
             color: AppColors.sokoonNavy,
             fontSize: 15.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
           ),
           16.szH,
           for (int index = 0; index < items.length; index++) ...[
@@ -63,7 +63,7 @@ class _InterestProgress extends StatelessWidget {
               '${item.value}%',
               color: AppColors.sokoonNavy,
               fontSize: 13.sp,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
             ),
           ],
         ),

@@ -38,7 +38,7 @@ class OwnerRevenuePropertyCard extends StatelessWidget {
                   item.title,
                   color: AppColors.sokoonNavy,
                   fontSize: 13.sp,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w800,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -60,7 +60,7 @@ class OwnerRevenuePropertyCard extends StatelessWidget {
                 '${LocaleKeys.ownerRevenueCurrency}',
                 color: AppColors.sokoonNavy,
                 fontSize: 14.sp,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w800,
               ),
               5.szH,
               Container(

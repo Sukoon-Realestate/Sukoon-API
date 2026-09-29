@@ -68,7 +68,7 @@ class _ChatListContentState extends State<ChatListContent> {
           LocaleKeys.chatConversationsTitle,
           color: AppColors.sokoonNavy,
           fontSize: 20.sp,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
         ).padding(EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 12.h)),
         ChatSearchField(
           readOnly: true,

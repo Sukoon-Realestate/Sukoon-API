@@ -37,7 +37,7 @@ class OwnerCalendarDay extends StatelessWidget {
                 '$day',
                 color: isSelected ? AppColors.white : AppColors.sokoonNavy,
                 fontSize: 13.sp,
-                fontWeight: isSelected ? FontWeight.w900 : FontWeight.w500,
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
               ),
               if (hasVisit)
                 Positioned(

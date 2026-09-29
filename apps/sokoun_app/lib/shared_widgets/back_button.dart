@@ -22,7 +22,7 @@ class SokoonBackButton extends StatelessWidget {
     return Visibility(
       visible: Navigator.canPop(context),
       child: SizedBox.square(
-        dimension: 36.r,
+        dimension: 48.r,
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: backgroundColor,
@@ -30,6 +30,7 @@ class SokoonBackButton extends StatelessWidget {
             border: Border.all(color: borderColor),
           ),
           child: IconButton(
+            tooltip: MaterialLocalizations.of(context).backButtonTooltip,
             onPressed: onTap ?? () => Go.back(),
             padding: EdgeInsets.zero,
             icon: Icon(icon, color: AppColors.sokoonNavy, size: 16.r),

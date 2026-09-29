@@ -1,3 +1,4 @@
+import 'package:melos_core/core/widgets/app_logo_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -19,18 +20,14 @@ class LoginHeader extends StatelessWidget {
             color: AppColors.sokoonTeal,
             borderRadius: BorderRadius.circular(16.r),
           ),
-          child: Icon(
-            Icons.favorite_rounded,
-            color: AppColors.white,
-            size: 28.r,
-          ),
+          child: AppLogoWidget(color: AppColors.white, size: 32.r),
         ),
         12.szH,
         AppText(
           LocaleKeys.login,
           color: AppColors.sokoonNavy,
           fontSize: 22.sp,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
           textAlign: TextAlign.center,
         ),
         4.szH,

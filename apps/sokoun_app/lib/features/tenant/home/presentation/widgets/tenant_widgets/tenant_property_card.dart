@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -28,38 +27,45 @@ class TenantPropertyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 94.h,
+      constraints: BoxConstraints(minHeight: 112.h),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: AppColors.sokoonBorder),
       ),
       clipBehavior: Clip.antiAlias,
+      padding: EdgeInsetsDirectional.only(start: 10.w),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             width: 96.w,
-            height: double.infinity,
-            color: AppColors.grayBluePale,
+            height: 96.h,
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              color: AppColors.grayBluePale,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
             child: imageUrl != null && imageUrl!.isNotEmpty
                 ? CachedImage(
                     url: imageUrl!,
                     fit: BoxFit.cover,
                     width: 96.w,
-                    height: 94.h,
+                    height: 96.h,
                   )
                 : Icon(icon, color: AppColors.blueGrayLight, size: 26.r),
           ),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 AppText(
                   title,
                   color: AppColors.sokoonNavy,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w900,
-                  maxLines: 1,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w700,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
                 6.szH,
@@ -97,15 +103,15 @@ class TenantPropertyCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const Spacer(),
+                12.szH,
                 AppText(
                   price,
                   color: AppColors.sokoonTeal,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w900,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w700,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                ).endWidget,
+                ),
               ],
             ).paddingSymmetric(horizontal: 12.w, vertical: 11.h),
           ),

@@ -28,6 +28,8 @@ import 'package:sokoun_app/generated/assets.dart';
 import 'package:upgrader/upgrader.dart';
 
 import '../widgets/home_bottom_navigation.dart';
+import '../widgets/home_navigation_rail.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
 import '../../data/enums/app_workspace.dart';
 import '../../data/enums/workspace_tab.dart';
 import '../cubits/workspace_cubit.dart';
@@ -103,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final List<_HomeTab> ownerTabs = _buildOwnerTabs();
     _allTabs = [
       ..._buildTenantTabs(),
-      ...ownerTabs..removeAt(3)
+      ...ownerTabs..removeAt(3),
       // ownerTabs[0],
       // ownerTabs[1],
       // ownerTabs[2],
@@ -193,6 +195,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       return;
     }
     setState(() => _selectedTabs[_workspace] = index);
+    if (_tabs[index].tab == WorkspaceTab.profile) {
+      unawaited(_refreshTenantProfile());
+    }
   }
 
   Future<void> _applyWorkspace(
@@ -330,6 +335,36 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     ];
   }
 
+  Widget _buildNavigation({required bool rail}) =>
+      BlocSelector<ChatUnreadCubit, AsyncState<ChatUnreadContent>, int>(
+        selector: (state) => state.data.count,
+        builder: (context, unreadCount) =>
+            BlocSelector<
+              TenantProfileCubit,
+              AsyncState<TenantProfileContent>,
+              TenantProfileStatsContent
+            >(
+              selector: (state) => state.data.stats,
+              builder: (context, stats) {
+                final destinations = _navigationDestinations(
+                  unreadCount: unreadCount,
+                  stats: stats,
+                );
+                return rail
+                    ? HomeNavigationRail(
+                        destinations: destinations,
+                        currentIndex: _currentIndex,
+                        onDestinationSelected: _selectTab,
+                      )
+                    : HomeBottomNavigation(
+                        destinations: destinations,
+                        currentIndex: _currentIndex,
+                        onDestinationSelected: _selectTab,
+                      );
+              },
+            ),
+      );
+
   @override
   Widget build(BuildContext context) {
     context.locale;
@@ -349,43 +384,41 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           return AppUpgradeAlert(
             upgrader: upgrader,
             onUpdatePressed: upgrader.sendUserToAppStore,
-            child: Scaffold(
-              backgroundColor: AppColors.scaffoldBackground,
-              body: IndexedStack(
-                // Recreate account-owned tab state after cookie-only login.
-                key: ValueKey(_workspaceCubit.userId),
-                index: bodyIndex,
-                children: List<Widget>.generate(
-                  _allTabs.length,
-                  (index) => _visited.contains(index)
-                      ? _allTabs[index].screen
-                      : const SizedBox.shrink(),
-                ),
-              ),
-              bottomNavigationBar:
-                  BlocSelector<
-                    ChatUnreadCubit,
-                    AsyncState<ChatUnreadContent>,
-                    int
-                  >(
-                    selector: (state) => state.data.count,
-                    builder: (context, unreadCount) =>
-                        BlocSelector<
-                          TenantProfileCubit,
-                          AsyncState<TenantProfileContent>,
-                          TenantProfileStatsContent
-                        >(
-                          selector: (state) => state.data.stats,
-                          builder: (context, stats) => HomeBottomNavigation(
-                            destinations: _navigationDestinations(
-                              unreadCount: unreadCount,
-                              stats: stats,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final bool rail =
+                    constraints.maxWidth >= SokounLayout.navigationBreakpoint;
+                return Scaffold(
+                  backgroundColor: AppColors.scaffoldBackground,
+                  body: Row(
+                    children: [
+                      SizedBox(
+                        width: rail ? 104 : 0,
+                        child: rail ? _buildNavigation(rail: true) : null,
+                      ),
+                      Expanded(
+                        child: IndexedStack(
+                          // Account identity, not window size, owns tab lifetimes.
+                          key: ValueKey(_workspaceCubit.userId),
+                          index: bodyIndex,
+                          children: List<Widget>.generate(
+                            _allTabs.length,
+                            (index) => TickerMode(
+                              enabled: index == bodyIndex,
+                              child: _visited.contains(index)
+                                  ? _allTabs[index].screen
+                                  : const SizedBox.shrink(),
                             ),
-                            currentIndex: _currentIndex,
-                            onDestinationSelected: _selectTab,
                           ),
                         ),
+                      ),
+                    ],
                   ),
+                  bottomNavigationBar: rail
+                      ? null
+                      : _buildNavigation(rail: false),
+                );
+              },
             ),
           );
         },

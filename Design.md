@@ -1,6 +1,6 @@
 # Sokoun App Design System
 
-This is the implementation reference for Sokoun's current mobile design
+This is the implementation reference for Sokoun's phone and tablet design
 language. It is derived from the Flutter tokens, shared widgets, and the
 authentication, KYC, tenant, owner, search, property, and visit flows already
 in the repository.
@@ -15,7 +15,9 @@ belongs to the existing product before introducing a new visual pattern.
   `packages/core/lib/config/res/constants_manager.dart`
 - Spacing, sizing, radii, and font sizes:
   `packages/core/lib/config/res/app_sizes.dart`
-- App theme bootstrap: `apps/sokoun_app/lib/app.dart`
+- App theme: `apps/sokoun_app/lib/shared_widgets/sokoun_theme.dart`
+- Responsive layout: `apps/sokoun_app/lib/shared_widgets/sokoun_layout.dart`
+- Motion policy: `apps/sokoun_app/lib/shared_widgets/sokoun_motion.dart`
 - Sokoun-specific widgets: `apps/sokoun_app/lib/shared_widgets/`
 - Feature UI: `apps/sokoun_app/lib/features/`
 - Cross-app widgets: `packages/core/lib/core/widgets/`
@@ -24,10 +26,10 @@ belongs to the existing product before introducing a new visual pattern.
 Use token names in code. Do not duplicate raw color values or hardcode sizes
 unless a value is genuinely one-off.
 
-The global `ThemeData` currently sets the Tajawal font family. Colors,
-component states, shapes, and spacing are primarily defined by `AppColors`,
-ScreenUtil tokens, and shared widgets, so those are the operative source of
-truth.
+`SokounTheme.light` sets Tajawal, the semantic color scheme, typography,
+fields, buttons, sheets, and feedback surfaces. `AppControlTheme` opts Sokoun
+into natural-height controls with a minimum 48-pixel target and 12-pixel
+corners; other apps retain their existing control sizing.
 
 ## Brand Direction
 
@@ -121,17 +123,17 @@ Use `AppText` for display text when possible.
 
 | Purpose | Size | Weight | Color |
 | --- | --- | --- | --- |
-| Screen title | `20.sp` to `22.sp` | `w900` | `AppColors.sokoonNavy` |
-| App bar title | `16.sp` | `w800` to `w900` | `AppColors.sokoonNavy` |
-| Hero/property title | `18.sp` to `20.sp` | `w900` | `AppColors.sokoonNavy` |
-| Card title | `14.sp` to `16.sp` | `w800` to `w900` | `AppColors.sokoonNavy` |
+| Screen title | `20.sp` to `22.sp` | `w700` | `AppColors.sokoonNavy` |
+| App bar title | `16.sp` | `w600` to `w700` | `AppColors.sokoonNavy` |
+| Hero/property title | `18.sp` to `20.sp` | `w700` | `AppColors.sokoonNavy` |
+| Card title | `14.sp` to `16.sp` | `w600` to `w700` | `AppColors.sokoonNavy` |
 | Body | `13.sp` to `15.sp` | `w500` to `w600` | `AppColors.sokoonNavy` |
 | Secondary | `12.sp` to `13.sp` | `w400` to `w500` | `AppColors.sokoonGray` |
 | Button | `14.sp` | `w700` | White or navy |
 | Metadata | `11.sp` to `12.sp` | `w400` | `AppColors.sokoonGray` |
 
-Use weight and color before adding more sizes. Reserve `w900` for short,
-high-value text such as titles, prices, metrics, and status labels. Body copy
+Use weight and color before adding more sizes. Use `w700` for headings and reserve `w800` for short
+prices and metrics. Avoid making every label equally heavy. Body copy
 uses a line height around `1.4` to `1.5`.
 
 Wrap explanatory content. Use `maxLines` and `TextOverflow.ellipsis` for
@@ -141,12 +143,26 @@ can preserve readability and text scaling.
 
 ## Responsive Layout
 
-The app uses `flutter_screenutil`.
+The app keeps `flutter_screenutil` units for existing tokens, with viewport
+scaling disabled in `app.dart`. Logical dimensions stay consistent across
+phones and tablets; the system `TextScaler` still enlarges text.
 
-- Reference size: `360 × 690`
-- Use `.w`, `.h`, `.r`, and `.sp`
-- Prefer `AppSize`, `AppPadding`, `AppMargin`, `FontSize`, and `AppCircular`
-- Avoid unscaled raw pixels in app UI
+- Reference size: `360 × 690`; `.w`, `.h`, `.r`, and `.sp` resolve without
+  multiplying spacing or font sizes by tablet width.
+- Use `LayoutBuilder` constraints to change composition.
+- `SokounContentWidth.form`: max 520; `readable`: max 720; `wide`: max 1200.
+- The root shell switches from bottom navigation to a 104-pixel side rail at
+  600 logical pixels, retaining tab instances and selected workspace state.
+- Property collections use `AppPagify` with `Ranking.adaptiveGrid`: one to
+  three natural-height columns, a 320-pixel minimum card width, and 16-pixel
+  gaps. Larger text increases the minimum column width.
+- Bounded collections use `SokounAdaptiveGrid`; dashboard metrics use up to
+  four columns. Never force text cards into a fixed aspect ratio.
+- Property details use gallery/content columns at 960 available pixels when
+  text scaling permits; otherwise they remain in reading order vertically.
+- Tablet displays permit rotation. Phone orientation remains portrait.
+- Check widths 320, 390, 600, 768, 1024, and 1366 with Arabic/English and text
+  scales 1, 1.3, and 2. Test keyboard insets and state preservation on resize.
 
 ### Spacing rhythm
 
@@ -164,7 +180,7 @@ The app uses `flutter_screenutil`.
 - Detail and dense task screens commonly use `16.w` to `18.w`.
 - Card grids use consistent gutters, normally `10.w` to `12.w`.
 - Bottom-fixed actions sit in a white safe-area surface with a top border and
-  `16.w` horizontal padding.
+  `20.w` horizontal padding through `SokounActionFooter`.
 - Protect essential content from system safe areas and the keyboard.
 - Avoid fixed-width text containers. Use `Expanded`, `Flexible`, `Wrap`, or a
   scrollable row where Arabic or translated content can grow.
@@ -179,9 +195,9 @@ The app uses `flutter_screenutil`.
 - Circular actions and avatars: equal width and height using `.r`
 - Loading buttons: `ConstantManager.buttonBorderRadiusNumber`
 
-The cross-app `DefaultButton` falls back to `AppCircular.r5`. Sokoun screens
-should pass the app-specific radius when the surrounding flow uses the current
-`8.r` to `12.r` button shape. Reserve `20.r` for large selection cards and
+The cross-app `DefaultButton` falls back to `AppCircular.r5`. Sokoun opts into
+a 12-pixel default radius through `AppControlTheme`; flow-specific overrides
+remain available. Reserve `20.r` for large selection cards and
 friendly empty-state surfaces.
 
 ## Surfaces
@@ -193,7 +209,9 @@ Default composition:
 - Grouped surface: `AppColors.grayOffWhite` or `AppColors.grayBackground`
 - Borders: `AppColors.sokoonBorder` or `AppColors.grayPale`
 - Shadow: rare and subtle, normally `AppColors.shadowBlack04`
-- Media: edge-to-edge and clipped by the parent card
+- Media: clipped consistently; inset square thumbnails in compact discovery
+  rows, stable aspect ratios in larger result and saved-property cards
+- Photo counts and thumbnail controls appear only for actual media
 
 Standard cards use a white fill, a 1-pixel light border, `16.r` to `20.r`
 corners, and `14.w` to `16.w` internal padding. Strong fills are reserved for
@@ -248,7 +266,7 @@ heavy shadow.
 
 - Teal or role-aware background
 - White text
-- `45.h` to `48.h` height
+- Minimum 48 logical pixels; grow vertically with larger or wrapped labels
 - `8.r` to `12.r` corners
 - Full width for final auth and multi-step actions
 
@@ -273,7 +291,7 @@ heavy shadow.
 
 Use `DefaultButton` for standard synchronous actions and `AppLoadingButton` for
 async submissions. Icon-only actions need a semantic label and a touch target
-of approximately 44 logical pixels even when the glyph is smaller.
+of at least 48 logical pixels even when the glyph is smaller.
 
 ## Forms
 
@@ -331,17 +349,20 @@ loading/error placeholder.
 
 ## Navigation and App Bars
 
-Use `AppScaffold` for standard titled screens. App bars are flat, have no
+Use `AppScaffold` for ordinary screens, including custom-header screens with
+`showBackButton: false`. `AuthScaffold` composes it with the form width cap.
+Full-screen media and the root navigation shell keep specialized scaffolds. App bars are flat, have no
 elevation or surface tint, share the canvas color, and use a centered navy
 `16.sp` title. Use `SokoonBackButton` for the standard back action.
 
 Home navigation uses:
 
 - White surface with a top `AppColors.sokoonBorder` divider
-- `70.h` height plus the device safe area
+- Minimum 76 logical pixels plus the device safe area; labels can grow
 - Five evenly distributed items
 - `22.r` icons and `11.sp` labels
-- Teal active state and muted gray inactive state
+- Teal active pill and legible gray inactive state
+- A scrollable side rail on tablets and split views at least 600 pixels wide
 - Stable item order within each role
 
 Use the shared `Go` navigation helper instead of calling `Navigator` directly.
@@ -362,7 +383,9 @@ Use the shared `Go` navigation helper instead of calling `Navigator` directly.
 - Other selection, expansion, and state feedback: `150ms` to `250ms`
 - Async actions: use the shared loading button behavior
 - Use motion to explain a state change, not as decoration
-- Respect reduced-motion platform settings for nonessential movement
+- Use `SokounMotion.duration(context)` for app-owned transitions; duration is
+  zero for reduced motion or accessible navigation
+- Disable inactive tab tickers through `TickerMode`
 
 Reuse the state widgets and Lottie assets under
 `packages/core/assets/lottie/` for loading, empty, error, no-connection, and
@@ -384,7 +407,7 @@ success feedback.
 
 ## Accessibility
 
-- Target at least 44 logical pixels for touch interactions.
+- Target at least 48 logical pixels for touch interactions.
 - Keep normal text contrast at or above 4.5:1 and large text at or above 3:1.
 - Pair status color with a label, icon, border, or shape.
 - Add `Semantics` labels to icon-only buttons, media actions, progress

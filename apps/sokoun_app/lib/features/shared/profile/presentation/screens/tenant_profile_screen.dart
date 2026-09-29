@@ -81,7 +81,8 @@ class _TenantProfileScreenState extends State<TenantProfileScreen> {
       value: _profileCubit,
       child: BlocBuilder<TenantProfileCubit, AsyncState<TenantProfileContent>>(
         builder: (context, state) {
-          return Scaffold(
+          return AppScaffold(
+            showBackButton: false,
             backgroundColor: AppColors.scaffoldBackground,
             body: SafeArea(
               child: Column(

@@ -56,7 +56,7 @@ class AddPropertyInfoBanner extends StatelessWidget {
                     title!,
                     color: AppColors.sokoonNavy,
                     fontSize: 12.sp,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

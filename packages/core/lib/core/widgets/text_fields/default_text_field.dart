@@ -3,8 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../config/res/config_imports.dart';
 import '../app_text.dart';
+import '../buttons/app_control_theme.dart';
 
-enum TitleStatus {withTitle, withoutTitle}
+enum TitleStatus { withTitle, withoutTitle }
+
 class DefaultTextField extends StatefulWidget {
   final double? borderRadius;
   final TitleStatus withTitle;
@@ -73,7 +75,8 @@ class DefaultTextField extends StatefulWidget {
     this.minLines,
     this.onChanged,
     this.style,
-  }) : upperTitle = null, withTitle = TitleStatus.withoutTitle;
+  }) : upperTitle = null,
+       withTitle = TitleStatus.withoutTitle;
 
   const DefaultTextField.withTitle({
     super.key,
@@ -108,7 +111,7 @@ class DefaultTextField extends StatefulWidget {
     this.minLines,
     this.onChanged,
     this.style,
-    required this.upperTitle
+    required this.upperTitle,
   }) : withTitle = TitleStatus.withTitle;
 
   @override
@@ -116,17 +119,21 @@ class DefaultTextField extends StatefulWidget {
 }
 
 class _DefaultTextFieldState extends State<DefaultTextField> {
-  late bool _isSecure;
+  late final ValueNotifier<bool> _isSecure;
 
   @override
   void initState() {
-    if (widget.isPassword != null) {
-      _isSecure = true;
-    }
     super.initState();
+    _isSecure = ValueNotifier(widget.isPassword == true);
   }
 
-  void _debounce(String val){
+  @override
+  void dispose() {
+    _isSecure.dispose();
+    super.dispose();
+  }
+
+  void _debounce(String val) {
     // EasyDebounce.debounce(
     //   'text_field_${widget.hashCode}', // unique key
     //   const Duration(milliseconds: 200),
@@ -142,93 +149,107 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 5.h,
       children: [
-        if(widget.withTitle == TitleStatus.withTitle)
-          AppText(widget.upperTitle!, fontWeight: FontWeight.bold, fontSize: 11.sp),
+        if (widget.withTitle == TitleStatus.withTitle)
+          AppText(
+            widget.upperTitle!,
+            fontWeight: FontWeight.w500,
+            fontSize: Theme.of(context).extension<AppControlTheme>() == null
+                ? 11.sp
+                : 14.sp,
+          ),
 
-        TextFormField(
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          controller: widget.controller,
-          onChanged: _debounce,
-          inputFormatters: widget.inputFormatters,
-          obscureText: widget.isPassword == true ? _isSecure : widget.secure,
-          onTap: widget.onTap,
-          onTapOutside: (event) {
-            if (widget.closeWhenTapOutSide == true) {
-              FocusScope.of(context).unfocus();
-            }
-          },
-          keyboardType: widget.inputType,
-          autofillHints: _getAutoFillHints(widget.inputType),
-          validator: widget.validator,
-          maxLength: widget.maxLength,
-          readOnly: widget.readOnly,
-          textAlign: widget.textAlign!,
-          maxLines: widget.inputType == TextInputType.multiline
-              ? widget.maxLines ?? 7
-              : 1,
-          minLines: widget.minLines,
-          style: widget.style,
-          onFieldSubmitted: widget.onSubmitted,
-          textInputAction: widget.action,
-          enableSuggestions: false,
-          autocorrect: false,
-          autofocus: widget.autoFocus,
-          focusNode: widget.autoFocus == true ? widget.focusNode : null,
-          cursorColor: AppColors.primary,
-          decoration: InputDecoration(
-            isDense: true,
-            contentPadding: widget.contentPadding,
-            counterText: ConstantManager.emptyText,
-            filled: widget.filled,
-            suffixText: widget.suffixText,
-            prefixIcon: widget.isPassword == true
-                ? const Icon(Icons.lock_outline, color: Colors.grey)
-                : widget.prefixIcon,
-            suffixIcon: widget.isPassword == true
-                ? IconButton(
-              onPressed: () {
-                setState(() {
-                  _isSecure = !_isSecure;
-                });
-              },
-              icon: Icon(
-                _isSecure
-                    ? Icons.visibility_outlined
-                    : Icons.visibility_off_outlined,
-                color: Colors.grey,
+        ValueListenableBuilder<bool>(
+          valueListenable: _isSecure,
+          builder: (context, secure, _) => TextFormField(
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            controller: widget.controller,
+            onChanged: _debounce,
+            inputFormatters: widget.inputFormatters,
+            obscureText: widget.isPassword == true ? secure : widget.secure,
+            onTap: widget.onTap,
+            onTapOutside: (event) {
+              if (widget.closeWhenTapOutSide == true) {
+                FocusScope.of(context).unfocus();
+              }
+            },
+            keyboardType: widget.inputType,
+            autofillHints: _getAutoFillHints(widget.inputType),
+            validator: widget.validator,
+            maxLength: widget.maxLength,
+            readOnly: widget.readOnly,
+            textAlign: widget.textAlign!,
+            maxLines: widget.inputType == TextInputType.multiline
+                ? widget.maxLines ?? 7
+                : 1,
+            minLines: widget.minLines,
+            style: widget.style,
+            onFieldSubmitted: widget.onSubmitted,
+            textInputAction: widget.action,
+            enableSuggestions: false,
+            autocorrect: false,
+            autofocus: widget.autoFocus,
+            focusNode: widget.focusNode,
+            cursorColor: AppColors.primary,
+            decoration: InputDecoration(
+              isDense: true,
+              errorMaxLines: 3,
+              contentPadding: widget.contentPadding,
+              counterText: ConstantManager.emptyText,
+              filled: widget.filled,
+              suffixText: widget.suffixText,
+              prefixIcon: widget.isPassword == true
+                  ? const Icon(Icons.lock_outline, color: Colors.grey)
+                  : widget.prefixIcon,
+              suffixIcon: widget.isPassword == true
+                  ? IconButton(
+                      onPressed: () => _isSecure.value = !secure,
+                      icon: Icon(
+                        secure
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                        color: Colors.grey,
+                      ),
+                    )
+                  : widget.suffixIcon,
+              prefix: widget.prefixWidget,
+              fillColor: widget.fillColor ?? Colors.white,
+              hintText: widget.title,
+              label: isLabel ? Text(widget.label!) : null,
+              labelStyle: isLabel
+                  ? const TextStyle(color: AppColors.primary)
+                  : null,
+              hintStyle: TextStyle(
+                fontSize: 13,
+                color: Colors.grey[600],
+                fontWeight: FontWeight.w300,
+                fontFamily: ConstantManager.fontFamily,
               ),
-            )
-                : widget.suffixIcon,
-            prefix: widget.prefixWidget,
-            fillColor: widget.fillColor ?? Colors.white,
-            hintText: widget.title,
-            label: isLabel ? Text(widget.label!) : null,
-            labelStyle: isLabel ? const TextStyle(color: AppColors.primary) : null,
-            hintStyle: TextStyle(
-              fontSize: 13,
-              color: Colors.grey[600],
-              fontWeight: FontWeight.w300,
-              fontFamily: ConstantManager.fontFamily,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(widget.borderRadius?? AppCircular.r12),
-              borderSide: widget.hasBorderColor == true
-                  ? BorderSide(
-                color: widget.borderColor ?? AppColors.border,
-              )
-                  : BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppCircular.r10),
-              borderSide: const BorderSide(color: AppColors.primary),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppCircular.r10),
-              borderSide: const BorderSide(color: Colors.red),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppCircular.r10),
-              borderSide: const BorderSide(color: Colors.red),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(
+                  widget.borderRadius ?? AppCircular.r12,
+                ),
+                borderSide: widget.hasBorderColor == true
+                    ? BorderSide(color: widget.borderColor ?? AppColors.border)
+                    : BorderSide.none,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(
+                  widget.borderRadius ?? AppCircular.r12,
+                ),
+                borderSide: const BorderSide(color: AppColors.primary),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(
+                  widget.borderRadius ?? AppCircular.r12,
+                ),
+                borderSide: const BorderSide(color: Colors.red),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(
+                  widget.borderRadius ?? AppCircular.r12,
+                ),
+                borderSide: const BorderSide(color: Colors.red),
+              ),
             ),
           ),
         ),

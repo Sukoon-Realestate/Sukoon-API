@@ -170,7 +170,8 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   }
 
   Widget _buildScaffold({required bool isSaving}) {
-    return Scaffold(
+    return AppScaffold(
+      showBackButton: false,
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: Column(
@@ -354,7 +355,7 @@ class _ProfileGenderSheet extends StatelessWidget {
             LocaleKeys.gender,
             color: AppColors.sokoonNavy,
             fontSize: 16.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
           ),
           10.szH,
           _ProfileGenderOption(

@@ -319,7 +319,7 @@ class _MapSection extends StatelessWidget {
                         : LocaleKeys.ownerAddPropertySelectLocation,
                     color: AppColors.white,
                     fontSize: 13.sp,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                   ),
                 ],
               ),

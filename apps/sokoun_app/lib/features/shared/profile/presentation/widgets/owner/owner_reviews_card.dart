@@ -15,7 +15,7 @@ class OwnerReviewsCard extends StatelessWidget {
             LocaleKeys.profileLatestReviews,
             color: AppColors.sokoonNavy,
             fontSize: 14.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
           ),
           4.szH,
           if (reviews.isEmpty) const OwnerReviewsEmptyState(),

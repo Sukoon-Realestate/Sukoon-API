@@ -74,7 +74,7 @@ class SuggestedAreaCard extends StatelessWidget {
               place.district,
               color: isSelected ? AppColors.sokoonTeal : AppColors.sokoonNavy,
               fontSize: 12.sp,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.start,

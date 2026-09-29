@@ -77,7 +77,7 @@ class NotificationDetailsContent extends StatelessWidget {
                   notification.title,
                   color: AppColors.sokoonNavy,
                   fontSize: 20.sp,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w700,
                   maxLines: 3,
                 ),
                 12.szH,

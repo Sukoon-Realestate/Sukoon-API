@@ -33,7 +33,7 @@ class TenantPropertyPriceAndRating extends StatelessWidget {
                     property.price,
                     color: AppColors.sokoonTeal,
                     fontSize: 24.sp,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w800,
                   ),
                 ],
               ),
@@ -49,7 +49,7 @@ class TenantPropertyPriceAndRating extends StatelessWidget {
               property.rating,
               color: AppColors.sokoonNavy,
               fontSize: 13.sp,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w800,
             ),
             3.szW,
             AppText(

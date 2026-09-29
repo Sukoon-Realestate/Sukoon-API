@@ -33,22 +33,12 @@ class TenantPropertyHeroGallery extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<String> imageUrls = property.imageUrls;
     final bool hasImages = imageUrls.isNotEmpty;
-    final int photoCount = hasImages
-        ? imageUrls.length
-        : property.photoLabels.length + 3;
-    final int thumbCount = hasImages && imageUrls.length < 6
-        ? imageUrls.length
-        : 6;
+    final int photoCount = imageUrls.length;
+    final int thumbCount = imageUrls.length.clamp(0, 6);
 
     return Container(
       height: 258.h,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: AlignmentDirectional.topStart,
-          end: AlignmentDirectional.bottomEnd,
-          colors: [AppColors.tealDark, AppColors.sokoonTeal],
-        ),
-      ),
+      decoration: const BoxDecoration(color: AppColors.grayBluePale),
       child: Stack(
         children: [
           if (hasImages)
@@ -62,7 +52,7 @@ class TenantPropertyHeroGallery extends StatelessWidget {
           else
             Icon(
               Icons.apartment_outlined,
-              color: AppColors.whiteAlpha40,
+              color: AppColors.blueGrayLight,
               size: 62.r,
             ).centerWidget,
           PositionedDirectional(
@@ -73,20 +63,25 @@ class TenantPropertyHeroGallery extends StatelessWidget {
               children: [
                 _HeroIconButton(
                   icon: Icons.arrow_back_ios_new_rounded,
+                  tooltip: MaterialLocalizations.of(context).backButtonTooltip,
                   onPressed: Go.back,
                 ),
                 const Spacer(),
                 _HeroIconButton(
                   icon: Icons.ios_share_rounded,
+                  tooltip: LocaleKeys.tenantPropertyDetailsShare,
                   onPressed: () => _showShareSheet(context),
                 ),
               ],
             ),
           ),
           PositionedDirectional(
-            bottom: 76.h,
+            bottom: hasImages ? 76.h : 16.h,
             start: 14.w,
-            child: Row(
+            end: 14.w,
+            child: Wrap(
+              spacing: 8.w,
+              runSpacing: 8.h,
               children: [
                 if (property.isVerified)
                   _HeroPill(
@@ -94,72 +89,70 @@ class TenantPropertyHeroGallery extends StatelessWidget {
                     color: AppColors.sokoonTeal,
                     textColor: AppColors.white,
                   ),
-                8.szW,
-                _HeroPill(
-                  label:
-                      '$photoCount ${LocaleKeys.tenantPropertyDetailsPhotoCountUnit}',
-                  color: AppColors.blackAlpha45,
-                  textColor: AppColors.white,
-                ),
+                if (hasImages)
+                  _HeroPill(
+                    label:
+                        '$photoCount ${LocaleKeys.tenantPropertyDetailsPhotoCountUnit}',
+                    color: AppColors.blackAlpha45,
+                    textColor: AppColors.white,
+                  ),
               ],
             ),
           ),
-          PositionedDirectional(
-            bottom: 0,
-            start: 0,
-            end: 0,
-            child: Container(
-              height: 64.h,
-              color: AppColors.slate,
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                reverse: true,
-                itemBuilder: (context, index) {
-                  final color =
-                      property.imageColors[index % property.imageColors.length];
-                  final bool showMoreOverlay = hasImages
-                      ? index == thumbCount - 1 && imageUrls.length > thumbCount
-                      : index == 5;
-                  return GestureDetector(
-                    onTap: () => _openPhotos(index),
-                    behavior: HitTestBehavior.opaque,
-                    child: Container(
-                      width: index == 0 ? 64.w : 58.w,
-                      decoration: BoxDecoration(
-                        color: color,
-                        borderRadius: BorderRadius.circular(10.r),
-                        border: index == 0
-                            ? Border.all(color: AppColors.white, width: 2)
+          if (hasImages)
+            PositionedDirectional(
+              bottom: 0,
+              start: 0,
+              end: 0,
+              child: Container(
+                height: 64.h,
+                color: AppColors.slate,
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  reverse: true,
+                  itemBuilder: (context, index) {
+                    const color = AppColors.slate;
+                    final bool showMoreOverlay =
+                        index == thumbCount - 1 &&
+                        imageUrls.length > thumbCount;
+                    return GestureDetector(
+                      onTap: () => _openPhotos(index),
+                      behavior: HitTestBehavior.opaque,
+                      child: Container(
+                        width: index == 0 ? 64.w : 58.w,
+                        decoration: BoxDecoration(
+                          color: color,
+                          borderRadius: BorderRadius.circular(10.r),
+                          border: index == 0
+                              ? Border.all(color: AppColors.white, width: 2)
+                              : null,
+                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child: showMoreOverlay
+                            ? AppText(
+                                '+${imageUrls.length - thumbCount}',
+                                color: AppColors.white,
+                                fontSize: 11.sp,
+                                fontWeight: FontWeight.w700,
+                                textAlign: TextAlign.center,
+                              ).centerWidget
+                            : hasImages
+                            ? CachedImage(
+                                url: imageUrls[index],
+                                fit: BoxFit.cover,
+                                width: index == 0 ? 64.w : 58.w,
+                                height: 48.h,
+                              )
                             : null,
                       ),
-                      clipBehavior: Clip.antiAlias,
-                      child: showMoreOverlay
-                          ? AppText(
-                              hasImages
-                                  ? '+${imageUrls.length - thumbCount}\n${LocaleKeys.tenantPropertyDetailsPhotos}'
-                                  : '+7\n${LocaleKeys.tenantPropertyDetailsPhotos}',
-                              color: AppColors.white,
-                              fontSize: 11.sp,
-                              fontWeight: FontWeight.w900,
-                              textAlign: TextAlign.center,
-                            ).centerWidget
-                          : hasImages
-                          ? CachedImage(
-                              url: imageUrls[index],
-                              fit: BoxFit.cover,
-                              width: index == 0 ? 64.w : 58.w,
-                              height: 48.h,
-                            )
-                          : null,
-                    ),
-                  );
-                },
-                separatorBuilder: (context, index) => 8.szW,
-                itemCount: thumbCount,
+                    );
+                  },
+                  separatorBuilder: (context, index) => 8.szW,
+                  itemCount: thumbCount,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
@@ -167,26 +160,28 @@ class TenantPropertyHeroGallery extends StatelessWidget {
 }
 
 class _HeroIconButton extends StatelessWidget {
-  const _HeroIconButton({required this.icon, required this.onPressed});
+  const _HeroIconButton({
+    required this.icon,
+    required this.tooltip,
+    required this.onPressed,
+  });
+
+  final String tooltip;
 
   final IconData icon;
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        width: 36.r,
-        height: 36.r,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: AppColors.blackAlpha35,
-          borderRadius: BorderRadius.circular(18.r),
-        ),
-        child: Icon(icon, color: AppColors.white, size: 18.r),
+    return IconButton.filled(
+      tooltip: tooltip,
+      onPressed: onPressed,
+      style: IconButton.styleFrom(
+        backgroundColor: AppColors.blackAlpha45,
+        foregroundColor: AppColors.white,
+        minimumSize: const Size(48, 48),
       ),
+      icon: Icon(icon, size: 20.r),
     );
   }
 }

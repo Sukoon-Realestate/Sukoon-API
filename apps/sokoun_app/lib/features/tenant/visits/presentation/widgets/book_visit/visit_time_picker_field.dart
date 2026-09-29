@@ -85,7 +85,7 @@ class VisitTimePickerField extends StatelessWidget {
         onTap: isEnabled ? () => _openPicker(context) : null,
         behavior: HitTestBehavior.opaque,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 180),
+          duration: SokounMotion.duration(context, milliseconds: 180),
           height: 52.h,
           padding: EdgeInsetsDirectional.symmetric(horizontal: 16.w),
           decoration: BoxDecoration(

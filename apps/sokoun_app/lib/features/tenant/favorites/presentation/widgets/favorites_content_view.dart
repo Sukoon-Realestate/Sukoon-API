@@ -64,6 +64,7 @@ class FavoritesContentView extends StatelessWidget {
                 )
               : AppPagify<FavoritePropertyContent>(
                   pagifyController: pagifyController,
+                  rankingType: Ranking.adaptiveGrid,
                   asyncCall: loadPage,
                   shrinkWrap: false,
                   cacheKey: activeFilterCount == 0
@@ -81,7 +82,7 @@ class FavoritesContentView extends StatelessWidget {
                         key: ValueKey(item.id),
                         item: item,
                         onRemove: () => onFavoriteRemoved(item),
-                      ).paddingBottom(12.h),
+                      ),
                 ).padding(EdgeInsets.fromLTRB(20.w, 0, 20.w, 16.h)),
         ),
       ],

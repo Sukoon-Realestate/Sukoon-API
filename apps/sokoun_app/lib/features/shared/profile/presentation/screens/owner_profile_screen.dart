@@ -67,7 +67,8 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
       value: _profileCubit,
       child: BlocBuilder<OwnerProfileCubit, AsyncState<OwnerProfileContent>>(
         builder: (context, state) {
-          return Scaffold(
+          return AppScaffold(
+            showBackButton: false,
             backgroundColor: AppColors.scaffoldBackground,
             body: SafeArea(
               child: Column(

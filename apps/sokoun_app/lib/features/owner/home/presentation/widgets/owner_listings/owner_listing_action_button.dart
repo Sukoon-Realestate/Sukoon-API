@@ -22,7 +22,7 @@ class OwnerListingActionButton extends StatelessWidget {
           action.label,
           color: action.foregroundColor,
           fontSize: 12.sp,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,

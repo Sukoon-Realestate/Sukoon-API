@@ -1,3 +1,4 @@
+import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sokoun_app/features/shared/auth/data/models/register.dart';
@@ -58,7 +59,7 @@ class _RegisterFlowScreenState extends State<RegisterFlowScreen> {
 
     _pageController.animateToPage(
       step.index,
-      duration: const Duration(milliseconds: 280),
+      duration: SokounMotion.duration(context, milliseconds: 280),
       curve: Curves.easeOutCubic,
     );
   }

@@ -17,7 +17,7 @@ class RegisterHeader extends StatelessWidget {
           LocaleKeys.createAccount,
           color: AppColors.sokoonNavy,
           fontSize: 24.sp,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
         ),
         6.szH,
         AppText(

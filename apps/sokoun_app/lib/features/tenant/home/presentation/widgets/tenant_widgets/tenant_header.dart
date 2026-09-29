@@ -49,7 +49,7 @@ class TenantHeader extends StatelessWidget {
                 greeting,
                 color: AppColors.sokoonNavy,
                 fontSize: 18.sp,
-                fontWeight: FontWeight.w900,
+                fontWeight: FontWeight.w700,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

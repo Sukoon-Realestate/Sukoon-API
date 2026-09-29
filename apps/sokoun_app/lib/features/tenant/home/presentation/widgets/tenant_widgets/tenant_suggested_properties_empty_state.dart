@@ -33,7 +33,7 @@ class TenantSuggestedPropertiesEmptyState extends StatelessWidget {
             LocaleKeys.tenantHomeEmptyTitle,
             color: AppColors.sokoonNavy,
             fontSize: 16.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
             textAlign: TextAlign.center,
             maxLines: 2,
           ),

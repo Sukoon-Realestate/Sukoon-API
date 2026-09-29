@@ -54,8 +54,8 @@ class SearchResultCard extends StatelessWidget {
                 item.title.isEmpty ? '••••••••••••' : item.title,
                 color: AppColors.sokoonNavy,
                 fontSize: 15.sp,
-                fontWeight: FontWeight.w900,
-                maxLines: 1,
+                fontWeight: FontWeight.w700,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
               5.szH,
@@ -89,27 +89,19 @@ class SearchResultCard extends StatelessWidget {
               10.szH,
               TagsRow(tags: tags),
               12.szH,
-              Row(
+              Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 12.w,
+                runSpacing: 8.h,
                 children: [
-                  DetailsButton(propertyId: item.id),
-                  const Spacer(),
-                  Row(
-                    children: [
-                      AppText(
-                        '${LocaleKeys.ownerRevenueCurrency}/${labelResolver.pricePeriodLabel(item.pricePeriod)}',
-                        color: AppColors.sokoonGray,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      5.szW,
-                      AppText(
-                        item.id.isEmpty ? '••••' : item.formattedPrice,
-                        color: AppColors.sokoonTeal,
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ],
+                  AppText(
+                    '${item.formattedPrice} ${LocaleKeys.ownerRevenueCurrency}/${labelResolver.pricePeriodLabel(item.pricePeriod)}',
+                    color: AppColors.sokoonTeal,
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.w700,
                   ),
+                  DetailsButton(propertyId: item.id),
                 ],
               ),
             ],

@@ -21,7 +21,7 @@ class VisitFilterChip extends StatelessWidget {
         onTap: onPressed,
         behavior: HitTestBehavior.opaque,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 180),
+          duration: SokounMotion.duration(context, milliseconds: 180),
           padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 7.h),
           decoration: BoxDecoration(
             color: isSelected ? AppColors.sokoonTeal : AppColors.white,

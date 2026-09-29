@@ -1,6 +1,7 @@
+import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
 import 'package:sokoun_app/features/tenant/favorites/data/models/favorites_content.dart';
 
 import 'favorite_property_card.dart';
@@ -23,25 +24,25 @@ class FavoritesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 220),
+      duration: SokounMotion.duration(context, milliseconds: 220),
       child: items.isEmpty
           ? FavoritesEmptyState(
               isFiltered: isFiltered,
               onClearFiltersTap: onClearFiltersPressed,
             )
-          : ListView.separated(
+          : SingleChildScrollView(
               key: const PageStorageKey('favorites-list'),
               padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 16.h),
-              itemBuilder: (context, index) {
-                final FavoritePropertyContent item = items[index];
-                return FavoritePropertyCard(
-                  key: ValueKey(item.id),
-                  item: item,
-                  onRemove: () => onFavoriteRemoved(item),
-                );
-              },
-              separatorBuilder: (context, index) => 12.szH,
-              itemCount: items.length,
+              child: SokounAdaptiveGrid(
+                children: [
+                  for (final item in items)
+                    FavoritePropertyCard(
+                      key: ValueKey(item.id),
+                      item: item,
+                      onRemove: () => onFavoriteRemoved(item),
+                    ),
+                ],
+              ),
             ),
     );
   }

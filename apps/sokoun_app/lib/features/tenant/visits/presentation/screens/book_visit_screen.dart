@@ -134,7 +134,8 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
   Widget build(BuildContext context) {
     return BlocProvider<BookVisitCubit>.value(
       value: _bookVisitCubit,
-      child: Scaffold(
+      child: AppScaffold(
+        showBackButton: false,
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
           child: Column(

@@ -42,56 +42,56 @@ class TenantAccountSummaryContentView extends StatelessWidget {
             ),
           ],
         ),
-        // 18.szH,
-        // ProfileSurfaceCard(
-        //   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
-        //   child: Column(
-        //     children: [
-        //       ProfileMenuTile(
-        //         icon: Icons.favorite_border_rounded,
-        //         label: shortcuts.savedProperties.title.isNotEmpty
-        //             ? shortcuts.savedProperties.title
-        //             : LocaleKeys.profileSavedProperties,
-        //         value: _shortcutLabel(shortcuts.savedProperties),
-        //         iconColor: AppColors.sokoonTeal,
-        //         iconBackgroundColor: AppColors.mintLight,
-        //         onTap: () => Go.to(const FavoritesScreen()),
-        //         showDivider: true,
-        //       ),
-        //       ProfileMenuTile(
-        //         icon: Icons.calendar_month_outlined,
-        //         label: shortcuts.visitsHistory.title.isNotEmpty
-        //             ? shortcuts.visitsHistory.title
-        //             : LocaleKeys.profileVisitHistory,
-        //         value: _shortcutLabel(shortcuts.visitsHistory),
-        //         iconColor: AppColors.sokoonTeal,
-        //         iconBackgroundColor: AppColors.mintLight,
-        //         onTap: () => Go.to(const TenantVisitsScreen()),
-        //         showDivider: true,
-        //       ),
-        //       ProfileMenuTile(
-        //         icon: Icons.shield_outlined,
-        //         label: shortcuts.identityVerification.title.isNotEmpty
-        //             ? shortcuts.identityVerification.title
-        //             : LocaleKeys.profileIdentityVerification,
-        //         value: shortcuts.identityVerification.label.isNotEmpty
-        //             ? shortcuts.identityVerification.label
-        //             : summary.identityVerification.statusLabel,
-        //         iconColor: summary.identityVerification.isVerified
-        //             ? AppColors.green
-        //             : AppColors.sokoonGray,
-        //         iconBackgroundColor: summary.identityVerification.isVerified
-        //             ? AppColors.greenPale
-        //             : AppColors.grayBackground,
-        //         onTap: () => Go.to(
-        //           summary.identityVerification.isVerified
-        //               ? const KycApprovedScreen()
-        //               : const KycIntroScreen(),
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
+        18.szH,
+        ProfileSurfaceCard(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
+          child: Column(
+            children: [
+              ProfileMenuTile(
+                icon: Icons.favorite_border_rounded,
+                label: shortcuts.savedProperties.title.isNotEmpty
+                    ? shortcuts.savedProperties.title
+                    : LocaleKeys.profileSavedProperties,
+                value: _shortcutLabel(shortcuts.savedProperties),
+                iconColor: AppColors.sokoonTeal,
+                iconBackgroundColor: AppColors.mintLight,
+                onTap: () => Go.to(const FavoritesScreen()),
+                showDivider: true,
+              ),
+              ProfileMenuTile(
+                icon: Icons.calendar_month_outlined,
+                label: shortcuts.visitsHistory.title.isNotEmpty
+                    ? shortcuts.visitsHistory.title
+                    : LocaleKeys.profileVisitHistory,
+                value: _shortcutLabel(shortcuts.visitsHistory),
+                iconColor: AppColors.sokoonTeal,
+                iconBackgroundColor: AppColors.mintLight,
+                onTap: () => Go.to(const TenantVisitsScreen()),
+                showDivider: true,
+              ),
+              ProfileMenuTile(
+                icon: Icons.shield_outlined,
+                label: shortcuts.identityVerification.title.isNotEmpty
+                    ? shortcuts.identityVerification.title
+                    : LocaleKeys.profileIdentityVerification,
+                value: shortcuts.identityVerification.label.isNotEmpty
+                    ? shortcuts.identityVerification.label
+                    : summary.identityVerification.statusLabel,
+                iconColor: summary.identityVerification.isVerified
+                    ? AppColors.green
+                    : AppColors.sokoonGray,
+                iconBackgroundColor: summary.identityVerification.isVerified
+                    ? AppColors.greenPale
+                    : AppColors.grayBackground,
+                onTap: () => Go.to(
+                  summary.identityVerification.isVerified
+                      ? const KycApprovedScreen()
+                      : const KycIntroScreen(),
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

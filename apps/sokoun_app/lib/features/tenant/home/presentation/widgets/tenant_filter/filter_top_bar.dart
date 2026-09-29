@@ -38,7 +38,7 @@ class FilterTopBar extends StatelessWidget {
               '$activeCount',
               color: AppColors.white,
               fontSize: 12.sp,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
             ),
           ),
           8.szW,
@@ -46,7 +46,7 @@ class FilterTopBar extends StatelessWidget {
             LocaleKeys.tenantFilterTitle,
             color: AppColors.sokoonNavy,
             fontSize: 17.sp,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
           ),
           const Spacer(),
           GestureDetector(

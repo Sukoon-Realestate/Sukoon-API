@@ -42,7 +42,7 @@ class TenantVisitsEmptyState extends StatelessWidget {
               title,
               color: AppColors.sokoonNavy,
               fontSize: 17.sp,
-              fontWeight: FontWeight.w900,
+              fontWeight: FontWeight.w700,
               textAlign: TextAlign.center,
               maxLines: 2,
             ),

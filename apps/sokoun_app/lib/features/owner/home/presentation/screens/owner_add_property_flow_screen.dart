@@ -1,3 +1,5 @@
+import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
+import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -116,7 +118,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
   void _goToPage(int page) {
     _pageController.animateToPage(
       page,
-      duration: const Duration(milliseconds: 280),
+      duration: SokounMotion.duration(context, milliseconds: 280),
       curve: Curves.easeOutCubic,
     );
   }
@@ -334,7 +336,8 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
       builder: (context, isSubmitting, _) => UnsavedChangesGuard(
         hasChanges: () => _hasChanges,
         isSaving: () => _isSubmitting.value,
-        child: Scaffold(
+        child: AppScaffold(
+          showBackButton: false,
           backgroundColor: AppColors.scaffoldBackground,
           body: SafeArea(
             child: PageView(

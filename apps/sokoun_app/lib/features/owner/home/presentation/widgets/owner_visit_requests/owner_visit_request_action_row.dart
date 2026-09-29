@@ -92,7 +92,7 @@ class _ActionButton extends StatelessWidget {
                   label,
                   color: foregroundColor,
                   fontSize: 14.sp,
-                  fontWeight: FontWeight.w900,
+                  fontWeight: FontWeight.w700,
                   textAlign: TextAlign.center,
                 ),
         ),

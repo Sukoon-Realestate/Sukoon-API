@@ -57,7 +57,7 @@ class OwnerTransactionRow extends StatelessWidget {
           '${LocaleKeys.ownerRevenueCurrency}',
           color: amountColor,
           fontSize: 13.sp,
-          fontWeight: FontWeight.w900,
+          fontWeight: FontWeight.w700,
         ),
       ],
     );

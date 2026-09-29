@@ -1,3 +1,7 @@
+import 'package:sokoun_app/features/tenant/favorites/presentation/screens/favorites_screen.dart';
+import 'package:sokoun_app/features/tenant/visits/imports.dart';
+import 'package:sokoun_app/features/shared/auth/presentation/screens/kyc_approved_screen.dart';
+import 'package:sokoun_app/features/shared/auth/presentation/screens/kyc_intro_screen.dart';
 import 'dart:io';
 import 'dart:async';
 
@@ -27,11 +31,8 @@ import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
 import 'package:melos_core/core/widgets/toast_messages/custom_messages.dart';
 import 'package:melos_core/generated/assets.dart';
-import 'package:sokoun_app/features/owner/properties/imports.dart';
-import 'package:sokoun_app/features/owner/visits/imports.dart';
 import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
 import 'package:sokoun_app/features/shared/notifications/data/notification_device_data.dart';
-import 'package:sokoun_app/features/tenant/favorites/presentation/screens/favorites_screen.dart';
 import 'package:sokoun_app/shared_widgets/shared_widgets.dart';
 import 'package:sokoun_app/shared_widgets/unsaved_changes_guard.dart';
 

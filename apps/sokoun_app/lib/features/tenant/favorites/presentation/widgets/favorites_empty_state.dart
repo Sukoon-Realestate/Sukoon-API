@@ -57,7 +57,7 @@ class FavoritesEmptyState extends StatelessWidget {
                 : LocaleKeys.favoritesEmptyTitle,
             color: AppColors.sokoonNavy,
             fontSize: FontSize.s18,
-            fontWeight: FontWeight.w900,
+            fontWeight: FontWeight.w700,
             textAlign: TextAlign.center,
           ),
           AppSize.sH8.szH,

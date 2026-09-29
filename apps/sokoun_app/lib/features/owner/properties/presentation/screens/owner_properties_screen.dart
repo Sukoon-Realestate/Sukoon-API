@@ -129,7 +129,9 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AppScaffold(
+      showBackButton: false,
+      contentWidth: SokounContentWidth.wide,
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: ValueListenableBuilder<bool>(

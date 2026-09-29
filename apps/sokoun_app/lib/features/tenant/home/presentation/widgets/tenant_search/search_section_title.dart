@@ -14,7 +14,7 @@ class SearchSectionTitle extends StatelessWidget {
       title,
       color: AppColors.sokoonGray,
       fontSize: 13.sp,
-      fontWeight: FontWeight.w900,
+      fontWeight: FontWeight.w700,
       textAlign: TextAlign.start,
     );
   }

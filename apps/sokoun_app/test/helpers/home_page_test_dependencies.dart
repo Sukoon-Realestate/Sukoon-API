@@ -7,7 +7,7 @@ import 'package:melos_core/core/network/network_service.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 /// Registers a fake [BaseCrudUseCase] so widget tests can pump screens
-/// that create `AsyncCubit`s (e.g. `HomePageCubit`) without a network.
+/// that use Cubits or AppPagify without a network.
 void registerHomePageTestDependencies() {
   if (!injector.isRegistered<BaseCrudUseCase>()) {
     injector.registerLazySingleton<BaseCrudUseCase>(

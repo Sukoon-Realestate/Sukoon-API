@@ -26,7 +26,7 @@ class FilterApplyBar extends StatelessWidget {
         height: 48.h,
         width: double.infinity,
         fontSize: 14.sp,
-        fontWeight: FontWeight.w900,
+        fontWeight: FontWeight.w700,
       ),
     );
   }
