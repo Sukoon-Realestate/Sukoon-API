@@ -124,12 +124,6 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
                   backgroundColor: AppColors.greenPale,
                 ),
                 OwnerMoreItem(
-                  icon: Icons.lock_outline_rounded,
-                  label: LocaleKeys.profilePrivacySecurity,
-                  color: AppColors.blue,
-                  backgroundColor: AppColors.bluePale,
-                ),
-                OwnerMoreItem(
                   icon: Icons.language_rounded,
                   label: LocaleKeys.changeLanguage,
                   color: AppColors.sokoonTeal,
@@ -143,25 +137,18 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
               title: LocaleKeys.profilePropertyManagement,
               items: [
                 OwnerMoreItem(
-                  icon: Icons.apartment_rounded,
-                  label: LocaleKeys.ownerPropertiesTitle,
-                  color: AppColors.sokoonGold,
-                  backgroundColor: AppColors.goldPale,
-                  onTap: () => Go.to(const OwnerPropertiesScreen()),
-                ),
-                OwnerMoreItem(
                   icon: Icons.bar_chart_rounded,
                   label: LocaleKeys.profileAnalyticsStatistics,
                   color: AppColors.blue,
                   backgroundColor: AppColors.bluePale,
                 ),
-                OwnerMoreItem(
-                  icon: Icons.calendar_month_outlined,
-                  label: LocaleKeys.profileVisitSchedule,
-                  color: AppColors.sokoonTeal,
-                  backgroundColor: AppColors.mintLight,
-                  onTap: () => Go.to(const OwnerRequestsCalendarScreen()),
-                ),
+                // OwnerMoreItem(
+                //   icon: Icons.calendar_month_outlined,
+                //   label: LocaleKeys.profileVisitSchedule,
+                //   color: AppColors.sokoonTeal,
+                //   backgroundColor: AppColors.mintLight,
+                //   onTap: () => Go.to(const OwnerRequestsCalendarScreen()),
+                // ),
               ],
             ),
             18.szH,
