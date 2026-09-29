@@ -285,6 +285,13 @@ class OwnerDashboardService:
         )
 
         profile = getattr(owner, "profile", None)
+        if profile is not None:
+            profile.refresh_from_db()
+        else:
+            from core_apps.profiles.models import Profile
+
+            profile = Profile.objects.filter(user=owner).first()
+
         avatar_url = (
             profile.avatar.url if profile and getattr(profile, "avatar", None) else None
         )
