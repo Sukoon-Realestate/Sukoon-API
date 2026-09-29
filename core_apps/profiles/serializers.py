@@ -1,5 +1,6 @@
 import base64
 import uuid
+from typing import Optional
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import serializers
@@ -376,3 +377,54 @@ class UserSettingsSerializer(serializers.ModelSerializer):
             for k, v in mutable_data.pop("privacy").items():
                 mutable_data.setdefault(k, v)
         return super().to_internal_value(mutable_data)
+
+
+class OwnerUnreadCountsSerializer(serializers.Serializer):
+    """
+    Serializer for Owner badge / unread counts:
+    - visit_requests_count
+    - unread_chat_messages_count
+    - unread_notifications_count
+    """
+
+    visit_requests_count = serializers.IntegerField(read_only=True)
+    unread_chat_messages_count = serializers.IntegerField(read_only=True)
+    unread_notifications_count = serializers.IntegerField(read_only=True)
+
+
+class TenantUnreadCountsSerializer(serializers.Serializer):
+    """
+    Serializer for Tenant badge / unread counts:
+    - favorites_count
+    - unread_chat_messages_count
+    - unread_notifications_count
+    - visit_requests_count
+    """
+
+    favorites_count = serializers.IntegerField(read_only=True)
+    unread_chat_messages_count = serializers.IntegerField(read_only=True)
+    unread_notifications_count = serializers.IntegerField(read_only=True)
+    visit_requests_count = serializers.IntegerField(read_only=True)
+
+
+class TenantMyRateSerializer(serializers.Serializer):
+    """
+    Serializer for tenant's submitted review in 'My rates' feed.
+    """
+
+    id = serializers.UUIDField(read_only=True)
+    property_id = serializers.UUIDField(source="visit.property.id", read_only=True)
+    property_title = serializers.CharField(
+        source="visit.property.title", read_only=True
+    )
+    property_image = serializers.SerializerMethodField()
+    visit_id = serializers.UUIDField(source="visit.id", read_only=True)
+    rating = serializers.IntegerField(source="overall_rating", read_only=True)
+    comment = serializers.CharField(read_only=True)
+    created_at = serializers.DateTimeField(read_only=True)
+
+    def get_property_image(self, obj) -> Optional[str]:
+        image = getattr(obj.visit.property, "main_image", None)
+        if image and hasattr(image, "url"):
+            return image.url
+        return str(image) if image else None

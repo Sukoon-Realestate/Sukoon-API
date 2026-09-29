@@ -68,7 +68,7 @@ class NotificationService:
         queryset = Notification.objects.filter(user=user)
         if unread_only:
             queryset = queryset.filter(is_read=False)
-        return queryset.order_by("-created_at")
+        return queryset.order_by("-created_at", "-pkid")
 
     @classmethod
     def get_notification_detail(cls, user: Any, notification_id: str) -> Notification:

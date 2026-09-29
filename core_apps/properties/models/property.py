@@ -39,6 +39,16 @@ class Property(TimeStampedModel):
         blank=True,
         verbose_name=_("Main Image"),
     )
+    video = CloudinaryField(
+        folder="properties/videos/",
+        resource_type="video",
+        null=True,
+        blank=True,
+        verbose_name=_("Property Video"),
+    )
+    video_duration = models.PositiveIntegerField(
+        _("Video Duration (seconds)"), null=True, blank=True
+    )
     title = models.CharField(_("Title"), max_length=255)
     description = models.TextField(_("Description"), blank=True, default="")
     price = models.DecimalField(_("Price"), max_digits=12, decimal_places=2)

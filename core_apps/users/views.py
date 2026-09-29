@@ -8,6 +8,7 @@ from rest_framework import generics, permissions, status
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -15,6 +16,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from core_apps.common.renderers import GenericJsonRenderer
 from core_apps.users.serializers import (
+    CompleteRegisterSerializer,
     CreateUserSerializer,
     GoogleAuthSerializer,
     AppleAuthSerializer,
@@ -28,7 +30,11 @@ from core_apps.users.services.social_auth_service import (
     authenticate_apple,
     authenticate_facebook,
 )
-from core_apps.users.services.user_service import delete_user_account, register_user
+from core_apps.users.services.user_service import (
+    complete_user_registration,
+    delete_user_account,
+    register_user,
+)
 from core_apps.users.services.otp_service import (
     verify_email_otp,
     resend_verification_otp,
@@ -454,3 +460,32 @@ class ResendOtpAPIView(APIView):
             },
             status=status.HTTP_200_OK,
         )
+
+
+class CompleteRegisterAPIView(APIView):
+    """
+    Complete registration by supplying missing national ID and identity documents.
+    Multipart form-data endpoint for authenticated users.
+
+    request.body (multipart):
+    - national_id: "12345678901234"
+    - front_id_image: <file>
+    - back_id_image: <file>
+    - selfie_image: <file> (optional)
+    """
+
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [GenericJsonRenderer]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    serializer_class = CompleteRegisterSerializer
+
+    def post(self, request: Request, *args, **kwargs) -> Response:
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        result = complete_user_registration(
+            user=request.user,
+            validated_data=serializer.validated_data,
+        )
+
+        return Response(result, status=status.HTTP_200_OK)

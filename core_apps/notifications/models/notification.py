@@ -47,7 +47,7 @@ class Notification(TimeStampedModel):
     class Meta:
         verbose_name = _("Notification")
         verbose_name_plural = _("Notifications")
-        ordering = ["-created_at"]
+        ordering = ["-created_at", "-pkid"]
         indexes = [
             models.Index(fields=["user", "is_read"]),
             models.Index(fields=["user", "-created_at"]),

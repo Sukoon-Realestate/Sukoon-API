@@ -729,7 +729,15 @@ class TestPropertyVisitViews:
         assert "data" in json_data
         assert len(json_data["data"]["results"]) == 1
         result = json_data["data"]["results"][0]
-        assert set(result.keys()) == {"id", "tenant", "visit_date", "status"}
+        assert set(result.keys()) == {
+            "id",
+            "property_id",
+            "tenant",
+            "visit_date",
+            "visit_time",
+            "time",
+            "status",
+        }
         assert set(result["tenant"].keys()) == {"name", "avatar", "is_verified"}
         assert result["tenant"]["name"] == another_user.get_full_name
 
@@ -815,7 +823,15 @@ class TestPropertyVisitViews:
         list_response = auth_client.get(list_url)
         assert list_response.status_code == status.HTTP_200_OK
         results = list_response.json()["data"]["results"]
-        assert set(results[0].keys()) == {"id", "tenant", "visit_date", "status"}
+        assert set(results[0].keys()) == {
+            "id",
+            "property_id",
+            "tenant",
+            "visit_date",
+            "visit_time",
+            "time",
+            "status",
+        }
         assert results[0]["status"] == PropertyVisit.Status.CONFIRMED
 
     def test_retrieve_visit_detail_returns_trimmed_payload(
@@ -837,7 +853,15 @@ class TestPropertyVisitViews:
 
         assert response.status_code == status.HTTP_200_OK
         visit_data = response.json()["data"]
-        assert set(visit_data.keys()) == {"id", "tenant", "visit_date", "status"}
+        assert set(visit_data.keys()) == {
+            "id",
+            "property_id",
+            "tenant",
+            "visit_date",
+            "visit_time",
+            "time",
+            "status",
+        }
         tenant_data = visit_data["tenant"]
         assert set(tenant_data.keys()) == {"name", "avatar", "is_verified"}
         assert tenant_data["name"] == another_user.get_full_name

@@ -161,6 +161,11 @@ class MyPropertyListSerializer(serializers.ModelSerializer):
 class PropertySerializer(serializers.ModelSerializer):
     images = PropertyImageSerializer(many=True, read_only=True)
     main_image = CloudinarySerializerField(required=False, allow_null=True)
+    video = CloudinarySerializerField(required=False, allow_null=True)
+    video_duration = serializers.IntegerField(
+        required=False, allow_null=True, min_value=1, max_value=60
+    )
+    property_link = serializers.SerializerMethodField(read_only=True)
     owner = serializers.ReadOnlyField(source="owner.get_full_name")
     property_type = serializers.SlugRelatedField(
         slug_field="slug", queryset=PropertyType.objects.all()
@@ -174,6 +179,9 @@ class PropertySerializer(serializers.ModelSerializer):
             "id",
             "owner",
             "main_image",
+            "video",
+            "video_duration",
+            "property_link",
             "title",
             "description",
             "price",
@@ -208,7 +216,17 @@ class PropertySerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
-        read_only_fields = ["id", "owner", "is_verified", "created_at", "updated_at"]
+        read_only_fields = [
+            "id",
+            "owner",
+            "is_verified",
+            "property_link",
+            "created_at",
+            "updated_at",
+        ]
+
+    def get_property_link(self, obj: Property) -> str:
+        return f"https://sokoun.app/properties/{obj.id}"
 
     def validate(self, attrs):
         attrs = super().validate(attrs)
@@ -219,6 +237,11 @@ class PropertySerializer(serializers.ModelSerializer):
         if city and governorate and city.governorate_id != governorate.pkid:
             raise serializers.ValidationError(
                 {"city": "The selected city does not belong to this governorate."}
+            )
+        video_duration = attrs.get("video_duration")
+        if video_duration is not None and (video_duration < 1 or video_duration > 60):
+            raise serializers.ValidationError(
+                {"video_duration": "Video duration must be between 1 and 60 seconds."}
             )
         return attrs
 
@@ -237,6 +260,9 @@ class PropertySerializer(serializers.ModelSerializer):
 class PropertyDetailSerializer(serializers.ModelSerializer):
     images = PropertyImageSerializer(many=True, read_only=True)
     main_image = CloudinarySerializerField(read_only=True)
+    video = CloudinarySerializerField(read_only=True)
+    video_duration = serializers.IntegerField(read_only=True)
+    property_link = serializers.SerializerMethodField(read_only=True)
     owner = serializers.ReadOnlyField(source="owner.get_full_name")
     property_type = serializers.SlugRelatedField(slug_field="slug", read_only=True)
     governorate = GovernorateSerializer(read_only=True)
@@ -265,6 +291,9 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
             "id",
             "owner",
             "main_image",
+            "video",
+            "video_duration",
+            "property_link",
             "title",
             "description",
             "price",
@@ -294,6 +323,9 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
         read_only_fields = fields
+
+    def get_property_link(self, obj: Property) -> str:
+        return f"https://sokoun.app/properties/{obj.id}"
 
     def get_amenities(self, obj: Property) -> list[str]:
         return [

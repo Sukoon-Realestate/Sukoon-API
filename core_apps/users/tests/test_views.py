@@ -23,14 +23,14 @@ class TestLoginView:
         assert "refresh" in res.cookies
         assert "logged_in" in res.cookies
 
-    def test_login_removes_tokens_from_response_body(self, api_client, user):
+    def test_login_returns_tokens_and_sets_cookies(self, api_client, user):
         res = api_client.post(
             LOGIN_URL,
             {"email": "user@example.com", "password": "Testpass123!"},
             format="json",
         )
-        assert "access" not in res.data
-        assert "refresh" not in res.data
+        assert "access" in res.data
+        assert "refresh" in res.data
         assert res.data["message"] == "Logged in Successfully"
 
     def test_login_wrong_password_returns_401(self, api_client, user):

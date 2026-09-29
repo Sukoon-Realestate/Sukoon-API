@@ -1,5 +1,6 @@
 from django.urls import path, re_path
 from .views import (
+    CompleteRegisterAPIView,
     CustomProviderAuthView,
     CustomTokenObtainPairView,
     CustomTokenRefreshView,
@@ -21,6 +22,7 @@ urlpatterns = [
         name="provider-auth",
     ),
     path("register/", UserRegisterAPIView.as_view(), name="user-register"),
+    path("complete-register/", CompleteRegisterAPIView.as_view(), name="complete-register"),
     path("verify/", VerifyEmailAPIView.as_view(), name="verify-email"),
     path("verify-email/", VerifyEmailAPIView.as_view()),
     path("verify-otp/", VerifyEmailAPIView.as_view()),

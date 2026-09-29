@@ -4,10 +4,13 @@ from core_apps.users.views import UserDeleteAPIView
 from .views import (
     AccountSummaryDetailAPIView,
     MyAccountDetailAPIView,
+    OwnerUnreadCountsAPIView,
     ProfileDetailAPIView,
     ProfileEditAPIView,
     ProfileListAPIView,
     ProfileUpdateAPIView,
+    TenantMyRatesListAPIView,
+    TenantUnreadCountsAPIView,
     UserSettingsAPIView,
 )
 
@@ -25,6 +28,17 @@ urlpatterns = [
     path("edit/", ProfileEditAPIView.as_view(), name="profile-edit"),
     path("settings/", UserSettingsAPIView.as_view(), name="user-settings"),
     path("delete-account/", UserDeleteAPIView.as_view(), name="profile-delete-account"),
+    path(
+        "owner/unread-counts/",
+        OwnerUnreadCountsAPIView.as_view(),
+        name="owner-unread-counts",
+    ),
+    path(
+        "tenant/unread-counts/",
+        TenantUnreadCountsAPIView.as_view(),
+        name="tenant-unread-counts",
+    ),
+    path("my-rates/", TenantMyRatesListAPIView.as_view(), name="tenant-my-rates"),
 ]
 
 

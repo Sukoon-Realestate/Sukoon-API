@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from djoser.serializers import UserCreatePasswordRetypeSerializer, UserSerializer
 from rest_framework import serializers
 
+from core_apps.profiles.serializers import CloudinarySerializerField
+
 User = get_user_model()
 
 
@@ -51,6 +53,7 @@ class CustomUserSerializer(UserSerializer):
     full_name = serializers.ReadOnlyField(source="get_full_name")
     gender = serializers.ReadOnlyField(source="profile.gender")
     birth_date = serializers.ReadOnlyField(source="profile.birth_date")
+    type = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -62,9 +65,40 @@ class CustomUserSerializer(UserSerializer):
             "full_name",
             "gender",
             "birth_date",
+            "is_verified",
+            "type",
             "date_joined",
         ]
-        read_only_fields = ["id", "email", "date_joined"]
+        read_only_fields = ["id", "email", "date_joined", "is_verified", "type"]
+
+    def get_type(self, obj):
+        return "user"
+
+
+class CompleteRegisterSerializer(serializers.Serializer):
+    """
+    Serializer for uploading missing KYC documents and national ID.
+    """
+
+    national_id = serializers.CharField(
+        required=False,
+        allow_blank=True,
+        max_length=14,
+        min_length=14,
+        error_messages={
+            "max_length": "National ID must be exactly 14 digits.",
+            "min_length": "National ID must be exactly 14 digits.",
+        },
+    )
+    front_id_image = CloudinarySerializerField(required=False, allow_null=True)
+    back_id_image = CloudinarySerializerField(required=False, allow_null=True)
+    selfie_image = CloudinarySerializerField(required=False, allow_null=True)
+
+    def validate_national_id(self, value: str) -> str:
+        value = value.strip()
+        if value and not value.isdigit():
+            raise serializers.ValidationError("National ID must contain digits only.")
+        return value
 
 
 class GoogleAuthSerializer(serializers.Serializer):

@@ -16,12 +16,16 @@ from .models import Profile, UserSettings
 from .serializers import (
     AccountSummaryScreenSerializer,
     MyAccountScreenSerializer,
+    OwnerUnreadCountsSerializer,
     ProfileEditSerializer,
     ProfileSerializer,
+    TenantMyRateSerializer,
+    TenantUnreadCountsSerializer,
     UpdateProfileSerializer,
     UserSettingsSerializer,
 )
 from .services import ProfileService
+from core_apps.properties.models import PropertyVisitReview
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -208,3 +212,58 @@ class UserSettingsAPIView(generics.RetrieveUpdateAPIView):
 
         response_serializer = self.get_serializer(settings_obj)
         return Response(response_serializer.data, status=status.HTTP_200_OK)
+
+
+class OwnerUnreadCountsAPIView(generics.GenericAPIView):
+    """
+    Returns badge / unread counts for an owner account:
+    - visit_requests_count (pending requests awaiting decision)
+    - unread_chat_messages_count (account-wide unread messages)
+    - unread_notifications_count (account-wide unread notifications)
+    """
+
+    serializer_class = OwnerUnreadCountsSerializer
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs) -> Response:
+        data = ProfileService.get_owner_unread_counts(request.user)
+        serializer = self.get_serializer(data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class TenantUnreadCountsAPIView(generics.GenericAPIView):
+    """
+    Returns badge / unread counts for a tenant account:
+    - favorites_count (saved properties)
+    - unread_chat_messages_count (account-wide unread messages)
+    - unread_notifications_count (account-wide unread notifications)
+    - visit_requests_count (active visit requests)
+    """
+
+    serializer_class = TenantUnreadCountsSerializer
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs) -> Response:
+        data = ProfileService.get_tenant_unread_counts(request.user)
+        serializer = self.get_serializer(data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class TenantMyRatesListAPIView(generics.ListAPIView):
+    """
+    Returns paginated list of reviews and ratings submitted by the authenticated tenant.
+    """
+
+    serializer_class = TenantMyRateSerializer
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = StandardResultsSetPagination
+
+    def get_queryset(self):
+        return (
+            PropertyVisitReview.objects.filter(visit__tenant=self.request.user)
+            .select_related("visit", "visit__property")
+            .order_by("-created_at")
+        )
