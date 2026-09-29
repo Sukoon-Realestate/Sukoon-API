@@ -71,7 +71,8 @@ The visual language is:
 | `AppColors.sokoonNavy` | `#111827` | Titles, body text, and important icons |
 | `AppColors.scaffoldBackground` | `#FAFAF8` | Default page canvas |
 | `AppColors.white` | `#FFFFFF` | Cards, fields, app bars, and sheets |
-| `AppColors.splash` / `AppColors.amber` | `#F59E0B` | Splash and focused warning moments |
+| `AppColors.sokoonSplashBackground` | `#EDFDF3` | Splash canvas, matched to the packaged logo background |
+| `AppColors.splash` / `AppColors.amber` | `#F59E0B` | Legacy splash and focused warning moments |
 
 ### Neutrals
 
