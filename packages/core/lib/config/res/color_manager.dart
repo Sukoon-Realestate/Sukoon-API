@@ -128,4 +128,5 @@ abstract class AppColors {
   static const Color sokoonGray = gray;
   static const Color sokoonMuted = grayLight;
   static const Color sokoonBorder = grayMist;
+  static const Color sokoonSplashBackground = Color(0xFFEDFDF3);
 }
