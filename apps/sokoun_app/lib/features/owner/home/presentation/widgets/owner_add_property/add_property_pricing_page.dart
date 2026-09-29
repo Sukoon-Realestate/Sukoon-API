@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/localized_digits_formatter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -136,9 +137,11 @@ class _PriceSection extends StatelessWidget {
             inputFormatters: [const LocalizedDigitsFormatter()],
             suffix: AppText(
               LocaleKeys.ownerAddPropertyCurrency,
-              color: AppColors.sokoonGray,
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold13.copyWith(
+                color: AppColors.sokoonGray,
+                fontSize: 13.sp,
+                height: 1.45,
+              ),
             ),
           ),
           10.szH,
@@ -212,9 +215,11 @@ class _RentalPeriodSection extends StatelessWidget {
               LocaleKeys.ownerAddPropertyRentalSummary
                   .replaceAll('{count}', form.rentalDuration)
                   .replaceAll('{unit}', form.rentalUnit),
-              color: AppColors.sokoonTeal,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold12.copyWith(
+                color: AppColors.sokoonTeal,
+                fontSize: 12.sp,
+                height: 1.45,
+              ),
               textAlign: TextAlign.start,
             ),
           ),

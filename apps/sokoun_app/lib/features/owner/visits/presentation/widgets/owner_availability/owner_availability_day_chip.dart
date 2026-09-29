@@ -37,17 +37,21 @@ class OwnerAvailabilityDayChip extends StatelessWidget {
             children: [
               AppText(
                 day.localizedShortWeekday,
-                color: isSelected ? AppColors.white : AppColors.sokoonGray,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w500,
+                style: AppTextStyles.medium12.copyWith(
+                  color: isSelected ? AppColors.white : AppColors.sokoonGray,
+                  fontSize: 12.sp,
+                  height: 1.45,
+                ),
                 maxLines: 1,
               ),
               3.szH,
               AppText(
                 '${day.dateValue?.day ?? ''}',
-                color: isSelected ? AppColors.white : AppColors.sokoonNavy,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w700,
+                style: AppTextStyles.bold14.copyWith(
+                  color: isSelected ? AppColors.white : AppColors.sokoonNavy,
+                  fontSize: 14.sp,
+                  height: 1.45,
+                ),
               ),
             ],
           ),

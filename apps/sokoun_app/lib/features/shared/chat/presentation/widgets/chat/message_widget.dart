@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/chat_builder/chat_message.dart';
 
@@ -52,17 +53,22 @@ class ChatMessageBubble extends StatelessWidget {
                   )
                 : AppText(
                     message.message.body,
-                    color: isFromMe ? AppColors.sokoonNavy : AppColors.white,
-                    fontSize: 14.sp,
-                    height: 1.4,
+                    style: AppTextStyles.regular14.copyWith(
+                      color: isFromMe ? AppColors.sokoonNavy : AppColors.white,
+                      fontSize: 14.sp,
+                      height: 1.4,
+                    ),
                     maxLines: 8,
                   ),
           ),
           3.szH,
           AppText(
             message.time ?? '',
-            color: AppColors.sokoonGray,
-            fontSize: 10.sp,
+            style: AppTextStyles.regular10.copyWith(
+              color: AppColors.sokoonGray,
+              fontSize: 10.sp,
+              height: 1.45,
+            ),
             maxLines: 1,
           ).paddingSymmetric(horizontal: 4.w),
         ],
@@ -120,8 +126,11 @@ class _VoiceMessageContent extends StatelessWidget {
         8.szW,
         AppText(
           duration,
-          color: foreground.withValues(alpha: .8),
-          fontSize: 11.sp,
+          style: AppTextStyles.regular11.copyWith(
+            color: foreground.withValues(alpha: .8),
+            fontSize: 11.sp,
+            height: 1.45,
+          ),
           maxLines: 1,
         ),
       ],

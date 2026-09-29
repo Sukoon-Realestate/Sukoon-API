@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 import 'package:melos_core/core/helpers/validators.dart';
@@ -57,11 +58,9 @@ class SokoonPasswordField extends StatelessWidget {
                 horizontal: 16.w,
                 vertical: 14.h,
               ),
-              style: TextStyle(
+              style: AppTextStyles.semiBold.copyWith(
                 color: AppColors.sokoonNavy,
-                fontFamily: ConstantManager.fontFamily,
                 fontSize: 15.sp,
-                fontWeight: FontWeight.w600,
               ),
               onChanged: onChanged,
               validator: validator ?? _validatePassword,
@@ -70,9 +69,11 @@ class SokoonPasswordField extends StatelessWidget {
               SizedBox(height: 4.h),
               AppText(
                 errorText!,
-                color: AppColors.sokoonRose,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w700,
+                style: AppTextStyles.bold12.copyWith(
+                  color: AppColors.sokoonRose,
+                  fontSize: 12.sp,
+                  height: 1.45,
+                ),
               ),
             ],
           ],

@@ -1,6 +1,38 @@
 import 'package:flutter/material.dart';
 
 class AppTextStyles {
+  /// Inherits the surrounding size, weight and line height.
+  static const TextStyle base = TextStyle(
+    fontFamily: 'packages/melos_core/Tajawal',
+  );
+
+  // Weight-only styles preserve contextual sizing in dialogs, buttons and
+  // nested spans, and support sizes outside the fixed type scale below.
+  static const TextStyle regular = TextStyle(
+    fontFamily: 'packages/melos_core/Tajawal',
+    fontWeight: FontWeight.w400,
+  );
+  static const TextStyle medium = TextStyle(
+    fontFamily: 'packages/melos_core/Tajawal',
+    fontWeight: FontWeight.w500,
+  );
+  static const TextStyle semiBold = TextStyle(
+    fontFamily: 'packages/melos_core/Tajawal',
+    fontWeight: FontWeight.w600,
+  );
+  static const TextStyle bold = TextStyle(
+    fontFamily: 'packages/melos_core/Tajawal',
+    fontWeight: FontWeight.w700,
+  );
+  static const TextStyle extraBold = TextStyle(
+    fontFamily: 'packages/melos_core/Tajawal',
+    fontWeight: FontWeight.w800,
+  );
+  static const TextStyle black = TextStyle(
+    fontFamily: 'packages/melos_core/Tajawal',
+    fontWeight: FontWeight.w900,
+  );
+
   static const TextStyle regular9 = TextStyle(
     fontFamily: 'packages/melos_core/Tajawal',
     fontWeight: FontWeight.w400,

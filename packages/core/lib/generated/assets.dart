@@ -11,6 +11,8 @@ class Assets {
 
   static const $AssetsFontsGen fonts = $AssetsFontsGen();
   static const $AssetsLottieGen lottie = $AssetsLottieGen();
+  static const $AssetsPngGen png = $AssetsPngGen();
+  static const $AssetsSvgGen svg = $AssetsSvgGen();
   static const $AssetsTranslationsGen translations = $AssetsTranslationsGen();
 }
 
@@ -85,6 +87,26 @@ class $AssetsFontsGen {
   final String riyal = 'assets/fonts/riyal.ttf';
 }
 
+class $AssetsSvgGen {
+  const $AssetsSvgGen();
+
+  final SvgGenImage building = const SvgGenImage('assets/svg/building.svg');
+  final SvgGenImage calendar = const SvgGenImage('assets/svg/calendar.svg');
+  final SvgGenImage home = const SvgGenImage('assets/svg/home.svg');
+  final SvgGenImage menu = const SvgGenImage('assets/svg/menu.svg');
+  final SvgGenImage message = const SvgGenImage('assets/svg/message.svg');
+  final SvgGenImage notification = const SvgGenImage(
+    'assets/svg/notification.svg',
+  );
+  final SvgGenImage profile = const SvgGenImage('assets/svg/profile.svg');
+}
+
+class $AssetsPngGen {
+  const $AssetsPngGen();
+
+  final AssetGenImage logo = const AssetGenImage('assets/png/logo.png');
+}
+
 class AssetGenImage {
   const AssetGenImage(this._assetName, {this.size, this.flavors = const {}});
 
@@ -148,6 +170,61 @@ class AssetGenImage {
 
   ImageProvider provider({AssetBundle? bundle, String? package}) {
     return AssetImage(_assetName, bundle: bundle, package: package);
+  }
+
+  Widget custom({
+    Key? key,
+    required Widget Function(BuildContext context, String assetPath) builder,
+  }) {
+    return Builder(
+      key: key,
+      builder: (context) => builder(context, _assetName),
+    );
+  }
+
+  String get path => _assetName;
+
+  String get keyName => _assetName;
+}
+
+class SvgGenImage {
+  const SvgGenImage(this._assetName);
+
+  final String _assetName;
+
+  SvgPicture svg({
+    Key? key,
+    bool matchTextDirection = false,
+    AssetBundle? bundle,
+    String? package,
+    double? width,
+    double? height,
+    BoxFit fit = BoxFit.contain,
+    AlignmentGeometry alignment = Alignment.center,
+    bool allowDrawingOutsideViewBox = false,
+    WidgetBuilder? placeholderBuilder,
+    String? semanticsLabel,
+    bool excludeFromSemantics = false,
+    SvgTheme? theme,
+    Clip clipBehavior = Clip.hardEdge,
+  }) {
+    return SvgPicture.asset(
+      _assetName,
+      key: key,
+      matchTextDirection: matchTextDirection,
+      bundle: bundle,
+      package: package,
+      width: width,
+      height: height,
+      fit: fit,
+      alignment: alignment,
+      allowDrawingOutsideViewBox: allowDrawingOutsideViewBox,
+      placeholderBuilder: placeholderBuilder,
+      semanticsLabel: semanticsLabel,
+      excludeFromSemantics: excludeFromSemantics,
+      theme: theme,
+      clipBehavior: clipBehavior,
+    );
   }
 
   Widget custom({

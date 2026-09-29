@@ -31,9 +31,11 @@ class ProfileLogoutButton extends StatelessWidget {
               8.szW,
               AppText(
                 LocaleKeys.profileLogout,
-                color: AppColors.red,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w700,
+                style: AppTextStyles.bold14.copyWith(
+                  color: AppColors.red,
+                  fontSize: 14.sp,
+                  height: 1.45,
+                ),
               ),
             ],
           ),

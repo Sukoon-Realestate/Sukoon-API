@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class KycStatusSummaryRow {
@@ -50,18 +51,22 @@ class KycStatusSummaryCard extends StatelessWidget {
                 Expanded(
                   child: AppText(
                     row.value,
-                    color: AppColors.sokoonNavy,
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w800,
+                    style: AppTextStyles.extraBold13.copyWith(
+                      color: AppColors.sokoonNavy,
+                      fontSize: 13.sp,
+                      height: 1.45,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 AppText(
                   row.label,
-                  color: AppColors.sokoonGray,
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w400,
+                  style: AppTextStyles.regular12.copyWith(
+                    color: AppColors.sokoonGray,
+                    fontSize: 12.sp,
+                    height: 1.45,
+                  ),
                 ),
               ],
             ),

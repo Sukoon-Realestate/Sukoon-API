@@ -5,6 +5,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -20,7 +21,12 @@ class TenantPropertyShareSheet extends StatelessWidget {
     await Clipboard.setData(ClipboardData(text: shareUrl));
     Go.back();
     messenger.showSnackBar(
-      SnackBar(content: Text(LocaleKeys.tenantPropertyDetailsLinkCopied)),
+      SnackBar(
+        content: Text(
+          LocaleKeys.tenantPropertyDetailsLinkCopied,
+          style: AppTextStyles.base,
+        ),
+      ),
     );
   }
 
@@ -49,9 +55,11 @@ class TenantPropertyShareSheet extends StatelessWidget {
             18.szH,
             AppText(
               LocaleKeys.tenantPropertyDetailsShareTitle,
-              color: AppColors.sokoonNavy,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold16.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 16.sp,
+                height: 1.45,
+              ),
               textAlign: TextAlign.start,
             ),
             14.szH,

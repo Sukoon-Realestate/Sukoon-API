@@ -76,24 +76,32 @@ class LanguageOptionCard extends StatelessWidget {
                     children: [
                       AppText(
                         title,
-                        color: AppColors.sokoonNavy,
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w800,
-                        height: 1.5,
+                        style: AppTextStyles.extraBold.copyWith(
+                          color: AppColors.sokoonNavy,
+                          fontSize: 16.sp,
+                          height: 1.5,
+                        ),
                       ),
                       AppText(
                         subtitle,
-                        color: AppColors.sokoonGray,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
-                        height: 1.5,
+                        style: AppTextStyles.medium12.copyWith(
+                          color: AppColors.sokoonGray,
+                          fontSize: 12.sp,
+                          height: 1.5,
+                        ),
                       ).showIf(condition: () => subtitle != title),
                     ],
                   ),
                 ),
                 14.szW,
                 ExcludeSemantics(
-                  child: AppText(flag, fontSize: 28.sp, height: 1.5),
+                  child: AppText(
+                    flag,
+                    style: AppTextStyles.regular.copyWith(
+                      fontSize: 28.sp,
+                      height: 1.5,
+                    ),
+                  ),
                 ),
               ],
             ).paddingSymmetric(horizontal: 18.w, vertical: 16.h),

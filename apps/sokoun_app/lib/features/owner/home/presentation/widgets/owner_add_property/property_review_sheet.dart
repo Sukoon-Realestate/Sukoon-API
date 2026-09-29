@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
@@ -33,8 +34,7 @@ class PropertyReviewSheet extends StatelessWidget {
             Expanded(
               child: AppText(
                 LocaleKeys.ownerPropertyReviewTitle,
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
+                style: AppTextStyles.bold.copyWith(fontSize: 22),
               ),
             ),
             IconButton(
@@ -53,8 +53,11 @@ class PropertyReviewSheet extends StatelessWidget {
             children: [
               AppText(
                 LocaleKeys.ownerPropertyReviewHint,
-                fontSize: 14,
-                color: AppColors.sokoonGray,
+                style: AppTextStyles.regular14.copyWith(
+                  fontSize: 14,
+                  color: AppColors.sokoonGray,
+                  height: 1.45,
+                ),
               ),
               const SizedBox(height: 16),
               SokounReveal(
@@ -128,6 +131,10 @@ class PropertyReviewSheet extends StatelessWidget {
               ? LocaleKeys.ownerPropertiesSaveChanges
               : LocaleKeys.ownerAddPropertySubmitReview,
           onTap: () => Go.back(PropertyReviewAction.submit),
+          textStyle: AppTextStyles.medium13.copyWith(
+            fontSize: FontSize.s13,
+            height: 1.45,
+          ),
         ),
       ),
     ],

@@ -106,8 +106,11 @@ class _ProfileEditViewState extends State<ProfileEditView> {
               6.szH,
               AppText(
                 field.errorText ?? '',
-                color: AppColors.sokoonRose,
-                fontSize: 11.sp,
+                style: AppTextStyles.regular11.copyWith(
+                  color: AppColors.sokoonRose,
+                  fontSize: 11.sp,
+                  height: 1.45,
+                ),
               ),
             ],
           ],
@@ -191,9 +194,11 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       )
                     : AppText(
                         LocaleKeys.profileSave,
-                        color: _accentColor,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w700,
+                        style: AppTextStyles.bold14.copyWith(
+                          color: _accentColor,
+                          fontSize: 14.sp,
+                          height: 1.45,
+                        ),
                       ),
               ),
             ),
@@ -220,9 +225,11 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                           8.szH,
                           AppText(
                             LocaleKeys.profileChangePhoto,
-                            color: _accentColor,
-                            fontSize: 13.sp,
-                            fontWeight: FontWeight.w700,
+                            style: AppTextStyles.bold13.copyWith(
+                              color: _accentColor,
+                              fontSize: 13.sp,
+                              height: 1.45,
+                            ),
                           ),
                         ],
                       ),
@@ -297,9 +304,11 @@ class _ProfileReadonlyField extends StatelessWidget {
       children: [
         AppText(
           label,
-          color: AppColors.sokoonNavy,
-          fontSize: 13.sp,
-          fontWeight: FontWeight.w700,
+          style: AppTextStyles.bold13.copyWith(
+            color: AppColors.sokoonNavy,
+            fontSize: 13.sp,
+            height: 1.45,
+          ),
         ),
         7.szH,
         Material(
@@ -320,9 +329,10 @@ class _ProfileReadonlyField extends StatelessWidget {
                   Expanded(
                     child: AppText(
                       value,
-                      color: AppColors.sokoonNavy,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
+                      style: AppTextStyles.semiBold.copyWith(
+                        color: AppColors.sokoonNavy,
+                        fontSize: 14.sp,
+                      ),
                     ),
                   ),
                   Icon(
@@ -353,9 +363,11 @@ class _ProfileGenderSheet extends StatelessWidget {
         children: [
           AppText(
             LocaleKeys.gender,
-            color: AppColors.sokoonNavy,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold16.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 16.sp,
+              height: 1.45,
+            ),
           ),
           10.szH,
           _ProfileGenderOption(
@@ -385,9 +397,11 @@ class _ProfileGenderOption extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       title: AppText(
         label,
-        color: AppColors.sokoonNavy,
-        fontSize: 14.sp,
-        fontWeight: FontWeight.w700,
+        style: AppTextStyles.bold14.copyWith(
+          color: AppColors.sokoonNavy,
+          fontSize: 14.sp,
+          height: 1.45,
+        ),
       ),
       trailing: Icon(
         Icons.chevron_right_rounded,

@@ -60,9 +60,11 @@ class TenantVisitCard extends StatelessWidget {
                       children: [
                         AppText(
                           visit.propertyTitle,
-                          color: AppColors.sokoonNavy,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w700,
+                          style: AppTextStyles.bold14.copyWith(
+                            color: AppColors.sokoonNavy,
+                            fontSize: 14.sp,
+                            height: 1.45,
+                          ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -70,8 +72,11 @@ class TenantVisitCard extends StatelessWidget {
                           3.szH,
                           AppText(
                             '${LocaleKeys.tenantVisitOwnerLabel} ${visit.ownerName}',
-                            color: AppColors.sokoonGray,
-                            fontSize: 12.sp,
+                            style: AppTextStyles.regular12.copyWith(
+                              color: AppColors.sokoonGray,
+                              fontSize: 12.sp,
+                              height: 1.45,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -91,9 +96,11 @@ class TenantVisitCard extends StatelessWidget {
                     ),
                     child: AppText(
                       visit.resolvedStatusText,
-                      color: _statusColor,
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w700,
+                      style: AppTextStyles.bold11.copyWith(
+                        color: _statusColor,
+                        fontSize: 11.sp,
+                        height: 1.45,
+                      ),
                       maxLines: 1,
                     ),
                   ),
@@ -111,8 +118,11 @@ class TenantVisitCard extends StatelessWidget {
                   Expanded(
                     child: AppText(
                       visit.dateLabel,
-                      color: AppColors.sokoonGray,
-                      fontSize: 12.sp,
+                      style: AppTextStyles.regular12.copyWith(
+                        color: AppColors.sokoonGray,
+                        fontSize: 12.sp,
+                        height: 1.45,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -225,9 +235,11 @@ class _VisitCardAction extends StatelessWidget {
         ),
         child: AppText(
           label,
-          color: foregroundColor,
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w700,
+          style: AppTextStyles.bold12.copyWith(
+            color: foregroundColor,
+            fontSize: 12.sp,
+            height: 1.45,
+          ),
           maxLines: 1,
         ),
       ),

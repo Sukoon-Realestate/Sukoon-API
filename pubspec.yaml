@@ -28,6 +28,11 @@ dev_dependencies:
 
   flutter_lints: ^5.0.0
 
+dependency_overrides:
+  # flutter_launcher_icons 0.14.4 uses logging APIs compatible with Melos 8's
+  # cli_util dependency. Remove once its published constraint supports 0.5.x.
+  cli_util: 0.5.1
+
 flutter:
   uses-material-design: true
 

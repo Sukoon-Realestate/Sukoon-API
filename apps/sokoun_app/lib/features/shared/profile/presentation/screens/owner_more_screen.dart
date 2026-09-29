@@ -83,9 +83,11 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
                                   Flexible(
                                     child: AppText(
                                       userName,
-                                      color: AppColors.sokoonNavy,
-                                      fontSize: 16.sp,
-                                      fontWeight: FontWeight.w700,
+                                      style: AppTextStyles.bold16.copyWith(
+                                        color: AppColors.sokoonNavy,
+                                        fontSize: 16.sp,
+                                        height: 1.45,
+                                      ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -95,8 +97,11 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
                               3.szH,
                               AppText(
                                 LocaleKeys.profileViewPersonalProfile,
-                                color: AppColors.sokoonGray,
-                                fontSize: 12.sp,
+                                style: AppTextStyles.regular12.copyWith(
+                                  color: AppColors.sokoonGray,
+                                  fontSize: 12.sp,
+                                  height: 1.45,
+                                ),
                               ),
                             ],
                           ),

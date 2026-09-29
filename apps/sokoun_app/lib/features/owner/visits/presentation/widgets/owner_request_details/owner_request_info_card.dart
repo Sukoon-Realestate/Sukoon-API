@@ -56,9 +56,11 @@ class OwnerRequestInfoCard extends StatelessWidget {
                         Flexible(
                           child: AppText(
                             request.tenant.name,
-                            color: AppColors.sokoonNavy,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w700,
+                            style: AppTextStyles.bold16.copyWith(
+                              color: AppColors.sokoonNavy,
+                              fontSize: 16.sp,
+                              height: 1.45,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -73,9 +75,11 @@ class OwnerRequestInfoCard extends StatelessWidget {
                     if (request.tenant.membershipLabel.isNotEmpty)
                       AppText(
                         request.tenant.membershipLabel,
-                        color: AppColors.sokoonGray,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
+                        style: AppTextStyles.regular12.copyWith(
+                          color: AppColors.sokoonGray,
+                          fontSize: 12.sp,
+                          height: 1.45,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -141,9 +145,11 @@ class _OwnerRequestStatusPill extends StatelessWidget {
       ),
       child: AppText(
         request.displayStatus,
-        color: _foregroundColor,
-        fontSize: 13.sp,
-        fontWeight: FontWeight.w800,
+        style: AppTextStyles.extraBold13.copyWith(
+          color: _foregroundColor,
+          fontSize: 13.sp,
+          height: 1.45,
+        ),
         textAlign: TextAlign.center,
         maxLines: 2,
       ),
@@ -175,17 +181,21 @@ class _OwnerRequestInfoRow extends StatelessWidget {
         children: [
           AppText(
             label,
-            color: AppColors.sokoonGray,
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w400,
+            style: AppTextStyles.regular12.copyWith(
+              color: AppColors.sokoonGray,
+              fontSize: 12.sp,
+              height: 1.45,
+            ),
           ),
           12.szW,
           Expanded(
             child: AppText(
               value,
-              color: AppColors.sokoonNavy,
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w800,
+              style: AppTextStyles.extraBold13.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 13.sp,
+                height: 1.45,
+              ),
               textAlign: TextAlign.end,
               maxLines: 2,
             ),

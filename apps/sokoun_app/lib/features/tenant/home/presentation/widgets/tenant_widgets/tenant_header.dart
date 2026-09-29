@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -47,9 +48,10 @@ class TenantHeader extends StatelessWidget {
             children: [
               AppText(
                 greeting,
-                color: AppColors.sokoonNavy,
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w700,
+                style: AppTextStyles.bold.copyWith(
+                  color: AppColors.sokoonNavy,
+                  fontSize: 18.sp,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

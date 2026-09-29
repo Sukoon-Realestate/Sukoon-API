@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 import '../../data/models/chat_content.dart';
@@ -30,9 +31,11 @@ class ChatCard extends StatelessWidget {
                   Expanded(
                     child: AppText(
                       conversation.name,
-                      color: AppColors.sokoonNavy,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w700,
+                      style: AppTextStyles.bold14.copyWith(
+                        color: AppColors.sokoonNavy,
+                        fontSize: 14.sp,
+                        height: 1.45,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -53,8 +56,11 @@ class ChatCard extends StatelessWidget {
               4.szH,
               AppText(
                 _displayTime(context),
-                color: AppColors.sokoonGray,
-                fontSize: 11.sp,
+                style: AppTextStyles.regular11.copyWith(
+                  color: AppColors.sokoonGray,
+                  fontSize: 11.sp,
+                  height: 1.45,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -62,8 +68,11 @@ class ChatCard extends StatelessWidget {
                 2.szH,
                 AppText(
                   conversation.property,
-                  color: AppColors.sokoonGray,
-                  fontSize: 12.sp,
+                  style: AppTextStyles.regular12.copyWith(
+                    color: AppColors.sokoonGray,
+                    fontSize: 12.sp,
+                    height: 1.45,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -71,13 +80,16 @@ class ChatCard extends StatelessWidget {
               3.szH,
               AppText(
                 conversation.lastMessage,
-                color: conversation.unreadCount > 0
-                    ? AppColors.sokoonNavy
-                    : AppColors.sokoonMuted,
-                fontSize: 12.sp,
-                fontWeight: conversation.unreadCount > 0
-                    ? FontWeight.w700
-                    : FontWeight.w400,
+                style: AppTextStyles.regular12.copyWith(
+                  color: conversation.unreadCount > 0
+                      ? AppColors.sokoonNavy
+                      : AppColors.sokoonMuted,
+                  fontSize: 12.sp,
+                  fontWeight: conversation.unreadCount > 0
+                      ? FontWeight.w700
+                      : FontWeight.w400,
+                  height: 1.45,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -137,9 +149,11 @@ class _ConversationAvatar extends StatelessWidget {
                   conversation.unreadCount > 99
                       ? '99+'
                       : '${conversation.unreadCount}',
-                  color: AppColors.white,
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w700,
+                  style: AppTextStyles.bold10.copyWith(
+                    color: AppColors.white,
+                    fontSize: 10.sp,
+                    height: 1.45,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),

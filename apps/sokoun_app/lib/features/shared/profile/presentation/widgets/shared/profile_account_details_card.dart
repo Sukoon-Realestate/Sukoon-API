@@ -31,9 +31,11 @@ class ProfileAccountDetailsCard extends StatelessWidget {
         children: [
           AppText(
             LocaleKeys.profileAccountData,
-            color: AppColors.sokoonNavy,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold14.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 14.sp,
+              height: 1.45,
+            ),
           ),
           6.szH,
           ...rows.indexed.map((entry) {
@@ -53,9 +55,11 @@ class ProfileAccountDetailsCard extends StatelessWidget {
                   Expanded(
                     child: AppText(
                       row.value,
-                      color: AppColors.sokoonNavy,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w700,
+                      style: AppTextStyles.bold14.copyWith(
+                        color: AppColors.sokoonNavy,
+                        fontSize: 14.sp,
+                        height: 1.45,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -63,8 +67,11 @@ class ProfileAccountDetailsCard extends StatelessWidget {
                   12.szW,
                   AppText(
                     row.label,
-                    color: AppColors.sokoonGray,
-                    fontSize: 12.sp,
+                    style: AppTextStyles.regular12.copyWith(
+                      color: AppColors.sokoonGray,
+                      fontSize: 12.sp,
+                      height: 1.45,
+                    ),
                   ),
                 ],
               ),

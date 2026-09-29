@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
 
@@ -63,9 +64,11 @@ class _FilterChip extends StatelessWidget {
         ),
         child: AppText(
           label,
-          color: isSelected ? AppColors.sokoonTeal : AppColors.sokoonNavy,
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w700,
+          style: AppTextStyles.bold12.copyWith(
+            color: isSelected ? AppColors.sokoonTeal : AppColors.sokoonNavy,
+            fontSize: 12.sp,
+            height: 1.45,
+          ),
         ),
       ),
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class ChatPrivacyBanner extends StatelessWidget {
@@ -24,9 +25,11 @@ class ChatPrivacyBanner extends StatelessWidget {
           Expanded(
             child: AppText(
               text,
-              color: AppColors.blue,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w500,
+              style: AppTextStyles.medium12.copyWith(
+                color: AppColors.blue,
+                fontSize: 12.sp,
+                height: 1.45,
+              ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),

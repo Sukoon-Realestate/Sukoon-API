@@ -23,6 +23,7 @@ class DefaultButton extends StatelessWidget {
   final double? elevation;
   final bool? disabled;
   final FontWeight? fontWeight;
+  final TextStyle? textStyle;
   final Widget? customChild;
   final bool isFitted;
 
@@ -43,6 +44,7 @@ class DefaultButton extends StatelessWidget {
     this.height,
     this.minHeight,
     this.fontWeight,
+    this.textStyle,
     this.elevation,
     this.customChild,
     this.isFitted = true,
@@ -50,12 +52,18 @@ class DefaultButton extends StatelessWidget {
 
   Widget get _defaultChild => Text(
     title ?? 'Click!',
-    style: TextStyle(
-      color: textColor ?? AppColors.buttonText,
-      fontSize: fontSize ?? FontSize.s13,
-      fontFamily: ConstantManager.fontFamily,
-      fontWeight: fontWeight ?? FontWeightManager.medium,
-    ),
+    style: textStyle == null
+        ? TextStyle(
+            color: textColor ?? AppColors.buttonText,
+            fontSize: fontSize ?? FontSize.s13,
+            fontFamily: ConstantManager.fontFamily,
+            fontWeight: fontWeight ?? FontWeightManager.medium,
+          )
+        : textStyle!.copyWith(
+            color: textColor ?? textStyle!.color ?? AppColors.buttonText,
+            fontSize: fontSize,
+            fontWeight: fontWeight,
+          ),
   );
 
   @override

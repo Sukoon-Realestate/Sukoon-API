@@ -4,6 +4,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
@@ -55,9 +56,10 @@ class FavoritesEmptyState extends StatelessWidget {
             isFiltered
                 ? LocaleKeys.tenantSearchResultsEmptyTitle
                 : LocaleKeys.favoritesEmptyTitle,
-            color: AppColors.sokoonNavy,
-            fontSize: FontSize.s18,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: FontSize.s18,
+            ),
             textAlign: TextAlign.center,
           ),
           AppSize.sH8.szH,
@@ -65,10 +67,11 @@ class FavoritesEmptyState extends StatelessWidget {
             isFiltered
                 ? LocaleKeys.tenantSearchResultsEmptyDescription
                 : LocaleKeys.favoritesEmptyDescription,
-            color: AppColors.sokoonGray,
-            fontSize: FontSize.s13,
-            fontWeight: FontWeight.w500,
-            height: 1.45,
+            style: AppTextStyles.medium13.copyWith(
+              color: AppColors.sokoonGray,
+              fontSize: FontSize.s13,
+              height: 1.45,
+            ),
             textAlign: TextAlign.center,
             maxLines: 3,
           ),
@@ -83,8 +86,7 @@ class FavoritesEmptyState extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppCircular.r12),
             height: AppSize.sH45,
             width: double.infinity,
-            fontSize: FontSize.s14,
-            fontWeight: FontWeight.w800,
+            textStyle: AppTextStyles.extraBold.copyWith(fontSize: FontSize.s14),
           ),
         ],
       ),

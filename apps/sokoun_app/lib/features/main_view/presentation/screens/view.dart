@@ -7,6 +7,7 @@ import 'package:melos_core/config/language/languages.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
+import 'package:melos_core/generated/assets.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chats_screen.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_unread_content.dart';
@@ -24,7 +25,6 @@ import 'package:sokoun_app/features/shared/notifications/presentation/notificati
 import 'package:sokoun_app/features/shared/permissions/data/enums/device_permission.dart';
 import 'package:sokoun_app/features/shared/permissions/presentation/device_permission_flow.dart';
 import 'package:sokoun_app/features/shared/notifications/presentation/cubits/unread_notifications_cubit.dart';
-import 'package:sokoun_app/generated/assets.dart';
 import 'package:upgrader/upgrader.dart';
 
 import '../widgets/home_bottom_navigation.dart';
@@ -240,8 +240,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       _HomeTab(
         tab: WorkspaceTab.home,
         destination: HomeNavigationDestination(
-          icon: Assets.svgHome,
-          selectedIcon: Assets.svgHome,
+          icon: Assets.svg.home.path,
+          selectedIcon: Assets.svg.home.path,
           label: LocaleKeys.home,
         ),
         screen: TenantHomeScreen(),
@@ -258,8 +258,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       _HomeTab(
         tab: WorkspaceTab.messages,
         destination: HomeNavigationDestination(
-          icon: Assets.svgMessage,
-          selectedIcon: Assets.svgMessage,
+          icon: Assets.svg.message.path,
+          selectedIcon: Assets.svg.message.path,
           label: LocaleKeys.chats,
         ),
         screen: const ChatListScreen(),
@@ -267,8 +267,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       _HomeTab(
         tab: WorkspaceTab.visits,
         destination: HomeNavigationDestination(
-          icon: Assets.svgCalendar,
-          selectedIcon: Assets.svgCalendar,
+          icon: Assets.svg.calendar.path,
+          selectedIcon: Assets.svg.calendar.path,
           label: LocaleKeys.tenantVisitsTitle,
         ),
         screen: const TenantVisitsScreen(),
@@ -276,8 +276,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       _HomeTab(
         tab: WorkspaceTab.profile,
         destination: HomeNavigationDestination(
-          icon: Assets.svgProfile,
-          selectedIcon: Assets.svgProfile,
+          icon: Assets.svg.profile.path,
+          selectedIcon: Assets.svg.profile.path,
           label: LocaleKeys.profile,
         ),
         screen: const TenantProfileScreen(),
@@ -290,8 +290,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       _HomeTab(
         tab: WorkspaceTab.home,
         destination: HomeNavigationDestination(
-          icon: Assets.svgHome,
-          selectedIcon: Assets.svgHome,
+          icon: Assets.svg.home.path,
+          selectedIcon: Assets.svg.home.path,
           label: LocaleKeys.home,
         ),
         screen: const OwnerHomeScreen(),
@@ -299,8 +299,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       _HomeTab(
         tab: WorkspaceTab.properties,
         destination: HomeNavigationDestination(
-          icon: Assets.svgBuilding,
-          selectedIcon: Assets.svgBuilding,
+          icon: Assets.svg.building.path,
+          selectedIcon: Assets.svg.building.path,
           label: LocaleKeys.notificationsOwnerPropertiesNavigation,
         ),
         screen: const OwnerPropertiesScreen(),
@@ -308,8 +308,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       _HomeTab(
         tab: WorkspaceTab.requests,
         destination: HomeNavigationDestination(
-          icon: Assets.svgCalendar,
-          selectedIcon: Assets.svgCalendar,
+          icon: Assets.svg.calendar.path,
+          selectedIcon: Assets.svg.calendar.path,
           label: LocaleKeys.notificationsOwnerRequestsNavigation,
         ),
         screen: const OwnerVisitRequestsScreen(showBackButton: false),
@@ -317,8 +317,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       _HomeTab(
         tab: WorkspaceTab.messages,
         destination: HomeNavigationDestination(
-          icon: Assets.svgMessage,
-          selectedIcon: Assets.svgMessage,
+          icon: Assets.svg.message.path,
+          selectedIcon: Assets.svg.message.path,
           label: LocaleKeys.chats,
         ),
         screen: const ChatListScreen(),
@@ -326,8 +326,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       _HomeTab(
         tab: WorkspaceTab.profile,
         destination: HomeNavigationDestination(
-          icon: Assets.svgProfile,
-          selectedIcon: Assets.svgProfile,
+          icon: Assets.svg.profile.path,
+          selectedIcon: Assets.svg.profile.path,
           label: LocaleKeys.more,
         ),
         screen: const OwnerMoreScreen(),

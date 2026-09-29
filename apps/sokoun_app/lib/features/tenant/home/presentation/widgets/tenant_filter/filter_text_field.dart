@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class FilterTextField extends StatelessWidget {
@@ -32,9 +33,10 @@ class FilterTextField extends StatelessWidget {
       children: [
         AppText(
           label,
-          color: AppColors.sokoonGray,
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w600,
+          style: AppTextStyles.semiBold.copyWith(
+            color: AppColors.sokoonGray,
+            fontSize: 12.sp,
+          ),
           textAlign: TextAlign.start,
         ),
         6.szH,
@@ -52,19 +54,18 @@ class FilterTextField extends StatelessWidget {
             keyboardType: keyboardType,
             inputFormatters: inputFormatters,
             textAlign: textAlign,
-            style: TextStyle(
+            style: AppTextStyles.semiBold.copyWith(
               color: AppColors.sokoonNavy,
               fontSize: 13.sp,
-              fontWeight: FontWeight.w600,
             ),
             decoration: InputDecoration(
               isCollapsed: true,
               border: InputBorder.none,
               hintText: hint,
-              hintStyle: TextStyle(
+              hintStyle: AppTextStyles.regular12.copyWith(
                 color: AppColors.navyAlpha50,
                 fontSize: 12.sp,
-                fontWeight: FontWeight.w400,
+                height: 1.45,
               ),
               contentPadding: EdgeInsets.symmetric(vertical: 14.h),
             ),

@@ -4,6 +4,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/shared_widgets/property_filter_button.dart';
 
@@ -31,9 +32,10 @@ class FavoritesHeader extends StatelessWidget {
             children: [
               AppText(
                 LocaleKeys.favoritesTitle,
-                color: AppColors.sokoonNavy,
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w700,
+                style: AppTextStyles.bold.copyWith(
+                  color: AppColors.sokoonNavy,
+                  fontSize: 20.sp,
+                ),
                 textAlign: TextAlign.start,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -41,9 +43,11 @@ class FavoritesHeader extends StatelessWidget {
               AppSize.sH4.szH,
               AppText(
                 '$itemCount ${LocaleKeys.favoritesSavedPropertiesCount}',
-                color: AppColors.sokoonGray,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w400,
+                style: AppTextStyles.regular12.copyWith(
+                  color: AppColors.sokoonGray,
+                  fontSize: 12.sp,
+                  height: 1.45,
+                ),
                 textAlign: TextAlign.start,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

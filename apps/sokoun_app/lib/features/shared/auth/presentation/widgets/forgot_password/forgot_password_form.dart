@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
@@ -67,9 +68,11 @@ class ForgotPasswordForm extends StatelessWidget {
           7.szH,
           AppText(
             LocaleKeys.forgotPasswordEmailHint,
-            color: AppColors.sokoonGray,
-            fontSize: 11.sp,
-            fontWeight: FontWeight.w500,
+            style: AppTextStyles.medium11.copyWith(
+              color: AppColors.sokoonGray,
+              fontSize: 11.sp,
+              height: 1.45,
+            ),
           ),
           22.szH,
           AppLoadingButton(
@@ -79,8 +82,7 @@ class ForgotPasswordForm extends StatelessWidget {
             textColor: AppColors.white,
             borderRadius: 14.r,
             height: 52.h,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w800,
+            textStyle: AppTextStyles.extraBold.copyWith(fontSize: 16.sp),
             icon: Icon(Icons.send_rounded, color: AppColors.white, size: 18.r),
           ),
           18.szH,
@@ -90,9 +92,11 @@ class ForgotPasswordForm extends StatelessWidget {
               Flexible(
                 child: AppText(
                   LocaleKeys.rememberedPassword,
-                  color: AppColors.sokoonGray,
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w500,
+                  style: AppTextStyles.medium12.copyWith(
+                    color: AppColors.sokoonGray,
+                    fontSize: 12.sp,
+                    height: 1.45,
+                  ),
                 ),
               ),
               4.szW,
@@ -105,10 +109,11 @@ class ForgotPasswordForm extends StatelessWidget {
                 ),
                 child: AppText(
                   LocaleKeys.login,
-                  color: accentColor,
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w800,
-                  decoration: TextDecoration.underline,
+                  style: AppTextStyles.extraBold.copyWith(
+                    color: accentColor,
+                    fontSize: 12.sp,
+                    decoration: TextDecoration.underline,
+                  ),
                 ),
               ),
             ],

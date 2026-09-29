@@ -36,17 +36,22 @@ class OwnerRevenuePropertyCard extends StatelessWidget {
               children: [
                 AppText(
                   item.title,
-                  color: AppColors.sokoonNavy,
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w800,
+                  style: AppTextStyles.extraBold13.copyWith(
+                    color: AppColors.sokoonNavy,
+                    fontSize: 13.sp,
+                    height: 1.45,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 5.szH,
                 AppText(
                   item.dueDate,
-                  color: AppColors.sokoonGray,
-                  fontSize: 11.sp,
+                  style: AppTextStyles.regular11.copyWith(
+                    color: AppColors.sokoonGray,
+                    fontSize: 11.sp,
+                    height: 1.45,
+                  ),
                 ),
               ],
             ),
@@ -58,9 +63,10 @@ class OwnerRevenuePropertyCard extends StatelessWidget {
               AppText(
                 '${_formatNumber(item.amount)} '
                 '${LocaleKeys.ownerRevenueCurrency}',
-                color: AppColors.sokoonNavy,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w800,
+                style: AppTextStyles.extraBold.copyWith(
+                  color: AppColors.sokoonNavy,
+                  fontSize: 14.sp,
+                ),
               ),
               5.szH,
               Container(
@@ -71,9 +77,10 @@ class OwnerRevenuePropertyCard extends StatelessWidget {
                 ),
                 child: AppText(
                   item.status.label,
-                  color: item.status.foregroundColor,
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w800,
+                  style: AppTextStyles.extraBold.copyWith(
+                    color: item.status.foregroundColor,
+                    fontSize: 10.sp,
+                  ),
                 ),
               ),
             ],

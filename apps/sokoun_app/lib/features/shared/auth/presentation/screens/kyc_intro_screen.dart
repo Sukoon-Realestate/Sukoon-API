@@ -5,6 +5,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/object.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
@@ -51,8 +52,10 @@ class KycIntroScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(14.r),
                 height: 52.h,
                 width: double.infinity,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w700,
+                textStyle: AppTextStyles.bold16.copyWith(
+                  fontSize: 16.sp,
+                  height: 1.45,
+                ),
               ),
               10.szH,
               if (!onSkip.isNull)
@@ -64,8 +67,10 @@ class KycIntroScreen extends StatelessWidget {
                   borderRadius: 14.r,
                   height: 48.h,
                   width: double.infinity,
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w700,
+                  textStyle: AppTextStyles.bold15.copyWith(
+                    fontSize: 15.sp,
+                    height: 1.45,
+                  ),
                 ),
             ],
           ),
@@ -98,26 +103,29 @@ class KycIntroScreen extends StatelessWidget {
                   14.szH,
                   AppText(
                     LocaleKeys.verifyIdentityAndStart,
-                    color: AppColors.sokoonNavy,
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.w700,
+                    style: AppTextStyles.bold.copyWith(
+                      color: AppColors.sokoonNavy,
+                      fontSize: 20.sp,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   8.szH,
                   AppText(
                     LocaleKeys.kycIntroDescription,
-                    color: AppColors.sokoonGray,
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w400,
+                    style: AppTextStyles.regular13.copyWith(
+                      color: AppColors.sokoonGray,
+                      fontSize: 13.sp,
+                      height: 1.45,
+                    ),
                     textAlign: TextAlign.center,
-                    height: 1.45,
                   ),
                   26.szH,
                   AppText(
                     LocaleKeys.requiredDocuments,
-                    color: AppColors.sokoonNavy,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w800,
+                    style: AppTextStyles.extraBold.copyWith(
+                      color: AppColors.sokoonNavy,
+                      fontSize: 14.sp,
+                    ),
                   ),
                   10.szH,
                   KycRequirementTile(

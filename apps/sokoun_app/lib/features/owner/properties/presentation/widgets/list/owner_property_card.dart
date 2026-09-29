@@ -80,9 +80,11 @@ class OwnerPropertyCard extends StatelessWidget {
                       children: [
                         AppText(
                           property.title,
-                          color: AppColors.sokoonNavy,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w700,
+                          style: AppTextStyles.bold14.copyWith(
+                            color: AppColors.sokoonNavy,
+                            fontSize: 14.sp,
+                            height: 1.45,
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.start,
@@ -93,18 +95,22 @@ class OwnerPropertyCard extends StatelessWidget {
                         AppText(
                           '${_formatNumber(property.monthlyPrice)} '
                           '${LocaleKeys.ownerPropertiesPriceUnit}',
-                          color: AppColors.sokoonTeal,
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w700,
+                          style: AppTextStyles.bold16.copyWith(
+                            color: AppColors.sokoonTeal,
+                            fontSize: 16.sp,
+                            height: 1.45,
+                          ),
                           textAlign: TextAlign.start,
                         ),
                         6.szH,
                         AppText(
                           '${property.views} ${LocaleKeys.ownerPropertiesViewUnit}'
                           ' · ${property.visitRequests} ${LocaleKeys.ownerPropertiesVisitUnit}',
-                          color: AppColors.sokoonGray,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
+                          style: AppTextStyles.regular12.copyWith(
+                            color: AppColors.sokoonGray,
+                            fontSize: 12.sp,
+                            height: 1.45,
+                          ),
                           textAlign: TextAlign.start,
                         ),
                       ],
@@ -164,9 +170,11 @@ class _OwnerPropertyCardAction extends StatelessWidget {
             height: 34.h,
             child: AppText(
               label,
-              color: foregroundColor,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold12.copyWith(
+                color: foregroundColor,
+                fontSize: 12.sp,
+                height: 1.45,
+              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ).centerWidget,

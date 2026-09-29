@@ -63,9 +63,11 @@ class _OwnerAvailabilityLegendItem extends StatelessWidget {
         6.szW,
         AppText(
           state.label,
-          color: AppColors.sokoonGray,
-          fontSize: 11.sp,
-          fontWeight: FontWeight.w500,
+          style: AppTextStyles.medium11.copyWith(
+            color: AppColors.sokoonGray,
+            fontSize: 11.sp,
+            height: 1.45,
+          ),
         ),
       ],
     );

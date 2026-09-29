@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_logo_widget.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/svg_pic.dart';
@@ -67,6 +68,7 @@ class HomeNavigationRail extends StatelessWidget {
                                 destinations[i].badgeCount > 99
                                     ? '99+'
                                     : '${destinations[i].badgeCount}',
+                                style: AppTextStyles.base,
                               ),
                               child: _icon(i),
                             ),
@@ -74,13 +76,16 @@ class HomeNavigationRail extends StatelessWidget {
                             AppText(
                               destinations[i].label,
                               textAlign: TextAlign.center,
-                              fontSize: 12,
-                              color: i == currentIndex
-                                  ? AppColors.sokoonTeal
-                                  : AppColors.sokoonGray,
-                              fontWeight: i == currentIndex
-                                  ? FontWeight.w700
-                                  : FontWeight.w500,
+                              style: AppTextStyles.regular12.copyWith(
+                                fontSize: 12,
+                                color: i == currentIndex
+                                    ? AppColors.sokoonTeal
+                                    : AppColors.sokoonGray,
+                                fontWeight: i == currentIndex
+                                    ? FontWeight.w700
+                                    : FontWeight.w500,
+                                height: 1.45,
+                              ),
                             ),
                           ],
                         ),

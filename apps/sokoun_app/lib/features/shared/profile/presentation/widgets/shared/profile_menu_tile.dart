@@ -53,23 +53,35 @@ class ProfileMenuTile extends StatelessWidget {
                 children: [
                   AppText(
                     label,
-                    color: AppColors.sokoonNavy,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w700,
+                    style: AppTextStyles.bold14.copyWith(
+                      color: AppColors.sokoonNavy,
+                      fontSize: 14.sp,
+                      height: 1.45,
+                    ),
                   ),
                   if (subtitle != null) ...[
                     2.szH,
                     AppText(
                       subtitle!,
-                      color: AppColors.sokoonGray,
-                      fontSize: 11.sp,
+                      style: AppTextStyles.regular11.copyWith(
+                        color: AppColors.sokoonGray,
+                        fontSize: 11.sp,
+                        height: 1.45,
+                      ),
                     ),
                   ],
                 ],
               ),
             ),
             if (value != null) ...[
-              AppText(value!, color: AppColors.sokoonGray, fontSize: 12.sp),
+              AppText(
+                value!,
+                style: AppTextStyles.regular12.copyWith(
+                  color: AppColors.sokoonGray,
+                  fontSize: 12.sp,
+                  height: 1.45,
+                ),
+              ),
               8.szW,
             ],
             Icon(

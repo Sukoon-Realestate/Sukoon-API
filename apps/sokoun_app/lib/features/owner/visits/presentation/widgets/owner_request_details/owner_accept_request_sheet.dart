@@ -36,8 +36,10 @@ class OwnerAcceptRequestSheet extends StatelessWidget {
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(14.r),
             height: 52.h,
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w700,
+            textStyle: AppTextStyles.bold15.copyWith(
+              fontSize: 15.sp,
+              height: 1.45,
+            ),
           ),
           12.szH,
           DefaultButton(
@@ -48,8 +50,7 @@ class OwnerAcceptRequestSheet extends StatelessWidget {
             borderColor: AppColors.sokoonBorder,
             borderRadius: BorderRadius.circular(14.r),
             height: 48.h,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w800,
+            textStyle: AppTextStyles.extraBold.copyWith(fontSize: 14.sp),
           ),
         ],
       ),
@@ -104,17 +105,21 @@ class _OwnerAcceptSummaryRow extends StatelessWidget {
       children: [
         AppText(
           label,
-          color: AppColors.sokoonGray,
-          fontSize: 13.sp,
-          fontWeight: FontWeight.w400,
+          style: AppTextStyles.regular13.copyWith(
+            color: AppColors.sokoonGray,
+            fontSize: 13.sp,
+            height: 1.45,
+          ),
         ),
         12.szW,
         Expanded(
           child: AppText(
             value,
-            color: AppColors.sokoonNavy,
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w800,
+            style: AppTextStyles.extraBold13.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 13.sp,
+              height: 1.45,
+            ),
             textAlign: TextAlign.end,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -177,16 +182,20 @@ class _OwnerDecisionSheetHeader extends StatelessWidget {
             children: [
               AppText(
                 title,
-                color: AppColors.sokoonNavy,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w700,
+                style: AppTextStyles.bold16.copyWith(
+                  color: AppColors.sokoonNavy,
+                  fontSize: 16.sp,
+                  height: 1.45,
+                ),
               ),
               3.szH,
               AppText(
                 subtitle,
-                color: AppColors.sokoonGray,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w400,
+                style: AppTextStyles.regular12.copyWith(
+                  color: AppColors.sokoonGray,
+                  fontSize: 12.sp,
+                  height: 1.45,
+                ),
               ),
             ],
           ),

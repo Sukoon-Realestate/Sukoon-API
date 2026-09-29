@@ -6,6 +6,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
@@ -138,17 +139,20 @@ class _OtpScreenState extends State<OtpScreen> {
           18.szH,
           AppText(
             LocaleKeys.otpSentToEmail,
-            color: AppColors.sokoonNavy,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w800,
+            style: AppTextStyles.extraBold.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 18.sp,
+            ),
             textAlign: TextAlign.center,
           ),
           8.szH,
           AppText(
             _maskedEmail,
-            color: AppColors.sokoonTeal,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold14.copyWith(
+              color: AppColors.sokoonTeal,
+              fontSize: 14.sp,
+              height: 1.45,
+            ),
             textAlign: TextAlign.center,
           ),
           6.szH,
@@ -161,10 +165,12 @@ class _OtpScreenState extends State<OtpScreen> {
             ),
             child: AppText(
               LocaleKeys.changeEmail,
-              color: AppColors.sokoonGray,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w700,
-              decoration: TextDecoration.underline,
+              style: AppTextStyles.bold12.copyWith(
+                color: AppColors.sokoonGray,
+                fontSize: 12.sp,
+                decoration: TextDecoration.underline,
+                height: 1.45,
+              ),
             ),
           ),
           26.szH,
@@ -211,8 +217,10 @@ class _OtpScreenState extends State<OtpScreen> {
                     borderRadius: 14.r,
                     height: 52.h,
                     width: double.infinity,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w700,
+                    textStyle: AppTextStyles.bold16.copyWith(
+                      fontSize: 16.sp,
+                      height: 1.45,
+                    ),
                   ),
                 ),
                 14.szH,
@@ -238,11 +246,13 @@ class _OtpScreenState extends State<OtpScreen> {
                         )
                       : AppText(
                           LocaleKeys.resendCode,
-                          color: uiState.canResend
-                              ? AppColors.sokoonTeal
-                              : AppColors.sokoonMuted,
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w700,
+                          style: AppTextStyles.bold13.copyWith(
+                            color: uiState.canResend
+                                ? AppColors.sokoonTeal
+                                : AppColors.sokoonMuted,
+                            fontSize: 13.sp,
+                            height: 1.45,
+                          ),
                         ),
                 ).centerWidget,
               ],

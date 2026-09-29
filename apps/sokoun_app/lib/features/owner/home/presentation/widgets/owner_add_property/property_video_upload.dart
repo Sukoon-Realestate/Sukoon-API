@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:video_player/video_player.dart';
@@ -134,17 +135,21 @@ class VideoEmptyState extends StatelessWidget {
           14.szH,
           AppText(
             LocaleKeys.ownerPropertyVideoUploadOrRecord,
-            color: AppColors.sokoonNavy,
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w800,
+            style: AppTextStyles.extraBold15.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 15.sp,
+              height: 1.45,
+            ),
             textAlign: TextAlign.center,
           ),
           5.szH,
           AppText(
             LocaleKeys.ownerPropertyVideoMaximumDuration,
-            color: AppColors.sokoonGray,
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w400,
+            style: AppTextStyles.regular12.copyWith(
+              color: AppColors.sokoonGray,
+              fontSize: 12.sp,
+              height: 1.45,
+            ),
             textAlign: TextAlign.center,
           ),
           18.szH,
@@ -196,9 +201,11 @@ class VideoLoadingState extends StatelessWidget {
           12.szH,
           AppText(
             LocaleKeys.ownerPropertyVideoPreparing,
-            color: AppColors.sokoonNavy,
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold13.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 13.sp,
+              height: 1.45,
+            ),
           ),
         ],
       ),
@@ -223,9 +230,11 @@ class VideoErrorMessage extends StatelessWidget {
           Expanded(
             child: AppText(
               message,
-              color: AppColors.red,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold12.copyWith(
+                color: AppColors.red,
+                fontSize: 12.sp,
+                height: 1.45,
+              ),
               textAlign: TextAlign.start,
               maxLines: 2,
             ),
@@ -274,9 +283,11 @@ class VideoActionButton extends StatelessWidget {
             Flexible(
               child: AppText(
                 label,
-                color: filled ? AppColors.white : color,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w700,
+                style: AppTextStyles.bold12.copyWith(
+                  color: filled ? AppColors.white : color,
+                  fontSize: 12.sp,
+                  height: 1.45,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

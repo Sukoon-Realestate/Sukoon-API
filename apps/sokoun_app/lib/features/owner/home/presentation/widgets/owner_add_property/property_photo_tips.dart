@@ -4,6 +4,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 
@@ -51,9 +52,11 @@ class TipRow extends StatelessWidget {
         Expanded(
           child: AppText(
             text,
-            color: AppColors.sokoonGray,
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w400,
+            style: AppTextStyles.regular12.copyWith(
+              color: AppColors.sokoonGray,
+              fontSize: 12.sp,
+              height: 1.45,
+            ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),

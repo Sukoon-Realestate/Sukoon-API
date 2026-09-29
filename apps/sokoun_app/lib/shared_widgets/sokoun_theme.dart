@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/buttons/app_control_theme.dart';
 
 abstract final class SokounTheme {
@@ -17,32 +18,31 @@ abstract final class SokounTheme {
           outline: AppColors.grayPale,
           error: AppColors.sokoonRose,
         );
-    TextStyle text(double size, FontWeight weight, {Color? color}) => TextStyle(
-      fontFamily: ConstantManager.fontFamily,
-      fontSize: size,
-      fontWeight: weight,
-      height: 1.45,
-      color: color ?? AppColors.sokoonNavy,
-    );
+    TextStyle text(TextStyle style, {double? size, Color? color}) =>
+        style.copyWith(
+          fontSize: size,
+          height: 1.45,
+          color: color ?? AppColors.sokoonNavy,
+        );
     return ThemeData(
       useMaterial3: true,
-      fontFamily: ConstantManager.fontFamily,
+      fontFamily: AppTextStyles.base.fontFamily,
       colorScheme: colors,
       scaffoldBackgroundColor: AppColors.scaffoldBackground,
       visualDensity: VisualDensity.standard,
       materialTapTargetSize: MaterialTapTargetSize.padded,
       extensions: const [AppControlTheme()],
       textTheme: TextTheme(
-        headlineSmall: text(24, FontWeight.w700),
-        titleLarge: text(22, FontWeight.w700),
-        titleMedium: text(18, FontWeight.w700),
-        titleSmall: text(16, FontWeight.w700),
-        bodyLarge: text(16, FontWeight.w400),
-        bodyMedium: text(14, FontWeight.w400),
-        bodySmall: text(12, FontWeight.w400, color: AppColors.sokoonGray),
-        labelLarge: text(14, FontWeight.w700),
-        labelMedium: text(13, FontWeight.w500),
-        labelSmall: text(12, FontWeight.w500),
+        headlineSmall: text(AppTextStyles.bold, size: 24),
+        titleLarge: text(AppTextStyles.bold, size: 22),
+        titleMedium: text(AppTextStyles.bold, size: 18),
+        titleSmall: text(AppTextStyles.bold16),
+        bodyLarge: text(AppTextStyles.regular16),
+        bodyMedium: text(AppTextStyles.regular14),
+        bodySmall: text(AppTextStyles.regular12, color: AppColors.sokoonGray),
+        labelLarge: text(AppTextStyles.bold14),
+        labelMedium: text(AppTextStyles.medium13),
+        labelSmall: text(AppTextStyles.medium12),
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.scaffoldBackground,
@@ -51,7 +51,7 @@ abstract final class SokounTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: true,
-        titleTextStyle: text(18, FontWeight.w700),
+        titleTextStyle: text(AppTextStyles.bold, size: 18),
       ),
       dividerTheme: const DividerThemeData(
         color: AppColors.sokoonBorder,

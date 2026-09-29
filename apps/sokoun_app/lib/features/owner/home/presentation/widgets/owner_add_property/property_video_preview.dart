@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:video_player/video_player.dart';
@@ -69,9 +70,11 @@ class VideoPreview extends StatelessWidget {
             ),
             child: AppText(
               LocaleKeys.ownerPropertyVideoUploaded,
-              color: AppColors.white,
-              fontSize: 10.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold10.copyWith(
+                color: AppColors.white,
+                fontSize: 10.sp,
+                height: 1.45,
+              ),
             ),
           ),
         ),
@@ -86,9 +89,10 @@ class VideoPreview extends StatelessWidget {
             ),
             child: AppText(
               video.formattedDuration,
-              color: AppColors.white,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w800,
+              style: AppTextStyles.extraBold.copyWith(
+                color: AppColors.white,
+                fontSize: 12.sp,
+              ),
             ),
           ),
         ),

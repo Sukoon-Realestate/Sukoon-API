@@ -39,15 +39,20 @@ class OwnerTransactionRow extends StatelessWidget {
             children: [
               AppText(
                 transaction.title,
-                color: AppColors.sokoonNavy,
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w800,
+                style: AppTextStyles.extraBold13.copyWith(
+                  color: AppColors.sokoonNavy,
+                  fontSize: 13.sp,
+                  height: 1.45,
+                ),
               ),
               3.szH,
               AppText(
                 transaction.date,
-                color: AppColors.sokoonMuted,
-                fontSize: 11.sp,
+                style: AppTextStyles.regular11.copyWith(
+                  color: AppColors.sokoonMuted,
+                  fontSize: 11.sp,
+                  height: 1.45,
+                ),
               ),
             ],
           ),
@@ -55,9 +60,11 @@ class OwnerTransactionRow extends StatelessWidget {
         AppText(
           '$sign${_formatNumber(absoluteAmount)} '
           '${LocaleKeys.ownerRevenueCurrency}',
-          color: amountColor,
-          fontSize: 13.sp,
-          fontWeight: FontWeight.w700,
+          style: AppTextStyles.bold13.copyWith(
+            color: amountColor,
+            fontSize: 13.sp,
+            height: 1.45,
+          ),
         ),
       ],
     );

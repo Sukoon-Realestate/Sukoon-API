@@ -56,18 +56,21 @@ class VisitStatusHeader extends StatelessWidget {
           ),
           child: AppText(
             visit.resolvedStatusText,
-            color: _foregroundColor,
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold13.copyWith(
+              color: _foregroundColor,
+              fontSize: 13.sp,
+              height: 1.45,
+            ),
             maxLines: 1,
           ),
         ),
         8.szH,
         AppText(
           _title,
-          color: AppColors.sokoonNavy,
-          fontSize: 18.sp,
-          fontWeight: FontWeight.w700,
+          style: AppTextStyles.bold.copyWith(
+            color: AppColors.sokoonNavy,
+            fontSize: 18.sp,
+          ),
           textAlign: TextAlign.center,
           maxLines: 2,
         ),

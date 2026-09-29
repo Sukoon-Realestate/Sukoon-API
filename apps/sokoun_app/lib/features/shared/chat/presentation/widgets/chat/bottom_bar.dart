@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 
 class ChatComposer extends StatelessWidget {
   const ChatComposer({
@@ -59,17 +60,15 @@ class ChatComposer extends StatelessWidget {
                         maxLines: 4,
                         textInputAction: TextInputAction.send,
                         onEditingComplete: onSendPressed,
-                        style: TextStyle(
+                        style: AppTextStyles.base.copyWith(
                           color: AppColors.sokoonNavy,
                           fontSize: 14.sp,
-                          fontFamily: ConstantManager.fontFamily,
                         ),
                         decoration: InputDecoration(
                           hintText: LocaleKeys.chatMessageHint,
-                          hintStyle: TextStyle(
+                          hintStyle: AppTextStyles.base.copyWith(
                             color: AppColors.sokoonMuted,
                             fontSize: 14.sp,
-                            fontFamily: ConstantManager.fontFamily,
                           ),
                           border: InputBorder.none,
                           isDense: true,

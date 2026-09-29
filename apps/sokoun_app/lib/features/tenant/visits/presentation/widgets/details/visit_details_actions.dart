@@ -20,8 +20,7 @@ class VisitDetailsActions extends StatelessWidget {
         textColor: AppColors.white,
         borderRadius: BorderRadius.circular(14.r),
         height: 50.h,
-        fontSize: 14.sp,
-        fontWeight: FontWeight.w700,
+        textStyle: AppTextStyles.bold14.copyWith(fontSize: 14.sp, height: 1.45),
       );
     }
 
@@ -36,8 +35,10 @@ class VisitDetailsActions extends StatelessWidget {
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(14.r),
             height: 50.h,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w700,
+            textStyle: AppTextStyles.bold14.copyWith(
+              fontSize: 14.sp,
+              height: 1.45,
+            ),
           ),
           12.szH,
         ],
@@ -51,8 +52,10 @@ class VisitDetailsActions extends StatelessWidget {
           borderColor: AppColors.sokoonBorder,
           borderRadius: BorderRadius.circular(14.r),
           height: 50.h,
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w700,
+          textStyle: AppTextStyles.bold14.copyWith(
+            fontSize: 14.sp,
+            height: 1.45,
+          ),
         ),
       ],
     );

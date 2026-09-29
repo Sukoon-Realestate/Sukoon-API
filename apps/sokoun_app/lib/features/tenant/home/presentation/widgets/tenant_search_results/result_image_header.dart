@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/image_widgets/cached_image.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
@@ -51,9 +52,10 @@ class ResultImageHeader extends StatelessWidget {
                 ),
                 child: AppText(
                   '${LocaleKeys.verified} ✓',
-                  color: AppColors.white,
-                  fontSize: 10.sp,
-                  fontWeight: FontWeight.w800,
+                  style: AppTextStyles.extraBold.copyWith(
+                    color: AppColors.white,
+                    fontSize: 10.sp,
+                  ),
                 ),
               ),
             ),
@@ -68,9 +70,10 @@ class ResultImageHeader extends StatelessWidget {
               ),
               child: AppText(
                 '$photoCount ${LocaleKeys.chatPhotos}',
-                color: AppColors.white,
-                fontSize: 10.sp,
-                fontWeight: FontWeight.w600,
+                style: AppTextStyles.semiBold.copyWith(
+                  color: AppColors.white,
+                  fontSize: 10.sp,
+                ),
               ),
             ),
           ),

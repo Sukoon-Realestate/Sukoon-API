@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
@@ -59,9 +60,10 @@ class UnauthenticatedSheet extends StatelessWidget {
             16.szH,
             AppText(
               LocaleKeys.unauthenticatedSheetTitle,
-              color: AppColors.sokoonNavy,
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w800,
+              style: AppTextStyles.extraBold.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 18.sp,
+              ),
               textAlign: TextAlign.center,
             ),
             8.szH,
@@ -71,11 +73,12 @@ class UnauthenticatedSheet extends StatelessWidget {
                 constraints: BoxConstraints(maxWidth: 280.w),
                 child: AppText(
                   LocaleKeys.unauthenticatedSheetDescription,
-                  color: AppColors.sokoonGray,
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w400,
+                  style: AppTextStyles.regular13.copyWith(
+                    color: AppColors.sokoonGray,
+                    fontSize: 13.sp,
+                    height: 1.6,
+                  ),
                   textAlign: TextAlign.center,
-                  height: 1.6,
                 ),
               ),
             ),
@@ -88,8 +91,10 @@ class UnauthenticatedSheet extends StatelessWidget {
               borderRadius: BorderRadius.circular(14.r),
               height: 52.h,
               width: double.infinity,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w700,
+              textStyle: AppTextStyles.bold16.copyWith(
+                fontSize: 16.sp,
+                height: 1.45,
+              ),
               isFitted: false,
             ),
             10.szH,
@@ -107,9 +112,10 @@ class UnauthenticatedSheet extends StatelessWidget {
                 ),
                 child: AppText(
                   LocaleKeys.createAccount,
-                  color: AppColors.sokoonNavy,
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w600,
+                  style: AppTextStyles.semiBold.copyWith(
+                    color: AppColors.sokoonNavy,
+                    fontSize: 15.sp,
+                  ),
                 ),
               ),
             ),

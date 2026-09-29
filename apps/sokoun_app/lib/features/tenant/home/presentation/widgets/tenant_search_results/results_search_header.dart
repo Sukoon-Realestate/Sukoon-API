@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 
 class ResultsSearchHeader extends StatelessWidget {
   const ResultsSearchHeader({
@@ -51,19 +52,18 @@ class ResultsSearchHeader extends StatelessWidget {
                       onSubmitted: onSubmitted,
                       textInputAction: TextInputAction.search,
                       textAlign: TextAlign.start,
-                      style: TextStyle(
+                      style: AppTextStyles.semiBold.copyWith(
                         color: AppColors.sokoonNavy,
                         fontSize: 14.sp,
-                        fontWeight: FontWeight.w600,
                       ),
                       decoration: InputDecoration(
                         isCollapsed: true,
                         border: InputBorder.none,
                         hintText: LocaleKeys.tenantSearchResultsHint,
-                        hintStyle: TextStyle(
+                        hintStyle: AppTextStyles.regular14.copyWith(
                           color: AppColors.sokoonGray,
                           fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
+                          height: 1.45,
                         ),
                       ),
                     ),

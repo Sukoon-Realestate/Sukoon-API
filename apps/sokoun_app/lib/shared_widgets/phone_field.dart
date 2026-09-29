@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 
 class SokoonPhoneField extends StatelessWidget {
@@ -55,11 +56,9 @@ class SokoonPhoneField extends StatelessWidget {
             horizontal: 16.w,
             vertical: 14.h,
           ),
-          style: TextStyle(
+          style: AppTextStyles.semiBold.copyWith(
             color: AppColors.sokoonNavy,
-            fontFamily: ConstantManager.fontFamily,
             fontSize: 15.sp,
-            fontWeight: FontWeight.w600,
           ),
           onChanged: onChanged,
           validator: validator,

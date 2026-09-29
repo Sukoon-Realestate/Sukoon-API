@@ -30,18 +30,21 @@ class LanguageSelectionHeader extends StatelessWidget {
         24.szH,
         AppText(
           LocaleKeys.languageSelectionTitle,
-          color: AppColors.sokoonNavy,
-          fontSize: 22.sp,
-          fontWeight: FontWeight.w700,
-          height: 1.5,
+          style: AppTextStyles.bold.copyWith(
+            color: AppColors.sokoonNavy,
+            fontSize: 22.sp,
+            height: 1.5,
+          ),
           textAlign: TextAlign.center,
         ),
         8.szH,
         AppText(
           LocaleKeys.languageSelectionSubtitle,
-          color: AppColors.sokoonGray,
-          fontSize: 14.sp,
-          height: 1.5,
+          style: AppTextStyles.regular14.copyWith(
+            color: AppColors.sokoonGray,
+            fontSize: 14.sp,
+            height: 1.5,
+          ),
           textAlign: TextAlign.center,
         ),
       ],

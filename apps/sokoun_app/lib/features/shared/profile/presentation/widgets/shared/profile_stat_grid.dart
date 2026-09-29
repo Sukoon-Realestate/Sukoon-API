@@ -48,17 +48,19 @@ class ProfileStatGrid extends StatelessWidget {
                   children: [
                     AppText(
                       stat.value,
-                      color: valueColor,
-                      fontSize: withCards ? 22.sp : 16.sp,
-                      fontWeight: FontWeight.w700,
+                      style: AppTextStyles.bold.copyWith(
+                        color: valueColor,
+                        fontSize: withCards ? 22.sp : 16.sp,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     3.szH,
                     AppText(
                       stat.label,
-                      color: AppColors.sokoonGray,
-                      fontSize: withCards ? 10.sp : 11.sp,
-                      fontWeight: FontWeight.w500,
+                      style: AppTextStyles.medium.copyWith(
+                        color: AppColors.sokoonGray,
+                        fontSize: withCards ? 10.sp : 11.sp,
+                      ),
                       textAlign: TextAlign.center,
                       maxLines: 2,
                     ),

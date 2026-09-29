@@ -34,9 +34,11 @@ class OwnerCalendarVisitCard extends StatelessWidget {
             ),
             child: AppText(
               visit.tenantInitial,
-              color: AppColors.white,
-              fontSize: 15.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold15.copyWith(
+                color: AppColors.white,
+                fontSize: 15.sp,
+                height: 1.45,
+              ),
             ),
           ),
           12.szW,
@@ -46,27 +48,32 @@ class OwnerCalendarVisitCard extends StatelessWidget {
               children: [
                 AppText(
                   visit.tenant.name,
-                  color: AppColors.sokoonNavy,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w800,
+                  style: AppTextStyles.extraBold.copyWith(
+                    color: AppColors.sokoonNavy,
+                    fontSize: 14.sp,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 3.szH,
                 AppText(
                   visit.property.title,
-                  color: AppColors.sokoonGray,
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w500,
+                  style: AppTextStyles.medium12.copyWith(
+                    color: AppColors.sokoonGray,
+                    fontSize: 12.sp,
+                    height: 1.45,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 3.szH,
                 AppText(
                   _formatOwnerCalendarVisitTime(context, visit.visitTime),
-                  color: AppColors.sokoonGray,
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w400,
+                  style: AppTextStyles.regular12.copyWith(
+                    color: AppColors.sokoonGray,
+                    fontSize: 12.sp,
+                    height: 1.45,
+                  ),
                 ),
               ],
             ),
@@ -81,9 +88,10 @@ class OwnerCalendarVisitCard extends StatelessWidget {
               isAccepted
                   ? LocaleKeys.ownerCalendarConfirmed
                   : LocaleKeys.ownerCalendarPending,
-              color: isAccepted ? AppColors.green : AppColors.amber,
-              fontSize: 11.sp,
-              fontWeight: FontWeight.w800,
+              style: AppTextStyles.extraBold.copyWith(
+                color: isAccepted ? AppColors.green : AppColors.amber,
+                fontSize: 11.sp,
+              ),
             ),
           ),
         ],

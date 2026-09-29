@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class KycPrivacyCard extends StatelessWidget {
@@ -47,18 +48,22 @@ class KycPrivacyCard extends StatelessWidget {
               children: [
                 AppText(
                   title,
-                  color: AppColors.sokoonNavy,
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w800,
+                  style: AppTextStyles.extraBold13.copyWith(
+                    color: AppColors.sokoonNavy,
+                    fontSize: 13.sp,
+                    height: 1.45,
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
                 4.szH,
                 AppText(
                   subtitle,
-                  color: AppColors.sokoonGray,
-                  fontSize: 11.sp,
-                  fontWeight: FontWeight.w400,
+                  style: AppTextStyles.regular11.copyWith(
+                    color: AppColors.sokoonGray,
+                    fontSize: 11.sp,
+                    height: 1.45,
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),

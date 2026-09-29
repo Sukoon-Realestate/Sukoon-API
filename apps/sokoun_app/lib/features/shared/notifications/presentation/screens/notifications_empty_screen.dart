@@ -1,3 +1,4 @@
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,9 +32,10 @@ class NotificationsEmptyScreen extends StatelessWidget {
               ),
               child: AppText(
                 LocaleKeys.notificationsFlowTitle,
-                color: AppColors.sokoonNavy,
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w700,
+                style: AppTextStyles.bold.copyWith(
+                  color: AppColors.sokoonNavy,
+                  fontSize: 18.sp,
+                ),
               ),
             ),
             Expanded(child: NotificationsEmptyState(role: role)),

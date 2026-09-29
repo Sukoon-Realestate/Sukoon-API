@@ -1,3 +1,4 @@
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/features/tenant/favorites/presentation/screens/favorites_screen.dart';
 import 'package:sokoun_app/features/tenant/visits/imports.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/screens/kyc_approved_screen.dart';

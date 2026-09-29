@@ -21,15 +21,20 @@ class OwnerPropertyPhotosEditor extends StatelessWidget {
           children: [
             AppText(
               LocaleKeys.ownerPropertiesPhotos,
-              color: AppColors.sokoonNavy,
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w800,
+              style: AppTextStyles.extraBold13.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 13.sp,
+                height: 1.45,
+              ),
             ),
             const Spacer(),
             AppText(
               '$photoCount ${LocaleKeys.ownerPropertiesPhotoUnit}',
-              color: AppColors.sokoonGray,
-              fontSize: 12.sp,
+              style: AppTextStyles.regular12.copyWith(
+                color: AppColors.sokoonGray,
+                fontSize: 12.sp,
+                height: 1.45,
+              ),
             ),
           ],
         ),
@@ -126,9 +131,11 @@ class _PhotoTile extends StatelessWidget {
             3.szH,
             AppText(
               label!,
-              color: foregroundColor,
-              fontSize: 10.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold10.copyWith(
+                color: foregroundColor,
+                fontSize: 10.sp,
+                height: 1.45,
+              ),
             ),
           ],
         ],

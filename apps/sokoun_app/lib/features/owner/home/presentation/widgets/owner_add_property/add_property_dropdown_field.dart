@@ -4,6 +4,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class AddPropertyDropdownField extends StatelessWidget {
@@ -27,9 +28,10 @@ class AddPropertyDropdownField extends StatelessWidget {
       children: [
         AppText(
           label,
-          color: AppColors.sokoonGray,
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w600,
+          style: AppTextStyles.semiBold.copyWith(
+            color: AppColors.sokoonGray,
+            fontSize: 12.sp,
+          ),
           textAlign: TextAlign.start,
         ),
         6.szH,
@@ -47,9 +49,10 @@ class AddPropertyDropdownField extends StatelessWidget {
               isExpanded: true,
               hint: AppText(
                 LocaleKeys.ownerAddPropertyChoose,
-                color: AppColors.sokoonMuted,
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w600,
+                style: AppTextStyles.semiBold.copyWith(
+                  color: AppColors.sokoonMuted,
+                  fontSize: 13.sp,
+                ),
               ).endWidget,
               icon: Icon(
                 Icons.keyboard_arrow_down_rounded,
@@ -69,9 +72,11 @@ class AddPropertyDropdownField extends StatelessWidget {
                   for (final item in items)
                     AppText(
                       item,
-                      color: AppColors.sokoonTeal,
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w700,
+                      style: AppTextStyles.bold15.copyWith(
+                        color: AppColors.sokoonTeal,
+                        fontSize: 15.sp,
+                        height: 1.45,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ).endWidget,
@@ -84,9 +89,11 @@ class AddPropertyDropdownField extends StatelessWidget {
                     alignment: AlignmentDirectional.centerEnd,
                     child: AppText(
                       item,
-                      color: AppColors.sokoonNavy,
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w700,
+                      style: AppTextStyles.bold13.copyWith(
+                        color: AppColors.sokoonNavy,
+                        fontSize: 13.sp,
+                        height: 1.45,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

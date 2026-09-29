@@ -1,3 +1,4 @@
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -233,7 +234,9 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
   void _showMessage(String message) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: AppText(message)));
+      ..showSnackBar(
+        SnackBar(content: AppText(message, style: AppTextStyles.regular)),
+      );
   }
 
   @override

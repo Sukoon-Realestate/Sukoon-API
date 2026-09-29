@@ -26,16 +26,20 @@ class OwnerReviewsEmptyState extends StatelessWidget {
             4.szH,
             AppText(
               LocaleKeys.profileNoReviewsTitle,
-              color: AppColors.sokoonNavy,
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w800,
+              style: AppTextStyles.extraBold.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 14.sp,
+              ),
               textAlign: TextAlign.center,
             ),
             4.szH,
             AppText(
               LocaleKeys.profileNoReviewsDescription,
-              color: AppColors.sokoonGray,
-              fontSize: 11.sp,
+              style: AppTextStyles.regular11.copyWith(
+                color: AppColors.sokoonGray,
+                fontSize: 11.sp,
+                height: 1.45,
+              ),
               textAlign: TextAlign.center,
               maxLines: 2,
             ),

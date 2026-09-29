@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
 
@@ -24,16 +25,19 @@ class TenantPropertyPriceAndRating extends StatelessWidget {
                 children: [
                   AppText(
                     LocaleKeys.tenantPropertyDetailsMonthlyPriceUnit,
-                    color: AppColors.sokoonGray,
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w500,
+                    style: AppTextStyles.medium13.copyWith(
+                      color: AppColors.sokoonGray,
+                      fontSize: 13.sp,
+                      height: 1.45,
+                    ),
                   ),
                   6.szW,
                   AppText(
                     property.price,
-                    color: AppColors.sokoonTeal,
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.w800,
+                    style: AppTextStyles.extraBold.copyWith(
+                      color: AppColors.sokoonTeal,
+                      fontSize: 24.sp,
+                    ),
                   ),
                 ],
               ),
@@ -43,20 +47,30 @@ class TenantPropertyPriceAndRating extends StatelessWidget {
         8.szW,
         Row(
           children: [
-            AppText('⭐', fontSize: 14.sp),
+            AppText(
+              '⭐',
+              style: AppTextStyles.regular14.copyWith(
+                fontSize: 14.sp,
+                height: 1.45,
+              ),
+            ),
             4.szW,
             AppText(
               property.rating,
-              color: AppColors.sokoonNavy,
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w800,
+              style: AppTextStyles.extraBold13.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 13.sp,
+                height: 1.45,
+              ),
             ),
             3.szW,
             AppText(
               '(${property.reviewCount})',
-              color: AppColors.sokoonGray,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w500,
+              style: AppTextStyles.medium12.copyWith(
+                color: AppColors.sokoonGray,
+                fontSize: 12.sp,
+                height: 1.45,
+              ),
             ),
           ],
         ),

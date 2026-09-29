@@ -5,6 +5,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
@@ -59,9 +60,10 @@ class AddPropertySubmittedPage extends StatelessWidget {
                 4.szW,
                 AppText(
                   LocaleKeys.ownerPropertySubmittedStatus,
-                  color: AppColors.amber,
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w600,
+                  style: AppTextStyles.semiBold.copyWith(
+                    color: AppColors.amber,
+                    fontSize: 12.sp,
+                  ),
                 ),
               ],
             ),
@@ -69,17 +71,20 @@ class AddPropertySubmittedPage extends StatelessWidget {
           14.szH,
           AppText(
             LocaleKeys.ownerPropertySubmittedTitle,
-            color: AppColors.sokoonNavy,
-            fontSize: 23.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 23.sp,
+            ),
             textAlign: TextAlign.center,
           ),
           8.szH,
           AppText(
             LocaleKeys.ownerPropertySubmittedDescription,
-            color: AppColors.sokoonGray,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w400,
+            style: AppTextStyles.regular14.copyWith(
+              color: AppColors.sokoonGray,
+              fontSize: 14.sp,
+              height: 1.45,
+            ),
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -152,9 +157,11 @@ class _SummaryRow extends StatelessWidget {
             flex: 3,
             child: AppText(
               item.value,
-              color: AppColors.sokoonNavy,
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold13.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 13.sp,
+                height: 1.45,
+              ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.start,
@@ -165,9 +172,11 @@ class _SummaryRow extends StatelessWidget {
             flex: 2,
             child: AppText(
               item.label,
-              color: AppColors.sokoonGray,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w400,
+              style: AppTextStyles.regular12.copyWith(
+                color: AppColors.sokoonGray,
+                fontSize: 12.sp,
+                height: 1.45,
+              ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.end,

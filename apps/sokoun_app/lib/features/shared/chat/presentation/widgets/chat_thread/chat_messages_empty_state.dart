@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/generated/assets.dart';
 
@@ -32,18 +33,22 @@ class ChatMessagesEmptyState extends StatelessWidget {
             10.szH,
             AppText(
               LocaleKeys.chatMessagesEmptyTitle,
-              color: AppColors.sokoonNavy,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold16.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 16.sp,
+                height: 1.45,
+              ),
               textAlign: TextAlign.center,
               maxLines: 2,
             ),
             6.szH,
             AppText(
               LocaleKeys.chatMessagesEmptyDescription,
-              color: AppColors.sokoonGray,
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w500,
+              style: AppTextStyles.medium13.copyWith(
+                color: AppColors.sokoonGray,
+                fontSize: 13.sp,
+                height: 1.45,
+              ),
               textAlign: TextAlign.center,
               maxLines: 3,
             ),

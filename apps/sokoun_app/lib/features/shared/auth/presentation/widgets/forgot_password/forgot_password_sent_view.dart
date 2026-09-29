@@ -4,6 +4,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
@@ -94,25 +95,29 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
         20.szH,
         AppText(
           LocaleKeys.resetLinkSent,
-          color: AppColors.sokoonNavy,
-          fontSize: 20.sp,
-          fontWeight: FontWeight.w700,
+          style: AppTextStyles.bold.copyWith(
+            color: AppColors.sokoonNavy,
+            fontSize: 20.sp,
+          ),
           textAlign: TextAlign.center,
         ),
         8.szH,
         AppText(
           LocaleKeys.resetLinkSentDescription,
-          color: AppColors.sokoonGray,
-          fontSize: 13.sp,
-          fontWeight: FontWeight.w500,
+          style: AppTextStyles.medium13.copyWith(
+            color: AppColors.sokoonGray,
+            fontSize: 13.sp,
+            height: 1.45,
+          ),
           textAlign: TextAlign.center,
         ),
         5.szH,
         AppText(
           widget.maskedEmail,
-          color: accentColor,
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w800,
+          style: AppTextStyles.extraBold.copyWith(
+            color: accentColor,
+            fontSize: 14.sp,
+          ),
           textAlign: TextAlign.center,
         ),
         30.szH,
@@ -145,17 +150,21 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
             children: [
               AppText(
                 LocaleKeys.emailNotReceived,
-                color: AppColors.sokoonNavy,
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w800,
+                style: AppTextStyles.extraBold13.copyWith(
+                  color: AppColors.sokoonNavy,
+                  fontSize: 13.sp,
+                  height: 1.45,
+                ),
                 textAlign: TextAlign.center,
               ),
               4.szH,
               AppText(
                 LocaleKeys.checkSpamFirst,
-                color: AppColors.sokoonGray,
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w500,
+                style: AppTextStyles.medium11.copyWith(
+                  color: AppColors.sokoonGray,
+                  fontSize: 11.sp,
+                  height: 1.45,
+                ),
                 textAlign: TextAlign.center,
               ),
               12.szH,
@@ -183,8 +192,10 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
                         textColor: AppColors.white,
                         borderRadius: 12.r,
                         height: 46.h,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w700,
+                        textStyle: AppTextStyles.bold14.copyWith(
+                          fontSize: 14.sp,
+                          height: 1.45,
+                        ),
                         icon: Icon(
                           Icons.refresh_rounded,
                           color: AppColors.white,
@@ -208,9 +219,14 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
           borderRadius: BorderRadius.circular(14.r),
           customChild: AppText(
             LocaleKeys.changeEmail,
-            color: accentColor,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w800,
+            style: AppTextStyles.extraBold.copyWith(
+              color: accentColor,
+              fontSize: 14.sp,
+            ),
+          ),
+          textStyle: AppTextStyles.medium13.copyWith(
+            fontSize: FontSize.s13,
+            height: 1.45,
           ),
         ),
       ],
@@ -246,9 +262,11 @@ class _RecoveryStep extends StatelessWidget {
           ),
           child: AppText(
             '$number',
-            color: accentColor,
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold13.copyWith(
+              color: accentColor,
+              fontSize: 13.sp,
+              height: 1.45,
+            ),
           ),
         ),
         12.szW,
@@ -258,16 +276,20 @@ class _RecoveryStep extends StatelessWidget {
             children: [
               AppText(
                 title,
-                color: AppColors.sokoonNavy,
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w800,
+                style: AppTextStyles.extraBold13.copyWith(
+                  color: AppColors.sokoonNavy,
+                  fontSize: 13.sp,
+                  height: 1.45,
+                ),
               ),
               3.szH,
               AppText(
                 description,
-                color: AppColors.sokoonGray,
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w500,
+                style: AppTextStyles.medium11.copyWith(
+                  color: AppColors.sokoonGray,
+                  fontSize: 11.sp,
+                  height: 1.45,
+                ),
               ),
             ],
           ),

@@ -4,6 +4,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class ForgotPasswordIntro extends StatelessWidget {
@@ -27,19 +28,21 @@ class ForgotPasswordIntro extends StatelessWidget {
         20.szH,
         AppText(
           LocaleKeys.forgotPassword,
-          color: AppColors.sokoonNavy,
-          fontSize: 20.sp,
-          fontWeight: FontWeight.w700,
+          style: AppTextStyles.bold.copyWith(
+            color: AppColors.sokoonNavy,
+            fontSize: 20.sp,
+          ),
           textAlign: TextAlign.center,
         ),
         8.szH,
         AppText(
           LocaleKeys.forgotPasswordDescription,
-          color: AppColors.sokoonGray,
-          fontSize: 13.sp,
-          fontWeight: FontWeight.w500,
+          style: AppTextStyles.medium13.copyWith(
+            color: AppColors.sokoonGray,
+            fontSize: 13.sp,
+            height: 1.7,
+          ),
           textAlign: TextAlign.center,
-          height: 1.7,
         ),
       ],
     );

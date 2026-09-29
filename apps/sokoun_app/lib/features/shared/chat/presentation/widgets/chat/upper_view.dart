@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
@@ -53,9 +54,11 @@ class ChatThreadHeader extends StatelessWidget {
               children: [
                 AppText(
                   conversation.name,
-                  color: AppColors.sokoonNavy,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w700,
+                  style: AppTextStyles.bold14.copyWith(
+                    color: AppColors.sokoonNavy,
+                    fontSize: 14.sp,
+                    height: 1.45,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -67,8 +70,11 @@ class ChatThreadHeader extends StatelessWidget {
                       conversation.property,
                       if (conversation.isOnline) LocaleKeys.chatActiveNow,
                     ].where((value) => value.isNotEmpty).join(' · '),
-                    color: AppColors.sokoonGray,
-                    fontSize: 11.sp,
+                    style: AppTextStyles.regular11.copyWith(
+                      color: AppColors.sokoonGray,
+                      fontSize: 11.sp,
+                      height: 1.45,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

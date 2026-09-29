@@ -1,3 +1,4 @@
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_action_footer.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:flutter/material.dart';
@@ -72,9 +73,11 @@ class AddPropertyStepShell extends StatelessWidget {
                 8.szH,
                 AppText(
                   progressSubtitle!,
-                  color: AppColors.sokoonGray,
-                  fontSize: 11.sp,
-                  fontWeight: FontWeight.w400,
+                  style: AppTextStyles.regular11.copyWith(
+                    color: AppColors.sokoonGray,
+                    fontSize: 11.sp,
+                    height: 1.45,
+                  ),
                   textAlign: TextAlign.start,
                 ),
               ],
@@ -159,9 +162,11 @@ class _TopBar extends StatelessWidget {
           Expanded(
             child: AppText(
               title,
-              color: AppColors.sokoonNavy,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold16.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 16.sp,
+                height: 1.45,
+              ),
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

@@ -37,17 +37,22 @@ class VisitPropertySummaryCard extends StatelessWidget {
               children: [
                 AppText(
                   property.title,
-                  color: AppColors.sokoonNavy,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w700,
+                  style: AppTextStyles.bold14.copyWith(
+                    color: AppColors.sokoonNavy,
+                    fontSize: 14.sp,
+                    height: 1.45,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 4.szH,
                 AppText(
                   property.meta,
-                  color: AppColors.sokoonGray,
-                  fontSize: 12.sp,
+                  style: AppTextStyles.regular12.copyWith(
+                    color: AppColors.sokoonGray,
+                    fontSize: 12.sp,
+                    height: 1.45,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

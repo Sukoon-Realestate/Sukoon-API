@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
 
@@ -43,16 +44,19 @@ class _MetricCard extends StatelessWidget {
           5.szH,
           AppText(
             metric.value,
-            color: AppColors.sokoonNavy,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w800,
+            style: AppTextStyles.extraBold.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 14.sp,
+            ),
           ),
           3.szH,
           AppText(
             metric.label,
-            color: AppColors.sokoonGray,
-            fontSize: 10.sp,
-            fontWeight: FontWeight.w500,
+            style: AppTextStyles.medium10.copyWith(
+              color: AppColors.sokoonGray,
+              fontSize: 10.sp,
+              height: 1.45,
+            ),
           ),
         ],
       ),

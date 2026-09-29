@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 
@@ -37,6 +38,7 @@ class RecentSearchesSection extends StatelessWidget {
             saved
                 ? LocaleKeys.searchHistoryRemoved
                 : LocaleKeys.searchHistorySaveFailed,
+            style: AppTextStyles.regular,
           ),
           action: saved
               ? SnackBarAction(
@@ -49,7 +51,10 @@ class RecentSearchesSection extends StatelessWidget {
                     if (!restored && context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: AppText(LocaleKeys.searchHistorySaveFailed),
+                          content: AppText(
+                            LocaleKeys.searchHistorySaveFailed,
+                            style: AppTextStyles.regular,
+                          ),
                         ),
                       );
                     }
@@ -79,7 +84,10 @@ class RecentSearchesSection extends StatelessWidget {
                   SearchSectionTitle(LocaleKeys.tenantSearchRecentSearches),
                   TextButton(
                     onPressed: () => _remove(context),
-                    child: Text(LocaleKeys.clearSearchHistory),
+                    child: Text(
+                      LocaleKeys.clearSearchHistory,
+                      style: AppTextStyles.base,
+                    ),
                   ),
                 ],
               ),

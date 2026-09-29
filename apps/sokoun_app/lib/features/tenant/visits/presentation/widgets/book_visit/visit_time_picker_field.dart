@@ -27,11 +27,7 @@ class VisitTimePickerField extends StatelessWidget {
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 foregroundColor: AppColors.sokoonTeal,
-                textStyle: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w800,
-                  fontFamily: ConstantManager.fontFamily,
-                ),
+                textStyle: AppTextStyles.extraBold.copyWith(fontSize: 14.sp),
               ),
             ),
             timePickerTheme: TimePickerThemeData(
@@ -44,16 +40,13 @@ class VisitTimePickerField extends StatelessWidget {
               dialHandColor: AppColors.sokoonTeal,
               dialTextColor: AppColors.sokoonNavy,
               entryModeIconColor: AppColors.sokoonTeal,
-              helpTextStyle: TextStyle(
+              helpTextStyle: AppTextStyles.bold12.copyWith(
                 color: AppColors.sokoonGray,
                 fontSize: 12.sp,
-                fontWeight: FontWeight.w700,
-                fontFamily: ConstantManager.fontFamily,
+                height: 1.45,
               ),
-              hourMinuteTextStyle: TextStyle(
+              hourMinuteTextStyle: AppTextStyles.extraBold.copyWith(
                 fontSize: 40.sp,
-                fontWeight: FontWeight.w800,
-                fontFamily: ConstantManager.fontFamily,
               ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(24.r),
@@ -119,11 +112,12 @@ class VisitTimePickerField extends StatelessWidget {
               Expanded(
                 child: AppText(
                   value,
-                  color: hasValue
-                      ? AppColors.sokoonNavy
-                      : AppColors.sokoonMuted,
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w600,
+                  style: AppTextStyles.semiBold.copyWith(
+                    color: hasValue
+                        ? AppColors.sokoonNavy
+                        : AppColors.sokoonMuted,
+                    fontSize: 15.sp,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ).startWidget,

@@ -4,6 +4,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
@@ -52,9 +53,11 @@ class SearchResultCard extends StatelessWidget {
             children: [
               AppText(
                 item.title.isEmpty ? '••••••••••••' : item.title,
-                color: AppColors.sokoonNavy,
-                fontSize: 15.sp,
-                fontWeight: FontWeight.w700,
+                style: AppTextStyles.bold15.copyWith(
+                  color: AppColors.sokoonNavy,
+                  fontSize: 15.sp,
+                  height: 1.45,
+                ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -75,9 +78,11 @@ class SearchResultCard extends StatelessWidget {
                               item.district,
                               item.city.name,
                             ].where((value) => value.isNotEmpty).join(', '),
-                      color: AppColors.sokoonGray,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
+                      style: AppTextStyles.regular12.copyWith(
+                        color: AppColors.sokoonGray,
+                        fontSize: 12.sp,
+                        height: 1.45,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -97,9 +102,10 @@ class SearchResultCard extends StatelessWidget {
                 children: [
                   AppText(
                     '${item.formattedPrice} ${LocaleKeys.ownerRevenueCurrency}/${labelResolver.pricePeriodLabel(item.pricePeriod)}',
-                    color: AppColors.sokoonTeal,
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w700,
+                    style: AppTextStyles.bold.copyWith(
+                      color: AppColors.sokoonTeal,
+                      fontSize: 18.sp,
+                    ),
                   ),
                   DetailsButton(propertyId: item.id),
                 ],

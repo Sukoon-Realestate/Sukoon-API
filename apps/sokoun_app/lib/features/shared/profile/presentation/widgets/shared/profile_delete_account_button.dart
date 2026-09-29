@@ -91,9 +91,11 @@ class _ProfileDeleteAccountButtonState
                         8.szW,
                         AppText(
                           LocaleKeys.deleteAccount,
-                          color: AppColors.red,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w700,
+                          style: AppTextStyles.bold14.copyWith(
+                            color: AppColors.red,
+                            fontSize: 14.sp,
+                            height: 1.45,
+                          ),
                         ),
                       ],
                     ),
@@ -133,19 +135,22 @@ class _ProfileDeleteAccountDialog extends StatelessWidget {
           12.szH,
           AppText(
             LocaleKeys.areYouSureYouWantToDeleteYourAccount,
-            color: AppColors.sokoonNavy,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w800,
+            style: AppTextStyles.extraBold.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 16.sp,
+            ),
             textAlign: TextAlign.center,
           ),
         ],
       ),
       content: AppText(
         LocaleKeys.deletingWillRemoveAllYourData,
-        color: AppColors.sokoonGray,
-        fontSize: 13.sp,
+        style: AppTextStyles.regular13.copyWith(
+          color: AppColors.sokoonGray,
+          fontSize: 13.sp,
+          height: 1.5,
+        ),
         textAlign: TextAlign.center,
-        height: 1.5,
       ),
       actionsAlignment: MainAxisAlignment.center,
       actions: [
@@ -153,9 +158,11 @@ class _ProfileDeleteAccountDialog extends StatelessWidget {
           onPressed: () => Go.back(false),
           child: AppText(
             LocaleKeys.cancel,
-            color: AppColors.sokoonGray,
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold13.copyWith(
+              color: AppColors.sokoonGray,
+              fontSize: 13.sp,
+              height: 1.45,
+            ),
           ),
         ),
         FilledButton(
@@ -168,9 +175,11 @@ class _ProfileDeleteAccountDialog extends StatelessWidget {
           ),
           child: AppText(
             LocaleKeys.deleteAccount,
-            color: AppColors.white,
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold13.copyWith(
+              color: AppColors.white,
+              fontSize: 13.sp,
+              height: 1.45,
+            ),
           ),
         ),
       ],

@@ -37,8 +37,11 @@ class BookVisitForm extends StatelessWidget {
           if (days.isEmpty)
             AppText(
               LocaleKeys.tenantVisitNoAvailableDays,
-              color: AppColors.sokoonMuted,
-              fontSize: 12.sp,
+              style: AppTextStyles.regular12.copyWith(
+                color: AppColors.sokoonMuted,
+                fontSize: 12.sp,
+                height: 1.45,
+              ),
             )
           else
             SingleChildScrollView(
@@ -79,18 +82,16 @@ class BookVisitForm extends StatelessWidget {
               controller: noteController,
               maxLines: 3,
               textAlign: TextAlign.start,
-              style: TextStyle(
+              style: AppTextStyles.medium13.copyWith(
                 color: AppColors.sokoonNavy,
                 fontSize: 13.sp,
-                fontWeight: FontWeight.w500,
-                fontFamily: ConstantManager.fontFamily,
+                height: 1.45,
               ),
               decoration: InputDecoration(
                 hintText: LocaleKeys.tenantVisitNoteHint,
-                hintStyle: TextStyle(
+                hintStyle: AppTextStyles.base.copyWith(
                   color: AppColors.navyAlpha50,
                   fontSize: 13.sp,
-                  fontFamily: ConstantManager.fontFamily,
                 ),
                 border: InputBorder.none,
               ),
@@ -110,8 +111,10 @@ class BookVisitForm extends StatelessWidget {
                 textColor: AppColors.white,
                 borderRadius: 14.r,
                 height: 50.h,
-                fontSize: 15.sp,
-                fontWeight: FontWeight.w700,
+                textStyle: AppTextStyles.bold15.copyWith(
+                  fontSize: 15.sp,
+                  height: 1.45,
+                ),
               ),
             ),
           ),
@@ -130,9 +133,11 @@ class _BookVisitSectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppText(
       title,
-      color: AppColors.sokoonNavy,
-      fontSize: 14.sp,
-      fontWeight: FontWeight.w700,
+      style: AppTextStyles.bold14.copyWith(
+        color: AppColors.sokoonNavy,
+        fontSize: 14.sp,
+        height: 1.45,
+      ),
       maxLines: 1,
     );
   }

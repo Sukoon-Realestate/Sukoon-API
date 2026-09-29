@@ -1,3 +1,4 @@
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_logo_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -40,19 +41,21 @@ class WelcomeScreen extends StatelessWidget {
           18.szH,
           AppText(
             content.title,
-            color: AppColors.sokoonNavy,
-            fontSize: 24.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 24.sp,
+            ),
             textAlign: TextAlign.center,
           ),
           8.szH,
           AppText(
             content.description,
-            color: AppColors.sokoonGray,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w400,
+            style: AppTextStyles.regular14.copyWith(
+              color: AppColors.sokoonGray,
+              fontSize: 14.sp,
+              height: 1.45,
+            ),
             textAlign: TextAlign.center,
-            height: 1.45,
           ),
           24.szH,
           ..._buildFeatureCards(content.features),
@@ -65,8 +68,10 @@ class WelcomeScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(8.r),
             height: 52.h,
             width: double.infinity,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w700,
+            textStyle: AppTextStyles.bold16.copyWith(
+              fontSize: 16.sp,
+              height: 1.45,
+            ),
           ),
           14.szH,
           TextButton(
@@ -77,9 +82,10 @@ class WelcomeScreen extends StatelessWidget {
             ),
             child: AppText(
               content.loginButtonTitle,
-              color: AppColors.sokoonGray,
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
+              style: AppTextStyles.semiBold.copyWith(
+                color: AppColors.sokoonGray,
+                fontSize: 14.sp,
+              ),
               textAlign: TextAlign.center,
               maxLines: 2,
             ),

@@ -38,9 +38,10 @@ class ProfileScreenHeader extends StatelessWidget {
           Expanded(
             child: AppText(
               title,
-              color: AppColors.sokoonNavy,
-              fontSize: showBackButton ? 17.sp : 21.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: showBackButton ? 17.sp : 21.sp,
+              ),
               textAlign: showBackButton ? TextAlign.center : TextAlign.start,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

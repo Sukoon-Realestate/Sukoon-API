@@ -48,9 +48,11 @@ class _VisitSummaryRow extends StatelessWidget {
           Expanded(
             child: AppText(
               row.value,
-              color: AppColors.sokoonNavy,
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w800,
+              style: AppTextStyles.extraBold13.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 13.sp,
+                height: 1.45,
+              ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -58,8 +60,11 @@ class _VisitSummaryRow extends StatelessWidget {
           12.szW,
           AppText(
             row.label,
-            color: AppColors.sokoonGray,
-            fontSize: 12.sp,
+            style: AppTextStyles.regular12.copyWith(
+              color: AppColors.sokoonGray,
+              fontSize: 12.sp,
+              height: 1.45,
+            ),
             maxLines: 1,
           ),
         ],

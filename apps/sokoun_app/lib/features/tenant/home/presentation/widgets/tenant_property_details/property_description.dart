@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 
 class PropertyDescription extends StatefulWidget {
@@ -30,11 +31,9 @@ class _PropertyDescriptionState extends State<PropertyDescription> {
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
-      const style = TextStyle(
-        fontFamily: ConstantManager.fontFamily,
+      final style = AppTextStyles.regular14.copyWith(
         fontSize: 14,
         height: 1.5,
-        fontWeight: FontWeight.w400,
         color: AppColors.sokoonGray,
       );
       final painter = TextPainter(
@@ -75,6 +74,7 @@ class _PropertyDescriptionState extends State<PropertyDescription> {
                   ),
                   label: Text(
                     expanded ? LocaleKeys.showLess : LocaleKeys.showMore,
+                    style: AppTextStyles.base,
                   ),
                 ),
               ),

@@ -45,16 +45,19 @@ class OwnerRevenueScreen extends StatelessWidget {
                       children: [
                         AppText(
                           LocaleKeys.ownerRevenueThisMonth,
-                          color: AppColors.whiteAlpha60,
-                          fontSize: 13.sp,
-                          fontWeight: FontWeight.w700,
+                          style: AppTextStyles.bold13.copyWith(
+                            color: AppColors.whiteAlpha60,
+                            fontSize: 13.sp,
+                            height: 1.45,
+                          ),
                         ),
                         8.szH,
                         AppText(
                           '${_formatNumber(totalThisMonth)} ${LocaleKeys.ownerRevenueCurrency}',
-                          color: AppColors.white,
-                          fontSize: 30.sp,
-                          fontWeight: FontWeight.w800,
+                          style: AppTextStyles.extraBold.copyWith(
+                            color: AppColors.white,
+                            fontSize: 30.sp,
+                          ),
                         ),
                         8.szH,
                         Container(
@@ -68,9 +71,11 @@ class OwnerRevenueScreen extends StatelessWidget {
                           ),
                           child: AppText(
                             growthLabel,
-                            color: AppColors.white,
-                            fontSize: 11.sp,
-                            fontWeight: FontWeight.w700,
+                            style: AppTextStyles.bold11.copyWith(
+                              color: AppColors.white,
+                              fontSize: 11.sp,
+                              height: 1.45,
+                            ),
                           ),
                         ),
                       ],
@@ -79,9 +84,10 @@ class OwnerRevenueScreen extends StatelessWidget {
                   22.szH,
                   AppText(
                     LocaleKeys.ownerRevenueProperties,
-                    color: AppColors.sokoonNavy,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w800,
+                    style: AppTextStyles.extraBold.copyWith(
+                      color: AppColors.sokoonNavy,
+                      fontSize: 16.sp,
+                    ),
                   ),
                   10.szH,
                   for (int index = 0; index < properties.length; index++) ...[
@@ -91,9 +97,10 @@ class OwnerRevenueScreen extends StatelessWidget {
                   22.szH,
                   AppText(
                     LocaleKeys.ownerRevenueLatestTransactions,
-                    color: AppColors.sokoonNavy,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w800,
+                    style: AppTextStyles.extraBold.copyWith(
+                      color: AppColors.sokoonNavy,
+                      fontSize: 16.sp,
+                    ),
                   ),
                   10.szH,
                   Container(

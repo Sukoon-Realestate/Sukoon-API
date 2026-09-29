@@ -1,3 +1,4 @@
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -127,7 +128,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          content: Text(LocaleKeys.favoritesRemovedMessage),
+          content: Text(
+            LocaleKeys.favoritesRemovedMessage,
+            style: AppTextStyles.base,
+          ),
           action: SnackBarAction(
             label: LocaleKeys.favoritesUndoAction,
             textColor: AppColors.mint,

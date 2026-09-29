@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 
 class AddPropertyPrimaryButton extends StatelessWidget {
@@ -31,8 +32,7 @@ class AddPropertyPrimaryButton extends StatelessWidget {
       minHeight: 48.h,
       isFitted: false,
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-      fontSize: 15.sp,
-      fontWeight: FontWeight.w700,
+      textStyle: AppTextStyles.bold15.copyWith(fontSize: 15.sp, height: 1.45),
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class ChatVerifiedBadge extends StatelessWidget {
@@ -27,9 +28,11 @@ class ChatVerifiedBadge extends StatelessWidget {
           4.szW,
           AppText(
             LocaleKeys.verified,
-            color: AppColors.sokoonGold,
-            fontSize: 10.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold10.copyWith(
+              color: AppColors.sokoonGold,
+              fontSize: 10.sp,
+              height: 1.45,
+            ),
             maxLines: 1,
           ),
         ],

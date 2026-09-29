@@ -6,6 +6,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 
@@ -97,9 +98,11 @@ class _DeviceNotificationPermissionTileState
           children: [
             AppText(
               LocaleKeys.deviceNotificationsTitle,
-              color: AppColors.sokoonNavy,
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold14.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 14.sp,
+                height: 1.45,
+              ),
             ),
             6.szH,
             AppText(
@@ -108,9 +111,11 @@ class _DeviceNotificationPermissionTileState
                   : enabled
                   ? LocaleKeys.deviceNotificationsEnabled
                   : LocaleKeys.deviceNotificationsDisabled,
-              color: AppColors.sokoonGray,
-              fontSize: 12.sp,
-              height: 1.5,
+              style: AppTextStyles.regular12.copyWith(
+                color: AppColors.sokoonGray,
+                fontSize: 12.sp,
+                height: 1.5,
+              ),
             ),
             if (!enabled) ...[
               12.szH,
@@ -123,7 +128,7 @@ class _DeviceNotificationPermissionTileState
                       : LocaleKeys.notificationPermissionTitle,
                   minHeight: 44.h,
                   width: double.infinity,
-                  fontSize: 14.sp,
+                  textStyle: AppTextStyles.medium.copyWith(fontSize: 14.sp),
                   borderRadius: BorderRadius.circular(12.r),
                   color: AppColors.blue,
                   customChild: busy

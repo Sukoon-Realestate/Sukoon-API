@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
@@ -77,9 +78,10 @@ class TenantSearchResultsContent extends StatelessWidget {
             count == null
                 ? LocaleKeys.tenantSearchResultsCount
                 : '$count ${LocaleKeys.tenantSearchResultsCount}',
-            color: AppColors.sokoonGray,
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w600,
+            style: AppTextStyles.semiBold.copyWith(
+              color: AppColors.sokoonGray,
+              fontSize: 13.sp,
+            ),
           ).paddingSymmetric(horizontal: 18.w, vertical: 10.h),
         ),
         Expanded(

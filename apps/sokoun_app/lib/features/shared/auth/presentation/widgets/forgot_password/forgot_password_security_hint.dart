@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class ForgotPasswordSecurityHint extends StatelessWidget {
@@ -38,17 +39,20 @@ class ForgotPasswordSecurityHint extends StatelessWidget {
               children: [
                 AppText(
                   LocaleKeys.recoveryLinkValidTitle,
-                  color: AppColors.sokoonNavy,
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w800,
+                  style: AppTextStyles.extraBold13.copyWith(
+                    color: AppColors.sokoonNavy,
+                    fontSize: 13.sp,
+                    height: 1.45,
+                  ),
                 ),
                 4.szH,
                 AppText(
                   LocaleKeys.recoverySecurityHint,
-                  color: AppColors.sokoonGray,
-                  fontSize: 11.sp,
-                  fontWeight: FontWeight.w500,
-                  height: 1.55,
+                  style: AppTextStyles.medium11.copyWith(
+                    color: AppColors.sokoonGray,
+                    fontSize: 11.sp,
+                    height: 1.55,
+                  ),
                 ),
               ],
             ),

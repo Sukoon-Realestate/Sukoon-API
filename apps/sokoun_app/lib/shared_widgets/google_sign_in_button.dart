@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:sokoun_app/features/shared/auth/data/social_auth_service/google_sign_in.dart';
@@ -38,13 +39,19 @@ class AppGoogleSignInButton extends StatelessWidget {
           Flexible(
             child: AppText(
               LocaleKeys.continueWithGoogle,
-              color: AppColors.sokoonNavy,
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold14.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 14.sp,
+                height: 1.45,
+              ),
               overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
+      ),
+      textStyle: AppTextStyles.medium13.copyWith(
+        fontSize: FontSize.s13,
+        height: 1.45,
       ),
     );
   }

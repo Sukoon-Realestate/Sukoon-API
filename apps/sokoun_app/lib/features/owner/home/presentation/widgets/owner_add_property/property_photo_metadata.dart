@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 
@@ -67,17 +68,22 @@ class PhotoMetadataCard extends StatelessWidget {
                 if (photo.name.trim().isNotEmpty)
                   AppText(
                     photo.name,
-                    color: AppColors.sokoonNavy,
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w800,
+                    style: AppTextStyles.extraBold13.copyWith(
+                      color: AppColors.sokoonNavy,
+                      fontSize: 13.sp,
+                      height: 1.45,
+                    ),
                     textAlign: TextAlign.start,
                   ),
                 if (photo.description.trim().isNotEmpty) ...[
                   4.szH,
                   AppText(
                     photo.description,
-                    color: AppColors.sokoonGray,
-                    fontSize: 12.sp,
+                    style: AppTextStyles.regular12.copyWith(
+                      color: AppColors.sokoonGray,
+                      fontSize: 12.sp,
+                      height: 1.45,
+                    ),
                     textAlign: TextAlign.start,
                   ),
                 ],
@@ -86,8 +92,11 @@ class PhotoMetadataCard extends StatelessWidget {
                   8.szH,
                 AppText(
                   LocaleKeys.ownerAddPropertyExistingPhotoPreserved,
-                  color: AppColors.sokoonGray,
-                  fontSize: 11.sp,
+                  style: AppTextStyles.regular11.copyWith(
+                    color: AppColors.sokoonGray,
+                    fontSize: 11.sp,
+                    height: 1.45,
+                  ),
                   textAlign: TextAlign.start,
                 ),
               ],
@@ -147,9 +156,10 @@ class PhotoMetadataField extends StatelessWidget {
       children: [
         AppText(
           label,
-          color: AppColors.sokoonGray,
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w600,
+          style: AppTextStyles.semiBold.copyWith(
+            color: AppColors.sokoonGray,
+            fontSize: 12.sp,
+          ),
           textAlign: TextAlign.start,
         ),
         6.szH,
@@ -158,10 +168,10 @@ class PhotoMetadataField extends StatelessWidget {
           onChanged: onChanged,
           maxLines: maxLines,
           minLines: maxLines == 1 ? 1 : 2,
-          style: TextStyle(
+          style: AppTextStyles.medium13.copyWith(
             color: AppColors.sokoonNavy,
             fontSize: 13.sp,
-            fontWeight: FontWeight.w500,
+            height: 1.45,
           ),
           decoration: InputDecoration(
             hintText: hint,

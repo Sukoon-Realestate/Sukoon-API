@@ -32,9 +32,11 @@ class OwnerPropertyAnalyticsScreen extends StatelessWidget {
                 ),
                 child: AppText(
                   LocaleKeys.ownerAnalyticsThirtyDays,
-                  color: AppColors.sokoonGray,
-                  fontSize: 11.sp,
-                  fontWeight: FontWeight.w700,
+                  style: AppTextStyles.bold11.copyWith(
+                    color: AppColors.sokoonGray,
+                    fontSize: 11.sp,
+                    height: 1.45,
+                  ),
                 ),
               ),
             ),
@@ -44,9 +46,10 @@ class OwnerPropertyAnalyticsScreen extends StatelessWidget {
                 children: [
                   AppText(
                     property.title,
-                    color: AppColors.sokoonGray,
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w600,
+                    style: AppTextStyles.semiBold.copyWith(
+                      color: AppColors.sokoonGray,
+                      fontSize: 13.sp,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   14.szH,

@@ -88,17 +88,21 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
             12.szH,
             AppText(
               LocaleKeys.tenantVisitRateTitle,
-              color: AppColors.sokoonNavy,
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 20.sp,
+              ),
               textAlign: TextAlign.center,
               maxLines: 2,
             ),
             4.szH,
             AppText(
               widget.propertyTitle,
-              color: AppColors.sokoonGray,
-              fontSize: 14.sp,
+              style: AppTextStyles.regular14.copyWith(
+                color: AppColors.sokoonGray,
+                fontSize: 14.sp,
+                height: 1.45,
+              ),
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
@@ -140,17 +144,15 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
               child: TextField(
                 controller: _commentController,
                 maxLines: 3,
-                style: TextStyle(
+                style: AppTextStyles.base.copyWith(
                   color: AppColors.sokoonNavy,
                   fontSize: 13.sp,
-                  fontFamily: ConstantManager.fontFamily,
                 ),
                 decoration: InputDecoration(
                   hintText: LocaleKeys.tenantVisitRatingCommentHint,
-                  hintStyle: TextStyle(
+                  hintStyle: AppTextStyles.base.copyWith(
                     color: AppColors.sokoonGray,
                     fontSize: 13.sp,
-                    fontFamily: ConstantManager.fontFamily,
                   ),
                   border: InputBorder.none,
                 ),
@@ -164,8 +166,10 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
               textColor: AppColors.white,
               borderRadius: BorderRadius.circular(14.r),
               height: 50.h,
-              fontSize: 15.sp,
-              fontWeight: FontWeight.w700,
+              textStyle: AppTextStyles.bold15.copyWith(
+                fontSize: 15.sp,
+                height: 1.45,
+              ),
             ),
           ],
         ),
@@ -192,9 +196,11 @@ class _VisitRatingCriterion extends StatelessWidget {
         Expanded(
           child: AppText(
             label,
-            color: AppColors.sokoonNavy,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold14.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 14.sp,
+              height: 1.45,
+            ),
             maxLines: 1,
           ),
         ),

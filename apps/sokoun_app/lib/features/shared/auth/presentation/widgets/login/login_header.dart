@@ -1,3 +1,4 @@
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_logo_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,17 +26,20 @@ class LoginHeader extends StatelessWidget {
         12.szH,
         AppText(
           LocaleKeys.login,
-          color: AppColors.sokoonNavy,
-          fontSize: 22.sp,
-          fontWeight: FontWeight.w700,
+          style: AppTextStyles.bold.copyWith(
+            color: AppColors.sokoonNavy,
+            fontSize: 22.sp,
+          ),
           textAlign: TextAlign.center,
         ),
         4.szH,
         AppText(
           LocaleKeys.welcomeBackToSokoon,
-          color: AppColors.sokoonGray,
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w500,
+          style: AppTextStyles.medium12.copyWith(
+            color: AppColors.sokoonGray,
+            fontSize: 12.sp,
+            height: 1.45,
+          ),
           textAlign: TextAlign.center,
         ),
       ],

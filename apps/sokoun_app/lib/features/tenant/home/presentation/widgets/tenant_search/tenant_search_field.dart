@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 
@@ -33,10 +34,9 @@ class TenantSearchField extends StatelessWidget {
       borderColor: AppColors.sokoonTeal,
       fillColor: AppColors.white,
       contentPadding: EdgeInsets.symmetric(vertical: 15.h),
-      style: TextStyle(
+      style: AppTextStyles.semiBold.copyWith(
         color: AppColors.sokoonNavy,
         fontSize: 14.sp,
-        fontWeight: FontWeight.w600,
       ),
       prefixIcon: GestureDetector(
         onTap: onSearchTap,
@@ -49,9 +49,10 @@ class TenantSearchField extends StatelessWidget {
           ),
           child: AppText(
             LocaleKeys.search,
-            color: AppColors.sokoonTeal,
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w800,
+            style: AppTextStyles.extraBold.copyWith(
+              color: AppColors.sokoonTeal,
+              fontSize: 12.sp,
+            ),
           ),
         ),
       ).paddingOnlyDirectional(start: 8.w),

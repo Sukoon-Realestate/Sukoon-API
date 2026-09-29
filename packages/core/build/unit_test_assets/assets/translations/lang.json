@@ -1498,5 +1498,18 @@
   "useMyLocation #$ Use my location": "استخدام موقعي",
   "currentLocationLoading #$ Finding your area...": "جارٍ تحديد منطقتك...",
   "locationServicesDisabled #$ Turn on location services in your device settings then try again.": "فعّل خدمات الموقع من إعدادات جهازك ثم حاول مرة أخرى.",
-  "currentLocationUnavailable #$ Could not find your area. Try again or search by area name.": "تعذّر تحديد منطقتك. حاول مرة أخرى أو ابحث باسم المنطقة."
+  "currentLocationUnavailable #$ Could not find your area. Try again or search by area name.": "تعذّر تحديد منطقتك. حاول مرة أخرى أو ابحث باسم المنطقة.",
+  "clearSearchHistory #$ Clear history": "مسح السجل",
+  "removeRecentSearch #$ Remove from history": "إزالة من السجل",
+  "searchHistoryRemoved #$ Search history updated": "تم تحديث سجل البحث",
+  "searchHistorySaveFailed #$ Could not update search history. Please try again.": "تعذّر تحديث سجل البحث. حاول مرة أخرى.",
+  "undoAction #$ Undo": "تراجع",
+  "clearSearchQuery #$ Clear search": "مسح البحث",
+  "searchPriceRangeError #$ The minimum price must not exceed the maximum price.": "يجب ألا يتجاوز الحد الأدنى للسعر الحد الأقصى.",
+  "swapPriceRange #$ Swap prices": "تبديل السعرين",
+  "ownerPropertyReviewTitle #$ Review your listing": "راجع إعلانك",
+  "ownerPropertyReviewHint #$ Check the details below. You can edit any section before submitting.": "تأكد من البيانات التالية. يمكنك تعديل أي قسم قبل الإرسال.",
+  "ownerPropertyReviewAction #$ Review listing": "مراجعة الإعلان",
+  "ownerPropertyReviewBasics #$ Property information" : "معلومات العقار",
+  "ownerPropertyReviewAdditional #$ Additional details" : "التفاصيل الإضافية"
 }

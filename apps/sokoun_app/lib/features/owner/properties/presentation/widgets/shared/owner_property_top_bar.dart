@@ -33,9 +33,10 @@ class OwnerPropertyTopBar extends StatelessWidget {
         Expanded(
           child: AppText(
             title,
-            color: AppColors.sokoonNavy,
-            fontSize: 20.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 20.sp,
+            ),
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

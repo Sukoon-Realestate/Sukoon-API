@@ -5,6 +5,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/image_widgets/cached_image.dart';
@@ -49,9 +50,11 @@ class FavoritePropertyCard extends StatelessWidget {
               children: [
                 AppText(
                   item.title,
-                  color: AppColors.sokoonNavy,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w700,
+                  style: AppTextStyles.bold14.copyWith(
+                    color: AppColors.sokoonNavy,
+                    fontSize: 14.sp,
+                    height: 1.45,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -68,9 +71,11 @@ class FavoritePropertyCard extends StatelessWidget {
                     Flexible(
                       child: AppText(
                         '${item.price} ${LocaleKeys.favoritesCurrencyShort}',
-                        color: AppColors.sokoonTeal,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w700,
+                        style: AppTextStyles.bold14.copyWith(
+                          color: AppColors.sokoonTeal,
+                          fontSize: 14.sp,
+                          height: 1.45,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -176,24 +181,30 @@ class _FavoritePropertyMeta extends StatelessWidget {
         6.szW,
         AppText(
           rating,
-          color: AppColors.sokoonGray,
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w400,
+          style: AppTextStyles.regular12.copyWith(
+            color: AppColors.sokoonGray,
+            fontSize: 12.sp,
+            height: 1.45,
+          ),
         ),
         8.szW,
         AppText(
           '·',
-          color: AppColors.sokoonGray,
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w400,
+          style: AppTextStyles.regular12.copyWith(
+            color: AppColors.sokoonGray,
+            fontSize: 12.sp,
+            height: 1.45,
+          ),
         ),
         8.szW,
         Flexible(
           child: AppText(
             area,
-            color: AppColors.sokoonGray,
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w400,
+            style: AppTextStyles.regular12.copyWith(
+              color: AppColors.sokoonGray,
+              fontSize: 12.sp,
+              height: 1.45,
+            ),
             maxLines: 1,
           ),
         ),

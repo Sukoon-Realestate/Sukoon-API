@@ -1,3 +1,4 @@
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -141,9 +142,11 @@ class _TenantPropertyPhotosScreenState
                 children: [
                   AppText(
                     '${selectedIndex + 1} / ${widget.property.photoLabels.length} — ${widget.property.photoLabels[selectedIndex]}',
-                    color: AppColors.white,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w700,
+                    style: AppTextStyles.bold14.copyWith(
+                      color: AppColors.white,
+                      fontSize: 14.sp,
+                      height: 1.45,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   14.szH,

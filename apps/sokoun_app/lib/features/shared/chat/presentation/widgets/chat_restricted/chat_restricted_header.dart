@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/shared_widgets/back_button.dart';
 
@@ -39,9 +40,11 @@ class ChatRestrictedHeader extends StatelessWidget {
               children: [
                 AppText(
                   conversation.name,
-                  color: AppColors.sokoonNavy,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w700,
+                  style: AppTextStyles.bold14.copyWith(
+                    color: AppColors.sokoonNavy,
+                    fontSize: 14.sp,
+                    height: 1.45,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -49,8 +52,11 @@ class ChatRestrictedHeader extends StatelessWidget {
                   2.szH,
                   AppText(
                     conversation.property,
-                    color: AppColors.sokoonGray,
-                    fontSize: 11.sp,
+                    style: AppTextStyles.regular11.copyWith(
+                      color: AppColors.sokoonGray,
+                      fontSize: 11.sp,
+                      height: 1.45,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

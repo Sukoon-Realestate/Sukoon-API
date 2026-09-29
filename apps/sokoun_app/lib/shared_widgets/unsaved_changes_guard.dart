@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
@@ -47,16 +48,28 @@ class _UnsavedChangesGuardState extends State<UnsavedChangesGuard> {
           await showDialog<bool>(
                 context: context,
                 builder: (_) => AlertDialog(
-                  title: AppText(LocaleKeys.workspaceDiscardTitle),
-                  content: AppText(LocaleKeys.workspaceDiscardMessage),
+                  title: AppText(
+                    LocaleKeys.workspaceDiscardTitle,
+                    style: AppTextStyles.regular,
+                  ),
+                  content: AppText(
+                    LocaleKeys.workspaceDiscardMessage,
+                    style: AppTextStyles.regular,
+                  ),
                   actions: [
                     TextButton(
                       onPressed: () => Go.back(false),
-                      child: AppText(LocaleKeys.workspaceStay),
+                      child: AppText(
+                        LocaleKeys.workspaceStay,
+                        style: AppTextStyles.regular,
+                      ),
                     ),
                     TextButton(
                       onPressed: () => Go.back(true),
-                      child: AppText(LocaleKeys.workspaceDiscard),
+                      child: AppText(
+                        LocaleKeys.workspaceDiscard,
+                        style: AppTextStyles.regular,
+                      ),
                     ),
                   ],
                 ),

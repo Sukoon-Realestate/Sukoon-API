@@ -76,7 +76,9 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
   void _showMessage(String message) {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: AppText(message)));
+      ..showSnackBar(
+        SnackBar(content: AppText(message, style: AppTextStyles.regular)),
+      );
   }
 
   @override

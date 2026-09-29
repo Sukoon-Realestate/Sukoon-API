@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -60,9 +61,11 @@ class AddPropertyInfoBanner extends StatelessWidget {
                   if (title != null) ...[
                     AppText(
                       title!,
-                      color: AppColors.sokoonNavy,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w700,
+                      style: AppTextStyles.bold12.copyWith(
+                        color: AppColors.sokoonNavy,
+                        fontSize: 12.sp,
+                        height: 1.45,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -70,11 +73,14 @@ class AddPropertyInfoBanner extends StatelessWidget {
                   ],
                   AppText(
                     text,
-                    color: textColor,
-                    fontSize: 12.sp,
-                    fontWeight: title == null
-                        ? FontWeight.w700
-                        : FontWeight.w400,
+                    style: AppTextStyles.regular12.copyWith(
+                      color: textColor,
+                      fontSize: 12.sp,
+                      fontWeight: title == null
+                          ? FontWeight.w700
+                          : FontWeight.w400,
+                      height: 1.45,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),

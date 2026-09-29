@@ -48,9 +48,10 @@ class TenantSummaryHeaderCard extends StatelessWidget {
                   children: [
                     AppText(
                       userName,
-                      color: AppColors.white,
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w700,
+                      style: AppTextStyles.bold.copyWith(
+                        color: AppColors.white,
+                        fontSize: 18.sp,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -59,8 +60,11 @@ class TenantSummaryHeaderCard extends StatelessWidget {
                       membership.isNotEmpty
                           ? membership
                           : LocaleKeys.profileTenantSummaryMemberSince,
-                      color: AppColors.whiteAlpha60,
-                      fontSize: 12.sp,
+                      style: AppTextStyles.regular12.copyWith(
+                        color: AppColors.whiteAlpha60,
+                        fontSize: 12.sp,
+                        height: 1.45,
+                      ),
                     ),
                   ],
                 ),
@@ -74,15 +78,19 @@ class TenantSummaryHeaderCard extends StatelessWidget {
                 user.profileCompletionLabel.isNotEmpty
                     ? user.profileCompletionLabel
                     : LocaleKeys.profileCompletion,
-                color: AppColors.whiteAlpha60,
-                fontSize: 12.sp,
+                style: AppTextStyles.regular12.copyWith(
+                  color: AppColors.whiteAlpha60,
+                  fontSize: 12.sp,
+                  height: 1.45,
+                ),
               ),
               const Spacer(),
               AppText(
                 '${user.profileCompletionPercentage.clamp(0, 100)}%',
-                color: AppColors.white,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w800,
+                style: AppTextStyles.extraBold.copyWith(
+                  color: AppColors.white,
+                  fontSize: 12.sp,
+                ),
               ),
             ],
           ),

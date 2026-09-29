@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class PropertyReviewSection extends StatelessWidget {
@@ -32,9 +33,11 @@ class PropertyReviewSection extends StatelessWidget {
             Expanded(
               child: AppText(
                 title,
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: AppColors.sokoonNavy,
+                style: AppTextStyles.bold16.copyWith(
+                  fontSize: 16,
+                  color: AppColors.sokoonNavy,
+                  height: 1.45,
+                ),
               ),
             ),
             IconButton(
@@ -53,9 +56,11 @@ class PropertyReviewSection extends StatelessWidget {
             padding: const EdgeInsetsDirectional.only(end: 8, top: 4),
             child: AppText(
               line,
-              fontSize: 14,
-              height: 1.5,
-              color: AppColors.sokoonGray,
+              style: AppTextStyles.regular14.copyWith(
+                fontSize: 14,
+                height: 1.5,
+                color: AppColors.sokoonGray,
+              ),
             ),
           ),
       ],

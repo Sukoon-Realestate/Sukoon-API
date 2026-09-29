@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 
 class ChatSearchField extends StatelessWidget {
   const ChatSearchField({
@@ -36,17 +37,15 @@ class ChatSearchField extends StatelessWidget {
       onTap: onTap,
       onChanged: onChanged,
       textInputAction: TextInputAction.search,
-      style: TextStyle(
+      style: AppTextStyles.base.copyWith(
         color: AppColors.sokoonNavy,
         fontSize: 14.sp,
-        fontFamily: ConstantManager.fontFamily,
       ),
       decoration: InputDecoration(
         hintText: LocaleKeys.chatSearchHint,
-        hintStyle: TextStyle(
+        hintStyle: AppTextStyles.base.copyWith(
           color: AppColors.sokoonMuted,
           fontSize: 14.sp,
-          fontFamily: ConstantManager.fontFamily,
         ),
         filled: true,
         fillColor: isActive ? AppColors.scaffoldBackground : AppColors.white,

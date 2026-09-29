@@ -108,9 +108,10 @@ class ProfileAvatar extends StatelessWidget {
     if (useInitial) {
       return AppText(
         _initial,
-        color: AppColors.white,
-        fontSize: (size * .36).sp,
-        fontWeight: FontWeight.w700,
+        style: AppTextStyles.bold.copyWith(
+          color: AppColors.white,
+          fontSize: (size * .36).sp,
+        ),
       );
     }
     return Icon(

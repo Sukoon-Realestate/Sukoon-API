@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -38,9 +39,10 @@ class SearchChip extends StatelessWidget {
           ),
           child: AppText(
             label,
-            color: isSelected ? AppColors.white : AppColors.sokoonNavy,
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w800,
+            style: AppTextStyles.extraBold.copyWith(
+              color: isSelected ? AppColors.white : AppColors.sokoonNavy,
+              fontSize: 12.sp,
+            ),
           ),
         ),
       ),

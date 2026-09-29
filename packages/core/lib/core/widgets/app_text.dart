@@ -8,25 +8,34 @@ class AppText extends StatelessWidget {
   final String text;
   final Color? color;
   final double? fontSize;
-  final FontWeight fontWeight;
+  final FontWeight? _fontWeight;
+
+  /// Base typography. Individual styling arguments override this style.
+  final TextStyle? style;
   final TextAlign textAlign;
   final TextOverflow? overflow;
   final int? maxLines;
   final double? height;
   final TextDecoration? decoration;
 
+  FontWeight get fontWeight =>
+      _fontWeight ?? style?.fontWeight ?? FontWeight.normal;
+
   const AppText(
-      this.text, {
-        super.key, this.icon,
-        this.color, this.withIcon = false,
-        this.decoration,
-        this.fontSize,
-        this.fontWeight = FontWeight.normal,
-        this.overflow,
-        this.textAlign = TextAlign.start,
-        this.maxLines,
-        this.height,
-      });
+    this.text, {
+    super.key,
+    this.icon,
+    this.color,
+    this.withIcon = false,
+    this.decoration,
+    this.fontSize,
+    FontWeight? fontWeight,
+    this.style,
+    this.overflow,
+    this.textAlign = TextAlign.start,
+    this.maxLines,
+    this.height,
+  }) : _fontWeight = fontWeight;
 
   final Widget? icon;
   const AppText.withIcon({
@@ -37,16 +46,34 @@ class AppText extends StatelessWidget {
     this.withIcon = true,
     this.color,
     this.fontSize,
-    this.fontWeight = FontWeight.normal,
+    FontWeight? fontWeight,
+    this.style,
     this.textAlign = TextAlign.start,
     this.overflow,
     this.maxLines,
-    this.height
-  });
+    this.height,
+  }) : _fontWeight = fontWeight;
 
   @override
   Widget build(BuildContext context) {
-    switch(withIcon){
+    final TextStyle effectiveStyle = style == null
+        ? TextStyle(
+            decoration: decoration,
+            color: color,
+            fontSize: fontSize ?? (withIcon ? FontSize.s16 : null),
+            fontWeight: fontWeight,
+            height: height,
+            fontFamily: ConstantManager.fontFamily,
+          )
+        : style!.copyWith(
+            decoration: decoration,
+            color: color,
+            fontSize:
+                fontSize ?? (withIcon ? style!.fontSize ?? FontSize.s16 : null),
+            fontWeight: _fontWeight,
+            height: height,
+          );
+    switch (withIcon) {
       case true:
         return Row(
           spacing: 5.w,
@@ -57,14 +84,7 @@ class AppText extends StatelessWidget {
               textAlign: textAlign,
               overflow: overflow,
               maxLines: maxLines,
-              style: TextStyle(
-                decoration: decoration,
-                color: color,
-                fontSize: fontSize ?? FontSize.s16,
-                fontWeight: fontWeight,
-                height: height,
-                fontFamily: ConstantManager.fontFamily
-              ),
+              style: effectiveStyle,
             ),
           ],
         );
@@ -74,16 +94,8 @@ class AppText extends StatelessWidget {
           textAlign: textAlign,
           overflow: overflow,
           maxLines: maxLines,
-          style: TextStyle(
-            color: color,
-            fontSize: fontSize,
-            fontWeight: fontWeight,
-              decoration: decoration,
-            height: height,
-            fontFamily: ConstantManager.fontFamily
-          ),
+          style: effectiveStyle,
         );
     }
-
   }
 }

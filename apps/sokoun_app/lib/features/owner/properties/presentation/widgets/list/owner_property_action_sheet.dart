@@ -28,9 +28,10 @@ class OwnerPropertyActionSheet extends StatelessWidget {
           18.szH,
           AppText(
             LocaleKeys.ownerPropertiesOptions,
-            color: AppColors.sokoonNavy,
-            fontSize: 20.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 20.sp,
+            ),
             textAlign: TextAlign.center,
           ),
           16.szH,
@@ -83,9 +84,10 @@ class _OwnerPropertyActionRow extends StatelessWidget {
               Expanded(
                 child: AppText(
                   action.label(isHidden: property.status.isHidden),
-                  color: action.foregroundColor,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w800,
+                  style: AppTextStyles.extraBold.copyWith(
+                    color: action.foregroundColor,
+                    fontSize: 14.sp,
+                  ),
                 ),
               ),
               Icon(

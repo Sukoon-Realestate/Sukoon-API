@@ -29,9 +29,11 @@ class OwnerMoreSection extends StatelessWidget {
       children: [
         AppText(
           title,
-          color: AppColors.sokoonGray,
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w700,
+          style: AppTextStyles.bold12.copyWith(
+            color: AppColors.sokoonGray,
+            fontSize: 12.sp,
+            height: 1.45,
+          ),
         ),
         7.szH,
         ProfileSurfaceCard(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/screens/register_flow_screen.dart';
 
@@ -34,19 +35,17 @@ class _LoginFooterState extends State<LoginFooter> {
     return Text.rich(
       TextSpan(
         text: '${LocaleKeys.doNotHaveAnAccount}؟ ',
-        style: TextStyle(
+        style: AppTextStyles.medium13.copyWith(
           color: AppColors.sokoonGray,
-          fontFamily: ConstantManager.fontFamily,
           fontSize: 13.sp,
-          fontWeight: FontWeight.w500,
+          height: 1.45,
         ),
         children: [
           TextSpan(
             text: LocaleKeys.signUp,
             recognizer: _signUpRecognizer,
-            style: TextStyle(
+            style: AppTextStyles.extraBold.copyWith(
               color: AppColors.sokoonTeal,
-              fontWeight: FontWeight.w800,
             ),
           ),
         ],

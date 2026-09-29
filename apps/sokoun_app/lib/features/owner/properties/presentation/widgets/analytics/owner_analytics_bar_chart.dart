@@ -23,9 +23,11 @@ class OwnerAnalyticsBarChart extends StatelessWidget {
         children: [
           AppText(
             LocaleKeys.ownerAnalyticsViewsLastFourteenDays,
-            color: AppColors.sokoonNavy,
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold15.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 15.sp,
+              height: 1.45,
+            ),
           ),
           18.szH,
           SizedBox(
@@ -61,14 +63,20 @@ class OwnerAnalyticsBarChart extends StatelessWidget {
             children: [
               AppText(
                 LocaleKeys.ownerAnalyticsFourteenDaysAgo,
-                color: AppColors.sokoonMuted,
-                fontSize: 10.sp,
+                style: AppTextStyles.regular10.copyWith(
+                  color: AppColors.sokoonMuted,
+                  fontSize: 10.sp,
+                  height: 1.45,
+                ),
               ),
               const Spacer(),
               AppText(
                 LocaleKeys.ownerAnalyticsToday,
-                color: AppColors.sokoonMuted,
-                fontSize: 10.sp,
+                style: AppTextStyles.regular10.copyWith(
+                  color: AppColors.sokoonMuted,
+                  fontSize: 10.sp,
+                  height: 1.45,
+                ),
               ),
             ],
           ),

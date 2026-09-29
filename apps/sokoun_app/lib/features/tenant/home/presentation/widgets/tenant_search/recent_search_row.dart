@@ -3,6 +3,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_search_content.dart';
 
@@ -39,9 +40,10 @@ class RecentSearchRow extends StatelessWidget {
             Expanded(
               child: AppText(
                 search.title,
-                color: AppColors.sokoonNavy,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
+                style: AppTextStyles.medium.copyWith(
+                  color: AppColors.sokoonNavy,
+                  fontSize: 14.sp,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

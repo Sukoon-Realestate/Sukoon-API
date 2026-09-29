@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -34,9 +35,10 @@ class NotificationsHeader extends StatelessWidget {
             Expanded(
               child: AppText(
                 LocaleKeys.workspaceAllNotifications,
-                color: AppColors.sokoonNavy,
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w700,
+                style: AppTextStyles.bold.copyWith(
+                  color: AppColors.sokoonNavy,
+                  fontSize: 20.sp,
+                ),
               ),
             ),
             IconButton(
@@ -65,9 +67,10 @@ class NotificationsHeader extends StatelessWidget {
             role.isOwner
                 ? LocaleKeys.notificationsMarkAll
                 : LocaleKeys.notificationsMarkAllRead,
-            color: canMarkAll ? AppColors.sokoonTeal : AppColors.sokoonMuted,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w600,
+            style: AppTextStyles.semiBold.copyWith(
+              color: canMarkAll ? AppColors.sokoonTeal : AppColors.sokoonMuted,
+              fontSize: 14.sp,
+            ),
           ),
         ),
       ],

@@ -4,6 +4,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
@@ -79,8 +80,10 @@ class WhatsNewSheet extends StatelessWidget {
                   borderRadius: BorderRadius.circular(50.r),
                   color: AppColors.primary,
                   title: LocaleKeys.whatsNewStartNow,
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.bold,
+                  textStyle: AppTextStyles.bold15.copyWith(
+                    fontSize: 15.sp,
+                    height: 1.45,
+                  ),
                   onTap: Go.back,
                 ).paddingSymmetric(horizontal: 20.w, vertical: 10.h),
               ],
@@ -132,16 +135,20 @@ class _WhatsNewHeader extends StatelessWidget {
             color: Color(0xFFE8F4F0),
             shape: BoxShape.circle,
           ),
-          child: AppText('🎉', fontSize: 24.sp),
+          child: AppText(
+            '🎉',
+            style: AppTextStyles.regular.copyWith(fontSize: 24.sp),
+          ),
         ),
         8.szH,
         AppText(
           LocaleKeys.whatsNewTitle,
-          color: AppColors.textBlack,
-          fontSize: 18.sp,
-          fontWeight: FontWeight.bold,
+          style: AppTextStyles.bold.copyWith(
+            color: AppColors.textBlack,
+            fontSize: 18.sp,
+            height: 1.3,
+          ),
           textAlign: TextAlign.center,
-          height: 1.3,
         ),
         4.szH,
         Container(
@@ -152,9 +159,11 @@ class _WhatsNewHeader extends StatelessWidget {
           ),
           child: AppText(
             '${LocaleKeys.whatsNewVersionLabel} $version',
-            color: AppColors.primary,
-            fontSize: 11.sp,
-            fontWeight: FontWeight.w500,
+            style: AppTextStyles.medium11.copyWith(
+              color: AppColors.primary,
+              fontSize: 11.sp,
+              height: 1.45,
+            ),
           ),
         ),
         8.szH,
@@ -162,10 +171,12 @@ class _WhatsNewHeader extends StatelessWidget {
           constraints: BoxConstraints(maxWidth: 280.w),
           child: AppText(
             LocaleKeys.whatsNewDescription,
-            color: AppColors.darkGay,
-            fontSize: 13.sp,
+            style: AppTextStyles.regular13.copyWith(
+              color: AppColors.darkGay,
+              fontSize: 13.sp,
+              height: 1.7,
+            ),
             textAlign: TextAlign.center,
-            height: 1.7,
           ),
         ),
       ],
@@ -246,10 +257,11 @@ class _FeatureItem extends StatelessWidget {
         Expanded(
           child: AppText(
             title,
-            color: AppColors.textBlack,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.bold,
-            height: 1.4,
+            style: AppTextStyles.bold14.copyWith(
+              color: AppColors.textBlack,
+              fontSize: 14.sp,
+              height: 1.4,
+            ),
           ),
         ),
       ],

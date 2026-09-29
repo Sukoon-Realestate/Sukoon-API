@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/localized_digits_formatter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -268,19 +269,18 @@ class _MapSection extends StatelessWidget {
                     controller: mapQueryController,
                     onChanged: onMapQueryChanged,
                     textAlign: TextAlign.start,
-                    style: TextStyle(
+                    style: AppTextStyles.semiBold.copyWith(
                       color: AppColors.sokoonNavy,
                       fontSize: 12.sp,
-                      fontWeight: FontWeight.w600,
                     ),
                     decoration: InputDecoration(
                       isCollapsed: true,
                       border: InputBorder.none,
                       hintText: LocaleKeys.ownerAddPropertyMapSearch,
-                      hintStyle: TextStyle(
+                      hintStyle: AppTextStyles.regular12.copyWith(
                         color: AppColors.navyAlpha50,
                         fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
+                        height: 1.45,
                       ),
                     ),
                   ),
@@ -317,9 +317,11 @@ class _MapSection extends StatelessWidget {
                     form.isLocationSelected
                         ? LocaleKeys.ownerAddPropertyLocationSelected
                         : LocaleKeys.ownerAddPropertySelectLocation,
-                    color: AppColors.white,
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w700,
+                    style: AppTextStyles.bold13.copyWith(
+                      color: AppColors.white,
+                      fontSize: 13.sp,
+                      height: 1.45,
+                    ),
                   ),
                 ],
               ),

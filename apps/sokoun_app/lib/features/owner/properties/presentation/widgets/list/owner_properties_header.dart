@@ -12,9 +12,10 @@ class OwnerPropertiesHeader extends StatelessWidget {
         Expanded(
           child: AppText(
             LocaleKeys.ownerPropertiesTitle,
-            color: AppColors.sokoonNavy,
-            fontSize: 20.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 20.sp,
+            ),
             textAlign: TextAlign.start,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -30,8 +31,10 @@ class OwnerPropertiesHeader extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           width: 124.w,
           height: 40.h,
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w700,
+          textStyle: AppTextStyles.bold12.copyWith(
+            fontSize: 12.sp,
+            height: 1.45,
+          ),
           isFitted: false,
         ),
       ],

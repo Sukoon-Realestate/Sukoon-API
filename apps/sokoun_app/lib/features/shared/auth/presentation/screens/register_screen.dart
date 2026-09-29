@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:melos_core/core/widgets/first_validation_error_form.dart';
@@ -172,8 +173,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 borderRadius: BorderRadius.circular(14.r),
                 height: 52.h,
                 width: double.infinity,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w700,
+                textStyle: AppTextStyles.bold16.copyWith(
+                  fontSize: 16.sp,
+                  height: 1.45,
+                ),
               ),
               18.szH,
               const RegisterFooter(),

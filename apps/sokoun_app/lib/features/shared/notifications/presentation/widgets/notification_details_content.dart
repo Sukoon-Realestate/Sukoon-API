@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 
@@ -66,26 +67,31 @@ class NotificationDetailsContent extends StatelessWidget {
                 if (notification.category.isNotEmpty) ...[
                   AppText(
                     notification.category,
-                    color: AppColors.sokoonGray,
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w700,
+                    style: AppTextStyles.bold11.copyWith(
+                      color: AppColors.sokoonGray,
+                      fontSize: 11.sp,
+                      height: 1.45,
+                    ),
                     maxLines: 1,
                   ),
                   8.szH,
                 ],
                 AppText(
                   notification.title,
-                  color: AppColors.sokoonNavy,
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.w700,
+                  style: AppTextStyles.bold.copyWith(
+                    color: AppColors.sokoonNavy,
+                    fontSize: 20.sp,
+                  ),
                   maxLines: 3,
                 ),
                 12.szH,
                 AppText(
                   notification.description,
-                  color: AppColors.sokoonGray,
-                  fontSize: 14.sp,
-                  height: 1.7,
+                  style: AppTextStyles.regular14.copyWith(
+                    color: AppColors.sokoonGray,
+                    fontSize: 14.sp,
+                    height: 1.7,
+                  ),
                   maxLines: 8,
                 ),
                 if (notification.hasDetailCard) ...[
@@ -99,8 +105,11 @@ class NotificationDetailsContent extends StatelessWidget {
                     notification.formattedTime.isNotEmpty
                         ? notification.formattedTime
                         : notification.time,
-                    color: AppColors.sokoonGray,
-                    fontSize: 11.sp,
+                    style: AppTextStyles.regular11.copyWith(
+                      color: AppColors.sokoonGray,
+                      fontSize: 11.sp,
+                      height: 1.45,
+                    ),
                     maxLines: 1,
                   ),
                 ],
@@ -118,8 +127,7 @@ class NotificationDetailsContent extends StatelessWidget {
                   textColor: AppColors.white,
                   borderRadius: BorderRadius.circular(16.r),
                   height: 50.h,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w800,
+                  textStyle: AppTextStyles.extraBold.copyWith(fontSize: 14.sp),
                 ),
               ),
               12.szW,
@@ -132,8 +140,7 @@ class NotificationDetailsContent extends StatelessWidget {
                   borderColor: AppColors.sokoonBorder,
                   borderRadius: BorderRadius.circular(16.r),
                   height: 50.h,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w800,
+                  textStyle: AppTextStyles.extraBold.copyWith(fontSize: 14.sp),
                 ),
               ),
             ],
@@ -163,9 +170,11 @@ class _NotificationContextCard extends StatelessWidget {
           if (notification.detailLabel.isNotEmpty) ...[
             AppText(
               notification.detailLabel,
-              color: AppColors.sokoonTeal,
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w800,
+              style: AppTextStyles.extraBold13.copyWith(
+                color: AppColors.sokoonTeal,
+                fontSize: 13.sp,
+                height: 1.45,
+              ),
               maxLines: 1,
             ),
             4.szH,
@@ -173,16 +182,22 @@ class _NotificationContextCard extends StatelessWidget {
           if (notification.detailDate.isNotEmpty)
             AppText(
               notification.detailDate,
-              color: AppColors.sokoonNavy,
-              fontSize: 13.sp,
+              style: AppTextStyles.regular13.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 13.sp,
+                height: 1.45,
+              ),
               maxLines: 2,
             ),
           if (notification.detailLocation.isNotEmpty) ...[
             4.szH,
             AppText(
               notification.detailLocation,
-              color: AppColors.sokoonGray,
-              fontSize: 12.sp,
+              style: AppTextStyles.regular12.copyWith(
+                color: AppColors.sokoonGray,
+                fontSize: 12.sp,
+                height: 1.45,
+              ),
               maxLines: 2,
             ),
           ],

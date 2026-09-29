@@ -85,17 +85,19 @@ class _OwnerPropertyRejectionScreenState
                   12.szH,
                   AppText(
                     LocaleKeys.ownerPropertyRejectedHeadline,
-                    color: AppColors.sokoonNavy,
-                    fontSize: 22.sp,
-                    fontWeight: FontWeight.w700,
+                    style: AppTextStyles.bold.copyWith(
+                      color: AppColors.sokoonNavy,
+                      fontSize: 22.sp,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   6.szH,
                   AppText(
                     property.title,
-                    color: AppColors.sokoonGray,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
+                    style: AppTextStyles.semiBold.copyWith(
+                      color: AppColors.sokoonGray,
+                      fontSize: 14.sp,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                   20.szH,
@@ -108,9 +110,11 @@ class _OwnerPropertyRejectionScreenState
                     ),
                     child: AppText(
                       LocaleKeys.ownerPropertyRejectionDetailsUnavailable,
-                      color: AppColors.sokoonGray,
-                      fontSize: 13.sp,
-                      height: 1.55,
+                      style: AppTextStyles.regular13.copyWith(
+                        color: AppColors.sokoonGray,
+                        fontSize: 13.sp,
+                        height: 1.55,
+                      ),
                     ),
                   ),
                   14.szH,
@@ -133,10 +137,11 @@ class _OwnerPropertyRejectionScreenState
                         Expanded(
                           child: AppText(
                             LocaleKeys.ownerPropertyRejectionWarning,
-                            color: AppColors.brown,
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w700,
-                            height: 1.45,
+                            style: AppTextStyles.bold12.copyWith(
+                              color: AppColors.brown,
+                              fontSize: 12.sp,
+                              height: 1.45,
+                            ),
                           ),
                         ),
                       ],
@@ -150,7 +155,10 @@ class _OwnerPropertyRejectionScreenState
                       onTap: isLoading ? null : _editAndResubmit,
                       height: 50.h,
                       borderRadius: BorderRadius.circular(15.r),
-                      fontWeight: FontWeight.w700,
+                      textStyle: AppTextStyles.bold13.copyWith(
+                        fontSize: FontSize.s13,
+                        height: 1.45,
+                      ),
                     ),
                   ),
                 ],

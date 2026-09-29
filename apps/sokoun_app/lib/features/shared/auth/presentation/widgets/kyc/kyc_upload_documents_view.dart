@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
@@ -72,8 +73,11 @@ class KycUploadDocumentsView extends StatelessWidget {
                     16.szH,
                     AppText(
                       LocaleKeys.uploadClearIdImage,
-                      color: AppColors.sokoonGray,
-                      fontSize: 13.sp,
+                      style: AppTextStyles.regular13.copyWith(
+                        color: AppColors.sokoonGray,
+                        fontSize: 13.sp,
+                        height: 1.45,
+                      ),
                     ),
                     18.szH,
                     _NationalIdField(
@@ -159,16 +163,14 @@ class _NationalIdField extends StatelessWidget {
         Text.rich(
           TextSpan(
             text: '${LocaleKeys.nationalId} ',
-            style: TextStyle(
+            style: AppTextStyles.extraBold.copyWith(
               color: AppColors.sokoonNavy,
-              fontFamily: ConstantManager.fontFamily,
               fontSize: 14.sp,
-              fontWeight: FontWeight.w800,
             ),
-            children: const [
+            children: [
               TextSpan(
                 text: '*',
-                style: TextStyle(color: AppColors.sokoonRose),
+                style: AppTextStyles.base.copyWith(color: AppColors.sokoonRose),
               ),
             ],
           ),
@@ -190,19 +192,20 @@ class _NationalIdField extends StatelessWidget {
             horizontal: 16.w,
             vertical: 14.h,
           ),
-          style: TextStyle(
+          style: AppTextStyles.semiBold.copyWith(
             color: AppColors.sokoonNavy,
-            fontFamily: ConstantManager.fontFamily,
             fontSize: 15.sp,
-            fontWeight: FontWeight.w600,
           ),
           onChanged: onChanged,
         ),
         6.szH,
         AppText(
           '$valueLength/14 ${LocaleKeys.digits}',
-          color: AppColors.sokoonGray,
-          fontSize: 11.sp,
+          style: AppTextStyles.regular11.copyWith(
+            color: AppColors.sokoonGray,
+            fontSize: 11.sp,
+            height: 1.45,
+          ),
         ),
         10.szH,
         Container(
@@ -223,8 +226,11 @@ class _NationalIdField extends StatelessWidget {
               Expanded(
                 child: AppText(
                   LocaleKeys.nationalIdPrivacyHint,
-                  color: AppColors.sokoonTeal,
-                  fontSize: 11.sp,
+                  style: AppTextStyles.regular11.copyWith(
+                    color: AppColors.sokoonTeal,
+                    fontSize: 11.sp,
+                    height: 1.45,
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -262,8 +268,11 @@ class _KycUploadValidationField extends StatelessWidget {
             6.szH,
             AppText(
               field.errorText ?? '',
-              color: AppColors.sokoonRose,
-              fontSize: 11.sp,
+              style: AppTextStyles.regular11.copyWith(
+                color: AppColors.sokoonRose,
+                fontSize: 11.sp,
+                height: 1.45,
+              ),
             ),
           ],
         ],
@@ -291,8 +300,11 @@ class _KycUploadSubmitBar extends StatelessWidget {
           children: [
             AppText(
               LocaleKeys.enterNationalIdToContinue,
-              color: AppColors.sokoonGray,
-              fontSize: 12.sp,
+              style: AppTextStyles.regular12.copyWith(
+                color: AppColors.sokoonGray,
+                fontSize: 12.sp,
+                height: 1.45,
+              ),
               textAlign: TextAlign.center,
             ),
             8.szH,
@@ -304,8 +316,10 @@ class _KycUploadSubmitBar extends StatelessWidget {
               borderRadius: 14.r,
               height: 52.h,
               width: double.infinity,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w700,
+              textStyle: AppTextStyles.bold16.copyWith(
+                fontSize: 16.sp,
+                height: 1.45,
+              ),
             ),
           ],
         ),

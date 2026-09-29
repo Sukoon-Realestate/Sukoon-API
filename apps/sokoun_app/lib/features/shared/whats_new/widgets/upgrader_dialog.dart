@@ -1,3 +1,4 @@
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -148,19 +149,22 @@ class _UpgraderDialogState extends State<UpgraderDialog> {
                     16.szH,
                     AppText(
                       title,
-                      color: AppColors.textBlack,
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
+                      style: AppTextStyles.bold.copyWith(
+                        color: AppColors.textBlack,
+                        fontSize: 18.sp,
+                        height: 1.3,
+                      ),
                       textAlign: TextAlign.center,
-                      height: 1.3,
                     ),
                     8.szH,
                     AppText(
                       description,
-                      color: AppColors.darkGay,
-                      fontSize: 13.sp,
+                      style: AppTextStyles.regular13.copyWith(
+                        color: AppColors.darkGay,
+                        fontSize: 13.sp,
+                        height: 1.8,
+                      ),
                       textAlign: TextAlign.center,
-                      height: 1.8,
                     ),
                     16.szH,
                     _VersionBadge(version: widget.version),
@@ -242,15 +246,20 @@ class _VersionBadge extends StatelessWidget {
         children: [
           AppText(
             '${LocaleKeys.updateDialogNewVersion}:',
-            color: AppColors.darkGay,
-            fontSize: 11.sp,
+            style: AppTextStyles.regular11.copyWith(
+              color: AppColors.darkGay,
+              fontSize: 11.sp,
+              height: 1.45,
+            ),
           ),
           6.szW,
           AppText(
             version,
-            color: AppColors.primary,
-            fontSize: 11.sp,
-            fontWeight: FontWeight.bold,
+            style: AppTextStyles.bold11.copyWith(
+              color: AppColors.primary,
+              fontSize: 11.sp,
+              height: 1.45,
+            ),
           ),
         ],
       ),
@@ -302,9 +311,11 @@ class _UpdateButton extends StatelessWidget {
                         fit: BoxFit.scaleDown,
                         child: AppText(
                           LocaleKeys.updateDialogOpeningStore,
-                          color: AppColors.white,
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.bold,
+                          style: AppTextStyles.bold15.copyWith(
+                            color: AppColors.white,
+                            fontSize: 15.sp,
+                            height: 1.45,
+                          ),
                         ),
                       ),
                     ),
@@ -315,9 +326,11 @@ class _UpdateButton extends StatelessWidget {
                   fit: BoxFit.scaleDown,
                   child: AppText(
                     LocaleKeys.updateDialogUpdateNow,
-                    color: AppColors.white,
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.bold,
+                    style: AppTextStyles.bold15.copyWith(
+                      color: AppColors.white,
+                      fontSize: 15.sp,
+                      height: 1.45,
+                    ),
                   ),
                 ),
         ),
@@ -347,9 +360,10 @@ class _LaterButton extends StatelessWidget {
         ),
         child: AppText(
           LocaleKeys.updateDialogLater,
-          color: AppColors.darkGay,
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w500,
+          style: AppTextStyles.medium.copyWith(
+            color: AppColors.darkGay,
+            fontSize: 14.sp,
+          ),
         ),
       ),
     );

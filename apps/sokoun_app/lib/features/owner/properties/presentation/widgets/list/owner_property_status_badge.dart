@@ -20,9 +20,11 @@ class OwnerPropertyStatusBadge extends StatelessWidget {
           4.szW,
           AppText(
             status.label,
-            color: status.foregroundColor,
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold12.copyWith(
+              color: status.foregroundColor,
+              fontSize: 12.sp,
+              height: 1.45,
+            ),
           ),
         ],
       ),

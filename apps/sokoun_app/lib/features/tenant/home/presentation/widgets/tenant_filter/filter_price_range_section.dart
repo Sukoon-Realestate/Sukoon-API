@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/localized_digits_formatter.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -50,9 +51,11 @@ class FilterPriceRangeSection extends StatelessWidget {
               10.szW,
               AppText(
                 '—',
-                color: AppColors.sokoonGray,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w700,
+                style: AppTextStyles.bold16.copyWith(
+                  color: AppColors.sokoonGray,
+                  fontSize: 16.sp,
+                  height: 1.45,
+                ),
               ),
               10.szW,
               Expanded(
@@ -84,8 +87,11 @@ class FilterPriceRangeSection extends StatelessWidget {
                         const SizedBox(height: 8),
                         AppText(
                           LocaleKeys.searchPriceRangeError,
-                          color: AppColors.sokoonRose,
-                          fontSize: 13.sp,
+                          style: AppTextStyles.regular13.copyWith(
+                            color: AppColors.sokoonRose,
+                            fontSize: 13.sp,
+                            height: 1.45,
+                          ),
                         ),
                         TextButton.icon(
                           onPressed: () {
@@ -101,7 +107,10 @@ class FilterPriceRangeSection extends StatelessWidget {
                             );
                           },
                           icon: const Icon(Icons.swap_horiz_rounded, size: 18),
-                          label: Text(LocaleKeys.swapPriceRange),
+                          label: Text(
+                            LocaleKeys.swapPriceRange,
+                            style: AppTextStyles.base,
+                          ),
                         ),
                       ],
                     ),

@@ -13,6 +13,7 @@ belongs to the existing product before introducing a new visual pattern.
 - Colors: `packages/core/lib/config/res/color_manager.dart`
 - Font families and shared constants:
   `packages/core/lib/config/res/constants_manager.dart`
+- Text styles: `packages/core/lib/core/helpers/text_style_manager.dart`
 - Spacing, sizing, radii, and font sizes:
   `packages/core/lib/config/res/app_sizes.dart`
 - App theme: `apps/sokoun_app/lib/shared_widgets/sokoun_theme.dart`
@@ -119,7 +120,12 @@ The primary typeface is Tajawal:
 - Riyal-specific text can use `ConstantManager.riyalFontFamily`
 - The app-wide family is set in `apps/sokoun_app/lib/app.dart`
 
-Use `AppText` for display text when possible.
+Use `AppText` for display text when possible, with `style` from
+`AppTextStyles` in `packages/core/lib/core/helpers/text_style_manager.dart`.
+Use the same styles for fields, spans, and theme typography, and pass them to
+shared buttons through `textStyle`. Customize colors, responsive sizes, and
+line heights with `copyWith` or the core text-style extensions. Weight-only
+styles preserve inherited sizes in dialogs and nested spans.
 
 | Purpose | Size | Weight | Color |
 | --- | --- | --- | --- |
@@ -444,7 +450,7 @@ Preferred reuse order:
 
 - Uses `AppColors` rather than duplicated hex values.
 - Uses ScreenUtil units and shared size tokens.
-- Uses `AppText` or an explicit Tajawal style.
+- Uses `AppTextStyles` for text, fields, spans, buttons, and theme typography.
 - Uses `LocaleKeys` for production copy.
 - Handles long and scaled text with wrapping or ellipsis.
 - Works in RTL without accidental fixed left/right assumptions.

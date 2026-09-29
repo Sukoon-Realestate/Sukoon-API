@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:pinput/pinput.dart';
 
 class OtpCodeField extends StatelessWidget {
@@ -21,11 +22,9 @@ class OtpCodeField extends StatelessWidget {
     final defaultTheme = PinTheme(
       width: 45.w,
       height: 58.h,
-      textStyle: TextStyle(
+      textStyle: AppTextStyles.extraBold.copyWith(
         color: AppColors.sokoonNavy,
-        fontFamily: ConstantManager.fontFamily,
         fontSize: 22.sp,
-        fontWeight: FontWeight.w800,
       ),
       decoration: BoxDecoration(
         color: AppColors.white,

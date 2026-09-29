@@ -4,6 +4,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
@@ -85,17 +86,15 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
                             controller: _detailsController,
                             minLines: 3,
                             maxLines: 4,
-                            style: TextStyle(
+                            style: AppTextStyles.base.copyWith(
                               color: AppColors.sokoonNavy,
                               fontSize: 14.sp,
-                              fontFamily: ConstantManager.fontFamily,
                             ),
                             decoration: InputDecoration(
                               hintText: LocaleKeys.chatReportDetailsHint,
-                              hintStyle: TextStyle(
+                              hintStyle: AppTextStyles.base.copyWith(
                                 color: AppColors.sokoonMuted,
                                 fontSize: 14.sp,
-                                fontFamily: ConstantManager.fontFamily,
                               ),
                               filled: true,
                               fillColor: AppColors.white,
@@ -132,17 +131,20 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
                           borderRadius: BorderRadius.circular(16.r),
                           width: double.infinity,
                           height: 52.h,
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.w800,
+                          textStyle: AppTextStyles.extraBold15.copyWith(
+                            fontSize: 15.sp,
+                            height: 1.45,
+                          ),
                         ),
                         6.szH,
                         TextButton(
                           onPressed: () => Go.back(),
                           child: AppText(
                             LocaleKeys.cancel,
-                            color: AppColors.sokoonGray,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w600,
+                            style: AppTextStyles.semiBold.copyWith(
+                              color: AppColors.sokoonGray,
+                              fontSize: 14.sp,
+                            ),
                           ),
                         ),
                       ],
@@ -180,9 +182,10 @@ class _ReportHeader extends StatelessWidget {
             Expanded(
               child: AppText(
                 LocaleKeys.chatReportProblemTitle,
-                color: AppColors.sokoonNavy,
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w700,
+                style: AppTextStyles.bold.copyWith(
+                  color: AppColors.sokoonNavy,
+                  fontSize: 18.sp,
+                ),
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -200,8 +203,11 @@ class _ReportHeader extends StatelessWidget {
         ),
         AppText(
           LocaleKeys.chatReportReasonPrompt,
-          color: AppColors.sokoonGray,
-          fontSize: 14.sp,
+          style: AppTextStyles.regular14.copyWith(
+            color: AppColors.sokoonGray,
+            fontSize: 14.sp,
+            height: 1.45,
+          ),
           textAlign: TextAlign.center,
         ),
       ],
@@ -261,8 +267,11 @@ class _ReportReasonTile extends StatelessWidget {
             Expanded(
               child: AppText(
                 label,
-                color: AppColors.sokoonNavy,
-                fontSize: 14.sp,
+                style: AppTextStyles.regular14.copyWith(
+                  color: AppColors.sokoonNavy,
+                  fontSize: 14.sp,
+                  height: 1.45,
+                ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),

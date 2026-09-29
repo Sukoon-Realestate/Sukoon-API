@@ -32,9 +32,10 @@ class VisitFilterChip extends StatelessWidget {
           ),
           child: AppText(
             label,
-            color: isSelected ? AppColors.white : AppColors.sokoonNavy,
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w800,
+            style: AppTextStyles.extraBold.copyWith(
+              color: isSelected ? AppColors.white : AppColors.sokoonNavy,
+              fontSize: 12.sp,
+            ),
             maxLines: 1,
           ),
         ),

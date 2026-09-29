@@ -35,9 +35,10 @@ class OwnerProfileHeaderCard extends StatelessWidget {
                         Flexible(
                           child: AppText(
                             userName,
-                            color: AppColors.sokoonNavy,
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w700,
+                            style: AppTextStyles.bold.copyWith(
+                              color: AppColors.sokoonNavy,
+                              fontSize: 18.sp,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -64,8 +65,11 @@ class OwnerProfileHeaderCard extends StatelessWidget {
                           owner.ratingLabel.isNotEmpty
                               ? owner.ratingLabel
                               : LocaleKeys.profileOwnerRatingSummary,
-                          color: AppColors.sokoonGray,
-                          fontSize: 12.sp,
+                          style: AppTextStyles.regular12.copyWith(
+                            color: AppColors.sokoonGray,
+                            fontSize: 12.sp,
+                            height: 1.45,
+                          ),
                         ),
                       ],
                     ),
@@ -74,8 +78,11 @@ class OwnerProfileHeaderCard extends StatelessWidget {
                       owner.memberSinceLabel.isNotEmpty
                           ? owner.memberSinceLabel
                           : LocaleKeys.profileOwnerMemberSince,
-                      color: AppColors.sokoonGray,
-                      fontSize: 12.sp,
+                      style: AppTextStyles.regular12.copyWith(
+                        color: AppColors.sokoonGray,
+                        fontSize: 12.sp,
+                        height: 1.45,
+                      ),
                     ),
                   ],
                 ),

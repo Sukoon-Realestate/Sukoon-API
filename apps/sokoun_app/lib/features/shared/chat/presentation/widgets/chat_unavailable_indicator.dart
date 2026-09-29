@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class ChatUnavailableIndicator extends StatelessWidget {
@@ -37,8 +38,11 @@ class ChatUnavailableIndicator extends StatelessWidget {
               Expanded(
                 child: AppText(
                   message,
-                  color: AppColors.sokoonMuted,
-                  fontSize: 13.sp,
+                  style: AppTextStyles.regular13.copyWith(
+                    color: AppColors.sokoonMuted,
+                    fontSize: 13.sp,
+                    height: 1.45,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

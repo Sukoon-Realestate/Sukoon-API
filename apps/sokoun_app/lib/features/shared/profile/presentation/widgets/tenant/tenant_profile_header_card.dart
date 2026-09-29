@@ -45,9 +45,10 @@ class TenantProfileHeaderCard extends StatelessWidget {
                       children: [
                         AppText(
                           userName,
-                          color: AppColors.sokoonNavy,
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w700,
+                          style: AppTextStyles.bold.copyWith(
+                            color: AppColors.sokoonNavy,
+                            fontSize: 18.sp,
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -64,8 +65,11 @@ class TenantProfileHeaderCard extends StatelessWidget {
                       membership.isNotEmpty
                           ? membership
                           : LocaleKeys.profileTenantMemberSince,
-                      color: AppColors.sokoonGray,
-                      fontSize: 13.sp,
+                      style: AppTextStyles.regular13.copyWith(
+                        color: AppColors.sokoonGray,
+                        fontSize: 13.sp,
+                        height: 1.45,
+                      ),
                     ),
                   ],
                 ),

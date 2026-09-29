@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class HomeSectionHeader extends StatelessWidget {
@@ -15,9 +16,11 @@ class HomeSectionHeader extends StatelessWidget {
         Expanded(
           child: AppText(
             title,
-            color: AppColors.sokoonNavy,
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold15.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 15.sp,
+              height: 1.45,
+            ),
             textAlign: TextAlign.start,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

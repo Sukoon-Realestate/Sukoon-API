@@ -13,6 +13,7 @@ class SvgPic extends StatelessWidget {
     return SizedBox.square(
       dimension: size,
       child: SvgPicture.asset(
+        package: 'melos_core',
         assetName,
         colorFilter: color == null
             ? null

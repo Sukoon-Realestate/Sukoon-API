@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/property_details_screen.dart';
@@ -31,9 +32,11 @@ class DetailsButton extends StatelessWidget {
         ),
         child: AppText(
           LocaleKeys.landingDetails,
-          color: AppColors.white,
-          fontSize: 13.sp,
-          fontWeight: FontWeight.w800,
+          style: AppTextStyles.extraBold13.copyWith(
+            color: AppColors.white,
+            fontSize: 13.sp,
+            height: 1.45,
+          ),
         ),
       ),
     );

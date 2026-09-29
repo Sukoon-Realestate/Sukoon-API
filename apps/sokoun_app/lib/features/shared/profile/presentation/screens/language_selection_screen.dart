@@ -91,8 +91,10 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                           buttonColor: AppColors.sokoonTeal,
                           borderRadius: 12.r,
                           height: 48.h,
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.w700,
+                          textStyle: AppTextStyles.bold15.copyWith(
+                            fontSize: 15.sp,
+                            height: 1.45,
+                          ),
                         ),
                       ),
                     ],

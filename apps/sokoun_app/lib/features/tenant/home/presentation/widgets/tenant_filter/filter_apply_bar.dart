@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 
 class FilterApplyBar extends StatelessWidget {
@@ -25,8 +26,7 @@ class FilterApplyBar extends StatelessWidget {
         borderRadius: BorderRadius.circular(14.r),
         height: 48.h,
         width: double.infinity,
-        fontSize: 14.sp,
-        fontWeight: FontWeight.w700,
+        textStyle: AppTextStyles.bold14.copyWith(fontSize: 14.sp, height: 1.45),
       ),
     );
   }

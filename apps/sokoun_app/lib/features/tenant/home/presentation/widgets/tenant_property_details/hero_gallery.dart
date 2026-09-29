@@ -4,6 +4,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/image_widgets/cached_image.dart';
@@ -132,9 +133,11 @@ class TenantPropertyHeroGallery extends StatelessWidget {
                         child: showMoreOverlay
                             ? AppText(
                                 '+${imageUrls.length - thumbCount}',
-                                color: AppColors.white,
-                                fontSize: 11.sp,
-                                fontWeight: FontWeight.w700,
+                                style: AppTextStyles.bold11.copyWith(
+                                  color: AppColors.white,
+                                  fontSize: 11.sp,
+                                  height: 1.45,
+                                ),
                                 textAlign: TextAlign.center,
                               ).centerWidget
                             : hasImages
@@ -207,9 +210,10 @@ class _HeroPill extends StatelessWidget {
       ),
       child: AppText(
         label,
-        color: textColor,
-        fontSize: 11.sp,
-        fontWeight: FontWeight.w800,
+        style: AppTextStyles.extraBold.copyWith(
+          color: textColor,
+          fontSize: 11.sp,
+        ),
       ),
     );
   }

@@ -39,18 +39,21 @@ class VisitDayChip extends StatelessWidget {
             children: [
               AppText(
                 day.weekdayLabel,
-                color: isSelected ? AppColors.white : AppColors.sokoonGray,
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w700,
+                style: AppTextStyles.bold12.copyWith(
+                  color: isSelected ? AppColors.white : AppColors.sokoonGray,
+                  fontSize: 12.sp,
+                  height: 1.45,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
               2.szH,
               AppText(
                 day.day,
-                color: isSelected ? AppColors.white : AppColors.sokoonNavy,
-                fontSize: 19.sp,
-                fontWeight: FontWeight.w700,
+                style: AppTextStyles.bold.copyWith(
+                  color: isSelected ? AppColors.white : AppColors.sokoonNavy,
+                  fontSize: 19.sp,
+                ),
               ),
             ],
           ),

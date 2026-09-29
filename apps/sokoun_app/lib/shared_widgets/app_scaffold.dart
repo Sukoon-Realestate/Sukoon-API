@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/shared_widgets/back_button.dart';
 import 'sokoun_layout.dart';
@@ -83,9 +84,10 @@ class AppScaffold extends StatelessWidget {
 
     return AppText(
       title,
-      color: AppColors.sokoonNavy,
-      fontSize: 16.sp,
-      fontWeight: FontWeight.w800,
+      style: AppTextStyles.extraBold.copyWith(
+        color: AppColors.sokoonNavy,
+        fontSize: 16.sp,
+      ),
       overflow: TextOverflow.ellipsis,
       maxLines: 1,
       textAlign: TextAlign.center,

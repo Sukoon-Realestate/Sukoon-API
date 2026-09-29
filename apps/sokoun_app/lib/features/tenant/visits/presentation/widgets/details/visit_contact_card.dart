@@ -19,9 +19,11 @@ class VisitContactCard extends StatelessWidget {
         children: [
           AppText(
             LocaleKeys.tenantVisitContactInfo,
-            color: AppColors.sokoonNavy,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold14.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 14.sp,
+              height: 1.45,
+            ),
           ),
           10.szH,
           Container(
@@ -40,18 +42,21 @@ class VisitContactCard extends StatelessWidget {
                     children: [
                       AppText(
                         LocaleKeys.tenantVisitOwnerPhoneConfirmed,
-                        color: AppColors.green,
-                        fontSize: 11.sp,
-                        fontWeight: FontWeight.w800,
+                        style: AppTextStyles.extraBold.copyWith(
+                          color: AppColors.green,
+                          fontSize: 11.sp,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       3.szH,
                       AppText(
                         ownerPhone,
-                        color: AppColors.green,
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w700,
+                        style: AppTextStyles.bold15.copyWith(
+                          color: AppColors.green,
+                          fontSize: 15.sp,
+                          height: 1.45,
+                        ),
                       ),
                     ],
                   ),

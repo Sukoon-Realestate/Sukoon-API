@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 
@@ -47,9 +48,10 @@ class AddPropertyField extends StatelessWidget {
       children: [
         AppText(
           field.label,
-          color: AppColors.sokoonGray,
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w600,
+          style: AppTextStyles.semiBold.copyWith(
+            color: AppColors.sokoonGray,
+            fontSize: 12.sp,
+          ),
           textAlign: TextAlign.start,
         ),
         6.szH,
@@ -90,7 +92,7 @@ class AddPropertyField extends StatelessWidget {
                         maxLines: maxLines,
                         minLines: minLines,
                         textAlign: field.textAlign,
-                        style: TextStyle(
+                        style: AppTextStyles.regular.copyWith(
                           color: fieldTextColor,
                           fontSize: field.isFocused ? 16.sp : 13.sp,
                           fontWeight: field.isFocused
@@ -101,10 +103,10 @@ class AddPropertyField extends StatelessWidget {
                           isCollapsed: true,
                           border: InputBorder.none,
                           hintText: hint ?? field.value,
-                          hintStyle: TextStyle(
+                          hintStyle: AppTextStyles.regular12.copyWith(
                             color: AppColors.navyAlpha50,
                             fontSize: 12.sp,
-                            fontWeight: FontWeight.w400,
+                            height: 1.45,
                           ),
                           contentPadding: EdgeInsets.symmetric(
                             vertical: maxLines == 1 ? 0 : 14.h,
@@ -113,11 +115,13 @@ class AddPropertyField extends StatelessWidget {
                       )
                     : AppText(
                         field.value,
-                        color: fieldTextColor,
-                        fontSize: field.isFocused ? 16.sp : 13.sp,
-                        fontWeight: field.isFocused
-                            ? FontWeight.w700
-                            : FontWeight.w400,
+                        style: AppTextStyles.regular.copyWith(
+                          color: fieldTextColor,
+                          fontSize: field.isFocused ? 16.sp : 13.sp,
+                          fontWeight: field.isFocused
+                              ? FontWeight.w700
+                              : FontWeight.w400,
+                        ),
                         textAlign: field.textAlign,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

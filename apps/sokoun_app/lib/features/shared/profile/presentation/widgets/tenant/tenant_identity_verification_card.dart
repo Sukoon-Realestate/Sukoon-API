@@ -42,9 +42,11 @@ class TenantIdentityVerificationCard extends StatelessWidget {
                         verification.title.isNotEmpty
                             ? verification.title
                             : LocaleKeys.profileIdentityVerification,
-                        color: accentColor,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.w800,
+                        style: AppTextStyles.extraBold13.copyWith(
+                          color: accentColor,
+                          fontSize: 13.sp,
+                          height: 1.45,
+                        ),
                       ),
                     ),
                     if (verification.statusLabel.isNotEmpty)
@@ -59,9 +61,11 @@ class TenantIdentityVerificationCard extends StatelessWidget {
                         ),
                         child: AppText(
                           verification.statusLabel,
-                          color: accentColor,
-                          fontSize: 10.sp,
-                          fontWeight: FontWeight.w700,
+                          style: AppTextStyles.bold10.copyWith(
+                            color: accentColor,
+                            fontSize: 10.sp,
+                            height: 1.45,
+                          ),
                         ),
                       ),
                   ],
@@ -69,9 +73,11 @@ class TenantIdentityVerificationCard extends StatelessWidget {
                 3.szH,
                 AppText(
                   verification.subtitle,
-                  color: AppColors.sokoonGray,
-                  fontSize: 11.sp,
-                  height: 1.35,
+                  style: AppTextStyles.regular11.copyWith(
+                    color: AppColors.sokoonGray,
+                    fontSize: 11.sp,
+                    height: 1.35,
+                  ),
                 ),
               ],
             ),

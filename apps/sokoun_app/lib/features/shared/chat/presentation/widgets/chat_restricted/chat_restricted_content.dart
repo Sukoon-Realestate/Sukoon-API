@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
@@ -38,18 +39,21 @@ class ChatRestrictedContent extends StatelessWidget {
           18.szH,
           AppText(
             LocaleKeys.chatRestrictedTitle,
-            color: AppColors.sokoonNavy,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 18.sp,
+            ),
             textAlign: TextAlign.center,
             maxLines: 2,
           ),
           8.szH,
           AppText(
             LocaleKeys.chatRestrictedDescription,
-            color: AppColors.sokoonGray,
-            fontSize: 14.sp,
-            height: 1.55,
+            style: AppTextStyles.regular14.copyWith(
+              color: AppColors.sokoonGray,
+              fontSize: 14.sp,
+              height: 1.55,
+            ),
             textAlign: TextAlign.center,
             maxLines: 3,
           ),
@@ -64,8 +68,10 @@ class ChatRestrictedContent extends StatelessWidget {
             borderRadius: BorderRadius.circular(16.r),
             width: double.infinity,
             height: 52.h,
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w800,
+            textStyle: AppTextStyles.extraBold15.copyWith(
+              fontSize: 15.sp,
+              height: 1.45,
+            ),
           ),
           12.szH,
           DefaultButton(
@@ -77,8 +83,10 @@ class ChatRestrictedContent extends StatelessWidget {
             borderRadius: BorderRadius.circular(16.r),
             width: double.infinity,
             height: 52.h,
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w800,
+            textStyle: AppTextStyles.extraBold15.copyWith(
+              fontSize: 15.sp,
+              height: 1.45,
+            ),
           ),
         ],
       ),

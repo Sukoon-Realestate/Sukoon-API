@@ -25,9 +25,11 @@ class OwnerEditField extends StatelessWidget {
       children: [
         AppText(
           label,
-          color: AppColors.sokoonNavy,
-          fontSize: 13.sp,
-          fontWeight: FontWeight.w800,
+          style: AppTextStyles.extraBold13.copyWith(
+            color: AppColors.sokoonNavy,
+            fontSize: 13.sp,
+            height: 1.45,
+          ),
         ),
         7.szH,
         TextField(
@@ -58,11 +60,9 @@ class OwnerEditField extends StatelessWidget {
               ),
             ),
           ),
-          style: TextStyle(
+          style: AppTextStyles.semiBold.copyWith(
             color: AppColors.sokoonNavy,
             fontSize: 14.sp,
-            fontFamily: ConstantManager.fontFamily,
-            fontWeight: FontWeight.w600,
           ),
         ),
       ],

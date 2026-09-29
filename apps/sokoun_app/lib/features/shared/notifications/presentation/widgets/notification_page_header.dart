@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -32,9 +33,11 @@ class NotificationPageHeader extends StatelessWidget {
           Expanded(
             child: AppText(
               title,
-              color: AppColors.sokoonNavy,
-              fontSize: 17.sp,
-              fontWeight: FontWeight.w800,
+              style: AppTextStyles.extraBold17.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 17.sp,
+                height: 1.45,
+              ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

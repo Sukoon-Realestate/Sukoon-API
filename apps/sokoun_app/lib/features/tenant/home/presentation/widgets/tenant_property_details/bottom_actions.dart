@@ -1,3 +1,4 @@
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_action_footer.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
@@ -76,6 +77,10 @@ class TenantPropertyBottomActions extends StatelessWidget {
               minHeight: 48.h,
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
               borderRadius: BorderRadius.circular(12.r),
+              textStyle: AppTextStyles.medium13.copyWith(
+                fontSize: FontSize.s13,
+                height: 1.45,
+              ),
             ),
           ),
           10.szW,

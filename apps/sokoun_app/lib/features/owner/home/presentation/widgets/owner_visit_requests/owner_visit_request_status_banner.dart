@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
 
@@ -42,9 +43,11 @@ class OwnerVisitRequestStatusBanner extends StatelessWidget {
       ),
       child: AppText(
         status.label,
-        color: _foregroundColor,
-        fontSize: 13.sp,
-        fontWeight: FontWeight.w700,
+        style: AppTextStyles.bold13.copyWith(
+          color: _foregroundColor,
+          fontSize: 13.sp,
+          height: 1.45,
+        ),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),

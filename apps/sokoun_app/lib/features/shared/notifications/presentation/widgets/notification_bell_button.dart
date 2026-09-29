@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -110,9 +111,10 @@ class _NotificationBellButtonState extends State<NotificationBellButton> {
                           ),
                           child: AppText(
                             count > 99 ? '99+' : '$count',
-                            color: AppColors.white,
-                            fontSize: 9.sp,
-                            fontWeight: FontWeight.w800,
+                            style: AppTextStyles.extraBold.copyWith(
+                              color: AppColors.white,
+                              fontSize: 9.sp,
+                            ),
                             maxLines: 1,
                           ),
                         ),

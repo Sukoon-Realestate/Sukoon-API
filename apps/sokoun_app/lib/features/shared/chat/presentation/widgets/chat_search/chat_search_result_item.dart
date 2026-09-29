@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
@@ -47,17 +48,22 @@ class ChatSearchResultItem extends StatelessWidget {
                     Expanded(
                       child: AppText(
                         conversation.name,
-                        color: AppColors.sokoonNavy,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w700,
+                        style: AppTextStyles.bold14.copyWith(
+                          color: AppColors.sokoonNavy,
+                          fontSize: 14.sp,
+                          height: 1.45,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     AppText(
                       conversation.time,
-                      color: AppColors.sokoonGray,
-                      fontSize: 11.sp,
+                      style: AppTextStyles.regular11.copyWith(
+                        color: AppColors.sokoonGray,
+                        fontSize: 11.sp,
+                        height: 1.45,
+                      ),
                       maxLines: 1,
                     ),
                   ],
@@ -65,16 +71,22 @@ class ChatSearchResultItem extends StatelessWidget {
                 2.szH,
                 AppText(
                   conversation.property,
-                  color: AppColors.sokoonGray,
-                  fontSize: 12.sp,
+                  style: AppTextStyles.regular12.copyWith(
+                    color: AppColors.sokoonGray,
+                    fontSize: 12.sp,
+                    height: 1.45,
+                  ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 3.szH,
                 AppText(
                   conversation.lastMessage,
-                  color: AppColors.sokoonTeal,
-                  fontSize: 12.sp,
+                  style: AppTextStyles.regular12.copyWith(
+                    color: AppColors.sokoonTeal,
+                    fontSize: 12.sp,
+                    height: 1.45,
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),

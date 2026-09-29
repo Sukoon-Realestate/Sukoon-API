@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
 
@@ -48,9 +49,11 @@ class TenantPropertyOwnerCard extends StatelessWidget {
                         Flexible(
                           child: AppText(
                             property.ownerName,
-                            color: AppColors.sokoonNavy,
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w700,
+                            style: AppTextStyles.bold14.copyWith(
+                              color: AppColors.sokoonNavy,
+                              fontSize: 14.sp,
+                              height: 1.45,
+                            ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -67,9 +70,10 @@ class TenantPropertyOwnerCard extends StatelessWidget {
                           ),
                           child: AppText(
                             LocaleKeys.verified,
-                            color: AppColors.white,
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.w800,
+                            style: AppTextStyles.extraBold.copyWith(
+                              color: AppColors.white,
+                              fontSize: 10.sp,
+                            ),
                           ),
                         ),
                       ],
@@ -77,9 +81,11 @@ class TenantPropertyOwnerCard extends StatelessWidget {
                     4.szH,
                     AppText(
                       property.ownerMeta,
-                      color: AppColors.sokoonGray,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w500,
+                      style: AppTextStyles.medium12.copyWith(
+                        color: AppColors.sokoonGray,
+                        fontSize: 12.sp,
+                        height: 1.45,
+                      ),
                     ),
                   ],
                 ),
@@ -104,9 +110,11 @@ class TenantPropertyOwnerCard extends StatelessWidget {
                 Expanded(
                   child: AppText(
                     LocaleKeys.tenantPropertyDetailsPhonePrivacy,
-                    color: AppColors.sokoonGray,
-                    fontSize: 11.sp,
-                    fontWeight: FontWeight.w500,
+                    style: AppTextStyles.medium11.copyWith(
+                      color: AppColors.sokoonGray,
+                      fontSize: 11.sp,
+                      height: 1.45,
+                    ),
                   ),
                 ),
               ],

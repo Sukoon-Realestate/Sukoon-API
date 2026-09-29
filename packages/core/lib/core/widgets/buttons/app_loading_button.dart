@@ -17,6 +17,7 @@ class AppLoadingButton extends StatelessWidget {
   final Color? textColor;
   final Color? buttonColor;
   final FontWeight? fontWeight;
+  final TextStyle? textStyle;
   final Widget? icon;
 
   const AppLoadingButton({
@@ -30,6 +31,7 @@ class AppLoadingButton extends StatelessWidget {
     this.textColor,
     this.buttonColor,
     this.fontWeight,
+    this.textStyle,
     this.icon,
   });
 
@@ -46,9 +48,10 @@ class AppLoadingButton extends StatelessWidget {
           child: AppText(
             title,
             textAlign: TextAlign.center,
-            fontSize: fontSize ?? 14.sp,
-            fontWeight: fontWeight ?? FontWeight.bold,
-            color: textColor ?? Colors.white,
+            style: textStyle,
+            fontSize: fontSize ?? textStyle?.fontSize ?? 14.sp,
+            fontWeight: fontWeight ?? textStyle?.fontWeight ?? FontWeight.bold,
+            color: textColor ?? textStyle?.color ?? Colors.white,
           ),
         ),
       ],

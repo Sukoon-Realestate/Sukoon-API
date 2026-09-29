@@ -4,6 +4,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
@@ -69,27 +70,30 @@ class KycPendingScreen extends StatelessWidget {
             ),
             child: AppText(
               LocaleKeys.kycPendingBadge,
-              color: AppColors.amber,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w600,
+              style: AppTextStyles.semiBold.copyWith(
+                color: AppColors.amber,
+                fontSize: 12.sp,
+              ),
             ),
           ).centerWidget,
           14.szH,
           AppText(
             LocaleKeys.kycPendingTitle,
-            color: AppColors.sokoonNavy,
-            fontSize: 24.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 24.sp,
+            ),
             textAlign: TextAlign.center,
           ),
           8.szH,
           AppText(
             LocaleKeys.kycPendingDescription,
-            color: AppColors.sokoonGray,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w400,
+            style: AppTextStyles.regular14.copyWith(
+              color: AppColors.sokoonGray,
+              fontSize: 14.sp,
+              height: 1.45,
+            ),
             textAlign: TextAlign.center,
-            height: 1.45,
           ),
           24.szH,
           if (summaryRows.isNotEmpty) ...[
@@ -104,8 +108,10 @@ class KycPendingScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(14.r),
             height: 52.h,
             width: double.infinity,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w700,
+            textStyle: AppTextStyles.bold16.copyWith(
+              fontSize: 16.sp,
+              height: 1.45,
+            ),
           ),
         ],
       ),

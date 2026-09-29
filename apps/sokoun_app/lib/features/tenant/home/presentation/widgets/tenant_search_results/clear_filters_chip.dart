@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class ClearFiltersChip extends StatelessWidget {
@@ -25,9 +26,10 @@ class ClearFiltersChip extends StatelessWidget {
         ),
         child: AppText(
           LocaleKeys.tenantSearchResultsClearAll,
-          color: AppColors.sokoonRose,
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w600,
+          style: AppTextStyles.semiBold.copyWith(
+            color: AppColors.sokoonRose,
+            fontSize: 12.sp,
+          ),
         ),
       ),
     );

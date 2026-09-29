@@ -4,6 +4,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
@@ -49,18 +50,21 @@ class NotificationsEmptyState extends StatelessWidget {
             12.szH,
             AppText(
               LocaleKeys.notificationsEmptyTitle,
-              color: AppColors.sokoonNavy,
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 20.sp,
+              ),
               textAlign: TextAlign.center,
               maxLines: 2,
             ),
             10.szH,
             AppText(
               LocaleKeys.notificationsEmptyDescription,
-              color: AppColors.sokoonGray,
-              fontSize: 14.sp,
-              height: 1.7,
+              style: AppTextStyles.regular14.copyWith(
+                color: AppColors.sokoonGray,
+                fontSize: 14.sp,
+                height: 1.7,
+              ),
               textAlign: TextAlign.center,
               maxLines: 4,
             ),
@@ -75,8 +79,7 @@ class NotificationsEmptyState extends StatelessWidget {
               borderRadius: BorderRadius.circular(12.r),
               width: double.infinity,
               height: 46.h,
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w800,
+              textStyle: AppTextStyles.extraBold.copyWith(fontSize: 14.sp),
             ),
           ],
         ),

@@ -43,17 +43,21 @@ class ProfileVerificationBanner extends StatelessWidget {
                 if (title.isNotEmpty)
                   AppText(
                     title,
-                    color: color,
-                    fontSize: 13.sp,
-                    fontWeight: FontWeight.w800,
+                    style: AppTextStyles.extraBold13.copyWith(
+                      color: color,
+                      fontSize: 13.sp,
+                      height: 1.45,
+                    ),
                   ),
                 if (title.isNotEmpty) 2.szH,
                 AppText(
                   description,
-                  color: isPrivacy ? color : AppColors.sokoonGray,
-                  fontSize: 11.sp,
-                  fontWeight: isPrivacy ? FontWeight.w600 : FontWeight.w400,
-                  height: 1.35,
+                  style: AppTextStyles.regular11.copyWith(
+                    color: isPrivacy ? color : AppColors.sokoonGray,
+                    fontSize: 11.sp,
+                    height: 1.35,
+                    fontWeight: isPrivacy ? FontWeight.w600 : FontWeight.w400,
+                  ),
                 ),
               ],
             ),

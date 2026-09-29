@@ -5,6 +5,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
@@ -90,9 +91,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 child: AppText(
                   LocaleKeys.forgotPassword,
-                  color: AppColors.sokoonTeal,
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w700,
+                  style: AppTextStyles.bold12.copyWith(
+                    color: AppColors.sokoonTeal,
+                    fontSize: 12.sp,
+                    height: 1.45,
+                  ),
                 ),
               ).startWidget,
               14.szH,
@@ -102,8 +105,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 buttonColor: AppColors.sokoonTeal,
                 textColor: AppColors.white,
                 borderRadius: 14.r,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w700,
+                textStyle: AppTextStyles.bold16.copyWith(
+                  fontSize: 16.sp,
+                  height: 1.45,
+                ),
               ),
               20.szH,
               const LoginDivider(),
@@ -130,10 +135,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 child: AppText(
                   LocaleKeys.signInAsVisitor,
-                  color: AppColors.sokoonGray,
-                  fontSize: 13.sp,
-                  fontWeight: FontWeight.w700,
-                  decoration: TextDecoration.underline,
+                  style: AppTextStyles.bold13.copyWith(
+                    color: AppColors.sokoonGray,
+                    fontSize: 13.sp,
+                    decoration: TextDecoration.underline,
+                    height: 1.45,
+                  ),
                 ),
               ).centerWidget,
               18.szH,

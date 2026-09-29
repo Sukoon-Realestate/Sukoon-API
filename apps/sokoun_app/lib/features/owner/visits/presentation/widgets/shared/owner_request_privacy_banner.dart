@@ -25,9 +25,10 @@ class OwnerRequestPrivacyBanner extends StatelessWidget {
           Expanded(
             child: AppText(
               message,
-              color: AppColors.blue,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w600,
+              style: AppTextStyles.semiBold.copyWith(
+                color: AppColors.blue,
+                fontSize: 12.sp,
+              ),
               maxLines: 2,
             ),
           ),

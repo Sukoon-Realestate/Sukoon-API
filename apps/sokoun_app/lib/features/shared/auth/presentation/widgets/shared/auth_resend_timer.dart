@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class AuthResendTimer extends StatelessWidget {
@@ -21,9 +22,11 @@ class AuthResendTimer extends StatelessWidget {
     if (canResend) {
       return AppText(
         LocaleKeys.youCanResendCodeNow,
-        color: AppColors.sokoonGray,
-        fontSize: 13.sp,
-        fontWeight: FontWeight.w500,
+        style: AppTextStyles.medium13.copyWith(
+          color: AppColors.sokoonGray,
+          fontSize: 13.sp,
+          height: 1.45,
+        ),
         textAlign: TextAlign.center,
       );
     }
@@ -36,18 +39,16 @@ class AuthResendTimer extends StatelessWidget {
         return Text.rich(
           TextSpan(
             text: '${LocaleKeys.resendAfter} ',
-            style: TextStyle(
+            style: AppTextStyles.medium13.copyWith(
               color: AppColors.sokoonGray,
-              fontFamily: ConstantManager.fontFamily,
               fontSize: 13.sp,
-              fontWeight: FontWeight.w500,
+              height: 1.45,
             ),
             children: [
               TextSpan(
                 text: timeString,
-                style: TextStyle(
+                style: AppTextStyles.extraBold.copyWith(
                   color: AppColors.sokoonTeal,
-                  fontWeight: FontWeight.w800,
                 ),
               ),
             ],

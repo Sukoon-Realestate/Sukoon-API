@@ -30,18 +30,27 @@ dependencies:
   multiple_result: ^5.2.0
   rename_app:
 
-
   firebase_core: ^4.3.0
   firebase_remote_config: ^6.2.0
   cloud_firestore: ^6.5.0
 
   melos_core:
     path: ../../packages/core
+  flutter_svg: ^2.2.3
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "../../packages/core/assets/png/logo.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.14.4
   flutter_test:
     sdk: flutter
 
 flutter:
   default-flavor: dev
   uses-material-design: true
+#  assets:
+#    - ../../packages/core/assets/svg/

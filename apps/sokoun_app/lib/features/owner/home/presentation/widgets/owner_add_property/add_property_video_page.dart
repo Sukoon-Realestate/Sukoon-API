@@ -7,6 +7,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/helpers.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:video_player/video_player.dart';
@@ -219,17 +220,20 @@ class _AddPropertyVideoPageState extends State<AddPropertyVideoPage> {
           children: [
             AppText(
               LocaleKeys.ownerPropertyVideoTitle,
-              color: AppColors.sokoonNavy,
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 20.sp,
+              ),
               textAlign: TextAlign.start,
             ),
             4.szH,
             AppText(
               LocaleKeys.ownerPropertyVideoSubtitle,
-              color: AppColors.sokoonGray,
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w400,
+              style: AppTextStyles.regular13.copyWith(
+                color: AppColors.sokoonGray,
+                fontSize: 13.sp,
+                height: 1.45,
+              ),
               textAlign: TextAlign.start,
             ),
           ],

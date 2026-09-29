@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_listing_content.dart';
 
@@ -55,9 +56,11 @@ class OwnerListingCard extends StatelessWidget {
                   children: [
                     AppText(
                       listing.title,
-                      color: AppColors.sokoonNavy,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w700,
+                      style: AppTextStyles.bold14.copyWith(
+                        color: AppColors.sokoonNavy,
+                        fontSize: 14.sp,
+                        height: 1.45,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.start,
@@ -67,9 +70,11 @@ class OwnerListingCard extends StatelessWidget {
                     8.szH,
                     AppText(
                       listing.price,
-                      color: AppColors.sokoonTeal,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w700,
+                      style: AppTextStyles.bold16.copyWith(
+                        color: AppColors.sokoonTeal,
+                        fontSize: 16.sp,
+                        height: 1.45,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.start,
@@ -81,23 +86,29 @@ class OwnerListingCard extends StatelessWidget {
                       children: [
                         AppText(
                           listing.views,
-                          color: AppColors.sokoonGray,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
+                          style: AppTextStyles.regular12.copyWith(
+                            color: AppColors.sokoonGray,
+                            fontSize: 12.sp,
+                            height: 1.45,
+                          ),
                         ),
                         8.szW,
                         AppText(
                           '·',
-                          color: AppColors.sokoonGray,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
+                          style: AppTextStyles.regular12.copyWith(
+                            color: AppColors.sokoonGray,
+                            fontSize: 12.sp,
+                            height: 1.45,
+                          ),
                         ),
                         8.szW,
                         AppText(
                           listing.visits,
-                          color: AppColors.sokoonGray,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
+                          style: AppTextStyles.regular12.copyWith(
+                            color: AppColors.sokoonGray,
+                            fontSize: 12.sp,
+                            height: 1.45,
+                          ),
                         ),
                       ],
                     ),

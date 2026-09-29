@@ -31,9 +31,11 @@ class OwnerAvailabilityContent extends StatelessWidget {
         children: [
           AppText(
             LocaleKeys.ownerAvailabilityDescription,
-            color: AppColors.sokoonGray,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w400,
+            style: AppTextStyles.regular14.copyWith(
+              color: AppColors.sokoonGray,
+              fontSize: 14.sp,
+              height: 1.45,
+            ),
           ),
           16.szH,
           SingleChildScrollView(
@@ -55,9 +57,11 @@ class OwnerAvailabilityContent extends StatelessWidget {
           18.szH,
           AppText(
             _ownerAvailabilityDateLabel(context, selectedDay),
-            color: AppColors.sokoonNavy,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold14.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 14.sp,
+              height: 1.45,
+            ),
           ),
           12.szH,
           LayoutBuilder(
@@ -101,8 +105,10 @@ class OwnerAvailabilityContent extends StatelessWidget {
             textColor: AppColors.white,
             borderRadius: 14.r,
             height: 52.h,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w700,
+            textStyle: AppTextStyles.bold14.copyWith(
+              fontSize: 14.sp,
+              height: 1.45,
+            ),
           ),
         ],
       ),

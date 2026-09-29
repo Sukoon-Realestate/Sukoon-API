@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class TenantPropertyAmenityWrap extends StatelessWidget {
@@ -25,9 +26,11 @@ class TenantPropertyAmenityWrap extends StatelessWidget {
             ),
             child: AppText(
               amenity,
-              color: AppColors.sokoonTeal,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold12.copyWith(
+                color: AppColors.sokoonTeal,
+                fontSize: 12.sp,
+                height: 1.45,
+              ),
             ),
           ),
       ],

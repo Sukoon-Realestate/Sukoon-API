@@ -51,9 +51,11 @@ class OwnerAvailabilityTimeChip extends StatelessWidget {
             fit: BoxFit.scaleDown,
             child: AppText(
               state.isBooked ? '$label ×' : label,
-              color: _foregroundColor,
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold12.copyWith(
+                color: _foregroundColor,
+                fontSize: 12.sp,
+                height: 1.45,
+              ),
             ),
           ),
         ),

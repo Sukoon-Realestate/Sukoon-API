@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
 
@@ -60,9 +61,10 @@ class _SmallTag extends StatelessWidget {
       ),
       child: AppText(
         label,
-        color: textColor,
-        fontSize: 11.sp,
-        fontWeight: FontWeight.w800,
+        style: AppTextStyles.extraBold.copyWith(
+          color: textColor,
+          fontSize: 11.sp,
+        ),
       ),
     );
   }

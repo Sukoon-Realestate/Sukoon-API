@@ -38,9 +38,11 @@ class OwnerCalendarContent extends StatelessWidget {
                       Expanded(
                         child: AppText(
                           day,
-                          color: AppColors.sokoonGray,
-                          fontSize: 11.sp,
-                          fontWeight: FontWeight.w700,
+                          style: AppTextStyles.bold11.copyWith(
+                            color: AppColors.sokoonGray,
+                            fontSize: 11.sp,
+                            height: 1.45,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                       ),
@@ -77,9 +79,11 @@ class OwnerCalendarContent extends StatelessWidget {
           18.szH,
           AppText(
             '${LocaleKeys.ownerCalendarVisitsOnDay} ${selectedDate.day}',
-            color: AppColors.sokoonGray,
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w800,
+            style: AppTextStyles.extraBold13.copyWith(
+              color: AppColors.sokoonGray,
+              fontSize: 13.sp,
+              height: 1.45,
+            ),
           ),
           12.szH,
           for (final OwnerCalendarVisitContent visit in calendar.visits) ...[
@@ -94,8 +98,10 @@ class OwnerCalendarContent extends StatelessWidget {
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(14.r),
             height: 50.h,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w700,
+            textStyle: AppTextStyles.bold14.copyWith(
+              fontSize: 14.sp,
+              height: 1.45,
+            ),
           ),
         ],
       ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class SwitchRow extends StatelessWidget {
@@ -28,16 +29,20 @@ class SwitchRow extends StatelessWidget {
             children: [
               AppText(
                 title,
-                color: AppColors.sokoonNavy,
-                fontSize: 13.sp,
-                fontWeight: FontWeight.w700,
+                style: AppTextStyles.bold13.copyWith(
+                  color: AppColors.sokoonNavy,
+                  fontSize: 13.sp,
+                  height: 1.45,
+                ),
               ),
               3.szH,
               AppText(
                 subtitle,
-                color: AppColors.sokoonGray,
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w500,
+                style: AppTextStyles.medium11.copyWith(
+                  color: AppColors.sokoonGray,
+                  fontSize: 11.sp,
+                  height: 1.45,
+                ),
               ),
             ],
           ),

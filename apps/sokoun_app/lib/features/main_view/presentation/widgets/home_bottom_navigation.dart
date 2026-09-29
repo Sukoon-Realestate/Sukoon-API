@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/svg_pic.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
@@ -137,9 +140,10 @@ class _HomeBottomNavigationItem extends StatelessWidget {
                             destination.badgeCount > 99
                                 ? '99+'
                                 : '${destination.badgeCount}',
-                            color: AppColors.white,
-                            fontSize: 9.sp,
-                            fontWeight: FontWeight.w800,
+                            style: AppTextStyles.extraBold.copyWith(
+                              color: AppColors.white,
+                              fontSize: 9.sp,
+                            ),
                             maxLines: 1,
                           ),
                         ),
@@ -150,9 +154,10 @@ class _HomeBottomNavigationItem extends StatelessWidget {
               3.szH,
               AppText(
                 destination.label,
-                color: color,
-                fontSize: 11.sp,
-                fontWeight: FontWeight.w600,
+                style: AppTextStyles.semiBold.copyWith(
+                  color: color,
+                  fontSize: 11.sp,
+                ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
@@ -169,6 +174,7 @@ class _HomeBottomNavigationItem extends StatelessWidget {
         ? destination.selectedIcon
         : destination.icon;
 
+    log('type isss $icon');
     if (icon is String) {
       return SvgPic(assetName: icon, color: color, size: 22.r);
     }

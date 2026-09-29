@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class TagsRow extends StatelessWidget {
@@ -23,9 +24,10 @@ class TagsRow extends StatelessWidget {
             ),
             child: AppText(
               tag,
-              color: AppColors.sokoonGray,
-              fontSize: 11.sp,
-              fontWeight: FontWeight.w600,
+              style: AppTextStyles.semiBold.copyWith(
+                color: AppColors.sokoonGray,
+                fontSize: 11.sp,
+              ),
             ),
           ),
       ],

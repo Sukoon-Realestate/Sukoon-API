@@ -1,3 +1,4 @@
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -71,9 +72,10 @@ class RoleOptionCard extends StatelessWidget {
                   children: [
                     AppText(
                       title,
-                      color: AppColors.sokoonNavy,
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w700,
+                      style: AppTextStyles.bold.copyWith(
+                        color: AppColors.sokoonNavy,
+                        fontSize: 18.sp,
+                      ),
                       textAlign: TextAlign.start,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -81,9 +83,11 @@ class RoleOptionCard extends StatelessWidget {
                     5.szH,
                     AppText(
                       subtitle,
-                      color: AppColors.sokoonGray,
-                      fontSize: 13.sp,
-                      fontWeight: FontWeight.w500,
+                      style: AppTextStyles.medium13.copyWith(
+                        color: AppColors.sokoonGray,
+                        fontSize: 13.sp,
+                        height: 1.45,
+                      ),
                       textAlign: TextAlign.start,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,

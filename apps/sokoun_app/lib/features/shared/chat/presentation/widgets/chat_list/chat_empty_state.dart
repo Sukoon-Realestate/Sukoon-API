@@ -4,6 +4,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
 import 'package:sokoun_app/features/main_view/data/enums/workspace_tab.dart';
@@ -39,9 +40,10 @@ class ChatEmptyState extends StatelessWidget {
             24.szH,
             AppText(
               LocaleKeys.chatEmptyTitle,
-              color: AppColors.sokoonNavy,
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 20.sp,
+              ),
               textAlign: TextAlign.center,
               maxLines: 2,
             ),
@@ -49,9 +51,11 @@ class ChatEmptyState extends StatelessWidget {
             ...[
               AppText(
                 LocaleKeys.chatEmptyDescription,
-                color: AppColors.sokoonGray,
-                fontSize: 14.sp,
-                height: 1.7,
+                style: AppTextStyles.regular14.copyWith(
+                  color: AppColors.sokoonGray,
+                  fontSize: 14.sp,
+                  height: 1.7,
+                ),
                 textAlign: TextAlign.center,
                 maxLines: 4,
                 overflow: TextOverflow.ellipsis,
@@ -69,8 +73,10 @@ class ChatEmptyState extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16.r),
                 width: double.infinity,
                 height: 52.h,
-                fontSize: 15.sp,
-                fontWeight: FontWeight.w800,
+                textStyle: AppTextStyles.extraBold15.copyWith(
+                  fontSize: 15.sp,
+                  height: 1.45,
+                ),
               ),
             ],
           ],

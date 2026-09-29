@@ -36,18 +36,21 @@ class VisitConfirmationContent extends StatelessWidget {
           20.szH,
           AppText(
             LocaleKeys.tenantVisitConfirmedTitle,
-            color: AppColors.sokoonNavy,
-            fontSize: 23.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 23.sp,
+            ),
             textAlign: TextAlign.center,
             maxLines: 2,
           ),
           8.szH,
           AppText(
             LocaleKeys.tenantVisitConfirmedDescription,
-            color: AppColors.sokoonGray,
-            fontSize: 14.sp,
-            height: 1.5,
+            style: AppTextStyles.regular14.copyWith(
+              color: AppColors.sokoonGray,
+              fontSize: 14.sp,
+              height: 1.5,
+            ),
             textAlign: TextAlign.center,
             maxLines: 3,
           ),
@@ -80,8 +83,10 @@ class VisitConfirmationContent extends StatelessWidget {
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(14.r),
             height: 50.h,
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w700,
+            textStyle: AppTextStyles.bold15.copyWith(
+              fontSize: 15.sp,
+              height: 1.45,
+            ),
           ),
           12.szH,
           DefaultButton(
@@ -92,8 +97,10 @@ class VisitConfirmationContent extends StatelessWidget {
             borderColor: AppColors.sokoonBorder,
             borderRadius: BorderRadius.circular(14.r),
             height: 50.h,
-            fontSize: 15.sp,
-            fontWeight: FontWeight.w700,
+            textStyle: AppTextStyles.bold15.copyWith(
+              fontSize: 15.sp,
+              height: 1.45,
+            ),
           ),
         ],
       ),

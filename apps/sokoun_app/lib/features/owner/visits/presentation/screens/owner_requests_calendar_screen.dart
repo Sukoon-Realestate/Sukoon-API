@@ -64,7 +64,12 @@ class _OwnerRequestsCalendarScreenState
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
-          SnackBar(content: AppText(LocaleKeys.ownerAvailabilitySaved)),
+          SnackBar(
+            content: AppText(
+              LocaleKeys.ownerAvailabilitySaved,
+              style: AppTextStyles.regular,
+            ),
+          ),
         );
     }
   }
@@ -154,16 +159,19 @@ class _OwnerCalendarHeader extends StatelessWidget {
           Expanded(
             child: AppText(
               LocaleKeys.ownerCalendarTitle,
-              color: AppColors.sokoonNavy,
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w700,
+              style: AppTextStyles.bold.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 18.sp,
+              ),
             ),
           ),
           AppText(
             monthLabel,
-            color: AppColors.gold,
-            fontSize: 13.sp,
-            fontWeight: FontWeight.w800,
+            style: AppTextStyles.extraBold13.copyWith(
+              color: AppColors.gold,
+              fontSize: 13.sp,
+              height: 1.45,
+            ),
           ),
         ],
       ),

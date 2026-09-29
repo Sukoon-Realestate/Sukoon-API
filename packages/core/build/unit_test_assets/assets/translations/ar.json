@@ -1467,5 +1467,18 @@
   "use_my_location": "استخدام موقعي",
   "current_location_loading": "جارٍ تحديد منطقتك...",
   "location_services_disabled": "فعّل خدمات الموقع من إعدادات جهازك ثم حاول مرة أخرى.",
-  "current_location_unavailable": "تعذّر تحديد منطقتك. حاول مرة أخرى أو ابحث باسم المنطقة."
+  "current_location_unavailable": "تعذّر تحديد منطقتك. حاول مرة أخرى أو ابحث باسم المنطقة.",
+  "clear_search_history": "مسح السجل",
+  "remove_recent_search": "إزالة من السجل",
+  "search_history_removed": "تم تحديث سجل البحث",
+  "search_history_save_failed": "تعذّر تحديث سجل البحث. حاول مرة أخرى.",
+  "undo_action": "تراجع",
+  "clear_search_query": "مسح البحث",
+  "search_price_range_error": "يجب ألا يتجاوز الحد الأدنى للسعر الحد الأقصى.",
+  "swap_price_range": "تبديل السعرين",
+  "owner_property_review_title": "راجع إعلانك",
+  "owner_property_review_hint": "تأكد من البيانات التالية. يمكنك تعديل أي قسم قبل الإرسال.",
+  "owner_property_review_action": "مراجعة الإعلان",
+  "owner_property_review_basics": "معلومات العقار",
+  "owner_property_review_additional": "التفاصيل الإضافية"
 }

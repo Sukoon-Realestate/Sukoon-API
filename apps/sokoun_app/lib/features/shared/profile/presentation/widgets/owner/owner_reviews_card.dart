@@ -13,9 +13,11 @@ class OwnerReviewsCard extends StatelessWidget {
         children: [
           AppText(
             LocaleKeys.profileLatestReviews,
-            color: AppColors.sokoonNavy,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold14.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 14.sp,
+              height: 1.45,
+            ),
           ),
           4.szH,
           if (reviews.isEmpty) const OwnerReviewsEmptyState(),
@@ -41,9 +43,11 @@ class OwnerReviewsCard extends StatelessWidget {
                           review.reviewerName.isNotEmpty
                               ? review.reviewerName
                               : LocaleKeys.profileFallbackName,
-                          color: AppColors.sokoonNavy,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w700,
+                          style: AppTextStyles.bold12.copyWith(
+                            color: AppColors.sokoonNavy,
+                            fontSize: 12.sp,
+                            height: 1.45,
+                          ),
                         ),
                       ),
                       Row(
@@ -63,15 +67,21 @@ class OwnerReviewsCard extends StatelessWidget {
                   4.szH,
                   AppText(
                     review.comment,
-                    color: AppColors.sokoonGray,
-                    fontSize: 12.sp,
+                    style: AppTextStyles.regular12.copyWith(
+                      color: AppColors.sokoonGray,
+                      fontSize: 12.sp,
+                      height: 1.45,
+                    ),
                   ),
                   if (review.dateLabel.isNotEmpty) ...[
                     4.szH,
                     AppText(
                       review.dateLabel,
-                      color: AppColors.sokoonGray,
-                      fontSize: 10.sp,
+                      style: AppTextStyles.regular10.copyWith(
+                        color: AppColors.sokoonGray,
+                        fontSize: 10.sp,
+                        height: 1.45,
+                      ),
                     ),
                   ],
                 ],

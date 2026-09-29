@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/available_places_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_types_model.dart';
@@ -61,9 +62,10 @@ class TenantSearchContentView extends StatelessWidget {
         children: [
           AppText(
             LocaleKeys.tenantSearchTitle,
-            color: AppColors.sokoonNavy,
-            fontSize: 20.sp,
-            fontWeight: FontWeight.w700,
+            style: AppTextStyles.bold.copyWith(
+              color: AppColors.sokoonNavy,
+              fontSize: 20.sp,
+            ),
             textAlign: TextAlign.start,
           ),
           14.szH,
