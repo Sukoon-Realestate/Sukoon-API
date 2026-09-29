@@ -12,6 +12,8 @@ import 'package:sokoun_app/features/tenant/home/data/models/property_details_mod
 import 'package:sokoun_app/shared_widgets/unsaved_changes_guard.dart';
 
 import '../../data/owner_add_property_mapper.dart';
+import '../../data/enums/property_review_action.dart';
+import '../widgets/owner_add_property/property_review_sheet.dart';
 import '../../data/models/owner_add_property_content.dart';
 import '../cubits/create_property_cubit.dart';
 import '../cubits/update_property_cubit.dart';
@@ -44,6 +46,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
   int _locationDropdownGeneration = 0;
   final ValueNotifier<bool> _isSubmitting = ValueNotifier<bool>(false);
   bool _hasChanges = false;
+  bool _isReviewOpen = false;
 
   late final TextEditingController _titleController;
   late final TextEditingController _streetController;
@@ -116,11 +119,57 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
   }
 
   void _goToPage(int page) {
-    _pageController.animateToPage(
-      page,
-      duration: SokounMotion.duration(context, milliseconds: 280),
-      curve: Curves.easeOutCubic,
-    );
+    FocusManager.instance.primaryFocus?.unfocus();
+    if (!_pageController.hasClients) return;
+    final duration = SokounMotion.duration(context, milliseconds: 280);
+    if (duration == Duration.zero) {
+      _pageController.jumpToPage(page);
+    } else {
+      _pageController.animateToPage(
+        page,
+        duration: duration,
+        curve: SokounMotion.curve,
+      );
+    }
+  }
+
+  Future<void> _reviewAndSubmit() async {
+    if (_isReviewOpen ||
+        _isSubmitting.value ||
+        !_form.isBasicsReady ||
+        !_form.isPhotosReady ||
+        !_form.isPricingReady ||
+        !_form.isExtraDetailsReady) {
+      return;
+    }
+    _isReviewOpen = true;
+    FocusManager.instance.primaryFocus?.unfocus();
+    try {
+      final action = await showModalBottomSheet<PropertyReviewAction>(
+        context: context,
+        isScrollControlled: true,
+        useSafeArea: true,
+        showDragHandle: true,
+        backgroundColor: AppColors.white,
+        sheetAnimationStyle: AnimationStyle(
+          duration: SokounMotion.duration(context, milliseconds: 280),
+          reverseDuration: SokounMotion.duration(context, milliseconds: 220),
+        ),
+        constraints: BoxConstraints(
+          maxWidth: 640,
+          maxHeight: MediaQuery.sizeOf(context).height * .9,
+        ),
+        builder: (_) => PropertyReviewSheet(form: _form, isEditing: _isEditing),
+      );
+      if (!mounted || action == null) return;
+      if (action == PropertyReviewAction.submit) {
+        await _submitForReview();
+      } else {
+        _goToPage(action.page!);
+      }
+    } finally {
+      _isReviewOpen = false;
+    }
   }
 
   void _syncControllers() {
@@ -449,11 +498,11 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
                           _updateForm(() => _form.copyWith(suitableFor: value)),
                       onProofUploadTap: _pickOwnershipProof,
                       onBack: () => _goToPage(3),
-                      onNext: _submitForReview,
+                      onNext: _reviewAndSubmit,
                       isSubmitting: isSubmitting,
-                      primaryLabel: _isEditing
-                          ? LocaleKeys.ownerPropertiesSaveChanges
-                          : null,
+                      primaryLabel: isSubmitting
+                          ? LocaleKeys.ownerAddPropertySubmitting
+                          : LocaleKeys.ownerPropertyReviewAction,
                     ),
                   ),
                 ),

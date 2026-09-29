@@ -80,6 +80,8 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
       _filters.value = filters;
 
   Future<void> _apply() async {
+    if (!_filters.value.hasValidPriceRange) return;
+    FocusManager.instance.primaryFocus?.unfocus();
     final PropertySearchFilters filters = _filters.value.copyWith(page: 1);
     Go.back();
     await widget.onFiltersApplied(filters);
@@ -123,7 +125,11 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
                               onFiltersChanged: _updateFilters,
                             ),
                           ),
-                          FilterApplyBar(onApplyPressed: _apply),
+                          FilterApplyBar(
+                            onApplyPressed: filters.hasValidPriceRange
+                                ? _apply
+                                : null,
+                          ),
                         ],
                       ),
                     ),

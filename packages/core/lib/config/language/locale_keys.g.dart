@@ -4390,4 +4390,43 @@ abstract class LocaleKeys {
   static const String _currentLocationUnavailable = 'current_location_unavailable';
   static String get currentLocationUnavailable => _currentLocationUnavailable.tr();
 
+  static const String _clearSearchHistory = 'clear_search_history';
+  static String get clearSearchHistory => _clearSearchHistory.tr();
+
+  static const String _removeRecentSearch = 'remove_recent_search';
+  static String get removeRecentSearch => _removeRecentSearch.tr();
+
+  static const String _searchHistoryRemoved = 'search_history_removed';
+  static String get searchHistoryRemoved => _searchHistoryRemoved.tr();
+
+  static const String _searchHistorySaveFailed = 'search_history_save_failed';
+  static String get searchHistorySaveFailed => _searchHistorySaveFailed.tr();
+
+  static const String _undoAction = 'undo_action';
+  static String get undoAction => _undoAction.tr();
+
+  static const String _clearSearchQuery = 'clear_search_query';
+  static String get clearSearchQuery => _clearSearchQuery.tr();
+
+  static const String _searchPriceRangeError = 'search_price_range_error';
+  static String get searchPriceRangeError => _searchPriceRangeError.tr();
+
+  static const String _swapPriceRange = 'swap_price_range';
+  static String get swapPriceRange => _swapPriceRange.tr();
+
+  static const String _ownerPropertyReviewTitle = 'owner_property_review_title';
+  static String get ownerPropertyReviewTitle => _ownerPropertyReviewTitle.tr();
+
+  static const String _ownerPropertyReviewHint = 'owner_property_review_hint';
+  static String get ownerPropertyReviewHint => _ownerPropertyReviewHint.tr();
+
+  static const String _ownerPropertyReviewAction = 'owner_property_review_action';
+  static String get ownerPropertyReviewAction => _ownerPropertyReviewAction.tr();
+
+  static const String _ownerPropertyReviewBasics = 'owner_property_review_basics';
+  static String get ownerPropertyReviewBasics => _ownerPropertyReviewBasics.tr();
+
+  static const String _ownerPropertyReviewAdditional = 'owner_property_review_additional';
+  static String get ownerPropertyReviewAdditional => _ownerPropertyReviewAdditional.tr();
+
 }

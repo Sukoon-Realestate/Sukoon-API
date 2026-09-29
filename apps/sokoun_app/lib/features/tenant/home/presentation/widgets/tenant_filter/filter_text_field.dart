@@ -39,7 +39,7 @@ class FilterTextField extends StatelessWidget {
         ),
         6.szH,
         Container(
-          height: 46.h,
+          constraints: BoxConstraints(minHeight: 48.h),
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           decoration: BoxDecoration(
             color: AppColors.grayOffWhite,

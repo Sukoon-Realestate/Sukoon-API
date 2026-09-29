@@ -55,11 +55,29 @@ class TenantSearchField extends StatelessWidget {
           ),
         ),
       ).paddingOnlyDirectional(start: 8.w),
-      suffixIcon: Icon(
-        Icons.search_rounded,
-        color: AppColors.sokoonMuted,
-        size: 20.r,
-      ),
+      suffixIcon: controller == null
+          ? Icon(Icons.search_rounded, color: AppColors.sokoonMuted, size: 20.r)
+          : ValueListenableBuilder<TextEditingValue>(
+              valueListenable: controller!,
+              builder: (context, value, _) => value.text.isEmpty
+                  ? Icon(
+                      Icons.search_rounded,
+                      color: AppColors.sokoonMuted,
+                      size: 20.r,
+                    )
+                  : IconButton(
+                      tooltip: LocaleKeys.clearSearchQuery,
+                      onPressed: () {
+                        controller!.clear();
+                        onChanged?.call('');
+                      },
+                      icon: Icon(
+                        Icons.close_rounded,
+                        color: AppColors.sokoonGray,
+                        size: 20.r,
+                      ),
+                    ),
+            ),
     );
   }
 }

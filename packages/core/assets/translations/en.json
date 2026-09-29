@@ -1467,5 +1467,18 @@
   "use_my_location": "Use my location",
   "current_location_loading": "Finding your area...",
   "location_services_disabled": "Turn on location services in your device settings then try again.",
-  "current_location_unavailable": "Could not find your area. Try again or search by area name."
+  "current_location_unavailable": "Could not find your area. Try again or search by area name.",
+  "clear_search_history": "Clear history",
+  "remove_recent_search": "Remove from history",
+  "search_history_removed": "Search history updated",
+  "search_history_save_failed": "Could not update search history. Please try again.",
+  "undo_action": "Undo",
+  "clear_search_query": "Clear search",
+  "search_price_range_error": "The minimum price must not exceed the maximum price.",
+  "swap_price_range": "Swap prices",
+  "owner_property_review_title": "Review your listing",
+  "owner_property_review_hint": "Check the details below. You can edit any section before submitting.",
+  "owner_property_review_action": "Review listing",
+  "owner_property_review_basics": "Property information",
+  "owner_property_review_additional": "Additional details"
 }

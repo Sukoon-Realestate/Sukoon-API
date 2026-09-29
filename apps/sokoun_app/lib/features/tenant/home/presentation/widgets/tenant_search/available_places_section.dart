@@ -7,6 +7,7 @@ import 'package:melos_core/core/helpers/status_builder.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/available_places_model.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/cubits/available_places_cubit.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_reveal.dart';
 
 import 'search_options_empty_state.dart';
 import 'suggested_areas_grid.dart';
@@ -45,10 +46,13 @@ class AvailablePlacesSection extends StatelessWidget {
       errorType: ErrorType.defaultView,
       builder: (data) => data.places.isEmpty
           ? const SearchAvailablePlacesEmptyState()
-          : SuggestedAreasGrid(
-              places: data.places,
-              selectedArea: selectedArea,
-              onAreaSelected: onAreaSelected,
+          : SokounReveal(
+              delay: const Duration(milliseconds: 60),
+              child: SuggestedAreasGrid(
+                places: data.places,
+                selectedArea: selectedArea,
+                onAreaSelected: onAreaSelected,
+              ),
             ),
     );
   }

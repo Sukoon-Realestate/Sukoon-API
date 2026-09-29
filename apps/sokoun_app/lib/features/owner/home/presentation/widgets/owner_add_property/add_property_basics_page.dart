@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:sokoun_app/shared_widgets/localized_digits_formatter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -218,7 +218,7 @@ class _DetailsSection extends StatelessWidget {
             controller: field.controller,
             onChanged: field.onChanged,
             keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            inputFormatters: [const LocalizedDigitsFormatter()],
           );
         },
       ),

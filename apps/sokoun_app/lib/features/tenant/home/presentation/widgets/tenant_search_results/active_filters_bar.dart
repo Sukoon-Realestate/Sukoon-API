@@ -5,6 +5,7 @@ import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_search_result_content.dart';
 
 import 'active_filter_chip.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'clear_filters_chip.dart';
 
 class ActiveFiltersBar extends StatelessWidget {
@@ -21,30 +22,36 @@ class ActiveFiltersBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 48.h,
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-      decoration: const BoxDecoration(
-        color: AppColors.white,
-        border: Border(bottom: BorderSide(color: AppColors.grayPale)),
-      ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            for (final filter in filters) ...[
-              ActiveFilterChip(
-                filter: filter,
-                onRemove: onFilterRemoved == null
-                    ? null
-                    : () => onFilterRemoved!(filter),
+    return AnimatedSize(
+      duration: SokounMotion.duration(context, milliseconds: 240),
+      curve: SokounMotion.curve,
+      alignment: AlignmentDirectional.topStart,
+      child: filters.isEmpty
+          ? const SizedBox(width: double.infinity)
+          : Container(
+              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+              decoration: const BoxDecoration(
+                color: AppColors.white,
+                border: Border(bottom: BorderSide(color: AppColors.grayPale)),
               ),
-              8.szW,
-            ],
-            if (filters.isNotEmpty) ClearFiltersChip(onTap: onClearAll),
-          ],
-        ),
-      ),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    for (final filter in filters) ...[
+                      ActiveFilterChip(
+                        filter: filter,
+                        onRemove: onFilterRemoved == null
+                            ? null
+                            : () => onFilterRemoved!(filter),
+                      ),
+                      8.szW,
+                    ],
+                    if (filters.isNotEmpty) ClearFiltersChip(onTap: onClearAll),
+                  ],
+                ),
+              ),
+            ),
     );
   }
 }

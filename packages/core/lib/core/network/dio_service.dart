@@ -327,12 +327,10 @@ class DioService implements NetworkService, SessionAuthService {
             );
           case HttpStatus.forbidden:
             throw ForbiddenException(
-              error.response?.data['message'] ??
-                  error.response?.data['detail'] ??
-                  LocaleKeys.unauthorized,
+              error.response?.data['message'] ?? LocaleKeys.unauthorized,
             );
           case HttpStatus.notFound:
-            throw NotFoundException(LocaleKeys.notFound);
+            throw NotFoundException(error.response?.data['message'] ?? LocaleKeys.notFound);
           case HttpStatus.conflict:
             throw ConflictException(
               error.response?.data['message'] ?? LocaleKeys.serverError,
@@ -345,7 +343,7 @@ class DioService implements NetworkService, SessionAuthService {
             throw ServerException(LocaleKeys.serverError);
         }
       case DioExceptionType.cancel:
-        throw ServerException(LocaleKeys.intenetWeakness);
+        throw ServerException(LocaleKeys.cancelled);
       case DioExceptionType.unknown:
         throw ServerException(
           error.response?.data['message'] ?? LocaleKeys.exceptionError,

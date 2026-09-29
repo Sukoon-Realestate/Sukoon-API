@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sokoun — search and listing review</title>
+<style>
+  :root { color-scheme: light; font-family: system-ui, sans-serif; color: #172033; background: #f7f8fa; }
+  body { max-width: 1240px; margin: auto; padding: 32px 20px; }
+  h1 { font-size: 28px; margin-bottom: 8px; }
+  p { color: #5b6473; line-height: 1.6; max-width: 76ch; }
+  nav { display: flex; gap: 12px; flex-wrap: wrap; margin: 24px 0; }
+  a { color: #087c74; }
+  section { scroll-margin-top: 20px; margin: 40px 0; }
+  .phones { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 24px; }
+  figure { margin: 0; }
+  figcaption { font-weight: 600; margin: 12px 0; }
+  img { display: block; width: 100%; height: auto; border: 1px solid #dfe5eb; border-radius: 16px; box-sizing: border-box; }
+  .phones img { max-width: 390px; }
+  .tablets { display: grid; gap: 28px; }
+</style>
+<h1>Search and listing review</h1>
+<p>Rendered Flutter components with sample data, using Sokoun’s Tajawal font and
+shared theme. The interaction tests cover both languages, six widths, and three
+text sizes. <a href="../motion-and-interactions.md">See animation triggers and behavior details</a>.</p>
+<nav><a href="#search">Search controls</a><a href="#review">Listing review</a><a href="#tablet">Tablet previews</a></nav>
+<section id="search">
+  <h2>Search controls — 390 px</h2>
+  <p>Clear the query, remove a recent search, or clear history. Deletion offers Undo.</p>
+  <div class="phones">
+    <figure><figcaption>Arabic</figcaption><img src="search-ar-390.png" alt="Arabic search field and removable history"></figure>
+    <figure><figcaption>English</figcaption><img src="search-en-390.png" alt="English search field and removable history"></figure>
+  </div>
+</section>
+<section id="review">
+  <h2>Listing review — 390 px</h2>
+  <p>The summary scrolls while the submit action remains accessible. Each section has an edit shortcut.</p>
+  <div class="phones">
+    <figure><figcaption>Arabic</figcaption><img src="review-ar-390.png" alt="Arabic listing review sheet"></figure>
+    <figure><figcaption>English</figcaption><img src="review-en-390.png" alt="English listing review sheet"></figure>
+  </div>
+</section>
+<section id="tablet">
+  <h2>Tablet previews — 1024 px</h2>
+  <div class="tablets">
+    <figure><figcaption>Arabic listing review</figcaption><img loading="lazy" src="review-ar-1024.png" alt="Arabic tablet listing review with capped sheet width"></figure>
+    <figure><figcaption>English listing review</figcaption><img loading="lazy" src="review-en-1024.png" alt="English tablet listing review with capped sheet width"></figure>
+    <figure><figcaption>Arabic search controls</figcaption><img loading="lazy" src="search-ar-1024.png" alt="Arabic search controls at tablet width"></figure>
+    <figure><figcaption>English search controls</figcaption><img loading="lazy" src="search-en-1024.png" alt="English search controls at tablet width"></figure>
+  </div>
+</section>
+</html>

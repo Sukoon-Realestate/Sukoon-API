@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:sokoun_app/shared_widgets/localized_digits_formatter.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -28,39 +29,83 @@ class FilterPriceRangeSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilterCard(
       title: LocaleKeys.tenantFilterPriceRange,
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Expanded(
-            child: FilterTextField(
-              label: LocaleKeys.tenantFilterFrom,
-              hint: LocaleKeys.tenantFilterFrom,
-              controller: minPriceController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              textAlign: TextAlign.center,
-              onChanged: (value) =>
-                  onFiltersChanged(filters.copyWith(priceMin: value, page: 1)),
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: FilterTextField(
+                  label: LocaleKeys.tenantFilterFrom,
+                  hint: LocaleKeys.tenantFilterFrom,
+                  controller: minPriceController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [const LocalizedDigitsFormatter()],
+                  textAlign: TextAlign.center,
+                  onChanged: (value) => onFiltersChanged(
+                    filters.copyWith(priceMin: value, page: 1),
+                  ),
+                ),
+              ),
+              10.szW,
+              AppText(
+                '—',
+                color: AppColors.sokoonGray,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w700,
+              ),
+              10.szW,
+              Expanded(
+                child: FilterTextField(
+                  label: LocaleKeys.tenantFilterTo,
+                  hint: LocaleKeys.tenantFilterTo,
+                  controller: maxPriceController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [const LocalizedDigitsFormatter()],
+                  textAlign: TextAlign.center,
+                  onChanged: (value) => onFiltersChanged(
+                    filters.copyWith(priceMax: value, page: 1),
+                  ),
+                ),
+              ),
+            ],
           ),
-          10.szW,
-          AppText(
-            '—',
-            color: AppColors.sokoonGray,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w700,
-          ),
-          10.szW,
-          Expanded(
-            child: FilterTextField(
-              label: LocaleKeys.tenantFilterTo,
-              hint: LocaleKeys.tenantFilterTo,
-              controller: maxPriceController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              textAlign: TextAlign.center,
-              onChanged: (value) =>
-                  onFiltersChanged(filters.copyWith(priceMax: value, page: 1)),
-            ),
+          AnimatedSize(
+            duration: SokounMotion.duration(context, milliseconds: 240),
+            curve: SokounMotion.curve,
+            alignment: AlignmentDirectional.topStart,
+            child: filters.hasValidPriceRange
+                ? const SizedBox(width: double.infinity)
+                : Semantics(
+                    liveRegion: true,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 8),
+                        AppText(
+                          LocaleKeys.searchPriceRangeError,
+                          color: AppColors.sokoonRose,
+                          fontSize: 13.sp,
+                        ),
+                        TextButton.icon(
+                          onPressed: () {
+                            final minimum = minPriceController.text;
+                            minPriceController.text = maxPriceController.text;
+                            maxPriceController.text = minimum;
+                            onFiltersChanged(
+                              filters.copyWith(
+                                priceMin: minPriceController.text,
+                                priceMax: maxPriceController.text,
+                                page: 1,
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.swap_horiz_rounded, size: 18),
+                          label: Text(LocaleKeys.swapPriceRange),
+                        ),
+                      ],
+                    ),
+                  ),
           ),
         ],
       ),

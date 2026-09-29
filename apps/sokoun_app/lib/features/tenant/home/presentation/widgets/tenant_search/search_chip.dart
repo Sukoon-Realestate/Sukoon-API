@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -17,25 +18,30 @@ class SearchChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        height: 34.h,
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: isSelected ? AppColors.sokoonTeal : AppColors.white,
-          borderRadius: BorderRadius.circular(999.r),
-          border: Border.all(
-            color: isSelected ? AppColors.sokoonTeal : AppColors.sokoonBorder,
+    return Semantics(
+      button: true,
+      selected: isSelected,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedContainer(
+          duration: SokounMotion.duration(context),
+          constraints: BoxConstraints(minHeight: 48.h),
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: isSelected ? AppColors.sokoonTeal : AppColors.white,
+            borderRadius: BorderRadius.circular(999.r),
+            border: Border.all(
+              color: isSelected ? AppColors.sokoonTeal : AppColors.sokoonBorder,
+            ),
           ),
-        ),
-        child: AppText(
-          label,
-          color: isSelected ? AppColors.white : AppColors.sokoonNavy,
-          fontSize: 12.sp,
-          fontWeight: FontWeight.w800,
+          child: AppText(
+            label,
+            color: isSelected ? AppColors.white : AppColors.sokoonNavy,
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w800,
+          ),
         ),
       ),
     );

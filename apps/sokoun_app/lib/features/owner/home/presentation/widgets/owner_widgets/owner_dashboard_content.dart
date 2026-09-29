@@ -6,6 +6,7 @@ import 'package:sokoun_app/features/owner/home/data/models/owner_dashboard_model
 import 'owner_header.dart';
 import 'owner_pending_requests_section.dart';
 import 'owner_stats_grid.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_reveal.dart';
 
 class OwnerDashboardContent extends StatelessWidget {
   const OwnerDashboardContent({
@@ -29,16 +30,21 @@ class OwnerDashboardContent extends StatelessWidget {
             isVerified: dashboard.owner.isVerified,
           ),
           18.szH,
-          OwnerStatsGrid(
-            visitsThisWeek: dashboard.visitsThisWeek,
-            activeProperties: dashboard.activeProperties,
-            overallRating: dashboard.overallRating,
-            pendingRequests: dashboard.pendingRequests,
+          SokounReveal(
+            child: OwnerStatsGrid(
+              visitsThisWeek: dashboard.visitsThisWeek,
+              activeProperties: dashboard.activeProperties,
+              overallRating: dashboard.overallRating,
+              pendingRequests: dashboard.pendingRequests,
+            ),
           ),
           18.szH,
-          OwnerPendingRequestsSection(
-            pendingVisits: dashboard.pendingVisits,
-            onRequestResolved: onRequestResolved,
+          SokounReveal(
+            delay: const Duration(milliseconds: 60),
+            child: OwnerPendingRequestsSection(
+              pendingVisits: dashboard.pendingVisits,
+              onRequestResolved: onRequestResolved,
+            ),
           ),
           24.szH,
         ],

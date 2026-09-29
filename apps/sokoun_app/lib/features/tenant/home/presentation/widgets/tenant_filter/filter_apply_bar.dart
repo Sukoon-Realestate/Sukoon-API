@@ -7,7 +7,7 @@ import 'package:melos_core/core/widgets/buttons/default_button.dart';
 class FilterApplyBar extends StatelessWidget {
   const FilterApplyBar({super.key, required this.onApplyPressed});
 
-  final VoidCallback onApplyPressed;
+  final VoidCallback? onApplyPressed;
 
   @override
   Widget build(BuildContext context) {

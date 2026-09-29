@@ -32,6 +32,7 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
     })
   >
   _viewState;
+  bool _isOpeningResults = false;
   late PropertySearchFilters _filters;
   late final TextEditingController _searchController;
   late final PropertyTypesCubit _propertyTypesCubit;
@@ -135,6 +136,7 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
   }
 
   Future<void> _submitSearch([String? submittedQuery]) async {
+    if (_isOpeningResults) return;
     final String query = (submittedQuery ?? _searchController.text).trim();
     if (query.isEmpty &&
         _viewState.value.form.selectedCategory.isEmpty &&
@@ -142,20 +144,23 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
       return;
     }
 
-    await _recentSearchesCubit.addRecentSearch(query);
-    if (!mounted) {
-      return;
-    }
-
-    await Go.to(
-      TenantSearchResultsScreen(
-        initialFilters: _filters.copyWith(
-          search: query,
-          propertyType: _viewState.value.form.selectedCategory,
-          page: 1,
+    _isOpeningResults = true;
+    FocusManager.instance.primaryFocus?.unfocus();
+    try {
+      await _recentSearchesCubit.addRecentSearch(query);
+      if (!mounted) return;
+      await Go.to(
+        TenantSearchResultsScreen(
+          initialFilters: _filters.copyWith(
+            search: query,
+            propertyType: _viewState.value.form.selectedCategory,
+            page: 1,
+          ),
         ),
-      ),
-    );
+      );
+    } finally {
+      _isOpeningResults = false;
+    }
   }
 
   Future<void> _openFilters() async {

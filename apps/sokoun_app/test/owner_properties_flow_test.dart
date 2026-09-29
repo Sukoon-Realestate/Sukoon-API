@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/property_review_sheet.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -144,7 +146,7 @@ void main() {
     ];
   }
 
-  Future<void> submitEditFlow(WidgetTester tester) async {
+  Future<void> openEditReview(WidgetTester tester) async {
     await tester.tap(find.text('التالي — الصور'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('التالي — فيديو العقار'));
@@ -153,6 +155,15 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('التالي — التفاصيل الإضافية'));
     await tester.pumpAndSettle();
+    final requestsBeforeReview = repository.updateRequestCount;
+    await tester.tap(find.text(LocaleKeys.ownerPropertyReviewAction));
+    await tester.pumpAndSettle();
+    expect(find.byType(PropertyReviewSheet), findsOneWidget);
+    expect(repository.updateRequestCount, requestsBeforeReview);
+  }
+
+  Future<void> submitEditFlow(WidgetTester tester) async {
+    await openEditReview(tester);
     await tester.tap(find.text('حفظ التعديلات'));
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
@@ -327,6 +338,47 @@ void main() {
     expect(find.byType(AddPropertyVideoPage), findsOneWidget);
     expect(find.text('فيديو العقار'), findsWidgets);
     expect(find.text('تخطي الفيديو'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('review edit returns to basics and retains the full draft', (
+    tester,
+  ) async {
+    configurePhoneViewport(tester);
+    final property = PropertyDetailsModel.fromJson(
+      repository._propertyDetailsJson('review-property'),
+    );
+    await tester.pumpWidget(
+      buildScreen(OwnerPropertyFlowScreen(property: property)),
+    );
+    await tester.pumpAndSettle();
+    await openEditReview(tester);
+    final before = tester
+        .widget<PropertyReviewSheet>(find.byType(PropertyReviewSheet))
+        .form;
+    final edit = find.byTooltip(
+      '${LocaleKeys.editData}: ${LocaleKeys.ownerPropertyReviewBasics}',
+    );
+    await tester.ensureVisible(edit);
+    await tester.tap(edit);
+    await tester.pumpAndSettle();
+    expect(find.byType(PropertyReviewSheet), findsNothing);
+    final titleField = find.byWidgetPredicate(
+      (widget) =>
+          widget is TextField && widget.controller?.text == before.title,
+    );
+    await tester.enterText(titleField, 'Updated listing title');
+    await tester.pumpAndSettle();
+    await openEditReview(tester);
+    final after = tester
+        .widget<PropertyReviewSheet>(find.byType(PropertyReviewSheet))
+        .form;
+    expect(after.title, 'Updated listing title');
+    expect(after.photoDrafts, before.photoDrafts);
+    expect(after.monthlyPrice, before.monthlyPrice);
+    expect(after.amenities, before.amenities);
+    expect(after.ownershipProofUrl, before.ownershipProofUrl);
+    expect(repository.updateRequestCount, 0);
     expect(tester.takeException(), isNull);
   });
 

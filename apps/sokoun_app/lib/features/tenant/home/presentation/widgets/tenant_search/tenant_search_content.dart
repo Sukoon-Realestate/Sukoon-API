@@ -10,7 +10,7 @@ import 'package:sokoun_app/features/tenant/home/data/models/tenant_search_conten
 import 'package:sokoun_app/shared_widgets/property_filter_button.dart';
 
 import 'available_places_section.dart';
-import 'recent_search_row.dart';
+import 'recent_searches_section.dart';
 import 'search_property_types_section.dart';
 import 'search_section_title.dart';
 import 'tenant_search_field.dart';
@@ -54,6 +54,7 @@ class TenantSearchContentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -98,14 +99,10 @@ class TenantSearchContentView extends StatelessWidget {
             selectedArea: form.selectedArea,
             onAreaSelected: onAreaSelected,
           ),
-          18.szH,
-          SearchSectionTitle(LocaleKeys.tenantSearchRecentSearches),
-          6.szH,
-          for (final search in recentSearches)
-            RecentSearchRow(
-              search: search,
-              onTap: () => onRecentSearchSelected(search),
-            ),
+          RecentSearchesSection(
+            searches: recentSearches,
+            onSelected: onRecentSearchSelected,
+          ),
           24.szH,
         ],
       ),

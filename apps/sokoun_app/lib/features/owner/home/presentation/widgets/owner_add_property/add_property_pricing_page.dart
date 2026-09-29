@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:sokoun_app/shared_widgets/localized_digits_formatter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -133,7 +133,7 @@ class _PriceSection extends StatelessWidget {
             controller: monthlyPriceController,
             onChanged: onMonthlyPriceChanged,
             keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            inputFormatters: [const LocalizedDigitsFormatter()],
             suffix: AppText(
               LocaleKeys.ownerAddPropertyCurrency,
               color: AppColors.sokoonGray,
@@ -186,7 +186,7 @@ class _RentalPeriodSection extends StatelessWidget {
                   controller: rentalDurationController,
                   onChanged: onRentalDurationChanged,
                   keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  inputFormatters: [const LocalizedDigitsFormatter()],
                 ),
               ),
               10.szW,

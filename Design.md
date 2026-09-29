@@ -381,6 +381,11 @@ Use the shared `Go` navigation helper instead of calling `Navigator` directly.
 
 - Selection cards: approximately `180ms`
 - Other selection, expansion, and state feedback: `150ms` to `250ms`
+- Use `SokounReveal` for a one-time `320ms` fade and short slide on coherent
+  content sections; stagger neighboring sections by at most `160ms` total.
+  Do not replay entrances when a field changes or animate every scrolling row.
+- Long property descriptions and changing history sections expand/collapse in
+  `260ms`; active filters and inline validation resize in `240ms`.
 - Async actions: use the shared loading button behavior
 - Use motion to explain a state change, not as decoration
 - Use `SokounMotion.duration(context)` for app-owned transitions; duration is
