@@ -12,6 +12,7 @@ import 'package:melos_core/config/res/config_imports.dart' show injector;
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/network/account_session.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:melos_core/core/widgets/retry_view.dart';
@@ -21,6 +22,7 @@ import 'package:sokoun_app/features/tenant/home/data/models/home_page_model.dart
 import 'package:sokoun_app/features/tenant/home/data/tenant_home_data.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_home_screen.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_widgets/imports.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_widgets/home_property_item.dart';
 import 'helpers/home_page_test_dependencies.dart';
 
 void main() {
@@ -125,6 +127,64 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets(
+    'greeting, search, banner, heading and properties scroll together',
+    (tester) async {
+      await _pumpHome(tester);
+      repository.requests.last.complete(
+        _page(List.generate(20, (i) => 'item-$i'), banner: 'visit'),
+      );
+      await tester.pumpAndSettle();
+
+      final sections = [
+        find.byType(TenantHomeAppBarTitle),
+        find.byType(HomeSearchBox),
+        find.byType(TenantVisitBanner),
+        find.byType(HomeSectionHeader),
+        find.byType(HomePropertyItem).first,
+      ];
+      final scrollable = Scrollable.of(tester.element(sections.first));
+      for (final section in sections) {
+        expect(Scrollable.of(tester.element(section)), same(scrollable));
+      }
+      final initialTops = [
+        for (final section in sections) tester.getTopLeft(section).dy,
+      ];
+      await tester.drag(find.byType(HomeSearchBox), const Offset(0, -180));
+      await tester.pumpAndSettle();
+
+      expect(scrollable.position.pixels, greaterThan(0));
+      for (int index = 0; index < sections.length; index++) {
+        expect(
+          initialTops[index] - tester.getTopLeft(sections[index]).dy,
+          closeTo(scrollable.position.pixels, 0.1),
+        );
+      }
+      expect(repository.requests, hasLength(1));
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('pulling down on the header refreshes an empty result', (
+    tester,
+  ) async {
+    await _pumpHome(tester);
+    repository.requests.last.complete(_page([]));
+    await tester.pumpAndSettle();
+
+    await tester.drag(find.byType(HomeSearchBox), const Offset(0, 350));
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    expect(repository.requests, hasLength(2));
+    repository.requests.last.complete(_page(['refreshed']));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(HomePropertyItem), findsOneWidget);
+    expect(find.byType(TenantHomeAppBarTitle), findsOneWidget);
+    expect(find.byType(HomeSearchBox), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets(
     'loads the next page and resizing keeps items without a new request',
@@ -234,6 +294,7 @@ Future<void> _pumpHome(WidgetTester tester) async {
         enableScaleText: () => false,
         fontSizeResolver: (size, _) => size.toDouble(),
         builder: (context, _) => MaterialApp(
+          navigatorKey: Go.navigatorKey,
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,
           locale: context.locale,

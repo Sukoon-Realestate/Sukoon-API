@@ -9,11 +9,9 @@ import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:pagify/pagify.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/home_page_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/tenant_home_data.dart';
-import 'home_search_box.dart';
-import 'home_section_header.dart';
 import 'home_property_item.dart';
+import 'tenant_home_header.dart';
 import 'tenant_suggested_properties_empty_state.dart';
-import 'tenant_visit_banner.dart';
 
 class TenantHomeContent extends StatefulWidget {
   const TenantHomeContent({super.key});
@@ -64,66 +62,40 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
   }
 
   @override
-  Widget build(BuildContext context) => Column(
-    crossAxisAlignment: CrossAxisAlignment.stretch,
-    children: [
-      Padding(
-        padding: EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 8.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const HomeSearchBox(),
-            ValueListenableBuilder<bool>(
-              valueListenable: _showBanner,
-              builder: (context, visible, _) => visible
-                  ? Padding(
-                      padding: EdgeInsets.only(top: 16.h),
-                      child: const TenantVisitBanner(),
-                    )
-                  : const SizedBox.shrink(),
-            ),
-            SizedBox(height: 12.h),
-            const HomeSectionHeader(),
-          ],
+  Widget build(BuildContext context) => RefreshIndicator(
+    onRefresh: _refresh,
+    child: Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      child: AppPagify<HomePropertyModel>(
+        pagifyController: _controller,
+        asyncCall: _getPage,
+        shrinkWrap: false,
+        physics: const AlwaysScrollableScrollPhysics(),
+        rankingType: Ranking.adaptiveGrid,
+        header: ValueListenableBuilder<bool>(
+          valueListenable: _showBanner,
+          builder: (context, visible, _) =>
+              TenantHomeHeader(showBanner: visible),
         ),
-      ),
-      Expanded(
-        child: RefreshIndicator(
-          onRefresh: _refresh,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
-            child: AppPagify<HomePropertyModel>(
-              pagifyController: _controller,
-              asyncCall: _getPage,
-              shrinkWrap: false,
-              physics: const AlwaysScrollableScrollPhysics(),
-              rankingType: Ranking.adaptiveGrid,
-              cacheKey: TenantHomeData.cacheKey,
-              cacheToJson: (item) => item.toJson(),
-              cacheFromJson: HomePropertyModel.fromJson,
-              onUpdateStatus: (status) {
-                if (status.isSuccess ||
-                    status.isError ||
-                    status.isNetworkError) {
-                  _completeRefresh();
-                }
-              },
-              emptyListView: const TenantSuggestedPropertiesEmptyState(),
-              errorBuilder: (error) => SingleChildScrollView(
-                child: ExceptionView(
-                  msg: error.msg,
-                  onRetry: () async => _controller.retry(),
-                ),
-              ),
-              loadingBuilder: const CustomShimmer(
-                child: HomePropertyItem(property: HomePropertyModel.initial()),
-              ),
-              itemBuilder: (context, data, index, item) =>
-                  HomePropertyItem(property: item),
-            ),
-          ),
+        cacheKey: TenantHomeData.cacheKey,
+        cacheToJson: (item) => item.toJson(),
+        cacheFromJson: HomePropertyModel.fromJson,
+        onUpdateStatus: (status) {
+          if (status.isSuccess || status.isError || status.isNetworkError) {
+            _completeRefresh();
+          }
+        },
+        emptyListView: const TenantSuggestedPropertiesEmptyState(),
+        errorBuilder: (error) => ExceptionView(
+          msg: error.msg,
+          onRetry: () async => _controller.retry(),
         ),
+        loadingBuilder: const CustomShimmer(
+          child: HomePropertyItem(property: HomePropertyModel.initial()),
+        ),
+        itemBuilder: (context, data, index, item) =>
+            HomePropertyItem(property: item),
       ),
-    ],
+    ),
   );
 }

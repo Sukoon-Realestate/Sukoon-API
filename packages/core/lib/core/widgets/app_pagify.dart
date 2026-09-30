@@ -46,6 +46,9 @@ class AppPagify<T> extends StatefulWidget {
   final FutureOr<void> Function(PagifyAsyncCallStatus)? onUpdateStatus;
   final bool shrinkWrap;
   final Widget? emptyListView;
+
+  /// Scrolls above list/adaptive-grid content, including loading and errors.
+  final Widget? header;
   final bool isReverse;
   final double? cacheExtent;
   final double? itemExtent;
@@ -80,6 +83,7 @@ class AppPagify<T> extends StatefulWidget {
     this.onUpdateStatus,
     this.shrinkWrap = true,
     this.emptyListView,
+    this.header,
     this.isReverse = false,
     this.cacheExtent,
     this.itemExtent,
@@ -94,7 +98,8 @@ class AppPagify<T> extends StatefulWidget {
     this.cacheKey,
     this.cacheToJson,
     this.cacheFromJson,
-  });
+  }) : assert(header == null || rankingType != Ranking.gridView),
+       assert(header == null || itemExtent == null);
 
   @override
   State<AppPagify<T>> createState() => _AppPagifyState<T>();
@@ -150,11 +155,82 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
 
   Widget _buildErrorView(PagifyException error) {
     final PagifyException requestError = _resolveError(error);
-    return widget.errorBuilder?.call(requestError) ??
-        ExceptionView(
-          msg: requestError.msg,
-          onRetry: () async => widget.pagifyController.retry(),
-        );
+    return _buildStateView(
+      widget.errorBuilder?.call(requestError) ??
+          ExceptionView(
+            msg: requestError.msg,
+            onRetry: () async => widget.pagifyController.retry(),
+          ),
+    );
+  }
+
+  Widget _buildStateView(Widget child) {
+    final Widget? header = widget.header;
+    if (header == null) return child;
+    return ListView(
+      padding: EdgeInsets.zero,
+      physics: widget.physics,
+      shrinkWrap: widget.shrinkWrap,
+      children: [header, child],
+    );
+  }
+
+  Widget get _loadingView => Builder(
+    builder: (context) {
+      final Widget loading =
+          widget.loadingBuilder ?? CustomLoading.showLoadingView();
+      // Pagify uses this same widget for its first load and pagination footer.
+      return widget.pagifyController.items.isEmpty
+          ? _buildStateView(loading)
+          : loading;
+    },
+  );
+
+  Widget get _emptyView => _buildStateView(
+    widget.emptyListView ??
+        Center(child: Column(children: [AppText(LocaleKeys.notFound)])),
+  );
+
+  Widget _buildListItem(
+    BuildContext context,
+    List<T> data,
+    int index,
+    T item,
+    int columns,
+  ) {
+    late final Widget row;
+    if (widget.rankingType == Ranking.adaptiveGrid) {
+      if (index % columns != 0) return const SizedBox.shrink();
+      row = Padding(
+        padding: EdgeInsets.only(bottom: widget.gridSpacing),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (int column = 0; column < columns; column++) ...[
+              if (column > 0) SizedBox(width: widget.gridSpacing),
+              Expanded(
+                child: index + column < data.length
+                    ? widget.itemBuilder(
+                        context,
+                        data,
+                        index + column,
+                        data[index + column],
+                      )
+                    : const SizedBox.shrink(),
+              ),
+            ],
+          ],
+        ),
+      );
+    } else {
+      row = widget.itemBuilder(context, data, index, item);
+    }
+    final Widget? header = widget.header;
+    if (index != 0 || header == null) return row;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [header, row],
+    );
   }
 
   Future<void> _onError(
@@ -235,20 +311,10 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
         onConnectivityChanged: widget.onConnectivityChanged,
         onUpdateStatus: widget.onUpdateStatus,
         shrinkWrap: widget.shrinkWrap,
-        emptyListView:
-            widget.emptyListView ??
-            Center(
-              child: Column(
-                children: [
-                  // Lottie.asset(Assets.lottie.notFound2.path),
-                  AppText(LocaleKeys.notFound),
-                ],
-              ),
-            ),
+        emptyListView: _emptyView,
         controller: widget.pagifyController,
         asyncCall: _loadPage,
-        loadingBuilder:
-            widget.loadingBuilder ?? CustomLoading.showLoadingView(),
+        loadingBuilder: _loadingView,
         mapper: (data) => PagifyData(
           data: data.$1,
           paginationData: PaginationData(
@@ -276,32 +342,8 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
         cacheFromJson: hasCacheConfig ? widget.cacheFromJson : null,
         onSaveCache: hasCacheConfig ? onSaveCache : null,
         onReadCache: hasCacheConfig ? onReadCache : null,
-        itemBuilder: widget.rankingType != Ranking.adaptiveGrid
-            ? widget.itemBuilder
-            : (context, data, index, item) {
-                if (index % columns != 0) return const SizedBox.shrink();
-                return Padding(
-                  padding: EdgeInsets.only(bottom: widget.gridSpacing),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      for (int column = 0; column < columns; column++) ...[
-                        if (column > 0) SizedBox(width: widget.gridSpacing),
-                        Expanded(
-                          child: index + column < data.length
-                              ? widget.itemBuilder(
-                                  context,
-                                  data,
-                                  index + column,
-                                  data[index + column],
-                                )
-                              : const SizedBox.shrink(),
-                        ),
-                      ],
-                    ],
-                  ),
-                );
-              },
+        itemBuilder: (context, data, index, item) =>
+            _buildListItem(context, data, index, item, columns),
       );
     } else {
       return Pagify<(List<T>, PaginationData), T>.gridView(
@@ -321,20 +363,10 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
         childAspectRatio: widget.childAspectRatio,
         mainAxisSpacing: widget.gridSpacing,
         crossAxisSpacing: widget.gridSpacing,
-        emptyListView:
-            widget.emptyListView ??
-            Center(
-              child: Column(
-                children: [
-                  // Lottie.asset(Assets.lottie.notFound2.path),
-                  AppText(LocaleKeys.notFound),
-                ],
-              ),
-            ),
+        emptyListView: _emptyView,
         controller: widget.pagifyController,
         asyncCall: _loadPage,
-        loadingBuilder:
-            widget.loadingBuilder ?? CustomLoading.showLoadingView(),
+        loadingBuilder: _loadingView,
         mapper: (data) => PagifyData(
           data: data.$1,
           paginationData: PaginationData(
