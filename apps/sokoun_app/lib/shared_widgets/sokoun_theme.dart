@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/buttons/app_control_theme.dart';
+import 'package:melos_core/core/widgets/pull_refresher_theme.dart';
+
+import 'sokoun_refresh_indicator.dart';
 
 abstract final class SokounTheme {
   static ThemeData get light {
@@ -31,7 +34,10 @@ abstract final class SokounTheme {
       scaffoldBackgroundColor: AppColors.scaffoldBackground,
       visualDensity: VisualDensity.standard,
       materialTapTargetSize: MaterialTapTargetSize.padded,
-      extensions: const [AppControlTheme()],
+      extensions: const [
+        AppControlTheme(),
+        PullRefresherTheme(indicatorBuilder: SokounRefreshIndicator.builder),
+      ],
       textTheme: TextTheme(
         headlineSmall: text(AppTextStyles.bold, size: 24),
         titleLarge: text(AppTextStyles.bold, size: 22),

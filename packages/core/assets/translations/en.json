@@ -1,4 +1,7 @@
 {
+  "pull_refresh_hint": "Pull to refresh",
+  "pull_refresh_release": "Release to refresh",
+  "pull_refresh_loading": "Refreshing",
   "owner_property_video_duration_invalid": "Use a video between 1 and 60 seconds",
   "kyc_existing_documents_hint": "Upload only missing or replacement documents. Documents already saved do not need to be uploaded again.",
   "kyc_optional_selfie": "Optional selfie photo",

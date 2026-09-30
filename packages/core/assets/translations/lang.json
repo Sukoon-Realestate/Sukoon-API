@@ -1,4 +1,7 @@
 {
+  "pullRefreshHint #$ Pull to refresh": "اسحب للتحديث",
+  "pullRefreshRelease #$ Release to refresh": "أفلت للتحديث",
+  "pullRefreshLoading #$ Refreshing": "جارٍ التحديث",
   "ownerPropertyVideoDurationInvalid #$ Use a video between 1 and 60 seconds": "اختر فيديو مدته من ثانية إلى 60 ثانية",
   "kycExistingDocumentsHint #$ Upload only missing or replacement documents. Documents already saved do not need to be uploaded again.": "ارفع المستندات الناقصة أو البديلة فقط. لا تحتاج لإعادة رفع المستندات المحفوظة.",
   "kycOptionalSelfie #$ Optional selfie photo": "صورة شخصية (اختياري)",

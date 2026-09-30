@@ -1,6 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 
 abstract class LocaleKeys {
+  static const String _pullRefreshHint = 'pull_refresh_hint';
+  static String get pullRefreshHint => _pullRefreshHint.tr();
+
+  static const String _pullRefreshRelease = 'pull_refresh_release';
+  static String get pullRefreshRelease => _pullRefreshRelease.tr();
+
+  static const String _pullRefreshLoading = 'pull_refresh_loading';
+  static String get pullRefreshLoading => _pullRefreshLoading.tr();
+
   static const String _ownerPropertyVideoDurationInvalid = 'owner_property_video_duration_invalid';
   static String get ownerPropertyVideoDurationInvalid => _ownerPropertyVideoDurationInvalid.tr();
 

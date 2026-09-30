@@ -1,4 +1,7 @@
 {
+  "pull_refresh_hint": "اسحب للتحديث",
+  "pull_refresh_release": "أفلت للتحديث",
+  "pull_refresh_loading": "جارٍ التحديث",
   "owner_property_video_duration_invalid": "اختر فيديو مدته من ثانية إلى 60 ثانية",
   "kyc_existing_documents_hint": "ارفع المستندات الناقصة أو البديلة فقط. لا تحتاج لإعادة رفع المستندات المحفوظة.",
   "kyc_optional_selfie": "صورة شخصية (اختياري)",
