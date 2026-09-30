@@ -124,13 +124,13 @@ class _OwnerPropertyRejectionScreenState
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 9.w,
                 children: [
                   Icon(
                     Icons.info_outline_rounded,
                     color: AppColors.amber,
                     size: 21.r,
                   ),
-                  9.szW,
                   Expanded(
                     child: AppText(
                       LocaleKeys.ownerPropertyRejectionWarning,

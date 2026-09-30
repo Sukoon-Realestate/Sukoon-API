@@ -17,6 +17,7 @@ class OwnerRequestInfoCard extends StatelessWidget {
       child: Column(
         children: [
           Row(
+            spacing: 12.w,
             children: [
               Container(
                 width: 56.r,
@@ -46,12 +47,12 @@ class OwnerRequestInfoCard extends StatelessWidget {
                         size: 27.r,
                       ),
               ),
-              12.szW,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      spacing: 7.w,
                       children: [
                         Flexible(
                           child: AppText(
@@ -65,10 +66,8 @@ class OwnerRequestInfoCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        if (request.tenant.isVerified) ...[
-                          7.szW,
+                        if (request.tenant.isVerified)
                           const OwnerVerifiedBadge(),
-                        ],
                       ],
                     ),
                     4.szH,
@@ -178,6 +177,7 @@ class _OwnerRequestInfoRow extends StatelessWidget {
             : null,
       ),
       child: Row(
+        spacing: 12.w,
         children: [
           AppText(
             label,
@@ -187,7 +187,6 @@ class _OwnerRequestInfoRow extends StatelessWidget {
               height: 1.45,
             ),
           ),
-          12.szW,
           Expanded(
             child: AppText(
               value,

@@ -4,9 +4,9 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:melos_core/core/widgets/buttons/default_button.dart';
+import 'package:melos_core/core/widgets/buttons/retry_button.dart';
 
-class AppRetryView extends StatefulWidget {
+class AppRetryView extends StatelessWidget {
   const AppRetryView({
     super.key,
     required this.onRetry,
@@ -17,29 +17,6 @@ class AppRetryView extends StatefulWidget {
   final bool isConnectionError;
 
   @override
-  State<AppRetryView> createState() => _AppRetryViewState();
-}
-
-class _AppRetryViewState extends State<AppRetryView> {
-  final ValueNotifier<bool> _isRetrying = ValueNotifier<bool>(false);
-
-  Future<void> _retry() async {
-    if (_isRetrying.value) return;
-    _isRetrying.value = true;
-    try {
-      await widget.onRetry();
-    } finally {
-      if (mounted) _isRetrying.value = false;
-    }
-  }
-
-  @override
-  void dispose() {
-    _isRetrying.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Center(
       child: SingleChildScrollView(
@@ -48,7 +25,7 @@ class _AppRetryViewState extends State<AppRetryView> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              widget.isConnectionError
+              isConnectionError
                   ? Icons.cloud_off_outlined
                   : Icons.error_outline,
               color: AppColors.sokoonMuted,
@@ -62,7 +39,7 @@ class _AppRetryViewState extends State<AppRetryView> {
               fontWeight: FontWeight.w900,
               textAlign: TextAlign.center,
             ),
-            if (widget.isConnectionError) ...[
+            if (isConnectionError) ...[
               6.szH,
               AppText(
                 LocaleKeys.checkInternet,
@@ -72,26 +49,7 @@ class _AppRetryViewState extends State<AppRetryView> {
               ),
             ],
             18.szH,
-            ValueListenableBuilder<bool>(
-              valueListenable: _isRetrying,
-              builder: (context, isRetrying, _) => DefaultButton(
-                onTap: isRetrying ? null : _retry,
-                title: LocaleKeys.ownerRetryAction,
-                width: 160.w,
-                color: AppColors.sokoonTeal,
-                textColor: AppColors.white,
-                borderRadius: BorderRadius.circular(12.r),
-                customChild: isRetrying
-                    ? SizedBox.square(
-                        dimension: 18.r,
-                        child: const CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: AppColors.white,
-                        ),
-                      )
-                    : null,
-              ),
-            ),
+            RetryButton(onRetry: onRetry),
           ],
         ),
       ),

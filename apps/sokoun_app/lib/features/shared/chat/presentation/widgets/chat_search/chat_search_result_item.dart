@@ -32,13 +32,13 @@ class ChatSearchResultItem extends StatelessWidget {
       onTap: _openConversation,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 12.w,
         children: [
           ChatParticipantAvatar(
             name: conversation.name,
             avatarUrl: conversation.otherParticipant.avatarUrl,
             size: 40.r,
           ),
-          12.szW,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

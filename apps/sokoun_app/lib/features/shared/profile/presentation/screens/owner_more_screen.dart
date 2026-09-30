@@ -66,6 +66,7 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 2.h),
                     child: Row(
+                      spacing: 12.w,
                       children: [
                         ProfileAvatar(
                           name: userName,
@@ -73,10 +74,10 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
                           backgroundColor: AppColors.goldPale,
                           size: 52,
                         ),
-                        12.szW,
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            spacing: 3.h,
                             children: [
                               Row(
                                 children: [
@@ -94,7 +95,6 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
                                   ),
                                 ],
                               ),
-                              3.szH,
                               AppText(
                                 LocaleKeys.profileViewPersonalProfile,
                                 style: AppTextStyles.regular12.copyWith(

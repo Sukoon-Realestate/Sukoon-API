@@ -44,6 +44,7 @@ class _VisitSummaryRow extends StatelessWidget {
     return ConstrainedBox(
       constraints: BoxConstraints(minHeight: 43.h),
       child: Row(
+        spacing: 12.w,
         children: [
           Expanded(
             child: AppText(
@@ -57,7 +58,6 @@ class _VisitSummaryRow extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          12.szW,
           AppText(
             row.label,
             style: AppTextStyles.regular12.copyWith(

@@ -27,13 +27,13 @@ class VideoRequirementsCard extends StatelessWidget {
           for (int index = 0; index < requirements.length; index++) ...[
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 8.w,
               children: [
                 Icon(
                   Icons.check_rounded,
                   color: AppColors.sokoonTeal,
                   size: 16.r,
                 ),
-                8.szW,
                 Expanded(
                   child: AppText(
                     requirements[index],
@@ -64,13 +64,13 @@ class VideoRequirementsCard extends StatelessWidget {
               border: Border.all(color: AppColors.goldAlpha15),
             ),
             child: Row(
+              spacing: 8.w,
               children: [
                 Icon(
                   Icons.schedule_rounded,
                   color: AppColors.brown,
                   size: 16.r,
                 ),
-                8.szW,
                 Expanded(
                   child: AppText(
                     LocaleKeys.ownerPropertyVideoMaximumDuration,

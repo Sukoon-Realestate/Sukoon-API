@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
@@ -35,15 +34,14 @@ class AddPropertyChip extends StatelessWidget {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
+          spacing: 4.w,
           children: [
-            if (chip.isSelected && showCheck) ...[
+            if (chip.isSelected && showCheck)
               Icon(
                 Icons.check_rounded,
                 color: AppColors.sokoonTeal,
                 size: 14.r,
               ),
-              4.szW,
-            ],
             AppText(
               chip.label,
               style: AppTextStyles.bold12.copyWith(

@@ -29,9 +29,9 @@ class AppFacebookSignInButton extends StatelessWidget {
       customChild: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
+        spacing: 10.w,
         children: [
           Icon(Icons.facebook, color: AppColors.facebookBlue, size: 20.r),
-          SizedBox(width: 10.w),
           Flexible(
             child: AppText(
               LocaleKeys.continueWithFacebook,

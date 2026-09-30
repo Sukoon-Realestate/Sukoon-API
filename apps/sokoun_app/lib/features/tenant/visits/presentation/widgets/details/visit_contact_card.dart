@@ -16,6 +16,7 @@ class VisitContactCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 10.h,
         children: [
           AppText(
             LocaleKeys.tenantVisitContactInfo,
@@ -25,7 +26,6 @@ class VisitContactCard extends StatelessWidget {
               height: 1.45,
             ),
           ),
-          10.szH,
           Container(
             padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 11.h),
             decoration: BoxDecoration(
@@ -33,12 +33,13 @@ class VisitContactCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(14.r),
             ),
             child: Row(
+              spacing: 9.w,
               children: [
                 Icon(Icons.phone_outlined, color: AppColors.green, size: 16.r),
-                9.szW,
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 3.h,
                     children: [
                       AppText(
                         LocaleKeys.tenantVisitOwnerPhoneConfirmed,
@@ -49,7 +50,6 @@ class VisitContactCard extends StatelessWidget {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      3.szH,
                       AppText(
                         ownerPhone,
                         style: AppTextStyles.bold15.copyWith(

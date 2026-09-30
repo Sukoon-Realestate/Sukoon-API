@@ -62,9 +62,9 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
+                    spacing: 32.h,
                     children: [
                       const LanguageSelectionIntro(),
-                      32.szH,
                       ValueListenableBuilder<Languages>(
                         valueListenable: _selectedLanguage,
                         builder: (context, selectedLanguage, _) =>
@@ -74,7 +74,6 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                                   _selectedLanguage.value = language,
                             ),
                       ),
-                      32.szH,
                       DecoratedBox(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12.r),

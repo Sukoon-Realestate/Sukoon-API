@@ -36,6 +36,7 @@ class OwnerRevenueScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(22.r),
               ),
               child: Column(
+                spacing: 8.h,
                 children: [
                   AppText(
                     LocaleKeys.ownerRevenueThisMonth,
@@ -45,7 +46,6 @@ class OwnerRevenueScreen extends StatelessWidget {
                       height: 1.45,
                     ),
                   ),
-                  8.szH,
                   AppText(
                     '${_formatNumber(totalThisMonth)} ${LocaleKeys.ownerRevenueCurrency}',
                     style: AppTextStyles.extraBold.copyWith(
@@ -53,7 +53,6 @@ class OwnerRevenueScreen extends StatelessWidget {
                       fontSize: 30.sp,
                     ),
                   ),
-                  8.szH,
                   Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: 10.w,

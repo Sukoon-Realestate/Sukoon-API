@@ -59,15 +59,14 @@ class WhatsNewSheet extends StatelessWidget {
                   child: SingleChildScrollView(
                     padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 16.h),
                     child: Column(
+                      spacing: 20.h,
                       children: [
                         _WhatsNewHeader(version: version),
-                        20.szH,
                         const Divider(
                           height: 1,
                           thickness: 1,
                           color: AppColors.border,
                         ),
-                        20.szH,
                         _FeaturesList(items: items),
                       ],
                     ),
@@ -220,12 +219,13 @@ class _FeaturesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      spacing: 16.h,
       children: items.indexed
           .map(
             ((int, String) entry) => _FeatureItem(
               title: entry.$2,
               visual: _visuals[entry.$1 % _visuals.length],
-            ).paddingOnly(bottom: entry.$1 == items.length - 1 ? 0 : 16.h),
+            ),
           )
           .toList(),
     );
@@ -242,6 +242,7 @@ class _FeatureItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 12.w,
       children: [
         Container(
           width: 40.r,
@@ -253,7 +254,6 @@ class _FeatureItem extends StatelessWidget {
           ),
           child: Icon(visual.icon, size: 19.r, color: visual.foregroundColor),
         ),
-        12.szW,
         Expanded(
           child: AppText(
             title,

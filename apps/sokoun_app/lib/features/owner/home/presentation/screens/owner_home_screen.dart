@@ -19,18 +19,16 @@ class OwnerHomeScreen extends StatefulWidget {
 
 class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
   late final OwnerDashboardCubit _ownerDashboardCubit;
-  late Future<void> _ownerDashboardRequest;
 
   @override
   void initState() {
     super.initState();
     _ownerDashboardCubit = OwnerDashboardCubit();
-    _ownerDashboardRequest = _ownerDashboardCubit.getDashboard();
+    _ownerDashboardCubit.getDashboard();
   }
 
   Future<void> _refreshDashboard() async {
     final Future<void> request = _ownerDashboardCubit.getDashboard();
-    _ownerDashboardRequest = request;
     await request;
   }
 
@@ -63,7 +61,6 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
                 OwnerDashboardModel
               >.withShimmer(
                 initialDataForShimmer: const OwnerDashboardModel.initial(),
-                requestToTryAgainWhenError: _ownerDashboardRequest,
                 onRetry: _refreshDashboard,
                 builder: (dashboard) => OwnerDashboardContent(
                   dashboard: dashboard,

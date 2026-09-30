@@ -24,7 +24,6 @@ class SearchPropertyTypesSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return StatusBuilder<PropertyTypesCubit, PropertyTypesModel>.withShimmer(
       initialDataForShimmer: const PropertyTypesModel.initial(),
-      requestToTryAgainWhenError: requestToTryAgainWhenError,
       onRetry: context.read<PropertyTypesCubit>().getPropertyTypes,
       errorType: ErrorType.defaultView,
       builder: (data) => data.results.isEmpty

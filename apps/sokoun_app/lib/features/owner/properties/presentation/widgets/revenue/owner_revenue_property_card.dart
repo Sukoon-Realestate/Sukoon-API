@@ -33,6 +33,7 @@ class OwnerRevenuePropertyCard extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 5.h,
               children: [
                 AppText(
                   item.title,
@@ -44,7 +45,6 @@ class OwnerRevenuePropertyCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                5.szH,
                 AppText(
                   item.dueDate,
                   style: AppTextStyles.regular11.copyWith(
@@ -59,6 +59,7 @@ class OwnerRevenuePropertyCard extends StatelessWidget {
           10.szW,
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
+            spacing: 5.h,
             children: [
               AppText(
                 '${_formatNumber(item.amount)} '
@@ -68,7 +69,6 @@ class OwnerRevenuePropertyCard extends StatelessWidget {
                   fontSize: 14.sp,
                 ),
               ),
-              5.szH,
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                 decoration: BoxDecoration(

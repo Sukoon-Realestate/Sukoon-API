@@ -50,6 +50,7 @@ class ProfileMenuTile extends StatelessWidget {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 2.h,
                 children: [
                   AppText(
                     label,
@@ -59,8 +60,7 @@ class ProfileMenuTile extends StatelessWidget {
                       height: 1.45,
                     ),
                   ),
-                  if (subtitle != null) ...[
-                    2.szH,
+                  if (subtitle != null)
                     AppText(
                       subtitle!,
                       style: AppTextStyles.regular11.copyWith(
@@ -69,7 +69,6 @@ class ProfileMenuTile extends StatelessWidget {
                         height: 1.45,
                       ),
                     ),
-                  ],
                 ],
               ),
             ),

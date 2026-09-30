@@ -24,16 +24,17 @@ class TenantIdentityVerificationCard extends StatelessWidget {
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 10.w,
         children: [
           Icon(
             isVerified ? Icons.verified_outlined : Icons.badge_outlined,
             color: accentColor,
             size: 22.r,
           ),
-          10.szW,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 3.h,
               children: [
                 Row(
                   children: [
@@ -70,7 +71,6 @@ class TenantIdentityVerificationCard extends StatelessWidget {
                       ),
                   ],
                 ),
-                3.szH,
                 AppText(
                   verification.subtitle,
                   style: AppTextStyles.regular11.copyWith(

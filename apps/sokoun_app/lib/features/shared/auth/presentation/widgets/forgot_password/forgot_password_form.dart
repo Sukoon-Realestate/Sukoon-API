@@ -88,6 +88,7 @@ class ForgotPasswordForm extends StatelessWidget {
           18.szH,
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 4.w,
             children: [
               Flexible(
                 child: AppText(
@@ -99,7 +100,6 @@ class ForgotPasswordForm extends StatelessWidget {
                   ),
                 ),
               ),
-              4.szW,
               TextButton(
                 onPressed: onBackToLogin,
                 style: TextButton.styleFrom(

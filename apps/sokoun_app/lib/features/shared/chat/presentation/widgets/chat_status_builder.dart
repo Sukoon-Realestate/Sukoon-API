@@ -25,7 +25,6 @@ class ChatStatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StatusBuilder<C, T>.withShimmer(
-      requestToTryAgainWhenError: request,
       onRetry: onRetry,
       initialDataForShimmer: initialData,
       emptyView: emptyView,

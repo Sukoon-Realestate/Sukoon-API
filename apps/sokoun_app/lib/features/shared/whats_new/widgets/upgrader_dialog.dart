@@ -243,6 +243,7 @@ class _VersionBadge extends StatelessWidget {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        spacing: 6.w,
         children: [
           AppText(
             '${LocaleKeys.updateDialogNewVersion}:',
@@ -252,7 +253,6 @@ class _VersionBadge extends StatelessWidget {
               height: 1.45,
             ),
           ),
-          6.szW,
           AppText(
             version,
             style: AppTextStyles.bold11.copyWith(
@@ -296,6 +296,7 @@ class _UpdateButton extends StatelessWidget {
               ? Row(
                   key: const ValueKey('update-loading'),
                   mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 8.w,
                   children: [
                     SizedBox.square(
                       dimension: 16.r,
@@ -305,7 +306,6 @@ class _UpdateButton extends StatelessWidget {
                         backgroundColor: AppColors.white.withValues(alpha: 0.4),
                       ),
                     ),
-                    8.szW,
                     Flexible(
                       child: FittedBox(
                         fit: BoxFit.scaleDown,

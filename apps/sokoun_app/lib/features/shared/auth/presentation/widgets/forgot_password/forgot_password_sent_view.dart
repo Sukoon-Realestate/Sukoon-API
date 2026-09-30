@@ -171,6 +171,7 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
               ValueListenableBuilder<bool>(
                 valueListenable: _canResend,
                 builder: (context, canResend, _) => Column(
+                  spacing: 14.h,
                   children: [
                     AuthResendTimer(
                       canResend: canResend,
@@ -180,7 +181,6 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
                         }
                       },
                     ),
-                    14.szH,
                     IgnorePointer(
                       ignoring: !canResend,
                       child: AppLoadingButton(
@@ -251,6 +251,7 @@ class _RecoveryStep extends StatelessWidget {
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 12.w,
       children: [
         Container(
           width: 34.r,
@@ -269,10 +270,10 @@ class _RecoveryStep extends StatelessWidget {
             ),
           ),
         ),
-        12.szW,
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 3.h,
             children: [
               AppText(
                 title,
@@ -282,7 +283,6 @@ class _RecoveryStep extends StatelessWidget {
                   height: 1.45,
                 ),
               ),
-              3.szH,
               AppText(
                 description,
                 style: AppTextStyles.medium11.copyWith(

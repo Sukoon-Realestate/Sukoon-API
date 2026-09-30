@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
@@ -22,8 +21,10 @@ class TenantPropertyOwnerCard extends StatelessWidget {
         border: Border.all(color: AppColors.sokoonBorder),
       ),
       child: Column(
+        spacing: 12.h,
         children: [
           Row(
+            spacing: 12.w,
             children: [
               Container(
                 width: 44.r,
@@ -39,12 +40,13 @@ class TenantPropertyOwnerCard extends StatelessWidget {
                   size: 22.r,
                 ),
               ),
-              12.szW,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 4.h,
                   children: [
                     Row(
+                      spacing: 6.w,
                       children: [
                         Flexible(
                           child: AppText(
@@ -58,7 +60,6 @@ class TenantPropertyOwnerCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        6.szW,
                         Container(
                           padding: EdgeInsets.symmetric(
                             horizontal: 6.w,
@@ -78,7 +79,6 @@ class TenantPropertyOwnerCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    4.szH,
                     AppText(
                       property.ownerMeta,
                       style: AppTextStyles.medium12.copyWith(
@@ -92,7 +92,6 @@ class TenantPropertyOwnerCard extends StatelessWidget {
               ),
             ],
           ),
-          12.szH,
           Container(
             padding: EdgeInsets.all(10.w),
             decoration: BoxDecoration(
@@ -100,13 +99,13 @@ class TenantPropertyOwnerCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(10.r),
             ),
             child: Row(
+              spacing: 8.w,
               children: [
                 Icon(
                   Icons.lock_outline_rounded,
                   color: AppColors.sokoonGray,
                   size: 16.r,
                 ),
-                8.szW,
                 Expanded(
                   child: AppText(
                     LocaleKeys.tenantPropertyDetailsPhonePrivacy,

@@ -72,17 +72,16 @@ class _OwnerAcceptSummary extends StatelessWidget {
         borderRadius: BorderRadius.circular(14.r),
       ),
       child: Column(
+        spacing: 10.h,
         children: [
           _OwnerAcceptSummaryRow(
             label: LocaleKeys.ownerVisitTenantLabel,
             value: request.name,
           ),
-          10.szH,
           _OwnerAcceptSummaryRow(
             label: LocaleKeys.ownerVisitRequestDate,
             value: request.detailDate,
           ),
-          10.szH,
           _OwnerAcceptSummaryRow(
             label: LocaleKeys.ownerVisitRequestTime,
             value: request.time,
@@ -102,6 +101,7 @@ class _OwnerAcceptSummaryRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      spacing: 12.w,
       children: [
         AppText(
           label,
@@ -111,7 +111,6 @@ class _OwnerAcceptSummaryRow extends StatelessWidget {
             height: 1.45,
           ),
         ),
-        12.szW,
         Expanded(
           child: AppText(
             value,
@@ -164,6 +163,7 @@ class _OwnerDecisionSheetHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      spacing: 10.w,
       children: [
         Container(
           width: 40.r,
@@ -175,10 +175,10 @@ class _OwnerDecisionSheetHeader extends StatelessWidget {
           ),
           child: Icon(icon, color: iconColor, size: 22.r),
         ),
-        10.szW,
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 3.h,
             children: [
               AppText(
                 title,
@@ -188,7 +188,6 @@ class _OwnerDecisionSheetHeader extends StatelessWidget {
                   height: 1.45,
                 ),
               ),
-              3.szH,
               AppText(
                 subtitle,
                 style: AppTextStyles.regular12.copyWith(

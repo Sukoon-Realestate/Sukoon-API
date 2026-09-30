@@ -32,6 +32,7 @@ class TenantSummaryHeaderCard extends StatelessWidget {
       child: Column(
         children: [
           Row(
+            spacing: 14.w,
             children: [
               ProfileAvatar(
                 name: userName,
@@ -41,10 +42,10 @@ class TenantSummaryHeaderCard extends StatelessWidget {
                 size: 56,
                 useInitial: true,
               ),
-              14.szW,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 3.h,
                   children: [
                     AppText(
                       userName,
@@ -55,7 +56,6 @@ class TenantSummaryHeaderCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    3.szH,
                     AppText(
                       membership.isNotEmpty
                           ? membership

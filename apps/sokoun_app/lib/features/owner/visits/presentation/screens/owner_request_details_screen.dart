@@ -13,7 +13,6 @@ class OwnerRequestDetailsScreen extends StatefulWidget {
 class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
   late final OwnerRequestDetailsCubit _requestDetailsCubit;
   late final OwnerVisitStatusCubit _visitStatusCubit;
-  late Future<void> _requestDetailsRequest;
   final ValueNotifier<OwnerVisitUpdateStatus?> _pendingStatus =
       ValueNotifier<OwnerVisitUpdateStatus?>(null);
 
@@ -22,9 +21,7 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
     super.initState();
     _requestDetailsCubit = OwnerRequestDetailsCubit();
     _visitStatusCubit = OwnerVisitStatusCubit();
-    _requestDetailsRequest = _requestDetailsCubit.getRequestDetails(
-      widget.requestId,
-    );
+    _requestDetailsCubit.getRequestDetails(widget.requestId);
   }
 
   @override
@@ -39,7 +36,6 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
     final Future<void> request = _requestDetailsCubit.getRequestDetails(
       widget.requestId,
     );
-    _requestDetailsRequest = request;
     await request;
   }
 
@@ -141,7 +137,6 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
                       >.withShimmer(
                         initialDataForShimmer:
                             const OwnerVisitRequestDetailsContent.initial(),
-                        requestToTryAgainWhenError: _requestDetailsRequest,
                         onRetry: _retryRequestDetails,
                         builder: (request) => OwnerRequestDetailsContent(
                           request: request,

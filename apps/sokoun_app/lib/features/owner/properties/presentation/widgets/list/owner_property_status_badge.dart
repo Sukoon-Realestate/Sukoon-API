@@ -15,9 +15,9 @@ class OwnerPropertyStatusBadge extends StatelessWidget {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        spacing: 4.w,
         children: [
           Icon(status.icon, color: status.foregroundColor, size: 12.r),
-          4.szW,
           AppText(
             status.label,
             style: AppTextStyles.bold12.copyWith(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -19,13 +18,13 @@ class ChatVerifiedBadge extends StatelessWidget {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        spacing: 4.w,
         children: [
           Icon(
             Icons.check_circle_outline_rounded,
             color: AppColors.sokoonGold,
             size: 11.r,
           ),
-          4.szW,
           AppText(
             LocaleKeys.verified,
             style: AppTextStyles.bold10.copyWith(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -32,6 +31,7 @@ class TenantPropertyShareActionRow extends StatelessWidget {
           border: Border.all(color: AppColors.grayPale),
         ),
         child: Row(
+          spacing: 12.w,
           children: [
             Container(
               width: 38.r,
@@ -43,7 +43,6 @@ class TenantPropertyShareActionRow extends StatelessWidget {
               ),
               child: Icon(icon, color: color, size: 18.r),
             ),
-            12.szW,
             AppText(
               label,
               style: AppTextStyles.extraBold.copyWith(

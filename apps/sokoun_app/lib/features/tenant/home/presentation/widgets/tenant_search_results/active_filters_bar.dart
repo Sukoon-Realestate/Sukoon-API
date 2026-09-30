@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_search_result_content.dart';
 
 import 'active_filter_chip.dart';
@@ -37,16 +36,15 @@ class ActiveFiltersBar extends StatelessWidget {
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
+                  spacing: 8.w,
                   children: [
-                    for (final filter in filters) ...[
+                    for (final filter in filters)
                       ActiveFilterChip(
                         filter: filter,
                         onRemove: onFilterRemoved == null
                             ? null
                             : () => onFilterRemoved!(filter),
                       ),
-                      8.szW,
-                    ],
                     if (filters.isNotEmpty) ClearFiltersChip(onTap: onClearAll),
                   ],
                 ),

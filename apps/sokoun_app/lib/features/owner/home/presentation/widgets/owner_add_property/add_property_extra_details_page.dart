@@ -89,6 +89,7 @@ class _OwnershipProofSection extends StatelessWidget {
       subtitle: LocaleKeys.ownerAddPropertyProofSubtitle,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 10.h,
         children: [
           GestureDetector(
             onTap: onProofUploadTap,
@@ -147,7 +148,6 @@ class _OwnershipProofSection extends StatelessWidget {
               ),
             ),
           ),
-          10.szH,
           AddPropertyInfoBanner(
             title: form.isProofUploaded
                 ? LocaleKeys.ownerAddPropertyProofAttached

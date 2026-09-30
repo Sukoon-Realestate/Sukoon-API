@@ -11,13 +11,12 @@ class TenantAccountSummaryScreen extends StatefulWidget {
 class _TenantAccountSummaryScreenState
     extends State<TenantAccountSummaryScreen> {
   late final TenantAccountSummaryCubit _summaryCubit;
-  late final Future<void> _summaryRequest;
 
   @override
   void initState() {
     super.initState();
     _summaryCubit = TenantAccountSummaryCubit();
-    _summaryRequest = _summaryCubit.getSummary();
+    _summaryCubit.getSummary();
   }
 
   @override
@@ -42,7 +41,6 @@ class _TenantAccountSummaryScreenState
               >.withShimmer(
                 initialDataForShimmer:
                     const TenantAccountSummaryContent.initial(),
-                requestToTryAgainWhenError: _summaryRequest,
                 onRetry: _summaryCubit.getSummary,
                 errorType: ErrorType.defaultView,
                 builder: (summary) =>

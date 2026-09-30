@@ -17,6 +17,7 @@ class OwnerProfileHeaderCard extends StatelessWidget {
       child: Column(
         children: [
           Row(
+            spacing: 14.w,
             children: [
               ProfileAvatar(
                 name: userName,
@@ -25,12 +26,12 @@ class OwnerProfileHeaderCard extends StatelessWidget {
                 backgroundColor: AppColors.goldPale,
                 badgeIcon: Icons.check_rounded,
               ),
-              14.szW,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      spacing: 8.w,
                       children: [
                         Flexible(
                           child: AppText(
@@ -43,7 +44,6 @@ class OwnerProfileHeaderCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        8.szW,
                         ProfileVerifiedBadge(
                           text: owner.roleBadge.isNotEmpty
                               ? owner.roleBadge
@@ -54,13 +54,13 @@ class OwnerProfileHeaderCard extends StatelessWidget {
                     ),
                     5.szH,
                     Row(
+                      spacing: 4.w,
                       children: [
                         Icon(
                           Icons.star_rounded,
                           color: AppColors.amber,
                           size: 14.r,
                         ),
-                        4.szW,
                         AppText(
                           owner.ratingLabel.isNotEmpty
                               ? owner.ratingLabel

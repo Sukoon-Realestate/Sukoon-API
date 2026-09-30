@@ -12,6 +12,7 @@ class OwnerReviewsEmptyState extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 8.h),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          spacing: 4.h,
           children: [
             ExcludeSemantics(
               child: Assets.lottie.noData.lottie(
@@ -23,7 +24,6 @@ class OwnerReviewsEmptyState extends StatelessWidget {
                 package: 'melos_core',
               ),
             ),
-            4.szH,
             AppText(
               LocaleKeys.profileNoReviewsTitle,
               style: AppTextStyles.extraBold.copyWith(
@@ -32,7 +32,6 @@ class OwnerReviewsEmptyState extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            4.szH,
             AppText(
               LocaleKeys.profileNoReviewsDescription,
               style: AppTextStyles.regular11.copyWith(

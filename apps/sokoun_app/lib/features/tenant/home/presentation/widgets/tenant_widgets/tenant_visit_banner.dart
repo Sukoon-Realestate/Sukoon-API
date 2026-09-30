@@ -57,6 +57,7 @@ class TenantVisitBanner extends StatelessWidget {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 3.h,
                   children: [
                     AppText(
                       LocaleKeys.tenantVisitBannerTitle,
@@ -68,7 +69,6 @@ class TenantVisitBanner extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    3.szH,
                     AppText(
                       LocaleKeys.tenantVisitBannerProperty,
                       style: AppTextStyles.medium12.copyWith(

@@ -1,6 +1,6 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_search_model.dart';
 
@@ -30,6 +30,7 @@ class FilterPropertyDetailsSection extends StatelessWidget {
       title: LocaleKeys.tenantFilterPropertyDetails,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 12.h,
         children: [
           SingleSelectGroup(
             title: LocaleKeys.tenantFilterBedrooms,
@@ -38,7 +39,6 @@ class FilterPropertyDetailsSection extends StatelessWidget {
             onSelected: (value) =>
                 onFiltersChanged(filters.copyWith(bedrooms: value, page: 1)),
           ),
-          12.szH,
           SingleSelectGroup(
             title: LocaleKeys.tenantFilterBathrooms,
             options: _withAll(filterOptions.bathrooms),
@@ -46,7 +46,6 @@ class FilterPropertyDetailsSection extends StatelessWidget {
             onSelected: (value) =>
                 onFiltersChanged(filters.copyWith(bathrooms: value, page: 1)),
           ),
-          12.szH,
           SingleSelectGroup(
             title: LocaleKeys.tenantFilterPricePeriod,
             options: _withAll(filterOptions.pricePeriods),
@@ -54,7 +53,6 @@ class FilterPropertyDetailsSection extends StatelessWidget {
             onSelected: (value) =>
                 onFiltersChanged(filters.copyWith(pricePeriod: value, page: 1)),
           ),
-          12.szH,
           SingleSelectGroup(
             title: LocaleKeys.tenantFilterSuitableFor,
             options: _withAll(filterOptions.suitableFor),
@@ -62,7 +60,6 @@ class FilterPropertyDetailsSection extends StatelessWidget {
             onSelected: (value) =>
                 onFiltersChanged(filters.copyWith(suitableFor: value, page: 1)),
           ),
-          12.szH,
           SingleSelectGroup(
             title: LocaleKeys.tenantFilterFurnished,
             options: _withAll(filterOptions.booleanOptions),
@@ -70,7 +67,6 @@ class FilterPropertyDetailsSection extends StatelessWidget {
             onSelected: (value) =>
                 onFiltersChanged(filters.copyWith(isFurnished: value, page: 1)),
           ),
-          12.szH,
           SingleSelectGroup(
             title: LocaleKeys.tenantFilterSmoking,
             options: _withAll(filterOptions.booleanOptions),

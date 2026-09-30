@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
@@ -35,13 +34,13 @@ class TenantHomeAppBarTitle extends StatelessWidget {
     ].join(' ');
 
     return Row(
+      spacing: 10.w,
       children: [
         const HomeAvatar(
           icon: Icons.person_outline_rounded,
           backgroundColor: AppColors.mintLight,
           iconColor: AppColors.sokoonTeal,
         ),
-        10.szW,
         Expanded(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -60,7 +59,6 @@ class TenantHomeAppBarTitle extends StatelessWidget {
             ],
           ),
         ),
-        10.szW,
         const NotificationBellButton(role: NotificationRole.tenant),
       ],
     );

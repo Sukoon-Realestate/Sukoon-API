@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/helpers.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -215,6 +214,7 @@ class _AddPropertyVideoPageState extends State<AddPropertyVideoPage> {
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 4.h,
           children: [
             AppText(
               LocaleKeys.ownerPropertyVideoTitle,
@@ -224,7 +224,6 @@ class _AddPropertyVideoPageState extends State<AddPropertyVideoPage> {
               ),
               textAlign: TextAlign.start,
             ),
-            4.szH,
             AppText(
               LocaleKeys.ownerPropertyVideoSubtitle,
               style: AppTextStyles.regular13.copyWith(

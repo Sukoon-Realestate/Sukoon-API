@@ -50,6 +50,7 @@ class _OwnerAvailabilityLegendItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
+      spacing: 6.w,
       children: [
         Container(
           width: 16.r,
@@ -60,7 +61,6 @@ class _OwnerAvailabilityLegendItem extends StatelessWidget {
             border: Border.all(color: _borderColor),
           ),
         ),
-        6.szW,
         AppText(
           state.label,
           style: AppTextStyles.medium11.copyWith(

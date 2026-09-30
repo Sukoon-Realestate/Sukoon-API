@@ -1,6 +1,6 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_search_model.dart';
 
 import 'filter_card.dart';
@@ -25,6 +25,7 @@ class FilterLocationSection extends StatelessWidget {
     return FilterCard(
       title: LocaleKeys.tenantFilterLocation,
       child: Column(
+        spacing: 10.h,
         children: [
           FilterTextField(
             label: LocaleKeys.tenantFilterCity,
@@ -33,7 +34,6 @@ class FilterLocationSection extends StatelessWidget {
             onChanged: (value) =>
                 onFiltersChanged(filters.copyWith(city: value, page: 1)),
           ),
-          10.szH,
           FilterTextField(
             label: LocaleKeys.tenantFilterDistrict,
             hint: LocaleKeys.tenantFilterDistrictHint,

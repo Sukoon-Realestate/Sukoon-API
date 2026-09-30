@@ -26,6 +26,7 @@ class OwnerMoreSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 7.h,
       children: [
         AppText(
           title,
@@ -35,7 +36,6 @@ class OwnerMoreSection extends StatelessWidget {
             height: 1.45,
           ),
         ),
-        7.szH,
         ProfileSurfaceCard(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
           child: Column(

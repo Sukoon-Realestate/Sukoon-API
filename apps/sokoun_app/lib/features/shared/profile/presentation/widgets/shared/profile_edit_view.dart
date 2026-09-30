@@ -93,6 +93,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
       builder: (field) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 6.h,
           children: [
             ValueListenableBuilder<ProfileGender>(
               valueListenable: _gender,
@@ -102,8 +103,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                 onTap: isSaving ? null : _pickGender,
               ),
             ),
-            if (field.hasError) ...[
-              6.szH,
+            if (field.hasError)
               AppText(
                 field.errorText ?? '',
                 style: AppTextStyles.regular11.copyWith(
@@ -112,7 +112,6 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                   height: 1.45,
                 ),
               ),
-            ],
           ],
         );
       },
@@ -207,6 +206,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
               ValueListenableBuilder<File?>(
                 valueListenable: _avatar,
                 builder: (context, avatar, _) => Column(
+                  spacing: 8.h,
                   children: [
                     ProfileAvatar(
                       name: _nameController.text,
@@ -218,7 +218,6 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       badgeIcon: Icons.camera_alt_outlined,
                       onBadgePressed: isSaving ? null : _pickAvatar,
                     ),
-                    8.szH,
                     AppText(
                       LocaleKeys.profileChangePhoto,
                       style: AppTextStyles.bold13.copyWith(
@@ -254,12 +253,12 @@ class _ProfileEditViewState extends State<ProfileEditView> {
               14.szH,
               if (widget.workspace.isOwner)
                 Column(
+                  spacing: 14.h,
                   children: [
                     _ProfileReadonlyField(
                       label: LocaleKeys.city,
                       value: LocaleKeys.profileCairo,
                     ),
-                    14.szH,
                     _buildGenderField(isSaving: isSaving),
                   ],
                 )
@@ -294,6 +293,7 @@ class _ProfileReadonlyField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 7.h,
       children: [
         AppText(
           label,
@@ -303,7 +303,6 @@ class _ProfileReadonlyField extends StatelessWidget {
             height: 1.45,
           ),
         ),
-        7.szH,
         Material(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(12.r),

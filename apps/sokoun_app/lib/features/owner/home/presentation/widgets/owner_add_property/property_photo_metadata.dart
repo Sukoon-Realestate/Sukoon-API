@@ -24,8 +24,9 @@ class PhotoMetadataSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      spacing: 10.h,
       children: [
-        for (int index = 0; index < photos.length; index++) ...[
+        for (int index = 0; index < photos.length; index++)
           PhotoMetadataCard(
             photo: photos[index],
             index: index,
@@ -33,8 +34,6 @@ class PhotoMetadataSection extends StatelessWidget {
             onDescriptionChanged: (value) =>
                 onPhotoDescriptionChanged(index, value),
           ),
-          if (index < photos.length - 1) 10.szH,
-        ],
       ],
     );
   }
@@ -102,6 +101,7 @@ class PhotoMetadataCard extends StatelessWidget {
               ],
             )
           : Column(
+              spacing: 10.h,
               children: [
                 PhotoMetadataField(
                   key: ValueKey('photo-name-${photo.id}'),
@@ -113,7 +113,6 @@ class PhotoMetadataCard extends StatelessWidget {
                       : null,
                   onChanged: onNameChanged,
                 ),
-                10.szH,
                 PhotoMetadataField(
                   key: ValueKey('photo-description-${photo.id}'),
                   label: LocaleKeys.ownerAddPropertyPhotoDescription,
@@ -153,6 +152,7 @@ class PhotoMetadataField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 6.h,
       children: [
         AppText(
           label,
@@ -162,7 +162,6 @@ class PhotoMetadataField extends StatelessWidget {
           ),
           textAlign: TextAlign.start,
         ),
-        6.szH,
         TextFormField(
           initialValue: initialValue,
           onChanged: onChanged,

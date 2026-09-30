@@ -28,9 +28,7 @@ class HomeNavigationRail extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 24),
         child: Column(
           children: [
-            const ExcludeSemantics(
-              child: AppLogoWidget(size: 36, color: AppColors.sokoonTeal),
-            ),
+            const ExcludeSemantics(child: AppLogoWidget()),
             const SizedBox(height: 32),
             for (int i = 0; i < destinations.length; i++)
               Semantics(
@@ -61,6 +59,7 @@ class HomeNavigationRail extends StatelessWidget {
                       ),
                       child: ExcludeSemantics(
                         child: Column(
+                          spacing: 8,
                           children: [
                             Badge(
                               isLabelVisible: destinations[i].badgeCount > 0,
@@ -72,7 +71,6 @@ class HomeNavigationRail extends StatelessWidget {
                               ),
                               child: _icon(i),
                             ),
-                            const SizedBox(height: 8),
                             AppText(
                               destinations[i].label,
                               textAlign: TextAlign.center,

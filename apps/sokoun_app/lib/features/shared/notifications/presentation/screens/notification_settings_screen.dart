@@ -28,14 +28,13 @@ class _NotificationSettingsScreenState
     extends State<NotificationSettingsScreen> {
   late final NotificationSettingsCubit _settingsCubit;
   late final NotificationSettingUpdateCubit _updateCubit;
-  late final Future<void> _settingsRequest;
 
   @override
   void initState() {
     super.initState();
     _settingsCubit = NotificationSettingsCubit();
     _updateCubit = NotificationSettingUpdateCubit();
-    _settingsRequest = _settingsCubit.loadSettings();
+    _settingsCubit.loadSettings();
   }
 
   @override
@@ -90,7 +89,6 @@ class _NotificationSettingsScreenState
                         >.withShimmer(
                           initialDataForShimmer:
                               const NotificationSettingsContent.initial(),
-                          requestToTryAgainWhenError: _settingsRequest,
                           onRetry: _settingsCubit.loadSettings,
                           errorType: ErrorType.defaultView,
                           builder: (settings) =>

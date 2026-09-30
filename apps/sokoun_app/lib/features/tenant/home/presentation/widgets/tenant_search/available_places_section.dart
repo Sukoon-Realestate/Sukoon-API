@@ -45,7 +45,6 @@ class AvailablePlacesSection extends StatelessWidget {
       AvailablePlacesModel
     >.withShimmer(
       initialDataForShimmer: const AvailablePlacesModel.initial(),
-      requestToTryAgainWhenError: request,
       onRetry: context.read<AvailablePlacesCubit>().retry,
       errorType: ErrorType.defaultView,
       builder: (data) => data.places.isEmpty

@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/generated/assets.dart';
@@ -52,6 +51,7 @@ class _SearchOptionsEmptyState extends StatelessWidget {
       label: title,
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        spacing: 4.h,
         children: [
           ExcludeSemantics(
             child: animation.lottie(
@@ -63,7 +63,6 @@ class _SearchOptionsEmptyState extends StatelessWidget {
               package: 'melos_core',
             ),
           ),
-          4.szH,
           AppText(
             title,
             style: AppTextStyles.bold14.copyWith(
@@ -74,7 +73,6 @@ class _SearchOptionsEmptyState extends StatelessWidget {
             textAlign: TextAlign.center,
             maxLines: 2,
           ),
-          4.szH,
           AppText(
             description,
             style: AppTextStyles.medium12.copyWith(

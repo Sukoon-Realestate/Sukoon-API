@@ -40,7 +40,6 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
   late final TextEditingController _minPriceController;
   late final TextEditingController _maxPriceController;
   late final PropertyFilterOptionsCubit _propertyFilterOptionsCubit;
-  late final Future<void> _propertyFilterOptionsRequest;
 
   @override
   void initState() {
@@ -51,8 +50,7 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
     _minPriceController = TextEditingController(text: _filters.value.priceMin);
     _maxPriceController = TextEditingController(text: _filters.value.priceMax);
     _propertyFilterOptionsCubit = PropertyFilterOptionsCubit();
-    _propertyFilterOptionsRequest = _propertyFilterOptionsCubit
-        .getFilterOptions();
+    _propertyFilterOptionsCubit.getFilterOptions();
   }
 
   @override
@@ -101,7 +99,6 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
             PropertyFilterOptionsModel
           >.withShimmer(
             initialDataForShimmer: const PropertyFilterOptionsModel.initial(),
-            requestToTryAgainWhenError: _propertyFilterOptionsRequest,
             onRetry: _propertyFilterOptionsCubit.getFilterOptions,
             errorType: ErrorType.defaultView,
             builder: (filterOptions) =>
@@ -111,6 +108,7 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
                     title: LocaleKeys.tenantFilterTitle,
                     titleWidget: Row(
                       mainAxisSize: MainAxisSize.min,
+                      spacing: 8.w,
                       children: [
                         Flexible(
                           child: AppText(
@@ -122,7 +120,6 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        SizedBox(width: 8.w),
                         Badge(
                           label: AppText(
                             '${filters.activeCount}',

@@ -11,6 +11,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
 import 'package:melos_core/core/error/failure.dart';
+import 'package:melos_core/core/error/exceptions.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/network/account_session.dart';
@@ -18,7 +19,7 @@ import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/network/network_request.dart';
 import 'package:melos_core/core/network/network_service.dart';
 import 'package:melos_core/core/network/network_logging_policy.dart';
-import 'package:melos_core/core/widgets/retry_view.dart';
+import 'package:melos_core/core/widgets/exeption_view.dart';
 import 'package:melos_core/core/shared/route_observer.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
@@ -406,13 +407,14 @@ void main() {
       _app(const PublicPageScreen(page: PublicPage.privacy)),
     );
     await tester.pumpAndSettle();
-    expect(find.byType(AppRetryView), findsOneWidget);
+    expect(find.byType(ExceptionView), findsOneWidget);
+    expect(find.text('Request failed'), findsOneWidget);
     expect(find.byType(PublicPageEmptyState), findsNothing);
     repository.fail = false;
     await tester.tap(find.text(LocaleKeys.ownerRetryAction));
     await tester.pumpAndSettle();
     expect(find.text(repository.pageContent), findsOneWidget);
-    expect(find.byType(AppRetryView), findsNothing);
+    expect(find.byType(ExceptionView), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
@@ -423,14 +425,15 @@ void main() {
     network.fail = true;
     await tester.pumpWidget(_app(const MyReviewsScreen()));
     await tester.pumpAndSettle();
-    expect(find.byType(AppRetryView), findsOneWidget);
+    expect(find.byType(ExceptionView), findsOneWidget);
+    expect(find.text('Request failed'), findsOneWidget);
     expect(find.byType(MyReviewsEmptyState), findsNothing);
     network.fail = false;
     network.reviews = [_review];
     await tester.tap(find.text(LocaleKeys.ownerRetryAction));
     await tester.pumpAndSettle();
     expect(find.byType(MyReviewCard), findsOneWidget);
-    expect(find.byType(AppRetryView), findsNothing);
+    expect(find.byType(ExceptionView), findsNothing);
     expect(tester.takeException(), isNull);
   });
 }
@@ -529,7 +532,7 @@ class _ReviewsNetwork implements NetworkService {
     T Function(dynamic)? mapper,
   }) async {
     lastRequest = request;
-    if (fail) throw Exception('Request failed');
+    if (fail) throw const ServerException('Request failed');
     return BaseModel<T>(
       key: '',
       msg: '',

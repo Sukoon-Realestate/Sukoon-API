@@ -42,15 +42,14 @@ class OwnerAvailabilityContent extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 6.w,
               children: [
-                for (int index = 0; index < days.length; index++) ...[
-                  if (index > 0) 6.szW,
+                for (int index = 0; index < days.length; index++)
                   OwnerAvailabilityDayChip(
                     day: days[index],
                     isSelected: selectedDayIndex == index,
                     onPressed: () => onDaySelected(index),
                   ),
-                ],
               ],
             ),
           ),

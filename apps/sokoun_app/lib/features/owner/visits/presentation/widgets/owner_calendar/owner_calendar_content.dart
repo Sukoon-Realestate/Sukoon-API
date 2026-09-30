@@ -30,6 +30,7 @@ class OwnerCalendarContent extends StatelessWidget {
               border: Border.all(color: AppColors.sokoonBorder),
             ),
             child: Column(
+              spacing: 8.h,
               children: [
                 Row(
                   children: [
@@ -48,7 +49,6 @@ class OwnerCalendarContent extends StatelessWidget {
                       ),
                   ],
                 ),
-                8.szH,
                 GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),

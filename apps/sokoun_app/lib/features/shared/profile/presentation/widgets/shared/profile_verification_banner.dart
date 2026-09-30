@@ -27,6 +27,7 @@ class ProfileVerificationBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(14.r),
       ),
       child: Row(
+        spacing: 10.w,
         children: [
           Icon(
             isPrivacy
@@ -35,10 +36,10 @@ class ProfileVerificationBanner extends StatelessWidget {
             color: color,
             size: isPrivacy ? 17.r : 22.r,
           ),
-          10.szW,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 2.h,
               children: [
                 if (title.isNotEmpty)
                   AppText(
@@ -49,7 +50,6 @@ class ProfileVerificationBanner extends StatelessWidget {
                       height: 1.45,
                     ),
                   ),
-                if (title.isNotEmpty) 2.szH,
                 AppText(
                   description,
                   style: AppTextStyles.regular11.copyWith(

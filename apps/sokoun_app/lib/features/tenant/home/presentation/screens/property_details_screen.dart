@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/status_builder.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
-import 'package:melos_core/core/widgets/exeption_view.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_details_cubit.dart';
@@ -33,7 +32,6 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   late final PropertyDetailsCubit _detailsCubit;
   late final PropertySaveCubit _saveCubit;
   late final CreateConversationCubit _conversationCubit;
-  late final Future<void> _detailsRequest;
   final ValueNotifier<({bool? savedOverride, bool isUpdating})> _savedState =
       ValueNotifier<({bool? savedOverride, bool isUpdating})>((
         savedOverride: null,
@@ -46,7 +44,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
     _detailsCubit = PropertyDetailsCubit();
     _saveCubit = PropertySaveCubit();
     _conversationCubit = CreateConversationCubit();
-    _detailsRequest = _detailsCubit.getPropertyDetails(widget.propertyId);
+    _detailsCubit.getPropertyDetails(widget.propertyId);
   }
 
   @override
@@ -170,12 +168,9 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                 PropertyDetailsModel
               >.withShimmer(
                 initialDataForShimmer: const PropertyDetailsModel.initial(),
-                requestToTryAgainWhenError: _detailsRequest,
                 onRetry: () =>
                     _detailsCubit.getPropertyDetails(widget.propertyId),
                 builder: _buildDetails,
-                errorType: ErrorType.customView,
-                errorWidget: const ExceptionView(),
               ),
         ),
       ),

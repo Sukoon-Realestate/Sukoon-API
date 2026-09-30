@@ -40,6 +40,7 @@ class KycUploadTile extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 8.h,
       children: [
         AppText(
           title,
@@ -50,7 +51,6 @@ class KycUploadTile extends StatelessWidget {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        8.szH,
         InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(14.r),
@@ -101,13 +101,13 @@ class _UploadedContent extends StatelessWidget {
             size: 28.r,
           ),
         Row(
+          spacing: 8.w,
           children: [
             Icon(
               Icons.check_circle_outline_rounded,
               color: AppColors.sokoonTeal,
               size: 18.r,
             ),
-            8.szW,
             Expanded(
               child: AppText(
                 tile.fileName ?? LocaleKeys.uploaded,

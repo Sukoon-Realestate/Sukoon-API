@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
@@ -26,6 +25,7 @@ class SingleSelectGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 8.h,
       children: [
         AppText(
           title,
@@ -35,7 +35,6 @@ class SingleSelectGroup extends StatelessWidget {
           ),
           textAlign: TextAlign.start,
         ),
-        8.szH,
         FilterChipWrap(
           options: options,
           selectedValues: {selectedValue},

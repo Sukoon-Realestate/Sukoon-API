@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 
 class ResultsSearchHeader extends StatelessWidget {
@@ -28,6 +27,7 @@ class ResultsSearchHeader extends StatelessWidget {
         border: Border(bottom: BorderSide(color: AppColors.grayPale)),
       ),
       child: Row(
+        spacing: 10.w,
         children: [
           Expanded(
             child: Container(
@@ -38,13 +38,13 @@ class ResultsSearchHeader extends StatelessWidget {
                 borderRadius: BorderRadius.circular(22.r),
               ),
               child: Row(
+                spacing: 8.w,
                 children: [
                   Icon(
                     Icons.search_rounded,
                     color: AppColors.sokoonGray,
                     size: 20.r,
                   ),
-                  8.szW,
                   Expanded(
                     child: TextField(
                       controller: controller,
@@ -72,7 +72,6 @@ class ResultsSearchHeader extends StatelessWidget {
               ),
             ),
           ),
-          10.szW,
           GestureDetector(
             onTap: onFiltersTap,
             behavior: HitTestBehavior.opaque,

@@ -47,6 +47,7 @@ class NotificationDetailsContent extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(20.w, 28.h, 20.w, 24.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 20.h,
         children: [
           Container(
             padding: EdgeInsets.all(24.r),
@@ -116,8 +117,8 @@ class NotificationDetailsContent extends StatelessWidget {
               ],
             ),
           ),
-          20.szH,
           Row(
+            spacing: 12.w,
             children: [
               Expanded(
                 child: DefaultButton(
@@ -130,7 +131,6 @@ class NotificationDetailsContent extends StatelessWidget {
                   textStyle: AppTextStyles.extraBold.copyWith(fontSize: 14.sp),
                 ),
               ),
-              12.szW,
               Expanded(
                 child: DefaultButton(
                   onTap: onDismissPressed,

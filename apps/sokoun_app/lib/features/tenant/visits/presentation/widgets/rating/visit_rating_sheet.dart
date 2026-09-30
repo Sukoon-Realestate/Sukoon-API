@@ -119,16 +119,15 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
             ValueListenableBuilder<List<int>>(
               valueListenable: _criteriaRatings,
               builder: (context, criteriaRatings, _) => Column(
+                spacing: 8.h,
                 children: [
-                  for (int index = 0; index < _criteria.length; index++) ...[
+                  for (int index = 0; index < _criteria.length; index++)
                     _VisitRatingCriterion(
                       label: _criteria[index],
                       rating: criteriaRatings[index],
                       onRatingSelected: (rating) =>
                           _updateCriterion(index, rating),
                     ),
-                    if (index < _criteria.length - 1) 8.szH,
-                  ],
                 ],
               ),
             ),

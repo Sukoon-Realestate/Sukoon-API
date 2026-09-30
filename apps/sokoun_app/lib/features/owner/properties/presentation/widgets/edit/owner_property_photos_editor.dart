@@ -16,6 +16,7 @@ class OwnerPropertyPhotosEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 8.h,
       children: [
         Row(
           children: [
@@ -38,7 +39,6 @@ class OwnerPropertyPhotosEditor extends StatelessWidget {
             ),
           ],
         ),
-        8.szH,
         SizedBox(
           height: 82.h,
           child: ListView(
@@ -125,10 +125,10 @@ class _PhotoTile extends StatelessWidget {
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 3.h,
         children: [
           Icon(icon, color: foregroundColor, size: 25.r),
-          if (label != null) ...[
-            3.szH,
+          if (label != null)
             AppText(
               label!,
               style: AppTextStyles.bold10.copyWith(
@@ -137,7 +137,6 @@ class _PhotoTile extends StatelessWidget {
                 height: 1.45,
               ),
             ),
-          ],
         ],
       ),
     );

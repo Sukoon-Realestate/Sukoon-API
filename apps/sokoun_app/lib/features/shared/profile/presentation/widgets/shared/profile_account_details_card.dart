@@ -51,6 +51,7 @@ class ProfileAccountDetailsCard extends StatelessWidget {
                     : null,
               ),
               child: Row(
+                spacing: 12.w,
                 children: [
                   Expanded(
                     child: AppText(
@@ -64,7 +65,6 @@ class ProfileAccountDetailsCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  12.szW,
                   AppText(
                     row.label,
                     style: AppTextStyles.regular12.copyWith(

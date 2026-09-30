@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/languages.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/toast_messages/custom_messages.dart';
@@ -86,6 +85,7 @@ class _UseCurrentLocationButtonState extends State<UseCurrentLocationButton> {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 8.w,
         children: [
           if (busy)
             SizedBox.square(
@@ -97,7 +97,6 @@ class _UseCurrentLocationButtonState extends State<UseCurrentLocationButton> {
             )
           else
             Icon(Icons.my_location_rounded, size: 18.r),
-          8.szW,
           Flexible(
             child: AppText(
               busy

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
-import 'package:melos_core/core/widgets/retry_view.dart';
+import 'package:melos_core/core/widgets/exeption_view.dart';
 import 'package:pagify/pagify.dart';
 import '../../data/my_reviews_data.dart';
 import '../../data/models/my_review.dart';
@@ -25,12 +25,8 @@ class _MyReviewsListState extends State<MyReviewsList> {
     cacheToJson: (review) => review.toJson(),
     cacheFromJson: MyReview.fromJson,
     emptyListView: const MyReviewsEmptyState(),
-    errorBuilder: (_) => AppRetryView(
-      onRetry: () async {
-        await _controller.refresh();
-      },
-      isConnectionError: false,
-    ),
+    errorBuilder: (error) =>
+        ExceptionView(msg: error.msg, onRetry: () async => _controller.retry()),
     itemBuilder: (_, __, ___, review) =>
         MyReviewCard(key: ValueKey(review.id), review: review),
   );

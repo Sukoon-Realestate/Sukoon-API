@@ -88,7 +88,6 @@ class _OwnerRequestsCalendarScreenState
               initialDataForShimmer: OwnerVisitCalendarContent.initial(
                 _selectedDate,
               ),
-              requestToTryAgainWhenError: calendarRequest,
               onRetry: () => _calendarCubit.getCalendar(date: _selectedDate),
               errorType: ErrorType.defaultView,
               builder: _buildScreen,

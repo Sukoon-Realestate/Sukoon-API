@@ -22,6 +22,7 @@ class ProfileStatGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      spacing: 10.w,
       children: stats
           .map(
             (stat) => Expanded(
@@ -45,6 +46,7 @@ class ProfileStatGrid extends StatelessWidget {
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 3.h,
                   children: [
                     AppText(
                       stat.value,
@@ -54,7 +56,6 @@ class ProfileStatGrid extends StatelessWidget {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    3.szH,
                     AppText(
                       stat.label,
                       style: AppTextStyles.medium.copyWith(
@@ -69,8 +70,7 @@ class ProfileStatGrid extends StatelessWidget {
               ),
             ),
           )
-          .toList(growable: false)
-          .joinWith(10.szW),
+          .toList(growable: false),
     );
   }
 }

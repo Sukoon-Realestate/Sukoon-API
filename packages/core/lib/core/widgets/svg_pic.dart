@@ -15,9 +15,6 @@ class SvgPic extends StatelessWidget {
       child: SvgPicture.asset(
         package: 'melos_core',
         assetName,
-        colorFilter: color == null
-            ? null
-            : ColorFilter.mode(color!, BlendMode.srcIn),
       ),
     );
   }

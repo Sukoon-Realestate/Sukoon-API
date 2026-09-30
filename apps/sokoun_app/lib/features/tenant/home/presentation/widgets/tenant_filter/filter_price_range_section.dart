@@ -5,7 +5,6 @@ import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_search_model.dart';
 
@@ -34,6 +33,7 @@ class FilterPriceRangeSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
+            spacing: 10.w,
             children: [
               Expanded(
                 child: FilterTextField(
@@ -48,7 +48,6 @@ class FilterPriceRangeSection extends StatelessWidget {
                   ),
                 ),
               ),
-              10.szW,
               AppText(
                 '—',
                 style: AppTextStyles.bold16.copyWith(
@@ -57,7 +56,6 @@ class FilterPriceRangeSection extends StatelessWidget {
                   height: 1.45,
                 ),
               ),
-              10.szW,
               Expanded(
                 child: FilterTextField(
                   label: LocaleKeys.tenantFilterTo,

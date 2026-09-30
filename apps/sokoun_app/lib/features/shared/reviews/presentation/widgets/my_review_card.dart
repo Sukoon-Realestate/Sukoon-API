@@ -35,8 +35,9 @@ class MyReviewCard extends StatelessWidget {
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 12.w,
                 children: [
-                  if (review.propertyImage.isNotEmpty) ...[
+                  if (review.propertyImage.isNotEmpty)
                     ClipRRect(
                       borderRadius: BorderRadius.circular(12.r),
                       child: Image.network(
@@ -49,8 +50,6 @@ class MyReviewCard extends StatelessWidget {
                             Icon(Icons.home_outlined, size: 48.r),
                       ),
                     ),
-                    12.szW,
-                  ],
                   Expanded(
                     child: AppText(
                       review.propertyTitle,

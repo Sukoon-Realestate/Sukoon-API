@@ -76,7 +76,6 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
 
   ReceivedVisitsCubit? _receivedVisitsCubit;
   late final OwnerVisitStatusCubit _visitStatusCubit;
-  Future<void>? _receivedVisitsRequest;
   late List<OwnerVisitRequestContent> _fixtureRequests;
   OwnerVisitRequestFilter _selectedFilter = OwnerVisitRequestFilter.all;
   String? _updatingRequestId;
@@ -99,7 +98,7 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
     if (initialRequests == null) {
       final ReceivedVisitsCubit cubit = ReceivedVisitsCubit();
       _receivedVisitsCubit = cubit;
-      _receivedVisitsRequest = cubit.getReceivedVisits();
+      cubit.getReceivedVisits();
     } else {
       _fixtureRequests = List<OwnerVisitRequestContent>.of(initialRequests);
     }
@@ -116,7 +115,6 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
     final ReceivedVisitsCubit? cubit = _receivedVisitsCubit;
     if (cubit == null) return;
     final Future<void> request = cubit.getReceivedVisits();
-    _receivedVisitsRequest = request;
     await request;
   }
 
@@ -253,7 +251,6 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
             List<OwnerVisitRequestContent>
           >.withShimmer(
             initialDataForShimmer: _shimmerRequests,
-            requestToTryAgainWhenError: _receivedVisitsRequest!,
             onRetry: _retryRequests,
             emptyView: _buildScreen(const []),
             builder: _buildScreen,

@@ -71,6 +71,7 @@ class VideoUploadCard extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(14.w),
               child: Row(
+                spacing: 10.w,
                 children: [
                   Expanded(
                     child: VideoActionButton(
@@ -80,7 +81,6 @@ class VideoUploadCard extends StatelessWidget {
                       onTap: onUploadPressed,
                     ),
                   ),
-                  10.szW,
                   Expanded(
                     child: VideoActionButton(
                       label: LocaleKeys.ownerPropertyVideoRemove,
@@ -154,6 +154,7 @@ class VideoEmptyState extends StatelessWidget {
           ),
           18.szH,
           Row(
+            spacing: 10.w,
             children: [
               Expanded(
                 child: VideoActionButton(
@@ -164,7 +165,6 @@ class VideoEmptyState extends StatelessWidget {
                   onTap: onRecordPressed,
                 ),
               ),
-              10.szW,
               Expanded(
                 child: VideoActionButton(
                   label: LocaleKeys.ownerPropertyVideoUpload,
@@ -189,6 +189,7 @@ class VideoLoadingState extends StatelessWidget {
       height: 220.h,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 12.h,
         children: [
           SizedBox(
             width: 34.r,
@@ -198,7 +199,6 @@ class VideoLoadingState extends StatelessWidget {
               color: AppColors.sokoonTeal,
             ),
           ),
-          12.szH,
           AppText(
             LocaleKeys.ownerPropertyVideoPreparing,
             style: AppTextStyles.bold13.copyWith(
@@ -224,9 +224,9 @@ class VideoErrorMessage extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
       color: AppColors.red.withValues(alpha: 0.06),
       child: Row(
+        spacing: 8.w,
         children: [
           Icon(Icons.error_outline_rounded, color: AppColors.red, size: 18.r),
-          8.szW,
           Expanded(
             child: AppText(
               message,
@@ -277,9 +277,9 @@ class VideoActionButton extends StatelessWidget {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 7.w,
           children: [
             Icon(icon, color: filled ? AppColors.white : color, size: 17.r),
-            7.szW,
             Flexible(
               child: AppText(
                 label,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 
 class ChatComposer extends StatelessWidget {
@@ -26,6 +25,7 @@ class ChatComposer extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: Row(
+          spacing: 8.w,
           children: [
             _ComposerActionButton(
               onPressed: onSendPressed,
@@ -33,7 +33,6 @@ class ChatComposer extends StatelessWidget {
               icon: Icons.send_rounded,
               iconColor: AppColors.white,
             ),
-            8.szW,
             Expanded(
               child: Container(
                 constraints: BoxConstraints(minHeight: 40.h),

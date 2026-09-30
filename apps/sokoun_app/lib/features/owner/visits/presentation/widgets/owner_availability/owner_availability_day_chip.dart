@@ -34,6 +34,7 @@ class OwnerAvailabilityDayChip extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 3.h,
             children: [
               AppText(
                 day.localizedShortWeekday,
@@ -44,7 +45,6 @@ class OwnerAvailabilityDayChip extends StatelessWidget {
                 ),
                 maxLines: 1,
               ),
-              3.szH,
               AppText(
                 '${day.dateValue?.day ?? ''}',
                 style: AppTextStyles.bold14.copyWith(

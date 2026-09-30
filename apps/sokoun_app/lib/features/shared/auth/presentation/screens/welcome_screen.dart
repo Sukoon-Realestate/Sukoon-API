@@ -36,7 +36,7 @@ class WelcomeScreen extends StatelessWidget {
               color: content.headerIconBackgroundColor,
               borderRadius: BorderRadius.circular(16.r),
             ),
-            child: AppLogoWidget(color: content.headerIconColor, size: 36.r),
+            child: AppLogoWidget(),
           ).centerWidget,
           18.szH,
           AppText(

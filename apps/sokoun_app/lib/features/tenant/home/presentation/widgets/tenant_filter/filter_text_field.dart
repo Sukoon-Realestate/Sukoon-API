@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -30,6 +29,7 @@ class FilterTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 6.h,
       children: [
         AppText(
           label,
@@ -39,7 +39,6 @@ class FilterTextField extends StatelessWidget {
           ),
           textAlign: TextAlign.start,
         ),
-        6.szH,
         Container(
           constraints: BoxConstraints(minHeight: 48.h),
           padding: EdgeInsets.symmetric(horizontal: 12.w),

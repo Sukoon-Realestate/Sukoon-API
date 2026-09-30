@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -26,6 +25,7 @@ class KycPrivacyCard extends StatelessWidget {
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 12.w,
         children: [
           Container(
             width: 36.r,
@@ -40,11 +40,11 @@ class KycPrivacyCard extends StatelessWidget {
               size: 18.r,
             ),
           ),
-          12.szW,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
+              spacing: 4.h,
               children: [
                 AppText(
                   title,
@@ -56,7 +56,6 @@ class KycPrivacyCard extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-                4.szH,
                 AppText(
                   subtitle,
                   style: AppTextStyles.regular11.copyWith(

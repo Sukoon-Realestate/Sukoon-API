@@ -45,8 +45,10 @@ class OwnerVisitRequestIdentityRow extends StatelessWidget {
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 3.h,
             children: [
               Row(
+                spacing: 6.w,
                 children: [
                   Flexible(
                     child: AppText(
@@ -60,13 +62,9 @@ class OwnerVisitRequestIdentityRow extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  if (request.isVerified) ...[
-                    6.szW,
-                    const OwnerVerifiedBadge(),
-                  ],
+                  if (request.isVerified) const OwnerVerifiedBadge(),
                 ],
               ),
-              3.szH,
               AppText(
                 request.property,
                 style: AppTextStyles.regular11.copyWith(

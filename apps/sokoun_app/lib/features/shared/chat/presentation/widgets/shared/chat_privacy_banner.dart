@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -19,9 +18,9 @@ class ChatPrivacyBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Row(
+        spacing: 8.w,
         children: [
           Icon(Icons.lock_outline_rounded, color: AppColors.blue, size: 14.r),
-          8.szW,
           Expanded(
             child: AppText(
               text,

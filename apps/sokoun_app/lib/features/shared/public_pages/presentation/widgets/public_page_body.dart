@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import '../../data/models/public_page_content.dart';
@@ -15,6 +14,7 @@ class PublicPageBody extends StatelessWidget {
     padding: EdgeInsets.all(20.r),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 16.h,
       children: [
         AppText(
           page.title,
@@ -23,7 +23,6 @@ class PublicPageBody extends StatelessWidget {
             color: AppColors.sokoonNavy,
           ),
         ),
-        16.szH,
         SelectableText(
           page.content,
           textDirection: page.language == 'ar'

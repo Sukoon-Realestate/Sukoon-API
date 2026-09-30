@@ -86,6 +86,7 @@ class OwnerRequestCard extends StatelessWidget {
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 3.h,
                   children: [
                     AppText(
                       name,
@@ -97,7 +98,6 @@ class OwnerRequestCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    3.szH,
                     AppText(
                       details,
                       style: AppTextStyles.regular12.copyWith(

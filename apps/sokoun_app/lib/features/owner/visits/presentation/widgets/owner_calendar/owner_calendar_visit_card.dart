@@ -45,6 +45,7 @@ class OwnerCalendarVisitCard extends StatelessWidget {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 3.h,
               children: [
                 AppText(
                   visit.tenant.name,
@@ -55,7 +56,6 @@ class OwnerCalendarVisitCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                3.szH,
                 AppText(
                   visit.property.title,
                   style: AppTextStyles.medium12.copyWith(
@@ -66,7 +66,6 @@ class OwnerCalendarVisitCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                3.szH,
                 AppText(
                   _formatOwnerCalendarVisitTime(context, visit.visitTime),
                   style: AppTextStyles.regular12.copyWith(

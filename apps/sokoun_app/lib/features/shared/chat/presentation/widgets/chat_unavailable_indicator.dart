@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -32,9 +31,9 @@ class ChatUnavailableIndicator extends StatelessWidget {
             borderRadius: BorderRadius.circular(16.r),
           ),
           child: Row(
+            spacing: 8.w,
             children: [
               Icon(icon, color: AppColors.sokoonMuted, size: 16.r),
-              8.szW,
               Expanded(
                 child: AppText(
                   message,

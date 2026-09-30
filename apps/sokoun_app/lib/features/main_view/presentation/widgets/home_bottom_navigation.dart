@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/svg_pic.dart';
@@ -107,6 +106,7 @@ class _HomeBottomNavigationItem extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
+            spacing: 3.h,
             children: [
               AnimatedContainer(
                 duration: SokounMotion.duration(context),
@@ -151,7 +151,6 @@ class _HomeBottomNavigationItem extends StatelessWidget {
                   ],
                 ),
               ),
-              3.szH,
               AppText(
                 destination.label,
                 style: AppTextStyles.semiBold.copyWith(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_listing_content.dart';
@@ -20,9 +19,9 @@ class OwnerListingStatusBadge extends StatelessWidget {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        spacing: 4.w,
         children: [
           Icon(status.icon, color: status.foregroundColor, size: 12.r),
-          4.szW,
           AppText(
             status.label,
             style: AppTextStyles.semiBold.copyWith(

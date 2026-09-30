@@ -49,6 +49,7 @@ class LanguageOptionCard extends StatelessWidget {
             onTap: onSelected,
             borderRadius: borderRadius,
             child: Row(
+              spacing: 14.w,
               children: [
                 Container(
                   width: 22.r,
@@ -69,7 +70,6 @@ class LanguageOptionCard extends StatelessWidget {
                         )
                       : null,
                 ),
-                14.szW,
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,7 +93,6 @@ class LanguageOptionCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                14.szW,
                 ExcludeSemantics(
                   child: AppText(
                     flag,

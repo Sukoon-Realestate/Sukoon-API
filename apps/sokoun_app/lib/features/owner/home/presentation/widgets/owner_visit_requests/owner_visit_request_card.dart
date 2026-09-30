@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
 
 import 'owner_visit_request_action_row.dart';
@@ -45,27 +44,23 @@ class OwnerVisitRequestCard extends StatelessWidget {
             border: Border.all(color: AppColors.grayPale),
           ),
           child: Column(
+            spacing: 12.h,
             children: [
               OwnerVisitRequestIdentityRow(request: request),
-              12.szH,
               OwnerVisitRequestTimeRow(
                 dateLabel: request.dateLabel.isNotEmpty
                     ? request.dateLabel
                     : request.time,
               ),
-              if (request.status.canDecide) ...[
-                12.szH,
+              if (request.status.canDecide)
                 OwnerVisitRequestActionRow(
                   onAcceptPressed: onAcceptPressed,
                   onRejectPressed: onRejectPressed,
                   isAccepting: isAccepting,
                   isRejecting: isRejecting,
                 ),
-              ],
-              if (!request.status.canDecide) ...[
-                12.szH,
+              if (!request.status.canDecide)
                 OwnerVisitRequestStatusBanner(status: request.status),
-              ],
             ],
           ),
         ),

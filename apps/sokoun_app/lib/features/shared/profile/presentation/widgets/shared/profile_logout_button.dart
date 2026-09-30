@@ -26,9 +26,9 @@ class ProfileLogoutButton extends StatelessWidget {
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 8.w,
             children: [
               Icon(Icons.logout_rounded, color: AppColors.red, size: 18.r),
-              8.szW,
               AppText(
                 LocaleKeys.profileLogout,
                 style: AppTextStyles.bold14.copyWith(

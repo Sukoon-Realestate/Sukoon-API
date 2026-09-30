@@ -36,6 +36,7 @@ class VisitDayChip extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 2.h,
             children: [
               AppText(
                 day.weekdayLabel,
@@ -47,7 +48,6 @@ class VisitDayChip extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              2.szH,
               AppText(
                 day.day,
                 style: AppTextStyles.bold.copyWith(

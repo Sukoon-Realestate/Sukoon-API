@@ -29,6 +29,7 @@ class TenantProfileHeaderCard extends StatelessWidget {
       child: Column(
         children: [
           Row(
+            spacing: 14.w,
             children: [
               ProfileAvatar(
                 name: userName,
@@ -38,10 +39,10 @@ class TenantProfileHeaderCard extends StatelessWidget {
                 badgeIcon: Icons.edit_outlined,
                 onBadgePressed: onEditPressed,
               ),
-              14.szW,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 4.h,
                   children: [
                     Wrap(
                       spacing: 8.w,
@@ -64,7 +65,6 @@ class TenantProfileHeaderCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                    4.szH,
                     AppText(
                       membership.isNotEmpty
                           ? membership

@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
@@ -30,6 +29,7 @@ class PhotoGridSection extends StatelessWidget {
         photos.length >= OwnerAddPropertyContent.minimumPhotoCount;
 
     return Column(
+      spacing: 10.h,
       children: [
         GridView.builder(
           shrinkWrap: true,
@@ -57,7 +57,6 @@ class PhotoGridSection extends StatelessWidget {
             );
           },
         ),
-        10.szH,
         AppText(
           LocaleKeys.ownerAddPropertyPhotosCount
               .replaceAll('{count}', '${photos.length}')
@@ -129,13 +128,13 @@ class PhotoTile extends StatelessWidget {
                     )
                   : Column(
                       mainAxisSize: MainAxisSize.min,
+                      spacing: 4.h,
                       children: [
                         Icon(
                           Icons.add_rounded,
                           color: AppColors.sokoonMuted,
                           size: 20.r,
                         ),
-                        4.szH,
                         AppText(
                           LocaleKeys.ownerPropertiesAddPhoto,
                           style: AppTextStyles.semiBold.copyWith(

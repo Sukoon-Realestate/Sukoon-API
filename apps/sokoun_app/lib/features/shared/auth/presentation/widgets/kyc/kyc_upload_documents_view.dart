@@ -248,13 +248,13 @@ class _NationalIdField extends StatelessWidget {
             border: Border.all(color: AppColors.tealAlpha09),
           ),
           child: Row(
+            spacing: 8.w,
             children: [
               Icon(
                 Icons.info_outline_rounded,
                 color: AppColors.sokoonTeal,
                 size: 16.r,
               ),
-              8.szW,
               Expanded(
                 child: AppText(
                   LocaleKeys.nationalIdPrivacyHint,
@@ -296,10 +296,10 @@ class _KycUploadValidationField extends StatelessWidget {
       validator: isRequired ? Validators.validateEmpty : (_) => null,
       builderWidget: (field) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 6.h,
         children: [
           child,
-          if (field.hasError) ...[
-            6.szH,
+          if (field.hasError)
             AppText(
               field.errorText ?? '',
               style: AppTextStyles.regular11.copyWith(
@@ -308,7 +308,6 @@ class _KycUploadValidationField extends StatelessWidget {
                 height: 1.45,
               ),
             ),
-          ],
         ],
       ),
     );
@@ -335,6 +334,7 @@ class _KycUploadSubmitBar extends StatelessWidget {
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          spacing: 8.h,
           children: [
             AppText(
               existingAccount
@@ -347,7 +347,6 @@ class _KycUploadSubmitBar extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            8.szH,
             AppLoadingButton(
               asyncCall: (_) => onSubmit(),
               title: LocaleKeys.nextReviewData,

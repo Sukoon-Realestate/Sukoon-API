@@ -35,7 +35,6 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
   late final TextEditingController _queryController;
   late final PagifyController<PropertyDetailsModel> _pagifyController;
   late final PropertyFilterOptionsCubit _propertyFilterOptionsCubit;
-  late final Future<void> _propertyFilterOptionsRequest;
   final ValueNotifier<int?> _resultCount = ValueNotifier<int?>(null);
   int _searchVersion = 0;
 
@@ -47,8 +46,7 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
     _queryController = TextEditingController(text: _filters.search);
     _pagifyController = PagifyController<PropertyDetailsModel>();
     _propertyFilterOptionsCubit = PropertyFilterOptionsCubit();
-    _propertyFilterOptionsRequest = _propertyFilterOptionsCubit
-        .getFilterOptions();
+    _propertyFilterOptionsCubit.getFilterOptions();
   }
 
   @override
@@ -177,7 +175,6 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
             PropertyFilterOptionsModel
           >.withShimmer(
             initialDataForShimmer: const PropertyFilterOptionsModel.initial(),
-            requestToTryAgainWhenError: _propertyFilterOptionsRequest,
             onRetry: _propertyFilterOptionsCubit.getFilterOptions,
             errorType: ErrorType.defaultView,
             builder: (filterOptions) => AppScaffold(

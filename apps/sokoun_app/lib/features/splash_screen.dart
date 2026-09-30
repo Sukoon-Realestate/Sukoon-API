@@ -40,8 +40,6 @@ class _SplashScreenState extends State<SplashScreen> {
     ]);
     if (!mounted) return;
     await _manipulateLoginState();
-    if (!mounted) return;
-    unawaited(NotificationCoordinator.start());
   }
 
   void _onLogoAnimationCompleted() {

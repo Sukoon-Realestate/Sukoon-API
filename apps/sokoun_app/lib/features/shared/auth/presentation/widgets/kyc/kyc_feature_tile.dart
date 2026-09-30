@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -21,9 +20,9 @@ class KycFeatureTile extends StatelessWidget {
         border: Border.all(color: AppColors.sokoonBorder),
       ),
       child: Row(
+        spacing: 10.w,
         children: [
           Icon(icon, color: AppColors.sokoonTeal, size: 18.r),
-          10.szW,
           Expanded(
             child: AppText(
               title,

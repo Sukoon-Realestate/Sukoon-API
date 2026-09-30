@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -20,13 +19,13 @@ class OwnerVisitRequestTimeRow extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: Row(
+        spacing: 6.w,
         children: [
           Icon(
             Icons.calendar_today_outlined,
             color: AppColors.sokoonGray,
             size: 14.r,
           ),
-          6.szW,
           Expanded(
             child: AppText(
               dateLabel,

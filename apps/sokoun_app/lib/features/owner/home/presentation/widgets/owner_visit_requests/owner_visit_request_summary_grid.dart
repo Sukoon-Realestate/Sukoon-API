@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -19,6 +18,7 @@ class OwnerVisitRequestSummaryGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      spacing: 8.w,
       children: [
         Expanded(
           child: _SummaryCard(
@@ -29,7 +29,6 @@ class OwnerVisitRequestSummaryGrid extends StatelessWidget {
             valueColor: AppColors.sokoonTeal,
           ),
         ),
-        8.szW,
         Expanded(
           child: _SummaryCard(
             label: LocaleKeys.ownerVisitsWaitingForReply,
@@ -70,6 +69,7 @@ class _SummaryCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 4.h,
         children: [
           AppText(
             label,
@@ -81,7 +81,6 @@ class _SummaryCard extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          4.szH,
           AppText(
             value,
             style: AppTextStyles.bold.copyWith(

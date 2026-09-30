@@ -47,6 +47,7 @@ class FavoritePropertyCard extends StatelessWidget {
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 4.h,
               children: [
                 AppText(
                   item.title,
@@ -58,8 +59,8 @@ class FavoritePropertyCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                4.szH,
                 Row(
+                  spacing: 8.w,
                   children: [
                     Expanded(
                       child: _FavoritePropertyMeta(
@@ -67,7 +68,6 @@ class FavoritePropertyCard extends StatelessWidget {
                         area: item.areaLabel,
                       ),
                     ),
-                    8.szW,
                     Flexible(
                       child: AppText(
                         '${item.price} ${LocaleKeys.favoritesCurrencyShort}',

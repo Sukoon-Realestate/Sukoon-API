@@ -33,13 +33,12 @@ class NotificationDetailScreen extends StatefulWidget {
 
 class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
   late final NotificationDetailCubit _cubit;
-  late final Future<void> _detailsRequest;
 
   @override
   void initState() {
     super.initState();
     _cubit = NotificationDetailCubit(initialNotification: widget.notification);
-    _detailsRequest = _cubit.load(
+    _cubit.load(
       notificationId: widget.notification.id,
       fixture: widget.fetchFromApi ? null : widget.notification,
     );
@@ -66,7 +65,6 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
                 AppNotificationContent
               >.withShimmer(
                 initialDataForShimmer: widget.notification,
-                requestToTryAgainWhenError: _detailsRequest,
                 onRetry: () => _cubit.load(
                   notificationId: widget.notification.id,
                   fixture: widget.fetchFromApi ? null : widget.notification,

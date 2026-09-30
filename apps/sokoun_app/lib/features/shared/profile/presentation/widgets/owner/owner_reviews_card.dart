@@ -35,6 +35,7 @@ class OwnerReviewsCard extends StatelessWidget {
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 4.h,
                 children: [
                   Row(
                     children: [
@@ -64,7 +65,6 @@ class OwnerReviewsCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  4.szH,
                   AppText(
                     review.comment,
                     style: AppTextStyles.regular12.copyWith(
@@ -73,8 +73,7 @@ class OwnerReviewsCard extends StatelessWidget {
                       height: 1.45,
                     ),
                   ),
-                  if (review.dateLabel.isNotEmpty) ...[
-                    4.szH,
+                  if (review.dateLabel.isNotEmpty)
                     AppText(
                       review.dateLabel,
                       style: AppTextStyles.regular10.copyWith(
@@ -83,7 +82,6 @@ class OwnerReviewsCard extends StatelessWidget {
                         height: 1.45,
                       ),
                     ),
-                  ],
                 ],
               ),
             );

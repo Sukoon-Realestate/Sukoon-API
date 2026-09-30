@@ -4,7 +4,6 @@ import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 import 'add_property_primary_button.dart';
@@ -44,10 +43,12 @@ class AddPropertyStepShell extends StatelessWidget {
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: 8.h,
             children: [
               Row(
+                spacing: 6.w,
                 children: [
-                  for (int index = 0; index < segmentCount; index++) ...[
+                  for (int index = 0; index < segmentCount; index++)
                     Expanded(
                       child: AnimatedContainer(
                         duration: SokounMotion.duration(context),
@@ -60,12 +61,9 @@ class AddPropertyStepShell extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (index < segmentCount - 1) 6.szW,
-                  ],
                 ],
               ),
-              if (progressSubtitle != null) ...[
-                8.szH,
+              if (progressSubtitle != null)
                 AppText(
                   progressSubtitle!,
                   style: AppTextStyles.regular11.copyWith(
@@ -75,41 +73,34 @@ class AddPropertyStepShell extends StatelessWidget {
                   ),
                   textAlign: TextAlign.start,
                 ),
-              ],
             ],
           ),
         ),
         Expanded(
           child: SingleChildScrollView(
-            padding: EdgeInsets.all(16.w),
+            padding: EdgeInsets.fromLTRB(16.w, 16.w, 16.w, 16.w + 24.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                for (int index = 0; index < children.length; index++) ...[
-                  children[index],
-                  if (index < children.length - 1) 12.szH,
-                ],
-                24.szH,
-              ],
+              spacing: 12.h,
+              children: children,
             ),
           ),
         ),
         SokounActionFooter(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: 10.h,
             children: [
               AddPropertyPrimaryButton(
                 label: primaryLabel,
                 onTap: onPrimaryTap,
               ),
-              if (secondaryLabel != null) ...[
-                10.szH,
+              if (secondaryLabel != null)
                 AddPropertyPrimaryButton(
                   label: secondaryLabel!,
                   isOutline: true,
                   onTap: onSecondaryTap,
                 ),
-              ],
             ],
           ),
         ),

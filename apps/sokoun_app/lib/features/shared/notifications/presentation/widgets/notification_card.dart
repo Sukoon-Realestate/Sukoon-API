@@ -49,15 +49,16 @@ class NotificationCard extends StatelessWidget {
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 12.w,
             children: [
               NotificationIconBadge(iconType: notification.resolvedIconType),
-              12.szW,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 8.w,
                       children: [
                         Expanded(
                           child: AppText(
@@ -71,8 +72,7 @@ class NotificationCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        if (notification.isUnread) ...[
-                          8.szW,
+                        if (notification.isUnread)
                           Container(
                             width: 8.r,
                             height: 8.r,
@@ -82,7 +82,6 @@ class NotificationCard extends StatelessWidget {
                               shape: BoxShape.circle,
                             ),
                           ),
-                        ],
                       ],
                     ),
                     3.szH,

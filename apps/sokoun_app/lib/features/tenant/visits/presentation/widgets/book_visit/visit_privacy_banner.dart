@@ -12,9 +12,9 @@ class VisitPrivacyBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(14.r),
       ),
       child: Row(
+        spacing: 8.w,
         children: [
           Icon(Icons.privacy_tip_outlined, color: AppColors.blue, size: 16.r),
-          8.szW,
           Expanded(
             child: AppText(
               LocaleKeys.tenantVisitPrivacyMessage,

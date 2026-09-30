@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
@@ -45,6 +44,7 @@ class AddPropertyField extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 6.h,
       children: [
         AppText(
           field.label,
@@ -54,7 +54,6 @@ class AddPropertyField extends StatelessWidget {
           ),
           textAlign: TextAlign.start,
         ),
-        6.szH,
         Container(
           height: maxLines == 1 ? 46.h : null,
           constraints: maxLines > 1 ? BoxConstraints(minHeight: 86.h) : null,
@@ -75,11 +74,9 @@ class AddPropertyField extends StatelessWidget {
             crossAxisAlignment: maxLines == 1
                 ? CrossAxisAlignment.center
                 : CrossAxisAlignment.start,
+            spacing: 8.w,
             children: [
-              if (suffix != null) ...[
-                suffix!.paddingTop(maxLines == 1 ? 0 : 14.h),
-                8.szW,
-              ],
+              if (suffix != null) suffix!.paddingTop(maxLines == 1 ? 0 : 14.h),
               Expanded(
                 child: hasInput
                     ? TextField(

@@ -63,13 +63,13 @@ class SearchResultCard extends StatelessWidget {
               ),
               5.szH,
               Row(
+                spacing: 4.w,
                 children: [
                   Icon(
                     Icons.location_on_outlined,
                     color: AppColors.sokoonGray,
                     size: 15.r,
                   ),
-                  4.szW,
                   Expanded(
                     child: AppText(
                       item.id.isEmpty

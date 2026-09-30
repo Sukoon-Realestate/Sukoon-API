@@ -15,6 +15,7 @@ class VisitPropertySummaryCard extends StatelessWidget {
         border: Border.all(color: AppColors.sokoonBorder),
       ),
       child: Row(
+        spacing: 12.w,
         children: [
           Container(
             width: 42.r,
@@ -30,10 +31,10 @@ class VisitPropertySummaryCard extends StatelessWidget {
               size: 19.r,
             ),
           ),
-          12.szW,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 4.h,
               children: [
                 AppText(
                   property.title,
@@ -45,7 +46,6 @@ class VisitPropertySummaryCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                4.szH,
                 AppText(
                   property.meta,
                   style: AppTextStyles.regular12.copyWith(

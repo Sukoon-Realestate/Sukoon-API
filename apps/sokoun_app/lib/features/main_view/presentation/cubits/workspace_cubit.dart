@@ -29,6 +29,5 @@ class WorkspaceCubit extends Cubit<AppWorkspace> {
 
   void reset() {
     _userId = null;
-    emit(AppWorkspace.tenant);
   }
 }

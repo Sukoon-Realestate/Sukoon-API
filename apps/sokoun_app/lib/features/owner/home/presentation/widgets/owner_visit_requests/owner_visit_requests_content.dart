@@ -51,12 +51,12 @@ class OwnerVisitRequestsContent extends StatelessWidget {
             border: Border(bottom: BorderSide(color: AppColors.grayPale)),
           ),
           child: Column(
+            spacing: 12.h,
             children: [
               OwnerVisitRequestSummaryGrid(
                 totalCount: requests.length,
                 pendingCount: _pendingCount,
               ),
-              12.szH,
               OwnerVisitRequestFilters(
                 filters: OwnerVisitRequestFilter.values,
                 selectedFilter: selectedFilter,

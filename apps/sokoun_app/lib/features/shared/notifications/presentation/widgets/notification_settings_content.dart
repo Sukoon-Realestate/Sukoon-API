@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -48,13 +47,13 @@ class NotificationSettingsContentView extends StatelessWidget {
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 10.w,
             children: [
               Icon(
                 Icons.info_outline_rounded,
                 color: AppColors.sokoonTeal,
                 size: 18.r,
               ),
-              10.szW,
               Expanded(
                 child: AppText(
                   settings.footerNote.isEmpty

@@ -29,13 +29,13 @@ class AppGoogleSignInButton extends StatelessWidget {
       customChild: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
+        spacing: 10.w,
         children: [
           SizedBox(
             width: 20.r,
             height: 20.r,
             child: const CustomPaint(painter: _GoogleMarkPainter()),
           ),
-          SizedBox(width: 10.w),
           Flexible(
             child: AppText(
               LocaleKeys.continueWithGoogle,

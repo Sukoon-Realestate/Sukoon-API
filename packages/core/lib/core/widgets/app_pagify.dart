@@ -6,6 +6,7 @@ import 'package:pagify/helpers/errors.dart';
 import 'package:pagify/helpers/status_stream.dart';
 import 'package:pagify/pagify.dart';
 import '../../config/language/locale_keys.g.dart';
+import '../error/exceptions.dart';
 import '../local_db/objectbox_cache_service.dart';
 import '../network/account_session.dart';
 import '../shared/base_state.dart';
@@ -102,10 +103,12 @@ class AppPagify<T> extends StatefulWidget {
 class _AppPagifyState<T> extends State<AppPagify<T>> {
   final int _sessionGeneration = AccountSession.generation;
   int _requestGeneration = 0;
+  PagifyException? _requestError;
 
   Future<(List<T>, PaginationData)> _loadPage(BuildContext context, int page) {
     if (page == 1) _requestGeneration++;
     final int generation = _requestGeneration;
+    _requestError = null;
     final completer = Completer<(List<T>, PaginationData)>();
     bool active() =>
         mounted &&
@@ -120,6 +123,16 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
         if (active()) completer.complete(result);
       } catch (error, stack) {
         if (active()) {
+          // Pagify 0.3 replaces non-Dio messages with its own error text.
+          // Preserve the original request message for the view and callback.
+          if (error is PagifyException) {
+            _requestError = error;
+          } else if (error is ServerException) {
+            _requestError = PagifyApiRequestException(
+              error.message,
+              pagifyFailure: RequestFailureData.initial(),
+            );
+          }
           completer.completeError(
             error is Exception ? error : Exception(error.toString()),
             stack,
@@ -130,6 +143,35 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
 
     unawaited(request());
     return completer.future;
+  }
+
+  PagifyException _resolveError(PagifyException error) =>
+      error is PagifyNetworkException ? error : _requestError ?? error;
+
+  Widget _buildErrorView(PagifyException error) {
+    final PagifyException requestError = _resolveError(error);
+    return widget.errorBuilder?.call(requestError) ??
+        ExceptionView(
+          msg: requestError.msg,
+          onRetry: () async => widget.pagifyController.retry(),
+        );
+  }
+
+  Future<void> _onError(
+    BuildContext context,
+    int page,
+    PagifyException error,
+  ) async {
+    final PagifyException requestError = _resolveError(error);
+    if (widget.onError != null) {
+      await widget.onError!(context, page, requestError);
+    } else {
+      Messages.showToast(
+        status: BaseStatus.error,
+        title: LocaleKeys.operationFaild,
+        msg: requestError.msg,
+      );
+    }
   }
 
   @override
@@ -184,15 +226,9 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
         itemExtent: widget.rankingType == Ranking.adaptiveGrid
             ? null
             : widget.itemExtent,
-        noConnectionText: widget.noConnectionText,
+        noConnectionText: widget.noConnectionText ?? LocaleKeys.checkInternet,
         onLoading: widget.onLoading,
-        onError:
-            widget.onError ??
-            (context, page, error) => Messages.showToast(
-              status: BaseStatus.error,
-              title: LocaleKeys.operationFaild,
-              msg: error.msg,
-            ),
+        onError: _onError,
         onSuccess: widget.onSuccess,
         listenToNetworkConnectivityChanges:
             widget.onConnectivityChanged != null,
@@ -220,7 +256,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
             totalPages: data.$2.totalPages,
           ),
         ),
-        errorBuilder: widget.errorBuilder ?? (error) => const ExceptionView(),
+        errorBuilder: _buildErrorView,
         errorMapper:
             widget.errorMapper ??
             PagifyErrorMapper(
@@ -273,15 +309,9 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
         isReverse: widget.isReverse,
         physics: widget.physics,
         cacheExtent: widget.cacheExtent,
-        noConnectionText: widget.noConnectionText,
+        noConnectionText: widget.noConnectionText ?? LocaleKeys.checkInternet,
         onLoading: widget.onLoading,
-        onError:
-            widget.onError ??
-            (context, page, error) => Messages.showToast(
-              status: BaseStatus.error,
-              title: LocaleKeys.operationFaild,
-              msg: error.msg,
-            ),
+        onError: _onError,
         onSuccess: widget.onSuccess,
         listenToNetworkConnectivityChanges:
             widget.onConnectivityChanged != null,
@@ -312,7 +342,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
             totalPages: data.$2.totalPages,
           ),
         ),
-        errorBuilder: widget.errorBuilder ?? (error) => const ExceptionView(),
+        errorBuilder: _buildErrorView,
         errorMapper:
             widget.errorMapper ??
             PagifyErrorMapper(

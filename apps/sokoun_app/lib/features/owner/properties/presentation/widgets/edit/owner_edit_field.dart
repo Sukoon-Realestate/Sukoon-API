@@ -22,6 +22,7 @@ class OwnerEditField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 7.h,
       children: [
         AppText(
           label,
@@ -31,7 +32,6 @@ class OwnerEditField extends StatelessWidget {
             height: 1.45,
           ),
         ),
-        7.szH,
         TextField(
           controller: controller,
           keyboardType: keyboardType,

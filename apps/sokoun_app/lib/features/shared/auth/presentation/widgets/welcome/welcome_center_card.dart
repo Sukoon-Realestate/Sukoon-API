@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -32,6 +31,7 @@ class WelcomeCenterCard extends StatelessWidget {
         border: Border.all(color: AppColors.sokoonBorder),
       ),
       child: Row(
+        spacing: 14.w,
         children: [
           Container(
             width: 40.r,
@@ -42,11 +42,11 @@ class WelcomeCenterCard extends StatelessWidget {
             ),
             child: Icon(icon, color: iconColor, size: 19.r),
           ),
-          14.szW,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
+              spacing: 3.h,
               children: [
                 AppText(
                   title,
@@ -58,7 +58,6 @@ class WelcomeCenterCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                3.szH,
                 AppText(
                   subtitle,
                   style: AppTextStyles.regular12.copyWith(

@@ -19,14 +19,15 @@ class ChatCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 12.w,
       children: [
         _ConversationAvatar(conversation: conversation),
-        12.szW,
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                spacing: 6.w,
                 children: [
                   Expanded(
                     child: AppText(
@@ -40,8 +41,7 @@ class ChatCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  if (conversation.isVerified) ...[
-                    6.szW,
+                  if (conversation.isVerified)
                     Tooltip(
                       message: LocaleKeys.verified,
                       child: Icon(
@@ -50,7 +50,6 @@ class ChatCard extends StatelessWidget {
                         size: 18.r,
                       ),
                     ),
-                  ],
                 ],
               ),
               4.szH,

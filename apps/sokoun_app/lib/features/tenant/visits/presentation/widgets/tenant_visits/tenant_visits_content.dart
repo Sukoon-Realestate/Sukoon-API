@@ -24,12 +24,12 @@ class TenantVisitsScreenContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 10.h,
       children: [
         TenantVisitsFilters(
           selectedFilter: selectedFilter,
           onFilterSelected: onFilterSelected,
         ),
-        10.szH,
         Expanded(
           child: TenantVisitsList(
             selectedFilter: selectedFilter,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_search_model.dart';
 
@@ -60,6 +59,7 @@ class TenantFilterContent extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 20.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 12.h,
         children: [
           FilterCard(
             title: LocaleKeys.tenantFilterOrdering,
@@ -71,7 +71,6 @@ class TenantFilterContent extends StatelessWidget {
                   onFiltersChanged(filters.copyWith(ordering: value, page: 1)),
             ),
           ),
-          12.szH,
           FilterCard(
             title: LocaleKeys.tenantFilterPropertyType,
             child: FilterChipWrap(
@@ -80,27 +79,23 @@ class TenantFilterContent extends StatelessWidget {
               onSelected: _selectPropertyType,
             ),
           ),
-          12.szH,
           FilterLocationSection(
             filters: filters,
             cityController: cityController,
             districtController: districtController,
             onFiltersChanged: onFiltersChanged,
           ),
-          12.szH,
           FilterPriceRangeSection(
             filters: filters,
             minPriceController: minPriceController,
             maxPriceController: maxPriceController,
             onFiltersChanged: onFiltersChanged,
           ),
-          12.szH,
           FilterPropertyDetailsSection(
             filters: filters,
             filterOptions: filterOptions,
             onFiltersChanged: onFiltersChanged,
           ),
-          12.szH,
           FilterCard(
             title: LocaleKeys.tenantFilterAmenities,
             child: FilterChipWrap(
@@ -109,7 +104,6 @@ class TenantFilterContent extends StatelessWidget {
               onSelected: _toggleAmenity,
             ),
           ),
-          12.szH,
           FilterCard(
             title: LocaleKeys.tenantFilterVerification,
             child: SingleSelectGroup(

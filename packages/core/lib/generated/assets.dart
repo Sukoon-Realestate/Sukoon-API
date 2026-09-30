@@ -93,6 +93,7 @@ class $AssetsSvgGen {
   final SvgGenImage building = const SvgGenImage('assets/svg/building.svg');
   final SvgGenImage calendar = const SvgGenImage('assets/svg/calendar.svg');
   final SvgGenImage home = const SvgGenImage('assets/svg/home.svg');
+  final SvgGenImage logo = const SvgGenImage('assets/svg/logo.svg');
   final SvgGenImage menu = const SvgGenImage('assets/svg/menu.svg');
   final SvgGenImage message = const SvgGenImage('assets/svg/message.svg');
   final SvgGenImage notification = const SvgGenImage(

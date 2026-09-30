@@ -251,13 +251,13 @@ class _MapSection extends StatelessWidget {
               border: Border.all(color: AppColors.grayPale),
             ),
             child: Row(
+              spacing: 8.w,
               children: [
                 Icon(
                   Icons.search_rounded,
                   color: AppColors.sokoonGray,
                   size: 18.r,
                 ),
-                8.szW,
                 Expanded(
                   child: TextField(
                     controller: mapQueryController,
@@ -298,6 +298,7 @@ class _MapSection extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
+                spacing: 8.w,
                 children: [
                   Icon(
                     form.isLocationSelected
@@ -306,7 +307,6 @@ class _MapSection extends StatelessWidget {
                     color: AppColors.white,
                     size: 17.r,
                   ),
-                  8.szW,
                   AppText(
                     form.isLocationSelected
                         ? LocaleKeys.ownerAddPropertyLocationSelected

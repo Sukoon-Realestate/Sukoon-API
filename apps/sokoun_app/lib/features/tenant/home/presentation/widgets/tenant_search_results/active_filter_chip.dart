@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_search_result_content.dart';
@@ -24,6 +23,7 @@ class ActiveFilterChip extends StatelessWidget {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        spacing: 5.w,
         children: [
           AppText(
             filter.label,
@@ -32,7 +32,6 @@ class ActiveFilterChip extends StatelessWidget {
               fontSize: 12.sp,
             ),
           ),
-          5.szW,
           GestureDetector(
             onTap: onRemove,
             behavior: HitTestBehavior.opaque,

@@ -24,9 +24,9 @@ class SokoonAppleSignInButton extends StatelessWidget {
       customChild: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
+        spacing: 10.w,
         children: [
           Icon(Icons.apple, color: AppColors.sokoonNavy, size: 20.r),
-          SizedBox(width: 10.w),
           Flexible(
             child: AppText(
               label ?? LocaleKeys.continueWithApple,

@@ -43,7 +43,7 @@ class OwnerRequestDetailsContent extends StatelessWidget {
                 : LocaleKeys.ownerVisitTenantPhoneHidden,
           ),
           16.szH,
-          if (request.actions.canAccept) ...[
+          if (request.actions.canAccept)
             DefaultButton(
               onTap: isUpdating ? null : onAcceptPressed,
               title: LocaleKeys.ownerVisitAcceptWithCheck,
@@ -59,9 +59,8 @@ class OwnerRequestDetailsContent extends StatelessWidget {
                 height: 1.45,
               ),
             ),
-          ],
           if (request.actions.canAccept && request.actions.canReject) 12.szH,
-          if (request.actions.canReject) ...[
+          if (request.actions.canReject)
             DefaultButton(
               onTap: isUpdating ? null : onRejectPressed,
               title: LocaleKeys.ownerVisitRejectRequest,
@@ -78,7 +77,6 @@ class OwnerRequestDetailsContent extends StatelessWidget {
                 height: 1.45,
               ),
             ),
-          ],
           if (request.actions.canAccept || request.actions.canReject) 12.szH,
           DefaultButton(
             onTap: isUpdating || !canOpenChat ? null : _openChat,
@@ -128,6 +126,7 @@ class _OwnerTenantNoteCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 8.h,
         children: [
           AppText(
             LocaleKeys.ownerVisitTenantNoteTitle,
@@ -137,7 +136,6 @@ class _OwnerTenantNoteCard extends StatelessWidget {
               height: 1.45,
             ),
           ),
-          8.szH,
           AppText(
             note,
             style: AppTextStyles.regular14.copyWith(

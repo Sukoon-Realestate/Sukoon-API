@@ -13,6 +13,7 @@ class LanguageSelectionOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      spacing: 12.h,
       children: [
         LanguageOptionCard(
           title: LocaleKeys.languageArabicName,
@@ -21,7 +22,6 @@ class LanguageSelectionOptions extends StatelessWidget {
           selected: selectedLanguage == Languages.arabic,
           onSelected: () => onLanguageSelected(Languages.arabic),
         ),
-        12.szH,
         LanguageOptionCard(
           title: LocaleKeys.languageEnglishNativeName,
           subtitle: LocaleKeys.languageEnglishTranslation,

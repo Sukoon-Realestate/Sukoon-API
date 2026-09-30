@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -26,6 +25,7 @@ class SwitchRow extends StatelessWidget {
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 3.h,
             children: [
               AppText(
                 title,
@@ -35,7 +35,6 @@ class SwitchRow extends StatelessWidget {
                   height: 1.45,
                 ),
               ),
-              3.szH,
               AppText(
                 subtitle,
                 style: AppTextStyles.medium11.copyWith(

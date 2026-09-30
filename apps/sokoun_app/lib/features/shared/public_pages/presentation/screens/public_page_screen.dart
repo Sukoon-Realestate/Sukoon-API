@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/language/languages.dart';
 import 'package:melos_core/core/helpers/status_builder.dart';
-import 'package:melos_core/core/widgets/retry_view.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import '../../data/enums/public_page.dart';
 import '../../data/models/public_page_content.dart';
@@ -20,14 +19,13 @@ class PublicPageScreen extends StatefulWidget {
 
 class _PublicPageScreenState extends State<PublicPageScreen> {
   late final PublicPageCubit _cubit;
-  late final Future<void> _request;
   late final String _language;
   @override
   void initState() {
     super.initState();
     _language = Languages.currentLanguage.locale.languageCode;
     _cubit = PublicPageCubit();
-    _request = _load();
+    _load();
   }
 
   Future<void> _load() => _cubit.load(page: widget.page, language: _language);
@@ -44,10 +42,7 @@ class _PublicPageScreenState extends State<PublicPageScreen> {
       title: publicPageTitle(widget.page),
       body: StatusBuilder<PublicPageCubit, PublicPageContent>.withShimmer(
         initialDataForShimmer: const PublicPageContent.initial(),
-        requestToTryAgainWhenError: _request,
         onRetry: _load,
-        errorType: ErrorType.customView,
-        errorWidget: AppRetryView(onRetry: _load, isConnectionError: false),
         builder: (page) => page.content.trim().isEmpty && _cubit.state.isSuccess
             ? const PublicPageEmptyState()
             : PublicPageBody(page: page),

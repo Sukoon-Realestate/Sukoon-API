@@ -8,6 +8,7 @@ class TenantProfileActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      spacing: 8.h,
       children: [
         ProfileSurfaceCard(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
@@ -19,7 +20,6 @@ class TenantProfileActions extends StatelessWidget {
             onTap: () => Go.to(const KycIntroScreen()),
           ),
         ),
-        8.szH,
         ProfileSurfaceCard(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
           child: ProfileMenuTile(
@@ -33,7 +33,6 @@ class TenantProfileActions extends StatelessWidget {
             onTap: () => Go.to(const LanguageSelectionScreen()),
           ),
         ),
-        8.szH,
         ProfileSurfaceCard(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
           child: ProfileMenuTile(
@@ -48,7 +47,6 @@ class TenantProfileActions extends StatelessWidget {
             iconBackgroundColor: AppColors.bluePale,
           ),
         ),
-        8.szH,
         ProfileSurfaceCard(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
           child: ProfileMenuTile(
@@ -64,7 +62,6 @@ class TenantProfileActions extends StatelessWidget {
             onTap: () => Go.to(const MyReviewsScreen()),
           ),
         ),
-        8.szH,
         const ProfileSurfaceCard(child: PublicPageMenu()),
       ],
     );

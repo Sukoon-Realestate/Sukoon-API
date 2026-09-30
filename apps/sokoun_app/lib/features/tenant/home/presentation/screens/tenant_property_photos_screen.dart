@@ -139,6 +139,7 @@ class _TenantPropertyPhotosScreenState
             ValueListenableBuilder<int>(
               valueListenable: _selectedIndex,
               builder: (context, selectedIndex, _) => Column(
+                spacing: 14.h,
                 children: [
                   AppText(
                     '${selectedIndex + 1} / ${widget.property.photoLabels.length} — ${widget.property.photoLabels[selectedIndex]}',
@@ -149,7 +150,6 @@ class _TenantPropertyPhotosScreenState
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  14.szH,
                   SizedBox(
                     height: 40.h,
                     child: ListView.separated(

@@ -43,9 +43,11 @@ class OwnerPropertyCard extends StatelessWidget {
             ],
           ),
           child: Column(
+            spacing: 14.h,
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 12.w,
                 children: [
                   Container(
                     width: 80.r,
@@ -73,7 +75,6 @@ class OwnerPropertyCard extends StatelessWidget {
                             ),
                           ),
                   ),
-                  12.szW,
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -118,7 +119,6 @@ class OwnerPropertyCard extends StatelessWidget {
                   ),
                 ],
               ),
-              14.szH,
               Row(
                 children: [
                   _OwnerPropertyCardAction(

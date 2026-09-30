@@ -12,7 +12,6 @@ class TenantProfileScreen extends StatefulWidget {
 class _TenantProfileScreenState extends State<TenantProfileScreen> {
   late final UserModel _fallbackUser;
   late final TenantProfileCubit _profileCubit;
-  late final Future<void> _profileRequest;
   bool _ownsProfileCubit = false;
   StreamSubscription<UserState>? _accountSubscription;
 
@@ -26,9 +25,9 @@ class _TenantProfileScreenState extends State<TenantProfileScreen> {
       _ownsProfileCubit = true;
       _profileCubit = TenantProfileCubit();
     }
-    _profileRequest = _profileCubit.state.isSuccess
-        ? Future<void>.value()
-        : _profileCubit.getProfile();
+    if (!_profileCubit.state.isSuccess) {
+      unawaited(_profileCubit.getProfile());
+    }
     if (injector.isRegistered<UserCubit>()) {
       _accountSubscription = UserCubit.instance.stream.listen((state) {
         if (state.userStatus == UserStatus.loggedIn) {
@@ -109,7 +108,6 @@ class _TenantProfileScreenState extends State<TenantProfileScreen> {
                     TenantProfileContent
                   >.withShimmer(
                     initialDataForShimmer: const TenantProfileContent.initial(),
-                    requestToTryAgainWhenError: _profileRequest,
                     onRetry: _profileCubit.getProfile,
                     errorType: ErrorType.defaultView,
                     builder: (profile) => TenantProfileContentView(

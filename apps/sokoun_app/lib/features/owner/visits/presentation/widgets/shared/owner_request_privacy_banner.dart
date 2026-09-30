@@ -19,9 +19,9 @@ class OwnerRequestPrivacyBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(14.r),
       ),
       child: Row(
+        spacing: 9.w,
         children: [
           Icon(icon, color: AppColors.blue, size: 17.r),
-          9.szW,
           Expanded(
             child: AppText(
               message,

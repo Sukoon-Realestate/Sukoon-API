@@ -34,8 +34,9 @@ class OwnerAnalyticsBarChart extends StatelessWidget {
             height: 128.h,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
+              spacing: 5.w,
               children: [
-                for (int index = 0; index < values.length; index++) ...[
+                for (int index = 0; index < values.length; index++)
                   Expanded(
                     child: AnimatedContainer(
                       duration: SokounMotion.duration(
@@ -53,8 +54,6 @@ class OwnerAnalyticsBarChart extends StatelessWidget {
                       ),
                     ),
                   ),
-                  if (index < values.length - 1) 5.szW,
-                ],
               ],
             ),
           ),

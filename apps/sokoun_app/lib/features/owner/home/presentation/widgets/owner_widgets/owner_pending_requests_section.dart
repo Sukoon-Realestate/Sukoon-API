@@ -1,3 +1,4 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
@@ -21,9 +22,9 @@ class OwnerPendingRequestsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 10.h,
       children: [
         HomeSectionHeader(title: LocaleKeys.ownerDashboardPendingTitle),
-        10.szH,
         if (pendingVisits.isEmpty)
           const OwnerPendingRequestsEmptyState()
         else

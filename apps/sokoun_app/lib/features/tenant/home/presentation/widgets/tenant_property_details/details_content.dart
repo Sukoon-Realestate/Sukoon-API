@@ -55,13 +55,13 @@ class TenantPropertyDetailsContentView extends StatelessWidget {
             onTap: _openLocation,
             behavior: HitTestBehavior.opaque,
             child: Row(
+              spacing: 6.w,
               children: [
                 Icon(
                   Icons.location_on_outlined,
                   color: AppColors.sokoonGray,
                   size: 18.r,
                 ),
-                6.szW,
                 Expanded(
                   child: AppText(
                     property.location,

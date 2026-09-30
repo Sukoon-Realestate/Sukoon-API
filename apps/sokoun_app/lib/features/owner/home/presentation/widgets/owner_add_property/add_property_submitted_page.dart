@@ -51,13 +51,13 @@ class AddPropertySubmittedPage extends StatelessWidget {
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
+              spacing: 4.w,
               children: [
                 Icon(
                   Icons.schedule_rounded,
                   color: AppColors.amber,
                   size: 12.r,
                 ),
-                4.szW,
                 AppText(
                   LocaleKeys.ownerPropertySubmittedStatus,
                   style: AppTextStyles.semiBold.copyWith(
@@ -152,6 +152,7 @@ class _SummaryRow extends StatelessWidget {
     return ConstrainedBox(
       constraints: BoxConstraints(minHeight: 40.h),
       child: Row(
+        spacing: 10.w,
         children: [
           Expanded(
             flex: 3,
@@ -167,7 +168,6 @@ class _SummaryRow extends StatelessWidget {
               textAlign: TextAlign.start,
             ),
           ),
-          10.szW,
           Expanded(
             flex: 2,
             child: AppText(

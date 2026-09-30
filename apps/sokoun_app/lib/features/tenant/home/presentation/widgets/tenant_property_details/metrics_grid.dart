@@ -14,11 +14,10 @@ class TenantPropertyMetricsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      spacing: 8.w,
       children: [
-        for (int index = 0; index < property.metrics.length; index++) ...[
+        for (int index = 0; index < property.metrics.length; index++)
           Expanded(child: _MetricCard(metric: property.metrics[index])),
-          if (index < property.metrics.length - 1) 8.szW,
-        ],
       ],
     );
   }

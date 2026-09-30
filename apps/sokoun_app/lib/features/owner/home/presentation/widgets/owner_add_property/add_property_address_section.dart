@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_dropinity.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
@@ -61,6 +60,7 @@ class AddPropertyAddressSection extends StatelessWidget {
     return AddPropertySectionCard(
       title: LocaleKeys.ownerAddPropertyAddressSection,
       child: Column(
+        spacing: 10.h,
         children: [
           AppDropinity<
             List<OwnerPropertyLocationModel>,
@@ -78,7 +78,6 @@ class AddPropertyAddressSection extends StatelessWidget {
             getLabel: (item) => item.name,
             onChanged: onGovernorateChanged,
           ),
-          10.szH,
           IgnorePointer(
             ignoring: governorate == null,
             child: Opacity(
@@ -117,7 +116,6 @@ class AddPropertyAddressSection extends StatelessWidget {
                     ),
             ),
           ),
-          10.szH,
           AddPropertyField(
             field: AddPropertyFieldContent(
               label: LocaleKeys.ownerAddPropertyStreet,

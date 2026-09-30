@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -19,13 +18,13 @@ class TenantPropertyOwnershipVerifiedBanner extends StatelessWidget {
         border: Border.all(color: AppColors.greenAlpha19),
       ),
       child: Row(
+        spacing: 8.w,
         children: [
           Icon(
             Icons.verified_user_outlined,
             color: AppColors.green,
             size: 18.r,
           ),
-          8.szW,
           Expanded(
             child: AppText(
               LocaleKeys.tenantPropertyDetailsOwnershipVerified,

@@ -4,7 +4,6 @@ import 'package:sokoun_app/shared_widgets/localized_digits_formatter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 
@@ -119,6 +118,7 @@ class _PriceSection extends StatelessWidget {
     return AddPropertySectionCard(
       title: LocaleKeys.ownerAddPropertyPrice,
       child: Column(
+        spacing: 10.h,
         children: [
           AddPropertyField(
             field: AddPropertyFieldContent(
@@ -140,7 +140,6 @@ class _PriceSection extends StatelessWidget {
               ),
             ),
           ),
-          10.szH,
           AddPropertyDropdownField(
             label: LocaleKeys.ownerAddPropertyDeposit,
             value: form.deposit,
@@ -171,8 +170,10 @@ class _RentalPeriodSection extends StatelessWidget {
     return AddPropertySectionCard(
       title: LocaleKeys.ownerAddPropertyRentalPeriod,
       child: Column(
+        spacing: 12.h,
         children: [
           Row(
+            spacing: 10.w,
             children: [
               Expanded(
                 child: AddPropertyField(
@@ -188,7 +189,6 @@ class _RentalPeriodSection extends StatelessWidget {
                   inputFormatters: [const LocalizedDigitsFormatter()],
                 ),
               ),
-              10.szW,
               Expanded(
                 child: AddPropertyDropdownField(
                   label: LocaleKeys.ownerAddPropertyUnit,
@@ -199,7 +199,6 @@ class _RentalPeriodSection extends StatelessWidget {
               ),
             ],
           ),
-          12.szH,
           Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),

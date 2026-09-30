@@ -15,6 +15,7 @@ class TenantPropertyPriceAndRating extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      spacing: 8.w,
       children: [
         Expanded(
           child: Align(
@@ -22,6 +23,7 @@ class TenantPropertyPriceAndRating extends StatelessWidget {
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Row(
+                spacing: 6.w,
                 children: [
                   AppText(
                     LocaleKeys.tenantPropertyDetailsMonthlyPriceUnit,
@@ -31,7 +33,6 @@ class TenantPropertyPriceAndRating extends StatelessWidget {
                       height: 1.45,
                     ),
                   ),
-                  6.szW,
                   AppText(
                     property.price,
                     style: AppTextStyles.extraBold.copyWith(
@@ -44,7 +45,6 @@ class TenantPropertyPriceAndRating extends StatelessWidget {
             ),
           ),
         ),
-        8.szW,
         Row(
           children: [
             AppText(

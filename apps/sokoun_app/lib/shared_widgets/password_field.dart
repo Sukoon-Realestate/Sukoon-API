@@ -44,6 +44,7 @@ class SokoonPasswordField extends StatelessWidget {
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 4.h,
           children: [
             DefaultTextField.withTitle(
               controller: controller,
@@ -65,8 +66,7 @@ class SokoonPasswordField extends StatelessWidget {
               onChanged: onChanged,
               validator: validator ?? _validatePassword,
             ),
-            if (errorText != null && errorText!.isNotEmpty) ...[
-              SizedBox(height: 4.h),
+            if (errorText != null && errorText!.isNotEmpty)
               AppText(
                 errorText!,
                 style: AppTextStyles.bold12.copyWith(
@@ -75,7 +75,6 @@ class SokoonPasswordField extends StatelessWidget {
                   height: 1.45,
                 ),
               ),
-            ],
           ],
         );
       },

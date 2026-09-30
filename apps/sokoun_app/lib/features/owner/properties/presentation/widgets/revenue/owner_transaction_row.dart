@@ -36,6 +36,7 @@ class OwnerTransactionRow extends StatelessWidget {
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: 3.h,
             children: [
               AppText(
                 transaction.title,
@@ -45,7 +46,6 @@ class OwnerTransactionRow extends StatelessWidget {
                   height: 1.45,
                 ),
               ),
-              3.szH,
               AppText(
                 transaction.date,
                 style: AppTextStyles.regular11.copyWith(

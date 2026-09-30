@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
@@ -23,16 +22,15 @@ class OwnerVisitRequestFilters extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      spacing: 8.w,
       children: [
-        for (int index = 0; index < filters.length; index++) ...[
+        for (int index = 0; index < filters.length; index++)
           _FilterChip(
             filter: filters[index],
             count: countForFilter(filters[index]),
             isSelected: filters[index].isSame(selectedFilter),
             onPressed: () => onFilterSelected(filters[index]),
           ),
-          if (index < filters.length - 1) 8.szW,
-        ],
       ],
     );
   }
@@ -71,6 +69,7 @@ class _FilterChip extends StatelessWidget {
             ),
             child: FittedBox(
               child: Row(
+                spacing: 6.w,
                 children: [
                   AppText(
                     filter.label,
@@ -82,8 +81,7 @@ class _FilterChip extends StatelessWidget {
                       height: 1.45,
                     ),
                   ),
-                  if (count > 0) ...[
-                    6.szW,
+                  if (count > 0)
                     Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 6.w,
@@ -106,7 +104,6 @@ class _FilterChip extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ],
                 ],
               ),
             ),

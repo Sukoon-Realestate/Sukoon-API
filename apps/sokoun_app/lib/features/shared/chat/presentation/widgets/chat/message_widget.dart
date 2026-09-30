@@ -28,6 +28,7 @@ class ChatMessageBubble extends StatelessWidget {
         crossAxisAlignment: isFromMe
             ? CrossAxisAlignment.end
             : CrossAxisAlignment.start,
+        spacing: 3.h,
         children: [
           Container(
             padding: EdgeInsets.symmetric(
@@ -61,7 +62,6 @@ class ChatMessageBubble extends StatelessWidget {
                     maxLines: 8,
                   ),
           ),
-          3.szH,
           AppText(
             message.time ?? '',
             style: AppTextStyles.regular10.copyWith(

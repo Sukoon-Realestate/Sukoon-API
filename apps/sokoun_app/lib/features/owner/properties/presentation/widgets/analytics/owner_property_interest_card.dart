@@ -51,6 +51,7 @@ class _InterestProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      spacing: 7.h,
       children: [
         Row(
           children: [
@@ -73,7 +74,6 @@ class _InterestProgress extends StatelessWidget {
             ),
           ],
         ),
-        7.szH,
         ClipRRect(
           borderRadius: BorderRadius.circular(99.r),
           child: LinearProgressIndicator(

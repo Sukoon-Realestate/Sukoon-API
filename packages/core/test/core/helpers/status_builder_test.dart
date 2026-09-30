@@ -12,6 +12,7 @@ import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/helpers/status_builder.dart';
 import 'package:melos_core/core/widgets/exeption_view.dart';
+import 'package:melos_core/core/widgets/retry_view.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -102,7 +103,8 @@ void main() {
         await tester.pump();
 
         expect(find.byIcon(Icons.cloud_off_outlined), findsOneWidget);
-        expect(find.byType(ExceptionView), findsNothing);
+        expect(find.byType(ExceptionView), findsOneWidget);
+        expect(find.byType(AppRetryView), findsOneWidget);
         expect(retries, 0);
 
         await tester.tap(find.text(LocaleKeys.ownerRetryAction));
@@ -116,9 +118,20 @@ void main() {
     );
   }
 
-  for (final String? message in ['Server unavailable', '', null]) {
-    testWidgets('other errors show ExceptionView: $message', (tester) async {
-      await tester.pumpWidget(_screen(cubit: cubit, onRetry: () async {}));
+  for (final String? message in ['Server unavailable', '', '   ', null]) {
+    testWidgets('other errors show their message and retry: $message', (
+      tester,
+    ) async {
+      int retries = 0;
+      await tester.pumpWidget(
+        _screen(
+          cubit: cubit,
+          onRetry: () async {
+            retries++;
+            cubit.showSuccess();
+          },
+        ),
+      );
       await tester.pumpAndSettle();
 
       cubit.setError(errorMessage: message);
@@ -126,68 +139,96 @@ void main() {
       await tester.pump();
 
       expect(find.byType(ExceptionView), findsOneWidget);
+      expect(find.byType(AppRetryView), findsNothing);
       expect(find.byIcon(Icons.cloud_off_outlined), findsNothing);
       expect(find.text('Loaded content'), findsNothing);
-      await tester.pumpWidget(const SizedBox.shrink());
+      expect(
+        find.text(
+          message?.trim().isNotEmpty == true
+              ? message!.trim()
+              : LocaleKeys.exceptionError,
+        ),
+        findsOneWidget,
+      );
+
+      await tester.tap(find.text(LocaleKeys.ownerRetryAction));
+      await tester.pumpAndSettle();
+      expect(retries, 1);
+      expect(find.text('Loaded content'), findsOneWidget);
+      expect(tester.takeException(), isNull);
     });
   }
 
-  testWidgets('retry ignores repeated taps until the request completes', (
-    tester,
-  ) async {
-    final request = Completer<void>();
-    int retries = 0;
-    await tester.pumpWidget(
-      _screen(
-        cubit: cubit,
-        onRetry: () {
-          retries++;
-          return request.future;
-        },
-      ),
+  for (final bool offline in [true, false]) {
+    testWidgets(
+      'retry ignores repeated taps until the request completes (offline: $offline)',
+      (tester) async {
+        final request = Completer<void>();
+        int retries = 0;
+        await tester.pumpWidget(
+          _screen(
+            cubit: cubit,
+            onRetry: () {
+              retries++;
+              return request.future;
+            },
+          ),
+        );
+        await tester.pumpAndSettle();
+        cubit.setError(
+          errorMessage: offline
+              ? LocaleKeys.checkInternet
+              : 'Server unavailable',
+        );
+        await tester.pump();
+        await tester.pump();
+
+        await tester.tap(find.text(LocaleKeys.ownerRetryAction));
+        await tester.tap(find.text(LocaleKeys.ownerRetryAction));
+        await tester.pump();
+
+        expect(retries, 1);
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        expect(
+          tester.widget<ElevatedButton>(find.byType(ElevatedButton)).onPressed,
+          isNull,
+        );
+
+        request.complete();
+        await tester.pumpAndSettle();
+
+        expect(find.byType(CircularProgressIndicator), findsNothing);
+        expect(find.text(LocaleKeys.ownerRetryAction), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      },
     );
-    await tester.pumpAndSettle();
-    cubit.setError(errorMessage: LocaleKeys.checkInternet);
-    await tester.pump();
-    await tester.pump();
 
-    await tester.tap(find.text(LocaleKeys.ownerRetryAction));
-    await tester.tap(find.text(LocaleKeys.ownerRetryAction));
-    await tester.pump();
+    testWidgets(
+      'retry can finish after its view is disposed (offline: $offline)',
+      (tester) async {
+        final request = Completer<void>();
+        await tester.pumpWidget(
+          _screen(cubit: cubit, onRetry: () => request.future),
+        );
+        await tester.pumpAndSettle();
+        cubit.setError(
+          errorMessage: offline
+              ? LocaleKeys.checkInternet
+              : 'Server unavailable',
+        );
+        await tester.pump();
+        await tester.pump();
+        await tester.tap(find.text(LocaleKeys.ownerRetryAction));
+        await tester.pump();
 
-    expect(retries, 1);
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    expect(
-      tester.widget<ElevatedButton>(find.byType(ElevatedButton)).onPressed,
-      isNull,
+        await tester.pumpWidget(const SizedBox.shrink());
+        request.complete();
+        await tester.pump();
+
+        expect(tester.takeException(), isNull);
+      },
     );
-
-    request.complete();
-    await tester.pumpAndSettle();
-
-    expect(find.byType(CircularProgressIndicator), findsNothing);
-    expect(find.text(LocaleKeys.ownerRetryAction), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
-
-  testWidgets('retry can finish after its view is disposed', (tester) async {
-    final request = Completer<void>();
-    await tester.pumpWidget(
-      _screen(cubit: cubit, onRetry: () => request.future),
-    );
-    await tester.pumpAndSettle();
-    cubit.setError(errorMessage: LocaleKeys.checkInternet);
-    await tester.pump();
-    await tester.pump();
-    await tester.tap(find.text(LocaleKeys.ownerRetryAction));
-    await tester.pump();
-
-    await tester.pumpWidget(const SizedBox.shrink());
-    request.complete();
-    await tester.pump();
-
-    expect(tester.takeException(), isNull);
-  });
+  }
 }
 
 Widget _screen({
@@ -196,7 +237,6 @@ Widget _screen({
   bool withShimmer = true,
   Widget Function(String)? builder,
 }) {
-  final Future<void> initialRequest = Future<void>.value();
   return EasyLocalization(
     supportedLocales: const [Locale('en')],
     path: 'unused',
@@ -214,12 +254,10 @@ Widget _screen({
             child: withShimmer
                 ? StatusBuilder<_StatusCubit, String>.withShimmer(
                     initialDataForShimmer: '',
-                    requestToTryAgainWhenError: initialRequest,
                     onRetry: onRetry,
                     builder: builder ?? (data) => Text(data),
                   )
                 : StatusBuilder<_StatusCubit, String>(
-                    requestToTryAgainWhenError: initialRequest,
                     onRetry: onRetry,
                     builder: builder ?? (data) => Text(data),
                   ),

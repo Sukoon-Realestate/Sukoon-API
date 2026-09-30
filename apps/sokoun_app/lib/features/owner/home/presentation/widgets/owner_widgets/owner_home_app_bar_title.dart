@@ -42,6 +42,7 @@ class OwnerHomeAppBarTitle extends StatelessWidget {
     ].join(' ');
 
     return Row(
+      spacing: 10.w,
       children: [
         HomeAvatar(
           icon: Icons.key_rounded,
@@ -49,7 +50,6 @@ class OwnerHomeAppBarTitle extends StatelessWidget {
           iconColor: AppColors.gold,
           imageUrl: avatarUrl,
         ),
-        10.szW,
         Expanded(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -74,6 +74,7 @@ class OwnerHomeAppBarTitle extends StatelessWidget {
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
+                  spacing: 3.w,
                   children: [
                     Icon(
                       isVerified
@@ -82,7 +83,6 @@ class OwnerHomeAppBarTitle extends StatelessWidget {
                       color: isVerified ? AppColors.gold : AppColors.sokoonGray,
                       size: 12.r,
                     ),
-                    3.szW,
                     Flexible(
                       child: AppText(
                         isVerified
@@ -104,7 +104,6 @@ class OwnerHomeAppBarTitle extends StatelessWidget {
             ],
           ),
         ),
-        10.szW,
         const NotificationBellButton(role: NotificationRole.owner),
       ],
     );

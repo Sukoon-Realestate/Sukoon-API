@@ -242,6 +242,7 @@ class _ReportReasonTile extends StatelessWidget {
           ),
         ),
         child: Row(
+          spacing: 12.w,
           children: [
             Container(
               width: 20.r,
@@ -263,7 +264,6 @@ class _ReportReasonTile extends StatelessWidget {
                     )
                   : null,
             ),
-            12.szW,
             Expanded(
               child: AppText(
                 label,

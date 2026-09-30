@@ -9,7 +9,6 @@ import '../widgets/custom_loading.dart';
 import '../widgets/custom_shimmer.dart';
 import '../widgets/exeption_view.dart';
 import '../widgets/not_contain_data.dart';
-import '../widgets/retry_view.dart';
 
 enum LoadingType { loadingIndicator, shimmer }
 
@@ -33,13 +32,11 @@ class StatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
   final Widget? errorWidget;
   final Widget? emptyView;
   final T? initialDataForShimmer;
-  final Future<void> requestToTryAgainWhenError;
   final Future<void> Function() onRetry;
 
   const StatusBuilder({
     super.key,
     required this.builder,
-    required this.requestToTryAgainWhenError,
     required this.onRetry,
     this.errorType = ErrorType.defaultView,
     this.errorWidget,
@@ -50,7 +47,6 @@ class StatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
   const StatusBuilder.withShimmer({
     super.key,
     required this.builder,
-    required this.requestToTryAgainWhenError,
     required this.onRetry,
     this.errorType = ErrorType.defaultView,
     required this.initialDataForShimmer,
@@ -104,17 +100,15 @@ class StatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
   }
 
   Widget _errorView(AsyncState<T> state) {
-    if (state.msg?.trim() == LocaleKeys.checkInternet.trim()) {
-      return AppRetryView(onRetry: onRetry);
+    if (state.msg?.trim() != LocaleKeys.checkInternet.trim()) {
+      if (errorType.isWithData) {
+        return builder.call(state.data);
+      } else if (errorType.isCustomView && errorWidget.isNotNull) {
+        return errorWidget!;
+      }
     }
 
-    if (errorType.isWithData) {
-      return builder.call(state.data);
-    } else if (errorType.isCustomView && errorWidget.isNotNull) {
-      return errorWidget!;
-    }
-
-    return const ExceptionView();
+    return ExceptionView(msg: state.msg, onRetry: onRetry);
   }
 
   @override
@@ -124,7 +118,6 @@ class StatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
         onLoading: () => _loadingView,
         onSuccess: () => _successView(state.data),
         onError: () => _errorView(state),
-        // Keep the content mounted; its scroll view owns the loading footer.
         onLoadMore: () => _successView(state.data),
       ),
     );

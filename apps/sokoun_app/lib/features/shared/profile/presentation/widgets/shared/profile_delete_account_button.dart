@@ -73,6 +73,7 @@ class _ProfileDeleteAccountButtonState
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 8.w,
                       children: [
                         if (state.isLoading)
                           SizedBox.square(
@@ -88,7 +89,6 @@ class _ProfileDeleteAccountButtonState
                             color: AppColors.red,
                             size: 18.r,
                           ),
-                        8.szW,
                         AppText(
                           LocaleKeys.deleteAccount,
                           style: AppTextStyles.bold14.copyWith(
@@ -117,6 +117,7 @@ class _ProfileDeleteAccountDialog extends StatelessWidget {
       backgroundColor: AppColors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
       title: Column(
+        spacing: 12.h,
         children: [
           Container(
             width: 48.r,
@@ -132,7 +133,6 @@ class _ProfileDeleteAccountDialog extends StatelessWidget {
               size: 24.r,
             ),
           ),
-          12.szH,
           AppText(
             LocaleKeys.areYouSureYouWantToDeleteYourAccount,
             style: AppTextStyles.extraBold.copyWith(

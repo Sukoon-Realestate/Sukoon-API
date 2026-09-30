@@ -48,15 +48,14 @@ class BookVisitForm extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 8.w,
                 children: [
-                  for (int index = 0; index < days.length; index++) ...[
-                    if (index > 0) 8.szW,
+                  for (int index = 0; index < days.length; index++)
                     VisitDayChip(
                       day: days[index],
                       isSelected: selectedDayIndex == index,
                       onPressed: () => onDaySelected(index),
                     ),
-                  ],
                 ],
               ),
             ),

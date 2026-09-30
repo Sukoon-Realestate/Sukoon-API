@@ -26,8 +26,9 @@ class VisitDetailsActions extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
+      spacing: 12.h,
       children: [
-        if (visit.status.isAccepted) ...[
+        if (visit.status.isAccepted)
           DefaultButton(
             onTap: visit.ownerId.isEmpty ? null : _openChat,
             title: LocaleKeys.tenantVisitOpenOwnerChat,
@@ -40,8 +41,6 @@ class VisitDetailsActions extends StatelessWidget {
               height: 1.45,
             ),
           ),
-          12.szH,
-        ],
         DefaultButton(
           onTap: () => Go.back(true),
           title: visit.status.isPending

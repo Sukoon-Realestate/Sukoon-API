@@ -11,14 +11,13 @@ class OwnerProfileScreen extends StatefulWidget {
 
 class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
   late final OwnerProfileCubit _profileCubit;
-  late final Future<void> _profileRequest;
   StreamSubscription<UserState>? _accountSubscription;
 
   @override
   void initState() {
     super.initState();
     _profileCubit = OwnerProfileCubit();
-    _profileRequest = _profileCubit.getProfile();
+    _profileCubit.getProfile();
     if (injector.isRegistered<UserCubit>()) {
       _accountSubscription = UserCubit.instance.stream.listen((state) {
         if (state.userStatus == UserStatus.loggedIn) {
@@ -90,7 +89,6 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
                     OwnerProfileContent
                   >.withShimmer(
                     initialDataForShimmer: const OwnerProfileContent.initial(),
-                    requestToTryAgainWhenError: _profileRequest,
                     onRetry: _profileCubit.getProfile,
                     errorType: ErrorType.defaultView,
                     builder: (profile) =>

@@ -34,13 +34,13 @@ class ChatQueuedMessagesBanner extends StatelessWidget {
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 8.w,
               children: [
                 Icon(
                   Icons.schedule_send_rounded,
                   color: AppColors.brown,
                   size: 17.r,
                 ),
-                SizedBox(width: 8.w),
                 Flexible(
                   child: AppText(
                     LocaleKeys.chatQueuedMessages,

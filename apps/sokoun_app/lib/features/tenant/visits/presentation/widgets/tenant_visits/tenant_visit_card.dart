@@ -50,13 +50,16 @@ class TenantVisitCard extends StatelessWidget {
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: 12.h,
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 10.w,
                 children: [
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 3.h,
                       children: [
                         AppText(
                           visit.propertyTitle,
@@ -68,8 +71,7 @@ class TenantVisitCard extends StatelessWidget {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        if (visit.ownerName.isNotEmpty) ...[
-                          3.szH,
+                        if (visit.ownerName.isNotEmpty)
                           AppText(
                             '${LocaleKeys.tenantVisitOwnerLabel} ${visit.ownerName}',
                             style: AppTextStyles.regular12.copyWith(
@@ -80,11 +82,9 @@ class TenantVisitCard extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                        ],
                       ],
                     ),
                   ),
-                  10.szW,
                   Container(
                     padding: EdgeInsets.symmetric(
                       horizontal: 9.w,
@@ -106,15 +106,14 @@ class TenantVisitCard extends StatelessWidget {
                   ),
                 ],
               ),
-              12.szH,
               Row(
+                spacing: 7.w,
                 children: [
                   Icon(
                     Icons.calendar_today_outlined,
                     color: AppColors.sokoonGray,
                     size: 14.r,
                   ),
-                  7.szW,
                   Expanded(
                     child: AppText(
                       visit.dateLabel,
@@ -129,7 +128,6 @@ class TenantVisitCard extends StatelessWidget {
                   ),
                 ],
               ),
-              12.szH,
               _VisitCardActions(
                 visit: visit,
                 onRatePressed: onRatePressed,
@@ -165,6 +163,7 @@ class _VisitCardActions extends StatelessWidget {
   Widget build(BuildContext context) {
     if (visit.status.isAccepted) {
       return Row(
+        spacing: 8.w,
         children: [
           Expanded(
             child: _VisitCardAction(
@@ -174,7 +173,6 @@ class _VisitCardActions extends StatelessWidget {
               onPressed: visit.ownerId.isEmpty ? null : _openChat,
             ),
           ),
-          8.szW,
           Expanded(
             child: _VisitCardAction(
               label: LocaleKeys.tenantVisitRateAction,

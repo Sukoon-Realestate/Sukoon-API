@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -23,6 +22,7 @@ class OwnerVisitRequestActionRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      spacing: 8.w,
       children: [
         Expanded(
           child: _ActionButton(
@@ -33,7 +33,6 @@ class OwnerVisitRequestActionRow extends StatelessWidget {
             isLoading: isAccepting,
           ),
         ),
-        8.szW,
         Expanded(
           child: _ActionButton(
             label: LocaleKeys.ownerVisitReject,

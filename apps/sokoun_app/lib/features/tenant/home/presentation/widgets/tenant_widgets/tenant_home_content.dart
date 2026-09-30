@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:melos_core/core/widgets/custom_shimmer.dart';
-import 'package:melos_core/core/widgets/retry_view.dart';
+import 'package:melos_core/core/widgets/exeption_view.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:pagify/pagify.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/home_page_model.dart';
@@ -108,11 +108,12 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
                   _completeRefresh();
                 }
               },
-              onConnectivityChanged: (_) {},
-              onError: (_, _, _) {},
               emptyListView: const TenantSuggestedPropertiesEmptyState(),
-              errorBuilder: (_) => SingleChildScrollView(
-                child: AppRetryView(onRetry: () async => _controller.retry()),
+              errorBuilder: (error) => SingleChildScrollView(
+                child: ExceptionView(
+                  msg: error.msg,
+                  onRetry: () async => _controller.retry(),
+                ),
               ),
               loadingBuilder: const CustomShimmer(
                 child: HomePropertyItem(property: HomePropertyModel.initial()),

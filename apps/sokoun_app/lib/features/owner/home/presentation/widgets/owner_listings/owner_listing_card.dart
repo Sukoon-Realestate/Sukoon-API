@@ -32,9 +32,11 @@ class OwnerListingCard extends StatelessWidget {
         ],
       ),
       child: Column(
+        spacing: 14.h,
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 12.w,
             children: [
               Container(
                 width: 80.r,
@@ -49,7 +51,6 @@ class OwnerListingCard extends StatelessWidget {
                   size: 28.r,
                 ),
               ),
-              12.szW,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -83,6 +84,7 @@ class OwnerListingCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       mainAxisSize: MainAxisSize.min,
+                      spacing: 8.w,
                       children: [
                         AppText(
                           listing.views,
@@ -92,7 +94,6 @@ class OwnerListingCard extends StatelessWidget {
                             height: 1.45,
                           ),
                         ),
-                        8.szW,
                         AppText(
                           '·',
                           style: AppTextStyles.regular12.copyWith(
@@ -101,7 +102,6 @@ class OwnerListingCard extends StatelessWidget {
                             height: 1.45,
                           ),
                         ),
-                        8.szW,
                         AppText(
                           listing.visits,
                           style: AppTextStyles.regular12.copyWith(
@@ -117,19 +117,17 @@ class OwnerListingCard extends StatelessWidget {
               ),
             ],
           ),
-          14.szH,
           Row(
+            spacing: 8.w,
             children: [
               for (
                 int index = 0;
                 index < OwnerListingsContent.actions.length;
                 index++
-              ) ...[
+              )
                 OwnerListingActionButton(
                   action: OwnerListingsContent.actions[index],
                 ),
-                if (index < OwnerListingsContent.actions.length - 1) 8.szW,
-              ],
             ],
           ),
         ],

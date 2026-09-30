@@ -58,6 +58,7 @@ class TenantSearchContentView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
+            spacing: 10.w,
             children: [
               Expanded(
                 child: TenantSearchField(
@@ -67,7 +68,6 @@ class TenantSearchContentView extends StatelessWidget {
                   onSearchTap: onSearchPressed,
                 ),
               ),
-              10.szW,
               PropertyFilterButton(
                 activeCount: activeFilterCount,
                 onPressed: onFiltersPressed,

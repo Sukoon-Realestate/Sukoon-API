@@ -16,6 +16,7 @@ class ProfileVerifiedBadge extends StatelessWidget {
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
+        spacing: 4.w,
         children: [
           Icon(
             isVerified
@@ -24,7 +25,6 @@ class ProfileVerifiedBadge extends StatelessWidget {
             color: isVerified ? AppColors.sokoonGold : AppColors.sokoonGray,
             size: 11.r,
           ),
-          4.szW,
           Flexible(
             child: AppText(
               text ?? LocaleKeys.verified,
