@@ -293,7 +293,7 @@ void main() {
 
   for (final String language in ['en', 'ar']) {
     testWidgets(
-      'shows dedicated role counts and refreshes badges in $language',
+      'loads role counts on entry and keeps them across tabs in $language',
       (tester) async {
         _phone(tester);
         await registerAuthenticatedTestAccount();
@@ -328,6 +328,8 @@ void main() {
         );
         expect(find.byType(TenantProfileScreen), findsNothing);
         expect(accountRepository.profileRequests, 1);
+        final int initialCountRequests = accountRepository.countRequests;
+        expect(initialCountRequests, greaterThan(0));
         final TenantProfileCubit sharedProfile = tester
             .element(bottomBar)
             .read<TenantProfileCubit>();
@@ -344,8 +346,9 @@ void main() {
         navigation().onDestinationSelected(4);
         await tester.pumpAndSettle();
         expect(find.byType(TenantProfileScreen), findsOneWidget);
-        expect(badgeCounts(), [0, 6, 7, 5, 3]);
-        expect(accountRepository.profileRequests, 2);
+        expect(badgeCounts(), [0, 120, 7, 4, 2]);
+        expect(accountRepository.profileRequests, 1);
+        expect(accountRepository.countRequests, initialCountRequests);
         expect(
           tester
               .element(find.byType(TenantProfileContentView))
@@ -356,7 +359,8 @@ void main() {
         unawaited(WorkspaceNavigation.open(workspace: AppWorkspace.owner));
         await tester.pumpAndSettle();
         expect(badgeCounts(), [0, 0, 9, 7, 0]);
-        expect(accountRepository.profileRequests, 2);
+        expect(accountRepository.profileRequests, 1);
+        expect(accountRepository.countRequests, initialCountRequests);
         expect(sharedProfile.isClosed, isFalse);
 
         accountRepository.stats = {
@@ -370,12 +374,13 @@ void main() {
         };
         unawaited(WorkspaceNavigation.open(workspace: AppWorkspace.tenant));
         await tester.pumpAndSettle();
-        expect(badgeCounts(), [0, 0, 7, 0, 0]);
-        expect(accountRepository.profileRequests, 3);
-        expect(
-          find.descendant(of: bottomBar, matching: find.text('0')),
-          findsNothing,
-        );
+        expect(badgeCounts(), [0, 120, 7, 4, 2]);
+        for (final int index in [0, 1, 2, 3, 4, 0]) {
+          navigation().onDestinationSelected(index);
+          await tester.pumpAndSettle();
+        }
+        expect(accountRepository.profileRequests, 1);
+        expect(accountRepository.countRequests, initialCountRequests);
 
         accountRepository.stats = {
           'saved_count': 3,
@@ -386,13 +391,23 @@ void main() {
           'favorites_count': 3,
           'visit_requests_count': 2,
         };
-        tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
-        tester.binding.handleAppLifecycleStateChanged(
+        for (final AppLifecycleState lifecycle in [
+          AppLifecycleState.inactive,
+          AppLifecycleState.hidden,
+          AppLifecycleState.paused,
+          AppLifecycleState.hidden,
+          AppLifecycleState.inactive,
           AppLifecycleState.resumed,
-        );
+        ]) {
+          tester.binding.handleAppLifecycleStateChanged(lifecycle);
+        }
         await tester.pumpAndSettle();
         expect(badgeCounts(), [0, 3, 7, 2, 1]);
-        expect(accountRepository.profileRequests, 4);
+        expect(accountRepository.profileRequests, 2);
+        expect(
+          accountRepository.countRequests,
+          greaterThan(initialCountRequests),
+        );
         expect(tester.takeException(), isNull);
 
         await tester.pumpWidget(const SizedBox.shrink());
@@ -751,6 +766,7 @@ class _AccountStatsRepository implements BaseRepository {
     'reviews_count': 0,
   };
   int profileRequests = 0;
+  int countRequests = 0;
   int homeRequests = 0;
   Completer<void>? profileGate;
   Completer<void>? homeGate;
@@ -775,8 +791,10 @@ class _AccountStatsRepository implements BaseRepository {
     }
     final Map<String, dynamic> response;
     if (params.api == ApiConstants.tenantUnreadCounts) {
+      countRequests++;
       response = tenantCounts;
     } else if (params.api == ApiConstants.ownerUnreadCounts) {
+      countRequests++;
       response = ownerCounts;
     } else if (params.api == ApiConstants.getAccData) {
       profileRequests++;

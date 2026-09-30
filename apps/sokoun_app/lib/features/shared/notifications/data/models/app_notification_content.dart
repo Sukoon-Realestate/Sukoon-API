@@ -75,7 +75,9 @@ class AppNotificationContent extends Equatable {
   factory AppNotificationContent.fromPushPayload(Map<String, dynamic> json) {
     return AppNotificationContent(
       id: json['notification_id']?.toString() ?? '',
-      kind: AppNotificationKind.fromApiValue(json['notification_type']),
+      kind: AppNotificationKind.fromApiValue(
+        json['notification_type'] ?? json['type'],
+      ),
       iconType: AppNotificationIconKind.fromApiValue(json['icon_type']),
       title: json['title']?.toString() ?? '',
       description: json['body']?.toString() ?? '',

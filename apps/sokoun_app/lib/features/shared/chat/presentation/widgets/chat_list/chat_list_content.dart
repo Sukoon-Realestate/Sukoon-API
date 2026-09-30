@@ -9,6 +9,9 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:pagify/pagify.dart';
 
+import '../../../../notifications/data/enums/app_notification_kind.dart';
+import '../../../../notifications/data/foreground_notification_bus.dart';
+import '../../../../notifications/data/models/app_notification_content.dart';
 import '../../../data/chats_data.dart';
 import '../../../data/chat_realtime_service.dart';
 import '../../../data/chat_unread_refresh_bus.dart';
@@ -32,6 +35,7 @@ class _ChatListContentState extends State<ChatListContent> {
   late final PagifyController<ConversationContent> _pagifyController;
   StreamSubscription<ChatSocketMessage>? _messageSubscription;
   StreamSubscription<int>? _unreadRefreshSubscription;
+  StreamSubscription<AppNotificationContent>? _notificationSubscription;
 
   @override
   void initState() {
@@ -44,12 +48,21 @@ class _ChatListContentState extends State<ChatListContent> {
     _unreadRefreshSubscription = ChatUnreadRefreshBus.stream.listen((removed) {
       if (removed == 0) unawaited(_pagifyController.refresh());
     });
+    _notificationSubscription = ForegroundNotificationBus.stream.listen((
+      notification,
+    ) {
+      if (notification.kind == AppNotificationKind.newMessage ||
+          notification.category == 'chat') {
+        unawaited(_pagifyController.refresh());
+      }
+    });
   }
 
   @override
   void dispose() {
     unawaited(_messageSubscription?.cancel());
     unawaited(_unreadRefreshSubscription?.cancel());
+    unawaited(_notificationSubscription?.cancel());
     super.dispose();
   }
 

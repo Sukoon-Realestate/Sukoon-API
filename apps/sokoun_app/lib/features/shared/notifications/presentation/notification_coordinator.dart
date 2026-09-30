@@ -5,8 +5,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/notification/notification_service.dart';
 
 import '../data/notification_device_data.dart';
-import '../data/notification_refresh_bus.dart';
-import '../../chat/data/chat_unread_refresh_bus.dart';
+import '../data/foreground_notification_bus.dart';
 import 'notification_push_handler.dart';
 
 abstract final class NotificationCoordinator {
@@ -36,13 +35,10 @@ abstract final class NotificationCoordinator {
       );
       await notificationService.setupNotifications(
         onForegroundMessage: (message) {
-          NotificationRefreshBus.requestRefresh();
-          final String type =
-              message.data['notification_type']?.toString() ?? '';
-          final String category = message.data['category']?.toString() ?? '';
-          if (type == 'new_message' || category == 'chat') {
-            ChatUnreadRefreshBus.requestRefresh();
-          }
+          ForegroundNotificationBus.receive(
+            message.data,
+            deliveryId: message.messageId,
+          );
         },
       );
     } catch (error, stackTrace) {

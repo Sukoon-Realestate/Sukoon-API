@@ -175,8 +175,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     await _tenantProfileCubit.getProfile();
   }
 
-  Future<void> _refreshCounts() =>
-      (_workspace.isOwner ? _ownerCounts : _tenantCounts).load();
+  Future<void> _refreshCounts() async {
+    await Future.wait([_tenantCounts.load(), _ownerCounts.load()]);
+  }
 
   Future<void> _showLaunchDialogs() async {
     await Future.wait<void>([
@@ -209,10 +210,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       return;
     }
     setState(() => _selectedTabs[_workspace] = index);
-    unawaited(_refreshCounts());
-    if (_tabs[index].tab == WorkspaceTab.profile) {
-      unawaited(_refreshTenantProfile());
-    }
   }
 
   Future<void> _applyWorkspace(
@@ -230,8 +227,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     await _workspaceCubit.switchTo(target);
     if (mounted) {
       setState(() {});
-      unawaited(_refreshTenantProfile());
-      unawaited(_refreshCounts());
     }
   }
 
