@@ -41,6 +41,7 @@ class NotificationsList extends StatelessWidget {
     }
 
     return AppPagify<AppNotificationContent>(
+      enablePullRefresh: true,
       pagifyController: pagifyController!,
       asyncCall: (_, page) => NotificationsData.getNotificationsPage(
         page: page,

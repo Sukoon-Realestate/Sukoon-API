@@ -1,4 +1,5 @@
 import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:melos_core/core/extensions/widget_extension.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -78,6 +79,14 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
         availablePlacesRequest: current.availablePlacesRequest,
       );
     }
+  }
+
+  Future<void> _refreshSearchOptions() async {
+    _recentSearchesCubit.loadRecentSearches();
+    await Future.wait<void>([
+      _propertyTypesCubit.getPropertyTypes(),
+      _availablePlacesCubit.retry(),
+    ]);
   }
 
   void _selectCategory(PropertyTypeModel propertyType) {
@@ -237,7 +246,7 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
                     onFiltersPressed: _openFilters,
                     activeFilterCount: viewState.activeFilterCount,
                     onCurrentAreaResolved: _searchCurrentArea,
-                  ),
+                  ).withPullRefresher(onRefresh: _refreshSearchOptions),
                 ),
               ),
             ),

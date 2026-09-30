@@ -1,3 +1,4 @@
+import 'package:melos_core/core/extensions/widget_extension.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'dart:async';
 
@@ -61,24 +62,30 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
           value: _cubit,
           child:
               StatusBuilder<
-                NotificationDetailCubit,
-                AppNotificationContent
-              >.withShimmer(
-                initialDataForShimmer: widget.notification,
-                onRetry: () => _cubit.load(
-                  notificationId: widget.notification.id,
-                  fixture: widget.fetchFromApi ? null : widget.notification,
-                ),
-                errorType: ErrorType.defaultView,
-                builder: (notification) => NotificationDetailsContent(
-                  notification: notification,
-                  onPrimaryPressed: () => NotificationNavigation.open(
-                    notification: notification,
-                    role: widget.role,
+                    NotificationDetailCubit,
+                    AppNotificationContent
+                  >.withShimmer(
+                    initialDataForShimmer: widget.notification,
+                    onRetry: () => _cubit.load(
+                      notificationId: widget.notification.id,
+                      fixture: widget.fetchFromApi ? null : widget.notification,
+                    ),
+                    errorType: ErrorType.defaultView,
+                    builder: (notification) => NotificationDetailsContent(
+                      notification: notification,
+                      onPrimaryPressed: () => NotificationNavigation.open(
+                        notification: notification,
+                        role: widget.role,
+                      ),
+                      onDismissPressed: Go.back,
+                    ),
+                  )
+                  .withPullRefresher(
+                    onRefresh: () => _cubit.load(
+                      notificationId: widget.notification.id,
+                      fixture: widget.fetchFromApi ? null : widget.notification,
+                    ),
                   ),
-                  onDismissPressed: Go.back,
-                ),
-              ),
         ),
       ),
     );

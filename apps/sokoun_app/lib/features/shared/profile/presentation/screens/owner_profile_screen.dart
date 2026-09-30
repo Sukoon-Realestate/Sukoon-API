@@ -85,15 +85,17 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
             body: SafeArea(
               child:
                   StatusBuilder<
-                    OwnerProfileCubit,
-                    OwnerProfileContent
-                  >.withShimmer(
-                    initialDataForShimmer: const OwnerProfileContent.initial(),
-                    onRetry: _profileCubit.getProfile,
-                    errorType: ErrorType.defaultView,
-                    builder: (profile) =>
-                        OwnerProfileContentView(profile: profile),
-                  ),
+                        OwnerProfileCubit,
+                        OwnerProfileContent
+                      >.withShimmer(
+                        initialDataForShimmer:
+                            const OwnerProfileContent.initial(),
+                        onRetry: _profileCubit.getProfile,
+                        errorType: ErrorType.defaultView,
+                        builder: (profile) =>
+                            OwnerProfileContentView(profile: profile),
+                      )
+                      .withPullRefresher(onRefresh: _profileCubit.getProfile),
             ),
           );
         },

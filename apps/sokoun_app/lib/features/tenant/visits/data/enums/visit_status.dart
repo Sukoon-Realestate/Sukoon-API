@@ -2,7 +2,7 @@ part of '../../imports.dart';
 
 enum TenantVisitStatus { accepted, pending, rejected }
 
-enum TenantVisitFilter { all, accepted, pending, rejected }
+enum TenantVisitFilter { all, approved, pending, rejected }
 
 extension TenantVisitStatusX on TenantVisitStatus {
   bool get isAccepted => this == TenantVisitStatus.accepted;
@@ -45,7 +45,7 @@ extension TenantVisitStatusX on TenantVisitStatus {
 
 extension TenantVisitFilterX on TenantVisitFilter {
   bool get isAll => this == TenantVisitFilter.all;
-  bool get isAccepted => this == TenantVisitFilter.accepted;
+  bool get isAccepted => this == TenantVisitFilter.approved;
   bool get isPending => this == TenantVisitFilter.pending;
   bool get isRejected => this == TenantVisitFilter.rejected;
 

@@ -60,6 +60,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     BuildContext context,
     int page,
   ) async {
+    if (page == 1) _loadedFavorites.clear();
     final (SavedPropertiesResponse response, PaginationData pagination) =
         await FavoritesData.getSavedPropertiesPage(page: page);
     if (page == 1 && mounted && _itemCount != response.count) {

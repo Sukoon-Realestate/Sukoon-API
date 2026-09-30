@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'package:pagify/helpers/status_stream.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
@@ -25,7 +23,6 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
   late final ValueNotifier<bool> _showBanner = ValueNotifier(
     _data.readCachedPage()?.banner != null,
   );
-  Completer<void>? _refreshCompleter;
   int _requestGeneration = 0;
 
   Future<(List<HomePropertyModel>, PaginationData)> _getPage(
@@ -41,61 +38,39 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
     return (model.results, pagination);
   }
 
-  Future<void> _refresh() {
-    if (_controller.isLoading) return Future.value();
-    _refreshCompleter ??= Completer<void>();
-    // Pagify's refresh starts the request but returns before it finishes.
-    unawaited(_controller.refresh());
-    return _refreshCompleter!.future;
-  }
-
-  void _completeRefresh() {
-    _refreshCompleter?.complete();
-    _refreshCompleter = null;
-  }
-
   @override
   void dispose() {
-    _completeRefresh();
     _showBanner.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => RefreshIndicator(
-    onRefresh: _refresh,
-    child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
-      child: AppPagify<HomePropertyModel>(
-        pagifyController: _controller,
-        asyncCall: _getPage,
-        shrinkWrap: false,
-        physics: const AlwaysScrollableScrollPhysics(),
-        rankingType: Ranking.adaptiveGrid,
-        header: ValueListenableBuilder<bool>(
-          valueListenable: _showBanner,
-          builder: (context, visible, _) =>
-              TenantHomeHeader(showBanner: visible),
-        ),
-        cacheKey: TenantHomeData.cacheKey,
-        cacheToJson: (item) => item.toJson(),
-        cacheFromJson: HomePropertyModel.fromJson,
-        onUpdateStatus: (status) {
-          if (status.isSuccess || status.isError || status.isNetworkError) {
-            _completeRefresh();
-          }
-        },
-        emptyListView: const TenantSuggestedPropertiesEmptyState(),
-        errorBuilder: (error) => ExceptionView(
-          msg: error.msg,
-          onRetry: () async => _controller.retry(),
-        ),
-        loadingBuilder: const CustomShimmer(
-          child: HomePropertyItem(property: HomePropertyModel.initial()),
-        ),
-        itemBuilder: (context, data, index, item) =>
-            HomePropertyItem(property: item),
+  Widget build(BuildContext context) => Padding(
+    padding: EdgeInsets.symmetric(horizontal: 20.w),
+    child: AppPagify<HomePropertyModel>(
+      enablePullRefresh: true,
+      pagifyController: _controller,
+      asyncCall: _getPage,
+      shrinkWrap: false,
+      physics: const AlwaysScrollableScrollPhysics(),
+      rankingType: Ranking.adaptiveGrid,
+      header: ValueListenableBuilder<bool>(
+        valueListenable: _showBanner,
+        builder: (context, visible, _) => TenantHomeHeader(showBanner: visible),
       ),
+      cacheKey: TenantHomeData.cacheKey,
+      cacheToJson: (item) => item.toJson(),
+      cacheFromJson: HomePropertyModel.fromJson,
+      emptyListView: const TenantSuggestedPropertiesEmptyState(),
+      errorBuilder: (error) => ExceptionView(
+        msg: error.msg,
+        onRetry: () async => _controller.retry(),
+      ),
+      loadingBuilder: const CustomShimmer(
+        child: HomePropertyItem(property: HomePropertyModel.initial()),
+      ),
+      itemBuilder: (context, data, index, item) =>
+          HomePropertyItem(property: item),
     ),
   );
 }

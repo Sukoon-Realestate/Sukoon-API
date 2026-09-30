@@ -63,6 +63,7 @@ class FavoritesContentView extends StatelessWidget {
                   onClearFiltersPressed: onClearFiltersPressed,
                 )
               : AppPagify<FavoritePropertyContent>(
+                  enablePullRefresh: true,
                   pagifyController: pagifyController,
                   rankingType: Ranking.adaptiveGrid,
                   asyncCall: loadPage,

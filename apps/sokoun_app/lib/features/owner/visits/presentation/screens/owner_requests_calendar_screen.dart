@@ -82,16 +82,21 @@ class _OwnerRequestsCalendarScreenState
         valueListenable: _calendarRequest,
         builder: (context, calendarRequest, _) =>
             StatusBuilder<
-              OwnerCalendarCubit,
-              OwnerVisitCalendarContent
-            >.withShimmer(
-              initialDataForShimmer: OwnerVisitCalendarContent.initial(
-                _selectedDate,
-              ),
-              onRetry: () => _calendarCubit.getCalendar(date: _selectedDate),
-              errorType: ErrorType.defaultView,
-              builder: _buildScreen,
-            ),
+                  OwnerCalendarCubit,
+                  OwnerVisitCalendarContent
+                >.withShimmer(
+                  initialDataForShimmer: OwnerVisitCalendarContent.initial(
+                    _selectedDate,
+                  ),
+                  onRetry: () =>
+                      _calendarCubit.getCalendar(date: _selectedDate),
+                  errorType: ErrorType.defaultView,
+                  builder: _buildScreen,
+                )
+                .withPullRefresher(
+                  onRefresh: () =>
+                      _calendarCubit.getCalendar(date: _selectedDate),
+                ),
       ),
     );
   }

@@ -35,6 +35,7 @@ class TenantVisitsList extends StatelessWidget {
     }
 
     return AppPagify<TenantVisitContent>(
+      enablePullRefresh: true,
       pagifyController: pagifyController!,
       asyncCall: (_, page) =>
           TenantVisitsData.getVisitsPage(page: page, filter: selectedFilter),

@@ -91,6 +91,29 @@ void main() {
     addTearDown(tester.view.reset);
   }
 
+  for (final screen in <Widget>[
+    const TenantProfileScreen(user: tenant),
+    const OwnerProfileScreen(user: owner),
+    const TenantAccountSummaryScreen(),
+  ]) {
+    testWidgets('${screen.runtimeType} reloads its data on pull-down', (
+      tester,
+    ) async {
+      configurePhoneViewport(tester);
+      await tester.pumpWidget(buildScreen(screen));
+      await tester.pumpAndSettle();
+      final int initialRequests = repository.requestCount;
+      final String endpoint = repository.lastApi;
+
+      await tester.drag(find.byType(Scrollable).first, const Offset(0, 350));
+      await tester.pumpAndSettle();
+
+      expect(repository.requestCount, initialRequests + 1);
+      expect(repository.lastApi, endpoint);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
   test('maps and serializes the owner profile response', () {
     final OwnerProfileContent profile = OwnerProfileContent.fromJson(
       _ownerProfileResponse,
@@ -467,6 +490,7 @@ const Map<String, dynamic> _tenantAccountSummaryResponse = {
 };
 
 class _ProfileRepository implements BaseRepository {
+  int requestCount = 0;
   String lastApi = '';
   HttpRequestType? lastMethod;
   String? lastCacheKey;
@@ -477,6 +501,7 @@ class _ProfileRepository implements BaseRepository {
   Future<Result<BaseModel<T>, Failure>> crudCall<T>(
     CrudBaseParmas<T> params,
   ) async {
+    requestCount++;
     lastApi = params.api;
     lastMethod = params.httpRequestType;
     lastCacheKey = params.cacheKey;

@@ -1,3 +1,4 @@
+import 'package:melos_core/core/extensions/widget_extension.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
@@ -164,14 +165,18 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
           ],
           child:
               StatusBuilder<
-                PropertyDetailsCubit,
-                PropertyDetailsModel
-              >.withShimmer(
-                initialDataForShimmer: const PropertyDetailsModel.initial(),
-                onRetry: () =>
-                    _detailsCubit.getPropertyDetails(widget.propertyId),
-                builder: _buildDetails,
-              ),
+                    PropertyDetailsCubit,
+                    PropertyDetailsModel
+                  >.withShimmer(
+                    initialDataForShimmer: const PropertyDetailsModel.initial(),
+                    onRetry: () =>
+                        _detailsCubit.getPropertyDetails(widget.propertyId),
+                    builder: _buildDetails,
+                  )
+                  .withPullRefresher(
+                    onRefresh: () =>
+                        _detailsCubit.getPropertyDetails(widget.propertyId),
+                  ),
         ),
       ),
     );

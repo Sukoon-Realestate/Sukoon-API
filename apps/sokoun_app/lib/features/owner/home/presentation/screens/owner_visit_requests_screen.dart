@@ -1,3 +1,4 @@
+import 'package:melos_core/core/extensions/widget_extension.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -247,14 +248,20 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
       value: cubit,
       child:
           StatusBuilder<
-            ReceivedVisitsCubit,
-            List<OwnerVisitRequestContent>
-          >.withShimmer(
-            initialDataForShimmer: _shimmerRequests,
-            onRetry: _retryRequests,
-            emptyView: _buildScreen(const []),
-            builder: _buildScreen,
-          ),
+                ReceivedVisitsCubit,
+                List<OwnerVisitRequestContent>
+              >.withShimmer(
+                initialDataForShimmer: _shimmerRequests,
+                onRetry: _retryRequests,
+                emptyView: _buildScreen(const []),
+                builder: _buildScreen,
+              )
+              .withPullRefresher(
+                onRefresh: () async {
+                  if (_updatingRequestId != null) return;
+                  await _retryRequests();
+                },
+              ),
     );
   }
 

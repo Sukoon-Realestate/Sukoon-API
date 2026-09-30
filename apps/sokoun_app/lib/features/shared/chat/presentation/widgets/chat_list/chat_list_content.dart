@@ -85,6 +85,7 @@ class _ChatListContentState extends State<ChatListContent> {
         ).padding(EdgeInsets.fromLTRB(8.w, 12.h, 8.w, 0)),
         Expanded(
           child: AppPagify<ConversationContent>(
+            enablePullRefresh: true,
             pagifyController: _pagifyController,
             asyncCall: (_, page) =>
                 _dataSource.getConversationsPage(page: page),

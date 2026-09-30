@@ -104,17 +104,19 @@ class _TenantProfileScreenState extends State<TenantProfileScreen> {
             body: SafeArea(
               child:
                   StatusBuilder<
-                    TenantProfileCubit,
-                    TenantProfileContent
-                  >.withShimmer(
-                    initialDataForShimmer: const TenantProfileContent.initial(),
-                    onRetry: _profileCubit.getProfile,
-                    errorType: ErrorType.defaultView,
-                    builder: (profile) => TenantProfileContentView(
-                      profile: profile,
-                      onEditPressed: () => _openEditProfile(profile),
-                    ),
-                  ),
+                        TenantProfileCubit,
+                        TenantProfileContent
+                      >.withShimmer(
+                        initialDataForShimmer:
+                            const TenantProfileContent.initial(),
+                        onRetry: _profileCubit.getProfile,
+                        errorType: ErrorType.defaultView,
+                        builder: (profile) => TenantProfileContentView(
+                          profile: profile,
+                          onEditPressed: () => _openEditProfile(profile),
+                        ),
+                      )
+                      .withPullRefresher(onRefresh: _profileCubit.getProfile),
             ),
           );
         },

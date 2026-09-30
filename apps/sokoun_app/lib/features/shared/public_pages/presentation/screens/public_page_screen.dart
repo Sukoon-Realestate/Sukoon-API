@@ -1,3 +1,4 @@
+import 'package:melos_core/core/extensions/widget_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/language/languages.dart';
@@ -46,7 +47,7 @@ class _PublicPageScreenState extends State<PublicPageScreen> {
         builder: (page) => page.content.trim().isEmpty && _cubit.state.isSuccess
             ? const PublicPageEmptyState()
             : PublicPageBody(page: page),
-      ),
+      ).withPullRefresher(onRefresh: _load),
     ),
   );
 }

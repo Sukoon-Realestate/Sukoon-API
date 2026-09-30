@@ -18,6 +18,7 @@ class _MyReviewsListState extends State<MyReviewsList> {
   // AppPagify owns disposal of its controller.
   @override
   Widget build(BuildContext context) => AppPagify<MyReview>(
+    enablePullRefresh: true,
     pagifyController: _controller,
     shrinkWrap: false,
     asyncCall: (_, page) => MyReviewsData.getPage(page),

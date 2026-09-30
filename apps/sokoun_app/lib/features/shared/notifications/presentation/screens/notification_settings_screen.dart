@@ -1,3 +1,4 @@
+import 'package:melos_core/core/extensions/widget_extension.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'dart:async';
 
@@ -84,22 +85,28 @@ class _NotificationSettingsScreenState
                     >(
                       builder: (context, updateState) {
                         return StatusBuilder<
-                          NotificationSettingsCubit,
-                          NotificationSettingsContent
-                        >.withShimmer(
-                          initialDataForShimmer:
-                              const NotificationSettingsContent.initial(),
-                          onRetry: _settingsCubit.loadSettings,
-                          errorType: ErrorType.defaultView,
-                          builder: (settings) =>
-                              NotificationSettingsContentView(
-                                settings: settings,
-                                updatingKey: updateState.isLoading
-                                    ? updateState.data
-                                    : null,
-                                onSettingChanged: _updateSetting,
-                              ),
-                        );
+                              NotificationSettingsCubit,
+                              NotificationSettingsContent
+                            >.withShimmer(
+                              initialDataForShimmer:
+                                  const NotificationSettingsContent.initial(),
+                              onRetry: _settingsCubit.loadSettings,
+                              errorType: ErrorType.defaultView,
+                              builder: (settings) =>
+                                  NotificationSettingsContentView(
+                                    settings: settings,
+                                    updatingKey: updateState.isLoading
+                                        ? updateState.data
+                                        : null,
+                                    onSettingChanged: _updateSetting,
+                                  ),
+                            )
+                            .withPullRefresher(
+                              onRefresh: () async {
+                                if (_updateCubit.isLoading) return;
+                                await _settingsCubit.loadSettings();
+                              },
+                            );
                       },
                     ),
               ),

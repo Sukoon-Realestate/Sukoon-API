@@ -32,6 +32,7 @@ class OwnerPropertiesList extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool usesApi = initialProperties == null;
     return AppPagify<OwnerPropertyContent>(
+      enablePullRefresh: true,
       pagifyController: pagifyController,
       rankingType: Ranking.adaptiveGrid,
       asyncCall: (_, page) => _loadPage(page),

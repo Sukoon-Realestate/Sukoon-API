@@ -14,7 +14,6 @@ class ChatsScreen extends StatelessWidget {
   );
 }
 
-/// Backwards-compatible name used by existing navigation call sites.
 class ChatListScreen extends ChatsScreen {
   const ChatListScreen({super.key});
 }

@@ -1,3 +1,4 @@
+import 'package:melos_core/core/extensions/widget_extension.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
@@ -57,16 +58,17 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
         body: SafeArea(
           child:
               StatusBuilder<
-                OwnerDashboardCubit,
-                OwnerDashboardModel
-              >.withShimmer(
-                initialDataForShimmer: const OwnerDashboardModel.initial(),
-                onRetry: _refreshDashboard,
-                builder: (dashboard) => OwnerDashboardContent(
-                  dashboard: dashboard,
-                  onRequestResolved: _refreshDashboard,
-                ),
-              ),
+                    OwnerDashboardCubit,
+                    OwnerDashboardModel
+                  >.withShimmer(
+                    initialDataForShimmer: const OwnerDashboardModel.initial(),
+                    onRetry: _refreshDashboard,
+                    builder: (dashboard) => OwnerDashboardContent(
+                      dashboard: dashboard,
+                      onRequestResolved: _refreshDashboard,
+                    ),
+                  )
+                  .withPullRefresher(onRefresh: _refreshDashboard),
         ),
       ),
     );

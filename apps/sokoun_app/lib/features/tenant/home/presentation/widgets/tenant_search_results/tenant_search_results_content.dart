@@ -86,6 +86,7 @@ class TenantSearchResultsContent extends StatelessWidget {
         ),
         Expanded(
           child: AppPagify<PropertyDetailsModel>(
+            enablePullRefresh: true,
             pagifyController: pagifyController,
             rankingType: Ranking.adaptiveGrid,
             disposeController: false,

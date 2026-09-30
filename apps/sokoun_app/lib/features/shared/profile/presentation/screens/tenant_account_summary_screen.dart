@@ -36,16 +36,17 @@ class _TenantAccountSummaryScreenState
         body: SafeArea(
           child:
               StatusBuilder<
-                TenantAccountSummaryCubit,
-                TenantAccountSummaryContent
-              >.withShimmer(
-                initialDataForShimmer:
-                    const TenantAccountSummaryContent.initial(),
-                onRetry: _summaryCubit.getSummary,
-                errorType: ErrorType.defaultView,
-                builder: (summary) =>
-                    TenantAccountSummaryContentView(summary: summary),
-              ),
+                    TenantAccountSummaryCubit,
+                    TenantAccountSummaryContent
+                  >.withShimmer(
+                    initialDataForShimmer:
+                        const TenantAccountSummaryContent.initial(),
+                    onRetry: _summaryCubit.getSummary,
+                    errorType: ErrorType.defaultView,
+                    builder: (summary) =>
+                        TenantAccountSummaryContentView(summary: summary),
+                  )
+                  .withPullRefresher(onRefresh: _summaryCubit.getSummary),
         ),
       ),
     );

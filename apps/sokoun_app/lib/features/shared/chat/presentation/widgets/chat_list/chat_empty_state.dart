@@ -5,12 +5,15 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/helpers/user_type/user_enum.dart';
+import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
 import 'package:sokoun_app/features/main_view/data/enums/workspace_tab.dart';
 import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
+import 'package:sokoun_app/features/owner/home/presentation/screens/owner_add_property_flow_screen.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
 import 'package:melos_core/generated/assets.dart';
 
@@ -62,12 +65,14 @@ class ChatEmptyState extends StatelessWidget {
               ),
               30.szH,
               DefaultButton(
-                onTap: () => WorkspaceNavigation.open(
-                  workspace: AppWorkspace.tenant,
-                  tab: WorkspaceTab.home,
-                  detail: () => Go.to(const TenantSearchScreen()),
+                onTap: () => Go.to(
+                  UserTypeHelper.instance.currentUserType.isTenant
+                      ? const TenantSearchScreen()
+                      : const OwnerAddPropertyFlowScreen(),
                 ),
-                title: LocaleKeys.chatExploreProperties,
+                title: UserTypeHelper.instance.currentUserType.isTenant
+                    ? LocaleKeys.chatExploreProperties
+                    : LocaleKeys.ownerAddPropertyTitle,
                 color: AppColors.sokoonTeal,
                 textColor: AppColors.white,
                 borderRadius: BorderRadius.circular(16.r),

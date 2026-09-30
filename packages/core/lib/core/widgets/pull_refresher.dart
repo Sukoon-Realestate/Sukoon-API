@@ -6,8 +6,8 @@ class PullRefresherWidget extends StatelessWidget {
   final Widget child;
   final Future<void> Function() onRefresh;
 
-
-  const PullRefresherWidget({super.key,
+  const PullRefresherWidget({
+    super.key,
     required this.child,
     required this.onRefresh,
   });
@@ -15,10 +15,17 @@ class PullRefresherWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-        onRefresh: onRefresh,
-        color: AppColors.primary,
-        backgroundColor: Colors.white,
-        child: child
+      onRefresh: onRefresh,
+      color: AppColors.primary,
+      backgroundColor: Colors.white,
+      child: ScrollConfiguration(
+        behavior: ScrollConfiguration.of(context).copyWith(
+          physics: AlwaysScrollableScrollPhysics(
+            parent: ScrollConfiguration.of(context).getScrollPhysics(context),
+          ),
+        ),
+        child: child,
+      ),
     );
   }
 }

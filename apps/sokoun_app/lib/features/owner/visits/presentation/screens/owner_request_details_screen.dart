@@ -132,26 +132,34 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
                   valueListenable: _pendingStatus,
                   builder: (context, pendingStatus, _) =>
                       StatusBuilder<
-                        OwnerRequestDetailsCubit,
-                        OwnerVisitRequestDetailsContent
-                      >.withShimmer(
-                        initialDataForShimmer:
-                            const OwnerVisitRequestDetailsContent.initial(),
-                        onRetry: _retryRequestDetails,
-                        builder: (request) => OwnerRequestDetailsContent(
-                          request: request,
-                          isAccepting:
-                              isUpdating &&
-                              pendingStatus == OwnerVisitUpdateStatus.confirmed,
-                          isRejecting:
-                              isUpdating &&
-                              pendingStatus == OwnerVisitUpdateStatus.rejected,
-                          onAcceptPressed: () =>
-                              _acceptRequest(context, request),
-                          onRejectPressed: () =>
-                              _rejectRequest(context, request),
-                        ),
-                      ),
+                            OwnerRequestDetailsCubit,
+                            OwnerVisitRequestDetailsContent
+                          >.withShimmer(
+                            initialDataForShimmer:
+                                const OwnerVisitRequestDetailsContent.initial(),
+                            onRetry: _retryRequestDetails,
+                            builder: (request) => OwnerRequestDetailsContent(
+                              request: request,
+                              isAccepting:
+                                  isUpdating &&
+                                  pendingStatus ==
+                                      OwnerVisitUpdateStatus.confirmed,
+                              isRejecting:
+                                  isUpdating &&
+                                  pendingStatus ==
+                                      OwnerVisitUpdateStatus.rejected,
+                              onAcceptPressed: () =>
+                                  _acceptRequest(context, request),
+                              onRejectPressed: () =>
+                                  _rejectRequest(context, request),
+                            ),
+                          )
+                          .withPullRefresher(
+                            onRefresh: () async {
+                              if (_visitStatusCubit.isLoading) return;
+                              await _retryRequestDetails();
+                            },
+                          ),
                 ),
               ),
             ),

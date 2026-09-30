@@ -7,6 +7,7 @@ import 'package:pagify/helpers/status_stream.dart';
 import 'package:pagify/pagify.dart';
 import '../../config/language/locale_keys.g.dart';
 import '../error/exceptions.dart';
+import '../extensions/widget_extension.dart';
 import '../local_db/objectbox_cache_service.dart';
 import '../network/account_session.dart';
 import '../shared/base_state.dart';
@@ -43,6 +44,9 @@ class AppPagify<T> extends StatefulWidget {
 
   /// Set to false when the caller owns and disposes the controller.
   final bool disposeController;
+
+  /// Uses the shared pull refresher and waits for the first page to finish.
+  final bool enablePullRefresh;
   final FutureOr<void> Function(PagifyAsyncCallStatus)? onUpdateStatus;
   final bool shrinkWrap;
   final Widget? emptyListView;
@@ -72,6 +76,7 @@ class AppPagify<T> extends StatefulWidget {
     required this.itemBuilder,
     required this.pagifyController,
     this.disposeController = true,
+    this.enablePullRefresh = false,
     this.physics,
     this.minimumItemWidth = 320,
     this.maximumColumns = 3,
@@ -109,6 +114,33 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
   final int _sessionGeneration = AccountSession.generation;
   int _requestGeneration = 0;
   PagifyException? _requestError;
+  Completer<void>? _refreshCompleter;
+
+  Future<void> _refresh() {
+    final Completer<void>? pending = _refreshCompleter;
+    if (pending != null) return pending.future;
+    if (widget.pagifyController.isLoading) return Future.value();
+    final completer = Completer<void>();
+    _refreshCompleter = completer;
+    // Pagify starts its request without awaiting it. Complete on terminal status.
+    unawaited(widget.pagifyController.refresh());
+    return completer.future;
+  }
+
+  void _completeRefresh() {
+    _refreshCompleter?.complete();
+    _refreshCompleter = null;
+  }
+
+  Future<void> _onUpdateStatus(PagifyAsyncCallStatus status) async {
+    try {
+      await widget.onUpdateStatus?.call(status);
+    } finally {
+      if (status.isSuccess || status.isError || status.isNetworkError) {
+        _completeRefresh();
+      }
+    }
+  }
 
   Future<(List<T>, PaginationData)> _loadPage(BuildContext context, int page) {
     if (page == 1) _requestGeneration++;
@@ -166,6 +198,24 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
 
   Widget _buildStateView(Widget child) {
     final Widget? header = widget.header;
+    if (widget.enablePullRefresh) {
+      return CustomScrollView(
+        physics: AlwaysScrollableScrollPhysics(parent: widget.physics),
+        shrinkWrap: widget.shrinkWrap,
+        slivers: [
+          if (header != null) SliverToBoxAdapter(child: header),
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: ScrollConfiguration(
+              behavior: ScrollConfiguration.of(
+                context,
+              ).copyWith(physics: const NeverScrollableScrollPhysics()),
+              child: child,
+            ),
+          ),
+        ],
+      );
+    }
     if (header == null) return child;
     return ListView(
       padding: EdgeInsets.zero,
@@ -252,15 +302,21 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
 
   @override
   void dispose() {
+    _completeRefresh();
     _requestGeneration++;
     if (widget.disposeController) widget.pagifyController.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
-    builder: (context, constraints) => _buildCollection(context, constraints),
-  );
+  Widget build(BuildContext context) {
+    final Widget collection = LayoutBuilder(
+      builder: (context, constraints) => _buildCollection(context, constraints),
+    );
+    return widget.enablePullRefresh
+        ? collection.withPullRefresher(onRefresh: _refresh)
+        : collection;
+  }
 
   Widget _buildCollection(BuildContext context, BoxConstraints constraints) {
     final double scale = (MediaQuery.textScalerOf(context).scale(14) / 14)
@@ -309,7 +365,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
         listenToNetworkConnectivityChanges:
             widget.onConnectivityChanged != null,
         onConnectivityChanged: widget.onConnectivityChanged,
-        onUpdateStatus: widget.onUpdateStatus,
+        onUpdateStatus: _onUpdateStatus,
         shrinkWrap: widget.shrinkWrap,
         emptyListView: _emptyView,
         controller: widget.pagifyController,
@@ -358,7 +414,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
         listenToNetworkConnectivityChanges:
             widget.onConnectivityChanged != null,
         onConnectivityChanged: widget.onConnectivityChanged,
-        onUpdateStatus: widget.onUpdateStatus,
+        onUpdateStatus: _onUpdateStatus,
         crossAxisCount: widget.crossAxisCount,
         childAspectRatio: widget.childAspectRatio,
         mainAxisSpacing: widget.gridSpacing,
