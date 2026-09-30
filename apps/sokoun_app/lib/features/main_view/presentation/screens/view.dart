@@ -34,6 +34,8 @@ import '../../data/enums/app_workspace.dart';
 import '../../data/enums/workspace_tab.dart';
 import '../cubits/workspace_cubit.dart';
 import '../cubits/account_cubit.dart';
+import '../cubits/workspace_counts_cubit.dart';
+import '../../data/models/workspace_counts.dart';
 import '../workspace_navigation.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -65,6 +67,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   late final TenantProfileCubit _tenantProfileCubit;
   late final AccountCubit _accountCubit;
   late final Future<void> _accountRequest;
+  late final WorkspaceCountsCubit _tenantCounts;
+  late final WorkspaceCountsCubit _ownerCounts;
 
   late final Upgrader upgrader = Upgrader(
     languageCode: Languages.currentLanguage.languageCode,
@@ -92,6 +96,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       WorkspaceNavigation.isAuthenticated ? UserCubit.instance.user.id : null,
     );
     _chatUnreadCubit = ChatUnreadCubit();
+    _tenantCounts = WorkspaceCountsCubit(AppWorkspace.tenant)..watch();
+    _ownerCounts = WorkspaceCountsCubit(AppWorkspace.owner)..watch();
     _notificationUnreadCubit = UnreadNotificationsCubit()
       ..watchRefreshRequests();
     _tenantProfileCubit = TenantProfileCubit();
@@ -123,6 +129,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed) {
       unawaited(_chatUnreadCubit.onAppResumed());
       unawaited(_refreshTenantProfile());
+      unawaited(_refreshCounts());
+      unawaited(_notificationUnreadCubit.loadUnreadCount());
       return;
     }
     if (state == AppLifecycleState.paused ||
@@ -140,6 +148,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     unawaited(_notificationUnreadCubit.close());
     unawaited(_tenantProfileCubit.close());
     unawaited(_accountCubit.close());
+    unawaited(_tenantCounts.close());
+    unawaited(_ownerCounts.close());
     super.dispose();
   }
 
@@ -155,6 +165,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     await Future.wait<void>([
       _chatUnreadCubit.start(),
       _notificationUnreadCubit.loadUnreadCount(),
+      _refreshCounts(),
       _showLaunchDialogs(),
     ]);
   }
@@ -163,6 +174,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (!_workspace.isTenant || !WorkspaceNavigation.isAuthenticated) return;
     await _tenantProfileCubit.getProfile();
   }
+
+  Future<void> _refreshCounts() =>
+      (_workspace.isOwner ? _ownerCounts : _tenantCounts).load();
 
   Future<void> _showLaunchDialogs() async {
     await Future.wait<void>([
@@ -195,6 +209,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       return;
     }
     setState(() => _selectedTabs[_workspace] = index);
+    unawaited(_refreshCounts());
     if (_tabs[index].tab == WorkspaceTab.profile) {
       unawaited(_refreshTenantProfile());
     }
@@ -216,19 +231,22 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (mounted) {
       setState(() {});
       unawaited(_refreshTenantProfile());
+      unawaited(_refreshCounts());
     }
   }
 
   List<HomeNavigationDestination> _navigationDestinations({
     required int unreadCount,
-    required TenantProfileStatsContent stats,
+    required WorkspaceCounts counts,
+    required int reviewsCount,
   }) => _tabs
       .map((tab) {
         final int badgeCount = switch (tab.tab) {
           WorkspaceTab.messages => unreadCount,
-          WorkspaceTab.saved when _workspace.isTenant => stats.savedCount,
-          WorkspaceTab.visits when _workspace.isTenant => stats.visitsCount,
-          WorkspaceTab.profile when _workspace.isTenant => stats.reviewsCount,
+          WorkspaceTab.saved when _workspace.isTenant => counts.favorites,
+          WorkspaceTab.visits when _workspace.isTenant => counts.visits,
+          WorkspaceTab.requests when _workspace.isOwner => counts.visits,
+          WorkspaceTab.profile when _workspace.isTenant => reviewsCount,
           _ => 0,
         };
         return tab.destination.copyWith(badgeCount: badgeCount);
@@ -340,15 +358,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         selector: (state) => state.data.count,
         builder: (context, unreadCount) =>
             BlocSelector<
-              TenantProfileCubit,
-              AsyncState<TenantProfileContent>,
-              TenantProfileStatsContent
+              WorkspaceCountsCubit,
+              AsyncState<WorkspaceCounts>,
+              WorkspaceCounts
             >(
-              selector: (state) => state.data.stats,
-              builder: (context, stats) {
+              bloc: _workspace.isOwner ? _ownerCounts : _tenantCounts,
+              selector: (state) => state.data,
+              builder: (context, counts) {
                 final destinations = _navigationDestinations(
                   unreadCount: unreadCount,
-                  stats: stats,
+                  counts: counts,
+                  reviewsCount: context.select<TenantProfileCubit, int>(
+                    (cubit) => cubit.data.stats.reviewsCount,
+                  ),
                 );
                 return rail
                     ? HomeNavigationRail(
@@ -376,6 +398,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           value: _notificationUnreadCubit,
         ),
         BlocProvider<TenantProfileCubit>.value(value: _tenantProfileCubit),
+        BlocProvider<WorkspaceCountsCubit>.value(value: _tenantCounts),
       ],
       child: BlocBuilder<WorkspaceCubit, AppWorkspace>(
         builder: (context, workspace) {

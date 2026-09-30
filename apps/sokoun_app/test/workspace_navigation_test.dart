@@ -39,6 +39,7 @@ import 'package:sokoun_app/features/shared/chat/data/models/chat_unread_content.
 import 'package:sokoun_app/features/shared/notifications/presentation/notification_push_handler.dart';
 import 'package:sokoun_app/features/shared/profile/imports.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_home_screen.dart';
+import 'package:sokoun_app/features/tenant/visits/imports.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/home_page_model.dart';
 import 'package:sokoun_app/shared_widgets/unsaved_changes_guard.dart';
@@ -292,7 +293,7 @@ void main() {
 
   for (final String language in ['en', 'ar']) {
     testWidgets(
-      'shows and refreshes my-account badges only in tenant workspace in $language',
+      'shows dedicated role counts and refreshes badges in $language',
       (tester) async {
         _phone(tester);
         await registerAuthenticatedTestAccount();
@@ -301,6 +302,11 @@ void main() {
           'visits_count': 4,
           'reviews_count': 2,
         };
+        accountRepository.tenantCounts = {
+          'favorites_count': 120,
+          'visit_requests_count': 4,
+        };
+        accountRepository.ownerCounts = {'visit_requests_count': 9};
         await tester.pumpWidget(_app(const HomeScreen(), language));
         await tester.pumpAndSettle();
         tester
@@ -331,6 +337,10 @@ void main() {
           'visits_count': 5,
           'reviews_count': 3,
         };
+        accountRepository.tenantCounts = {
+          'favorites_count': 6,
+          'visit_requests_count': 5,
+        };
         navigation().onDestinationSelected(4);
         await tester.pumpAndSettle();
         expect(find.byType(TenantProfileScreen), findsOneWidget);
@@ -345,7 +355,7 @@ void main() {
 
         unawaited(WorkspaceNavigation.open(workspace: AppWorkspace.owner));
         await tester.pumpAndSettle();
-        expect(badgeCounts(), [0, 0, 0, 7, 0]);
+        expect(badgeCounts(), [0, 0, 9, 7, 0]);
         expect(accountRepository.profileRequests, 2);
         expect(sharedProfile.isClosed, isFalse);
 
@@ -353,6 +363,10 @@ void main() {
           'saved_count': 0,
           'visits_count': 0,
           'reviews_count': 0,
+        };
+        accountRepository.tenantCounts = {
+          'favorites_count': 0,
+          'visit_requests_count': 0,
         };
         unawaited(WorkspaceNavigation.open(workspace: AppWorkspace.tenant));
         await tester.pumpAndSettle();
@@ -367,6 +381,10 @@ void main() {
           'saved_count': 3,
           'visits_count': 2,
           'reviews_count': 1,
+        };
+        accountRepository.tenantCounts = {
+          'favorites_count': 3,
+          'visit_requests_count': 2,
         };
         tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
         tester.binding.handleAppLifecycleStateChanged(
@@ -475,6 +493,56 @@ void main() {
       },
     );
   }
+
+  testWidgets(
+    'a booking draft survives cancelled workspace switching and cannot leave while submitting',
+    (tester) async {
+      _phone(tester);
+      await registerAuthenticatedTestAccount();
+      await tester.pumpWidget(_app(const HomeScreen(), 'en'));
+      await tester.pumpAndSettle();
+      unawaited(
+        Go.to(
+          const BookVisitScreen(
+            property: VisitPropertyContent(
+              id: 'property-1',
+              ownerId: 'another-owner',
+              title: 'Apartment',
+              meta: 'Cairo',
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      BookVisitForm form() =>
+          tester.widget<BookVisitForm>(find.byType(BookVisitForm));
+      form().noteController.text = 'Please call before the visit';
+      form().onTimeSelected(const TimeOfDay(hour: 14, minute: 30));
+      await tester.pump();
+      unawaited(WorkspaceNavigation.open(workspace: AppWorkspace.owner));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(LocaleKeys.workspaceStay));
+      await tester.pumpAndSettle();
+      expect(form().noteController.text, 'Please call before the visit');
+      expect(WorkspaceCubit.instance.state, AppWorkspace.tenant);
+      final gate = Completer<void>();
+      accountRepository.bookingGate = gate;
+      final submission = form().onConfirmPressed(
+        tester.element(find.byType(BookVisitForm)),
+      );
+      await tester.pump();
+      await WorkspaceNavigation.open(workspace: AppWorkspace.owner);
+      await tester.pump();
+      expect(find.byType(BookVisitScreen), findsOneWidget);
+      expect(WorkspaceCubit.instance.state, AppWorkspace.tenant);
+      gate.complete();
+      await submission;
+      await tester.pumpAndSettle();
+      expect(find.byType(VisitConfirmedScreen), findsOneWidget);
+      expect(accountRepository.bookings, 1);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets('cross-workspace navigation asks before discarding an edit', (
     tester,
@@ -675,6 +743,8 @@ class _AccountStatsRepository implements BaseRepository {
   _AccountStatsRepository(this.fallback);
 
   final BaseRepository fallback;
+  Map<String, dynamic> tenantCounts = const {};
+  Map<String, dynamic> ownerCounts = const {};
   Map<String, dynamic> stats = const {
     'saved_count': 0,
     'visits_count': 0,
@@ -684,13 +754,31 @@ class _AccountStatsRepository implements BaseRepository {
   int homeRequests = 0;
   Completer<void>? profileGate;
   Completer<void>? homeGate;
+  Completer<void>? bookingGate;
+  int bookings = 0;
 
   @override
   Future<Result<BaseModel<T>, Failure>> crudCall<T>(
     CrudBaseParmas<T> params,
   ) async {
+    if (params.api == ApiConstants.propertyVisits('property-1') &&
+        params.httpRequestType == HttpRequestType.post) {
+      bookings++;
+      await bookingGate?.future;
+      return Success(
+        BaseModel<T>(
+          key: '',
+          msg: '',
+          data: params.mapper!(<String, dynamic>{}),
+        ),
+      );
+    }
     final Map<String, dynamic> response;
-    if (params.api == ApiConstants.getAccData) {
+    if (params.api == ApiConstants.tenantUnreadCounts) {
+      response = tenantCounts;
+    } else if (params.api == ApiConstants.ownerUnreadCounts) {
+      response = ownerCounts;
+    } else if (params.api == ApiConstants.getAccData) {
       profileRequests++;
       await profileGate?.future;
       response = {

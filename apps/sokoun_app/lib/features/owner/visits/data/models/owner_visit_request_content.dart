@@ -53,7 +53,7 @@ class OwnerVisitRequestContent extends Equatable {
     final String visitDate =
         json['visit_date'] ?? json['date'] ?? json['detail_date'] ?? '';
     final String visitTime =
-        json['visit_time'] ?? json['time'] ?? property['time'] ?? '';
+        json['time'] ?? json['visit_time'] ?? property['time'] ?? '';
 
     return OwnerVisitRequestContent(
       id: json['id'] ?? '',

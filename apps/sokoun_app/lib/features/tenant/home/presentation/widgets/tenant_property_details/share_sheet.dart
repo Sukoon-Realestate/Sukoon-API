@@ -6,6 +6,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/helpers/helpers.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -15,6 +16,24 @@ class TenantPropertyShareSheet extends StatelessWidget {
   const TenantPropertyShareSheet({super.key, required this.shareUrl});
 
   final String shareUrl;
+
+  Future<void> _shareLink(BuildContext context) async {
+    final RenderBox? box = context.findRenderObject() as RenderBox?;
+    try {
+      await Helpers.shareApp(
+        shareUrl,
+        sharePositionOrigin: box == null
+            ? null
+            : box.localToGlobal(Offset.zero) & box.size,
+      );
+    } catch (_) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(LocaleKeys.operationFaild)));
+      }
+    }
+  }
 
   Future<void> _copyLink(BuildContext context) async {
     final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
@@ -74,7 +93,7 @@ class TenantPropertyShareSheet extends StatelessWidget {
               icon: Icons.ios_share_rounded,
               label: LocaleKeys.tenantPropertyDetailsShare,
               color: AppColors.blue,
-              onActionPressed: Go.back,
+              onActionPressed: () => _shareLink(context),
             ),
             8.szH,
             TenantPropertyShareActionRow(

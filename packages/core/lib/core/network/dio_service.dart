@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -22,9 +21,11 @@ import 'fire_store.dart';
 import 'interceptors/cookie_token_header_interceptor.dart';
 import 'interceptors/log_interceptor.dart';
 import 'interceptors/unauthorized_interceptor.dart';
+import 'interceptors/session_cookie_manager.dart';
 import 'network_request.dart';
 import 'network_service.dart';
 import 'session_auth_service.dart';
+import 'network_logging_policy.dart';
 
 class DioService implements NetworkService, SessionAuthService {
   DioService({
@@ -42,8 +43,10 @@ class DioService implements NetworkService, SessionAuthService {
   late final Dio _dio;
   final Future<Directory> Function() _cookieDirectoryProvider;
   PersistCookieJar? _cookieJar;
+  SessionCookieManager? _sessionCookies;
   Future<void>? _cookieInitialization;
   Future<bool>? _sessionRefresh;
+  int? _sessionRefreshGeneration;
 
   void _initDio({
     required String initialBaseUrl,
@@ -96,8 +99,10 @@ class DioService implements NetworkService, SessionAuthService {
     await cookieJar.forceInit();
 
     _cookieJar = cookieJar;
+    final SessionCookieManager manager = SessionCookieManager(cookieJar);
+    _sessionCookies = manager;
     _dio.interceptors
-      ..insert(0, CookieManager(cookieJar))
+      ..insert(0, manager)
       ..insert(1, CookieTokenHeaderInterceptor(cookieJar: cookieJar))
       ..insert(
         2,
@@ -111,12 +116,13 @@ class DioService implements NetworkService, SessionAuthService {
               refreshUri,
             );
 
-            return cookies.isNotEmpty;
+            return cookies.any(
+              (cookie) =>
+                  cookie.name == 'refresh_token' && cookie.value.isNotEmpty,
+            );
           },
-          onSessionExpired: () async {
-            await cookieJar.deleteAll();
-            AccountSession.notifyExpired();
-          },
+          onSessionExpired: (generation) =>
+              manager.clear(generation: generation, expire: true),
         ),
       );
   }
@@ -149,12 +155,15 @@ class DioService implements NetworkService, SessionAuthService {
 
   @override
   Future<String?> getAccessToken() async {
+    final int generation = AccountSession.generation;
     final Uri? baseUri = await getBaseUri();
     if (baseUri == null) return null;
 
     final List<Cookie> cookies = await _cookieJar!.loadForRequest(baseUri);
+    if (generation != AccountSession.generation) return null;
     for (final Cookie cookie in cookies) {
-      if (cookie.name == 'access' && cookie.value.isNotEmpty) {
+      if ((cookie.name == 'access_token' || cookie.name == 'access') &&
+          cookie.value.isNotEmpty) {
         return cookie.value;
       }
     }
@@ -164,10 +173,15 @@ class DioService implements NetworkService, SessionAuthService {
   @override
   Future<bool> refreshSession() {
     final Future<bool>? pendingRefresh = _sessionRefresh;
-    if (pendingRefresh != null) return pendingRefresh;
+    if (pendingRefresh != null &&
+        _sessionRefreshGeneration == AccountSession.generation) {
+      return pendingRefresh;
+    }
 
-    final Future<bool> refresh = _refreshSession();
+    final int generation = AccountSession.generation;
+    final Future<bool> refresh = _refreshSession(generation);
     _sessionRefresh = refresh;
+    _sessionRefreshGeneration = generation;
     return refresh.whenComplete(() {
       if (identical(_sessionRefresh, refresh)) {
         _sessionRefresh = null;
@@ -175,7 +189,7 @@ class DioService implements NetworkService, SessionAuthService {
     });
   }
 
-  Future<bool> _refreshSession() async {
+  Future<bool> _refreshSession(int generation) async {
     try {
       final Uri? baseUri = await getBaseUri();
       if (baseUri == null) return false;
@@ -187,8 +201,17 @@ class DioService implements NetworkService, SessionAuthService {
       );
       if (!hasRefreshToken) return false;
 
-      await _dio.post<void>(ApiConstants.refreshToken);
-      return (await getAccessToken())?.isNotEmpty ?? false;
+      if (generation != AccountSession.generation) return false;
+      await _dio.post<void>(
+        ApiConstants.refreshToken,
+        options: Options(
+          extra: {SessionCookieManager.generationKey: generation},
+        ),
+      );
+      if (generation != AccountSession.generation) return false;
+      final String? token = await getAccessToken();
+      return generation == AccountSession.generation &&
+          (token?.isNotEmpty ?? false);
     } catch (_) {
       return false;
     }
@@ -223,8 +246,9 @@ class DioService implements NetworkService, SessionAuthService {
 
   @override
   Future<void> clearSessionCookies() async {
+    final int generation = AccountSession.generation;
     await _ensureCookieManager();
-    await _cookieJar!.deleteAll();
+    await _sessionCookies!.clear(generation: generation);
     _dio.options.headers
       ..remove(HttpHeaders.authorizationHeader)
       ..remove(HttpHeaders.cookieHeader);
@@ -234,6 +258,7 @@ class DioService implements NetworkService, SessionAuthService {
     required String path,
     required Map<String, dynamic> response,
   }) {
+    if (NetworkLoggingPolicy.isSensitive(path)) return;
     if (FireStoreService.isInitialized && kReleaseMode) {
       FireStoreService.instance.storeResponse(path: path, response: response);
     }
@@ -251,7 +276,9 @@ class DioService implements NetworkService, SessionAuthService {
         await updateBaseUrl();
       }
       await networkRequest.prepareRequestData();
-      if (FireStoreService.isInitialized && kReleaseMode) {
+      if (FireStoreService.isInitialized &&
+          kReleaseMode &&
+          !NetworkLoggingPolicy.isSensitive(networkRequest.path)) {
         FireStoreService.instance.storeRequest(networkRequest);
       }
       final response = await _dio.request(
@@ -271,6 +298,7 @@ class DioService implements NetworkService, SessionAuthService {
         options: Options(
           method: networkRequest.asString(),
           headers: networkRequest.headers,
+          extra: {SessionCookieManager.generationKey: generation},
         ),
       );
 
@@ -292,10 +320,11 @@ class DioService implements NetworkService, SessionAuthService {
           generation == AccountSession.generation &&
           AccountSession.userId != null) {
         // A session can expire without leaving any refresh cookies behind.
-        await clearSessionCookies();
-        AccountSession.notifyExpired();
+        await _sessionCookies!.clear(generation: generation, expire: true);
       }
-      log('error is ${e.response?.data}');
+      if (!NetworkLoggingPolicy.isSensitive(networkRequest.path)) {
+        log('error is ${e.response?.data}');
+      }
       _handleIncomingResponse(
         path: networkRequest.path,
         response: e.response?.data ?? {'error': e.toString()},
@@ -330,7 +359,9 @@ class DioService implements NetworkService, SessionAuthService {
               error.response?.data['message'] ?? LocaleKeys.unauthorized,
             );
           case HttpStatus.notFound:
-            throw NotFoundException(error.response?.data['message'] ?? LocaleKeys.notFound);
+            throw NotFoundException(
+              error.response?.data['message'] ?? LocaleKeys.notFound,
+            );
           case HttpStatus.conflict:
             throw ConflictException(
               error.response?.data['message'] ?? LocaleKeys.serverError,

@@ -295,12 +295,17 @@ class Helpers {
     return image;
   }
 
-  static void shareApp(String url) {
+  static Future<void> shareApp(String url, {Rect? sharePositionOrigin}) async {
     CustomLoading.showFullScreenLoading();
-    final ShareParams params = ShareParams(uri: Uri.parse(url));
-    SharePlus.instance.share(params).whenComplete(() {
+    try {
+      final ShareParams params = ShareParams(
+        uri: Uri.parse(url),
+        sharePositionOrigin: sharePositionOrigin,
+      );
+      await SharePlus.instance.share(params);
+    } finally {
       CustomLoading.hideFullScreenLoading();
-    });
+    }
   }
 
   static String getDeviceType() {

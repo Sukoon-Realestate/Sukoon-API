@@ -19,11 +19,13 @@ class KycPendingScreen extends StatelessWidget {
     this.fullName,
     this.submittedAt,
     this.expectedReviewTime,
+    this.existingAccount = false,
   });
 
   final String? fullName;
   final String? submittedAt;
   final String? expectedReviewTime;
+  final bool existingAccount;
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +103,8 @@ class KycPendingScreen extends StatelessWidget {
             24.szH,
           ],
           DefaultButton(
-            onTap: () => Go.offAll(LoginScreen()),
+            onTap: () =>
+                existingAccount ? Go.backToInitial() : Go.offAll(LoginScreen()),
             title: LocaleKeys.ok,
             color: AppColors.sokoonTeal,
             textColor: AppColors.white,

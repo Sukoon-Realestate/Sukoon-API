@@ -154,9 +154,11 @@ class _AddPropertyVideoPageState extends State<AddPropertyVideoPage> {
       }
 
       final Duration duration = controller.value.duration;
-      if (duration > _maximumDuration) {
+      if (duration.inSeconds < 1 || duration > _maximumDuration) {
         await controller.dispose();
-        _updateUi(validationMessage: LocaleKeys.ownerPropertyVideoTooLong);
+        _updateUi(
+          validationMessage: LocaleKeys.ownerPropertyVideoDurationInvalid,
+        );
         return;
       }
 

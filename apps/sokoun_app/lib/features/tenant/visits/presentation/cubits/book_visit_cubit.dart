@@ -13,6 +13,7 @@ class BookVisitCubit extends AsyncCubit<Map<String, dynamic>> {
     required void Function() onSuccess,
     void Function(String message)? onError,
   }) async {
+    if (isLoading || isClosed) return;
     if (ownerId.isNotEmpty && ownerId == UserModel.currentUser?.id) {
       setError(errorMessage: LocaleKeys.workspaceSelfActionBlocked);
       onError?.call(LocaleKeys.workspaceSelfActionBlocked);
@@ -34,7 +35,10 @@ class BookVisitCubit extends AsyncCubit<Map<String, dynamic>> {
               json is Map<String, dynamic> ? json : <String, dynamic>{},
         ),
       ),
-      onSuccess: (_) => onSuccess(),
+      onSuccess: (_) {
+        WorkspaceCountsRefreshBus.refresh();
+        onSuccess();
+      },
       onError: onError,
     );
   }

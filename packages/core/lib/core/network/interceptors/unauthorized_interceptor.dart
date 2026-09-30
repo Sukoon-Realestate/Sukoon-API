@@ -3,12 +3,13 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 
 import '../api_endpoints.dart';
+import 'session_cookie_manager.dart';
 
 class UnauthorizedInterceptor extends Interceptor {
   UnauthorizedInterceptor({
     required Dio dio,
     required Future<bool> Function() canRefreshSession,
-    required Future<void> Function() onSessionExpired,
+    required Future<void> Function(int generation) onSessionExpired,
   }) : _dio = dio,
        _canRefreshSession = canRefreshSession,
        _onSessionExpired = onSessionExpired;
@@ -17,8 +18,9 @@ class UnauthorizedInterceptor extends Interceptor {
 
   final Dio _dio;
   final Future<bool> Function() _canRefreshSession;
-  final Future<void> Function() _onSessionExpired;
+  final Future<void> Function(int generation) _onSessionExpired;
   Future<void>? _refreshFuture;
+  int? _refreshGeneration;
 
   @override
   Future<void> onError(
@@ -26,7 +28,8 @@ class UnauthorizedInterceptor extends Interceptor {
     ErrorInterceptorHandler handler,
   ) async {
     final RequestOptions request = err.requestOptions;
-    if (err.response?.statusCode != HttpStatus.unauthorized ||
+    if (!SessionCookieManager.isCurrent(request) ||
+        err.response?.statusCode != HttpStatus.unauthorized ||
         request.extra[_retryKey] == true ||
         request.path == ApiConstants.refreshToken) {
       handler.next(err);
@@ -43,8 +46,19 @@ class UnauthorizedInterceptor extends Interceptor {
       return;
     }
 
+    if (!SessionCookieManager.isCurrent(request)) {
+      handler.next(SessionCookieManager.staleRequest(request));
+      return;
+    }
+
     try {
-      await _refreshSession();
+      await _refreshSession(
+        request.extra[SessionCookieManager.generationKey] as int,
+      );
+      if (!SessionCookieManager.isCurrent(request)) {
+        handler.next(SessionCookieManager.staleRequest(request));
+        return;
+      }
 
       request
         ..headers.remove(HttpHeaders.cookieHeader)
@@ -55,25 +69,42 @@ class UnauthorizedInterceptor extends Interceptor {
 
       final Response<dynamic> response = await _dio.fetch<dynamic>(request);
       handler.resolve(response);
-    } catch (_) {
-      await _onSessionExpired();
+    } catch (error) {
+      // A failed retry (403, offline, server error) is not an expired session.
+      if (SessionCookieManager.isCurrent(request) &&
+          error is DioException &&
+          error.response?.statusCode == HttpStatus.unauthorized) {
+        await _onSessionExpired(
+          request.extra[SessionCookieManager.generationKey] as int,
+        );
+      }
+      if (error is DioException) {
+        handler.next(error);
+        return;
+      }
       handler.next(err);
     }
   }
 
-  Future<void> _refreshSession() {
+  Future<void> _refreshSession(int generation) {
     final Future<void>? pendingRefresh = _refreshFuture;
-    if (pendingRefresh != null) {
+    if (pendingRefresh != null && _refreshGeneration == generation) {
       return pendingRefresh;
     }
 
     final Future<void> refresh = _dio
         .post<void>(
           ApiConstants.refreshToken,
-          options: Options(extra: {_retryKey: true}),
+          options: Options(
+            extra: {
+              _retryKey: true,
+              SessionCookieManager.generationKey: generation,
+            },
+          ),
         )
         .then((_) {});
     _refreshFuture = refresh;
+    _refreshGeneration = generation;
     return refresh.whenComplete(() {
       if (identical(_refreshFuture, refresh)) {
         _refreshFuture = null;

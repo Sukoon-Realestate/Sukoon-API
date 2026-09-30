@@ -7,7 +7,10 @@ class UnreadNotificationsContent extends Equatable {
 
   factory UnreadNotificationsContent.fromJson(Map<String, dynamic> json) {
     return UnreadNotificationsContent(
-      count: (json['unread_count'] as num?)?.toInt() ?? 0,
+      count:
+          ((json['unread_notifications_count'] ?? json['unread_count']) as num?)
+              ?.toInt() ??
+          0,
     );
   }
 

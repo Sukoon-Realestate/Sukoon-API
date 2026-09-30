@@ -21,6 +21,11 @@ import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_widg
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_theme.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
+import 'package:sokoun_app/features/shared/reviews/data/models/my_review.dart';
+import 'package:sokoun_app/features/shared/reviews/presentation/widgets/my_review_card.dart';
+import 'package:sokoun_app/features/shared/public_pages/data/models/public_page_content.dart';
+import 'package:sokoun_app/features/shared/public_pages/presentation/widgets/public_page_body.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/property_video.dart';
 
 /// Opt-in PNG export; the same fixtures are used before and after refinement.
 /// flutter test test/ui_visual_review_test.dart --dart-define=UI_REVIEW_DIR=/tmp/review
@@ -67,12 +72,54 @@ void main() {
         'dashboard',
         'language',
         'chat_header',
+        'my_review',
+        'public_page',
+        'property_video',
       ]) {
         testWidgets('$subject $locale at $width', (tester) async {
           tester.view.physicalSize = Size(width, width > 600 ? 768 : 844);
           tester.view.devicePixelRatio = 1;
           addTearDown(tester.view.reset);
           final Widget screen = switch (subject) {
+            'my_review' => AppScaffold(
+              title: locale == 'ar' ? 'تقييماتي' : 'My Reviews',
+              body: SingleChildScrollView(
+                child: MyReviewCard(
+                  review: const MyReview.initial().copyWith(
+                    propertyTitle: locale == 'ar'
+                        ? 'شقة واسعة في المعادي'
+                        : 'Spacious apartment in Maadi',
+                    comment: locale == 'ar'
+                        ? 'العقار مطابق للوصف والزيارة كانت منظمة.'
+                        : 'The property matched the description and the visit was well organized.',
+                    rating: 5,
+                    createdAt: '2026-09-28T14:13:00Z',
+                  ),
+                ),
+              ),
+            ),
+            'public_page' => AppScaffold(
+              title: locale == 'ar' ? 'عن سكون' : 'About Sokoun',
+              body: PublicPageBody(
+                page: const PublicPageContent.initial().copyWith(
+                  title: locale == 'ar' ? 'عن سكون' : 'About Sokoun',
+                  language: locale,
+                  content: locale == 'ar'
+                      ? 'سكون منصة لاستكشاف العقارات وحجز الزيارات والتواصل مع الملاك.\n\nحساب واحد يتيح لك التأجير والاستئجار.'
+                      : 'Sokoun helps you discover properties, book visits, and contact owners.\n\nOne account lets you rent and list properties.',
+                ),
+              ),
+            ),
+            'property_video' => AppScaffold(
+              title: locale == 'ar' ? 'فيديو العقار' : 'Property video',
+              body: const Padding(
+                padding: EdgeInsets.all(20),
+                child: PropertyVideo(
+                  url: 'https://cdn.example.com/tour.mp4',
+                  durationSeconds: 45,
+                ),
+              ),
+            ),
             'welcome' => const WelcomeScreen(),
             'language' => const LanguageSelectionScreen(),
             'chat_header' => AppScaffold(

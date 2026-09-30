@@ -1,6 +1,51 @@
 import 'package:easy_localization/easy_localization.dart';
 
 abstract class LocaleKeys {
+  static const String _ownerPropertyVideoDurationInvalid = 'owner_property_video_duration_invalid';
+  static String get ownerPropertyVideoDurationInvalid => _ownerPropertyVideoDurationInvalid.tr();
+
+  static const String _kycExistingDocumentsHint = 'kyc_existing_documents_hint';
+  static String get kycExistingDocumentsHint => _kycExistingDocumentsHint.tr();
+
+  static const String _kycOptionalSelfie = 'kyc_optional_selfie';
+  static String get kycOptionalSelfie => _kycOptionalSelfie.tr();
+
+  static const String _kycMissingFields = 'kyc_missing_fields';
+  static String get kycMissingFields => _kycMissingFields.tr();
+
+  static const String _kycIncompleteSubmission = 'kyc_incomplete_submission';
+  static String get kycIncompleteSubmission => _kycIncompleteSubmission.tr();
+
+  static const String _myReviewsEmptyTitle = 'my_reviews_empty_title';
+  static String get myReviewsEmptyTitle => _myReviewsEmptyTitle.tr();
+
+  static const String _myReviewsEmptyDescription = 'my_reviews_empty_description';
+  static String get myReviewsEmptyDescription => _myReviewsEmptyDescription.tr();
+
+  static const String _publicAboutUs = 'public_about_us';
+  static String get publicAboutUs => _publicAboutUs.tr();
+
+  static const String _publicPrivacyPolicy = 'public_privacy_policy';
+  static String get publicPrivacyPolicy => _publicPrivacyPolicy.tr();
+
+  static const String _publicTerms = 'public_terms';
+  static String get publicTerms => _publicTerms.tr();
+
+  static const String _publicPageEmptyTitle = 'public_page_empty_title';
+  static String get publicPageEmptyTitle => _publicPageEmptyTitle.tr();
+
+  static const String _publicPageEmptyDescription = 'public_page_empty_description';
+  static String get publicPageEmptyDescription => _publicPageEmptyDescription.tr();
+
+  static const String _propertyVideoPlay = 'property_video_play';
+  static String get propertyVideoPlay => _propertyVideoPlay.tr();
+
+  static const String _propertyVideoPause = 'property_video_pause';
+  static String get propertyVideoPause => _propertyVideoPause.tr();
+
+  static const String _propertyVideoError = 'property_video_error';
+  static String get propertyVideoError => _propertyVideoError.tr();
+
   static const String _workspaceTenant = 'workspace_tenant';
   static String get workspaceTenant => _workspaceTenant.tr();
 

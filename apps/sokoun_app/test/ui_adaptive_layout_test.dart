@@ -32,6 +32,11 @@ import 'package:sokoun_app/features/shared/chat/data/models/conversation_content
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_card.dart';
 import 'package:sokoun_app/features/main_view/presentation/widgets/home_bottom_navigation.dart';
 import 'helpers/home_page_test_dependencies.dart';
+import 'package:sokoun_app/features/shared/reviews/data/models/my_review.dart';
+import 'package:sokoun_app/features/shared/reviews/presentation/widgets/my_review_card.dart';
+import 'package:sokoun_app/features/shared/public_pages/data/models/public_page_content.dart';
+import 'package:sokoun_app/features/shared/public_pages/presentation/widgets/public_page_body.dart';
+import 'package:sokoun_app/features/shared/public_pages/presentation/widgets/public_page_menu.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_home_screen.dart';
 
 void main() {
@@ -64,6 +69,10 @@ void main() {
           'welcome',
           'login',
           'kyc',
+          'kyc_completion',
+          'my_review',
+          'public_page',
+          'public_menu',
           'properties',
           'details',
           'dashboard',
@@ -96,6 +105,8 @@ void main() {
               'bedrooms': 3,
               'bathrooms': 2,
               'images': [],
+              'video': 'https://cdn.example.com/tour.mp4',
+              'video_duration': 45,
             });
             Widget scroll(Widget child) => AppScaffold(
               showBackButton: false,
@@ -114,6 +125,29 @@ void main() {
               'welcome' => const WelcomeScreen(),
               'login' => const LoginScreen(),
               'kyc' => const KycUploadDocumentsScreen(),
+              'kyc_completion' => const KycUploadDocumentsScreen(
+                existingAccount: true,
+              ),
+              'my_review' => scroll(
+                MyReviewCard(
+                  review: const MyReview.initial().copyWith(
+                    propertyTitle: title,
+                    comment: '$title. $title.',
+                    rating: 5,
+                    createdAt: '2026-09-28T14:13:00Z',
+                  ),
+                ),
+              ),
+              'public_page' => page(
+                PublicPageBody(
+                  page: const PublicPageContent.initial().copyWith(
+                    title: title,
+                    content: List.filled(10, title).join('\n\n'),
+                    language: locale,
+                  ),
+                ),
+              ),
+              'public_menu' => scroll(const PublicPageMenu()),
               'properties' => scroll(
                 SokounAdaptiveGrid(
                   children: [

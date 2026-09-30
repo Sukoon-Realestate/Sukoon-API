@@ -6,6 +6,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/screens/login_screen.dart';
+import 'package:sokoun_app/features/shared/public_pages/presentation/widgets/public_page_menu.dart';
 
 class RegisterFooter extends StatefulWidget {
   const RegisterFooter({super.key});
@@ -32,25 +33,31 @@ class _RegisterFooterState extends State<RegisterFooter> {
   @override
   Widget build(BuildContext context) {
     _loginRecognizer.onTap = () => Go.off(const LoginScreen());
-    return Text.rich(
-      TextSpan(
-        text: '${LocaleKeys.alreadyHaveAnAccount}؟ ',
-        style: AppTextStyles.medium13.copyWith(
-          color: AppColors.sokoonGray,
-          fontSize: 13.sp,
-          height: 1.45,
-        ),
-        children: [
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text.rich(
           TextSpan(
-            text: LocaleKeys.login,
-            recognizer: _loginRecognizer,
-            style: AppTextStyles.extraBold.copyWith(
-              color: AppColors.sokoonTeal,
+            text: '${LocaleKeys.alreadyHaveAnAccount}؟ ',
+            style: AppTextStyles.medium13.copyWith(
+              color: AppColors.sokoonGray,
+              fontSize: 13.sp,
+              height: 1.45,
             ),
+            children: [
+              TextSpan(
+                text: LocaleKeys.login,
+                recognizer: _loginRecognizer,
+                style: AppTextStyles.extraBold.copyWith(
+                  color: AppColors.sokoonTeal,
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-      textAlign: TextAlign.center,
+          textAlign: TextAlign.center,
+        ),
+        const PublicPageMenu(),
+      ],
     );
   }
 }

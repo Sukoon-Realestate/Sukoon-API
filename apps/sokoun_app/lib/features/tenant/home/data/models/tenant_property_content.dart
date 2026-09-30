@@ -53,6 +53,9 @@ class TenantPropertyDetailsContent {
     required this.latitude,
     required this.longitude,
     this.imageUrls = const [],
+    this.videoUrl,
+    this.videoDuration,
+    this.propertyLink = '',
   });
 
   factory TenantPropertyDetailsContent.fromModel(PropertyDetailsModel model) {
@@ -101,6 +104,9 @@ class TenantPropertyDetailsContent {
           : LocaleKeys.tenantPropertyDetailsOwner,
       imageColors: const [AppColors.tealDark, AppColors.sokoonTeal],
       imageUrls: model.imageUrls,
+      videoUrl: model.video,
+      videoDuration: model.videoDuration,
+      propertyLink: model.propertyLink,
       latitude: model.latitude,
       longitude: model.longitude,
     );
@@ -129,9 +135,20 @@ class TenantPropertyDetailsContent {
   final List<String> imageUrls;
   final String latitude;
   final String longitude;
+  final String? videoUrl;
+  final int? videoDuration;
+  final String propertyLink;
 
   String get shortTitle => title;
-  String get shareUrl => 'https://sokoun.app/property/$id';
+  String get shareUrl {
+    final Uri? uri = Uri.tryParse(propertyLink.trim());
+    if (uri != null &&
+        (uri.scheme == 'https' || uri.scheme == 'http') &&
+        uri.host.isNotEmpty) {
+      return uri.toString();
+    }
+    return 'https://sokoun.app/properties/${Uri.encodeComponent(id)}';
+  }
 }
 
 class TenantFilterFormState {

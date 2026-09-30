@@ -28,6 +28,20 @@ class KycUploadDocumentsData {
         (selfieImage != null || selfieFileName != null);
   }
 
+  bool get hasChanges =>
+      nationalId.trim().isNotEmpty ||
+      frontIdImage != null ||
+      backIdImage != null ||
+      selfieImage != null;
+
+  /// Existing documents may be omitted; the server identifies missing fields.
+  Map<String, dynamic> toJson() => {
+    if (nationalId.trim().isNotEmpty) 'national_id': nationalId.trim(),
+    if (frontIdImage != null) 'front_id_image': frontIdImage,
+    if (backIdImage != null) 'back_id_image': backIdImage,
+    if (selfieImage != null) 'selfie_image': selfieImage,
+  };
+
   KycDocumentUploadData toUploadData() => KycDocumentUploadData(
     nationalId: nationalId.trim(),
     frontIdImage: frontIdImage,

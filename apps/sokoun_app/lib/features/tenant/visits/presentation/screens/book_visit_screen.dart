@@ -14,6 +14,7 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
   late final List<VisitDayContent> _days;
   late final TextEditingController _noteController;
   late final BookVisitCubit _bookVisitCubit;
+  bool _submitted = false;
   final ValueNotifier<({int dayIndex, TimeOfDay? time})> _selection =
       ValueNotifier<({int dayIndex, TimeOfDay? time})>((
         dayIndex: 0,
@@ -115,13 +116,17 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
       visitHour: selectedTimeOfDay.hour,
       visitMinute: selectedTimeOfDay.minute,
       note: _noteController.text.trim(),
-      onSuccess: () => Go.to(
-        VisitConfirmedScreen(
-          property: _property,
-          selectedDay: selectedDay,
-          selectedTime: selectedTime,
-        ),
-      ),
+      onSuccess: () {
+        if (!mounted) return;
+        _submitted = true;
+        Go.to(
+          VisitConfirmedScreen(
+            property: _property,
+            selectedDay: selectedDay,
+            selectedTime: selectedTime,
+          ),
+        );
+      },
       onError: (message) {
         if (BookVisitCubit.isUnavailableSlotError(message)) {
           _clearTimeAfterConflict();
@@ -134,24 +139,34 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
   Widget build(BuildContext context) {
     return BlocProvider<BookVisitCubit>.value(
       value: _bookVisitCubit,
-      child: AppScaffold(
-        title: LocaleKeys.tenantVisitBookTitle,
-        showBackButton: true,
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child: ValueListenableBuilder<({int dayIndex, TimeOfDay? time})>(
-            valueListenable: _selection,
-            builder: (context, selection, _) => BookVisitForm(
-              property: _property,
-              days: _days,
-              selectedDayIndex: selection.dayIndex,
-              selectedTime: selection.time,
-              noteController: _noteController,
-              onDaySelected: (index) =>
-                  _selection.value = (dayIndex: index, time: selection.time),
-              onTimeSelected: (time) =>
-                  _selection.value = (dayIndex: selection.dayIndex, time: time),
-              onConfirmPressed: _confirmVisit,
+      child: UnsavedChangesGuard(
+        hasChanges: () =>
+            !_submitted &&
+            (_selection.value.time != null ||
+                _selection.value.dayIndex != 0 ||
+                _noteController.text.trim().isNotEmpty),
+        isSaving: () => _bookVisitCubit.isLoading,
+        child: AppScaffold(
+          title: LocaleKeys.tenantVisitBookTitle,
+          showBackButton: true,
+          backgroundColor: AppColors.scaffoldBackground,
+          body: SafeArea(
+            child: ValueListenableBuilder<({int dayIndex, TimeOfDay? time})>(
+              valueListenable: _selection,
+              builder: (context, selection, _) => BookVisitForm(
+                property: _property,
+                days: _days,
+                selectedDayIndex: selection.dayIndex,
+                selectedTime: selection.time,
+                noteController: _noteController,
+                onDaySelected: (index) =>
+                    _selection.value = (dayIndex: index, time: selection.time),
+                onTimeSelected: (time) => _selection.value = (
+                  dayIndex: selection.dayIndex,
+                  time: time,
+                ),
+                onConfirmPressed: _confirmVisit,
+              ),
             ),
           ),
         ),

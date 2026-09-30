@@ -40,7 +40,10 @@ class OwnerVisitStatusCubit extends AsyncCubit<bool> {
           mapper: (_) => true,
         ),
       ),
-      onSuccess: (_) => onSuccess(),
+      onSuccess: (_) {
+        WorkspaceCountsRefreshBus.refresh();
+        onSuccess();
+      },
       onError: onError,
     );
   }

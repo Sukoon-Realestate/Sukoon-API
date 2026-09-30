@@ -11,6 +11,9 @@ import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 
 import '../widgets/auth_scaffold.dart';
+import 'kyc_upload_documents_screen.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
 import '../widgets/kyc/kyc_privacy_card.dart';
 import '../widgets/kyc/kyc_progress_bar.dart';
 import '../widgets/kyc/kyc_requirement_tile.dart';
@@ -44,7 +47,13 @@ class KycIntroScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               DefaultButton(
-                onTap: onUploadDocuments,
+                onTap:
+                    onUploadDocuments ??
+                    () => WorkspaceNavigation.open(
+                      detail: () => Go.to(
+                        const KycUploadDocumentsScreen(existingAccount: true),
+                      ),
+                    ),
                 title: LocaleKeys.uploadDocuments,
                 color: AppColors.sokoonTeal,
                 textColor: AppColors.white,

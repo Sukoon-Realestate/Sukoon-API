@@ -128,6 +128,7 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
                   label: LocaleKeys.profileVerificationDocuments,
                   color: AppColors.green,
                   backgroundColor: AppColors.greenPale,
+                  onTap: () => Go.to(const KycIntroScreen()),
                 ),
                 OwnerMoreItem(
                   icon: Icons.language_rounded,
@@ -167,14 +168,9 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
                   color: AppColors.sokoonGray,
                   backgroundColor: AppColors.grayBackground,
                 ),
-                OwnerMoreItem(
-                  icon: Icons.description_outlined,
-                  label: LocaleKeys.profileTermsPolicies,
-                  color: AppColors.sokoonGray,
-                  backgroundColor: AppColors.grayBackground,
-                ),
               ],
             ),
+            const PublicPageMenu(),
             18.szH,
             const ProfileLogoutButton(),
           ],

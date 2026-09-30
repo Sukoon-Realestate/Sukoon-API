@@ -108,7 +108,8 @@ abstract final class NotificationNavigation {
             lastMessage: notification.description,
             time: notification.time,
             unreadCount: 1,
-            isVerified: true,
+            // Notifications do not carry a verified-participant contract.
+            isVerified: false,
             isOnline: false,
             otherParticipant: ChatParticipantContent(
               id: notification.payload.senderId,

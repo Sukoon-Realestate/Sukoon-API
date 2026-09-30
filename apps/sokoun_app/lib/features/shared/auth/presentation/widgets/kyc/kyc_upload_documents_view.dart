@@ -34,6 +34,8 @@ class KycUploadDocumentsView extends StatelessWidget {
     required this.onCaptureSelfie,
     required this.onSubmit,
     this.onBack,
+    this.existingAccount = false,
+    this.submissionMessage,
   });
 
   final ValueListenable<KycUploadDocumentsData> dataListenable;
@@ -49,6 +51,8 @@ class KycUploadDocumentsView extends StatelessWidget {
   final VoidCallback onCaptureSelfie;
   final Future<void> Function() onSubmit;
   final VoidCallback? onBack;
+  final bool existingAccount;
+  final ValueListenable<String?>? submissionMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +60,10 @@ class KycUploadDocumentsView extends StatelessWidget {
       showBackButton: true,
       isScrollable: false,
       padding: EdgeInsets.zero,
-      bottomNavigationBar: _KycUploadSubmitBar(onSubmit: onSubmit),
+      bottomNavigationBar: _KycUploadSubmitBar(
+        onSubmit: onSubmit,
+        existingAccount: existingAccount,
+      ),
       onBack: onBack,
       title: LocaleKeys.uploadDocumentsTitle,
       child: Column(
@@ -71,8 +78,25 @@ class KycUploadDocumentsView extends StatelessWidget {
                   children: [
                     const KycProgressBar(currentStep: 2),
                     16.szH,
+                    if (submissionMessage != null)
+                      ValueListenableBuilder<String?>(
+                        valueListenable: submissionMessage!,
+                        builder: (_, message, __) => message == null
+                            ? const SizedBox.shrink()
+                            : Semantics(
+                                liveRegion: true,
+                                child: AppText(
+                                  message,
+                                  style: AppTextStyles.regular13.copyWith(
+                                    color: AppColors.sokoonRose,
+                                  ),
+                                ),
+                              ),
+                      ),
                     AppText(
-                      LocaleKeys.uploadClearIdImage,
+                      existingAccount
+                          ? LocaleKeys.kycExistingDocumentsHint
+                          : LocaleKeys.uploadClearIdImage,
                       style: AppTextStyles.regular13.copyWith(
                         color: AppColors.sokoonGray,
                         fontSize: 13.sp,
@@ -86,11 +110,13 @@ class KycUploadDocumentsView extends StatelessWidget {
                       validator: validateNationalId,
                       valueLength: data.nationalId.length,
                       onChanged: onNationalIdChanged,
+                      isRequired: !existingAccount,
                     ),
                     18.szH,
                     _KycUploadValidationField(
                       fieldKey: frontIdFieldKey,
                       value: data.frontIdFileName,
+                      isRequired: !existingAccount,
                       child: KycUploadTile(
                         title: LocaleKeys.idFrontLabel,
                         fileName: data.frontIdFileName,
@@ -102,6 +128,7 @@ class KycUploadDocumentsView extends StatelessWidget {
                     _KycUploadValidationField(
                       fieldKey: backIdFieldKey,
                       value: data.backIdFileName,
+                      isRequired: !existingAccount,
                       child: KycUploadTile(
                         title: LocaleKeys.idBackLabel,
                         fileName: data.backIdFileName,
@@ -113,8 +140,11 @@ class KycUploadDocumentsView extends StatelessWidget {
                     _KycUploadValidationField(
                       fieldKey: selfieFieldKey,
                       value: data.selfieFileName,
+                      isRequired: !existingAccount,
                       child: KycUploadTile(
-                        title: LocaleKeys.selfiePhoto,
+                        title: existingAccount
+                            ? LocaleKeys.kycOptionalSelfie
+                            : LocaleKeys.selfiePhoto,
                         fileName: data.selfieFileName,
                         image: data.selfieImage,
                         onTap: onCaptureSelfie,
@@ -147,6 +177,7 @@ class _NationalIdField extends StatelessWidget {
     required this.validator,
     required this.valueLength,
     required this.onChanged,
+    required this.isRequired,
   });
 
   final GlobalKey fieldKey;
@@ -154,6 +185,7 @@ class _NationalIdField extends StatelessWidget {
   final FormFieldValidator<String> validator;
   final int valueLength;
   final ValueChanged<String?> onChanged;
+  final bool isRequired;
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +201,7 @@ class _NationalIdField extends StatelessWidget {
             ),
             children: [
               TextSpan(
-                text: '*',
+                text: isRequired ? '*' : '',
                 style: AppTextStyles.base.copyWith(color: AppColors.sokoonRose),
               ),
             ],
@@ -248,18 +280,20 @@ class _KycUploadValidationField extends StatelessWidget {
     required this.fieldKey,
     required this.value,
     required this.child,
+    this.isRequired = true,
   });
 
   final GlobalKey<FormFieldState<String>> fieldKey;
   final String? value;
   final Widget child;
+  final bool isRequired;
 
   @override
   Widget build(BuildContext context) {
     return ValidationHost<String>(
       key: fieldKey,
       initialValue: value,
-      validator: Validators.validateEmpty,
+      validator: isRequired ? Validators.validateEmpty : (_) => null,
       builderWidget: (field) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -282,9 +316,13 @@ class _KycUploadValidationField extends StatelessWidget {
 }
 
 class _KycUploadSubmitBar extends StatelessWidget {
-  const _KycUploadSubmitBar({required this.onSubmit});
+  const _KycUploadSubmitBar({
+    required this.onSubmit,
+    required this.existingAccount,
+  });
 
   final Future<void> Function() onSubmit;
+  final bool existingAccount;
 
   @override
   Widget build(BuildContext context) {
@@ -299,7 +337,9 @@ class _KycUploadSubmitBar extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             AppText(
-              LocaleKeys.enterNationalIdToContinue,
+              existingAccount
+                  ? LocaleKeys.kycExistingDocumentsHint
+                  : LocaleKeys.enterNationalIdToContinue,
               style: AppTextStyles.regular12.copyWith(
                 color: AppColors.sokoonGray,
                 fontSize: 12.sp,

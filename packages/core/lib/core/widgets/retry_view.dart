@@ -7,9 +7,14 @@ import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 
 class AppRetryView extends StatefulWidget {
-  const AppRetryView({super.key, required this.onRetry});
+  const AppRetryView({
+    super.key,
+    required this.onRetry,
+    this.isConnectionError = true,
+  });
 
   final Future<void> Function() onRetry;
+  final bool isConnectionError;
 
   @override
   State<AppRetryView> createState() => _AppRetryViewState();
@@ -37,13 +42,15 @@ class _AppRetryViewState extends State<AppRetryView> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: EdgeInsets.all(24.w),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.cloud_off_outlined,
+              widget.isConnectionError
+                  ? Icons.cloud_off_outlined
+                  : Icons.error_outline,
               color: AppColors.sokoonMuted,
               size: 44.r,
             ),
@@ -55,13 +62,15 @@ class _AppRetryViewState extends State<AppRetryView> {
               fontWeight: FontWeight.w900,
               textAlign: TextAlign.center,
             ),
-            6.szH,
-            AppText(
-              LocaleKeys.checkInternet,
-              color: AppColors.sokoonGray,
-              fontSize: 13.sp,
-              textAlign: TextAlign.center,
-            ),
+            if (widget.isConnectionError) ...[
+              6.szH,
+              AppText(
+                LocaleKeys.checkInternet,
+                color: AppColors.sokoonGray,
+                fontSize: 13.sp,
+                textAlign: TextAlign.center,
+              ),
+            ],
             18.szH,
             ValueListenableBuilder<bool>(
               valueListenable: _isRetrying,

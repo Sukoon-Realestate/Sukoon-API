@@ -12,6 +12,10 @@ class TenantProfileHeaderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final WorkspaceCounts? counts = context
+        .select<WorkspaceCountsCubit?, WorkspaceCounts?>(
+          (cubit) => cubit?.state.isSuccess == true ? cubit?.state.data : null,
+        );
     final TenantProfileUserContent user = profile.user;
     final String userName = user.fullName.trim().isEmpty
         ? LocaleKeys.profileFallbackName
@@ -82,11 +86,11 @@ class TenantProfileHeaderCard extends StatelessWidget {
           ProfileStatGrid(
             stats: [
               ProfileStat(
-                value: '${profile.stats.savedCount}',
+                value: '${counts?.favorites ?? profile.stats.savedCount}',
                 label: LocaleKeys.profileSaved,
               ),
               ProfileStat(
-                value: '${profile.stats.visitsCount}',
+                value: '${counts?.visits ?? profile.stats.visitsCount}',
                 label: LocaleKeys.profileVisits,
               ),
               ProfileStat(

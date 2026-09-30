@@ -10,16 +10,23 @@ import 'package:sokoun_app/features/shared/auth/data/models/kyc_upload_documents
 import 'package:sokoun_app/features/shared/auth/data/models/register.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/register.dart';
 import '../widgets/kyc/kyc_upload_documents_view.dart';
+import '../cubits/complete_registration_cubit.dart';
+import '../../data/models/complete_registration_result.dart';
+import 'kyc_pending_screen.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:sokoun_app/shared_widgets/unsaved_changes_guard.dart';
 
 class KycUploadDocumentsScreen extends StatefulWidget {
   const KycUploadDocumentsScreen({
     super.key,
     this.onBack,
     this.onRegisterSuccess,
+    this.existingAccount = false,
   });
 
   final VoidCallback? onBack;
   final ValueChanged<RegisterBody>? onRegisterSuccess;
+  final bool existingAccount;
 
   @override
   State<KycUploadDocumentsScreen> createState() =>
@@ -39,11 +46,23 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
     const KycUploadDocumentsData(),
   );
   Completer<void>? _submitCompleter;
+  CompleteRegistrationCubit? _completionCubit;
+  final ValueNotifier<String?> _submissionMessage = ValueNotifier(null);
+  bool _submitted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.existingAccount) _completionCubit = CompleteRegistrationCubit();
+  }
 
   @override
   void dispose() {
     _nationalIdController.dispose();
     _dataNotifier.dispose();
+    _completionCubit?.close();
+    _submissionMessage.dispose();
+    _completeSubmit();
     super.dispose();
   }
 
@@ -54,12 +73,13 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
   }
 
   String? _validateNationalId(String? value) {
+    if (widget.existingAccount && (value?.trim().isEmpty ?? true)) return null;
     final String? emptyError = Validators.validateEmpty(value);
     if (emptyError != null) {
       return emptyError;
     }
 
-    if (value!.trim().length != 14) {
+    if (!RegExp(r'^\d{14}$').hasMatch(value!.trim())) {
       return LocaleKeys.filedValidation;
     }
 
@@ -75,29 +95,51 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
         value: _nationalIdController.text,
         validator: _validateNationalId,
       ),
-      FirstValidationErrorField(
-        fieldKey: _frontIdFieldKey,
-        title: LocaleKeys.idFrontLabel,
-        value: data.frontIdFileName,
-        validator: Validators.validateEmpty,
-      ),
-      FirstValidationErrorField(
-        fieldKey: _backIdFieldKey,
-        title: LocaleKeys.idBackLabel,
-        value: data.backIdFileName,
-        validator: Validators.validateEmpty,
-      ),
-      FirstValidationErrorField(
-        fieldKey: _selfieFieldKey,
-        title: LocaleKeys.selfiePhoto,
-        value: data.selfieFileName,
-        validator: Validators.validateEmpty,
-      ),
+      if (!widget.existingAccount)
+        FirstValidationErrorField(
+          fieldKey: _frontIdFieldKey,
+          title: LocaleKeys.idFrontLabel,
+          value: data.frontIdFileName,
+          validator: Validators.validateEmpty,
+        ),
+      if (!widget.existingAccount)
+        FirstValidationErrorField(
+          fieldKey: _backIdFieldKey,
+          title: LocaleKeys.idBackLabel,
+          value: data.backIdFileName,
+          validator: Validators.validateEmpty,
+        ),
+      if (!widget.existingAccount)
+        FirstValidationErrorField(
+          fieldKey: _selfieFieldKey,
+          title: LocaleKeys.selfiePhoto,
+          value: data.selfieFileName,
+          validator: Validators.validateEmpty,
+        ),
     ];
   }
 
   Future<void> _submit(BuildContext context) async {
     final KycUploadDocumentsData formData = _dataNotifier.value;
+    if (widget.existingAccount) {
+      _submissionMessage.value = null;
+      await _completionCubit!.submit(
+        formData,
+        onResult: (result) {
+          if (!mounted) return;
+          if (result.isComplete) {
+            _submitted = true;
+            Go.off(const KycPendingScreen(existingAccount: true));
+          } else {
+            _submissionMessage.value = _missingFieldsMessage(result);
+          }
+        },
+      );
+      if (mounted && _completionCubit!.state.isError) {
+        _submissionMessage.value = _completionCubit!.state.msg;
+      }
+      return;
+    }
     if (!formData.canSubmit) {
       return;
     }
@@ -113,6 +155,23 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
     );
 
     await registerCubit.register(onSuccess: widget.onRegisterSuccess);
+  }
+
+  String _missingFieldsMessage(CompleteRegistrationResult result) {
+    final String fields = result.missingFields
+        .map(
+          (field) => switch (field) {
+            'national_id' => LocaleKeys.nationalId,
+            'front_id_image' => LocaleKeys.idFrontLabel,
+            'back_id_image' => LocaleKeys.idBackLabel,
+            'selfie_image' => LocaleKeys.selfiePhoto,
+            _ => field,
+          },
+        )
+        .join(', ');
+    return fields.isEmpty
+        ? LocaleKeys.kycIncompleteSubmission
+        : '${LocaleKeys.kycMissingFields}: $fields';
   }
 
   String _fileNameFrom(File image) {
@@ -161,6 +220,7 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
   }
 
   Future<void> _submitForm(VoidCallback submit) async {
+    if (_submitCompleter != null) return;
     final Completer<void> completer = Completer<void>();
     _submitCompleter = completer;
     submit();
@@ -178,7 +238,7 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FirstValidationErrorForm(
+    final Widget form = FirstValidationErrorForm(
       validationFields: _validationFields,
       onValidationError: (_) => _completeSubmit(),
       onValid: () async {
@@ -205,8 +265,16 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
           onCaptureSelfie: _captureSelfieImage,
           onSubmit: () => _submitForm(submit),
           onBack: widget.onBack,
+          existingAccount: widget.existingAccount,
+          submissionMessage: _submissionMessage,
         );
       },
+    );
+    if (!widget.existingAccount) return form;
+    return UnsavedChangesGuard(
+      hasChanges: () => !_submitted && _dataNotifier.value.hasChanges,
+      isSaving: () => _completionCubit?.isLoading ?? false,
+      child: form,
     );
   }
 }

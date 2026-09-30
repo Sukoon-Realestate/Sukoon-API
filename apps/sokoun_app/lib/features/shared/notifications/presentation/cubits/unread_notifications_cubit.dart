@@ -21,9 +21,9 @@ class UnreadNotificationsCubit extends AsyncCubit<UnreadNotificationsContent> {
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<UnreadNotificationsContent>(
-          api: ApiConstants.unreadNotificationCount,
+          api: ApiConstants.tenantUnreadCounts,
           httpRequestType: HttpRequestType.get,
-          cacheKey: 'notifications_unread_count',
+          cacheKey: 'notifications_unread_count_v2',
           mapper: (json) => UnreadNotificationsContent.fromJson(
             json is Map<String, dynamic> ? json : const {},
           ),

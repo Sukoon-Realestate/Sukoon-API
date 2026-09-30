@@ -12,6 +12,17 @@ class TenantProfileActions extends StatelessWidget {
         ProfileSurfaceCard(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
           child: ProfileMenuTile(
+            icon: Icons.shield_outlined,
+            label: LocaleKeys.profileVerificationDocuments,
+            iconColor: AppColors.sokoonTeal,
+            iconBackgroundColor: AppColors.mintLight,
+            onTap: () => Go.to(const KycIntroScreen()),
+          ),
+        ),
+        8.szH,
+        ProfileSurfaceCard(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
+          child: ProfileMenuTile(
             icon: Icons.language_rounded,
             label: LocaleKeys.changeLanguage,
             subtitle: context.locale == Languages.arabic.locale
@@ -50,8 +61,11 @@ class TenantProfileActions extends StatelessWidget {
                 : LocaleKeys.profileReviewsCount,
             iconColor: AppColors.amber,
             iconBackgroundColor: AppColors.orangePale,
+            onTap: () => Go.to(const MyReviewsScreen()),
           ),
         ),
+        8.szH,
+        const ProfileSurfaceCard(child: PublicPageMenu()),
       ],
     );
   }

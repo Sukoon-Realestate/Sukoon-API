@@ -161,6 +161,9 @@ class CityModel extends Equatable {
 
 class PropertyDetailsModel extends Equatable {
   const PropertyDetailsModel({
+    this.video,
+    this.videoDuration,
+    this.propertyLink = '',
     required this.id,
     required this.owner,
     required this.ownerId,
@@ -199,7 +202,10 @@ class PropertyDetailsModel extends Equatable {
   });
 
   const PropertyDetailsModel.initial()
-    : id = '',
+    : video = null,
+      videoDuration = null,
+      propertyLink = '',
+      id = '',
       owner = '',
       ownerId = '',
       mainImage = '',
@@ -250,6 +256,9 @@ class PropertyDetailsModel extends Equatable {
         json['owner_name']?.toString() ??
         (ownerStringIsId ? '' : ownerString);
     return PropertyDetailsModel(
+      video: json['video'] as String?,
+      videoDuration: (json['video_duration'] as num?)?.toInt(),
+      propertyLink: json['property_link'] as String? ?? '',
       id: json['id'] as String? ?? '',
       owner: ownerName,
       ownerId:
@@ -309,6 +318,9 @@ class PropertyDetailsModel extends Equatable {
   final String id;
   final String owner;
   final String ownerId;
+  final String? video;
+  final int? videoDuration;
+  final String propertyLink;
   final String mainImage;
   final String title;
   final String description;
@@ -346,6 +358,9 @@ class PropertyDetailsModel extends Equatable {
     'id': id,
     'owner': owner,
     'owner_id': ownerId,
+    'video': video,
+    'video_duration': videoDuration,
+    'property_link': propertyLink,
     'main_image': mainImage,
     'title': title,
     'description': description,
@@ -381,6 +396,9 @@ class PropertyDetailsModel extends Equatable {
   };
 
   PropertyDetailsModel copyWith({
+    String? video,
+    int? videoDuration,
+    String? propertyLink,
     String? id,
     String? owner,
     String? ownerId,
@@ -418,6 +436,9 @@ class PropertyDetailsModel extends Equatable {
     String? updatedAt,
   }) {
     return PropertyDetailsModel(
+      video: video ?? this.video,
+      videoDuration: videoDuration ?? this.videoDuration,
+      propertyLink: propertyLink ?? this.propertyLink,
       id: id ?? this.id,
       owner: owner ?? this.owner,
       ownerId: ownerId ?? this.ownerId,
@@ -545,6 +566,9 @@ class PropertyDetailsModel extends Equatable {
     id,
     owner,
     ownerId,
+    video,
+    videoDuration,
+    propertyLink,
     mainImage,
     title,
     description,

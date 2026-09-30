@@ -1,6 +1,7 @@
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
+import 'package:sokoun_app/features/main_view/data/workspace_counts_refresh_bus.dart';
 
 class PropertySaveCubit extends AsyncCubit<bool> {
   PropertySaveCubit() : super(false);
@@ -44,6 +45,7 @@ class PropertySaveCubit extends AsyncCubit<bool> {
           mapper: (_) => isSaved,
         ),
       ),
+      onSuccess: (_) => WorkspaceCountsRefreshBus.refresh(),
       onError: onError,
     );
   }

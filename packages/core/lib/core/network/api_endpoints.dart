@@ -8,6 +8,13 @@ class ApiConstants {
   static const String refreshToken = 'auth/jwt/refresh/';
   static const String register = 'auth/users/';
   static const String currentUser = 'auth/users/me/';
+  static const String completeRegister = 'auth/complete-register/';
+  static const String ownerUnreadCounts = 'profiles/owner/unread-counts/';
+  static const String tenantUnreadCounts = 'profiles/tenant/unread-counts/';
+  static const String myRates = 'profiles/my-rates/';
+  static const String aboutUs = 'pages/about-us/';
+  static const String privacyPolicy = 'pages/privacy-policy/';
+  static const String terms = 'pages/terms/';
   static const String resetPassword = 'users/reset_password/';
 
   // home

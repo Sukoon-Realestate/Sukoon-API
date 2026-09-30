@@ -16,10 +16,11 @@ class ChatUnreadCubit extends AsyncCubit<ChatUnreadContent> {
   ChatUnreadCubit() : super(const ChatUnreadContent.initial());
 
   StreamSubscription<int>? _refreshSubscription;
-  final int _sessionGeneration = AccountSession.generation;
+  int _sessionGeneration = AccountSession.generation;
   StreamSubscription<ChatSocketMessage>? _messageSubscription;
 
   Future<void> start() async {
+    _sessionGeneration = AccountSession.generation;
     _refreshSubscription ??= ChatUnreadRefreshBus.stream.listen((removed) {
       removeConversationUnread(removed);
       if (removed == 0) unawaited(loadUnreadCount());
@@ -39,11 +40,10 @@ class ChatUnreadCubit extends AsyncCubit<ChatUnreadContent> {
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<ChatUnreadContent>(
-          api: ApiConstants.chatConversations,
+          api: ApiConstants.tenantUnreadCounts,
           httpRequestType: HttpRequestType.get,
-          queryParameters: const {'page': 1, 'page_size': 100},
-          cacheKey: 'chat_unread_count',
-          mapper: (json) => ChatUnreadContent.fromConversationsJson(
+          cacheKey: 'chat_unread_count_v2',
+          mapper: (json) => ChatUnreadContent.fromJson(
             json is Map<String, dynamic> ? json : const {},
           ),
           fromCacheJson: ChatUnreadContent.fromJson,

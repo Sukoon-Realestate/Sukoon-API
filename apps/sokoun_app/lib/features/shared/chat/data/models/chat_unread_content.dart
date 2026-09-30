@@ -9,7 +9,12 @@ class ChatUnreadContent extends Equatable {
   const ChatUnreadContent.initial() : count = 0;
 
   factory ChatUnreadContent.fromJson(Map<String, dynamic> json) {
-    return ChatUnreadContent(count: (json['count'] as num?)?.toInt() ?? 0);
+    return ChatUnreadContent(
+      count:
+          ((json['unread_chat_messages_count'] ?? json['count']) as num?)
+              ?.toInt() ??
+          0,
+    );
   }
 
   factory ChatUnreadContent.fromConversationsJson(Map<String, dynamic> json) {

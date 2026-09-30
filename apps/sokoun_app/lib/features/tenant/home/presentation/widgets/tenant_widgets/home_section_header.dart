@@ -5,7 +5,8 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_results_screen.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/property_search_model.dart';
 
 class HomeSectionHeader extends StatelessWidget {
   const HomeSectionHeader({super.key});
@@ -30,7 +31,11 @@ class HomeSectionHeader extends StatelessWidget {
         ),
         Flexible(
           child: TextButton(
-            onPressed: () => Go.to(const TenantSearchScreen()),
+            onPressed: () => Go.to(
+              const TenantSearchResultsScreen(
+                initialFilters: PropertySearchFilters.initial(),
+              ),
+            ),
             style: TextButton.styleFrom(
               minimumSize: Size.zero,
               padding: EdgeInsets.zero,
