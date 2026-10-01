@@ -7,6 +7,7 @@ class PropertyDetailsCubit extends AsyncCubit<PropertyDetailsModel> {
   PropertyDetailsCubit() : super(const PropertyDetailsModel.initial());
 
   Future<void> getPropertyDetails(String id) async {
+    if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<PropertyDetailsModel>(

@@ -590,21 +590,33 @@ void main() {
 
     expect(find.byType(OwnerRequestsCalendarScreen), findsOneWidget);
     expect(find.text('تم حفظ مواعيد الإتاحة'), findsOneWidget);
-    expect(
-      repository.lastApi,
-      'properties/owner/properties/owner-property-id/availability/',
+    final availabilityRequest = repository.requests.singleWhere(
+      (params) =>
+          params.api ==
+          'properties/owner/properties/owner-property-id/availability/',
     );
-    expect(repository.lastMethod, HttpRequestType.post);
-    expect(repository.lastBody?['availability_date'], availabilityDate);
-    expect((repository.lastBody?['slots'] as List)[1], {
+    expect(availabilityRequest.httpRequestType, HttpRequestType.post);
+    expect(availabilityRequest.body?['availability_date'], availabilityDate);
+    expect((availabilityRequest.body?['slots'] as List)[1], {
       'time': '10:00:00',
       'is_enabled': true,
     });
+    expect(repository.lastApi, 'properties/owner/calendar/');
+    expect(repository.lastMethod, HttpRequestType.get);
+    expect(
+      repository.requests.where(
+        (params) =>
+            params.api == 'properties/owner/calendar/' &&
+            params.queryParameters?['date'] == availabilityDate,
+      ),
+      hasLength(2),
+    );
     expect(tester.takeException(), isNull);
   });
 }
 
 class _RecordingBaseRepository implements BaseRepository {
+  final List<CrudBaseParmas> requests = [];
   String lastApi = '';
   HttpRequestType? lastMethod;
   Map<String, dynamic>? lastBody;
@@ -615,6 +627,7 @@ class _RecordingBaseRepository implements BaseRepository {
   Future<Result<BaseModel<T>, Failure>> crudCall<T>(
     CrudBaseParmas<T> params,
   ) async {
+    requests.add(params);
     lastApi = params.api;
     lastMethod = params.httpRequestType;
     lastBody = params.body;

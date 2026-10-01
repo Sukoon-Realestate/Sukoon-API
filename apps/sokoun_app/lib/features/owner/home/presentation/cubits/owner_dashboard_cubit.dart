@@ -7,6 +7,7 @@ class OwnerDashboardCubit extends AsyncCubit<OwnerDashboardModel> {
   OwnerDashboardCubit() : super(const OwnerDashboardModel.initial());
 
   Future<void> getDashboard() async {
+    if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<OwnerDashboardModel>(

@@ -44,11 +44,14 @@ class BaseRepositoryImpl implements BaseRepository {
           fromCacheJson: params.fromCacheJson ?? (json) => params.mapper!(json),
           toJson: params.toJson!,
           onSave: (key, json) {
-            if (generation == AccountSession.generation) {
+            if (generation == AccountSession.generation &&
+                !(params.cancelToken?.isCancelled ?? false)) {
               baseLocalDataSource.save(key, json);
             }
           },
-          onRead: (key) => generation == AccountSession.generation
+          onRead: (key) =>
+              generation == AccountSession.generation &&
+                  !(params.cancelToken?.isCancelled ?? false)
               ? baseLocalDataSource.read(key)
               : null,
         );

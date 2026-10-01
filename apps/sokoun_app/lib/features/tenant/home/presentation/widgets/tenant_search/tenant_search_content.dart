@@ -1,3 +1,5 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../cubits/tenant_recent_searches_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -20,7 +22,6 @@ class TenantSearchContentView extends StatelessWidget {
     super.key,
     required this.searchController,
     required this.form,
-    required this.recentSearches,
     required this.propertyTypesRequest,
     required this.availablePlacesRequest,
     required this.onQueryChanged,
@@ -36,7 +37,6 @@ class TenantSearchContentView extends StatelessWidget {
 
   final TextEditingController searchController;
   final TenantSearchFormState form;
-  final List<RecentSearchContent> recentSearches;
   final Future<void> propertyTypesRequest;
   final Future<void>? availablePlacesRequest;
   final ValueChanged<String> onQueryChanged;
@@ -89,9 +89,11 @@ class TenantSearchContentView extends StatelessWidget {
             selectedArea: form.selectedArea,
             onAreaSelected: onAreaSelected,
           ),
-          RecentSearchesSection(
-            searches: recentSearches,
-            onSelected: onRecentSearchSelected,
+          BlocBuilder<TenantRecentSearchesCubit, List<RecentSearchContent>>(
+            builder: (context, recentSearches) => RecentSearchesSection(
+              searches: recentSearches,
+              onSelected: onRecentSearchSelected,
+            ),
           ),
           24.szH,
         ],

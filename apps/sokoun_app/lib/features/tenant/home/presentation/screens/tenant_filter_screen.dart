@@ -24,10 +24,14 @@ class TenantFilterScreen extends StatefulWidget {
     super.key,
     required this.initialFilters,
     required this.onFiltersApplied,
+    this.initialFilterOptions,
+    this.onFilterOptionsLoaded,
   });
 
   final PropertySearchFilters initialFilters;
   final TenantFiltersApplied onFiltersApplied;
+  final PropertyFilterOptionsModel? initialFilterOptions;
+  final ValueChanged<PropertyFilterOptionsModel>? onFilterOptionsLoaded;
 
   @override
   State<TenantFilterScreen> createState() => _TenantFilterScreenState();
@@ -49,8 +53,19 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
     _districtController = TextEditingController(text: _filters.value.district);
     _minPriceController = TextEditingController(text: _filters.value.priceMin);
     _maxPriceController = TextEditingController(text: _filters.value.priceMax);
-    _propertyFilterOptionsCubit = PropertyFilterOptionsCubit();
-    _propertyFilterOptionsCubit.getFilterOptions();
+    _propertyFilterOptionsCubit = PropertyFilterOptionsCubit(
+      initialOptions: widget.initialFilterOptions,
+    );
+    if (widget.initialFilterOptions == null) {
+      _loadFilterOptions();
+    }
+  }
+
+  Future<void> _loadFilterOptions() async {
+    await _propertyFilterOptionsCubit.getFilterOptions();
+    if (mounted && _propertyFilterOptionsCubit.state.isSuccess) {
+      widget.onFilterOptionsLoaded?.call(_propertyFilterOptionsCubit.data);
+    }
   }
 
   @override
@@ -93,58 +108,58 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
   Widget build(BuildContext context) {
     return BlocProvider<PropertyFilterOptionsCubit>.value(
       value: _propertyFilterOptionsCubit,
-      child:
-          StatusBuilder<
-            PropertyFilterOptionsCubit,
-            PropertyFilterOptionsModel
-          >.withShimmer(
-            initialDataForShimmer: const PropertyFilterOptionsModel.initial(),
-            onRetry: _propertyFilterOptionsCubit.getFilterOptions,
-            errorType: ErrorType.defaultView,
-            builder: (filterOptions) =>
-                ValueListenableBuilder<PropertySearchFilters>(
-                  valueListenable: _filters,
-                  builder: (context, filters, _) => AppScaffold(
-                    title: LocaleKeys.tenantFilterTitle,
-                    titleWidget: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      spacing: 8.w,
-                      children: [
-                        Flexible(
-                          child: AppText(
-                            LocaleKeys.tenantFilterTitle,
-                            style: AppTextStyles.extraBold.copyWith(
-                              fontSize: 16.sp,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Badge(
-                          label: AppText(
-                            '${filters.activeCount}',
-                            style: AppTextStyles.regular10.copyWith(
-                              color: AppColors.white,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    showBackButton: true,
-                    actions: [
-                      TextButton(
-                        onPressed: _reset,
-                        child: AppText(
-                          LocaleKeys.tenantFilterReset,
-                          style: AppTextStyles.bold13.copyWith(
-                            color: AppColors.sokoonTeal,
-                          ),
-                        ),
-                      ),
-                    ],
-                    backgroundColor: AppColors.scaffoldBackground,
-                    body: SafeArea(
-                      child: Column(
+      child: AppScaffold(
+        title: LocaleKeys.tenantFilterTitle,
+        titleWidget: Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8.w,
+          children: [
+            Flexible(
+              child: AppText(
+                LocaleKeys.tenantFilterTitle,
+                style: AppTextStyles.extraBold.copyWith(fontSize: 16.sp),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            ValueListenableBuilder<PropertySearchFilters>(
+              valueListenable: _filters,
+              builder: (context, filters, _) => Badge(
+                label: AppText(
+                  '${filters.activeCount}',
+                  style: AppTextStyles.regular10.copyWith(
+                    color: AppColors.white,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        showBackButton: true,
+        actions: [
+          TextButton(
+            onPressed: _reset,
+            child: AppText(
+              LocaleKeys.tenantFilterReset,
+              style: AppTextStyles.bold13.copyWith(color: AppColors.sokoonTeal),
+            ),
+          ),
+        ],
+        backgroundColor: AppColors.scaffoldBackground,
+        body: SafeArea(
+          child:
+              StatusBuilder<
+                PropertyFilterOptionsCubit,
+                PropertyFilterOptionsModel
+              >.withShimmer(
+                initialDataForShimmer:
+                    const PropertyFilterOptionsModel.initial(),
+                onRetry: _loadFilterOptions,
+                errorType: ErrorType.defaultView,
+                builder: (filterOptions) =>
+                    ValueListenableBuilder<PropertySearchFilters>(
+                      valueListenable: _filters,
+                      builder: (context, filters, _) => Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Expanded(
@@ -166,9 +181,9 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
                         ],
                       ),
                     ),
-                  ),
-                ),
-          ),
+              ),
+        ),
+      ),
     );
   }
 }

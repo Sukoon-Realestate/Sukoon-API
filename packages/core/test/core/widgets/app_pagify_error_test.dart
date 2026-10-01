@@ -45,6 +45,34 @@ void main() {
     messenger.setMockMethodCallHandler(connectivityChannel, null);
   });
 
+  testWidgets(
+    'cancelled pages do not display errors or notify error listeners',
+    (tester) async {
+      final controller = PagifyController<String>();
+      final request = Completer<(List<String>, PaginationData)>();
+      final errors = <PagifyException>[];
+      await tester.pumpWidget(
+        _screen(
+          AppPagify<String>(
+            pagifyController: controller,
+            shrinkWrap: false,
+            loadingBuilder: const SizedBox.shrink(),
+            onError: (_, _, error) => errors.add(error),
+            asyncCall: (_, __) => request.future,
+            itemBuilder: (_, _, _, item) => Text(item),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      request.completeError(const RequestCancelledException());
+      await tester.pumpAndSettle();
+      expect(errors, isEmpty);
+      expect(find.byType(ExceptionView), findsNothing);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
+
   for (final Ranking ranking in Ranking.values) {
     for (final String kind in ['connection', 'server', 'pagify']) {
       testWidgets(

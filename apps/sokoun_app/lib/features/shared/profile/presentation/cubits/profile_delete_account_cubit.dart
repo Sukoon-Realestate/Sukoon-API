@@ -4,6 +4,7 @@ class ProfileDeleteAccountCubit extends AsyncCubit<Map<String, dynamic>> {
   ProfileDeleteAccountCubit() : super(const {});
 
   Future<void> deleteAccount({required void Function() onSuccess}) async {
+    if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<Map<String, dynamic>>(

@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
 import 'package:sokoun_app/shared_widgets/property_filter_button.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
@@ -34,7 +35,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   late final PropertySaveCubit? _saveCubit;
   late final List<FavoritePropertyContent>? _initialFavorites;
   late int _itemCount;
+  final ValueNotifier<int> _visibleCount = ValueNotifier(0);
   late PropertySearchFilters _filters;
+  PropertyFilterOptionsModel? _filterOptions;
   final List<FavoritePropertyContent> _loadedFavorites = [];
   final Set<String> _pendingPropertyIds = {};
 
@@ -48,11 +51,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     _saveCubit = widget.initialItems == null ? PropertySaveCubit() : null;
     _itemCount = _initialFavorites?.length ?? 0;
     _filters = const PropertySearchFilters.initial();
+    _visibleCount.value = _visibleItemCount;
   }
 
   @override
   void dispose() {
     _saveCubit?.close();
+    _visibleCount.dispose();
     super.dispose();
   }
 
@@ -64,7 +69,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     final (SavedPropertiesResponse response, PaginationData pagination) =
         await FavoritesData.getSavedPropertiesPage(page: page);
     if (page == 1 && mounted && _itemCount != response.count) {
-      setState(() => _itemCount = response.count);
+      _itemCount = response.count;
+      _visibleCount.value = _visibleItemCount;
     }
 
     return (response.results, pagination);
@@ -84,6 +90,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         initialFavorites.removeAt(removedIndex);
         _itemCount = initialFavorites.length;
       });
+      _visibleCount.value = _visibleItemCount;
       _showRemovedMessage(item: item, removedIndex: removedIndex);
       return;
     }
@@ -96,9 +103,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     final PropertySaveCubit? saveCubit = _saveCubit;
     _loadedFavorites.removeAt(removedIndex);
     _pagifyController.removeWhere((favorite) => favorite.id == item.id);
-    setState(() {
-      if (_itemCount > 0) _itemCount--;
-    });
+    if (_itemCount > 0) _itemCount--;
+    _visibleCount.value = _visibleItemCount;
     if (saveCubit != null) {
       bool requestFailed = false;
       _pendingPropertyIds.add(item.id);
@@ -112,7 +118,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             item.copyWith(isSaved: true),
           );
           _applyFiltersToPagify();
-          setState(() => _itemCount++);
+          _itemCount++;
+          _visibleCount.value = _visibleItemCount;
         },
       );
       _pendingPropertyIds.remove(item.id);
@@ -157,6 +164,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         initialFavorites.insert(restoredIndex, item.copyWith(isSaved: true));
         _itemCount = initialFavorites.length;
       });
+      _visibleCount.value = _visibleItemCount;
       return;
     }
 
@@ -169,7 +177,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     final int restoredIndex = removedIndex.clamp(0, _loadedFavorites.length);
     _loadedFavorites.insert(restoredIndex, item.copyWith(isSaved: true));
     _applyFiltersToPagify();
-    setState(() => _itemCount++);
+    _itemCount++;
+    _visibleCount.value = _visibleItemCount;
     if (saveCubit != null) {
       _pendingPropertyIds.add(item.id);
       await saveCubit.saveProperty(
@@ -178,9 +187,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           if (!mounted) return;
           _loadedFavorites.removeWhere((favorite) => favorite.id == item.id);
           _applyFiltersToPagify();
-          setState(() {
-            if (_itemCount > 0) _itemCount--;
-          });
+          if (_itemCount > 0) _itemCount--;
+          _visibleCount.value = _visibleItemCount;
         },
       );
       _pendingPropertyIds.remove(item.id);
@@ -206,6 +214,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   Future<void> _openFilters() async {
     await Go.to<void>(
       TenantFilterScreen(
+        initialFilterOptions: _filterOptions,
+        onFilterOptionsLoaded: (options) => _filterOptions = options,
         initialFilters: _filters,
         onFiltersApplied: _applyFilters,
       ),
@@ -216,6 +226,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     if (!mounted) return;
     setState(() => _filters = filters.copyWith(page: 1));
     if (_initialFavorites == null) _applyFiltersToPagify();
+    _visibleCount.value = _visibleItemCount;
   }
 
   void _clearFilters() {
@@ -237,7 +248,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     if (_hasLocalFilters) {
       _applyFiltersToPagify();
     } else {
-      setState(() {});
+      _visibleCount.value = _visibleItemCount;
     }
   }
 
@@ -250,7 +261,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     for (final FavoritePropertyContent item in filtered) {
       _pagifyController.addItem(item);
     }
-    if (mounted) setState(() {});
+    if (mounted) _visibleCount.value = _visibleItemCount;
   }
 
   @override
@@ -268,7 +279,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       contentWidth: SokounContentWidth.wide,
       body: SafeArea(
         child: FavoritesContentView(
-          itemCount: _visibleItemCount,
+          itemCount: _visibleCount,
           initialItems: _visibleInitialFavorites,
           pagifyController: _pagifyController,
           loadPage: _getFavoritesPage,

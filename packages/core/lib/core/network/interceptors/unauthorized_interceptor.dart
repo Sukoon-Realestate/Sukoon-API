@@ -3,14 +3,17 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 
 import '../api_endpoints.dart';
+import '../session_refresh_coordinator.dart';
 import 'session_cookie_manager.dart';
 
 class UnauthorizedInterceptor extends Interceptor {
   UnauthorizedInterceptor({
     required Dio dio,
+    required SessionRefreshCoordinator refreshCoordinator,
     required Future<bool> Function() canRefreshSession,
     required Future<void> Function(int generation) onSessionExpired,
   }) : _dio = dio,
+       _refreshCoordinator = refreshCoordinator,
        _canRefreshSession = canRefreshSession,
        _onSessionExpired = onSessionExpired;
 
@@ -19,8 +22,7 @@ class UnauthorizedInterceptor extends Interceptor {
   final Dio _dio;
   final Future<bool> Function() _canRefreshSession;
   final Future<void> Function(int generation) _onSessionExpired;
-  Future<void>? _refreshFuture;
-  int? _refreshGeneration;
+  final SessionRefreshCoordinator _refreshCoordinator;
 
   @override
   Future<void> onError(
@@ -28,6 +30,10 @@ class UnauthorizedInterceptor extends Interceptor {
     ErrorInterceptorHandler handler,
   ) async {
     final RequestOptions request = err.requestOptions;
+    if (request.cancelToken?.isCancelled ?? false) {
+      handler.next(request.cancelToken!.cancelError!);
+      return;
+    }
     if (!SessionCookieManager.isCurrent(request) ||
         err.response?.statusCode != HttpStatus.unauthorized ||
         request.extra[_retryKey] == true ||
@@ -52,9 +58,17 @@ class UnauthorizedInterceptor extends Interceptor {
     }
 
     try {
-      await _refreshSession(
+      if (request.cancelToken?.isCancelled ?? false) {
+        throw request.cancelToken!.cancelError!;
+      }
+      await _refreshCoordinator.refresh(
         request.extra[SessionCookieManager.generationKey] as int,
+        requestRevision:
+            request.extra[SessionRefreshCoordinator.revisionKey] as int?,
       );
+      if (request.cancelToken?.isCancelled ?? false) {
+        throw request.cancelToken!.cancelError!;
+      }
       if (!SessionCookieManager.isCurrent(request)) {
         handler.next(SessionCookieManager.staleRequest(request));
         return;
@@ -84,31 +98,5 @@ class UnauthorizedInterceptor extends Interceptor {
       }
       handler.next(err);
     }
-  }
-
-  Future<void> _refreshSession(int generation) {
-    final Future<void>? pendingRefresh = _refreshFuture;
-    if (pendingRefresh != null && _refreshGeneration == generation) {
-      return pendingRefresh;
-    }
-
-    final Future<void> refresh = _dio
-        .post<void>(
-          ApiConstants.refreshToken,
-          options: Options(
-            extra: {
-              _retryKey: true,
-              SessionCookieManager.generationKey: generation,
-            },
-          ),
-        )
-        .then((_) {});
-    _refreshFuture = refresh;
-    _refreshGeneration = generation;
-    return refresh.whenComplete(() {
-      if (identical(_refreshFuture, refresh)) {
-        _refreshFuture = null;
-      }
-    });
   }
 }

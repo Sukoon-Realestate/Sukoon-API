@@ -35,6 +35,8 @@ class ConstantManager {
   static const double snackbarElevation = 4;
   static const int snackbarDuration = 4;
   static const int connectTimeoutDuration = 120;
+  static const int sendTimeoutDuration = 120;
+  static const Duration uploadSendTimeout = Duration(minutes: 5);
   static const int recieveTimeoutDuration = 120;
   static const double customImageSliderAsepctRatio = 3;
   static const String ar = 'ar';

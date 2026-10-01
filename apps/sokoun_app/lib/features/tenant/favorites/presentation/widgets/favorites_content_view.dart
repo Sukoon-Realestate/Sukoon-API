@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -35,7 +36,7 @@ class FavoritesContentView extends StatelessWidget {
     required this.onPagifyStatusChanged,
   });
 
-  final int itemCount;
+  final ValueListenable<int> itemCount;
   final List<FavoritePropertyContent>? initialItems;
   final PagifyController<FavoritePropertyContent> pagifyController;
   final FavoritesPageLoader loadPage;
@@ -50,10 +51,15 @@ class FavoritesContentView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        AppText(
-          '$itemCount ${LocaleKeys.favoritesSavedPropertiesCount}',
-          style: AppTextStyles.regular12.copyWith(color: AppColors.sokoonGray),
-        ).paddingSymmetric(horizontal: 20, vertical: 12),
+        ValueListenableBuilder<int>(
+          valueListenable: itemCount,
+          builder: (context, count, _) => AppText(
+            '$count ${LocaleKeys.favoritesSavedPropertiesCount}',
+            style: AppTextStyles.regular12.copyWith(
+              color: AppColors.sokoonGray,
+            ),
+          ).paddingSymmetric(horizontal: 20, vertical: 12),
+        ),
         Expanded(
           child: fixtureItems != null
               ? FavoritesList(

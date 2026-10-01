@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -19,8 +20,7 @@ class OwnerVisitRequestsContent extends StatelessWidget {
     required this.onRequestPressed,
     required this.onAcceptPressed,
     required this.onRejectPressed,
-    this.updatingRequestId,
-    this.pendingStatus,
+    required this.progress,
   });
 
   final List<OwnerVisitRequestContent> requests;
@@ -30,8 +30,8 @@ class OwnerVisitRequestsContent extends StatelessWidget {
   final ValueChanged<OwnerVisitRequestContent> onRequestPressed;
   final ValueChanged<OwnerVisitRequestContent> onAcceptPressed;
   final ValueChanged<OwnerVisitRequestContent> onRejectPressed;
-  final String? updatingRequestId;
-  final OwnerVisitUpdateStatus? pendingStatus;
+  final ValueListenable<({String? requestId, OwnerVisitUpdateStatus? status})>
+  progress;
 
   int get _pendingCount =>
       requests.where((request) => request.status.canDecide).length;
@@ -75,31 +75,37 @@ class OwnerVisitRequestsContent extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final OwnerVisitRequestContent request =
                         visibleRequests[index];
-                    final bool isUpdating = updatingRequestId == request.id;
-                    return OwnerVisitRequestCard(
-                      key: ValueKey(request.id),
-                      request: request,
-                      onPressed: isUpdating
-                          ? null
-                          : () => onRequestPressed(request),
-                      onAcceptPressed: isUpdating
-                          ? null
-                          : () => onAcceptPressed(request),
-                      onRejectPressed: isUpdating
-                          ? null
-                          : () => onRejectPressed(request),
-                      isAccepting:
-                          isUpdating &&
-                          pendingStatus == OwnerVisitUpdateStatus.confirmed,
-                      isRejecting:
-                          isUpdating &&
-                          pendingStatus == OwnerVisitUpdateStatus.rejected,
+                    return ValueListenableBuilder<
+                      ({String? requestId, OwnerVisitUpdateStatus? status})
+                    >(
+                      valueListenable: progress,
+                      child: _card(request, null),
+                      builder: (context, pending, child) =>
+                          pending.requestId == request.id
+                          ? _card(request, pending.status)
+                          : child!,
                     );
                   },
                   separatorBuilder: (context, index) => 12.szH,
                 ),
         ),
       ],
+    );
+  }
+
+  Widget _card(
+    OwnerVisitRequestContent request,
+    OwnerVisitUpdateStatus? pendingStatus,
+  ) {
+    final bool isUpdating = pendingStatus != null;
+    return OwnerVisitRequestCard(
+      key: ValueKey(request.id),
+      request: request,
+      onPressed: isUpdating ? null : () => onRequestPressed(request),
+      onAcceptPressed: isUpdating ? null : () => onAcceptPressed(request),
+      onRejectPressed: isUpdating ? null : () => onRejectPressed(request),
+      isAccepting: pendingStatus == OwnerVisitUpdateStatus.confirmed,
+      isRejecting: pendingStatus == OwnerVisitUpdateStatus.rejected,
     );
   }
 }

@@ -8,6 +8,8 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 import 'package:melos_core/generated/assets.dart';
+import 'package:sokoun_app/features/shared/unread_counts/presentation/cubits/unread_counts_cubit.dart';
+import 'package:sokoun_app/features/shared/unread_counts/data/models/unread_counts.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chats_screen.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_unread_content.dart';
@@ -24,7 +26,6 @@ import 'package:sokoun_app/features/shared/whats_new/widgets/upgrader_dialog.dar
 import 'package:sokoun_app/features/shared/notifications/presentation/notification_coordinator.dart';
 import 'package:sokoun_app/features/shared/permissions/data/enums/device_permission.dart';
 import 'package:sokoun_app/features/shared/permissions/presentation/device_permission_flow.dart';
-import 'package:sokoun_app/features/shared/notifications/presentation/cubits/unread_notifications_cubit.dart';
 import 'package:upgrader/upgrader.dart';
 
 import '../widgets/home_bottom_navigation.dart';
@@ -34,7 +35,6 @@ import '../../data/enums/app_workspace.dart';
 import '../../data/enums/workspace_tab.dart';
 import '../cubits/workspace_cubit.dart';
 import '../cubits/account_cubit.dart';
-import '../cubits/workspace_counts_cubit.dart';
 import '../../data/models/workspace_counts.dart';
 import '../workspace_navigation.dart';
 
@@ -62,13 +62,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   List<_HomeTab> get _tabs => _tabIndices[_workspace]!
       .map((index) => _allTabs[index])
       .toList(growable: false);
+  late final UnreadCountsCubit _unreadCountsCubit;
   late final ChatUnreadCubit _chatUnreadCubit;
-  late final UnreadNotificationsCubit _notificationUnreadCubit;
   late final TenantProfileCubit _tenantProfileCubit;
   late final AccountCubit _accountCubit;
   late final Future<void> _accountRequest;
-  late final WorkspaceCountsCubit _tenantCounts;
-  late final WorkspaceCountsCubit _ownerCounts;
+  late final UnreadCountsCubit _ownerCounts;
 
   late final Upgrader upgrader = Upgrader(
     languageCode: Languages.currentLanguage.languageCode,
@@ -95,11 +94,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     _workspaceCubit.initialize(
       WorkspaceNavigation.isAuthenticated ? UserCubit.instance.user.id : null,
     );
-    _chatUnreadCubit = ChatUnreadCubit();
-    _tenantCounts = WorkspaceCountsCubit(AppWorkspace.tenant)..watch();
-    _ownerCounts = WorkspaceCountsCubit(AppWorkspace.owner)..watch();
-    _notificationUnreadCubit = UnreadNotificationsCubit()
-      ..watchRefreshRequests();
+    _unreadCountsCubit = UnreadCountsCubit()..watch();
+    _chatUnreadCubit = ChatUnreadCubit(unreadCounts: _unreadCountsCubit);
+    _ownerCounts = UnreadCountsCubit(workspace: AppWorkspace.owner)..watch();
     _tenantProfileCubit = TenantProfileCubit();
     if (WorkspaceNavigation.isAuthenticated) {
       _tenantProfileCubit.restoreCachedProfile();
@@ -108,6 +105,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     _accountRequest = _accountCubit.getAccount(
       onProfileLoaded: _tenantProfileCubit.setProfile,
     );
+    _tenantProfileCubit.useAccountRequest(_accountRequest);
     final List<_HomeTab> ownerTabs = _buildOwnerTabs();
     _allTabs = [
       ..._buildTenantTabs(),
@@ -130,7 +128,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       unawaited(_chatUnreadCubit.onAppResumed());
       unawaited(_refreshTenantProfile());
       unawaited(_refreshCounts());
-      unawaited(_notificationUnreadCubit.loadUnreadCount());
       return;
     }
     if (state == AppLifecycleState.paused ||
@@ -145,11 +142,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     WorkspaceNavigation.detach(_applyWorkspace);
     WidgetsBinding.instance.removeObserver(this);
     unawaited(_chatUnreadCubit.close());
-    unawaited(_notificationUnreadCubit.close());
     unawaited(_tenantProfileCubit.close());
     unawaited(_accountCubit.close());
-    unawaited(_tenantCounts.close());
     unawaited(_ownerCounts.close());
+    unawaited(_unreadCountsCubit.close());
     super.dispose();
   }
 
@@ -164,7 +160,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (accountChanged) setState(() {});
     await Future.wait<void>([
       _chatUnreadCubit.start(),
-      _notificationUnreadCubit.loadUnreadCount(),
       _refreshCounts(),
       _showLaunchDialogs(),
     ]);
@@ -176,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   Future<void> _refreshCounts() async {
-    await Future.wait([_tenantCounts.load(), _ownerCounts.load()]);
+    await Future.wait([_unreadCountsCubit.load(), _ownerCounts.load()]);
   }
 
   Future<void> _showLaunchDialogs() async {
@@ -353,12 +348,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         selector: (state) => state.data.count,
         builder: (context, unreadCount) =>
             BlocSelector<
-              WorkspaceCountsCubit,
-              AsyncState<WorkspaceCounts>,
+              UnreadCountsCubit,
+              AsyncState<UnreadCounts>,
               WorkspaceCounts
             >(
-              bloc: _workspace.isOwner ? _ownerCounts : _tenantCounts,
-              selector: (state) => state.data,
+              bloc: _workspace.isOwner ? _ownerCounts : _unreadCountsCubit,
+              selector: (state) => state.data.workspace,
               builder: (context, counts) {
                 final destinations = _navigationDestinations(
                   unreadCount: unreadCount,
@@ -388,12 +383,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     return MultiBlocProvider(
       providers: [
         BlocProvider<WorkspaceCubit>.value(value: _workspaceCubit),
+        BlocProvider<UnreadCountsCubit>.value(value: _unreadCountsCubit),
         BlocProvider<ChatUnreadCubit>.value(value: _chatUnreadCubit),
-        BlocProvider<UnreadNotificationsCubit>.value(
-          value: _notificationUnreadCubit,
-        ),
         BlocProvider<TenantProfileCubit>.value(value: _tenantProfileCubit),
-        BlocProvider<WorkspaceCountsCubit>.value(value: _tenantCounts),
       ],
       child: BlocBuilder<WorkspaceCubit, AppWorkspace>(
         builder: (context, workspace) {

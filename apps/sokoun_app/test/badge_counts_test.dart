@@ -12,15 +12,16 @@ import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/network/network_request.dart';
 import 'package:melos_core/core/network/network_service.dart';
 import 'package:multiple_result/multiple_result.dart';
+import 'package:sokoun_app/features/shared/unread_counts/data/models/unread_counts.dart';
+import 'package:sokoun_app/features/shared/unread_counts/presentation/cubits/unread_counts_cubit.dart';
 import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
-import 'package:sokoun_app/features/main_view/presentation/cubits/workspace_counts_cubit.dart';
+import 'package:sokoun_app/features/main_view/data/workspace_counts_refresh_bus.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_realtime_service.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_unread_refresh_bus.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_socket_message.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/cubits/chat_unread_cubit.dart';
 import 'package:sokoun_app/features/shared/notifications/data/foreground_notification_bus.dart';
 import 'package:sokoun_app/features/shared/notifications/data/notification_refresh_bus.dart';
-import 'package:sokoun_app/features/shared/notifications/presentation/cubits/unread_notifications_cubit.dart';
 
 import 'helpers/account_test_dependencies.dart';
 import 'helpers/home_page_test_dependencies.dart';
@@ -29,9 +30,8 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late _CountsRepository repository;
   late _Realtime realtime;
-  late WorkspaceCountsCubit tenant;
-  late WorkspaceCountsCubit owner;
-  late UnreadNotificationsCubit notifications;
+  late UnreadCountsCubit counts;
+  late UnreadCountsCubit owner;
   late ChatUnreadCubit chat;
 
   setUpAll(() async {
@@ -56,30 +56,21 @@ void main() {
       BaseCrudUseCase(repository: repository),
     );
     realtime = _Realtime();
-    tenant = WorkspaceCountsCubit(AppWorkspace.tenant)..watch();
-    owner = WorkspaceCountsCubit(AppWorkspace.owner)..watch();
-    notifications = UnreadNotificationsCubit()..watchRefreshRequests();
-    chat = ChatUnreadCubit(realtimeService: realtime);
+    counts = UnreadCountsCubit()..watch();
+    owner = UnreadCountsCubit(workspace: AppWorkspace.owner)..watch();
+    chat = ChatUnreadCubit(unreadCounts: counts, realtimeService: realtime);
   });
 
   tearDown(() async {
-    await Future.wait([
-      tenant.close(),
-      owner.close(),
-      notifications.close(),
-      chat.close(),
-    ]);
+    await Future.wait([owner.close(), chat.close()]);
+    await counts.close();
     await realtime.close();
     await injector.reset();
     AccountSession.end();
   });
 
-  Future<void> load() => Future.wait([
-    tenant.load(),
-    owner.load(),
-    notifications.loadUnreadCount(),
-    chat.start(),
-  ]);
+  Future<void> load() =>
+      Future.wait([counts.load(), owner.load(), chat.start()]);
 
   void receive(
     String type, {
@@ -93,24 +84,194 @@ void main() {
     });
   }
 
+  test(
+    'concurrent consumers share one tenant request and cached snapshot',
+    () async {
+      repository.gate = Completer<void>();
+      final Future<void> request = Future.wait([
+        counts.load(),
+        counts.load(),
+        chat.loadUnreadCount(),
+      ]);
+      await Future<void>.delayed(Duration.zero);
+      expect(repository.endpoints, [ApiConstants.tenantUnreadCounts]);
+      repository.gate!.complete();
+      await request;
+
+      expect(counts.data.workspace.favorites, 6);
+      expect(counts.data.workspace.visits, 2);
+      expect(counts.data.notifications.count, 3);
+      expect(chat.data.count, 7);
+      final params = repository.lastParams! as CrudBaseParmas<UnreadCounts>;
+      expect(params.cacheKey, 'tenant_unread_counts');
+      final json = params.toJson!(counts.data);
+      expect(json, {
+        'favorites_count': 6,
+        'visit_requests_count': 2,
+        'unread_chat_messages_count': 7,
+        'unread_notifications_count': 3,
+      });
+      expect(params.fromCacheJson!(json), counts.data);
+    },
+  );
+
+  test('a notification refresh updates all shared counters', () async {
+    await load();
+    repository.tenantResponse = {
+      'favorites_count': 9,
+      'visit_requests_count': 5,
+      'unread_chat_messages_count': 2,
+      'unread_notifications_count': 0,
+    };
+    NotificationRefreshBus.requestRefresh();
+    await Future<void>.delayed(Duration.zero);
+
+    expect(repository.endpoints, [
+      ApiConstants.tenantUnreadCounts,
+      ApiConstants.ownerUnreadCounts,
+      ApiConstants.tenantUnreadCounts,
+    ]);
+    expect(counts.state.data.workspace.favorites, 9);
+    expect(counts.state.data.workspace.visits, 5);
+    expect(chat.state.data.count, 2);
+    expect(counts.state.data.notifications.count, 0);
+    expect(owner.data.workspace.visits, 4);
+  });
+
+  test('workspace refreshes reconcile both roles during a fetch', () async {
+    repository.gate = Completer<void>();
+    final Future<void> request = load();
+    repository.tenantResponse = {
+      ...repository.tenantResponse,
+      'favorites_count': 10,
+      'visit_requests_count': 3,
+    };
+    repository.ownerResponse = {'visit_requests_count': 8};
+    WorkspaceCountsRefreshBus.refresh();
+    WorkspaceCountsRefreshBus.refresh();
+    await Future<void>.delayed(Duration.zero);
+    expect(repository.requests, 2);
+
+    repository.gate!.complete();
+    await request;
+
+    expect(repository.requests, 4);
+    expect(counts.data.workspace.favorites, 10);
+    expect(counts.data.workspace.visits, 3);
+    expect(owner.data.workspace.visits, 8);
+  });
+
+  test('watching repeatedly does not duplicate badge updates', () async {
+    await load();
+    counts.watch();
+    counts.watch();
+    owner.watch();
+    owner.watch();
+
+    receive('visit_request');
+    expect(counts.data.notifications.count, 4);
+    expect(owner.data.workspace.visits, 5);
+    NotificationRefreshBus.requestRefresh();
+    await Future<void>.delayed(Duration.zero);
+    expect(repository.requests, 3);
+  });
+
+  test('disposed counts stop handling refreshes and notifications', () async {
+    await load();
+    await Future.wait([counts.close(), owner.close(), chat.close()]);
+
+    receive('visit_request');
+    WorkspaceCountsRefreshBus.refresh();
+    NotificationRefreshBus.requestRefresh();
+    await Future<void>.delayed(Duration.zero);
+
+    expect(repository.requests, 2);
+    expect(counts.data.notifications.count, 3);
+    expect(owner.data.workspace.visits, 4);
+  });
+
+  test('read actions during a fetch queue one fresh snapshot', () async {
+    repository.gate = Completer<void>();
+    final Future<void> request = load();
+    await Future<void>.delayed(Duration.zero);
+    repository.tenantResponse = {
+      ...repository.tenantResponse,
+      'unread_notifications_count': 0,
+    };
+    NotificationRefreshBus.requestRefresh();
+    NotificationRefreshBus.requestRefresh();
+    expect(repository.requests, 2);
+    repository.gate!.complete();
+    await request;
+
+    expect(repository.requests, 3);
+    expect(counts.data.notifications.count, 0);
+  });
+
+  test(
+    'stale session responses cannot replace a new session snapshot',
+    () async {
+      final Completer<void> oldGate = Completer<void>();
+      repository.gate = oldGate;
+      final Future<void> oldRequest = counts.load();
+      AccountSession.begin('another-account');
+      repository.gate = null;
+      repository.tenantResponse = {
+        'favorites_count': 1,
+        'visit_requests_count': 0,
+        'unread_chat_messages_count': 0,
+        'unread_notifications_count': 1,
+      };
+      await counts.load();
+      oldGate.complete();
+      await oldRequest;
+
+      expect(repository.requests, 2);
+      expect(counts.data.workspace.favorites, 1);
+      expect(counts.data.chat.count, 0);
+      expect(counts.data.notifications.count, 1);
+    },
+  );
+
+  test('guests and disposed counts never issue requests', () async {
+    await CacheStorage.deleteAll();
+    AccountSession.end();
+    await counts.load();
+    expect(repository.requests, 0);
+    await counts.close();
+    await counts.load();
+    await counts.refresh();
+    expect(repository.requests, 0);
+  });
+
+  test('closing counts ignores an in-flight response', () async {
+    repository.gate = Completer<void>();
+    final Future<void> request = counts.load();
+    await counts.close();
+    repository.gate!.complete();
+    await request;
+    expect(counts.data.workspace.favorites, 0);
+    expect(counts.data.chat.count, 0);
+  });
+
   test('foreground types update only their badges without fetching', () async {
     await load();
     final int requests = repository.requests;
     receive('visit_request');
-    expect(owner.data.visits, 5);
-    expect(tenant.data.visits, 2);
-    expect(tenant.data.favorites, 6);
-    expect(notifications.data.count, 4);
+    expect(owner.data.workspace.visits, 5);
+    expect(counts.data.workspace.visits, 2);
+    expect(counts.data.workspace.favorites, 6);
+    expect(counts.data.notifications.count, 4);
     expect(chat.data.count, 7);
 
     receive('visit_accepted');
-    expect(tenant.data.visits, 2);
+    expect(counts.data.workspace.visits, 2);
     receive('visit_rejected');
-    expect(tenant.data.visits, 1);
+    expect(counts.data.workspace.visits, 1);
     receive('visit_rejected');
     receive('visit_rejected');
-    expect(tenant.data.visits, 0);
-    expect(owner.data.visits, 5);
+    expect(counts.data.workspace.visits, 0);
+    expect(owner.data.workspace.visits, 5);
 
     for (final String type in [
       'new_message',
@@ -124,9 +285,9 @@ void main() {
     expect(chat.data.count, 12);
     receive('promotion');
     receive('visit_review');
-    expect(notifications.data.count, 15);
-    expect(tenant.data.favorites, 6);
-    expect(owner.data.visits, 5);
+    expect(counts.data.notifications.count, 15);
+    expect(counts.data.workspace.favorites, 6);
+    expect(owner.data.workspace.visits, 5);
     expect(chat.data.count, 12);
     expect(repository.requests, requests);
   });
@@ -141,8 +302,8 @@ void main() {
     ForegroundNotificationBus.receive({
       'notification_type': 'promotion',
     }, deliveryId: 'fcm-1');
-    expect(notifications.data.count, 5);
-    expect(owner.data.visits, 5);
+    expect(counts.data.notifications.count, 5);
+    expect(owner.data.workspace.visits, 5);
   });
 
   for (final bool pushFirst in [true, false]) {
@@ -170,7 +331,7 @@ void main() {
           push();
         }
         expect(chat.data.count, 8);
-        expect(notifications.data.count, 4);
+        expect(counts.data.notifications.count, 4);
         expect(repository.requests, requests);
       },
     );
@@ -198,7 +359,7 @@ void main() {
         ).copyWith(sender: const ChatSocketSender.initial().copyWith(id: '1')),
       );
       expect(chat.data.count, 7);
-      expect(notifications.data.count, 5);
+      expect(counts.data.notifications.count, 5);
     },
   );
 
@@ -206,30 +367,30 @@ void main() {
     repository.gate = Completer<void>();
     final Future<void> request = load();
     await Future<void>.delayed(Duration.zero);
-    expect(repository.requests, 4);
+    expect(repository.requests, 2);
     receive('visit_request');
     receive('visit_rejected');
     receive('new_message', data: {'message_id': 'loading-message'});
     repository.gate!.complete();
     await request;
-    expect(owner.data.visits, 5);
-    expect(tenant.data.visits, 1);
-    expect(notifications.data.count, 6);
+    expect(owner.data.workspace.visits, 5);
+    expect(counts.data.workspace.visits, 1);
+    expect(counts.data.notifications.count, 6);
     expect(chat.data.count, 8);
-    expect(repository.requests, 4);
+    expect(repository.requests, 2);
   });
 
   test('read actions still reconcile counts and start is idempotent', () async {
     await load();
     await chat.start();
-    expect(repository.requests, 4);
+    expect(repository.requests, 2);
     expect(realtime.connections, 1);
     ChatUnreadRefreshBus.requestRefresh(removedUnreadCount: 4);
     expect(chat.data.count, 3);
-    expect(repository.requests, 4);
+    expect(repository.requests, 2);
     NotificationRefreshBus.requestRefresh();
     await Future<void>.delayed(Duration.zero);
-    expect(repository.requests, 5);
+    expect(repository.requests, 3);
   });
 
   test(
@@ -239,18 +400,13 @@ void main() {
       AccountSession.end();
       receive('visit_request');
       receive('new_message');
-      expect(owner.data.visits, 4);
-      expect(notifications.data.count, 3);
+      expect(owner.data.workspace.visits, 4);
+      expect(counts.data.notifications.count, 3);
       expect(chat.data.count, 7);
-      await Future.wait([
-        tenant.close(),
-        owner.close(),
-        notifications.close(),
-        chat.close(),
-      ]);
+      await Future.wait([counts.close(), owner.close(), chat.close()]);
       receive('visit_request');
-      expect(owner.data.visits, 4);
-      expect(notifications.data.count, 3);
+      expect(owner.data.workspace.visits, 4);
+      expect(counts.data.notifications.count, 3);
     },
   );
 }
@@ -264,6 +420,15 @@ ChatSocketMessage _message(String id, String conversationId) =>
 
 class _CountsRepository implements BaseRepository {
   int requests = 0;
+  final List<String> endpoints = [];
+  CrudBaseParmas<dynamic>? lastParams;
+  Map<String, dynamic> tenantResponse = {
+    'favorites_count': 6,
+    'visit_requests_count': 2,
+    'unread_chat_messages_count': 7,
+    'unread_notifications_count': 3,
+  };
+  Map<String, dynamic> ownerResponse = {'visit_requests_count': 4};
   Completer<void>? gate;
 
   @override
@@ -271,20 +436,15 @@ class _CountsRepository implements BaseRepository {
     CrudBaseParmas<T> params,
   ) async {
     requests++;
+    endpoints.add(params.api);
+    lastParams = params;
+    final Map<String, dynamic> response =
+        params.api == ApiConstants.ownerUnreadCounts
+        ? Map<String, dynamic>.from(ownerResponse)
+        : Map<String, dynamic>.from(tenantResponse);
     await gate?.future;
     return Success(
-      BaseModel<T>(
-        key: '',
-        msg: '',
-        data: params.mapper!({
-          'favorites_count': 6,
-          'visit_requests_count': params.api == ApiConstants.ownerUnreadCounts
-              ? 4
-              : 2,
-          'unread_chat_messages_count': 7,
-          'unread_notifications_count': 3,
-        }),
-      ),
+      BaseModel<T>(key: '', msg: '', data: params.mapper!(response)),
     );
   }
 

@@ -6,6 +6,7 @@ class OwnerRequestDetailsCubit
     : super(const OwnerVisitRequestDetailsContent.initial());
 
   Future<void> getRequestDetails(String requestId) async {
+    if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<OwnerVisitRequestDetailsContent>(

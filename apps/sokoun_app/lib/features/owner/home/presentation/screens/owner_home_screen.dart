@@ -45,10 +45,18 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
       value: _ownerDashboardCubit,
       child: AppScaffold(
         titleWidget:
-            BlocBuilder<OwnerDashboardCubit, AsyncState<OwnerDashboardModel>>(
-              builder: (context, state) => OwnerHomeAppBarTitle(
+            BlocSelector<
+              OwnerDashboardCubit,
+              AsyncState<OwnerDashboardModel>,
+              ({String? avatarUrl, bool isVerified})
+            >(
+              selector: (state) => (
                 avatarUrl: state.data.owner.avatar,
                 isVerified: state.data.owner.isVerified,
+              ),
+              builder: (context, owner) => OwnerHomeAppBarTitle(
+                avatarUrl: owner.avatarUrl,
+                isVerified: owner.isVerified,
               ),
             ),
         showBackButton: false,

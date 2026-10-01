@@ -61,6 +61,7 @@ class _OwnerRequestsCalendarScreenState
       ),
     );
     if (saved == true && mounted) {
+      _calendarRequest.value = _calendarCubit.getCalendar(date: _selectedDate);
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(
@@ -78,54 +79,49 @@ class _OwnerRequestsCalendarScreenState
   Widget build(BuildContext context) {
     return BlocProvider<OwnerCalendarCubit>.value(
       value: _calendarCubit,
-      child: ValueListenableBuilder<Future<void>>(
-        valueListenable: _calendarRequest,
-        builder: (context, calendarRequest, _) =>
-            StatusBuilder<
-                  OwnerCalendarCubit,
-                  OwnerVisitCalendarContent
-                >.withShimmer(
-                  initialDataForShimmer: OwnerVisitCalendarContent.initial(
-                    _selectedDate,
-                  ),
-                  onRetry: () =>
-                      _calendarCubit.getCalendar(date: _selectedDate),
-                  errorType: ErrorType.defaultView,
-                  builder: _buildScreen,
-                )
-                .withPullRefresher(
-                  onRefresh: () =>
-                      _calendarCubit.getCalendar(date: _selectedDate),
-                ),
-      ),
-    );
-  }
-
-  Widget _buildScreen(OwnerVisitCalendarContent calendar) {
-    final bool canManageAvailability =
-        calendar.firstPropertyId.isNotEmpty ||
-        widget.ownerPropertyId.trim().isNotEmpty;
-    return AppScaffold(
-      title: LocaleKeys.ownerCalendarTitle,
-      showBackButton: true,
-      actions: [
-        AppText(
-          MaterialLocalizations.of(
-            context,
-          ).formatMonthYear(DateTime(calendar.year, calendar.month)),
-          style: AppTextStyles.extraBold13.copyWith(color: AppColors.gold),
-        ).paddingSymmetric(horizontal: 12),
-      ],
-      backgroundColor: AppColors.scaffoldBackground,
-      contentWidth: SokounContentWidth.wide,
-      body: SafeArea(
-        child: OwnerCalendarContent(
-          calendar: calendar,
-          selectedDate: calendar.selectedDateValue,
-          onDaySelected: _selectDay,
-          onAvailabilityPressed: canManageAvailability
-              ? () => _openAvailability(calendar)
-              : null,
+      child: AppScaffold(
+        title: LocaleKeys.ownerCalendarTitle,
+        showBackButton: true,
+        actions: [
+          ValueListenableBuilder<Future<void>>(
+            valueListenable: _calendarRequest,
+            builder: (context, _, child) => AppText(
+              MaterialLocalizations.of(context).formatMonthYear(_selectedDate),
+              style: AppTextStyles.extraBold13.copyWith(color: AppColors.gold),
+            ).paddingSymmetric(horizontal: 12),
+          ),
+        ],
+        backgroundColor: AppColors.scaffoldBackground,
+        contentWidth: SokounContentWidth.wide,
+        body: SafeArea(
+          child: ValueListenableBuilder<Future<void>>(
+            valueListenable: _calendarRequest,
+            builder: (context, _, child) =>
+                StatusBuilder<
+                      OwnerCalendarCubit,
+                      OwnerVisitCalendarContent
+                    >.withShimmer(
+                      initialDataForShimmer: OwnerVisitCalendarContent.initial(
+                        _selectedDate,
+                      ),
+                      onRetry: () =>
+                          _calendarCubit.getCalendar(date: _selectedDate),
+                      builder: (calendar) => OwnerCalendarContent(
+                        calendar: calendar,
+                        selectedDate: calendar.selectedDateValue,
+                        onDaySelected: _selectDay,
+                        onAvailabilityPressed:
+                            calendar.firstPropertyId.isNotEmpty ||
+                                widget.ownerPropertyId.trim().isNotEmpty
+                            ? () => _openAvailability(calendar)
+                            : null,
+                      ),
+                    )
+                    .withPullRefresher(
+                      onRefresh: () =>
+                          _calendarCubit.getCalendar(date: _selectedDate),
+                    ),
+          ),
         ),
       ),
     );

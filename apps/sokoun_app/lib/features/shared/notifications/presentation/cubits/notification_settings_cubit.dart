@@ -10,6 +10,7 @@ class NotificationSettingsCubit
     : super(const NotificationSettingsContent.initial());
 
   Future<void> loadSettings() async {
+    if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<NotificationSettingsContent>(
@@ -36,6 +37,7 @@ class NotificationSettingUpdateCubit extends AsyncCubit<String> {
   NotificationSettingUpdateCubit() : super('');
 
   Future<bool> updateSetting({required String key, required bool value}) async {
+    if (isClosed || isLoading) return false;
     updateData(key);
     bool succeeded = false;
     await executeAsyncWithBaseModel(

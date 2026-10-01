@@ -36,15 +36,23 @@ class ConflictException extends ServerException {
 
 class InternalServerErrorException extends ServerException {
   InternalServerErrorException([String? message])
-      : super(message ?? LocaleKeys.checkInternet);
+    : super(message ?? LocaleKeys.checkInternet);
 }
 
 class NoInternetConnectionException extends ServerException {
   NoInternetConnectionException([String? message])
-      : super(message ?? LocaleKeys.checkInternet.tr());
+    : super(message ?? LocaleKeys.checkInternet.tr());
 }
 
 class CacheException implements Exception {}
+
+/// An obsolete request, not an error to display or resolve from cache.
+class RequestCancelledException implements Exception {
+  const RequestCancelledException();
+
+  @override
+  String toString() => 'Request cancelled';
+}
 
 class ForbiddenException extends ServerException {
   const ForbiddenException(super.message);

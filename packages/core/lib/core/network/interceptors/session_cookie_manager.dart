@@ -2,10 +2,13 @@ import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 
 import '../account_session.dart';
+import '../session_refresh_coordinator.dart';
 
 /// Serializes cookie writes and logout, rejecting work from older accounts.
 class SessionCookieManager extends CookieManager {
-  SessionCookieManager(super.cookieJar);
+  SessionCookieManager(super.cookieJar, {this.refreshRevision});
+
+  final int Function()? refreshRevision;
 
   static const generationKey = 'account_session_generation';
   Future<void> _pending = Future<void>.value();
@@ -36,6 +39,10 @@ class SessionCookieManager extends CookieManager {
   @override
   Future<String> loadCookies(RequestOptions options) => _serialize(() async {
     if (!isCurrent(options)) throw staleRequest(options);
+    // Stamp before reading either cookies or authorization headers so a
+    // refresh racing with credential loading still invalidates this request.
+    options.extra[SessionRefreshCoordinator.revisionKey] = refreshRevision
+        ?.call();
     final String cookies = await super.loadCookies(options);
     if (!isCurrent(options)) throw staleRequest(options);
     return cookies;

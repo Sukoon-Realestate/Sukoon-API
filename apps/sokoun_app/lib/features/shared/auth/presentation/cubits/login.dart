@@ -10,6 +10,7 @@ class LoginCubit extends AsyncCubit<UserModel> {
     required String password,
     required void Function() onSuccess,
   }) async {
+    if (isClosed || isLoading) return;
     UserModel? authenticatedUser;
 
     await executeAsyncWithBaseModel(

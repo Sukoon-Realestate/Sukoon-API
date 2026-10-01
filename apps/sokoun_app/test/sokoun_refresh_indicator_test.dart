@@ -174,7 +174,8 @@ void main() {
         expect(
           tester
               .getSemantics(find.bySemanticsLabel(label))
-              .flagsCollection.isLiveRegion,
+              .flagsCollection
+              .isLiveRegion,
           isTrue,
         );
         final icon = tester.getCenter(find.byIcon(Icons.home_outlined));
@@ -256,8 +257,10 @@ Widget _app({
   ),
 );
 
-Widget _scrollView({double height = 40}) => SingleChildScrollView(
-  child: SizedBox(height: height, child: const Text('Content')),
+Widget _scrollView({double height = 40}) => SizedBox.expand(
+  child: SingleChildScrollView(
+    child: SizedBox(height: height, child: const Text('Content')),
+  ),
 );
 
 void _size(WidgetTester tester, double width) {

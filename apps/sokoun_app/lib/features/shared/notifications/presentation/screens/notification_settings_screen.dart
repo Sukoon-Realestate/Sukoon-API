@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:melos_core/core/extensions/widget_extension.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'dart:async';
@@ -6,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/helpers/status_builder.dart';
 
 import '../../data/enums/notification_role.dart';
@@ -79,36 +79,45 @@ class _NotificationSettingsScreenState
               const DeviceNotificationPermissionTile(),
               Expanded(
                 child:
-                    BlocBuilder<
-                      NotificationSettingUpdateCubit,
-                      AsyncState<String>
-                    >(
-                      builder: (context, updateState) {
-                        return StatusBuilder<
-                              NotificationSettingsCubit,
-                              NotificationSettingsContent
-                            >.withShimmer(
-                              initialDataForShimmer:
-                                  const NotificationSettingsContent.initial(),
-                              onRetry: _settingsCubit.loadSettings,
-                              errorType: ErrorType.defaultView,
-                              builder: (settings) =>
-                                  NotificationSettingsContentView(
-                                    settings: settings,
-                                    updatingKey: updateState.isLoading
-                                        ? updateState.data
-                                        : null,
-                                    onSettingChanged: _updateSetting,
-                                  ),
-                            )
-                            .withPullRefresher(
-                              onRefresh: () async {
-                                if (_updateCubit.isLoading) return;
-                                await _settingsCubit.loadSettings();
-                              },
-                            );
-                      },
-                    ),
+                    StatusBuilder<
+                          NotificationSettingsCubit,
+                          NotificationSettingsContent
+                        >.withShimmer(
+                          initialDataForShimmer:
+                              const NotificationSettingsContent.initial(),
+                          onRetry: _settingsCubit.loadSettings,
+                          buildWhen: (previous, current) =>
+                              previous.status != current.status ||
+                              previous.msg != current.msg ||
+                              previous.data.id != current.data.id ||
+                              previous.data.footerNote !=
+                                  current.data.footerNote ||
+                              !listEquals(
+                                previous.data.items
+                                    .map((item) => item.id)
+                                    .toList(),
+                                current.data.items
+                                    .map((item) => item.id)
+                                    .toList(),
+                              ),
+                          shimmerBuilder: (settings) =>
+                              NotificationSettingsContentView(
+                                settings: settings,
+                                onSettingChanged: _updateSetting,
+                              ),
+                          builder: (settings) =>
+                              NotificationSettingsContentView(
+                                settings: settings,
+                                observeChanges: true,
+                                onSettingChanged: _updateSetting,
+                              ),
+                        )
+                        .withPullRefresher(
+                          onRefresh: () async {
+                            if (_updateCubit.isLoading) return;
+                            await _settingsCubit.loadSettings();
+                          },
+                        ),
               ),
             ],
           ),

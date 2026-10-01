@@ -10,6 +10,7 @@ class PublicPageCubit extends AsyncCubit<PublicPageContent> {
     required PublicPage page,
     required String language,
   }) async {
+    if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<PublicPageContent>(

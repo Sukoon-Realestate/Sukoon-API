@@ -9,8 +9,9 @@ abstract interface class PropertySearchDataSource {
   String cacheKeyFor(PropertySearchFilters filters);
 
   Future<(PropertySearchResponseModel, PaginationData)> getPropertiesPage(
-    PropertySearchFilters filters,
-  );
+    PropertySearchFilters filters, {
+    CancelToken? cancelToken,
+  });
 }
 
 final class PropertySearchApiDataSource implements PropertySearchDataSource {
@@ -21,11 +22,13 @@ final class PropertySearchApiDataSource implements PropertySearchDataSource {
 
   @override
   Future<(PropertySearchResponseModel, PaginationData)> getPropertiesPage(
-    PropertySearchFilters filters,
-  ) async {
+    PropertySearchFilters filters, {
+    CancelToken? cancelToken,
+  }) async {
     final response = await injector<NetworkService>().callApi(
       NetworkRequest(
         method: RequestMethod.get,
+        cancelToken: cancelToken,
         path: ApiConstants.properties,
         queryParameters: filters.toQueryParameters(),
       ),
@@ -53,6 +56,8 @@ abstract final class PropertySearchData {
       source.cacheKeyFor(filters);
 
   static Future<(PropertySearchResponseModel, PaginationData)>
-  getPropertiesPage(PropertySearchFilters filters) =>
-      source.getPropertiesPage(filters);
+  getPropertiesPage(
+    PropertySearchFilters filters, {
+    CancelToken? cancelToken,
+  }) => source.getPropertiesPage(filters, cancelToken: cancelToken);
 }

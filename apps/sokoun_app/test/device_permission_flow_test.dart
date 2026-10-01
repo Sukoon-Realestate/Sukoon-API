@@ -1,3 +1,4 @@
+import 'package:melos_core/core/network/network_request.dart';
 import 'dart:async';
 import 'dart:convert';
 
@@ -551,8 +552,9 @@ class _PropertySearchSource implements PropertySearchDataSource {
   String cacheKeyFor(PropertySearchFilters filters) => filters.cacheKey;
   @override
   Future<(PropertySearchResponseModel, PaginationData)> getPropertiesPage(
-    PropertySearchFilters filters,
-  ) async {
+    PropertySearchFilters filters, {
+    CancelToken? cancelToken,
+  }) async {
     request = filters;
     return (
       PropertySearchResponseModel.fromJson(const {'count': 0, 'results': []}),

@@ -566,8 +566,6 @@ class OwnerAddPropertyFormState {
         arabic: 'عداد مياه',
         english: 'Water meter',
       ),
-      if (photos.isNotEmpty) 'main_image': photos.first,
-      if (photos.length > 1) 'images': photos.skip(1).toList(growable: false),
       if (video != null) 'video': video!.file,
       if (video != null) 'video_duration': video!.duration.inSeconds,
       if (ownershipProof != null) 'ownership_proof': ownershipProof,

@@ -64,41 +64,38 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
   Widget build(BuildContext context) {
     return BlocProvider<OwnerProfileCubit>.value(
       value: _profileCubit,
-      child: BlocBuilder<OwnerProfileCubit, AsyncState<OwnerProfileContent>>(
-        builder: (context, state) {
-          return AppScaffold(
-            title: LocaleKeys.profileOwnerTitle,
-            showBackButton: true,
-            actions: [
-              IconButton(
-                onPressed: state.isSuccess
-                    ? () => _openEditProfile(state.data)
-                    : null,
-                icon: Icon(
-                  Icons.edit_outlined,
-                  color: AppColors.sokoonNavy,
-                  size: 18.r,
-                ),
+      child: AppScaffold(
+        title: LocaleKeys.profileOwnerTitle,
+        showBackButton: true,
+        actions: [
+          BlocSelector<
+            OwnerProfileCubit,
+            AsyncState<OwnerProfileContent>,
+            bool
+          >(
+            selector: (state) => state.isSuccess,
+            builder: (context, isSuccess) => IconButton(
+              onPressed: isSuccess
+                  ? () => _openEditProfile(_profileCubit.data)
+                  : null,
+              icon: Icon(
+                Icons.edit_outlined,
+                color: AppColors.sokoonNavy,
+                size: 18.r,
               ),
-            ],
-            backgroundColor: AppColors.scaffoldBackground,
-            body: SafeArea(
-              child:
-                  StatusBuilder<
-                        OwnerProfileCubit,
-                        OwnerProfileContent
-                      >.withShimmer(
-                        initialDataForShimmer:
-                            const OwnerProfileContent.initial(),
-                        onRetry: _profileCubit.getProfile,
-                        errorType: ErrorType.defaultView,
-                        builder: (profile) =>
-                            OwnerProfileContentView(profile: profile),
-                      )
-                      .withPullRefresher(onRefresh: _profileCubit.getProfile),
             ),
-          );
-        },
+          ),
+        ],
+        backgroundColor: AppColors.scaffoldBackground,
+        body: SafeArea(
+          child:
+              StatusBuilder<OwnerProfileCubit, OwnerProfileContent>.withShimmer(
+                initialDataForShimmer: const OwnerProfileContent.initial(),
+                onRetry: _profileCubit.getProfile,
+                errorType: ErrorType.defaultView,
+                builder: (profile) => OwnerProfileContentView(profile: profile),
+              ).withPullRefresher(onRefresh: _profileCubit.getProfile),
+        ),
       ),
     );
   }

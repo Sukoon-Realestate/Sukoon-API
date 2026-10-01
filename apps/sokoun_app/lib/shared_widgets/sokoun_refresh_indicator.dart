@@ -3,11 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/widgets/app_logo_widget.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 import 'sokoun_motion.dart';
 
-/// A compact refresh status that floats over content without shifting the page.
 class SokounRefreshIndicator extends StatelessWidget {
   const SokounRefreshIndicator({super.key, required this.status});
 
@@ -95,7 +95,7 @@ class SokounRefreshIndicator extends StatelessWidget {
                                 child: CircularProgressIndicator(
                                   value: visible && duration != Duration.zero
                                       ? null
-                                      : .75,
+                                      : 1,
                                   strokeWidth: 2.r,
                                   strokeCap: StrokeCap.round,
                                   color: AppColors.sokoonTeal,
@@ -103,11 +103,7 @@ class SokounRefreshIndicator extends StatelessWidget {
                                 ),
                               ),
                             if (loading)
-                              Icon(
-                                Icons.home_outlined,
-                                size: 20.r,
-                                color: AppColors.sokoonTeal,
-                              )
+                              AppLogoWidget(size: 25.sp)
                             else
                               AnimatedRotation(
                                 turns: armed ? .5 : 0,

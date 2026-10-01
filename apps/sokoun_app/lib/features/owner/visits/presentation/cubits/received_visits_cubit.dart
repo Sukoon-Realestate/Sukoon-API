@@ -7,6 +7,7 @@ class ReceivedVisitsCubit extends AsyncCubit<List<OwnerVisitRequestContent>> {
   ReceivedVisitsCubit() : super(const []);
 
   Future<void> getReceivedVisits() async {
+    if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<List<OwnerVisitRequestContent>>(

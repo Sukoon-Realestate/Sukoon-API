@@ -4,6 +4,7 @@ class OwnerProfileCubit extends AsyncCubit<OwnerProfileContent> {
   OwnerProfileCubit() : super(const OwnerProfileContent.initial());
 
   Future<void> getProfile() async {
+    if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<OwnerProfileContent>(

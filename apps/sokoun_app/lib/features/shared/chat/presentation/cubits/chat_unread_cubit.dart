@@ -1,42 +1,52 @@
 import 'dart:async';
-import 'dart:math' show max;
 
-import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
-import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/network/account_session.dart';
 
 import '../../../notifications/data/enums/app_notification_kind.dart';
 import '../../../notifications/data/foreground_notification_bus.dart';
 import '../../../notifications/data/models/app_notification_content.dart';
-import '../../data/chats_data.dart';
+import '../../../unread_counts/data/models/unread_counts.dart';
+import '../../../unread_counts/presentation/cubits/unread_counts_cubit.dart';
 import '../../data/chat_realtime_service.dart';
 import '../../data/chat_unread_refresh_bus.dart';
 import '../../data/models/chat_socket_message.dart';
 import '../../data/models/chat_unread_content.dart';
 
 class ChatUnreadCubit extends AsyncCubit<ChatUnreadContent> {
-  ChatUnreadCubit({ChatRealtimeGateway? realtimeService})
-    : _realtime = realtimeService ?? ChatRealtimeService.instance,
-      super(const ChatUnreadContent.initial());
+  ChatUnreadCubit({
+    required UnreadCountsCubit unreadCounts,
+    ChatRealtimeGateway? realtimeService,
+  }) : _unreadCounts = unreadCounts,
+       _realtime = realtimeService ?? ChatRealtimeService.instance,
+       super(const ChatUnreadContent.initial());
 
+  final UnreadCountsCubit _unreadCounts;
   final ChatRealtimeGateway _realtime;
+  StreamSubscription<AsyncState<UnreadCounts>>? _countsSubscription;
+
   StreamSubscription<int>? _refreshSubscription;
   int _sessionGeneration = AccountSession.generation;
   StreamSubscription<ChatSocketMessage>? _messageSubscription;
   StreamSubscription<AppNotificationContent>? _notificationSubscription;
   final Set<String> _receivedMessageIds = {};
-  int _unreadChange = 0;
   Future<void>? _startRequest;
+
+  void _watchCounts() {
+    if (_countsSubscription != null || isClosed) return;
+    _syncCounts();
+    _countsSubscription = _unreadCounts.stream.listen((_) => _syncCounts());
+  }
 
   Future<void> start() => _startRequest ??= _start();
 
   Future<void> _start() async {
     _sessionGeneration = AccountSession.generation;
+    _watchCounts();
     _refreshSubscription ??= ChatUnreadRefreshBus.stream.listen((removed) {
       removeConversationUnread(removed);
-      if (removed == 0) unawaited(loadUnreadCount());
+      if (removed == 0) unawaited(_unreadCounts.refresh());
     });
     _messageSubscription ??= _realtime.messages.listen(_handleIncomingMessage);
     _notificationSubscription ??= ForegroundNotificationBus.stream.listen(
@@ -47,41 +57,16 @@ class ChatUnreadCubit extends AsyncCubit<ChatUnreadContent> {
   }
 
   Future<void> loadUnreadCount() async {
-    if (isClosed || isLoading || !await ChatData.hasAuthenticatedSession()) {
-      return;
-    }
-    if (isClosed || isLoading) return;
-    final int unreadChangeAtRequest = _unreadChange;
-    await executeAsyncWithBaseModel(
-      operation: () => baseCrudUseCase.call(
-        CrudBaseParmas<ChatUnreadContent>(
-          api: ApiConstants.tenantUnreadCounts,
-          httpRequestType: HttpRequestType.get,
-          cacheKey: 'chat_unread_count_v2',
-          mapper: (json) => ChatUnreadContent.fromJson(
-            json is Map<String, dynamic> ? json : const {},
-          ),
-          fromCacheJson: ChatUnreadContent.fromJson,
-          toJson: (content) => content.toJson(),
-        ),
-      ),
-      onSuccess: (_) {
-        final int delta = _unreadChange - unreadChangeAtRequest;
-        if (delta != 0) {
-          updateData(data.copyWith(count: max(0, data.count + delta)));
-        }
-      },
-      withInternetInterceptor: true,
-    );
+    if (isClosed) return;
+    _watchCounts();
+    await _unreadCounts.load();
+    _syncCounts();
   }
 
   void removeConversationUnread(int unreadCount) {
-    if (unreadCount <= 0) return;
-    final int nextCount = data.count > unreadCount
-        ? data.count - unreadCount
-        : 0;
-    _unreadChange -= unreadCount;
-    updateData(data.copyWith(count: nextCount));
+    if (isClosed || unreadCount <= 0) return;
+    _unreadCounts.changeChatCount(-unreadCount);
+    _syncCounts();
   }
 
   void _handleNotification(AppNotificationContent notification) {
@@ -126,12 +111,12 @@ class ChatUnreadCubit extends AsyncCubit<ChatUnreadContent> {
         conversationId == _realtime.activeConversationId) {
       return;
     }
-    _unreadChange++;
-    updateData(data.copyWith(count: data.count + 1));
+    _unreadCounts.changeChatCount(1);
+    _syncCounts();
   }
 
   Future<void> onAppResumed() async {
-    await Future.wait([loadUnreadCount(), _realtime.connect()]);
+    await _realtime.connect();
   }
 
   Future<void> onAppBackgrounded() async {
@@ -140,8 +125,20 @@ class ChatUnreadCubit extends AsyncCubit<ChatUnreadContent> {
     }
   }
 
+  void _syncCounts() {
+    final AsyncState<UnreadCounts> counts = _unreadCounts.state;
+    emit(
+      state.copyWith(
+        status: counts.status,
+        data: counts.data.chat,
+        msg: counts.msg,
+      ),
+    );
+  }
+
   @override
   Future<void> close() async {
+    await _countsSubscription?.cancel();
     await _refreshSubscription?.cancel();
     await _messageSubscription?.cancel();
     await _notificationSubscription?.cancel();

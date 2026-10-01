@@ -5,10 +5,13 @@ import 'package:sokoun_app/features/tenant/home/data/models/property_filter_opti
 
 class PropertyFilterOptionsCubit
     extends AsyncCubit<PropertyFilterOptionsModel> {
-  PropertyFilterOptionsCubit()
-    : super(const PropertyFilterOptionsModel.initial());
+  PropertyFilterOptionsCubit({PropertyFilterOptionsModel? initialOptions})
+    : super(initialOptions ?? const PropertyFilterOptionsModel.initial()) {
+    if (initialOptions != null) emit(state.success(data: initialOptions));
+  }
 
   Future<void> getFilterOptions() async {
+    if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<PropertyFilterOptionsModel>(

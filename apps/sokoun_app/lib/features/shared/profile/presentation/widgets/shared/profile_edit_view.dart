@@ -157,43 +157,44 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   Widget build(BuildContext context) {
     return BlocProvider<ProfileEditCubit>.value(
       value: _editCubit,
-      child: BlocBuilder<ProfileEditCubit, AsyncState<Map<String, dynamic>>>(
-        builder: (context, state) => UnsavedChangesGuard(
-          hasChanges: () =>
-              _nameController.text.trim() != widget.initialValue.name ||
-              _phoneController.text.trim() != widget.initialValue.phone ||
-              _avatar.value != null ||
-              !_gender.value.isUnspecified,
-          isSaving: () => _editCubit.isLoading,
-          child: _buildScaffold(isSaving: state.isLoading),
-        ),
+      child: UnsavedChangesGuard(
+        hasChanges: () =>
+            _nameController.text.trim() != widget.initialValue.name ||
+            _phoneController.text.trim() != widget.initialValue.phone ||
+            _avatar.value != null ||
+            !_gender.value.isUnspecified,
+        isSaving: () => _editCubit.isLoading,
+        child: _buildScaffold(),
       ),
     );
   }
 
-  Widget _buildScaffold({required bool isSaving}) {
+  Widget _buildScaffold() {
     return AppScaffold(
       title: _title,
       showBackButton: true,
       actions: [
-        TextButton(
-          onPressed: isSaving ? null : _save,
-          child: isSaving
-              ? SizedBox.square(
-                  dimension: 18.r,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.r,
-                    color: _accentColor,
+        BlocSelector<ProfileEditCubit, AsyncState<Map<String, dynamic>>, bool>(
+          selector: (state) => state.isLoading,
+          builder: (context, isSaving) => TextButton(
+            onPressed: isSaving ? null : _save,
+            child: isSaving
+                ? SizedBox.square(
+                    dimension: 18.r,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.r,
+                      color: _accentColor,
+                    ),
+                  )
+                : AppText(
+                    LocaleKeys.profileSave,
+                    style: AppTextStyles.bold14.copyWith(
+                      color: _accentColor,
+                      fontSize: 14.sp,
+                      height: 1.45,
+                    ),
                   ),
-                )
-              : AppText(
-                  LocaleKeys.profileSave,
-                  style: AppTextStyles.bold14.copyWith(
-                    color: _accentColor,
-                    fontSize: 14.sp,
-                    height: 1.45,
-                  ),
-                ),
+          ),
         ),
       ],
       backgroundColor: AppColors.scaffoldBackground,
@@ -208,15 +209,22 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                 builder: (context, avatar, _) => Column(
                   spacing: 8.h,
                   children: [
-                    ProfileAvatar(
-                      name: _nameController.text,
-                      imageFile: avatar,
-                      accentColor: _accentColor,
-                      backgroundColor: _accentColor,
-                      size: 88,
-                      useInitial: true,
-                      badgeIcon: Icons.camera_alt_outlined,
-                      onBadgePressed: isSaving ? null : _pickAvatar,
+                    BlocSelector<
+                      ProfileEditCubit,
+                      AsyncState<Map<String, dynamic>>,
+                      bool
+                    >(
+                      selector: (state) => state.isLoading,
+                      builder: (context, isSaving) => ProfileAvatar(
+                        name: _nameController.text,
+                        imageFile: avatar,
+                        accentColor: _accentColor,
+                        backgroundColor: _accentColor,
+                        size: 88,
+                        useInitial: true,
+                        badgeIcon: Icons.camera_alt_outlined,
+                        onBadgePressed: isSaving ? null : _pickAvatar,
+                      ),
                     ),
                     AppText(
                       LocaleKeys.profileChangePhoto,
@@ -259,7 +267,15 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       label: LocaleKeys.city,
                       value: LocaleKeys.profileCairo,
                     ),
-                    _buildGenderField(isSaving: isSaving),
+                    BlocSelector<
+                      ProfileEditCubit,
+                      AsyncState<Map<String, dynamic>>,
+                      bool
+                    >(
+                      selector: (state) => state.isLoading,
+                      builder: (context, isSaving) =>
+                          _buildGenderField(isSaving: isSaving),
+                    ),
                   ],
                 )
               else ...[
@@ -268,7 +284,15 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                   value: LocaleKeys.notSetYet,
                 ),
                 14.szH,
-                _buildGenderField(isSaving: isSaving),
+                BlocSelector<
+                  ProfileEditCubit,
+                  AsyncState<Map<String, dynamic>>,
+                  bool
+                >(
+                  selector: (state) => state.isLoading,
+                  builder: (context, isSaving) =>
+                      _buildGenderField(isSaving: isSaving),
+                ),
               ],
             ],
           ),

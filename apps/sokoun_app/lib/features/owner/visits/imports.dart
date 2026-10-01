@@ -1,3 +1,4 @@
+import 'package:melos_core/core/network/network_request.dart';
 import 'package:melos_core/core/extensions/widget_extension.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
@@ -45,6 +46,7 @@ part 'presentation/widgets/owner_calendar/owner_calendar_visit_card.dart';
 part 'presentation/widgets/owner_request_details/owner_accept_request_sheet.dart';
 part 'presentation/widgets/owner_request_details/owner_reject_request_sheet.dart';
 part 'presentation/widgets/owner_request_details/owner_request_details_content.dart';
+part 'presentation/widgets/owner_request_details/owner_request_details_actions.dart';
 part 'presentation/widgets/owner_request_details/owner_request_info_card.dart';
 part 'presentation/widgets/shared/owner_request_privacy_banner.dart';
 part 'presentation/widgets/shared/owner_verified_badge.dart';

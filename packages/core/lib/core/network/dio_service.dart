@@ -25,6 +25,7 @@ import 'interceptors/session_cookie_manager.dart';
 import 'network_request.dart';
 import 'network_service.dart';
 import 'session_auth_service.dart';
+import 'session_refresh_coordinator.dart';
 import 'network_logging_policy.dart';
 
 class DioService implements NetworkService, SessionAuthService {
@@ -32,12 +33,14 @@ class DioService implements NetworkService, SessionAuthService {
     String initialBaseUrl = '',
     String? initialLanguageCode,
     Future<Directory> Function()? cookieDirectoryProvider,
+    HttpClientAdapter? httpClientAdapter,
   }) : _cookieDirectoryProvider =
            cookieDirectoryProvider ?? getApplicationSupportDirectory {
     _initDio(
       initialBaseUrl: initialBaseUrl,
       initialLanguageCode: initialLanguageCode,
     );
+    if (httpClientAdapter != null) _dio.httpClientAdapter = httpClientAdapter;
   }
 
   late final Dio _dio;
@@ -45,8 +48,8 @@ class DioService implements NetworkService, SessionAuthService {
   PersistCookieJar? _cookieJar;
   SessionCookieManager? _sessionCookies;
   Future<void>? _cookieInitialization;
-  Future<bool>? _sessionRefresh;
-  int? _sessionRefreshGeneration;
+  late final SessionRefreshCoordinator _refreshCoordinator =
+      SessionRefreshCoordinator(refresh: _performSessionRefresh);
 
   void _initDio({
     required String initialBaseUrl,
@@ -56,6 +59,9 @@ class DioService implements NetworkService, SessionAuthService {
       ..options.baseUrl = initialBaseUrl
       ..options.connectTimeout = const Duration(
         seconds: ConstantManager.connectTimeoutDuration,
+      )
+      ..options.sendTimeout = const Duration(
+        seconds: ConstantManager.sendTimeoutDuration,
       )
       ..options.receiveTimeout = const Duration(
         seconds: ConstantManager.recieveTimeoutDuration,
@@ -99,7 +105,10 @@ class DioService implements NetworkService, SessionAuthService {
     await cookieJar.forceInit();
 
     _cookieJar = cookieJar;
-    final SessionCookieManager manager = SessionCookieManager(cookieJar);
+    final SessionCookieManager manager = SessionCookieManager(
+      cookieJar,
+      refreshRevision: () => _refreshCoordinator.revision,
+    );
     _sessionCookies = manager;
     _dio.interceptors
       ..insert(0, manager)
@@ -108,6 +117,7 @@ class DioService implements NetworkService, SessionAuthService {
         2,
         UnauthorizedInterceptor(
           dio: _dio,
+          refreshCoordinator: _refreshCoordinator,
           canRefreshSession: () async {
             final Uri refreshUri = Uri.parse(
               _dio.options.baseUrl,
@@ -171,49 +181,45 @@ class DioService implements NetworkService, SessionAuthService {
   }
 
   @override
-  Future<bool> refreshSession() {
-    final Future<bool>? pendingRefresh = _sessionRefresh;
-    if (pendingRefresh != null &&
-        _sessionRefreshGeneration == AccountSession.generation) {
-      return pendingRefresh;
-    }
-
+  Future<bool> refreshSession() async {
     final int generation = AccountSession.generation;
-    final Future<bool> refresh = _refreshSession(generation);
-    _sessionRefresh = refresh;
-    _sessionRefreshGeneration = generation;
-    return refresh.whenComplete(() {
-      if (identical(_sessionRefresh, refresh)) {
-        _sessionRefresh = null;
-      }
-    });
+    try {
+      await _refreshCoordinator.refresh(generation);
+      final String? token = await getAccessToken();
+      return generation == AccountSession.generation &&
+          (token?.isNotEmpty ?? false);
+    } catch (_) {
+      return false;
+    }
   }
 
-  Future<bool> _refreshSession(int generation) async {
+  Future<void> _performSessionRefresh(int generation) async {
+    final Uri? baseUri = await getBaseUri();
+    if (baseUri == null) throw StateError('No API base URI configured.');
+    final List<Cookie> cookies = await _cookieJar!.loadForRequest(
+      baseUri.resolve(ApiConstants.refreshToken),
+    );
+    if (generation != AccountSession.generation) {
+      throw const RequestCancelledException();
+    }
+    if (!cookies.any(
+      (cookie) => cookie.name == 'refresh_token' && cookie.value.isNotEmpty,
+    )) {
+      throw StateError('No refresh token available.');
+    }
     try {
-      final Uri? baseUri = await getBaseUri();
-      if (baseUri == null) return false;
-
-      final Uri refreshUri = baseUri.resolve(ApiConstants.refreshToken);
-      final List<Cookie> cookies = await _cookieJar!.loadForRequest(refreshUri);
-      final bool hasRefreshToken = cookies.any(
-        (cookie) => cookie.name == 'refresh_token' && cookie.value.isNotEmpty,
-      );
-      if (!hasRefreshToken) return false;
-
-      if (generation != AccountSession.generation) return false;
       await _dio.post<void>(
         ApiConstants.refreshToken,
         options: Options(
           extra: {SessionCookieManager.generationKey: generation},
         ),
       );
-      if (generation != AccountSession.generation) return false;
-      final String? token = await getAccessToken();
-      return generation == AccountSession.generation &&
-          (token?.isNotEmpty ?? false);
-    } catch (_) {
-      return false;
+    } on DioException catch (error) {
+      if (error.response?.statusCode == HttpStatus.unauthorized &&
+          generation == AccountSession.generation) {
+        await _sessionCookies!.clear(generation: generation, expire: true);
+      }
+      rethrow;
     }
   }
 
@@ -271,11 +277,20 @@ class DioService implements NetworkService, SessionAuthService {
   }) async {
     final int generation = AccountSession.generation;
     try {
+      if (networkRequest.cancelToken?.isCancelled ?? false) {
+        throw networkRequest.cancelToken!.cancelError!;
+      }
       await _ensureCookieManager();
       if (_dio.options.baseUrl.isNull || _dio.options.baseUrl.isEmpty) {
         await updateBaseUrl();
       }
+      if (networkRequest.cancelToken?.isCancelled ?? false) {
+        throw networkRequest.cancelToken!.cancelError!;
+      }
       await networkRequest.prepareRequestData();
+      if (networkRequest.cancelToken?.isCancelled ?? false) {
+        throw networkRequest.cancelToken!.cancelError!;
+      }
       if (FireStoreService.isInitialized &&
           kReleaseMode &&
           !NetworkLoggingPolicy.isSensitive(networkRequest.path)) {
@@ -292,18 +307,21 @@ class DioService implements NetworkService, SessionAuthService {
         onSendProgress: networkRequest.hasBodyAndProgress()
             ? networkRequest.onSendProgress
             : null,
-        onReceiveProgress: networkRequest.hasBodyAndProgress()
-            ? networkRequest.onReceiveProgress
-            : null,
+        onReceiveProgress: networkRequest.onReceiveProgress,
+        cancelToken: networkRequest.cancelToken,
         options: Options(
           method: networkRequest.asString(),
           headers: networkRequest.headers,
+          sendTimeout: networkRequest.sendTimeout,
           extra: {SessionCookieManager.generationKey: generation},
         ),
       );
 
+      if (networkRequest.cancelToken?.isCancelled ?? false) {
+        throw networkRequest.cancelToken!.cancelError!;
+      }
       if (generation != AccountSession.generation) {
-        throw UnauthorizedException(LocaleKeys.unauthorized);
+        throw const RequestCancelledException();
       }
 
       _handleIncomingResponse(
@@ -316,6 +334,7 @@ class DioService implements NetworkService, SessionAuthService {
         return BaseModel.fromJson(response.data);
       }
     } on DioException catch (e) {
+      if (CancelToken.isCancel(e)) throw const RequestCancelledException();
       if (e.response?.statusCode == HttpStatus.unauthorized &&
           generation == AccountSession.generation &&
           AccountSession.userId != null) {
@@ -374,7 +393,7 @@ class DioService implements NetworkService, SessionAuthService {
             throw ServerException(LocaleKeys.serverError);
         }
       case DioExceptionType.cancel:
-        throw ServerException(LocaleKeys.cancelled);
+        throw const RequestCancelledException();
       case DioExceptionType.unknown:
         throw ServerException(
           error.response?.data['message'] ?? LocaleKeys.exceptionError,

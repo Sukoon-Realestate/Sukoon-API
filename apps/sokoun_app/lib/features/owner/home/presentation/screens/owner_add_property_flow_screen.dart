@@ -17,6 +17,7 @@ import '../widgets/owner_add_property/property_review_sheet.dart';
 import '../../data/models/owner_add_property_content.dart';
 import '../cubits/create_property_cubit.dart';
 import '../cubits/update_property_cubit.dart';
+import '../cubits/upload_property_images_cubit.dart';
 import '../widgets/owner_add_property/imports.dart';
 
 class OwnerAddPropertyFlowScreen extends StatelessWidget {
@@ -41,6 +42,9 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
   final ValueNotifier<int> _currentStep = ValueNotifier(0);
   CreatePropertyCubit? _createPropertyCubit;
   UpdatePropertyCubit? _updatePropertyCubit;
+  UploadPropertyImagesCubit? _uploadPropertyImagesCubit;
+  PropertyDetailsModel? _savedProperty;
+  OwnerAddPropertyFormState? _savedForm;
   late final ValueNotifier<OwnerAddPropertyFormState> _formNotifier;
   OwnerPropertyLocationModel? _selectedGovernorate;
   OwnerPropertyLocationModel? _selectedCity;
@@ -97,6 +101,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
     _isSubmitting.dispose();
     _createPropertyCubit?.close();
     _updatePropertyCubit?.close();
+    _uploadPropertyImagesCubit?.close();
     _titleController.dispose();
     _streetController.dispose();
     _bedroomsController.dispose();
@@ -190,6 +195,8 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
 
   void _resetFlow() {
     _hasChanges = false;
+    _savedProperty = null;
+    _savedForm = null;
     _selectedGovernorate = null;
     _selectedCity = null;
     _locationDropdownGeneration++;
@@ -338,45 +345,87 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
     }
     _isSubmitting.value = true;
     bool wasSubmitted = false;
-    PropertyDetailsModel? updatedProperty;
-    final PropertyDetailsModel? property = widget.property;
+    try {
+      if (!await _saveProperty() || !mounted) return;
+      final PropertyDetailsModel? property = _savedProperty;
+      if (property == null) return;
+      final UploadPropertyImagesCubit cubit = _uploadPropertyImagesCubit ??=
+          UploadPropertyImagesCubit();
+      await cubit.uploadImages(
+        propertyId: property.id,
+        photos: _form.photoDrafts,
+        onPhotoUploaded: _recordUploadedPhoto,
+        onSuccess: () => wasSubmitted = true,
+      );
+    } finally {
+      if (mounted) _isSubmitting.value = false;
+    }
+    if (!mounted || !wasSubmitted) return;
+    _hasChanges = false;
+    if (_isEditing) {
+      Go.back(_savedProperty);
+    } else {
+      _formNotifier.value = _form.copyWith(submittedAt: DateTime.now());
+      _goToPage(5);
+    }
+  }
+
+  Future<bool> _saveProperty() async {
+    final OwnerAddPropertyFormState form = _form;
+    if (identical(_savedForm, form)) return true;
+    final PropertyDetailsModel? property = _savedProperty ?? widget.property;
+    bool wasSaved = false;
     if (property == null) {
       final CreatePropertyCubit cubit = _createPropertyCubit ??=
           CreatePropertyCubit();
       await cubit.createProperty(
-        form: _form,
-        onSuccess: () => wasSubmitted = true,
+        form: form,
+        onSuccess: (createdProperty) {
+          _savedProperty = createdProperty;
+          wasSaved = true;
+        },
       );
     } else {
       final UpdatePropertyCubit cubit = _updatePropertyCubit ??=
           UpdatePropertyCubit();
       await cubit.updateProperty(
         propertyId: property.id,
-        form: _form,
+        form: form,
         onSuccess: (response) {
-          updatedProperty = OwnerAddPropertyMapper.mergeIntoProperty(
+          _savedProperty = OwnerAddPropertyMapper.mergeIntoProperty(
             original: property,
             response: response,
-            form: _form,
+            form: form,
             selectedGovernorate: _selectedGovernorate,
             selectedCity: _selectedCity,
           );
-          wasSubmitted = true;
+          wasSaved = true;
         },
       );
     }
-    if (!mounted) {
-      return;
-    }
-    _isSubmitting.value = false;
-    if (wasSubmitted) _hasChanges = false;
-    if (wasSubmitted && !_isEditing) {
-      _formNotifier.value = _form.copyWith(submittedAt: DateTime.now());
-    }
-    if (updatedProperty != null) {
-      Go.back(updatedProperty);
-    } else if (wasSubmitted) {
-      _goToPage(5);
+    if (wasSaved) _savedForm = form;
+    return wasSaved;
+  }
+
+  void _recordUploadedPhoto({
+    required OwnerPropertyPhotoDraft photo,
+    required PropertyImageModel image,
+  }) {
+    if (!mounted) return;
+    final List<OwnerPropertyPhotoDraft> photos = List.of(_form.photoDrafts);
+    final int index = photos.indexOf(photo);
+    if (index < 0) return;
+    photos[index] = OwnerPropertyPhotoDraft(
+      existingId: image.id,
+      existingUrl: image.image,
+      name: image.name,
+      description: image.description,
+    );
+    _formNotifier.value = _form.copyWith(photoDrafts: photos);
+    _savedForm = _form;
+    final PropertyDetailsModel? property = _savedProperty;
+    if (property != null) {
+      _savedProperty = property.copyWith(images: [...property.images, image]);
     }
   }
 

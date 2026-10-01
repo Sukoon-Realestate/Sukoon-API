@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -12,10 +14,11 @@ import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
 import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:sokoun_app/features/owner/home/presentation/screens/owner_add_property_flow_screen.dart';
-import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/add_property_video_page.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/imports.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 
@@ -169,6 +172,225 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
   }
 
+  Future<void> prepareCreateFlow(WidgetTester tester) async {
+    configurePhoneViewport(tester);
+    final Directory images = Directory.systemTemp.createTempSync(
+      'owner-photos-',
+    );
+    final List<int> bytes = base64Decode(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=',
+    );
+    final List<String> paths = List.generate(10, (index) {
+      final File file = File('${images.path}/photo-$index.png');
+      file.writeAsBytesSync(bytes);
+      return file.path;
+    });
+    const MethodChannel picker = MethodChannel(
+      'plugins.flutter.io/image_picker',
+    );
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(picker, (call) async {
+          return call.method == 'pickMultiImage' ? paths : paths.first;
+        });
+    addTearDown(() {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(picker, null);
+      images.deleteSync(recursive: true);
+    });
+
+    await tester.pumpWidget(buildScreen(const OwnerAddPropertyFlowScreen()));
+    await tester.pumpAndSettle();
+    final AddPropertyBasicsPage basics = tester.widget(
+      find.byType(AddPropertyBasicsPage),
+    );
+    basics.onPropertyTypeSelected('apartment');
+    basics.onTitleChanged('A new apartment');
+    basics.onGovernorateChanged(
+      const OwnerPropertyLocationModel.initial().copyWith(
+        id: 'cairo',
+        name: 'Cairo',
+      ),
+    );
+    basics.onCityChanged(
+      const OwnerPropertyLocationModel.initial().copyWith(
+        id: 'nasr-city',
+        name: 'Nasr City',
+      ),
+    );
+    basics.onStreetChanged('Main street');
+    basics.onBedroomsChanged('2');
+    basics.onBathroomsChanged('1');
+    basics.onSpaceChanged('120');
+    basics.onFloorChanged('3');
+    basics.onBuildingYearChanged('2020');
+    basics.onLocationSelected();
+    await tester.pump();
+    await tester.tap(find.text(LocaleKeys.ownerAddPropertyNextPhotos));
+    await tester.pumpAndSettle();
+    tester
+        .widget<AddPropertyPhotosPage>(find.byType(AddPropertyPhotosPage))
+        .onAddPhotos();
+    await tester.pumpAndSettle();
+    final AddPropertyPhotosPage photos = tester.widget(
+      find.byType(AddPropertyPhotosPage),
+    );
+    expect(photos.photos, hasLength(10));
+    for (int index = 0; index < 10; index++) {
+      photos.onPhotoNameChanged(index, 'Photo $index');
+      photos.onPhotoDescriptionChanged(index, 'Description $index');
+    }
+    await tester.pump();
+    await tester.tap(find.text(LocaleKeys.ownerAddPropertyNextVideo));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(LocaleKeys.ownerPropertyVideoSkip));
+    await tester.pumpAndSettle();
+    final AddPropertyPricingPage pricing = tester.widget(
+      find.byType(AddPropertyPricingPage),
+    );
+    pricing.onMonthlyPriceChanged('6500');
+    pricing.onDepositChanged('one_month');
+    pricing.onRentalDurationChanged('6');
+    pricing.onRentalUnitChanged('monthly');
+    pricing.onAmenityToggled('wifi');
+    pricing.onDescriptionChanged('A comfortable apartment near the metro.');
+    await tester.pump();
+    await tester.tap(find.text(LocaleKeys.ownerAddPropertyNextExtra));
+    await tester.pumpAndSettle();
+    final AddPropertyExtraDetailsPage details = tester.widget(
+      find.byType(AddPropertyExtraDetailsPage),
+    );
+    details.onSmokingSelected('not_allowed');
+    details.onSuitableForSelected('all');
+    details.onProofUploadTap();
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> submitCreateFlow(WidgetTester tester) async {
+    await tester.tap(find.text(LocaleKeys.ownerPropertyReviewAction));
+    await tester.pumpAndSettle();
+    expect(find.byType(PropertyReviewSheet), findsOneWidget);
+    await tester.tap(find.text(LocaleKeys.ownerAddPropertySubmitReview));
+    await tester.pumpAndSettle();
+  }
+
+  testWidgets(
+    'creates once, uploads ten photos concurrently, and retries only failures',
+    (tester) async {
+      repository.createResponse = Completer<bool>();
+      await prepareCreateFlow(tester);
+      expect(repository.createRequests, isEmpty);
+      expect(repository.imageRequests, isEmpty);
+      await submitCreateFlow(tester);
+      expect(repository.createRequests, hasLength(1));
+      expect(
+        repository.createRequests.single.body,
+        isNot(contains('main_image')),
+      );
+      expect(repository.createRequests.single.body, isNot(contains('images')));
+      expect(repository.imageRequests, isEmpty);
+      expect(
+        tester
+            .widget<AddPropertyExtraDetailsPage>(
+              find.byType(AddPropertyExtraDetailsPage),
+            )
+            .isSubmitting,
+        isTrue,
+      );
+
+      repository.createResponse!.complete(true);
+      await tester.pumpAndSettle();
+      expect(repository.imageRequests, hasLength(10));
+      for (int index = 0; index < 10; index++) {
+        final request = repository.imageRequests[index];
+        expect(request.api, 'properties/created-property/images/');
+        expect(request.httpRequestType, HttpRequestType.post);
+        expect(request.isFromData, isTrue);
+        expect(request.sendTimeout, ConstantManager.uploadSendTimeout);
+        expect(
+          request.body!.keys,
+          unorderedEquals(['image', 'name', 'description']),
+        );
+        expect(request.body!['image'], isA<File>());
+        expect(request.body!['name'], 'Photo $index');
+        expect(request.body!['description'], 'Description $index');
+      }
+      // One failure must not finish the batch while other uploads are pending.
+      repository.imageResponses.first.complete(false);
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<AddPropertyExtraDetailsPage>(
+              find.byType(AddPropertyExtraDetailsPage),
+            )
+            .isSubmitting,
+        isTrue,
+      );
+      for (final response in repository.imageResponses.skip(1)) {
+        response.complete(true);
+      }
+      await tester.pumpAndSettle();
+      expect(find.byType(AddPropertySubmittedPage), findsNothing);
+      final AddPropertyExtraDetailsPage details = tester.widget(
+        find.byType(AddPropertyExtraDetailsPage),
+      );
+      expect(details.isSubmitting, isFalse);
+      expect(
+        details.form.photoDrafts.where((photo) => photo.isExisting),
+        hasLength(9),
+      );
+
+      await submitCreateFlow(tester);
+      expect(repository.createRequests, hasLength(1));
+      expect(repository.updateRequestCount, 0);
+      expect(repository.imageRequests, hasLength(11));
+      expect(repository.imageRequests.last.body!['name'], 'Photo 0');
+      expect(
+        repository.imageRequests.last.api,
+        'properties/created-property/images/',
+      );
+      repository.imageResponses.last.complete(true);
+      await tester.pumpAndSettle();
+      expect(find.byType(AddPropertySubmittedPage), findsOneWidget);
+      expect(tester.takeException(), isNull);
+
+      // Starting another listing must clear the saved property and upload state.
+      tester
+          .widget<AddPropertySubmittedPage>(
+            find.byType(AddPropertySubmittedPage),
+          )
+          .onAddAnother();
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<AddPropertyBasicsPage>(find.byType(AddPropertyBasicsPage))
+            .form
+            .photoDrafts,
+        isEmpty,
+      );
+    },
+  );
+
+  testWidgets('failed property creation does not start image uploads', (
+    tester,
+  ) async {
+    repository.createResponse = Completer<bool>();
+    await prepareCreateFlow(tester);
+    await submitCreateFlow(tester);
+    repository.createResponse!.complete(false);
+    await tester.pumpAndSettle();
+    expect(repository.imageRequests, isEmpty);
+    expect(find.byType(AddPropertySubmittedPage), findsNothing);
+    expect(
+      tester
+          .widget<AddPropertyExtraDetailsPage>(
+            find.byType(AddPropertyExtraDetailsPage),
+          )
+          .isSubmitting,
+      isFalse,
+    );
+    expect(tester.takeException(), isNull);
+  });
+
   test('maps the owned-properties response', () {
     final OwnerPropertiesResponse response = OwnerPropertiesResponse.fromJson({
       'count': 1,
@@ -276,8 +498,8 @@ void main() {
     expect(body['governorate'], 'cairo-governorate-id');
     expect(body['city'], 'nasr-city-id');
     expect(body['district'], 'nasr-city-id');
-    expect(body['main_image'], same(photos.first));
-    expect(body['images'], hasLength(9));
+    expect(body, isNot(contains('main_image')));
+    expect(body, isNot(contains('images')));
     expect(body['video'], same(video));
     expect(body['video_duration'], 45);
     expect(body['ownership_proof'], same(ownershipProof));
@@ -500,11 +722,51 @@ class _OwnerPropertiesRepository implements BaseRepository {
   String? lastDetailsId;
   Map<String, dynamic>? lastUpdateBody;
   int updateRequestCount = 0;
+  Completer<bool>? createResponse;
+  final List<CrudBaseParmas> createRequests = [];
+  final List<CrudBaseParmas> imageRequests = [];
+  final List<Completer<bool>> imageResponses = [];
 
   @override
   Future<Result<BaseModel<T>, Failure>> crudCall<T>(
     CrudBaseParmas<T> params,
   ) async {
+    if (params.api == ApiConstants.createProperty) {
+      createRequests.add(params);
+      if (!await createResponse!.future) {
+        return const Error(ServerFailure('Creation failed'));
+      }
+      return Success(
+        BaseModel(
+          key: '',
+          msg: '',
+          data: params.mapper!({'id': 'created-property'}),
+        ),
+      );
+    }
+    if (params.api.endsWith('/images/')) {
+      imageRequests.add(params);
+      final int index = imageRequests.length;
+      final Completer<bool> response = Completer<bool>();
+      imageResponses.add(response);
+      if (!await response.future) {
+        return const Error(ServerFailure('Image upload failed'));
+      }
+      return Success(
+        BaseModel(
+          key: '',
+          msg: '',
+          data: params.mapper!({
+            'id': 'uploaded-$index',
+            'image': 'https://example.com/uploaded-$index.jpg',
+            'name': params.body!['name'],
+            'description': params.body!['description'],
+            'created_at': '2026-07-26T22:12:45.392372+03:00',
+            'updated_at': '2026-07-26T22:12:45.392430+03:00',
+          }),
+        ),
+      );
+    }
     final List<String> pathSegments = params.api
         .split('/')
         .where((segment) => segment.isNotEmpty)
@@ -583,6 +845,12 @@ class _OwnerPropertiesAssetLoader extends AssetLoader {
   @override
   Future<Map<String, dynamic>> load(String path, Locale locale) async {
     return {
+      ...jsonDecode(
+            File(
+              '../../packages/core/assets/translations/ar.json',
+            ).readAsStringSync(),
+          )
+          as Map<String, dynamic>,
       'home': 'الرئيسية',
       'chats': 'الشات',
       'search': 'بحث',

@@ -24,6 +24,8 @@ extension ErrorHandlerWithCache<M> on Future<BaseModel<M>> {
         if (kDebugMode) log('Cache save failed for key $cacheKey: $e');
       }
       return Success(result);
+    } on RequestCancelledException {
+      return const Error(RequestCancelledFailure());
     } on BlockedException catch (e) {
       return _resolveFromCache(cacheKey, fromCacheJson, e.message, onRead);
     } on UnauthorizedException catch (e) {
@@ -49,7 +51,13 @@ Result<BaseModel<M>, Failure> _resolveFromCache<M>(
   try {
     final cached = onRead(cacheKey);
     if (cached.isNotNull) {
-      return Success(BaseModel(key: 'fromCache', msg: errorMessage, data: fromCacheJson(cached!)));
+      return Success(
+        BaseModel(
+          key: 'fromCache',
+          msg: errorMessage,
+          data: fromCacheJson(cached!),
+        ),
+      );
     }
   } catch (_) {}
   return Error(Failure(errorMessage));
@@ -69,6 +77,8 @@ extension ErrorHandler<T> on Future<T> {
     try {
       final result = await this;
       return Success(result);
+    } on RequestCancelledException {
+      return const Error(RequestCancelledFailure());
     } on BlockedException catch (e) {
       return Error(Failure(e.message));
     } on UnauthorizedException catch (e) {

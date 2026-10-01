@@ -10,6 +10,7 @@ class OtpCubit extends AsyncCubit<Map<String, dynamic>> {
     required VerifyOtpBody body,
     required void Function() onSuccess,
   }) async {
+    if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       showMsgOnSuccess: true,
       operation: () => baseCrudUseCase.call(
@@ -27,6 +28,7 @@ class OtpCubit extends AsyncCubit<Map<String, dynamic>> {
     required ResendOtpBody body,
     required void Function() onSuccess,
   }) async {
+    if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       showMsgOnSuccess: true,
       operation: () => baseCrudUseCase.call(

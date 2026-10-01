@@ -14,11 +14,21 @@ class TenantPropertyDetailsBody extends StatelessWidget {
     required this.onSavedPressed,
     this.onChatPressed,
     this.isOpeningChat = false,
-  });
+  }) : bottomActions = null;
+
+  const TenantPropertyDetailsBody.withActions({
+    super.key,
+    required this.property,
+    required Widget this.bottomActions,
+  }) : isSaved = false,
+       onSavedPressed = null,
+       onChatPressed = null,
+       isOpeningChat = false;
 
   final TenantPropertyDetailsContent property;
   final bool isSaved;
-  final VoidCallback onSavedPressed;
+  final VoidCallback? onSavedPressed;
+  final Widget? bottomActions;
   final VoidCallback? onChatPressed;
   final bool isOpeningChat;
 
@@ -63,13 +73,14 @@ class TenantPropertyDetailsBody extends StatelessWidget {
             ),
           ),
         ),
-        TenantPropertyBottomActions(
-          property: property,
-          isSaved: isSaved,
-          onSavedPressed: onSavedPressed,
-          onChatPressed: onChatPressed,
-          isOpeningChat: isOpeningChat,
-        ),
+        bottomActions ??
+            TenantPropertyBottomActions(
+              property: property,
+              isSaved: isSaved,
+              onSavedPressed: onSavedPressed!,
+              onChatPressed: onChatPressed,
+              isOpeningChat: isOpeningChat,
+            ),
       ],
     );
   }

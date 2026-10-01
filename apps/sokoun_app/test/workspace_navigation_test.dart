@@ -35,7 +35,6 @@ import 'package:sokoun_app/features/owner/home/presentation/screens/owner_home_s
 import 'package:sokoun_app/features/owner/visits/imports.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/screens/login_screen.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/cubits/chat_unread_cubit.dart';
-import 'package:sokoun_app/features/shared/chat/data/models/chat_unread_content.dart';
 import 'package:sokoun_app/features/shared/notifications/presentation/notification_push_handler.dart';
 import 'package:sokoun_app/features/shared/profile/imports.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_home_screen.dart';
@@ -303,16 +302,12 @@ void main() {
           'reviews_count': 2,
         };
         accountRepository.tenantCounts = {
+          'unread_chat_messages_count': 7,
           'favorites_count': 120,
           'visit_requests_count': 4,
         };
         accountRepository.ownerCounts = {'visit_requests_count': 9};
         await tester.pumpWidget(_app(const HomeScreen(), language));
-        await tester.pumpAndSettle();
-        tester
-            .element(find.byType(HomeBottomNavigation))
-            .read<ChatUnreadCubit>()
-            .updateData(const ChatUnreadContent(count: 7));
         await tester.pumpAndSettle();
 
         HomeBottomNavigation navigation() => tester
@@ -329,7 +324,7 @@ void main() {
         expect(find.byType(TenantProfileScreen), findsNothing);
         expect(accountRepository.profileRequests, 1);
         final int initialCountRequests = accountRepository.countRequests;
-        expect(initialCountRequests, greaterThan(0));
+        expect(initialCountRequests, 2);
         final TenantProfileCubit sharedProfile = tester
             .element(bottomBar)
             .read<TenantProfileCubit>();
@@ -340,6 +335,7 @@ void main() {
           'reviews_count': 3,
         };
         accountRepository.tenantCounts = {
+          'unread_chat_messages_count': 7,
           'favorites_count': 6,
           'visit_requests_count': 5,
         };
@@ -369,6 +365,7 @@ void main() {
           'reviews_count': 0,
         };
         accountRepository.tenantCounts = {
+          'unread_chat_messages_count': 7,
           'favorites_count': 0,
           'visit_requests_count': 0,
         };
@@ -388,6 +385,7 @@ void main() {
           'reviews_count': 1,
         };
         accountRepository.tenantCounts = {
+          'unread_chat_messages_count': 7,
           'favorites_count': 3,
           'visit_requests_count': 2,
         };
@@ -404,10 +402,7 @@ void main() {
         await tester.pumpAndSettle();
         expect(badgeCounts(), [0, 3, 7, 2, 1]);
         expect(accountRepository.profileRequests, 2);
-        expect(
-          accountRepository.countRequests,
-          greaterThan(initialCountRequests),
-        );
+        expect(accountRepository.countRequests, initialCountRequests + 2);
         expect(tester.takeException(), isNull);
 
         await tester.pumpWidget(const SizedBox.shrink());

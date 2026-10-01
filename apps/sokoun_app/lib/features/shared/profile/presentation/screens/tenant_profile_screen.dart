@@ -78,48 +78,50 @@ class _TenantProfileScreenState extends State<TenantProfileScreen> {
     Localizations.localeOf(context);
     return BlocProvider<TenantProfileCubit>.value(
       value: _profileCubit,
-      child: BlocBuilder<TenantProfileCubit, AsyncState<TenantProfileContent>>(
-        builder: (context, state) {
-          return AppScaffold(
-            title: LocaleKeys.profileMyAccount,
-            showBackButton: false,
-            actions: [
-              IconButton(
-                onPressed: state.isSuccess ? _openSummary : null,
-                style: IconButton.styleFrom(
-                  backgroundColor: AppColors.white,
-                  side: const BorderSide(color: AppColors.sokoonBorder),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                ),
-                icon: Icon(
-                  Icons.settings_outlined,
-                  color: AppColors.sokoonNavy,
-                  size: 18.r,
+      child: AppScaffold(
+        title: LocaleKeys.profileMyAccount,
+        showBackButton: false,
+        actions: [
+          BlocSelector<
+            TenantProfileCubit,
+            AsyncState<TenantProfileContent>,
+            bool
+          >(
+            selector: (state) => state.isSuccess,
+            builder: (context, isSuccess) => IconButton(
+              onPressed: isSuccess ? _openSummary : null,
+              style: IconButton.styleFrom(
+                backgroundColor: AppColors.white,
+                side: const BorderSide(color: AppColors.sokoonBorder),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
                 ),
               ),
-            ],
-            backgroundColor: AppColors.scaffoldBackground,
-            body: SafeArea(
-              child:
-                  StatusBuilder<
-                        TenantProfileCubit,
-                        TenantProfileContent
-                      >.withShimmer(
-                        initialDataForShimmer:
-                            const TenantProfileContent.initial(),
-                        onRetry: _profileCubit.getProfile,
-                        errorType: ErrorType.defaultView,
-                        builder: (profile) => TenantProfileContentView(
-                          profile: profile,
-                          onEditPressed: () => _openEditProfile(profile),
-                        ),
-                      )
-                      .withPullRefresher(onRefresh: _profileCubit.getProfile),
+              icon: Icon(
+                Icons.settings_outlined,
+                color: AppColors.sokoonNavy,
+                size: 18.r,
+              ),
             ),
-          );
-        },
+          ),
+        ],
+        backgroundColor: AppColors.scaffoldBackground,
+        body: SafeArea(
+          child:
+              StatusBuilder<
+                    TenantProfileCubit,
+                    TenantProfileContent
+                  >.withShimmer(
+                    initialDataForShimmer: const TenantProfileContent.initial(),
+                    onRetry: _profileCubit.getProfile,
+                    errorType: ErrorType.defaultView,
+                    builder: (profile) => TenantProfileContentView(
+                      profile: profile,
+                      onEditPressed: () => _openEditProfile(profile),
+                    ),
+                  )
+                  .withPullRefresher(onRefresh: _profileCubit.getProfile),
+        ),
       ),
     );
   }

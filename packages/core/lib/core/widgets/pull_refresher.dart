@@ -78,6 +78,7 @@ class _PullRefresherWidgetState extends State<PullRefresherWidget> {
     );
     if (theme != null) {
       return Stack(
+        clipBehavior: Clip.none,
         children: [
           RefreshIndicator.noSpinner(
             onRefresh: _refresh,

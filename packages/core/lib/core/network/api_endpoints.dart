@@ -67,6 +67,9 @@ class ApiConstants {
 
   static String propertyDetails(String propertyId) => '$properties$propertyId/';
 
+  static String propertyImages(String propertyId) =>
+      '${propertyDetails(propertyId)}images/';
+
   static String saveProperty(String propertyId) =>
       '$properties$propertyId/save/';
 

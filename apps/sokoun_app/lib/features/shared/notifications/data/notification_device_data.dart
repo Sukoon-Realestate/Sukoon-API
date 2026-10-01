@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
+import 'package:melos_core/core/network/account_session.dart';
 import 'package:melos_core/core/network/network_request.dart';
 import 'package:melos_core/core/network/network_service.dart';
 import 'package:melos_core/core/notification/notification_service.dart';
@@ -23,12 +24,18 @@ abstract interface class NotificationDeviceDataSource {
 final class NotificationDeviceApiDataSource
     implements NotificationDeviceDataSource {
   StreamSubscription<String>? _tokenRefreshSubscription;
-  bool _isRegistering = false;
+  Future<void>? _registration;
+  ({String token, int generation})? _pendingRegistration;
+  ({String token, int generation})? _activeRegistration;
+  ({String token, int generation})? _registered;
+  int _registrationEpoch = 0;
 
   @override
   Future<void> start() async {
+    final int epoch = _registrationEpoch;
     try {
       await registerCurrentDevice();
+      if (epoch != _registrationEpoch) return;
       _tokenRefreshSubscription ??= injector<NotificationService>()
           .onTokenRefresh
           .listen(registerToken);
@@ -52,36 +59,70 @@ final class NotificationDeviceApiDataSource
   }
 
   @override
-  Future<void> registerToken(String token) async {
-    if (_isRegistering || token.trim().isEmpty) return;
-    try {
-      final NetworkService networkService = injector<NetworkService>();
-      if (!await networkService.hasSessionCookies()) return;
-      _isRegistering = true;
-      final NotificationDeviceBody body = NotificationDeviceBody(
-        token: token,
-        deviceType: Platform.isIOS ? 'ios' : 'android',
-        deviceName: Platform.operatingSystemVersion,
-      );
-      await networkService.callApi<Map<String, dynamic>>(
-        NetworkRequest(
-          method: RequestMethod.post,
-          path: ApiConstants.notificationDevices,
-          body: body.toJson(),
-        ),
-        mapper: _mapResponse,
-      );
-    } catch (error, stackTrace) {
-      _logDeviceFailure('register', error, stackTrace);
-    } finally {
-      _isRegistering = false;
+  Future<void> registerToken(String token) {
+    final String normalizedToken = token.trim();
+    if (normalizedToken.isEmpty) return Future<void>.value();
+    final ({String token, int generation}) registration = (
+      token: normalizedToken,
+      generation: AccountSession.generation,
+    );
+    if (registration == _registered) return Future<void>.value();
+    if (registration != _activeRegistration) {
+      _pendingRegistration = registration;
+    }
+    return _registration ??= _drainRegistrations(
+      _registrationEpoch,
+    ).whenComplete(() => _registration = null);
+  }
+
+  Future<void> _drainRegistrations(int epoch) async {
+    while (_pendingRegistration != null && epoch == _registrationEpoch) {
+      final ({String token, int generation}) registration =
+          _pendingRegistration!;
+      _pendingRegistration = null;
+      _activeRegistration = registration;
+      try {
+        final NetworkService networkService = injector<NetworkService>();
+        if (!await networkService.hasSessionCookies() ||
+            registration.generation != AccountSession.generation ||
+            epoch != _registrationEpoch) {
+          continue;
+        }
+        final NotificationDeviceBody body = NotificationDeviceBody(
+          token: registration.token,
+          deviceType: Platform.isIOS ? 'ios' : 'android',
+          deviceName: Platform.operatingSystemVersion,
+        );
+        await networkService.callApi<Map<String, dynamic>>(
+          NetworkRequest(
+            method: RequestMethod.post,
+            path: ApiConstants.notificationDevices,
+            body: body.toJson(),
+          ),
+          mapper: _mapResponse,
+        );
+        if (registration.generation == AccountSession.generation &&
+            epoch == _registrationEpoch) {
+          _registered = registration;
+        }
+      } catch (error, stackTrace) {
+        _logDeviceFailure('register', error, stackTrace);
+      } finally {
+        _activeRegistration = null;
+      }
     }
   }
 
   @override
   Future<void> unregisterCurrentDevice() async {
+    final int generation = AccountSession.generation;
+    _registrationEpoch++;
+    _pendingRegistration = null;
+    _registered = null;
+    await _registration;
     await _tokenRefreshSubscription?.cancel();
     _tokenRefreshSubscription = null;
+    if (generation != AccountSession.generation) return;
 
     try {
       final NetworkService networkService = injector<NetworkService>();

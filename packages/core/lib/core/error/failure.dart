@@ -14,3 +14,7 @@ class ServerFailure extends Failure {
   @override
   List<Object> get props => [message];
 }
+
+class RequestCancelledFailure extends Failure {
+  const RequestCancelledFailure() : super('');
+}

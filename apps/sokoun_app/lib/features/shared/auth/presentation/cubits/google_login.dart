@@ -13,6 +13,7 @@ class GoogleLoginCubit extends AsyncCubit<UserModel> {
     required GoogleLoginBody body,
     required void Function() onSuccess,
   }) async {
+    if (isClosed || isLoading) return;
     UserModel? authenticatedUser;
 
     await executeAsyncWithBaseModel(

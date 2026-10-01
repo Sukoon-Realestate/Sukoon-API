@@ -6,15 +6,33 @@ class OwnerCalendarCubit extends AsyncCubit<OwnerVisitCalendarContent> {
       super(OwnerVisitCalendarContent.initial(initialDate));
 
   DateTime _selectedDate;
-  bool _hasInternetInterceptor = false;
+  Future<void>? _request;
+  int _requestVersion = 0;
+  CancelToken? _cancelToken;
 
-  Future<void> getCalendar({required DateTime date}) async {
-    _selectedDate = DateUtils.dateOnly(date);
-    final bool shouldAttachInternetInterceptor = !_hasInternetInterceptor;
-    _hasInternetInterceptor = true;
+  Future<void> getCalendar({required DateTime date}) {
+    if (isClosed) return Future<void>.value();
+    final DateTime selectedDate = DateUtils.dateOnly(date);
+    if (selectedDate == _selectedDate && _request != null) return _request!;
+    _selectedDate = selectedDate;
+    _cancelToken?.cancel();
+    final CancelToken cancelToken = _cancelToken = CancelToken();
+    final int version = ++_requestVersion;
+    return _request = _load(selectedDate, version, cancelToken).whenComplete(
+      () {
+        if (version == _requestVersion) _request = null;
+      },
+    );
+  }
+
+  Future<void> _load(
+    DateTime selectedDate,
+    int version,
+    CancelToken cancelToken,
+  ) async {
     await executeAsyncWithBaseModel(
+      shouldApplyResult: () => version == _requestVersion,
       operation: () {
-        final DateTime selectedDate = _selectedDate;
         final String formattedDate = OwnerVisitCalendarContent.formatDate(
           selectedDate,
         );
@@ -22,6 +40,7 @@ class OwnerCalendarCubit extends AsyncCubit<OwnerVisitCalendarContent> {
           CrudBaseParmas<OwnerVisitCalendarContent>(
             api: ApiConstants.ownerCalendar,
             httpRequestType: HttpRequestType.get,
+            cancelToken: cancelToken,
             queryParameters: {
               'year': selectedDate.year,
               'month': selectedDate.month,
@@ -41,7 +60,14 @@ class OwnerCalendarCubit extends AsyncCubit<OwnerVisitCalendarContent> {
           ),
         );
       },
-      withInternetInterceptor: shouldAttachInternetInterceptor,
+      withInternetInterceptor: true,
     );
+  }
+
+  @override
+  Future<void> close() {
+    _requestVersion++;
+    _cancelToken?.cancel();
+    return super.close();
   }
 }

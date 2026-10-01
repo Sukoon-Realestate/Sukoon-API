@@ -13,17 +13,17 @@ class BaseRemoteDataSourceImpl implements BaseRemoteDataSource {
   BaseRemoteDataSourceImpl({required this.dioService});
   @override
   Future<List<T>> getData<T extends BaseEntity>(
-      GetBaseEntityParams? param) async {
+    GetBaseEntityParams? param,
+  ) async {
     return (await dioService.callApi<List<T>>(
       NetworkRequest(
-          path: getBaseIdAndNameEntityApi<T>(param),
-          queryParameters: param?.toJson(),
-          method: RequestMethod.get),
+        path: getBaseIdAndNameEntityApi<T>(param),
+        queryParameters: param?.toJson(),
+        method: RequestMethod.get,
+      ),
       mapper: (json) => param?.mapper != null
           ? param!.mapper!<List<T>>(json)
-          : List<T>.from(
-              json.map((x) => baseIdAndNameEntityFromJson<T>(x)),
-            ),
+          : List<T>.from(json.map((x) => baseIdAndNameEntityFromJson<T>(x))),
     )).data;
   }
 
@@ -31,12 +31,15 @@ class BaseRemoteDataSourceImpl implements BaseRemoteDataSource {
   Future<BaseModel<T>> crudCall<T>(CrudBaseParmas<T> param) async {
     final response = await dioService.callApi<T>(
       NetworkRequest(
-          path: param.api,
-          method: param.httpRequestType.requestMethod,
-          body: param.body,
-          isFormData: param.isFromData,
-          queryParameters: param.queryParameters,
-          onSendProgress: param.onSendProgress
+        path: param.api,
+        method: param.httpRequestType.requestMethod,
+        body: param.body,
+        isFormData: param.isFromData,
+        queryParameters: param.queryParameters,
+        onSendProgress: param.onSendProgress,
+        onReceiveProgress: param.onReceiveProgress,
+        cancelToken: param.cancelToken,
+        sendTimeout: param.sendTimeout,
       ),
       mapper: param.mapper,
     );

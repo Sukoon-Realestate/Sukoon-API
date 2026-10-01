@@ -110,6 +110,53 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Widget body = SafeArea(
+      child:
+          StatusBuilder<
+                OwnerRequestDetailsCubit,
+                OwnerVisitRequestDetailsContent
+              >.withShimmer(
+                initialDataForShimmer:
+                    const OwnerVisitRequestDetailsContent.initial(),
+                onRetry: _retryRequestDetails,
+                builder: (request) => OwnerRequestDetailsContent(
+                  request: request,
+                  actions: ValueListenableBuilder<OwnerVisitUpdateStatus?>(
+                    valueListenable: _pendingStatus,
+                    builder: (context, pendingStatus, _) =>
+                        BlocSelector<
+                          OwnerVisitStatusCubit,
+                          AsyncState<bool>,
+                          bool
+                        >(
+                          selector: (state) => state.isLoading,
+                          builder: (context, isUpdating) =>
+                              OwnerRequestDetailsActions(
+                                request: request,
+                                isAccepting:
+                                    isUpdating &&
+                                    pendingStatus ==
+                                        OwnerVisitUpdateStatus.confirmed,
+                                isRejecting:
+                                    isUpdating &&
+                                    pendingStatus ==
+                                        OwnerVisitUpdateStatus.rejected,
+                                onAcceptPressed: () =>
+                                    _acceptRequest(context, request),
+                                onRejectPressed: () =>
+                                    _rejectRequest(context, request),
+                              ),
+                        ),
+                  ),
+                ),
+              )
+              .withPullRefresher(
+                onRefresh: () async {
+                  if (_visitStatusCubit.isLoading) return;
+                  await _retryRequestDetails();
+                },
+              ),
+    );
     return MultiBlocProvider(
       providers: [
         BlocProvider<OwnerRequestDetailsCubit>.value(
@@ -117,54 +164,18 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
         ),
         BlocProvider<OwnerVisitStatusCubit>.value(value: _visitStatusCubit),
       ],
-      child: BlocBuilder<OwnerVisitStatusCubit, AsyncState<bool>>(
-        builder: (context, state) {
-          final bool isUpdating = state.isLoading;
-          return PopScope(
-            canPop: !isUpdating,
-            child: AppScaffold(
-              title: LocaleKeys.ownerRequestDetailsTitle,
-              showBackButton: true,
-              isBackEnabled: !isUpdating,
-              backgroundColor: AppColors.scaffoldBackground,
-              body: SafeArea(
-                child: ValueListenableBuilder<OwnerVisitUpdateStatus?>(
-                  valueListenable: _pendingStatus,
-                  builder: (context, pendingStatus, _) =>
-                      StatusBuilder<
-                            OwnerRequestDetailsCubit,
-                            OwnerVisitRequestDetailsContent
-                          >.withShimmer(
-                            initialDataForShimmer:
-                                const OwnerVisitRequestDetailsContent.initial(),
-                            onRetry: _retryRequestDetails,
-                            builder: (request) => OwnerRequestDetailsContent(
-                              request: request,
-                              isAccepting:
-                                  isUpdating &&
-                                  pendingStatus ==
-                                      OwnerVisitUpdateStatus.confirmed,
-                              isRejecting:
-                                  isUpdating &&
-                                  pendingStatus ==
-                                      OwnerVisitUpdateStatus.rejected,
-                              onAcceptPressed: () =>
-                                  _acceptRequest(context, request),
-                              onRejectPressed: () =>
-                                  _rejectRequest(context, request),
-                            ),
-                          )
-                          .withPullRefresher(
-                            onRefresh: () async {
-                              if (_visitStatusCubit.isLoading) return;
-                              await _retryRequestDetails();
-                            },
-                          ),
-                ),
-              ),
-            ),
-          );
-        },
+      child: BlocSelector<OwnerVisitStatusCubit, AsyncState<bool>, bool>(
+        selector: (state) => state.isLoading,
+        builder: (context, isUpdating) => PopScope(
+          canPop: !isUpdating,
+          child: AppScaffold(
+            title: LocaleKeys.ownerRequestDetailsTitle,
+            showBackButton: true,
+            isBackEnabled: !isUpdating,
+            backgroundColor: AppColors.scaffoldBackground,
+            body: body,
+          ),
+        ),
       ),
     );
   }

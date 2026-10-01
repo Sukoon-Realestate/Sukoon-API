@@ -11,9 +11,9 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 import '../../data/enums/notification_role.dart';
-import '../../data/models/unread_notifications_content.dart';
-import '../cubits/unread_notifications_cubit.dart';
+import '../../../unread_counts/data/models/unread_counts.dart';
 import '../screens/notifications_screen.dart';
+import 'package:sokoun_app/features/shared/unread_counts/presentation/cubits/unread_counts_cubit.dart';
 import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
 
 class NotificationBellButton extends StatefulWidget {
@@ -26,19 +26,16 @@ class NotificationBellButton extends StatefulWidget {
 }
 
 class _NotificationBellButtonState extends State<NotificationBellButton> {
-  late final UnreadNotificationsCubit _cubit;
-  bool _ownsCubit = false;
+  late final UnreadCountsCubit _cubit;
+  late final bool _ownsCubit;
 
   @override
   void initState() {
     super.initState();
-    try {
-      _cubit = context.read<UnreadNotificationsCubit>();
-    } on ProviderNotFoundException {
-      _ownsCubit = true;
-      _cubit = UnreadNotificationsCubit()..watchRefreshRequests();
-      unawaited(_cubit.loadUnreadCount());
-    }
+    final UnreadCountsCubit? sharedCubit = context.read<UnreadCountsCubit?>();
+    _ownsCubit = sharedCubit == null;
+    _cubit = sharedCubit ?? UnreadCountsCubit();
+    if (_ownsCubit) unawaited(_cubit.load());
   }
 
   @override
@@ -56,74 +53,68 @@ class _NotificationBellButtonState extends State<NotificationBellButton> {
       return;
     }
     await Go.to<void>(NotificationsScreen(role: widget.role));
-    if (mounted) unawaited(_cubit.loadUnreadCount());
+    if (mounted) unawaited(_cubit.refresh());
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<UnreadNotificationsCubit>.value(
-      value: _cubit,
-      child:
-          BlocBuilder<
-            UnreadNotificationsCubit,
-            AsyncState<UnreadNotificationsContent>
-          >(
-            builder: (context, state) {
-              final int count = state.data.count;
-              return Semantics(
-                button: true,
-                label: LocaleKeys.notificationsFlowTitle,
-                value: count > 0 ? '$count' : null,
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    InkWell(
-                      onTap: _openNotifications,
-                      customBorder: const CircleBorder(),
-                      child: Container(
-                        width: 36.r,
-                        height: 36.r,
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: AppColors.sokoonBorder),
-                        ),
-                        child: Icon(
-                          Icons.notifications_none_rounded,
-                          color: AppColors.sokoonNavy,
-                          size: 18.r,
-                        ),
-                      ),
-                    ),
-                    if (count > 0)
-                      PositionedDirectional(
-                        top: -5.r,
-                        end: -5.r,
-                        child: Container(
-                          constraints: BoxConstraints(minWidth: 18.r),
-                          height: 18.r,
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.symmetric(horizontal: 4.w),
-                          decoration: BoxDecoration(
-                            color: AppColors.red,
-                            borderRadius: BorderRadius.circular(999.r),
-                            border: Border.all(color: AppColors.white),
-                          ),
-                          child: AppText(
-                            count > 99 ? '99+' : '$count',
-                            style: AppTextStyles.extraBold.copyWith(
-                              color: AppColors.white,
-                              fontSize: 9.sp,
-                            ),
-                            maxLines: 1,
-                          ),
-                        ),
-                      ),
-                  ],
+    return BlocSelector<UnreadCountsCubit, AsyncState<UnreadCounts>, int>(
+      bloc: _cubit,
+      selector: (state) => state.data.notifications.count,
+      builder: (context, count) {
+        return Semantics(
+          button: true,
+          label: LocaleKeys.notificationsFlowTitle,
+          value: count > 0 ? '$count' : null,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              InkWell(
+                onTap: _openNotifications,
+                customBorder: const CircleBorder(),
+                child: Container(
+                  width: 36.r,
+                  height: 36.r,
+                  decoration: BoxDecoration(
+                    color: AppColors.white,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: AppColors.sokoonBorder),
+                  ),
+                  child: Icon(
+                    Icons.notifications_none_rounded,
+                    color: AppColors.sokoonNavy,
+                    size: 18.r,
+                  ),
                 ),
-              );
-            },
+              ),
+              if (count > 0)
+                PositionedDirectional(
+                  top: -5.r,
+                  end: -5.r,
+                  child: Container(
+                    constraints: BoxConstraints(minWidth: 18.r),
+                    height: 18.r,
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.symmetric(horizontal: 4.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.red,
+                      borderRadius: BorderRadius.circular(999.r),
+                      border: Border.all(color: AppColors.white),
+                    ),
+                    child: AppText(
+                      count > 99 ? '99+' : '$count',
+                      style: AppTextStyles.extraBold.copyWith(
+                        color: AppColors.white,
+                        fontSize: 9.sp,
+                      ),
+                      maxLines: 1,
+                    ),
+                  ),
+                ),
+            ],
           ),
+        );
+      },
     );
   }
 }

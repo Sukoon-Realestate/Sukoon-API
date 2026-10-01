@@ -1,3 +1,4 @@
+import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
@@ -12,6 +13,7 @@ class UpdatePropertyCubit extends AsyncCubit<PropertyDetailsModel> {
     required OwnerAddPropertyFormState form,
     required void Function(PropertyDetailsModel property) onSuccess,
   }) async {
+    if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<PropertyDetailsModel>(
@@ -19,6 +21,7 @@ class UpdatePropertyCubit extends AsyncCubit<PropertyDetailsModel> {
           httpRequestType: HttpRequestType.patch,
           body: form.toRequestBody(),
           isFromData: true,
+          sendTimeout: ConstantManager.uploadSendTimeout,
           mapper: (json) => json is Map<String, dynamic>
               ? PropertyDetailsModel.fromJson(json)
               : const PropertyDetailsModel.initial(),

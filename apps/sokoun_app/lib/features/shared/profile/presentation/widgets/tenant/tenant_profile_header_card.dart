@@ -13,8 +13,10 @@ class TenantProfileHeaderCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final WorkspaceCounts? counts = context
-        .select<WorkspaceCountsCubit?, WorkspaceCounts?>(
-          (cubit) => cubit?.state.isSuccess == true ? cubit?.state.data : null,
+        .select<UnreadCountsCubit?, WorkspaceCounts?>(
+          (cubit) => cubit?.state.isSuccess == true
+              ? cubit?.state.data.workspace
+              : null,
         );
     final TenantProfileUserContent user = profile.user;
     final String userName = user.fullName.trim().isEmpty

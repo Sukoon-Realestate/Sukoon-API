@@ -4,7 +4,6 @@ import 'package:melos_core/core/network/api_endpoints.dart';
 
 import '../../data/models/notification_operations_state.dart';
 import '../../data/notification_refresh_bus.dart';
-import '../../data/notifications_data.dart';
 
 class NotificationsCubit extends AsyncCubit<NotificationOperationsState> {
   NotificationsCubit() : super(const NotificationOperationsState.initial());
@@ -13,26 +12,9 @@ class NotificationsCubit extends AsyncCubit<NotificationOperationsState> {
     updateData(data.copyWith(unreadCount: count < 0 ? 0 : count));
   }
 
-  Future<void> loadUnreadCount() async {
-    if (!await NotificationsData.hasAuthenticatedSession()) return;
-    await executeAsyncWithBaseModel(
-      operation: () => baseCrudUseCase.call(
-        CrudBaseParmas<NotificationOperationsState>(
-          api: ApiConstants.unreadNotificationCount,
-          httpRequestType: HttpRequestType.get,
-          cacheKey: 'notifications_unread_count',
-          mapper: (json) =>
-              data.copyWith(unreadCount: _unreadCountFromJson(json)),
-          fromCacheJson: NotificationOperationsState.fromJson,
-          toJson: (state) => state.toJson(),
-        ),
-      ),
-      withInternetInterceptor: true,
-    );
-  }
-
   Future<bool> markAsRead(String notificationId) async {
-    if (notificationId.isEmpty ||
+    if (isClosed ||
+        notificationId.isEmpty ||
         data.pendingNotificationIds.contains(notificationId)) {
       return false;
     }
@@ -78,7 +60,7 @@ class NotificationsCubit extends AsyncCubit<NotificationOperationsState> {
   }
 
   Future<bool> markAllAsRead() async {
-    if (data.isMarkingAll || data.unreadCount == 0) return false;
+    if (isClosed || data.isMarkingAll || data.unreadCount == 0) return false;
 
     final int previousUnreadCount = data.unreadCount;
     updateData(data.copyWith(isMarkingAll: true));
@@ -103,9 +85,4 @@ class NotificationsCubit extends AsyncCubit<NotificationOperationsState> {
     );
     return succeeded;
   }
-}
-
-int _unreadCountFromJson(dynamic json) {
-  if (json is! Map) return 0;
-  return (json['unread_count'] as num?)?.toInt() ?? 0;
 }

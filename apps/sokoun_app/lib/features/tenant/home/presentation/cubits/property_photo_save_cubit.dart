@@ -5,12 +5,16 @@ import 'package:melos_core/core/shared/base_state.dart';
 
 import '../../data/property_photo_gallery_data.dart';
 
-typedef PropertyPhotoSaveState = ({BaseStatus status, String? errorMessage});
+typedef PropertyPhotoSaveState = ({
+  BaseStatus status,
+  String? errorMessage,
+  double? progress,
+});
 
 class PropertyPhotoSaveCubit extends Cubit<PropertyPhotoSaveState> {
   PropertyPhotoSaveCubit({PropertyPhotoGalleryData? galleryData})
     : _galleryData = galleryData ?? PropertyPhotoGalleryData(),
-      super((status: BaseStatus.initial, errorMessage: null));
+      super((status: BaseStatus.initial, errorMessage: null, progress: null));
 
   final PropertyPhotoGalleryData _galleryData;
 
@@ -20,16 +24,25 @@ class PropertyPhotoSaveCubit extends Cubit<PropertyPhotoSaveState> {
 
   Future<void> saveImage(String imageUrl) async {
     if (isClosed || state.status.isLoading) return;
-    emit((status: BaseStatus.loading, errorMessage: null));
+    emit((status: BaseStatus.loading, errorMessage: null, progress: null));
 
     try {
-      final bool saved = await _galleryData.saveImage(imageUrl);
+      final bool saved = await _galleryData.saveImage(
+        imageUrl,
+        onProgress: (progress) => emit((
+          status: BaseStatus.loading,
+          errorMessage: null,
+          progress: progress,
+        )),
+      );
       emit((
+        progress: null,
         status: saved ? BaseStatus.success : BaseStatus.error,
         errorMessage: saved ? null : _permissionDeniedMessage,
       ));
     } on GalException catch (error) {
       emit((
+        progress: null,
         status: BaseStatus.error,
         errorMessage: switch (error.type) {
           GalExceptionType.accessDenied => _permissionDeniedMessage,
@@ -43,6 +56,7 @@ class PropertyPhotoSaveCubit extends Cubit<PropertyPhotoSaveState> {
       ));
     } catch (_) {
       emit((
+        progress: null,
         status: BaseStatus.error,
         errorMessage: LocaleKeys.tenantPropertyPhotoSaveFailed,
       ));

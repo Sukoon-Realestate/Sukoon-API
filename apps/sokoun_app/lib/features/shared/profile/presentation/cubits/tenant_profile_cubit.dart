@@ -5,6 +5,12 @@ class TenantProfileCubit extends AsyncCubit<TenantProfileContent> {
 
   Future<void>? _profileRequest;
 
+  /// The home account request also supplies this profile. Join it if the
+  /// profile tab opens before account initialization has finished.
+  void useAccountRequest(Future<void> request) {
+    _profileRequest = request.whenComplete(() => _profileRequest = null);
+  }
+
   void setProfile(TenantProfileContent profile) {
     ObjectBoxCacheService.save(TenantProfileContent.cacheKey, profile.toJson());
     emit(state.success(data: profile));

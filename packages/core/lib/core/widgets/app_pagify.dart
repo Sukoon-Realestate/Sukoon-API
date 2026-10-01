@@ -158,6 +158,8 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
       try {
         final result = await widget.asyncCall(context, page);
         if (active()) completer.complete(result);
+      } on RequestCancelledException {
+        // Replaced/disposed reads must not trigger Pagify cache fallback.
       } catch (error, stack) {
         if (active()) {
           // Pagify 0.3 replaces non-Dio messages with its own error text.

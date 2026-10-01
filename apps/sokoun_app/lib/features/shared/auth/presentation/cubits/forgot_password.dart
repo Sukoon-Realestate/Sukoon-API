@@ -9,6 +9,7 @@ class ForgotPasswordCubit extends AsyncCubit<Map<String, dynamic>> {
     required String email,
     required void Function() onSuccess,
   }) async {
+    if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       showMsgOnSuccess: true,
       operation: () => baseCrudUseCase.call(

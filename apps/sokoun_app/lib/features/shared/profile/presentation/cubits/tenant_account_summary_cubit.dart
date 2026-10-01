@@ -6,6 +6,7 @@ class TenantAccountSummaryCubit
     : super(const TenantAccountSummaryContent.initial());
 
   Future<void> getSummary() async {
+    if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<TenantAccountSummaryContent>(

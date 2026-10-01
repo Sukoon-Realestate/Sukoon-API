@@ -7,6 +7,7 @@ class ProfileEditCubit extends AsyncCubit<Map<String, dynamic>> {
     required ProfileEditBody body,
     required void Function() onSuccess,
   }) async {
+    if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<Map<String, dynamic>>(

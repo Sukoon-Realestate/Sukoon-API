@@ -1,3 +1,6 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
+import '../cubits/notification_settings_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -13,12 +16,12 @@ class NotificationSettingsContentView extends StatelessWidget {
   const NotificationSettingsContentView({
     super.key,
     required this.settings,
-    required this.updatingKey,
+    this.observeChanges = false,
     required this.onSettingChanged,
   });
 
   final NotificationSettingsContent settings;
-  final String? updatingKey;
+  final bool observeChanges;
   final void Function(NotificationSettingContent setting, bool value)
   onSettingChanged;
 
@@ -28,16 +31,11 @@ class NotificationSettingsContentView extends StatelessWidget {
       padding: EdgeInsets.only(top: 12.h, bottom: 24.h),
       children: [
         for (final NotificationSettingContent setting in settings.items)
-          NotificationSettingsTile(
+          _NotificationSettingRow(
             key: ValueKey(setting.id),
-            setting: setting.copyWith(
-              title: setting.title.isEmpty ? _titleFor(setting.id) : null,
-              description: setting.description.isEmpty
-                  ? _descriptionFor(setting.id)
-                  : null,
-            ),
-            isUpdating: updatingKey == setting.id,
-            onChanged: (value) => onSettingChanged(setting, value),
+            initialSetting: setting,
+            observeChanges: observeChanges,
+            onSettingChanged: onSettingChanged,
           ),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
@@ -71,6 +69,56 @@ class NotificationSettingsContentView extends StatelessWidget {
           ),
         ).paddingOnly(left: 20.w, top: 24.h, right: 20.w),
       ],
+    );
+  }
+}
+
+class _NotificationSettingRow extends StatelessWidget {
+  const _NotificationSettingRow({
+    super.key,
+    required this.initialSetting,
+    required this.observeChanges,
+    required this.onSettingChanged,
+  });
+
+  final NotificationSettingContent initialSetting;
+  final bool observeChanges;
+  final void Function(NotificationSettingContent, bool) onSettingChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!observeChanges) return _tile(initialSetting, false);
+    return BlocSelector<
+      NotificationSettingsCubit,
+      AsyncState<NotificationSettingsContent>,
+      NotificationSettingContent
+    >(
+      selector: (state) => state.data.items.firstWhere(
+        (item) => item.id == initialSetting.id,
+        orElse: () => initialSetting,
+      ),
+      builder: (context, setting) =>
+          BlocSelector<
+            NotificationSettingUpdateCubit,
+            AsyncState<String>,
+            bool
+          >(
+            selector: (state) => state.isLoading && state.data == setting.id,
+            builder: (context, isUpdating) => _tile(setting, isUpdating),
+          ),
+    );
+  }
+
+  Widget _tile(NotificationSettingContent setting, bool isUpdating) {
+    return NotificationSettingsTile(
+      setting: setting.copyWith(
+        title: setting.title.isEmpty ? _titleFor(setting.id) : null,
+        description: setting.description.isEmpty
+            ? _descriptionFor(setting.id)
+            : null,
+      ),
+      isUpdating: isUpdating,
+      onChanged: (value) => onSettingChanged(setting, value),
     );
   }
 

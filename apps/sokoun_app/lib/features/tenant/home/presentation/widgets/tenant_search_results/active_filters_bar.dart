@@ -21,35 +21,38 @@ class ActiveFiltersBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedSize(
-      duration: SokounMotion.duration(context, milliseconds: 240),
-      curve: SokounMotion.curve,
-      alignment: AlignmentDirectional.topStart,
-      child: filters.isEmpty
-          ? const SizedBox(width: double.infinity)
-          : Container(
-              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-              decoration: const BoxDecoration(
-                color: AppColors.white,
-                border: Border(bottom: BorderSide(color: AppColors.grayPale)),
-              ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  spacing: 8.w,
-                  children: [
-                    for (final filter in filters)
-                      ActiveFilterChip(
-                        filter: filter,
-                        onRemove: onFilterRemoved == null
-                            ? null
-                            : () => onFilterRemoved!(filter),
-                      ),
-                    if (filters.isNotEmpty) ClearFiltersChip(onTap: onClearAll),
-                  ],
-                ),
+    final Widget content = filters.isEmpty
+        ? const SizedBox(width: double.infinity)
+        : Container(
+            padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+            decoration: const BoxDecoration(
+              color: AppColors.white,
+              border: Border(bottom: BorderSide(color: AppColors.grayPale)),
+            ),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                spacing: 8.w,
+                children: [
+                  for (final filter in filters)
+                    ActiveFilterChip(
+                      filter: filter,
+                      onRemove: onFilterRemoved == null
+                          ? null
+                          : () => onFilterRemoved!(filter),
+                    ),
+                  if (filters.isNotEmpty) ClearFiltersChip(onTap: onClearAll),
+                ],
               ),
             ),
+          );
+    final Duration duration = SokounMotion.duration(context, milliseconds: 240);
+    if (duration == Duration.zero) return content;
+    return AnimatedSize(
+      duration: duration,
+      curve: SokounMotion.curve,
+      alignment: AlignmentDirectional.topStart,
+      child: content,
     );
   }
 }

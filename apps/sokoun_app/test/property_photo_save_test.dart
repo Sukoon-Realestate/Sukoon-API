@@ -6,6 +6,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -101,6 +102,55 @@ void main() {
       isTrue,
     );
   });
+
+  test('download progress handles known, unknown and empty lengths', () async {
+    final updates = <double?>[];
+    final cachedImage = await MemoryCacheSystem().createFile('photo.png');
+    await cachedImage.writeAsBytes(imageBytes);
+    final data = PropertyPhotoGalleryData(
+      loadImageStream: (_) => Stream.fromIterable([
+        DownloadProgress(imageUrl, null, 10),
+        DownloadProgress(imageUrl, 0, 0),
+        DownloadProgress(imageUrl, 100, 25),
+        DownloadProgress(imageUrl, 100, 150),
+        FileInfo(cachedImage, FileSource.Online, DateTime.now(), imageUrl),
+      ]),
+    );
+    expect(await data.saveImage(imageUrl, onProgress: updates.add), isTrue);
+    expect(updates, [null, null, 0.25, 1.0, null]);
+    expect(
+      galleryCalls.where((call) => call.method == 'putImageBytes'),
+      hasLength(1),
+    );
+  });
+
+  test(
+    'an expired cached image waits for its replacement before saving',
+    () async {
+      final stream = StreamController<FileResponse>();
+      final files = MemoryCacheSystem();
+      final cachedImage = await files.createFile('photo.png');
+      final staleImage = await files.createFile('missing-stale-image');
+      await cachedImage.writeAsBytes(imageBytes);
+      final data = PropertyPhotoGalleryData(
+        loadImageStream: (_) => stream.stream,
+      );
+      final saved = data.saveImage(imageUrl);
+      stream.add(
+        FileInfo(
+          staleImage,
+          FileSource.Cache,
+          DateTime.now().subtract(const Duration(days: 1)),
+          imageUrl,
+        ),
+      );
+      stream.add(
+        FileInfo(cachedImage, FileSource.Online, DateTime.now(), imageUrl),
+      );
+      expect(await saved, isTrue);
+      await stream.close();
+    },
+  );
 
   test('permission denial does not download or write the photo', () async {
     accessGranted = false;
@@ -234,6 +284,16 @@ void main() {
       await tester.pump();
 
       expect(data.savedUrls, [imageUrl]);
+      data.reportProgress?.call(0.5);
+      await tester.pump();
+      expect(
+        tester
+            .widget<CircularProgressIndicator>(
+              find.byType(CircularProgressIndicator),
+            )
+            .value,
+        0.5,
+      );
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
       expect(
         tester.widget<IconButton>(find.byType(IconButton)).onPressed,
@@ -304,10 +364,15 @@ class _PendingGalleryData extends PropertyPhotoGalleryData {
 
   final Future<bool> result;
   final List<String> savedUrls = [];
+  void Function(double?)? reportProgress;
 
   @override
-  Future<bool> saveImage(String imageUrl) {
+  Future<bool> saveImage(
+    String imageUrl, {
+    void Function(double?)? onProgress,
+  }) {
     savedUrls.add(imageUrl);
+    reportProgress = onProgress;
     return result;
   }
 }

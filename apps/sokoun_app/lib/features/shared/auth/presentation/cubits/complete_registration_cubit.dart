@@ -1,3 +1,4 @@
+import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
@@ -20,6 +21,7 @@ class CompleteRegistrationCubit extends AsyncCubit<CompleteRegistrationResult> {
           httpRequestType: HttpRequestType.post,
           body: body.toJson(),
           isFromData: true,
+          sendTimeout: ConstantManager.uploadSendTimeout,
           mapper: (json) => CompleteRegistrationResult.fromJson(
             Map<String, dynamic>.from(json as Map),
           ),

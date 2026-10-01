@@ -22,10 +22,10 @@ import 'package:melos_core/core/network/network_logging_policy.dart';
 import 'package:melos_core/core/widgets/exeption_view.dart';
 import 'package:melos_core/core/shared/route_observer.dart';
 import 'package:multiple_result/multiple_result.dart';
+import 'package:sokoun_app/features/shared/unread_counts/presentation/cubits/unread_counts_cubit.dart';
 import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
 import 'package:sokoun_app/features/main_view/data/models/workspace_counts.dart';
-import 'package:sokoun_app/features/main_view/presentation/cubits/workspace_counts_cubit.dart';
 import 'package:sokoun_app/features/shared/auth/data/models/complete_registration_result.dart';
 import 'package:sokoun_app/features/shared/auth/data/models/kyc_upload_documents_data.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/complete_registration_cubit.dart';
@@ -211,7 +211,7 @@ void main() {
     () async {
       await registerAuthenticatedTestAccount();
       for (final workspace in AppWorkspace.values) {
-        final cubit = WorkspaceCountsCubit(workspace);
+        final cubit = UnreadCountsCubit(workspace: workspace);
         await cubit.load();
         expect(
           repository.lastParams?.api,
@@ -219,7 +219,7 @@ void main() {
               ? ApiConstants.ownerUnreadCounts
               : ApiConstants.tenantUnreadCounts,
         );
-        expect(cubit.data.visits, workspace.isOwner ? 4 : 2);
+        expect(cubit.data.workspace.visits, workspace.isOwner ? 4 : 2);
         await cubit.close();
       }
     },

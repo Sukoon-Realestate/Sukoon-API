@@ -14,6 +14,7 @@ class NotificationDetailCubit extends AsyncCubit<AppNotificationContent> {
     required String notificationId,
     AppNotificationContent? fixture,
   }) async {
+    if (isClosed || isLoading) return;
     if (fixture != null) {
       setSuccess(BaseModel(key: '', msg: '', data: fixture));
       return;

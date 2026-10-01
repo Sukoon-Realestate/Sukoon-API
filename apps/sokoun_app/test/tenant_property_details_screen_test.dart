@@ -96,10 +96,24 @@ void main() {
     expect(repository.hasCacheSerializer, isTrue);
     expect(tester.takeException(), isNull);
 
+    final Widget gallery = tester.widget(
+      find.byType(TenantPropertyHeroGallery),
+    );
+    final Widget details = tester.widget(
+      find.byType(TenantPropertyDetailsContentView),
+    );
     await tester.tap(find.byIcon(Icons.bookmark_border_rounded));
     await tester.pump();
 
     expect(find.byIcon(Icons.bookmark_rounded), findsOneWidget);
+    expect(
+      tester.widget(find.byType(TenantPropertyHeroGallery)),
+      same(gallery),
+    );
+    expect(
+      tester.widget(find.byType(TenantPropertyDetailsContentView)),
+      same(details),
+    );
 
     await tester.tap(find.byIcon(Icons.ios_share_rounded));
     await tester.pumpAndSettle();

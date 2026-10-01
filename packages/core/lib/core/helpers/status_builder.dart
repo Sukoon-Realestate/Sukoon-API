@@ -32,6 +32,10 @@ class StatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
   final Widget? errorWidget;
   final Widget? emptyView;
   final T? initialDataForShimmer;
+
+  /// Use a passive placeholder when [builder] owns request-driven children.
+  final Widget Function(T data)? shimmerBuilder;
+  final BlocBuilderCondition<AsyncState<T>>? buildWhen;
   final Future<void> Function() onRetry;
 
   const StatusBuilder({
@@ -41,7 +45,9 @@ class StatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
     this.errorType = ErrorType.defaultView,
     this.errorWidget,
     this.emptyView,
+    this.buildWhen,
   }) : loadingType = LoadingType.loadingIndicator,
+       shimmerBuilder = null,
        initialDataForShimmer = null;
 
   const StatusBuilder.withShimmer({
@@ -50,8 +56,10 @@ class StatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
     required this.onRetry,
     this.errorType = ErrorType.defaultView,
     required this.initialDataForShimmer,
+    this.shimmerBuilder,
     this.errorWidget,
     this.emptyView,
+    this.buildWhen,
   }) : loadingType = LoadingType.shimmer;
 
   bool _isEmpty(T data) {
@@ -72,7 +80,9 @@ class StatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
       if (shimmerData == null) {
         return const SizedBox.shrink();
       }
-      return CustomShimmer(child: builder.call(shimmerData));
+      return CustomShimmer(
+        child: (shimmerBuilder ?? builder).call(shimmerData),
+      );
     } else if (loadingType.isLoadingIndicator) {
       return SizedBox.square(
         dimension: 50.sp,
@@ -114,6 +124,7 @@ class StatusBuilder<C extends AsyncCubit<T>, T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<C, AsyncState<T>>(
+      buildWhen: buildWhen,
       builder: (context, state) => state.status.when(
         onLoading: () => _loadingView,
         onSuccess: () => _successView(state.data),

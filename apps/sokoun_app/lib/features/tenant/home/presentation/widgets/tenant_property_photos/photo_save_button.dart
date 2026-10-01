@@ -17,6 +17,7 @@ class TenantPropertyPhotoSaveButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<PropertyPhotoSaveCubit, PropertyPhotoSaveState>(
+      listenWhen: (previous, current) => previous.status != current.status,
       listener: (context, state) {
         if (state.status.isSuccess) {
           Messages.showToast(
@@ -55,7 +56,8 @@ class TenantPropertyPhotoSaveButton extends StatelessWidget {
             icon: isSaving
                 ? SizedBox.square(
                     dimension: 18.r,
-                    child: const CircularProgressIndicator(
+                    child: CircularProgressIndicator(
+                      value: state.progress,
                       strokeWidth: 2,
                       color: AppColors.white,
                     ),

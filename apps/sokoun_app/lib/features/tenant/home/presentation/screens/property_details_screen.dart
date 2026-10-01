@@ -108,24 +108,33 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   Widget _buildDetails(PropertyDetailsModel data) {
     final TenantPropertyDetailsContent property =
         TenantPropertyDetailsContent.fromModel(data);
-    return BlocBuilder<
-      CreateConversationCubit,
-      AsyncState<ConversationContent>
-    >(
-      builder: (context, conversationState) =>
-          ValueListenableBuilder<({bool? savedOverride, bool isUpdating})>(
-            valueListenable: _savedState,
-            builder: (context, savedState, _) => TenantPropertyDetailsBody(
-              property: property,
-              isSaved: savedState.savedOverride ?? property.isSaved,
-              onSavedPressed: () => _toggleSaved(property),
-              isOpeningChat: conversationState.isLoading,
-              onChatPressed:
-                  property.ownerId.isEmpty ||
-                      property.ownerId == UserModel.currentUser?.id
-                  ? null
-                  : () => _openChat(property),
-            ),
+    return TenantPropertyDetailsBody.withActions(
+      property: property,
+      bottomActions:
+          BlocSelector<
+            CreateConversationCubit,
+            AsyncState<ConversationContent>,
+            bool
+          >(
+            selector: (state) => state.isLoading,
+            builder: (context, isOpeningChat) =>
+                ValueListenableBuilder<
+                  ({bool? savedOverride, bool isUpdating})
+                >(
+                  valueListenable: _savedState,
+                  builder: (context, savedState, _) =>
+                      TenantPropertyBottomActions(
+                        property: property,
+                        isSaved: savedState.savedOverride ?? property.isSaved,
+                        onSavedPressed: () => _toggleSaved(property),
+                        isOpeningChat: isOpeningChat,
+                        onChatPressed:
+                            property.ownerId.isEmpty ||
+                                property.ownerId == UserModel.currentUser?.id
+                            ? null
+                            : () => _openChat(property),
+                      ),
+                ),
           ),
     );
   }

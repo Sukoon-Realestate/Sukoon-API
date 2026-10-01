@@ -29,7 +29,6 @@ class OwnerVisitRequestsScreen extends StatefulWidget {
 }
 
 class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
-  // Filter and request mutations recompose the header, actions, and list.
   static List<OwnerVisitRequestContent> get _shimmerRequests => [
     OwnerVisitRequestContent(
       id: 'shimmer-request-1',
@@ -79,8 +78,9 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
   late final OwnerVisitStatusCubit _visitStatusCubit;
   late List<OwnerVisitRequestContent> _fixtureRequests;
   OwnerVisitRequestFilter _selectedFilter = OwnerVisitRequestFilter.all;
-  String? _updatingRequestId;
-  OwnerVisitUpdateStatus? _pendingStatus;
+  final ValueNotifier<({String? requestId, OwnerVisitUpdateStatus? status})>
+  _progress = ValueNotifier((requestId: null, status: null));
+  String? get _updatingRequestId => _progress.value.requestId;
 
   List<OwnerVisitRequestContent> _visibleRequests(
     List<OwnerVisitRequestContent> requests,
@@ -109,6 +109,7 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
   void dispose() {
     _receivedVisitsCubit?.close();
     _visitStatusCubit.close();
+    _progress.dispose();
     super.dispose();
   }
 
@@ -175,10 +176,7 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
     required OwnerRequestResolution resolution,
   }) async {
     if (_updatingRequestId != null || _visitStatusCubit.isLoading) return;
-    setState(() {
-      _updatingRequestId = request.id;
-      _pendingStatus = status;
-    });
+    _progress.value = (requestId: request.id, status: status);
 
     bool succeeded = false;
     void onSuccess() => succeeded = true;
@@ -195,10 +193,7 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
     }
 
     if (!mounted) return;
-    setState(() {
-      _updatingRequestId = null;
-      _pendingStatus = null;
-    });
+    _progress.value = (requestId: null, status: null);
     if (succeeded) {
       _resolveRequest(request: request, resolution: resolution);
     }
@@ -241,68 +236,67 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
   @override
   Widget build(BuildContext context) {
     final ReceivedVisitsCubit? cubit = _receivedVisitsCubit;
-    if (cubit == null) {
-      return _buildScreen(_fixtureRequests);
-    }
-    return BlocProvider.value(
-      value: cubit,
-      child:
-          StatusBuilder<
-                ReceivedVisitsCubit,
-                List<OwnerVisitRequestContent>
-              >.withShimmer(
-                initialDataForShimmer: _shimmerRequests,
-                onRetry: _retryRequests,
-                emptyView: _buildScreen(const []),
-                builder: _buildScreen,
-              )
-              .withPullRefresher(
-                onRefresh: () async {
-                  if (_updatingRequestId != null) return;
-                  await _retryRequests();
-                },
-              ),
-    );
-  }
-
-  Widget _buildScreen(List<OwnerVisitRequestContent> requests) {
-    final List<OwnerVisitRequestContent> visibleRequests = _visibleRequests(
-      requests,
-    );
-
+    final Widget body = cubit == null
+        ? _buildContent(_fixtureRequests)
+        : BlocProvider.value(
+            value: cubit,
+            child:
+                StatusBuilder<
+                      ReceivedVisitsCubit,
+                      List<OwnerVisitRequestContent>
+                    >.withShimmer(
+                      initialDataForShimmer: _shimmerRequests,
+                      onRetry: _retryRequests,
+                      emptyView: _buildContent(const []),
+                      builder: _buildContent,
+                    )
+                    .withPullRefresher(
+                      onRefresh: () async {
+                        if (_updatingRequestId != null) return;
+                        await _retryRequests();
+                      },
+                    ),
+          );
     return AppScaffold(
       title: LocaleKeys.ownerVisitsTitle,
       showBackButton: widget.showBackButton,
       actions: [
         IconButton(
           tooltip: LocaleKeys.ownerCalendarTitle,
-          onPressed: () => Go.to(
-            OwnerRequestsCalendarScreen(
-              ownerPropertyId:
-                  requests
-                      .where((request) => request.propertyId.trim().isNotEmpty)
-                      .firstOrNull
-                      ?.propertyId ??
-                  '',
-            ),
-          ),
+          onPressed: () {
+            final List<OwnerVisitRequestContent> requests =
+                cubit?.data ?? _fixtureRequests;
+            Go.to(
+              OwnerRequestsCalendarScreen(
+                ownerPropertyId:
+                    requests
+                        .where(
+                          (request) => request.propertyId.trim().isNotEmpty,
+                        )
+                        .firstOrNull
+                        ?.propertyId ??
+                    '',
+              ),
+            );
+          },
           icon: const Icon(Icons.calendar_month_outlined),
         ),
       ],
       backgroundColor: AppColors.scaffoldBackground,
-      body: SafeArea(
-        child: OwnerVisitRequestsContent(
-          requests: requests,
-          visibleRequests: visibleRequests,
-          selectedFilter: _selectedFilter,
-          onFilterSelected: _selectFilter,
-          onRequestPressed: _openDetails,
-          onAcceptPressed: _acceptRequest,
-          onRejectPressed: _rejectRequest,
-          updatingRequestId: _updatingRequestId,
-          pendingStatus: _pendingStatus,
-        ),
-      ),
+      body: SafeArea(child: body),
+    );
+  }
+
+  Widget _buildContent(List<OwnerVisitRequestContent> requests) {
+    return OwnerVisitRequestsContent(
+      requests: requests,
+      visibleRequests: _visibleRequests(requests),
+      selectedFilter: _selectedFilter,
+      onFilterSelected: _selectFilter,
+      onRequestPressed: _openDetails,
+      onAcceptPressed: _acceptRequest,
+      onRejectPressed: _rejectRequest,
+      progress: _progress,
     );
   }
 }

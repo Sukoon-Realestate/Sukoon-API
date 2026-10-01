@@ -5,8 +5,7 @@ part of '../base_domain_imports.dart';
 class BaseCrudUseCase {
   final BaseRepository repository;
   BaseCrudUseCase({required this.repository});
-  Future<Result<BaseModel<T>, Failure>> call<T>(
-      CrudBaseParmas<T> param) async {
+  Future<Result<BaseModel<T>, Failure>> call<T>(CrudBaseParmas<T> param) async {
     return await repository.crudCall<T>(param);
   }
 }
@@ -24,7 +23,7 @@ enum HttpRequestType {
   const HttpRequestType({required this.requestMethod});
 }
 
-class CrudBaseParmas<T>  {
+class CrudBaseParmas<T> {
   final String api;
   final String? cacheKey;
   final HttpRequestType httpRequestType;
@@ -34,6 +33,9 @@ class CrudBaseParmas<T>  {
   final T Function(Map<String, dynamic> json)? fromCacheJson;
   final bool isFromData;
   final void Function(int, int)? onSendProgress;
+  final void Function(int, int)? onReceiveProgress;
+  final CancelToken? cancelToken;
+  final Duration? sendTimeout;
   final Map<String, dynamic> Function(T)? toJson;
   CrudBaseParmas({
     required this.api,
@@ -42,6 +44,9 @@ class CrudBaseParmas<T>  {
     this.body,
     this.queryParameters,
     this.onSendProgress,
+    this.onReceiveProgress,
+    this.cancelToken,
+    this.sendTimeout,
     this.isFromData = false,
     this.mapper,
     this.fromCacheJson,
@@ -54,12 +59,23 @@ class CrudBaseParmas<T>  {
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
     T Function(dynamic)? mapper,
+    T Function(Map<String, dynamic>)? fromCacheJson,
+    void Function(int, int)? onSendProgress,
+    void Function(int, int)? onReceiveProgress,
+    CancelToken? cancelToken,
+    Duration? sendTimeout,
     bool? isFromData,
     String? cacheKey,
     Map<String, dynamic> Function(T)? toJson,
   }) {
     return CrudBaseParmas<T>(
       api: api ?? this.api,
+      cacheKey: cacheKey ?? this.cacheKey,
+      fromCacheJson: fromCacheJson ?? this.fromCacheJson,
+      onSendProgress: onSendProgress ?? this.onSendProgress,
+      onReceiveProgress: onReceiveProgress ?? this.onReceiveProgress,
+      cancelToken: cancelToken ?? this.cancelToken,
+      sendTimeout: sendTimeout ?? this.sendTimeout,
       httpRequestType: httpRequestType ?? this.httpRequestType,
       body: body ?? this.body,
       queryParameters: queryParameters ?? this.queryParameters,

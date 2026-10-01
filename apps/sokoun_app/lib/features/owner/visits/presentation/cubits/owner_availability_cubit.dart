@@ -9,6 +9,7 @@ class OwnerAvailabilityCubit
     required String ownerPropertyId,
     required OwnerAvailabilitySaveBody body,
   }) async {
+    if (isClosed || isLoading) return false;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<OwnerAvailabilityScheduleContent>(

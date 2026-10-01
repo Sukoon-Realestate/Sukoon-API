@@ -66,12 +66,14 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
     Function(String msg)? onError,
     bool withInternetInterceptor = false,
     bool showMsgOnSuccess = false,
+    bool Function()? shouldApplyResult,
   }) async {
     await _basicOperation(
       operation: operation,
       successEmitter: onSuccess,
       onError: onError,
       showMsgOnSuccess: showMsgOnSuccess,
+      shouldApplyResult: shouldApplyResult,
     );
     // if (withInternetInterceptor) {
     //   await _basicOperationWithInternetInterceptor(
@@ -181,11 +183,17 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
     required Function(BaseModel<T>)? successEmitter,
     required Function(String msg)? onError,
     bool showMsgOnSuccess = false,
+    bool Function()? shouldApplyResult,
   }) async {
+    if (isClosed) return;
     setLoading();
     final int generation = AccountSession.generation;
     final result = await operation();
-    if (isClosed || generation != AccountSession.generation) return;
+    if (isClosed ||
+        generation != AccountSession.generation ||
+        !(shouldApplyResult?.call() ?? true)) {
+      return;
+    }
     result.when(
       (success) {
         if (showMsgOnSuccess && success.msg.isNotEmpty) {
@@ -195,6 +203,7 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
         successEmitter?.call(success);
       },
       (failure) {
+        if (failure is RequestCancelledFailure) return;
         Messages.showToast(msg: failure.message, status: BaseStatus.error);
         setError(errorMessage: failure.message);
         onError?.call(failure.message);

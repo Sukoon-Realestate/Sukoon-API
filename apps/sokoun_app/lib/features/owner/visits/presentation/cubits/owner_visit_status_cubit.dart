@@ -8,6 +8,7 @@ class OwnerVisitStatusCubit extends AsyncCubit<bool> {
     required void Function() onSuccess,
     void Function(String message)? onError,
   }) async {
+    if (isClosed || isLoading) return;
     await _updateVisitRequest(
       api: ApiConstants.acceptOwnerVisitRequest(requestId),
       onSuccess: onSuccess,
@@ -20,6 +21,7 @@ class OwnerVisitStatusCubit extends AsyncCubit<bool> {
     required void Function() onSuccess,
     void Function(String message)? onError,
   }) async {
+    if (isClosed || isLoading) return;
     await _updateVisitRequest(
       api: ApiConstants.rejectOwnerVisitRequest(requestId),
       onSuccess: onSuccess,
@@ -32,6 +34,7 @@ class OwnerVisitStatusCubit extends AsyncCubit<bool> {
     required void Function() onSuccess,
     void Function(String message)? onError,
   }) async {
+    if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<bool>(

@@ -13,7 +13,7 @@ class CreateConversationCubit extends AsyncCubit<ConversationContent> {
     required String userId,
     required void Function(ConversationContent conversation) onSuccess,
   }) async {
-    if (isLoading || userId.trim().isEmpty) return;
+    if (isClosed || isLoading || userId.trim().isEmpty) return;
     if (userId == UserModel.currentUser?.id) {
       setError(errorMessage: LocaleKeys.workspaceSelfActionBlocked);
       return;
