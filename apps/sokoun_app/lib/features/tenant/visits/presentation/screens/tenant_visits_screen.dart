@@ -1,9 +1,14 @@
 part of '../../imports.dart';
 
 class TenantVisitsScreen extends StatefulWidget {
-  const TenantVisitsScreen({super.key, this.initialVisits});
+  const TenantVisitsScreen({
+    super.key,
+    this.initialVisits,
+    this.useRequestEndpoint = true,
+  });
 
   final List<TenantVisitContent>? initialVisits;
+  final bool useRequestEndpoint;
 
   @override
   State<TenantVisitsScreen> createState() => _TenantVisitsScreenState();
@@ -13,11 +18,13 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
   // Filter and fixture mutations replace the filters and visit list together.
   PagifyController<TenantVisitContent>? _pagifyController;
   late final List<TenantVisitContent>? _fixtureVisits;
+  late final VisitCancelCubit _cancelCubit;
   TenantVisitFilter _selectedFilter = TenantVisitFilter.all;
 
   @override
   void initState() {
     super.initState();
+    _cancelCubit = VisitCancelCubit();
     final List<TenantVisitContent>? initialVisits = widget.initialVisits;
     _fixtureVisits = initialVisits == null
         ? null
@@ -25,6 +32,12 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
     if (_fixtureVisits == null) {
       _pagifyController = PagifyController<TenantVisitContent>();
     }
+  }
+
+  @override
+  void dispose() {
+    _cancelCubit.close();
+    super.dispose();
   }
 
   void _selectFilter(TenantVisitFilter filter) {
@@ -42,6 +55,11 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
   Future<void> _openDetails(TenantVisitContent visit) async {
     final bool? canceled = await Go.to<bool>(VisitDetailsScreen(visit: visit));
     if (canceled == true && mounted) _removeVisit(visit);
+  }
+
+  Future<void> _cancelVisit(TenantVisitContent visit) async {
+    if (!visit.canCancel) return;
+    if (await _cancelCubit.cancel(visit.id) && mounted) _removeVisit(visit);
   }
 
   void _removeVisit(TenantVisitContent visit) {
@@ -64,12 +82,16 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
       backgroundColor: AppColors.transparent,
       barrierColor: AppColors.blackAlpha50,
       builder: (context) {
-        return VisitRatingSheet(propertyTitle: visit.propertyTitle);
+        return VisitRatingSheet(
+          visitId: visit.id,
+          propertyTitle: visit.propertyTitle,
+        );
       },
     );
 
     if (submitted == true && mounted) {
       _showMessage(LocaleKeys.tenantVisitRatingSubmitted);
+      await _pagifyController?.refresh();
     }
   }
 
@@ -89,13 +111,14 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         child: TenantVisitsScreenContent(
+          useRequestEndpoint: widget.useRequestEndpoint,
           selectedFilter: _selectedFilter,
           initialVisits: _fixtureVisits,
           pagifyController: _pagifyController,
           onFilterSelected: _selectFilter,
           onVisitPressed: _openDetails,
           onRatePressed: _showRating,
-          onCancelPressed: _removeVisit,
+          onCancelPressed: _cancelVisit,
         ),
       ),
     );

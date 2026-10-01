@@ -1,46 +1,38 @@
 part of '../../../imports.dart';
 
-class ProfileLogoutButton extends StatelessWidget {
+class ProfileLogoutButton extends StatefulWidget {
   const ProfileLogoutButton({super.key});
+  @override
+  State<ProfileLogoutButton> createState() => _ProfileLogoutButtonState();
+}
 
-  Future<void> _logout() async {
-    await NotificationDeviceData.unregisterCurrentDevice();
-    await UserCubit.instance.logout();
+class _ProfileLogoutButtonState extends State<ProfileLogoutButton> {
+  late final ProfileLogoutCubit _cubit;
+  @override
+  void initState() {
+    super.initState();
+    _cubit = ProfileLogoutCubit();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      label: LocaleKeys.profileLogout,
-      child: InkWell(
-        onTap: _logout,
-        borderRadius: BorderRadius.circular(16.r),
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(vertical: 15.h),
-          decoration: BoxDecoration(
-            color: AppColors.redPale,
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.red.withValues(alpha: .18)),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 8.w,
-            children: [
-              Icon(Icons.logout_rounded, color: AppColors.red, size: 18.r),
-              AppText(
-                LocaleKeys.profileLogout,
-                style: AppTextStyles.bold14.copyWith(
-                  color: AppColors.red,
-                  fontSize: 14.sp,
-                  height: 1.45,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  void dispose() {
+    _cubit.close();
+    super.dispose();
   }
+
+  Future<void> _logout(BuildContext context) async {
+    if (_cubit.isLoading) return;
+    await NotificationDeviceData.unregisterCurrentDevice();
+    if (await _cubit.logout()) await UserCubit.instance.logout();
+  }
+
+  @override
+  Widget build(BuildContext context) => AppLoadingButton(
+    asyncCall: _logout,
+    title: LocaleKeys.profileLogout,
+    buttonColor: AppColors.redPale,
+    textColor: AppColors.red,
+    icon: Icon(Icons.logout_rounded, color: AppColors.red, size: 18.r),
+    borderRadius: 16.r,
+  );
 }

@@ -1,3 +1,6 @@
+import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:melos_core/core/widgets/app_text.dart';
+import '../../screens/owner_visit_requests_screen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -24,7 +27,21 @@ class OwnerPendingRequestsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: 10.h,
       children: [
-        HomeSectionHeader(title: LocaleKeys.ownerDashboardPendingTitle),
+        Row(
+          children: [
+            Expanded(
+              child: HomeSectionHeader(
+                title: LocaleKeys.ownerDashboardPendingTitle,
+              ),
+            ),
+            TextButton(
+              onPressed: () => Go.to(
+                const OwnerVisitRequestsScreen(useRequestEndpoint: false),
+              ),
+              child: AppText(LocaleKeys.ownerVisitsTitle),
+            ),
+          ],
+        ),
         if (pendingVisits.isEmpty)
           const OwnerPendingRequestsEmptyState()
         else

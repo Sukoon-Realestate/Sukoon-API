@@ -6,24 +6,33 @@ class VisitStatusHeader extends StatelessWidget {
   final TenantVisitContent visit;
 
   Color get _foregroundColor {
-    if (visit.status.isAccepted) return AppColors.green;
+    if (visit.status.isAccepted || visit.status.isCompleted) {
+      return AppColors.green;
+    }
     if (visit.status.isPending) return AppColors.amber;
     return AppColors.red;
   }
 
   Color get _backgroundColor {
-    if (visit.status.isAccepted) return AppColors.greenPale;
+    if (visit.status.isAccepted || visit.status.isCompleted) {
+      return AppColors.greenPale;
+    }
     if (visit.status.isPending) return AppColors.amberPale;
     return AppColors.redPale;
   }
 
   IconData get _icon {
-    if (visit.status.isAccepted) return Icons.check_circle_outline_rounded;
+    if (visit.status.isAccepted || visit.status.isCompleted) {
+      return Icons.check_circle_outline_rounded;
+    }
     if (visit.status.isPending) return Icons.schedule_rounded;
     return Icons.cancel_outlined;
   }
 
   String get _title {
+    if (visit.status.isCompleted || visit.status.isCanceled) {
+      return visit.status.label;
+    }
     if (visit.status.isAccepted) {
       return LocaleKeys.tenantVisitConfirmedHeading;
     }

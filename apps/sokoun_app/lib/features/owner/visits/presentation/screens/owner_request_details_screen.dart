@@ -1,9 +1,14 @@
 part of '../../imports.dart';
 
 class OwnerRequestDetailsScreen extends StatefulWidget {
-  const OwnerRequestDetailsScreen({super.key, required this.requestId});
+  const OwnerRequestDetailsScreen({
+    super.key,
+    required this.requestId,
+    this.useVisitEndpoint = false,
+  });
 
   final String requestId;
+  final bool useVisitEndpoint;
 
   @override
   State<OwnerRequestDetailsScreen> createState() =>
@@ -19,7 +24,9 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
   @override
   void initState() {
     super.initState();
-    _requestDetailsCubit = OwnerRequestDetailsCubit();
+    _requestDetailsCubit = OwnerRequestDetailsCubit(
+      useVisitEndpoint: widget.useVisitEndpoint,
+    );
     _visitStatusCubit = OwnerVisitStatusCubit();
     _requestDetailsCubit.getRequestDetails(widget.requestId);
   }

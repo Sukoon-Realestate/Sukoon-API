@@ -52,10 +52,10 @@ class OwnerVisitRequestCard extends StatelessWidget {
                     ? request.dateLabel
                     : request.time,
               ),
-              if (request.status.canDecide)
+              if (request.canAccept || request.canReject)
                 OwnerVisitRequestActionRow(
-                  onAcceptPressed: onAcceptPressed,
-                  onRejectPressed: onRejectPressed,
+                  onAcceptPressed: request.canAccept ? onAcceptPressed : null,
+                  onRejectPressed: request.canReject ? onRejectPressed : null,
                   isAccepting: isAccepting,
                   isRejecting: isRejecting,
                 ),

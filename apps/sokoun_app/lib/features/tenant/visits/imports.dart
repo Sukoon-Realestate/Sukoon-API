@@ -1,3 +1,6 @@
+import 'package:melos_core/core/helpers/status_builder.dart';
+import 'package:sokoun_app/features/shared/reviews/data/models/property_review.dart';
+import 'package:sokoun_app/features/shared/reviews/presentation/widgets/property_review_card.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
@@ -64,3 +67,19 @@ part 'presentation/widgets/tenant_visits/tenant_visits_empty_state.dart';
 part 'presentation/widgets/tenant_visits/tenant_visits_filters.dart';
 part 'presentation/widgets/tenant_visits/tenant_visits_list.dart';
 part 'presentation/widgets/tenant_visits/visit_filter_chip.dart';
+
+part 'data/models/visit_actions.dart';
+
+part 'data/models/tenant_visit_details_content.dart';
+
+part 'data/models/visit_review_body.dart';
+
+part 'presentation/cubits/visit_details_cubit.dart';
+
+part 'presentation/cubits/visit_cancel_cubit.dart';
+
+part 'presentation/cubits/visit_review_cubit.dart';
+
+part 'presentation/widgets/details/visit_details_extra.dart';
+
+part 'presentation/widgets/details/visit_note_card.dart';

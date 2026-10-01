@@ -11,6 +11,7 @@ class TenantVisitContent extends Equatable {
     this.ownerName = '',
     this.ownerPhone = '',
     this.ownerId = '',
+    this.actions,
   });
 
   const TenantVisitContent.initial()
@@ -22,10 +23,13 @@ class TenantVisitContent extends Equatable {
       statusText = '',
       ownerName = '',
       ownerPhone = '',
-      ownerId = '';
+      ownerId = '',
+      actions = null;
 
   factory TenantVisitContent.fromJson(Map<String, dynamic> json) {
-    final String statusText = json['status'] as String? ?? '';
+    final String statusText =
+        (json['status_label'] ?? json['status'])?.toString() ?? '';
+    final Map<String, dynamic> property = _visitMap(json['property']);
     final Object? ownerValue = json['owner'];
     final Map<String, dynamic> owner = ownerValue is Map
         ? Map<String, dynamic>.from(ownerValue)
@@ -33,14 +37,24 @@ class TenantVisitContent extends Equatable {
     return TenantVisitContent(
       id: json['id'] as String? ?? '',
       propertyTitle:
-          json['title'] as String? ?? json['property_title'] as String? ?? '',
+          property['title']?.toString() ??
+          json['title'] as String? ??
+          json['property_title'] as String? ??
+          '',
       day:
+          json['day_label'] as String? ??
           json['day'] as String? ??
           json['detail_date'] as String? ??
           json['date_label'] as String? ??
+          json['visit_date'] as String? ??
           '',
-      time: json['time'] as String? ?? '',
-      status: TenantVisitStatusX.fromApiValue(statusText),
+      time:
+          (json['time_label'] ?? json['visit_time'] ?? json['time'])
+              ?.toString() ??
+          '',
+      status: TenantVisitStatusX.fromApiValue(
+        json['status']?.toString() ?? statusText,
+      ),
       statusText: statusText,
       ownerName:
           json['owner_name']?.toString() ??
@@ -48,8 +62,14 @@ class TenantVisitContent extends Equatable {
           owner['name']?.toString() ??
           '',
       ownerPhone:
-          json['owner_phone']?.toString() ?? owner['phone']?.toString() ?? '',
+          json['owner_phone']?.toString() ??
+          owner['phone_number']?.toString() ??
+          owner['phone']?.toString() ??
+          '',
       ownerId: json['owner_id']?.toString() ?? owner['id']?.toString() ?? '',
+      actions: json['actions'] is Map
+          ? VisitActions.fromJson(_visitMap(json['actions']))
+          : null,
     );
   }
 
@@ -62,6 +82,16 @@ class TenantVisitContent extends Equatable {
   final String ownerName;
   final String ownerPhone;
   final String ownerId;
+  final VisitActions? actions;
+
+  bool get canCancel =>
+      actions?.canCancel ?? (status.isPending || status.isAccepted);
+  bool get canChat =>
+      (actions?.canChat ?? status.isAccepted) && ownerId.isNotEmpty;
+  bool get canReview =>
+      actions?.canReview ?? (status.isAccepted || status.isCompleted);
+  bool get canFindAlternative =>
+      actions?.canFindAlternative ?? status.isRejected;
 
   String get dateLabel =>
       [day, time].where((value) => value.trim().isNotEmpty).join(' · ');
@@ -76,7 +106,9 @@ class TenantVisitContent extends Equatable {
     'title': propertyTitle,
     'day': day,
     'time': time,
-    'status': statusText.isEmpty ? status.name : statusText,
+    'status': status.name,
+    'status_label': statusText,
+    if (actions != null) 'actions': actions!.toJson(),
     'owner_name': ownerName,
     'owner_phone': ownerPhone,
     'owner_id': ownerId,
@@ -92,6 +124,7 @@ class TenantVisitContent extends Equatable {
     String? ownerName,
     String? ownerPhone,
     String? ownerId,
+    VisitActions? actions,
   }) {
     return TenantVisitContent(
       id: id ?? this.id,
@@ -103,6 +136,7 @@ class TenantVisitContent extends Equatable {
       ownerName: ownerName ?? this.ownerName,
       ownerPhone: ownerPhone ?? this.ownerPhone,
       ownerId: ownerId ?? this.ownerId,
+      actions: actions ?? this.actions,
     );
   }
 
@@ -117,5 +151,6 @@ class TenantVisitContent extends Equatable {
     ownerName,
     ownerPhone,
     ownerId,
+    actions,
   ];
 }

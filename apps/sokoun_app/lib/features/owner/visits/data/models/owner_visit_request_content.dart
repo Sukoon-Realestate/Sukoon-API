@@ -16,6 +16,7 @@ class OwnerVisitRequestContent extends Equatable {
     required this.isVerified,
     this.propertyId = '',
     this.tenantId = '',
+    this.actions,
   });
 
   factory OwnerVisitRequestContent.initial() => const OwnerVisitRequestContent(
@@ -68,18 +69,24 @@ class OwnerVisitRequestContent extends Equatable {
           (propertyValue is String ? propertyValue : '') ??
           '',
       dateLabel:
+          json['schedule_label'] ??
           json['date_label'] ??
           [visitDate, visitTime].where((value) => value.isNotEmpty).join(' · '),
       detailDate: visitDate,
       time: visitTime,
       memberSince: json['member_since'] ?? tenant['member_since'] ?? '',
       tenantNote: json['tenant_note'] ?? json['note'] ?? '',
-      phone: json['phone'] ?? tenant['phone'] ?? '',
+      phone: json['phone'] ?? tenant['phone_number'] ?? tenant['phone'] ?? '',
       status: OwnerVisitRequestStatusExtension.fromName(json['status']),
       isVerified: json['is_verified'] ?? tenant['is_verified'] ?? false,
       propertyId:
           property['id'] as String? ?? json['property_id'] as String? ?? '',
       tenantId: tenant['id']?.toString() ?? json['tenant_id']?.toString() ?? '',
+      actions: json['actions'] is Map
+          ? OwnerVisitRequestActionsContent.fromJson(
+              _ownerVisitJsonMap(json['actions']),
+            )
+          : null,
     );
   }
 
@@ -107,6 +114,9 @@ class OwnerVisitRequestContent extends Equatable {
   final bool isVerified;
   final String propertyId;
   final String tenantId;
+  final OwnerVisitRequestActionsContent? actions;
+  bool get canAccept => status.canDecide && (actions?.canAccept ?? true);
+  bool get canReject => status.canDecide && (actions?.canReject ?? true);
 
   Map<String, dynamic> toJson() {
     return {
@@ -124,6 +134,7 @@ class OwnerVisitRequestContent extends Equatable {
       'is_verified': isVerified,
       'property_id': propertyId,
       'tenant_id': tenantId,
+      if (actions != null) 'actions': actions!.toJson(),
     };
   }
 
@@ -142,6 +153,7 @@ class OwnerVisitRequestContent extends Equatable {
     bool? isVerified,
     String? propertyId,
     String? tenantId,
+    OwnerVisitRequestActionsContent? actions,
   }) {
     return OwnerVisitRequestContent(
       id: id ?? this.id,
@@ -158,6 +170,7 @@ class OwnerVisitRequestContent extends Equatable {
       isVerified: isVerified ?? this.isVerified,
       propertyId: propertyId ?? this.propertyId,
       tenantId: tenantId ?? this.tenantId,
+      actions: actions ?? this.actions,
     );
   }
 
@@ -177,5 +190,6 @@ class OwnerVisitRequestContent extends Equatable {
     isVerified,
     propertyId,
     tenantId,
+    actions,
   ];
 }

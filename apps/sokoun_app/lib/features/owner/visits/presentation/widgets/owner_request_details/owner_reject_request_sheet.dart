@@ -24,6 +24,11 @@ class OwnerRejectRequestSheet extends StatelessWidget {
             iconColor: AppColors.red,
             iconBackgroundColor: AppColors.redPale,
           ),
+          12.szH,
+          AppText(
+            LocaleKeys.ownerRejectTimingReason,
+            style: AppTextStyles.regular14,
+          ),
           22.szH,
           DefaultButton(
             onTap: () => Go.back(true),

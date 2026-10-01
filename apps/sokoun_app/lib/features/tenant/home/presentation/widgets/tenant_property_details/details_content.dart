@@ -1,3 +1,5 @@
+import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:sokoun_app/features/shared/reviews/presentation/screens/property_reviews_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -80,6 +82,13 @@ class TenantPropertyDetailsContentView extends StatelessWidget {
           ),
           12.szH,
           TenantPropertyPriceAndRating(property: property),
+          if (property.id.isNotEmpty)
+            TextButton.icon(
+              onPressed: () =>
+                  Go.to(PropertyReviewsScreen(propertyId: property.id)),
+              icon: const Icon(Icons.reviews_outlined),
+              label: AppText(LocaleKeys.propertyReviewsTitle),
+            ),
           14.szH,
           TenantPropertyMetricsGrid(property: property),
           if (property.videoUrl?.isNotEmpty ?? false) ...[

@@ -27,7 +27,7 @@ void main() {
   });
 
   test('loads the documented paginated conversations endpoint', () async {
-    expect(ApiConstants.refreshToken, 'auth/jwt/refresh/');
+    expect(ApiConstants.refreshToken, 'auth/refresh/');
 
     final page = await ChatData.getConversationsPage(page: 2);
 

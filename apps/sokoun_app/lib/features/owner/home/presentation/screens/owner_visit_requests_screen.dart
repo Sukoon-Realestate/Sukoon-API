@@ -18,10 +18,12 @@ class OwnerVisitRequestsScreen extends StatefulWidget {
     super.key,
     this.initialRequests,
     this.showBackButton = true,
+    this.useRequestEndpoint = true,
   });
 
   final List<OwnerVisitRequestContent>? initialRequests;
   final bool showBackButton;
+  final bool useRequestEndpoint;
 
   @override
   State<OwnerVisitRequestsScreen> createState() =>
@@ -97,7 +99,9 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
     final List<OwnerVisitRequestContent>? initialRequests =
         widget.initialRequests;
     if (initialRequests == null) {
-      final ReceivedVisitsCubit cubit = ReceivedVisitsCubit();
+      final ReceivedVisitsCubit cubit = ReceivedVisitsCubit(
+        requests: widget.useRequestEndpoint,
+      );
       _receivedVisitsCubit = cubit;
       cubit.getReceivedVisits();
     } else {
@@ -127,7 +131,10 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
   Future<void> _openDetails(OwnerVisitRequestContent request) async {
     final OwnerRequestResolution? resolution =
         await Go.to<OwnerRequestResolution>(
-          OwnerRequestDetailsScreen(requestId: request.id),
+          OwnerRequestDetailsScreen(
+            requestId: request.id,
+            useVisitEndpoint: !widget.useRequestEndpoint,
+          ),
         );
     if (resolution != null && mounted) {
       _resolveRequest(request: request, resolution: resolution);

@@ -21,7 +21,7 @@ class TenantVisitBanner extends StatelessWidget {
       child: GestureDetector(
         onTap: () {
           if (WorkspaceNavigation.isAuthenticated) {
-            Go.to(const TenantVisitsScreen());
+            Go.to(const TenantVisitsScreen(useRequestEndpoint: false));
           } else {
             WorkspaceNavigation.open(
               workspace: AppWorkspace.tenant,

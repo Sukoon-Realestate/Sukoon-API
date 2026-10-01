@@ -1053,5 +1053,22 @@
   "owner_property_review_hint": "تأكد من البيانات التالية. يمكنك تعديل أي قسم قبل الإرسال.",
   "owner_property_review_action": "مراجعة الإعلان",
   "owner_property_review_basics": "معلومات العقار",
-  "owner_property_review_additional": "التفاصيل الإضافية"
+  "owner_property_review_additional": "التفاصيل الإضافية",
+  "visit_property_location": "الموقع",
+  "visit_property_price": "السعر",
+  "visit_price_period": "فترة الإيجار",
+  "visit_monthly": "شهري",
+  "visit_daily": "يومي",
+  "visit_yearly": "سنوي",
+  "property_reviews_title": "تقييمات العقار",
+  "property_reviews_empty_title": "لا توجد تقييمات للعقار بعد",
+  "property_reviews_empty_description": "ستظهر هنا تقييمات الزيارات المكتملة.",
+  "profile_settings_title": "الخصوصية والتفضيلات",
+  "profile_visit_notifications": "إشعارات الزيارات",
+  "profile_promotions": "العروض والتحديثات",
+  "profile_share_location": "مشاركة الموقع للبحث",
+  "profile_show_in_search": "إظهار ملفي الشخصي في البحث",
+  "profile_settings_empty_title": "لا توجد تفضيلات متاحة",
+  "profile_settings_empty_description": "لا توجد تفضيلات متاحة لحسابك حالياً.",
+  "owner_reject_timing_reason": "السبب: الموعد المطلوب غير مناسب"
 }

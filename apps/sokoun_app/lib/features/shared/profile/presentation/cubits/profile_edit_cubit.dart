@@ -5,22 +5,28 @@ class ProfileEditCubit extends AsyncCubit<Map<String, dynamic>> {
 
   Future<void> editProfile({
     required ProfileEditBody body,
+    bool updateUser = false,
     required void Function() onSuccess,
   }) async {
     if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<Map<String, dynamic>>(
-          api: ApiConstants.editProfile,
+          api: updateUser
+              ? ApiConstants.updateUserProfile
+              : ApiConstants.editProfile,
           httpRequestType: HttpRequestType.patch,
-          body: body.toJson(),
+          body: updateUser ? body.toUserJson() : body.toJson(),
           isFromData: true,
           mapper: (json) => json is Map
               ? Map<String, dynamic>.from(json)
               : <String, dynamic>{},
         ),
       ),
-      onSuccess: (_) => onSuccess(),
+      onSuccess: (_) {
+        ObjectBoxCacheService.remove('editable_user_profile');
+        onSuccess();
+      },
     );
   }
 }

@@ -3160,4 +3160,55 @@ abstract class LocaleKeys {
   static const String _ownerPropertyReviewAdditional = 'owner_property_review_additional';
   static String get ownerPropertyReviewAdditional => _ownerPropertyReviewAdditional.tr();
 
+  static const String _visitPropertyLocation = 'visit_property_location';
+  static String get visitPropertyLocation => _visitPropertyLocation.tr();
+
+  static const String _visitPropertyPrice = 'visit_property_price';
+  static String get visitPropertyPrice => _visitPropertyPrice.tr();
+
+  static const String _visitPricePeriod = 'visit_price_period';
+  static String get visitPricePeriod => _visitPricePeriod.tr();
+
+  static const String _visitMonthly = 'visit_monthly';
+  static String get visitMonthly => _visitMonthly.tr();
+
+  static const String _visitDaily = 'visit_daily';
+  static String get visitDaily => _visitDaily.tr();
+
+  static const String _visitYearly = 'visit_yearly';
+  static String get visitYearly => _visitYearly.tr();
+
+  static const String _propertyReviewsTitle = 'property_reviews_title';
+  static String get propertyReviewsTitle => _propertyReviewsTitle.tr();
+
+  static const String _propertyReviewsEmptyTitle = 'property_reviews_empty_title';
+  static String get propertyReviewsEmptyTitle => _propertyReviewsEmptyTitle.tr();
+
+  static const String _propertyReviewsEmptyDescription = 'property_reviews_empty_description';
+  static String get propertyReviewsEmptyDescription => _propertyReviewsEmptyDescription.tr();
+
+  static const String _profileSettingsTitle = 'profile_settings_title';
+  static String get profileSettingsTitle => _profileSettingsTitle.tr();
+
+  static const String _profileVisitNotifications = 'profile_visit_notifications';
+  static String get profileVisitNotifications => _profileVisitNotifications.tr();
+
+  static const String _profilePromotions = 'profile_promotions';
+  static String get profilePromotions => _profilePromotions.tr();
+
+  static const String _profileShareLocation = 'profile_share_location';
+  static String get profileShareLocation => _profileShareLocation.tr();
+
+  static const String _profileShowInSearch = 'profile_show_in_search';
+  static String get profileShowInSearch => _profileShowInSearch.tr();
+
+  static const String _profileSettingsEmptyTitle = 'profile_settings_empty_title';
+  static String get profileSettingsEmptyTitle => _profileSettingsEmptyTitle.tr();
+
+  static const String _profileSettingsEmptyDescription = 'profile_settings_empty_description';
+  static String get profileSettingsEmptyDescription => _profileSettingsEmptyDescription.tr();
+
+  static const String _ownerRejectTimingReason = 'owner_reject_timing_reason';
+  static String get ownerRejectTimingReason => _ownerRejectTimingReason.tr();
+
 }

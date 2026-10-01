@@ -4,16 +4,19 @@ import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
 
 class ReceivedVisitsCubit extends AsyncCubit<List<OwnerVisitRequestContent>> {
-  ReceivedVisitsCubit() : super(const []);
+  ReceivedVisitsCubit({this.requests = false}) : super(const []);
+  final bool requests;
 
   Future<void> getReceivedVisits() async {
     if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<List<OwnerVisitRequestContent>>(
-          api: ApiConstants.receivedPropertyVisits,
+          api: requests
+              ? ApiConstants.ownerVisitRequests
+              : ApiConstants.receivedPropertyVisits,
           httpRequestType: HttpRequestType.get,
-          cacheKey: 'owner_received_visits',
+          cacheKey: requests ? 'owner_visit_requests' : 'owner_received_visits',
           mapper: OwnerVisitRequestContent.listFromResponse,
           fromCacheJson: OwnerVisitRequestContent.listFromResponse,
           toJson: (requests) => {

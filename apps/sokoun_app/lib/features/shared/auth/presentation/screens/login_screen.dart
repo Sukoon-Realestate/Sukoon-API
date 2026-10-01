@@ -54,6 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _submitGoogle(BuildContext context, String token) async {
+    if (!context.mounted) return;
     await context.read<GoogleLoginCubit>().login(
       body: GoogleLoginBody(token: token),
       onSuccess: () => Go.offAll(const HomeScreen()),
@@ -114,11 +115,12 @@ class _LoginScreenState extends State<LoginScreen> {
               20.szH,
               const LoginDivider(),
               18.szH,
-              // Builder(
-              //   builder: (context) => AppGoogleSignInButton(
-              //     onSuccess: (token) => _submitGoogle(context, token),
-              //   ),
-              // ),
+              Builder(
+                builder: (context) => AppGoogleSignInButton(
+                  onSuccess: (token) => _submitGoogle(context, token),
+                ),
+              ),
+              12.szH,
               // 12.szH,
               // AppFacebookSignInButton(onSuccess: (token) async {}),
               // 12.szH,

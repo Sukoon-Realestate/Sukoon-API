@@ -1053,5 +1053,22 @@
   "owner_property_review_hint": "Check the details below. You can edit any section before submitting.",
   "owner_property_review_action": "Review listing",
   "owner_property_review_basics": "Property information",
-  "owner_property_review_additional": "Additional details"
+  "owner_property_review_additional": "Additional details",
+  "visit_property_location": "Location",
+  "visit_property_price": "Price",
+  "visit_price_period": "Rental period",
+  "visit_monthly": "Monthly",
+  "visit_daily": "Daily",
+  "visit_yearly": "Yearly",
+  "property_reviews_title": "Property reviews",
+  "property_reviews_empty_title": "No property reviews yet",
+  "property_reviews_empty_description": "Reviews from completed visits will appear here.",
+  "profile_settings_title": "Privacy and preferences",
+  "profile_visit_notifications": "Visit notifications",
+  "profile_promotions": "Promotions and updates",
+  "profile_share_location": "Share location for search",
+  "profile_show_in_search": "Show my profile in search",
+  "profile_settings_empty_title": "No preferences available",
+  "profile_settings_empty_description": "Your account has no available preferences at the moment.",
+  "owner_reject_timing_reason": "Requested time is not suitable"
 }

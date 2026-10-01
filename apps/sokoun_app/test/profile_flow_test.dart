@@ -281,7 +281,7 @@ void main() {
     expect(repository.lastMethod, HttpRequestType.get);
     expect(tester.takeException(), isNull);
 
-    await tester.tap(find.byIcon(Icons.settings_outlined));
+    await tester.tap(find.widgetWithIcon(IconButton, Icons.settings_outlined));
     await tester.pumpAndSettle();
 
     expect(find.byType(TenantAccountSummaryScreen), findsOneWidget);
@@ -357,10 +357,11 @@ void main() {
     });
   }
 
-  testWidgets('T-EDIT-01 prefills registration fields from initialValue', (
+  testWidgets('T-EDIT-01 loads the editable profile from the server', (
     tester,
   ) async {
     configurePhoneViewport(tester);
+    repository.editableUser = tenant;
     await tester.pumpWidget(
       buildScreen(const TenantEditProfileScreen(initialValue: tenant)),
     );
@@ -368,13 +369,15 @@ void main() {
 
     expect(find.byType(TenantEditProfileScreen), findsOneWidget);
     _expectPrefilledFields(tester, tenant);
+    expect(repository.lastApi, ApiConstants.userProfile);
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('O-EDIT-P-01 prefills registration fields from initialValue', (
+  testWidgets('O-EDIT-P-01 loads the editable profile from the server', (
     tester,
   ) async {
     configurePhoneViewport(tester);
+    repository.editableUser = owner;
     await tester.pumpWidget(
       buildScreen(const OwnerEditProfileScreen(initialValue: owner)),
     );
@@ -382,6 +385,7 @@ void main() {
 
     expect(find.byType(OwnerEditProfileScreen), findsOneWidget);
     _expectPrefilledFields(tester, owner);
+    expect(repository.lastApi, ApiConstants.userProfile);
     expect(tester.takeException(), isNull);
   });
 }
@@ -491,6 +495,7 @@ const Map<String, dynamic> _tenantAccountSummaryResponse = {
 
 class _ProfileRepository implements BaseRepository {
   int requestCount = 0;
+  UserModel? editableUser;
   String lastApi = '';
   HttpRequestType? lastMethod;
   String? lastCacheKey;
@@ -508,6 +513,13 @@ class _ProfileRepository implements BaseRepository {
     lastBody = params.body;
     lastIsFromData = params.isFromData;
     final dynamic response = switch (params.api) {
+      ApiConstants.userProfile => {
+        'id': editableUser?.id,
+        'full_name': editableUser?.name,
+        'phone_number': editableUser?.phone,
+        'gender': 'male',
+        'birth_date': '1990-01-15',
+      },
       ApiConstants.ownerProfile => _ownerProfileResponse,
       ApiConstants.getAccData => _tenantProfileResponse,
       ApiConstants.tenantAccountSummary => _tenantAccountSummaryResponse,

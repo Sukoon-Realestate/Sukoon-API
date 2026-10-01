@@ -3,6 +3,7 @@ part of '../../../imports.dart';
 class TenantVisitsList extends StatelessWidget {
   const TenantVisitsList({
     super.key,
+    this.useRequestEndpoint = true,
     required this.selectedFilter,
     required this.initialVisits,
     required this.pagifyController,
@@ -12,6 +13,7 @@ class TenantVisitsList extends StatelessWidget {
     required this.onCancelPressed,
   });
 
+  final bool useRequestEndpoint;
   final TenantVisitFilter selectedFilter;
   final List<TenantVisitContent>? initialVisits;
   final PagifyController<TenantVisitContent>? pagifyController;
@@ -37,10 +39,16 @@ class TenantVisitsList extends StatelessWidget {
     return AppPagify<TenantVisitContent>(
       enablePullRefresh: true,
       pagifyController: pagifyController!,
-      asyncCall: (_, page) =>
-          TenantVisitsData.getVisitsPage(page: page, filter: selectedFilter),
+      asyncCall: (_, page) => TenantVisitsData.getVisitsPage(
+        page: page,
+        filter: selectedFilter,
+        requests: useRequestEndpoint,
+      ),
       shrinkWrap: false,
-      cacheKey: TenantVisitsData.cacheKeyFor(selectedFilter),
+      cacheKey: TenantVisitsData.cacheKeyFor(
+        selectedFilter,
+        requests: useRequestEndpoint,
+      ),
       cacheToJson: (item) => item.toJson(),
       cacheFromJson: TenantVisitContent.fromJson,
       emptyListView: _buildEmptyState(),

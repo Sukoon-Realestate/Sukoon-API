@@ -3,6 +3,7 @@ part of '../../../imports.dart';
 class TenantVisitsScreenContent extends StatelessWidget {
   const TenantVisitsScreenContent({
     super.key,
+    this.useRequestEndpoint = true,
     required this.selectedFilter,
     required this.initialVisits,
     required this.pagifyController,
@@ -12,6 +13,7 @@ class TenantVisitsScreenContent extends StatelessWidget {
     required this.onCancelPressed,
   });
 
+  final bool useRequestEndpoint;
   final TenantVisitFilter selectedFilter;
   final List<TenantVisitContent>? initialVisits;
   final PagifyController<TenantVisitContent>? pagifyController;
@@ -32,6 +34,7 @@ class TenantVisitsScreenContent extends StatelessWidget {
         ),
         Expanded(
           child: TenantVisitsList(
+            useRequestEndpoint: useRequestEndpoint,
             selectedFilter: selectedFilter,
             initialVisits: initialVisits,
             pagifyController: pagifyController,

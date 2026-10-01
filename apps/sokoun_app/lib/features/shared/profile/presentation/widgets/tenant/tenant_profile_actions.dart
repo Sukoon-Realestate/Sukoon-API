@@ -62,6 +62,15 @@ class TenantProfileActions extends StatelessWidget {
             onTap: () => Go.to(const MyReviewsScreen()),
           ),
         ),
+        ProfileSurfaceCard(
+          child: ProfileMenuTile(
+            icon: Icons.settings_outlined,
+            label: LocaleKeys.profileSettingsTitle,
+            iconColor: AppColors.sokoonTeal,
+            iconBackgroundColor: AppColors.mintLight,
+            onTap: () => Go.to(const ProfileSettingsScreen()),
+          ),
+        ),
         const ProfileSurfaceCard(child: PublicPageMenu()),
       ],
     );

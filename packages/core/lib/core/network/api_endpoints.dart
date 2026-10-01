@@ -5,7 +5,11 @@ class ApiConstants {
   static const String googleLogin = 'auth/google/';
   static const String verifyOtp = 'auth/verify/';
   static const String resendOtp = 'auth/resend-otp/';
-  static const String refreshToken = 'auth/jwt/refresh/';
+  static const String refreshToken = 'auth/refresh/';
+  static const String logout = 'auth/logout/';
+  static const String userProfile = 'profiles/user/my-profile/';
+  static const String updateUserProfile = 'profiles/user/update/';
+  static const String profileSettings = 'profiles/settings/';
   static const String register = 'auth/users/';
   static const String currentUser = 'auth/users/me/';
   static const String completeRegister = 'auth/complete-register/';
@@ -15,15 +19,17 @@ class ApiConstants {
   static const String aboutUs = 'pages/about-us/';
   static const String privacyPolicy = 'pages/privacy-policy/';
   static const String terms = 'pages/terms/';
-  static const String resetPassword = 'users/reset_password/';
+  static const String resetPassword = 'auth/users/reset_password/';
 
   // home
-  static const String homePage = 'homepage';
+  static const String homePage = 'homepage/';
   static const String properties = 'properties/';
   static const String createProperty = 'properties/create/';
   static const String availablePlaces = 'properties/available_places/';
   static const String savedProperties = 'properties/saved/';
   static const String tenantVisits = 'properties/visits/';
+  static const String tenantVisitRequests = 'properties/visits/requests/';
+  static const String ownerVisitRequests = 'properties/owner/visits/requests/';
   static const String receivedPropertyVisits = 'properties/visits/received/';
   static const String ownedProperties = 'properties/owned/';
   static const String ownerDashboard = 'properties/owner/dashboard/';
@@ -81,6 +87,18 @@ class ApiConstants {
 
   static String propertyVisitDetails(String visitId) =>
       '$tenantVisits$visitId/';
+
+  static String tenantVisitRequestDetails(String visitId) =>
+      '$tenantVisitRequests$visitId/';
+
+  static String updatePropertyVisit(String visitId) =>
+      '${propertyVisitDetails(visitId)}update/';
+
+  static String reviewPropertyVisit(String visitId) =>
+      '${propertyVisitDetails(visitId)}review/';
+
+  static String propertyReviews(String propertyId) =>
+      '${propertyDetails(propertyId)}reviews/';
 
   static String ownerPropertyAvailability(String propertyId) =>
       'properties/owner/properties/$propertyId/availability/';

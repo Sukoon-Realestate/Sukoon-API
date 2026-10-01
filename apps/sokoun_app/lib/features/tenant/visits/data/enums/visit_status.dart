@@ -1,10 +1,13 @@
 part of '../../imports.dart';
 
-enum TenantVisitStatus { accepted, pending, rejected }
+enum TenantVisitStatus { accepted, pending, rejected, completed, canceled }
 
 enum TenantVisitFilter { all, approved, pending, rejected }
 
 extension TenantVisitStatusX on TenantVisitStatus {
+  bool get isCompleted => this == TenantVisitStatus.completed;
+  bool get isCanceled => this == TenantVisitStatus.canceled;
+
   bool get isAccepted => this == TenantVisitStatus.accepted;
   bool get isPending => this == TenantVisitStatus.pending;
   bool get isRejected => this == TenantVisitStatus.rejected;
@@ -24,6 +27,11 @@ extension TenantVisitStatusX on TenantVisitStatus {
       case 'بانتظار الرد':
       case 'بانتظار رد المالك':
         return TenantVisitStatus.pending;
+      case 'completed':
+        return TenantVisitStatus.completed;
+      case 'canceled':
+      case 'cancelled':
+        return TenantVisitStatus.canceled;
       case 'rejected':
       case 'declined':
       case 'مرفوض':
@@ -33,6 +41,8 @@ extension TenantVisitStatusX on TenantVisitStatus {
   }
 
   String get label {
+    if (isCompleted) return LocaleKeys.ownerVisitStatusCompleted;
+    if (isCanceled) return LocaleKeys.cancelled;
     if (isAccepted) {
       return LocaleKeys.tenantVisitStatusAccepted;
     }

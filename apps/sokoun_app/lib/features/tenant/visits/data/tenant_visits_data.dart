@@ -15,11 +15,13 @@ abstract interface class TenantVisitsDataSource {
 }
 
 final class TenantVisitsApiDataSource implements TenantVisitsDataSource {
-  const TenantVisitsApiDataSource();
+  const TenantVisitsApiDataSource({this.requests = false});
+
+  final bool requests;
 
   @override
   String cacheKeyFor(TenantVisitFilter filter) {
-    return 'tenant_visits_${filter.name}';
+    return '${requests ? 'tenant_visit_requests' : 'tenant_visits'}_${filter.name}';
   }
 
   @override
@@ -54,7 +56,9 @@ final class TenantVisitsApiDataSource implements TenantVisitsDataSource {
     final response = await injector<NetworkService>().callApi(
       NetworkRequest(
         method: RequestMethod.get,
-        path: ApiConstants.tenantVisits,
+        path: requests
+            ? ApiConstants.tenantVisitRequests
+            : ApiConstants.tenantVisits,
         queryParameters: queryParameters,
       ),
       mapper: (json) => TenantVisitsResponse.fromJson(
@@ -74,13 +78,21 @@ abstract final class TenantVisitsData {
       ? injector<TenantVisitsDataSource>()
       : const TenantVisitsApiDataSource();
 
-  static String cacheKeyFor(TenantVisitFilter filter) =>
-      source.cacheKeyFor(filter);
+  static TenantVisitsDataSource _sourceFor(bool requests) =>
+      injector.isRegistered<TenantVisitsDataSource>()
+      ? source
+      : TenantVisitsApiDataSource(requests: requests);
+
+  static String cacheKeyFor(
+    TenantVisitFilter filter, {
+    bool requests = false,
+  }) => _sourceFor(requests).cacheKeyFor(filter);
 
   static Future<(List<TenantVisitContent>, PaginationData)> getVisitsPage({
     required int page,
     required TenantVisitFilter filter,
-  }) => source.getVisitsPage(page: page, filter: filter);
+    bool requests = false,
+  }) => _sourceFor(requests).getVisitsPage(page: page, filter: filter);
 
   static Future<TenantVisitsResponse> getVisits({
     required int page,

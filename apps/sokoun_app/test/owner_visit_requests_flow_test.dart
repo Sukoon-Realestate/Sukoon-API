@@ -261,7 +261,10 @@ void main() {
       'properties/owner/visits/requests/visit-id/reject/',
     );
     expect(repository.lastMethod, HttpRequestType.post);
-    expect(repository.lastBody, isNull);
+    expect(repository.lastBody, {
+      'reason': 'timing_not_suitable',
+      'custom_reason': '',
+    });
     expect(rejected, isTrue);
   });
 
@@ -548,11 +551,16 @@ void main() {
       'properties/owner/visits/requests/sara-nasr-city/reject/',
     );
     expect(repository.lastMethod, HttpRequestType.post);
-    expect(repository.lastBody, isNull);
+    expect(repository.lastBody, {
+      'reason': 'timing_not_suitable',
+      'custom_reason': '',
+    });
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('opens O-CAL-01 and edits O-AVAIL-01', (tester) async {
+  testWidgets('opens calendar without the excluded availability flow', (
+    tester,
+  ) async {
     configurePhoneViewport(tester);
 
     await tester.pumpWidget(
@@ -574,42 +582,10 @@ void main() {
     await tester.tap(find.text('19'));
     await tester.pumpAndSettle();
     expect(find.text('زيارات يوم 19'), findsOneWidget);
-    final String availabilityDate = repository.lastQuery!['date'] as String;
-
-    final Finder availabilityButton = find.text('إدارة مواعيد الإتاحة');
-    await tester.ensureVisible(availabilityButton);
-    await tester.tap(availabilityButton);
-    await tester.pumpAndSettle();
-
-    expect(find.byType(OwnerAvailabilityScreen), findsOneWidget);
-    expect(find.text('مواعيد الاتاحة'), findsOneWidget);
-
-    await tester.tap(find.text('10:00 ص'));
-    await tester.tap(find.text('حفظ مواعيد الاتاحة'));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(OwnerRequestsCalendarScreen), findsOneWidget);
-    expect(find.text('تم حفظ مواعيد الإتاحة'), findsOneWidget);
-    final availabilityRequest = repository.requests.singleWhere(
-      (params) =>
-          params.api ==
-          'properties/owner/properties/owner-property-id/availability/',
-    );
-    expect(availabilityRequest.httpRequestType, HttpRequestType.post);
-    expect(availabilityRequest.body?['availability_date'], availabilityDate);
-    expect((availabilityRequest.body?['slots'] as List)[1], {
-      'time': '10:00:00',
-      'is_enabled': true,
-    });
-    expect(repository.lastApi, 'properties/owner/calendar/');
-    expect(repository.lastMethod, HttpRequestType.get);
+    expect(find.text('إدارة مواعيد الإتاحة'), findsNothing);
     expect(
-      repository.requests.where(
-        (params) =>
-            params.api == 'properties/owner/calendar/' &&
-            params.queryParameters?['date'] == availabilityDate,
-      ),
-      hasLength(2),
+      repository.requests.where((p) => p.api.contains('/availability/')),
+      isEmpty,
     );
     expect(tester.takeException(), isNull);
   });

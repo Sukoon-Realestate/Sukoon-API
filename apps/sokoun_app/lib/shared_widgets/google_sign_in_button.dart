@@ -3,52 +3,85 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/shared/base_state.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
+import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 import 'package:sokoun_app/features/shared/auth/data/social_auth_service/google_sign_in.dart';
 
-class AppGoogleSignInButton extends StatelessWidget {
+class AppGoogleSignInButton extends StatefulWidget {
   const AppGoogleSignInButton({super.key, required this.onSuccess});
   final Future<void> Function(String userToken) onSuccess;
 
   @override
+  State<AppGoogleSignInButton> createState() => _AppGoogleSignInButtonState();
+}
+
+class _AppGoogleSignInButtonState extends State<AppGoogleSignInButton> {
+  bool _busy = false;
+
+  Future<void> _signIn() async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    try {
+      await GoogleSignService.instance.init();
+      final token = await GoogleSignService.instance.authorize();
+      if (mounted && token.isNotEmpty) {
+        await widget.onSuccess(token);
+      }
+    } catch (_) {
+      if (mounted) {
+        Messages.showToast(
+          msg: LocaleKeys.googleSignInFailed,
+          status: BaseStatus.error,
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DefaultButton(
-      onTap: () async {
-        await GoogleSignService.instance.init();
-        final String token = await GoogleSignService.instance.authorize();
-        if (token.isNotEmpty) {
-          await onSuccess.call(token);
-        }
-      },
+      onTap: _signIn,
+      disabled: _busy,
       color: AppColors.white,
       borderColor: AppColors.sokoonBorder,
       borderRadius: BorderRadius.circular(12.r),
       height: 48.h,
       width: double.infinity,
-      customChild: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        spacing: 10.w,
-        children: [
-          SizedBox(
-            width: 20.r,
-            height: 20.r,
-            child: const CustomPaint(painter: _GoogleMarkPainter()),
-          ),
-          Flexible(
-            child: AppText(
-              LocaleKeys.continueWithGoogle,
-              style: AppTextStyles.bold14.copyWith(
-                color: AppColors.sokoonNavy,
-                fontSize: 14.sp,
-                height: 1.45,
+      customChild: _busy
+          ? SizedBox.square(
+              dimension: 20.r,
+              child: const CircularProgressIndicator(
+                strokeWidth: 2,
+                color: AppColors.sokoonTeal,
               ),
-              overflow: TextOverflow.ellipsis,
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              spacing: 10.w,
+              children: [
+                SizedBox(
+                  width: 20.r,
+                  height: 20.r,
+                  child: const CustomPaint(painter: _GoogleMarkPainter()),
+                ),
+                Flexible(
+                  child: AppText(
+                    LocaleKeys.continueWithGoogle,
+                    style: AppTextStyles.bold14.copyWith(
+                      color: AppColors.sokoonNavy,
+                      fontSize: 14.sp,
+                      height: 1.45,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
       textStyle: AppTextStyles.medium13.copyWith(
         fontSize: FontSize.s13,
         height: 1.45,

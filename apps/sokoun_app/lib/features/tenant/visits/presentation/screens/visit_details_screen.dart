@@ -1,17 +1,73 @@
 part of '../../imports.dart';
 
-class VisitDetailsScreen extends StatelessWidget {
+class VisitDetailsScreen extends StatefulWidget {
   const VisitDetailsScreen({super.key, required this.visit});
-
   final TenantVisitContent visit;
+  @override
+  State<VisitDetailsScreen> createState() => _VisitDetailsScreenState();
+}
+
+class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
+  late final VisitDetailsCubit _detailsCubit;
+  late final VisitCancelCubit _cancelCubit;
+  @override
+  void initState() {
+    super.initState();
+    _detailsCubit = VisitDetailsCubit();
+    _cancelCubit = VisitCancelCubit();
+    _detailsCubit.load(widget.visit.id);
+  }
 
   @override
-  Widget build(BuildContext context) {
-    return AppScaffold(
+  void dispose() {
+    _detailsCubit.close();
+    _cancelCubit.close();
+    super.dispose();
+  }
+
+  Future<void> _cancel() async {
+    if (await _cancelCubit.cancel(widget.visit.id) && mounted) Go.back(true);
+  }
+
+  Future<void> _review() async {
+    final TenantVisitContent visit = _detailsCubit.data.visit;
+    final bool? submitted = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (_) => VisitRatingSheet(
+        visitId: visit.id,
+        propertyTitle: visit.propertyTitle,
+      ),
+    );
+    if (submitted == true && mounted) await _detailsCubit.load(widget.visit.id);
+  }
+
+  @override
+  Widget build(BuildContext context) => MultiBlocProvider(
+    providers: [
+      BlocProvider.value(value: _detailsCubit),
+      BlocProvider.value(value: _cancelCubit),
+    ],
+    child: AppScaffold(
       title: LocaleKeys.tenantVisitDetailsTitle,
       showBackButton: true,
-      backgroundColor: AppColors.scaffoldBackground,
-      body: SafeArea(child: VisitDetailsContent(visit: visit)),
-    );
-  }
+      body: SafeArea(
+        child:
+            StatusBuilder<
+              VisitDetailsCubit,
+              TenantVisitDetailsContent
+            >.withShimmer(
+              initialDataForShimmer: const TenantVisitDetailsContent.initial(),
+              onRetry: () => _detailsCubit.load(widget.visit.id),
+              builder: (details) => VisitDetailsContent(
+                visit: details.visit,
+                details: details,
+                onCancel: _cancel,
+                onReview: _review,
+              ),
+            ),
+      ),
+    ),
+  );
 }

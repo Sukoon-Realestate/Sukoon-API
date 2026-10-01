@@ -1084,5 +1084,22 @@
   "ownerPropertyReviewHint #$ Check the details below. You can edit any section before submitting.": "تأكد من البيانات التالية. يمكنك تعديل أي قسم قبل الإرسال.",
   "ownerPropertyReviewAction #$ Review listing": "مراجعة الإعلان",
   "ownerPropertyReviewBasics #$ Property information" : "معلومات العقار",
-  "ownerPropertyReviewAdditional #$ Additional details" : "التفاصيل الإضافية"
+  "ownerPropertyReviewAdditional #$ Additional details" : "التفاصيل الإضافية",
+  "visitPropertyLocation #$ Location" : "الموقع",
+  "visitPropertyPrice #$ Price" : "السعر",
+  "visitPricePeriod #$ Rental period" : "فترة الإيجار",
+  "visitMonthly #$ Monthly" : "شهري",
+  "visitDaily #$ Daily" : "يومي",
+  "visitYearly #$ Yearly" : "سنوي",
+  "propertyReviewsTitle #$ Property reviews" : "تقييمات العقار",
+  "propertyReviewsEmptyTitle #$ No property reviews yet" : "لا توجد تقييمات للعقار بعد",
+  "propertyReviewsEmptyDescription #$ Reviews from completed visits will appear here." : "ستظهر هنا تقييمات الزيارات المكتملة.",
+  "profileSettingsTitle #$ Privacy and preferences" : "الخصوصية والتفضيلات",
+  "profileVisitNotifications #$ Visit notifications" : "إشعارات الزيارات",
+  "profilePromotions #$ Promotions and updates" : "العروض والتحديثات",
+  "profileShareLocation #$ Share location for search" : "مشاركة الموقع للبحث",
+  "profileShowInSearch #$ Show my profile in search" : "إظهار ملفي الشخصي في البحث",
+  "profileSettingsEmptyTitle #$ No preferences available" : "لا توجد تفضيلات متاحة",
+  "profileSettingsEmptyDescription #$ Your account has no available preferences at the moment." : "لا توجد تفضيلات متاحة لحسابك حالياً.",
+  "ownerRejectTimingReason #$ Requested time is not suitable" : "السبب: الموعد المطلوب غير مناسب"
 }

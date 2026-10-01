@@ -1,3 +1,7 @@
+import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
+import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
+import 'package:melos_core/core/error/failure.dart';
+import 'package:multiple_result/multiple_result.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -35,6 +39,10 @@ void main() {
     await EasyLocalization.ensureInitialized();
     await CacheStorage.init();
     registerHomePageTestDependencies();
+    await injector.unregister<BaseCrudUseCase>();
+    injector.registerSingleton<BaseCrudUseCase>(
+      BaseCrudUseCase(repository: _VisitsRepository()),
+    );
     await registerAuthenticatedTestAccount();
   });
 
@@ -115,7 +123,17 @@ void main() {
     expect(find.byType(VisitRatingSheet), findsOneWidget);
     expect(find.text('قيّم تجربة الزيارة'), findsOneWidget);
 
-    await tester.tap(find.byIcon(Icons.star_border_rounded).at(4));
+    for (int i = 0; i < 3; i++) {
+      final stars = find
+          .descendant(
+            of: find.byType(VisitRatingStars).at(i),
+            matching: find.byIcon(Icons.star_border_rounded),
+          )
+          .last;
+      await tester.ensureVisible(stars);
+      await tester.tap(stars);
+      await tester.pump();
+    }
     await tester.enterText(find.byType(TextField), 'تجربة ممتازة');
     await tester.tap(find.text('إرسال التقييم'));
     await tester.pumpAndSettle();
@@ -432,4 +450,23 @@ List<TenantVisitContent> _tenantVisitFixtures() {
       ownerName: 'خالد حسن',
     ),
   ];
+}
+
+class _VisitsRepository implements BaseRepository {
+  @override
+  Future<Result<BaseModel<T>, Failure>> crudCall<T>(
+    CrudBaseParmas<T> params,
+  ) async {
+    final String id = params.api.split('/').where((s) => s.isNotEmpty).last;
+    final visit = _tenantVisitFixtures().where((v) => v.id == id).firstOrNull;
+    final json =
+        visit?.toJson() ??
+        const <String, dynamic>{'count': 0, 'results': [], 'banner': 'visit'};
+    return Success(BaseModel<T>(key: '', msg: '', data: params.mapper!(json)));
+  }
+
+  @override
+  Future<Result<List<T>, Failure>> getBaseIdAndNameEntity<T extends BaseEntity>(
+    GetBaseEntityParams? param,
+  ) => throw UnimplementedError();
 }

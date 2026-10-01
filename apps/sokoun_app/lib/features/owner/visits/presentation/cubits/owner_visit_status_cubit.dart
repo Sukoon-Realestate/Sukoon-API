@@ -24,6 +24,7 @@ class OwnerVisitStatusCubit extends AsyncCubit<bool> {
     if (isClosed || isLoading) return;
     await _updateVisitRequest(
       api: ApiConstants.rejectOwnerVisitRequest(requestId),
+      body: const {'reason': 'timing_not_suitable', 'custom_reason': ''},
       onSuccess: onSuccess,
       onError: onError,
     );
@@ -31,6 +32,7 @@ class OwnerVisitStatusCubit extends AsyncCubit<bool> {
 
   Future<void> _updateVisitRequest({
     required String api,
+    Map<String, dynamic>? body,
     required void Function() onSuccess,
     void Function(String message)? onError,
   }) async {
@@ -39,6 +41,7 @@ class OwnerVisitStatusCubit extends AsyncCubit<bool> {
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<bool>(
           api: api,
+          body: body,
           httpRequestType: HttpRequestType.post,
           mapper: (_) => true,
         ),

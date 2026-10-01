@@ -30,7 +30,7 @@ void main() {
       onSuccess: () => completed = true,
     );
 
-    expect(ApiConstants.resetPassword, 'users/reset_password/');
+    expect(ApiConstants.resetPassword, 'auth/users/reset_password/');
     expect(repository.api, ApiConstants.resetPassword);
     expect(repository.method, HttpRequestType.post);
     expect(repository.body, {'email': 'meshzeyad2@gmail.com'});

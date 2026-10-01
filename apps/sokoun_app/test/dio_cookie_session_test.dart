@@ -33,7 +33,7 @@ void main() {
             request.response.cookies
               ..add(Cookie('access_token', 'old')..path = '/')
               ..add(Cookie('refresh_token', 'refresh')..path = '/');
-          } else if (request.uri.path == '/auth/jwt/refresh/') {
+          } else if (request.uri.path == '/auth/refresh/') {
             request.response.cookies.add(
               Cookie('access_token', 'fresh')..path = '/',
             );
@@ -99,7 +99,7 @@ void main() {
             request.response.cookies.add(
               Cookie('access_token', 'stale-account')..path = '/',
             );
-          } else if (request.uri.path == '/auth/jwt/refresh/') {
+          } else if (request.uri.path == '/auth/refresh/') {
             refreshes++;
           }
           request.response.write(
@@ -180,7 +180,7 @@ void main() {
           } else if (request.uri.path == '/mutation/') {
             mutations++;
             request.response.statusCode = HttpStatus.unauthorized;
-          } else if (request.uri.path == '/auth/jwt/refresh/') {
+          } else if (request.uri.path == '/auth/refresh/') {
             refreshing.complete();
             await release.future;
             request.response.statusCode = refreshStatus;
@@ -429,9 +429,9 @@ void main() {
             ..add(
               Cookie('refresh_token', 'server-refresh-token')
                 ..httpOnly = true
-                ..path = '/auth/jwt/refresh/',
+                ..path = '/auth/refresh/',
             );
-        } else if (request.uri.path == '/auth/jwt/refresh/' &&
+        } else if (request.uri.path == '/auth/refresh/' &&
             refreshToken == 'server-refresh-token' &&
             authorization == 'Bearer server-refresh-token') {
           refreshCount++;

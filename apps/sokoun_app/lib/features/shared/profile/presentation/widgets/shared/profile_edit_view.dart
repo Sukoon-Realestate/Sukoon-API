@@ -22,6 +22,10 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   late final TextEditingController _phoneController;
   late final TextEditingController _emailController;
   late final ProfileEditCubit _editCubit;
+  late final UserProfileCubit _profileCubit;
+  late UserModel _initialUser;
+  ProfileGender _initialGender = ProfileGender.unspecified;
+  String _birthDate = '';
   final ValueNotifier<File?> _avatar = ValueNotifier<File?>(null);
   final ValueNotifier<ProfileGender> _gender = ValueNotifier<ProfileGender>(
     ProfileGender.unspecified,
@@ -40,8 +44,26 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     _nameController = TextEditingController(text: widget.initialValue.name);
     _phoneController = TextEditingController(text: widget.initialValue.phone);
     _emailController = TextEditingController(text: widget.initialValue.email);
+    _initialUser = widget.initialValue;
     _editCubit = ProfileEditCubit();
+    _profileCubit = UserProfileCubit();
+    _loadProfile();
   }
+
+  Future<void> _loadProfile() => _profileCubit.load(
+    onLoaded: (profile) {
+      if (!mounted) return;
+      _initialUser = profile.toUser(widget.initialValue);
+      _nameController.text = _initialUser.name;
+      _phoneController.text = _initialUser.phone;
+      _initialGender = ProfileGender.values.firstWhere(
+        (g) => g.apiValue == profile.gender,
+        orElse: () => ProfileGender.unspecified,
+      );
+      _gender.value = _initialGender;
+      _birthDate = profile.birthDate;
+    },
+  );
 
   @override
   void dispose() {
@@ -51,6 +73,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     _avatar.dispose();
     _gender.dispose();
     _editCubit.close();
+    _profileCubit.close();
     super.dispose();
   }
 
@@ -125,6 +148,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
 
     bool wasUpdated = false;
     await _editCubit.editProfile(
+      updateUser: widget.workspace.isOwner,
       body: ProfileEditBody(
         avatar: _avatar.value,
         fullName: _nameController.text.trim(),
@@ -135,7 +159,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     );
     if (!wasUpdated || !mounted) return;
 
-    final UserModel updatedUser = widget.initialValue.copyWith(
+    final UserModel updatedUser = _initialUser.copyWith(
       name: _nameController.text.trim(),
       phone: _phoneController.text.trim(),
     );
@@ -159,12 +183,26 @@ class _ProfileEditViewState extends State<ProfileEditView> {
       value: _editCubit,
       child: UnsavedChangesGuard(
         hasChanges: () =>
-            _nameController.text.trim() != widget.initialValue.name ||
-            _phoneController.text.trim() != widget.initialValue.phone ||
+            _nameController.text.trim() != _initialUser.name ||
+            _phoneController.text.trim() != _initialUser.phone ||
             _avatar.value != null ||
-            !_gender.value.isUnspecified,
+            _gender.value != _initialGender,
         isSaving: () => _editCubit.isLoading,
-        child: _buildScaffold(),
+        child: BlocProvider<UserProfileCubit>.value(
+          value: _profileCubit,
+          child:
+              StatusBuilder<UserProfileCubit, UserProfileContent>.withShimmer(
+                initialDataForShimmer: const UserProfileContent.initial(),
+                onRetry: _loadProfile,
+                shimmerBuilder: (_) => AppScaffold(
+                  title: _title,
+                  body: const ProfileAccountDetailsCard(
+                    details: ProfileAccountDetailsContent.initial(),
+                  ),
+                ),
+                builder: (_) => _buildScaffold(),
+              ),
+        ),
       ),
     );
   }
@@ -281,7 +319,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
               else ...[
                 _ProfileReadonlyField(
                   label: LocaleKeys.profileBirthDate,
-                  value: LocaleKeys.notSetYet,
+                  value: _birthDate.isEmpty ? LocaleKeys.notSetYet : _birthDate,
                 ),
                 14.szH,
                 BlocSelector<

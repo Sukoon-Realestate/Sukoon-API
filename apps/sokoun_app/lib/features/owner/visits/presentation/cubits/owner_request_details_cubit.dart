@@ -2,17 +2,22 @@ part of '../../imports.dart';
 
 class OwnerRequestDetailsCubit
     extends AsyncCubit<OwnerVisitRequestDetailsContent> {
-  OwnerRequestDetailsCubit()
+  OwnerRequestDetailsCubit({this.useVisitEndpoint = false})
     : super(const OwnerVisitRequestDetailsContent.initial());
+
+  final bool useVisitEndpoint;
 
   Future<void> getRequestDetails(String requestId) async {
     if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<OwnerVisitRequestDetailsContent>(
-          api: ApiConstants.ownerVisitRequestDetails(requestId),
+          api: useVisitEndpoint
+              ? ApiConstants.propertyVisitDetails(requestId)
+              : ApiConstants.ownerVisitRequestDetails(requestId),
           httpRequestType: HttpRequestType.get,
-          cacheKey: 'owner_visit_request_details_$requestId',
+          cacheKey:
+              '${useVisitEndpoint ? 'received_visit_details' : 'owner_visit_request_details'}_$requestId',
           mapper: (json) => OwnerVisitRequestDetailsContent.fromJson(
             _ownerVisitJsonMap(json),
           ),

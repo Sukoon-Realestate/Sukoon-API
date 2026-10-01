@@ -1,9 +1,18 @@
 part of '../../../imports.dart';
 
 class VisitDetailsContent extends StatelessWidget {
-  const VisitDetailsContent({super.key, required this.visit});
+  const VisitDetailsContent({
+    super.key,
+    required this.visit,
+    this.details,
+    this.onCancel,
+    this.onReview,
+  });
 
   final TenantVisitContent visit;
+  final TenantVisitDetailsContent? details;
+  final Future<void> Function()? onCancel;
+  final Future<void> Function()? onReview;
 
   List<({String label, String value})> get _summaryRows {
     return [
@@ -35,8 +44,13 @@ class VisitDetailsContent extends StatelessWidget {
             12.szH,
             VisitContactCard(ownerPhone: visit.ownerPhone),
           ],
+          if (details != null) VisitDetailsExtra(details: details!),
           14.szH,
-          VisitDetailsActions(visit: visit),
+          VisitDetailsActions(
+            visit: visit,
+            onCancel: onCancel,
+            onReview: onReview,
+          ),
         ],
       ),
     );

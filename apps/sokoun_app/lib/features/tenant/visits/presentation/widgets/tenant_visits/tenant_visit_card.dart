@@ -161,44 +161,39 @@ class _VisitCardActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (visit.status.isAccepted) {
-      return Row(
-        spacing: 8.w,
-        children: [
-          Expanded(
-            child: _VisitCardAction(
-              label: LocaleKeys.tenantVisitChatAction,
-              backgroundColor: AppColors.bluePale,
-              foregroundColor: AppColors.blue,
-              onPressed: visit.ownerId.isEmpty ? null : _openChat,
-            ),
+    return Wrap(
+      spacing: 8.w,
+      runSpacing: 8.h,
+      children: [
+        if (visit.canChat)
+          _VisitCardAction(
+            label: LocaleKeys.tenantVisitChatAction,
+            backgroundColor: AppColors.bluePale,
+            foregroundColor: AppColors.blue,
+            onPressed: _openChat,
           ),
-          Expanded(
-            child: _VisitCardAction(
-              label: LocaleKeys.tenantVisitRateAction,
-              backgroundColor: AppColors.goldPale,
-              foregroundColor: AppColors.gold,
-              onPressed: onRatePressed,
-            ),
+        if (visit.canReview)
+          _VisitCardAction(
+            label: LocaleKeys.tenantVisitRateAction,
+            backgroundColor: AppColors.goldPale,
+            foregroundColor: AppColors.gold,
+            onPressed: onRatePressed,
           ),
-        ],
-      );
-    }
-
-    if (visit.status.isPending) {
-      return _VisitCardAction(
-        label: LocaleKeys.tenantVisitCancelRequest,
-        backgroundColor: AppColors.redPale,
-        foregroundColor: AppColors.red,
-        onPressed: onCancelPressed,
-      );
-    }
-
-    return _VisitCardAction(
-      label: LocaleKeys.tenantVisitFindAlternative,
-      backgroundColor: AppColors.sokoonTeal,
-      foregroundColor: AppColors.white,
-      onPressed: _findAlternative,
+        if (visit.canCancel)
+          _VisitCardAction(
+            label: LocaleKeys.tenantVisitCancelRequest,
+            backgroundColor: AppColors.redPale,
+            foregroundColor: AppColors.red,
+            onPressed: onCancelPressed,
+          ),
+        if (visit.canFindAlternative)
+          _VisitCardAction(
+            label: LocaleKeys.tenantVisitFindAlternative,
+            backgroundColor: AppColors.sokoonTeal,
+            foregroundColor: AppColors.white,
+            onPressed: _findAlternative,
+          ),
+      ],
     );
   }
 }

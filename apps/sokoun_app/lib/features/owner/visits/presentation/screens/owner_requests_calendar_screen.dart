@@ -46,35 +46,6 @@ class _OwnerRequestsCalendarScreenState
     _calendarRequest.value = _calendarCubit.getCalendar(date: date);
   }
 
-  Future<void> _openAvailability(OwnerVisitCalendarContent calendar) async {
-    final String ownerPropertyId = calendar.firstPropertyId.isNotEmpty
-        ? calendar.firstPropertyId
-        : widget.ownerPropertyId;
-    if (ownerPropertyId.isEmpty) {
-      return;
-    }
-
-    final bool? saved = await Go.to<bool>(
-      OwnerAvailabilityScreen(
-        ownerPropertyId: ownerPropertyId,
-        availabilityStartDate: calendar.selectedDateValue,
-      ),
-    );
-    if (saved == true && mounted) {
-      _calendarRequest.value = _calendarCubit.getCalendar(date: _selectedDate);
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          SnackBar(
-            content: AppText(
-              LocaleKeys.ownerAvailabilitySaved,
-              style: AppTextStyles.regular,
-            ),
-          ),
-        );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider<OwnerCalendarCubit>.value(
@@ -110,11 +81,7 @@ class _OwnerRequestsCalendarScreenState
                         calendar: calendar,
                         selectedDate: calendar.selectedDateValue,
                         onDaySelected: _selectDay,
-                        onAvailabilityPressed:
-                            calendar.firstPropertyId.isNotEmpty ||
-                                widget.ownerPropertyId.trim().isNotEmpty
-                            ? () => _openAvailability(calendar)
-                            : null,
+                        onAvailabilityPressed: null,
                       ),
                     )
                     .withPullRefresher(

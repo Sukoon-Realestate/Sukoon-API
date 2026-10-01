@@ -1,9 +1,14 @@
 part of '../../../imports.dart';
 
 class VisitRatingSheet extends StatefulWidget {
-  const VisitRatingSheet({super.key, required this.propertyTitle});
+  const VisitRatingSheet({
+    super.key,
+    required this.propertyTitle,
+    this.visitId = '',
+  });
 
   final String propertyTitle;
+  final String visitId;
 
   @override
   State<VisitRatingSheet> createState() => _VisitRatingSheetState();
@@ -12,9 +17,9 @@ class VisitRatingSheet extends StatefulWidget {
 class _VisitRatingSheetState extends State<VisitRatingSheet> {
   late final TextEditingController _commentController;
   final ValueNotifier<List<int>> _criteriaRatings = ValueNotifier<List<int>>(
-    <int>[4, 4, 4],
+    <int>[0, 0, 0],
   );
-  final ValueNotifier<int> _overallRating = ValueNotifier<int>(0);
+  late final VisitReviewCubit _reviewCubit;
 
   List<String> get _criteria => [
     LocaleKeys.tenantVisitRatingCleanliness,
@@ -26,13 +31,14 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
   void initState() {
     super.initState();
     _commentController = TextEditingController();
+    _reviewCubit = VisitReviewCubit();
   }
 
   @override
   void dispose() {
     _commentController.dispose();
     _criteriaRatings.dispose();
-    _overallRating.dispose();
+    _reviewCubit.close();
     super.dispose();
   }
 
@@ -42,7 +48,19 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
     _criteriaRatings.value = ratings;
   }
 
-  void _submit() => Go.back(true);
+  Future<void> _submit() async {
+    final List<int> values = _criteriaRatings.value;
+    final bool succeeded = await _reviewCubit.submit(
+      visitId: widget.visitId,
+      body: VisitReviewBody(
+        cleanliness: values[0],
+        accuracy: values[1],
+        ownerInteraction: values[2],
+        comment: _commentController.text,
+      ),
+    );
+    if (succeeded && mounted) Go.back(true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,14 +126,6 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
               overflow: TextOverflow.ellipsis,
             ),
             14.szH,
-            ValueListenableBuilder<int>(
-              valueListenable: _overallRating,
-              builder: (context, overallRating, _) => VisitRatingStars(
-                rating: overallRating,
-                onRatingSelected: (rating) => _overallRating.value = rating,
-              ),
-            ),
-            12.szH,
             ValueListenableBuilder<List<int>>(
               valueListenable: _criteriaRatings,
               builder: (context, criteriaRatings, _) => Column(
@@ -158,17 +168,19 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
               ),
             ),
             14.szH,
-            DefaultButton(
-              onTap: _submit,
-              title: LocaleKeys.tenantVisitRatingSubmit,
-              color: AppColors.sokoonTeal,
-              textColor: AppColors.white,
-              borderRadius: BorderRadius.circular(14.r),
-              height: 50.h,
-              textStyle: AppTextStyles.bold15.copyWith(
-                fontSize: 15.sp,
-                height: 1.45,
-              ),
+            ValueListenableBuilder<List<int>>(
+              valueListenable: _criteriaRatings,
+              builder: (context, ratings, _) =>
+                  ratings.any((rating) => rating < 1) || widget.visitId.isEmpty
+                  ? DefaultButton(
+                      onTap: null,
+                      title: LocaleKeys.tenantVisitRatingSubmit,
+                    )
+                  : AppLoadingButton(
+                      asyncCall: (_) => _submit(),
+                      title: LocaleKeys.tenantVisitRatingSubmit,
+                      buttonColor: AppColors.sokoonTeal,
+                    ),
             ),
           ],
         ),

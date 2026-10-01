@@ -82,3 +82,19 @@ part 'presentation/widgets/tenant/tenant_profile_header_card.dart';
 part 'presentation/widgets/tenant/tenant_account_summary_content_view.dart';
 part 'presentation/widgets/tenant/tenant_identity_verification_card.dart';
 part 'presentation/widgets/tenant/tenant_summary_header_card.dart';
+
+part 'data/models/user_profile_content.dart';
+part 'presentation/cubits/user_profile_cubit.dart';
+part 'presentation/cubits/profile_logout_cubit.dart';
+
+part 'data/enums/profile_setting.dart';
+
+part 'data/models/profile_settings_content.dart';
+
+part 'presentation/cubits/profile_settings_cubit.dart';
+
+part 'presentation/screens/profile_settings_screen.dart';
+
+part 'presentation/widgets/shared/profile_settings_content_view.dart';
+
+part 'presentation/widgets/shared/profile_settings_empty_state.dart';

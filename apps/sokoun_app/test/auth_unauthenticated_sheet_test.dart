@@ -8,6 +8,7 @@ import 'package:melos_core/core/helpers/helpers.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/screens/login_screen.dart';
 import 'package:sokoun_app/shared_widgets/unauthenticated_sheet.dart';
+import 'package:sokoun_app/shared_widgets/google_sign_in_button.dart';
 import 'package:sokoun_app/features/main_view/presentation/screens/view.dart';
 import 'package:sokoun_app/features/main_view/presentation/widgets/home_bottom_navigation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -63,6 +64,7 @@ void main() {
     await tester.pumpWidget(_buildApp(const LoginScreen()));
     await tester.pumpAndSettle();
 
+    expect(find.byType(AppGoogleSignInButton), findsOneWidget);
     final visitorButton = find.text('Sign in as visitor');
     await tester.ensureVisible(visitorButton);
     await tester.tap(visitorButton);

@@ -117,6 +117,13 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
               title: LocaleKeys.profileAccountAndProfile,
               items: [
                 OwnerMoreItem(
+                  icon: Icons.settings_outlined,
+                  label: LocaleKeys.profileSettingsTitle,
+                  color: AppColors.sokoonTeal,
+                  backgroundColor: AppColors.mintLight,
+                  onTap: () => Go.to(const ProfileSettingsScreen()),
+                ),
+                OwnerMoreItem(
                   icon: Icons.person_outline_rounded,
                   label: LocaleKeys.profileMyProfile,
                   color: AppColors.sokoonTeal,
