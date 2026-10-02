@@ -19,7 +19,9 @@ class OwnerAvailabilityDayChip extends StatelessWidget {
       child: InkWell(
         onTap: onPressed,
         borderRadius: BorderRadius.circular(16.r),
-        child: Container(
+        child: AnimatedContainer(
+          duration: SokounMotion.duration(context, milliseconds: 180),
+          curve: SokounMotion.curve,
           width:
               64.w *
               (MediaQuery.textScalerOf(context).scale(14) / 14).clamp(1, 2),

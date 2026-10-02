@@ -31,6 +31,7 @@ import 'package:upgrader/upgrader.dart';
 import '../widgets/home_bottom_navigation.dart';
 import '../widgets/home_navigation_rail.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_content_transition.dart';
 import '../../data/enums/app_workspace.dart';
 import '../../data/enums/workspace_tab.dart';
 import '../cubits/workspace_cubit.dart';
@@ -407,17 +408,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                         child: rail ? _buildNavigation(rail: true) : null,
                       ),
                       Expanded(
-                        child: IndexedStack(
-                          // Account identity, not window size, owns tab lifetimes.
-                          key: ValueKey(_workspaceCubit.userId),
-                          index: bodyIndex,
-                          children: List<Widget>.generate(
-                            _allTabs.length,
-                            (index) => TickerMode(
-                              enabled: index == bodyIndex,
-                              child: _visited.contains(index)
-                                  ? _allTabs[index].screen
-                                  : const SizedBox.shrink(),
+                        child: SokounContentTransition(
+                          identity: bodyIndex,
+                          child: IndexedStack(
+                            // Account identity, not window size, owns tab lifetimes.
+                            key: ValueKey(_workspaceCubit.userId),
+                            index: bodyIndex,
+                            children: List<Widget>.generate(
+                              _allTabs.length,
+                              (index) => TickerMode(
+                                enabled: index == bodyIndex,
+                                child: _visited.contains(index)
+                                    ? _allTabs[index].screen
+                                    : const SizedBox.shrink(),
+                              ),
                             ),
                           ),
                         ),

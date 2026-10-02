@@ -1,6 +1,6 @@
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_action_footer.dart';
-import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_selection_feedback.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -127,9 +127,8 @@ class TenantPropertyBottomActions extends StatelessWidget {
               backgroundColor: AppColors.grayBackground,
               minimumSize: Size(48.r, 48.r),
             ),
-            icon: AnimatedScale(
-              scale: isSaved ? 1.08 : 1,
-              duration: SokounMotion.duration(context, milliseconds: 180),
+            icon: SokounSelectionFeedback(
+              selected: isSaved,
               child: Icon(
                 isSaved
                     ? Icons.bookmark_rounded

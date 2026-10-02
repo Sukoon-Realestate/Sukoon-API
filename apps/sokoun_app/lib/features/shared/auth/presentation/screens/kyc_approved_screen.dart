@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_reveal.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -25,17 +26,20 @@ class KycApprovedScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            width: 112.r,
-            height: 112.r,
-            decoration: const BoxDecoration(
-              color: AppColors.mintLight,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.shield_outlined,
-              color: AppColors.sokoonTeal,
-              size: 52.r,
+          SokounReveal(
+            beginScale: .88,
+            child: Container(
+              width: 112.r,
+              height: 112.r,
+              decoration: const BoxDecoration(
+                color: AppColors.mintLight,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.shield_outlined,
+                color: AppColors.sokoonTeal,
+                size: 52.r,
+              ),
             ),
           ),
           10.szH,

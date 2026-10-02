@@ -6,6 +6,8 @@ import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_action_footer.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_content_transition.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import '../../../data/models/property_location.dart';
 import '../owner_add_property/add_property_primary_button.dart';
 
@@ -25,18 +27,35 @@ class PropertyLocationConfirmation extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: 8.h,
       children: [
-        AppText(
-          selected == null
-              ? LocaleKeys.propertyMapTapHint
-              : selected!.address.isEmpty
-              ? LocaleKeys.ownerAddPropertySelectedLocation
-              : selected!.address,
-          style: AppTextStyles.regular14.copyWith(color: AppColors.sokoonNavy),
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
+        AnimatedSize(
+          duration: SokounMotion.duration(context, milliseconds: 240),
+          curve: SokounMotion.curve,
+          alignment: AlignmentDirectional.topStart,
+          child: SokounContentTransition(
+            identity: (selected?.latitude, selected?.longitude),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 8.h,
+              children: [
+                AppText(
+                  selected == null
+                      ? LocaleKeys.propertyMapTapHint
+                      : selected!.address.isEmpty
+                      ? LocaleKeys.ownerAddPropertySelectedLocation
+                      : selected!.address,
+                  style: AppTextStyles.regular14.copyWith(
+                    color: AppColors.sokoonNavy,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (selected != null)
+                  Text(selected!.coordinates, textDirection: TextDirection.ltr),
+              ],
+            ),
+          ),
         ),
-        if (selected != null)
-          Text(selected!.coordinates, textDirection: TextDirection.ltr),
         AddPropertyPrimaryButton(
           label: LocaleKeys.propertyMapConfirm,
           onTap: selected?.isValid == true && !busy

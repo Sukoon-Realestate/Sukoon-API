@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_reveal.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -28,18 +29,21 @@ class AddPropertySubmittedPage extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 24.h),
         children: [
-          Container(
-            width: 96.r,
-            height: 96.r,
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              color: AppColors.orangePale,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.schedule_rounded,
-              color: AppColors.amber,
-              size: 42.r,
+          SokounReveal(
+            beginScale: .88,
+            child: Container(
+              width: 96.r,
+              height: 96.r,
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(
+                color: AppColors.orangePale,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.schedule_rounded,
+                color: AppColors.amber,
+                size: 42.r,
+              ),
             ),
           ).centerWidget,
           16.szH,
@@ -90,7 +94,10 @@ class AddPropertySubmittedPage extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           22.szH,
-          _SubmittedSummaryCard(items: summaryItems),
+          SokounReveal(
+            delay: const Duration(milliseconds: 80),
+            child: _SubmittedSummaryCard(items: summaryItems),
+          ),
           22.szH,
           AddPropertyPrimaryButton(
             label: LocaleKeys.ownerPropertySubmittedViewProperties,

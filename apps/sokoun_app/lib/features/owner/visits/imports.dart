@@ -4,6 +4,8 @@ import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/features/main_view/data/workspace_counts_refresh_bus.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_content_transition.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';

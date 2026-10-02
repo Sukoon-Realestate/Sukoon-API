@@ -5,6 +5,7 @@ import 'package:melos_core/core/widgets/app_logo_widget.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/svg_pic.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_selection_feedback.dart';
 
 import 'home_bottom_navigation.dart';
 
@@ -69,7 +70,10 @@ class HomeNavigationRail extends StatelessWidget {
                                     : '${destinations[i].badgeCount}',
                                 style: AppTextStyles.base,
                               ),
-                              child: _icon(i),
+                              child: SokounSelectionFeedback(
+                                selected: i == currentIndex,
+                                child: _icon(i),
+                              ),
                             ),
                             AppText(
                               destinations[i].label,

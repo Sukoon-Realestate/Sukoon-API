@@ -9,10 +9,12 @@ class SokounReveal extends StatefulWidget {
     super.key,
     required this.child,
     this.delay = Duration.zero,
+    this.beginScale = 1,
   });
 
   final Widget child;
   final Duration delay;
+  final double beginScale;
 
   @override
   State<SokounReveal> createState() => _SokounRevealState();
@@ -23,6 +25,7 @@ class _SokounRevealState extends State<SokounReveal>
   late final AnimationController _controller = AnimationController(vsync: this);
   late Animation<double> _opacity;
   late Animation<Offset> _position;
+  late Animation<double> _scale;
   bool _started = false;
 
   @override
@@ -47,6 +50,7 @@ class _SokounRevealState extends State<SokounReveal>
         begin: const Offset(0, .035),
         end: Offset.zero,
       ).animate(curve);
+      _scale = Tween(begin: widget.beginScale, end: 1.0).animate(curve);
       if (duration != Duration.zero) _controller.forward();
     }
     if (duration == Duration.zero) _controller.value = 1;
@@ -61,6 +65,9 @@ class _SokounRevealState extends State<SokounReveal>
   @override
   Widget build(BuildContext context) => FadeTransition(
     opacity: _opacity,
-    child: SlideTransition(position: _position, child: widget.child),
+    child: SlideTransition(
+      position: _position,
+      child: ScaleTransition(scale: _scale, child: widget.child),
+    ),
   );
 }

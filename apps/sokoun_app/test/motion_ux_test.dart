@@ -30,6 +30,14 @@ import 'package:sokoun_app/shared_widgets/localized_digits_formatter.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_reveal.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_theme.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_content_transition.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_selection_feedback.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_selection_chip.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/add_property_chip.dart';
+import 'package:sokoun_app/features/owner/visits/imports.dart'
+    show OwnerAvailabilityTimeChip, OwnerAvailabilitySlotState;
+import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_filter/filter_chip_wrap.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -127,6 +135,7 @@ void main() {
       _app(
         const SokounReveal(
           delay: Duration(milliseconds: 160),
+          beginScale: .88,
           child: Text('Visible'),
         ),
         reduced: true,
@@ -138,7 +147,192 @@ void main() {
       matching: find.byType(FadeTransition),
     );
     expect(tester.widget<FadeTransition>(fade).opacity.value, 1);
+    expect(
+      tester
+          .widget<ScaleTransition>(
+            find.descendant(
+              of: find.byType(SokounReveal),
+              matching: find.byType(ScaleTransition),
+            ),
+          )
+          .scale
+          .value,
+      1,
+    );
   });
+
+  testWidgets(
+    'context transitions retain form state and do not replay on rebuild',
+    (tester) async {
+      final identity = ValueNotifier(0);
+      final controller = TextEditingController();
+      addTearDown(identity.dispose);
+      addTearDown(controller.dispose);
+      Widget content() => _app(
+        ValueListenableBuilder<int>(
+          valueListenable: identity,
+          builder: (_, value, _) => SokounContentTransition(
+            identity: value,
+            child: TextField(controller: controller),
+          ),
+        ),
+      );
+      await tester.pumpWidget(content());
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'Retained address');
+      final fieldState = tester.state(find.byType(TextField));
+      identity.value = 1;
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 80));
+      final fade = find.descendant(
+        of: find.byType(SokounContentTransition),
+        matching: find.byType(FadeTransition),
+      );
+      expect(
+        tester.widget<FadeTransition>(fade).opacity.value,
+        inExclusiveRange(.65, 1),
+      );
+      expect(tester.state(find.byType(TextField)), same(fieldState));
+      expect(find.text('Retained address'), findsOneWidget);
+      await tester.pumpAndSettle();
+      await tester.pumpWidget(content());
+      expect(tester.widget<FadeTransition>(fade).opacity.value, 1);
+      expect(controller.text, 'Retained address');
+    },
+  );
+
+  for (final accessible in [false, true]) {
+    testWidgets(
+      'changing the motion preference settles active transitions ($accessible)',
+      (tester) async {
+        final identity = ValueNotifier(0);
+        addTearDown(identity.dispose);
+        Widget content({bool reduced = false}) => _app(
+          ValueListenableBuilder<int>(
+            valueListenable: identity,
+            builder: (_, value, _) => SokounContentTransition(
+              identity: value,
+              child: const Text('Current content'),
+            ),
+          ),
+          reduced: reduced && !accessible,
+          accessible: reduced && accessible,
+        );
+        await tester.pumpWidget(content());
+        await tester.pumpAndSettle();
+        identity.value = 1;
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 40));
+        await tester.pumpWidget(content(reduced: true));
+        final fade = find.descendant(
+          of: find.byType(SokounContentTransition),
+          matching: find.byType(FadeTransition),
+        );
+        expect(tester.widget<FadeTransition>(fade).opacity.value, 1);
+        identity.value = 2;
+        await tester.pump();
+        expect(tester.widget<FadeTransition>(fade).opacity.value, 1);
+      },
+    );
+  }
+
+  testWidgets(
+    'selection feedback pulses once then returns to its original size',
+    (tester) async {
+      final selected = ValueNotifier(false);
+      addTearDown(selected.dispose);
+      Widget content({bool reduced = false}) => _app(
+        ValueListenableBuilder<bool>(
+          valueListenable: selected,
+          builder: (_, value, _) => SokounSelectionFeedback(
+            selected: value,
+            child: const Icon(Icons.bookmark_rounded),
+          ),
+        ),
+        reduced: reduced,
+      );
+      await tester.pumpWidget(content());
+      await tester.pumpAndSettle();
+      final transform = find.descendant(
+        of: find.byType(SokounSelectionFeedback),
+        matching: find.byType(Transform),
+      );
+      double scale() =>
+          tester.widget<Transform>(transform).transform.storage[0];
+      expect(scale(), 1);
+      selected.value = true;
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 60));
+      expect(scale(), inExclusiveRange(1, 1.09));
+      await tester.pumpAndSettle();
+      expect(scale(), closeTo(1, .0001));
+      await tester.pumpWidget(content(reduced: true));
+      selected.value = false;
+      await tester.pump();
+      expect(scale(), 1);
+    },
+  );
+
+  testWidgets(
+    'inactive content settles without replaying when it becomes visible',
+    (tester) async {
+      Widget content(int identity, bool active) => _app(
+        TickerMode(
+          enabled: active,
+          child: SokounContentTransition(
+            identity: identity,
+            child: const Text('Kept alive'),
+          ),
+        ),
+      );
+      await tester.pumpWidget(content(0, true));
+      await tester.pumpAndSettle();
+      await tester.pumpWidget(content(1, true));
+      await tester.pump(const Duration(milliseconds: 40));
+      await tester.pumpWidget(content(1, false));
+      await tester.pumpWidget(content(2, false));
+      await tester.pumpWidget(content(2, true));
+      final fade = find.descendant(
+        of: find.byType(SokounContentTransition),
+        matching: find.byType(FadeTransition),
+      );
+      expect(tester.widget<FadeTransition>(fade).opacity.value, 1);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'selection chips expose their selected state to assistive technology',
+    (tester) async {
+      final semantics = tester.ensureSemantics();
+      try {
+        final selected = ValueNotifier(false);
+        addTearDown(selected.dispose);
+        await tester.pumpWidget(
+          _app(
+            ValueListenableBuilder<bool>(
+              valueListenable: selected,
+              builder: (_, value, _) => SokounSelectionChip(
+                label: 'Elevator',
+                selected: value,
+                onPressed: () => selected.value = !value,
+              ),
+            ),
+            reduced: true,
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Elevator'));
+        await tester.pumpAndSettle();
+        final node = tester.getSemantics(find.byType(SokounSelectionChip));
+        expect(node.getSemanticsData().flagsCollection.isSelected, isTrue);
+        expect(node.getSemanticsData().flagsCollection.isButton, isTrue);
+        expect(node.label, 'Elevator');
+      } finally {
+        semantics.dispose();
+      }
+    },
+  );
 
   for (final language in ['ar', 'en']) {
     testWidgets('long descriptions expand and collapse in $language', (
@@ -179,6 +373,70 @@ void main() {
 
     for (final width in [320.0, 390.0, 600.0, 768.0, 1024.0, 1366.0]) {
       for (final scale in [1.0, 1.3, 2.0]) {
+        testWidgets('animated controls fit $language $width $scale', (
+          tester,
+        ) async {
+          _size(tester, width);
+          final selected = ValueNotifier(false);
+          addTearDown(selected.dispose);
+          final ownerLabel = language == 'ar'
+              ? 'تكييف هواء'
+              : 'Air conditioning';
+          final filterLabel = language == 'ar'
+              ? 'قريب من المواصلات والخدمات الأساسية'
+              : 'Close to public transport and essential services';
+          await tester.pumpWidget(
+            _app(
+              _MotionSelectionPreview(
+                selected: selected,
+                ownerLabel: ownerLabel,
+                filterLabel: filterLabel,
+              ),
+              language: language,
+              scale: scale,
+            ),
+          );
+          await tester.pumpAndSettle();
+          expect(tester.takeException(), isNull);
+          for (final chip in tester.widgetList<SokounSelectionChip>(
+            find.byType(SokounSelectionChip),
+          )) {
+            expect(
+              tester.getSize(find.byWidget(chip)).height,
+              greaterThanOrEqualTo(48),
+            );
+          }
+          final capture = scale == 1 && (width == 390 || width == 1024);
+          if (capture) {
+            await _capture(
+              tester,
+              'selection-before-$language-${width.toInt()}',
+            );
+          }
+          await tester.tap(find.text(ownerLabel));
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 70));
+          expect(tester.takeException(), isNull);
+          if (capture) {
+            await _capture(
+              tester,
+              'selection-during-$language-${width.toInt()}',
+            );
+          }
+          await tester.pumpAndSettle();
+          expect(selected.value, isTrue);
+          if (capture) {
+            await _capture(
+              tester,
+              'selection-after-$language-${width.toInt()}',
+            );
+          }
+          await tester.tap(find.text(filterLabel));
+          await tester.pumpAndSettle();
+          expect(selected.value, isFalse);
+          expect(tester.takeException(), isNull);
+        });
+
         testWidgets(
           'search can clear its query and delete history with Undo in $language $width $scale',
           (tester) async {
@@ -358,6 +616,100 @@ void main() {
   });
 }
 
+class _MotionSelectionPreview extends StatelessWidget {
+  const _MotionSelectionPreview({
+    required this.selected,
+    required this.ownerLabel,
+    required this.filterLabel,
+  });
+
+  final ValueNotifier<bool> selected;
+  final String ownerLabel;
+  final String filterLabel;
+
+  @override
+  Widget build(BuildContext context) => Align(
+    alignment: Alignment.topCenter,
+    child: SizedBox(
+      width: 520,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: ValueListenableBuilder<bool>(
+          valueListenable: selected,
+          builder: (_, value, _) => Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: 20,
+            children: [
+              Text(LocaleKeys.ownerAddPropertyType),
+              Wrap(
+                children: [
+                  AddPropertyChip(
+                    chip: AddPropertyChipContent(
+                      label: ownerLabel,
+                      isSelected: value,
+                    ),
+                    onTap: () => selected.value = !value,
+                  ),
+                ],
+              ),
+              const Divider(),
+              Text(LocaleKeys.tenantFilterShowResults),
+              FilterChipWrap(
+                options: [
+                  TenantFilterOption(value: 'transport', label: filterLabel),
+                ],
+                selectedValues: value ? {'transport'} : {},
+                onSelected: (_) => selected.value = !value,
+              ),
+              const Divider(),
+              Text(LocaleKeys.ownerAvailabilityDescription),
+              Row(
+                spacing: 12,
+                children: [
+                  Expanded(
+                    child: OwnerAvailabilityTimeChip(
+                      label: '09:00 AM',
+                      state: value
+                          ? OwnerAvailabilitySlotState.available
+                          : OwnerAvailabilitySlotState.unspecified,
+                      onPressed: () => selected.value = !value,
+                    ),
+                  ),
+                  Expanded(
+                    child: OwnerAvailabilityTimeChip(
+                      label: '10:00 AM',
+                      state: OwnerAvailabilitySlotState.booked,
+                      onPressed: () {},
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(),
+              Row(
+                children: [
+                  Expanded(child: Text(LocaleKeys.favoritesNavigationSaved)),
+                  IconButton(
+                    onPressed: () => selected.value = !value,
+                    icon: SokounSelectionFeedback(
+                      selected: value,
+                      child: Icon(
+                        value
+                            ? Icons.bookmark_rounded
+                            : Icons.bookmark_border_rounded,
+                        color: AppColors.sokoonTeal,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
 OwnerAddPropertyFormState _reviewForm() =>
     OwnerAddPropertyFormState.initial().copyWith(
       title: 'Bright apartment / شقة بإضاءة طبيعية',
@@ -401,6 +753,7 @@ Widget _app(
   Widget child, {
   String language = 'en',
   bool reduced = false,
+  bool accessible = false,
   double scale = 1,
 }) => EasyLocalization(
   supportedLocales: const [Locale('en'), Locale('ar')],
@@ -422,6 +775,7 @@ Widget _app(
       builder: (context, navigator) => MediaQuery(
         data: MediaQuery.of(context).copyWith(
           disableAnimations: reduced,
+          accessibleNavigation: accessible,
           textScaler: TextScaler.linear(scale),
         ),
         child: RepaintBoundary(child: navigator!),

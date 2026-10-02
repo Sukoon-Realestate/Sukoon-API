@@ -3,6 +3,7 @@ import 'package:sokoun_app/features/shared/reviews/data/models/property_review.d
 import 'package:sokoun_app/features/shared/reviews/presentation/widgets/property_review_card.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_reveal.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:sokoun_app/shared_widgets/unsaved_changes_guard.dart';
 import 'package:sokoun_app/features/main_view/data/workspace_counts_refresh_bus.dart';

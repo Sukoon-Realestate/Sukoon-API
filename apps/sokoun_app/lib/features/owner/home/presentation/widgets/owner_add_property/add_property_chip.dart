@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/helpers/text_style_manager.dart';
-import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_selection_chip.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 
 class AddPropertyChip extends StatelessWidget {
@@ -18,43 +15,10 @@ class AddPropertyChip extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        height: 34.h,
-        padding: EdgeInsets.symmetric(horizontal: 14.w),
-        decoration: BoxDecoration(
-          color: chip.isSelected ? AppColors.tealAlpha07 : AppColors.white,
-          borderRadius: BorderRadius.circular(999.r),
-          border: Border.all(
-            color: chip.isSelected ? AppColors.sokoonTeal : AppColors.grayPale,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          spacing: 4.w,
-          children: [
-            if (chip.isSelected && showCheck)
-              Icon(
-                Icons.check_rounded,
-                color: AppColors.sokoonTeal,
-                size: 14.r,
-              ),
-            AppText(
-              chip.label,
-              style: AppTextStyles.bold12.copyWith(
-                color: chip.isSelected
-                    ? AppColors.sokoonTeal
-                    : AppColors.sokoonNavy,
-                fontSize: 12.sp,
-                height: 1.45,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => SokounSelectionChip(
+    label: chip.label,
+    selected: chip.isSelected,
+    showCheck: showCheck,
+    onPressed: onTap,
+  );
 }

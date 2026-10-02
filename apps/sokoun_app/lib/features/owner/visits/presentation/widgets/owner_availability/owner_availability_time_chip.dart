@@ -39,23 +39,24 @@ class OwnerAvailabilityTimeChip extends StatelessWidget {
       child: InkWell(
         onTap: onPressed,
         borderRadius: BorderRadius.circular(16.r),
-        child: Container(
-          height: 40.h,
+        child: AnimatedContainer(
+          duration: SokounMotion.duration(context, milliseconds: 180),
+          curve: SokounMotion.curve,
+          constraints: BoxConstraints(minHeight: 48.h),
+          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 10.h),
           alignment: Alignment.center,
           decoration: BoxDecoration(
             color: _backgroundColor,
             borderRadius: BorderRadius.circular(16.r),
             border: Border.all(color: _foregroundColor),
           ),
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: AppText(
-              state.isBooked ? '$label ×' : label,
-              style: AppTextStyles.bold12.copyWith(
-                color: _foregroundColor,
-                fontSize: 12.sp,
-                height: 1.45,
-              ),
+          child: AppText(
+            state.isBooked ? '$label ×' : label,
+            textAlign: TextAlign.center,
+            style: AppTextStyles.bold12.copyWith(
+              color: _foregroundColor,
+              fontSize: 12.sp,
+              height: 1.45,
             ),
           ),
         ),

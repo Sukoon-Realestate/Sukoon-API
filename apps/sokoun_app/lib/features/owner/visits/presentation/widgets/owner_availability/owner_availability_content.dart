@@ -54,47 +54,55 @@ class OwnerAvailabilityContent extends StatelessWidget {
             ),
           ),
           18.szH,
-          AppText(
-            _ownerAvailabilityDateLabel(context, selectedDay),
-            style: AppTextStyles.bold14.copyWith(
-              color: AppColors.sokoonNavy,
-              fontSize: 14.sp,
-              height: 1.45,
+          SokounContentTransition(
+            identity: selectedDay.dateValue,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AppText(
+                  _ownerAvailabilityDateLabel(context, selectedDay),
+                  style: AppTextStyles.bold14.copyWith(
+                    color: AppColors.sokoonNavy,
+                    fontSize: 14.sp,
+                    height: 1.45,
+                  ),
+                ),
+                12.szH,
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    final int columns = SokounLayout.columns(
+                      context,
+                      constraints.maxWidth,
+                      minimumWidth: 76,
+                      maximum: 6,
+                      gap: 8,
+                    );
+                    final double chipWidth =
+                        (constraints.maxWidth - (columns - 1) * 8) / columns;
+                    return Wrap(
+                      spacing: 8.w,
+                      runSpacing: 8.h,
+                      children: [
+                        for (int index = 0; index < slots.length; index++)
+                          SizedBox(
+                            width: chipWidth,
+                            child: OwnerAvailabilityTimeChip(
+                              label: _ownerAvailabilityTimeLabel(
+                                context,
+                                slots[index].time,
+                              ),
+                              state: slotStates[index],
+                              onPressed: () => onTimePressed(index),
+                            ),
+                          ),
+                      ],
+                    );
+                  },
+                ),
+                18.szH,
+              ],
             ),
           ),
-          12.szH,
-          LayoutBuilder(
-            builder: (context, constraints) {
-              final int columns = SokounLayout.columns(
-                context,
-                constraints.maxWidth,
-                minimumWidth: 76,
-                maximum: 6,
-                gap: 8,
-              );
-              final double chipWidth =
-                  (constraints.maxWidth - (columns - 1) * 8) / columns;
-              return Wrap(
-                spacing: 8.w,
-                runSpacing: 8.h,
-                children: [
-                  for (int index = 0; index < slots.length; index++)
-                    SizedBox(
-                      width: chipWidth,
-                      child: OwnerAvailabilityTimeChip(
-                        label: _ownerAvailabilityTimeLabel(
-                          context,
-                          slots[index].time,
-                        ),
-                        state: slotStates[index],
-                        onPressed: () => onTimePressed(index),
-                      ),
-                    ),
-                ],
-              );
-            },
-          ),
-          18.szH,
           const OwnerAvailabilityLegend(),
           18.szH,
           AppLoadingButton(

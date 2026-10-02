@@ -19,18 +19,21 @@ class VisitConfirmationContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            width: 96.r,
-            height: 96.r,
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              color: AppColors.greenPale,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.check_circle_outline_rounded,
-              color: AppColors.green,
-              size: 44.r,
+          SokounReveal(
+            beginScale: .88,
+            child: Container(
+              width: 96.r,
+              height: 96.r,
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(
+                color: AppColors.greenPale,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.check_circle_outline_rounded,
+                color: AppColors.green,
+                size: 44.r,
+              ),
             ),
           ).centerWidget,
           20.szH,
@@ -55,25 +58,28 @@ class VisitConfirmationContent extends StatelessWidget {
             maxLines: 3,
           ),
           24.szH,
-          VisitSummaryCard(
-            rows: [
-              (
-                label: LocaleKeys.tenantVisitSummaryProperty,
-                value: property.title,
-              ),
-              (
-                label: LocaleKeys.tenantVisitSummaryDay,
-                value: selectedDay.fullLabel,
-              ),
-              (
-                label: LocaleKeys.tenantVisitSummaryTime,
-                value: selectedTime.label,
-              ),
-              (
-                label: LocaleKeys.tenantVisitSummaryStatus,
-                value: LocaleKeys.tenantVisitPendingOwnerResponse,
-              ),
-            ],
+          SokounReveal(
+            delay: const Duration(milliseconds: 80),
+            child: VisitSummaryCard(
+              rows: [
+                (
+                  label: LocaleKeys.tenantVisitSummaryProperty,
+                  value: property.title,
+                ),
+                (
+                  label: LocaleKeys.tenantVisitSummaryDay,
+                  value: selectedDay.fullLabel,
+                ),
+                (
+                  label: LocaleKeys.tenantVisitSummaryTime,
+                  value: selectedTime.label,
+                ),
+                (
+                  label: LocaleKeys.tenantVisitSummaryStatus,
+                  value: LocaleKeys.tenantVisitPendingOwnerResponse,
+                ),
+              ],
+            ),
           ),
           24.szH,
           DefaultButton(

@@ -101,7 +101,9 @@ class BookVisitForm extends StatelessWidget {
           16.szH,
           IgnorePointer(
             ignoring: !canConfirm,
-            child: Opacity(
+            child: AnimatedOpacity(
+              duration: SokounMotion.duration(context, milliseconds: 180),
+              curve: SokounMotion.curve,
               opacity: canConfirm ? 1 : .45,
               child: AppLoadingButton(
                 asyncCall: onConfirmPressed,

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -7,6 +5,7 @@ import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/svg_pic.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_selection_feedback.dart';
 
 class HomeBottomNavigation extends StatelessWidget {
   const HomeBottomNavigation({
@@ -121,7 +120,10 @@ class _HomeBottomNavigationItem extends StatelessWidget {
                 child: Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    _buildIcon(color),
+                    SokounSelectionFeedback(
+                      selected: isSelected,
+                      child: _buildIcon(color),
+                    ),
                     if (destination.badgeCount > 0)
                       PositionedDirectional(
                         top: -7.r,
@@ -173,7 +175,6 @@ class _HomeBottomNavigationItem extends StatelessWidget {
         ? destination.selectedIcon
         : destination.icon;
 
-    log('type isss $icon');
     if (icon is String) {
       return SvgPic(assetName: icon, color: color, size: 22.r);
     }
