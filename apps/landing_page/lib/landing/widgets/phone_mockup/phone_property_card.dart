@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 
 import '../../theme/landing_theme.dart';
+import '../shared/property_illustration.dart';
 
 class PhonePropertyCard extends StatelessWidget {
   const PhonePropertyCard({
@@ -41,16 +42,7 @@ class PhonePropertyCard extends StatelessWidget {
           Expanded(
             child: Stack(
               children: [
-                Positioned.fill(
-                  child: ColoredBox(
-                    color: color,
-                    child: Icon(
-                      Icons.image_outlined,
-                      color: Colors.white.withValues(alpha: 0.65),
-                      size: 25,
-                    ),
-                  ),
-                ),
+                Positioned.fill(child: PropertyIllustration(tint: color)),
                 Positioned(
                   top: 7,
                   left: 7,

@@ -7,7 +7,6 @@ import 'package:melos_core/core/extensions/object.dart';
 import '../api_endpoints.dart';
 import 'session_cookie_manager.dart';
 
-/// Bridges cookie-based sessions to APIs that also require token headers.
 class CookieTokenHeaderInterceptor extends Interceptor {
   CookieTokenHeaderInterceptor({
     required PersistCookieJar cookieJar,

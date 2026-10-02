@@ -19,7 +19,9 @@ class LandingPageApp extends StatelessWidget {
       supportedLocales: context.supportedLocales,
       locale: context.locale,
       theme: LandingTheme.theme,
-      home: const LandingPage(),
+      // LocaleKeys resolves strings outside BuildContext; remount cached sections
+      // so a language change also refreshes const widgets and header delegates.
+      home: LandingPage(key: ValueKey(context.locale.languageCode)),
     );
   }
 }

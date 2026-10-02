@@ -52,35 +52,45 @@ class PropertyCardDetails extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          Row(
+          Wrap(
+            spacing: 14,
+            runSpacing: 8,
             children: [
-              const Icon(
-                Icons.home_outlined,
-                size: 15,
-                color: LandingColors.subtext,
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.home_outlined,
+                    size: 15,
+                    color: LandingColors.subtext,
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    '${property.rooms} ${LocaleKeys.landingRooms}',
+                    style: const TextStyle(
+                      color: LandingColors.subtext,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 5),
-              Text(
-                '${property.rooms} ${LocaleKeys.landingRooms}',
-                style: const TextStyle(
-                  color: LandingColors.subtext,
-                  fontSize: 13,
-                ),
-              ),
-              const SizedBox(width: 14),
-              const Icon(
-                Icons.crop_square_rounded,
-                size: 14,
-                color: LandingColors.subtext,
-              ),
-              const SizedBox(width: 5),
-              Text(
-                '${property.squareMeters} '
-                '${LocaleKeys.landingSquareMeters}',
-                style: const TextStyle(
-                  color: LandingColors.subtext,
-                  fontSize: 13,
-                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.crop_square_rounded,
+                    size: 14,
+                    color: LandingColors.subtext,
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    '${property.squareMeters} ${LocaleKeys.landingSquareMeters}',
+                    style: const TextStyle(
+                      color: LandingColors.subtext,
+                      fontSize: 13,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -112,7 +122,7 @@ class PropertyCardDetails extends StatelessWidget {
                 ),
               ),
               LandingButton(
-                label: LocaleKeys.landingDetails,
+                label: LocaleKeys.landingAppTag,
                 onPressed: onDetails,
                 height: 36,
                 horizontalPadding: 16,

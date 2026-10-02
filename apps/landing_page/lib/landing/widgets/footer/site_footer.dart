@@ -24,16 +24,15 @@ class SiteFooter extends StatelessWidget {
     (
       LocaleKeys.landingFooterHelp,
       [
-        (LocaleKeys.landingFooterHelpCenter, 'faq'),
-        (LocaleKeys.landingFooterContact, 'faq'),
         (LocaleKeys.landingNavFaq, 'faq'),
+        (LocaleKeys.landingNavTrust, 'trust'),
       ],
     ),
     (
-      LocaleKeys.landingFooterLegal,
+      LocaleKeys.landingAppTag,
       [
-        (LocaleKeys.landingFooterTerms, 'faq'),
-        (LocaleKeys.landingFooterPrivacy, 'trust'),
+        (LocaleKeys.landingPreviewAction, 'app'),
+        (LocaleKeys.landingStartNow, 'download'),
       ],
     ),
   ];

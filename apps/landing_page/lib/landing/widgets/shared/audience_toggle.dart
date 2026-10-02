@@ -65,7 +65,11 @@ class AudienceToggle extends StatelessWidget {
                       onTap: () => onChanged(audience),
                       borderRadius: BorderRadius.circular(12),
                       child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 180),
+                        duration: Duration(
+                          milliseconds: MediaQuery.disableAnimationsOf(context)
+                              ? 0
+                              : 180,
+                        ),
                         height: 44,
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         alignment: Alignment.center,
@@ -78,7 +82,9 @@ class AudienceToggle extends StatelessWidget {
                                 Icon(
                                   icon,
                                   color: selected
-                                      ? Colors.white
+                                      ? (audience == Audience.owner
+                                            ? LandingColors.navy
+                                            : Colors.white)
                                       : LandingColors.subtext,
                                   size: 18,
                                 ),
@@ -88,7 +94,9 @@ class AudienceToggle extends StatelessWidget {
                                 label,
                                 style: TextStyle(
                                   color: selected
-                                      ? Colors.white
+                                      ? (audience == Audience.owner
+                                            ? LandingColors.navy
+                                            : Colors.white)
                                       : LandingColors.subtext,
                                   fontSize: 15,
                                   fontWeight: FontWeight.w700,

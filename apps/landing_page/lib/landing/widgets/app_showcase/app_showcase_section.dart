@@ -5,131 +5,137 @@ import '../../models/landing_content.dart';
 import '../../theme/landing_theme.dart';
 import '../phone_mockup/phone_mockup.dart';
 import '../shared/imports.dart';
-import 'carousel_button.dart';
 
 class AppShowcaseSection extends StatefulWidget {
   const AppShowcaseSection({super.key});
-
   @override
   State<AppShowcaseSection> createState() => _AppShowcaseSectionState();
 }
 
 class _AppShowcaseSectionState extends State<AppShowcaseSection> {
-  static List<(String, Audience)> get _screens => [
-    (LocaleKeys.landingTenantHomePreviewLabel, Audience.tenant),
-    (LocaleKeys.landingOwnerDashboardPreviewLabel, Audience.owner),
-    (LocaleKeys.landingTenantHomePreviewLabel, Audience.tenant),
-    (LocaleKeys.landingOwnerDashboardPreviewLabel, Audience.owner),
-  ];
-
-  var _index = 0;
-
-  void _setIndex(int value) {
-    setState(() => _index = value.clamp(0, _screens.length - 1));
-  }
+  Audience _audience = Audience.tenant;
 
   @override
   Widget build(BuildContext context) {
-    final mobile = LandingBreakpoints.isMobile(
-      MediaQuery.sizeOf(context).width,
-    );
-    final visible = <int>[
-      if (!mobile && _index > 0) _index - 1,
-      _index,
-      if (!mobile && _index < _screens.length - 1) _index + 1,
-    ];
-
+    final tenant = _audience == Audience.tenant;
+    final reduced = MediaQuery.disableAnimationsOf(context);
     return SectionSpacing(
-      backgroundColor: LandingColors.background,
+      backgroundColor: const Color(0xFFEDF3ED),
       child: Column(
         children: [
           SectionHeading(
             tag: LocaleKeys.landingAppTag,
             title: LocaleKeys.landingAppSectionTitle,
+            subtitle: LocaleKeys.landingPreviewDisclaimer,
           ),
-          const SizedBox(height: 52),
-          Row(
-            textDirection: TextDirection.ltr,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: visible.map((screenIndex) {
-              final active = screenIndex == _index;
-
-              return Padding(
-                padding: EdgeInsets.symmetric(horizontal: mobile ? 0 : 16),
-                child: GestureDetector(
-                  onTap: () => _setIndex(screenIndex),
-                  child: AnimatedOpacity(
-                    duration: const Duration(milliseconds: 300),
-                    opacity: active ? 1 : 0.48,
-                    child: AnimatedScale(
-                      duration: const Duration(milliseconds: 300),
-                      scale: active ? 1 : 0.78,
-                      child: PhoneMockup(
-                        audience: _screens[screenIndex].$2,
-                        width: 182,
+          const SizedBox(height: 28),
+          AudienceToggle(
+            value: _audience,
+            onChanged: (value) => setState(() => _audience = value),
+          ),
+          const SizedBox(height: 40),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final copy = ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 430),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      tenant
+                          ? Icons.travel_explore_rounded
+                          : Icons.space_dashboard_outlined,
+                      color: LandingColors.teal,
+                      size: 36,
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      tenant
+                          ? LocaleKeys.landingTenantHomePreviewLabel
+                          : LocaleKeys.landingOwnerDashboardPreviewLabel,
+                      style: const TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.w800,
+                        color: LandingColors.navy,
                       ),
                     ),
-                  ),
+                    const SizedBox(height: 16),
+                    Text(
+                      tenant
+                          ? LocaleKeys.landingTenantPreviewBody
+                          : LocaleKeys.landingOwnerPreviewBody,
+                      style: const TextStyle(
+                        fontSize: 17,
+                        height: 1.8,
+                        color: LandingColors.subtext,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    for (final item
+                        in (tenant
+                                ? LandingContent.tenantSteps
+                                : LandingContent.ownerSteps)
+                            .take(3))
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 16),
+                        child: Row(
+                          children: [
+                            Text(
+                              item.number,
+                              style: const TextStyle(
+                                color: LandingColors.teal,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Text(
+                                item.title,
+                                style: const TextStyle(
+                                  color: LandingColors.navy,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
                 ),
               );
-            }).toList(),
-          ),
-          const SizedBox(height: 32),
-          Text(
-            _screens[_index].$1,
-            style: const TextStyle(
-              color: LandingColors.navy,
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              _screens.length,
-              (index) => GestureDetector(
-                onTap: () => _setIndex(index),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 180),
-                  width: index == _index ? 24 : 8,
-                  height: 8,
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(
-                    color: index == _index
-                        ? LandingColors.teal
-                        : LandingColors.border,
-                    borderRadius: BorderRadius.circular(4),
+              final phone = AnimatedSwitcher(
+                duration: Duration(milliseconds: reduced ? 0 : 420),
+                switchInCurve: Curves.easeOutCubic,
+                transitionBuilder: (child, animation) => FadeTransition(
+                  opacity: animation,
+                  child: SlideTransition(
+                    position: Tween(
+                      begin: const Offset(.08, 0),
+                      end: Offset.zero,
+                    ).animate(animation),
+                    child: child,
                   ),
                 ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
-          Row(
-            textDirection: TextDirection.ltr,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CarouselButton(
-                tooltip: LocaleKeys.landingPreviousScreen,
-                icon: Icons.chevron_left_rounded,
-                foreground: LandingColors.navy,
-                background: Colors.white,
-                borderColor: LandingColors.border,
-                onPressed: _index == 0 ? null : () => _setIndex(_index - 1),
-              ),
-              const SizedBox(width: 16),
-              CarouselButton(
-                tooltip: LocaleKeys.landingNextScreen,
-                icon: Icons.chevron_right_rounded,
-                foreground: Colors.white,
-                background: LandingColors.teal,
-                onPressed: _index == _screens.length - 1
-                    ? null
-                    : () => _setIndex(_index + 1),
-              ),
-            ],
+                child: PhoneMockup(
+                  key: ValueKey(_audience),
+                  audience: _audience,
+                  width: 220,
+                ),
+              );
+              if (constraints.maxWidth < 760) {
+                return Column(
+                  children: [copy, const SizedBox(height: 30), phone],
+                );
+              }
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Flexible(child: copy),
+                  const SizedBox(width: 48),
+                  phone,
+                ],
+              );
+            },
           ),
         ],
       ),

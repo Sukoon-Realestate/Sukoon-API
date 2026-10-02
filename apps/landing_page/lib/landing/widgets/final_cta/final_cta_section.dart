@@ -23,7 +23,7 @@ class FinalCtaSection extends StatelessWidget {
               Container(
                 width: 72,
                 height: 72,
-                padding: const EdgeInsets.all(18),
+                padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
                   color: LandingColors.teal.withValues(alpha: 0.09),
                   borderRadius: BorderRadius.circular(20),
@@ -57,16 +57,17 @@ class FinalCtaSection extends StatelessWidget {
                 runSpacing: 12,
                 children: [
                   LandingButton(
-                    label: LocaleKeys.landingStartAsTenant,
-                    onPressed: () => onNavigate('hero'),
+                    label: LocaleKeys.landingNavTenant,
+                    onPressed: () => onNavigate('tenant'),
                     height: 56,
                     horizontalPadding: 32,
                     radius: 16,
                   ),
                   LandingButton(
-                    label: LocaleKeys.landingStartAsOwner,
-                    onPressed: () => onNavigate('hero'),
+                    label: LocaleKeys.landingNavOwner,
+                    onPressed: () => onNavigate('owner'),
                     backgroundColor: LandingColors.gold,
+                    foregroundColor: LandingColors.navy,
                     height: 56,
                     horizontalPadding: 32,
                     radius: 16,

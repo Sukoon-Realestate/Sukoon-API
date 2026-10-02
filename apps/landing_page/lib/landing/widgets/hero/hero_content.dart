@@ -83,12 +83,12 @@ class HeroContent extends StatelessWidget {
                 borderColor: LandingColors.border,
               ),
               TextButton(
-                onPressed: () => onNavigate('properties'),
+                onPressed: () => onNavigate('app'),
                 style: TextButton.styleFrom(
                   foregroundColor: LandingColors.teal,
                 ),
                 child: Text(
-                  LocaleKeys.landingBrowseAsGuest,
+                  LocaleKeys.landingPreviewAction,
                   style: const TextStyle(
                     decoration: TextDecoration.underline,
                     decorationColor: LandingColors.teal,

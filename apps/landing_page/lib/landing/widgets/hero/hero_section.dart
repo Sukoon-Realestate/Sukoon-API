@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../theme/landing_theme.dart';
 import '../shared/site_content.dart';
 import 'hero_content.dart';
+import '../shared/scroll_reveal.dart';
 import 'hero_phones.dart';
 
 class HeroSection extends StatelessWidget {
@@ -16,9 +17,13 @@ class HeroSection extends StatelessWidget {
       builder: (context, constraints) {
         final desktop = constraints.maxWidth >= 1000;
         final mobile = LandingBreakpoints.isMobile(constraints.maxWidth);
-        final content = HeroContent(centered: !desktop, onNavigate: onNavigate);
+        final content = ScrollReveal(
+          child: HeroContent(centered: !desktop, onNavigate: onNavigate),
+        );
         final phones = HeroPhones(
-          phoneWidth: desktop ? 202 : (mobile ? 138 : 175),
+          phoneWidth: desktop
+              ? 190
+              : (mobile ? (constraints.maxWidth - 40) / 2.45 : 175),
         );
 
         return Container(
@@ -28,38 +33,14 @@ class HeroSection extends StatelessWidget {
               end: Alignment.bottomLeft,
               stops: [0, 0.5, 1],
               colors: [
-                Color(0xFFF0FDFA),
+                Color(0xFFEDF5ED),
                 LandingColors.background,
-                Color(0xFFFEF9F0),
+                Color(0xFFF7F1E4),
               ],
             ),
           ),
           child: Stack(
             children: [
-              const Positioned(
-                top: -70,
-                left: 38,
-                child: Icon(
-                  Icons.home_rounded,
-                  size: 390,
-                  color: Color(0x0F0F766E),
-                ),
-              ),
-              Positioned(
-                bottom: -80,
-                right: 28,
-                child: Container(
-                  width: 260,
-                  height: 260,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: LandingColors.teal.withValues(alpha: 0.05),
-                      width: 38,
-                    ),
-                  ),
-                ),
-              ),
               Padding(
                 padding: EdgeInsets.fromLTRB(
                   mobile ? 20 : 24,

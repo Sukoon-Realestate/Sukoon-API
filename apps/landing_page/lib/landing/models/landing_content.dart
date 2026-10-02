@@ -12,7 +12,7 @@ class FeatureGroup {
     required this.items,
   });
 
-  final String icon;
+  final IconData icon;
   final String title;
   final List<String> items;
 }
@@ -61,7 +61,7 @@ class FaqItem {
 abstract final class LandingContent {
   static List<FeatureGroup> get tenantFeatures => [
     FeatureGroup(
-      icon: '🔍',
+      icon: Icons.tune_rounded,
       title: LocaleKeys.landingFeatureSmartSearchTitle,
       items: [
         LocaleKeys.landingFeaturePropertyTypeArea,
@@ -71,7 +71,7 @@ abstract final class LandingContent {
       ],
     ),
     FeatureGroup(
-      icon: '🏠',
+      icon: Icons.home_work_outlined,
       title: LocaleKeys.landingFeatureFullDetailsTitle,
       items: [
         LocaleKeys.landingFeatureMediaLocation,
@@ -81,16 +81,16 @@ abstract final class LandingContent {
       ],
     ),
     FeatureGroup(
-      icon: '❤️',
+      icon: Icons.favorite_border_rounded,
       title: LocaleKeys.landingFeatureSaveCompareTitle,
       items: [
         LocaleKeys.landingFeatureSaveFavorites,
         LocaleKeys.landingFeatureReturnFavorites,
-        LocaleKeys.landingFeatureCompareOptions,
+        LocaleKeys.landingFeatureSavedPhotos,
       ],
     ),
     FeatureGroup(
-      icon: '💬',
+      icon: Icons.forum_outlined,
       title: LocaleKeys.landingFeatureSafeChatTitle,
       items: [
         LocaleKeys.landingFeaturePhoneNumbersHidden,
@@ -99,7 +99,7 @@ abstract final class LandingContent {
       ],
     ),
     FeatureGroup(
-      icon: '📅',
+      icon: Icons.event_available_outlined,
       title: LocaleKeys.landingFeatureBookVisitTitle,
       items: [
         LocaleKeys.landingFeatureChooseDateTime,
@@ -107,11 +107,19 @@ abstract final class LandingContent {
         LocaleKeys.landingFeatureChangeCancelVisit,
       ],
     ),
+    FeatureGroup(
+      icon: Icons.rate_review_outlined,
+      title: LocaleKeys.landingFeatureReviewsTitle,
+      items: [
+        LocaleKeys.landingFeatureReviewsBody,
+        LocaleKeys.landingFeatureNotifications,
+      ],
+    ),
   ];
 
   static List<FeatureGroup> get ownerFeatures => [
     FeatureGroup(
-      icon: '📋',
+      icon: Icons.add_home_outlined,
       title: LocaleKeys.landingFeatureOrganizedListingTitle,
       items: [
         LocaleKeys.landingFeatureCompleteDataMap,
@@ -121,7 +129,7 @@ abstract final class LandingContent {
       ],
     ),
     FeatureGroup(
-      icon: '📸',
+      icon: Icons.photo_library_outlined,
       title: LocaleKeys.landingFeatureClearMediaTitle,
       items: [
         LocaleKeys.landingFeatureImageNameDescription,
@@ -130,7 +138,7 @@ abstract final class LandingContent {
       ],
     ),
     FeatureGroup(
-      icon: '📄',
+      icon: Icons.verified_user_outlined,
       title: LocaleKeys.landingFeatureOwnershipProofTitle,
       items: [
         LocaleKeys.landingFeatureUtilityBill,
@@ -139,16 +147,17 @@ abstract final class LandingContent {
       ],
     ),
     FeatureGroup(
-      icon: '📬',
+      icon: Icons.calendar_month_outlined,
       title: LocaleKeys.landingFeatureManageVisitsTitle,
       items: [
         LocaleKeys.landingFeatureAcceptRejectRequests,
         LocaleKeys.landingFeatureOpenChat,
         LocaleKeys.landingFeatureManageAppointments,
+        LocaleKeys.landingFeatureAvailability,
       ],
     ),
     FeatureGroup(
-      icon: '📊',
+      icon: Icons.insights_outlined,
       title: LocaleKeys.landingFeatureTrackPerformanceTitle,
       items: [
         LocaleKeys.landingFeatureViewsSaves,
@@ -157,7 +166,7 @@ abstract final class LandingContent {
       ],
     ),
     FeatureGroup(
-      icon: '🔧',
+      icon: Icons.dashboard_customize_outlined,
       title: LocaleKeys.landingFeatureManageStatusTitle,
       items: [
         LocaleKeys.landingFeatureReviewStatuses,

@@ -20,8 +20,8 @@ class HeaderActions extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         LandingButton(
-          label: LocaleKeys.landingLogin,
-          onPressed: () => onNavigate('hero'),
+          label: LocaleKeys.landingAppTag,
+          onPressed: () => onNavigate('app'),
           backgroundColor: Colors.transparent,
           foregroundColor: LandingColors.navy,
           borderColor: LandingColors.border,
@@ -32,7 +32,7 @@ class HeaderActions extends StatelessWidget {
         const SizedBox(width: 10),
         LandingButton(
           label: LocaleKeys.landingStartNow,
-          onPressed: () => onNavigate('hero'),
+          onPressed: () => onNavigate('download'),
           height: 40,
           horizontalPadding: 18,
           radius: 10,

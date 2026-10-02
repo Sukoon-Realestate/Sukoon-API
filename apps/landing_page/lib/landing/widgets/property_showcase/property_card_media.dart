@@ -3,6 +3,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 
 import '../../models/landing_content.dart';
 import '../../theme/landing_theme.dart';
+import '../shared/property_illustration.dart';
 
 class PropertyCardMedia extends StatelessWidget {
   const PropertyCardMedia({
@@ -23,14 +24,7 @@ class PropertyCardMedia extends StatelessWidget {
       child: Stack(
         children: [
           Positioned.fill(
-            child: ColoredBox(
-              color: property.imageColor,
-              child: Icon(
-                Icons.image_outlined,
-                color: Colors.white.withValues(alpha: 0.62),
-                size: 42,
-              ),
-            ),
+            child: PropertyIllustration(tint: property.imageColor),
           ),
           if (property.isVerified)
             Positioned(

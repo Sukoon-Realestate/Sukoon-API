@@ -20,6 +20,8 @@ class _LandingPageState extends State<LandingPage> {
     'properties': GlobalKey(),
     'trust': GlobalKey(),
     'faq': GlobalKey(),
+    'download': GlobalKey(),
+    'app': GlobalKey(),
   };
 
   var _audience = Audience.tenant;
@@ -59,6 +61,7 @@ class _LandingPageState extends State<LandingPage> {
       target = 'audience';
     }
 
+    if (!mounted || !_scrollController.hasClients) return;
     final targetContext = _sectionKeys[target]?.currentContext;
     final renderObject = targetContext?.findRenderObject();
     if (renderObject == null || !renderObject.attached) return;
@@ -71,6 +74,10 @@ class _LandingPageState extends State<LandingPage> {
       _scrollController.position.minScrollExtent,
       _scrollController.position.maxScrollExtent,
     );
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _scrollController.jumpTo(targetOffset);
+      return;
+    }
     await _scrollController.animateTo(
       targetOffset,
       duration: const Duration(milliseconds: 650),
@@ -110,21 +117,25 @@ class _LandingPageState extends State<LandingPage> {
                     onAudienceChanged: (value) {
                       setState(() => _audience = value);
                     },
-                    onCtaPressed: () => _navigateTo('hero'),
+                    onCtaPressed: () => _navigateTo('download'),
                   ),
                 ),
               ),
               SliverToBoxAdapter(
                 child: KeyedSubtree(
                   key: _sectionKeys['how'],
-                  child: const HowItWorksSection(),
+                  child: HowItWorksSection(
+                    audience: _audience,
+                    onAudienceChanged: (value) =>
+                        setState(() => _audience = value),
+                  ),
                 ),
               ),
               SliverToBoxAdapter(
                 child: KeyedSubtree(
                   key: _sectionKeys['properties'],
                   child: PropertyShowcaseSection(
-                    onExplore: () => _navigateTo('hero'),
+                    onExplore: () => _navigateTo('app'),
                   ),
                 ),
               ),
@@ -134,9 +145,17 @@ class _LandingPageState extends State<LandingPage> {
                   child: const PrivacyTrustSection(),
                 ),
               ),
-              const SliverToBoxAdapter(child: AppShowcaseSection()),
               SliverToBoxAdapter(
-                child: FinalCtaSection(onNavigate: _navigateTo),
+                child: KeyedSubtree(
+                  key: _sectionKeys['app'],
+                  child: const AppShowcaseSection(),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: KeyedSubtree(
+                  key: _sectionKeys['download'],
+                  child: FinalCtaSection(onNavigate: _navigateTo),
+                ),
               ),
               SliverToBoxAdapter(
                 child: KeyedSubtree(

@@ -4,6 +4,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import '../../theme/landing_theme.dart';
 import '../shared/imports.dart';
 import 'header_actions.dart';
+import 'language_button.dart';
 import 'header_desktop_navigation.dart';
 import 'header_navigation_menu.dart';
 
@@ -24,16 +25,19 @@ class SiteHeader extends StatelessWidget {
     (LocaleKeys.landingNavTrust, 'trust'),
     (LocaleKeys.landingNavHow, 'how'),
     (LocaleKeys.landingNavFaq, 'faq'),
+    (LocaleKeys.landingStartNow, 'download'),
   ];
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.sizeOf(context).width;
-    final showDesktopNav = width >= 1120;
+    final showDesktopNav = width >= 1280;
     final showActions = width >= LandingBreakpoints.mobile;
 
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 250),
+      duration: Duration(
+        milliseconds: MediaQuery.disableAnimationsOf(context) ? 0 : 250,
+      ),
       height: 68,
       decoration: BoxDecoration(
         color: scrolled
@@ -70,12 +74,13 @@ class SiteHeader extends StatelessWidget {
               const SizedBox(width: 20),
               if (showDesktopNav)
                 HeaderDesktopNavigation(
-                  items: _navItems,
+                  items: _navItems.take(6).toList(),
                   onNavigate: onNavigate,
                 )
               else
                 const Spacer(),
               const SizedBox(width: 20),
+              const LanguageButton(),
               if (showActions)
                 HeaderActions(
                   showMenuSpacing: !showDesktopNav,

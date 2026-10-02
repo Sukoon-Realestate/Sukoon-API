@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../theme/landing_theme.dart';
 import 'site_content.dart';
+import 'scroll_reveal.dart';
 
 class SectionSpacing extends StatelessWidget {
   const SectionSpacing({
@@ -31,7 +32,7 @@ class SectionSpacing extends StatelessWidget {
           horizontal: mobile ? 20 : horizontalPadding,
           vertical: mobile ? verticalPadding * 0.7 : verticalPadding,
         ),
-        child: SiteContent(child: child),
+        child: SiteContent(child: ScrollReveal(child: child)),
       ),
     );
   }

@@ -30,7 +30,9 @@ class _PropertyCardState extends State<PropertyCard> {
       onEnter: (_) => setState(() => _hovering = true),
       onExit: (_) => setState(() => _hovering = false),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
+        duration: Duration(
+          milliseconds: MediaQuery.disableAnimationsOf(context) ? 0 : 180,
+        ),
         transform: Matrix4.translationValues(0, _hovering ? -4 : 0, 0),
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(

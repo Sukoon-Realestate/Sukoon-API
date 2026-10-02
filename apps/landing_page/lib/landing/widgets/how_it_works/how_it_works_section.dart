@@ -6,22 +6,21 @@ import '../../theme/landing_theme.dart';
 import '../shared/imports.dart';
 import 'journey_step_card.dart';
 
-class HowItWorksSection extends StatefulWidget {
-  const HowItWorksSection({super.key});
-
-  @override
-  State<HowItWorksSection> createState() => _HowItWorksSectionState();
-}
-
-class _HowItWorksSectionState extends State<HowItWorksSection> {
-  var _audience = Audience.tenant;
+class HowItWorksSection extends StatelessWidget {
+  const HowItWorksSection({
+    required this.audience,
+    required this.onAudienceChanged,
+    super.key,
+  });
+  final Audience audience;
+  final ValueChanged<Audience> onAudienceChanged;
 
   @override
   Widget build(BuildContext context) {
-    final color = _audience == Audience.tenant
+    final color = audience == Audience.tenant
         ? LandingColors.teal
         : LandingColors.gold;
-    final steps = _audience == Audience.tenant
+    final steps = audience == Audience.tenant
         ? LandingContent.tenantSteps
         : LandingContent.ownerSteps;
 
@@ -35,15 +34,17 @@ class _HowItWorksSectionState extends State<HowItWorksSection> {
           ),
           const SizedBox(height: 48),
           AudienceToggle(
-            value: _audience,
+            value: audience,
             compactLabels: true,
-            onChanged: (value) => setState(() => _audience = value),
+            onChanged: onAudienceChanged,
           ),
           const SizedBox(height: 48),
           AnimatedSwitcher(
-            duration: const Duration(milliseconds: 220),
+            duration: Duration(
+              milliseconds: MediaQuery.disableAnimationsOf(context) ? 0 : 350,
+            ),
             child: ResponsiveGrid(
-              key: ValueKey(_audience),
+              key: ValueKey(audience),
               desktopColumns: 4,
               minItemWidth: 220,
               spacing: 24,

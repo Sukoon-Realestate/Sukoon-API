@@ -44,7 +44,9 @@ class _LandingButtonState extends State<LandingButton> {
         onExit: (_) => setState(() => _hovering = false),
         child: AnimatedScale(
           scale: _hovering ? 1.015 : 1,
-          duration: const Duration(milliseconds: 150),
+          duration: Duration(
+            milliseconds: MediaQuery.disableAnimationsOf(context) ? 0 : 150,
+          ),
           child: Material(
             color: widget.backgroundColor,
             shape: RoundedRectangleBorder(

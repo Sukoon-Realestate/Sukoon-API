@@ -5,6 +5,7 @@ import '../../models/landing_content.dart';
 import '../../theme/landing_theme.dart';
 import '../shared/imports.dart';
 import 'feature_card.dart';
+import '../shared/scroll_reveal.dart';
 
 class AudienceFeaturesSection extends StatelessWidget {
   const AudienceFeaturesSection({
@@ -37,7 +38,9 @@ class AudienceFeaturesSection extends StatelessWidget {
           AudienceToggle(value: audience, onChanged: onAudienceChanged),
           const SizedBox(height: 38),
           AnimatedSwitcher(
-            duration: const Duration(milliseconds: 220),
+            duration: Duration(
+              milliseconds: MediaQuery.disableAnimationsOf(context) ? 0 : 350,
+            ),
             child: Column(
               key: ValueKey(audience),
               children: [
@@ -68,12 +71,13 @@ class AudienceFeaturesSection extends StatelessWidget {
                   desktopColumns: 3,
                   tabletColumns: 2,
                   minItemWidth: 280,
-                  children: features
-                      .map(
-                        (feature) =>
-                            FeatureCard(feature: feature, color: color),
-                      )
-                      .toList(),
+                  children: [
+                    for (var i = 0; i < features.length; i++)
+                      ScrollReveal(
+                        delay: (i % 3) * 90,
+                        child: FeatureCard(feature: features[i], color: color),
+                      ),
+                  ],
                 ),
               ],
             ),
@@ -85,6 +89,7 @@ class AudienceFeaturesSection extends StatelessWidget {
                 : LocaleKeys.landingStartListingProperty,
             onPressed: onCtaPressed,
             backgroundColor: color,
+            foregroundColor: tenant ? Colors.white : LandingColors.navy,
             horizontalPadding: 32,
           ),
         ],

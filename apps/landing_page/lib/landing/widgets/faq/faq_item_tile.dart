@@ -41,7 +41,11 @@ class FaqItemTile extends StatelessWidget {
                   ),
                   const SizedBox(width: 16),
                   AnimatedContainer(
-                    duration: const Duration(milliseconds: 180),
+                    duration: Duration(
+                      milliseconds: MediaQuery.disableAnimationsOf(context)
+                          ? 0
+                          : 180,
+                    ),
                     width: 28,
                     height: 28,
                     decoration: BoxDecoration(
@@ -51,7 +55,11 @@ class FaqItemTile extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                     child: AnimatedRotation(
-                      duration: const Duration(milliseconds: 180),
+                      duration: Duration(
+                        milliseconds: MediaQuery.disableAnimationsOf(context)
+                            ? 0
+                            : 180,
+                      ),
                       turns: isOpen ? 0.5 : 0,
                       child: Icon(
                         Icons.keyboard_arrow_down_rounded,
@@ -83,7 +91,9 @@ class FaqItemTile extends StatelessWidget {
             crossFadeState: isOpen
                 ? CrossFadeState.showFirst
                 : CrossFadeState.showSecond,
-            duration: const Duration(milliseconds: 180),
+            duration: Duration(
+              milliseconds: MediaQuery.disableAnimationsOf(context) ? 0 : 180,
+            ),
           ),
         ],
       ),

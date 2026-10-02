@@ -1,35 +1,19 @@
 {
-    "name": "سكون | Sokoon",
-    "short_name": "Sokoon",
-    "start_url": ".",
-    "display": "standalone",
-    "background_color": "#FAFAF8",
-    "theme_color": "#0F766E",
-    "description": "منصة الإيجار الموثوقة في مصر",
-    "orientation": "portrait-primary",
-    "prefer_related_applications": false,
-    "icons": [
-        {
-            "src": "icons/Icon-192.png",
-            "sizes": "192x192",
-            "type": "image/png"
-        },
-        {
-            "src": "icons/Icon-512.png",
-            "sizes": "512x512",
-            "type": "image/png"
-        },
-        {
-            "src": "icons/Icon-maskable-192.png",
-            "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "maskable"
-        },
-        {
-            "src": "icons/Icon-maskable-512.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "maskable"
-        }
-    ]
+  "name": "سكون | Sokoon",
+  "short_name": "Sokoon",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#FAFBF8",
+  "theme_color": "#0C6254",
+  "description": "منصة الإيجار الموثوقة في مصر",
+  "orientation": "any",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
 }

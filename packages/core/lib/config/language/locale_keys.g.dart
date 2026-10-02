@@ -805,6 +805,33 @@ abstract class LocaleKeys {
   static const String _chatSubmitReport = 'chat_submit_report';
   static String get chatSubmitReport => _chatSubmitReport.tr();
 
+  static const String _landingPreviewAction = 'landing_preview_action';
+  static String get landingPreviewAction => _landingPreviewAction.tr();
+
+  static const String _landingFeatureSavedPhotos = 'landing_feature_saved_photos';
+  static String get landingFeatureSavedPhotos => _landingFeatureSavedPhotos.tr();
+
+  static const String _landingFeatureReviewsTitle = 'landing_feature_reviews_title';
+  static String get landingFeatureReviewsTitle => _landingFeatureReviewsTitle.tr();
+
+  static const String _landingFeatureReviewsBody = 'landing_feature_reviews_body';
+  static String get landingFeatureReviewsBody => _landingFeatureReviewsBody.tr();
+
+  static const String _landingFeatureNotifications = 'landing_feature_notifications';
+  static String get landingFeatureNotifications => _landingFeatureNotifications.tr();
+
+  static const String _landingFeatureAvailability = 'landing_feature_availability';
+  static String get landingFeatureAvailability => _landingFeatureAvailability.tr();
+
+  static const String _landingPreviewDisclaimer = 'landing_preview_disclaimer';
+  static String get landingPreviewDisclaimer => _landingPreviewDisclaimer.tr();
+
+  static const String _landingTenantPreviewBody = 'landing_tenant_preview_body';
+  static String get landingTenantPreviewBody => _landingTenantPreviewBody.tr();
+
+  static const String _landingOwnerPreviewBody = 'landing_owner_preview_body';
+  static String get landingOwnerPreviewBody => _landingOwnerPreviewBody.tr();
+
   static const String _landingAppTitle = 'landing_app_title';
   static String get landingAppTitle => _landingAppTitle.tr();
 
