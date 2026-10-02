@@ -15,6 +15,7 @@ import 'package:melos_core/core/widgets/chat_builder/easy_chat.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_realtime_service.dart';
+import 'package:sokoun_app/features/shared/chat/data/chat_socket_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_thread_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_page_response.dart';
@@ -33,6 +34,8 @@ import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_queued_messages_banner.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_thread_content.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/report/chat_report_sheet.dart';
+
+import 'helpers/recording_chat_socket.dart';
 
 const List<ConversationContent> _conversations = [
   ConversationContent(
@@ -145,6 +148,11 @@ void main() {
   });
 
   tearDown(() async {
+    ChatRealtimeService.instance.setActiveConversation(null);
+    await ChatRealtimeService.instance.disconnect();
+    if (injector.isRegistered<ChatSocketDataSource>()) {
+      await injector.unregister<ChatSocketDataSource>();
+    }
     if (injector.isRegistered<ChatDataSource>()) {
       await injector.unregister<ChatDataSource>();
     }
@@ -236,6 +244,49 @@ void main() {
 
     expect(find.byType(ChatListScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('chat entry, exit and app lifecycle own the socket connection', (
+    tester,
+  ) async {
+    configurePhoneViewport(tester);
+    final sockets = RecordingChatSocketSource();
+    injector.registerSingleton<ChatSocketDataSource>(sockets);
+    await tester.pumpWidget(
+      buildScreen(ChatScreen(conversation: _conversations.first)),
+    );
+    await tester.pumpAndSettle();
+    expect(sockets.connections, 1);
+    expect(sockets.readRequests, 1);
+    expect(_messagesRequestCount, 1);
+
+    for (final state in [
+      AppLifecycleState.inactive,
+      AppLifecycleState.hidden,
+      AppLifecycleState.paused,
+    ]) {
+      tester.binding.handleAppLifecycleStateChanged(state);
+    }
+    await tester.pumpAndSettle();
+    expect(sockets.disconnections, 1);
+    expect(ChatRealtimeService.instance.isConnected, isFalse);
+    for (final state in [
+      AppLifecycleState.hidden,
+      AppLifecycleState.inactive,
+      AppLifecycleState.resumed,
+    ]) {
+      tester.binding.handleAppLifecycleStateChanged(state);
+    }
+    await tester.pumpAndSettle();
+    expect(sockets.connections, 2);
+    expect(sockets.readRequests, 2);
+    expect(_messagesRequestCount, 1);
+
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+    expect(sockets.disconnections, 2);
+    expect(ChatRealtimeService.instance.isConnected, isFalse);
+    expect(ChatRealtimeService.instance.activeConversationId, isNull);
   });
 
   testWidgets('loads message history once for each ChatScreen entry', (

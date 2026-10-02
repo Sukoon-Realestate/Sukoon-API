@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
+import 'package:melos_core/core/network/account_session.dart';
 
 import '../../data/chats_data.dart';
 import '../../data/chat_realtime_service.dart';
@@ -53,6 +54,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   final String otherParticipantId;
   final ChatRealtimeGateway _realtime;
   final ChatDataSource _dataSource;
+  final int _sessionGeneration = AccountSession.generation;
   final List<_QueuedChatMessage> _outbox = [];
   final Map<String, List<_SocketConfirmation>> _confirmations = {};
   StreamSubscription<ChatSocketMessage>? _messageSubscription;
@@ -61,18 +63,23 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   Future<void>? _outboxFlush;
   Timer? _queueRetryTimer;
   bool _shouldBeConnected = true;
+  bool _closing = false;
+
+  bool get _hasCurrentSession =>
+      !isClosed && !_closing && _sessionGeneration == AccountSession.generation;
 
   int get queuedMessageCount => _outbox.length;
 
   Future<void> connect() async {
+    if (!_hasCurrentSession || !_shouldBeConnected) return;
     _realtime.setActiveConversation(conversationId);
     _messageSubscription ??= _realtime.messages.listen(_receiveMessage);
     _readSubscription ??= _realtime.readReceipts.listen(_receiveReadReceipt);
     _statusSubscription ??= _realtime.statuses.listen(_receiveStatus);
     _receiveStatus(_realtime.status);
 
-    if (!_shouldBeConnected) return;
     await _realtime.connect();
+    if (!_hasCurrentSession || !_shouldBeConnected) return;
     await markConversationAsRead();
   }
 
@@ -80,6 +87,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
     String rawContent, {
     String? localMessageId,
   }) async {
+    if (!_hasCurrentSession) return const ChatSendResult.failed();
     final String content = rawContent.trim();
     if (!Validators.isValidChatContent(content)) {
       return const ChatSendResult.failed();
@@ -111,32 +119,37 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   }
 
   Future<void> markConversationAsRead() async {
+    if (!_hasCurrentSession) return;
     if (_realtime.isConnected) {
       try {
         await _realtime.markConversationAsRead(conversationId);
-        ChatUnreadRefreshBus.requestRefresh();
+        if (_hasCurrentSession) ChatUnreadRefreshBus.requestRefresh();
         return;
       } catch (_) {
         // Continue with the HTTP fallback below.
       }
     }
 
+    if (!_hasCurrentSession) return;
     try {
       await _dataSource.markConversationAsRead(conversationId);
-      ChatUnreadRefreshBus.requestRefresh();
+      if (_hasCurrentSession) ChatUnreadRefreshBus.requestRefresh();
     } catch (error, stackTrace) {
       log('Unable to mark chat as read: $error', stackTrace: stackTrace);
     }
   }
 
   Future<void> onAppLifecycleStateChanged(AppLifecycleState lifecycle) async {
+    if (!_hasCurrentSession ||
+        _realtime.activeConversationId != conversationId) {
+      return;
+    }
     _shouldBeConnected =
         lifecycle == AppLifecycleState.resumed ||
         lifecycle == AppLifecycleState.inactive;
     switch (lifecycle) {
       case AppLifecycleState.resumed:
-        await _realtime.connect();
-        await markConversationAsRead();
+        await connect();
       case AppLifecycleState.paused:
       case AppLifecycleState.detached:
       case AppLifecycleState.hidden:
@@ -147,7 +160,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   }
 
   void _receiveStatus(ChatRealtimeStatus status) {
-    if (isClosed) return;
+    if (!_hasCurrentSession) return;
     final ChatSocketStatus mappedStatus = switch (status) {
       ChatRealtimeStatus.disconnected => ChatSocketStatus.disconnected,
       ChatRealtimeStatus.connecting => ChatSocketStatus.connecting,
@@ -162,7 +175,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   }
 
   void _receiveMessage(ChatSocketMessage message) {
-    if (isClosed) return;
+    if (!_hasCurrentSession) return;
     final String? localMessageId = _confirmOutgoingMessage(message);
     if (localMessageId == null && !_isMessageFromActiveConversation(message)) {
       return;
@@ -171,7 +184,9 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   }
 
   void _receiveReadReceipt(ChatReadReceipt receipt) {
-    if (isClosed || !_isActiveConversation(receipt.conversationId)) return;
+    if (!_hasCurrentSession || !_isActiveConversation(receipt.conversationId)) {
+      return;
+    }
     emit(state.copyWith(readReceiptRevision: state.readReceiptRevision + 1));
   }
 
@@ -213,7 +228,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   }
 
   Future<void> _drainOutbox() async {
-    while (_outbox.isNotEmpty && _realtime.isConnected && !isClosed) {
+    while (_outbox.isNotEmpty && _realtime.isConnected && _hasCurrentSession) {
       final _QueuedChatMessage queuedMessage = _outbox.first;
       final ChatSendResult result = await _deliverQueuedMessage(queuedMessage);
       if (!result.isSent) {
@@ -249,7 +264,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
       return ChatSendResult.sent(restMessage: confirmedMessage);
     } catch (socketError, socketStackTrace) {
       _removeConfirmation(queuedMessage.content, confirmation);
-      if (isClosed || !_realtime.isConnected) {
+      if (!_hasCurrentSession || !_realtime.isConnected) {
         log(
           'Chat message remains queued until the socket reconnects: '
           '$socketError',
@@ -280,7 +295,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
     ChatSocketMessage message, {
     String? localMessageId,
   }) {
-    if (isClosed) return;
+    if (!_hasCurrentSession) return;
     emit(
       state.copyWith(
         receivedMessage: message,
@@ -291,15 +306,15 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   }
 
   void _emitQueuedMessageCount() {
-    if (isClosed) return;
+    if (!_hasCurrentSession) return;
     emit(state.copyWith(queuedMessageCount: _outbox.length));
   }
 
   void _scheduleQueueRetry() {
-    if (!_shouldBeConnected || _outbox.isEmpty || isClosed) return;
+    if (!_shouldBeConnected || _outbox.isEmpty || !_hasCurrentSession) return;
     _queueRetryTimer?.cancel();
     _queueRetryTimer = Timer(_queueRetryDelay, () async {
-      if (!_shouldBeConnected || _outbox.isEmpty || isClosed) return;
+      if (!_shouldBeConnected || _outbox.isEmpty || !_hasCurrentSession) return;
       if (!_realtime.isConnected) await _realtime.connect();
       if (_realtime.isConnected) await _flushOutbox();
     });
@@ -338,10 +353,12 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
 
   @override
   Future<void> close() async {
+    _closing = true;
     _shouldBeConnected = false;
     _queueRetryTimer?.cancel();
     if (_realtime.activeConversationId == conversationId) {
       _realtime.setActiveConversation(null);
+      await _realtime.disconnect();
     }
     await _messageSubscription?.cancel();
     await _readSubscription?.cancel();

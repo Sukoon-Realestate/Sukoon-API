@@ -1,10 +1,11 @@
 part of '../../imports.dart';
 
-enum OwnerRevenueStatus { paid, due, late }
+enum OwnerRevenueStatus { paid, due, late, upcoming }
 
 extension OwnerRevenueStatusX on OwnerRevenueStatus {
   bool get isPaid => this == OwnerRevenueStatus.paid;
-  bool get isDue => this == OwnerRevenueStatus.due;
+  bool get isDue =>
+      this == OwnerRevenueStatus.due || this == OwnerRevenueStatus.upcoming;
   bool get isLate => this == OwnerRevenueStatus.late;
 
   String get label {
@@ -12,7 +13,9 @@ extension OwnerRevenueStatusX on OwnerRevenueStatus {
       return LocaleKeys.ownerRevenuePaid;
     }
     if (isDue) {
-      return LocaleKeys.ownerRevenueDue;
+      return this == OwnerRevenueStatus.upcoming
+          ? LocaleKeys.ownerRevenueUpcoming
+          : LocaleKeys.ownerRevenueDue;
     }
     return LocaleKeys.ownerRevenueLate;
   }

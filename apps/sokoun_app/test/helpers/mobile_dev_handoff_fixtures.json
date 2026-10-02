@@ -1,0 +1,209 @@
+{
+  "profile": {
+    "data": {
+      "full_name": "سامي يوسف",
+      "first_name": "سامي",
+      "last_name": "يوسف",
+      "email": "sami@example.com",
+      "phone_number": "+201012345432",
+      "masked_phone_number": "010****432",
+      "birth_date": "1995-03-15",
+      "birth_date_label": "15 مارس 1995",
+      "gender": "male",
+      "gender_label": "ذكر",
+      "city": {
+        "id": "e8623b3f-18d4-4a25-a13b-a6369c0d1234",
+        "name": "الإسكندرية",
+        "slug": "alexandria"
+      },
+      "avatar": "https://res.cloudinary.com/.../avatar.jpg"
+    }
+  },
+  "city_patch": {
+    "city_id": "e8623b3f-18d4-4a25-a13b-a6369c0d1234"
+  },
+  "property": {
+    "data": {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "title": "شقة فاخرة للإيجار في مدينة نصر",
+      "is_verified": true,
+      "owner": {
+        "id": "u1v2w3x4-y5z6-7890-abcd-ef1234567890",
+        "full_name": "أحمد محمود",
+        "name": "أحمد محمود",
+        "avatar": "https://res.cloudinary.com/.../avatar.jpg",
+        "is_verified": true
+      },
+      "owner_is_verified": true,
+      "is_ownership_verified": true,
+      "price": 12000.0,
+      "price_period": "monthly",
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "area": 140,
+      "district": "مدينة نصر",
+      "city": {
+        "id": "c1c2c3c4-0000-0000-0000-000000000000",
+        "name": "القاهرة",
+        "slug": "cairo"
+      },
+      "governorate": {
+        "id": "g1g2g3g4-0000-0000-0000-000000000000",
+        "name": "محافظة القاهرة",
+        "slug": "cairo-gov"
+      },
+      "amenities": [
+        "wifi",
+        "elevator",
+        "garage",
+        "security",
+        "natural_gas"
+      ],
+      "is_fav": false,
+      "is_saved": false,
+      "rating": 4.9
+    }
+  },
+  "availability": {
+    "data": {
+      "week_start": "2026-10-05",
+      "week_end": "2026-10-11",
+      "days": [
+        {
+          "date": "2026-10-06",
+          "day": "tuesday",
+          "slots": [
+            {
+              "id": "s1s2s3s4-0000-0000-0000-000000000001",
+              "time": "10:00:00",
+              "is_enabled": true,
+              "state": "available",
+              "visit": null
+            },
+            {
+              "id": "s1s2s3s4-0000-0000-0000-000000000002",
+              "time": "14:00:00",
+              "is_enabled": true,
+              "state": "available",
+              "visit": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "availability_put": {
+    "availability_date": "2026-10-06",
+    "slots": [
+      {
+        "time": "10:00:00",
+        "is_enabled": true
+      },
+      {
+        "time": "12:00:00",
+        "is_enabled": true
+      },
+      {
+        "time": "14:00:00",
+        "is_enabled": true
+      }
+    ]
+  },
+  "analytics": {
+    "data": {
+      "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "title": "شقة مدينة نصر",
+      "period": "30_days",
+      "period_label": "آخر 30 يوم",
+      "visit_requests_count": 8,
+      "views_count": 142,
+      "acceptance_rate": 95,
+      "saved_count": 24,
+      "views_last_14_days": [
+        {
+          "date": "2026-09-18",
+          "day": "18",
+          "day_name": "الجمعة",
+          "count": 12
+        },
+        {
+          "date": "2026-09-19",
+          "day": "19",
+          "day_name": "السبت",
+          "count": 15
+        },
+        {
+          "date": "2026-09-20",
+          "day": "20",
+          "day_name": "الأحد",
+          "count": 8
+        }
+      ],
+      "top_search_criteria": [
+        {
+          "key": "location",
+          "label": "الموقع والحي",
+          "percentage": 85
+        },
+        {
+          "key": "price",
+          "label": "السعر المناسب",
+          "percentage": 70
+        },
+        {
+          "key": "amenities",
+          "label": "الخدمات والمرافق",
+          "percentage": 60
+        }
+      ]
+    }
+  },
+  "revenue": {
+    "data": {
+      "total_this_month": 36000.0,
+      "formatted_total": "36,000",
+      "currency": "ج",
+      "percentage_change": 8.0,
+      "comparison_text": "+8% عن الشهر السابق",
+      "is_positive": true,
+      "properties": [
+        {
+          "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+          "title": "شقة مدينة نصر",
+          "amount": 12000.0,
+          "formatted_amount": "12,000",
+          "currency": "ج",
+          "status": "paid",
+          "status_label": "مدفوع",
+          "due_date": null
+        },
+        {
+          "id": "b2c3d4e5-f6a7-8901-bcde-fa2345678901",
+          "title": "فيلا التجمع الخامس",
+          "amount": 24000.0,
+          "formatted_amount": "24,000",
+          "currency": "ج",
+          "status": "upcoming",
+          "status_label": "قادم 15 أكتوبر",
+          "due_date": "2026-10-15"
+        }
+      ],
+      "recent_transactions": [
+        {
+          "id": "tx-101",
+          "title": "إيجار شقة مدينة نصر",
+          "date": "1 أكتوبر 2026",
+          "date_iso": "2026-10-01",
+          "amount": 12000.0,
+          "formatted_amount": "12,000",
+          "currency": "ج",
+          "type": "rental_income",
+          "is_credit": true
+        }
+      ]
+    }
+  },
+  "error": {
+    "message": "<Field Name>: <Specific explanation>"
+  }
+}

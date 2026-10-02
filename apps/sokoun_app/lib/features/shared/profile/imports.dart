@@ -9,6 +9,12 @@ import 'package:sokoun_app/features/shared/reviews/presentation/screens/my_revie
 import 'package:sokoun_app/features/shared/public_pages/presentation/widgets/public_page_menu.dart';
 import 'dart:io';
 import 'dart:async';
+import 'package:sokoun_app/features/owner/properties/imports.dart';
+import 'package:pagify/pagify.dart';
+import 'package:melos_core/core/network/network_service.dart';
+import 'package:melos_core/core/network/network_request.dart';
+import 'package:melos_core/core/widgets/app_pagify.dart';
+import 'package:pagify/helpers/data_and_pagination_data.dart';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
@@ -84,6 +90,10 @@ part 'presentation/widgets/tenant/tenant_identity_verification_card.dart';
 part 'presentation/widgets/tenant/tenant_summary_header_card.dart';
 
 part 'data/models/user_profile_content.dart';
+part 'data/models/profile_city.dart';
+part 'data/profile_cities_data.dart';
+part 'presentation/widgets/shared/profile_city_selector.dart';
+part 'presentation/widgets/shared/profile_cities_empty_state.dart';
 part 'presentation/cubits/user_profile_cubit.dart';
 part 'presentation/cubits/profile_logout_cubit.dart';
 

@@ -22,8 +22,11 @@ class _ProfileLogoutButtonState extends State<ProfileLogoutButton> {
 
   Future<void> _logout(BuildContext context) async {
     if (_cubit.isLoading) return;
-    await NotificationDeviceData.unregisterCurrentDevice();
-    if (await _cubit.logout()) await UserCubit.instance.logout();
+    if (!await _cubit.logout()) return;
+    await Future.wait([
+      NotificationDeviceData.stop(),
+      UserCubit.instance.logout(),
+    ]);
   }
 
   @override

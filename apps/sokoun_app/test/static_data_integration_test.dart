@@ -208,11 +208,16 @@ void main() {
       final params = repository.requests.single;
       expect(params.httpRequestType, HttpRequestType.get);
       expect(params.api, ApiConstants.ownerPropertyAvailability('property-id'));
-      expect(params.cacheKey, 'owner_property_availability_property-id');
+      expect(params.queryParameters, {'week_start': '2026-09-28'});
+      expect(
+        params.cacheKey,
+        'owner_property_availability_property-id_2026-09-28',
+      );
       final content = tester.widget<OwnerAvailabilityContent>(
         find.byType(OwnerAvailabilityContent),
       );
-      expect(content.days.single.date, '2026-10-02');
+      expect(content.days, hasLength(7));
+      expect(content.days[content.selectedDayIndex].date, '2026-10-02');
       expect(content.slots.map((slot) => slot.time), [
         '09:30:00',
         '12:15:00',

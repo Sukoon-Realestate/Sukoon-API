@@ -155,6 +155,14 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
                   label: LocaleKeys.profileAnalyticsStatistics,
                   color: AppColors.blue,
                   backgroundColor: AppColors.bluePale,
+                  onTap: () => Go.to(const OwnerPropertiesScreen()),
+                ),
+                OwnerMoreItem(
+                  icon: Icons.account_balance_wallet_outlined,
+                  label: LocaleKeys.ownerRevenueTitle,
+                  color: AppColors.sokoonTeal,
+                  backgroundColor: AppColors.mintLight,
+                  onTap: () => Go.to(const OwnerRevenueScreen()),
                 ),
                 // OwnerMoreItem(
                 //   icon: Icons.calendar_month_outlined,

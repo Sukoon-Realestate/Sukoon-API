@@ -558,7 +558,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('opens calendar without the excluded availability flow', (
+  testWidgets('opens calendar with availability management for its property', (
     tester,
   ) async {
     configurePhoneViewport(tester);
@@ -582,7 +582,7 @@ void main() {
     await tester.tap(find.text('19'));
     await tester.pumpAndSettle();
     expect(find.text('زيارات يوم 19'), findsOneWidget);
-    expect(find.text('إدارة مواعيد الإتاحة'), findsNothing);
+    expect(find.text('إدارة مواعيد الإتاحة'), findsOneWidget);
     expect(
       repository.requests.where((p) => p.api.contains('/availability/')),
       isEmpty,

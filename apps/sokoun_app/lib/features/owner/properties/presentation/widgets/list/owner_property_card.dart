@@ -119,13 +119,35 @@ class OwnerPropertyCard extends StatelessWidget {
                   ),
                 ],
               ),
-              Row(
+              Wrap(
+                spacing: 8.w,
+                runSpacing: 8.h,
                 children: [
                   _OwnerPropertyCardAction(
                     label: LocaleKeys.ownerPropertiesEdit,
                     foregroundColor: AppColors.blue,
                     backgroundColor: AppColors.bluePale,
                     onPressed: onEditPressed,
+                  ),
+                  _OwnerPropertyCardAction(
+                    label: LocaleKeys.ownerAnalyticsTitle,
+                    foregroundColor: AppColors.sokoonTeal,
+                    backgroundColor: AppColors.mintLight,
+                    onPressed: () =>
+                        Go.to(OwnerPropertyAnalyticsScreen(property: property)),
+                  ),
+                  _OwnerPropertyCardAction(
+                    label: LocaleKeys.ownerAvailabilityTitle,
+                    foregroundColor: AppColors.sokoonTeal,
+                    backgroundColor: AppColors.mintLight,
+                    onPressed: () => Go.to(
+                      OwnerAvailabilityScreen(
+                        ownerPropertyId: property.id,
+                        availabilityStartDate: TimeZoneHelper.inLocation(
+                          'Africa/Cairo',
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -159,25 +181,21 @@ class _OwnerPropertyCardAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Material(
-        color: backgroundColor,
+    return Material(
+      color: backgroundColor,
+      borderRadius: BorderRadius.circular(12.r),
+      child: InkWell(
+        onTap: onPressed,
         borderRadius: BorderRadius.circular(12.r),
-        child: InkWell(
-          onTap: onPressed,
-          borderRadius: BorderRadius.circular(12.r),
-          child: SizedBox(
-            height: 34.h,
-            child: AppText(
-              label,
-              style: AppTextStyles.bold12.copyWith(
-                color: foregroundColor,
-                fontSize: 12.sp,
-                height: 1.45,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ).centerWidget,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
+          child: AppText(
+            label,
+            style: AppTextStyles.bold12.copyWith(
+              color: foregroundColor,
+              fontSize: 12.sp,
+              height: 1.45,
+            ),
           ),
         ),
       ),

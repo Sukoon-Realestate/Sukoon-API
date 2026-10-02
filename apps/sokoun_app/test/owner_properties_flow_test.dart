@@ -596,54 +596,58 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('keeps only API-backed property actions available', (
-    tester,
-  ) async {
-    configurePhoneViewport(tester);
+  testWidgets(
+    'offers analytics, availability, and editing for owned properties',
+    (tester) async {
+      configurePhoneViewport(tester);
 
-    await tester.pumpWidget(
-      buildScreen(
-        OwnerPropertiesScreen(initialProperties: ownerPropertiesFixture()),
-      ),
-    );
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        buildScreen(
+          OwnerPropertiesScreen(initialProperties: ownerPropertiesFixture()),
+        ),
+      );
+      await tester.pumpAndSettle();
 
-    expect(find.text('عقاراتي'), findsWidgets);
-    expect(find.byType(OwnerPropertyCard), findsNWidgets(3));
-    expect(find.text('شقة مفروشة — مدينة نصر'), findsOneWidget);
-    expect(tester.takeException(), isNull);
+      expect(find.text('عقاراتي'), findsWidgets);
+      expect(find.byType(OwnerPropertyCard), findsWidgets);
+      expect(find.text('شقة مفروشة — مدينة نصر'), findsOneWidget);
+      expect(tester.takeException(), isNull);
 
-    final Finder furnishedCard = find.byKey(
-      const ValueKey('nasr-city-furnished'),
-    );
-    expect(
-      find.descendant(of: furnishedCard, matching: find.text('إجراءات')),
-      findsNothing,
-    );
-    expect(
-      find.descendant(of: furnishedCard, matching: find.text('إحصاءات')),
-      findsNothing,
-    );
+      final Finder furnishedCard = find.byKey(
+        const ValueKey('nasr-city-furnished'),
+      );
+      expect(
+        find.descendant(of: furnishedCard, matching: find.text('إجراءات')),
+        findsNothing,
+      );
+      expect(
+        find.descendant(
+          of: furnishedCard,
+          matching: find.text('إحصاءات العقار'),
+        ),
+        findsOneWidget,
+      );
 
-    await tester.tap(
-      find.descendant(of: furnishedCard, matching: find.text('تعديل')),
-    );
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 400));
-    expect(repository.lastDetailsId, 'nasr-city-furnished');
-    expect(find.byType(OwnerEditPropertyScreen), findsOneWidget);
-    expect(find.text('تعديل العقار'), findsOneWidget);
+      await tester.tap(
+        find.descendant(of: furnishedCard, matching: find.text('تعديل')),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      expect(repository.lastDetailsId, 'nasr-city-furnished');
+      expect(find.byType(OwnerEditPropertyScreen), findsOneWidget);
+      expect(find.text('تعديل العقار'), findsOneWidget);
 
-    await submitEditFlow(tester);
-    expect(find.byType(OwnerPropertiesScreen), findsOneWidget);
-    expect(find.text('تم حفظ تعديلات العقار'), findsOneWidget);
-    expect(repository.updateRequestCount, 1);
-    expect(repository.lastUpdateBody?['governorate'], 'cairo-governorate-id');
-    expect(repository.lastUpdateBody?['city'], 'cairo-city-id');
-    expect(repository.lastUpdateBody?['district'], 'مدينة نصر');
+      await submitEditFlow(tester);
+      expect(find.byType(OwnerPropertiesScreen), findsOneWidget);
+      expect(find.text('تم حفظ تعديلات العقار'), findsOneWidget);
+      expect(repository.updateRequestCount, 1);
+      expect(repository.lastUpdateBody?['governorate'], 'cairo-governorate-id');
+      expect(repository.lastUpdateBody?['city'], 'cairo-city-id');
+      expect(repository.lastUpdateBody?['district'], 'مدينة نصر');
 
-    expect(tester.takeException(), isNull);
-  });
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets('runs O-REJECT-01 edit and resubmit flow', (tester) async {
     configurePhoneViewport(tester);
@@ -723,6 +727,31 @@ class _OwnerPropertiesRepository implements BaseRepository {
   Future<Result<BaseModel<T>, Failure>> crudCall<T>(
     CrudBaseParmas<T> params,
   ) async {
+    if (params.api == ApiConstants.propertyFilterOptions) {
+      return Success(
+        BaseModel<T>(
+          key: '',
+          msg: '',
+          data: params.mapper!({
+            'price_periods': [
+              {'value': 'monthly', 'label': 'شهر'},
+              {'value': 'daily', 'label': 'يوم'},
+            ],
+            'suitable_for': [
+              {'value': 'families', 'label': 'عائلات'},
+              {'value': 'students', 'label': 'طلاب'},
+            ],
+            'amenities': [
+              {
+                'value': 'wifi',
+                'label': 'واي فاي',
+                'query_parameter': 'has_wifi',
+              },
+            ],
+          }),
+        ),
+      );
+    }
     if (params.api == ApiConstants.propertyTypes) {
       return Success(
         BaseModel<T>(

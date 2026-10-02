@@ -384,7 +384,7 @@ void main() {
     await load();
     await chat.start();
     expect(repository.requests, 2);
-    expect(realtime.connections, 1);
+    expect(realtime.connections, 0);
     ChatUnreadRefreshBus.requestRefresh(removedUnreadCount: 4);
     expect(chat.data.count, 3);
     expect(repository.requests, 2);
@@ -392,6 +392,16 @@ void main() {
     await Future<void>.delayed(Duration.zero);
     expect(repository.requests, 3);
   });
+
+  test(
+    'unread subscriptions leave socket ownership with the chat thread',
+    () async {
+      await load();
+      await chat.close();
+      expect(realtime.connections, 0);
+      expect(realtime.disconnections, 0);
+    },
+  );
 
   test(
     'closed cubits and a previous session ignore foreground messages',
@@ -472,6 +482,7 @@ class _Realtime implements ChatRealtimeGateway {
   final StreamController<ChatSocketMessage> messagesController =
       StreamController<ChatSocketMessage>.broadcast(sync: true);
   int connections = 0;
+  int disconnections = 0;
   @override
   String? activeConversationId;
   @override
@@ -493,7 +504,10 @@ class _Realtime implements ChatRealtimeGateway {
   }
 
   @override
-  Future<void> disconnect() async {}
+  Future<void> disconnect() async {
+    disconnections++;
+  }
+
   @override
   Future<void> sendMessage({
     required String conversationId,

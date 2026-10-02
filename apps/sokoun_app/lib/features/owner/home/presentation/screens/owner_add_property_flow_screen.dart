@@ -302,7 +302,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
   }
 
   void _toggleAmenity(String amenity) {
-    final amenities = Set<String>.from(_form.amenities);
+    final amenities = Set<String>.from(_form.amenityApiValues);
     if (amenities.contains(amenity)) {
       amenities.remove(amenity);
     } else {
@@ -514,6 +514,11 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
                       onSuitableForSelected: (value) =>
                           _updateForm(() => _form.copyWith(suitableFor: value)),
                       isSubmitting: isSubmitting,
+                      onOptionLabelsLoaded: (labels) {
+                        _formNotifier.value = _form.copyWith(
+                          optionLabels: labels,
+                        );
+                      },
                       onNext: _reviewAndSubmit,
                     ),
                   ),

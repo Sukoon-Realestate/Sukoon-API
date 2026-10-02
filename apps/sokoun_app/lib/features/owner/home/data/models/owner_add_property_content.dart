@@ -7,10 +7,16 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/validators.dart';
 
 class AddPropertyChipContent {
-  const AddPropertyChipContent({required this.label, this.isSelected = false});
+  const AddPropertyChipContent({
+    required this.label,
+    this.isSelected = false,
+    this.value,
+  });
 
   final String label;
   final bool isSelected;
+  final String? value;
+  String get selectionValue => value ?? label;
 }
 
 class AddPropertyFieldContent {
@@ -68,6 +74,8 @@ abstract final class OwnerAddPropertyContent {
     LocaleKeys.ownerAddPropertyAirConditioning,
     LocaleKeys.ownerAddPropertyNaturalGas,
     LocaleKeys.ownerAddPropertyNearMetro,
+    LocaleKeys.ownerAddPropertyElectricityMeter,
+    LocaleKeys.ownerAddPropertyWaterMeter,
   ];
 
   static List<String> get smokingOptionLabels => [
@@ -206,6 +214,7 @@ class OwnerAddPropertyFormState {
     required this.ownershipProofUrl,
     required this.ownershipProof,
     this.submittedAt,
+    this.optionLabels = const {},
   });
 
   factory OwnerAddPropertyFormState.initial() {
@@ -268,6 +277,16 @@ class OwnerAddPropertyFormState {
   final String ownershipProofUrl;
   final File? ownershipProof;
   final DateTime? submittedAt;
+  final Map<String, String> optionLabels;
+  String get rentalUnitLabel =>
+      optionLabels['price_period:$rentalUnitApiValue'] ?? rentalUnit;
+  String get suitableForLabel =>
+      optionLabels['suitable_for:$suitableForApiValue'] ?? suitableFor;
+  List<String> get amenityLabels => optionLabels.isEmpty
+      ? amenities.toList(growable: false)
+      : amenityApiValues
+            .map((value) => optionLabels['amenity:$value'] ?? value)
+            .toList(growable: false);
 
   int get photoCount => photoDrafts.length;
   List<String> get existingPhotoUrls => photoDrafts
@@ -411,6 +430,7 @@ class OwnerAddPropertyFormState {
     File? ownershipProof,
     bool clearOwnershipProof = false,
     DateTime? submittedAt,
+    Map<String, String>? optionLabels,
   }) {
     return OwnerAddPropertyFormState(
       title: title ?? this.title,
@@ -445,6 +465,7 @@ class OwnerAddPropertyFormState {
           ? null
           : ownershipProof ?? this.ownershipProof,
       submittedAt: submittedAt ?? this.submittedAt,
+      optionLabels: optionLabels ?? this.optionLabels,
     );
   }
 
@@ -529,6 +550,8 @@ class OwnerAddPropertyFormState {
         arabic: 'قريب من المترو',
         english: 'Near the metro',
       ),
+      'has_electricity_meter': amenityApiValues.contains('electricity_meter'),
+      'has_water_meter': amenityApiValues.contains('water_meter'),
       'has_natural_gas': _containsOption(
         selectedAmenities,
         localized: LocaleKeys.ownerAddPropertyNaturalGas,
@@ -542,6 +565,26 @@ class OwnerAddPropertyFormState {
   String get propertyTypeApiValue => propertyTypeValue.isNotEmpty
       ? propertyTypeValue
       : _propertyTypeValue(propertyType);
+
+  String get rentalUnitApiValue => _rentalUnitValue(rentalUnit);
+  String get suitableForApiValue => _suitableForValue(suitableFor);
+  Set<String> get amenityApiValues => {
+    for (final entry in {
+      'furnished': LocaleKeys.ownerAddPropertyFurnished,
+      'wifi': LocaleKeys.ownerAddPropertyWifi,
+      'elevator': LocaleKeys.ownerAddPropertyElevator,
+      'garage': LocaleKeys.ownerAddPropertyGarage,
+      'security': LocaleKeys.ownerAddPropertySecurity,
+      'balcony': LocaleKeys.ownerAddPropertyBalcony,
+      'air_conditioning': LocaleKeys.ownerAddPropertyAirConditioning,
+      'near_metro': LocaleKeys.ownerAddPropertyNearMetro,
+      'natural_gas': LocaleKeys.ownerAddPropertyNaturalGas,
+      'electricity_meter': LocaleKeys.ownerAddPropertyElectricityMeter,
+      'water_meter': LocaleKeys.ownerAddPropertyWaterMeter,
+    }.entries)
+      if (amenities.contains(entry.key) || amenities.contains(entry.value))
+        entry.key,
+  };
 
   static String _propertyTypeValue(String value) {
     return {

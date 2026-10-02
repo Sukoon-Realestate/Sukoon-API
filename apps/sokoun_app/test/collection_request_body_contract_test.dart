@@ -29,6 +29,14 @@ void main() {
     bool partial = false,
   }) {
     final expected = _body(contract(method, path));
+    if (method == 'POST' && path == '/properties/create/') {
+      // The sample multipart request omits these optional amenities. They are
+      // documented by the creation response and the confirmed filter lookup.
+      expected.addAll({
+        'has_electricity_meter': false,
+        'has_water_meter': false,
+      });
+    }
     expect(
       body.keys.toSet().difference(expected.keys.toSet()),
       isEmpty,
@@ -134,6 +142,8 @@ void main() {
       expect(body['city'], 'city-id');
       expect(body['suitable_for'], 'singles');
       expect(body['main_image'], isA<File>());
+      expect(body['has_electricity_meter'], isFalse);
+      expect(body['has_water_meter'], isFalse);
       expect(
         form.toJson(includeMainImage: false).containsKey('main_image'),
         isFalse,

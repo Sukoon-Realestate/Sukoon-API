@@ -85,6 +85,34 @@ class OwnerAvailabilityScheduleContent extends Equatable {
   final String weekEnd;
   final List<OwnerAvailabilityDayContent> days;
 
+  static DateTime startOfWeek(DateTime date) => DateTime(
+    date.year,
+    date.month,
+    date.day - (date.weekday - DateTime.monday),
+  );
+
+  OwnerAvailabilityScheduleContent withEditableDays() {
+    final start = DateTime.tryParse(weekStart);
+    final end = DateTime.tryParse(weekEnd);
+    // Dates are calendar days; a daylight-saving week need not be 144 hours.
+    if (start == null ||
+        end == null ||
+        !DateUtils.isSameDay(
+          end,
+          DateTime(start.year, start.month, start.day + 6),
+        )) {
+      return this;
+    }
+    return copyWith(
+      days: List.generate(7, (index) {
+        final date = DateTime(start.year, start.month, start.day + index);
+        final key = OwnerVisitCalendarContent.formatDate(date);
+        return days.where((day) => day.date == key).firstOrNull ??
+            OwnerAvailabilityDayContent.fromDate(date);
+      }, growable: false),
+    );
+  }
+
   Map<String, dynamic> toJson() => {
     'week_start': weekStart,
     'week_end': weekEnd,

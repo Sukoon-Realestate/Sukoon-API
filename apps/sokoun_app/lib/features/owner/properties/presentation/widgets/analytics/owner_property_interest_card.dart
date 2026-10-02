@@ -40,7 +40,7 @@ class OwnerPropertyInterestItem {
   const OwnerPropertyInterestItem({required this.label, required this.value});
 
   final String label;
-  final int value;
+  final double value;
 }
 
 class _InterestProgress extends StatelessWidget {
@@ -55,17 +55,18 @@ class _InterestProgress extends StatelessWidget {
       children: [
         Row(
           children: [
-            AppText(
-              item.label,
-              style: AppTextStyles.bold13.copyWith(
-                color: AppColors.sokoonGray,
-                fontSize: 13.sp,
-                height: 1.45,
+            Expanded(
+              child: AppText(
+                item.label,
+                style: AppTextStyles.bold13.copyWith(
+                  color: AppColors.sokoonGray,
+                  fontSize: 13.sp,
+                  height: 1.45,
+                ),
               ),
             ),
-            const Spacer(),
             AppText(
-              '${item.value}%',
+              '${_ownerFormattedNumber(item.value)}%',
               style: AppTextStyles.bold13.copyWith(
                 color: AppColors.sokoonNavy,
                 fontSize: 13.sp,
@@ -77,7 +78,7 @@ class _InterestProgress extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(99.r),
           child: LinearProgressIndicator(
-            value: item.value / 100,
+            value: (item.value / 100).clamp(0, 1),
             minHeight: 7.h,
             backgroundColor: AppColors.grayBackground,
             valueColor: const AlwaysStoppedAnimation<Color>(

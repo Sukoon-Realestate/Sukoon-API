@@ -2,6 +2,12 @@
 
 Date: 2026-10-02
 
+**Status update, 2026-10-03:** The backend answered this request in
+[MOBILE_DEV_HANDOFF.md](MOBILE_DEV_HANDOFF.md). The mobile changes are recorded in
+[MOBILE_BACKEND_INTEGRATION.md](MOBILE_BACKEND_INTEGRATION.md).
+The sections below preserve the original request; they are not a current list
+of missing backend work.
+
 Please implement the missing data or confirm the existing API contracts below
 so the app can display real information. If an item already exists, provide its
 documented request/response and an example instead of creating another endpoint.

@@ -34,6 +34,9 @@ class ApiConstants {
   static const String ownedProperties = 'properties/owned/';
   static const String ownerDashboard = 'properties/owner/dashboard/';
   static const String ownerProfile = 'properties/owner/profile/';
+  static const String ownerRevenues = 'properties/owner/revenues/';
+  static String propertyStatistics(String propertyId) =>
+      '${propertyDetails(propertyId)}statistics/';
   static const String getAccData = 'profiles/my-account/';
   static const String tenantAccountSummary = 'profiles/account-summary/';
   static const String ownerCalendar = 'properties/owner/calendar/';

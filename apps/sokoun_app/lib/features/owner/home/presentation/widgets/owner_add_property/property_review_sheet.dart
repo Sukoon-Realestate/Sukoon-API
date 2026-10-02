@@ -92,9 +92,9 @@ class PropertyReviewSheet extends StatelessWidget {
                   title: LocaleKeys.ownerAddPropertyPricingTitle,
                   lines: [
                     '${LocaleKeys.ownerAddPropertyPrice}: ${form.monthlyPrice} ${LocaleKeys.ownerAddPropertyCurrency}',
-                    '${LocaleKeys.ownerAddPropertySuitableFor}: ${form.suitableFor}',
-                    '${LocaleKeys.ownerAddPropertyRentalPeriod}: ${form.rentalDuration} ${form.rentalUnit}',
-                    form.amenities.join(' · '),
+                    '${LocaleKeys.ownerAddPropertySuitableFor}: ${form.suitableForLabel}',
+                    '${LocaleKeys.ownerAddPropertyRentalPeriod}: ${form.rentalDuration} ${form.rentalUnitLabel}',
+                    form.amenityLabels.join(' · '),
                     form.description,
                   ],
                   onEdit: () => Go.back(PropertyReviewAction.pricing),

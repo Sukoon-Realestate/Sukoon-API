@@ -18,7 +18,7 @@ abstract interface class NotificationDeviceDataSource {
 
   Future<void> registerToken(String token);
 
-  Future<void> unregisterCurrentDevice();
+  Future<void> unregisterCurrentDevice({bool notifyServer = true});
 }
 
 final class NotificationDeviceApiDataSource
@@ -46,12 +46,23 @@ final class NotificationDeviceApiDataSource
 
   @override
   Future<void> registerCurrentDevice() async {
+    final int epoch = _registrationEpoch;
+    final int generation = AccountSession.generation;
     try {
       final NetworkService networkService = injector<NetworkService>();
-      if (!await networkService.hasSessionCookies()) return;
+      if (!await networkService.hasSessionCookies() ||
+          epoch != _registrationEpoch ||
+          generation != AccountSession.generation) {
+        return;
+      }
 
       final String? token = await injector<NotificationService>().getFcmToken();
-      if (token == null || token.isEmpty) return;
+      if (token == null ||
+          token.isEmpty ||
+          epoch != _registrationEpoch ||
+          generation != AccountSession.generation) {
+        return;
+      }
       await registerToken(token);
     } catch (error, stackTrace) {
       _logDeviceFailure('register', error, stackTrace);
@@ -70,9 +81,14 @@ final class NotificationDeviceApiDataSource
     if (registration != _activeRegistration) {
       _pendingRegistration = registration;
     }
-    return _registration ??= _drainRegistrations(
-      _registrationEpoch,
-    ).whenComplete(() => _registration = null);
+    final Future<void>? pending = _registration;
+    if (pending != null) return pending;
+    late final Future<void> request;
+    request = _drainRegistrations(_registrationEpoch).whenComplete(() {
+      if (identical(_registration, request)) _registration = null;
+    });
+    _registration = request;
+    return request;
   }
 
   Future<void> _drainRegistrations(int epoch) async {
@@ -108,20 +124,25 @@ final class NotificationDeviceApiDataSource
       } catch (error, stackTrace) {
         _logDeviceFailure('register', error, stackTrace);
       } finally {
-        _activeRegistration = null;
+        if (epoch == _registrationEpoch) _activeRegistration = null;
       }
     }
   }
 
   @override
-  Future<void> unregisterCurrentDevice() async {
+  Future<void> unregisterCurrentDevice({bool notifyServer = true}) async {
     final int generation = AccountSession.generation;
     _registrationEpoch++;
     _pendingRegistration = null;
+    _activeRegistration = null;
     _registered = null;
-    await _registration;
-    await _tokenRefreshSubscription?.cancel();
+    final Future<void>? pending = _registration;
+    _registration = null;
+    final subscription = _tokenRefreshSubscription;
     _tokenRefreshSubscription = null;
+    await subscription?.cancel();
+    if (!notifyServer) return;
+    await pending;
     if (generation != AccountSession.generation) return;
 
     try {
@@ -179,4 +200,7 @@ abstract final class NotificationDeviceData {
 
   static Future<void> unregisterCurrentDevice() =>
       source.unregisterCurrentDevice();
+
+  static Future<void> stop() =>
+      source.unregisterCurrentDevice(notifyServer: false);
 }

@@ -174,6 +174,14 @@ class _OtpScreenState extends State<OtpScreen> {
             ),
           ),
           26.szH,
+          AppText(
+            LocaleKeys.otpCodeExpiresInTenMinutes,
+            style: AppTextStyles.regular12.copyWith(
+              color: AppColors.sokoonGray,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          12.szH,
           ValueListenableBuilder<
             ({bool canResend, bool isResending, bool isCodeComplete})
           >(

@@ -1,5 +1,55 @@
 part of '../../imports.dart';
 
+class OwnerAnalyticsDay extends Equatable {
+  const OwnerAnalyticsDay({required this.date, required this.count});
+  const OwnerAnalyticsDay.initial() : date = '', count = 0;
+  factory OwnerAnalyticsDay.fromJson(Map<String, dynamic> json) =>
+      OwnerAnalyticsDay(
+        date: json['date']?.toString() ?? '',
+        count: _ownerNumber(json['count']).toInt(),
+      );
+  final String date;
+  final int count;
+  Map<String, dynamic> toJson() => {'date': date, 'count': count};
+  OwnerAnalyticsDay copyWith({String? date, int? count}) =>
+      OwnerAnalyticsDay(date: date ?? this.date, count: count ?? this.count);
+  @override
+  List<Object?> get props => [date, count];
+}
+
+class OwnerSearchCriterion extends Equatable {
+  const OwnerSearchCriterion({
+    required this.key,
+    required this.label,
+    required this.percentage,
+  });
+  const OwnerSearchCriterion.initial() : key = '', label = '', percentage = 0;
+  factory OwnerSearchCriterion.fromJson(Map<String, dynamic> json) =>
+      OwnerSearchCriterion(
+        key: json['key']?.toString() ?? '',
+        label: json['label']?.toString() ?? '',
+        percentage: _ownerNumber(json['percentage']).toDouble(),
+      );
+  final String key, label;
+  final double percentage;
+  Map<String, dynamic> toJson() => {
+    'key': key,
+    'label': label,
+    'percentage': percentage,
+  };
+  OwnerSearchCriterion copyWith({
+    String? key,
+    String? label,
+    double? percentage,
+  }) => OwnerSearchCriterion(
+    key: key ?? this.key,
+    label: label ?? this.label,
+    percentage: percentage ?? this.percentage,
+  );
+  @override
+  List<Object?> get props => [key, label, percentage];
+}
+
 class OwnerPropertyAnalyticsContent extends Equatable {
   const OwnerPropertyAnalyticsContent({
     this.hasDetails = true,
@@ -7,107 +57,91 @@ class OwnerPropertyAnalyticsContent extends Equatable {
     required this.visitRequests,
     required this.saves,
     required this.acceptanceRate,
-    required this.viewHistory,
-    required this.spaceInterest,
-    required this.priceInterest,
-    required this.locationInterest,
-    required this.amenitiesInterest,
+    this.period = '30_days',
+    this.periodLabel = '',
+    this.history = const [],
+    this.criteria = const [],
   });
+  const OwnerPropertyAnalyticsContent.initial()
+    : hasDetails = false,
+      views = 0,
+      visitRequests = 0,
+      saves = 0,
+      acceptanceRate = 0,
+      period = '30_days',
+      periodLabel = '',
+      history = const [],
+      criteria = const [];
 
-  factory OwnerPropertyAnalyticsContent.initial() {
-    return const OwnerPropertyAnalyticsContent(
-      hasDetails: false,
-      views: 0,
-      visitRequests: 0,
-      saves: 0,
-      acceptanceRate: 0,
-      viewHistory: [],
-      spaceInterest: 0,
-      priceInterest: 0,
-      locationInterest: 0,
-      amenitiesInterest: 0,
-    );
-  }
+  factory OwnerPropertyAnalyticsContent.fromJson(Map<String, dynamic> json) =>
+      OwnerPropertyAnalyticsContent(
+        hasDetails:
+            json['has_details'] as bool? ??
+            const [
+              'views_count',
+              'visit_requests_count',
+              'saved_count',
+              'acceptance_rate',
+            ].every((key) => json[key] != null),
+        views: _ownerNumber(json['views_count'] ?? json['views']).toInt(),
+        visitRequests: _ownerNumber(json['visit_requests_count']).toInt(),
+        saves: _ownerNumber(json['saved_count']).toInt(),
+        acceptanceRate: _ownerNumber(json['acceptance_rate']).toDouble(),
+        period: json['period']?.toString() ?? '30_days',
+        periodLabel: json['period_label']?.toString() ?? '',
+        history: _ownerMaps(
+          json['views_last_14_days'],
+        ).map(OwnerAnalyticsDay.fromJson).toList(growable: false),
+        criteria: _ownerMaps(
+          json['top_search_criteria'],
+        ).map(OwnerSearchCriterion.fromJson).toList(growable: false),
+      );
 
-  factory OwnerPropertyAnalyticsContent.fromJson(Map<String, dynamic> json) {
-    return OwnerPropertyAnalyticsContent(
-      hasDetails:
-          json['has_details'] as bool? ??
-          const [
-            'views',
-            'visit_requests',
-            'saves',
-            'acceptance_rate',
-            'view_history',
-            'space_interest',
-            'price_interest',
-            'location_interest',
-            'amenities_interest',
-          ].every((key) => json[key] != null),
-      views: json['views'] ?? 0,
-      visitRequests: json['visit_requests'] ?? 0,
-      saves: json['saves'] ?? 0,
-      acceptanceRate: json['acceptance_rate'] ?? 0,
-      viewHistory: List<int>.from(json['view_history'] ?? const <int>[]),
-      spaceInterest: json['space_interest'] ?? 0,
-      priceInterest: json['price_interest'] ?? 0,
-      locationInterest: json['location_interest'] ?? 0,
-      amenitiesInterest: json['amenities_interest'] ?? 0,
-    );
-  }
-
-  final int views;
   final bool hasDetails;
-  final int visitRequests;
-  final int saves;
-  final int acceptanceRate;
-  final List<int> viewHistory;
-  final int spaceInterest;
-  final int priceInterest;
-  final int locationInterest;
-  final int amenitiesInterest;
+  final int views, visitRequests, saves;
+  final double acceptanceRate;
+  final String period, periodLabel;
+  final List<OwnerAnalyticsDay> history;
+  final List<OwnerSearchCriterion> criteria;
+  List<int> get viewHistory =>
+      history.map((day) => day.count).toList(growable: false);
 
-  Map<String, dynamic> toJson() {
-    return {
-      'has_details': hasDetails,
-      'views': views,
-      'visit_requests': visitRequests,
-      'saves': saves,
-      'acceptance_rate': acceptanceRate,
-      'view_history': viewHistory,
-      'space_interest': spaceInterest,
-      'price_interest': priceInterest,
-      'location_interest': locationInterest,
-      'amenities_interest': amenitiesInterest,
-    };
-  }
-
+  Map<String, dynamic> toJson() => {
+    'has_details': hasDetails,
+    'views_count': views,
+    'visit_requests_count': visitRequests,
+    'saved_count': saves,
+    'acceptance_rate': acceptanceRate,
+    'period': period,
+    'period_label': periodLabel,
+    'views_last_14_days': history
+        .map((day) => day.toJson())
+        .toList(growable: false),
+    'top_search_criteria': criteria
+        .map((item) => item.toJson())
+        .toList(growable: false),
+  };
   OwnerPropertyAnalyticsContent copyWith({
     bool? hasDetails,
     int? views,
     int? visitRequests,
     int? saves,
-    int? acceptanceRate,
-    List<int>? viewHistory,
-    int? spaceInterest,
-    int? priceInterest,
-    int? locationInterest,
-    int? amenitiesInterest,
-  }) {
-    return OwnerPropertyAnalyticsContent(
-      hasDetails: hasDetails ?? this.hasDetails,
-      views: views ?? this.views,
-      visitRequests: visitRequests ?? this.visitRequests,
-      saves: saves ?? this.saves,
-      acceptanceRate: acceptanceRate ?? this.acceptanceRate,
-      viewHistory: viewHistory ?? this.viewHistory,
-      spaceInterest: spaceInterest ?? this.spaceInterest,
-      priceInterest: priceInterest ?? this.priceInterest,
-      locationInterest: locationInterest ?? this.locationInterest,
-      amenitiesInterest: amenitiesInterest ?? this.amenitiesInterest,
-    );
-  }
-
+    double? acceptanceRate,
+    String? period,
+    String? periodLabel,
+    List<OwnerAnalyticsDay>? history,
+    List<OwnerSearchCriterion>? criteria,
+  }) => OwnerPropertyAnalyticsContent(
+    hasDetails: hasDetails ?? this.hasDetails,
+    views: views ?? this.views,
+    visitRequests: visitRequests ?? this.visitRequests,
+    saves: saves ?? this.saves,
+    acceptanceRate: acceptanceRate ?? this.acceptanceRate,
+    period: period ?? this.period,
+    periodLabel: periodLabel ?? this.periodLabel,
+    history: history ?? this.history,
+    criteria: criteria ?? this.criteria,
+  );
   @override
   List<Object?> get props => [
     hasDetails,
@@ -115,10 +149,16 @@ class OwnerPropertyAnalyticsContent extends Equatable {
     visitRequests,
     saves,
     acceptanceRate,
-    viewHistory,
-    spaceInterest,
-    priceInterest,
-    locationInterest,
-    amenitiesInterest,
+    period,
+    periodLabel,
+    history,
+    criteria,
   ];
 }
+
+num _ownerNumber(dynamic value) =>
+    value is num ? value : num.tryParse('$value') ?? 0;
+Iterable<Map<String, dynamic>> _ownerMaps(dynamic value) =>
+    (value is List ? value : const []).whereType<Map>().map(
+      (item) => Map<String, dynamic>.from(item),
+    );

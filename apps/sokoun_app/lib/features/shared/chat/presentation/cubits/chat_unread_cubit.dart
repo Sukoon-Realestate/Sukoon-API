@@ -45,6 +45,7 @@ class ChatUnreadCubit extends AsyncCubit<ChatUnreadContent> {
     _sessionGeneration = AccountSession.generation;
     _watchCounts();
     _refreshSubscription ??= ChatUnreadRefreshBus.stream.listen((removed) {
+      if (isClosed || _sessionGeneration != AccountSession.generation) return;
       removeConversationUnread(removed);
       if (removed == 0) unawaited(_unreadCounts.refresh());
     });
@@ -53,11 +54,11 @@ class ChatUnreadCubit extends AsyncCubit<ChatUnreadContent> {
       _handleNotification,
     );
     if (!UserModel.isAuthenticated) return;
-    await Future.wait([loadUnreadCount(), _realtime.connect()]);
+    await loadUnreadCount();
   }
 
   Future<void> loadUnreadCount() async {
-    if (isClosed) return;
+    if (isClosed || _sessionGeneration != AccountSession.generation) return;
     _watchCounts();
     await _unreadCounts.load();
     _syncCounts();
@@ -115,16 +116,6 @@ class ChatUnreadCubit extends AsyncCubit<ChatUnreadContent> {
     _syncCounts();
   }
 
-  Future<void> onAppResumed() async {
-    await _realtime.connect();
-  }
-
-  Future<void> onAppBackgrounded() async {
-    if (_sessionGeneration == AccountSession.generation) {
-      await _realtime.disconnect();
-    }
-  }
-
   void _syncCounts() {
     final AsyncState<UnreadCounts> counts = _unreadCounts.state;
     emit(
@@ -142,9 +133,6 @@ class ChatUnreadCubit extends AsyncCubit<ChatUnreadContent> {
     await _refreshSubscription?.cancel();
     await _messageSubscription?.cancel();
     await _notificationSubscription?.cancel();
-    if (_sessionGeneration == AccountSession.generation) {
-      await _realtime.disconnect();
-    }
     return super.close();
   }
 }

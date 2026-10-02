@@ -7,6 +7,7 @@ import 'package:melos_core/config/language/languages.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
+import 'package:melos_core/core/network/account_session.dart';
 import 'package:melos_core/generated/assets.dart';
 import 'package:sokoun_app/features/shared/unread_counts/presentation/cubits/unread_counts_cubit.dart';
 import 'package:sokoun_app/features/shared/unread_counts/data/models/unread_counts.dart';
@@ -48,6 +49,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   late final WorkspaceCubit _workspaceCubit;
+  String? _tabAccountId;
+  int _sessionGeneration = AccountSession.generation;
   late final List<_HomeTab> _allTabs;
   final Map<AppWorkspace, int> _selectedTabs = {
     AppWorkspace.tenant: 0,
@@ -95,6 +98,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     _workspaceCubit.initialize(
       WorkspaceNavigation.isAuthenticated ? UserCubit.instance.user.id : null,
     );
+    _tabAccountId = _workspaceCubit.userId;
     _unreadCountsCubit = UnreadCountsCubit()..watch();
     _chatUnreadCubit = ChatUnreadCubit(unreadCounts: _unreadCountsCubit);
     _ownerCounts = UnreadCountsCubit(workspace: AppWorkspace.owner)..watch();
@@ -125,16 +129,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!_hasCurrentSession) return;
     if (state == AppLifecycleState.resumed) {
-      unawaited(_chatUnreadCubit.onAppResumed());
       unawaited(_refreshTenantProfile());
       unawaited(_refreshCounts());
-      return;
-    }
-    if (state == AppLifecycleState.paused ||
-        state == AppLifecycleState.detached ||
-        state == AppLifecycleState.hidden) {
-      unawaited(_chatUnreadCubit.onAppBackgrounded());
     }
   }
 
@@ -156,7 +154,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final String? userId = WorkspaceNavigation.isAuthenticated
         ? UserCubit.instance.user.id
         : null;
-    final bool accountChanged = _workspaceCubit.userId != userId;
+    // Cookie-only startup can establish an account while the request runs.
+    // An ended or replaced signed-in session must not restart home features.
+    if (_sessionGeneration != AccountSession.generation &&
+        (_tabAccountId != null || userId == null)) {
+      return;
+    }
+    final bool accountChanged = _tabAccountId != userId;
+    _tabAccountId = userId;
+    _sessionGeneration = AccountSession.generation;
     _workspaceCubit.initialize(userId);
     if (accountChanged) setState(() {});
     await Future.wait<void>([
@@ -167,22 +173,36 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   Future<void> _refreshTenantProfile() async {
-    if (!_workspace.isTenant || !WorkspaceNavigation.isAuthenticated) return;
+    if (!_hasCurrentSession ||
+        !_workspace.isTenant ||
+        !WorkspaceNavigation.isAuthenticated) {
+      return;
+    }
     await _tenantProfileCubit.getProfile();
   }
 
   Future<void> _refreshCounts() async {
+    if (!_hasCurrentSession) return;
     await Future.wait([_unreadCountsCubit.load(), _ownerCounts.load()]);
   }
 
   Future<void> _showLaunchDialogs() async {
+    if (!_hasCurrentSession) return;
     await Future.wait<void>([
       WorkspaceNavigation.resumePending(),
       NotificationCoordinator.start(),
     ]);
-    if (!mounted || ModalRoute.of(context)?.isCurrent != true) return;
+    if (!mounted ||
+        !_hasCurrentSession ||
+        ModalRoute.of(context)?.isCurrent != true) {
+      return;
+    }
     await WhatsNewService.showIfNeeded(upgrader: upgrader);
-    if (!mounted || !WorkspaceNavigation.isAuthenticated) return;
+    if (!mounted ||
+        !_hasCurrentSession ||
+        !WorkspaceNavigation.isAuthenticated) {
+      return;
+    }
     await DevicePermissionFlow.ensureGranted(
       context,
       DevicePermission.notifications,
@@ -191,6 +211,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   void _selectTab(int index) {
+    if (!_hasCurrentSession) return;
     if (index == _currentIndex) {
       return;
     }
@@ -212,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     AppWorkspace? workspace,
     WorkspaceTab? tab,
   ) async {
-    if (!mounted) return;
+    if (!_hasCurrentSession) return;
     final AppWorkspace target = workspace ?? _workspace;
     if (tab != null) {
       final int index = _tabIndices[target]!.indexWhere(
@@ -221,10 +242,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       if (index >= 0) _selectedTabs[target] = index;
     }
     await _workspaceCubit.switchTo(target);
-    if (mounted) {
+    if (_hasCurrentSession) {
       setState(() {});
     }
   }
+
+  bool get _hasCurrentSession =>
+      mounted && _sessionGeneration == AccountSession.generation;
 
   List<HomeNavigationDestination> _navigationDestinations({
     required int unreadCount,
@@ -411,8 +435,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                         child: SokounContentTransition(
                           identity: bodyIndex,
                           child: IndexedStack(
-                            // Account identity, not window size, owns tab lifetimes.
-                            key: ValueKey(_workspaceCubit.userId),
+                            // Keep outgoing tabs alive until this route is disposed.
+                            key: ValueKey(_tabAccountId),
                             index: bodyIndex,
                             children: List<Widget>.generate(
                               _allTabs.length,

@@ -3397,4 +3397,55 @@ abstract class LocaleKeys {
   static const String _ownerAnalyticsUnavailableDescription = 'owner_analytics_unavailable_description';
   static String get ownerAnalyticsUnavailableDescription => _ownerAnalyticsUnavailableDescription.tr();
 
+  static const String _profileClearCity = 'profile_clear_city';
+  static String get profileClearCity => _profileClearCity.tr();
+
+  static const String _profileCitiesEmptyTitle = 'profile_cities_empty_title';
+  static String get profileCitiesEmptyTitle => _profileCitiesEmptyTitle.tr();
+
+  static const String _ownerAnalyticsPeriod = 'owner_analytics_period';
+  static String get ownerAnalyticsPeriod => _ownerAnalyticsPeriod.tr();
+
+  static const String _ownerAnalyticsSevenDays = 'owner_analytics_seven_days';
+  static String get ownerAnalyticsSevenDays => _ownerAnalyticsSevenDays.tr();
+
+  static const String _ownerAnalyticsNinetyDays = 'owner_analytics_ninety_days';
+  static String get ownerAnalyticsNinetyDays => _ownerAnalyticsNinetyDays.tr();
+
+  static const String _ownerAnalyticsEmptyTitle = 'owner_analytics_empty_title';
+  static String get ownerAnalyticsEmptyTitle => _ownerAnalyticsEmptyTitle.tr();
+
+  static const String _ownerRevenueUpcoming = 'owner_revenue_upcoming';
+  static String get ownerRevenueUpcoming => _ownerRevenueUpcoming.tr();
+
+  static const String _ownerRevenueEmptyTitle = 'owner_revenue_empty_title';
+  static String get ownerRevenueEmptyTitle => _ownerRevenueEmptyTitle.tr();
+
+  static const String _ownerRevenueEmptyDescription = 'owner_revenue_empty_description';
+  static String get ownerRevenueEmptyDescription => _ownerRevenueEmptyDescription.tr();
+
+  static const String _ownerAvailabilityPreviousWeek = 'owner_availability_previous_week';
+  static String get ownerAvailabilityPreviousWeek => _ownerAvailabilityPreviousWeek.tr();
+
+  static const String _ownerAvailabilityNextWeek = 'owner_availability_next_week';
+  static String get ownerAvailabilityNextWeek => _ownerAvailabilityNextWeek.tr();
+
+  static const String _ownerAvailabilityAddTime = 'owner_availability_add_time';
+  static String get ownerAvailabilityAddTime => _ownerAvailabilityAddTime.tr();
+
+  static const String _ownerAvailabilityCairoTime = 'owner_availability_cairo_time';
+  static String get ownerAvailabilityCairoTime => _ownerAvailabilityCairoTime.tr();
+
+  static const String _ownerAvailabilityTimeAlreadyExists = 'owner_availability_time_already_exists';
+  static String get ownerAvailabilityTimeAlreadyExists => _ownerAvailabilityTimeAlreadyExists.tr();
+
+  static const String _recoveryLinkValidFor24Hours = 'recovery_link_valid_for_2_4_hours';
+  static String get recoveryLinkValidFor24Hours => _recoveryLinkValidFor24Hours.tr();
+
+  static const String _otpCodeExpiresInTenMinutes = 'otp_code_expires_in_ten_minutes';
+  static String get otpCodeExpiresInTenMinutes => _otpCodeExpiresInTenMinutes.tr();
+
+  static const String _ownerAddPropertyOptionsEmptyTitle = 'owner_add_property_options_empty_title';
+  static String get ownerAddPropertyOptionsEmptyTitle => _ownerAddPropertyOptionsEmptyTitle.tr();
+
 }

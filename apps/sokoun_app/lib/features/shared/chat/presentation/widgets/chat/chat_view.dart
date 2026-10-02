@@ -6,6 +6,7 @@ import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/widgets/chat_builder/chat_message.dart';
 import 'package:melos_core/core/widgets/chat_builder/easy_chat.dart';
+import 'package:melos_core/core/widgets/custom_loading.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:pagify/helpers/errors.dart';
 import 'package:pagify/pagify.dart';
@@ -164,9 +165,7 @@ class _ChatThreadMessagesViewState extends State<ChatThreadMessagesView> {
               message: message,
               isFromMe: false,
             ),
-            loadingBuilder: const Center(
-              child: CircularProgressIndicator(color: AppColors.sokoonTeal),
-            ),
+            loadingBuilder: CustomLoading.showLoadingView(),
             emptyView: const ChatMessagesEmptyState(),
             cacheKey: widget.messagesCacheKey,
             cacheToJson: widget.messagesCacheKey == null

@@ -231,6 +231,69 @@ void main() {
     },
   );
 
+  test('local device cleanup sends no unregister endpoint', () async {
+    final source = NotificationDeviceApiDataSource();
+    await source.registerToken('token');
+    await source.unregisterCurrentDevice(notifyServer: false);
+    expect(network.requests.map((request) => request.path), [
+      ApiConstants.notificationDevices,
+    ]);
+  });
+
+  test(
+    'local device cleanup cancels registration waiting for cookies',
+    () async {
+      final source = NotificationDeviceApiDataSource();
+      network.sessionGate = Completer<bool>();
+      final registration = source.registerToken('token');
+      final stopped = source.unregisterCurrentDevice(notifyServer: false);
+      network.sessionGate!.complete(true);
+      await Future.wait([registration, stopped]);
+      expect(network.requests, isEmpty);
+    },
+  );
+
+  test('local device cleanup cancels delayed device startup', () async {
+    final source = NotificationDeviceApiDataSource();
+    network.sessionGate = Completer<bool>();
+    final starting = source.start();
+    await source.unregisterCurrentDevice(notifyServer: false);
+    network.sessionGate!.complete(true);
+    await starting;
+    expect(network.requests, isEmpty);
+  });
+
+  test(
+    'late registration cannot block or clear the next login registration',
+    () async {
+      final source = NotificationDeviceApiDataSource();
+      final oldResponse = Completer<void>();
+      network.requestGate = oldResponse;
+      final previous = source.registerToken('old-token');
+      await pumpEventQueue();
+      expect(network.requests, hasLength(1));
+
+      await source.unregisterCurrentDevice(notifyServer: false);
+      AccountSession.begin('next-account');
+      final newResponse = Completer<void>();
+      network.requestGate = newResponse;
+      final current = source.registerToken('new-token');
+      await pumpEventQueue();
+      expect(network.requests, hasLength(2));
+      oldResponse.complete();
+      await previous;
+      final duplicate = source.registerToken('new-token');
+      expect(duplicate, same(current));
+      newResponse.complete();
+      await Future.wait([current, duplicate]);
+
+      expect(network.requests.map((request) => request.body?['token']), [
+        'old-token',
+        'new-token',
+      ]);
+    },
+  );
+
   test('device registration failure remains retryable', () async {
     final source = NotificationDeviceApiDataSource();
     network.failRequest = true;

@@ -8,6 +8,8 @@ class UserProfileContent extends Equatable {
     required this.gender,
     required this.birthDate,
     required this.avatar,
+    this.city,
+    this.email = '',
   });
   const UserProfileContent.initial()
     : id = '',
@@ -15,7 +17,9 @@ class UserProfileContent extends Equatable {
       phone = '',
       gender = '',
       birthDate = '',
-      avatar = '';
+      avatar = '',
+      email = '',
+      city = null;
   factory UserProfileContent.fromJson(Map<String, dynamic> json) =>
       UserProfileContent(
         id: _profileString(json['id']),
@@ -30,8 +34,14 @@ class UserProfileContent extends Equatable {
         gender: _profileString(json['gender']),
         birthDate: _profileString(json['birth_date']),
         avatar: _profileString(json['avatar']),
+        email: _profileString(json['email']),
+        city: json['city'] is Map
+            ? ProfileCity.fromJson(_profileJsonMap(json['city']))
+            : null,
       );
   final String id, name, phone, gender, birthDate, avatar;
+  final String email;
+  final ProfileCity? city;
   UserModel toUser(UserModel fallback) =>
       fallback.copyWith(name: name, phone: phone);
   Map<String, dynamic> toJson() => {
@@ -41,6 +51,8 @@ class UserProfileContent extends Equatable {
     'gender': gender,
     'birth_date': birthDate,
     'avatar': avatar,
+    'email': email,
+    'city': city?.toJson(),
   };
   UserProfileContent copyWith({
     String? id,
@@ -49,6 +61,9 @@ class UserProfileContent extends Equatable {
     String? gender,
     String? birthDate,
     String? avatar,
+    String? email,
+    ProfileCity? city,
+    bool clearCity = false,
   }) => UserProfileContent(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -56,7 +71,18 @@ class UserProfileContent extends Equatable {
     gender: gender ?? this.gender,
     birthDate: birthDate ?? this.birthDate,
     avatar: avatar ?? this.avatar,
+    email: email ?? this.email,
+    city: clearCity ? null : city ?? this.city,
   );
   @override
-  List<Object?> get props => [id, name, phone, gender, birthDate, avatar];
+  List<Object?> get props => [
+    id,
+    name,
+    phone,
+    gender,
+    birthDate,
+    avatar,
+    city,
+    email,
+  ];
 }

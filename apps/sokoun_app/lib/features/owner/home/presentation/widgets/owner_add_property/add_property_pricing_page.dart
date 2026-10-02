@@ -8,13 +8,17 @@ import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 
 import 'add_property_chip_wrap.dart';
-import 'add_property_dropdown_field.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:melos_core/core/helpers/status_builder.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_filter_options_cubit.dart';
+import 'add_property_options_empty_state.dart';
 import 'add_property_field.dart';
 import 'add_property_info_banner.dart';
 import 'add_property_section_card.dart';
 import 'add_property_step_shell.dart';
 
-class AddPropertyPricingPage extends StatelessWidget {
+class AddPropertyPricingPage extends StatefulWidget {
   const AddPropertyPricingPage({
     super.key,
     required this.form,
@@ -29,6 +33,7 @@ class AddPropertyPricingPage extends StatelessWidget {
     required this.onDescriptionChanged,
     required this.onNext,
     this.isSubmitting = false,
+    this.onOptionLabelsLoaded,
   });
 
   final OwnerAddPropertyFormState form;
@@ -43,6 +48,41 @@ class AddPropertyPricingPage extends StatelessWidget {
   final ValueChanged<String> onDescriptionChanged;
   final VoidCallback onNext;
   final bool isSubmitting;
+  final ValueChanged<Map<String, String>>? onOptionLabelsLoaded;
+
+  @override
+  State<AddPropertyPricingPage> createState() => _AddPropertyPricingPageState();
+}
+
+class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
+  late final PropertyFilterOptionsCubit _optionsCubit;
+  @override
+  void initState() {
+    super.initState();
+    _optionsCubit = PropertyFilterOptionsCubit();
+    _loadOptions();
+  }
+
+  Future<void> _loadOptions() => _optionsCubit.getFilterOptions(
+    onLoaded: (options) {
+      if (!mounted) return;
+      widget.onOptionLabelsLoaded?.call({
+        'amenity:furnished': LocaleKeys.ownerAddPropertyFurnished,
+        for (final option in options.amenities)
+          'amenity:${option.value}': option.label,
+        for (final option in options.suitableFor)
+          'suitable_for:${option.value}': option.label,
+        for (final option in options.pricePeriods)
+          'price_period:${option.value}': option.label,
+      });
+    },
+  );
+
+  @override
+  void dispose() {
+    _optionsCubit.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,61 +90,114 @@ class AddPropertyPricingPage extends StatelessWidget {
       activeSegments: 3,
       segmentCount: 3,
       progressSubtitle: LocaleKeys.ownerAddPropertyPricingProgress,
-      primaryLabel: isSubmitting
+      primaryLabel: widget.isSubmitting
           ? LocaleKeys.ownerAddPropertySubmitting
           : LocaleKeys.ownerPropertyReviewAction,
-      onPrimaryTap: form.isPricingReady && !isSubmitting ? onNext : null,
+      onPrimaryTap: widget.form.isPricingReady && !widget.isSubmitting
+          ? widget.onNext
+          : null,
       children: [
         _PriceSection(
-          form: form,
-          monthlyPriceController: monthlyPriceController,
-          onMonthlyPriceChanged: onMonthlyPriceChanged,
+          form: widget.form,
+          monthlyPriceController: widget.monthlyPriceController,
+          onMonthlyPriceChanged: widget.onMonthlyPriceChanged,
         ),
-        _RentalPeriodSection(
-          form: form,
-          rentalDurationController: rentalDurationController,
-          onRentalDurationChanged: onRentalDurationChanged,
-          onRentalUnitChanged: onRentalUnitChanged,
-        ),
-        AddPropertySectionCard(
-          title: LocaleKeys.ownerAddPropertyAmenities,
-          child: AddPropertyChipWrap(
-            chips: OwnerAddPropertyContent.multiSelectedChips(
-              labels: OwnerAddPropertyContent.amenityOptions,
-              selectedValues: form.amenities,
-            ),
-            onChipTap: (chip) => onAmenityToggled(chip.label),
-          ),
-        ),
-        AddPropertySectionCard(
-          title: LocaleKeys.ownerAddPropertySuitableFor,
-          child: AddPropertyChipWrap(
-            chips: OwnerAddPropertyContent.singleSelectedChips(
-              labels: OwnerAddPropertyContent.suitableForOptions,
-              selectedValue: form.suitableFor,
-            ),
-            onChipTap: (chip) => onSuitableForSelected(chip.label),
-          ),
+        BlocProvider<PropertyFilterOptionsCubit>.value(
+          value: _optionsCubit,
+          child:
+              StatusBuilder<
+                PropertyFilterOptionsCubit,
+                PropertyFilterOptionsModel
+              >.withShimmer(
+                initialDataForShimmer:
+                    const PropertyFilterOptionsModel.initial(),
+                onRetry: _loadOptions,
+                shimmerBuilder: (_) => const SizedBox(height: 120),
+                builder: (options) {
+                  if (options.pricePeriods.isEmpty &&
+                      options.suitableFor.isEmpty &&
+                      options.amenities.isEmpty) {
+                    return const AddPropertyOptionsEmptyState();
+                  }
+                  return Column(
+                    spacing: 16,
+                    children: [
+                      _RentalPeriodSection(
+                        form: widget.form,
+                        rentalDurationController:
+                            widget.rentalDurationController,
+                        onRentalDurationChanged: widget.onRentalDurationChanged,
+                        onRentalUnitChanged: widget.onRentalUnitChanged,
+                        options: options.pricePeriods,
+                      ),
+                      AddPropertySectionCard(
+                        title: LocaleKeys.ownerAddPropertyAmenities,
+                        child: AddPropertyChipWrap(
+                          chips: [
+                            AddPropertyChipContent(
+                              label: LocaleKeys.ownerAddPropertyFurnished,
+                              value: 'furnished',
+                              isSelected: widget.form.amenityApiValues.contains(
+                                'furnished',
+                              ),
+                            ),
+                            for (final option in options.amenities)
+                              AddPropertyChipContent(
+                                label: option.label,
+                                value: option.value,
+                                isSelected: widget.form.amenityApiValues
+                                    .contains(option.value),
+                              ),
+                          ],
+                          onChipTap: (chip) =>
+                              widget.onAmenityToggled(chip.selectionValue),
+                        ),
+                      ),
+                      AddPropertySectionCard(
+                        title: LocaleKeys.ownerAddPropertySuitableFor,
+                        child: options.suitableFor.isEmpty
+                            ? const AddPropertyOptionsEmptyState()
+                            : AddPropertyChipWrap(
+                                chips: [
+                                  for (final option in options.suitableFor)
+                                    AddPropertyChipContent(
+                                      label: option.label,
+                                      value: option.value,
+                                      isSelected:
+                                          widget.form.suitableForApiValue ==
+                                          option.value,
+                                    ),
+                                ],
+                                onChipTap: (chip) => widget
+                                    .onSuitableForSelected(chip.selectionValue),
+                              ),
+                      ),
+                    ],
+                  );
+                },
+              ),
         ),
         _DescriptionSection(
-          descriptionController: descriptionController,
-          onDescriptionChanged: onDescriptionChanged,
+          descriptionController: widget.descriptionController,
+          onDescriptionChanged: widget.onDescriptionChanged,
         ),
         AddPropertyInfoBanner(
-          text: form.isPricingReady
+          text: widget.form.isPricingReady
               ? LocaleKeys.ownerAddPropertyPricingReady
               : LocaleKeys.ownerAddPropertyPricingRequired,
-          backgroundColor: form.isPricingReady
+          backgroundColor: widget.form.isPricingReady
               ? AppColors.greenPale
               : AppColors.amberPale,
-          borderColor: form.isPricingReady
+          borderColor: widget.form.isPricingReady
               ? AppColors.greenAlpha19
               : AppColors.goldAlpha15,
-          iconColor: form.isPricingReady ? AppColors.green : AppColors.brown,
-          textColor: form.isPricingReady
+          iconColor: widget.form.isPricingReady
+              ? AppColors.green
+              : AppColors.brown,
+          textColor: widget.form.isPricingReady
               ? AppColors.sokoonNavy
               : AppColors.brown,
-          icon: form.isPricingReady
+          icon: widget.form.isPricingReady
               ? Icons.check_circle_outline_rounded
               : Icons.info_outline_rounded,
         ),
@@ -163,15 +256,20 @@ class _RentalPeriodSection extends StatelessWidget {
     required this.rentalDurationController,
     required this.onRentalDurationChanged,
     required this.onRentalUnitChanged,
+    required this.options,
   });
 
   final OwnerAddPropertyFormState form;
+  final List<TenantFilterOption> options;
   final TextEditingController rentalDurationController;
   final ValueChanged<String> onRentalDurationChanged;
   final ValueChanged<String> onRentalUnitChanged;
 
   @override
   Widget build(BuildContext context) {
+    final selected = options
+        .where((option) => option.value == form.rentalUnitApiValue)
+        .firstOrNull;
     return AddPropertySectionCard(
       title: LocaleKeys.ownerAddPropertyRentalPeriod,
       child: Column(
@@ -195,11 +293,23 @@ class _RentalPeriodSection extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: AddPropertyDropdownField(
-                  label: LocaleKeys.ownerAddPropertyUnit,
-                  value: form.rentalUnit,
-                  items: OwnerAddPropertyContent.rentalUnitOptions,
-                  onChanged: onRentalUnitChanged,
+                child: DropdownButtonFormField<TenantFilterOption>(
+                  isExpanded: true,
+                  decoration: InputDecoration(
+                    labelText: LocaleKeys.ownerAddPropertyUnit,
+                  ),
+                  hint: AppText(LocaleKeys.ownerAddPropertyChoose),
+                  initialValue: selected,
+                  items: [
+                    for (final option in options)
+                      DropdownMenuItem(
+                        value: option,
+                        child: AppText(option.label),
+                      ),
+                  ],
+                  onChanged: (option) {
+                    if (option != null) onRentalUnitChanged(option.value);
+                  },
                 ),
               ),
             ],
@@ -214,7 +324,7 @@ class _RentalPeriodSection extends StatelessWidget {
             child: AppText(
               LocaleKeys.ownerAddPropertyRentalSummary
                   .replaceAll('{count}', form.rentalDuration)
-                  .replaceAll('{unit}', form.rentalUnit),
+                  .replaceAll('{unit}', selected?.label ?? form.rentalUnit),
               style: AppTextStyles.bold12.copyWith(
                 color: AppColors.sokoonTeal,
                 fontSize: 12.sp,

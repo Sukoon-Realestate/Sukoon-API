@@ -2,6 +2,13 @@
 
 Audit date: 2026-10-02. Scope: `apps/sokoun_app/lib`.
 
+**Status update, 2026-10-03:** This is the original audit before the backend
+handoff. The confirmed contracts are in
+[MOBILE_DEV_HANDOFF.md](MOBILE_DEV_HANDOFF.md), and the subsequent mobile
+integration is documented in
+[MOBILE_BACKEND_INTEGRATION.md](MOBILE_BACKEND_INTEGRATION.md).
+The historical findings and pending items below should be read in that context.
+
 The initial scan covered 567 Dart files, including 59 files under `screens/`
 and 317 files under feature `widgets/` or `shared_widgets/`. Screen classes
 outside those folders and the models supplying UI content were included.

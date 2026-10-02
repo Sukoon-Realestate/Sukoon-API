@@ -11,7 +11,6 @@ class OwnerTransactionRow extends StatelessWidget {
         ? AppColors.green
         : AppColors.red;
     final String sign = transaction.isCredit ? '+' : '-';
-    final int absoluteAmount = transaction.amount.abs();
 
     return Row(
       children: [
@@ -58,8 +57,7 @@ class OwnerTransactionRow extends StatelessWidget {
           ),
         ),
         AppText(
-          '$sign${_formatNumber(absoluteAmount)} '
-          '${LocaleKeys.ownerRevenueCurrency}',
+          '$sign${transaction.amountLabel} ${transaction.currency}',
           style: AppTextStyles.bold13.copyWith(
             color: amountColor,
             fontSize: 13.sp,
@@ -67,13 +65,6 @@ class OwnerTransactionRow extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  String _formatNumber(int value) {
-    return value.toString().replaceAllMapped(
-      RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-      (match) => '${match[1]},',
     );
   }
 }

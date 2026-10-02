@@ -10,7 +10,9 @@ class PropertyFilterOptionsCubit
     if (initialOptions != null) emit(state.success(data: initialOptions));
   }
 
-  Future<void> getFilterOptions() async {
+  Future<void> getFilterOptions({
+    void Function(PropertyFilterOptionsModel)? onLoaded,
+  }) async {
     if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
@@ -25,6 +27,7 @@ class PropertyFilterOptionsCubit
           toJson: (model) => model.toJson(),
         ),
       ),
+      onSuccess: (model) => onLoaded?.call(model.data),
       withInternetInterceptor: true,
     );
   }

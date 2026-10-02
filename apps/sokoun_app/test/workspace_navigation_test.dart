@@ -34,7 +34,11 @@ import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.
 import 'package:sokoun_app/features/owner/home/presentation/screens/owner_home_screen.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/screens/login_screen.dart';
+import 'package:sokoun_app/features/shared/auth/presentation/screens/welcome_screen.dart';
+import 'package:sokoun_app/features/shared/chat/data/chat_realtime_service.dart';
+import 'package:sokoun_app/features/shared/chat/data/chat_socket_data.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/cubits/chat_unread_cubit.dart';
+import 'package:sokoun_app/features/shared/notifications/data/notification_device_data.dart';
 import 'package:sokoun_app/features/shared/notifications/presentation/notification_push_handler.dart';
 import 'package:sokoun_app/features/shared/profile/imports.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_home_screen.dart';
@@ -50,6 +54,7 @@ import 'package:sokoun_app/features/shared/permissions/data/enums/device_permiss
 
 import 'helpers/account_test_dependencies.dart';
 import 'helpers/home_page_test_dependencies.dart';
+import 'helpers/recording_chat_socket.dart';
 
 final Map<String, Map<String, dynamic>> _translations = {};
 
@@ -119,6 +124,8 @@ void main() {
   });
   tearDown(() async {
     WorkspaceNavigation.clearPending();
+    ChatRealtimeService.instance.setActiveConversation(null);
+    await ChatRealtimeService.instance.disconnect();
     await injector.reset();
   });
   tearDownAll(() {
@@ -218,8 +225,12 @@ void main() {
         _HomePermissionSource()..seen = true,
       );
       accountRepository.homeGate = Completer<void>();
+      accountRepository.profileGate = Completer<void>();
 
       await tester.pumpWidget(_app(const HomeScreen(), 'en'));
+      await tester.pumpAndSettle();
+      expect(accountRepository.homeRequests, 1);
+      accountRepository.profileGate!.complete();
       await tester.pumpAndSettle();
 
       expect(accountRepository.profileRequests, 1);
@@ -686,12 +697,146 @@ void main() {
       const Duration(seconds: 5),
     );
   });
+  for (final bool deleteAccount in [false, true]) {
+    testWidgets(
+      '${deleteAccount ? 'deleting the account' : 'logout'} sends only its action endpoint',
+      (tester) async {
+        _phone(tester);
+        await registerAuthenticatedTestAccount();
+        _listenForLogout();
+        final devices = _HomeNotificationDeviceSource();
+        injector.registerSingleton<NotificationDeviceDataSource>(devices);
+        injector.registerSingleton<DevicePermissionDataSource>(
+          _HomePermissionSource()..seen = true,
+        );
+        await tester.pumpWidget(_app(const HomeScreen(), 'en'));
+        await tester.pumpAndSettle();
+        tester
+            .widget<HomeBottomNavigation>(find.byType(HomeBottomNavigation))
+            .onDestinationSelected(4);
+        await tester.pumpAndSettle();
+        expect(find.byType(IndexedStack), findsOneWidget);
+        final int homeRequests = accountRepository.homeRequests;
+        final int requests = accountRepository.endpoints.length;
+
+        final button = find.byType(
+          deleteAccount ? ProfileDeleteAccountButton : ProfileLogoutButton,
+        );
+        await tester.scrollUntilVisible(
+          button,
+          300,
+          scrollable: find.descendant(
+            of: find.byType(TenantProfileContentView),
+            matching: find.byType(Scrollable),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(button);
+        await tester.pumpAndSettle();
+        await tester.tap(button);
+        if (deleteAccount) {
+          await tester.pumpAndSettle();
+          await tester.tap(
+            find.descendant(
+              of: find.byType(AlertDialog),
+              matching: find.byType(FilledButton),
+            ),
+          );
+        }
+        await tester.pumpAndSettle();
+
+        expect(accountRepository.endpoints.skip(requests), [
+          deleteAccount ? ApiConstants.deleteAccount : ApiConstants.logout,
+        ]);
+        expect(accountRepository.homeRequests, homeRequests);
+        expect(devices.localStops, 1);
+        expect(devices.serverUnregisters, 0);
+        expect(UserCubit.instance.isUserLoggedIn, isFalse);
+        expect(find.byType(WelcomeScreen), findsOneWidget);
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pumpAndSettle();
+      },
+    );
+  }
+
+  testWidgets('home and the messages tab leave the socket disconnected', (
+    tester,
+  ) async {
+    _phone(tester);
+    await registerAuthenticatedTestAccount();
+    injector.registerSingleton<DevicePermissionDataSource>(
+      _HomePermissionSource()..seen = true,
+    );
+    final sockets = RecordingChatSocketSource();
+    injector.registerSingleton<ChatSocketDataSource>(sockets);
+    await tester.pumpWidget(_app(const HomeScreen(), 'en'));
+    await tester.pumpAndSettle();
+    tester
+        .widget<HomeBottomNavigation>(find.byType(HomeBottomNavigation))
+        .onDestinationSelected(2);
+    await tester.pumpAndSettle();
+    for (final state in [
+      AppLifecycleState.inactive,
+      AppLifecycleState.hidden,
+      AppLifecycleState.paused,
+      AppLifecycleState.hidden,
+      AppLifecycleState.inactive,
+      AppLifecycleState.resumed,
+    ]) {
+      tester.binding.handleAppLifecycleStateChanged(state);
+    }
+    await tester.pumpAndSettle();
+
+    expect(sockets.creations, 0);
+    expect(sockets.connections, 0);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets(
+    'late account startup cannot restart home features after logout',
+    (tester) async {
+      _phone(tester);
+      await registerAuthenticatedTestAccount();
+      _listenForLogout();
+      final devices = _HomeNotificationDeviceSource();
+      injector.registerSingleton<NotificationDeviceDataSource>(devices);
+      accountRepository.profileGate = Completer<void>();
+      await tester.pumpWidget(_app(const HomeScreen(), 'en'));
+      await tester.pump();
+      expect(accountRepository.profileRequests, 1);
+      await UserCubit.instance.logout();
+      accountRepository.profileGate!.complete();
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpAndSettle();
+
+      expect(accountRepository.countRequests, 0);
+      expect(accountRepository.homeRequests, 1);
+      expect(devices.starts, 0);
+      expect(find.byType(WelcomeScreen), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+    },
+  );
 }
 
 void _phone(WidgetTester tester) {
   tester.view.physicalSize = const Size(390, 844);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
+}
+
+void _listenForLogout() {
+  final subscription = UserCubit.instance.stream.listen((state) {
+    if (state.userStatus != UserStatus.loggedOut) return;
+    WorkspaceNavigation.clearPending();
+    WorkspaceCubit.instance.reset();
+    unawaited(Go.offAll(const WelcomeScreen()));
+  });
+  addTearDown(subscription.cancel);
 }
 
 Widget _app(Widget home, String language) => EasyLocalization(
@@ -749,6 +894,27 @@ class _HomePermissionSource implements DevicePermissionDataSource {
   Future<bool> openSettings() async => true;
 }
 
+class _HomeNotificationDeviceSource implements NotificationDeviceDataSource {
+  int starts = 0;
+  int localStops = 0;
+  int serverUnregisters = 0;
+
+  @override
+  Future<void> start() async => starts++;
+  @override
+  Future<void> registerCurrentDevice() async {}
+  @override
+  Future<void> registerToken(String token) async {}
+  @override
+  Future<void> unregisterCurrentDevice({bool notifyServer = true}) async {
+    if (notifyServer) {
+      serverUnregisters++;
+    } else {
+      localStops++;
+    }
+  }
+}
+
 class _AccountStatsRepository implements BaseRepository {
   _AccountStatsRepository(this.fallback);
 
@@ -763,6 +929,7 @@ class _AccountStatsRepository implements BaseRepository {
   int profileRequests = 0;
   int countRequests = 0;
   int homeRequests = 0;
+  final List<String> endpoints = [];
   Completer<void>? profileGate;
   Completer<void>? homeGate;
   Completer<void>? bookingGate;
@@ -772,6 +939,7 @@ class _AccountStatsRepository implements BaseRepository {
   Future<Result<BaseModel<T>, Failure>> crudCall<T>(
     CrudBaseParmas<T> params,
   ) async {
+    endpoints.add(params.api);
     if (params.api == ApiConstants.propertyVisits('property-1') &&
         params.httpRequestType == HttpRequestType.post) {
       bookings++;

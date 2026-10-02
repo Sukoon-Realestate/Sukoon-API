@@ -26,6 +26,8 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   late UserModel _initialUser;
   ProfileGender _initialGender = ProfileGender.unspecified;
   String _birthDate = '';
+  ProfileCity? _initialCity;
+  final ValueNotifier<ProfileCity?> _city = ValueNotifier(null);
   final ValueNotifier<File?> _avatar = ValueNotifier<File?>(null);
   final ValueNotifier<ProfileGender> _gender = ValueNotifier<ProfileGender>(
     ProfileGender.unspecified,
@@ -56,6 +58,9 @@ class _ProfileEditViewState extends State<ProfileEditView> {
       _initialUser = profile.toUser(widget.initialValue);
       _nameController.text = _initialUser.name;
       _phoneController.text = _initialUser.phone;
+      if (profile.email.isNotEmpty) _emailController.text = profile.email;
+      _initialCity = profile.city;
+      _city.value = profile.city;
       _initialGender = ProfileGender.values.firstWhere(
         (g) => g.apiValue == profile.gender,
         orElse: () => ProfileGender.unspecified,
@@ -71,6 +76,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     _phoneController.dispose();
     _emailController.dispose();
     _avatar.dispose();
+    _city.dispose();
     _gender.dispose();
     _editCubit.close();
     _profileCubit.close();
@@ -158,6 +164,8 @@ class _ProfileEditViewState extends State<ProfileEditView> {
       fullName: _nameController.text.trim(),
       gender: _gender.value.apiValue,
       phoneNumber: _phoneController.text.trim(),
+      cityId: _city.value?.id,
+      updateCity: _city.value?.id != _initialCity?.id,
     );
     final String? imageError = await Validators.validateAccountImage(
       body.avatar,
@@ -203,6 +211,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
             _nameController.text.trim() != _initialUser.name ||
             _phoneController.text.trim() != _initialUser.phone ||
             _avatar.value != null ||
+            _city.value?.id != _initialCity?.id ||
             _gender.value != _initialGender,
         isSaving: () => _editCubit.isLoading,
         child: BlocProvider<UserProfileCubit>.value(
@@ -316,14 +325,27 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                 validator: Validators.skipValidation,
               ),
               14.szH,
+              BlocSelector<
+                ProfileEditCubit,
+                AsyncState<Map<String, dynamic>>,
+                bool
+              >(
+                selector: (state) => state.isLoading,
+                builder: (context, isSaving) =>
+                    ValueListenableBuilder<ProfileCity?>(
+                      valueListenable: _city,
+                      builder: (context, city, _) => ProfileCitySelector(
+                        city: city,
+                        isSaving: isSaving,
+                        onChanged: (value) => _city.value = value,
+                      ),
+                    ),
+              ),
+              14.szH,
               if (widget.workspace.isOwner)
                 Column(
                   spacing: 14.h,
                   children: [
-                    _ProfileReadonlyField(
-                      label: LocaleKeys.city,
-                      value: LocaleKeys.notSetYet,
-                    ),
                     BlocSelector<
                       ProfileEditCubit,
                       AsyncState<Map<String, dynamic>>,

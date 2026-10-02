@@ -215,9 +215,7 @@ abstract final class OwnerAddPropertyMapper {
         'monthly': LocaleKeys.ownerAddPropertyMonth,
         'yearly': LocaleKeys.ownerAddPropertyYear,
       }[value] ??
-      (OwnerAddPropertyContent.rentalUnitOptions.contains(value)
-          ? value
-          : LocaleKeys.ownerAddPropertyMonth);
+      value;
 
   static List<OwnerPropertyPhotoDraft> _photoDraftsFromProperty(
     PropertyDetailsModel property,
@@ -251,5 +249,5 @@ abstract final class OwnerAddPropertyMapper {
         'singles': LocaleKeys.ownerAddPropertyIndividuals,
         'shared': LocaleKeys.ownerAddPropertyShared,
       }[value] ??
-      (OwnerAddPropertyContent.suitableForOptions.contains(value) ? value : '');
+      value;
 }

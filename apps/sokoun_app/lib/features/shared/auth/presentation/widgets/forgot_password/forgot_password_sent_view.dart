@@ -130,7 +130,7 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
         _RecoveryStep(
           number: 2,
           title: LocaleKeys.tapTheLink,
-          description: LocaleKeys.resetLinkValidFor15Minutes,
+          description: LocaleKeys.recoveryLinkValidFor24Hours,
         ),
         14.szH,
         _RecoveryStep(

@@ -59,7 +59,11 @@ class UnreadCountsCubit extends AsyncCubit<UnreadCounts> {
   }
 
   Future<void> load() {
-    if (isClosed || !UserModel.isAuthenticated) return Future.value();
+    if (isClosed ||
+        !UserModel.isAuthenticated ||
+        AccountSession.userId == null) {
+      return Future.value();
+    }
     if (_sessionGeneration != AccountSession.generation) {
       _sessionGeneration = AccountSession.generation;
       _loadRequest = null;

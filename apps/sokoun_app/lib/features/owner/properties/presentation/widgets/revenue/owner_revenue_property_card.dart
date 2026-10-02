@@ -62,8 +62,7 @@ class OwnerRevenuePropertyCard extends StatelessWidget {
             spacing: 5.h,
             children: [
               AppText(
-                '${_formatNumber(item.amount)} '
-                '${LocaleKeys.ownerRevenueCurrency}',
+                '${item.amountLabel} ${item.currency}',
                 style: AppTextStyles.extraBold.copyWith(
                   color: AppColors.sokoonNavy,
                   fontSize: 14.sp,
@@ -76,7 +75,9 @@ class OwnerRevenuePropertyCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(99.r),
                 ),
                 child: AppText(
-                  item.status.label,
+                  item.statusLabel.isNotEmpty
+                      ? item.statusLabel
+                      : item.status.label,
                   style: AppTextStyles.extraBold.copyWith(
                     color: item.status.foregroundColor,
                     fontSize: 10.sp,
@@ -87,13 +88,6 @@ class OwnerRevenuePropertyCard extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  String _formatNumber(int value) {
-    return value.toString().replaceAllMapped(
-      RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-      (match) => '${match[1]},',
     );
   }
 }

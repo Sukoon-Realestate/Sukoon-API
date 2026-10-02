@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/error/exceptions.dart';
+import 'package:melos_core/core/network/account_session.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:melos_core/core/widgets/exeption_view.dart';
 import 'package:melos_core/core/widgets/retry_view.dart';
@@ -44,6 +45,41 @@ void main() {
     messenger.setMockMethodCallHandler(preferencesChannel, null);
     messenger.setMockMethodCallHandler(connectivityChannel, null);
   });
+
+  testWidgets(
+    'refreshing an outgoing page after logout does not dispatch a request',
+    (tester) async {
+      AccountSession.begin('signed-in-user');
+      addTearDown(AccountSession.end);
+      final controller = PagifyController<String>();
+      int requests = 0;
+      await tester.pumpWidget(
+        _screen(
+          AppPagify<String>(
+            pagifyController: controller,
+            loadingBuilder: const SizedBox.shrink(),
+            asyncCall: (_, _) async {
+              requests++;
+              return (
+                ['Loaded result'],
+                PaginationData(perPage: 10, totalPages: 1),
+              );
+            },
+            itemBuilder: (_, _, _, item) => Text(item),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(requests, 1);
+
+      AccountSession.end();
+      controller.refresh();
+      await tester.pumpAndSettle();
+      expect(requests, 1);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
 
   testWidgets(
     'cancelled pages do not display errors or notify error listeners',

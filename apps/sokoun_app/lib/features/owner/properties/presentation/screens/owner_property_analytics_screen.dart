@@ -1,113 +1,109 @@
 part of '../../imports.dart';
 
-class OwnerPropertyAnalyticsScreen extends StatelessWidget {
+class OwnerPropertyAnalyticsScreen extends StatefulWidget {
   const OwnerPropertyAnalyticsScreen({
     super.key,
     required this.property,
-    required this.analytics,
+    this.analytics,
   });
-
   final OwnerPropertyContent property;
-  final OwnerPropertyAnalyticsContent analytics;
+  final OwnerPropertyAnalyticsContent? analytics;
+  @override
+  State<OwnerPropertyAnalyticsScreen> createState() =>
+      _OwnerPropertyAnalyticsScreenState();
+}
+
+class _OwnerPropertyAnalyticsScreenState
+    extends State<OwnerPropertyAnalyticsScreen> {
+  late final OwnerPropertyAnalyticsCubit _cubit;
+  final ValueNotifier<String> _period = ValueNotifier('30_days');
+  Future<void> _load() =>
+      _cubit.load(propertyId: widget.property.id, period: _period.value);
 
   @override
-  Widget build(BuildContext context) {
-    final OwnerPropertyAnalyticsContent content = analytics;
+  void initState() {
+    super.initState();
+    _cubit = OwnerPropertyAnalyticsCubit();
+    if (widget.analytics == null) _load();
+  }
 
-    return AppScaffold(
+  @override
+  void dispose() {
+    _cubit.close();
+    _period.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => BlocProvider.value(
+    value: _cubit,
+    child: AppScaffold(
       title: LocaleKeys.ownerAnalyticsTitle,
       showBackButton: true,
       backgroundColor: AppColors.scaffoldBackground,
       contentWidth: SokounContentWidth.wide,
       body: SafeArea(
-        child: !content.hasDetails
-            ? OwnerAnalyticsUnavailableDetails(
-                propertyTitle: property.title,
-                views: content.views,
-              )
-            : ListView(
-                padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 24.h),
-                children: [
-                  AppText(
-                    property.title,
-                    style: AppTextStyles.semiBold.copyWith(
-                      color: AppColors.sokoonGray,
-                      fontSize: 13.sp,
+        child: Column(
+          children: [
+            if (widget.analytics == null)
+              ValueListenableBuilder<String>(
+                valueListenable: _period,
+                builder: (context, period, _) => Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 20.w,
+                    vertical: 8.h,
+                  ),
+                  child: DropdownButtonFormField<String>(
+                    isExpanded: true,
+                    initialValue: period,
+                    decoration: InputDecoration(
+                      labelText: LocaleKeys.ownerAnalyticsPeriod,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  14.szH,
-                  GridView.count(
-                    crossAxisCount: 2,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisSpacing: 10.w,
-                    mainAxisSpacing: 10.h,
-                    childAspectRatio: 1.02,
-                    children: [
-                      OwnerAnalyticsMetricCard(
-                        label: LocaleKeys.ownerAnalyticsViews,
-                        value: _formatNumber(content.views),
-                        icon: Icons.visibility_outlined,
-                        color: AppColors.blue,
-                        backgroundColor: AppColors.bluePale,
-                      ),
-                      OwnerAnalyticsMetricCard(
-                        label: LocaleKeys.ownerAnalyticsVisitRequests,
-                        value: '${content.visitRequests}',
-                        icon: Icons.event_available_outlined,
-                        color: AppColors.sokoonTeal,
-                        backgroundColor: AppColors.mintLight,
-                      ),
-                      OwnerAnalyticsMetricCard(
-                        label: LocaleKeys.ownerAnalyticsSaved,
-                        value: '${content.saves}',
-                        icon: Icons.favorite_border_rounded,
-                        color: AppColors.red,
-                        backgroundColor: AppColors.redPale,
-                      ),
-                      OwnerAnalyticsMetricCard(
-                        label: LocaleKeys.ownerAnalyticsAcceptanceRate,
-                        value: '${content.acceptanceRate}%',
-                        icon: Icons.trending_up_rounded,
-                        color: AppColors.green,
-                        backgroundColor: AppColors.greenPale,
-                      ),
-                    ],
-                  ),
-                  14.szH,
-                  OwnerAnalyticsBarChart(values: content.viewHistory),
-                  14.szH,
-                  OwnerPropertyInterestCard(
                     items: [
-                      OwnerPropertyInterestItem(
-                        label: LocaleKeys.ownerAnalyticsInterestArea,
-                        value: content.spaceInterest,
+                      DropdownMenuItem(
+                        value: '7_days',
+                        child: AppText(LocaleKeys.ownerAnalyticsSevenDays),
                       ),
-                      OwnerPropertyInterestItem(
-                        label: LocaleKeys.ownerAnalyticsInterestPrice,
-                        value: content.priceInterest,
+                      DropdownMenuItem(
+                        value: '30_days',
+                        child: AppText(LocaleKeys.ownerAnalyticsThirtyDays),
                       ),
-                      OwnerPropertyInterestItem(
-                        label: LocaleKeys.ownerAnalyticsInterestLocation,
-                        value: content.locationInterest,
-                      ),
-                      OwnerPropertyInterestItem(
-                        label: LocaleKeys.ownerAnalyticsInterestAmenities,
-                        value: content.amenitiesInterest,
+                      DropdownMenuItem(
+                        value: '90_days',
+                        child: AppText(LocaleKeys.ownerAnalyticsNinetyDays),
                       ),
                     ],
+                    onChanged: (value) {
+                      if (value == null || value == _period.value) return;
+                      _period.value = value;
+                      _load();
+                    },
                   ),
-                ],
+                ),
               ),
+            Expanded(
+              child: widget.analytics != null
+                  ? OwnerAnalyticsContent(
+                      propertyTitle: widget.property.title,
+                      analytics: widget.analytics!,
+                    )
+                  : StatusBuilder<
+                      OwnerPropertyAnalyticsCubit,
+                      OwnerPropertyAnalyticsContent
+                    >.withShimmer(
+                      initialDataForShimmer:
+                          const OwnerPropertyAnalyticsContent.initial(),
+                      onRetry: _load,
+                      shimmerBuilder: (_) => const SizedBox.expand(),
+                      builder: (data) => OwnerAnalyticsContent(
+                        propertyTitle: widget.property.title,
+                        analytics: data,
+                      ),
+                    ),
+            ),
+          ],
+        ),
       ),
-    );
-  }
-
-  String _formatNumber(int value) {
-    return value.toString().replaceAllMapped(
-      RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-      (match) => '${match[1]},',
-    );
-  }
+    ),
+  );
 }

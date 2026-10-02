@@ -144,14 +144,7 @@ abstract final class NotificationNavigation {
         location: notification.detailLocation,
         views: notification.payload.viewsCount,
       );
-      await Go.to<void>(
-        OwnerPropertyAnalyticsScreen(
-          property: property,
-          analytics: OwnerPropertyAnalyticsContent.initial().copyWith(
-            views: notification.payload.viewsCount,
-          ),
-        ),
-      );
+      await Go.to<void>(OwnerPropertyAnalyticsScreen(property: property));
       return;
     }
 

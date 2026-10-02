@@ -38,7 +38,7 @@ class ForgotPasswordSecurityHint extends StatelessWidget {
               spacing: 4.h,
               children: [
                 AppText(
-                  LocaleKeys.recoveryLinkValidTitle,
+                  LocaleKeys.recoveryLinkValidFor24Hours,
                   style: AppTextStyles.extraBold13.copyWith(
                     color: AppColors.sokoonNavy,
                     fontSize: 13.sp,

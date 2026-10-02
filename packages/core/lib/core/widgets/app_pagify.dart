@@ -155,6 +155,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
     // futures intentionally stop delivering results (as a cancelled operation
     // does), so its disposed state can never receive a late success or error.
     Future<void> request() async {
+      if (!active()) return;
       try {
         final result = await widget.asyncCall(context, page);
         if (active()) completer.complete(result);

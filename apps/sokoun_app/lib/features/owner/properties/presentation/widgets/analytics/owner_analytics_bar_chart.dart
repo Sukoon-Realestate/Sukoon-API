@@ -1,9 +1,14 @@
 part of '../../../imports.dart';
 
 class OwnerAnalyticsBarChart extends StatelessWidget {
-  const OwnerAnalyticsBarChart({super.key, required this.values});
+  const OwnerAnalyticsBarChart({
+    super.key,
+    required this.values,
+    this.dates = const [],
+  });
 
   final List<int> values;
+  final List<String> dates;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +65,23 @@ class OwnerAnalyticsBarChart extends StatelessWidget {
               ],
             ),
           ),
+          if (dates.isNotEmpty) ...[
+            8.szH,
+            Row(
+              children: [
+                Expanded(
+                  child: AppText(dates.first, style: AppTextStyles.regular11),
+                ),
+                Expanded(
+                  child: AppText(
+                    dates.last,
+                    style: AppTextStyles.regular11,
+                    textAlign: TextAlign.end,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );

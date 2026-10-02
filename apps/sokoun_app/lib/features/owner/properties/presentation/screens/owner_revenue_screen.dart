@@ -1,131 +1,44 @@
 part of '../../imports.dart';
 
-class OwnerRevenueScreen extends StatelessWidget {
-  const OwnerRevenueScreen({
-    super.key,
-    required this.properties,
-    required this.transactions,
-    required this.totalThisMonth,
-    required this.growthLabel,
-    this.showBackButton = true,
-  });
-
-  final List<OwnerRevenuePropertyContent> properties;
-  final List<OwnerTransactionContent> transactions;
-  final int totalThisMonth;
-  final String growthLabel;
+class OwnerRevenueScreen extends StatefulWidget {
+  const OwnerRevenueScreen({super.key, this.showBackButton = true});
   final bool showBackButton;
+  @override
+  State<OwnerRevenueScreen> createState() => _OwnerRevenueScreenState();
+}
+
+class _OwnerRevenueScreenState extends State<OwnerRevenueScreen> {
+  late final OwnerRevenueCubit _cubit;
+  @override
+  void initState() {
+    super.initState();
+    _cubit = OwnerRevenueCubit();
+    _cubit.load();
+  }
 
   @override
-  Widget build(BuildContext context) {
-    return AppScaffold(
+  void dispose() {
+    _cubit.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => BlocProvider.value(
+    value: _cubit,
+    child: AppScaffold(
       title: LocaleKeys.ownerRevenueTitle,
-      showBackButton: showBackButton,
+      showBackButton: widget.showBackButton,
       backgroundColor: AppColors.scaffoldBackground,
       contentWidth: SokounContentWidth.wide,
       body: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 24.h),
-          children: [
-            Container(
-              padding: EdgeInsets.all(20.w),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [AppColors.tealDeep, AppColors.sokoonTeal],
-                ),
-                borderRadius: BorderRadius.circular(22.r),
-              ),
-              child: Column(
-                spacing: 8.h,
-                children: [
-                  AppText(
-                    LocaleKeys.ownerRevenueThisMonth,
-                    style: AppTextStyles.bold13.copyWith(
-                      color: AppColors.whiteAlpha60,
-                      fontSize: 13.sp,
-                      height: 1.45,
-                    ),
-                  ),
-                  AppText(
-                    '${_formatNumber(totalThisMonth)} ${LocaleKeys.ownerRevenueCurrency}',
-                    style: AppTextStyles.extraBold.copyWith(
-                      color: AppColors.white,
-                      fontSize: 30.sp,
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
-                      vertical: 5.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.whiteAlpha10,
-                      borderRadius: BorderRadius.circular(99.r),
-                    ),
-                    child: AppText(
-                      growthLabel,
-                      style: AppTextStyles.bold11.copyWith(
-                        color: AppColors.white,
-                        fontSize: 11.sp,
-                        height: 1.45,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+        child:
+            StatusBuilder<OwnerRevenueCubit, OwnerRevenueContent>.withShimmer(
+              initialDataForShimmer: const OwnerRevenueContent.initial(),
+              onRetry: _cubit.load,
+              shimmerBuilder: (_) => const SizedBox.expand(),
+              builder: (data) => OwnerRevenueContentView(data: data),
             ),
-            22.szH,
-            AppText(
-              LocaleKeys.ownerRevenueProperties,
-              style: AppTextStyles.extraBold.copyWith(
-                color: AppColors.sokoonNavy,
-                fontSize: 16.sp,
-              ),
-            ),
-            10.szH,
-            for (int index = 0; index < properties.length; index++) ...[
-              OwnerRevenuePropertyCard(item: properties[index]),
-              if (index < properties.length - 1) 10.szH,
-            ],
-            22.szH,
-            AppText(
-              LocaleKeys.ownerRevenueLatestTransactions,
-              style: AppTextStyles.extraBold.copyWith(
-                color: AppColors.sokoonNavy,
-                fontSize: 16.sp,
-              ),
-            ),
-            10.szH,
-            Container(
-              padding: EdgeInsets.all(16.w),
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(18.r),
-                border: Border.all(color: AppColors.sokoonBorder),
-              ),
-              child: Column(
-                children: [
-                  for (int index = 0; index < transactions.length; index++) ...[
-                    OwnerTransactionRow(transaction: transactions[index]),
-                    if (index < transactions.length - 1)
-                      const Divider(
-                        height: 1,
-                        color: AppColors.sokoonBorder,
-                      ).paddingSymmetric(vertical: 13.h),
-                  ],
-                ],
-              ),
-            ),
-          ],
-        ),
       ),
-    );
-  }
-
-  String _formatNumber(int value) {
-    return value.toString().replaceAllMapped(
-      RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-      (match) => '${match[1]},',
-    );
-  }
+    ),
+  );
 }

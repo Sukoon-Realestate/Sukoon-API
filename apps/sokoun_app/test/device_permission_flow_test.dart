@@ -543,7 +543,7 @@ class _NotificationDeviceSource implements NotificationDeviceDataSource {
   @override
   Future<void> registerToken(String token) async {}
   @override
-  Future<void> unregisterCurrentDevice() async {}
+  Future<void> unregisterCurrentDevice({bool notifyServer = true}) async {}
 }
 
 class _PropertySearchSource implements PropertySearchDataSource {

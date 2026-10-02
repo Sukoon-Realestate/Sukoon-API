@@ -39,8 +39,10 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
     }
     _hadSession = UserCubit.instance.isUserLoggedIn;
     _expiredSubscription = AccountSession.expired.listen((_) async {
-      await NotificationDeviceData.unregisterCurrentDevice();
-      await UserCubit.instance.logout();
+      await Future.wait([
+        NotificationDeviceData.stop(),
+        UserCubit.instance.logout(),
+      ]);
     });
     _userSubscription = UserCubit.instance.stream.listen((state) {
       final bool wasLoggedIn = _hadSession;

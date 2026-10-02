@@ -41,8 +41,10 @@ class _ProfileDeleteAccountButtonState
     await _deleteCubit.deleteAccount(onSuccess: () => wasDeleted = true);
     if (!wasDeleted || !mounted) return;
 
-    await NotificationDeviceData.unregisterCurrentDevice();
-    await UserCubit.instance.logout();
+    await Future.wait([
+      NotificationDeviceData.stop(),
+      UserCubit.instance.logout(),
+    ]);
   }
 
   @override

@@ -1,8 +1,13 @@
 import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/helpers/time_zone_helper.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
+import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
+import 'package:melos_core/core/helpers/status_builder.dart';
 import 'package:melos_core/core/helpers/validators.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:equatable/equatable.dart';
@@ -26,6 +31,7 @@ import 'package:sokoun_app/features/owner/home/presentation/screens/owner_add_pr
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_details_cubit.dart';
 import 'package:sokoun_app/shared_widgets/property_details_screen.dart';
+import 'package:sokoun_app/features/owner/visits/imports.dart';
 
 part 'data/enums/owner_property_action.dart';
 part 'data/enums/owner_property_status.dart';
@@ -40,8 +46,14 @@ part 'data/owner_properties_data.dart';
 part 'presentation/screens/owner_edit_property_screen.dart';
 part 'presentation/screens/owner_properties_screen.dart';
 part 'presentation/screens/owner_property_analytics_screen.dart';
+part 'presentation/cubits/owner_property_analytics_cubit.dart';
+part 'presentation/widgets/analytics/owner_analytics_content.dart';
+part 'presentation/widgets/analytics/owner_analytics_empty_state.dart';
 part 'presentation/screens/owner_property_rejection_screen.dart';
 part 'presentation/screens/owner_revenue_screen.dart';
+part 'presentation/cubits/owner_revenue_cubit.dart';
+part 'presentation/widgets/revenue/owner_revenue_content_view.dart';
+part 'presentation/widgets/revenue/owner_revenue_empty_state.dart';
 part 'presentation/widgets/analytics/owner_analytics_bar_chart.dart';
 part 'presentation/widgets/analytics/owner_analytics_unavailable_details.dart';
 part 'presentation/widgets/analytics/owner_analytics_metric_card.dart';

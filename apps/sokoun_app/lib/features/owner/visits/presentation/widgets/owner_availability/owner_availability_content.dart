@@ -10,6 +10,11 @@ class OwnerAvailabilityContent extends StatelessWidget {
     required this.onDaySelected,
     required this.onTimePressed,
     required this.onSavePressed,
+    this.onAddTimePressed,
+    this.onPreviousWeek,
+    this.onNextWeek,
+    this.isSaving = false,
+    this.canSave,
   });
 
   final List<OwnerAvailabilityDayContent> days;
@@ -19,6 +24,9 @@ class OwnerAvailabilityContent extends StatelessWidget {
   final ValueChanged<int> onDaySelected;
   final ValueChanged<int> onTimePressed;
   final Future<void> Function() onSavePressed;
+  final VoidCallback? onAddTimePressed, onPreviousWeek, onNextWeek;
+  final bool isSaving;
+  final bool? canSave;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +37,42 @@ class OwnerAvailabilityContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (onPreviousWeek != null || onNextWeek != null)
+            Row(
+              children: [
+                IconButton(
+                  tooltip: LocaleKeys.ownerAvailabilityPreviousWeek,
+                  onPressed: isSaving ? null : onPreviousWeek,
+                  icon: Icon(
+                    Directionality.of(context) == TextDirection.rtl
+                        ? Icons.chevron_right_rounded
+                        : Icons.chevron_left_rounded,
+                  ),
+                ),
+                Expanded(
+                  child: AppText(
+                    '${days.first.date} – ${days.last.date}',
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.bold13,
+                  ),
+                ),
+                IconButton(
+                  tooltip: LocaleKeys.ownerAvailabilityNextWeek,
+                  onPressed: isSaving ? null : onNextWeek,
+                  icon: Icon(
+                    Directionality.of(context) == TextDirection.rtl
+                        ? Icons.chevron_left_rounded
+                        : Icons.chevron_right_rounded,
+                  ),
+                ),
+              ],
+            ),
+          AppText(
+            LocaleKeys.ownerAvailabilityCairoTime,
+            style: AppTextStyles.regular12,
+            textAlign: TextAlign.center,
+          ),
+          12.szH,
           AppText(
             LocaleKeys.ownerAvailabilityDescription,
             style: AppTextStyles.regular14.copyWith(
@@ -107,8 +151,14 @@ class OwnerAvailabilityContent extends StatelessWidget {
             ),
           ),
           const OwnerAvailabilityLegend(),
+          if (onAddTimePressed != null)
+            TextButton.icon(
+              onPressed: isSaving ? null : onAddTimePressed,
+              icon: const Icon(Icons.add_rounded),
+              label: AppText(LocaleKeys.ownerAvailabilityAddTime),
+            ),
           18.szH,
-          if (slots.isNotEmpty)
+          if (canSave ?? slots.isNotEmpty)
             AppLoadingButton(
               asyncCall: (_) => onSavePressed(),
               title: LocaleKeys.ownerAvailabilitySave,
