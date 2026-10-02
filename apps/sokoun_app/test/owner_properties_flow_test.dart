@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/owner/home/data/models/property_location.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -152,11 +153,7 @@ void main() {
   Future<void> openEditReview(WidgetTester tester) async {
     await tester.tap(find.text('التالي — الصور'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('التالي — فيديو العقار'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('تخطي الفيديو'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('التالي — التفاصيل الإضافية'));
+    await tester.tap(find.text(LocaleKeys.ownerAddPropertyPricingTitle).last);
     await tester.pumpAndSettle();
     final requestsBeforeReview = repository.updateRequestCount;
     await tester.tap(find.text(LocaleKeys.ownerPropertyReviewAction));
@@ -222,8 +219,9 @@ void main() {
     basics.onBathroomsChanged('1');
     basics.onSpaceChanged('120');
     basics.onFloorChanged('3');
-    basics.onBuildingYearChanged('2020');
-    basics.onLocationSelected();
+    basics.onLocationSelected(
+      const PropertyLocation(latitude: 30.0444, longitude: 31.2357),
+    );
     await tester.pump();
     await tester.tap(find.text(LocaleKeys.ownerAddPropertyNextPhotos));
     await tester.pumpAndSettle();
@@ -240,29 +238,18 @@ void main() {
       photos.onPhotoDescriptionChanged(index, 'Description $index');
     }
     await tester.pump();
-    await tester.tap(find.text(LocaleKeys.ownerAddPropertyNextVideo));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text(LocaleKeys.ownerPropertyVideoSkip));
+    await tester.tap(find.text(LocaleKeys.ownerAddPropertyPricingTitle).last);
     await tester.pumpAndSettle();
     final AddPropertyPricingPage pricing = tester.widget(
       find.byType(AddPropertyPricingPage),
     );
     pricing.onMonthlyPriceChanged('6500');
-    pricing.onDepositChanged('one_month');
+    pricing.onSuitableForSelected('singles');
     pricing.onRentalDurationChanged('6');
     pricing.onRentalUnitChanged('monthly');
     pricing.onAmenityToggled('wifi');
     pricing.onDescriptionChanged('A comfortable apartment near the metro.');
     await tester.pump();
-    await tester.tap(find.text(LocaleKeys.ownerAddPropertyNextExtra));
-    await tester.pumpAndSettle();
-    final AddPropertyExtraDetailsPage details = tester.widget(
-      find.byType(AddPropertyExtraDetailsPage),
-    );
-    details.onSmokingSelected('not_allowed');
-    details.onSuitableForSelected('all');
-    details.onProofUploadTap();
-    await tester.pumpAndSettle();
   }
 
   Future<void> submitCreateFlow(WidgetTester tester) async {
@@ -282,17 +269,12 @@ void main() {
       expect(repository.imageRequests, isEmpty);
       await submitCreateFlow(tester);
       expect(repository.createRequests, hasLength(1));
-      expect(
-        repository.createRequests.single.body,
-        isNot(contains('main_image')),
-      );
+      expect(repository.createRequests.single.body!['main_image'], isA<File>());
       expect(repository.createRequests.single.body, isNot(contains('images')));
       expect(repository.imageRequests, isEmpty);
       expect(
         tester
-            .widget<AddPropertyExtraDetailsPage>(
-              find.byType(AddPropertyExtraDetailsPage),
-            )
+            .widget<AddPropertyPricingPage>(find.byType(AddPropertyPricingPage))
             .isSubmitting,
         isTrue,
       );
@@ -319,9 +301,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         tester
-            .widget<AddPropertyExtraDetailsPage>(
-              find.byType(AddPropertyExtraDetailsPage),
-            )
+            .widget<AddPropertyPricingPage>(find.byType(AddPropertyPricingPage))
             .isSubmitting,
         isTrue,
       );
@@ -330,8 +310,8 @@ void main() {
       }
       await tester.pumpAndSettle();
       expect(find.byType(AddPropertySubmittedPage), findsNothing);
-      final AddPropertyExtraDetailsPage details = tester.widget(
-        find.byType(AddPropertyExtraDetailsPage),
+      final AddPropertyPricingPage details = tester.widget(
+        find.byType(AddPropertyPricingPage),
       );
       expect(details.isSubmitting, isFalse);
       expect(
@@ -382,9 +362,7 @@ void main() {
     expect(find.byType(AddPropertySubmittedPage), findsNothing);
     expect(
       tester
-          .widget<AddPropertyExtraDetailsPage>(
-            find.byType(AddPropertyExtraDetailsPage),
-          )
+          .widget<AddPropertyPricingPage>(find.byType(AddPropertyPricingPage))
           .isSubmitting,
       isFalse,
     );
@@ -460,7 +438,10 @@ void main() {
           floor: '3',
           buildingYear: '2020',
           mapQuery: 'مدينة نصر، القاهرة',
-          isLocationSelected: true,
+          location: const PropertyLocation(
+            latitude: 30.0444,
+            longitude: 31.2357,
+          ),
           photoDrafts: photos
               .asMap()
               .entries
@@ -497,12 +478,15 @@ void main() {
     expect(body['price_period'], 'monthly');
     expect(body['governorate'], 'cairo-governorate-id');
     expect(body['city'], 'nasr-city-id');
-    expect(body['district'], 'nasr-city-id');
-    expect(body, isNot(contains('main_image')));
+    expect(body['district'], 'شارع النصر');
+    expect(body['latitude'], 30.0444);
+    expect(body['longitude'], 31.2357);
+    expect(body['suitable_for'], 'singles');
+    expect(body['main_image'], same(photos.first));
     expect(body, isNot(contains('images')));
-    expect(body['video'], same(video));
-    expect(body['video_duration'], 45);
-    expect(body['ownership_proof'], same(ownershipProof));
+    expect(body, isNot(contains('video')));
+    expect(body, isNot(contains('video_duration')));
+    expect(body, isNot(contains('ownership_proof')));
     expect(body['has_wifi'], isTrue);
     expect(body['has_elevator'], isFalse);
     expect(OwnerAddPropertyContent.maxPhotoCount, 25);
@@ -538,7 +522,7 @@ void main() {
     );
   });
 
-  testWidgets('places O-ADD-02V after the photos step', (tester) async {
+  testWidgets('goes from photos to documented pricing fields', (tester) async {
     configurePhoneViewport(tester);
     final PropertyDetailsModel property = PropertyDetailsModel.fromJson(
       repository._propertyDetailsJson('video-flow-property'),
@@ -553,13 +537,13 @@ void main() {
     await tester.tap(find.text('التالي — الصور'));
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
-    await tester.tap(find.text('التالي — فيديو العقار'));
+    await tester.tap(find.text(LocaleKeys.ownerAddPropertyPricingTitle).last);
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
 
-    expect(find.byType(AddPropertyVideoPage), findsOneWidget);
-    expect(find.text('فيديو العقار'), findsWidgets);
-    expect(find.text('تخطي الفيديو'), findsOneWidget);
+    expect(find.byType(AddPropertyPricingPage), findsOneWidget);
+    expect(find.byType(AddPropertyVideoPage), findsNothing);
+    expect(find.text(LocaleKeys.ownerAddPropertyDeposit), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
@@ -648,7 +632,7 @@ void main() {
     expect(repository.updateRequestCount, 1);
     expect(repository.lastUpdateBody?['governorate'], 'cairo-governorate-id');
     expect(repository.lastUpdateBody?['city'], 'cairo-city-id');
-    expect(repository.lastUpdateBody?['district'], 'cairo-city-id');
+    expect(repository.lastUpdateBody?['district'], 'مدينة نصر');
 
     expect(tester.takeException(), isNull);
   });

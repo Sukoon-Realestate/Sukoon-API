@@ -32,7 +32,7 @@ gradle.projectsEvaluated {
                 ?.compileOptions?.targetCompatibility?.toString()
                 ?: JavaVersion.VERSION_1_8.toString()
             tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
-                kotlinOptions.jvmTarget = javaTarget
+                compilerOptions.jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.fromTarget(javaTarget))
             }
         }
     }

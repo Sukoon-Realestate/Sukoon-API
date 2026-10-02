@@ -67,9 +67,11 @@ class PropertyReviewSheet extends StatelessWidget {
                     form.title,
                     form.propertyType,
                     '${form.locationSummary}، ${form.street}',
+                    if (form.location case final location?)
+                      location.coordinates,
                     '${LocaleKeys.ownerAddPropertyBedrooms}: ${form.bedrooms} · ${LocaleKeys.ownerAddPropertyBathrooms}: ${form.bathrooms}',
                     '${LocaleKeys.ownerAddPropertySpace}: ${form.space}',
-                    '${LocaleKeys.ownerAddPropertyFloor}: ${form.floor} · ${LocaleKeys.ownerAddPropertyBuildingYear}: ${form.buildingYear}',
+                    '${LocaleKeys.ownerAddPropertyFloor}: ${form.floor}',
                   ],
                   onEdit: () => Go.back(PropertyReviewAction.basics),
                 ),
@@ -85,40 +87,17 @@ class PropertyReviewSheet extends StatelessWidget {
                 ),
               ),
               SokounReveal(
-                delay: const Duration(milliseconds: 80),
-                child: PropertyReviewSection(
-                  title: LocaleKeys.ownerAddPropertyVideoSummary,
-                  lines: [
-                    form.video?.formattedDuration ??
-                        LocaleKeys.ownerAddPropertyVideoSkipped,
-                  ],
-                  onEdit: () => Go.back(PropertyReviewAction.video),
-                ),
-              ),
-              SokounReveal(
                 delay: const Duration(milliseconds: 120),
                 child: PropertyReviewSection(
                   title: LocaleKeys.ownerAddPropertyPricingTitle,
                   lines: [
                     '${LocaleKeys.ownerAddPropertyPrice}: ${form.monthlyPrice} ${LocaleKeys.ownerAddPropertyCurrency}',
-                    '${LocaleKeys.ownerAddPropertyDeposit}: ${form.deposit}',
+                    '${LocaleKeys.ownerAddPropertySuitableFor}: ${form.suitableFor}',
                     '${LocaleKeys.ownerAddPropertyRentalPeriod}: ${form.rentalDuration} ${form.rentalUnit}',
                     form.amenities.join(' · '),
                     form.description,
                   ],
                   onEdit: () => Go.back(PropertyReviewAction.pricing),
-                ),
-              ),
-              SokounReveal(
-                delay: const Duration(milliseconds: 160),
-                child: PropertyReviewSection(
-                  title: LocaleKeys.ownerPropertyReviewAdditional,
-                  lines: [
-                    '${LocaleKeys.ownerAddPropertySmokingQuestion}: ${form.smokingPolicy}',
-                    '${LocaleKeys.ownerAddPropertySuitableFor}: ${form.suitableFor}',
-                    '${LocaleKeys.ownerAddPropertyProofSummary}: ${form.proofFileName}',
-                  ],
-                  onEdit: () => Go.back(PropertyReviewAction.details),
                 ),
               ),
             ],

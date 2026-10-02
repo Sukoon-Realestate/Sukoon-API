@@ -1,3 +1,4 @@
+import 'models/property_location.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
@@ -43,9 +44,7 @@ abstract final class OwnerAddPropertyMapper {
         district: property.city.name.isNotEmpty
             ? property.city.name
             : property.district,
-        street: property.street.isNotEmpty
-            ? property.street
-            : property.district,
+        street: property.district,
         bedrooms: _positiveNumberText(property.bedrooms),
         bathrooms: _positiveNumberText(property.bathrooms),
         space: property.space.isNotEmpty
@@ -54,7 +53,7 @@ abstract final class OwnerAddPropertyMapper {
         floor: property.floor.toString(),
         buildingYear: _positiveNumberText(property.buildingYear),
         mapQuery: locationParts.join('، '),
-        isLocationSelected: locationParts.isNotEmpty,
+        location: _locationFromProperty(property),
         photoDrafts: _photoDraftsFromProperty(property),
         monthlyPrice: property.price,
         deposit: _depositLabel(property.deposit),
@@ -121,14 +120,23 @@ abstract final class OwnerAddPropertyMapper {
       floor: int.parse(form.floor),
       rentalPeriod: int.parse(form.rentalDuration),
       suitableFor: body['suitable_for'] as String,
-      smokingAllowed: body['smoking_allowed'] as bool,
       city: city,
-      district: form.district,
+      district: form.street.trim(),
+      latitude: form.location?.latitude.toString() ?? property.latitude,
+      longitude: form.location?.longitude.toString() ?? property.longitude,
       street: form.street.trim(),
-      buildingYear: int.parse(form.buildingYear),
-      deposit: body['deposit'] as String,
       amenities: amenities,
     );
+  }
+
+  static PropertyLocation? _locationFromProperty(
+    PropertyDetailsModel property,
+  ) {
+    final location = PropertyLocation.fromJson({
+      'latitude': property.latitude,
+      'longitude': property.longitude,
+    });
+    return location.isValid ? location : null;
   }
 
   static OwnerPropertyLocationModel? _governorateFromProperty(
@@ -240,6 +248,7 @@ abstract final class OwnerAddPropertyMapper {
         'females_only': LocaleKeys.ownerAddPropertyFemalesOnly,
         'families': LocaleKeys.ownerAddPropertyFamilies,
         'individuals': LocaleKeys.ownerAddPropertyIndividuals,
+        'singles': LocaleKeys.ownerAddPropertyIndividuals,
         'shared': LocaleKeys.ownerAddPropertyShared,
       }[value] ??
       (OwnerAddPropertyContent.suitableForOptions.contains(value) ? value : '');

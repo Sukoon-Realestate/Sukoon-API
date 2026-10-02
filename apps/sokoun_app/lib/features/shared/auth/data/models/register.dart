@@ -61,7 +61,7 @@ class RegisterBody extends Equatable {
   factory RegisterBody.fromJson(Map<String, dynamic> json) => RegisterBody(
     firstName: json['first_name'] ?? '',
     lastName: json['last_name'] ?? '',
-    phone: json['phone'] ?? '',
+    phone: json['phone_number'] ?? '',
     email: json['email'] ?? '',
     password: json['password'] ?? '',
     rePassword: json['re_password'] ?? '',
@@ -75,24 +75,11 @@ class RegisterBody extends Equatable {
     final Map<String, dynamic> body = {
       'first_name': firstName,
       'last_name': lastName,
-      'phone': phone,
+      'phone_number': phone,
       'email': email,
       'password': password,
       're_password': rePassword,
     };
-
-    if (nationalId != null && nationalId!.isNotEmpty) {
-      body['national_id'] = nationalId;
-    }
-    if (frontIdImage != null) {
-      body['front_id_image'] = frontIdImage;
-    }
-    if (backIdImage != null) {
-      body['back_id_image'] = backIdImage;
-    }
-    if (selfieImage != null) {
-      body['selfie_image'] = selfieImage;
-    }
 
     return body;
   }

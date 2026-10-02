@@ -338,7 +338,7 @@ void main() {
       repository.lastApi,
       'properties/owner/properties/property-id/availability/',
     );
-    expect(repository.lastMethod, HttpRequestType.post);
+    expect(repository.lastMethod, HttpRequestType.put);
     expect(repository.lastBody, body.toJson());
 
     final OwnerAvailabilityScheduleContent schedule =

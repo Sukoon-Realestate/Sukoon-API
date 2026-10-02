@@ -283,7 +283,7 @@ void main() {
             await tester.tap(find.text('Open review'));
             await tester.pumpAndSettle();
             expect(find.byType(PropertyReviewSheet), findsOneWidget);
-            expect(find.byType(PropertyReviewSection), findsNWidgets(5));
+            expect(find.byType(PropertyReviewSection), findsNWidgets(3));
             expect(find.textContaining('18000'), findsOneWidget);
             if (scale == 1 && (width == 390 || width == 1024)) {
               await _capture(tester, 'review-$language-${width.toInt()}');

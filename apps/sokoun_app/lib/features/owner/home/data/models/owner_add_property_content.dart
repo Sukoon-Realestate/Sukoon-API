@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'property_location.dart';
 
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -74,8 +75,6 @@ abstract final class OwnerAddPropertyContent {
     LocaleKeys.ownerAddPropertyBalcony,
     LocaleKeys.ownerAddPropertyAirConditioning,
     LocaleKeys.ownerAddPropertyNaturalGas,
-    LocaleKeys.ownerAddPropertyElectricityMeter,
-    LocaleKeys.ownerAddPropertyWaterMeter,
     LocaleKeys.ownerAddPropertyNearMetro,
   ];
 
@@ -197,7 +196,7 @@ class OwnerAddPropertyFormState {
     required this.floor,
     required this.buildingYear,
     required this.mapQuery,
-    required this.isLocationSelected,
+    this.location,
     required this.photoDrafts,
     required this.video,
     required this.monthlyPrice,
@@ -228,7 +227,7 @@ class OwnerAddPropertyFormState {
       floor: '',
       buildingYear: '',
       mapQuery: '',
-      isLocationSelected: false,
+      location: null,
       photoDrafts: [],
       video: null,
       monthlyPrice: '',
@@ -257,7 +256,8 @@ class OwnerAddPropertyFormState {
   final String floor;
   final String buildingYear;
   final String mapQuery;
-  final bool isLocationSelected;
+  final PropertyLocation? location;
+  bool get isLocationSelected => location?.isValid == true;
   final List<OwnerPropertyPhotoDraft> photoDrafts;
   final OwnerPropertyVideoSelection? video;
   final String monthlyPrice;
@@ -295,8 +295,7 @@ class OwnerAddPropertyFormState {
         _hasPositiveNumber(bedrooms) &&
         _hasPositiveNumber(bathrooms) &&
         _hasPositiveNumber(space) &&
-        floor.trim().isNotEmpty &&
-        _hasPositiveNumber(buildingYear) &&
+        int.tryParse(floor) != null &&
         isLocationSelected;
   }
 
@@ -306,17 +305,14 @@ class OwnerAddPropertyFormState {
 
   bool get isPricingReady {
     return _hasPositiveNumber(monthlyPrice) &&
-        deposit.trim().isNotEmpty &&
         _hasPositiveNumber(rentalDuration) &&
         rentalUnit.trim().isNotEmpty &&
-        amenities.isNotEmpty &&
+        suitableFor.trim().isNotEmpty &&
         description.trim().length >= 10;
   }
 
   bool get isExtraDetailsReady {
-    return smokingPolicy.trim().isNotEmpty &&
-        suitableFor.trim().isNotEmpty &&
-        isProofUploaded;
+    return suitableFor.trim().isNotEmpty;
   }
 
   String get locationSummary => '$district، $governorate';
@@ -379,14 +375,6 @@ class OwnerAddPropertyFormState {
             value: photoDrafts[index].description.trim(),
           ),
       AddPropertySummaryContent(
-        label: LocaleKeys.ownerAddPropertyVideoSummary,
-        value: videoSummary,
-      ),
-      AddPropertySummaryContent(
-        label: LocaleKeys.ownerAddPropertyProofSummary,
-        value: proofFileName,
-      ),
-      AddPropertySummaryContent(
         label: LocaleKeys.ownerAddPropertySubmittedAtSummary,
         value: _formatSubmittedAt(submittedAt ?? DateTime.now()),
       ),
@@ -407,7 +395,8 @@ class OwnerAddPropertyFormState {
     String? floor,
     String? buildingYear,
     String? mapQuery,
-    bool? isLocationSelected,
+    PropertyLocation? location,
+    bool clearLocation = false,
     List<OwnerPropertyPhotoDraft>? photoDrafts,
     OwnerPropertyVideoSelection? video,
     bool clearVideo = false,
@@ -438,7 +427,7 @@ class OwnerAddPropertyFormState {
       floor: floor ?? this.floor,
       buildingYear: buildingYear ?? this.buildingYear,
       mapQuery: mapQuery ?? this.mapQuery,
-      isLocationSelected: isLocationSelected ?? this.isLocationSelected,
+      location: clearLocation ? null : location ?? this.location,
       photoDrafts: photoDrafts ?? this.photoDrafts,
       video: clearVideo ? null : video ?? this.video,
       monthlyPrice: monthlyPrice ?? this.monthlyPrice,
@@ -459,7 +448,9 @@ class OwnerAddPropertyFormState {
     );
   }
 
-  Map<String, dynamic> toRequestBody() {
+  Map<String, dynamic> toRequestBody() => toJson();
+
+  Map<String, dynamic> toJson({bool includeMainImage = true}) {
     final Set<String> selectedAmenities = amenities;
     return {
       'title': title.trim(),
@@ -481,21 +472,14 @@ class OwnerAddPropertyFormState {
       'floor': int.parse(floor),
       'rental_period': int.parse(rentalDuration),
       'suitable_for': _suitableForValue(suitableFor),
-      'smoking_allowed': _matchesOption(
-        smokingPolicy,
-        localized: LocaleKeys.ownerAddPropertyAllowed,
-        apiValue: 'allowed',
-        arabic: 'مسموح',
-        english: 'Allowed',
-      ),
-      'country': 'Egypt',
       'governorate': governorateId,
       'city': districtId,
-      'district': districtId,
-      'street': street.trim(),
-      'building_year': int.parse(buildingYear),
-      'deposit': _depositValue(deposit),
-      'location': mapQuery.trim(),
+      'district': street.trim(),
+      if (location?.isValid == true) ...{
+        'latitude': location!.latitude,
+        'longitude': location!.longitude,
+      },
+      if (includeMainImage && photos.isNotEmpty) 'main_image': photos.first,
       'has_wifi': _containsOption(
         selectedAmenities,
         localized: LocaleKeys.ownerAddPropertyWifi,
@@ -552,23 +536,6 @@ class OwnerAddPropertyFormState {
         arabic: 'غاز طبيعي',
         english: 'Natural gas',
       ),
-      'has_electricity_meter': _containsOption(
-        selectedAmenities,
-        localized: LocaleKeys.ownerAddPropertyElectricityMeter,
-        apiValue: 'electricity_meter',
-        arabic: 'عداد كهرباء',
-        english: 'Electricity meter',
-      ),
-      'has_water_meter': _containsOption(
-        selectedAmenities,
-        localized: LocaleKeys.ownerAddPropertyWaterMeter,
-        apiValue: 'water_meter',
-        arabic: 'عداد مياه',
-        english: 'Water meter',
-      ),
-      if (video != null) 'video': video!.file,
-      if (video != null) 'video_duration': video!.duration.inSeconds,
-      if (ownershipProof != null) 'ownership_proof': ownershipProof,
     };
   }
 
@@ -642,36 +609,14 @@ class OwnerAddPropertyFormState {
           'Families': 'families',
           'عائلات': 'families',
           LocaleKeys.ownerAddPropertyFamilies: 'families',
-          'individuals': 'individuals',
-          'Individuals': 'individuals',
-          'أفراد': 'individuals',
-          LocaleKeys.ownerAddPropertyIndividuals: 'individuals',
+          'individuals': 'singles',
+          'Individuals': 'singles',
+          'أفراد': 'singles',
+          LocaleKeys.ownerAddPropertyIndividuals: 'singles',
           'shared': 'shared',
           'Shared': 'shared',
           'مشاركة': 'shared',
           LocaleKeys.ownerAddPropertyShared: 'shared',
-        }[value] ??
-        value;
-  }
-
-  static String _depositValue(String value) {
-    return {
-          'none': 'none',
-          'No deposit': 'none',
-          'بدون تأمين': 'none',
-          LocaleKeys.ownerAddPropertyNoDeposit: 'none',
-          'half_month': 'half_month',
-          'Half a month': 'half_month',
-          'نصف شهر': 'half_month',
-          LocaleKeys.ownerAddPropertyHalfMonth: 'half_month',
-          'one_month': 'one_month',
-          'One month': 'one_month',
-          'شهر واحد': 'one_month',
-          LocaleKeys.ownerAddPropertyOneMonth: 'one_month',
-          'two_months': 'two_months',
-          'Two months': 'two_months',
-          'شهرين': 'two_months',
-          LocaleKeys.ownerAddPropertyTwoMonths: 'two_months',
         }[value] ??
         value;
   }

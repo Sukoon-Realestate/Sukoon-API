@@ -22,12 +22,13 @@ class AddPropertyPricingPage extends StatelessWidget {
     required this.rentalDurationController,
     required this.descriptionController,
     required this.onMonthlyPriceChanged,
-    required this.onDepositChanged,
+    required this.onSuitableForSelected,
     required this.onRentalDurationChanged,
     required this.onRentalUnitChanged,
     required this.onAmenityToggled,
     required this.onDescriptionChanged,
     required this.onNext,
+    this.isSubmitting = false,
   });
 
   final OwnerAddPropertyFormState form;
@@ -35,27 +36,29 @@ class AddPropertyPricingPage extends StatelessWidget {
   final TextEditingController rentalDurationController;
   final TextEditingController descriptionController;
   final ValueChanged<String> onMonthlyPriceChanged;
-  final ValueChanged<String> onDepositChanged;
+  final ValueChanged<String> onSuitableForSelected;
   final ValueChanged<String> onRentalDurationChanged;
   final ValueChanged<String> onRentalUnitChanged;
   final ValueChanged<String> onAmenityToggled;
   final ValueChanged<String> onDescriptionChanged;
   final VoidCallback onNext;
+  final bool isSubmitting;
 
   @override
   Widget build(BuildContext context) {
     return AddPropertyStepShell(
-      activeSegments: 4,
-      segmentCount: 5,
+      activeSegments: 3,
+      segmentCount: 3,
       progressSubtitle: LocaleKeys.ownerAddPropertyPricingProgress,
-      primaryLabel: LocaleKeys.ownerAddPropertyNextExtra,
-      onPrimaryTap: form.isPricingReady ? onNext : null,
+      primaryLabel: isSubmitting
+          ? LocaleKeys.ownerAddPropertySubmitting
+          : LocaleKeys.ownerPropertyReviewAction,
+      onPrimaryTap: form.isPricingReady && !isSubmitting ? onNext : null,
       children: [
         _PriceSection(
           form: form,
           monthlyPriceController: monthlyPriceController,
           onMonthlyPriceChanged: onMonthlyPriceChanged,
-          onDepositChanged: onDepositChanged,
         ),
         _RentalPeriodSection(
           form: form,
@@ -71,6 +74,16 @@ class AddPropertyPricingPage extends StatelessWidget {
               selectedValues: form.amenities,
             ),
             onChipTap: (chip) => onAmenityToggled(chip.label),
+          ),
+        ),
+        AddPropertySectionCard(
+          title: LocaleKeys.ownerAddPropertySuitableFor,
+          child: AddPropertyChipWrap(
+            chips: OwnerAddPropertyContent.singleSelectedChips(
+              labels: OwnerAddPropertyContent.suitableForOptions,
+              selectedValue: form.suitableFor,
+            ),
+            onChipTap: (chip) => onSuitableForSelected(chip.label),
           ),
         ),
         _DescriptionSection(
@@ -105,13 +118,11 @@ class _PriceSection extends StatelessWidget {
     required this.form,
     required this.monthlyPriceController,
     required this.onMonthlyPriceChanged,
-    required this.onDepositChanged,
   });
 
   final OwnerAddPropertyFormState form;
   final TextEditingController monthlyPriceController;
   final ValueChanged<String> onMonthlyPriceChanged;
-  final ValueChanged<String> onDepositChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -139,12 +150,6 @@ class _PriceSection extends StatelessWidget {
                 height: 1.45,
               ),
             ),
-          ),
-          AddPropertyDropdownField(
-            label: LocaleKeys.ownerAddPropertyDeposit,
-            value: form.deposit,
-            items: OwnerAddPropertyContent.depositOptions,
-            onChanged: onDepositChanged,
           ),
         ],
       ),

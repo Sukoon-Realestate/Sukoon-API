@@ -29,7 +29,6 @@ class ProfileEditBody {
   Map<String, dynamic> toUserJson() {
     final List<String> names = fullName.trim().split(RegExp(r'\s+'));
     return {
-      if (avatar != null) 'avatar': avatar,
       'first_name': names.first,
       'last_name': names.skip(1).join(' '),
       'gender': gender,

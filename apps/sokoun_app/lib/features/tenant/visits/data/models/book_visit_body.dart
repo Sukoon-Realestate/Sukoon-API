@@ -36,12 +36,14 @@ class BookVisitBody extends Equatable {
   static String formatApiTime({required int hour, required int minute}) {
     final String apiHour = hour.toString().padLeft(2, '0');
     final String apiMinute = minute.toString().padLeft(2, '0');
-    return '$apiHour:$apiMinute';
+    return '$apiHour:$apiMinute:00';
   }
 
   Map<String, dynamic> toJson() => {
     'visit_date': visitDate,
-    'visit_time': visitTime,
+    'visit_time': RegExp(r'^\d{2}:\d{2}$').hasMatch(visitTime)
+        ? '$visitTime:00'
+        : visitTime,
     'note': note,
   };
 

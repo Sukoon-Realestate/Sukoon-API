@@ -38,6 +38,7 @@ dependencies:
   melos_core:
     path: ../../packages/core
   flutter_svg: ^2.2.3
+  google_maps_flutter: ^2.14.2
 
 flutter_launcher_icons:
   android: true
@@ -50,6 +51,7 @@ dev_dependencies:
   flutter_launcher_icons: ^0.14.4
   flutter_test:
     sdk: flutter
+  google_maps_flutter_platform_interface: ^2.14.0
 
 flutter:
   default-flavor: dev

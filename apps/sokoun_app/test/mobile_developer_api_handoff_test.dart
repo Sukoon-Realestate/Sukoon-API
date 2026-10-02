@@ -47,7 +47,7 @@ void main() {
 
       expect(body.toJson(), {
         'visit_date': '2026-09-15',
-        'visit_time': '14:00',
+        'visit_time': '14:00:00',
         'note': 'Optional tenant note',
       });
       expect(BookVisitBody.formatDisplayTime(hour: 14, minute: 0), '2:00 PM');

@@ -118,12 +118,12 @@ class AddPropertyAddressSection extends StatelessWidget {
           ),
           AddPropertyField(
             field: AddPropertyFieldContent(
-              label: LocaleKeys.ownerAddPropertyStreet,
-              value: LocaleKeys.ownerAddPropertyStreetHint,
+              label: LocaleKeys.propertyDistrict,
+              value: LocaleKeys.propertyDistrictHint,
             ),
             controller: streetController,
             onChanged: onStreetChanged,
-            hint: LocaleKeys.ownerAddPropertyStreetHint,
+            hint: LocaleKeys.propertyDistrictHint,
           ),
         ],
       ),

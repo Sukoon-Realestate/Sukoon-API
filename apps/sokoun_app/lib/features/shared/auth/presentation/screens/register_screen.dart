@@ -17,9 +17,10 @@ import '../widgets/register/register_footer.dart';
 import '../widgets/register/register_intro.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key, this.onSubmit});
+  const RegisterScreen({super.key, this.onSubmit, this.isSubmitting = false});
 
   final VoidCallback? onSubmit;
+  final bool isSubmitting;
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -167,8 +168,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               24.szH,
               DefaultButton(
-                onTap: submit,
-                title: LocaleKeys.createAccount,
+                onTap: widget.isSubmitting ? null : submit,
+                title: widget.isSubmitting
+                    ? LocaleKeys.registrationSubmitting
+                    : LocaleKeys.createAccount,
                 color: AppColors.sokoonTeal,
                 textColor: AppColors.white,
                 borderRadius: BorderRadius.circular(14.r),

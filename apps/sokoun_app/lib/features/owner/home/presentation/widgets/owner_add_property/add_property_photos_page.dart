@@ -40,9 +40,9 @@ class AddPropertyPhotosPage extends StatelessWidget {
 
     return AddPropertyStepShell(
       activeSegments: 2,
-      segmentCount: 5,
+      segmentCount: 3,
       progressSubtitle: LocaleKeys.ownerAddPropertyPhotosProgress,
-      primaryLabel: LocaleKeys.ownerAddPropertyNextVideo,
+      primaryLabel: LocaleKeys.ownerAddPropertyPricingTitle,
       onPrimaryTap: isReady ? onNext : null,
       children: [
         AddPropertyInfoBanner(

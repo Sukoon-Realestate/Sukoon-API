@@ -13,13 +13,15 @@ class UpdatePropertyCubit extends AsyncCubit<PropertyDetailsModel> {
     required OwnerAddPropertyFormState form,
     required void Function(PropertyDetailsModel property) onSuccess,
   }) async {
-    if (isClosed || isLoading) return;
+    if (isClosed || isLoading || !form.isBasicsReady || !form.isPricingReady) {
+      return;
+    }
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<PropertyDetailsModel>(
           api: ApiConstants.propertyDetails(propertyId),
           httpRequestType: HttpRequestType.patch,
-          body: form.toRequestBody(),
+          body: form.toJson(includeMainImage: false),
           isFromData: true,
           sendTimeout: ConstantManager.uploadSendTimeout,
           mapper: (json) => json is Map<String, dynamic>

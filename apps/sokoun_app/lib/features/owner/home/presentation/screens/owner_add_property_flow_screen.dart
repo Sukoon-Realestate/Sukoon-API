@@ -1,3 +1,4 @@
+import '../../data/models/property_location.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'dart:io';
@@ -59,8 +60,6 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
   late final TextEditingController _bathroomsController;
   late final TextEditingController _spaceController;
   late final TextEditingController _floorController;
-  late final TextEditingController _buildingYearController;
-  late final TextEditingController _mapQueryController;
   late final TextEditingController _monthlyPriceController;
   late final TextEditingController _rentalDurationController;
   late final TextEditingController _descriptionController;
@@ -84,8 +83,6 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
     _bathroomsController = TextEditingController(text: _form.bathrooms);
     _spaceController = TextEditingController(text: _form.space);
     _floorController = TextEditingController(text: _form.floor);
-    _buildingYearController = TextEditingController(text: _form.buildingYear);
-    _mapQueryController = TextEditingController(text: _form.mapQuery);
     _monthlyPriceController = TextEditingController(text: _form.monthlyPrice);
     _rentalDurationController = TextEditingController(
       text: _form.rentalDuration,
@@ -108,8 +105,6 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
     _bathroomsController.dispose();
     _spaceController.dispose();
     _floorController.dispose();
-    _buildingYearController.dispose();
-    _mapQueryController.dispose();
     _monthlyPriceController.dispose();
     _rentalDurationController.dispose();
     _descriptionController.dispose();
@@ -186,8 +181,6 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
     _bathroomsController.text = _form.bathrooms;
     _spaceController.text = _form.space;
     _floorController.text = _form.floor;
-    _buildingYearController.text = _form.buildingYear;
-    _mapQueryController.text = _form.mapQuery;
     _monthlyPriceController.text = _form.monthlyPrice;
     _rentalDurationController.text = _form.rentalDuration;
     _descriptionController.text = _form.description;
@@ -220,10 +213,9 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
         districtId: '',
         district: '',
         mapQuery: governorate.name,
-        isLocationSelected: false,
+        clearLocation: true,
       ),
     );
-    _mapQueryController.text = governorate.name;
   }
 
   void _selectCity(OwnerPropertyLocationModel city) {
@@ -237,19 +229,19 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
         districtId: city.id,
         district: city.name,
         mapQuery: query,
-        isLocationSelected: false,
+        clearLocation: true,
       ),
     );
-    _mapQueryController.text = query;
   }
 
-  void _selectLocation() {
-    final query = _mapQueryController.text.trim().isEmpty
-        ? '${_form.district}، ${_form.governorate}'
-        : _mapQueryController.text.trim();
-    _mapQueryController.text = query;
+  void _selectLocation(PropertyLocation location) {
     _updateForm(
-      () => _form.copyWith(mapQuery: query, isLocationSelected: true),
+      () => _form.copyWith(
+        location: location,
+        mapQuery: location.address.isEmpty
+            ? _form.locationSummary
+            : location.address,
+      ),
     );
   }
 
@@ -309,22 +301,6 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
     _updateForm(() => _form.copyWith(photoDrafts: photoDrafts));
   }
 
-  Future<void> _pickOwnershipProof() async {
-    final File? proof = await Helpers.getImage();
-    if (!mounted || proof == null) {
-      return;
-    }
-    _updateForm(() => _form.copyWith(ownershipProof: proof));
-  }
-
-  void _selectVideo(OwnerPropertyVideoSelection video) {
-    _updateForm(() => _form.copyWith(video: video));
-  }
-
-  void _removeVideo() {
-    _updateForm(() => _form.copyWith(clearVideo: true));
-  }
-
   void _toggleAmenity(String amenity) {
     final amenities = Set<String>.from(_form.amenities);
     if (amenities.contains(amenity)) {
@@ -366,7 +342,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
       Go.back(_savedProperty);
     } else {
       _formNotifier.value = _form.copyWith(submittedAt: DateTime.now());
-      _goToPage(5);
+      _goToPage(3);
     }
   }
 
@@ -445,12 +421,10 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
                     ? LocaleKeys.ownerPropertiesEditTitle
                     : LocaleKeys.ownerAddPropertyTitle,
               1 => LocaleKeys.ownerPropertiesPhotos,
-              2 => LocaleKeys.ownerPropertyVideoTitle,
-              3 => LocaleKeys.ownerAddPropertyPricingTitle,
-              4 => LocaleKeys.ownerAddPropertyDetails,
+              2 => LocaleKeys.ownerAddPropertyPricingTitle,
               _ => null,
             },
-            showBackButton: step < 5,
+            showBackButton: step < 3,
             onBack: () {
               if (step == 0) {
                 Go.mayPop;
@@ -474,8 +448,6 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
                       bathroomsController: _bathroomsController,
                       spaceController: _spaceController,
                       floorController: _floorController,
-                      buildingYearController: _buildingYearController,
-                      mapQueryController: _mapQueryController,
                       selectedGovernorate: _selectedGovernorate,
                       selectedCity: _selectedCity,
                       locationDropdownGeneration: _locationDropdownGeneration,
@@ -486,8 +458,10 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
                           _updateForm(() => _form.copyWith(title: value)),
                       onGovernorateChanged: _selectGovernorate,
                       onCityChanged: _selectCity,
-                      onStreetChanged: (value) =>
-                          _updateForm(() => _form.copyWith(street: value)),
+                      onStreetChanged: (value) => _updateForm(
+                        () =>
+                            _form.copyWith(street: value, clearLocation: true),
+                      ),
                       onBedroomsChanged: (value) =>
                           _updateForm(() => _form.copyWith(bedrooms: value)),
                       onBathroomsChanged: (value) =>
@@ -496,15 +470,6 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
                           _updateForm(() => _form.copyWith(space: value)),
                       onFloorChanged: (value) =>
                           _updateForm(() => _form.copyWith(floor: value)),
-                      onBuildingYearChanged: (value) => _updateForm(
-                        () => _form.copyWith(buildingYear: value),
-                      ),
-                      onMapQueryChanged: (value) => _updateForm(
-                        () => _form.copyWith(
-                          mapQuery: value,
-                          isLocationSelected: false,
-                        ),
-                      ),
                       onLocationSelected: _selectLocation,
                       onNext: () => _goToPage(1),
                     ),
@@ -527,15 +492,6 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
                     ),
                   ),
                   _listenToForm(
-                    (form) => AddPropertyVideoPage(
-                      video: form.video,
-                      onVideoSelected: _selectVideo,
-                      onVideoRemoved: _removeVideo,
-                      onNext: () => _goToPage(3),
-                      onSkip: () => _goToPage(3),
-                    ),
-                  ),
-                  _listenToForm(
                     (form) => AddPropertyPricingPage(
                       form: form,
                       monthlyPriceController: _monthlyPriceController,
@@ -544,8 +500,6 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
                       onMonthlyPriceChanged: (value) => _updateForm(
                         () => _form.copyWith(monthlyPrice: value),
                       ),
-                      onDepositChanged: (value) =>
-                          _updateForm(() => _form.copyWith(deposit: value)),
                       onRentalDurationChanged: (value) => _updateForm(
                         () => _form.copyWith(rentalDuration: value),
                       ),
@@ -554,27 +508,10 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
                       onAmenityToggled: _toggleAmenity,
                       onDescriptionChanged: (value) =>
                           _updateForm(() => _form.copyWith(description: value)),
-                      onNext: () => _goToPage(4),
-                    ),
-                  ),
-                  _listenToForm(
-                    (form) => AbsorbPointer(
-                      absorbing: isSubmitting,
-                      child: AddPropertyExtraDetailsPage(
-                        form: form,
-                        onSmokingSelected: (value) => _updateForm(
-                          () => _form.copyWith(smokingPolicy: value),
-                        ),
-                        onSuitableForSelected: (value) => _updateForm(
-                          () => _form.copyWith(suitableFor: value),
-                        ),
-                        onProofUploadTap: _pickOwnershipProof,
-                        onNext: _reviewAndSubmit,
-                        isSubmitting: isSubmitting,
-                        primaryLabel: isSubmitting
-                            ? LocaleKeys.ownerAddPropertySubmitting
-                            : LocaleKeys.ownerPropertyReviewAction,
-                      ),
+                      onSuitableForSelected: (value) =>
+                          _updateForm(() => _form.copyWith(suitableFor: value)),
+                      isSubmitting: isSubmitting,
+                      onNext: _reviewAndSubmit,
                     ),
                   ),
                   if (!_isEditing)

@@ -148,7 +148,6 @@ class _ProfileEditViewState extends State<ProfileEditView> {
 
     bool wasUpdated = false;
     await _editCubit.editProfile(
-      updateUser: widget.workspace.isOwner,
       body: ProfileEditBody(
         avatar: _avatar.value,
         fullName: _nameController.text.trim(),

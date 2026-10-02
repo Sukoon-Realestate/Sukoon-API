@@ -3238,4 +3238,40 @@ abstract class LocaleKeys {
   static const String _ownerRejectTimingReason = 'owner_reject_timing_reason';
   static String get ownerRejectTimingReason => _ownerRejectTimingReason.tr();
 
+  static const String _propertyMapConfirm = 'property_map_confirm';
+  static String get propertyMapConfirm => _propertyMapConfirm.tr();
+
+  static const String _propertyMapChange = 'property_map_change';
+  static String get propertyMapChange => _propertyMapChange.tr();
+
+  static const String _propertyMapTapHint = 'property_map_tap_hint';
+  static String get propertyMapTapHint => _propertyMapTapHint.tr();
+
+  static const String _propertyMapStandard = 'property_map_standard';
+  static String get propertyMapStandard => _propertyMapStandard.tr();
+
+  static const String _propertyMapSatellite = 'property_map_satellite';
+  static String get propertyMapSatellite => _propertyMapSatellite.tr();
+
+  static const String _propertyMapPermissionDenied = 'property_map_permission_denied';
+  static String get propertyMapPermissionDenied => _propertyMapPermissionDenied.tr();
+
+  static const String _propertyMapPermissionSettings = 'property_map_permission_settings';
+  static String get propertyMapPermissionSettings => _propertyMapPermissionSettings.tr();
+
+  static const String _propertyMapNoResults = 'property_map_no_results';
+  static String get propertyMapNoResults => _propertyMapNoResults.tr();
+
+  static const String _propertyMapUnavailable = 'property_map_unavailable';
+  static String get propertyMapUnavailable => _propertyMapUnavailable.tr();
+
+  static const String _propertyDistrict = 'property_district';
+  static String get propertyDistrict => _propertyDistrict.tr();
+
+  static const String _propertyDistrictHint = 'property_district_hint';
+  static String get propertyDistrictHint => _propertyDistrictHint.tr();
+
+  static const String _registrationSubmitting = 'registration_submitting';
+  static String get registrationSubmitting => _registrationSubmitting.tr();
+
 }

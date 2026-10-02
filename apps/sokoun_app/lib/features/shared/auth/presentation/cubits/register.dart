@@ -50,7 +50,6 @@ class RegisterCubit extends AsyncCubit<Map<String, dynamic>> {
           api: ApiConstants.register,
           httpRequestType: HttpRequestType.post,
           body: requestBody.toJson(),
-          isFromData: requestBody.hasFiles,
         ),
       ),
       onSuccess: (_) => onSuccess?.call(requestBody),

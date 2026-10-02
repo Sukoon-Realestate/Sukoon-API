@@ -14,7 +14,7 @@ class OwnerAvailabilityCubit
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<OwnerAvailabilityScheduleContent>(
           api: ApiConstants.ownerPropertyAvailability(ownerPropertyId),
-          httpRequestType: HttpRequestType.post,
+          httpRequestType: HttpRequestType.put,
           body: body.toJson(),
           mapper: (json) => OwnerAvailabilityScheduleContent.fromJson(
             json is Map<String, dynamic> ? json : const {},
