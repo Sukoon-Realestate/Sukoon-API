@@ -23,7 +23,7 @@ void main() {
       int rejected = 0;
       int retries = 0;
       final service = await _service((request) async {
-        if (request.uri.path == '/auth/jwt/refresh/') {
+        if (request.uri.path == '/auth/refresh/') {
           refreshes++;
           if (!refreshing.isCompleted) refreshing.complete();
           await release.future;
@@ -71,7 +71,7 @@ void main() {
     int refreshes = 0;
     int protected = 0;
     final service = await _service((request) async {
-      if (request.uri.path == '/auth/jwt/refresh/') {
+      if (request.uri.path == '/auth/refresh/') {
         refreshes++;
         return _respond(request, fresh: true);
       }
@@ -108,7 +108,7 @@ void main() {
       int refreshes = 0;
       int cancelledCalls = 0;
       final service = await _service((request) async {
-        if (request.uri.path == '/auth/jwt/refresh/') {
+        if (request.uri.path == '/auth/refresh/') {
           refreshes++;
           refreshing.complete();
           await release.future;
@@ -194,7 +194,7 @@ void main() {
       final bodies = <String>[];
       int refreshes = 0;
       final service = await _service((request) async {
-        if (request.uri.path == '/auth/jwt/refresh/') {
+        if (request.uri.path == '/auth/refresh/') {
           refreshes++;
           return _respond(request, fresh: true);
         }
@@ -229,7 +229,7 @@ void main() {
     final subscription = AccountSession.expired.listen((_) => expirations++);
     addTearDown(subscription.cancel);
     final service = await _service((request) async {
-      if (request.uri.path == '/auth/jwt/refresh/') {
+      if (request.uri.path == '/auth/refresh/') {
         refreshes++;
         return _respond(request, fresh: true);
       }

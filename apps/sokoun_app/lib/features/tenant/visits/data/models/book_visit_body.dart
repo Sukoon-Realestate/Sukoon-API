@@ -41,9 +41,7 @@ class BookVisitBody extends Equatable {
 
   Map<String, dynamic> toJson() => {
     'visit_date': visitDate,
-    'visit_time': RegExp(r'^\d{2}:\d{2}$').hasMatch(visitTime)
-        ? '$visitTime:00'
-        : visitTime,
+    'visit_time': Validators.normalizeVisitTime(visitTime),
     'note': note,
   };
 

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/core/shared/base_state.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
@@ -26,9 +27,13 @@ class _AppGoogleSignInButtonState extends State<AppGoogleSignInButton> {
     try {
       await GoogleSignService.instance.init();
       final token = await GoogleSignService.instance.authorize();
-      if (mounted && token.isNotEmpty) {
-        await widget.onSuccess(token);
+      if (!mounted) return;
+      final String? error = Validators.validateGoogleToken(token);
+      if (error != null) {
+        Messages.showToast(msg: error, status: BaseStatus.error);
+        return;
       }
+      await widget.onSuccess(token);
     } catch (_) {
       if (mounted) {
         Messages.showToast(

@@ -21,9 +21,9 @@ class ProfileEditBody {
 
   Map<String, dynamic> toJson() => {
     if (avatar != null) 'avatar': avatar,
-    'full_name': fullName,
+    'full_name': fullName.trim(),
     'gender': gender,
-    'phone_number': phoneNumber,
+    'phone_number': Validators.normalizeEgyptianMobile(phoneNumber),
   };
 
   Map<String, dynamic> toUserJson() {
@@ -32,7 +32,7 @@ class ProfileEditBody {
       'first_name': names.first,
       'last_name': names.skip(1).join(' '),
       'gender': gender,
-      'phone_number': phoneNumber,
+      'phone_number': Validators.normalizeEgyptianMobile(phoneNumber),
     };
   }
 

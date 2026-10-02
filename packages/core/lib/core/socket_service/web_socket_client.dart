@@ -123,7 +123,14 @@ class WebSocketClientImpl<MessageModel>
     _handledGeneration = null;
 
     try {
-      final String token = (await accessTokenProvider())?.trim() ?? '';
+      String token = (await accessTokenProvider())?.trim() ?? '';
+      final Future<bool> Function()? refresh = refreshAccessToken;
+      if (token.isEmpty && refresh != null) {
+        if (!_allowReconnect || generation != _generation) return;
+        if (await refresh()) {
+          token = (await accessTokenProvider())?.trim() ?? '';
+        }
+      }
       if (token.isEmpty) {
         throw const SocketAuthenticationException(
           'A JWT access token is required to open the chat socket.',

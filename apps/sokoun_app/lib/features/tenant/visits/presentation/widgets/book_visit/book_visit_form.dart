@@ -24,7 +24,11 @@ class BookVisitForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool canConfirm = days.isNotEmpty && selectedTime != null;
+    final bool canConfirm = Validators.isValidVisitSelection(
+      selectedDayIndex: selectedDayIndex,
+      dayCount: days.length,
+      selectedTime: selectedTime,
+    );
     return SingleChildScrollView(
       padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 24.h),
       child: Column(

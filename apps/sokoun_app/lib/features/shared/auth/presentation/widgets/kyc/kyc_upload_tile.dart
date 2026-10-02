@@ -6,6 +6,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class KycUploadTile extends StatelessWidget {
@@ -153,7 +154,7 @@ class _EmptyContent extends StatelessWidget {
         ),
         5.szH,
         AppText(
-          tile.emptySubtitle ?? LocaleKeys.jpgPngUpTo5mb,
+          tile.emptySubtitle ?? Validators.accountDocumentUploadHint,
           style: AppTextStyles.regular11.copyWith(
             color: AppColors.sokoonMuted,
             fontSize: 11.sp,

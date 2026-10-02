@@ -3,7 +3,7 @@ import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:equatable/equatable.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';

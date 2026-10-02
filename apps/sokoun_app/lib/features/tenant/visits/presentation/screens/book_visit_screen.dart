@@ -90,9 +90,12 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
     }
     final ({int dayIndex, TimeOfDay? time}) selection = _selection.value;
     final TimeOfDay? selectedTimeOfDay = selection.time;
-    if (_days.isEmpty ||
-        selectedTimeOfDay == null ||
-        selection.dayIndex >= _days.length) {
+    if (!Validators.isValidVisitSelection(
+          selectedDayIndex: selection.dayIndex,
+          dayCount: _days.length,
+          selectedTime: selectedTimeOfDay,
+        ) ||
+        selectedTimeOfDay == null) {
       return;
     }
 

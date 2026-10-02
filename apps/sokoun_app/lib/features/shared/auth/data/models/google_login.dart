@@ -8,5 +8,5 @@ class GoogleLoginBody {
   GoogleLoginBody copyWith({String? token}) =>
       GoogleLoginBody(token: token ?? this.token);
 
-  Map<String, dynamic> toJson() => {'token': token};
+  Map<String, dynamic> toJson() => {'token': token.trim()};
 }

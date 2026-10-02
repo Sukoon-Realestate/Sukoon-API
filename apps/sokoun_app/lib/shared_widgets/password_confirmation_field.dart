@@ -66,7 +66,12 @@ class SokoonPasswordConfirmationField extends StatelessWidget {
                 fontSize: 15.sp,
               ),
               onChanged: onChanged,
-              validator: validator ?? _validatePasswordConfirmation,
+              validator:
+                  validator ??
+                  (value) => Validators.validatePasswordConfirmation(
+                    value,
+                    password: passwordController?.text,
+                  ),
             ),
             if (errorText != null && errorText!.isNotEmpty)
               AppText(
@@ -80,17 +85,6 @@ class SokoonPasswordConfirmationField extends StatelessWidget {
           ],
         );
       },
-    );
-  }
-
-  String? _validatePasswordConfirmation(String? value) {
-    if (passwordController == null) {
-      return Validators.validateLoginPassword(value);
-    }
-
-    return Validators.validatePasswordConfirmation(
-      value,
-      password: passwordController!.text,
     );
   }
 }

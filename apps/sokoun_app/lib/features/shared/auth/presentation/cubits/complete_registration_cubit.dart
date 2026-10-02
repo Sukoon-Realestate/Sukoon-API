@@ -22,9 +22,7 @@ class CompleteRegistrationCubit extends AsyncCubit<CompleteRegistrationResult> {
           body: body.toJson(),
           isFromData: true,
           sendTimeout: ConstantManager.uploadSendTimeout,
-          mapper: (json) => CompleteRegistrationResult.fromJson(
-            Map<String, dynamic>.from(json as Map),
-          ),
+          mapper: (json) => CompleteRegistrationResult.fromJson(json),
         ),
       ),
       onSuccess: (response) => onResult(response.data),

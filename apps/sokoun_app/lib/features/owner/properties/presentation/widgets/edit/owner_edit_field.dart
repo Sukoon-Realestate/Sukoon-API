@@ -37,7 +37,7 @@ class OwnerEditField extends StatelessWidget {
           keyboardType: keyboardType,
           maxLines: maxLines,
           inputFormatters: keyboardType == TextInputType.number
-              ? [FilteringTextInputFormatter.digitsOnly]
+              ? [Validators.asciiDigitsOnly]
               : null,
           decoration: InputDecoration(
             hintText: hint,

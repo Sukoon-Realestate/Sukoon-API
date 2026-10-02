@@ -72,46 +72,31 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
     _dataNotifier.value = update(_dataNotifier.value);
   }
 
-  String? _validateNationalId(String? value) {
-    if (widget.existingAccount && (value?.trim().isEmpty ?? true)) return null;
-    return Validators.validateEgyptianNationalId(value);
-  }
-
   List<FirstValidationErrorField> _validationFields() {
-    final KycUploadDocumentsData data = _dataNotifier.value;
     return [
       FirstValidationErrorField(
         fieldKey: _nationalIdFieldKey,
         title: LocaleKeys.nationalId,
         value: _nationalIdController.text,
-        validator: _validateNationalId,
+        validator: Validators.validateEgyptianNationalId,
       ),
-      if (!widget.existingAccount)
-        FirstValidationErrorField(
-          fieldKey: _frontIdFieldKey,
-          title: LocaleKeys.idFrontLabel,
-          value: data.frontIdFileName,
-          validator: Validators.validateEmpty,
-        ),
-      if (!widget.existingAccount)
-        FirstValidationErrorField(
-          fieldKey: _backIdFieldKey,
-          title: LocaleKeys.idBackLabel,
-          value: data.backIdFileName,
-          validator: Validators.validateEmpty,
-        ),
-      if (!widget.existingAccount)
-        FirstValidationErrorField(
-          fieldKey: _selfieFieldKey,
-          title: LocaleKeys.selfiePhoto,
-          value: data.selfieFileName,
-          validator: Validators.validateEmpty,
-        ),
     ];
   }
 
   Future<void> _submit(BuildContext context) async {
     final KycUploadDocumentsData formData = _dataNotifier.value;
+    _submissionMessage.value = null;
+    final String? error = await Validators.validateKycDocuments(
+      nationalId: formData.nationalId,
+      frontIdImage: formData.frontIdImage,
+      backIdImage: formData.backIdImage,
+      selfieImage: formData.selfieImage,
+    );
+    if (!mounted || !context.mounted) return;
+    if (error != null) {
+      _submissionMessage.value = error;
+      return;
+    }
     if (widget.existingAccount) {
       _submissionMessage.value = null;
       await _completionCubit!.submit(
@@ -177,6 +162,11 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
       return;
     }
 
+    final String? error = await Validators.validateAccountImage(image);
+    if (!mounted) return;
+    _submissionMessage.value = error;
+    if (error != null) return;
+
     final String fileName = _fileNameFrom(image);
     _updateData(
       (data) => data.copyWith(frontIdImage: image, frontIdFileName: fileName),
@@ -190,6 +180,11 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
       return;
     }
 
+    final String? error = await Validators.validateAccountImage(image);
+    if (!mounted) return;
+    _submissionMessage.value = error;
+    if (error != null) return;
+
     final String fileName = _fileNameFrom(image);
     _updateData(
       (data) => data.copyWith(backIdImage: image, backIdFileName: fileName),
@@ -202,6 +197,11 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
     if (!mounted || image == null) {
       return;
     }
+
+    final String? error = await Validators.validateAccountImage(image);
+    if (!mounted) return;
+    _submissionMessage.value = error;
+    if (error != null) return;
 
     final String fileName = _fileNameFrom(image);
     _updateData(
@@ -247,7 +247,6 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
           backIdFieldKey: _backIdFieldKey,
           selfieFieldKey: _selfieFieldKey,
           nationalIdController: _nationalIdController,
-          validateNationalId: _validateNationalId,
           onNationalIdChanged: (value) => _updateData(
             (data) => data.copyWith(nationalId: (value ?? '').trim()),
           ),

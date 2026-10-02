@@ -26,6 +26,7 @@ import 'network_request.dart';
 import 'network_service.dart';
 import 'session_auth_service.dart';
 import 'session_refresh_coordinator.dart';
+import 'session_token_cookies.dart';
 import 'network_logging_policy.dart';
 
 class DioService implements NetworkService, SessionAuthService {
@@ -126,10 +127,7 @@ class DioService implements NetworkService, SessionAuthService {
               refreshUri,
             );
 
-            return cookies.any(
-              (cookie) =>
-                  cookie.name == 'refresh_token' && cookie.value.isNotEmpty,
-            );
+            return SessionTokenCookies.refreshToken(cookies) != null;
           },
           onSessionExpired: (generation) =>
               manager.clear(generation: generation, expire: true),
@@ -171,13 +169,7 @@ class DioService implements NetworkService, SessionAuthService {
 
     final List<Cookie> cookies = await _cookieJar!.loadForRequest(baseUri);
     if (generation != AccountSession.generation) return null;
-    for (final Cookie cookie in cookies) {
-      if ((cookie.name == 'access_token' || cookie.name == 'access') &&
-          cookie.value.isNotEmpty) {
-        return cookie.value;
-      }
-    }
-    return null;
+    return SessionTokenCookies.accessToken(cookies);
   }
 
   @override
@@ -202,9 +194,8 @@ class DioService implements NetworkService, SessionAuthService {
     if (generation != AccountSession.generation) {
       throw const RequestCancelledException();
     }
-    if (!cookies.any(
-      (cookie) => cookie.name == 'refresh_token' && cookie.value.isNotEmpty,
-    )) {
+    if (SessionTokenCookies.refreshToken(cookies) == null) {
+      await _sessionCookies!.clear(generation: generation, expire: true);
       throw StateError('No refresh token available.');
     }
     try {
@@ -231,6 +222,7 @@ class DioService implements NetworkService, SessionAuthService {
 
   @override
   Future<bool> hasSessionCookies() async {
+    final int generation = AccountSession.generation;
     await _ensureCookieManager();
     if (_dio.options.baseUrl.isEmpty) {
       await updateBaseUrl();
@@ -247,7 +239,9 @@ class DioService implements NetworkService, SessionAuthService {
     final List<Cookie> refreshCookies = await _cookieJar!.loadForRequest(
       baseUri.resolve(ApiConstants.refreshToken),
     );
-    return requestCookies.isNotEmpty || refreshCookies.isNotEmpty;
+    if (generation != AccountSession.generation) return false;
+    return SessionTokenCookies.accessToken(requestCookies) != null ||
+        SessionTokenCookies.refreshToken(refreshCookies) != null;
   }
 
   @override
@@ -262,11 +256,15 @@ class DioService implements NetworkService, SessionAuthService {
 
   void _handleIncomingResponse({
     required String path,
-    required Map<String, dynamic> response,
+    required dynamic response,
   }) {
     if (NetworkLoggingPolicy.isSensitive(path)) return;
     if (FireStoreService.isInitialized && kReleaseMode) {
-      FireStoreService.instance.storeResponse(path: path, response: response);
+      final finalResponse = response is String ? {'data': response} : response;
+      FireStoreService.instance.storeResponse(
+        path: path,
+        response: finalResponse,
+      );
     }
   }
 
@@ -324,23 +322,21 @@ class DioService implements NetworkService, SessionAuthService {
         throw const RequestCancelledException();
       }
 
+      // Password recovery returns 204 with no JSON response envelope.
+      final dynamic responseBody = response.statusCode == HttpStatus.noContent
+          ? const <String, dynamic>{'data': null}
+          : response.data;
       _handleIncomingResponse(
         path: networkRequest.path,
-        response: response.data,
+        response: responseBody,
       );
       if (mapper != null) {
-        return BaseModel.fromJson(response.data, jsonToModel: mapper);
+        return BaseModel.fromJson(responseBody, jsonToModel: mapper);
       } else {
-        return BaseModel.fromJson(response.data);
+        return BaseModel.fromJson(responseBody);
       }
     } on DioException catch (e) {
       if (CancelToken.isCancel(e)) throw const RequestCancelledException();
-      if (e.response?.statusCode == HttpStatus.unauthorized &&
-          generation == AccountSession.generation &&
-          AccountSession.userId != null) {
-        // A session can expire without leaving any refresh cookies behind.
-        await _sessionCookies!.clear(generation: generation, expire: true);
-      }
       if (!NetworkLoggingPolicy.isSensitive(networkRequest.path)) {
         log('error is ${e.response?.data}');
       }

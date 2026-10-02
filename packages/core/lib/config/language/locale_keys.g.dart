@@ -1,6 +1,84 @@
 import 'package:easy_localization/easy_localization.dart';
 
 abstract class LocaleKeys {
+  static const String _validationIdentityRequired = 'validation_identity_required';
+  static String get validationIdentityRequired => _validationIdentityRequired.tr();
+
+  static const String _validationFieldRequired = 'validation_field_required';
+  static String get validationFieldRequired => _validationFieldRequired.tr();
+
+  static const String _validationInteger = 'validation_integer';
+  static String get validationInteger => _validationInteger.tr();
+
+  static const String _validationNumber = 'validation_number';
+  static String get validationNumber => _validationNumber.tr();
+
+  static const String _validationNumberRange = 'validation_number_range';
+  static String get validationNumberRange => _validationNumberRange.tr();
+
+  static const String _validationMinLength = 'validation_min_length';
+  static String get validationMinLength => _validationMinLength.tr();
+
+  static const String _validationMaxLength = 'validation_max_length';
+  static String get validationMaxLength => _validationMaxLength.tr();
+
+  static const String _validationIdentityLength = 'validation_identity_length';
+  static String get validationIdentityLength => _validationIdentityLength.tr();
+
+  static const String _validationFileRequired = 'validation_file_required';
+  static String get validationFileRequired => _validationFileRequired.tr();
+
+  static const String _validationImageRequired = 'validation_image_required';
+  static String get validationImageRequired => _validationImageRequired.tr();
+
+  static const String _accountNameRequired = 'account_name_required';
+  static String get accountNameRequired => _accountNameRequired.tr();
+
+  static const String _accountNameTooLong = 'account_name_too_long';
+  static String get accountNameTooLong => _accountNameTooLong.tr();
+
+  static const String _accountEmailRequired = 'account_email_required';
+  static String get accountEmailRequired => _accountEmailRequired.tr();
+
+  static const String _accountEmailTooLong = 'account_email_too_long';
+  static String get accountEmailTooLong => _accountEmailTooLong.tr();
+
+  static const String _accountEmailLocalPartTooLong = 'account_email_local_part_too_long';
+  static String get accountEmailLocalPartTooLong => _accountEmailLocalPartTooLong.tr();
+
+  static const String _accountPasswordTooShort = 'account_password_too_short';
+  static String get accountPasswordTooShort => _accountPasswordTooShort.tr();
+
+  static const String _accountPasswordConfirmationRequired = 'account_password_confirmation_required';
+  static String get accountPasswordConfirmationRequired => _accountPasswordConfirmationRequired.tr();
+
+  static const String _accountPhoneRequired = 'account_phone_required';
+  static String get accountPhoneRequired => _accountPhoneRequired.tr();
+
+  static const String _accountOtpRequired = 'account_otp_required';
+  static String get accountOtpRequired => _accountOtpRequired.tr();
+
+  static const String _accountNationalIdRequired = 'account_national_id_required';
+  static String get accountNationalIdRequired => _accountNationalIdRequired.tr();
+
+  static const String _accountGenderValidation = 'account_gender_validation';
+  static String get accountGenderValidation => _accountGenderValidation.tr();
+
+  static const String _accountBirthDateRequired = 'account_birth_date_required';
+  static String get accountBirthDateRequired => _accountBirthDateRequired.tr();
+
+  static const String _accountBirthDateValidation = 'account_birth_date_validation';
+  static String get accountBirthDateValidation => _accountBirthDateValidation.tr();
+
+  static const String _chatMessageRequired = 'chat_message_required';
+  static String get chatMessageRequired => _chatMessageRequired.tr();
+
+  static const String _chatMessageLettersValidation = 'chat_message_letters_validation';
+  static String get chatMessageLettersValidation => _chatMessageLettersValidation.tr();
+
+  static const String _accountDocumentUploadHint = 'account_document_upload_hint';
+  static String get accountDocumentUploadHint => _accountDocumentUploadHint.tr();
+
   static const String _pullRefreshHint = 'pull_refresh_hint';
   static String get pullRefreshHint => _pullRefreshHint.tr();
 
@@ -3279,6 +3357,18 @@ abstract class LocaleKeys {
 
   static const String _accountEgyptianMobileValidation = 'account_egyptian_mobile_validation';
   static String get accountEgyptianMobileValidation => _accountEgyptianMobileValidation.tr();
+
+  static const String _accountImageTooLarge = 'account_image_too_large';
+  static String get accountImageTooLarge => _accountImageTooLarge.tr();
+
+  static const String _accountImageInvalid = 'account_image_invalid';
+  static String get accountImageInvalid => _accountImageInvalid.tr();
+
+  static const String _accountAvatarFormatValidation = 'account_avatar_format_validation';
+  static String get accountAvatarFormatValidation => _accountAvatarFormatValidation.tr();
+
+  static const String _accountDocumentFormatValidation = 'account_document_format_validation';
+  static String get accountDocumentFormatValidation => _accountDocumentFormatValidation.tr();
 
   static const String _accountOtpValidation = 'account_otp_validation';
   static String get accountOtpValidation => _accountOtpValidation.tr();

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:melos_core/core/helpers/validators.dart';
 import 'dart:developer';
 
 import 'package:equatable/equatable.dart';
@@ -80,7 +81,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
     String? localMessageId,
   }) async {
     final String content = rawContent.trim();
-    if (content.isEmpty || content.length > 5000) {
+    if (!Validators.isValidChatContent(content)) {
       return const ChatSendResult.failed();
     }
 

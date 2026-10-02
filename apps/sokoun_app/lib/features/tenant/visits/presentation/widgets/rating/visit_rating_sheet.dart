@@ -171,7 +171,8 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
             ValueListenableBuilder<List<int>>(
               valueListenable: _criteriaRatings,
               builder: (context, ratings, _) =>
-                  ratings.any((rating) => rating < 1) || widget.visitId.isEmpty
+                  !Validators.isValidRatings(ratings) ||
+                      !Validators.isNonBlank(widget.visitId)
                   ? DefaultButton(
                       onTap: null,
                       title: LocaleKeys.tenantVisitRatingSubmit,

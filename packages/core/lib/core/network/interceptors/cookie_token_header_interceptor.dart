@@ -2,16 +2,16 @@ import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
-import 'package:melos_core/core/extensions/object.dart';
 
 import '../api_endpoints.dart';
+import '../session_token_cookies.dart';
 import 'session_cookie_manager.dart';
 
 class CookieTokenHeaderInterceptor extends Interceptor {
   CookieTokenHeaderInterceptor({
     required PersistCookieJar cookieJar,
-    this.accessCookieName = 'access_token',
-    this.refreshCookieName = 'refresh_token',
+    this.accessCookieName = SessionTokenCookies.accessCookieName,
+    this.refreshCookieName = SessionTokenCookies.refreshCookieName,
   }) : _cookieJar = cookieJar;
 
   final PersistCookieJar _cookieJar;
@@ -33,21 +33,20 @@ class CookieTokenHeaderInterceptor extends Interceptor {
       return;
     }
 
-    String? valueFor(String name) {
-      for (final Cookie cookie in cookies) {
-        if (cookie.name == name) {
-          return cookie.value;
-        }
-      }
-      return null;
-    }
+    final bool isRefresh = options.uri.path.endsWith(
+      '/${ApiConstants.refreshToken}',
+    );
+    final String? token = isRefresh
+        ? SessionTokenCookies.refreshToken(
+            cookies,
+            cookieName: refreshCookieName,
+          )
+        : SessionTokenCookies.accessToken(
+            cookies,
+            cookieName: accessCookieName,
+          );
 
-    final String tokenCookieName = options.path == ApiConstants.refreshToken
-        ? refreshCookieName
-        : accessCookieName;
-    final String? token = valueFor(tokenCookieName);
-
-    if (token.isNotNull && token!.isNotEmpty) {
+    if (token != null) {
       options.headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
     } else {
       options.headers.remove(HttpHeaders.authorizationHeader);

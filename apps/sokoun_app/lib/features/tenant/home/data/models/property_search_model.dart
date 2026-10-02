@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 
 import 'property_details_model.dart';
 
@@ -31,19 +32,8 @@ class PropertySearchFilterEntry extends Equatable {
 }
 
 class PropertySearchFilters extends Equatable {
-  bool get hasValidPriceRange {
-    final minimum = priceMin.trim().isEmpty ? null : double.tryParse(priceMin);
-    final maximum = priceMax.trim().isEmpty ? null : double.tryParse(priceMax);
-    if (priceMin.trim().isNotEmpty &&
-        (minimum == null || !minimum.isFinite || minimum < 0)) {
-      return false;
-    }
-    if (priceMax.trim().isNotEmpty &&
-        (maximum == null || !maximum.isFinite || maximum < 0)) {
-      return false;
-    }
-    return minimum == null || maximum == null || minimum <= maximum;
-  }
+  bool get hasValidPriceRange =>
+      Validators.isValidPriceRange(min: priceMin, max: priceMax);
 
   final String search;
   final String city;

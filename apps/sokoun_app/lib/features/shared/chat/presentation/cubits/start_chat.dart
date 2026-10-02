@@ -3,6 +3,7 @@ import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/asy
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 
 import '../../data/models/chat_content.dart';
 
@@ -13,7 +14,7 @@ class CreateConversationCubit extends AsyncCubit<ConversationContent> {
     required String userId,
     required void Function(ConversationContent conversation) onSuccess,
   }) async {
-    if (isClosed || isLoading || userId.trim().isEmpty) return;
+    if (isClosed || isLoading || !Validators.isNonBlank(userId)) return;
     if (userId == UserModel.currentUser?.id) {
       setError(errorMessage: LocaleKeys.workspaceSelfActionBlocked);
       return;

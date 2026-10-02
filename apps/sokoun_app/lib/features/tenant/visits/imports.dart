@@ -2,6 +2,7 @@ import 'package:melos_core/core/helpers/status_builder.dart';
 import 'package:sokoun_app/features/shared/reviews/data/models/property_review.dart';
 import 'package:sokoun_app/features/shared/reviews/presentation/widgets/property_review_card.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_reveal.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';

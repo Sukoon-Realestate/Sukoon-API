@@ -86,6 +86,15 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   Future<void> _pickAvatar() async {
     final File? avatar = await Helpers.getImageFromCameraOrDevice();
     if (avatar != null && mounted) {
+      final String? error = await Validators.validateAccountImage(
+        avatar,
+        allowGif: true,
+      );
+      if (!mounted) return;
+      if (error != null) {
+        MessageUtils.showSnackBar(error, context: context);
+        return;
+      }
       _avatar.value = avatar;
     }
   }
@@ -110,9 +119,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     return FormField<ProfileGender>(
       key: _genderFieldKey,
       initialValue: _gender.value,
-      validator: (gender) => gender == null || gender.isUnspecified
-          ? LocaleKeys.pleaseEnterTheGender
-          : null,
+      validator: (gender) => Validators.validateGender(gender?.apiValue),
       builder: (field) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,21 +153,32 @@ class _ProfileEditViewState extends State<ProfileEditView> {
       return;
     }
 
+    final ProfileEditBody body = ProfileEditBody(
+      avatar: _avatar.value,
+      fullName: _nameController.text.trim(),
+      gender: _gender.value.apiValue,
+      phoneNumber: _phoneController.text.trim(),
+    );
+    final String? imageError = await Validators.validateAccountImage(
+      body.avatar,
+      allowGif: true,
+    );
+    if (!mounted || _editCubit.isLoading) return;
+    if (imageError != null) {
+      MessageUtils.showSnackBar(imageError, context: context);
+      return;
+    }
+
     bool wasUpdated = false;
     await _editCubit.editProfile(
-      body: ProfileEditBody(
-        avatar: _avatar.value,
-        fullName: _nameController.text.trim(),
-        gender: _gender.value.apiValue,
-        phoneNumber: _phoneController.text.trim(),
-      ),
+      body: body,
       onSuccess: () => wasUpdated = true,
     );
     if (!wasUpdated || !mounted) return;
 
     final UserModel updatedUser = _initialUser.copyWith(
-      name: _nameController.text.trim(),
-      phone: _phoneController.text.trim(),
+      name: body.fullName,
+      phone: Validators.normalizeEgyptianMobile(body.phoneNumber),
     );
     await UserCubit.instance.updateUser(updatedUser);
 
@@ -281,7 +299,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                 label: LocaleKeys.fullName,
                 hintText: LocaleKeys.fullNameHint,
                 accentColor: _accentColor,
-                validator: Validators.validateName,
+                validator: Validators.validateFullName,
               ),
               14.szH,
               SokoonPhoneField(
@@ -295,6 +313,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                 accentColor: _accentColor,
                 action: TextInputAction.done,
                 readOnly: true,
+                validator: Validators.skipValidation,
               ),
               14.szH,
               if (widget.workspace.isOwner)

@@ -15,7 +15,7 @@ class VisitReviewBody {
   final int cleanliness, accuracy, ownerInteraction;
   final String comment;
   bool get isValid =>
-      [cleanliness, accuracy, ownerInteraction].every((v) => v >= 1 && v <= 5);
+      Validators.isValidRatings([cleanliness, accuracy, ownerInteraction]);
   Map<String, dynamic> toJson() => {
     'cleanliness_rating': cleanliness,
     'listing_accuracy_rating': accuracy,

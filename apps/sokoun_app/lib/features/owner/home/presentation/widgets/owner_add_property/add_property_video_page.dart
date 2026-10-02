@@ -7,6 +7,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/helpers.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:video_player/video_player.dart';
@@ -38,8 +39,6 @@ class AddPropertyVideoPage extends StatefulWidget {
 }
 
 class _AddPropertyVideoPageState extends State<AddPropertyVideoPage> {
-  static const Duration _maximumDuration = Duration(seconds: 60);
-
   VideoPlayerController? _videoController;
   String? _previewPath;
   int _previewGeneration = 0;
@@ -134,7 +133,9 @@ class _AddPropertyVideoPageState extends State<AddPropertyVideoPage> {
 
     try {
       final File? file = fromCamera
-          ? await Helpers.recordVideo(maxDuration: _maximumDuration)
+          ? await Helpers.recordVideo(
+              maxDuration: Validators.propertyVideoMaxDuration,
+            )
           : await Helpers.getVideoFromGallery();
       if (!mounted || file == null) {
         return;
@@ -153,11 +154,12 @@ class _AddPropertyVideoPageState extends State<AddPropertyVideoPage> {
       }
 
       final Duration duration = controller.value.duration;
-      if (duration.inSeconds < 1 || duration > _maximumDuration) {
+      final String? durationError = Validators.validatePropertyVideoDuration(
+        duration,
+      );
+      if (durationError != null) {
         await controller.dispose();
-        _updateUi(
-          validationMessage: LocaleKeys.ownerPropertyVideoDurationInvalid,
-        );
+        _updateUi(validationMessage: durationError);
         return;
       }
 

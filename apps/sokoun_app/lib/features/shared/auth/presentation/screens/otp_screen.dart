@@ -7,7 +7,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
-import 'package:melos_core/core/helpers/account_input_rules.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
@@ -67,12 +67,12 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   Future<void> _confirm(BuildContext _) async {
-    if (!AccountInputRules.isValidOtpCode(_otpController.text)) {
+    if (!Validators.isValidOtpCode(_otpController.text)) {
       return;
     }
 
     await _otpCubit.verifyOtp(
-      body: VerifyOtpBody(email: widget.email.trim(), otp: _otpController.text),
+      body: VerifyOtpBody(email: widget.email, otp: _otpController.text),
       onSuccess: widget.onVerified,
     );
   }
@@ -187,7 +187,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     _uiState.value = (
                       canResend: uiState.canResend,
                       isResending: uiState.isResending,
-                      isCodeComplete: AccountInputRules.isValidOtpCode(
+                      isCodeComplete: Validators.isValidOtpCode(
                         _otpController.text,
                       ),
                     );

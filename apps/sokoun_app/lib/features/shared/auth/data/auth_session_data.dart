@@ -5,6 +5,7 @@ import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/network/network_service.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/shared/auth/data/models/google_login.dart';
 
@@ -29,7 +30,7 @@ final class AuthSessionApiDataSource implements AuthSessionDataSource {
   }) async {
     return _authenticateAndGetCurrentUser(
       api: ApiConstants.login,
-      body: {'email': email, 'password': password},
+      body: {'email': Validators.normalizeEmail(email), 'password': password},
     );
   }
 

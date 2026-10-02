@@ -4,6 +4,7 @@ import 'property_location.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 
 class AddPropertyChipContent {
   const AddPropertyChipContent({required this.label, this.isSelected = false});
@@ -41,8 +42,8 @@ abstract final class OwnerAddPropertyContent {
     LocaleKeys.ownerAddPropertyPhotoTipLimits,
   ];
 
-  static const minimumPhotoCount = 10;
-  static const maxPhotoCount = 25;
+  static const minimumPhotoCount = Validators.propertyMinPhotoCount;
+  static const maxPhotoCount = Validators.propertyMaxPhotoCount;
 
   static List<String> get depositOptions => [
     LocaleKeys.ownerAddPropertyNoDeposit,
@@ -149,8 +150,11 @@ class OwnerPropertyPhotoDraft {
 
   bool get isExisting => existingUrl.trim().isNotEmpty;
   bool get canRemove => !isExisting;
-  bool get isMetadataReady =>
-      isExisting || (name.trim().isNotEmpty && description.trim().isNotEmpty);
+  bool get isMetadataReady => Validators.isValidPhotoMetadata(
+    isExisting: isExisting,
+    name: name,
+    description: description,
+  );
   String get id => isExisting
       ? (existingId.isNotEmpty ? existingId : existingUrl)
       : file?.path ?? '';
@@ -277,35 +281,36 @@ class OwnerAddPropertyFormState {
   bool get isProofUploaded =>
       ownershipProof != null || ownershipProofUrl.isNotEmpty;
 
-  bool get isBasicsReady {
-    return title.trim().isNotEmpty &&
-        propertyType.trim().isNotEmpty &&
-        governorateId.trim().isNotEmpty &&
-        governorate.trim().isNotEmpty &&
-        districtId.trim().isNotEmpty &&
-        district.trim().isNotEmpty &&
-        street.trim().isNotEmpty &&
-        _hasPositiveNumber(bedrooms) &&
-        _hasPositiveNumber(bathrooms) &&
-        _hasPositiveNumber(space) &&
-        int.tryParse(floor) != null &&
-        isLocationSelected;
-  }
+  bool get isBasicsReady => Validators.isValidPropertyBasics(
+    requiredFields: [
+      title,
+      propertyType,
+      governorateId,
+      governorate,
+      districtId,
+      district,
+      street,
+    ],
+    positiveNumbers: [bedrooms, bathrooms, space],
+    floor: floor,
+    hasValidLocation: isLocationSelected,
+  );
 
-  bool get isPhotosReady =>
-      photoCount >= OwnerAddPropertyContent.minimumPhotoCount &&
-      photoDrafts.every((photo) => photo.isMetadataReady);
+  bool get isPhotosReady => Validators.isValidPropertyPhotos(
+    count: photoCount,
+    metadataStates: photoDrafts.map((photo) => photo.isMetadataReady),
+  );
 
-  bool get isPricingReady {
-    return _hasPositiveNumber(monthlyPrice) &&
-        _hasPositiveNumber(rentalDuration) &&
-        rentalUnit.trim().isNotEmpty &&
-        suitableFor.trim().isNotEmpty &&
-        description.trim().length >= 10;
-  }
+  bool get isPricingReady => Validators.isValidPropertyPricing(
+    monthlyPrice: monthlyPrice,
+    rentalDuration: rentalDuration,
+    rentalUnit: rentalUnit,
+    suitableFor: suitableFor,
+    description: description,
+  );
 
   bool get isExtraDetailsReady {
-    return suitableFor.trim().isNotEmpty;
+    return Validators.isNonBlank(suitableFor);
   }
 
   String get locationSummary => '$district، $governorate';
@@ -618,11 +623,6 @@ class OwnerAddPropertyFormState {
           LocaleKeys.ownerAddPropertyShared: 'shared',
         }[value] ??
         value;
-  }
-
-  static bool _hasPositiveNumber(String value) {
-    final parsed = num.tryParse(value.trim());
-    return parsed != null && parsed > 0;
   }
 
   static bool _containsOption(

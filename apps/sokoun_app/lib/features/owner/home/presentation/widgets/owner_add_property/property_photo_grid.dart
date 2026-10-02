@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -23,10 +24,10 @@ class PhotoGridSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool canAddMore =
-        photos.length < OwnerAddPropertyContent.maxPhotoCount;
-    final bool hasEnoughPhotos =
-        photos.length >= OwnerAddPropertyContent.minimumPhotoCount;
+    final bool canAddMore = Validators.canAddPropertyPhoto(photos.length);
+    final bool hasEnoughPhotos = Validators.hasEnoughPropertyPhotos(
+      photos.length,
+    );
 
     return Column(
       spacing: 10.h,

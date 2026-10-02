@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 
 class ChatComposer extends StatelessWidget {
   const ChatComposer({
@@ -47,7 +48,7 @@ class ChatComposer extends StatelessWidget {
                     Expanded(
                       child: TextField(
                         controller: controller,
-                        maxLength: 5000,
+                        maxLength: Validators.chatMessageMaxLength,
                         buildCounter:
                             (
                               _, {

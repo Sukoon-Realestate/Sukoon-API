@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
-import 'package:melos_core/core/helpers/account_input_rules.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/forgot_password.dart';
 
 import '../widgets/auth_scaffold.dart';
@@ -45,7 +45,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   bool get _looksLikeValidEmail =>
-      AccountInputRules.isValidEmail(_emailController.text);
+      Validators.isValidEmail(_emailController.text);
 
   String get _maskedEmail {
     final List<String> parts = _emailController.text.trim().split('@');

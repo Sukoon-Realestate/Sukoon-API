@@ -6,7 +6,12 @@ class VisitReviewCubit extends AsyncCubit<bool> {
     required String visitId,
     required VisitReviewBody body,
   }) async {
-    if (isClosed || isLoading || visitId.isEmpty || !body.isValid) return false;
+    if (isClosed ||
+        isLoading ||
+        !Validators.isNonBlank(visitId) ||
+        !body.isValid) {
+      return false;
+    }
     bool succeeded = false;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(

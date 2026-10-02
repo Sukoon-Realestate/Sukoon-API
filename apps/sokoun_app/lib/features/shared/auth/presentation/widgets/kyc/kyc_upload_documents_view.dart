@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -27,7 +26,6 @@ class KycUploadDocumentsView extends StatelessWidget {
     required this.backIdFieldKey,
     required this.selfieFieldKey,
     required this.nationalIdController,
-    required this.validateNationalId,
     required this.onNationalIdChanged,
     required this.onPickFrontId,
     required this.onPickBackId,
@@ -44,7 +42,6 @@ class KycUploadDocumentsView extends StatelessWidget {
   final GlobalKey<FormFieldState<String>> backIdFieldKey;
   final GlobalKey<FormFieldState<String>> selfieFieldKey;
   final TextEditingController nationalIdController;
-  final FormFieldValidator<String> validateNationalId;
   final ValueChanged<String?> onNationalIdChanged;
   final VoidCallback onPickFrontId;
   final VoidCallback onPickBackId;
@@ -107,16 +104,16 @@ class KycUploadDocumentsView extends StatelessWidget {
                     _NationalIdField(
                       fieldKey: nationalIdFieldKey,
                       controller: nationalIdController,
-                      validator: validateNationalId,
+                      validator: Validators.validateEgyptianNationalId,
                       valueLength: data.nationalId.length,
                       onChanged: onNationalIdChanged,
-                      isRequired: !existingAccount,
+                      isRequired: false,
                     ),
                     18.szH,
                     _KycUploadValidationField(
                       fieldKey: frontIdFieldKey,
                       value: data.frontIdFileName,
-                      isRequired: !existingAccount,
+                      isRequired: false,
                       child: KycUploadTile(
                         title: LocaleKeys.idFrontLabel,
                         fileName: data.frontIdFileName,
@@ -128,7 +125,7 @@ class KycUploadDocumentsView extends StatelessWidget {
                     _KycUploadValidationField(
                       fieldKey: backIdFieldKey,
                       value: data.backIdFileName,
-                      isRequired: !existingAccount,
+                      isRequired: false,
                       child: KycUploadTile(
                         title: LocaleKeys.idBackLabel,
                         fileName: data.backIdFileName,
@@ -140,7 +137,7 @@ class KycUploadDocumentsView extends StatelessWidget {
                     _KycUploadValidationField(
                       fieldKey: selfieFieldKey,
                       value: data.selfieFileName,
-                      isRequired: !existingAccount,
+                      isRequired: false,
                       child: KycUploadTile(
                         title: existingAccount
                             ? LocaleKeys.kycOptionalSelfie
@@ -213,9 +210,9 @@ class _NationalIdField extends StatelessWidget {
           controller: controller,
           title: LocaleKeys.nationalIdHint,
           inputType: TextInputType.number,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          inputFormatters: [Validators.asciiDigitsOnly],
           validator: validator,
-          maxLength: 14,
+          maxLength: Validators.nationalIdLength,
           textAlign: TextAlign.start,
           borderRadius: 12.r,
           fillColor: AppColors.white,
@@ -232,7 +229,7 @@ class _NationalIdField extends StatelessWidget {
         ),
         6.szH,
         AppText(
-          '$valueLength/14 ${LocaleKeys.digits}',
+          '$valueLength/${Validators.nationalIdLength} ${LocaleKeys.digits}',
           style: AppTextStyles.regular11.copyWith(
             color: AppColors.sokoonGray,
             fontSize: 11.sp,
@@ -293,7 +290,7 @@ class _KycUploadValidationField extends StatelessWidget {
     return ValidationHost<String>(
       key: fieldKey,
       initialValue: value,
-      validator: isRequired ? Validators.validateEmpty : (_) => null,
+      validator: Validators.skipValidation,
       builderWidget: (field) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 6.h,

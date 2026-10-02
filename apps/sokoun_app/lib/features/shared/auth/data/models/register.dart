@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 
 class KycDocumentUploadData extends Equatable {
   const KycDocumentUploadData({
@@ -73,10 +74,10 @@ class RegisterBody extends Equatable {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> body = {
-      'first_name': firstName,
-      'last_name': lastName,
-      'phone_number': phone,
-      'email': email,
+      'first_name': firstName.trim(),
+      'last_name': lastName.trim(),
+      'phone_number': Validators.normalizeEgyptianMobile(phone),
+      'email': Validators.normalizeEmail(email),
       'password': password,
       're_password': rePassword,
     };

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -52,7 +51,6 @@ class SokoonPhoneField extends StatelessWidget {
           borderColor: borderColor,
           fillColor: AppColors.white,
           maxLength: maxLength,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           contentPadding: EdgeInsets.symmetric(
             horizontal: 16.w,
             vertical: 14.h,

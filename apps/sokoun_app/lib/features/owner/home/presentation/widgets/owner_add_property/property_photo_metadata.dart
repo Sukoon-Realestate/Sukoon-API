@@ -4,6 +4,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 
@@ -108,9 +109,10 @@ class PhotoMetadataCard extends StatelessWidget {
                   label: LocaleKeys.ownerAddPropertyPhotoName,
                   hint: LocaleKeys.ownerAddPropertyPhotoNameHint,
                   initialValue: photo.name,
-                  errorText: photo.name.trim().isEmpty
-                      ? LocaleKeys.ownerAddPropertyPhotoNameRequired
-                      : null,
+                  errorText: Validators.validateRequired(
+                    photo.name,
+                    message: LocaleKeys.ownerAddPropertyPhotoNameRequired,
+                  ),
                   onChanged: onNameChanged,
                 ),
                 PhotoMetadataField(
@@ -118,9 +120,11 @@ class PhotoMetadataCard extends StatelessWidget {
                   label: LocaleKeys.ownerAddPropertyPhotoDescription,
                   hint: LocaleKeys.ownerAddPropertyPhotoDescriptionHint,
                   initialValue: photo.description,
-                  errorText: photo.description.trim().isEmpty
-                      ? LocaleKeys.ownerAddPropertyPhotoDescriptionRequired
-                      : null,
+                  errorText: Validators.validateRequired(
+                    photo.description,
+                    message:
+                        LocaleKeys.ownerAddPropertyPhotoDescriptionRequired,
+                  ),
                   onChanged: onDescriptionChanged,
                   maxLines: 3,
                 ),

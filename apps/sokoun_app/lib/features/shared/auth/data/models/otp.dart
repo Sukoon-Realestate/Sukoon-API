@@ -1,3 +1,5 @@
+import 'package:melos_core/core/helpers/validators.dart';
+
 class VerifyOtpBody {
   const VerifyOtpBody({required this.email, required this.otp});
 
@@ -9,7 +11,10 @@ class VerifyOtpBody {
   VerifyOtpBody copyWith({String? email, String? otp}) =>
       VerifyOtpBody(email: email ?? this.email, otp: otp ?? this.otp);
 
-  Map<String, dynamic> toJson() => {'email': email, 'otp': otp};
+  Map<String, dynamic> toJson() => {
+    'email': Validators.normalizeEmail(email),
+    'otp': Validators.normalizeOtpCode(otp),
+  };
 }
 
 class ResendOtpBody {
@@ -22,5 +27,5 @@ class ResendOtpBody {
   ResendOtpBody copyWith({String? email}) =>
       ResendOtpBody(email: email ?? this.email);
 
-  Map<String, dynamic> toJson() => {'email': email};
+  Map<String, dynamic> toJson() => {'email': Validators.normalizeEmail(email)};
 }

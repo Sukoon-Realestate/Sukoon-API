@@ -11,6 +11,41 @@ void main() {
   setUp(AccountSession.end);
   tearDown(AccountSession.end);
 
+  test('password reset accepts a 204 response with no JSON body', () async {
+    final Directory directory = await Directory.systemTemp.createTemp(
+      'sokoun_reset_204_',
+    );
+    final HttpServer server = await HttpServer.bind(
+      InternetAddress.loopbackIPv4,
+      0,
+    );
+    addTearDown(() async {
+      await server.close(force: true);
+      await directory.delete(recursive: true);
+    });
+    server.listen((request) async {
+      expect(request.uri.path, '/auth/users/reset_password/');
+      expect(request.method, 'POST');
+      request.response.statusCode = HttpStatus.noContent;
+      await request.response.close();
+    });
+    final DioService service = DioService(
+      initialBaseUrl: 'http://${server.address.host}:${server.port}/',
+      initialLanguageCode: 'en',
+      cookieDirectoryProvider: () async => directory,
+    );
+    final response = await service.callApi<Map<String, dynamic>>(
+      NetworkRequest(
+        path: 'auth/users/reset_password/',
+        method: RequestMethod.post,
+        body: const {'email': 'user@example.com'},
+      ),
+      mapper: (_) => <String, dynamic>{},
+    );
+    expect(response.data, isEmpty);
+    expect(response.msg, isEmpty);
+  });
+
   for (final retryStatus in [
     HttpStatus.forbidden,
     HttpStatus.internalServerError,
