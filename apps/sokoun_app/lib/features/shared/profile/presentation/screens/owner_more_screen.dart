@@ -177,7 +177,11 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
                 ),
               ],
             ),
-            const PublicPageMenu(),
+            18.szH,
+            ProfileSurfaceCard(
+              padding: EdgeInsets.symmetric(vertical: 2.h),
+              child: const PublicPageMenu(),
+            ),
             18.szH,
             const ProfileLogoutButton(),
           ],

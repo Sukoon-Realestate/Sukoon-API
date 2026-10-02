@@ -71,7 +71,10 @@ class TenantProfileActions extends StatelessWidget {
             onTap: () => Go.to(const ProfileSettingsScreen()),
           ),
         ),
-        const ProfileSurfaceCard(child: PublicPageMenu()),
+        ProfileSurfaceCard(
+          padding: EdgeInsets.symmetric(vertical: 2.h),
+          child: const PublicPageMenu(),
+        ),
       ],
     );
   }

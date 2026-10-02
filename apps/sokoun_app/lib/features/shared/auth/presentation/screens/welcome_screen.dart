@@ -61,7 +61,7 @@ class WelcomeScreen extends StatelessWidget {
           ..._buildFeatureCards(content.features),
           22.szH,
           DefaultButton(
-            onTap: () => Go.offAll(const RegisterFlowScreen()),
+            onTap: () => Go.to(const RegisterFlowScreen()),
             title: content.primaryButtonTitle,
             color: AppColors.sokoonTeal,
             textColor: AppColors.white,
@@ -75,7 +75,7 @@ class WelcomeScreen extends StatelessWidget {
           ),
           14.szH,
           TextButton(
-            onPressed: () => Go.offAll(const LoginScreen()),
+            onPressed: () => Go.to(const LoginScreen()),
             style: TextButton.styleFrom(
               minimumSize: const Size(48, 48),
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),

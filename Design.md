@@ -386,6 +386,17 @@ Use the shared `Go` navigation helper instead of calling `Navigator` directly.
 
 ## Motion and Feedback
 
+- Root tab and availability-date changes use `SokounContentTransition`: a
+  `240ms` fade from 65% opacity with an 8-pixel upward settle. Keep the same
+  content element so forms, scroll positions, and loaded tabs retain state.
+- Navigation and saved-property icons use `SokounSelectionFeedback`: a short
+  `240ms` pulse that settles back to normal size after a selection changes.
+  Do not pulse on initial display or run idle animations.
+- Property-form and search-filter chips share `SokounSelectionChip`: `180ms`
+  fill/border changes and a revealing checkmark, with natural text height and
+  at least a 48-pixel touch target.
+- Confirmation emblems may use `SokounReveal(beginScale: .88)` once, with their
+  summary following by `80ms`. Keep actions available throughout the motion.
 - Selection cards: approximately `180ms`
 - Other selection, expansion, and state feedback: `150ms` to `250ms`
 - Use `SokounReveal` for a one-time `320ms` fade and short slide on coherent
