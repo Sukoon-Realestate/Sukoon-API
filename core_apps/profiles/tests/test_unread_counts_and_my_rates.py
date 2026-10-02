@@ -140,3 +140,20 @@ class TestUnreadCountsAndMyRates:
         assert item["visit_id"] == str(visit.id)
         assert item["rating"] == 5
         assert item["comment"] == "Excellent apartment and great host!"
+
+    def test_owner_unread_counts_unauthenticated(self, client):
+        url = reverse("owner-unread-counts")
+        res = client.get(url)
+        assert res.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_tenant_unread_counts_unauthenticated(self, client):
+        url = reverse("tenant-unread-counts")
+        res = client.get(url)
+        assert res.status_code == status.HTTP_401_UNAUTHORIZED
+
+    def test_tenant_my_rates_unauthenticated(self, client):
+        url = reverse("tenant-my-rates")
+        res = client.get(url)
+        assert res.status_code == status.HTTP_401_UNAUTHORIZED
+
+

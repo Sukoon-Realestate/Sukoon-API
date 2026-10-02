@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from djoser.serializers import UserCreatePasswordRetypeSerializer, UserSerializer
 from rest_framework import serializers
 
+from phonenumber_field.serializerfields import PhoneNumberField
 from core_apps.profiles.serializers import CloudinarySerializerField
 
 User = get_user_model()
@@ -9,7 +10,7 @@ User = get_user_model()
 
 class CreateUserSerializer(UserCreatePasswordRetypeSerializer):
     birth_date = serializers.DateField(write_only=True, required=False)
-    phone_number = serializers.CharField(write_only=True, required=False)
+    phone_number = PhoneNumberField(write_only=True, required=False, allow_blank=True)
 
     class Meta(UserCreatePasswordRetypeSerializer.Meta):
         model = User
@@ -22,6 +23,27 @@ class CreateUserSerializer(UserCreatePasswordRetypeSerializer):
             "birth_date",
             "phone_number",
         ]
+
+    def validate_first_name(self, value: str) -> str:
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError("First name cannot be blank.")
+        if len(value) > 50:
+            raise serializers.ValidationError("First name cannot exceed 50 characters.")
+        return value
+
+    def validate_last_name(self, value: str) -> str:
+        value = value.strip()
+        if not value:
+            raise serializers.ValidationError("Last name cannot be blank.")
+        if len(value) > 50:
+            raise serializers.ValidationError("Last name cannot exceed 50 characters.")
+        return value
+
+    def validate_password(self, value: str) -> str:
+        if not value or not value.strip():
+            raise serializers.ValidationError("Password cannot be blank or whitespace only.")
+        return super().validate(value) if hasattr(super(), "validate_password") else value
 
     def validate(self, attrs):
         birth_date = attrs.pop("birth_date", None)
