@@ -164,6 +164,8 @@ class PropertyDetailsModel extends Equatable {
     this.video,
     this.videoDuration,
     this.propertyLink = '',
+    this.isOwnerVerified = false,
+    this.isOwnershipVerified = false,
     required this.id,
     required this.owner,
     required this.ownerId,
@@ -205,6 +207,8 @@ class PropertyDetailsModel extends Equatable {
     : video = null,
       videoDuration = null,
       propertyLink = '',
+      isOwnerVerified = false,
+      isOwnershipVerified = false,
       id = '',
       owner = '',
       ownerId = '',
@@ -273,6 +277,10 @@ class PropertyDetailsModel extends Equatable {
       propertyType: json['property_type'] as String? ?? '',
       isFurnished: json['is_furnished'] as bool? ?? false,
       isVerified: json['is_verified'] as bool? ?? false,
+      isOwnerVerified:
+          (ownerJson['is_verified'] as bool?) ??
+          (json['owner_is_verified'] == true),
+      isOwnershipVerified: json['is_ownership_verified'] == true,
       bedrooms: (json['bedrooms'] as num?)?.toInt() ?? 0,
       bathrooms: (json['bathrooms'] as num?)?.toInt() ?? 0,
       area: (json['area'] as num?)?.toInt() ?? 0,
@@ -329,6 +337,8 @@ class PropertyDetailsModel extends Equatable {
   final String propertyType;
   final bool isFurnished;
   final bool isVerified;
+  final bool isOwnerVerified;
+  final bool isOwnershipVerified;
   final int bedrooms;
   final int bathrooms;
   final int area;
@@ -369,6 +379,8 @@ class PropertyDetailsModel extends Equatable {
     'property_type': propertyType,
     'is_furnished': isFurnished,
     'is_verified': isVerified,
+    'owner_is_verified': isOwnerVerified,
+    'is_ownership_verified': isOwnershipVerified,
     'bedrooms': bedrooms,
     'bathrooms': bathrooms,
     'area': area,
@@ -410,6 +422,8 @@ class PropertyDetailsModel extends Equatable {
     String? propertyType,
     bool? isFurnished,
     bool? isVerified,
+    bool? isOwnerVerified,
+    bool? isOwnershipVerified,
     int? bedrooms,
     int? bathrooms,
     int? area,
@@ -450,6 +464,8 @@ class PropertyDetailsModel extends Equatable {
       propertyType: propertyType ?? this.propertyType,
       isFurnished: isFurnished ?? this.isFurnished,
       isVerified: isVerified ?? this.isVerified,
+      isOwnerVerified: isOwnerVerified ?? this.isOwnerVerified,
+      isOwnershipVerified: isOwnershipVerified ?? this.isOwnershipVerified,
       bedrooms: bedrooms ?? this.bedrooms,
       bathrooms: bathrooms ?? this.bathrooms,
       area: area ?? this.area,
@@ -488,8 +504,9 @@ class PropertyDetailsModel extends Equatable {
       case 'yearly':
         return LocaleKeys.tenantPropertyDetailsYearlyPriceUnit;
       case 'monthly':
-      default:
         return LocaleKeys.tenantPropertyDetailsMonthlyPriceUnit;
+      default:
+        return pricePeriod;
     }
   }
 
@@ -577,6 +594,8 @@ class PropertyDetailsModel extends Equatable {
     propertyType,
     isFurnished,
     isVerified,
+    isOwnerVerified,
+    isOwnershipVerified,
     bedrooms,
     bathrooms,
     area,

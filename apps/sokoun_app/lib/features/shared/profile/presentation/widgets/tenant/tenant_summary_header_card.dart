@@ -59,7 +59,7 @@ class TenantSummaryHeaderCard extends StatelessWidget {
                     AppText(
                       membership.isNotEmpty
                           ? membership
-                          : LocaleKeys.profileTenantSummaryMemberSince,
+                          : LocaleKeys.workspaceTenant,
                       style: AppTextStyles.regular12.copyWith(
                         color: AppColors.whiteAlpha60,
                         fontSize: 12.sp,

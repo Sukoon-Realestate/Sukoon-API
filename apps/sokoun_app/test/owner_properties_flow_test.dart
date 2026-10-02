@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/tenant/home/data/models/property_types_model.dart';
 import 'package:sokoun_app/features/owner/home/data/models/property_location.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -200,7 +201,14 @@ void main() {
     final AddPropertyBasicsPage basics = tester.widget(
       find.byType(AddPropertyBasicsPage),
     );
-    basics.onPropertyTypeSelected('apartment');
+    basics.onPropertyTypeSelected(
+      const PropertyTypeModel(
+        id: 'apartment-type',
+        name: 'شقة',
+        slug: 'apartment',
+        description: '',
+      ),
+    );
     basics.onTitleChanged('A new apartment');
     basics.onGovernorateChanged(
       const OwnerPropertyLocationModel.initial().copyWith(
@@ -715,6 +723,20 @@ class _OwnerPropertiesRepository implements BaseRepository {
   Future<Result<BaseModel<T>, Failure>> crudCall<T>(
     CrudBaseParmas<T> params,
   ) async {
+    if (params.api == ApiConstants.propertyTypes) {
+      return Success(
+        BaseModel<T>(
+          key: '',
+          msg: '',
+          data: params.mapper!({
+            'count': 1,
+            'results': [
+              {'id': 'apartment-type', 'name': 'شقة', 'slug': 'apartment'},
+            ],
+          }),
+        ),
+      );
+    }
     if (params.api == ApiConstants.createProperty) {
       createRequests.add(params);
       if (!await createResponse!.future) {

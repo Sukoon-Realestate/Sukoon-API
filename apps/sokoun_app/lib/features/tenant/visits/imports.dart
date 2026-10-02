@@ -40,7 +40,6 @@ part 'data/enums/visit_status.dart';
 part 'data/tenant_visits_data.dart';
 part 'data/models/book_visit_body.dart';
 part 'data/models/tenant_visit_content.dart';
-part 'data/models/tenant_visits_content.dart';
 part 'data/models/tenant_visits_response.dart';
 part 'data/models/visit_property_content.dart';
 part 'data/models/visit_schedule_content.dart';

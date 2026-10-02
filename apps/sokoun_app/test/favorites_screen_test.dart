@@ -1,3 +1,4 @@
+import 'helpers/favorites_fixtures.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,7 +7,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
-import 'package:sokoun_app/features/tenant/favorites/data/models/favorites_content.dart';
 import 'package:sokoun_app/features/tenant/favorites/presentation/screens/favorites_screen.dart';
 import 'package:sokoun_app/features/tenant/favorites/presentation/widgets/favorite_property_card.dart';
 import 'package:sokoun_app/features/tenant/favorites/presentation/widgets/favorites_empty_state.dart';
@@ -80,7 +80,7 @@ void main() {
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
 
-    final item = FavoritesContent.initialItems.first;
+    final item = FavoritesFixtures.initialItems.first;
 
     await tester.pumpWidget(
       buildScreen(screen: FavoritesScreen(initialItems: [item])),

@@ -37,7 +37,7 @@ class OwnerAvailabilityTimeChip extends StatelessWidget {
     return Material(
       color: AppColors.transparent,
       child: InkWell(
-        onTap: onPressed,
+        onTap: state.isBooked ? null : onPressed,
         borderRadius: BorderRadius.circular(16.r),
         child: AnimatedContainer(
           duration: SokounMotion.duration(context, milliseconds: 180),

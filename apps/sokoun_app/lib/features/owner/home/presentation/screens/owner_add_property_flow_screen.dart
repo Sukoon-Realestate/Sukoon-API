@@ -452,7 +452,10 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
                       selectedCity: _selectedCity,
                       locationDropdownGeneration: _locationDropdownGeneration,
                       onPropertyTypeSelected: (value) => _updateForm(
-                        () => _form.copyWith(propertyType: value),
+                        () => _form.copyWith(
+                          propertyType: value.name,
+                          propertyTypeValue: value.slug,
+                        ),
                       ),
                       onTitleChanged: (value) =>
                           _updateForm(() => _form.copyWith(title: value)),

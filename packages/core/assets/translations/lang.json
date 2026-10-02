@@ -1121,5 +1121,16 @@
   "propertyMapUnavailable #$ Location lookup is unavailable. Try again or pick a point on the map.": "تعذّر البحث عن الموقع. حاول مجددًا أو حدّد نقطة على الخريطة.",
   "propertyDistrict #$ District or neighborhood": "الحي / المنطقة",
   "propertyDistrictHint #$ Enter the neighborhood name": "اكتب اسم الحي أو المنطقة",
-  "registrationSubmitting #$ Creating your account": "جارٍ إنشاء حسابك"
+  "registrationSubmitting #$ Creating your account": "جارٍ إنشاء حسابك",
+    "accountNameValidation #$ Enter a name of up to 50 characters using letters, spaces, apostrophes, or hyphens": "أدخل اسماً لا يزيد عن ٥٠ حرفاً باستخدام الحروف والمسافات والفاصلة العليا أو الشرطة",
+    "accountEgyptianMobileValidation #$ Enter an 11-digit Egyptian mobile number starting with 010, 011, 012, or 015": "أدخل رقم موبايل مصري من ١١ رقماً يبدأ بـ 010 أو 011 أو 012 أو 015",
+    "accountOtpValidation #$ Enter the 6-digit verification code": "أدخل رمز التحقق المكون من ٦ أرقام",
+    "accountNationalIdValidation #$ Enter a national ID of exactly 14 digits": "أدخل رقماً قومياً مكوناً من ١٤ رقماً بالضبط",
+    "accountPasswordWhitespaceValidation #$ Password cannot contain only spaces": "لا يمكن أن تتكون كلمة المرور من مسافات فقط",
+    "profileContractCountLabel #$ {count} active contracts": "{count} عقود نشطة",
+    "profileReviewCountLabel #$ {count} reviews": "{count} تقييمات",
+    "profileRatingSummaryLabel #$ Rated {rating} from {count} reviews": "تقييم {rating} من {count} تقييمات",
+    "ownerAvailabilityEmptyTitle #$ No availability schedule": "لا توجد مواعيد إتاحة",
+    "ownerAvailabilityEmptyDescription #$ No visit times are available for this property yet.": "لا توجد مواعيد زيارة متاحة لهذا العقار حتى الآن.",
+    "ownerAnalyticsUnavailableDescription #$ Detailed statistics are currently unavailable. This view count comes from your notification.": "الإحصاءات التفصيلية غير متاحة حالياً. عدد المشاهدات المعروض مأخوذ من الإشعار."
 }

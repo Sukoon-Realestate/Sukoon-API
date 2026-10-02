@@ -31,50 +31,18 @@ class OwnerVisitRequestsScreen extends StatefulWidget {
 }
 
 class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
-  static List<OwnerVisitRequestContent> get _shimmerRequests => [
-    OwnerVisitRequestContent(
-      id: 'shimmer-request-1',
-      initial: LocaleKeys.ownerVisitTenantMohamedInitial,
-      name: LocaleKeys.ownerVisitTenantMohamed,
-      property: LocaleKeys.ownerVisitPropertyNasrCity,
-      dateLabel: LocaleKeys.ownerVisitDateSaturdayAtThree,
-      detailDate: '',
-      time: '',
-      memberSince: '',
-      tenantNote: '',
-      phone: '',
-      status: OwnerVisitRequestStatus.pending,
-      isVerified: true,
-    ),
-    OwnerVisitRequestContent(
-      id: 'shimmer-request-2',
-      initial: LocaleKeys.ownerVisitTenantSaraInitial,
-      name: LocaleKeys.ownerVisitTenantSara,
-      property: LocaleKeys.ownerVisitPropertyJeddahStudio,
-      dateLabel: LocaleKeys.ownerVisitDateSundayAtTwo,
-      detailDate: '',
-      time: '',
-      memberSince: '',
-      tenantNote: '',
-      phone: '',
-      status: OwnerVisitRequestStatus.pending,
-      isVerified: false,
-    ),
-    OwnerVisitRequestContent(
-      id: 'shimmer-request-3',
-      initial: LocaleKeys.ownerVisitTenantKhaledInitial,
-      name: LocaleKeys.ownerVisitTenantKhaled,
-      property: LocaleKeys.ownerVisitPropertyDammamRoom,
-      dateLabel: LocaleKeys.ownerVisitDateMondayAtEleven,
-      detailDate: '',
-      time: '',
-      memberSince: '',
-      tenantNote: '',
-      phone: '',
-      status: OwnerVisitRequestStatus.pending,
-      isVerified: true,
-    ),
-  ];
+  static List<OwnerVisitRequestContent> get _shimmerRequests =>
+      List<OwnerVisitRequestContent>.generate(
+        3,
+        (index) => OwnerVisitRequestContent.initial().copyWith(
+          id: 'shimmer-request-$index',
+          initial: '••',
+          name: '••••••••',
+          property: '••••••••••••',
+          dateLabel: '••••••••',
+        ),
+        growable: false,
+      );
 
   ReceivedVisitsCubit? _receivedVisitsCubit;
   late final OwnerVisitStatusCubit _visitStatusCubit;

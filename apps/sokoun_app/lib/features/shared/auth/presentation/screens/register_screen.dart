@@ -83,7 +83,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         fieldKey: _phoneFieldKey,
         title: LocaleKeys.phoneNumber,
         value: _phoneController.text,
-        validator: Validators.validateEmpty,
+        validator: Validators.validateEgyptianMobile,
       ),
       FirstValidationErrorField(
         fieldKey: _emailFieldKey,
@@ -141,7 +141,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               SokoonPhoneField(
                 key: _phoneFieldKey,
                 controller: _phoneController,
-                validator: Validators.validateEmpty,
+                validator: Validators.validateEgyptianMobile,
               ),
               14.szH,
               SokoonEmailField(

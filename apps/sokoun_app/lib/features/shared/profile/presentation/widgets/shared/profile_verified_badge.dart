@@ -1,7 +1,7 @@
 part of '../../../imports.dart';
 
 class ProfileVerifiedBadge extends StatelessWidget {
-  const ProfileVerifiedBadge({super.key, this.text, this.isVerified = true});
+  const ProfileVerifiedBadge({super.key, this.text, required this.isVerified});
 
   final String? text;
   final bool isVerified;

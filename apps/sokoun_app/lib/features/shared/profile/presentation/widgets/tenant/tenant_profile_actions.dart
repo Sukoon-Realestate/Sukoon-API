@@ -42,7 +42,10 @@ class TenantProfileActions extends StatelessWidget {
                 : LocaleKeys.profileContracts,
             subtitle: menuItems.contracts.subtitle.isNotEmpty
                 ? menuItems.contracts.subtitle
-                : LocaleKeys.profileActiveContractCount,
+                : LocaleKeys.profileContractCountLabel.replaceAll(
+                    '{count}',
+                    '${menuItems.contracts.count}',
+                  ),
             iconColor: AppColors.blue,
             iconBackgroundColor: AppColors.bluePale,
           ),
@@ -56,7 +59,10 @@ class TenantProfileActions extends StatelessWidget {
                 : LocaleKeys.profileMyReviews,
             subtitle: menuItems.reviews.subtitle.isNotEmpty
                 ? menuItems.reviews.subtitle
-                : LocaleKeys.profileReviewsCount,
+                : LocaleKeys.profileReviewCountLabel.replaceAll(
+                    '{count}',
+                    '${menuItems.reviews.count}',
+                  ),
             iconColor: AppColors.amber,
             iconBackgroundColor: AppColors.orangePale,
             onTap: () => Go.to(const MyReviewsScreen()),

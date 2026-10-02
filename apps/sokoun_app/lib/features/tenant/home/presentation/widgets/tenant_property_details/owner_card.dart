@@ -60,23 +60,24 @@ class TenantPropertyOwnerCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 6.w,
-                            vertical: 2.h,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.sokoonTeal,
-                            borderRadius: BorderRadius.circular(6.r),
-                          ),
-                          child: AppText(
-                            LocaleKeys.verified,
-                            style: AppTextStyles.extraBold.copyWith(
-                              color: AppColors.white,
-                              fontSize: 10.sp,
+                        if (property.isOwnerVerified)
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 6.w,
+                              vertical: 2.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.sokoonTeal,
+                              borderRadius: BorderRadius.circular(6.r),
+                            ),
+                            child: AppText(
+                              LocaleKeys.verified,
+                              style: AppTextStyles.extraBold.copyWith(
+                                color: AppColors.white,
+                                fontSize: 10.sp,
+                              ),
                             ),
                           ),
-                        ),
                       ],
                     ),
                     AppText(

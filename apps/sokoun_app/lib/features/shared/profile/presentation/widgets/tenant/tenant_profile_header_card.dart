@@ -70,7 +70,7 @@ class TenantProfileHeaderCard extends StatelessWidget {
                     AppText(
                       membership.isNotEmpty
                           ? membership
-                          : LocaleKeys.profileTenantMemberSince,
+                          : LocaleKeys.workspaceTenant,
                       style: AppTextStyles.regular13.copyWith(
                         color: AppColors.sokoonGray,
                         fontSize: 13.sp,

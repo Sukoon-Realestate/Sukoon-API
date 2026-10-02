@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
@@ -12,7 +11,9 @@ import 'package:sokoun_app/features/main_view/data/enums/workspace_tab.dart';
 import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
 
 class TenantVisitBanner extends StatelessWidget {
-  const TenantVisitBanner({super.key});
+  const TenantVisitBanner({super.key, required this.text});
+
+  final String text;
 
   @override
   Widget build(BuildContext context) {
@@ -60,20 +61,10 @@ class TenantVisitBanner extends StatelessWidget {
                   spacing: 3.h,
                   children: [
                     AppText(
-                      LocaleKeys.tenantVisitBannerTitle,
+                      text,
                       style: AppTextStyles.bold14.copyWith(
                         color: AppColors.sokoonTeal,
                         fontSize: 14.sp,
-                        height: 1.45,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    AppText(
-                      LocaleKeys.tenantVisitBannerProperty,
-                      style: AppTextStyles.medium12.copyWith(
-                        color: AppColors.sokoonTeal,
-                        fontSize: 12.sp,
                         height: 1.45,
                       ),
                     ),

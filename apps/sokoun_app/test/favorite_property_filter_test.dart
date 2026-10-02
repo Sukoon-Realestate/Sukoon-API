@@ -1,3 +1,4 @@
+import 'helpers/favorites_fixtures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sokoun_app/features/tenant/favorites/data/favorite_property_filter.dart';
 import 'package:sokoun_app/features/tenant/favorites/data/models/favorites_content.dart';
@@ -6,7 +7,7 @@ import 'package:sokoun_app/features/tenant/home/data/models/property_search_mode
 void main() {
   group('FavoritePropertyFilter', () {
     final List<FavoritePropertyContent> favorites = [
-      FavoritesContent.initialItems[0].copyWith(
+      FavoritesFixtures.initialItems[0].copyWith(
         city: 'cairo',
         district: 'nasr-city',
         suitableFor: 'families',
@@ -15,7 +16,7 @@ void main() {
         amenities: const {'wifi', 'parking'},
         savedAt: '2026-08-01',
       ),
-      FavoritesContent.initialItems[1].copyWith(
+      FavoritesFixtures.initialItems[1].copyWith(
         city: 'cairo',
         district: 'new-cairo',
         suitableFor: 'students',
@@ -24,7 +25,7 @@ void main() {
         amenities: const {'wifi'},
         savedAt: '2026-08-03',
       ),
-      FavoritesContent.initialItems[2].copyWith(
+      FavoritesFixtures.initialItems[2].copyWith(
         city: 'giza',
         district: 'mohandessin',
         suitableFor: 'families',

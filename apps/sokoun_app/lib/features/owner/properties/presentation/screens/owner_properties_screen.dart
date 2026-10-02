@@ -91,6 +91,7 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
       mainImage: details.mainImage,
       location: location.isEmpty ? property.location : location,
       monthlyPrice: (double.tryParse(details.price) ?? 0).round(),
+      pricePeriod: details.pricePeriod,
       bedrooms: details.bedrooms,
       area: details.area,
       description: details.description,

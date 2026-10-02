@@ -157,6 +157,12 @@ class _PropertyDetailsRepository implements BaseRepository {
   Future<Result<BaseModel<T>, Failure>> crudCall<T>(
     CrudBaseParmas<T> params,
   ) async {
+    if (params.api.endsWith('/reviews/')) {
+      final T summary = params.mapper!(const {
+        'summary': {'total_reviews': 7, 'average_rating': 4.2},
+      });
+      return Success(BaseModel<T>(key: '', msg: '', data: summary));
+    }
     if (params.httpRequestType == HttpRequestType.get) {
       if (failDetailsRequest) {
         return const Error(Failure('offline'));

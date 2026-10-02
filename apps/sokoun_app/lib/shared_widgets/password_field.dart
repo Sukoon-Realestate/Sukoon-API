@@ -64,7 +64,7 @@ class SokoonPasswordField extends StatelessWidget {
                 fontSize: 15.sp,
               ),
               onChanged: onChanged,
-              validator: validator ?? _validatePassword,
+              validator: validator ?? Validators.validatePassword,
             ),
             if (errorText != null && errorText!.isNotEmpty)
               AppText(
@@ -79,17 +79,5 @@ class SokoonPasswordField extends StatelessWidget {
         );
       },
     );
-  }
-
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return LocaleKeys.passRequiredValidation;
-    }
-
-    if (value.length < 8) {
-      return LocaleKeys.passValidation;
-    }
-
-    return Validators.noValidate(value);
   }
 }

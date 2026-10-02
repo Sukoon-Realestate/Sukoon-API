@@ -1091,5 +1091,16 @@
   "property_map_unavailable": "Location lookup is unavailable. Try again or pick a point on the map.",
   "property_district": "District or neighborhood",
   "property_district_hint": "Enter the neighborhood name",
-  "registration_submitting": "Creating your account"
+  "registration_submitting": "Creating your account",
+  "account_name_validation": "Enter a name of up to 50 characters using letters, spaces, apostrophes, or hyphens",
+  "account_egyptian_mobile_validation": "Enter an 11-digit Egyptian mobile number starting with 010, 011, 012, or 015",
+  "account_otp_validation": "Enter the 6-digit verification code",
+  "account_national_id_validation": "Enter a national ID of exactly 14 digits",
+  "account_password_whitespace_validation": "Password cannot contain only spaces",
+  "profile_contract_count_label": "{count} active contracts",
+  "profile_review_count_label": "{count} reviews",
+  "profile_rating_summary_label": "Rated {rating} from {count} reviews",
+  "owner_availability_empty_title": "No availability schedule",
+  "owner_availability_empty_description": "No visit times are available for this property yet.",
+  "owner_analytics_unavailable_description": "Detailed statistics are currently unavailable. This view count comes from your notification."
 }

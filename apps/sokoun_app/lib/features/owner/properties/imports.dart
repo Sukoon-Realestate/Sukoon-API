@@ -43,6 +43,7 @@ part 'presentation/screens/owner_property_analytics_screen.dart';
 part 'presentation/screens/owner_property_rejection_screen.dart';
 part 'presentation/screens/owner_revenue_screen.dart';
 part 'presentation/widgets/analytics/owner_analytics_bar_chart.dart';
+part 'presentation/widgets/analytics/owner_analytics_unavailable_details.dart';
 part 'presentation/widgets/analytics/owner_analytics_metric_card.dart';
 part 'presentation/widgets/analytics/owner_property_interest_card.dart';
 part 'presentation/widgets/edit/owner_edit_field.dart';

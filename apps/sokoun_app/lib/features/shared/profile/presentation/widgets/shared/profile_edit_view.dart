@@ -254,6 +254,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       selector: (state) => state.isLoading,
                       builder: (context, isSaving) => ProfileAvatar(
                         name: _nameController.text,
+                        avatarUrl: _profileCubit.data.avatar,
                         imageFile: avatar,
                         accentColor: _accentColor,
                         backgroundColor: _accentColor,
@@ -286,7 +287,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
               SokoonPhoneField(
                 controller: _phoneController,
                 accentColor: _accentColor,
-                validator: Validators.validateEmpty,
+                validator: Validators.validateEgyptianMobile,
               ),
               14.szH,
               SokoonEmailField(
@@ -302,7 +303,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                   children: [
                     _ProfileReadonlyField(
                       label: LocaleKeys.city,
-                      value: LocaleKeys.profileCairo,
+                      value: LocaleKeys.notSetYet,
                     ),
                     BlocSelector<
                       ProfileEditCubit,

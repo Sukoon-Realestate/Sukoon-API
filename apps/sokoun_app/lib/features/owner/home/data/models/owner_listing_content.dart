@@ -88,31 +88,4 @@ abstract final class OwnerListingsContent {
       foregroundColor: AppColors.red,
     ),
   ];
-
-  static List<OwnerListingContent> get listings => [
-    OwnerListingContent(
-      title: LocaleKeys.ownerPropertyNasrCityTitle,
-      status: verifiedStatus,
-      price: '6,500 ${LocaleKeys.ownerPropertiesPriceUnit}',
-      views: '142 ${LocaleKeys.ownerPropertiesViewUnit}',
-      visits: '3 ${LocaleKeys.ownerPropertiesVisitUnit}',
-      icon: Icons.apartment_rounded,
-    ),
-    OwnerListingContent(
-      title: LocaleKeys.ownerPropertyStudioTitle,
-      status: pendingStatus,
-      price: '4,200 ${LocaleKeys.ownerPropertiesPriceUnit}',
-      views: '67 ${LocaleKeys.ownerPropertiesViewUnit}',
-      visits: '0 ${LocaleKeys.ownerPropertiesVisitUnit}',
-      icon: Icons.meeting_room_outlined,
-    ),
-    OwnerListingContent(
-      title: LocaleKeys.ownerPropertyMohandessinTitle,
-      status: hiddenStatus,
-      price: '8,800 ${LocaleKeys.ownerPropertiesPriceUnit}',
-      views: '0 ${LocaleKeys.ownerPropertiesViewUnit}',
-      visits: '0 ${LocaleKeys.ownerPropertiesVisitUnit}',
-      icon: Icons.home_work_outlined,
-    ),
-  ];
 }

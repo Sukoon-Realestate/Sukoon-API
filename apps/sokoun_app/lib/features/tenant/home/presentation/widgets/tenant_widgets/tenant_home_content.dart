@@ -20,8 +20,8 @@ class TenantHomeContent extends StatefulWidget {
 class _TenantHomeContentState extends State<TenantHomeContent> {
   final TenantHomeData _data = TenantHomeData();
   final PagifyController<HomePropertyModel> _controller = PagifyController();
-  late final ValueNotifier<bool> _showBanner = ValueNotifier(
-    _data.readCachedPage()?.banner != null,
+  late final ValueNotifier<String?> _banner = ValueNotifier(
+    _data.readCachedPage()?.banner,
   );
   int _requestGeneration = 0;
 
@@ -33,14 +33,14 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
     final int generation = _requestGeneration;
     final (model, pagination) = await _data.getPage(page: page);
     if (mounted && generation == _requestGeneration && page == 1) {
-      _showBanner.value = model.banner != null;
+      _banner.value = model.banner;
     }
     return (model.results, pagination);
   }
 
   @override
   void dispose() {
-    _showBanner.dispose();
+    _banner.dispose();
     super.dispose();
   }
 
@@ -54,9 +54,9 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
       shrinkWrap: false,
       physics: const AlwaysScrollableScrollPhysics(),
       rankingType: Ranking.adaptiveGrid,
-      header: ValueListenableBuilder<bool>(
-        valueListenable: _showBanner,
-        builder: (context, visible, _) => TenantHomeHeader(showBanner: visible),
+      header: ValueListenableBuilder<String?>(
+        valueListenable: _banner,
+        builder: (context, banner, _) => TenantHomeHeader(banner: banner),
       ),
       cacheKey: TenantHomeData.cacheKey,
       cacheToJson: (item) => item.toJson(),

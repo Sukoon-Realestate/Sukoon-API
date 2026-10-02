@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 
@@ -84,17 +85,12 @@ class SokoonPasswordConfirmationField extends StatelessWidget {
 
   String? _validatePasswordConfirmation(String? value) {
     if (passwordController == null) {
-      return null;
+      return Validators.validateLoginPassword(value);
     }
 
-    if (value == null || value.isEmpty) {
-      return LocaleKeys.passRequiredValidation;
-    }
-
-    if (value != passwordController!.text) {
-      return LocaleKeys.confirmValidation;
-    }
-
-    return null;
+    return Validators.validatePasswordConfirmation(
+      value,
+      password: passwordController!.text,
+    );
   }
 }

@@ -2,6 +2,7 @@ part of '../../imports.dart';
 
 class OwnerPropertyAnalyticsContent extends Equatable {
   const OwnerPropertyAnalyticsContent({
+    this.hasDetails = true,
     required this.views,
     required this.visitRequests,
     required this.saves,
@@ -15,6 +16,7 @@ class OwnerPropertyAnalyticsContent extends Equatable {
 
   factory OwnerPropertyAnalyticsContent.initial() {
     return const OwnerPropertyAnalyticsContent(
+      hasDetails: false,
       views: 0,
       visitRequests: 0,
       saves: 0,
@@ -29,6 +31,19 @@ class OwnerPropertyAnalyticsContent extends Equatable {
 
   factory OwnerPropertyAnalyticsContent.fromJson(Map<String, dynamic> json) {
     return OwnerPropertyAnalyticsContent(
+      hasDetails:
+          json['has_details'] as bool? ??
+          const [
+            'views',
+            'visit_requests',
+            'saves',
+            'acceptance_rate',
+            'view_history',
+            'space_interest',
+            'price_interest',
+            'location_interest',
+            'amenities_interest',
+          ].every((key) => json[key] != null),
       views: json['views'] ?? 0,
       visitRequests: json['visit_requests'] ?? 0,
       saves: json['saves'] ?? 0,
@@ -42,6 +57,7 @@ class OwnerPropertyAnalyticsContent extends Equatable {
   }
 
   final int views;
+  final bool hasDetails;
   final int visitRequests;
   final int saves;
   final int acceptanceRate;
@@ -53,6 +69,7 @@ class OwnerPropertyAnalyticsContent extends Equatable {
 
   Map<String, dynamic> toJson() {
     return {
+      'has_details': hasDetails,
       'views': views,
       'visit_requests': visitRequests,
       'saves': saves,
@@ -66,6 +83,7 @@ class OwnerPropertyAnalyticsContent extends Equatable {
   }
 
   OwnerPropertyAnalyticsContent copyWith({
+    bool? hasDetails,
     int? views,
     int? visitRequests,
     int? saves,
@@ -77,6 +95,7 @@ class OwnerPropertyAnalyticsContent extends Equatable {
     int? amenitiesInterest,
   }) {
     return OwnerPropertyAnalyticsContent(
+      hasDetails: hasDetails ?? this.hasDetails,
       views: views ?? this.views,
       visitRequests: visitRequests ?? this.visitRequests,
       saves: saves ?? this.saves,
@@ -91,6 +110,7 @@ class OwnerPropertyAnalyticsContent extends Equatable {
 
   @override
   List<Object?> get props => [
+    hasDetails,
     views,
     visitRequests,
     saves,

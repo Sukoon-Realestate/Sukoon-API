@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/helpers/account_input_rules.dart';
 import 'package:pinput/pinput.dart';
 
 class OtpCodeField extends StatelessWidget {
@@ -42,7 +43,7 @@ class OtpCodeField extends StatelessWidget {
     return Directionality(
       textDirection: TextDirection.ltr,
       child: Pinput(
-        length: 6,
+        length: AccountInputRules.otpLength,
         controller: controller,
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],

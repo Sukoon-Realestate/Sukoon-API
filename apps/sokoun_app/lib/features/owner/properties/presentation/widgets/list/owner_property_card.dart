@@ -95,7 +95,7 @@ class OwnerPropertyCard extends StatelessWidget {
                         8.szH,
                         AppText(
                           '${_formatNumber(property.monthlyPrice)} '
-                          '${LocaleKeys.ownerPropertiesPriceUnit}',
+                          '${property.priceUnitLabel}',
                           style: AppTextStyles.bold16.copyWith(
                             color: AppColors.sokoonTeal,
                             fontSize: 16.sp,

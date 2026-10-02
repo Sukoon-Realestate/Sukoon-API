@@ -1091,5 +1091,16 @@
   "property_map_unavailable": "تعذّر البحث عن الموقع. حاول مجددًا أو حدّد نقطة على الخريطة.",
   "property_district": "الحي / المنطقة",
   "property_district_hint": "اكتب اسم الحي أو المنطقة",
-  "registration_submitting": "جارٍ إنشاء حسابك"
+  "registration_submitting": "جارٍ إنشاء حسابك",
+  "account_name_validation": "أدخل اسماً لا يزيد عن ٥٠ حرفاً باستخدام الحروف والمسافات والفاصلة العليا أو الشرطة",
+  "account_egyptian_mobile_validation": "أدخل رقم موبايل مصري من ١١ رقماً يبدأ بـ 010 أو 011 أو 012 أو 015",
+  "account_otp_validation": "أدخل رمز التحقق المكون من ٦ أرقام",
+  "account_national_id_validation": "أدخل رقماً قومياً مكوناً من ١٤ رقماً بالضبط",
+  "account_password_whitespace_validation": "لا يمكن أن تتكون كلمة المرور من مسافات فقط",
+  "profile_contract_count_label": "{count} عقود نشطة",
+  "profile_review_count_label": "{count} تقييمات",
+  "profile_rating_summary_label": "تقييم {rating} من {count} تقييمات",
+  "owner_availability_empty_title": "لا توجد مواعيد إتاحة",
+  "owner_availability_empty_description": "لا توجد مواعيد زيارة متاحة لهذا العقار حتى الآن.",
+  "owner_analytics_unavailable_description": "الإحصاءات التفصيلية غير متاحة حالياً. عدد المشاهدات المعروض مأخوذ من الإشعار."
 }

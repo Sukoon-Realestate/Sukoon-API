@@ -24,7 +24,7 @@ class OwnerProfileHeaderCard extends StatelessWidget {
                 avatarUrl: owner.avatar,
                 accentColor: AppColors.sokoonGold,
                 backgroundColor: AppColors.goldPale,
-                badgeIcon: Icons.check_rounded,
+                badgeIcon: owner.isVerified ? Icons.check_rounded : null,
               ),
               Expanded(
                 child: Column(
@@ -47,7 +47,9 @@ class OwnerProfileHeaderCard extends StatelessWidget {
                         ProfileVerifiedBadge(
                           text: owner.roleBadge.isNotEmpty
                               ? owner.roleBadge
-                              : LocaleKeys.profileVerifiedOwner,
+                              : owner.isVerified
+                              ? LocaleKeys.profileVerifiedOwner
+                              : LocaleKeys.workspaceOwner,
                           isVerified: owner.isVerified,
                         ),
                       ],
@@ -61,14 +63,24 @@ class OwnerProfileHeaderCard extends StatelessWidget {
                           color: AppColors.amber,
                           size: 14.r,
                         ),
-                        AppText(
-                          owner.ratingLabel.isNotEmpty
-                              ? owner.ratingLabel
-                              : LocaleKeys.profileOwnerRatingSummary,
-                          style: AppTextStyles.regular12.copyWith(
-                            color: AppColors.sokoonGray,
-                            fontSize: 12.sp,
-                            height: 1.45,
+                        Flexible(
+                          child: AppText(
+                            owner.ratingLabel.isNotEmpty
+                                ? owner.ratingLabel
+                                : LocaleKeys.profileRatingSummaryLabel
+                                      .replaceAll(
+                                        '{rating}',
+                                        owner.averageRating.toStringAsFixed(1),
+                                      )
+                                      .replaceAll(
+                                        '{count}',
+                                        '${owner.reviewsCount}',
+                                      ),
+                            style: AppTextStyles.regular12.copyWith(
+                              color: AppColors.sokoonGray,
+                              fontSize: 12.sp,
+                              height: 1.45,
+                            ),
                           ),
                         ),
                       ],
@@ -77,7 +89,7 @@ class OwnerProfileHeaderCard extends StatelessWidget {
                     AppText(
                       owner.memberSinceLabel.isNotEmpty
                           ? owner.memberSinceLabel
-                          : LocaleKeys.profileOwnerMemberSince,
+                          : LocaleKeys.notSetYet,
                       style: AppTextStyles.regular12.copyWith(
                         color: AppColors.sokoonGray,
                         fontSize: 12.sp,

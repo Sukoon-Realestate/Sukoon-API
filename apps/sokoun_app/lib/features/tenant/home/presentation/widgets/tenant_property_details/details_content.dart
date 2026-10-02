@@ -109,7 +109,7 @@ class TenantPropertyDetailsContentView extends StatelessWidget {
             child: TenantPropertyAmenityWrap(amenities: property.amenities),
           ),
           12.szH,
-          if (property.isVerified)
+          if (property.isOwnershipVerified)
             const TenantPropertyOwnershipVerifiedBanner(),
           24.szH,
           TenantPropertyOwnerCard(property: property),

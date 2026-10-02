@@ -226,7 +226,18 @@ void main() {
   testWidgets('runs booking and confirmation into my visits', (tester) async {
     configurePhoneViewport(tester);
 
-    await tester.pumpWidget(buildScreen(const BookVisitScreen()));
+    await tester.pumpWidget(
+      buildScreen(
+        const BookVisitScreen(
+          property: VisitPropertyContent(
+            id: 'booking-property',
+            ownerId: 'booking-owner',
+            title: 'Test property',
+            meta: 'Test price',
+          ),
+        ),
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
@@ -294,7 +305,9 @@ void main() {
     await tester.pumpWidget(buildScreen(const TenantHomeScreen()));
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
-    await tester.tap(find.text('عندك زيارة النهارده 3:00 م'));
+    expect(find.text('visit'), findsOneWidget);
+    expect(find.text('عندك زيارة النهارده 3:00 م'), findsNothing);
+    await tester.tap(find.text('visit'));
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
 

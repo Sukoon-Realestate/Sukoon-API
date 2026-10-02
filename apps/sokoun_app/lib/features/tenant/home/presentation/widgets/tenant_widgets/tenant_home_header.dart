@@ -8,9 +8,9 @@ import 'tenant_home_app_bar_title.dart';
 import 'tenant_visit_banner.dart';
 
 class TenantHomeHeader extends StatelessWidget {
-  const TenantHomeHeader({super.key, required this.showBanner});
+  const TenantHomeHeader({super.key, required this.banner});
 
-  final bool showBanner;
+  final String? banner;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -21,7 +21,10 @@ class TenantHomeHeader extends StatelessWidget {
         const TenantHomeAppBarTitle(),
         20.szH,
         const HomeSearchBox(),
-        if (showBanner) ...[16.szH, const TenantVisitBanner()],
+        if (banner?.trim().isNotEmpty == true) ...[
+          16.szH,
+          TenantVisitBanner(text: banner!.trim()),
+        ],
         12.szH,
         const HomeSectionHeader(),
       ],

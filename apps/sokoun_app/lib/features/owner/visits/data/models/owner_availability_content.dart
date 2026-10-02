@@ -240,19 +240,6 @@ class OwnerAvailabilitySlotContent extends Equatable {
   List<Object?> get props => [id, time, isEnabled, state, visit];
 }
 
-abstract final class OwnerAvailabilityDefaults {
-  static const List<OwnerAvailabilitySlotBody> slots = [
-    OwnerAvailabilitySlotBody(time: '09:00:00', isEnabled: false),
-    OwnerAvailabilitySlotBody(time: '10:00:00', isEnabled: false),
-    OwnerAvailabilitySlotBody(time: '11:00:00', isEnabled: false),
-    OwnerAvailabilitySlotBody(time: '12:00:00', isEnabled: false),
-    OwnerAvailabilitySlotBody(time: '14:00:00', isEnabled: false),
-    OwnerAvailabilitySlotBody(time: '15:00:00', isEnabled: false),
-    OwnerAvailabilitySlotBody(time: '16:00:00', isEnabled: false),
-    OwnerAvailabilitySlotBody(time: '17:00:00', isEnabled: false),
-  ];
-}
-
 String _ownerAvailabilityDayName(int weekday) {
   return switch (weekday) {
     DateTime.monday => 'monday',

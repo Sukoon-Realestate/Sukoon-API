@@ -1,9 +1,9 @@
 part of '../../imports.dart';
 
 class BookVisitScreen extends StatefulWidget {
-  const BookVisitScreen({super.key, this.property});
+  const BookVisitScreen({super.key, required this.property});
 
-  final VisitPropertyContent? property;
+  final VisitPropertyContent property;
 
   @override
   State<BookVisitScreen> createState() => _BookVisitScreenState();
@@ -24,7 +24,7 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
   @override
   void initState() {
     super.initState();
-    _property = widget.property ?? VisitPropertyContent.prototype();
+    _property = widget.property;
     _days = _createUpcomingDays();
     _noteController = TextEditingController();
     _bookVisitCubit = BookVisitCubit();

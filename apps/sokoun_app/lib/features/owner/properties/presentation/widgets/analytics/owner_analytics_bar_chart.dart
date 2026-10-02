@@ -9,7 +9,10 @@ class OwnerAnalyticsBarChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final int maximum = values.isEmpty
         ? 1
-        : values.reduce((current, next) => current > next ? current : next);
+        : values.fold<int>(
+            1,
+            (current, next) => current > next ? current : next,
+          );
 
     return Container(
       padding: EdgeInsets.all(16.w),
@@ -22,7 +25,7 @@ class OwnerAnalyticsBarChart extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           AppText(
-            LocaleKeys.ownerAnalyticsViewsLastFourteenDays,
+            LocaleKeys.ownerAnalyticsViews,
             style: AppTextStyles.bold15.copyWith(
               color: AppColors.sokoonNavy,
               fontSize: 15.sp,
@@ -56,28 +59,6 @@ class OwnerAnalyticsBarChart extends StatelessWidget {
                   ),
               ],
             ),
-          ),
-          8.szH,
-          Row(
-            children: [
-              AppText(
-                LocaleKeys.ownerAnalyticsFourteenDaysAgo,
-                style: AppTextStyles.regular10.copyWith(
-                  color: AppColors.sokoonMuted,
-                  fontSize: 10.sp,
-                  height: 1.45,
-                ),
-              ),
-              const Spacer(),
-              AppText(
-                LocaleKeys.ownerAnalyticsToday,
-                style: AppTextStyles.regular10.copyWith(
-                  color: AppColors.sokoonMuted,
-                  fontSize: 10.sp,
-                  height: 1.45,
-                ),
-              ),
-            ],
           ),
         ],
       ),

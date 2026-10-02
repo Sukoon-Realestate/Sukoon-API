@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/property_types_model.dart';
 
 import 'add_property_address_section.dart';
-import 'add_property_chip_wrap.dart';
+import 'add_property_type_selector.dart';
 import 'add_property_field.dart';
 import 'add_property_section_card.dart';
 import 'add_property_step_shell.dart';
@@ -48,7 +49,7 @@ class AddPropertyBasicsPage extends StatelessWidget {
   final OwnerPropertyLocationModel? selectedGovernorate;
   final OwnerPropertyLocationModel? selectedCity;
   final int locationDropdownGeneration;
-  final ValueChanged<String> onPropertyTypeSelected;
+  final ValueChanged<PropertyTypeModel> onPropertyTypeSelected;
   final ValueChanged<String> onTitleChanged;
   final ValueChanged<OwnerPropertyLocationModel> onGovernorateChanged;
   final ValueChanged<OwnerPropertyLocationModel> onCityChanged;
@@ -71,12 +72,9 @@ class AddPropertyBasicsPage extends StatelessWidget {
       children: [
         AddPropertySectionCard(
           title: LocaleKeys.ownerAddPropertyType,
-          child: AddPropertyChipWrap(
-            chips: OwnerAddPropertyContent.singleSelectedChips(
-              labels: OwnerAddPropertyContent.propertyTypeOptions,
-              selectedValue: form.propertyType,
-            ),
-            onChipTap: (chip) => onPropertyTypeSelected(chip.label),
+          child: AddPropertyTypeSelector(
+            selectedValue: form.propertyTypeApiValue,
+            onSelected: onPropertyTypeSelected,
           ),
         ),
         AddPropertySectionCard(

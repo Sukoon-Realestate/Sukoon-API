@@ -7,6 +7,7 @@ class OwnerPropertyContent extends Equatable {
     required this.mainImage,
     required this.location,
     required this.monthlyPrice,
+    this.pricePeriod = '',
     required this.views,
     required this.visitRequests,
     required this.bedrooms,
@@ -24,6 +25,7 @@ class OwnerPropertyContent extends Equatable {
       mainImage: '',
       location: '',
       monthlyPrice: 0,
+      pricePeriod: '',
       views: 0,
       visitRequests: 0,
       bedrooms: 0,
@@ -45,6 +47,7 @@ class OwnerPropertyContent extends Equatable {
           (double.tryParse('${json['price'] ?? json['monthly_price'] ?? ''}') ??
                   0)
               .round(),
+      pricePeriod: json['price_period']?.toString() ?? '',
       views:
           (json['views_count'] as num?)?.toInt() ??
           (json['views'] as num?)?.toInt() ??
@@ -67,6 +70,15 @@ class OwnerPropertyContent extends Equatable {
   final String mainImage;
   final String location;
   final int monthlyPrice;
+  final String pricePeriod;
+
+  String get priceUnitLabel => switch (pricePeriod) {
+    'daily' => LocaleKeys.tenantPropertyDetailsDailyPriceUnit,
+    'weekly' => LocaleKeys.tenantPropertyDetailsWeeklyPriceUnit,
+    'monthly' => LocaleKeys.tenantPropertyDetailsMonthlyPriceUnit,
+    'yearly' => LocaleKeys.tenantPropertyDetailsYearlyPriceUnit,
+    _ => LocaleKeys.favoritesCurrencyShort,
+  };
   final int views;
   final int visitRequests;
   final int bedrooms;
@@ -83,6 +95,7 @@ class OwnerPropertyContent extends Equatable {
       'main_image': mainImage,
       'location': location,
       'monthly_price': monthlyPrice,
+      'price_period': pricePeriod,
       'views': views,
       'visit_requests': visitRequests,
       'bedrooms': bedrooms,
@@ -99,6 +112,7 @@ class OwnerPropertyContent extends Equatable {
     String? mainImage,
     String? location,
     int? monthlyPrice,
+    String? pricePeriod,
     int? views,
     int? visitRequests,
     int? bedrooms,
@@ -114,6 +128,7 @@ class OwnerPropertyContent extends Equatable {
       mainImage: mainImage ?? this.mainImage,
       location: location ?? this.location,
       monthlyPrice: monthlyPrice ?? this.monthlyPrice,
+      pricePeriod: pricePeriod ?? this.pricePeriod,
       views: views ?? this.views,
       visitRequests: visitRequests ?? this.visitRequests,
       bedrooms: bedrooms ?? this.bedrooms,
@@ -132,6 +147,7 @@ class OwnerPropertyContent extends Equatable {
     mainImage,
     location,
     monthlyPrice,
+    pricePeriod,
     views,
     visitRequests,
     bedrooms,

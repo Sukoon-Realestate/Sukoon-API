@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:melos_core/core/helpers/account_input_rules.dart';
 
 import 'register.dart';
 
@@ -22,10 +23,10 @@ class KycUploadDocumentsData {
   });
 
   bool get canSubmit {
-    return nationalId.trim().length == 14 &&
-        (frontIdImage != null || frontIdFileName != null) &&
-        (backIdImage != null || backIdFileName != null) &&
-        (selfieImage != null || selfieFileName != null);
+    return AccountInputRules.isValidEgyptianNationalId(nationalId) &&
+        frontIdImage != null &&
+        backIdImage != null &&
+        selfieImage != null;
   }
 
   bool get hasChanges =>

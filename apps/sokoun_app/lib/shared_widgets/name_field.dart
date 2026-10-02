@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 
 class SokoonNameField extends StatelessWidget {
@@ -56,7 +57,7 @@ class SokoonNameField extends StatelessWidget {
             fontSize: 15.sp,
           ),
           onChanged: onChanged,
-          validator: validator,
+          validator: validator ?? Validators.validateName,
         );
       },
     );

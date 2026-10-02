@@ -34,15 +34,6 @@ class AddPropertySummaryContent {
 }
 
 abstract final class OwnerAddPropertyContent {
-  static List<String> get propertyTypeOptions => [
-    LocaleKeys.ownerAddPropertyApartment,
-    LocaleKeys.ownerAddPropertyRoom,
-    LocaleKeys.ownerAddPropertyStudio,
-    LocaleKeys.ownerAddPropertyVilla,
-    LocaleKeys.ownerAddPropertyWholeFloor,
-    LocaleKeys.ownerAddPropertyRoof,
-  ];
-
   static List<String> get photoTips => [
     LocaleKeys.ownerAddPropertyPhotoTipRooms,
     LocaleKeys.ownerAddPropertyPhotoTipLighting,
@@ -185,6 +176,7 @@ class OwnerAddPropertyFormState {
   const OwnerAddPropertyFormState({
     required this.title,
     required this.propertyType,
+    this.propertyTypeValue = '',
     required this.governorateId,
     required this.governorate,
     required this.districtId,
@@ -245,6 +237,7 @@ class OwnerAddPropertyFormState {
 
   final String title;
   final String propertyType;
+  final String propertyTypeValue;
   final String governorateId;
   final String governorate;
   final String districtId;
@@ -384,6 +377,7 @@ class OwnerAddPropertyFormState {
   OwnerAddPropertyFormState copyWith({
     String? title,
     String? propertyType,
+    String? propertyTypeValue,
     String? governorateId,
     String? governorate,
     String? districtId,
@@ -416,6 +410,7 @@ class OwnerAddPropertyFormState {
     return OwnerAddPropertyFormState(
       title: title ?? this.title,
       propertyType: propertyType ?? this.propertyType,
+      propertyTypeValue: propertyTypeValue ?? this.propertyTypeValue,
       governorateId: governorateId ?? this.governorateId,
       governorate: governorate ?? this.governorate,
       districtId: districtId ?? this.districtId,
@@ -457,7 +452,7 @@ class OwnerAddPropertyFormState {
       'description': description.trim(),
       'price': monthlyPrice.trim(),
       'price_period': _rentalUnitValue(rentalUnit),
-      'property_type': _propertyTypeValue(propertyType),
+      'property_type': propertyTypeApiValue,
       'is_furnished': _containsOption(
         selectedAmenities,
         localized: LocaleKeys.ownerAddPropertyFurnished,
@@ -538,6 +533,10 @@ class OwnerAddPropertyFormState {
       ),
     };
   }
+
+  String get propertyTypeApiValue => propertyTypeValue.isNotEmpty
+      ? propertyTypeValue
+      : _propertyTypeValue(propertyType);
 
   static String _propertyTypeValue(String value) {
     return {

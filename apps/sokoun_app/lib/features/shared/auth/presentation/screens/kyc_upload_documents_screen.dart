@@ -74,16 +74,7 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
 
   String? _validateNationalId(String? value) {
     if (widget.existingAccount && (value?.trim().isEmpty ?? true)) return null;
-    final String? emptyError = Validators.validateEmpty(value);
-    if (emptyError != null) {
-      return emptyError;
-    }
-
-    if (!RegExp(r'^\d{14}$').hasMatch(value!.trim())) {
-      return LocaleKeys.filedValidation;
-    }
-
-    return null;
+    return Validators.validateEgyptianNationalId(value);
   }
 
   List<FirstValidationErrorField> _validationFields() {

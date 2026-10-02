@@ -3274,4 +3274,37 @@ abstract class LocaleKeys {
   static const String _registrationSubmitting = 'registration_submitting';
   static String get registrationSubmitting => _registrationSubmitting.tr();
 
+  static const String _accountNameValidation = 'account_name_validation';
+  static String get accountNameValidation => _accountNameValidation.tr();
+
+  static const String _accountEgyptianMobileValidation = 'account_egyptian_mobile_validation';
+  static String get accountEgyptianMobileValidation => _accountEgyptianMobileValidation.tr();
+
+  static const String _accountOtpValidation = 'account_otp_validation';
+  static String get accountOtpValidation => _accountOtpValidation.tr();
+
+  static const String _accountNationalIdValidation = 'account_national_id_validation';
+  static String get accountNationalIdValidation => _accountNationalIdValidation.tr();
+
+  static const String _accountPasswordWhitespaceValidation = 'account_password_whitespace_validation';
+  static String get accountPasswordWhitespaceValidation => _accountPasswordWhitespaceValidation.tr();
+
+  static const String _profileContractCountLabel = 'profile_contract_count_label';
+  static String get profileContractCountLabel => _profileContractCountLabel.tr();
+
+  static const String _profileReviewCountLabel = 'profile_review_count_label';
+  static String get profileReviewCountLabel => _profileReviewCountLabel.tr();
+
+  static const String _profileRatingSummaryLabel = 'profile_rating_summary_label';
+  static String get profileRatingSummaryLabel => _profileRatingSummaryLabel.tr();
+
+  static const String _ownerAvailabilityEmptyTitle = 'owner_availability_empty_title';
+  static String get ownerAvailabilityEmptyTitle => _ownerAvailabilityEmptyTitle.tr();
+
+  static const String _ownerAvailabilityEmptyDescription = 'owner_availability_empty_description';
+  static String get ownerAvailabilityEmptyDescription => _ownerAvailabilityEmptyDescription.tr();
+
+  static const String _ownerAnalyticsUnavailableDescription = 'owner_analytics_unavailable_description';
+  static String get ownerAnalyticsUnavailableDescription => _ownerAnalyticsUnavailableDescription.tr();
+
 }

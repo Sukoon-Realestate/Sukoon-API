@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import '../../config/language/locale_keys.g.dart';
 import '../extensions/object.dart';
 import '../navigation/navigator.dart';
+import 'account_input_rules.dart';
 
 class Validators {
   static String? validateChatMessage(String? value, {String? fieldTitle}) {
@@ -37,12 +38,10 @@ class Validators {
   static String? validateName(String? value, {String? fieldTitle}) {
     if (value == null || value.trim().isEmpty) {
       return fieldTitle == null
-          ? LocaleKeys.fillField.tr(context: Go.context)
+          ? LocaleKeys.fillField.tr()
           : '${LocaleKeys.filedValidation.tr()} $fieldTitle';
-    } else if (value.length > 50) {
-      return fieldTitle != null
-          ? '$fieldTitle ${LocaleKeys.filedValidation.tr()}'
-          : LocaleKeys.filedValidation.tr();
+    } else if (!AccountInputRules.isValidName(value)) {
+      return LocaleKeys.accountNameValidation.tr();
     }
     return null;
   }
@@ -87,12 +86,10 @@ class Validators {
   static String? validateOtpCode(String? value, {String? fieldTitle}) {
     if (value == null || value.isEmpty) {
       return fieldTitle == null
-          ? LocaleKeys.fillField.tr(context: Go.context)
+          ? LocaleKeys.fillField.tr()
           : '${LocaleKeys.filedValidation.tr()} $fieldTitle';
-    } else if (value.length < 4) {
-      return LocaleKeys.theVerificationCodeMustConsistOf4Digits.tr(
-        context: Go.context,
-      );
+    } else if (!AccountInputRules.isValidOtpCode(value)) {
+      return LocaleKeys.accountOtpValidation.tr();
     }
 
     return null;
@@ -112,46 +109,67 @@ class Validators {
   static String? validateEmail(String? value, {String? fieldTitle}) {
     if (value?.trim().isEmpty ?? true) {
       return fieldTitle == null
-          ? LocaleKeys.fillField.tr(context: Go.context)
+          ? LocaleKeys.fillField.tr()
           : '${LocaleKeys.filedValidation.tr()} $fieldTitle';
-    } else if (RegExp(r'[<>]').hasMatch(value!)) {
-      return LocaleKeys.scripInjectionValidate.tr(context: Go.context);
-    } else if (!RegExp(
-      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.["
-      r'a-zA-Z]+',
-    ).hasMatch(value)) {
-      return LocaleKeys.mailValidation.tr(context: Go.context);
-    } else if (value.length > 50) {
-      return LocaleKeys.mailValidation.tr(context: Go.context);
+    } else if (!AccountInputRules.isValidEmail(value!)) {
+      return LocaleKeys.mailValidation.tr();
     }
     return null;
   }
 
   static String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return LocaleKeys.passRequiredValidation;
+      return LocaleKeys.passRequiredValidation.tr();
     }
 
-    if (value.length < 8) {
-      return LocaleKeys.passValidation;
+    if (value.trim().isEmpty) {
+      return LocaleKeys.accountPasswordWhitespaceValidation.tr();
     }
 
-    return noValidate(value);
+    if (value.runes.length < AccountInputRules.passwordMinLength) {
+      return LocaleKeys.passValidation.tr();
+    }
+
+    return null;
   }
+
+  /// Login submits existing credentials exactly, without a creation policy.
+  static String? validateLoginPassword(String? value) =>
+      value == null || value.isEmpty
+      ? LocaleKeys.passRequiredValidation.tr()
+      : null;
 
   static String? validatePasswordConfirmation(
     String? value, {
     required String password,
   }) {
     if (value == null || value.isEmpty) {
-      return LocaleKeys.passRequiredValidation;
+      return LocaleKeys.passRequiredValidation.tr();
     }
 
     if (value != password) {
-      return LocaleKeys.confirmValidation;
+      return LocaleKeys.confirmValidation.tr();
     }
 
     return null;
+  }
+
+  static String? validateEgyptianMobile(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return LocaleKeys.fillField.tr();
+    }
+    return AccountInputRules.isValidEgyptianMobile(value)
+        ? null
+        : LocaleKeys.accountEgyptianMobileValidation.tr();
+  }
+
+  static String? validateEgyptianNationalId(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return LocaleKeys.fillField.tr();
+    }
+    return AccountInputRules.isValidEgyptianNationalId(value)
+        ? null
+        : LocaleKeys.accountNationalIdValidation.tr();
   }
 
   static String? validatePhone(String? value, {String? message}) {

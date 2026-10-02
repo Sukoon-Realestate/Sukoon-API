@@ -6,6 +6,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
@@ -82,7 +83,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 hintText: 'ahmed@gmail.com',
               ),
               16.szH,
-              SokoonPasswordField(controller: _passwordController),
+              SokoonPasswordField(
+                controller: _passwordController,
+                validator: Validators.validateLoginPassword,
+              ),
               10.szH,
               TextButton(
                 onPressed: () => Go.to(const ForgotPasswordScreen()),

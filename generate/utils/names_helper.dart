@@ -1,6 +1,6 @@
 abstract class NamesHelper {
   static final RegExp validCharactersPattern = RegExp(
-    r"^[A-Za-z0-9_\s\?''@.]+$",
+    r"^[A-Za-z0-9_\s\?''@.,{}-]+$",
   );
   static final RegExp shortKey = RegExp(r'#\$');
 

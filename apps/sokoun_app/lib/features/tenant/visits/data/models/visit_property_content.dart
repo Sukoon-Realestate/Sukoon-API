@@ -11,13 +11,6 @@ class VisitPropertyContent extends Equatable {
   factory VisitPropertyContent.initial() =>
       const VisitPropertyContent(title: '', meta: '');
 
-  factory VisitPropertyContent.prototype() {
-    return VisitPropertyContent(
-      title: LocaleKeys.tenantVisitBookingPropertyTitle,
-      meta: LocaleKeys.tenantVisitBookingPropertyMeta,
-    );
-  }
-
   factory VisitPropertyContent.fromPropertyDetails(
     TenantPropertyDetailsContent property,
   ) {
@@ -25,7 +18,11 @@ class VisitPropertyContent extends Equatable {
       id: property.id,
       ownerId: property.ownerId,
       title: property.shortTitle,
-      meta: LocaleKeys.tenantVisitBookingPropertyMeta,
+      meta: [
+        '${property.price} ${property.pricePeriodLabel}'.trim(),
+        if (property.bedrooms != null)
+          '${property.bedrooms} ${LocaleKeys.tenantSearchResultsBeds}',
+      ].join(' · '),
     );
   }
 
