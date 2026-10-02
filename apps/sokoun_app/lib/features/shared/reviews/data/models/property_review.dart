@@ -11,6 +11,7 @@ class PropertyReview extends Equatable {
     this.accuracy,
     this.ownerInteraction,
     this.isVerified = false,
+    this.avatarUrl = '',
   });
   const PropertyReview.initial()
     : id = '',
@@ -21,7 +22,8 @@ class PropertyReview extends Equatable {
       cleanliness = null,
       accuracy = null,
       ownerInteraction = null,
-      isVerified = false;
+      isVerified = false,
+      avatarUrl = '';
   factory PropertyReview.fromJson(Map<String, dynamic> json) {
     final Map tenant = json['tenant'] is Map ? json['tenant'] as Map : const {};
     return PropertyReview(
@@ -34,16 +36,18 @@ class PropertyReview extends Equatable {
       accuracy: _number(json['listing_accuracy_rating']),
       ownerInteraction: _number(json['owner_interaction_rating']),
       isVerified: tenant['is_verified'] == true,
+      avatarUrl: tenant['avatar']?.toString() ?? '',
     );
   }
   final String id, name, comment, createdAt;
   final double? rating, cleanliness, accuracy, ownerInteraction;
   final bool isVerified;
+  final String avatarUrl;
   static double? _number(Object? v) =>
       v is num ? v.toDouble() : double.tryParse(v?.toString() ?? '');
   Map<String, dynamic> toJson() => {
     'id': id,
-    'tenant': {'name': name, 'is_verified': isVerified},
+    'tenant': {'name': name, 'is_verified': isVerified, 'avatar': avatarUrl},
     'comment': comment,
     'created_at': createdAt,
     'overall_rating': rating,
@@ -61,6 +65,7 @@ class PropertyReview extends Equatable {
     double? accuracy,
     double? ownerInteraction,
     bool? isVerified,
+    String? avatarUrl,
   }) => PropertyReview(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -71,6 +76,7 @@ class PropertyReview extends Equatable {
     accuracy: accuracy ?? this.accuracy,
     ownerInteraction: ownerInteraction ?? this.ownerInteraction,
     isVerified: isVerified ?? this.isVerified,
+    avatarUrl: avatarUrl ?? this.avatarUrl,
   );
   @override
   List<Object?> get props => [
@@ -83,5 +89,6 @@ class PropertyReview extends Equatable {
     accuracy,
     ownerInteraction,
     isVerified,
+    avatarUrl,
   ];
 }

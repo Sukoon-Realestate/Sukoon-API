@@ -66,10 +66,19 @@ class _OwnerRequestsCalendarScreenState
         title: LocaleKeys.ownerCalendarTitle,
         showBackButton: true,
         actions: [
-          ValueListenableBuilder<Future<void>>(
-            valueListenable: _calendarRequest,
-            builder: (context, _, child) => AppText(
-              MaterialLocalizations.of(context).formatMonthYear(_selectedDate),
+          BlocBuilder<
+            OwnerCalendarCubit,
+            AsyncState<OwnerVisitCalendarContent>
+          >(
+            bloc: _calendarCubit,
+            builder: (context, state) => AppText(
+              state.data.year == _selectedDate.year &&
+                      state.data.month == _selectedDate.month &&
+                      state.data.monthLabel.trim().isNotEmpty
+                  ? state.data.monthLabel
+                  : MaterialLocalizations.of(
+                      context,
+                    ).formatMonthYear(_selectedDate),
               style: AppTextStyles.extraBold13.copyWith(color: AppColors.gold),
             ).paddingSymmetric(horizontal: 12),
           ),

@@ -22,63 +22,69 @@ class OwnerCalendarContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Container(
-            padding: EdgeInsets.all(12.r),
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(18.r),
-              border: Border.all(color: AppColors.sokoonBorder),
-            ),
-            child: Column(
-              spacing: 8.h,
-              children: [
-                Row(
-                  children: [
-                    for (final String day
-                        in OwnerVisitCalendarContent.weekdayHeaders)
-                      Expanded(
-                        child: AppText(
-                          day,
-                          style: AppTextStyles.bold11.copyWith(
-                            color: AppColors.sokoonGray,
-                            fontSize: 11.sp,
-                            height: 1.45,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                  ],
-                ),
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 7,
-                    mainAxisSpacing: 4.h,
-                    crossAxisSpacing: 4.w,
-                    childAspectRatio: 1.02,
-                  ),
-                  itemBuilder: (context, index) {
-                    final int? day = monthDays[index];
-                    return OwnerCalendarDay(
-                      day: day,
-                      isSelected: day == selectedDate.day,
-                      hasVisit: day != null && calendar.hasVisitsOn(day),
-                      onPressed: day == null
-                          ? null
-                          : () => onDaySelected(
-                              DateTime(calendar.year, calendar.month, day),
+          SokounContent(
+            width: SokounContentWidth.form,
+            child: Container(
+              padding: EdgeInsets.all(12.r),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(18.r),
+                border: Border.all(color: AppColors.sokoonBorder),
+              ),
+              child: Column(
+                spacing: 8.h,
+                children: [
+                  Row(
+                    children: [
+                      for (final String day
+                          in OwnerVisitCalendarContent.weekdayHeaders)
+                        Expanded(
+                          child: AppText(
+                            day,
+                            style: AppTextStyles.bold11.copyWith(
+                              color: AppColors.sokoonGray,
+                              fontSize: 11.sp,
+                              height: 1.45,
                             ),
-                    );
-                  },
-                  itemCount: monthDays.length,
-                ),
-              ],
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                    ],
+                  ),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 7,
+                      mainAxisSpacing: 4.h,
+                      crossAxisSpacing: 4.w,
+                      childAspectRatio: 1.02,
+                    ),
+                    itemBuilder: (context, index) {
+                      final int? day = monthDays[index];
+                      return OwnerCalendarDay(
+                        day: day,
+                        isSelected: day == selectedDate.day,
+                        hasVisit: day != null && calendar.hasVisitsOn(day),
+                        visitCount: day == null ? 0 : calendar.visitsOn(day),
+                        onPressed: day == null
+                            ? null
+                            : () => onDaySelected(
+                                DateTime(calendar.year, calendar.month, day),
+                              ),
+                      );
+                    },
+                    itemCount: monthDays.length,
+                  ),
+                ],
+              ),
             ),
           ),
           18.szH,
           AppText(
-            '${LocaleKeys.ownerCalendarVisitsOnDay} ${selectedDate.day}',
+            calendar.selectedDateLabel.trim().isNotEmpty
+                ? calendar.selectedDateLabel
+                : '${LocaleKeys.ownerCalendarVisitsOnDay} ${selectedDate.day}',
             style: AppTextStyles.extraBold13.copyWith(
               color: AppColors.sokoonGray,
               fontSize: 13.sp,

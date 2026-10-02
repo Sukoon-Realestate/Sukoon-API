@@ -7,26 +7,24 @@ class TenantPhotoCircleIconButton extends StatelessWidget {
     super.key,
     required this.icon,
     required this.onTap,
+    required this.tooltip,
   });
 
   final IconData icon;
   final VoidCallback onTap;
+  final String tooltip;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        width: 36.r,
-        height: 36.r,
-        alignment: Alignment.center,
-        decoration: const BoxDecoration(
-          color: AppColors.whiteAlpha10,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(icon, color: AppColors.white, size: 19.r),
+    return IconButton.filled(
+      tooltip: tooltip,
+      onPressed: onTap,
+      style: IconButton.styleFrom(
+        minimumSize: Size.square(48.r),
+        backgroundColor: AppColors.whiteAlpha10,
+        foregroundColor: AppColors.white,
       ),
+      icon: Icon(icon, size: 19.r),
     );
   }
 }

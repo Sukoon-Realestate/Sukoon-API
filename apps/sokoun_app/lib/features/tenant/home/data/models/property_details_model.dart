@@ -224,10 +224,10 @@ class PropertyDetailsModel extends Equatable {
       bathrooms = 0,
       area = 0,
       space = '',
-      floor = 0,
+      floor = null,
       rentalPeriod = 0,
       suitableFor = '',
-      smokingAllowed = false,
+      smokingAllowed = null,
       country = '',
       city = const CityModel.initial(),
       district = '',
@@ -285,10 +285,10 @@ class PropertyDetailsModel extends Equatable {
       bathrooms: (json['bathrooms'] as num?)?.toInt() ?? 0,
       area: (json['area'] as num?)?.toInt() ?? 0,
       space: json['space']?.toString() ?? '',
-      floor: (json['floor'] as num?)?.toInt() ?? 0,
+      floor: int.tryParse(json['floor']?.toString() ?? ''),
       rentalPeriod: (json['rental_period'] as num?)?.toInt() ?? 0,
       suitableFor: json['suitable_for'] as String? ?? '',
-      smokingAllowed: json['smoking_allowed'] as bool? ?? false,
+      smokingAllowed: json['smoking_allowed'] as bool?,
       country: json['country'] as String? ?? '',
       city: json['city'] is Map
           ? CityModel.fromJson(Map<String, dynamic>.from(json['city'] as Map))
@@ -343,10 +343,10 @@ class PropertyDetailsModel extends Equatable {
   final int bathrooms;
   final int area;
   final String space;
-  final int floor;
+  final int? floor;
   final int rentalPeriod;
   final String suitableFor;
-  final bool smokingAllowed;
+  final bool? smokingAllowed;
   final String country;
   final CityModel city;
   final String district;
@@ -510,8 +510,10 @@ class PropertyDetailsModel extends Equatable {
     }
   }
 
-  String get propertyTypeLabel {
-    switch (propertyType) {
+  String get propertyTypeLabel => propertyTypeLabelFor(propertyType);
+
+  static String propertyTypeLabelFor(String value) {
+    switch (value) {
       case 'apartment':
         return LocaleKeys.ownerAddPropertyApartment;
       case 'room':
@@ -527,7 +529,7 @@ class PropertyDetailsModel extends Equatable {
       case 'studio':
         return LocaleKeys.ownerAddPropertyStudio;
       default:
-        return propertyType;
+        return value;
     }
   }
 
@@ -536,15 +538,43 @@ class PropertyDetailsModel extends Equatable {
       .replaceAll('{district}', district)
       .replaceAll('{city}', city.name);
 
-  List<String> get imageUrls => [
-    if (mainImage.isNotEmpty) mainImage,
-    ...images.map((image) => image.image).where((url) => url.isNotEmpty),
-  ];
+  /// One ordered source for gallery URLs, names, and descriptions.
+  List<PropertyImageModel> get galleryImages {
+    final List<PropertyImageModel> photos = [];
+    final Set<String> seen = {};
+    if (mainImage.trim().isNotEmpty) {
+      final PropertyImageModel main = images.firstWhere(
+        (image) => image.image == mainImage,
+        orElse: () => PropertyImageModel.initial().copyWith(image: mainImage),
+      );
+      photos.add(
+        main.copyWith(
+          name: main.name.trim().isEmpty
+              ? LocaleKeys.tenantPropertyDetailsMainPhoto
+              : main.name,
+        ),
+      );
+      seen.add(mainImage);
+    }
+    for (final PropertyImageModel image in images) {
+      if (image.image.trim().isNotEmpty && seen.add(image.image)) {
+        photos.add(image);
+      }
+    }
+    return photos;
+  }
 
-  List<String> get photoLabels => [
-    LocaleKeys.tenantPropertyDetailsMainPhoto,
-    ...images.map((image) => image.name),
-  ];
+  List<String> get imageUrls =>
+      galleryImages.map((image) => image.image).toList(growable: false);
+
+  List<String> get photoLabels => galleryImages.indexed
+      .map((entry) {
+        final (int index, PropertyImageModel image) = entry;
+        return image.name.trim().isNotEmpty
+            ? image.name
+            : '${LocaleKeys.tenantPropertyDetailsPhotoCountUnit} ${index + 1}';
+      })
+      .toList(growable: false);
 
   List<String> get amenityLabels => amenities
       .map(_amenityLabel)

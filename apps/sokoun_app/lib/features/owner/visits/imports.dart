@@ -35,6 +35,8 @@ import 'data/models/owner_visit_calendar_content.dart';
 import 'data/models/owner_visit_request_content.dart';
 import 'data/models/owner_visit_request_details_content.dart';
 import 'data/owner_visit_json.dart';
+import 'presentation/widgets/shared/owner_tenant_avatar.dart';
+export 'presentation/widgets/shared/owner_tenant_avatar.dart';
 
 export 'data/enums/owner_visit_request_state.dart';
 export 'data/enums/owner_visit_update_status.dart';

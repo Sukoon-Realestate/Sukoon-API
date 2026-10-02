@@ -7,6 +7,7 @@ import 'owner_visit_request_action_row.dart';
 import 'owner_visit_request_identity_row.dart';
 import 'owner_visit_request_status_banner.dart';
 import 'owner_visit_request_time_row.dart';
+import 'owner_visit_verification_warning.dart';
 
 class OwnerVisitRequestCard extends StatelessWidget {
   const OwnerVisitRequestCard({
@@ -28,6 +29,11 @@ class OwnerVisitRequestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String schedule = request.dateLabel.isNotEmpty
+        ? request.dateLabel
+        : request.time;
+    final bool scheduleInSubtitle =
+        schedule.isNotEmpty && request.subtitle.contains(schedule);
     return Material(
       color: AppColors.transparent,
       child: InkWell(
@@ -47,11 +53,13 @@ class OwnerVisitRequestCard extends StatelessWidget {
             spacing: 12.h,
             children: [
               OwnerVisitRequestIdentityRow(request: request),
-              OwnerVisitRequestTimeRow(
-                dateLabel: request.dateLabel.isNotEmpty
-                    ? request.dateLabel
-                    : request.time,
-              ),
+              if (!request.isVerified &&
+                  request.verificationWarning.trim().isNotEmpty)
+                OwnerVisitVerificationWarning(
+                  message: request.verificationWarning,
+                ),
+              if (!scheduleInSubtitle && schedule.isNotEmpty)
+                OwnerVisitRequestTimeRow(dateLabel: schedule),
               if (request.canAccept || request.canReject)
                 OwnerVisitRequestActionRow(
                   onAcceptPressed: request.canAccept ? onAcceptPressed : null,
@@ -59,8 +67,12 @@ class OwnerVisitRequestCard extends StatelessWidget {
                   isAccepting: isAccepting,
                   isRejecting: isRejecting,
                 ),
-              if (!request.status.canDecide)
-                OwnerVisitRequestStatusBanner(status: request.status),
+              if (!request.status.canDecide ||
+                  request.statusLabel.trim().isNotEmpty)
+                OwnerVisitRequestStatusBanner(
+                  status: request.status,
+                  label: request.statusLabel,
+                ),
             ],
           ),
         ),

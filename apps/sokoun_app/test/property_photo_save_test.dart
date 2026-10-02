@@ -226,7 +226,10 @@ void main() {
 
     void expectDownloadFor(String url) {
       expect(find.byIcon(Icons.download_rounded), findsOneWidget);
-      expect(tester.widget<CachedImage>(find.byType(CachedImage)).url, url);
+      expect(
+        tester.widget<CachedImage>(find.byType(CachedImage).first).url,
+        url,
+      );
       expect(
         tester
             .widget<TenantPropertyPhotoSaveButton>(
@@ -238,15 +241,15 @@ void main() {
     }
 
     expectDownloadFor(property.imageUrls[1]);
-    await tester.tap(find.byIcon(Icons.chevron_right_rounded));
+    await tester.tap(find.byTooltip(LocaleKeys.tenantPropertyPhotosNext));
     await tester.pump();
     expectDownloadFor(property.imageUrls[2]);
 
-    await tester.tap(find.byIcon(Icons.chevron_left_rounded));
+    await tester.tap(find.byTooltip(LocaleKeys.tenantPropertyPhotosPrevious));
     await tester.pump();
     expectDownloadFor(property.imageUrls[1]);
 
-    await tester.tap(find.byIcon(Icons.image_outlined).first);
+    await tester.tap(find.bySemanticsLabel('1 / 3'));
     await tester.pump();
     expectDownloadFor(property.imageUrls.first);
     expect(tester.takeException(), isNull);

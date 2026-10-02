@@ -148,8 +148,15 @@ class OwnerVisitCalendarContent extends Equatable {
   ];
 
   @override
-  List<Object?> get props => [year, month, days, selectedDate, visits,
-    monthLabel, selectedDateLabel];
+  List<Object?> get props => [
+    year,
+    month,
+    days,
+    selectedDate,
+    visits,
+    monthLabel,
+    selectedDateLabel,
+  ];
 }
 
 class OwnerCalendarDayContent extends Equatable {
@@ -274,16 +281,30 @@ class OwnerCalendarVisitContent extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, tenant, property, visitTime, status,
-    timeFormatted, statusLabel];
+  List<Object?> get props => [
+    id,
+    tenant,
+    property,
+    visitTime,
+    status,
+    timeFormatted,
+    statusLabel,
+  ];
 }
 
 class OwnerCalendarTenantContent extends Equatable {
-  const OwnerCalendarTenantContent({required this.id, required this.name,
-    this.avatar = '', this.initial = ''});
+  const OwnerCalendarTenantContent({
+    required this.id,
+    required this.name,
+    this.avatar = '',
+    this.initial = '',
+  });
 
-  const OwnerCalendarTenantContent.initial() : id = '', name = '',
-    avatar = '', initial = '';
+  const OwnerCalendarTenantContent.initial()
+    : id = '',
+      name = '',
+      avatar = '',
+      initial = '';
 
   factory OwnerCalendarTenantContent.fromJson(Map<String, dynamic> json) {
     return OwnerCalendarTenantContent(
@@ -299,11 +320,19 @@ class OwnerCalendarTenantContent extends Equatable {
   final String avatar;
   final String initial;
 
-  Map<String, dynamic> toJson() => {'id': id, 'name': name,
-    'avatar': avatar, 'initial': initial};
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'name': name,
+    'avatar': avatar,
+    'initial': initial,
+  };
 
-  OwnerCalendarTenantContent copyWith({String? id, String? name,
-    String? avatar, String? initial}) {
+  OwnerCalendarTenantContent copyWith({
+    String? id,
+    String? name,
+    String? avatar,
+    String? initial,
+  }) {
     return OwnerCalendarTenantContent(
       id: id ?? this.id,
       name: name ?? this.name,

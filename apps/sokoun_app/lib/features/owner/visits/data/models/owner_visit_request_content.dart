@@ -74,9 +74,9 @@ class OwnerVisitRequestContent extends Equatable {
           json['property_title'] ??
           (property.isNotEmpty
               ? [property['title'], property['district']]
-                  .whereType<String>()
-                  .where((value) => value.trim().isNotEmpty)
-                  .join(' · ')
+                    .whereType<String>()
+                    .where((value) => value.trim().isNotEmpty)
+                    .join(' · ')
               : null) ??
           (propertyValue is String ? propertyValue : '') ??
           '',
@@ -90,8 +90,11 @@ class OwnerVisitRequestContent extends Equatable {
       tenantNote: json['tenant_note'] ?? json['note'] ?? '',
       phone: json['phone'] ?? tenant['phone_number'] ?? tenant['phone'] ?? '',
       status: OwnerVisitRequestStatusExtension.fromName(json['status']),
-      isVerified: json['is_verified_tenant'] ??
-          json['is_verified'] ?? tenant['is_verified'] ?? false,
+      isVerified:
+          json['is_verified_tenant'] ??
+          json['is_verified'] ??
+          tenant['is_verified'] ??
+          false,
       avatar: ownerVisitString(tenant['avatar'] ?? json['avatar']),
       subtitle: ownerVisitString(json['subtitle']),
       statusLabel: ownerVisitString(json['status_label']),

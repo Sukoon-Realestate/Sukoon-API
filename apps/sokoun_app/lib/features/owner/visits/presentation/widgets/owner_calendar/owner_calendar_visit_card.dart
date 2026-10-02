@@ -8,38 +8,34 @@ class OwnerCalendarVisitCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isAccepted = visit.status.isAccepted;
+    final Color statusColor = isAccepted || visit.status.isCompleted
+        ? AppColors.green
+        : visit.status.isRejected
+        ? AppColors.red
+        : visit.status.canDecide
+        ? AppColors.amber
+        : AppColors.sokoonGray;
+    final Color statusBackground = isAccepted || visit.status.isCompleted
+        ? AppColors.greenPale
+        : visit.status.isRejected
+        ? AppColors.redPale
+        : visit.status.canDecide
+        ? AppColors.amberPale
+        : AppColors.grayBackground;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(14.r),
-        boxShadow: const [
-          BoxShadow(
-            color: AppColors.shadowBlack04,
-            blurRadius: 8,
-            offset: Offset(0, 2),
-          ),
-        ],
+        border: Border.all(color: AppColors.sokoonBorder),
       ),
       child: Row(
         children: [
-          Container(
-            width: 40.r,
-            height: 40.r,
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              color: AppColors.sokoonTeal,
-              shape: BoxShape.circle,
-            ),
-            child: AppText(
-              visit.tenantInitial,
-              style: AppTextStyles.bold15.copyWith(
-                color: AppColors.white,
-                fontSize: 15.sp,
-                height: 1.45,
-              ),
-            ),
+          OwnerTenantAvatar(
+            name: visit.tenant.name,
+            initial: visit.tenantInitial,
+            avatarUrl: visit.tenant.avatar,
           ),
           12.szW,
           Expanded(
@@ -67,30 +63,37 @@ class OwnerCalendarVisitCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 AppText(
-                  _formatOwnerCalendarVisitTime(context, visit.visitTime),
+                  visit.timeFormatted.trim().isNotEmpty
+                      ? visit.timeFormatted
+                      : _formatOwnerCalendarVisitTime(context, visit.visitTime),
                   style: AppTextStyles.regular12.copyWith(
                     color: AppColors.sokoonGray,
                     fontSize: 12.sp,
                     height: 1.45,
                   ),
                 ),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10.w,
+                    vertical: 5.h,
+                  ),
+                  decoration: BoxDecoration(
+                    color: statusBackground,
+                    borderRadius: BorderRadius.circular(999.r),
+                  ),
+                  child: AppText(
+                    visit.statusLabel.trim().isNotEmpty
+                        ? visit.statusLabel
+                        : isAccepted
+                        ? LocaleKeys.ownerCalendarConfirmed
+                        : visit.status.label,
+                    style: AppTextStyles.extraBold.copyWith(
+                      color: statusColor,
+                      fontSize: 11.sp,
+                    ),
+                  ),
+                ),
               ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-            decoration: BoxDecoration(
-              color: isAccepted ? AppColors.greenPale : AppColors.amberPale,
-              borderRadius: BorderRadius.circular(999.r),
-            ),
-            child: AppText(
-              isAccepted
-                  ? LocaleKeys.ownerCalendarConfirmed
-                  : LocaleKeys.ownerCalendarPending,
-              style: AppTextStyles.extraBold.copyWith(
-                color: isAccepted ? AppColors.green : AppColors.amber,
-                fontSize: 11.sp,
-              ),
             ),
           ),
         ],

@@ -2857,6 +2857,39 @@ abstract class LocaleKeys {
   static const String _tenantPropertyDetailsPhotoCountUnit = 'tenant_property_details_photo_count_unit';
   static String get tenantPropertyDetailsPhotoCountUnit => _tenantPropertyDetailsPhotoCountUnit.tr();
 
+  static const String _tenantPropertyDetailsRentalDetails = 'tenant_property_details_rental_details';
+  static String get tenantPropertyDetailsRentalDetails => _tenantPropertyDetailsRentalDetails.tr();
+
+  static const String _tenantPropertyDetailsSmokingAllowed = 'tenant_property_details_smoking_allowed';
+  static String get tenantPropertyDetailsSmokingAllowed => _tenantPropertyDetailsSmokingAllowed.tr();
+
+  static const String _tenantPropertyDetailsSmokingPolicy = 'tenant_property_details_smoking_policy';
+  static String get tenantPropertyDetailsSmokingPolicy => _tenantPropertyDetailsSmokingPolicy.tr();
+
+  static const String _tenantPropertyDetailsSmokingNotAllowed = 'tenant_property_details_smoking_not_allowed';
+  static String get tenantPropertyDetailsSmokingNotAllowed => _tenantPropertyDetailsSmokingNotAllowed.tr();
+
+  static const String _tenantPropertyDetailsBuildingYear = 'tenant_property_details_building_year';
+  static String get tenantPropertyDetailsBuildingYear => _tenantPropertyDetailsBuildingYear.tr();
+
+  static const String _tenantPropertyDetailsDeposit = 'tenant_property_details_deposit';
+  static String get tenantPropertyDetailsDeposit => _tenantPropertyDetailsDeposit.tr();
+
+  static const String _tenantPropertyPhotosEmpty = 'tenant_property_photos_empty';
+  static String get tenantPropertyPhotosEmpty => _tenantPropertyPhotosEmpty.tr();
+
+  static const String _tenantPropertyPhotosPrevious = 'tenant_property_photos_previous';
+  static String get tenantPropertyPhotosPrevious => _tenantPropertyPhotosPrevious.tr();
+
+  static const String _tenantPropertyPhotosNext = 'tenant_property_photos_next';
+  static String get tenantPropertyPhotosNext => _tenantPropertyPhotosNext.tr();
+
+  static const String _tenantPropertyPhotosClose = 'tenant_property_photos_close';
+  static String get tenantPropertyPhotosClose => _tenantPropertyPhotosClose.tr();
+
+  static const String _ownerCalendarDayVisitCount = 'owner_calendar_day_visit_count';
+  static String get ownerCalendarDayVisitCount => _ownerCalendarDayVisitCount.tr();
+
   static const String _tenantFilterTitle = 'tenant_filter_title';
   static String get tenantFilterTitle => _tenantFilterTitle.tr();
 

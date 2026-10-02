@@ -23,23 +23,10 @@ class OwnerVisitRequestIdentityRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
-          width: 40.r,
-          height: 40.r,
-          alignment: Alignment.center,
-          decoration: const BoxDecoration(
-            color: AppColors.tealAlpha13,
-            shape: BoxShape.circle,
-          ),
-          child: AppText(
-            request.initial,
-            style: AppTextStyles.bold16.copyWith(
-              color: AppColors.sokoonTeal,
-              fontSize: 16.sp,
-              height: 1.45,
-            ),
-            maxLines: 1,
-          ),
+        OwnerTenantAvatar(
+          name: request.name,
+          initial: request.initial,
+          avatarUrl: request.avatar,
         ),
         10.szW,
         Expanded(
@@ -66,13 +53,15 @@ class OwnerVisitRequestIdentityRow extends StatelessWidget {
                 ],
               ),
               AppText(
-                request.property,
+                request.subtitle.trim().isNotEmpty
+                    ? request.subtitle
+                    : request.property,
                 style: AppTextStyles.regular11.copyWith(
                   color: AppColors.sokoonGray,
                   fontSize: 11.sp,
                   height: 1.45,
                 ),
-                maxLines: 1,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
             ],
@@ -83,15 +72,15 @@ class OwnerVisitRequestIdentityRow extends StatelessWidget {
           button: true,
           label: LocaleKeys.ownerVisitOpenChat,
           child: SizedBox.square(
-            dimension: 32.r,
+            dimension: 48.r,
             child: IconButton(
               tooltip: LocaleKeys.ownerVisitOpenChat,
-              onPressed: request.tenantId.isEmpty ? null : _openChat,
+              onPressed: request.canChat ? _openChat : null,
               padding: EdgeInsets.zero,
               visualDensity: VisualDensity.compact,
               style: IconButton.styleFrom(
-                minimumSize: Size.square(32.r),
-                maximumSize: Size.square(32.r),
+                minimumSize: Size.square(48.r),
+                maximumSize: Size.square(48.r),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 backgroundColor: AppColors.white,
                 shape: RoundedRectangleBorder(

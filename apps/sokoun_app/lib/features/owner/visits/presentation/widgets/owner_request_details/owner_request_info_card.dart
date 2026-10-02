@@ -19,33 +19,10 @@ class OwnerRequestInfoCard extends StatelessWidget {
           Row(
             spacing: 12.w,
             children: [
-              Container(
-                width: 56.r,
-                height: 56.r,
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  color: AppColors.bluePale,
-                  shape: BoxShape.circle,
-                ),
-                child: request.tenant.avatar.isNotEmpty
-                    ? ClipOval(
-                        child: Image.network(
-                          request.tenant.avatar,
-                          width: 56.r,
-                          height: 56.r,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Icon(
-                            Icons.person_outline_rounded,
-                            color: AppColors.blue,
-                            size: 27.r,
-                          ),
-                        ),
-                      )
-                    : Icon(
-                        Icons.person_outline_rounded,
-                        color: AppColors.blue,
-                        size: 27.r,
-                      ),
+              OwnerTenantAvatar(
+                name: request.tenant.name,
+                avatarUrl: request.tenant.avatar,
+                size: 56,
               ),
               Expanded(
                 child: Column(

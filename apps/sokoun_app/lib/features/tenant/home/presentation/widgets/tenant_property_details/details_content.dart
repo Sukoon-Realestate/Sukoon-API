@@ -20,6 +20,7 @@ import 'price_and_rating.dart';
 import 'tag_row.dart';
 import 'property_description.dart';
 import 'property_video.dart';
+import 'rental_details.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_reveal.dart';
 
 class TenantPropertyDetailsContentView extends StatelessWidget {
@@ -91,6 +92,8 @@ class TenantPropertyDetailsContentView extends StatelessWidget {
             ),
           14.szH,
           TenantPropertyMetricsGrid(property: property),
+          14.szH,
+          TenantPropertyRentalDetails(property: property),
           if (property.videoUrl?.isNotEmpty ?? false) ...[
             14.szH,
             PropertyVideo(

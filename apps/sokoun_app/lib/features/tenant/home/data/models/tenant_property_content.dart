@@ -46,6 +46,12 @@ class TenantPropertyDetailsContent {
     this.propertyLink = '',
     this.pricePeriodLabel = '',
     this.bedrooms,
+    this.floor,
+    this.suitableFor = '',
+    this.smokingAllowed,
+    this.buildingYear = 0,
+    this.deposit = '',
+    this.photoDescriptions = const [],
   });
 
   factory TenantPropertyDetailsContent.fromModel(PropertyDetailsModel model) {
@@ -87,6 +93,14 @@ class TenantPropertyDetailsContent {
       description: model.description,
       amenities: model.amenityLabels,
       photoLabels: model.photoLabels,
+      photoDescriptions: model.galleryImages
+          .map((image) => image.description)
+          .toList(growable: false),
+      floor: model.floor,
+      suitableFor: model.suitableFor,
+      smokingAllowed: model.smokingAllowed,
+      buildingYear: model.buildingYear,
+      deposit: model.deposit,
       ownerName: model.owner,
       ownerId: model.ownerId,
       ownerMeta: model.isOwnerVerified
@@ -132,6 +146,12 @@ class TenantPropertyDetailsContent {
   final String propertyLink;
   final String pricePeriodLabel;
   final int? bedrooms;
+  final int? floor;
+  final String suitableFor;
+  final bool? smokingAllowed;
+  final int buildingYear;
+  final String deposit;
+  final List<String> photoDescriptions;
 
   String get shortTitle => title;
   String get shareUrl {

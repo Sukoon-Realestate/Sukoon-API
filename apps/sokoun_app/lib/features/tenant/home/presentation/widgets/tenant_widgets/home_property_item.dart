@@ -3,6 +3,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/extensions/string_extension.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/home_page_model.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/property_details_screen.dart';
 import 'tenant_property_card.dart';
 
@@ -29,12 +30,19 @@ class HomePropertyItem extends StatelessWidget {
             : () => Go.to(PropertyDetailsScreen(propertyId: property.id)),
         child: TenantPropertyCard(
           title: property.title,
-          rating: property.rate.toStringAsFixed(1),
-          area:
-              '${property.area} ${LocaleKeys.tenantSearchResultsSquareMeters}',
+          rating: property.rate >= 0 && property.rate <= 5
+              ? property.rate.toStringAsFixed(1)
+              : '—',
+          area: [
+            PropertyDetailsModel.propertyTypeLabelFor(property.propertyType),
+            '${property.area} ${LocaleKeys.tenantSearchResultsSquareMeters}',
+          ].where((value) => value.isNotEmpty).join(' · '),
           price:
               '${price.toCurrency()} ${LocaleKeys.favoritesCurrencyShort}/$period',
-          icon: Icons.apartment_outlined,
+          icon: property.propertyType == 'villa'
+              ? Icons.villa_outlined
+              : Icons.apartment_outlined,
+          imageCount: property.imagesCount,
           imageUrl: property.mainImage,
         ),
       ),

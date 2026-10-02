@@ -5,6 +5,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/widgets/image_widgets/cached_image.dart';
 import '../../data/models/property_review.dart';
 
 class PropertyReviewCard extends StatelessWidget {
@@ -36,8 +37,30 @@ class PropertyReviewCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 8.h,
         children: [
-          if (review.name.isNotEmpty)
-            AppText(review.name, style: AppTextStyles.bold14),
+          if (review.name.isNotEmpty || review.avatarUrl.isNotEmpty)
+            Row(
+              spacing: 10.w,
+              children: [
+                if (review.avatarUrl.trim().isNotEmpty)
+                  ExcludeSemantics(
+                    child: CachedImage(
+                      url: review.avatarUrl,
+                      width: 40.r,
+                      height: 40.r,
+                      fit: BoxFit.cover,
+                      boxShape: BoxShape.circle,
+                      bgColor: AppColors.bluePale,
+                      placeHolder: const Icon(
+                        Icons.person_outline_rounded,
+                        color: AppColors.sokoonGray,
+                      ),
+                    ),
+                  ),
+                Expanded(
+                  child: AppText(review.name, style: AppTextStyles.bold14),
+                ),
+              ],
+            ),
           if (review.isVerified)
             AppText(LocaleKeys.verified, style: AppTextStyles.regular12),
           if (review.rating != null)

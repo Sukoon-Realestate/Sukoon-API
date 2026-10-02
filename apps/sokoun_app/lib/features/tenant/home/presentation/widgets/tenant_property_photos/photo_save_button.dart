@@ -36,7 +36,7 @@ class TenantPropertyPhotoSaveButton extends StatelessWidget {
       builder: (context, state) {
         final bool isSaving = state.status.isLoading;
         return SizedBox.square(
-          dimension: 36.r,
+          dimension: 48.r,
           child: IconButton(
             tooltip: isSaving
                 ? LocaleKeys.tenantPropertyPhotoSaving
