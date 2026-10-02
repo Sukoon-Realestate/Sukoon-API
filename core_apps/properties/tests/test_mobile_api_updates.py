@@ -166,6 +166,38 @@ class TestPropertyDetailsMobileFields:
         assert data["is_fav"] is False
         assert data["is_saved"] is False
         assert data["rating"] == 0.0
+        assert "owner" in data
+        assert "is_verified" in data
+        assert "owner_is_verified" in data
+        assert "is_ownership_verified" in data
+        assert data["owner"]["is_verified"] == another_user.is_verified
+
+    def test_owner_availability_supports_week_start_query_param(
+        self, auth_client, user, apartment_type
+    ):
+        from datetime import time, timedelta
+        from django.utils import timezone
+        from core_apps.properties.models import OwnerAvailabilitySlot
+
+        property_obj = create_property(user, apartment_type)
+        target_week_start = timezone.localdate() + timedelta(days=7)
+        slot_date = target_week_start + timedelta(days=1)
+        OwnerAvailabilitySlot.objects.create(
+            owner=user,
+            property=property_obj,
+            date=slot_date,
+            time=time(14, 0),
+            is_enabled=True,
+        )
+
+        url = reverse("owner-availability-week", kwargs={"property_id": property_obj.id})
+        res = auth_client.get(url, {"week_start": target_week_start.isoformat()})
+        assert res.status_code == status.HTTP_200_OK
+        data = res.json()["data"]
+        assert data["week_start"] == target_week_start.isoformat()
+        assert len(data["days"]) >= 1
+        assert data["days"][0]["date"] == slot_date.isoformat()
+
 
 
 class PropertyDetailAmenityFields:

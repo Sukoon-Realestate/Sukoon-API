@@ -43,12 +43,19 @@ class CloudinarySerializerField(serializers.ImageField):
         return str(value)
 
 
+class ProfileCitySerializer(serializers.Serializer):
+    id = serializers.UUIDField(read_only=True)
+    name = serializers.CharField(read_only=True)
+    slug = serializers.CharField(read_only=True)
+
+
 class ProfileSerializer(serializers.ModelSerializer):
     first_name = serializers.ReadOnlyField(source="user.first_name")
     last_name = serializers.ReadOnlyField(source="user.last_name")
     full_name = serializers.ReadOnlyField(source="user.get_full_name")
     date_joined = serializers.DateTimeField(source="user.date_joined", read_only=True)
     phone_number = PhoneNumberField(read_only=True)
+    city = ProfileCitySerializer(read_only=True)
     avatar = CloudinarySerializerField(read_only=True)
     id_face = CloudinarySerializerField(read_only=True)
     id_back = CloudinarySerializerField(read_only=True)
@@ -64,6 +71,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "gender",
             "birth_date",
             "phone_number",
+            "city",
             "avatar",
             "id_face",
             "id_back",
@@ -77,6 +85,8 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(source="user.first_name")
     last_name = serializers.CharField(source="user.last_name")
     phone_number = PhoneNumberField(required=False, allow_blank=True)
+    city = ProfileCitySerializer(read_only=True)
+    city_id = serializers.UUIDField(required=False, allow_null=True, write_only=True)
     avatar = CloudinarySerializerField(required=False, allow_null=True)
     id_face = CloudinarySerializerField(required=False, allow_null=True)
     id_back = CloudinarySerializerField(required=False, allow_null=True)
@@ -90,12 +100,29 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
             "gender",
             "birth_date",
             "phone_number",
+            "city",
+            "city_id",
             "avatar",
             "id_face",
             "id_back",
             "confirmation_selfi",
             "national_id",
         ]
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        if "city_id" in attrs:
+            city_id = attrs.pop("city_id")
+            if city_id:
+                from core_apps.properties.models import City
+
+                try:
+                    attrs["city"] = City.objects.get(id=city_id)
+                except City.DoesNotExist:
+                    raise serializers.ValidationError({"city_id": "Invalid city ID."})
+            else:
+                attrs["city"] = None
+        return attrs
 
 
 # * =========================================================================
@@ -192,6 +219,8 @@ class ProfileEditSerializer(serializers.ModelSerializer):
     birth_date_label = serializers.SerializerMethodField(read_only=True)
     gender = serializers.ChoiceField(choices=Profile.Gender.choices, required=False)
     gender_label = serializers.SerializerMethodField(read_only=True)
+    city = ProfileCitySerializer(read_only=True)
+    city_id = serializers.UUIDField(required=False, allow_null=True, write_only=True)
     avatar = CloudinarySerializerField(required=False, allow_null=True)
     profile_image = CloudinarySerializerField(
         required=False, allow_null=True, write_only=True
@@ -211,6 +240,8 @@ class ProfileEditSerializer(serializers.ModelSerializer):
             "birth_date_label",
             "gender",
             "gender_label",
+            "city",
+            "city_id",
             "avatar",
             "profile_image",
             "image",
@@ -222,6 +253,18 @@ class ProfileEditSerializer(serializers.ModelSerializer):
         img = attrs.pop("profile_image", None) or attrs.pop("image", None)
         if img is not None and "avatar" not in attrs:
             attrs["avatar"] = img
+
+        if "city_id" in attrs:
+            city_id = attrs.pop("city_id")
+            if city_id:
+                from core_apps.properties.models import City
+
+                try:
+                    attrs["city"] = City.objects.get(id=city_id)
+                except City.DoesNotExist:
+                    raise serializers.ValidationError({"city_id": "Invalid city ID."})
+            else:
+                attrs["city"] = None
         return attrs
 
     def get_masked_phone_number(self, obj: Profile) -> str:

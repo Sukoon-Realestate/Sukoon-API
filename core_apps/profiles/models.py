@@ -21,6 +21,14 @@ class Profile(TimeStampedModel):
     )
     birth_date = models.DateField(_("Birth Date"), null=True, blank=True)
     phone_number = PhoneNumberField(_("Phone Number"), blank=True, default="")
+    city = models.ForeignKey(
+        "properties.City",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="profiles",
+        verbose_name=_("City"),
+    )
     avatar = CloudinaryField(
         folder="profile_documents/avatar/",
         null=True,

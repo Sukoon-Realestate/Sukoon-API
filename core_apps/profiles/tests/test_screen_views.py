@@ -374,3 +374,43 @@ class TestProfileEditScreenAPI:
         assert user.first_name == "سامي"
         assert user.last_name == "خالد"
         assert user.profile.avatar is not None
+
+    def test_patch_profile_city_and_retrieve_city(self, auth_client, user):
+        governorate, _ = Governorate.objects.get_or_create(
+            slug="alexandria", defaults={"name": "Alexandria"}
+        )
+        city, _ = City.objects.get_or_create(
+            governorate=governorate,
+            slug="smouha",
+            defaults={"name": "Smouha"},
+        )
+        # GET before city is set returns None
+        res_before = auth_client.get(PROFILE_EDIT_URL)
+        assert res_before.status_code == status.HTTP_200_OK
+        assert res_before.json()["data"]["city"] is None
+
+        # PATCH city_id updates city
+        res_patch = auth_client.patch(
+            PROFILE_EDIT_URL,
+            {"city_id": str(city.id)},
+            format="json",
+        )
+        assert res_patch.status_code == status.HTTP_200_OK
+        data = res_patch.json()["data"]
+        assert data["city"]["id"] == str(city.id)
+        assert data["city"]["name"] == "Smouha"
+        assert data["city"]["slug"] == "smouha"
+
+        user.profile.refresh_from_db()
+        assert user.profile.city == city
+
+    def test_patch_invalid_city_id_returns_400(self, auth_client):
+        import uuid
+
+        res = auth_client.patch(
+            PROFILE_EDIT_URL,
+            {"city_id": str(uuid.uuid4())},
+            format="json",
+        )
+        assert res.status_code == status.HTTP_400_BAD_REQUEST
+

@@ -257,13 +257,25 @@ class PropertySerializer(serializers.ModelSerializer):
         )
 
 
+class PropertyDetailOwnerSerializer(serializers.Serializer):
+    id = serializers.UUIDField(read_only=True)
+    full_name = serializers.CharField(source="get_full_name", read_only=True)
+    name = serializers.CharField(source="get_full_name", read_only=True)
+    avatar = CloudinarySerializerField(source="profile.avatar", read_only=True)
+    is_verified = serializers.BooleanField(read_only=True)
+
+
 class PropertyDetailSerializer(serializers.ModelSerializer):
     images = PropertyImageSerializer(many=True, read_only=True)
     main_image = CloudinarySerializerField(read_only=True)
     video = CloudinarySerializerField(read_only=True)
     video_duration = serializers.IntegerField(read_only=True)
     property_link = serializers.SerializerMethodField(read_only=True)
-    owner = serializers.ReadOnlyField(source="owner.get_full_name")
+    owner = PropertyDetailOwnerSerializer(read_only=True)
+    owner_is_verified = serializers.BooleanField(
+        source="owner.is_verified", read_only=True
+    )
+    is_ownership_verified = serializers.SerializerMethodField(read_only=True)
     property_type = serializers.SlugRelatedField(slug_field="slug", read_only=True)
     governorate = GovernorateSerializer(read_only=True)
     city = CitySerializer(read_only=True)
@@ -290,6 +302,8 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "owner",
+            "owner_is_verified",
+            "is_ownership_verified",
             "main_image",
             "video",
             "video_duration",
@@ -323,6 +337,9 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
             "updated_at",
         ]
         read_only_fields = fields
+
+    def get_is_ownership_verified(self, obj: Property) -> bool:
+        return bool(obj.is_verified)
 
     def get_property_link(self, obj: Property) -> str:
         return f"https://sokoun.app/properties/{obj.id}"

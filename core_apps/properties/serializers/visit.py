@@ -210,6 +210,12 @@ class AvailableDatesQuerySerializer(serializers.Serializer):
 
 class OwnerAvailabilityWeekQuerySerializer(serializers.Serializer):
     start_date = serializers.DateField(required=False)
+    week_start = serializers.DateField(required=False)
+
+    def validate(self, attrs):
+        if "week_start" in attrs and "start_date" not in attrs:
+            attrs["start_date"] = attrs["week_start"]
+        return attrs
 
 
 class OwnerAvailabilitySlotInputSerializer(serializers.Serializer):
