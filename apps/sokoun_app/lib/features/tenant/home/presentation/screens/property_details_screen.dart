@@ -13,7 +13,7 @@ import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_det
 import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_save_cubit.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/imports.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
-import 'package:sokoun_app/features/shared/chat/presentation/cubits/start_chat.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/cubits/create_conversation_cubit.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_screen.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
@@ -152,7 +152,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
     await _conversationCubit.createOrGet(
       userId: property.ownerId,
       onSuccess: (conversation) =>
-          Go.to(ChatThreadScreen(conversation: conversation)),
+          Go.to(ChatScreen(conversation: conversation)),
     );
   }
 

@@ -1,4 +1,7 @@
-part of '../../imports.dart';
+import 'package:equatable/equatable.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
+import '../profile_json.dart';
+import 'profile_city.dart';
 
 class UserProfileContent extends Equatable {
   const UserProfileContent({
@@ -22,21 +25,21 @@ class UserProfileContent extends Equatable {
       city = null;
   factory UserProfileContent.fromJson(Map<String, dynamic> json) =>
       UserProfileContent(
-        id: _profileString(json['id']),
-        name: _profileString(
+        id: profileString(json['id']),
+        name: profileString(
           json['full_name'] ??
               [
                 json['first_name'],
                 json['last_name'],
               ].whereType<String>().join(' '),
         ),
-        phone: _profileString(json['phone_number']),
-        gender: _profileString(json['gender']),
-        birthDate: _profileString(json['birth_date']),
-        avatar: _profileString(json['avatar']),
-        email: _profileString(json['email']),
+        phone: profileString(json['phone_number']),
+        gender: profileString(json['gender']),
+        birthDate: profileString(json['birth_date']),
+        avatar: profileString(json['avatar']),
+        email: profileString(json['email']),
         city: json['city'] is Map
-            ? ProfileCity.fromJson(_profileJsonMap(json['city']))
+            ? ProfileCity.fromJson(profileJsonMap(json['city']))
             : null,
       );
   final String id, name, phone, gender, birthDate, avatar;

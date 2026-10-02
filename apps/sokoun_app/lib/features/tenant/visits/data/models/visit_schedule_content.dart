@@ -1,4 +1,5 @@
-part of '../../imports.dart';
+import 'package:equatable/equatable.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 
 class VisitDayContent extends Equatable {
   const VisitDayContent({

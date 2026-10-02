@@ -18,7 +18,7 @@ class ChatReportButton extends StatelessWidget {
       barrierColor: AppColors.blackAlpha50,
       builder: (_) => const ChatReportSheet(),
     );
-    if (submitted == true && context.mounted) Go.off(const ChatListScreen());
+    if (submitted == true && context.mounted) Go.off(const ChatsScreen());
   }
 
   @override

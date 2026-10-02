@@ -40,12 +40,3 @@ class ChatListTile extends StatelessWidget {
     );
   }
 }
-
-class ChatListItem extends ChatListTile {
-  const ChatListItem({
-    super.key,
-    required super.conversation,
-    super.isReadOnly,
-    super.onOpen,
-  });
-}

@@ -1,3 +1,6 @@
+import 'package:sokoun_app/features/main_view/presentation/models/home_navigation_destination.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/property_review_sheet.dart';
+import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
@@ -20,7 +23,6 @@ import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_sear
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/details_body.dart';
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_widgets/owner_stats_grid.dart';
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/add_property_photos_page.dart';
-import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/add_property_video_page.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
 import 'package:sokoun_app/features/tenant/visits/imports.dart';
 import 'package:sokoun_app/features/shared/profile/imports.dart';
@@ -77,7 +79,7 @@ void main() {
           'details',
           'dashboard',
           'photos',
-          'video',
+          'property_review',
           'booking',
           'availability',
           'profile',
@@ -187,13 +189,13 @@ void main() {
                   onNext: () {},
                 ),
               ),
-              'video' => page(
-                AddPropertyVideoPage(
-                  video: null,
-                  onVideoSelected: (_) {},
-                  onVideoRemoved: () {},
-                  onNext: () {},
-                  onSkip: () {},
+              'property_review' => page(
+                PropertyReviewSheet(
+                  form: OwnerAddPropertyFormState.initial().copyWith(
+                    title: title,
+                    description: title,
+                  ),
+                  isEditing: false,
                 ),
               ),
               'booking' => page(
@@ -232,7 +234,7 @@ void main() {
               ),
               'profile' => scroll(
                 TenantProfileHeaderCard(
-                  profile: TenantProfileContent.fromJson({
+                  profile: AccountContent.fromJson({
                     'user': {'full_name': title},
                     'stats': {'saved_count': 12},
                   }),

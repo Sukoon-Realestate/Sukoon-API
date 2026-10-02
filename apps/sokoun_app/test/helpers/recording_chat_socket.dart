@@ -1,4 +1,6 @@
+import 'package:sokoun_app/features/shared/chat/data/models/chat_participant_content.dart';
 import 'package:melos_core/core/socket_service/web_socket_client.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_socket_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_socket_message.dart';
 
@@ -7,6 +9,13 @@ class RecordingChatSocketSource implements ChatSocketDataSource {
   int connections = 0;
   int disconnections = 0;
   int readRequests = 0;
+  int sentMessages = 0;
+  bool echoSentMessages = false;
+  Future<void> Function(ChatSocketMessage)? _onReceiveMessage;
+
+  Future<void> receive(ChatSocketMessage message) async {
+    await _onReceiveMessage?.call(message);
+  }
 
   @override
   Future<WebSocketHelper<ChatSocketMessage>> create({
@@ -19,6 +28,7 @@ class RecordingChatSocketSource implements ChatSocketDataSource {
     SocketErrorCallback? onError,
   }) async {
     creations++;
+    _onReceiveMessage = onReceiveMessage;
     return _RecordingChatSocket(this, onConnect, onDisconnect);
   }
 }
@@ -59,7 +69,20 @@ class _RecordingChatSocket implements WebSocketHelper<ChatSocketMessage> {
   }
 
   @override
-  Future<void> sendMessage(Map<String, dynamic> data) async {}
+  Future<void> sendMessage(Map<String, dynamic> data) async {
+    source.sentMessages++;
+    if (!source.echoSentMessages) return;
+    await source.receive(
+      const ChatSocketMessage.initial().copyWith(
+        id: 'socket-message-${source.sentMessages}',
+        conversationId: data['conversation_id'].toString(),
+        content: data['content'].toString(),
+        sender: const ChatParticipantContent.initial().copyWith(
+          id: UserModel.currentUser?.id ?? '',
+        ),
+      ),
+    );
+  }
 
   @override
   Future<void> emitEvent({

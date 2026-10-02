@@ -29,7 +29,7 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
 
   Future<void> _openAddProperty() async {
     final bool? shouldReturnToProperties = await Go.to<bool>(
-      const OwnerAddPropertyFlowScreen(),
+      const OwnerPropertyFlowScreen(),
     );
     if (shouldReturnToProperties == true && mounted) {
       _showMessage(LocaleKeys.ownerPropertiesSubmittedMessage);
@@ -47,7 +47,7 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
       return;
     }
     final PropertyDetailsModel? updated = await Go.to<PropertyDetailsModel>(
-      OwnerEditPropertyScreen(property: details),
+      OwnerPropertyFlowScreen(property: details),
     );
     if (updated == null || !mounted) {
       return;

@@ -44,7 +44,7 @@ class _OwnerPropertyRejectionScreenState
       return;
     }
     final PropertyDetailsModel? updated = await Go.to<PropertyDetailsModel>(
-      OwnerEditPropertyScreen(property: details),
+      OwnerPropertyFlowScreen(property: details),
     );
     if (updated != null) {
       Go.back(updated);

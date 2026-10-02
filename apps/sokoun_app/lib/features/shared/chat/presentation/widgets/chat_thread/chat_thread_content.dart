@@ -10,9 +10,9 @@ import 'package:pagify/pagify.dart';
 
 import '../../../data/models/chat_content.dart';
 import '../../../data/models/chat_socket_message.dart';
-import '../../cubits/socket_cubit.dart';
-import '../chat/bottom_bar.dart';
-import '../chat/chat_view.dart';
+import '../../cubits/chat_thread_cubit.dart';
+import 'chat_composer.dart';
+import 'chat_messages_view.dart';
 import 'chat_queued_messages_banner.dart';
 
 class ChatThreadContent extends StatefulWidget {
@@ -137,7 +137,7 @@ class _ChatThreadContentState extends State<ChatThreadContent>
       message: Message(id: content.id, type: 'text', body: content.content),
       sender: Sender(
         id: content.sender.id,
-        name: content.sender.name,
+        name: content.sender.fullName,
         image: content.sender.avatarUrl,
         isFromMe: isFromMe,
       ),
@@ -220,7 +220,7 @@ class _ChatThreadContentState extends State<ChatThreadContent>
             child: Stack(
               children: [
                 Positioned.fill(
-                  child: ChatView(
+                  child: ChatMessagesView(
                     conversation: widget.conversation,
                     controller: _chatController,
                     initialMessagesRequest: widget.initialMessagesRequest,
@@ -236,7 +236,7 @@ class _ChatThreadContentState extends State<ChatThreadContent>
               ],
             ),
           ),
-          ChatBottomBar(
+          ChatComposer(
             controller: _messageController,
             onSendPressed: _sendTextMessage,
           ),

@@ -21,8 +21,12 @@ import 'package:pagify/helpers/errors.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/home_page_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/tenant_home_data.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_home_screen.dart';
-import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_widgets/imports.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_widgets/home_property_item.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_widgets/home_search_box.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_widgets/tenant_suggested_properties_empty_state.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_widgets/tenant_home_app_bar_title.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_widgets/tenant_visit_banner.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_widgets/home_section_header.dart';
 import 'helpers/home_page_test_dependencies.dart';
 
 void main() {

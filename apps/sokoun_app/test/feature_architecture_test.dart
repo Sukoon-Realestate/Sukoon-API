@@ -11,12 +11,30 @@ void main() {
       .toList(growable: false);
 
   group('Sokoun feature architecture', () {
-    test('data code never imports presentation code', () {
+    test('data code stays independent of presentation and its barrels', () {
       final violations = <String>[];
       for (final File file in dartFiles.where(_isDataFile)) {
         final String source = file.readAsStringSync();
-        if (RegExp(r'''import\s+['"][^'"]*/presentation/''').hasMatch(source)) {
-          violations.add(_relativePath(file));
+        for (final match in RegExp(
+          r'''(?:import|export|part\s+of)\s+['"]([^'"]+)['"]''',
+        ).allMatches(source)) {
+          final String path = match.group(1)!;
+          final Uri? target = path.startsWith('package:sokoun_app/')
+              ? features.parent.absolute.uri.resolve(
+                  path.substring('package:sokoun_app/'.length),
+                )
+              : path.startsWith('package:') || path.startsWith('dart:')
+              ? null
+              : file.absolute.uri.resolve(path);
+          if (target == null) continue;
+          final File dependency = File.fromUri(target);
+          final String dependencySource = dependency.readAsStringSync();
+          if (dependency.path.contains('/presentation/') ||
+              RegExp(
+                r'''part\s+['"][^'"]*presentation/''',
+              ).hasMatch(dependencySource)) {
+            violations.add('${_relativePath(file)} depends on $path');
+          }
         }
       }
       expect(violations, isEmpty, reason: violations.join('\n'));

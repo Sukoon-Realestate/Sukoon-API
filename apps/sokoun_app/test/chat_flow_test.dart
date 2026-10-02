@@ -11,6 +11,7 @@ import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:melos_core/core/shared/route_observer.dart';
 import 'package:melos_core/core/widgets/chat_builder/easy_chat.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_data.dart';
@@ -21,19 +22,20 @@ import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_page_response.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_read_content.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_socket_message.dart';
-import 'package:sokoun_app/features/shared/chat/presentation/cubits/socket_cubit.dart';
-import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_list_screen.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/cubits/chat_thread_cubit.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/screens/chats_screen.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_restricted_screen.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_search_screen.dart';
-import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_thread_screen.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_screen.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/previous_chat_screen.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_list/chat_empty_state.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_list/chat_search_field.dart';
-import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_list/chat_list_item.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_list_tile.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_message_bubble.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_queued_messages_banner.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_thread_content.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/report/chat_report_sheet.dart';
+import 'package:sokoun_app/features/shared/notifications/data/foreground_notification_bus.dart';
 
 import 'helpers/recording_chat_socket.dart';
 
@@ -98,6 +100,7 @@ const List<ChatMessageContent> _messages = [
 ];
 
 int _messagesRequestCount = 0;
+int _conversationsRequestCount = 0;
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -131,6 +134,7 @@ void main() {
 
   setUp(() async {
     _messagesRequestCount = 0;
+    _conversationsRequestCount = 0;
     if (injector.isRegistered<ChatDataSource>()) {
       await injector.unregister<ChatDataSource>();
     }
@@ -171,6 +175,7 @@ void main() {
         builder: (context, _) {
           return MaterialApp(
             navigatorKey: Go.navigatorKey,
+            navigatorObservers: [AppNavigationObserver.instance],
             localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,
             locale: context.locale,
@@ -187,12 +192,97 @@ void main() {
     addTearDown(tester.view.reset);
   }
 
+  for (final bool fromSearch in [false, true]) {
+    testWidgets(
+      'refreshes conversations once after returning from ${fromSearch ? 'search and chat' : 'chat'}',
+      (tester) async {
+        configurePhoneViewport(tester);
+        final sockets = RecordingChatSocketSource()..echoSentMessages = true;
+        injector.registerSingleton<ChatSocketDataSource>(sockets);
+        await tester.pumpWidget(buildScreen(const ChatsScreen()));
+        await tester.pumpAndSettle();
+        expect(_conversationsRequestCount, 1);
+        if (fromSearch) {
+          await tester.tap(find.byType(ChatSearchField));
+          await tester.pumpAndSettle();
+          await tester.tap(find.byKey(const ValueKey('conversation-1')));
+        } else {
+          await tester.tap(find.byType(ChatListTile).first);
+        }
+        await tester.pumpAndSettle();
+        expect(find.byType(ChatScreen), findsOneWidget);
+        expect(_conversationsRequestCount, 1);
+
+        for (final message in ['Hello', 'Another message']) {
+          await tester.enterText(find.byType(TextField).first, message);
+          await tester.tap(find.byIcon(Icons.send_rounded));
+          await tester.pumpAndSettle();
+          expect(_conversationsRequestCount, 1);
+          expect(
+            find.text('سيتم إرسال الرسائل عند عودة الاتصال'),
+            findsNothing,
+          );
+        }
+        expect(sockets.sentMessages, 2);
+        await sockets.receive(
+          const ChatSocketMessage.initial().copyWith(
+            id: 'incoming-message',
+            conversationId: 'conversation-1',
+            content: 'Reply',
+            sender: const ChatParticipantContent.initial().copyWith(
+              id: 'other-user',
+            ),
+          ),
+        );
+        ForegroundNotificationBus.receive({
+          'notification_type': 'new_message',
+          'message_id': 'incoming-message',
+          'conversation_id': 'conversation-1',
+        });
+        await tester.pumpAndSettle();
+        expect(_conversationsRequestCount, 1);
+
+        Go.back();
+        await tester.pumpAndSettle();
+        if (fromSearch) {
+          expect(find.byType(ChatSearchScreen), findsOneWidget);
+          expect(_conversationsRequestCount, 1);
+          Go.back();
+          await tester.pumpAndSettle();
+        }
+        expect(find.byType(ChatsScreen), findsOneWidget);
+        expect(_conversationsRequestCount, 2);
+        await tester.pump(const Duration(seconds: 2));
+        expect(_conversationsRequestCount, 2);
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pumpAndSettle();
+      },
+    );
+  }
+
+  testWidgets('closing search without a chat does not refetch conversations', (
+    tester,
+  ) async {
+    configurePhoneViewport(tester);
+    await tester.pumpWidget(buildScreen(const ChatsScreen()));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(ChatSearchField));
+    await tester.pumpAndSettle();
+    Go.back();
+    await tester.pumpAndSettle();
+    expect(_conversationsRequestCount, 1);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
+  });
+
   testWidgets(
     'opens API-backed search and builds the selected thread with EasyChat',
     (tester) async {
       configurePhoneViewport(tester);
 
-      await tester.pumpWidget(buildScreen(const ChatListScreen()));
+      await tester.pumpWidget(buildScreen(const ChatsScreen()));
       await tester.pumpAndSettle();
 
       expect(find.byType(ChatListTile), findsNWidgets(3));
@@ -218,7 +308,7 @@ void main() {
     configurePhoneViewport(tester);
 
     await tester.pumpWidget(
-      buildScreen(ChatThreadScreen(conversation: _conversations.first)),
+      buildScreen(ChatScreen(conversation: _conversations.first)),
     );
     await tester.pumpAndSettle();
 
@@ -242,7 +332,7 @@ void main() {
     await tester.tap(find.text('إرسال البلاغ'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(ChatListScreen), findsOneWidget);
+    expect(find.byType(ChatsScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -385,54 +475,97 @@ void main() {
     expect(_messagesRequestCount, 1);
   });
 
-  testWidgets('shows queued messages while the chat is offline', (
-    tester,
-  ) async {
-    configurePhoneViewport(tester);
-    final _MemoryChatRealtimeGateway realtime = _MemoryChatRealtimeGateway(
-      canConnect: false,
-    );
-    final ChatThreadCubit cubit = ChatThreadCubit(
-      conversationId: _conversations.first.id,
-      otherParticipantId: 'other-user-id',
-      realtimeService: realtime,
-      dataSource: ChatData.source,
-    );
-    addTearDown(() async {
-      await cubit.close();
-      await realtime.close();
-    });
-    final ChatThreadData chatThreadData = ChatThreadData(
-      conversationId: _conversations.first.id,
-      dataSource: ChatData.source,
-    );
+  for (final bool offline in [true, false]) {
+    testWidgets(
+      offline
+          ? 'shows queued messages while the chat is offline'
+          : 'shows the queued-message banner after a two-second send delay',
+      (tester) async {
+        configurePhoneViewport(tester);
+        final _MemoryChatRealtimeGateway realtime = _MemoryChatRealtimeGateway(
+          canConnect: !offline,
+        );
+        final ChatThreadCubit cubit = ChatThreadCubit(
+          conversationId: _conversations.first.id,
+          otherParticipantId: 'other-user-id',
+          realtimeService: realtime,
+          dataSource: ChatData.source,
+        );
+        addTearDown(() async {
+          await cubit.close();
+          await realtime.close();
+        });
+        final ChatThreadData chatThreadData = ChatThreadData(
+          conversationId: _conversations.first.id,
+          dataSource: ChatData.source,
+        );
 
-    await tester.pumpWidget(
-      buildScreen(
-        BlocProvider<ChatThreadCubit>.value(
-          value: cubit,
-          child: Scaffold(
-            body: ChatThreadContent(
-              conversation: _conversations.first,
-              initialMessagesRequest: chatThreadData.loadInitialMessages(),
-              messagesCacheKey: chatThreadData.messagesCacheKey,
+        await tester.pumpWidget(
+          buildScreen(
+            BlocProvider<ChatThreadCubit>.value(
+              value: cubit,
+              child: Scaffold(
+                body: ChatThreadContent(
+                  conversation: _conversations.first,
+                  initialMessagesRequest: chatThreadData.loadInitialMessages(),
+                  messagesCacheKey: chatThreadData.messagesCacheKey,
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+        await tester.pumpAndSettle();
+
+        await tester.enterText(
+          find.byType(TextField).first,
+          'رسالة بدون اتصال',
+        );
+        await tester.tap(find.byIcon(Icons.send_rounded));
+        await tester.pump();
+
+        expect(cubit.state.queuedMessageCount, 1);
+        expect(find.byType(ChatQueuedMessagesBanner), findsOneWidget);
+        if (!offline) {
+          expect(
+            find.text('سيتم إرسال الرسائل عند عودة الاتصال'),
+            findsNothing,
+          );
+          await tester.pump(const Duration(milliseconds: 1999));
+          expect(
+            find.text('سيتم إرسال الرسائل عند عودة الاتصال'),
+            findsNothing,
+          );
+          await tester.pump(const Duration(milliseconds: 1));
+        }
+        expect(
+          find.text('سيتم إرسال الرسائل عند عودة الاتصال'),
+          findsOneWidget,
+        );
+        expect(find.byIcon(Icons.schedule_send_rounded), findsOneWidget);
+        if (!offline) {
+          realtime.addMessage(
+            const ChatSocketMessage.initial().copyWith(
+              id: 'confirmed-delayed-message',
+              conversationId: 'conversation-1',
+              content: 'رسالة بدون اتصال',
+              sender: const ChatParticipantContent.initial().copyWith(
+                id: 'f9cf1cdf-50bc-4136-a042-2302ec1513b2',
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+          expect(
+            find.text('سيتم إرسال الرسائل عند عودة الاتصال'),
+            findsNothing,
+          );
+        }
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.runAsync(cubit.close);
+        await tester.pumpAndSettle();
+      },
     );
-    await tester.pumpAndSettle();
-
-    await tester.enterText(find.byType(TextField).first, 'رسالة بدون اتصال');
-    await tester.tap(find.byIcon(Icons.send_rounded));
-    await tester.pump();
-
-    expect(cubit.state.queuedMessageCount, 1);
-    expect(find.byType(ChatQueuedMessagesBanner), findsOneWidget);
-    expect(find.text('سيتم إرسال الرسائل عند عودة الاتصال'), findsOneWidget);
-    expect(find.byIcon(Icons.schedule_send_rounded), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
+  }
 
   testWidgets('previous chat loads history without composer actions', (
     tester,
@@ -458,7 +591,7 @@ void main() {
       const _MemoryChatDataSource(conversations: []),
     );
 
-    await tester.pumpWidget(buildScreen(const ChatListScreen()));
+    await tester.pumpWidget(buildScreen(const ChatsScreen()));
     await tester.pumpAndSettle();
 
     expect(find.byType(ChatEmptyState), findsOneWidget);
@@ -469,7 +602,7 @@ void main() {
     injector.registerSingleton<ChatDataSource>(
       const _MemoryChatDataSource(conversations: _conversations),
     );
-    await tester.pumpWidget(buildScreen(const ChatListScreen()));
+    await tester.pumpWidget(buildScreen(const ChatsScreen()));
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('conversation-3')));
     await tester.pumpAndSettle();
@@ -494,6 +627,7 @@ class _MemoryChatDataSource implements ChatDataSource {
   Future<(List<ConversationContent>, PaginationData)> getConversationsPage({
     required int page,
   }) async {
+    _conversationsRequestCount++;
     return (
       page == 1 ? conversations : const <ConversationContent>[],
       PaginationData(perPage: conversations.length, totalPages: 1),

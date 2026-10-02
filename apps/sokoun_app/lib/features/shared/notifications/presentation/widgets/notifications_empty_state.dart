@@ -9,7 +9,7 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:melos_core/generated/assets.dart';
-import 'package:sokoun_app/features/owner/home/presentation/screens/owner_add_property_flow_screen.dart';
+import 'package:sokoun_app/features/owner/home/presentation/screens/owner_property_flow_screen.dart';
 import 'package:sokoun_app/features/shared/notifications/data/enums/notification_role.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
 
@@ -20,7 +20,7 @@ class NotificationsEmptyState extends StatelessWidget {
 
   void _exploreProperties() {
     if (role.isOwner) {
-      Go.to(const OwnerAddPropertyFlowScreen());
+      Go.to(const OwnerPropertyFlowScreen());
       return;
     }
 

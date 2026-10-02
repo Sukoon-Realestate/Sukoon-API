@@ -1,5 +1,3 @@
-part of '../../imports.dart';
-
 enum ProfileGender { male, female, unspecified }
 
 extension ProfileGenderX on ProfileGender {

@@ -11,7 +11,7 @@ class ProfileSettingsCubit extends AsyncCubit<ProfileSettingsContent> {
           httpRequestType: HttpRequestType.get,
           cacheKey: 'profile_settings',
           mapper: (json) =>
-              ProfileSettingsContent.fromJson(_profileJsonMap(json)),
+              ProfileSettingsContent.fromJson(profileJsonMap(json)),
           fromCacheJson: ProfileSettingsContent.fromJson,
           toJson: (data) => data.toJson(),
         ),

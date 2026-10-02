@@ -1,4 +1,8 @@
-part of '../../imports.dart';
+import '../enums/owner_visit_request_state.dart';
+import '../owner_visit_json.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart' show DateUtils;
+import 'package:melos_core/config/language/locale_keys.g.dart';
 
 class OwnerVisitCalendarContent extends Equatable {
   const OwnerVisitCalendarContent({
@@ -7,6 +11,8 @@ class OwnerVisitCalendarContent extends Equatable {
     required this.days,
     required this.selectedDate,
     required this.visits,
+    this.monthLabel = '',
+    this.selectedDateLabel = '',
   });
 
   factory OwnerVisitCalendarContent.initial(DateTime date) {
@@ -36,6 +42,8 @@ class OwnerVisitCalendarContent extends Equatable {
     return OwnerVisitCalendarContent(
       year: year,
       month: month,
+      monthLabel: ownerVisitString(json['month_label']),
+      selectedDateLabel: ownerVisitString(json['selected_date_label']),
       days:
           (json['days'] as List?)
               ?.whereType<Map<String, dynamic>>()
@@ -57,6 +65,8 @@ class OwnerVisitCalendarContent extends Equatable {
   final List<OwnerCalendarDayContent> days;
   final String selectedDate;
   final List<OwnerCalendarVisitContent> visits;
+  final String monthLabel;
+  final String selectedDateLabel;
 
   DateTime get selectedDateValue =>
       DateTime.tryParse(selectedDate) ?? DateTime(year, month);
@@ -85,17 +95,19 @@ class OwnerVisitCalendarContent extends Equatable {
     return cells;
   }
 
-  bool hasVisitsOn(int day) {
-    return days.any(
-      (calendarDay) => calendarDay.day == day && calendarDay.visitCount > 0,
-    );
-  }
+  int visitsOn(int day) => days
+      .where((calendarDay) => calendarDay.day == day)
+      .fold(0, (count, calendarDay) => count + calendarDay.visitCount);
+
+  bool hasVisitsOn(int day) => visitsOn(day) > 0;
 
   Map<String, dynamic> toJson() => {
     'year': year,
     'month': month,
     'days': days.map((day) => day.toJson()).toList(growable: false),
     'selected_date': selectedDate,
+    'month_label': monthLabel,
+    'selected_date_label': selectedDateLabel,
     'visits': visits.map((visit) => visit.toJson()).toList(growable: false),
   };
 
@@ -105,6 +117,8 @@ class OwnerVisitCalendarContent extends Equatable {
     List<OwnerCalendarDayContent>? days,
     String? selectedDate,
     List<OwnerCalendarVisitContent>? visits,
+    String? monthLabel,
+    String? selectedDateLabel,
   }) {
     return OwnerVisitCalendarContent(
       year: year ?? this.year,
@@ -112,6 +126,8 @@ class OwnerVisitCalendarContent extends Equatable {
       days: days ?? this.days,
       selectedDate: selectedDate ?? this.selectedDate,
       visits: visits ?? this.visits,
+      monthLabel: monthLabel ?? this.monthLabel,
+      selectedDateLabel: selectedDateLabel ?? this.selectedDateLabel,
     );
   }
 
@@ -132,7 +148,8 @@ class OwnerVisitCalendarContent extends Equatable {
   ];
 
   @override
-  List<Object?> get props => [year, month, days, selectedDate, visits];
+  List<Object?> get props => [year, month, days, selectedDate, visits,
+    monthLabel, selectedDateLabel];
 }
 
 class OwnerCalendarDayContent extends Equatable {
@@ -181,6 +198,8 @@ class OwnerCalendarVisitContent extends Equatable {
     required this.property,
     required this.visitTime,
     required this.status,
+    this.timeFormatted = '',
+    this.statusLabel = '',
   });
 
   const OwnerCalendarVisitContent.initial()
@@ -188,18 +207,22 @@ class OwnerCalendarVisitContent extends Equatable {
       tenant = const OwnerCalendarTenantContent.initial(),
       property = const OwnerCalendarPropertyContent.initial(),
       visitTime = '',
+      timeFormatted = '',
+      statusLabel = '',
       status = OwnerVisitRequestStatus.pending;
 
   factory OwnerCalendarVisitContent.fromJson(Map<String, dynamic> json) {
     return OwnerCalendarVisitContent(
       id: json['id'] as String? ?? '',
       tenant: OwnerCalendarTenantContent.fromJson(
-        _ownerVisitJsonMap(json['tenant']),
+        ownerVisitJsonMap(json['tenant']),
       ),
       property: OwnerCalendarPropertyContent.fromJson(
-        _ownerVisitJsonMap(json['property']),
+        ownerVisitJsonMap(json['property']),
       ),
       visitTime: json['visit_time'] as String? ?? '',
+      timeFormatted: ownerVisitString(json['time_formatted']),
+      statusLabel: ownerVisitString(json['status_label']),
       status: OwnerVisitRequestStatusExtension.fromName(
         json['status'] as String?,
       ),
@@ -211,8 +234,11 @@ class OwnerCalendarVisitContent extends Equatable {
   final OwnerCalendarPropertyContent property;
   final String visitTime;
   final OwnerVisitRequestStatus status;
+  final String timeFormatted;
+  final String statusLabel;
 
   String get tenantInitial {
+    if (tenant.initial.trim().isNotEmpty) return tenant.initial;
     final String name = tenant.name.trim();
     return name.isEmpty ? '' : name.substring(0, 1);
   }
@@ -222,6 +248,8 @@ class OwnerCalendarVisitContent extends Equatable {
     'tenant': tenant.toJson(),
     'property': property.toJson(),
     'visit_time': visitTime,
+    'time_formatted': timeFormatted,
+    'status_label': statusLabel,
     'status': status.name,
   };
 
@@ -231,6 +259,8 @@ class OwnerCalendarVisitContent extends Equatable {
     OwnerCalendarPropertyContent? property,
     String? visitTime,
     OwnerVisitRequestStatus? status,
+    String? timeFormatted,
+    String? statusLabel,
   }) {
     return OwnerCalendarVisitContent(
       id: id ?? this.id,
@@ -238,39 +268,52 @@ class OwnerCalendarVisitContent extends Equatable {
       property: property ?? this.property,
       visitTime: visitTime ?? this.visitTime,
       status: status ?? this.status,
+      timeFormatted: timeFormatted ?? this.timeFormatted,
+      statusLabel: statusLabel ?? this.statusLabel,
     );
   }
 
   @override
-  List<Object?> get props => [id, tenant, property, visitTime, status];
+  List<Object?> get props => [id, tenant, property, visitTime, status,
+    timeFormatted, statusLabel];
 }
 
 class OwnerCalendarTenantContent extends Equatable {
-  const OwnerCalendarTenantContent({required this.id, required this.name});
+  const OwnerCalendarTenantContent({required this.id, required this.name,
+    this.avatar = '', this.initial = ''});
 
-  const OwnerCalendarTenantContent.initial() : id = '', name = '';
+  const OwnerCalendarTenantContent.initial() : id = '', name = '',
+    avatar = '', initial = '';
 
   factory OwnerCalendarTenantContent.fromJson(Map<String, dynamic> json) {
     return OwnerCalendarTenantContent(
       id: json['id'] as String? ?? '',
       name: json['name'] as String? ?? '',
+      avatar: ownerVisitString(json['avatar']),
+      initial: ownerVisitString(json['initial']),
     );
   }
 
   final String id;
   final String name;
+  final String avatar;
+  final String initial;
 
-  Map<String, dynamic> toJson() => {'id': id, 'name': name};
+  Map<String, dynamic> toJson() => {'id': id, 'name': name,
+    'avatar': avatar, 'initial': initial};
 
-  OwnerCalendarTenantContent copyWith({String? id, String? name}) {
+  OwnerCalendarTenantContent copyWith({String? id, String? name,
+    String? avatar, String? initial}) {
     return OwnerCalendarTenantContent(
       id: id ?? this.id,
       name: name ?? this.name,
+      avatar: avatar ?? this.avatar,
+      initial: initial ?? this.initial,
     );
   }
 
   @override
-  List<Object?> get props => [id, name];
+  List<Object?> get props => [id, name, avatar, initial];
 }
 
 class OwnerCalendarPropertyContent extends Equatable {
@@ -299,8 +342,4 @@ class OwnerCalendarPropertyContent extends Equatable {
 
   @override
   List<Object?> get props => [id, title];
-}
-
-Map<String, dynamic> _ownerVisitJsonMap(Object? value) {
-  return value is Map ? value.cast<String, dynamic>() : const {};
 }

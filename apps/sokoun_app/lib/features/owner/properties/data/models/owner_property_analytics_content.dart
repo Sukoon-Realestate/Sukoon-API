@@ -1,4 +1,5 @@
-part of '../../imports.dart';
+import '../owner_property_json.dart';
+import 'package:equatable/equatable.dart';
 
 class OwnerAnalyticsDay extends Equatable {
   const OwnerAnalyticsDay({required this.date, required this.count});
@@ -6,7 +7,7 @@ class OwnerAnalyticsDay extends Equatable {
   factory OwnerAnalyticsDay.fromJson(Map<String, dynamic> json) =>
       OwnerAnalyticsDay(
         date: json['date']?.toString() ?? '',
-        count: _ownerNumber(json['count']).toInt(),
+        count: ownerPropertyNumber(json['count']).toInt(),
       );
   final String date;
   final int count;
@@ -28,7 +29,7 @@ class OwnerSearchCriterion extends Equatable {
       OwnerSearchCriterion(
         key: json['key']?.toString() ?? '',
         label: json['label']?.toString() ?? '',
-        percentage: _ownerNumber(json['percentage']).toDouble(),
+        percentage: ownerPropertyNumber(json['percentage']).toDouble(),
       );
   final String key, label;
   final double percentage;
@@ -73,29 +74,30 @@ class OwnerPropertyAnalyticsContent extends Equatable {
       history = const [],
       criteria = const [];
 
-  factory OwnerPropertyAnalyticsContent.fromJson(Map<String, dynamic> json) =>
-      OwnerPropertyAnalyticsContent(
-        hasDetails:
-            json['has_details'] as bool? ??
-            const [
-              'views_count',
-              'visit_requests_count',
-              'saved_count',
-              'acceptance_rate',
-            ].every((key) => json[key] != null),
-        views: _ownerNumber(json['views_count'] ?? json['views']).toInt(),
-        visitRequests: _ownerNumber(json['visit_requests_count']).toInt(),
-        saves: _ownerNumber(json['saved_count']).toInt(),
-        acceptanceRate: _ownerNumber(json['acceptance_rate']).toDouble(),
-        period: json['period']?.toString() ?? '30_days',
-        periodLabel: json['period_label']?.toString() ?? '',
-        history: _ownerMaps(
-          json['views_last_14_days'],
-        ).map(OwnerAnalyticsDay.fromJson).toList(growable: false),
-        criteria: _ownerMaps(
-          json['top_search_criteria'],
-        ).map(OwnerSearchCriterion.fromJson).toList(growable: false),
-      );
+  factory OwnerPropertyAnalyticsContent.fromJson(
+    Map<String, dynamic> json,
+  ) => OwnerPropertyAnalyticsContent(
+    hasDetails:
+        json['has_details'] as bool? ??
+        const [
+          'views_count',
+          'visit_requests_count',
+          'saved_count',
+          'acceptance_rate',
+        ].every((key) => json[key] != null),
+    views: ownerPropertyNumber(json['views_count'] ?? json['views']).toInt(),
+    visitRequests: ownerPropertyNumber(json['visit_requests_count']).toInt(),
+    saves: ownerPropertyNumber(json['saved_count']).toInt(),
+    acceptanceRate: ownerPropertyNumber(json['acceptance_rate']).toDouble(),
+    period: json['period']?.toString() ?? '30_days',
+    periodLabel: json['period_label']?.toString() ?? '',
+    history: ownerPropertyMaps(
+      json['views_last_14_days'],
+    ).map(OwnerAnalyticsDay.fromJson).toList(growable: false),
+    criteria: ownerPropertyMaps(
+      json['top_search_criteria'],
+    ).map(OwnerSearchCriterion.fromJson).toList(growable: false),
+  );
 
   final bool hasDetails;
   final int views, visitRequests, saves;
@@ -155,10 +157,3 @@ class OwnerPropertyAnalyticsContent extends Equatable {
     criteria,
   ];
 }
-
-num _ownerNumber(dynamic value) =>
-    value is num ? value : num.tryParse('$value') ?? 0;
-Iterable<Map<String, dynamic>> _ownerMaps(dynamic value) =>
-    (value is List ? value : const []).whereType<Map>().map(
-      (item) => Map<String, dynamic>.from(item),
-    );

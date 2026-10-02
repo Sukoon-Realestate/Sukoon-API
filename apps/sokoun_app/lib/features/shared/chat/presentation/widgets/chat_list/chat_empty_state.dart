@@ -8,12 +8,9 @@ import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
-import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
-import 'package:sokoun_app/features/main_view/data/enums/workspace_tab.dart';
-import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
-import 'package:sokoun_app/features/owner/home/presentation/screens/owner_add_property_flow_screen.dart';
+import 'package:sokoun_app/features/owner/home/presentation/screens/owner_property_flow_screen.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
 import 'package:melos_core/generated/assets.dart';
 
@@ -68,7 +65,7 @@ class ChatEmptyState extends StatelessWidget {
                 onTap: () => Go.to(
                   UserTypeHelper.instance.currentUserType.isTenant
                       ? const TenantSearchScreen()
-                      : const OwnerAddPropertyFlowScreen(),
+                      : const OwnerPropertyFlowScreen(),
                 ),
                 title: UserTypeHelper.instance.currentUserType.isTenant
                     ? LocaleKeys.chatExploreProperties

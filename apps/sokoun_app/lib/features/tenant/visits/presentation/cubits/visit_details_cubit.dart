@@ -10,7 +10,8 @@ class VisitDetailsCubit extends AsyncCubit<TenantVisitDetailsContent> {
           api: ApiConstants.tenantVisitRequestDetails(visitId),
           httpRequestType: HttpRequestType.get,
           cacheKey: 'tenant_visit_details_$visitId',
-          mapper: (json) => TenantVisitDetailsContent.fromJson(_visitMap(json)),
+          mapper: (json) =>
+              TenantVisitDetailsContent.fromJson(visitJsonMap(json)),
           fromCacheJson: TenantVisitDetailsContent.fromJson,
           toJson: (data) => data.toJson(),
         ),

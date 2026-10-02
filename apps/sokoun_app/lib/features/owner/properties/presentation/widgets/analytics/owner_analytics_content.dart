@@ -58,7 +58,7 @@ class OwnerAnalyticsContent extends StatelessWidget {
             ),
             OwnerAnalyticsMetricCard(
               label: LocaleKeys.ownerAnalyticsAcceptanceRate,
-              value: '${_ownerFormattedNumber(content.acceptanceRate)}%',
+              value: '${ownerFormattedNumber(content.acceptanceRate)}%',
               icon: Icons.trending_up_rounded,
               color: AppColors.green,
               backgroundColor: AppColors.greenPale,

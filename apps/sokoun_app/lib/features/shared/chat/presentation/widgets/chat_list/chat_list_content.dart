@@ -6,17 +6,14 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:melos_core/core/network/account_session.dart';
+import 'package:melos_core/core/shared/route_observer.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:pagify/pagify.dart';
 
-import '../../../../notifications/data/enums/app_notification_kind.dart';
-import '../../../../notifications/data/foreground_notification_bus.dart';
-import '../../../../notifications/data/models/app_notification_content.dart';
-import '../../../data/chats_data.dart';
-import '../../../data/chat_realtime_service.dart';
+import '../../../data/chat_data.dart';
 import '../../../data/chat_unread_refresh_bus.dart';
 import '../../../data/models/chat_content.dart';
-import '../../../data/models/chat_socket_message.dart';
 import '../../screens/chat_search_screen.dart';
 import '../shared/chat_privacy_banner.dart';
 import 'chat_empty_state.dart';
@@ -30,39 +27,57 @@ class ChatListContent extends StatefulWidget {
   State<ChatListContent> createState() => _ChatListContentState();
 }
 
-class _ChatListContentState extends State<ChatListContent> {
+class _ChatListContentState extends State<ChatListContent> with RouteAware {
   late final ChatDataSource _dataSource;
   late final PagifyController<ConversationContent> _pagifyController;
-  StreamSubscription<ChatSocketMessage>? _messageSubscription;
+  final int _sessionGeneration = AccountSession.generation;
+  ModalRoute<dynamic>? _route;
+  bool _needsRefresh = false;
   StreamSubscription<int>? _unreadRefreshSubscription;
-  StreamSubscription<AppNotificationContent>? _notificationSubscription;
 
   @override
   void initState() {
     super.initState();
     _dataSource = ChatData.source;
     _pagifyController = PagifyController<ConversationContent>();
-    _messageSubscription = ChatRealtimeService.instance.messages.listen(
-      (_) => unawaited(_pagifyController.refresh()),
-    );
-    _unreadRefreshSubscription = ChatUnreadRefreshBus.stream.listen((removed) {
-      if (removed == 0) unawaited(_pagifyController.refresh());
-    });
-    _notificationSubscription = ForegroundNotificationBus.stream.listen((
-      notification,
-    ) {
-      if (notification.kind == AppNotificationKind.newMessage ||
-          notification.category == 'chat') {
-        unawaited(_pagifyController.refresh());
+    _unreadRefreshSubscription = ChatUnreadRefreshBus.stream.listen((_) {
+      if (_sessionGeneration == AccountSession.generation &&
+          _route?.isCurrent == false) {
+        _needsRefresh = true;
       }
     });
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (identical(_route, route)) return;
+    AppNavigationObserver.instance.unsubscribe(this);
+    _route = route;
+    if (route != null) AppNavigationObserver.instance.subscribe(this, route);
+  }
+
+  @override
+  void didPopNext() {
+    // Wait for the navigator to restore the list's route and tab visibility.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted ||
+          !_needsRefresh ||
+          _sessionGeneration != AccountSession.generation ||
+          _route?.isCurrent != true) {
+        return;
+      }
+      _needsRefresh = false;
+      if (!TickerMode.of(context)) return;
+      unawaited(_pagifyController.refresh());
+    });
+  }
+
+  @override
   void dispose() {
-    unawaited(_messageSubscription?.cancel());
+    AppNavigationObserver.instance.unsubscribe(this);
     unawaited(_unreadRefreshSubscription?.cancel());
-    unawaited(_notificationSubscription?.cancel());
     super.dispose();
   }
 

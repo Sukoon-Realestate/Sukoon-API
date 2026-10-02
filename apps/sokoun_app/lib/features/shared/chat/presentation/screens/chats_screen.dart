@@ -13,7 +13,3 @@ class ChatsScreen extends StatelessWidget {
     body: const SafeArea(child: ChatListContent()),
   );
 }
-
-class ChatListScreen extends ChatsScreen {
-  const ChatListScreen({super.key});
-}

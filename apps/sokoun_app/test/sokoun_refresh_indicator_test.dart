@@ -12,6 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/language/languages.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/widget_extension.dart';
+import 'package:melos_core/core/widgets/app_logo_widget.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_refresh_indicator.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_theme.dart';
 
@@ -80,7 +81,7 @@ void main() {
       expect(calls, 1);
       expect(find.text('Refreshing'), findsOneWidget);
       expect(find.byType(RefreshProgressIndicator), findsNothing);
-      expect(find.byIcon(Icons.home_outlined), findsOneWidget);
+      expect(find.byType(AppLogoWidget), findsOneWidget);
 
       await tester.drag(find.byType(Scrollable), const Offset(0, 350));
       await tester.pump(const Duration(seconds: 1));
@@ -178,7 +179,7 @@ void main() {
               .isLiveRegion,
           isTrue,
         );
-        final icon = tester.getCenter(find.byIcon(Icons.home_outlined));
+        final icon = tester.getCenter(find.byType(AppLogoWidget));
         final text = tester.getCenter(find.text(label));
         expect(locale == 'ar' ? icon.dx > text.dx : icon.dx < text.dx, isTrue);
         expect(tester.takeException(), isNull);

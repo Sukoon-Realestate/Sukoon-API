@@ -3,11 +3,10 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_logo_widget.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:melos_core/core/widgets/svg_pic.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
-import 'package:sokoun_app/shared_widgets/sokoun_selection_feedback.dart';
 
-import 'home_bottom_navigation.dart';
+import '../models/home_navigation_destination.dart';
+import 'home_navigation_icon.dart';
 
 class HomeNavigationRail extends StatelessWidget {
   const HomeNavigationRail({
@@ -62,18 +61,10 @@ class HomeNavigationRail extends StatelessWidget {
                         child: Column(
                           spacing: 8,
                           children: [
-                            Badge(
-                              isLabelVisible: destinations[i].badgeCount > 0,
-                              label: Text(
-                                destinations[i].badgeCount > 99
-                                    ? '99+'
-                                    : '${destinations[i].badgeCount}',
-                                style: AppTextStyles.base,
-                              ),
-                              child: SokounSelectionFeedback(
-                                selected: i == currentIndex,
-                                child: _icon(i),
-                              ),
+                            HomeNavigationIcon(
+                              destination: destinations[i],
+                              isSelected: i == currentIndex,
+                              size: 24,
                             ),
                             AppText(
                               destinations[i].label,
@@ -101,16 +92,4 @@ class HomeNavigationRail extends StatelessWidget {
       ),
     ),
   );
-
-  Widget _icon(int index) {
-    final Object icon = index == currentIndex
-        ? destinations[index].selectedIcon
-        : destinations[index].icon;
-    final Color color = index == currentIndex
-        ? AppColors.sokoonTeal
-        : AppColors.sokoonGray;
-    return icon is String
-        ? SvgPic(assetName: icon, size: 24, color: color)
-        : Icon(icon as IconData, size: 24, color: color);
-  }
 }

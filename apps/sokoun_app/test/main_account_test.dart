@@ -89,13 +89,8 @@ void main() {
   test(
     'loads cookie-authenticated account and persists it before completion',
     () async {
-      TenantProfileContent? profile;
-      await accountCubit.getAccount(
-        onProfileLoaded: (value) {
-          expect(UserModel.currentUser?.name, 'Updated account');
-          profile = value;
-        },
-      );
+      await accountCubit.getAccount();
+      final AccountContent profile = accountCubit.data;
       expect(repository.requests, 1);
       expect(repository.lastApi, ApiConstants.getAccData);
       expect(repository.lastMethod, HttpRequestType.get);
@@ -104,7 +99,7 @@ void main() {
       expect(userCubit.isUserLoggedIn, isTrue);
       expect(userCubit.user.toJson(), UserModel.currentUser?.toJson());
       expect(UserModel.currentUser?.email, 'updated@example.com');
-      expect(profile?.stats.savedCount, 3);
+      expect(profile.stats.savedCount, 3);
 
       final UserCubit restored = UserCubit();
       addTearDown(restored.close);
@@ -132,6 +127,20 @@ void main() {
     expect(repository.requests, 0);
     expect(UserModel.currentUser, isNull);
     expect(userCubit.isUserLoggedIn, isFalse);
+  });
+
+  test('profile edits update the shared account without refetching', () async {
+    await accountCubit.getAccount();
+    final int savedCount = accountCubit.data.stats.savedCount;
+    await userCubit.updateUser(
+      userCubit.user.copyWith(name: 'Edited account', phone: '0511111111'),
+    );
+    await Future<void>.delayed(Duration.zero);
+
+    expect(repository.requests, 1);
+    expect(accountCubit.data.user.fullName, 'Edited account');
+    expect(accountCubit.data.accountDetails.phoneNumber, '0511111111');
+    expect(accountCubit.data.stats.savedCount, savedCount);
   });
 
   for (final bool closeCubit in [false, true]) {

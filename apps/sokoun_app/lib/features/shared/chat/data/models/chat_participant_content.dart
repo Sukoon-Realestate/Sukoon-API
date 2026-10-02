@@ -3,12 +3,12 @@ import 'package:equatable/equatable.dart';
 class ChatParticipantContent extends Equatable {
   const ChatParticipantContent({
     required this.id,
-    required this.firstName,
-    required this.lastName,
-    required this.fullName,
-    required this.email,
-    required this.avatarUrl,
-    required this.isOnline,
+    this.firstName = '',
+    this.lastName = '',
+    this.fullName = '',
+    this.email = '',
+    this.avatarUrl = '',
+    this.isOnline = false,
     this.isVerified = true,
   });
 
@@ -25,7 +25,8 @@ class ChatParticipantContent extends Equatable {
   factory ChatParticipantContent.fromJson(Map<String, dynamic> json) {
     final String firstName = json['first_name']?.toString() ?? '';
     final String lastName = json['last_name']?.toString() ?? '';
-    final String fullName = json['full_name']?.toString().trim() ?? '';
+    final String fullName =
+        (json['full_name'] ?? json['name'])?.toString().trim() ?? '';
     final String composedName = [
       firstName,
       lastName,
@@ -39,8 +40,8 @@ class ChatParticipantContent extends Equatable {
       email: json['email']?.toString() ?? '',
       avatarUrl:
           json['avatar_url']?.toString() ?? json['avatar']?.toString() ?? '',
-      isOnline: json['is_online'] == true,
-      isVerified: json['is_verified'] != false,
+      isOnline: json['is_online'] as bool? ?? false,
+      isVerified: json['is_verified'] as bool? ?? true,
     );
   }
 

@@ -1,4 +1,7 @@
-part of '../../imports.dart';
+import '../visit_json.dart';
+import 'package:equatable/equatable.dart';
+import 'package:sokoun_app/features/shared/reviews/data/models/property_review.dart';
+import 'tenant_visit_content.dart';
 
 class TenantVisitDetailsContent extends Equatable {
   const TenantVisitDetailsContent({
@@ -26,8 +29,8 @@ class TenantVisitDetailsContent extends Equatable {
       review = null;
 
   factory TenantVisitDetailsContent.fromJson(Map<String, dynamic> json) {
-    final Map<String, dynamic> property = _visitMap(json['property']);
-    final Map<String, dynamic> owner = _visitMap(json['owner']);
+    final Map<String, dynamic> property = visitJsonMap(json['property']);
+    final Map<String, dynamic> owner = visitJsonMap(json['owner']);
     return TenantVisitDetailsContent(
       visit: TenantVisitContent.fromJson(json),
       propertyId: property['id']?.toString() ?? '',
@@ -39,7 +42,7 @@ class TenantVisitDetailsContent extends Equatable {
       maskedPhone: owner['masked_phone_number']?.toString() ?? '',
       ownerVerified: owner['is_verified'] == true,
       review: json['review'] is Map
-          ? PropertyReview.fromJson(_visitMap(json['review']))
+          ? PropertyReview.fromJson(visitJsonMap(json['review']))
           : null,
     );
   }

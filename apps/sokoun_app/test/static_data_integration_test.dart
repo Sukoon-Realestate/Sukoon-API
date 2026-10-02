@@ -189,7 +189,7 @@ void main() {
       await tester.tap(find.text('API duplex'));
       expect(form.propertyType, 'API duplex');
       expect(form.propertyTypeApiValue, 'duplex');
-      expect(form.toRequestBody()['property_type'], 'duplex');
+      expect(form.toJson()['property_type'], 'duplex');
       expect(repository.requests.single.api, ApiConstants.propertyTypes);
       expect(tester.takeException(), isNull);
     },
@@ -260,7 +260,7 @@ void main() {
         'is_verified': false,
       },
     });
-    final menu = TenantProfileMenuItemsContent.fromJson({
+    final menu = AccountMenuItemsContent.fromJson({
       'contracts': {'count': 8},
       'reviews': {'count': 13},
     });

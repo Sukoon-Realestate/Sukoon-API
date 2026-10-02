@@ -728,8 +728,6 @@ OwnerAddPropertyFormState _reviewForm() =>
       bathrooms: '1',
       space: '120',
       floor: '3',
-      buildingYear: '2020',
-      deposit: 'One month',
       rentalDuration: '12',
       rentalUnit: 'Month',
       monthlyPrice: '18000',
@@ -738,9 +736,7 @@ OwnerAddPropertyFormState _reviewForm() =>
         'Near public transport and services.',
       ).join(' '),
       amenities: {'Wi-Fi', 'Elevator'},
-      smokingPolicy: 'No smoking',
       suitableFor: 'Families',
-      ownershipProofUrl: 'https://example.com/proof.jpg',
     );
 
 void _size(WidgetTester tester, double width) {

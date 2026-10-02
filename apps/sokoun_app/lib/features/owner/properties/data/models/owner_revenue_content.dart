@@ -1,4 +1,6 @@
-part of '../../imports.dart';
+import '../enums/owner_revenue_status.dart';
+import '../owner_property_json.dart';
+import 'package:equatable/equatable.dart';
 
 class OwnerRevenueContent extends Equatable {
   const OwnerRevenueContent({
@@ -20,23 +22,24 @@ class OwnerRevenueContent extends Equatable {
       isPositive = true,
       properties = const [],
       transactions = const [];
-  factory OwnerRevenueContent.fromJson(Map<String, dynamic> json) =>
-      OwnerRevenueContent(
-        totalThisMonth: _ownerNumber(json['total_this_month']).toDouble(),
-        formattedTotal: json['formatted_total']?.toString() ?? '',
-        currency: json['currency']?.toString() ?? '',
-        percentageChange: _ownerNumber(json['percentage_change']).toDouble(),
-        comparisonText: json['comparison_text']?.toString() ?? '',
-        isPositive:
-            json['is_positive'] as bool? ??
-            _ownerNumber(json['percentage_change']) >= 0,
-        properties: _ownerMaps(
-          json['properties'],
-        ).map(OwnerRevenuePropertyContent.fromJson).toList(growable: false),
-        transactions: _ownerMaps(
-          json['recent_transactions'],
-        ).map(OwnerTransactionContent.fromJson).toList(growable: false),
-      );
+  factory OwnerRevenueContent.fromJson(
+    Map<String, dynamic> json,
+  ) => OwnerRevenueContent(
+    totalThisMonth: ownerPropertyNumber(json['total_this_month']).toDouble(),
+    formattedTotal: json['formatted_total']?.toString() ?? '',
+    currency: json['currency']?.toString() ?? '',
+    percentageChange: ownerPropertyNumber(json['percentage_change']).toDouble(),
+    comparisonText: json['comparison_text']?.toString() ?? '',
+    isPositive:
+        json['is_positive'] as bool? ??
+        ownerPropertyNumber(json['percentage_change']) >= 0,
+    properties: ownerPropertyMaps(
+      json['properties'],
+    ).map(OwnerRevenuePropertyContent.fromJson).toList(growable: false),
+    transactions: ownerPropertyMaps(
+      json['recent_transactions'],
+    ).map(OwnerTransactionContent.fromJson).toList(growable: false),
+  );
   final double totalThisMonth, percentageChange;
   final String formattedTotal, currency, comparisonText;
   final bool isPositive;
@@ -44,7 +47,7 @@ class OwnerRevenueContent extends Equatable {
   final List<OwnerTransactionContent> transactions;
   String get totalLabel => formattedTotal.isNotEmpty
       ? formattedTotal
-      : _ownerFormattedNumber(totalThisMonth);
+      : ownerFormattedNumber(totalThisMonth);
   Map<String, dynamic> toJson() => {
     'total_this_month': totalThisMonth,
     'formatted_total': formattedTotal,
@@ -115,7 +118,7 @@ class OwnerRevenuePropertyContent extends Equatable {
       OwnerRevenuePropertyContent(
         id: json['id']?.toString() ?? '',
         title: json['title']?.toString() ?? '',
-        amount: _ownerNumber(json['amount']).toDouble(),
+        amount: ownerPropertyNumber(json['amount']).toDouble(),
         dueDate: json['due_date']?.toString() ?? '',
         status: OwnerRevenueStatusX.fromName(json['status']?.toString()),
         formattedAmount: json['formatted_amount']?.toString() ?? '',
@@ -127,7 +130,7 @@ class OwnerRevenuePropertyContent extends Equatable {
   final OwnerRevenueStatus status;
   String get amountLabel => formattedAmount.isNotEmpty
       ? formattedAmount
-      : _ownerFormattedNumber(amount);
+      : ownerFormattedNumber(amount);
   Map<String, dynamic> toJson() => {
     'id': id,
     'title': title,
@@ -197,7 +200,7 @@ class OwnerTransactionContent extends Equatable {
         id: json['id']?.toString() ?? '',
         title: json['title']?.toString() ?? '',
         date: json['date']?.toString() ?? '',
-        amount: _ownerNumber(json['amount']).toDouble(),
+        amount: ownerPropertyNumber(json['amount']).toDouble(),
         formattedAmount: json['formatted_amount']?.toString() ?? '',
         currency: json['currency']?.toString() ?? '',
         dateIso: json['date_iso']?.toString() ?? '',
@@ -210,7 +213,7 @@ class OwnerTransactionContent extends Equatable {
   bool get isCredit => _isCredit ?? amount >= 0;
   String get amountLabel => formattedAmount.isNotEmpty
       ? formattedAmount
-      : _ownerFormattedNumber(amount.abs());
+      : ownerFormattedNumber(amount.abs());
   Map<String, dynamic> toJson() => {
     'id': id,
     'title': title,
@@ -255,14 +258,4 @@ class OwnerTransactionContent extends Equatable {
     type,
     _isCredit,
   ];
-}
-
-String _ownerFormattedNumber(num value) {
-  final text = value.toStringAsFixed(2).replaceFirst(RegExp(r'\.?0+$'), '');
-  final parts = text.split('.');
-  final whole = parts.first.replaceAllMapped(
-    RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-    (match) => '${match[1]},',
-  );
-  return parts.length > 1 ? '$whole.${parts.last}' : whole;
 }

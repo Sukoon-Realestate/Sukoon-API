@@ -1,4 +1,7 @@
-part of '../../imports.dart';
+import '../enums/owner_visit_request_state.dart';
+import '../owner_visit_json.dart';
+import 'owner_visit_request_details_content.dart';
+import 'package:equatable/equatable.dart';
 
 class OwnerVisitRequestContent extends Equatable {
   const OwnerVisitRequestContent({
@@ -17,6 +20,10 @@ class OwnerVisitRequestContent extends Equatable {
     this.propertyId = '',
     this.tenantId = '',
     this.actions,
+    this.avatar = '',
+    this.subtitle = '',
+    this.statusLabel = '',
+    this.verificationWarning = '',
   });
 
   factory OwnerVisitRequestContent.initial() => const OwnerVisitRequestContent(
@@ -65,7 +72,12 @@ class OwnerVisitRequestContent extends Equatable {
       name: name,
       property:
           json['property_title'] ??
-          property['title'] ??
+          (property.isNotEmpty
+              ? [property['title'], property['district']]
+                  .whereType<String>()
+                  .where((value) => value.trim().isNotEmpty)
+                  .join(' · ')
+              : null) ??
           (propertyValue is String ? propertyValue : '') ??
           '',
       dateLabel:
@@ -78,13 +90,18 @@ class OwnerVisitRequestContent extends Equatable {
       tenantNote: json['tenant_note'] ?? json['note'] ?? '',
       phone: json['phone'] ?? tenant['phone_number'] ?? tenant['phone'] ?? '',
       status: OwnerVisitRequestStatusExtension.fromName(json['status']),
-      isVerified: json['is_verified'] ?? tenant['is_verified'] ?? false,
+      isVerified: json['is_verified_tenant'] ??
+          json['is_verified'] ?? tenant['is_verified'] ?? false,
+      avatar: ownerVisitString(tenant['avatar'] ?? json['avatar']),
+      subtitle: ownerVisitString(json['subtitle']),
+      statusLabel: ownerVisitString(json['status_label']),
+      verificationWarning: ownerVisitString(json['verification_warning']),
       propertyId:
           property['id'] as String? ?? json['property_id'] as String? ?? '',
       tenantId: tenant['id']?.toString() ?? json['tenant_id']?.toString() ?? '',
       actions: json['actions'] is Map
           ? OwnerVisitRequestActionsContent.fromJson(
-              _ownerVisitJsonMap(json['actions']),
+              ownerVisitJsonMap(json['actions']),
             )
           : null,
     );
@@ -115,8 +132,13 @@ class OwnerVisitRequestContent extends Equatable {
   final String propertyId;
   final String tenantId;
   final OwnerVisitRequestActionsContent? actions;
+  final String avatar;
+  final String subtitle;
+  final String statusLabel;
+  final String verificationWarning;
   bool get canAccept => status.canDecide && (actions?.canAccept ?? true);
   bool get canReject => status.canDecide && (actions?.canReject ?? true);
+  bool get canChat => tenantId.isNotEmpty && (actions?.canChat ?? true);
 
   Map<String, dynamic> toJson() {
     return {
@@ -134,6 +156,10 @@ class OwnerVisitRequestContent extends Equatable {
       'is_verified': isVerified,
       'property_id': propertyId,
       'tenant_id': tenantId,
+      'avatar': avatar,
+      'subtitle': subtitle,
+      'status_label': statusLabel,
+      'verification_warning': verificationWarning,
       if (actions != null) 'actions': actions!.toJson(),
     };
   }
@@ -154,6 +180,10 @@ class OwnerVisitRequestContent extends Equatable {
     String? propertyId,
     String? tenantId,
     OwnerVisitRequestActionsContent? actions,
+    String? avatar,
+    String? subtitle,
+    String? statusLabel,
+    String? verificationWarning,
   }) {
     return OwnerVisitRequestContent(
       id: id ?? this.id,
@@ -171,6 +201,10 @@ class OwnerVisitRequestContent extends Equatable {
       propertyId: propertyId ?? this.propertyId,
       tenantId: tenantId ?? this.tenantId,
       actions: actions ?? this.actions,
+      avatar: avatar ?? this.avatar,
+      subtitle: subtitle ?? this.subtitle,
+      statusLabel: statusLabel ?? this.statusLabel,
+      verificationWarning: verificationWarning ?? this.verificationWarning,
     );
   }
 
@@ -191,5 +225,9 @@ class OwnerVisitRequestContent extends Equatable {
     propertyId,
     tenantId,
     actions,
+    avatar,
+    subtitle,
+    statusLabel,
+    verificationWarning,
   ];
 }

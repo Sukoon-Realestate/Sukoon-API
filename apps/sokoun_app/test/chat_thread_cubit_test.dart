@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/chat/data/models/chat_participant_content.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
@@ -176,6 +177,105 @@ void main() {
     expect(result.restMessage?.content, 'Connect then send');
   });
 
+  test('successful sends never show the queued-message notice', () async {
+    final realtime = _FakeChatRealtimeGateway()..echoSentMessages = true;
+    final cubit = ChatThreadCubit(
+      conversationId: 'conversation-uuid',
+      realtimeService: realtime,
+    );
+    final states = <ChatThreadState>[];
+    final subscription = cubit.stream.listen(states.add);
+    addTearDown(() async {
+      await cubit.close();
+      await subscription.cancel();
+      await realtime.close();
+    });
+    final result = await cubit.sendTextMessage('Hello');
+    await pumpEventQueue();
+    expect(result.isSent, isTrue);
+    expect(states.any((state) => state.queuedMessageCount > 0), isTrue);
+    expect(states.any((state) => state.showQueuedMessages), isFalse);
+  });
+
+  testWidgets(
+    'a pending send shows the notice after two seconds and clears on confirmation',
+    (tester) async {
+      final realtime = _FakeChatRealtimeGateway();
+      final cubit = ChatThreadCubit(
+        conversationId: 'conversation-uuid',
+        realtimeService: realtime,
+      );
+      addTearDown(() async {
+        await cubit.close();
+        await realtime.close();
+      });
+      await cubit.connect();
+      final sending = cubit.sendTextMessage('Slow message');
+      await tester.pump();
+      expect(cubit.state.queuedMessageCount, 1);
+      expect(cubit.state.showQueuedMessages, isFalse);
+      await tester.pump(const Duration(milliseconds: 1999));
+      expect(cubit.state.showQueuedMessages, isFalse);
+      await tester.pump(const Duration(milliseconds: 1));
+      expect(cubit.state.showQueuedMessages, isTrue);
+      realtime.addMessage(
+        _message(
+          conversationId: 'conversation-uuid',
+          senderId: 'current-user-id',
+          content: 'Slow message',
+        ),
+      );
+      await tester.pump();
+      expect((await sending).isSent, isTrue);
+      expect(cubit.state.queuedMessageCount, 0);
+      expect(cubit.state.showQueuedMessages, isFalse);
+    },
+  );
+
+  testWidgets('the next pending message has its own two-second threshold', (
+    tester,
+  ) async {
+    final realtime = _FakeChatRealtimeGateway();
+    final cubit = ChatThreadCubit(
+      conversationId: 'conversation-uuid',
+      realtimeService: realtime,
+    );
+    addTearDown(() async {
+      await cubit.close();
+      await realtime.close();
+    });
+    await cubit.connect();
+    final first = cubit.sendTextMessage('First');
+    await tester.pump(const Duration(milliseconds: 1500));
+    final second = cubit.sendTextMessage('Second');
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(cubit.state.showQueuedMessages, isTrue);
+    realtime.addMessage(
+      _message(
+        conversationId: 'conversation-uuid',
+        senderId: 'current-user-id',
+        content: 'First',
+      ),
+    );
+    await tester.pump();
+    expect(cubit.state.queuedMessageCount, 1);
+    expect(cubit.state.showQueuedMessages, isFalse);
+    await tester.pump(const Duration(milliseconds: 1499));
+    expect(cubit.state.showQueuedMessages, isFalse);
+    await tester.pump(const Duration(milliseconds: 1));
+    expect(cubit.state.showQueuedMessages, isTrue);
+    realtime.addMessage(
+      _message(
+        conversationId: 'conversation-uuid',
+        senderId: 'current-user-id',
+        content: 'Second',
+      ),
+    );
+    await tester.pump();
+    await Future.wait([first, second]);
+    expect(cubit.state.showQueuedMessages, isFalse);
+  });
+
   test('queues messages while disconnected and sends them in order', () async {
     final _FakeChatRealtimeGateway realtime = _FakeChatRealtimeGateway()
       ..canConnect = false
@@ -202,6 +302,7 @@ void main() {
     expect(first.isQueued, isTrue);
     expect(second.isQueued, isTrue);
     expect(cubit.queuedMessageCount, 2);
+    expect(cubit.state.showQueuedMessages, isTrue);
     expect(realtime.sentContents, isEmpty);
 
     realtime.setConnected(true);
@@ -210,6 +311,7 @@ void main() {
     expect(realtime.sentContents, <String>['First', 'Second']);
     expect(cubit.queuedMessageCount, 0);
     expect(cubit.state.queuedMessageCount, 0);
+    expect(cubit.state.showQueuedMessages, isFalse);
     expect(cubit.state.confirmedLocalMessageId, 'local-second');
   });
 
@@ -276,9 +378,9 @@ ChatSocketMessage _message({
   return ChatSocketMessage(
     id: 'message-id',
     conversationId: conversationId,
-    sender: ChatSocketSender(
+    sender: ChatParticipantContent(
       id: senderId,
-      name: 'Sender',
+      fullName: 'Sender',
       avatarUrl: '',
       isOnline: true,
     ),
@@ -360,9 +462,9 @@ class _FakeChatRealtimeGateway implements ChatRealtimeGateway {
         ? ChatSocketMessage(
             id: 'message-${++_sentMessageCount}',
             conversationId: conversationId,
-            sender: const ChatSocketSender(
+            sender: const ChatParticipantContent(
               id: 'current-user-id',
-              name: 'Current User',
+              fullName: 'Current User',
               avatarUrl: '',
               isOnline: true,
             ),

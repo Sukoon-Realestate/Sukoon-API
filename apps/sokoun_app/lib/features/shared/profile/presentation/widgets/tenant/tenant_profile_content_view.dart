@@ -7,7 +7,7 @@ class TenantProfileContentView extends StatelessWidget {
     required this.onEditPressed,
   });
 
-  final TenantProfileContent profile;
+  final AccountContent profile;
   final VoidCallback onEditPressed;
 
   @override

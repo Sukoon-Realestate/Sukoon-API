@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/chat/data/models/chat_participant_content.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
@@ -19,7 +20,6 @@ import 'package:sokoun_app/features/main_view/data/workspace_counts_refresh_bus.
 import 'package:sokoun_app/features/shared/chat/data/chat_realtime_service.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_unread_refresh_bus.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_socket_message.dart';
-import 'package:sokoun_app/features/shared/chat/presentation/cubits/chat_unread_cubit.dart';
 import 'package:sokoun_app/features/shared/notifications/data/foreground_notification_bus.dart';
 import 'package:sokoun_app/features/shared/notifications/data/notification_refresh_bus.dart';
 
@@ -31,8 +31,6 @@ void main() {
   late _CountsRepository repository;
   late _Realtime realtime;
   late UnreadCountsCubit counts;
-  late UnreadCountsCubit owner;
-  late ChatUnreadCubit chat;
 
   setUpAll(() async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -56,21 +54,17 @@ void main() {
       BaseCrudUseCase(repository: repository),
     );
     realtime = _Realtime();
-    counts = UnreadCountsCubit()..watch();
-    owner = UnreadCountsCubit(workspace: AppWorkspace.owner)..watch();
-    chat = ChatUnreadCubit(unreadCounts: counts, realtimeService: realtime);
+    counts = UnreadCountsCubit(realtimeService: realtime)..watch();
   });
 
   tearDown(() async {
-    await Future.wait([owner.close(), chat.close()]);
     await counts.close();
     await realtime.close();
     await injector.reset();
     AccountSession.end();
   });
 
-  Future<void> load() =>
-      Future.wait([counts.load(), owner.load(), chat.start()]);
+  Future<void> load() => counts.load();
 
   void receive(
     String type, {
@@ -89,25 +83,25 @@ void main() {
     () async {
       repository.gate = Completer<void>();
       final Future<void> request = Future.wait([
-        counts.load(),
-        counts.load(),
-        chat.loadUnreadCount(),
+        counts.load(workspace: AppWorkspace.tenant),
+        counts.load(workspace: AppWorkspace.tenant),
+        counts.load(workspace: AppWorkspace.tenant),
       ]);
       await Future<void>.delayed(Duration.zero);
       expect(repository.endpoints, [ApiConstants.tenantUnreadCounts]);
       repository.gate!.complete();
       await request;
 
-      expect(counts.data.workspace.favorites, 6);
-      expect(counts.data.workspace.visits, 2);
-      expect(counts.data.notifications.count, 3);
-      expect(chat.data.count, 7);
+      expect(counts.data.tenant.favorites, 6);
+      expect(counts.data.tenant.visits, 2);
+      expect(counts.data.notificationsCount, 3);
+      expect(counts.data.chatCount, 7);
       final params = repository.lastParams! as CrudBaseParmas<UnreadCounts>;
       expect(params.cacheKey, 'tenant_unread_counts');
       final json = params.toJson!(counts.data);
       expect(json, {
-        'favorites_count': 6,
-        'visit_requests_count': 2,
+        'tenant': {'favorites_count': 6, 'visit_requests_count': 2},
+        'owner': {'favorites_count': 0, 'visit_requests_count': 0},
         'unread_chat_messages_count': 7,
         'unread_notifications_count': 3,
       });
@@ -131,11 +125,56 @@ void main() {
       ApiConstants.ownerUnreadCounts,
       ApiConstants.tenantUnreadCounts,
     ]);
-    expect(counts.state.data.workspace.favorites, 9);
-    expect(counts.state.data.workspace.visits, 5);
-    expect(chat.state.data.count, 2);
-    expect(counts.state.data.notifications.count, 0);
-    expect(owner.data.workspace.visits, 4);
+    expect(counts.state.data.tenant.favorites, 9);
+    expect(counts.state.data.tenant.visits, 5);
+    expect(counts.state.data.chatCount, 2);
+    expect(counts.state.data.notificationsCount, 0);
+    expect(counts.data.owner.visits, 4);
+  });
+
+  test('workspace responses preserve each other regardless of order', () async {
+    final Completer<void> ownerGate = Completer<void>();
+    repository.gates[ApiConstants.ownerUnreadCounts] = ownerGate;
+    final request = counts.load();
+    await Future<void>.delayed(Duration.zero);
+    expect(counts.data.tenant.favorites, 6);
+    expect(counts.data.chatCount, 7);
+    expect(counts.data.owner.visits, 0);
+    ownerGate.complete();
+    await request;
+    expect(counts.data.owner.visits, 4);
+    expect(counts.data.chatCount, 7);
+
+    final Completer<void> tenantGate = Completer<void>();
+    repository.gates[ApiConstants.tenantUnreadCounts] = tenantGate;
+    repository.ownerResponse = {'visit_requests_count': 9};
+    final refresh = counts.refresh();
+    await Future<void>.delayed(Duration.zero);
+    expect(counts.data.owner.visits, 9);
+    tenantGate.complete();
+    await refresh;
+    expect(counts.data.owner.visits, 9);
+    expect(counts.data.tenant.favorites, 6);
+  });
+
+  test('an old request cannot consume the new session refresh queue', () async {
+    final Completer<void> oldGate = Completer<void>();
+    repository.gate = oldGate;
+    final oldRequest = counts.load(workspace: AppWorkspace.tenant);
+    AccountSession.begin('new-account');
+    final Completer<void> newGate = Completer<void>();
+    repository.gate = newGate;
+    final newRequest = counts.load(workspace: AppWorkspace.tenant);
+    final refresh = counts.refresh(workspace: AppWorkspace.tenant);
+    oldGate.complete();
+    await Future<void>.delayed(Duration.zero);
+    final int requestsBeforeNewResponse = repository.requests;
+    newGate.complete();
+    await Future.wait([oldRequest, newRequest, refresh]);
+
+    expect(requestsBeforeNewResponse, 2);
+    expect(repository.requests, 3);
+    expect(counts.data.tenant.favorites, 6);
   });
 
   test('workspace refreshes reconcile both roles during a fetch', () async {
@@ -156,21 +195,19 @@ void main() {
     await request;
 
     expect(repository.requests, 4);
-    expect(counts.data.workspace.favorites, 10);
-    expect(counts.data.workspace.visits, 3);
-    expect(owner.data.workspace.visits, 8);
+    expect(counts.data.tenant.favorites, 10);
+    expect(counts.data.tenant.visits, 3);
+    expect(counts.data.owner.visits, 8);
   });
 
   test('watching repeatedly does not duplicate badge updates', () async {
     await load();
     counts.watch();
     counts.watch();
-    owner.watch();
-    owner.watch();
 
     receive('visit_request');
-    expect(counts.data.notifications.count, 4);
-    expect(owner.data.workspace.visits, 5);
+    expect(counts.data.notificationsCount, 4);
+    expect(counts.data.owner.visits, 5);
     NotificationRefreshBus.requestRefresh();
     await Future<void>.delayed(Duration.zero);
     expect(repository.requests, 3);
@@ -178,7 +215,7 @@ void main() {
 
   test('disposed counts stop handling refreshes and notifications', () async {
     await load();
-    await Future.wait([counts.close(), owner.close(), chat.close()]);
+    await counts.close();
 
     receive('visit_request');
     WorkspaceCountsRefreshBus.refresh();
@@ -186,8 +223,8 @@ void main() {
     await Future<void>.delayed(Duration.zero);
 
     expect(repository.requests, 2);
-    expect(counts.data.notifications.count, 3);
-    expect(owner.data.workspace.visits, 4);
+    expect(counts.data.notificationsCount, 3);
+    expect(counts.data.owner.visits, 4);
   });
 
   test('read actions during a fetch queue one fresh snapshot', () async {
@@ -205,7 +242,7 @@ void main() {
     await request;
 
     expect(repository.requests, 3);
-    expect(counts.data.notifications.count, 0);
+    expect(counts.data.notificationsCount, 0);
   });
 
   test(
@@ -213,7 +250,9 @@ void main() {
     () async {
       final Completer<void> oldGate = Completer<void>();
       repository.gate = oldGate;
-      final Future<void> oldRequest = counts.load();
+      final Future<void> oldRequest = counts.load(
+        workspace: AppWorkspace.tenant,
+      );
       AccountSession.begin('another-account');
       repository.gate = null;
       repository.tenantResponse = {
@@ -222,14 +261,14 @@ void main() {
         'unread_chat_messages_count': 0,
         'unread_notifications_count': 1,
       };
-      await counts.load();
+      await counts.load(workspace: AppWorkspace.tenant);
       oldGate.complete();
       await oldRequest;
 
       expect(repository.requests, 2);
-      expect(counts.data.workspace.favorites, 1);
-      expect(counts.data.chat.count, 0);
-      expect(counts.data.notifications.count, 1);
+      expect(counts.data.tenant.favorites, 1);
+      expect(counts.data.chatCount, 0);
+      expect(counts.data.notificationsCount, 1);
     },
   );
 
@@ -250,28 +289,28 @@ void main() {
     await counts.close();
     repository.gate!.complete();
     await request;
-    expect(counts.data.workspace.favorites, 0);
-    expect(counts.data.chat.count, 0);
+    expect(counts.data.tenant.favorites, 0);
+    expect(counts.data.chatCount, 0);
   });
 
   test('foreground types update only their badges without fetching', () async {
     await load();
     final int requests = repository.requests;
     receive('visit_request');
-    expect(owner.data.workspace.visits, 5);
-    expect(counts.data.workspace.visits, 2);
-    expect(counts.data.workspace.favorites, 6);
-    expect(counts.data.notifications.count, 4);
-    expect(chat.data.count, 7);
+    expect(counts.data.owner.visits, 5);
+    expect(counts.data.tenant.visits, 2);
+    expect(counts.data.tenant.favorites, 6);
+    expect(counts.data.notificationsCount, 4);
+    expect(counts.data.chatCount, 7);
 
     receive('visit_accepted');
-    expect(counts.data.workspace.visits, 2);
+    expect(counts.data.tenant.visits, 2);
     receive('visit_rejected');
-    expect(counts.data.workspace.visits, 1);
+    expect(counts.data.tenant.visits, 1);
     receive('visit_rejected');
     receive('visit_rejected');
-    expect(counts.data.workspace.visits, 0);
-    expect(owner.data.workspace.visits, 5);
+    expect(counts.data.tenant.visits, 0);
+    expect(counts.data.owner.visits, 5);
 
     for (final String type in [
       'new_message',
@@ -282,13 +321,13 @@ void main() {
     }
     ForegroundNotificationBus.receive({'type': 'new_message'});
     receive('unknown', data: {'category': 'chat'});
-    expect(chat.data.count, 12);
+    expect(counts.data.chatCount, 12);
     receive('promotion');
     receive('visit_review');
-    expect(counts.data.notifications.count, 15);
-    expect(counts.data.workspace.favorites, 6);
-    expect(owner.data.workspace.visits, 5);
-    expect(chat.data.count, 12);
+    expect(counts.data.notificationsCount, 15);
+    expect(counts.data.tenant.favorites, 6);
+    expect(counts.data.owner.visits, 5);
+    expect(counts.data.chatCount, 12);
     expect(repository.requests, requests);
   });
 
@@ -302,8 +341,8 @@ void main() {
     ForegroundNotificationBus.receive({
       'notification_type': 'promotion',
     }, deliveryId: 'fcm-1');
-    expect(counts.data.notifications.count, 5);
-    expect(owner.data.workspace.visits, 5);
+    expect(counts.data.notificationsCount, 5);
+    expect(counts.data.owner.visits, 5);
   });
 
   for (final bool pushFirst in [true, false]) {
@@ -330,8 +369,8 @@ void main() {
           socket();
           push();
         }
-        expect(chat.data.count, 8);
-        expect(counts.data.notifications.count, 4);
+        expect(counts.data.chatCount, 8);
+        expect(counts.data.notificationsCount, 4);
         expect(repository.requests, requests);
       },
     );
@@ -353,13 +392,12 @@ void main() {
         data: {'message_id': 'own-message', 'sender_id': '1'},
       );
       realtime.messagesController.add(
-        _message(
-          'own-message',
-          'conversation-1',
-        ).copyWith(sender: const ChatSocketSender.initial().copyWith(id: '1')),
+        _message('own-message', 'conversation-1').copyWith(
+          sender: const ChatParticipantContent.initial().copyWith(id: '1'),
+        ),
       );
-      expect(chat.data.count, 7);
-      expect(counts.data.notifications.count, 5);
+      expect(counts.data.chatCount, 7);
+      expect(counts.data.notificationsCount, 5);
     },
   );
 
@@ -373,20 +411,20 @@ void main() {
     receive('new_message', data: {'message_id': 'loading-message'});
     repository.gate!.complete();
     await request;
-    expect(owner.data.workspace.visits, 5);
-    expect(counts.data.workspace.visits, 1);
-    expect(counts.data.notifications.count, 6);
-    expect(chat.data.count, 8);
+    expect(counts.data.owner.visits, 5);
+    expect(counts.data.tenant.visits, 1);
+    expect(counts.data.notificationsCount, 6);
+    expect(counts.data.chatCount, 8);
     expect(repository.requests, 2);
   });
 
   test('read actions still reconcile counts and start is idempotent', () async {
     await load();
-    await chat.start();
+    counts.watch();
     expect(repository.requests, 2);
     expect(realtime.connections, 0);
     ChatUnreadRefreshBus.requestRefresh(removedUnreadCount: 4);
-    expect(chat.data.count, 3);
+    expect(counts.data.chatCount, 3);
     expect(repository.requests, 2);
     NotificationRefreshBus.requestRefresh();
     await Future<void>.delayed(Duration.zero);
@@ -397,7 +435,7 @@ void main() {
     'unread subscriptions leave socket ownership with the chat thread',
     () async {
       await load();
-      await chat.close();
+      await counts.close();
       expect(realtime.connections, 0);
       expect(realtime.disconnections, 0);
     },
@@ -410,13 +448,13 @@ void main() {
       AccountSession.end();
       receive('visit_request');
       receive('new_message');
-      expect(owner.data.workspace.visits, 4);
-      expect(counts.data.notifications.count, 3);
-      expect(chat.data.count, 7);
-      await Future.wait([counts.close(), owner.close(), chat.close()]);
+      expect(counts.data.owner.visits, 4);
+      expect(counts.data.notificationsCount, 3);
+      expect(counts.data.chatCount, 7);
+      await counts.close();
       receive('visit_request');
-      expect(owner.data.workspace.visits, 4);
-      expect(counts.data.notifications.count, 3);
+      expect(counts.data.owner.visits, 4);
+      expect(counts.data.notificationsCount, 3);
     },
   );
 }
@@ -425,7 +463,7 @@ ChatSocketMessage _message(String id, String conversationId) =>
     const ChatSocketMessage.initial().copyWith(
       id: id,
       conversationId: conversationId,
-      sender: const ChatSocketSender.initial().copyWith(id: 'other-user'),
+      sender: const ChatParticipantContent.initial().copyWith(id: 'other-user'),
     );
 
 class _CountsRepository implements BaseRepository {
@@ -440,6 +478,7 @@ class _CountsRepository implements BaseRepository {
   };
   Map<String, dynamic> ownerResponse = {'visit_requests_count': 4};
   Completer<void>? gate;
+  final Map<String, Completer<void>> gates = {};
 
   @override
   Future<Result<BaseModel<T>, Failure>> crudCall<T>(
@@ -452,7 +491,7 @@ class _CountsRepository implements BaseRepository {
         params.api == ApiConstants.ownerUnreadCounts
         ? Map<String, dynamic>.from(ownerResponse)
         : Map<String, dynamic>.from(tenantResponse);
-    await gate?.future;
+    await (gates[params.api] ?? gate)?.future;
     return Success(
       BaseModel<T>(key: '', msg: '', data: params.mapper!(response)),
     );

@@ -1,4 +1,11 @@
-part of '../imports.dart';
+import 'models/owner_properties_response.dart';
+import 'models/owner_property_content.dart';
+import 'models/owner_property_location_model.dart';
+import 'package:melos_core/config/res/config_imports.dart' show injector;
+import 'package:melos_core/core/network/api_endpoints.dart';
+import 'package:melos_core/core/network/network_request.dart';
+import 'package:melos_core/core/network/network_service.dart';
+import 'package:pagify/helpers/data_and_pagination_data.dart';
 
 abstract interface class OwnerPropertiesDataSource {
   String get cacheKey;

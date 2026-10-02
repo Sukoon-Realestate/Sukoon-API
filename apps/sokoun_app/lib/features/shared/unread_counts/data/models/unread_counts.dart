@@ -1,47 +1,73 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../../main_view/data/enums/app_workspace.dart';
 import '../../../../main_view/data/models/workspace_counts.dart';
-import '../../../chat/data/models/chat_unread_content.dart';
-import '../../../notifications/data/models/unread_notifications_content.dart';
 
 class UnreadCounts extends Equatable {
   const UnreadCounts({
-    required this.workspace,
-    required this.chat,
-    required this.notifications,
+    required this.tenant,
+    required this.owner,
+    required this.chatCount,
+    required this.notificationsCount,
   });
 
   const UnreadCounts.initial()
-    : workspace = const WorkspaceCounts.initial(),
-      chat = const ChatUnreadContent.initial(),
-      notifications = const UnreadNotificationsContent.initial();
+    : tenant = const WorkspaceCounts.initial(),
+      owner = const WorkspaceCounts.initial(),
+      chatCount = 0,
+      notificationsCount = 0;
 
-  factory UnreadCounts.fromJson(Map<String, dynamic> json) => UnreadCounts(
-    workspace: WorkspaceCounts.fromJson(json),
-    chat: ChatUnreadContent.fromJson(json),
-    notifications: UnreadNotificationsContent.fromJson(json),
-  );
+  factory UnreadCounts.fromJson(
+    Map<String, dynamic> json, {
+    AppWorkspace workspace = AppWorkspace.tenant,
+  }) {
+    final bool isCachedSnapshot = json['tenant'] is Map;
+    return UnreadCounts(
+      tenant: isCachedSnapshot
+          ? WorkspaceCounts.fromJson(Map<String, dynamic>.from(json['tenant']))
+          : workspace.isTenant
+          ? WorkspaceCounts.fromJson(json)
+          : const WorkspaceCounts.initial(),
+      owner: isCachedSnapshot
+          ? WorkspaceCounts.fromJson(Map<String, dynamic>.from(json['owner']))
+          : workspace.isOwner
+          ? WorkspaceCounts.fromJson(json)
+          : const WorkspaceCounts.initial(),
+      chatCount: _count(json['unread_chat_messages_count']),
+      notificationsCount: _count(json['unread_notifications_count']),
+    );
+  }
 
-  final WorkspaceCounts workspace;
-  final ChatUnreadContent chat;
-  final UnreadNotificationsContent notifications;
+  final WorkspaceCounts tenant;
+  final WorkspaceCounts owner;
+  final int chatCount;
+  final int notificationsCount;
+
+  WorkspaceCounts forWorkspace(AppWorkspace workspace) =>
+      workspace.isOwner ? owner : tenant;
 
   Map<String, dynamic> toJson() => {
-    ...workspace.toJson(),
-    'unread_chat_messages_count': chat.count,
-    'unread_notifications_count': notifications.count,
+    'tenant': tenant.toJson(),
+    'owner': owner.toJson(),
+    'unread_chat_messages_count': chatCount,
+    'unread_notifications_count': notificationsCount,
   };
 
   UnreadCounts copyWith({
-    WorkspaceCounts? workspace,
-    ChatUnreadContent? chat,
-    UnreadNotificationsContent? notifications,
+    WorkspaceCounts? tenant,
+    WorkspaceCounts? owner,
+    int? chatCount,
+    int? notificationsCount,
   }) => UnreadCounts(
-    workspace: workspace ?? this.workspace,
-    chat: chat ?? this.chat,
-    notifications: notifications ?? this.notifications,
+    tenant: tenant ?? this.tenant,
+    owner: owner ?? this.owner,
+    chatCount: chatCount ?? this.chatCount,
+    notificationsCount: notificationsCount ?? this.notificationsCount,
   );
 
+  static int _count(Object? value) =>
+      value is num ? value.toInt() : int.tryParse(value?.toString() ?? '') ?? 0;
+
   @override
-  List<Object?> get props => [workspace, chat, notifications];
+  List<Object?> get props => [tenant, owner, chatCount, notificationsCount];
 }

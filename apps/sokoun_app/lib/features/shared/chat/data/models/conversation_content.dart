@@ -50,12 +50,10 @@ class ConversationContent extends Equatable {
           '',
       time: json['time']?.toString() ?? '',
       unreadCount: (json['unread_count'] as num?)?.toInt() ?? 0,
-      isVerified: participantJson is Map
-          ? participant.isVerified
-          : json['is_verified'] == true,
-      isOnline: participantJson is Map
-          ? participant.isOnline
-          : json['is_online'] == true,
+      isVerified:
+          json['is_verified'] as bool? ??
+          (participantJson is Map && participant.isVerified),
+      isOnline: json['is_online'] as bool? ?? participant.isOnline,
       otherParticipant: participant,
       lastMessageAt: DateTime.tryParse(
         json['last_message_at']?.toString() ?? '',

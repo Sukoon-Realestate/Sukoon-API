@@ -1,4 +1,4 @@
-part of '../../imports.dart';
+import 'package:equatable/equatable.dart';
 
 class OwnerPropertyLocationsResponse extends Equatable {
   const OwnerPropertyLocationsResponse({

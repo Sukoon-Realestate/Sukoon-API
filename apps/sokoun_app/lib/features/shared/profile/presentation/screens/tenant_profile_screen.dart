@@ -11,59 +11,37 @@ class TenantProfileScreen extends StatefulWidget {
 
 class _TenantProfileScreenState extends State<TenantProfileScreen> {
   late final UserModel _fallbackUser;
-  late final TenantProfileCubit _profileCubit;
+  late final AccountCubit _profileCubit;
   bool _ownsProfileCubit = false;
-  StreamSubscription<UserState>? _accountSubscription;
 
   @override
   void initState() {
     super.initState();
     _fallbackUser = widget.user ?? UserModel.currentUser ?? UserModel.initial();
-    try {
-      _profileCubit = context.read<TenantProfileCubit>();
-    } on ProviderNotFoundException {
-      _ownsProfileCubit = true;
-      _profileCubit = TenantProfileCubit();
-    }
+    final AccountCubit? sharedAccount = context.read<AccountCubit?>();
+    _ownsProfileCubit = sharedAccount == null;
+    _profileCubit = sharedAccount ?? AccountCubit();
+    if (_ownsProfileCubit) _profileCubit.restoreCachedProfile();
     if (!_profileCubit.state.isSuccess) {
-      unawaited(_profileCubit.getProfile());
-    }
-    if (injector.isRegistered<UserCubit>()) {
-      _accountSubscription = UserCubit.instance.stream.listen((state) {
-        if (state.userStatus == UserStatus.loggedIn) {
-          _profileCubit.updateFromUser(state.userModel);
-          unawaited(_profileCubit.getProfile());
-        }
-      });
+      unawaited(_profileCubit.getAccount());
     }
   }
 
   @override
   void dispose() {
-    unawaited(_accountSubscription?.cancel());
     if (_ownsProfileCubit) unawaited(_profileCubit.close());
     super.dispose();
   }
 
-  UserModel _editableUser(TenantProfileContent profile) {
-    return UserModel(
-      id: _fallbackUser.id,
-      name: profile.user.fullName.isNotEmpty
-          ? profile.user.fullName
-          : _fallbackUser.name,
-      phone: profile.accountDetails.phoneNumber.isNotEmpty
-          ? profile.accountDetails.phoneNumber
-          : _fallbackUser.phone,
-      email: profile.accountDetails.email.isNotEmpty
-          ? profile.accountDetails.email
-          : _fallbackUser.email,
-      type: _fallbackUser.type,
-    );
-  }
-
-  Future<void> _openEditProfile(TenantProfileContent profile) async {
+  Future<void> _openEditProfile(AccountContent profile) async {
     final UserModel? updated = await Go.to<UserModel>(
-      TenantEditProfileScreen(initialValue: _editableUser(profile)),
+      ProfileEditScreen(
+        initialValue: profile.accountDetails.editableUser(
+          fallback: _fallbackUser,
+          fullName: profile.user.fullName,
+        ),
+        workspace: AppWorkspace.tenant,
+      ),
     );
     if (updated != null && mounted) {
       _profileCubit.updateFromUser(updated);
@@ -76,17 +54,13 @@ class _TenantProfileScreenState extends State<TenantProfileScreen> {
   Widget build(BuildContext context) {
     // LocaleKeys getters resolve strings without subscribing this screen.
     Localizations.localeOf(context);
-    return BlocProvider<TenantProfileCubit>.value(
+    return BlocProvider<AccountCubit>.value(
       value: _profileCubit,
       child: AppScaffold(
         title: LocaleKeys.profileMyAccount,
         showBackButton: false,
         actions: [
-          BlocSelector<
-            TenantProfileCubit,
-            AsyncState<TenantProfileContent>,
-            bool
-          >(
+          BlocSelector<AccountCubit, AsyncState<AccountContent>, bool>(
             selector: (state) => state.isSuccess,
             builder: (context, isSuccess) => IconButton(
               onPressed: isSuccess ? _openSummary : null,
@@ -107,20 +81,15 @@ class _TenantProfileScreenState extends State<TenantProfileScreen> {
         ],
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
-          child:
-              StatusBuilder<
-                    TenantProfileCubit,
-                    TenantProfileContent
-                  >.withShimmer(
-                    initialDataForShimmer: const TenantProfileContent.initial(),
-                    onRetry: _profileCubit.getProfile,
-                    errorType: ErrorType.defaultView,
-                    builder: (profile) => TenantProfileContentView(
-                      profile: profile,
-                      onEditPressed: () => _openEditProfile(profile),
-                    ),
-                  )
-                  .withPullRefresher(onRefresh: _profileCubit.getProfile),
+          child: StatusBuilder<AccountCubit, AccountContent>.withShimmer(
+            initialDataForShimmer: const AccountContent.initial(),
+            onRetry: _profileCubit.getAccount,
+            errorType: ErrorType.defaultView,
+            builder: (profile) => TenantProfileContentView(
+              profile: profile,
+              onEditPressed: () => _openEditProfile(profile),
+            ),
+          ).withPullRefresher(onRefresh: _profileCubit.getAccount),
         ),
       ),
     );

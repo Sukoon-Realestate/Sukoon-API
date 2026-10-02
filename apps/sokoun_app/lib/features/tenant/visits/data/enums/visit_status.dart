@@ -1,4 +1,4 @@
-part of '../../imports.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 
 enum TenantVisitStatus { accepted, pending, rejected, completed, canceled }
 

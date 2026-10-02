@@ -1,4 +1,7 @@
-part of '../../imports.dart';
+import '../enums/visit_status.dart';
+import '../visit_json.dart';
+import 'package:equatable/equatable.dart';
+import 'visit_actions.dart';
 
 class TenantVisitContent extends Equatable {
   const TenantVisitContent({
@@ -29,7 +32,7 @@ class TenantVisitContent extends Equatable {
   factory TenantVisitContent.fromJson(Map<String, dynamic> json) {
     final String statusText =
         (json['status_label'] ?? json['status'])?.toString() ?? '';
-    final Map<String, dynamic> property = _visitMap(json['property']);
+    final Map<String, dynamic> property = visitJsonMap(json['property']);
     final Object? ownerValue = json['owner'];
     final Map<String, dynamic> owner = ownerValue is Map
         ? Map<String, dynamic>.from(ownerValue)
@@ -68,7 +71,7 @@ class TenantVisitContent extends Equatable {
           '',
       ownerId: json['owner_id']?.toString() ?? owner['id']?.toString() ?? '',
       actions: json['actions'] is Map
-          ? VisitActions.fromJson(_visitMap(json['actions']))
+          ? VisitActions.fromJson(visitJsonMap(json['actions']))
           : null,
     );
   }

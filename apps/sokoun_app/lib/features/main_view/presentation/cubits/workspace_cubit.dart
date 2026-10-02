@@ -27,7 +27,5 @@ class WorkspaceCubit extends Cubit<AppWorkspace> {
     await WorkspacePreferences.write(id, workspace);
   }
 
-  void reset() {
-    _userId = null;
-  }
+  void reset() => initialize(null);
 }

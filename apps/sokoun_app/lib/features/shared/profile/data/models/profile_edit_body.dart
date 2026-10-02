@@ -1,4 +1,5 @@
-part of '../../imports.dart';
+import 'dart:io';
+import 'package:melos_core/core/helpers/validators.dart';
 
 class ProfileEditBody {
   const ProfileEditBody({

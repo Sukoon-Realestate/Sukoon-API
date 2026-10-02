@@ -7,18 +7,17 @@ class TenantProfileHeaderCard extends StatelessWidget {
     required this.onEditPressed,
   });
 
-  final TenantProfileContent profile;
+  final AccountContent profile;
   final VoidCallback onEditPressed;
 
   @override
   Widget build(BuildContext context) {
     final WorkspaceCounts? counts = context
         .select<UnreadCountsCubit?, WorkspaceCounts?>(
-          (cubit) => cubit?.state.isSuccess == true
-              ? cubit?.state.data.workspace
-              : null,
+          (cubit) =>
+              cubit?.state.isSuccess == true ? cubit?.state.data.tenant : null,
         );
-    final TenantProfileUserContent user = profile.user;
+    final AccountUserContent user = profile.user;
     final String userName = user.fullName.trim().isEmpty
         ? LocaleKeys.profileFallbackName
         : user.fullName;

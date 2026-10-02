@@ -1,7 +1,7 @@
 import 'models/property_location.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
-import 'package:sokoun_app/features/owner/properties/imports.dart';
+import 'package:sokoun_app/features/owner/properties/data/models/owner_property_location_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 
 class OwnerPropertyFormSeed {
@@ -26,12 +26,6 @@ abstract final class OwnerAddPropertyMapper {
       amenities.add(LocaleKeys.ownerAddPropertyFurnished);
     }
 
-    final List<String> locationParts = [
-      property.district,
-      property.city.name,
-      property.city.governorateName,
-    ].where((part) => part.trim().isNotEmpty).toList(growable: false);
-
     return OwnerPropertyFormSeed(
       governorate: _governorateFromProperty(property),
       city: _cityFromProperty(property),
@@ -50,22 +44,15 @@ abstract final class OwnerAddPropertyMapper {
         space: property.space.isNotEmpty
             ? property.space
             : _positiveNumberText(property.area),
-        floor: property.floor.toString(),
-        buildingYear: _positiveNumberText(property.buildingYear),
-        mapQuery: locationParts.join('، '),
+        floor: property.floor?.toString() ?? '',
         location: _locationFromProperty(property),
         photoDrafts: _photoDraftsFromProperty(property),
         monthlyPrice: property.price,
-        deposit: _depositLabel(property.deposit),
         rentalDuration: _positiveNumberText(property.rentalPeriod),
         rentalUnit: _rentalUnitLabel(property.pricePeriod),
         amenities: amenities,
         description: property.description,
-        smokingPolicy: property.smokingAllowed
-            ? LocaleKeys.ownerAddPropertyAllowed
-            : LocaleKeys.ownerAddPropertyNotAllowed,
         suitableFor: _suitableForLabel(property.suitableFor),
-        ownershipProofUrl: property.ownershipProof,
       ),
     );
   }
@@ -77,7 +64,7 @@ abstract final class OwnerAddPropertyMapper {
     required OwnerPropertyLocationModel? selectedGovernorate,
     required OwnerPropertyLocationModel? selectedCity,
   }) {
-    final Map<String, dynamic> body = form.toRequestBody();
+    final Map<String, dynamic> body = form.toJson();
     final List<String> amenities = [
       if (body['has_wifi'] == true) 'wifi',
       if (body['has_elevator'] == true) 'elevator',
@@ -194,19 +181,6 @@ abstract final class OwnerAddPropertyMapper {
         'near_metro': LocaleKeys.ownerAddPropertyNearMetro,
       }[value] ??
       value;
-
-  static String _depositLabel(String value) =>
-      {
-        'none': LocaleKeys.ownerAddPropertyNoDeposit,
-        '0': LocaleKeys.ownerAddPropertyNoDeposit,
-        'half_month': LocaleKeys.ownerAddPropertyHalfMonth,
-        '0.5': LocaleKeys.ownerAddPropertyHalfMonth,
-        'one_month': LocaleKeys.ownerAddPropertyOneMonth,
-        '1': LocaleKeys.ownerAddPropertyOneMonth,
-        'two_months': LocaleKeys.ownerAddPropertyTwoMonths,
-        '2': LocaleKeys.ownerAddPropertyTwoMonths,
-      }[value] ??
-      (OwnerAddPropertyContent.depositOptions.contains(value) ? value : '');
 
   static String _rentalUnitLabel(String value) =>
       {

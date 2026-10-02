@@ -58,7 +58,7 @@ class OwnerPropertyCard extends StatelessWidget {
                     ),
                     child: property.mainImage.isEmpty
                         ? Icon(
-                            property.icon,
+                            Icons.apartment_rounded,
                             color: AppColors.blueGrayLight,
                             size: 30.r,
                           )
@@ -69,7 +69,7 @@ class OwnerPropertyCard extends StatelessWidget {
                             fit: BoxFit.cover,
                             borderRadius: BorderRadius.circular(16.r),
                             placeHolder: Icon(
-                              property.icon,
+                              Icons.apartment_rounded,
                               color: AppColors.blueGrayLight,
                               size: 30.r,
                             ),

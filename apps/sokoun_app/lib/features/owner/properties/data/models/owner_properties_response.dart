@@ -1,4 +1,5 @@
-part of '../../imports.dart';
+import 'owner_property_content.dart';
+import 'package:equatable/equatable.dart';
 
 class OwnerPropertiesResponse extends Equatable {
   const OwnerPropertiesResponse({

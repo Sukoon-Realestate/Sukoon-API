@@ -98,7 +98,7 @@ abstract final class NotificationNavigation {
           ? notification.payload.chatId
           : targetId;
       await Go.to<void>(
-        ChatThreadScreen(
+        ChatScreen(
           conversation: ConversationContent(
             id: chatId,
             name: notification.payload.senderName.isNotEmpty

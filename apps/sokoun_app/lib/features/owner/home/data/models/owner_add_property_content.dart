@@ -3,7 +3,6 @@ import 'property_location.dart';
 
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
-import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/validators.dart';
 
 class AddPropertyChipContent {
@@ -51,13 +50,6 @@ abstract final class OwnerAddPropertyContent {
   static const minimumPhotoCount = Validators.propertyMinPhotoCount;
   static const maxPhotoCount = Validators.propertyMaxPhotoCount;
 
-  static List<String> get depositOptions => [
-    LocaleKeys.ownerAddPropertyNoDeposit,
-    LocaleKeys.ownerAddPropertyHalfMonth,
-    LocaleKeys.ownerAddPropertyOneMonth,
-    LocaleKeys.ownerAddPropertyTwoMonths,
-  ];
-
   static List<String> get rentalUnitOptions => [
     LocaleKeys.ownerAddPropertyDay,
     LocaleKeys.ownerAddPropertyMonth,
@@ -78,12 +70,6 @@ abstract final class OwnerAddPropertyContent {
     LocaleKeys.ownerAddPropertyWaterMeter,
   ];
 
-  static List<String> get smokingOptionLabels => [
-    LocaleKeys.ownerAddPropertyAllowed,
-    LocaleKeys.ownerAddPropertyNotAllowed,
-    LocaleKeys.ownerAddPropertyByAgreement,
-  ];
-
   static List<String> get suitableForOptions => [
     LocaleKeys.ownerAddPropertyEveryone,
     LocaleKeys.ownerAddPropertyMalesOnly,
@@ -92,9 +78,6 @@ abstract final class OwnerAddPropertyContent {
     LocaleKeys.ownerAddPropertyIndividuals,
     LocaleKeys.ownerAddPropertyShared,
   ];
-
-  static const tealSoft = AppColors.tealAlpha07;
-  static const tealBorder = AppColors.tealAlpha19;
 
   static List<AddPropertyChipContent> singleSelectedChips({
     required List<String> labels,
@@ -122,22 +105,6 @@ abstract final class OwnerAddPropertyContent {
           ),
         )
         .toList();
-  }
-}
-
-class OwnerPropertyVideoSelection {
-  const OwnerPropertyVideoSelection({
-    required this.file,
-    required this.duration,
-  });
-
-  final File file;
-  final Duration duration;
-
-  String get formattedDuration {
-    final String minutes = duration.inMinutes.toString().padLeft(2, '0');
-    final String seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
-    return '$minutes:$seconds';
   }
 }
 
@@ -198,21 +165,14 @@ class OwnerAddPropertyFormState {
     required this.bathrooms,
     required this.space,
     required this.floor,
-    required this.buildingYear,
-    required this.mapQuery,
     this.location,
     required this.photoDrafts,
-    required this.video,
     required this.monthlyPrice,
-    required this.deposit,
     required this.rentalDuration,
     required this.rentalUnit,
     required this.amenities,
     required this.description,
-    required this.smokingPolicy,
     required this.suitableFor,
-    required this.ownershipProofUrl,
-    required this.ownershipProof,
     this.submittedAt,
     this.optionLabels = const {},
   });
@@ -230,21 +190,14 @@ class OwnerAddPropertyFormState {
       bathrooms: '',
       space: '',
       floor: '',
-      buildingYear: '',
-      mapQuery: '',
       location: null,
       photoDrafts: [],
-      video: null,
       monthlyPrice: '',
-      deposit: '',
       rentalDuration: '',
       rentalUnit: '',
       amenities: {},
       description: '',
-      smokingPolicy: '',
       suitableFor: '',
-      ownershipProofUrl: '',
-      ownershipProof: null,
     );
   }
 
@@ -260,22 +213,15 @@ class OwnerAddPropertyFormState {
   final String bathrooms;
   final String space;
   final String floor;
-  final String buildingYear;
-  final String mapQuery;
   final PropertyLocation? location;
   bool get isLocationSelected => location?.isValid == true;
   final List<OwnerPropertyPhotoDraft> photoDrafts;
-  final OwnerPropertyVideoSelection? video;
   final String monthlyPrice;
-  final String deposit;
   final String rentalDuration;
   final String rentalUnit;
   final Set<String> amenities;
   final String description;
-  final String smokingPolicy;
   final String suitableFor;
-  final String ownershipProofUrl;
-  final File? ownershipProof;
   final DateTime? submittedAt;
   final Map<String, String> optionLabels;
   String get rentalUnitLabel =>
@@ -297,9 +243,6 @@ class OwnerAddPropertyFormState {
       .map((photo) => photo.file)
       .whereType<File>()
       .toList(growable: false);
-  bool get isProofUploaded =>
-      ownershipProof != null || ownershipProofUrl.isNotEmpty;
-
   bool get isBasicsReady => Validators.isValidPropertyBasics(
     requiredFields: [
       title,
@@ -328,10 +271,6 @@ class OwnerAddPropertyFormState {
     description: description,
   );
 
-  bool get isExtraDetailsReady {
-    return Validators.isNonBlank(suitableFor);
-  }
-
   String get locationSummary => '$district، $governorate';
 
   String get priceSummary {
@@ -341,28 +280,6 @@ class OwnerAddPropertyFormState {
 
   String get photoSummary => LocaleKeys.ownerAddPropertyPhotoCountSummary
       .replaceAll('{count}', '$photoCount');
-
-  String get videoSummary {
-    final OwnerPropertyVideoSelection? selectedVideo = video;
-    return selectedVideo == null
-        ? LocaleKeys.ownerAddPropertyVideoSkipped
-        : LocaleKeys.ownerAddPropertyVideoUploadedSummary.replaceAll(
-            '{duration}',
-            selectedVideo.formattedDuration,
-          );
-  }
-
-  String get proofFileName {
-    final File? proof = ownershipProof;
-    if (proof != null && proof.uri.pathSegments.isNotEmpty) {
-      return proof.uri.pathSegments.last;
-    }
-    final Uri? existingProof = Uri.tryParse(ownershipProofUrl);
-    if (existingProof == null || existingProof.pathSegments.isEmpty) {
-      return ownershipProofUrl;
-    }
-    return existingProof.pathSegments.last;
-  }
 
   List<AddPropertySummaryContent> get submittedSummary {
     return [
@@ -411,24 +328,15 @@ class OwnerAddPropertyFormState {
     String? bathrooms,
     String? space,
     String? floor,
-    String? buildingYear,
-    String? mapQuery,
     PropertyLocation? location,
     bool clearLocation = false,
     List<OwnerPropertyPhotoDraft>? photoDrafts,
-    OwnerPropertyVideoSelection? video,
-    bool clearVideo = false,
     String? monthlyPrice,
-    String? deposit,
     String? rentalDuration,
     String? rentalUnit,
     Set<String>? amenities,
     String? description,
-    String? smokingPolicy,
     String? suitableFor,
-    String? ownershipProofUrl,
-    File? ownershipProof,
-    bool clearOwnershipProof = false,
     DateTime? submittedAt,
     Map<String, String>? optionLabels,
   }) {
@@ -445,31 +353,18 @@ class OwnerAddPropertyFormState {
       bathrooms: bathrooms ?? this.bathrooms,
       space: space ?? this.space,
       floor: floor ?? this.floor,
-      buildingYear: buildingYear ?? this.buildingYear,
-      mapQuery: mapQuery ?? this.mapQuery,
       location: clearLocation ? null : location ?? this.location,
       photoDrafts: photoDrafts ?? this.photoDrafts,
-      video: clearVideo ? null : video ?? this.video,
       monthlyPrice: monthlyPrice ?? this.monthlyPrice,
-      deposit: deposit ?? this.deposit,
       rentalDuration: rentalDuration ?? this.rentalDuration,
       rentalUnit: rentalUnit ?? this.rentalUnit,
       amenities: amenities ?? this.amenities,
       description: description ?? this.description,
-      smokingPolicy: smokingPolicy ?? this.smokingPolicy,
       suitableFor: suitableFor ?? this.suitableFor,
-      ownershipProofUrl: clearOwnershipProof
-          ? ''
-          : ownershipProofUrl ?? this.ownershipProofUrl,
-      ownershipProof: clearOwnershipProof
-          ? null
-          : ownershipProof ?? this.ownershipProof,
       submittedAt: submittedAt ?? this.submittedAt,
       optionLabels: optionLabels ?? this.optionLabels,
     );
   }
-
-  Map<String, dynamic> toRequestBody() => toJson();
 
   Map<String, dynamic> toJson({bool includeMainImage = true}) {
     final Set<String> selectedAmenities = amenities;

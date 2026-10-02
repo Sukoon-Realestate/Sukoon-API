@@ -14,7 +14,7 @@ import 'package:sokoun_app/features/main_view/data/enums/workspace_tab.dart';
 import 'package:sokoun_app/features/main_view/data/workspace_preferences.dart';
 import 'package:sokoun_app/features/main_view/presentation/cubits/workspace_cubit.dart';
 import 'package:sokoun_app/features/shared/auth/data/models/register.dart';
-import 'package:sokoun_app/features/shared/chat/presentation/cubits/start_chat.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/cubits/create_conversation_cubit.dart';
 import 'package:sokoun_app/features/shared/notifications/data/models/app_notification_content.dart';
 import 'package:sokoun_app/features/shared/notifications/data/notification_destination.dart';
 import 'package:sokoun_app/features/tenant/visits/imports.dart';

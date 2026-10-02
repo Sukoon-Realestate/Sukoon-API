@@ -3,7 +3,7 @@ part of '../../../imports.dart';
 class TenantProfileActions extends StatelessWidget {
   const TenantProfileActions({super.key, required this.menuItems});
 
-  final TenantProfileMenuItemsContent menuItems;
+  final AccountMenuItemsContent menuItems;
 
   @override
   Widget build(BuildContext context) {

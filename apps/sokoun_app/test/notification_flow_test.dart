@@ -11,7 +11,6 @@ import 'package:sokoun_app/features/shared/notifications/data/enums/notification
 import 'package:sokoun_app/features/shared/notifications/data/models/app_notification_content.dart';
 import 'package:sokoun_app/features/shared/notifications/presentation/screens/notification_detail_screen.dart';
 import 'package:sokoun_app/features/shared/notifications/presentation/screens/notification_settings_screen.dart';
-import 'package:sokoun_app/features/shared/notifications/presentation/screens/notifications_empty_screen.dart';
 import 'package:sokoun_app/features/shared/notifications/presentation/screens/notifications_screen.dart';
 import 'package:sokoun_app/features/shared/notifications/presentation/widgets/notification_card.dart';
 
@@ -203,7 +202,6 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.byType(NotificationsEmptyScreen), findsNothing);
     expect(find.text('لا إشعارات حالياً'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });

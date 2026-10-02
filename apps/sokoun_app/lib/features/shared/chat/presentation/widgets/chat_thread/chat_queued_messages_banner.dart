@@ -6,17 +6,17 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
-import '../../cubits/socket_cubit.dart';
+import '../../cubits/chat_thread_cubit.dart';
 
 class ChatQueuedMessagesBanner extends StatelessWidget {
   const ChatQueuedMessagesBanner({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<ChatThreadCubit, ChatThreadState, int>(
-      selector: (state) => state.queuedMessageCount,
-      builder: (context, queuedMessageCount) {
-        if (queuedMessageCount == 0) {
+    return BlocSelector<ChatThreadCubit, ChatThreadState, bool>(
+      selector: (state) => state.showQueuedMessages,
+      builder: (context, showQueuedMessages) {
+        if (!showQueuedMessages) {
           return const SizedBox.shrink();
         }
 

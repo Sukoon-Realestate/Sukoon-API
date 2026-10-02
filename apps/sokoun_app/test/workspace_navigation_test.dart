@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/main_view/presentation/cubits/account_cubit.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_widgets/tenant_home_content.dart';
 import 'package:sokoun_app/features/main_view/presentation/widgets/home_navigation_rail.dart';
 import 'dart:async';
@@ -37,7 +38,7 @@ import 'package:sokoun_app/features/shared/auth/presentation/screens/login_scree
 import 'package:sokoun_app/features/shared/auth/presentation/screens/welcome_screen.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_realtime_service.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_socket_data.dart';
-import 'package:sokoun_app/features/shared/chat/presentation/cubits/chat_unread_cubit.dart';
+import 'package:sokoun_app/features/shared/unread_counts/presentation/cubits/unread_counts_cubit.dart';
 import 'package:sokoun_app/features/shared/notifications/data/notification_device_data.dart';
 import 'package:sokoun_app/features/shared/notifications/presentation/notification_push_handler.dart';
 import 'package:sokoun_app/features/shared/profile/imports.dart';
@@ -268,19 +269,20 @@ void main() {
   });
 
   test('coalesces simultaneous my-account requests', () async {
+    await registerAuthenticatedTestAccount();
     accountRepository.profileGate = Completer<void>();
-    final TenantProfileCubit cubit = TenantProfileCubit();
+    final AccountCubit cubit = AccountCubit();
     addTearDown(cubit.close);
 
-    final Future<void> first = cubit.getProfile();
-    final Future<void> second = cubit.getProfile();
+    final Future<void> first = cubit.getAccount();
+    final Future<void> second = cubit.getAccount();
     expect(second, same(first));
     expect(accountRepository.profileRequests, 1);
 
     accountRepository.profileGate!.complete();
     await Future.wait([first, second]);
     expect(cubit.state.isSuccess, isTrue);
-    await cubit.getProfile();
+    await cubit.getAccount();
     expect(accountRepository.profileRequests, 2);
   });
 
@@ -291,9 +293,9 @@ void main() {
     await registerAuthenticatedTestAccount();
     await tester.pumpWidget(_app(const TenantProfileScreen(), 'en'));
     await tester.pumpAndSettle();
-    final TenantProfileCubit profile = tester
+    final AccountCubit profile = tester
         .element(find.byType(TenantProfileContentView))
-        .read<TenantProfileCubit>();
+        .read<AccountCubit>();
     expect(accountRepository.profileRequests, 1);
     expect(profile.state.isSuccess, isTrue);
     await tester.pumpWidget(const SizedBox.shrink());
@@ -336,9 +338,9 @@ void main() {
         expect(accountRepository.profileRequests, 1);
         final int initialCountRequests = accountRepository.countRequests;
         expect(initialCountRequests, 2);
-        final TenantProfileCubit sharedProfile = tester
+        final AccountCubit sharedProfile = tester
             .element(bottomBar)
-            .read<TenantProfileCubit>();
+            .read<AccountCubit>();
 
         accountRepository.stats = {
           'saved_count': 6,
@@ -359,7 +361,7 @@ void main() {
         expect(
           tester
               .element(find.byType(TenantProfileContentView))
-              .read<TenantProfileCubit>(),
+              .read<AccountCubit>(),
           same(sharedProfile),
         );
 
@@ -446,9 +448,9 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.byType(HomeNavigationRail), findsNothing);
         expect(tester.state(find.byType(TenantHomeContent)), same(tenantState));
-        final ChatUnreadCubit unread = tester
+        final UnreadCountsCubit unread = tester
             .element(find.byType(HomeBottomNavigation))
-            .read<ChatUnreadCubit>();
+            .read<UnreadCountsCubit>();
 
         await tester.tap(
           find.widgetWithText(ChoiceChip, LocaleKeys.workspaceOwner),
@@ -499,7 +501,7 @@ void main() {
         expect(
           tester
               .element(find.byType(HomeBottomNavigation))
-              .read<ChatUnreadCubit>(),
+              .read<UnreadCountsCubit>(),
           same(unread),
         );
         expect(AccountSession.generation, generation);

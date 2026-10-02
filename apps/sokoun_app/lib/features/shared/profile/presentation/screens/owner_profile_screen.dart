@@ -35,25 +35,15 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
     super.dispose();
   }
 
-  UserModel _editableUser(OwnerProfileContent profile) {
-    return UserModel(
-      id: widget.user.id,
-      name: profile.owner.fullName.isNotEmpty
-          ? profile.owner.fullName
-          : widget.user.name,
-      phone: profile.accountDetails.phoneNumber.isNotEmpty
-          ? profile.accountDetails.phoneNumber
-          : widget.user.phone,
-      email: profile.accountDetails.email.isNotEmpty
-          ? profile.accountDetails.email
-          : widget.user.email,
-      type: widget.user.type,
-    );
-  }
-
   Future<void> _openEditProfile(OwnerProfileContent profile) async {
     final UserModel? updated = await Go.to<UserModel>(
-      OwnerEditProfileScreen(initialValue: _editableUser(profile)),
+      ProfileEditScreen(
+        initialValue: profile.accountDetails.editableUser(
+          fallback: widget.user,
+          fullName: profile.owner.fullName,
+        ),
+        workspace: AppWorkspace.owner,
+      ),
     );
     if (updated != null && mounted) {
       _profileCubit.updateFromUser(updated);

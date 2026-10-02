@@ -1,4 +1,10 @@
-part of '../imports.dart';
+import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/network/api_endpoints.dart';
+import 'package:melos_core/core/network/network_service.dart';
+import 'package:melos_core/core/network/network_request.dart';
+import 'package:pagify/helpers/data_and_pagination_data.dart';
+import 'models/profile_city.dart';
+import 'profile_json.dart';
 
 abstract final class ProfileCitiesData {
   static const cacheKey = 'profile_city_choices';
@@ -12,7 +18,7 @@ abstract final class ProfileCitiesData {
         queryParameters: {'page': page, 'page_size': pageSize},
       ),
       mapper: (json) {
-        final Map<String, dynamic> data = _profileJsonMap(json);
+        final Map<String, dynamic> data = profileJsonMap(json);
         final cities = (data['results'] as List? ?? const [])
             .whereType<Map>()
             .map(
@@ -20,7 +26,7 @@ abstract final class ProfileCitiesData {
             )
             .where((city) => city.id.isNotEmpty)
             .toList(growable: false);
-        final count = _profileInt(data['count']);
+        final count = profileInt(data['count']);
         final int totalPages = count > 0
             ? (count + pageSize - 1) ~/ pageSize
             : data['next'] != null

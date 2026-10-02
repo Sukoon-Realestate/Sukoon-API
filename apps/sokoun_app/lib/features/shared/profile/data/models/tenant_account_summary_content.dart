@@ -1,4 +1,5 @@
-part of '../../imports.dart';
+import 'package:equatable/equatable.dart';
+import '../profile_json.dart';
 
 class TenantAccountSummaryContent extends Equatable {
   const TenantAccountSummaryContent({
@@ -17,16 +18,16 @@ class TenantAccountSummaryContent extends Equatable {
   factory TenantAccountSummaryContent.fromJson(Map<String, dynamic> json) {
     return TenantAccountSummaryContent(
       user: TenantAccountSummaryUserContent.fromJson(
-        _profileJsonMap(json['user']),
+        profileJsonMap(json['user']),
       ),
       identityVerification: TenantIdentityVerificationContent.fromJson(
-        _profileJsonMap(json['identity_verification']),
+        profileJsonMap(json['identity_verification']),
       ),
       stats: TenantAccountSummaryStatsContent.fromJson(
-        _profileJsonMap(json['stats']),
+        profileJsonMap(json['stats']),
       ),
       shortcuts: TenantAccountSummaryShortcutsContent.fromJson(
-        _profileJsonMap(json['shortcuts']),
+        profileJsonMap(json['shortcuts']),
       ),
     );
   }
@@ -87,16 +88,16 @@ class TenantAccountSummaryUserContent extends Equatable {
 
   factory TenantAccountSummaryUserContent.fromJson(Map<String, dynamic> json) {
     return TenantAccountSummaryUserContent(
-      id: _profileString(json['id']),
-      fullName: _profileString(json['full_name'] ?? json['name']),
-      avatar: _profileNullableString(json['avatar']),
-      initial: _profileString(json['initial']),
-      roleLabel: _profileString(json['role_label']),
-      memberSinceLabel: _profileString(json['member_since_label']),
-      profileCompletionPercentage: _profileInt(
+      id: profileString(json['id']),
+      fullName: profileString(json['full_name'] ?? json['name']),
+      avatar: profileNullableString(json['avatar']),
+      initial: profileString(json['initial']),
+      roleLabel: profileString(json['role_label']),
+      memberSinceLabel: profileString(json['member_since_label']),
+      profileCompletionPercentage: profileInt(
         json['profile_completion_percentage'],
       ),
-      profileCompletionLabel: _profileString(json['profile_completion_label']),
+      profileCompletionLabel: profileString(json['profile_completion_label']),
     );
   }
 
@@ -177,9 +178,9 @@ class TenantIdentityVerificationContent extends Equatable {
   ) {
     return TenantIdentityVerificationContent(
       isVerified: json['is_verified'] == true,
-      title: _profileString(json['title']),
-      subtitle: _profileString(json['subtitle']),
-      statusLabel: _profileString(json['status_label']),
+      title: profileString(json['title']),
+      subtitle: profileString(json['subtitle']),
+      statusLabel: profileString(json['status_label']),
     );
   }
 
@@ -227,9 +228,9 @@ class TenantAccountSummaryStatsContent extends Equatable {
 
   factory TenantAccountSummaryStatsContent.fromJson(Map<String, dynamic> json) {
     return TenantAccountSummaryStatsContent(
-      savedPropertiesCount: _profileInt(json['saved_properties_count']),
-      completedVisitsCount: _profileInt(json['completed_visits_count']),
-      activeChatsCount: _profileInt(json['active_chats_count']),
+      savedPropertiesCount: profileInt(json['saved_properties_count']),
+      completedVisitsCount: profileInt(json['completed_visits_count']),
+      activeChatsCount: profileInt(json['active_chats_count']),
     );
   }
 
@@ -281,13 +282,13 @@ class TenantAccountSummaryShortcutsContent extends Equatable {
   ) {
     return TenantAccountSummaryShortcutsContent(
       savedProperties: TenantAccountSummaryShortcutContent.fromJson(
-        _profileJsonMap(json['saved_properties']),
+        profileJsonMap(json['saved_properties']),
       ),
       visitsHistory: TenantAccountSummaryShortcutContent.fromJson(
-        _profileJsonMap(json['visits_history']),
+        profileJsonMap(json['visits_history']),
       ),
       identityVerification: TenantAccountSummaryShortcutContent.fromJson(
-        _profileJsonMap(json['identity_verification']),
+        profileJsonMap(json['identity_verification']),
       ),
     );
   }
@@ -340,10 +341,10 @@ class TenantAccountSummaryShortcutContent extends Equatable {
     Map<String, dynamic> json,
   ) {
     return TenantAccountSummaryShortcutContent(
-      title: _profileString(json['title']),
-      count: _profileInt(json['count']),
-      status: _profileString(json['status']),
-      label: _profileString(json['label']),
+      title: profileString(json['title']),
+      count: profileInt(json['count']),
+      status: profileString(json['status']),
+      label: profileString(json['label']),
     );
   }
 

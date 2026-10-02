@@ -12,7 +12,7 @@ class UserProfileCubit extends AsyncCubit<UserProfileContent> {
           api: ApiConstants.userProfile,
           httpRequestType: HttpRequestType.get,
           cacheKey: 'editable_user_profile',
-          mapper: (json) => UserProfileContent.fromJson(_profileJsonMap(json)),
+          mapper: (json) => UserProfileContent.fromJson(profileJsonMap(json)),
           fromCacheJson: UserProfileContent.fromJson,
           toJson: (data) => data.toJson(),
         ),

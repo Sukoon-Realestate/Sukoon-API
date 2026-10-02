@@ -1,4 +1,7 @@
-part of '../../imports.dart';
+import '../enums/owner_visit_request_state.dart';
+import '../owner_visit_json.dart';
+import 'owner_visit_request_content.dart';
+import 'package:equatable/equatable.dart';
 
 class OwnerVisitRequestDetailsContent extends Equatable {
   const OwnerVisitRequestDetailsContent({
@@ -32,26 +35,26 @@ class OwnerVisitRequestDetailsContent extends Equatable {
 
   factory OwnerVisitRequestDetailsContent.fromJson(Map<String, dynamic> json) {
     return OwnerVisitRequestDetailsContent(
-      id: _ownerVisitString(json['id']),
+      id: ownerVisitString(json['id']),
       tenant: OwnerVisitRequestTenantContent.fromJson(
-        _ownerVisitJsonMap(json['tenant']),
+        ownerVisitJsonMap(json['tenant']),
       ),
       property: OwnerVisitRequestPropertyContent.fromJson(
-        _ownerVisitJsonMap(json['property']),
+        ownerVisitJsonMap(json['property']),
       ),
-      visitDate: _ownerVisitString(json['visit_date']),
-      visitTime: _ownerVisitString(json['visit_time']),
-      dayLabel: _ownerVisitString(json['day_label']),
-      timeLabel: _ownerVisitString(json['time_label']),
-      note: _ownerVisitString(json['note']),
+      visitDate: ownerVisitString(json['visit_date']),
+      visitTime: ownerVisitString(json['visit_time']),
+      dayLabel: ownerVisitString(json['day_label']),
+      timeLabel: ownerVisitString(json['time_label']),
+      note: ownerVisitString(json['note']),
       status: OwnerVisitRequestStatusExtension.fromName(
-        _ownerVisitString(json['status']),
+        ownerVisitString(json['status']),
       ),
-      statusLabel: _ownerVisitString(json['status_label']),
+      statusLabel: ownerVisitString(json['status_label']),
       actions: OwnerVisitRequestActionsContent.fromJson(
-        _ownerVisitJsonMap(json['actions']),
+        ownerVisitJsonMap(json['actions']),
       ),
-      createdAt: _ownerVisitString(json['created_at']),
+      createdAt: ownerVisitString(json['created_at']),
     );
   }
 
@@ -103,6 +106,9 @@ class OwnerVisitRequestDetailsContent extends Equatable {
       isVerified: tenant.isVerified,
       propertyId: property.id,
       tenantId: tenant.id,
+      avatar: tenant.avatar,
+      statusLabel: statusLabel,
+      actions: actions,
     );
   }
 
@@ -196,16 +202,16 @@ class OwnerVisitRequestTenantContent extends Equatable {
 
   factory OwnerVisitRequestTenantContent.fromJson(Map<String, dynamic> json) {
     return OwnerVisitRequestTenantContent(
-      id: _ownerVisitString(json['id']),
-      name: _ownerVisitString(json['name'] ?? json['full_name']),
-      avatar: _ownerVisitString(json['avatar']),
+      id: ownerVisitString(json['id']),
+      name: ownerVisitString(json['name'] ?? json['full_name']),
+      avatar: ownerVisitString(json['avatar']),
       isVerified: json['is_verified'] == true,
       memberSinceYear: (json['member_since_year'] as num?)?.toInt() ?? 0,
-      membershipLabel: _ownerVisitString(json['membership_label']),
-      phoneNumber: _ownerVisitString(json['phone_number']),
-      maskedPhoneNumber: _ownerVisitString(json['masked_phone_number']),
+      membershipLabel: ownerVisitString(json['membership_label']),
+      phoneNumber: ownerVisitString(json['phone_number']),
+      maskedPhoneNumber: ownerVisitString(json['masked_phone_number']),
       isPhoneRevealed: json['is_phone_revealed'] == true,
-      phoneNotice: _ownerVisitString(json['phone_notice']),
+      phoneNotice: ownerVisitString(json['phone_notice']),
     );
   }
 
@@ -300,10 +306,10 @@ class OwnerVisitRequestPropertyContent extends Equatable {
 
   factory OwnerVisitRequestPropertyContent.fromJson(Map<String, dynamic> json) {
     return OwnerVisitRequestPropertyContent(
-      id: _ownerVisitString(json['id']),
-      title: _ownerVisitString(json['title']),
-      district: _ownerVisitString(json['district']),
-      displayName: _ownerVisitString(json['display_name']),
+      id: ownerVisitString(json['id']),
+      title: ownerVisitString(json['title']),
+      district: ownerVisitString(json['district']),
+      displayName: ownerVisitString(json['display_name']),
     );
   }
 
@@ -382,5 +388,3 @@ class OwnerVisitRequestActionsContent extends Equatable {
   @override
   List<Object?> get props => [canAccept, canReject, canChat];
 }
-
-String _ownerVisitString(Object? value) => value?.toString().trim() ?? '';

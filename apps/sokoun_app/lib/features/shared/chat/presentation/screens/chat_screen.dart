@@ -10,7 +10,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import '../../data/chat_unread_refresh_bus.dart';
 import '../../data/chat_thread_data.dart';
 import '../../data/models/chat_content.dart';
-import '../cubits/socket_cubit.dart';
+import '../cubits/chat_thread_cubit.dart';
 import '../widgets/chat_thread/chat_thread_content.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -23,7 +23,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
-  late final SocketCubit _chatThreadCubit;
+  late final ChatThreadCubit _chatThreadCubit;
   late final ChatThreadData _chatThreadData;
   late final Future<List<ChatMessageContent>> _initialMessagesRequest;
 
@@ -31,7 +31,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _chatThreadCubit = SocketCubit(
+    _chatThreadCubit = ChatThreadCubit(
       conversationId: widget.conversation.id,
       otherParticipantId: widget.conversation.otherParticipant.id,
     );
@@ -87,9 +87,4 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       ),
     );
   }
-}
-
-/// Backwards-compatible name used by existing navigation call sites.
-class ChatThreadScreen extends ChatScreen {
-  const ChatThreadScreen({super.key, required super.conversation});
 }

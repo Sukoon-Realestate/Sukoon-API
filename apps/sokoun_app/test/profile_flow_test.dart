@@ -1,3 +1,7 @@
+import 'package:melos_core/core/helpers/cache_service.dart';
+import 'helpers/account_test_dependencies.dart';
+import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
+import 'package:sokoun_app/features/main_view/presentation/cubits/account_cubit.dart';
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -44,7 +48,13 @@ void main() {
         .setMockMethodCallHandler(sharedPreferencesChannel, (call) async {
           return call.method == 'getAll' ? <String, Object>{} : true;
         });
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel('plugins.it_nomads.com/flutter_secure_storage'),
+          (_) async => null,
+        );
     await EasyLocalization.ensureInitialized();
+    await CacheStorage.init();
   });
 
   tearDownAll(() {
@@ -58,6 +68,7 @@ void main() {
     injector.registerSingleton<BaseCrudUseCase>(
       BaseCrudUseCase(repository: repository),
     );
+    await registerAuthenticatedTestAccount(user: tenant);
   });
 
   tearDown(() => injector.reset());
@@ -130,7 +141,7 @@ void main() {
   });
 
   test('maps and serializes the tenant profile response', () {
-    final TenantProfileContent profile = TenantProfileContent.fromJson(
+    final AccountContent profile = AccountContent.fromJson(
       _tenantProfileResponse,
     );
 
@@ -140,7 +151,7 @@ void main() {
     expect(profile.menuItems.contracts.count, 1);
     expect(profile.menuItems.verification.isVerified, isFalse);
     expect(profile.accountDetails.email, 'zeyaddd@gmail.com');
-    expect(TenantProfileContent.fromJson(profile.toJson()), profile);
+    expect(AccountContent.fromJson(profile.toJson()), profile);
   });
 
   test('maps and serializes the tenant account summary response', () {
@@ -160,7 +171,7 @@ void main() {
 
   test('loads profile screens from their GET endpoints', () async {
     final OwnerProfileCubit ownerCubit = OwnerProfileCubit();
-    final TenantProfileCubit tenantCubit = TenantProfileCubit();
+    final AccountCubit tenantCubit = AccountCubit();
     final TenantAccountSummaryCubit summaryCubit = TenantAccountSummaryCubit();
     addTearDown(ownerCubit.close);
     addTearDown(tenantCubit.close);
@@ -172,10 +183,10 @@ void main() {
     expect(repository.lastCacheKey, OwnerProfileContent.cacheKey);
     expect(ownerCubit.data.owner.fullName, 'Zeayd Mohammed');
 
-    await tenantCubit.getProfile();
+    await tenantCubit.getAccount();
     expect(repository.lastApi, ApiConstants.getAccData);
     expect(repository.lastMethod, HttpRequestType.get);
-    expect(repository.lastCacheKey, TenantProfileContent.cacheKey);
+    expect(repository.lastCacheKey, AccountContent.cacheKey);
     expect(tenantCubit.data.stats.visitsCount, 2);
 
     await summaryCubit.getSummary();
@@ -363,11 +374,16 @@ void main() {
     configurePhoneViewport(tester);
     repository.editableUser = tenant;
     await tester.pumpWidget(
-      buildScreen(const TenantEditProfileScreen(initialValue: tenant)),
+      buildScreen(
+        const ProfileEditScreen(
+          initialValue: tenant,
+          workspace: AppWorkspace.tenant,
+        ),
+      ),
     );
     await tester.pumpAndSettle();
 
-    expect(find.byType(TenantEditProfileScreen), findsOneWidget);
+    expect(find.byType(ProfileEditScreen), findsOneWidget);
     _expectPrefilledFields(tester, tenant);
     expect(repository.lastApi, ApiConstants.userProfile);
     expect(tester.takeException(), isNull);
@@ -379,11 +395,16 @@ void main() {
     configurePhoneViewport(tester);
     repository.editableUser = owner;
     await tester.pumpWidget(
-      buildScreen(const OwnerEditProfileScreen(initialValue: owner)),
+      buildScreen(
+        const ProfileEditScreen(
+          initialValue: owner,
+          workspace: AppWorkspace.owner,
+        ),
+      ),
     );
     await tester.pumpAndSettle();
 
-    expect(find.byType(OwnerEditProfileScreen), findsOneWidget);
+    expect(find.byType(ProfileEditScreen), findsOneWidget);
     _expectPrefilledFields(tester, owner);
     expect(repository.lastApi, ApiConstants.userProfile);
     expect(tester.takeException(), isNull);

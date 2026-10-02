@@ -1,4 +1,5 @@
-part of '../../imports.dart';
+import 'package:equatable/equatable.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 
 class BookVisitBody extends Equatable {
   const BookVisitBody({

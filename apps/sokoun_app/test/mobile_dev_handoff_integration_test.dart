@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -206,9 +207,10 @@ void main() {
       await registerAuthenticatedTestAccount(user: _user);
       await pump(
         tester,
-        isOwner
-            ? const OwnerEditProfileScreen(initialValue: _user)
-            : const TenantEditProfileScreen(initialValue: _user),
+        ProfileEditScreen(
+          initialValue: _user,
+          workspace: isOwner ? AppWorkspace.owner : AppWorkspace.tenant,
+        ),
       );
       final selector = find.byType(ProfileCitySelector);
       await tester.ensureVisible(selector);
@@ -308,7 +310,7 @@ void main() {
         'amenities': ['wifi', 'electricity_meter', 'water_meter'],
       });
       final form = OwnerAddPropertyMapper.fromProperty(property).form;
-      final body = form.toRequestBody();
+      final body = form.toJson();
       expect(body['price_period'], 'weekly');
       expect(body['suitable_for'], 'female_students');
       expect(body['has_electricity_meter'], isTrue);
@@ -686,16 +688,16 @@ void main() {
     );
     wraps.first.onChipTap!(meter);
     wraps.last.onChipTap!(wraps.last.chips.single);
-    expect(form.toRequestBody()['has_electricity_meter'], isTrue);
-    expect(form.toRequestBody()['suitable_for'], 'students');
+    expect(form.toJson()['has_electricity_meter'], isTrue);
+    expect(form.toJson()['suitable_for'], 'students');
     tester
         .widget<AddPropertyPricingPage>(find.byType(AddPropertyPricingPage))
         .onRentalUnitChanged('weekly');
-    expect(form.toRequestBody()['price_period'], 'weekly');
+    expect(form.toJson()['price_period'], 'weekly');
     expect(form.rentalUnitLabel, 'API weekly');
     expect(form.suitableForLabel, 'API students');
     expect(form.amenityLabels, ['API electricity']);
-    expect(form.toRequestBody(), isNot(contains('option_labels')));
+    expect(form.toJson(), isNot(contains('option_labels')));
     expect(tester.takeException(), isNull);
   });
 

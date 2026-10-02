@@ -1,4 +1,4 @@
-part of '../../imports.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 
 enum OwnerVisitRequestStatus {
   newRequest,
@@ -109,36 +109,6 @@ enum OwnerRequestResolution { accepted, rejected }
 extension OwnerRequestResolutionExtension on OwnerRequestResolution {
   bool get isAccepted => this == OwnerRequestResolution.accepted;
   bool get isRejected => this == OwnerRequestResolution.rejected;
-}
-
-enum OwnerRejectionReason {
-  inconvenientTime,
-  propertyRented,
-  requirementsNotMet,
-  other,
-}
-
-extension OwnerRejectionReasonExtension on OwnerRejectionReason {
-  bool get isInconvenientTime => this == OwnerRejectionReason.inconvenientTime;
-  bool get isPropertyRented => this == OwnerRejectionReason.propertyRented;
-  bool get isRequirementsNotMet =>
-      this == OwnerRejectionReason.requirementsNotMet;
-  bool get isOther => this == OwnerRejectionReason.other;
-
-  String get label {
-    if (isInconvenientTime) {
-      return LocaleKeys.ownerRejectReasonInconvenientTime;
-    }
-    if (isPropertyRented) {
-      return LocaleKeys.ownerRejectReasonPropertyRented;
-    }
-    if (isRequirementsNotMet) {
-      return LocaleKeys.ownerRejectReasonRequirementsNotMet;
-    }
-    return LocaleKeys.ownerRejectReasonOther;
-  }
-
-  bool isSame(OwnerRejectionReason other) => this == other;
 }
 
 enum OwnerAvailabilitySlotState { unspecified, available, booked }

@@ -97,7 +97,7 @@ void main() {
       );
       expect(
         OwnerAddPropertyFormState.initial()
-            .copyWith(mapQuery: 'Cairo')
+            .copyWith(street: 'Cairo')
             .isLocationSelected,
         isFalse,
       );

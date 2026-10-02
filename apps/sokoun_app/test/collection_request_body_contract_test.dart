@@ -15,7 +15,7 @@ import 'package:sokoun_app/features/owner/visits/imports.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:sokoun_app/features/owner/home/data/models/property_location.dart';
 import 'package:sokoun_app/features/owner/home/data/models/upload_property_image_body.dart';
-import 'package:sokoun_app/features/owner/home/presentation/cubits/create_property_cubit.dart';
+import 'package:sokoun_app/features/owner/home/presentation/cubits/property_submission_cubit.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -164,20 +164,20 @@ void main() {
       injector.registerSingleton<BaseCrudUseCase>(
         BaseCrudUseCase(repository: repository),
       );
-      final cubit = CreatePropertyCubit();
+      final cubit = PropertySubmissionCubit();
       addTearDown(cubit.close);
-      await cubit.createProperty(
+      await cubit.save(
         form: _property().copyWith(clearLocation: true),
         onSuccess: (_) {},
       );
-      await cubit.createProperty(
+      await cubit.save(
         form: _property().copyWith(
           location: const PropertyLocation(latitude: 100, longitude: 200),
         ),
         onSuccess: (_) {},
       );
       expect(repository.calls, isEmpty);
-      await cubit.createProperty(form: _property(), onSuccess: (_) {});
+      await cubit.save(form: _property(), onSuccess: (_) {});
       expect(repository.calls.single.isFromData, isTrue);
       matches(
         repository.calls.single.body!,

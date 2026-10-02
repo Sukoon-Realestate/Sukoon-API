@@ -1,5 +1,4 @@
 import 'package:melos_core/core/helpers/status_builder.dart';
-import 'package:sokoun_app/features/shared/reviews/data/models/property_review.dart';
 import 'package:sokoun_app/features/shared/reviews/presentation/widgets/property_review_card.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/helpers/validators.dart';
@@ -8,7 +7,6 @@ import 'package:sokoun_app/shared_widgets/sokoun_reveal.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:sokoun_app/shared_widgets/unsaved_changes_guard.dart';
 import 'package:sokoun_app/features/main_view/data/workspace_counts_refresh_bus.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,29 +19,39 @@ import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
-import 'package:melos_core/core/network/network_request.dart';
-import 'package:melos_core/core/network/network_service.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:melos_core/generated/assets.dart';
-import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:pagify/pagify.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/start_conversation_screen.dart';
-import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
 import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
 import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
+import 'data/enums/visit_status.dart';
+import 'data/tenant_visits_data.dart';
+import 'data/models/book_visit_body.dart';
+import 'data/models/tenant_visit_content.dart';
+import 'data/models/visit_property_content.dart';
+import 'data/models/visit_schedule_content.dart';
+import 'data/models/tenant_visit_details_content.dart';
+import 'data/models/visit_review_body.dart';
+import 'data/visit_json.dart';
 
-part 'data/enums/visit_status.dart';
-part 'data/tenant_visits_data.dart';
-part 'data/models/book_visit_body.dart';
-part 'data/models/tenant_visit_content.dart';
-part 'data/models/tenant_visits_response.dart';
-part 'data/models/visit_property_content.dart';
-part 'data/models/visit_schedule_content.dart';
+export 'data/enums/visit_status.dart';
+export 'data/tenant_visits_data.dart';
+export 'data/models/book_visit_body.dart';
+export 'data/models/tenant_visit_content.dart';
+export 'data/models/tenant_visits_response.dart';
+export 'data/models/visit_property_content.dart';
+export 'data/models/visit_schedule_content.dart';
+export 'data/models/visit_actions.dart';
+export 'data/models/tenant_visit_details_content.dart';
+export 'data/models/visit_review_body.dart';
+export 'data/visit_json.dart';
+
 part 'presentation/cubits/book_visit_cubit.dart';
 part 'presentation/screens/book_visit_screen.dart';
 part 'presentation/screens/tenant_visits_screen.dart';
@@ -68,19 +76,8 @@ part 'presentation/widgets/tenant_visits/tenant_visits_empty_state.dart';
 part 'presentation/widgets/tenant_visits/tenant_visits_filters.dart';
 part 'presentation/widgets/tenant_visits/tenant_visits_list.dart';
 part 'presentation/widgets/tenant_visits/visit_filter_chip.dart';
-
-part 'data/models/visit_actions.dart';
-
-part 'data/models/tenant_visit_details_content.dart';
-
-part 'data/models/visit_review_body.dart';
-
 part 'presentation/cubits/visit_details_cubit.dart';
-
 part 'presentation/cubits/visit_cancel_cubit.dart';
-
 part 'presentation/cubits/visit_review_cubit.dart';
-
 part 'presentation/widgets/details/visit_details_extra.dart';
-
 part 'presentation/widgets/details/visit_note_card.dart';

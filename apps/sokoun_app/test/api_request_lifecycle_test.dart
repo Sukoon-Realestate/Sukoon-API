@@ -1,3 +1,5 @@
+import 'helpers/account_test_dependencies.dart';
+import 'package:sokoun_app/features/main_view/presentation/cubits/account_cubit.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -20,7 +22,6 @@ import 'package:melos_core/core/network/network_request.dart';
 import 'package:melos_core/core/network/network_service.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
-import 'package:sokoun_app/features/shared/profile/imports.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/forgot_password.dart';
 import 'package:sokoun_app/features/shared/notifications/data/enums/notification_role.dart';
 import 'package:sokoun_app/features/shared/notifications/data/notification_device_data.dart';
@@ -55,6 +56,11 @@ void main() {
       const MethodChannel('dev.fluttercommunity.plus/connectivity_status'),
       (_) async => null,
     );
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel('plugins.it_nomads.com/flutter_secure_storage'),
+          (_) async => null,
+        );
     await EasyLocalization.ensureInitialized();
     await CacheStorage.init();
   });
@@ -77,17 +83,23 @@ void main() {
   test(
     'profile opened during account startup joins the account request',
     () async {
-      final cubit = TenantProfileCubit();
+      await registerAuthenticatedTestAccount();
+      final cubit = AccountCubit();
       addTearDown(cubit.close);
-      final accountRequest = Completer<void>();
-      cubit.useAccountRequest(accountRequest.future);
-      final profile = cubit.getProfile();
-      expect(repository.requests, isEmpty);
-      accountRequest.complete();
-      await profile;
-      final refresh = cubit.getProfile();
+      final startup = cubit.getAccount();
+      final profile = cubit.getAccount();
+      expect(profile, same(startup));
       expect(repository.requests, hasLength(1));
-      repository.requests.single.complete({});
+      repository.requests.single.complete({
+        'user': {'id': '1'},
+      });
+      await Future.wait([startup, profile]);
+      expect(cubit.state.isSuccess, isTrue);
+      final refresh = cubit.getAccount();
+      expect(repository.requests, hasLength(2));
+      repository.requests.last.complete({
+        'user': {'id': '1'},
+      });
       await refresh;
     },
   );

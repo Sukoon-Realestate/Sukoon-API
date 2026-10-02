@@ -1,4 +1,5 @@
-part of '../../imports.dart';
+import 'package:equatable/equatable.dart';
+import '../enums/profile_setting.dart';
 
 class ProfileSettingsContent extends Equatable {
   const ProfileSettingsContent({required this.values});

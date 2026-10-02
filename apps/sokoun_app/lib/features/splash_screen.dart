@@ -10,7 +10,6 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/notification/notification_service.dart';
 import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/screens/welcome_screen.dart';
-import 'package:sokoun_app/features/shared/notifications/presentation/notification_coordinator.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 
 import 'main_view/presentation/screens/view.dart';

@@ -1,4 +1,6 @@
-part of '../../imports.dart';
+import 'package:equatable/equatable.dart';
+import '../profile_json.dart';
+import 'profile_account_details_content.dart';
 
 class OwnerProfileContent extends Equatable {
   const OwnerProfileContent({
@@ -19,20 +21,20 @@ class OwnerProfileContent extends Equatable {
   factory OwnerProfileContent.fromJson(Map<String, dynamic> json) {
     return OwnerProfileContent(
       owner: OwnerProfileIdentityContent.fromJson(
-        _profileJsonMap(json['owner']),
+        profileJsonMap(json['owner']),
       ),
-      stats: OwnerProfileStatsContent.fromJson(_profileJsonMap(json['stats'])),
+      stats: OwnerProfileStatsContent.fromJson(profileJsonMap(json['stats'])),
       accountDetails: ProfileAccountDetailsContent.fromJson(
-        _profileJsonMap(json['account_details']),
+        profileJsonMap(json['account_details']),
       ),
       privacyNotice: OwnerProfilePrivacyNoticeContent.fromJson(
-        _profileJsonMap(json['privacy_notice']),
+        profileJsonMap(json['privacy_notice']),
       ),
       recentReviews:
           (json['recent_reviews'] as List?)
               ?.map(
                 (review) =>
-                    OwnerProfileReviewContent.fromJson(_profileJsonMap(review)),
+                    OwnerProfileReviewContent.fromJson(profileJsonMap(review)),
               )
               .toList(growable: false) ??
           const [],
@@ -109,15 +111,15 @@ class OwnerProfileIdentityContent extends Equatable {
 
   factory OwnerProfileIdentityContent.fromJson(Map<String, dynamic> json) {
     return OwnerProfileIdentityContent(
-      id: _profileString(json['id']),
-      fullName: _profileString(json['full_name'] ?? json['name']),
-      avatar: _profileNullableString(json['avatar']),
+      id: profileString(json['id']),
+      fullName: profileString(json['full_name'] ?? json['name']),
+      avatar: profileNullableString(json['avatar']),
       isVerified: json['is_verified'] == true,
-      roleBadge: _profileString(json['role_badge']),
-      averageRating: _profileDouble(json['average_rating']),
-      reviewsCount: _profileInt(json['reviews_count']),
-      ratingLabel: _profileString(json['rating_label']),
-      memberSinceLabel: _profileString(json['member_since_label']),
+      roleBadge: profileString(json['role_badge']),
+      averageRating: profileDouble(json['average_rating']),
+      reviewsCount: profileInt(json['reviews_count']),
+      ratingLabel: profileString(json['rating_label']),
+      memberSinceLabel: profileString(json['member_since_label']),
     );
   }
 
@@ -204,15 +206,13 @@ class OwnerProfileStatsContent extends Equatable {
 
   factory OwnerProfileStatsContent.fromJson(Map<String, dynamic> json) {
     return OwnerProfileStatsContent(
-      propertiesCount: _profileInt(json['properties_count']),
-      propertiesLabel: _profileString(json['properties_label']),
-      reviewsCount: _profileInt(json['reviews_count']),
-      reviewsLabel: _profileString(json['reviews_label']),
-      acceptanceRate: _profileInt(json['acceptance_rate']),
-      acceptanceLabel: _profileString(json['acceptance_label']),
-      formattedAcceptanceRate: _profileString(
-        json['formatted_acceptance_rate'],
-      ),
+      propertiesCount: profileInt(json['properties_count']),
+      propertiesLabel: profileString(json['properties_label']),
+      reviewsCount: profileInt(json['reviews_count']),
+      reviewsLabel: profileString(json['reviews_label']),
+      acceptanceRate: profileInt(json['acceptance_rate']),
+      acceptanceLabel: profileString(json['acceptance_label']),
+      formattedAcceptanceRate: profileString(json['formatted_acceptance_rate']),
     );
   }
 
@@ -281,8 +281,8 @@ class OwnerProfilePrivacyNoticeContent extends Equatable {
 
   factory OwnerProfilePrivacyNoticeContent.fromJson(Map<String, dynamic> json) {
     return OwnerProfilePrivacyNoticeContent(
-      icon: _profileString(json['icon']),
-      text: _profileString(json['text']),
+      icon: profileString(json['icon']),
+      text: profileString(json['text']),
     );
   }
 
@@ -319,20 +319,18 @@ class OwnerProfileReviewContent extends Equatable {
       dateLabel = '';
 
   factory OwnerProfileReviewContent.fromJson(Map<String, dynamic> json) {
-    final Map<String, dynamic> reviewer = _profileJsonMap(json['reviewer']);
+    final Map<String, dynamic> reviewer = profileJsonMap(json['reviewer']);
     return OwnerProfileReviewContent(
-      id: _profileString(json['id']),
-      reviewerName: _profileString(
+      id: profileString(json['id']),
+      reviewerName: profileString(
         json['reviewer_name'] ??
             json['tenant_name'] ??
             reviewer['name'] ??
             json['name'],
       ),
-      comment: _profileString(
-        json['comment'] ?? json['text'] ?? json['review'],
-      ),
-      rating: _profileDouble(json['rating']),
-      dateLabel: _profileString(json['date_label'] ?? json['created_at']),
+      comment: profileString(json['comment'] ?? json['text'] ?? json['review']),
+      rating: profileDouble(json['rating']),
+      dateLabel: profileString(json['date_label'] ?? json['created_at']),
     );
   }
 

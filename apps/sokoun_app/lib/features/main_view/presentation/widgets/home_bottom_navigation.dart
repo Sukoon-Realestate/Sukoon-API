@@ -3,9 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:melos_core/core/widgets/svg_pic.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
-import 'package:sokoun_app/shared_widgets/sokoun_selection_feedback.dart';
+
+import '../models/home_navigation_destination.dart';
+import 'home_navigation_icon.dart';
 
 class HomeBottomNavigation extends StatelessWidget {
   const HomeBottomNavigation({
@@ -38,7 +39,6 @@ class HomeBottomNavigation extends StatelessWidget {
 
                 return Expanded(
                   child: _HomeBottomNavigationItem(
-                    index: index,
                     destination: destination,
                     isSelected: currentIndex == index,
                     onPressed: () => onDestinationSelected(index),
@@ -52,38 +52,13 @@ class HomeBottomNavigation extends StatelessWidget {
   }
 }
 
-class HomeNavigationDestination {
-  const HomeNavigationDestination({
-    required this.icon,
-    required this.selectedIcon,
-    required this.label,
-    this.badgeCount = 0,
-  });
-
-  final Object icon;
-  final Object selectedIcon;
-  final String label;
-  final int badgeCount;
-
-  HomeNavigationDestination copyWith({int? badgeCount}) {
-    return HomeNavigationDestination(
-      icon: icon,
-      selectedIcon: selectedIcon,
-      label: label,
-      badgeCount: badgeCount ?? this.badgeCount,
-    );
-  }
-}
-
 class _HomeBottomNavigationItem extends StatelessWidget {
   const _HomeBottomNavigationItem({
-    required this.index,
     required this.destination,
     required this.isSelected,
     required this.onPressed,
   });
 
-  final int index;
   final HomeNavigationDestination destination;
   final bool isSelected;
   final VoidCallback onPressed;
@@ -117,40 +92,10 @@ class _HomeBottomNavigationItem extends StatelessWidget {
                       : AppColors.transparent,
                   borderRadius: BorderRadius.circular(16.r),
                 ),
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    SokounSelectionFeedback(
-                      selected: isSelected,
-                      child: _buildIcon(color),
-                    ),
-                    if (destination.badgeCount > 0)
-                      PositionedDirectional(
-                        top: -7.r,
-                        end: -11.r,
-                        child: Container(
-                          constraints: BoxConstraints(minWidth: 17.r),
-                          height: 17.r,
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.symmetric(horizontal: 4.w),
-                          decoration: BoxDecoration(
-                            color: AppColors.red,
-                            borderRadius: BorderRadius.circular(999.r),
-                            border: Border.all(color: AppColors.white),
-                          ),
-                          child: AppText(
-                            destination.badgeCount > 99
-                                ? '99+'
-                                : '${destination.badgeCount}',
-                            style: AppTextStyles.extraBold.copyWith(
-                              color: AppColors.white,
-                              fontSize: 9.sp,
-                            ),
-                            maxLines: 1,
-                          ),
-                        ),
-                      ),
-                  ],
+                child: HomeNavigationIcon(
+                  destination: destination,
+                  isSelected: isSelected,
+                  size: 22.r,
                 ),
               ),
               AppText(
@@ -168,17 +113,5 @@ class _HomeBottomNavigationItem extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget _buildIcon(Color color) {
-    final Object icon = isSelected
-        ? destination.selectedIcon
-        : destination.icon;
-
-    if (icon is String) {
-      return SvgPic(assetName: icon, color: color, size: 22.r);
-    }
-
-    return Icon(icon as IconData, color: color, size: 22.r);
   }
 }

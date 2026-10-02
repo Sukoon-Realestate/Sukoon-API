@@ -1,4 +1,4 @@
-part of 'socket_cubit.dart';
+part of 'chat_thread_cubit.dart';
 
 enum ChatSocketStatus { disconnected, connecting, connected, error }
 
@@ -12,6 +12,7 @@ class ChatThreadState extends Equatable {
     required this.receivedMessageRevision,
     required this.readReceiptRevision,
     required this.queuedMessageCount,
+    this.showQueuedMessages = false,
     this.receivedMessage,
     this.confirmedLocalMessageId,
   });
@@ -21,6 +22,7 @@ class ChatThreadState extends Equatable {
       receivedMessageRevision = 0,
       readReceiptRevision = 0,
       queuedMessageCount = 0,
+      showQueuedMessages = false,
       confirmedLocalMessageId = null,
       receivedMessage = null;
 
@@ -30,6 +32,7 @@ class ChatThreadState extends Equatable {
   final int receivedMessageRevision;
   final int readReceiptRevision;
   final int queuedMessageCount;
+  final bool showQueuedMessages;
 
   ChatThreadState copyWith({
     ChatSocketStatus? status,
@@ -38,6 +41,7 @@ class ChatThreadState extends Equatable {
     int? receivedMessageRevision,
     int? readReceiptRevision,
     int? queuedMessageCount,
+    bool? showQueuedMessages,
   }) {
     return ChatThreadState(
       status: status ?? this.status,
@@ -49,6 +53,7 @@ class ChatThreadState extends Equatable {
           receivedMessageRevision ?? this.receivedMessageRevision,
       readReceiptRevision: readReceiptRevision ?? this.readReceiptRevision,
       queuedMessageCount: queuedMessageCount ?? this.queuedMessageCount,
+      showQueuedMessages: showQueuedMessages ?? this.showQueuedMessages,
     );
   }
 
@@ -60,6 +65,7 @@ class ChatThreadState extends Equatable {
     receivedMessageRevision,
     readReceiptRevision,
     queuedMessageCount,
+    showQueuedMessages,
   ];
 }
 

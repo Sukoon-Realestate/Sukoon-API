@@ -14,7 +14,7 @@ class TenantAccountSummaryCubit
           httpRequestType: HttpRequestType.get,
           cacheKey: TenantAccountSummaryContent.cacheKey,
           mapper: (json) =>
-              TenantAccountSummaryContent.fromJson(_profileJsonMap(json)),
+              TenantAccountSummaryContent.fromJson(profileJsonMap(json)),
           fromCacheJson: TenantAccountSummaryContent.fromJson,
           toJson: (summary) => summary.toJson(),
         ),

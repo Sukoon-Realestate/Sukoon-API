@@ -1,4 +1,5 @@
-part of '../../imports.dart';
+import 'package:equatable/equatable.dart';
+import 'tenant_visit_content.dart';
 
 class TenantVisitsResponse extends Equatable {
   const TenantVisitsResponse({

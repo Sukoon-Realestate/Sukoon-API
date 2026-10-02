@@ -1,4 +1,6 @@
-part of '../../imports.dart';
+import 'package:equatable/equatable.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
 
 class VisitPropertyContent extends Equatable {
   const VisitPropertyContent({

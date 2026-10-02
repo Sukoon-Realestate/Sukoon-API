@@ -1,4 +1,6 @@
-part of '../../imports.dart';
+import '../enums/owner_property_status.dart';
+import 'package:equatable/equatable.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 
 class OwnerPropertyContent extends Equatable {
   const OwnerPropertyContent({
@@ -15,7 +17,6 @@ class OwnerPropertyContent extends Equatable {
     required this.description,
     required this.photoCount,
     required this.status,
-    required this.icon,
   });
 
   factory OwnerPropertyContent.initial() {
@@ -33,7 +34,6 @@ class OwnerPropertyContent extends Equatable {
       description: '',
       photoCount: 0,
       status: OwnerPropertyStatus.pending,
-      icon: Icons.apartment_rounded,
     );
   }
 
@@ -61,7 +61,6 @@ class OwnerPropertyContent extends Equatable {
       description: json['description'] ?? '',
       photoCount: json['photo_count'] ?? 0,
       status: OwnerPropertyStatusX.fromName(json['status']),
-      icon: Icons.apartment_rounded,
     );
   }
 
@@ -86,7 +85,6 @@ class OwnerPropertyContent extends Equatable {
   final String description;
   final int photoCount;
   final OwnerPropertyStatus status;
-  final IconData icon;
 
   Map<String, dynamic> toJson() {
     return {
@@ -120,7 +118,6 @@ class OwnerPropertyContent extends Equatable {
     String? description,
     int? photoCount,
     OwnerPropertyStatus? status,
-    IconData? icon,
   }) {
     return OwnerPropertyContent(
       id: id ?? this.id,
@@ -136,7 +133,6 @@ class OwnerPropertyContent extends Equatable {
       description: description ?? this.description,
       photoCount: photoCount ?? this.photoCount,
       status: status ?? this.status,
-      icon: icon ?? this.icon,
     );
   }
 
@@ -155,6 +151,5 @@ class OwnerPropertyContent extends Equatable {
     description,
     photoCount,
     status,
-    icon,
   ];
 }

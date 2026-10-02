@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/unread_counts/data/models/unread_counts.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -31,8 +32,6 @@ import 'package:sokoun_app/features/shared/auth/data/models/kyc_upload_documents
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/complete_registration_cubit.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/screens/kyc_upload_documents_screen.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/screens/kyc_pending_screen.dart';
-import 'package:sokoun_app/features/shared/chat/data/models/chat_unread_content.dart';
-import 'package:sokoun_app/features/shared/notifications/data/models/unread_notifications_content.dart';
 import 'package:sokoun_app/features/shared/public_pages/data/enums/public_page.dart';
 import 'package:sokoun_app/features/shared/public_pages/data/models/public_page_content.dart';
 import 'package:sokoun_app/features/shared/public_pages/presentation/cubits/public_page_cubit.dart';
@@ -167,8 +166,8 @@ void main() {
     expect(counts.favorites, 145);
     expect(counts.visits, 8);
     expect(WorkspaceCounts.fromJson(counts.toJson()), counts);
-    expect(ChatUnreadContent.fromJson(json).count, 240);
-    expect(UnreadNotificationsContent.fromJson(json).count, 12);
+    expect(UnreadCounts.fromJson(json).chatCount, 240);
+    expect(UnreadCounts.fromJson(json).notificationsCount, 12);
   });
 
   test('formatted visit time takes precedence over the machine value', () {
@@ -211,15 +210,18 @@ void main() {
     () async {
       await registerAuthenticatedTestAccount();
       for (final workspace in AppWorkspace.values) {
-        final cubit = UnreadCountsCubit(workspace: workspace);
-        await cubit.load();
+        final cubit = UnreadCountsCubit();
+        await cubit.load(workspace: workspace);
         expect(
           repository.lastParams?.api,
           workspace.isOwner
               ? ApiConstants.ownerUnreadCounts
               : ApiConstants.tenantUnreadCounts,
         );
-        expect(cubit.data.workspace.visits, workspace.isOwner ? 4 : 2);
+        expect(
+          cubit.data.forWorkspace(workspace).visits,
+          workspace.isOwner ? 4 : 2,
+        );
         await cubit.close();
       }
     },

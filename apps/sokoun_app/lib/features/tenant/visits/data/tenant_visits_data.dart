@@ -1,4 +1,11 @@
-part of '../imports.dart';
+import 'enums/visit_status.dart';
+import 'models/tenant_visit_content.dart';
+import 'models/tenant_visits_response.dart';
+import 'package:melos_core/config/res/config_imports.dart' show injector;
+import 'package:melos_core/core/network/api_endpoints.dart';
+import 'package:melos_core/core/network/network_request.dart';
+import 'package:melos_core/core/network/network_service.dart';
+import 'package:pagify/helpers/data_and_pagination_data.dart';
 
 abstract interface class TenantVisitsDataSource {
   String cacheKeyFor(TenantVisitFilter filter);

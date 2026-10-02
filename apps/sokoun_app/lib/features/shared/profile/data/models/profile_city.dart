@@ -1,13 +1,14 @@
-part of '../../imports.dart';
+import 'package:equatable/equatable.dart';
+import '../profile_json.dart';
 
 class ProfileCity extends Equatable {
   const ProfileCity({required this.id, required this.name, required this.slug});
   const ProfileCity.initial() : id = '', name = '', slug = '';
 
   factory ProfileCity.fromJson(Map<String, dynamic> json) => ProfileCity(
-    id: _profileString(json['id']),
-    name: _profileString(json['name']),
-    slug: _profileString(json['slug']),
+    id: profileString(json['id']),
+    name: profileString(json['name']),
+    slug: profileString(json['slug']),
   );
 
   final String id, name, slug;

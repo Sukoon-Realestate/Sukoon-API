@@ -1,4 +1,6 @@
-part of '../../imports.dart';
+import 'package:equatable/equatable.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
+import '../profile_json.dart';
 
 class ProfileAccountDetailsContent extends Equatable {
   const ProfileAccountDetailsContent({
@@ -16,10 +18,10 @@ class ProfileAccountDetailsContent extends Equatable {
 
   factory ProfileAccountDetailsContent.fromJson(Map<String, dynamic> json) {
     return ProfileAccountDetailsContent(
-      name: _profileString(json['name'] ?? json['full_name']),
-      email: _profileString(json['email']),
-      phoneNumber: _profileString(json['phone_number'] ?? json['phone']),
-      maskedPhoneNumber: _profileString(json['masked_phone_number']),
+      name: profileString(json['name'] ?? json['full_name']),
+      email: profileString(json['email']),
+      phoneNumber: profileString(json['phone_number'] ?? json['phone']),
+      maskedPhoneNumber: profileString(json['masked_phone_number']),
     );
   }
 
@@ -27,6 +29,22 @@ class ProfileAccountDetailsContent extends Equatable {
   final String email;
   final String phoneNumber;
   final String maskedPhoneNumber;
+
+  UserModel editableUser({
+    required UserModel fallback,
+    required String fullName,
+  }) => fallback.copyWith(
+    name: fullName.isNotEmpty ? fullName : fallback.name,
+    phone: phoneNumber.isNotEmpty ? phoneNumber : fallback.phone,
+    email: email.isNotEmpty ? email : fallback.email,
+  );
+
+  ProfileAccountDetailsContent updateFromUser(UserModel user) => copyWith(
+    name: user.name,
+    email: user.email,
+    phoneNumber: user.phone,
+    maskedPhoneNumber: maskPhone(user.phone),
+  );
 
   String get displayPhone {
     if (maskedPhoneNumber.isNotEmpty) return maskedPhoneNumber;
@@ -62,27 +80,4 @@ class ProfileAccountDetailsContent extends Equatable {
 
   @override
   List<Object?> get props => [name, email, phoneNumber, maskedPhoneNumber];
-}
-
-Map<String, dynamic> _profileJsonMap(Object? value) {
-  if (value is Map<String, dynamic>) return value;
-  if (value is Map) return Map<String, dynamic>.from(value);
-  return const {};
-}
-
-String _profileString(Object? value) => value?.toString().trim() ?? '';
-
-String? _profileNullableString(Object? value) {
-  final String normalized = _profileString(value);
-  return normalized.isEmpty ? null : normalized;
-}
-
-int _profileInt(Object? value) {
-  if (value is num) return value.toInt();
-  return int.tryParse(_profileString(value)) ?? 0;
-}
-
-double _profileDouble(Object? value) {
-  if (value is num) return value.toDouble();
-  return double.tryParse(_profileString(value)) ?? 0;
 }

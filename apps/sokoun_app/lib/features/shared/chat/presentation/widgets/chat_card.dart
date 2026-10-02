@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/extensions/widget_extension.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
@@ -53,15 +54,34 @@ class ChatCard extends StatelessWidget {
                 ],
               ),
               4.szH,
-              AppText(
-                _displayTime(context),
-                style: AppTextStyles.regular11.copyWith(
-                  color: AppColors.sokoonGray,
-                  fontSize: 11.sp,
-                  height: 1.45,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+              Row(
+                spacing: 8.w,
+                children: [
+                  Expanded(
+                    child: AppText(
+                      _displayTime(context),
+                      style: AppTextStyles.regular11.copyWith(
+                        color: AppColors.sokoonGray,
+                        fontSize: 11.sp,
+                        height: 1.45,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Flexible(
+                    child: AppText(
+                      LocaleKeys.chatActiveNow,
+                      style: AppTextStyles.regular11.copyWith(
+                        color: AppColors.green,
+                        fontSize: 11.sp,
+                        height: 1.45,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ).showIf(condition: () => conversation.isOnline),
+                ],
               ),
               if (conversation.property.isNotEmpty) ...[
                 2.szH,
@@ -132,6 +152,19 @@ class _ConversationAvatar extends StatelessWidget {
             avatarUrl: conversation.otherParticipant.avatarUrl,
             size: 48.r,
           ),
+          PositionedDirectional(
+            bottom: 0,
+            end: 0,
+            child: Container(
+              width: 12.r,
+              height: 12.r,
+              decoration: BoxDecoration(
+                color: AppColors.green,
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.white, width: 2.r),
+              ),
+            ),
+          ).showIf(condition: () => conversation.isOnline),
           if (conversation.unreadCount > 0)
             PositionedDirectional(
               top: -4.h,

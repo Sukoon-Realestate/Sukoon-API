@@ -11,7 +11,7 @@ class OwnerProfileCubit extends AsyncCubit<OwnerProfileContent> {
           api: ApiConstants.ownerProfile,
           httpRequestType: HttpRequestType.get,
           cacheKey: OwnerProfileContent.cacheKey,
-          mapper: (json) => OwnerProfileContent.fromJson(_profileJsonMap(json)),
+          mapper: (json) => OwnerProfileContent.fromJson(profileJsonMap(json)),
           fromCacheJson: OwnerProfileContent.fromJson,
           toJson: (profile) => profile.toJson(),
         ),
@@ -24,12 +24,7 @@ class OwnerProfileCubit extends AsyncCubit<OwnerProfileContent> {
     updateData(
       data.copyWith(
         owner: data.owner.copyWith(fullName: user.name),
-        accountDetails: data.accountDetails.copyWith(
-          name: user.name,
-          email: user.email,
-          phoneNumber: user.phone,
-          maskedPhoneNumber: ProfileAccountDetailsContent.maskPhone(user.phone),
-        ),
+        accountDetails: data.accountDetails.updateFromUser(user),
       ),
     );
   }

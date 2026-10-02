@@ -1,4 +1,7 @@
-part of '../../imports.dart';
+import '../enums/owner_visit_request_state.dart';
+import 'owner_visit_calendar_content.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart' show DateUtils;
 
 class OwnerAvailabilitySaveBody extends Equatable {
   const OwnerAvailabilitySaveBody({

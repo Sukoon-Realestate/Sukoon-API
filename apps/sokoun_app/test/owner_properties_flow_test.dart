@@ -19,7 +19,7 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
-import 'package:sokoun_app/features/owner/home/presentation/screens/owner_add_property_flow_screen.dart';
+import 'package:sokoun_app/features/owner/home/presentation/screens/owner_property_flow_screen.dart';
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/imports.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
@@ -116,7 +116,6 @@ void main() {
         description: 'شقة مفروشة بإضاءة طبيعية ومرافق متكاملة',
         photoCount: 12,
         status: OwnerPropertyStatus.verified,
-        icon: Icons.apartment_rounded,
       ),
       OwnerPropertyContent(
         id: 'fifth-settlement-studio',
@@ -131,7 +130,6 @@ void main() {
         description: 'ستوديو حديث قريب من الخدمات والمواصلات',
         photoCount: 8,
         status: OwnerPropertyStatus.pending,
-        icon: Icons.meeting_room_outlined,
       ),
       OwnerPropertyContent(
         id: 'mohandessin-three-bed',
@@ -146,7 +144,6 @@ void main() {
         description: 'شقة واسعة من ثلاث غرف بإطلالة هادئة',
         photoCount: 10,
         status: OwnerPropertyStatus.hidden,
-        icon: Icons.home_work_outlined,
       ),
     ];
   }
@@ -196,7 +193,7 @@ void main() {
       images.deleteSync(recursive: true);
     });
 
-    await tester.pumpWidget(buildScreen(const OwnerAddPropertyFlowScreen()));
+    await tester.pumpWidget(buildScreen(const OwnerPropertyFlowScreen()));
     await tester.pumpAndSettle();
     final AddPropertyBasicsPage basics = tester.widget(
       find.byType(AddPropertyBasicsPage),
@@ -429,8 +426,6 @@ void main() {
       10,
       (index) => File('/tmp/property-photo-$index.jpg'),
     );
-    final File ownershipProof = File('/tmp/ownership-proof.png');
-    final File video = File('/tmp/property-video.mp4');
     final OwnerAddPropertyFormState form = OwnerAddPropertyFormState.initial()
         .copyWith(
           title: 'Cozy Studio',
@@ -444,8 +439,6 @@ void main() {
           bathrooms: '1',
           space: '65',
           floor: '3',
-          buildingYear: '2020',
-          mapQuery: 'مدينة نصر، القاهرة',
           location: const PropertyLocation(
             latitude: 30.0444,
             longitude: 31.2357,
@@ -461,27 +454,19 @@ void main() {
                 ),
               )
               .toList(growable: false),
-          video: OwnerPropertyVideoSelection(
-            file: video,
-            duration: const Duration(seconds: 45),
-          ),
           monthlyPrice: '7000',
-          deposit: 'شهر واحد',
           rentalDuration: '6',
           rentalUnit: 'شهر',
           amenities: {'واي فاي', 'جراج', 'مفروش'},
           description: 'A furnished studio near the metro station.',
-          smokingPolicy: 'ممنوع',
           suitableFor: 'أفراد',
-          ownershipProof: ownershipProof,
         );
 
-    final Map<String, dynamic> body = form.toRequestBody();
+    final Map<String, dynamic> body = form.toJson();
 
     expect(form.isBasicsReady, isTrue);
     expect(form.isPhotosReady, isTrue);
     expect(form.isPricingReady, isTrue);
-    expect(form.isExtraDetailsReady, isTrue);
     expect(body['property_type'], 'studio');
     expect(body['price_period'], 'monthly');
     expect(body['governorate'], 'cairo-governorate-id');
@@ -550,7 +535,6 @@ void main() {
     expect(tester.takeException(), isNull);
 
     expect(find.byType(AddPropertyPricingPage), findsOneWidget);
-    expect(find.byType(AddPropertyVideoPage), findsNothing);
     expect(find.text(LocaleKeys.ownerAddPropertyDeposit), findsNothing);
     expect(tester.takeException(), isNull);
   });
@@ -591,7 +575,6 @@ void main() {
     expect(after.photoDrafts, before.photoDrafts);
     expect(after.monthlyPrice, before.monthlyPrice);
     expect(after.amenities, before.amenities);
-    expect(after.ownershipProofUrl, before.ownershipProofUrl);
     expect(repository.updateRequestCount, 0);
     expect(tester.takeException(), isNull);
   });
@@ -634,7 +617,7 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));
       expect(repository.lastDetailsId, 'nasr-city-furnished');
-      expect(find.byType(OwnerEditPropertyScreen), findsOneWidget);
+      expect(find.byType(OwnerPropertyFlowScreen), findsOneWidget);
       expect(find.text('تعديل العقار'), findsOneWidget);
 
       await submitEditFlow(tester);
@@ -686,7 +669,7 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
 
-    expect(find.byType(OwnerEditPropertyScreen), findsOneWidget);
+    expect(find.byType(OwnerPropertyFlowScreen), findsOneWidget);
     expect(repository.lastDetailsId, 'nasr-city-rejected');
     await submitEditFlow(tester);
 
@@ -708,7 +691,7 @@ void main() {
     await tester.tap(find.byTooltip('إضافة عقار'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(OwnerAddPropertyFlowScreen), findsOneWidget);
+    expect(find.byType(OwnerPropertyFlowScreen), findsOneWidget);
     expect(find.text('إضافة عقار جديد'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });

@@ -1,4 +1,4 @@
-part of '../../imports.dart';
+import 'package:equatable/equatable.dart';
 
 class VisitActions extends Equatable {
   const VisitActions({
@@ -48,6 +48,3 @@ class VisitActions extends Equatable {
     canFindAlternative,
   ];
 }
-
-Map<String, dynamic> _visitMap(Object? value) =>
-    value is Map ? Map<String, dynamic>.from(value) : const {};

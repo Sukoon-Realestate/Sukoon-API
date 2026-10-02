@@ -1,4 +1,4 @@
-part of '../../imports.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 
 class VisitReviewBody {
   const VisitReviewBody({

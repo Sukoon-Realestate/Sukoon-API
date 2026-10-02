@@ -7,7 +7,7 @@ import 'package:pagify/pagify.dart';
 
 import '../../data/chat_thread_data.dart';
 import '../../data/models/chat_content.dart';
-import '../widgets/chat/chat_view.dart';
+import '../widgets/chat_thread/chat_messages_view.dart';
 
 /// Read-only history: no socket connection and no composer.
 class PreviousChatScreen extends StatefulWidget {
@@ -41,7 +41,7 @@ class _PreviousChatScreenState extends State<PreviousChatScreen> {
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
         bottom: false,
-        child: ChatView(
+        child: ChatMessagesView(
           conversation: widget.conversation,
           controller: _chatController,
           initialMessagesRequest: _initialMessagesRequest,

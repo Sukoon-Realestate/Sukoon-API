@@ -66,7 +66,7 @@ class _InterestProgress extends StatelessWidget {
               ),
             ),
             AppText(
-              '${_ownerFormattedNumber(item.value)}%',
+              '${ownerFormattedNumber(item.value)}%',
               style: AppTextStyles.bold13.copyWith(
                 color: AppColors.sokoonNavy,
                 fontSize: 13.sp,

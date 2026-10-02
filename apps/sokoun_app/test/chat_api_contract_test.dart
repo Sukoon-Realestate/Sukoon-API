@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/unread_counts/data/models/unread_counts.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
@@ -6,7 +7,7 @@ import 'package:melos_core/core/network/network_request.dart';
 import 'package:melos_core/core/network/network_service.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
-import 'package:sokoun_app/features/shared/chat/data/models/chat_unread_content.dart';
+import 'package:sokoun_app/features/shared/chat/data/models/chat_socket_message.dart';
 import 'package:sokoun_app/features/shared/notifications/data/models/notification_payload_content.dart';
 
 void main() {
@@ -54,6 +55,33 @@ void main() {
     expect(conversation.id, 'conversation-uuid');
   });
 
+  test('online presence survives cached conversation snapshots', () {
+    final ConversationContent conversation = ConversationContent.fromJson({
+      'id': 'online-conversation',
+      'other_participant': {
+        'id': 'other-user',
+        'full_name': 'Online account',
+        'is_online': true,
+      },
+    });
+    expect(conversation.isOnline, isTrue);
+    expect(ConversationContent.fromJson(conversation.toJson()), conversation);
+
+    final cached = const ConversationContent.initial().copyWith(isOnline: true);
+    expect(ConversationContent.fromJson(cached.toJson()).isOnline, isTrue);
+  });
+
+  test('REST and socket messages share sparse participant parsing', () {
+    final sender = {'id': 'other-user', 'name': 'Chat account'};
+    final rest = ChatMessageContent.fromJson({'sender': sender});
+    final socket = ChatSocketMessage.fromJson({'sender': sender});
+
+    expect(rest.sender, socket.sender);
+    expect(socket.sender.fullName, 'Chat account');
+    expect(socket.sender.isOnline, isFalse);
+    expect(ChatSocketMessage.fromJson(socket.toJson()), socket);
+  });
+
   test('loads history and calls both REST fallback actions', () async {
     final history = await ChatData.getMessagesPage(
       conversationId: 'conversation-uuid',
@@ -90,25 +118,21 @@ void main() {
     expect(read.status, 'read');
   });
 
-  test('maps FCM chat deep links and sums conversation unread counts', () {
+  test('maps FCM chat deep links and account unread totals', () {
     final NotificationPayloadContent payload =
         NotificationPayloadContent.fromJson({
           'conversation_id': 'conversation-uuid',
           'message_id': 'message-uuid',
           'sender_id': 'owner-uuid',
         });
-    final ChatUnreadContent unread = ChatUnreadContent.fromConversationsJson({
-      'count': 2,
-      'results': [
-        _RecordingNetworkService._conversation,
-        {..._RecordingNetworkService._conversation, 'unread_count': 3},
-      ],
+    final UnreadCounts unread = UnreadCounts.fromJson({
+      'unread_chat_messages_count': 5,
     });
 
     expect(payload.chatId, 'conversation-uuid');
     expect(payload.messageId, 'message-uuid');
     expect(payload.senderId, 'owner-uuid');
-    expect(unread.count, 5);
+    expect(unread.chatCount, 5);
   });
 }
 
