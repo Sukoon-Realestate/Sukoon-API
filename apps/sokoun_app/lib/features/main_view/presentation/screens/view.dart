@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -92,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     WorkspaceNavigation.attach(_applyWorkspace);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-      unawaited(_initializeAccountFeatures());
+      _initializeAccountFeatures();
     });
   }
 
@@ -100,8 +98,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (!_hasCurrentSession) return;
     if (state == AppLifecycleState.resumed) {
-      unawaited(_refreshAccount());
-      unawaited(_refreshCounts());
+      _refreshAccount();
+      _refreshCounts();
     }
   }
 
@@ -109,8 +107,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void dispose() {
     WorkspaceNavigation.detach(_applyWorkspace);
     WidgetsBinding.instance.removeObserver(this);
-    unawaited(_accountCubit.close());
-    unawaited(_countsCubit.close());
+    _accountCubit.close();
+    _countsCubit.close();
     super.dispose();
   }
 
@@ -170,19 +168,17 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     );
   }
 
-  void _selectTab(int index) {
+  Future<void> _selectTab(int index) async {
     if (!_hasCurrentSession) return;
     if (index == _currentIndex) {
       return;
     }
 
     if (index != 0 && !WorkspaceNavigation.isAuthenticated) {
-      unawaited(
-        WorkspaceNavigation.open(
-          workspace: _workspace,
-          tab: _tabs[index].tab,
-          showLoginSheet: true,
-        ),
+      await WorkspaceNavigation.open(
+        workspace: _workspace,
+        tab: _tabs[index].tab,
+        showLoginSheet: true,
       );
       return;
     }

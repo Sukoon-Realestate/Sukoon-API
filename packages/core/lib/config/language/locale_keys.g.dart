@@ -766,6 +766,9 @@ abstract class LocaleKeys {
   static const String _favoriteRemoveSemanticLabel = 'favorite_remove_semantic_label';
   static String get favoriteRemoveSemanticLabel => _favoriteRemoveSemanticLabel.tr();
 
+  static const String _egyptianPoundShort = 'egyptian_pound_short';
+  static String get egyptianPoundShort => _egyptianPoundShort.tr();
+
   static const String _favoritesCurrencyShort = 'favorites_currency_short';
   static String get favoritesCurrencyShort => _favoritesCurrencyShort.tr();
 

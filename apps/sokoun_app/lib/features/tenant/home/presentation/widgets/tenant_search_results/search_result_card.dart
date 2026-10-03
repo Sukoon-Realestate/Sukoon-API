@@ -6,6 +6,7 @@ import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:sokoun_app/features/shared/finance/presentation/egyptian_pound_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_filter/property_filter_label_resolver.dart';
@@ -101,7 +102,10 @@ class SearchResultCard extends StatelessWidget {
                 runSpacing: 8.h,
                 children: [
                   AppText(
-                    '${item.formattedPrice} ${LocaleKeys.ownerRevenueCurrency}/${labelResolver.pricePeriodLabel(item.pricePeriod)}',
+                    EgyptianPoundText.format(
+                      item.price,
+                      period: item.pricePeriod,
+                    ),
                     style: AppTextStyles.bold.copyWith(
                       color: AppColors.sokoonTeal,
                       fontSize: 18.sp,

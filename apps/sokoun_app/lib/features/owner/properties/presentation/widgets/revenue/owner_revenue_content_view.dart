@@ -64,7 +64,7 @@ class OwnerRevenueSummaryCard extends StatelessWidget {
           style: AppTextStyles.bold13.copyWith(color: AppColors.white),
         ),
         AppText(
-          '${data.totalLabel} ${data.currency}',
+          EgyptianPoundText.format(data.totalThisMonth),
           style: AppTextStyles.extraBold.copyWith(
             color: AppColors.white,
             fontSize: 30.sp,

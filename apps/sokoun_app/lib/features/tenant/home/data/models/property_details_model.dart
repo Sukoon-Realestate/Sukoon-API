@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
-import 'package:melos_core/core/extensions/string_extension.dart';
+import 'package:sokoun_app/features/shared/finance/data/egyptian_pound.dart';
 
 class PropertyImageModel extends Equatable {
   const PropertyImageModel({
@@ -493,7 +493,7 @@ class PropertyDetailsModel extends Equatable {
     );
   }
 
-  String get formattedPrice => (double.tryParse(price) ?? 0).toCurrency();
+  String get formattedPrice => EgyptianPound.formatAmount(price);
 
   String get pricePeriodLabel {
     switch (pricePeriod) {
@@ -506,7 +506,7 @@ class PropertyDetailsModel extends Equatable {
       case 'monthly':
         return LocaleKeys.tenantPropertyDetailsMonthlyPriceUnit;
       default:
-        return pricePeriod;
+        return LocaleKeys.egyptianPoundShort;
     }
   }
 

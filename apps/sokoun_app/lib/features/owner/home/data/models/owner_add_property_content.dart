@@ -4,6 +4,7 @@ import 'property_location.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/helpers/validators.dart';
+import 'package:sokoun_app/features/shared/finance/data/egyptian_pound.dart';
 
 class AddPropertyChipContent {
   const AddPropertyChipContent({
@@ -274,7 +275,9 @@ class OwnerAddPropertyFormState {
   String get locationSummary => '$district، $governorate';
 
   String get priceSummary {
-    final price = monthlyPrice.trim().isEmpty ? '0' : monthlyPrice.trim();
+    final price = EgyptianPound.formatAmount(
+      monthlyPrice.trim().isEmpty ? '0' : monthlyPrice,
+    );
     return LocaleKeys.ownerAddPropertyMonthlyPrice.replaceAll('{price}', price);
   }
 

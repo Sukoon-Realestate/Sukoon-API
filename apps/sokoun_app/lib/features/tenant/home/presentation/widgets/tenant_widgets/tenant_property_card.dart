@@ -166,8 +166,6 @@ class TenantPropertyCard extends StatelessWidget {
                     fontSize: 16.sp,
                     height: 1.45,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ).paddingSymmetric(horizontal: 12.w, vertical: 11.h),

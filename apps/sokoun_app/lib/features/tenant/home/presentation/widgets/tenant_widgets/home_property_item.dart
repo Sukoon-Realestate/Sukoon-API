@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
-import 'package:melos_core/core/extensions/string_extension.dart';
+import 'package:sokoun_app/features/shared/finance/presentation/egyptian_pound_text.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/home_page_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
@@ -13,14 +13,6 @@ class HomePropertyItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double price =
-        double.tryParse(property.price.replaceAll(',', '')) ?? 0;
-    final String period = switch (property.pricePeriod) {
-      'daily' => LocaleKeys.tenantFilterDaily,
-      'weekly' => LocaleKeys.tenantFilterWeekly,
-      'yearly' => LocaleKeys.tenantFilterYearly,
-      _ => LocaleKeys.tenantFilterMonthly,
-    };
     return Semantics(
       button: true,
       child: InkWell(
@@ -37,8 +29,10 @@ class HomePropertyItem extends StatelessWidget {
             PropertyDetailsModel.propertyTypeLabelFor(property.propertyType),
             '${property.area} ${LocaleKeys.tenantSearchResultsSquareMeters}',
           ].where((value) => value.isNotEmpty).join(' · '),
-          price:
-              '${price.toCurrency()} ${LocaleKeys.favoritesCurrencyShort}/$period',
+          price: EgyptianPoundText.format(
+            property.price,
+            period: property.pricePeriod,
+          ),
           icon: property.propertyType == 'villa'
               ? Icons.villa_outlined
               : Icons.apartment_outlined,

@@ -49,7 +49,7 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
       _hadSession = state.userStatus == UserStatus.loggedIn;
       if (wasLoggedIn && !_hadSession) {
         ChatRealtimeService.instance.setActiveConversation(null);
-        unawaited(ChatRealtimeService.instance.disconnect());
+        ChatRealtimeService.instance.disconnect();
         WorkspaceNavigation.clearPending();
         WorkspaceCubit.instance.reset();
         if (Go.navigatorKey.currentState != null) {
@@ -63,8 +63,8 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    unawaited(_expiredSubscription?.cancel());
-    unawaited(_userSubscription?.cancel());
+    _expiredSubscription?.cancel();
+    _userSubscription?.cancel();
     super.dispose();
   }
 

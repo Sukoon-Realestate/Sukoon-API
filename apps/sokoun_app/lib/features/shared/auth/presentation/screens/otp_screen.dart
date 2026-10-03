@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -49,7 +47,7 @@ class _OtpScreenState extends State<OtpScreen> {
   void dispose() {
     _otpController.dispose();
     _uiState.dispose();
-    unawaited(_otpCubit.close());
+    _otpCubit.close();
     super.dispose();
   }
 

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -55,17 +54,17 @@ class _PropertyVideoState extends State<PropertyVideo>
     super.didUpdateWidget(oldWidget);
     if (oldWidget.url != widget.url) {
       _generation++;
-      unawaited(_controller?.dispose());
+      _controller?.dispose();
       _controller = null;
       _playback.value = (loading: false, failed: false, controller: null);
     }
   }
 
   @override
-  void didPushNext() => unawaited(_pause());
+  void didPushNext() => _pause();
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state != AppLifecycleState.resumed) unawaited(_pause());
+    if (state != AppLifecycleState.resumed) _pause();
   }
 
   @override
@@ -73,7 +72,7 @@ class _PropertyVideoState extends State<PropertyVideo>
     _generation++;
     AppNavigationObserver.instance.unsubscribe(this);
     WidgetsBinding.instance.removeObserver(this);
-    unawaited(_controller?.dispose());
+    _controller?.dispose();
     _playback.dispose();
     super.dispose();
   }

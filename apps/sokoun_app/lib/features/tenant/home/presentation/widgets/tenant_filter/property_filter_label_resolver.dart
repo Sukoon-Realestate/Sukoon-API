@@ -1,4 +1,5 @@
 import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:sokoun_app/features/shared/finance/presentation/egyptian_pound_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_search_model.dart';
@@ -14,9 +15,9 @@ class PropertyFilterLabelResolver {
       case 'district':
         return filter.value;
       case 'price_min':
-        return '${LocaleKeys.tenantFilterFrom} ${filter.value}';
+        return '${LocaleKeys.tenantFilterFrom} ${EgyptianPoundText.format(filter.value)}';
       case 'price_max':
-        return '${LocaleKeys.tenantFilterTo} ${filter.value}';
+        return '${LocaleKeys.tenantFilterTo} ${EgyptianPoundText.format(filter.value)}';
       case 'property_type':
         return propertyTypeLabel(filter.value);
       case 'price_period':

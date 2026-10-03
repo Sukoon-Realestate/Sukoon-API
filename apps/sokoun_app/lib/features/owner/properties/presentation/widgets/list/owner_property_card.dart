@@ -94,8 +94,10 @@ class OwnerPropertyCard extends StatelessWidget {
                         OwnerPropertyStatusBadge(status: property.status),
                         8.szH,
                         AppText(
-                          '${_formatNumber(property.monthlyPrice)} '
-                          '${property.priceUnitLabel}',
+                          EgyptianPoundText.format(
+                            property.monthlyPrice,
+                            period: property.pricePeriod,
+                          ),
                           style: AppTextStyles.bold16.copyWith(
                             color: AppColors.sokoonTeal,
                             fontSize: 16.sp,
@@ -155,13 +157,6 @@ class OwnerPropertyCard extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  String _formatNumber(int value) {
-    return value.toString().replaceAllMapped(
-      RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-      (match) => '${match[1]},',
     );
   }
 }

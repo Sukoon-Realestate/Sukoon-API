@@ -1,15 +1,17 @@
 import 'dart:async';
 
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/local_db/objectbox_cache_service.dart';
 import 'package:melos_core/core/network/account_session.dart';
+import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/network/network_service.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 
-import '../../../shared/profile/data/account_data.dart';
 import '../../../shared/profile/data/models/account_content.dart';
+import '../../../shared/profile/data/profile_json.dart';
 
 /// The shared account response supplies identity, profile details and statistics.
 class AccountCubit extends AsyncCubit<AccountContent> {
@@ -68,7 +70,23 @@ class AccountCubit extends AsyncCubit<AccountContent> {
     AccountContent? loadedAccount;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(
-        AccountData.request(cacheProfile: userCubit.isUserLoggedIn),
+        CrudBaseParmas<AccountContent>(
+          api: ApiConstants.getAccData,
+          httpRequestType: HttpRequestType.get,
+          // Only an established identity may read its account cache.
+          cacheKey: userCubit.isUserLoggedIn ? AccountContent.cacheKey : null,
+          mapper: (json) {
+            final AccountContent account = AccountContent.fromJson(
+              profileJsonMap(json),
+            );
+            if (account.user.id.isEmpty || account.user.id == '0') {
+              throw const FormatException('Missing authenticated account ID');
+            }
+            return account;
+          },
+          fromCacheJson: AccountContent.fromJson,
+          toJson: (account) => account.toJson(),
+        ),
       ),
       onSuccess: (response) => loadedAccount = response.data,
       withInternetInterceptor: true,

@@ -23,13 +23,13 @@ class _TenantProfileScreenState extends State<TenantProfileScreen> {
     _profileCubit = sharedAccount ?? AccountCubit();
     if (_ownsProfileCubit) _profileCubit.restoreCachedProfile();
     if (!_profileCubit.state.isSuccess) {
-      unawaited(_profileCubit.getAccount());
+      _profileCubit.getAccount();
     }
   }
 
   @override
   void dispose() {
-    if (_ownsProfileCubit) unawaited(_profileCubit.close());
+    if (_ownsProfileCubit) _profileCubit.close();
     super.dispose();
   }
 

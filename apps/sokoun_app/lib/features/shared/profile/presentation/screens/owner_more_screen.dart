@@ -30,7 +30,7 @@ class _OwnerMoreScreenState extends State<OwnerMoreScreen> {
 
   @override
   void dispose() {
-    unawaited(_accountSubscription?.cancel());
+    _accountSubscription?.cancel();
     _user.dispose();
     super.dispose();
   }

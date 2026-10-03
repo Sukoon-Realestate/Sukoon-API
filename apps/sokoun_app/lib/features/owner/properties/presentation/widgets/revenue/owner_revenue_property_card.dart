@@ -62,7 +62,7 @@ class OwnerRevenuePropertyCard extends StatelessWidget {
             spacing: 5.h,
             children: [
               AppText(
-                '${item.amountLabel} ${item.currency}',
+                EgyptianPoundText.format(item.amount),
                 style: AppTextStyles.extraBold.copyWith(
                   color: AppColors.sokoonNavy,
                   fontSize: 14.sp,

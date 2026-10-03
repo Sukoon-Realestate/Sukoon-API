@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:sokoun_app/features/shared/finance/presentation/egyptian_pound_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 
 import 'add_property_chip_wrap.dart';
@@ -236,7 +237,7 @@ class _PriceSection extends StatelessWidget {
             keyboardType: TextInputType.number,
             inputFormatters: [const LocalizedDigitsFormatter()],
             suffix: AppText(
-              LocaleKeys.ownerAddPropertyCurrency,
+              EgyptianPoundText.symbol,
               style: AppTextStyles.bold13.copyWith(
                 color: AppColors.sokoonGray,
                 fontSize: 13.sp,

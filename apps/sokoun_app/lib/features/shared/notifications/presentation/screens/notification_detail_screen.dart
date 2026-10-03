@@ -1,6 +1,5 @@
 import 'package:melos_core/core/extensions/widget_extension.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,7 +46,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
 
   @override
   void dispose() {
-    unawaited(_cubit.close());
+    _cubit.close();
     super.dispose();
   }
 

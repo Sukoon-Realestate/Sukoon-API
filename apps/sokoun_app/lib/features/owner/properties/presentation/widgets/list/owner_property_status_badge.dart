@@ -18,12 +18,14 @@ class OwnerPropertyStatusBadge extends StatelessWidget {
         spacing: 4.w,
         children: [
           Icon(status.icon, color: status.foregroundColor, size: 12.r),
-          AppText(
-            status.label,
-            style: AppTextStyles.bold12.copyWith(
-              color: status.foregroundColor,
-              fontSize: 12.sp,
-              height: 1.45,
+          Flexible(
+            child: AppText(
+              status.label,
+              style: AppTextStyles.bold12.copyWith(
+                color: status.foregroundColor,
+                fontSize: 12.sp,
+                height: 1.45,
+              ),
             ),
           ),
         ],

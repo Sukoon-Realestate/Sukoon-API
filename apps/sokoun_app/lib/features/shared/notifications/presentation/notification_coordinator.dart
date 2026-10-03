@@ -23,13 +23,11 @@ abstract final class NotificationCoordinator {
           injector<NotificationService>();
       NotificationNavigator(
         onRoutingMessage: (message) {
-          unawaited(
-            NotificationPushHandler.handle({
-              ...message.data,
-              'title': message.notification?.title,
-              'body': message.notification?.body,
-            }),
-          );
+          NotificationPushHandler.handle({
+            ...message.data,
+            'title': message.notification?.title,
+            'body': message.notification?.body,
+          });
         },
         onNoInitialMessage: () {},
       );

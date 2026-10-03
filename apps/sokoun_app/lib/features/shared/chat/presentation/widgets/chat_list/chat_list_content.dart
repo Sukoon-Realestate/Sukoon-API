@@ -70,14 +70,14 @@ class _ChatListContentState extends State<ChatListContent> with RouteAware {
       }
       _needsRefresh = false;
       if (!TickerMode.of(context)) return;
-      unawaited(_pagifyController.refresh());
+      _pagifyController.refresh();
     });
   }
 
   @override
   void dispose() {
     AppNavigationObserver.instance.unsubscribe(this);
-    unawaited(_unreadRefreshSubscription?.cancel());
+    _unreadRefreshSubscription?.cancel();
     super.dispose();
   }
 

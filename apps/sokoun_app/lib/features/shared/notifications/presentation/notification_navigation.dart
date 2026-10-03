@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/owner/home/presentation/screens/owner_listings_screen.dart';
@@ -38,13 +36,11 @@ abstract final class NotificationNavigation {
     await WorkspaceNavigation.open(
       workspace: target.workspace,
       tab: target.tab,
-      detail: () => unawaited(
-        _openNotification(
-          notification: notification,
-          role: WorkspaceCubit.instance.state.isOwner
-              ? NotificationRole.owner
-              : NotificationRole.tenant,
-        ),
+      detail: () => _openNotification(
+        notification: notification,
+        role: WorkspaceCubit.instance.state.isOwner
+            ? NotificationRole.owner
+            : NotificationRole.tenant,
       ),
     );
   }

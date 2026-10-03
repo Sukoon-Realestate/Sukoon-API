@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:melos_core/core/extensions/widget_extension.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,8 +39,8 @@ class _NotificationSettingsScreenState
 
   @override
   void dispose() {
-    unawaited(_settingsCubit.close());
-    unawaited(_updateCubit.close());
+    _settingsCubit.close();
+    _updateCubit.close();
     super.dispose();
   }
 

@@ -9,6 +9,7 @@ import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/image_widgets/cached_image.dart';
+import 'package:sokoun_app/features/shared/finance/presentation/egyptian_pound_text.dart';
 import 'package:sokoun_app/features/tenant/favorites/data/models/favorites_content.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/property_details_screen.dart';
 
@@ -70,14 +71,15 @@ class FavoritePropertyCard extends StatelessWidget {
                     ),
                     Flexible(
                       child: AppText(
-                        '${item.price} ${LocaleKeys.favoritesCurrencyShort}',
+                        EgyptianPoundText.format(
+                          item.price,
+                          period: item.pricePeriod,
+                        ),
                         style: AppTextStyles.bold14.copyWith(
                           color: AppColors.sokoonTeal,
                           fontSize: 14.sp,
                           height: 1.45,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],

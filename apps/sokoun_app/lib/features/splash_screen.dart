@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    unawaited(_manipulateSplashData());
+    _manipulateSplashData();
   }
 
   Future<void> _manipulateSplashData() async {

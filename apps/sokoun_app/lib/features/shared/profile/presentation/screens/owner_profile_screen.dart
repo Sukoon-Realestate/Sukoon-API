@@ -22,7 +22,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
       _accountSubscription = UserCubit.instance.stream.listen((state) {
         if (state.userStatus == UserStatus.loggedIn) {
           _profileCubit.updateFromUser(state.userModel);
-          unawaited(_profileCubit.getProfile());
+          _profileCubit.getProfile();
         }
       });
     }
@@ -30,7 +30,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
 
   @override
   void dispose() {
-    unawaited(_accountSubscription?.cancel());
+    _accountSubscription?.cancel();
     _profileCubit.close();
     super.dispose();
   }

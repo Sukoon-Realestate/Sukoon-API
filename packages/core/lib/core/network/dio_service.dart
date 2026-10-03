@@ -386,7 +386,7 @@ class DioService implements NetworkService, SessionAuthService {
               error.response?.data['message'] ?? LocaleKeys.serverError,
             );
           default:
-            throw ServerException(LocaleKeys.serverError);
+            throw ServerException(error.response?.data['message'] ?? LocaleKeys.serverError);
         }
       case DioExceptionType.cancel:
         throw const RequestCancelledException();

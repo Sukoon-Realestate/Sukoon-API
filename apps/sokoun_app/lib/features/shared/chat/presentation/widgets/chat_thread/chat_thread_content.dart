@@ -146,7 +146,7 @@ class _ChatThreadContentState extends State<ChatThreadContent>
     );
   }
 
-  void _sendTextMessage() {
+  Future<void> _sendTextMessage() async {
     final String text = _messageController.text.trim();
     if (text.isEmpty) return;
 
@@ -168,8 +168,9 @@ class _ChatThreadContentState extends State<ChatThreadContent>
     _chatController.addItem(pendingMessage);
     _chatController.moveToMaxBottom();
     _messageController.clear();
-    unawaited(
-      _sendMessage(text, localMessageId: pendingMessage.message.id.toString()),
+    await _sendMessage(
+      text,
+      localMessageId: pendingMessage.message.id.toString(),
     );
   }
 
@@ -199,11 +200,9 @@ class _ChatThreadContentState extends State<ChatThreadContent>
           listener: (context, state) {
             final ChatSocketMessage? message = state.receivedMessage;
             if (message != null) {
-              unawaited(
-                _receiveSocketMessage(
-                  message,
-                  localMessageId: state.confirmedLocalMessageId,
-                ),
+              _receiveSocketMessage(
+                message,
+                localMessageId: state.confirmedLocalMessageId,
               );
             }
           },
@@ -211,7 +210,7 @@ class _ChatThreadContentState extends State<ChatThreadContent>
         BlocListener<ChatThreadCubit, ChatThreadState>(
           listenWhen: (previous, current) =>
               previous.readReceiptRevision != current.readReceiptRevision,
-          listener: (context, state) => unawaited(_receiveReadReceipt()),
+          listener: (context, state) => _receiveReadReceipt(),
         ),
       ],
       child: Column(

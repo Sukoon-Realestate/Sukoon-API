@@ -5,6 +5,7 @@ import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
+import 'package:sokoun_app/features/shared/finance/presentation/egyptian_pound_text.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_action_footer.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_reveal.dart';
 
@@ -91,7 +92,7 @@ class PropertyReviewSheet extends StatelessWidget {
                 child: PropertyReviewSection(
                   title: LocaleKeys.ownerAddPropertyPricingTitle,
                   lines: [
-                    '${LocaleKeys.ownerAddPropertyPrice}: ${form.monthlyPrice} ${LocaleKeys.ownerAddPropertyCurrency}',
+                    '${LocaleKeys.ownerAddPropertyPrice}: ${EgyptianPoundText.format(form.monthlyPrice)}',
                     '${LocaleKeys.ownerAddPropertySuitableFor}: ${form.suitableForLabel}',
                     '${LocaleKeys.ownerAddPropertyRentalPeriod}: ${form.rentalDuration} ${form.rentalUnitLabel}',
                     form.amenityLabels.join(' · '),

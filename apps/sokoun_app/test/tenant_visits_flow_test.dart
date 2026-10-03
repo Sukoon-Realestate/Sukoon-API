@@ -352,6 +352,7 @@ class _CoreTranslationsAssetLoader extends AssetLoader {
       'tenant_home_current_area': 'منطقتك الحالية',
       'tenant_home_search_area_hint': 'ابحث عن منطقة',
       'tenant_search_results_square_meters': 'م²',
+      'egyptian_pound_short': 'ج.م',
       'favorites_currency_short': 'ج.م',
       'tenant_filter_monthly': 'شهرياً',
       'tenant_home_empty_title': 'لا توجد عقارات مقترحة',

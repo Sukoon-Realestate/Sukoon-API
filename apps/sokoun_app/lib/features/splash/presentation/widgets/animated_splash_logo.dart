@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -48,7 +46,7 @@ class _AnimatedSplashLogoState extends State<AnimatedSplashLogo>
     _controller.duration = SokounMotion.duration(context, milliseconds: 2000);
     if (!_preparingLogo) {
       _preparingLogo = true;
-      unawaited(_prepareLogo());
+      _prepareLogo();
     } else if (_logoReady && _controller.duration == Duration.zero) {
       _controller.value = 1;
     }

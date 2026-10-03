@@ -57,7 +57,7 @@ class OwnerTransactionRow extends StatelessWidget {
           ),
         ),
         AppText(
-          '$sign${transaction.amountLabel} ${transaction.currency}',
+          '$sign${EgyptianPoundText.format(transaction.amount.abs())}',
           style: AppTextStyles.bold13.copyWith(
             color: amountColor,
             fontSize: 13.sp,

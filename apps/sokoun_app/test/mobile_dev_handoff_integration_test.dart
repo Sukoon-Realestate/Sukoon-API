@@ -378,31 +378,32 @@ void main() {
     expect(repository.requests.first.cancelToken?.isCancelled, isTrue);
   });
 
-  testWidgets('revenue uses backend amounts, labels, and upcoming status', (
-    tester,
-  ) async {
-    await pump(tester, const OwnerRevenueScreen());
-    expect(repository.requests.single.api, ApiConstants.ownerRevenues);
-    expect(find.text('36,000 ج'), findsOneWidget);
-    expect(find.text('+8% عن الشهر السابق'), findsOneWidget);
-    expect(find.text('قادم 15 أكتوبر'), findsOneWidget);
-    expect(find.text('+12,000 ج'), findsOneWidget);
-    final model = OwnerRevenueContent.fromJson(_data('revenue'));
-    expect(model.properties.last.status, OwnerRevenueStatus.upcoming);
-    expect(model.properties.first.dueDate, '');
-    final request =
-        repository.requests.single as CrudBaseParmas<OwnerRevenueContent>;
-    expect(request.fromCacheJson!(request.toJson!(model)), model);
-    final debit = OwnerTransactionContent.fromJson({
-      'amount': 125.75,
-      'currency': 'EGP',
-      'is_credit': false,
-    });
-    expect(debit.amountLabel, '125.75');
-    expect(debit.isCredit, isFalse);
-    expect(OwnerTransactionContent.fromJson(debit.toJson()), debit);
-    expect(tester.takeException(), isNull);
-  });
+  testWidgets(
+    'revenue uses backend amounts and statuses with Egyptian pounds',
+    (tester) async {
+      await pump(tester, const OwnerRevenueScreen());
+      expect(repository.requests.single.api, ApiConstants.ownerRevenues);
+      expect(find.text('36,000 EGP'), findsOneWidget);
+      expect(find.text('+8% عن الشهر السابق'), findsOneWidget);
+      expect(find.text('قادم 15 أكتوبر'), findsOneWidget);
+      expect(find.text('+12,000 EGP'), findsOneWidget);
+      final model = OwnerRevenueContent.fromJson(_data('revenue'));
+      expect(model.properties.last.status, OwnerRevenueStatus.upcoming);
+      expect(model.properties.first.dueDate, '');
+      final request =
+          repository.requests.single as CrudBaseParmas<OwnerRevenueContent>;
+      expect(request.fromCacheJson!(request.toJson!(model)), model);
+      final debit = OwnerTransactionContent.fromJson({
+        'amount': 125.75,
+        'currency': 'EGP',
+        'is_credit': false,
+      });
+      expect(debit.amountLabel, '125.75');
+      expect(debit.isCredit, isFalse);
+      expect(OwnerTransactionContent.fromJson(debit.toJson()), debit);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets(
     'empty revenue retains real totals and has a contextual empty state',
@@ -676,6 +677,7 @@ void main() {
       ),
     );
     expect(repository.requests.single.api, ApiConstants.propertyFilterOptions);
+    expect(find.text('EGP'), findsOneWidget);
     final wraps = tester
         .widgetList<AddPropertyChipWrap>(find.byType(AddPropertyChipWrap))
         .toList();

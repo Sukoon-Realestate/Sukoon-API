@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -36,13 +34,13 @@ class _NotificationBellButtonState extends State<NotificationBellButton> {
     _ownsCubit = sharedCubit == null;
     _cubit = sharedCubit ?? UnreadCountsCubit();
     if (_ownsCubit) {
-      unawaited(_cubit.load(workspace: AppWorkspace.tenant));
+      _cubit.load(workspace: AppWorkspace.tenant);
     }
   }
 
   @override
   void dispose() {
-    if (_ownsCubit) unawaited(_cubit.close());
+    if (_ownsCubit) _cubit.close();
     super.dispose();
   }
 
@@ -56,7 +54,7 @@ class _NotificationBellButtonState extends State<NotificationBellButton> {
     }
     await Go.to<void>(NotificationsScreen(role: widget.role));
     if (mounted) {
-      unawaited(_cubit.refresh(workspace: AppWorkspace.tenant));
+      await _cubit.refresh(workspace: AppWorkspace.tenant);
     }
   }
 

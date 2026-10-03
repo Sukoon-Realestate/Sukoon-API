@@ -986,7 +986,8 @@ class _OwnerPropertiesAssetLoader extends AssetLoader {
       'owner_add_property_pricing_required':
           'اكتب سعر، مدة إيجار، ووصف واضح لا يقل عن 10 أحرف',
       'owner_add_property_price': 'السعر',
-      'owner_add_property_currency': 'ر.س',
+      'egyptian_pound_short': 'ج.م',
+      'owner_add_property_currency': 'ج.م',
       'owner_add_property_deposit': 'تأمين الشقة',
       'owner_add_property_rental_period': 'فترة التأجير',
       'owner_add_property_count': 'العدد',
@@ -1034,7 +1035,7 @@ class _OwnerPropertiesAssetLoader extends AssetLoader {
       'owner_add_property_video_summary': 'الفيديو',
       'owner_add_property_proof_summary': 'إثبات الملكية',
       'owner_add_property_submitted_at_summary': 'وقت الإرسال',
-      'owner_add_property_monthly_price': '{price} ر.س/شهر',
+      'owner_add_property_monthly_price': '{price} ج.م/شهر',
       'owner_add_property_photo_count_summary': '{count} صورة',
       'owner_add_property_video_skipped': 'تم تخطي الفيديو',
       'owner_add_property_video_uploaded_summary':

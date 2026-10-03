@@ -3,6 +3,8 @@ import 'package:melos_core/core/helpers/time_zone_helper.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
+import 'package:sokoun_app/features/shared/finance/data/egyptian_pound.dart';
+import 'package:sokoun_app/features/shared/finance/presentation/egyptian_pound_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';

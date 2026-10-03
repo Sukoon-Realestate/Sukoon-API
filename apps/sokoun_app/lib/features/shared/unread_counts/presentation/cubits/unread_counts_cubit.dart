@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:math' show max;
 
+import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/network/account_session.dart';
+import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:multiple_result/multiple_result.dart';
 
@@ -18,7 +20,6 @@ import '../../../notifications/data/foreground_notification_bus.dart';
 import '../../../notifications/data/models/app_notification_content.dart';
 import '../../../notifications/data/notification_refresh_bus.dart';
 import '../../data/models/unread_counts.dart';
-import '../../data/unread_counts_data.dart';
 
 /// Owns all account badges, including both workspace snapshots and live deltas.
 class UnreadCountsCubit extends AsyncCubit<UnreadCounts> {
@@ -39,9 +40,9 @@ class UnreadCountsCubit extends AsyncCubit<UnreadCounts> {
   void watch() {
     if (isClosed || _subscriptions.isNotEmpty) return;
     _subscriptions.addAll([
-      WorkspaceCountsRefreshBus.stream.listen((_) => unawaited(refresh())),
+      WorkspaceCountsRefreshBus.stream.listen((_) => refresh()),
       NotificationRefreshBus.stream.listen(
-        (_) => unawaited(refresh(workspace: AppWorkspace.tenant)),
+        (_) => refresh(workspace: AppWorkspace.tenant),
       ),
       ForegroundNotificationBus.stream.listen(_onNotificationReceived),
       _realtime.messages.listen(_onMessageReceived),
@@ -49,7 +50,7 @@ class UnreadCountsCubit extends AsyncCubit<UnreadCounts> {
         if (!_canUpdate) return;
         changeChatCount(-removed);
         if (removed == 0) {
-          unawaited(refresh(workspace: AppWorkspace.tenant));
+          refresh(workspace: AppWorkspace.tenant);
         }
       }),
     ]);
@@ -106,7 +107,24 @@ class UnreadCountsCubit extends AsyncCubit<UnreadCounts> {
       final int visitsChange = _visitsChanges[workspace] ?? 0;
       await executeAsyncWithBaseModel(
         operation: () async {
-          final result = await UnreadCountsData.load(workspace);
+          final result = await baseCrudUseCase.call(
+            CrudBaseParmas<UnreadCounts>(
+              api: workspace.isOwner
+                  ? ApiConstants.ownerUnreadCounts
+                  : ApiConstants.tenantUnreadCounts,
+              httpRequestType: HttpRequestType.get,
+              cacheKey: workspace.isOwner
+                  ? 'workspace_counts_owner'
+                  : 'tenant_unread_counts',
+              mapper: (json) => UnreadCounts.fromJson(
+                json is Map ? Map<String, dynamic>.from(json) : const {},
+                workspace: workspace,
+              ),
+              fromCacheJson: (json) =>
+                  UnreadCounts.fromJson(json, workspace: workspace),
+              toJson: (counts) => counts.toJson(),
+            ),
+          );
           return result.when(
             (response) => Success<BaseModel<UnreadCounts>, Failure>(
               BaseModel<UnreadCounts>(

@@ -19,28 +19,27 @@ class TenantPropertyPriceAndRating extends StatelessWidget {
         Expanded(
           child: Align(
             alignment: AlignmentDirectional.centerStart,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Row(
-                spacing: 6.w,
-                children: [
-                  AppText(
-                    property.pricePeriodLabel,
-                    style: AppTextStyles.medium13.copyWith(
-                      color: AppColors.sokoonGray,
-                      fontSize: 13.sp,
-                      height: 1.45,
-                    ),
+            child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 6.w,
+              runSpacing: 4.h,
+              children: [
+                AppText(
+                  property.price,
+                  style: AppTextStyles.extraBold.copyWith(
+                    color: AppColors.sokoonTeal,
+                    fontSize: 24.sp,
                   ),
-                  AppText(
-                    property.price,
-                    style: AppTextStyles.extraBold.copyWith(
-                      color: AppColors.sokoonTeal,
-                      fontSize: 24.sp,
-                    ),
+                ),
+                AppText(
+                  property.pricePeriodLabel,
+                  style: AppTextStyles.medium13.copyWith(
+                    color: AppColors.sokoonGray,
+                    fontSize: 13.sp,
+                    height: 1.45,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

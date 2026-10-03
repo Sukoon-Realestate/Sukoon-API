@@ -62,7 +62,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   void dispose() {
     _fixtureNotifications.dispose();
-    unawaited(_cubit.close());
+    _cubit.close();
     super.dispose();
   }
 

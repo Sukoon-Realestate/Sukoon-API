@@ -542,7 +542,12 @@ void main() {
             await tester.pumpAndSettle();
             expect(find.byType(PropertyReviewSheet), findsOneWidget);
             expect(find.byType(PropertyReviewSection), findsNWidgets(3));
-            expect(find.textContaining('18000'), findsOneWidget);
+            expect(
+              find.textContaining(
+                language == 'ar' ? '18,000 ج.م' : '18,000 EGP',
+              ),
+              findsOneWidget,
+            );
             if (scale == 1 && (width == 390 || width == 1024)) {
               await _capture(tester, 'review-$language-${width.toInt()}');
             }

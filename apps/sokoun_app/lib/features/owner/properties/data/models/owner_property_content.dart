@@ -1,6 +1,6 @@
 import '../enums/owner_property_status.dart';
 import 'package:equatable/equatable.dart';
-import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:sokoun_app/features/shared/finance/data/egyptian_pound.dart';
 
 class OwnerPropertyContent extends Equatable {
   const OwnerPropertyContent({
@@ -44,9 +44,8 @@ class OwnerPropertyContent extends Equatable {
       mainImage: json['main_image'] ?? '',
       location: json['location'] ?? '',
       monthlyPrice:
-          (double.tryParse('${json['price'] ?? json['monthly_price'] ?? ''}') ??
-                  0)
-              .round(),
+          EgyptianPound.parseAmount(json['price'] ?? json['monthly_price']) ??
+          0,
       pricePeriod: json['price_period']?.toString() ?? '',
       views:
           (json['views_count'] as num?)?.toInt() ??
@@ -68,16 +67,9 @@ class OwnerPropertyContent extends Equatable {
   final String title;
   final String mainImage;
   final String location;
-  final int monthlyPrice;
+  final num monthlyPrice;
   final String pricePeriod;
 
-  String get priceUnitLabel => switch (pricePeriod) {
-    'daily' => LocaleKeys.tenantPropertyDetailsDailyPriceUnit,
-    'weekly' => LocaleKeys.tenantPropertyDetailsWeeklyPriceUnit,
-    'monthly' => LocaleKeys.tenantPropertyDetailsMonthlyPriceUnit,
-    'yearly' => LocaleKeys.tenantPropertyDetailsYearlyPriceUnit,
-    _ => LocaleKeys.favoritesCurrencyShort,
-  };
   final int views;
   final int visitRequests;
   final int bedrooms;
@@ -109,7 +101,7 @@ class OwnerPropertyContent extends Equatable {
     String? title,
     String? mainImage,
     String? location,
-    int? monthlyPrice,
+    num? monthlyPrice,
     String? pricePeriod,
     int? views,
     int? visitRequests,

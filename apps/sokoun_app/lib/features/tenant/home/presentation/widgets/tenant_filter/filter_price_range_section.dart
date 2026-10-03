@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:sokoun_app/features/shared/finance/presentation/egyptian_pound_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_search_model.dart';
 
 import 'filter_card.dart';
@@ -37,7 +38,8 @@ class FilterPriceRangeSection extends StatelessWidget {
             children: [
               Expanded(
                 child: FilterTextField(
-                  label: LocaleKeys.tenantFilterFrom,
+                  label:
+                      '${LocaleKeys.tenantFilterFrom} (${EgyptianPoundText.symbol})',
                   hint: LocaleKeys.tenantFilterFrom,
                   controller: minPriceController,
                   keyboardType: TextInputType.number,
@@ -58,7 +60,8 @@ class FilterPriceRangeSection extends StatelessWidget {
               ),
               Expanded(
                 child: FilterTextField(
-                  label: LocaleKeys.tenantFilterTo,
+                  label:
+                      '${LocaleKeys.tenantFilterTo} (${EgyptianPoundText.symbol})',
                   hint: LocaleKeys.tenantFilterTo,
                   controller: maxPriceController,
                   keyboardType: TextInputType.number,

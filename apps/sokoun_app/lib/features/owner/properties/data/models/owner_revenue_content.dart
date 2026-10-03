@@ -1,6 +1,7 @@
 import '../enums/owner_revenue_status.dart';
 import '../owner_property_json.dart';
 import 'package:equatable/equatable.dart';
+import 'package:sokoun_app/features/shared/finance/data/egyptian_pound.dart';
 
 class OwnerRevenueContent extends Equatable {
   const OwnerRevenueContent({
@@ -25,7 +26,8 @@ class OwnerRevenueContent extends Equatable {
   factory OwnerRevenueContent.fromJson(
     Map<String, dynamic> json,
   ) => OwnerRevenueContent(
-    totalThisMonth: ownerPropertyNumber(json['total_this_month']).toDouble(),
+    totalThisMonth:
+        EgyptianPound.parseAmount(json['total_this_month'])?.toDouble() ?? 0,
     formattedTotal: json['formatted_total']?.toString() ?? '',
     currency: json['currency']?.toString() ?? '',
     percentageChange: ownerPropertyNumber(json['percentage_change']).toDouble(),
@@ -45,9 +47,7 @@ class OwnerRevenueContent extends Equatable {
   final bool isPositive;
   final List<OwnerRevenuePropertyContent> properties;
   final List<OwnerTransactionContent> transactions;
-  String get totalLabel => formattedTotal.isNotEmpty
-      ? formattedTotal
-      : ownerFormattedNumber(totalThisMonth);
+  String get totalLabel => EgyptianPound.formatAmount(totalThisMonth);
   Map<String, dynamic> toJson() => {
     'total_this_month': totalThisMonth,
     'formatted_total': formattedTotal,
@@ -118,7 +118,7 @@ class OwnerRevenuePropertyContent extends Equatable {
       OwnerRevenuePropertyContent(
         id: json['id']?.toString() ?? '',
         title: json['title']?.toString() ?? '',
-        amount: ownerPropertyNumber(json['amount']).toDouble(),
+        amount: EgyptianPound.parseAmount(json['amount'])?.toDouble() ?? 0,
         dueDate: json['due_date']?.toString() ?? '',
         status: OwnerRevenueStatusX.fromName(json['status']?.toString()),
         formattedAmount: json['formatted_amount']?.toString() ?? '',
@@ -128,9 +128,7 @@ class OwnerRevenuePropertyContent extends Equatable {
   final String id, title, dueDate, formattedAmount, currency, statusLabel;
   final double amount;
   final OwnerRevenueStatus status;
-  String get amountLabel => formattedAmount.isNotEmpty
-      ? formattedAmount
-      : ownerFormattedNumber(amount);
+  String get amountLabel => EgyptianPound.formatAmount(amount);
   Map<String, dynamic> toJson() => {
     'id': id,
     'title': title,
@@ -200,7 +198,7 @@ class OwnerTransactionContent extends Equatable {
         id: json['id']?.toString() ?? '',
         title: json['title']?.toString() ?? '',
         date: json['date']?.toString() ?? '',
-        amount: ownerPropertyNumber(json['amount']).toDouble(),
+        amount: EgyptianPound.parseAmount(json['amount'])?.toDouble() ?? 0,
         formattedAmount: json['formatted_amount']?.toString() ?? '',
         currency: json['currency']?.toString() ?? '',
         dateIso: json['date_iso']?.toString() ?? '',
@@ -211,9 +209,7 @@ class OwnerTransactionContent extends Equatable {
   final double amount;
   final bool? _isCredit;
   bool get isCredit => _isCredit ?? amount >= 0;
-  String get amountLabel => formattedAmount.isNotEmpty
-      ? formattedAmount
-      : ownerFormattedNumber(amount.abs());
+  String get amountLabel => EgyptianPound.formatAmount(amount.abs());
   Map<String, dynamic> toJson() => {
     'id': id,
     'title': title,

@@ -102,9 +102,4 @@ abstract final class NotificationsData {
     unreadOnly: unreadOnly,
     onUnreadCount: onUnreadCount,
   );
-
-  static Future<NotificationsResponse> getNotifications({
-    required int page,
-    bool unreadOnly = false,
-  }) => source.getNotifications(page: page, unreadOnly: unreadOnly);
 }

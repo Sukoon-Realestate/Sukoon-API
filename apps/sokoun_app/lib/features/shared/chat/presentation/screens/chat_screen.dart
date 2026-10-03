@@ -1,7 +1,6 @@
 import '../widgets/report/chat_report_button.dart';
 import '../widgets/chat/chat_participant_title.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
-import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -55,13 +54,13 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    unawaited(_chatThreadCubit.onAppLifecycleStateChanged(state));
+    _chatThreadCubit.onAppLifecycleStateChanged(state);
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    unawaited(_chatThreadCubit.close());
+    _chatThreadCubit.close();
     super.dispose();
   }
 
