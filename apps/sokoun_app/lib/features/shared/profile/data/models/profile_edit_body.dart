@@ -9,6 +9,7 @@ class ProfileEditBody {
     required this.phoneNumber,
     this.cityId,
     this.updateCity = false,
+    this.updateGender = true,
   });
 
   const ProfileEditBody.initial()
@@ -17,7 +18,8 @@ class ProfileEditBody {
       gender = '',
       phoneNumber = '',
       cityId = null,
-      updateCity = false;
+      updateCity = false,
+      updateGender = true;
 
   final File? avatar;
   final String fullName;
@@ -25,11 +27,12 @@ class ProfileEditBody {
   final String phoneNumber;
   final String? cityId;
   final bool updateCity;
+  final bool updateGender;
 
   Map<String, dynamic> toJson() => {
     if (avatar != null) 'avatar': avatar,
     'full_name': fullName.trim(),
-    'gender': gender,
+    if (updateGender) 'gender': gender,
     'phone_number': Validators.normalizeEgyptianMobile(phoneNumber),
     if (updateCity) 'city_id': cityId ?? '',
   };
@@ -39,7 +42,7 @@ class ProfileEditBody {
     return {
       'first_name': names.first,
       'last_name': names.skip(1).join(' '),
-      'gender': gender,
+      if (updateGender) 'gender': gender,
       'phone_number': Validators.normalizeEgyptianMobile(phoneNumber),
       if (updateCity) 'city_id': cityId ?? '',
     };
@@ -54,6 +57,7 @@ class ProfileEditBody {
     String? cityId,
     bool clearCity = false,
     bool? updateCity,
+    bool? updateGender,
   }) {
     return ProfileEditBody(
       avatar: clearAvatar ? null : avatar ?? this.avatar,
@@ -62,6 +66,7 @@ class ProfileEditBody {
       phoneNumber: phoneNumber ?? this.phoneNumber,
       cityId: clearCity ? null : cityId ?? this.cityId,
       updateCity: updateCity ?? this.updateCity,
+      updateGender: updateGender ?? this.updateGender,
     );
   }
 }

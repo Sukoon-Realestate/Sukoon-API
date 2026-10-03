@@ -1,19 +1,27 @@
 part of '../../../imports.dart';
 
 class OwnerProfileContentView extends StatelessWidget {
-  const OwnerProfileContentView({super.key, required this.profile});
+  const OwnerProfileContentView({
+    super.key,
+    required this.profile,
+    required this.onEditPressed,
+  });
 
   final OwnerProfileContent profile;
+  final VoidCallback onEditPressed;
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.fromLTRB(20.w, 14.h, 20.w, 24.h),
-      children: [
-        OwnerProfileHeaderCard(profile: profile),
-        14.szH,
-        ProfileAccountDetailsCard(details: profile.accountDetails),
-        14.szH,
+    return ProfileContentView(
+      workspace: AppWorkspace.owner,
+      header: OwnerProfileHeaderCard(
+        profile: profile,
+        onEditPressed: onEditPressed,
+      ),
+      accountDetails: profile.accountDetails,
+      isVerified: profile.owner.isVerified,
+      activity: const OwnerProfileActions(),
+      additionalSections: [
         ProfileVerificationBanner(
           title: '',
           description: profile.privacyNotice.text.isNotEmpty
@@ -21,10 +29,7 @@ class OwnerProfileContentView extends StatelessWidget {
               : LocaleKeys.profileOwnerPhonePrivacy,
           isPrivacy: true,
         ),
-        14.szH,
         OwnerReviewsCard(reviews: profile.recentReviews),
-        14.szH,
-        const ProfileDeleteAccountButton(),
       ],
     );
   }

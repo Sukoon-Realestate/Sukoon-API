@@ -44,8 +44,7 @@ class HomeTab {
           LocaleKeys.notificationsOwnerRequestsNavigation,
         WorkspaceTab.properties =>
           LocaleKeys.notificationsOwnerPropertiesNavigation,
-        WorkspaceTab.profile =>
-          workspace.isTenant ? LocaleKeys.profile : LocaleKeys.more,
+        WorkspaceTab.profile => LocaleKeys.profile,
       },
       badgeCount: badgeCount,
     );
@@ -62,7 +61,10 @@ class HomeTab {
         HomeTab(tab: WorkspaceTab.saved, screen: FavoritesScreen()),
         messages,
         HomeTab(tab: WorkspaceTab.visits, screen: TenantVisitsScreen()),
-        HomeTab(tab: WorkspaceTab.profile, screen: TenantProfileScreen()),
+        HomeTab(
+          tab: WorkspaceTab.profile,
+          screen: ProfileScreen(workspace: AppWorkspace.tenant),
+        ),
       ],
       AppWorkspace.owner: [
         HomeTab(tab: WorkspaceTab.home, screen: OwnerHomeScreen()),
@@ -72,7 +74,10 @@ class HomeTab {
           screen: OwnerVisitRequestsScreen(showBackButton: false),
         ),
         messages,
-        HomeTab(tab: WorkspaceTab.profile, screen: OwnerMoreScreen()),
+        HomeTab(
+          tab: WorkspaceTab.profile,
+          screen: ProfileScreen(workspace: AppWorkspace.owner),
+        ),
       ],
     };
   }

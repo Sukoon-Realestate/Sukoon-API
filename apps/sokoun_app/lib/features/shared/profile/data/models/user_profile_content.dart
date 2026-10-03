@@ -45,8 +45,11 @@ class UserProfileContent extends Equatable {
   final String id, name, phone, gender, birthDate, avatar;
   final String email;
   final ProfileCity? city;
-  UserModel toUser(UserModel fallback) =>
-      fallback.copyWith(name: name, phone: phone);
+  UserModel toUser(UserModel fallback) => fallback.copyWith(
+    name: name.isEmpty ? fallback.name : name,
+    phone: phone.isEmpty ? fallback.phone : phone,
+    email: email.isEmpty ? fallback.email : email,
+  );
   Map<String, dynamic> toJson() => {
     'id': id,
     'full_name': name,

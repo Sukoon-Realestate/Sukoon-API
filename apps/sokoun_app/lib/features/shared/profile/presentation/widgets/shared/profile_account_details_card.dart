@@ -8,22 +8,28 @@ class ProfileAccountDetailsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String fallback = LocaleKeys.notSetYet;
-    final List<({String label, String value})> rows = [
-      (
-        label: LocaleKeys.name,
-        value: details.name.trim().isEmpty ? fallback : details.name,
-      ),
-      (
-        label: LocaleKeys.email,
-        value: details.email.trim().isEmpty ? fallback : details.email,
-      ),
-      if (details.phoneNumber.isNotEmpty ||
-          details.maskedPhoneNumber.isNotEmpty)
-        (
-          label: LocaleKeys.profileMobile,
-          value: details.displayPhone.isEmpty ? fallback : details.displayPhone,
-        ),
-    ];
+    final List<({String label, String value, TextDirection? direction})> rows =
+        [
+          (
+            label: LocaleKeys.name,
+            value: details.name.trim().isEmpty ? fallback : details.name,
+            direction: null,
+          ),
+          (
+            label: LocaleKeys.email,
+            value: details.email.trim().isEmpty ? fallback : details.email,
+            direction: details.email.trim().isEmpty ? null : TextDirection.ltr,
+          ),
+          if (details.phoneNumber.isNotEmpty ||
+              details.maskedPhoneNumber.isNotEmpty)
+            (
+              label: LocaleKeys.profileMobile,
+              value: details.displayPhone.isEmpty
+                  ? fallback
+                  : details.displayPhone,
+              direction: TextDirection.ltr,
+            ),
+        ];
 
     return ProfileSurfaceCard(
       child: Column(
@@ -40,7 +46,7 @@ class ProfileAccountDetailsCard extends StatelessWidget {
           6.szH,
           ...rows.indexed.map((entry) {
             final int index = entry.$1;
-            final ({String label, String value}) row = entry.$2;
+            final row = entry.$2;
             return Container(
               padding: EdgeInsets.symmetric(vertical: 10.h),
               decoration: BoxDecoration(
@@ -50,30 +56,10 @@ class ProfileAccountDetailsCard extends StatelessWidget {
                       )
                     : null,
               ),
-              child: Row(
-                spacing: 12.w,
-                children: [
-                  Expanded(
-                    child: AppText(
-                      row.value,
-                      style: AppTextStyles.bold14.copyWith(
-                        color: AppColors.sokoonNavy,
-                        fontSize: 14.sp,
-                        height: 1.45,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  AppText(
-                    row.label,
-                    style: AppTextStyles.regular12.copyWith(
-                      color: AppColors.sokoonGray,
-                      fontSize: 12.sp,
-                      height: 1.45,
-                    ),
-                  ),
-                ],
+              child: ProfileAccountDetailRow(
+                label: row.label,
+                value: row.value,
+                valueDirection: row.direction,
               ),
             );
           }),

@@ -83,11 +83,14 @@ class ProfileMenuTile extends StatelessWidget {
               ),
               8.szW,
             ],
-            Icon(
-              Icons.arrow_forward_ios_rounded,
-              color: AppColors.sokoonGray,
-              size: 15.r,
-            ),
+            if (onTap != null)
+              Icon(
+                Directionality.of(context) == TextDirection.rtl
+                    ? Icons.chevron_left_rounded
+                    : Icons.chevron_right_rounded,
+                color: AppColors.sokoonGray,
+                size: 15.r,
+              ),
           ],
         ),
       ),

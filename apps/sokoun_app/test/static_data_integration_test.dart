@@ -268,7 +268,7 @@ void main() {
       tester,
       ListView(
         children: [
-          OwnerProfileHeaderCard(profile: owner),
+          OwnerProfileHeaderCard(profile: owner, onEditPressed: () {},),
           TenantProfileActions(menuItems: menu),
         ],
       ),

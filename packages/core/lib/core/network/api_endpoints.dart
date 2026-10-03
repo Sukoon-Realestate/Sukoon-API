@@ -10,6 +10,16 @@ class ApiConstants {
   static const String userProfile = 'profiles/user/my-profile/';
   static const String updateUserProfile = 'profiles/user/update/';
   static const String profileSettings = 'profiles/settings/';
+  // Proposed contracts; see docs/profile_settings_support_backend.md.
+  static const String changePassword = 'auth/users/set_password/';
+  static const String verificationStatus = 'profiles/verification-status/';
+  static const String accountContracts = 'profiles/contracts/';
+  static const String supportHelpCenter = 'support/help-center/';
+  static const String supportTickets = 'support/tickets/';
+  static String supportTicket(String id) =>
+      '$supportTickets${Uri.encodeComponent(id)}/';
+  static String supportTicketReplies(String id) =>
+      '${supportTicket(id)}replies/';
   static const String register = 'auth/users/';
   static const String currentUser = 'auth/users/me/';
   static const String completeRegister = 'auth/complete-register/';

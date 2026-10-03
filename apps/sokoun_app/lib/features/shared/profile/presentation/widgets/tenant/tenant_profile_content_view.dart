@@ -12,19 +12,17 @@ class TenantProfileContentView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 24.h),
-      children: [
-        TenantProfileHeaderCard(profile: profile, onEditPressed: onEditPressed),
-        14.szH,
-        TenantProfileActions(menuItems: profile.menuItems),
-        14.szH,
-        ProfileAccountDetailsCard(details: profile.accountDetails),
-        14.szH,
-        const ProfileLogoutButton(),
-        10.szH,
-        const ProfileDeleteAccountButton(),
-      ],
+    return ProfileContentView(
+      workspace: AppWorkspace.tenant,
+      header: TenantProfileHeaderCard(
+        profile: profile,
+        onEditPressed: onEditPressed,
+      ),
+      accountDetails: profile.accountDetails,
+      isVerified:
+          profile.user.isVerified || profile.menuItems.verification.isVerified,
+      verificationSubtitle: profile.menuItems.verification.subtitle,
+      activity: TenantProfileActions(menuItems: profile.menuItems),
     );
   }
 }

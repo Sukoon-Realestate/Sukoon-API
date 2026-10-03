@@ -29,7 +29,7 @@ class ProfileVerifiedBadge extends StatelessWidget {
             child: AppText(
               text ?? LocaleKeys.verified,
               style: AppTextStyles.bold10.copyWith(
-                color: isVerified ? AppColors.sokoonGold : AppColors.sokoonGray,
+                color: isVerified ? AppColors.sokoonNavy : AppColors.sokoonGray,
                 fontSize: 10.sp,
                 height: 1.45,
               ),

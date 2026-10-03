@@ -699,6 +699,98 @@ void main() {
       const Duration(seconds: 5),
     );
   });
+  for (final workspace in AppWorkspace.values) {
+    for (final notificationType in ['account_verification', 'security_alert']) {
+      testWidgets(
+        '${workspace.name} $notificationType opens its detail without a second Profile',
+        (tester) async {
+          _phone(tester);
+          await registerAuthenticatedTestAccount();
+          await WorkspacePreferences.write('1', workspace);
+          injector.registerSingleton<DevicePermissionDataSource>(
+            _HomePermissionSource()..seen = true,
+          );
+          await tester.pumpWidget(_app(const HomeScreen(), 'en'));
+          await tester.pumpAndSettle();
+          unawaited(
+            NotificationPushHandler.handle({
+              'notification_type': notificationType,
+            }),
+          );
+          await tester.pumpAndSettle();
+          expect(WorkspaceCubit.instance.state, workspace);
+          if (notificationType == 'account_verification') {
+            expect(find.byType(ProfileVerificationScreen), findsOneWidget);
+            expect(
+              tester
+                  .widget<ProfileVerificationScreen>(
+                    find.byType(ProfileVerificationScreen),
+                  )
+                  .workspace,
+              workspace,
+            );
+          } else {
+            expect(find.byType(ProfileSettingsScreen), findsOneWidget);
+            expect(
+              tester
+                  .widget<ProfileSettingsScreen>(
+                    find.byType(ProfileSettingsScreen),
+                  )
+                  .workspace,
+              workspace,
+            );
+          }
+          Go.back();
+          await tester.pumpAndSettle();
+          expect(find.byType(ProfileScreen), findsOneWidget);
+          expect(
+            tester
+                .widget<HomeBottomNavigation>(find.byType(HomeBottomNavigation))
+                .currentIndex,
+            4,
+          );
+          expect(find.byType(ProfileVerificationScreen), findsNothing);
+          expect(find.byType(ProfileSettingsScreen), findsNothing);
+          expect(tester.takeException(), isNull);
+        },
+      );
+    }
+    testWidgets('${workspace.name} last tab opens Profile directly', (
+      tester,
+    ) async {
+      _phone(tester);
+      await registerAuthenticatedTestAccount();
+      await WorkspacePreferences.write('1', workspace);
+      injector.registerSingleton<DevicePermissionDataSource>(
+        _HomePermissionSource()..seen = true,
+      );
+      await tester.pumpWidget(_app(const HomeScreen(), 'en'));
+      await tester.pumpAndSettle();
+      final navigation = tester.widget<HomeBottomNavigation>(
+        find.byType(HomeBottomNavigation),
+      );
+      expect(navigation.destinations.last.label, 'Profile');
+      navigation.onDestinationSelected(4);
+      await tester.pumpAndSettle();
+      expect(find.byType(ProfileScreen), findsOneWidget);
+      expect(
+        tester.widget<ProfileScreen>(find.byType(ProfileScreen)).workspace,
+        workspace,
+      );
+      expect(
+        find.byType(
+          workspace.isOwner ? OwnerProfileScreen : TenantProfileScreen,
+        ),
+        findsOneWidget,
+      );
+      expect(find.byType(ProfileHeaderCard), findsOneWidget);
+      expect(find.byIcon(Icons.settings_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.support_agent_rounded), findsOneWidget);
+      expect(find.text('More'), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
   for (final (workspace, deleteAccount) in [
     for (final workspace in AppWorkspace.values)
       for (final deleteAccount in [false, true]) (workspace, deleteAccount),
@@ -722,16 +814,9 @@ void main() {
             .onDestinationSelected(4);
         await tester.pumpAndSettle();
         expect(find.byType(IndexedStack), findsOneWidget);
-        if (workspace.isOwner && deleteAccount) {
-          await tester.tap(
-            find.ancestor(
-              of: find.text(UserCubit.instance.user.name),
-              matching: find.byType(InkWell),
-            ),
-          );
-          await tester.pumpAndSettle();
-          expect(find.byType(OwnerProfileScreen), findsOneWidget);
-        }
+        await tester.tap(find.byIcon(Icons.settings_outlined));
+        await tester.pumpAndSettle();
+        expect(find.byType(ProfileSettingsScreen), findsOneWidget);
         final int homeRequests = accountRepository.homeRequests;
         final int requests = accountRepository.endpoints.length;
 
@@ -742,13 +827,7 @@ void main() {
           button,
           300,
           scrollable: find.descendant(
-            of: find.byType(
-              workspace.isTenant
-                  ? TenantProfileContentView
-                  : deleteAccount
-                  ? OwnerProfileContentView
-                  : OwnerMoreScreen,
-            ),
+            of: find.byType(ProfileSettingsContentView),
             matching: find.byType(Scrollable),
           ),
         );
@@ -758,12 +837,12 @@ void main() {
         await tester.tap(button);
         if (deleteAccount) {
           await tester.pumpAndSettle();
-          await tester.tap(
-            find.descendant(
-              of: find.byType(AlertDialog),
-              matching: find.byType(FilledButton),
-            ),
-          );
+          await tester.tap(find.byType(CheckboxListTile));
+          await tester.pumpAndSettle();
+          await tester.tap(find.text(LocaleKeys.settingsDeletePermanently));
+        } else {
+          await tester.pumpAndSettle();
+          await tester.tap(find.text(LocaleKeys.profileLogout).last);
         }
         await tester.pumpAndSettle();
 

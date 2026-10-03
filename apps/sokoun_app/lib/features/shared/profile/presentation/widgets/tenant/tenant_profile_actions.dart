@@ -13,51 +13,6 @@ class TenantProfileActions extends StatelessWidget {
         ProfileSurfaceCard(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
           child: ProfileMenuTile(
-            icon: Icons.calendar_month_outlined,
-            label: menuItems.visitRequests.title.isNotEmpty
-                ? menuItems.visitRequests.title
-                : LocaleKeys.tenantVisitsTitle,
-            subtitle: menuItems.visitRequests.subtitle.isNotEmpty
-                ? menuItems.visitRequests.subtitle
-                : '${menuItems.visitRequests.count}',
-            iconColor: AppColors.sokoonTeal,
-            iconBackgroundColor: AppColors.mintLight,
-            onTap: () => Go.to(const TenantVisitsScreen()),
-          ),
-        ),
-        ProfileSurfaceCard(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
-          child: ProfileMenuTile(
-            icon: Icons.shield_outlined,
-            label: menuItems.verification.title.isNotEmpty
-                ? menuItems.verification.title
-                : LocaleKeys.profileVerificationDocuments,
-            subtitle: menuItems.verification.subtitle.isNotEmpty
-                ? menuItems.verification.subtitle
-                : menuItems.verification.isVerified
-                ? LocaleKeys.verified
-                : LocaleKeys.ownerHomeUnverified,
-            iconColor: AppColors.sokoonTeal,
-            iconBackgroundColor: AppColors.mintLight,
-            onTap: () => Go.to(const KycIntroScreen()),
-          ),
-        ),
-        ProfileSurfaceCard(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
-          child: ProfileMenuTile(
-            icon: Icons.language_rounded,
-            label: LocaleKeys.changeLanguage,
-            subtitle: context.locale == Languages.arabic.locale
-                ? LocaleKeys.languageArabicName
-                : LocaleKeys.languageEnglishNativeName,
-            iconColor: AppColors.sokoonTeal,
-            iconBackgroundColor: AppColors.mintLight,
-            onTap: () => Go.to(const LanguageSelectionScreen()),
-          ),
-        ),
-        ProfileSurfaceCard(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
-          child: ProfileMenuTile(
             icon: Icons.description_outlined,
             label: menuItems.contracts.title.isNotEmpty
                 ? menuItems.contracts.title
@@ -70,6 +25,7 @@ class TenantProfileActions extends StatelessWidget {
                   ),
             iconColor: AppColors.blue,
             iconBackgroundColor: AppColors.bluePale,
+            onTap: () => Go.to(const ProfileContractsScreen()),
           ),
         ),
         ProfileSurfaceCard(
@@ -92,16 +48,12 @@ class TenantProfileActions extends StatelessWidget {
         ),
         ProfileSurfaceCard(
           child: ProfileMenuTile(
-            icon: Icons.settings_outlined,
-            label: LocaleKeys.profileSettingsTitle,
+            icon: Icons.account_circle_outlined,
+            label: LocaleKeys.profileSummaryTitle,
             iconColor: AppColors.sokoonTeal,
             iconBackgroundColor: AppColors.mintLight,
-            onTap: () => Go.to(const ProfileSettingsScreen()),
+            onTap: () => Go.to(const TenantAccountSummaryScreen()),
           ),
-        ),
-        ProfileSurfaceCard(
-          padding: EdgeInsets.symmetric(vertical: 2.h),
-          child: const PublicPageMenu(),
         ),
       ],
     );

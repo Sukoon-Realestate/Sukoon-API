@@ -7,7 +7,7 @@ SHELL := /bin/bash
 
 .PHONY: help clean run apk ipa appbundle ios upgrade \
 	handlePods openXcode flutterfireSetup translations \
-	architectureCheck gradleFix clearGradleCache buildIos distribute \
+	architectureCheck accountCheck accountUiReview gradleFix clearGradleCache buildIos distribute \
 	distributeAndroid fingerPrint kill sha
 
 # Show available commands
@@ -25,6 +25,8 @@ help:
 	@echo "  make flutterfireSetup"
 	@echo "  make translations"
 	@echo "  make architectureCheck"
+	@echo "  make accountCheck"
+	@echo "  make accountUiReview REVIEW_DIR=/tmp/sokoun-account-ui"
 	@echo "  make gradleFix"
 	@echo "  make clearGradleCache"
 	@echo "  make buildIos"
@@ -84,6 +86,17 @@ translations:
 # Verify feature-layer architecture invariants
 architectureCheck:
 	flutter test --no-pub test/feature_architecture_test.dart
+
+## Verify Profile, Settings and Support architecture, behavior and layouts.
+accountCheck:
+	flutter analyze --no-pub lib/features/shared/profile lib/features/shared/support lib/features/shared/public_pages lib/features/main_view/presentation/models/home_tab.dart lib/features/shared/notifications/presentation/notification_navigation.dart
+	flutter test --no-pub test/profile_flow_test.dart test/profile_settings_support_test.dart test/workspace_navigation_test.dart test/feature_architecture_test.dart
+	flutter test --no-pub test/mobile_dev_handoff_integration_test.dart --plain-name='owner Profile opens API-backed revenue'
+
+REVIEW_DIR ?= /tmp/sokoun-account-ui
+## Run responsive account checks and export Arabic screenshots for UI review.
+accountUiReview:
+	flutter test --no-pub test/profile_settings_support_test.dart --dart-define=ACCOUNT_UI_REVIEW_DIR=$(REVIEW_DIR)
 
 # Stop Gradle and remove lock files
 gradleFix:

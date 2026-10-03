@@ -84,9 +84,9 @@ class TenantAccountSummaryContentView extends StatelessWidget {
                     ? AppColors.greenPale
                     : AppColors.grayBackground,
                 onTap: () => Go.to(
-                  summary.identityVerification.isVerified
-                      ? const KycApprovedScreen()
-                      : const KycIntroScreen(),
+                  const ProfileVerificationScreen(
+                    workspace: AppWorkspace.tenant,
+                  ),
                 ),
               ),
             ],

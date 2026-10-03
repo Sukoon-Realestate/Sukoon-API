@@ -587,15 +587,19 @@ void main() {
     },
   );
 
-  testWidgets('owner More menu opens API-backed revenue', (tester) async {
+  testWidgets('owner Profile opens API-backed revenue', (tester) async {
     await registerAuthenticatedTestAccount(user: _user);
-    await pump(tester, const OwnerMoreScreen(user: _user));
+    await pump(
+      tester,
+      const ProfileScreen(workspace: AppWorkspace.owner, user: _user),
+    );
     await tester.ensureVisible(find.text('Revenue'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Revenue'));
     await tester.pumpAndSettle();
     expect(find.byType(OwnerRevenueScreen), findsOneWidget);
-    expect(repository.requests.single.api, ApiConstants.ownerRevenues);
+    expect(repository.requests.first.api, ApiConstants.ownerProfile);
+    expect(repository.requests.last.api, ApiConstants.ownerRevenues);
     expect(tester.takeException(), isNull);
   });
 

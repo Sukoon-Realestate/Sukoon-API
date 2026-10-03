@@ -1,9 +1,10 @@
 part of '../../imports.dart';
 
 class OwnerProfileScreen extends StatefulWidget {
-  const OwnerProfileScreen({super.key, required this.user});
+  const OwnerProfileScreen({super.key, this.user, this.showBackButton = false});
 
-  final UserModel user;
+  final UserModel? user;
+  final bool showBackButton;
 
   @override
   State<OwnerProfileScreen> createState() => _OwnerProfileScreenState();
@@ -11,18 +12,21 @@ class OwnerProfileScreen extends StatefulWidget {
 
 class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
   late final OwnerProfileCubit _profileCubit;
+  late final UserModel _fallbackUser;
+  late Future<void> _profileRequest;
   StreamSubscription<UserState>? _accountSubscription;
 
   @override
   void initState() {
     super.initState();
+    _fallbackUser = widget.user ?? UserModel.currentUser ?? UserModel.initial();
     _profileCubit = OwnerProfileCubit();
-    _profileCubit.getProfile();
+    _profileRequest = _profileCubit.getProfile();
     if (injector.isRegistered<UserCubit>()) {
       _accountSubscription = UserCubit.instance.stream.listen((state) {
         if (state.userStatus == UserStatus.loggedIn) {
           _profileCubit.updateFromUser(state.userModel);
-          _profileCubit.getProfile();
+          _refreshProfile();
         }
       });
     }
@@ -39,7 +43,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
     final UserModel? updated = await Go.to<UserModel>(
       ProfileEditScreen(
         initialValue: profile.accountDetails.editableUser(
-          fallback: widget.user,
+          fallback: UserModel.currentUser ?? _fallbackUser,
           fullName: profile.owner.fullName,
         ),
         workspace: AppWorkspace.owner,
@@ -50,42 +54,28 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
     }
   }
 
+  Future<void> _refreshProfile() {
+    if (_profileCubit.isLoading) return _profileRequest;
+    return _profileRequest = _profileCubit.getProfile();
+  }
+
   @override
   Widget build(BuildContext context) {
+    Localizations.localeOf(context);
     return BlocProvider<OwnerProfileCubit>.value(
       value: _profileCubit,
-      child: AppScaffold(
-        title: LocaleKeys.profileOwnerTitle,
-        showBackButton: true,
-        actions: [
-          BlocSelector<
-            OwnerProfileCubit,
-            AsyncState<OwnerProfileContent>,
-            bool
-          >(
-            selector: (state) => state.isSuccess,
-            builder: (context, isSuccess) => IconButton(
-              onPressed: isSuccess
-                  ? () => _openEditProfile(_profileCubit.data)
-                  : null,
-              icon: Icon(
-                Icons.edit_outlined,
-                color: AppColors.sokoonNavy,
-                size: 18.r,
-              ),
-            ),
+      child: ProfileScaffold(
+        workspace: AppWorkspace.owner,
+        showBackButton: widget.showBackButton,
+        body: StatusBuilder<OwnerProfileCubit, OwnerProfileContent>.withShimmer(
+          initialDataForShimmer: const OwnerProfileContent.initial(),
+          onRetry: _refreshProfile,
+          errorType: ErrorType.defaultView,
+          builder: (profile) => OwnerProfileContentView(
+            profile: profile,
+            onEditPressed: () => _openEditProfile(profile),
           ),
-        ],
-        backgroundColor: AppColors.scaffoldBackground,
-        body: SafeArea(
-          child:
-              StatusBuilder<OwnerProfileCubit, OwnerProfileContent>.withShimmer(
-                initialDataForShimmer: const OwnerProfileContent.initial(),
-                onRetry: _profileCubit.getProfile,
-                errorType: ErrorType.defaultView,
-                builder: (profile) => OwnerProfileContentView(profile: profile),
-              ).withPullRefresher(onRefresh: _profileCubit.getProfile),
-        ),
+        ).withPullRefresher(onRefresh: _refreshProfile),
       ),
     );
   }

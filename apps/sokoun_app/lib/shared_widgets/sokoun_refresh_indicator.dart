@@ -93,9 +93,8 @@ class SokounRefreshIndicator extends StatelessWidget {
                           children: [
                             if (loading && visible && duration != Duration.zero)
                               Positioned.fill(
-                                child: CustomLoading.showLoadingView(
+                                child: CircularProgressIndicator(
                                   color: AppColors.sokoonTeal,
-                                  size: 36.r,
                                 ),
                               ),
                             if (loading)

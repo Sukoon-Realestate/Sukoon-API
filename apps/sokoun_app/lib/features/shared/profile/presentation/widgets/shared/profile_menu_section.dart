@@ -1,7 +1,7 @@
 part of '../../../imports.dart';
 
-class OwnerMoreItem {
-  const OwnerMoreItem({
+class ProfileMenuItem {
+  const ProfileMenuItem({
     required this.icon,
     required this.label,
     required this.color,
@@ -16,11 +16,15 @@ class OwnerMoreItem {
   final VoidCallback? onTap;
 }
 
-class OwnerMoreSection extends StatelessWidget {
-  const OwnerMoreSection({super.key, required this.title, required this.items});
+class ProfileMenuSection extends StatelessWidget {
+  const ProfileMenuSection({
+    super.key,
+    required this.title,
+    required this.items,
+  });
 
   final String title;
-  final List<OwnerMoreItem> items;
+  final List<ProfileMenuItem> items;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +46,7 @@ class OwnerMoreSection extends StatelessWidget {
             children: items.indexed
                 .map((entry) {
                   final int index = entry.$1;
-                  final OwnerMoreItem item = entry.$2;
+                  final ProfileMenuItem item = entry.$2;
                   return ProfileMenuTile(
                     icon: item.icon,
                     label: item.label,

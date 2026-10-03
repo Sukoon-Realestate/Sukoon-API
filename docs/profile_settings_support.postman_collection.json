@@ -1,0 +1,448 @@
+{
+  "info": {
+    "name": "Sokoun Profile Settings Support - PROPOSED contracts",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Draft contracts accompanying profile_settings_support_backend.md. No deployment is asserted. Authenticate using the established app session; never store real passwords in the collection."
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://api.example.invalid"
+    },
+    {
+      "key": "workspace",
+      "value": "tenant"
+    },
+    {
+      "key": "lang",
+      "value": "ar"
+    },
+    {
+      "key": "category",
+      "value": "visit"
+    },
+    {
+      "key": "ticket_id",
+      "value": "ticket-example"
+    },
+    {
+      "key": "image_path",
+      "value": ""
+    },
+    {
+      "key": "current_password",
+      "value": ""
+    },
+    {
+      "key": "new_password",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "PROPOSED Change password",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/v1/auth/users/set_password/",
+        "description": "PROPOSED: implement and confirm before adding to the authoritative collection. See profile_settings_support_backend.md. Use the existing authenticated session.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"current_password\": \"{{current_password}}\",\n  \"new_password\": \"{{new_password}}\",\n  \"re_new_password\": \"{{new_password}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "Proposed success example",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/v1/auth/users/set_password/",
+            "description": "PROPOSED: implement and confirm before adding to the authoritative collection. See profile_settings_support_backend.md. Use the existing authenticated session.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"current_password\": \"{{current_password}}\",\n  \"new_password\": \"{{new_password}}\",\n  \"re_new_password\": \"{{new_password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"key\": \"success\",\n  \"message\": \"\",\n  \"data\": {}\n}"
+        }
+      ]
+    },
+    {
+      "name": "PROPOSED Verification status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/api/v1/profiles/verification-status/",
+        "description": "PROPOSED: implement and confirm before adding to the authoritative collection. See profile_settings_support_backend.md. Use the existing authenticated session."
+      },
+      "response": [
+        {
+          "name": "Proposed success example",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/api/v1/profiles/verification-status/",
+            "description": "PROPOSED: implement and confirm before adding to the authoritative collection. See profile_settings_support_backend.md. Use the existing authenticated session."
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"key\": \"success\",\n  \"message\": \"\",\n  \"data\": {\n    \"status\": \"pending\",\n    \"full_name\": \"اسم الحساب\",\n    \"submitted_at\": \"2026-10-03T10:15:00Z\",\n    \"rejection_reason\": \"\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "PROPOSED Tenant contracts",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/api/v1/profiles/contracts/?page=1&page_size=20",
+        "description": "PROPOSED: implement and confirm before adding to the authoritative collection. See profile_settings_support_backend.md. Use the existing authenticated session."
+      },
+      "response": [
+        {
+          "name": "Proposed success example",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/api/v1/profiles/contracts/?page=1&page_size=20",
+            "description": "PROPOSED: implement and confirm before adding to the authoritative collection. See profile_settings_support_backend.md. Use the existing authenticated session."
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"key\": \"success\",\n  \"message\": \"\",\n  \"data\": {\n    \"count\": 0,\n    \"per_page\": 20,\n    \"total_pages\": 1,\n    \"next\": null,\n    \"results\": []\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "PROPOSED Help center",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/api/v1/support/help-center/?workspace={{workspace}}&lang={{lang}}",
+        "description": "PROPOSED: implement and confirm before adding to the authoritative collection. See profile_settings_support_backend.md. Use the existing authenticated session."
+      },
+      "response": [
+        {
+          "name": "Proposed success example",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/api/v1/support/help-center/?workspace={{workspace}}&lang={{lang}}",
+            "description": "PROPOSED: implement and confirm before adding to the authoritative collection. See profile_settings_support_backend.md. Use the existing authenticated session."
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"key\": \"success\",\n  \"message\": \"\",\n  \"data\": {\n    \"phone\": \"\",\n    \"email\": \"\",\n    \"hours\": \"\",\n    \"faqs\": [\n      {\n        \"id\": \"visit-booking\",\n        \"question\": \"كيف أحجز زيارة؟\",\n        \"answer\": \"افتح صفحة العقار، ثم اختر موعدًا متاحًا وأرسل طلب الزيارة.\"\n      }\n    ]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "PROPOSED List tickets",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/api/v1/support/tickets/?workspace={{workspace}}&page=1&page_size=20",
+        "description": "PROPOSED: implement and confirm before adding to the authoritative collection. See profile_settings_support_backend.md. Use the existing authenticated session."
+      },
+      "response": [
+        {
+          "name": "Proposed success example",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/api/v1/support/tickets/?workspace={{workspace}}&page=1&page_size=20",
+            "description": "PROPOSED: implement and confirm before adding to the authoritative collection. See profile_settings_support_backend.md. Use the existing authenticated session."
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"key\": \"success\",\n  \"message\": \"\",\n  \"data\": {\n    \"count\": 1,\n    \"per_page\": 20,\n    \"total_pages\": 1,\n    \"next\": null,\n    \"results\": [\n      {\n        \"id\": \"ticket-example\",\n        \"reference\": \"SUP-00142\",\n        \"subject\": \"مشكلة في حجز الزيارة\",\n        \"status\": \"open\",\n        \"created_at\": \"2026-10-03T10:15:00Z\",\n        \"messages\": [\n          {\n            \"id\": \"message-example\",\n            \"sender\": \"user\",\n            \"body\": \"لا أستطيع إكمال طلب الزيارة.\",\n            \"created_at\": \"2026-10-03T10:15:00Z\",\n            \"attachments\": []\n          }\n        ]\n      }\n    ]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "PROPOSED Create ticket",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/v1/support/tickets/",
+        "description": "PROPOSED: implement and confirm before adding to the authoritative collection. See profile_settings_support_backend.md. Use the existing authenticated session.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"workspace\": \"{{workspace}}\",\n  \"category\": \"{{category}}\",\n  \"subject\": \"موضوع المشكلة\",\n  \"description\": \"وصف المشكلة بالتفصيل\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "Proposed success example",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/v1/support/tickets/",
+            "description": "PROPOSED: implement and confirm before adding to the authoritative collection. See profile_settings_support_backend.md. Use the existing authenticated session.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"workspace\": \"{{workspace}}\",\n  \"category\": \"{{category}}\",\n  \"subject\": \"موضوع المشكلة\",\n  \"description\": \"وصف المشكلة بالتفصيل\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"key\": \"success\",\n  \"message\": \"\",\n  \"data\": {\n    \"id\": \"ticket-example\",\n    \"reference\": \"SUP-00142\",\n    \"subject\": \"مشكلة في حجز الزيارة\",\n    \"status\": \"open\",\n    \"created_at\": \"2026-10-03T10:15:00Z\",\n    \"messages\": [\n      {\n        \"id\": \"message-example\",\n        \"sender\": \"user\",\n        \"body\": \"لا أستطيع إكمال طلب الزيارة.\",\n        \"created_at\": \"2026-10-03T10:15:00Z\",\n        \"attachments\": []\n      }\n    ]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "PROPOSED Create ticket with images",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{base_url}}/api/v1/support/tickets/",
+        "description": "PROPOSED: implement and confirm before adding to the authoritative collection. See profile_settings_support_backend.md. Use the existing authenticated session.",
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "workspace",
+              "value": "{{workspace}}",
+              "type": "text"
+            },
+            {
+              "key": "category",
+              "value": "{{category}}",
+              "type": "text"
+            },
+            {
+              "key": "subject",
+              "value": "موضوع المشكلة",
+              "type": "text"
+            },
+            {
+              "key": "description",
+              "value": "وصف المشكلة بالتفصيل",
+              "type": "text"
+            },
+            {
+              "key": "attachments",
+              "src": "{{image_path}}",
+              "type": "file"
+            }
+          ]
+        }
+      },
+      "response": [
+        {
+          "name": "Proposed success example",
+          "originalRequest": {
+            "method": "POST",
+            "header": [],
+            "url": "{{base_url}}/api/v1/support/tickets/",
+            "description": "PROPOSED: implement and confirm before adding to the authoritative collection. See profile_settings_support_backend.md. Use the existing authenticated session.",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "workspace",
+                  "value": "{{workspace}}",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "{{category}}",
+                  "type": "text"
+                },
+                {
+                  "key": "subject",
+                  "value": "موضوع المشكلة",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "وصف المشكلة بالتفصيل",
+                  "type": "text"
+                },
+                {
+                  "key": "attachments",
+                  "src": "{{image_path}}",
+                  "type": "file"
+                }
+              ]
+            }
+          },
+          "status": "Created",
+          "code": 201,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"key\": \"success\",\n  \"message\": \"\",\n  \"data\": {\n    \"id\": \"ticket-example\",\n    \"reference\": \"SUP-00142\",\n    \"subject\": \"مشكلة في حجز الزيارة\",\n    \"status\": \"open\",\n    \"created_at\": \"2026-10-03T10:15:00Z\",\n    \"messages\": [\n      {\n        \"id\": \"message-example\",\n        \"sender\": \"user\",\n        \"body\": \"لا أستطيع إكمال طلب الزيارة.\",\n        \"created_at\": \"2026-10-03T10:15:00Z\",\n        \"attachments\": []\n      }\n    ]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "PROPOSED Ticket detail",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/api/v1/support/tickets/{{ticket_id}}/?workspace={{workspace}}",
+        "description": "PROPOSED: implement and confirm before adding to the authoritative collection. See profile_settings_support_backend.md. Use the existing authenticated session."
+      },
+      "response": [
+        {
+          "name": "Proposed success example",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}/api/v1/support/tickets/{{ticket_id}}/?workspace={{workspace}}",
+            "description": "PROPOSED: implement and confirm before adding to the authoritative collection. See profile_settings_support_backend.md. Use the existing authenticated session."
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"key\": \"success\",\n  \"message\": \"\",\n  \"data\": {\n    \"id\": \"ticket-example\",\n    \"reference\": \"SUP-00142\",\n    \"subject\": \"مشكلة في حجز الزيارة\",\n    \"status\": \"open\",\n    \"created_at\": \"2026-10-03T10:15:00Z\",\n    \"messages\": [\n      {\n        \"id\": \"message-example\",\n        \"sender\": \"user\",\n        \"body\": \"لا أستطيع إكمال طلب الزيارة.\",\n        \"created_at\": \"2026-10-03T10:15:00Z\",\n        \"attachments\": []\n      }\n    ]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "PROPOSED Reply to ticket",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{base_url}}/api/v1/support/tickets/{{ticket_id}}/replies/",
+        "description": "PROPOSED: implement and confirm before adding to the authoritative collection. See profile_settings_support_backend.md. Use the existing authenticated session.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"body\": \"أرجو متابعة المشكلة.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "name": "Proposed success example",
+          "originalRequest": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/api/v1/support/tickets/{{ticket_id}}/replies/",
+            "description": "PROPOSED: implement and confirm before adding to the authoritative collection. See profile_settings_support_backend.md. Use the existing authenticated session.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"body\": \"أرجو متابعة المشكلة.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"key\": \"success\",\n  \"message\": \"\",\n  \"data\": {\n    \"id\": \"ticket-example\",\n    \"reference\": \"SUP-00142\",\n    \"subject\": \"مشكلة في حجز الزيارة\",\n    \"status\": \"open\",\n    \"created_at\": \"2026-10-03T10:15:00Z\",\n    \"messages\": [\n      {\n        \"id\": \"message-example\",\n        \"sender\": \"user\",\n        \"body\": \"لا أستطيع إكمال طلب الزيارة.\",\n        \"created_at\": \"2026-10-03T10:15:00Z\",\n        \"attachments\": []\n      }\n    ]\n  }\n}"
+        }
+      ]
+    }
+  ]
+}

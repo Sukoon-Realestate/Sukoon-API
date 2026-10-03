@@ -46,7 +46,10 @@ class _PublicPageScreenState extends State<PublicPageScreen> {
         onRetry: _load,
         builder: (page) => page.content.trim().isEmpty && _cubit.state.isSuccess
             ? const PublicPageEmptyState()
-            : PublicPageBody(page: page),
+            : PublicPageBody(
+                page: page,
+                showAppIdentity: widget.page == PublicPage.aboutUs,
+              ),
       ).withPullRefresher(onRefresh: _load),
     ),
   );

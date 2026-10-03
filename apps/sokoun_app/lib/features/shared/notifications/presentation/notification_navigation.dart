@@ -154,10 +154,20 @@ abstract final class NotificationNavigation {
       return;
     }
 
-    if (notification.kind == AppNotificationKind.accountVerification ||
-        notification.kind == AppNotificationKind.securityAlert) {
+    if (notification.kind == AppNotificationKind.accountVerification) {
       await Go.to<void>(
-        role.isOwner ? const OwnerMoreScreen() : const TenantProfileScreen(),
+        ProfileVerificationScreen(
+          workspace: role.isOwner ? AppWorkspace.owner : AppWorkspace.tenant,
+        ),
+      );
+      return;
+    }
+
+    if (notification.kind == AppNotificationKind.securityAlert) {
+      await Go.to<void>(
+        ProfileSettingsScreen(
+          workspace: role.isOwner ? AppWorkspace.owner : AppWorkspace.tenant,
+        ),
       );
       return;
     }

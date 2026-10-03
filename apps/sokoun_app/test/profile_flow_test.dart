@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'package:melos_core/core/helpers/cache_service.dart';
 import 'helpers/account_test_dependencies.dart';
 import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
@@ -5,6 +7,7 @@ import 'package:sokoun_app/features/main_view/presentation/cubits/account_cubit.
 import 'dart:io';
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -218,6 +221,43 @@ void main() {
     );
   });
 
+  test('profile metadata does not erase known account identity', () {
+    final UserModel fromEmpty = const UserProfileContent.initial().toUser(
+      tenant,
+    );
+    expect(fromEmpty.toJson(), tenant.toJson());
+    final UserModel fromPartial = UserProfileContent.fromJson({
+      'first_name': 'Updated',
+      'last_name': 'Account',
+      'email': 'updated@example.com',
+    }).toUser(tenant);
+    expect(fromPartial.name, 'Updated Account');
+    expect(fromPartial.phone, tenant.phone);
+    expect(fromPartial.email, 'updated@example.com');
+    expect(fromPartial.id, tenant.id);
+  });
+
+  test('profile PATCH omits unknown gender without clearing it', () {
+    final ProfileEditBody body = const ProfileEditBody.initial().copyWith(
+      fullName: 'Updated Account',
+      phoneNumber: tenant.phone,
+      updateGender: false,
+    );
+    expect(body.toJson(), {
+      'full_name': 'Updated Account',
+      'phone_number': tenant.phone,
+    });
+    expect(body.toUserJson(), {
+      'first_name': 'Updated',
+      'last_name': 'Account',
+      'phone_number': tenant.phone,
+    });
+    expect(
+      body.copyWith(gender: 'female', updateGender: true).toJson(),
+      containsPair('gender', 'female'),
+    );
+  });
+
   test('patches the shared owner and tenant profile edit endpoint', () async {
     final ProfileEditCubit cubit = ProfileEditCubit();
     addTearDown(cubit.close);
@@ -266,9 +306,12 @@ void main() {
     await tester.tap(find.byType(ProfileDeleteAccountButton));
     await tester.pumpAndSettle();
 
-    expect(find.byType(FilledButton), findsOneWidget);
-    expect(find.byType(TextButton), findsOneWidget);
-    await tester.tap(find.byType(TextButton));
+    expect(find.byType(ProfileDeleteAccountScreen), findsOneWidget);
+    expect(
+      tester.widget<CheckboxListTile>(find.byType(CheckboxListTile)).value,
+      isFalse,
+    );
+    Go.back();
     await tester.pumpAndSettle();
 
     expect(repository.lastApi, isEmpty);
@@ -287,12 +330,12 @@ void main() {
     expect(find.text('2'), findsWidgets);
     await tester.drag(find.byType(ListView).last, const Offset(0, -900));
     await tester.pumpAndSettle();
-    expect(find.byType(ProfileDeleteAccountButton), findsOneWidget);
+    expect(find.byType(ProfileDeleteAccountButton), findsNothing);
     expect(repository.lastApi, ApiConstants.getAccData);
     expect(repository.lastMethod, HttpRequestType.get);
     expect(tester.takeException(), isNull);
 
-    await tester.tap(find.widgetWithIcon(IconButton, Icons.settings_outlined));
+    await tester.tap(find.byIcon(Icons.account_circle_outlined));
     await tester.pumpAndSettle();
 
     expect(find.byType(TenantAccountSummaryScreen), findsOneWidget);
@@ -306,27 +349,29 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('renders O-MORE-01 and opens O-PROFILE-01', (tester) async {
+  testWidgets('owner Profile opens directly with identity and revenue', (
+    tester,
+  ) async {
     configurePhoneViewport(tester);
-    await tester.pumpWidget(buildScreen(const OwnerMoreScreen(user: owner)));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(OwnerMoreScreen), findsOneWidget);
-    expect(find.text(owner.name), findsOneWidget);
-    expect(tester.takeException(), isNull);
-
-    await tester.tap(
-      find.ancestor(of: find.text(owner.name), matching: find.byType(InkWell)),
+    await tester.pumpWidget(
+      buildScreen(
+        const ProfileScreen(workspace: AppWorkspace.owner, user: owner),
+      ),
     );
     await tester.pumpAndSettle();
 
     expect(find.byType(OwnerProfileScreen), findsOneWidget);
+    expect(find.byType(ProfileScreen), findsOneWidget);
+    expect(find.text('الملف الشخصي'), findsOneWidget);
+    expect(find.byIcon(Icons.settings_outlined), findsOneWidget);
+    expect(find.byIcon(Icons.support_agent_rounded), findsOneWidget);
     expect(find.text('Zeayd Mohammed'), findsWidgets);
     expect(find.text('96%'), findsOneWidget);
     expect(find.text('010****972'), findsOneWidget);
     await tester.drag(find.byType(ListView).last, const Offset(0, -900));
     await tester.pumpAndSettle();
-    expect(find.byType(ProfileDeleteAccountButton), findsOneWidget);
+    expect(find.byIcon(Icons.account_balance_wallet_outlined), findsOneWidget);
+    expect(find.byType(ProfileDeleteAccountButton), findsNothing);
     expect(repository.lastApi, ApiConstants.ownerProfile);
     expect(repository.lastMethod, HttpRequestType.get);
     expect(tester.takeException(), isNull);
@@ -339,11 +384,14 @@ void main() {
       configurePhoneViewport(tester);
       await tester.pumpWidget(
         buildScreen(
-          isOwner
-              ? const OwnerMoreScreen(user: owner)
-              : const TenantProfileScreen(user: tenant),
+          ProfileScreen(
+            workspace: isOwner ? AppWorkspace.owner : AppWorkspace.tenant,
+            user: isOwner ? owner : tenant,
+          ),
         ),
       );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byIcon(Icons.settings_outlined));
       await tester.pumpAndSettle();
       await tester.tap(find.byIcon(Icons.language_rounded));
       await tester.pumpAndSettle();
@@ -355,15 +403,12 @@ void main() {
 
       expect(find.byType(LanguageSelectionScreen), findsNothing);
       expect(Go.context.locale, const Locale('en'));
-      expect(find.text('Change language'), findsOneWidget);
-      expect(
-        find.text(
-          isOwner
-              ? 'English profile_account_and_profile'
-              : 'English profile_my_account',
-        ),
-        findsOneWidget,
-      );
+      expect(find.text(LocaleKeys.changeLanguage), findsOneWidget);
+      expect(find.byType(ProfileSettingsScreen), findsOneWidget);
+      Go.back();
+      await tester.pumpAndSettle();
+      expect(find.text('Profile'), findsOneWidget);
+      expect(find.text('Edit profile'), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
   }
@@ -372,7 +417,8 @@ void main() {
     tester,
   ) async {
     configurePhoneViewport(tester);
-    repository.editableUser = tenant;
+    final UserModel serverUser = tenant.copyWith(name: 'Updated server name');
+    repository.editableUser = serverUser;
     await tester.pumpWidget(
       buildScreen(
         const ProfileEditScreen(
@@ -384,7 +430,11 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(ProfileEditScreen), findsOneWidget);
-    _expectPrefilledFields(tester, tenant);
+    _expectPrefilledFields(tester, serverUser);
+    expect(
+      tester.widget<ProfileAvatar>(find.byType(ProfileAvatar)).name,
+      serverUser.name,
+    );
     expect(repository.lastApi, ApiConstants.userProfile);
     expect(tester.takeException(), isNull);
   });
@@ -407,6 +457,331 @@ void main() {
     expect(find.byType(ProfileEditScreen), findsOneWidget);
     _expectPrefilledFields(tester, owner);
     expect(repository.lastApi, ApiConstants.userProfile);
+    expect(tester.takeException(), isNull);
+  });
+
+  for (final workspace in AppWorkspace.values) {
+    testWidgets(
+      '${workspace.name} saving changed gender blocks duplicate submissions',
+      (tester) async {
+        configurePhoneViewport(tester);
+        repository.editableUser = tenant;
+        await tester.pumpWidget(
+          buildScreen(ProfileScreen(workspace: workspace, user: tenant)),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(LocaleKeys.profileEditAction));
+        await tester.pumpAndSettle();
+        final gender = find.byType(FormField<ProfileGender>);
+        await tester.ensureVisible(gender);
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.descendant(of: gender, matching: find.byType(InkWell)).first,
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(LocaleKeys.profileFemale));
+        await tester.pumpAndSettle();
+        final pending = Completer<void>();
+        repository.profileWriteGate = pending;
+        await tester.ensureVisible(find.byType(SokoonNameField));
+        await tester.pumpAndSettle();
+        await tester.enterText(
+          find.descendant(
+            of: find.byType(SokoonNameField),
+            matching: find.byType(TextFormField),
+          ),
+          'Submitted account draft',
+        );
+        await tester.tap(find.text(LocaleKeys.profileSave));
+        await tester.pump();
+        expect(repository.profileWriteCount, 1);
+        expect(repository.lastWriteBody, {
+          'full_name': 'Submitted account draft',
+          'phone_number': tenant.phone,
+          'gender': 'female',
+        });
+        expect(
+          tester
+              .widget<EditableText>(
+                find.descendant(
+                  of: find.byType(SokoonNameField),
+                  matching: find.byType(EditableText),
+                ),
+              )
+              .focusNode
+              .hasFocus,
+          isFalse,
+        );
+        expect(
+          tester
+              .widget<AbsorbPointer>(
+                find.descendant(
+                  of: find.byType(ProfileEditView),
+                  matching: find.byType(AbsorbPointer),
+                ),
+              )
+              .absorbing,
+          isTrue,
+        );
+        final save = find.descendant(
+          of: find.byType(AppBar),
+          matching: find.byType(TextButton),
+        );
+        await tester.tap(save, warnIfMissed: false);
+        await tester.pump();
+        expect(repository.profileWriteCount, 1);
+        pending.complete();
+        await tester.pumpAndSettle();
+        expect(find.byType(ProfileEditScreen), findsNothing);
+        expect(find.text('Submitted account draft'), findsWidgets);
+        expect(tester.takeException(), isNull);
+      },
+    );
+    testWidgets(
+      '${workspace.name} editor can go back while details are pending',
+      (tester) async {
+        configurePhoneViewport(tester);
+        final pending = Completer<void>();
+        repository.editableReadGate = pending;
+        repository.editableUser = tenant;
+        await tester.pumpWidget(
+          buildScreen(ProfileScreen(workspace: workspace, user: tenant)),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(LocaleKeys.profileEditAction));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 600));
+        final editor = tester.widget<ProfileEditScreen>(
+          find.byType(ProfileEditScreen),
+        );
+        _expectPrefilledFields(tester, editor.initialValue, hasMetadata: false);
+        expect(find.byType(SokoonBackButton), findsOneWidget);
+        expect(find.text(LocaleKeys.profileEditLoadingDetails), findsOneWidget);
+        expect(find.byType(ProfileCitySelector), findsNothing);
+        await tester.tap(find.byType(SokoonBackButton));
+        await tester.pumpAndSettle();
+        expect(find.byType(ProfileEditScreen), findsNothing);
+        expect(find.byType(ProfileScreen), findsOneWidget);
+        pending.complete();
+        await tester.pumpAndSettle();
+        expect(repository.lastWriteBody, isNull);
+        expect(tester.takeException(), isNull);
+      },
+    );
+
+    testWidgets(
+      '${workspace.name} delayed details preserve name and phone drafts',
+      (tester) async {
+        configurePhoneViewport(tester);
+        final pending = Completer<void>();
+        repository.editableReadGate = pending;
+        repository.editableUser = tenant;
+        await tester.pumpWidget(
+          buildScreen(ProfileScreen(workspace: workspace, user: tenant)),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(LocaleKeys.profileEditAction));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 600));
+        await tester.enterText(
+          find.descendant(
+            of: find.byType(SokoonNameField),
+            matching: find.byType(TextFormField),
+          ),
+          'Delayed account draft',
+        );
+        await tester.enterText(
+          find.descendant(
+            of: find.byType(SokoonPhoneField),
+            matching: find.byType(TextFormField),
+          ),
+          '01055556789',
+        );
+        final String draftPhone = tester
+            .widget<SokoonPhoneField>(find.byType(SokoonPhoneField))
+            .controller
+            .text;
+        await tester.tap(find.text(LocaleKeys.profileSave));
+        await tester.pump();
+        expect(repository.lastWriteBody, isNull);
+        pending.complete();
+        await tester.pumpAndSettle();
+        expect(
+          tester
+              .widget<SokoonNameField>(find.byType(SokoonNameField))
+              .controller
+              .text,
+          'Delayed account draft',
+        );
+        expect(
+          tester
+              .widget<SokoonPhoneField>(find.byType(SokoonPhoneField))
+              .controller
+              .text,
+          draftPhone,
+        );
+        await tester.tap(find.text(LocaleKeys.profileSave));
+        await tester.pumpAndSettle();
+        expect(repository.lastWriteBody, {
+          'full_name': 'Delayed account draft',
+          'phone_number': '+201055556789',
+        });
+        expect(find.byType(ProfileEditScreen), findsNothing);
+        expect(find.text('Delayed account draft'), findsWidgets);
+        expect(tester.takeException(), isNull);
+      },
+    );
+
+    testWidgets(
+      '${workspace.name} failed save keeps the draft and allows retry',
+      (tester) async {
+        configurePhoneViewport(tester);
+        repository.editableUser = tenant;
+        repository.failProfileWrite = true;
+        await tester.pumpWidget(
+          buildScreen(ProfileScreen(workspace: workspace, user: tenant)),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(LocaleKeys.profileEditAction));
+        await tester.pumpAndSettle();
+        final String originalAccountName = UserModel.currentUser!.name;
+        await tester.enterText(
+          find.descendant(
+            of: find.byType(SokoonNameField),
+            matching: find.byType(TextFormField),
+          ),
+          'Unsaved account draft',
+        );
+        await tester.tap(find.text(LocaleKeys.profileSave));
+        await tester.pumpAndSettle();
+        expect(find.byType(ProfileEditScreen), findsOneWidget);
+        expect(
+          tester
+              .widget<SokoonNameField>(find.byType(SokoonNameField))
+              .controller
+              .text,
+          'Unsaved account draft',
+        );
+        expect(UserModel.currentUser!.name, originalAccountName);
+        expect(repository.profileWriteCount, 1);
+        repository.failProfileWrite = false;
+        await tester.tap(find.text(LocaleKeys.profileSave));
+        await tester.pumpAndSettle();
+        expect(repository.profileWriteCount, 2);
+        expect(find.byType(ProfileEditScreen), findsNothing);
+        expect(find.text('Unsaved account draft'), findsWidgets);
+        expect(UserModel.currentUser!.name, 'Unsaved account draft');
+        expect(tester.takeException(), isNull);
+      },
+    );
+
+    testWidgets(
+      '${workspace.name} edit remains usable when the details GET fails',
+      (tester) async {
+        configurePhoneViewport(tester);
+        repository.failEditableRead = true;
+        await tester.pumpWidget(
+          buildScreen(ProfileScreen(workspace: workspace, user: tenant)),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(LocaleKeys.profileEditAction));
+        await tester.pumpAndSettle();
+        final editor = tester.widget<ProfileEditScreen>(
+          find.byType(ProfileEditScreen),
+        );
+        expect(find.byType(SokoonNameField), findsOneWidget);
+        expect(find.byType(SokoonPhoneField), findsOneWidget);
+        expect(find.byType(SokoonBackButton), findsOneWidget);
+        expect(
+          find.text('Editable profile temporarily unavailable'),
+          findsOneWidget,
+        );
+        expect(
+          tester
+              .widget<SokoonNameField>(find.byType(SokoonNameField))
+              .controller
+              .text,
+          editor.initialValue.name,
+        );
+        expect(find.byType(ProfileCitySelector), findsNothing);
+        expect(find.byType(FormField<ProfileGender>), findsNothing);
+
+        await tester.enterText(
+          find.descendant(
+            of: find.byType(SokoonNameField),
+            matching: find.byType(TextFormField),
+          ),
+          'Updated account name',
+        );
+        await tester.tap(find.text(LocaleKeys.profileSave));
+        await tester.pumpAndSettle();
+        expect(repository.lastWriteBody, {
+          'full_name': 'Updated account name',
+          'phone_number': editor.initialValue.phone,
+        });
+        expect(find.byType(ProfileEditScreen), findsNothing);
+        expect(find.byType(ProfileScreen), findsOneWidget);
+        expect(find.text('Updated account name'), findsWidgets);
+        expect(tester.takeException(), isNull);
+      },
+    );
+    testWidgets('${workspace.name} retrying details preserves an edited name', (
+      tester,
+    ) async {
+      configurePhoneViewport(tester);
+      repository.failEditableRead = true;
+      repository.editableUser = tenant;
+      await tester.pumpWidget(
+        buildScreen(ProfileScreen(workspace: workspace, user: tenant)),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(LocaleKeys.profileEditAction));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+        find.descendant(
+          of: find.byType(SokoonNameField),
+          matching: find.byType(TextFormField),
+        ),
+        'Draft account name',
+      );
+      repository.failEditableRead = false;
+      await tester.tap(find.text(LocaleKeys.ownerRetryAction));
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<SokoonNameField>(find.byType(SokoonNameField))
+            .controller
+            .text,
+        'Draft account name',
+      );
+      expect(find.byType(ProfileCitySelector), findsOneWidget);
+      await tester.tap(find.text(LocaleKeys.profileSave));
+      await tester.pumpAndSettle();
+      expect(repository.lastWriteBody?['full_name'], 'Draft account name');
+      expect(find.byType(ProfileEditScreen), findsNothing);
+      expect(find.text('Draft account name'), findsWidgets);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  testWidgets('offline details keep the editor scaffold and retry action', (
+    tester,
+  ) async {
+    configurePhoneViewport(tester);
+    await tester.pumpWidget(
+      buildScreen(
+        const ProfileScreen(workspace: AppWorkspace.owner, user: owner),
+      ),
+    );
+    await tester.pumpAndSettle();
+    repository.failEditableRead = true;
+    repository.editableReadError = LocaleKeys.checkInternet;
+    await tester.tap(find.text(LocaleKeys.profileEditAction));
+    await tester.pumpAndSettle();
+    expect(find.byType(SokoonNameField), findsOneWidget);
+    expect(find.byType(SokoonBackButton), findsOneWidget);
+    expect(find.text(LocaleKeys.checkInternet), findsOneWidget);
+    expect(find.text(LocaleKeys.ownerRetryAction), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 }
@@ -522,6 +897,14 @@ class _ProfileRepository implements BaseRepository {
   String? lastCacheKey;
   Map<String, dynamic>? lastBody;
   bool lastIsFromData = false;
+  bool failEditableRead = false;
+  String editableReadError = 'Editable profile temporarily unavailable';
+  bool failProfileWrite = false;
+  int profileWriteCount = 0;
+  Completer<void>? editableReadGate;
+  Completer<void>? profileWriteGate;
+  Map<String, dynamic>? lastWriteBody;
+  UserModel? _savedUser;
 
   @override
   Future<Result<BaseModel<T>, Failure>> crudCall<T>(
@@ -533,6 +916,27 @@ class _ProfileRepository implements BaseRepository {
     lastCacheKey = params.cacheKey;
     lastBody = params.body;
     lastIsFromData = params.isFromData;
+    if (params.api == ApiConstants.userProfile) {
+      await editableReadGate?.future;
+      if (failEditableRead) {
+        return Error(Failure(editableReadError));
+      }
+    }
+    if (params.api == ApiConstants.editProfile) {
+      profileWriteCount++;
+      lastWriteBody = params.body;
+      await profileWriteGate?.future;
+      if (failProfileWrite) {
+        return const Error(Failure('Profile update failed'));
+      }
+      _savedUser =
+          (editableUser ?? UserModel.currentUser ?? UserModel.initial())
+              .copyWith(
+                name: params.body?['full_name'],
+                phone: params.body?['phone_number'],
+              );
+      editableUser = _savedUser;
+    }
     final dynamic response = switch (params.api) {
       ApiConstants.userProfile => {
         'id': editableUser?.id,
@@ -541,8 +945,34 @@ class _ProfileRepository implements BaseRepository {
         'gender': 'male',
         'birth_date': '1990-01-15',
       },
-      ApiConstants.ownerProfile => _ownerProfileResponse,
-      ApiConstants.getAccData => _tenantProfileResponse,
+      ApiConstants.ownerProfile => {
+        ..._ownerProfileResponse,
+        if (_savedUser != null)
+          'owner': {
+            ..._ownerProfileResponse['owner'] as Map,
+            'full_name': _savedUser!.name,
+          },
+        if (_savedUser != null)
+          'account_details': {
+            ..._ownerProfileResponse['account_details'] as Map,
+            'name': _savedUser!.name,
+            'phone_number': _savedUser!.phone,
+          },
+      },
+      ApiConstants.getAccData => {
+        ..._tenantProfileResponse,
+        if (_savedUser != null)
+          'user': {
+            ..._tenantProfileResponse['user'] as Map,
+            'full_name': _savedUser!.name,
+          },
+        if (_savedUser != null)
+          'account_details': {
+            ..._tenantProfileResponse['account_details'] as Map,
+            'name': _savedUser!.name,
+            'phone_number': _savedUser!.phone,
+          },
+      },
       ApiConstants.tenantAccountSummary => _tenantAccountSummaryResponse,
       ApiConstants.editProfile => const <String, dynamic>{'updated': true},
       ApiConstants.deleteAccount => const <String, dynamic>{'deleted': true},
@@ -558,7 +988,11 @@ class _ProfileRepository implements BaseRepository {
   ) => throw UnimplementedError();
 }
 
-void _expectPrefilledFields(WidgetTester tester, UserModel user) {
+void _expectPrefilledFields(
+  WidgetTester tester,
+  UserModel user, {
+  bool hasMetadata = true,
+}) {
   final SokoonNameField nameField = tester.widget(find.byType(SokoonNameField));
   final SokoonPhoneField phoneField = tester.widget(
     find.byType(SokoonPhoneField),
@@ -571,108 +1005,21 @@ void _expectPrefilledFields(WidgetTester tester, UserModel user) {
   expect(phoneField.controller.text, user.phone);
   expect(emailField.controller.text, user.email);
   expect(emailField.readOnly, isTrue);
-  expect(find.byType(FormField<ProfileGender>), findsOneWidget);
+  expect(
+    find.byType(FormField<ProfileGender>),
+    hasMetadata ? findsOneWidget : findsNothing,
+  );
 }
 
 class _ProfileTranslationsAssetLoader extends AssetLoader {
   const _ProfileTranslationsAssetLoader();
 
   @override
-  Future<Map<String, dynamic>> load(String path, Locale locale) async {
-    const List<String> keys = [
-      'change_language',
-      'language_selection_title',
-      'language_selection_subtitle',
-      'language_arabic_name',
-      'language_arabic_translation',
-      'language_english_native_name',
-      'language_english_translation',
-      'confirm',
-      'profile_my_account',
-      'profile_owner_title',
-      'profile_summary_title',
-      'profile_tenant_member_since',
-      'profile_tenant_summary_member_since',
-      'profile_owner_member_since',
-      'profile_verified_owner',
-      'profile_fallback_name',
-      'profile_saved',
-      'profile_visits',
-      'profile_reviews',
-      'profile_properties',
-      'profile_acceptance',
-      'profile_visit_requests',
-      'profile_visit_requests_count',
-      'profile_contracts',
-      'profile_active_contract_count',
-      'profile_my_reviews',
-      'profile_reviews_count',
-      'profile_verification_and_privacy',
-      'profile_account_data',
-      'profile_mobile',
-      'profile_logout',
-      'profile_completion',
-      'profile_identity_verified',
-      'profile_identity_verified_description',
-      'profile_saved_properties',
-      'profile_completed_visits',
-      'profile_active_chats',
-      'profile_visit_history',
-      'profile_identity_verification',
-      'profile_complete_status',
-      'profile_owner_rating_summary',
-      'profile_owner_phone_privacy',
-      'profile_latest_reviews',
-      'profile_no_reviews_title',
-      'profile_no_reviews_description',
-      'profile_review_sara_name',
-      'profile_review_sara_text',
-      'profile_review_mohamed_name',
-      'profile_review_mohamed_text',
-      'profile_view_personal_profile',
-      'profile_account_and_profile',
-      'profile_my_profile',
-      'profile_verification_documents',
-      'profile_privacy_security',
-      'profile_property_management',
-      'profile_analytics_statistics',
-      'profile_visit_schedule',
-      'profile_support',
-      'profile_help_center',
-      'profile_terms_policies',
-      'profile_tenant_edit_title',
-      'profile_owner_edit_title',
-      'profile_save',
-      'profile_change_photo',
-      'profile_birth_date',
-      'profile_male',
-      'profile_female',
-      'profile_cairo',
-      'profile_verified_account',
-      'profile_verified_account_description',
-      'name',
-      'email',
-      'verified',
-      'not_set_yet',
-      'full_name',
-      'full_name_hint',
-      'phone_number',
-      'city',
-      'gender',
-      'owner_properties_title',
-      'delete_account',
-      'are_you_sure_you_want_to_delete_your_account',
-      'deleting_will_remove_all_your_data',
-      'cancel',
-    ];
-    return {
-      for (final String key in keys)
-        key: locale.languageCode == 'ar' ? 'نص' : 'English $key',
-      'language_english_native_name': 'English',
-      'confirm': locale.languageCode == 'ar' ? 'تأكيد' : 'Confirm',
-      'change_language': locale.languageCode == 'ar'
-          ? 'تغيير اللغة'
-          : 'Change language',
-    };
-  }
+  Future<Map<String, dynamic>> load(String path, Locale locale) async =>
+      jsonDecode(
+            File(
+              '../../packages/core/assets/translations/${locale.languageCode}.json',
+            ).readAsStringSync(),
+          )
+          as Map<String, dynamic>;
 }

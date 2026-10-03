@@ -20,8 +20,10 @@ class ProfileSettingsCubit extends AsyncCubit<ProfileSettingsContent> {
     );
   }
 
-  void apply(ProfileSetting setting, bool value) =>
-      updateData(data.copyWith(values: {...data.values, setting: value}));
+  void apply(ProfileSetting setting, bool value) {
+    updateData(data.copyWith(values: {...data.values, setting: value}));
+    ObjectBoxCacheService.save('profile_settings', data.toJson());
+  }
 }
 
 class ProfileSettingUpdateCubit extends AsyncCubit<ProfileSetting?> {

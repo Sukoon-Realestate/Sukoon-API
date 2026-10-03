@@ -23,6 +23,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   late final TextEditingController _emailController;
   late final ProfileEditCubit _editCubit;
   late final UserProfileCubit _profileCubit;
+  late Future<void> _profileRequest;
   late UserModel _initialUser;
   ProfileGender _initialGender = ProfileGender.unspecified;
   String _birthDate = '';
@@ -49,26 +50,37 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     _initialUser = widget.initialValue;
     _editCubit = ProfileEditCubit();
     _profileCubit = UserProfileCubit();
-    _loadProfile();
+    _profileRequest = _profileCubit.load(onLoaded: _applyProfile);
   }
 
-  Future<void> _loadProfile() => _profileCubit.load(
-    onLoaded: (profile) {
-      if (!mounted) return;
-      _initialUser = profile.toUser(widget.initialValue);
-      _nameController.text = _initialUser.name;
-      _phoneController.text = _initialUser.phone;
-      if (profile.email.isNotEmpty) _emailController.text = profile.email;
-      _initialCity = profile.city;
-      _city.value = profile.city;
-      _initialGender = ProfileGender.values.firstWhere(
-        (g) => g.apiValue == profile.gender,
-        orElse: () => ProfileGender.unspecified,
-      );
+  Future<void> _loadProfile() {
+    if (_profileCubit.isLoading) return _profileRequest;
+    return _profileRequest = _profileCubit.load(onLoaded: _applyProfile);
+  }
+
+  void _applyProfile(UserProfileContent profile) {
+    if (!mounted) return;
+    final bool nameChanged = _nameController.text.trim() != _initialUser.name;
+    final bool phoneChanged =
+        _phoneController.text.trim() != _initialUser.phone;
+    final bool cityChanged = _city.value?.id != _initialCity?.id;
+    final bool genderChanged = _gender.value != _initialGender;
+    _initialUser = profile.toUser(_initialUser);
+    if (!nameChanged) _nameController.text = _initialUser.name;
+    if (!phoneChanged) _phoneController.text = _initialUser.phone;
+    _emailController.text = _initialUser.email;
+    _initialCity = profile.city;
+    if (!cityChanged) _city.value = profile.city;
+    _initialGender = ProfileGender.values.firstWhere(
+      (gender) => gender.apiValue == profile.gender,
+      orElse: () => ProfileGender.unspecified,
+    );
+    if (!genderChanged) {
       _gender.value = _initialGender;
-      _birthDate = profile.birthDate;
-    },
-  );
+      _genderFieldKey.currentState?.didChange(_initialGender);
+    }
+    _birthDate = profile.birthDate;
+  }
 
   @override
   void dispose() {
@@ -155,7 +167,9 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   }
 
   Future<void> _save() async {
-    if (_editCubit.isLoading || _formKey.currentState?.validate() != true) {
+    if (_editCubit.isLoading ||
+        _profileCubit.isLoading ||
+        _formKey.currentState?.validate() != true) {
       return;
     }
 
@@ -166,6 +180,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
       phoneNumber: _phoneController.text.trim(),
       cityId: _city.value?.id,
       updateCity: _city.value?.id != _initialCity?.id,
+      updateGender: _gender.value != _initialGender,
     );
     final String? imageError = await Validators.validateAccountImage(
       body.avatar,
@@ -216,18 +231,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
         isSaving: () => _editCubit.isLoading,
         child: BlocProvider<UserProfileCubit>.value(
           value: _profileCubit,
-          child:
-              StatusBuilder<UserProfileCubit, UserProfileContent>.withShimmer(
-                initialDataForShimmer: const UserProfileContent.initial(),
-                onRetry: _loadProfile,
-                shimmerBuilder: (_) => AppScaffold(
-                  title: _title,
-                  body: const ProfileAccountDetailsCard(
-                    details: ProfileAccountDetailsContent.initial(),
-                  ),
-                ),
-                builder: (_) => _buildScaffold(),
-              ),
+          child: _buildScaffold(),
         ),
       ),
     );
@@ -237,148 +241,193 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     return AppScaffold(
       title: _title,
       showBackButton: true,
+      contentWidth: SokounContentWidth.form,
       actions: [
-        BlocSelector<ProfileEditCubit, AsyncState<Map<String, dynamic>>, bool>(
+        BlocSelector<UserProfileCubit, AsyncState<UserProfileContent>, bool>(
           selector: (state) => state.isLoading,
-          builder: (context, isSaving) => TextButton(
-            onPressed: isSaving ? null : _save,
-            child: isSaving
-                ? SizedBox.square(
-                    dimension: 18.r,
-                    child: CustomLoading.showLoadingView(
-                      color: _accentColor,
-                      size: 18.r,
-                    ),
-                  )
-                : AppText(
-                    LocaleKeys.profileSave,
-                    style: AppTextStyles.bold14.copyWith(
-                      color: _accentColor,
-                      fontSize: 14.sp,
-                      height: 1.45,
-                    ),
-                  ),
-          ),
-        ),
-      ],
-      backgroundColor: AppColors.scaffoldBackground,
-      body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 28.h),
-            children: [
-              ValueListenableBuilder<File?>(
-                valueListenable: _avatar,
-                builder: (context, avatar, _) => Column(
-                  spacing: 8.h,
-                  children: [
-                    BlocSelector<
-                      ProfileEditCubit,
-                      AsyncState<Map<String, dynamic>>,
-                      bool
-                    >(
-                      selector: (state) => state.isLoading,
-                      builder: (context, isSaving) => ProfileAvatar(
-                        name: _nameController.text,
-                        avatarUrl: _profileCubit.data.avatar,
-                        imageFile: avatar,
-                        accentColor: _accentColor,
-                        backgroundColor: _accentColor,
-                        size: 88,
-                        useInitial: true,
-                        badgeIcon: Icons.camera_alt_outlined,
-                        onBadgePressed: isSaving ? null : _pickAvatar,
-                      ),
-                    ),
-                    AppText(
-                      LocaleKeys.profileChangePhoto,
-                      style: AppTextStyles.bold13.copyWith(
-                        color: _accentColor,
-                        fontSize: 13.sp,
-                        height: 1.45,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              24.szH,
-              SokoonNameField(
-                controller: _nameController,
-                label: LocaleKeys.fullName,
-                hintText: LocaleKeys.fullNameHint,
-                accentColor: _accentColor,
-                validator: Validators.validateFullName,
-              ),
-              14.szH,
-              SokoonPhoneField(
-                controller: _phoneController,
-                accentColor: _accentColor,
-                validator: Validators.validateEgyptianMobile,
-              ),
-              14.szH,
-              SokoonEmailField(
-                controller: _emailController,
-                accentColor: _accentColor,
-                action: TextInputAction.done,
-                readOnly: true,
-                validator: Validators.skipValidation,
-              ),
-              14.szH,
+          builder: (context, isLoading) =>
               BlocSelector<
                 ProfileEditCubit,
                 AsyncState<Map<String, dynamic>>,
                 bool
               >(
                 selector: (state) => state.isLoading,
-                builder: (context, isSaving) =>
-                    ValueListenableBuilder<ProfileCity?>(
-                      valueListenable: _city,
-                      builder: (context, city, _) => ProfileCitySelector(
-                        city: city,
-                        isSaving: isSaving,
-                        onChanged: (value) => _city.value = value,
-                      ),
-                    ),
+                builder: (context, isSaving) => TextButton(
+                  onPressed: isSaving || isLoading ? null : _save,
+                  child: isSaving
+                      ? SizedBox.square(
+                          dimension: 18.r,
+                          child: CustomLoading.showLoadingView(
+                            color: AppColors.sokoonTeal,
+                            size: 18.r,
+                          ),
+                        )
+                      : AppText(
+                          LocaleKeys.profileSave,
+                          style: AppTextStyles.bold14.copyWith(
+                            color: isLoading
+                                ? AppColors.sokoonMuted
+                                : AppColors.sokoonTeal,
+                            fontSize: 14.sp,
+                            height: 1.45,
+                          ),
+                        ),
+                ),
               ),
-              14.szH,
-              if (widget.workspace.isOwner)
-                Column(
-                  spacing: 14.h,
-                  children: [
-                    BlocSelector<
-                      ProfileEditCubit,
-                      AsyncState<Map<String, dynamic>>,
-                      bool
-                    >(
-                      selector: (state) => state.isLoading,
-                      builder: (context, isSaving) =>
-                          _buildGenderField(isSaving: isSaving),
-                    ),
-                  ],
-                )
-              else ...[
-                _ProfileReadonlyField(
-                  label: LocaleKeys.profileBirthDate,
-                  value: _birthDate.isEmpty ? LocaleKeys.notSetYet : _birthDate,
-                ),
-                14.szH,
-                BlocSelector<
-                  ProfileEditCubit,
-                  AsyncState<Map<String, dynamic>>,
-                  bool
-                >(
-                  selector: (state) => state.isLoading,
-                  builder: (context, isSaving) =>
-                      _buildGenderField(isSaving: isSaving),
-                ),
-              ],
-            ],
-          ),
         ),
+      ],
+      backgroundColor: AppColors.scaffoldBackground,
+      body: SafeArea(
+        child:
+            BlocSelector<
+              ProfileEditCubit,
+              AsyncState<Map<String, dynamic>>,
+              bool
+            >(
+              selector: (state) => state.isLoading,
+              builder: (context, isSaving) => ExcludeFocus(
+                excluding: isSaving,
+                child: AbsorbPointer(
+                  absorbing: isSaving,
+                  child: Form(
+                    key: _formKey,
+                    child: ListView(
+                      padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 28.h),
+                      children: [
+                        ValueListenableBuilder<File?>(
+                          valueListenable: _avatar,
+                          builder: (context, avatar, _) => Column(
+                            spacing: 8.h,
+                            children: [
+                              BlocSelector<
+                                UserProfileCubit,
+                                AsyncState<UserProfileContent>,
+                                String
+                              >(
+                                selector: (state) => state.data.avatar,
+                                builder: (context, avatarUrl) =>
+                                    ValueListenableBuilder<TextEditingValue>(
+                                      valueListenable: _nameController,
+                                      builder: (context, name, _) =>
+                                          ProfileAvatar(
+                                            name: name.text,
+                                            avatarUrl: avatarUrl,
+                                            imageFile: avatar,
+                                            accentColor: _accentColor,
+                                            backgroundColor: _accentColor,
+                                            size: 88,
+                                            useInitial: true,
+                                            badgeIcon:
+                                                Icons.camera_alt_outlined,
+                                            onBadgePressed: isSaving
+                                                ? null
+                                                : _pickAvatar,
+                                          ),
+                                    ),
+                              ),
+                              AppText(
+                                LocaleKeys.profileChangePhoto,
+                                style: AppTextStyles.bold13.copyWith(
+                                  color: _accentColor,
+                                  fontSize: 13.sp,
+                                  height: 1.45,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        24.szH,
+                        SokoonNameField(
+                          controller: _nameController,
+                          label: LocaleKeys.fullName,
+                          hintText: LocaleKeys.fullNameHint,
+                          accentColor: _accentColor,
+                          validator: Validators.validateFullName,
+                        ),
+                        14.szH,
+                        SokoonPhoneField(
+                          controller: _phoneController,
+                          accentColor: _accentColor,
+                          validator: Validators.validateEgyptianMobile,
+                        ),
+                        14.szH,
+                        SokoonEmailField(
+                          controller: _emailController,
+                          accentColor: _accentColor,
+                          action: TextInputAction.done,
+                          readOnly: true,
+                          validator: Validators.skipValidation,
+                        ),
+                        14.szH,
+                        BlocBuilder<
+                          UserProfileCubit,
+                          AsyncState<UserProfileContent>
+                        >(
+                          builder: (context, state) {
+                            if (state.isError) {
+                              return ProfileEditLoadNotice.error(
+                                message: state.msg,
+                                onRetry: _loadProfile,
+                              );
+                            }
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              spacing: 10.h,
+                              children: [
+                                if (state.isLoading || state.isInitial)
+                                  AppText(
+                                    LocaleKeys.profileEditLoadingDetails,
+                                    style: AppTextStyles.regular13.copyWith(
+                                      color: AppColors.sokoonGray,
+                                      fontSize: 13.sp,
+                                      height: 1.45,
+                                    ),
+                                  ),
+                                StatusBuilder<
+                                  UserProfileCubit,
+                                  UserProfileContent
+                                >.withShimmer(
+                                  initialDataForShimmer:
+                                      const UserProfileContent.initial(),
+                                  onRetry: _loadProfile,
+                                  shimmerBuilder: (_) =>
+                                      const ProfileEditLoadNotice.loading(),
+                                  builder: (_) =>
+                                      _buildAccountDetails(isSaving: isSaving),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
       ),
     );
   }
+
+  Widget _buildAccountDetails({required bool isSaving}) => Column(
+    spacing: 14.h,
+    children: [
+      ValueListenableBuilder<ProfileCity?>(
+        valueListenable: _city,
+        builder: (context, city, _) => ProfileCitySelector(
+          city: city,
+          isSaving: isSaving,
+          onChanged: (value) => _city.value = value,
+        ),
+      ),
+      if (widget.workspace.isTenant)
+        _ProfileReadonlyField(
+          label: LocaleKeys.profileBirthDate,
+          value: _birthDate.isEmpty ? LocaleKeys.notSetYet : _birthDate,
+        ),
+      _buildGenderField(isSaving: isSaving),
+    ],
+  );
 }
 
 class _ProfileReadonlyField extends StatelessWidget {
