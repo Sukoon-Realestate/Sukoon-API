@@ -260,6 +260,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       ],
       child: BlocBuilder<WorkspaceCubit, AppWorkspace>(
         builder: (context, workspace) {
+          // The workspace reset can arrive before the signed-out route is disposed.
+          if (!_hasCurrentSession) return const SizedBox.shrink();
+
           final int bodyIndex = _allTabs.indexOf(
             _workspaceTabs[workspace]![_selectedTabs[workspace]!],
           );
@@ -283,7 +286,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                         child: SokounContentTransition(
                           identity: bodyIndex,
                           child: IndexedStack(
-                            // Keep outgoing tabs alive until this route is disposed.
+                            // Keep visited tabs alive within the current session.
                             key: ValueKey(_tabAccountId),
                             index: bodyIndex,
                             children: List<Widget>.generate(

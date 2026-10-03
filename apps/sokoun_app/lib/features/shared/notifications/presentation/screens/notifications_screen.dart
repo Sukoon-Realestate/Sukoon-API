@@ -166,39 +166,32 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         ],
         backgroundColor: AppColors.scaffoldBackground,
         body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              BlocSelector<
-                NotificationsCubit,
-                AsyncState<NotificationOperationsState>,
-                ({bool hasUnread, bool isMarkingAll})
-              >(
-                selector: (state) => (
-                  hasUnread: state.data.unreadCount > 0,
-                  isMarkingAll: state.data.isMarkingAll,
-                ),
-                builder: (context, state) => NotificationsReadAction(
-                  role: _role,
-                  hasUnread: state.hasUnread,
-                  isMarkingAll: state.isMarkingAll,
-                  onMarkAllPressed: _markAllAsRead,
-                ),
-              ),
-              Expanded(
-                child: ValueListenableBuilder<List<AppNotificationContent>?>(
-                  valueListenable: _fixtureNotifications,
-                  builder: (context, fixtureNotifications, _) =>
-                      NotificationsList(
-                        role: _role,
-                        initialNotifications: fixtureNotifications,
-                        pagifyController: _pagifyController,
-                        onNotificationPressed: _openNotification,
-                        onUnreadCountChanged: _cubit.setUnreadCount,
-                      ),
-                ),
-              ),
-            ],
+          child: ValueListenableBuilder<List<AppNotificationContent>?>(
+            valueListenable: _fixtureNotifications,
+            builder: (context, fixtureNotifications, _) => NotificationsList(
+              role: _role,
+              initialNotifications: fixtureNotifications,
+              pagifyController: _pagifyController,
+              onNotificationPressed: _openNotification,
+              onUnreadCountChanged: _cubit.setUnreadCount,
+              header:
+                  BlocSelector<
+                    NotificationsCubit,
+                    AsyncState<NotificationOperationsState>,
+                    ({bool hasUnread, bool isMarkingAll})
+                  >(
+                    selector: (state) => (
+                      hasUnread: state.data.unreadCount > 0,
+                      isMarkingAll: state.data.isMarkingAll,
+                    ),
+                    builder: (context, state) => NotificationsReadAction(
+                      role: _role,
+                      hasUnread: state.hasUnread,
+                      isMarkingAll: state.isMarkingAll,
+                      onMarkAllPressed: _markAllAsRead,
+                    ),
+                  ),
+            ),
           ),
         ),
       ),

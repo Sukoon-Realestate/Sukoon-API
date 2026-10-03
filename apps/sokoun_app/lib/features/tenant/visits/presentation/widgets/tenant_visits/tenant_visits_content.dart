@@ -24,27 +24,15 @@ class TenantVisitsScreenContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: 10.h,
-      children: [
-        TenantVisitsFilters(
-          selectedFilter: selectedFilter,
-          onFilterSelected: onFilterSelected,
-        ),
-        Expanded(
-          child: TenantVisitsList(
-            useRequestEndpoint: useRequestEndpoint,
-            selectedFilter: selectedFilter,
-            initialVisits: initialVisits,
-            pagifyController: pagifyController,
-            onFilterSelected: onFilterSelected,
-            onVisitPressed: onVisitPressed,
-            onRatePressed: onRatePressed,
-            onCancelPressed: onCancelPressed,
-          ),
-        ),
-      ],
+    return TenantVisitsList(
+      useRequestEndpoint: useRequestEndpoint,
+      selectedFilter: selectedFilter,
+      initialVisits: initialVisits,
+      pagifyController: pagifyController,
+      onFilterSelected: onFilterSelected,
+      onVisitPressed: onVisitPressed,
+      onRatePressed: onRatePressed,
+      onCancelPressed: onCancelPressed,
     );
   }
 }

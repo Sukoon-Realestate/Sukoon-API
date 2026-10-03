@@ -14,40 +14,40 @@ class MessageUtils {
       fontFamily: ConstantManager.fontFamily
   );
 
-  static void showTopMsg(String msg, {MsgState state = MsgState.error}){
-    // final overlayState = Go.navigatorKey.currentState?.overlay;
-    final overlayState = Overlay.of(Go.context);
-    if(state == MsgState.success){
-      showTopSnackBar(
-        overlayState,
-        CustomSnackBar.success(
-          message: msg,
-          messagePadding: EdgeInsets.all(10.r),
-          textStyle: _textStyle
-        )
-      );
-
-    }else if(state == MsgState.error){
-      showTopSnackBar(
-        overlayState,
-        CustomSnackBar.error(
-            message: msg,
-            messagePadding: EdgeInsets.all(10.r),
-            textStyle: _textStyle
-        ),
-      );
-
-    }else{
-      showTopSnackBar(
-        overlayState,
-        CustomSnackBar.info(
-            message: msg,
-            messagePadding: EdgeInsets.all(10.r),
-            textStyle: _textStyle
-        ),
-      );
-    }
-  }
+  // static void showTopMsg(String msg, {MsgState state = MsgState.error}){
+  //   // final overlayState = Go.navigatorKey.currentState?.overlay;
+  //   final overlayState = Overlay.of(Go.context);
+  //   if(state == MsgState.success){
+  //     showTopSnackBar(
+  //       overlayState,
+  //       CustomSnackBar.success(
+  //         message: msg,
+  //         messagePadding: EdgeInsets.all(10.r),
+  //         textStyle: _textStyle
+  //       )
+  //     );
+  //
+  //   }else if(state == MsgState.error){
+  //     showTopSnackBar(
+  //       overlayState,
+  //       CustomSnackBar.error(
+  //           message: msg,
+  //           messagePadding: EdgeInsets.all(10.r),
+  //           textStyle: _textStyle
+  //       ),
+  //     );
+  //
+  //   }else{
+  //     showTopSnackBar(
+  //       overlayState,
+  //       CustomSnackBar.info(
+  //           message: msg,
+  //           messagePadding: EdgeInsets.all(10.r),
+  //           textStyle: _textStyle
+  //       ),
+  //     );
+  //   }
+  // }
 
   static void showSnackBar(
     String message, {

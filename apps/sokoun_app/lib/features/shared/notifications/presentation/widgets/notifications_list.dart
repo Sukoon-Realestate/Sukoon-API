@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:pagify/pagify.dart';
 
@@ -14,6 +13,7 @@ import 'notifications_empty_state.dart';
 class NotificationsList extends StatelessWidget {
   const NotificationsList({
     super.key,
+    required this.header,
     required this.role,
     required this.initialNotifications,
     required this.pagifyController,
@@ -22,6 +22,7 @@ class NotificationsList extends StatelessWidget {
   });
 
   final NotificationRole role;
+  final Widget header;
   final List<AppNotificationContent>? initialNotifications;
   final PagifyController<AppNotificationContent>? pagifyController;
   final ValueChanged<AppNotificationContent> onNotificationPressed;
@@ -31,12 +32,18 @@ class NotificationsList extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<AppNotificationContent>? fixtures = initialNotifications;
     if (fixtures != null) {
-      if (fixtures.isEmpty) return NotificationsEmptyState(role: role);
-      return ListView.separated(
-        padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 18.h),
-        itemBuilder: (context, index) => _buildCard(fixtures[index]),
-        separatorBuilder: (context, index) => 8.szH,
-        itemCount: fixtures.length,
+      return ListView(
+        padding: EdgeInsets.only(bottom: 18.h),
+        children: [
+          header,
+          if (fixtures.isEmpty)
+            NotificationsEmptyState(role: role)
+          else
+            for (final notification in fixtures)
+              _buildCard(
+                notification,
+              ).padding(EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 4.h)),
+        ],
       );
     }
 
@@ -48,13 +55,16 @@ class NotificationsList extends StatelessWidget {
         onUnreadCount: onUnreadCountChanged,
       ),
       shrinkWrap: false,
+      header: header,
+      contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
       cacheKey: NotificationsData.cacheKey,
       cacheToJson: (notification) => notification.toJson(),
       cacheFromJson: AppNotificationContent.fromJson,
       emptyListView: NotificationsEmptyState(role: role),
-      itemBuilder: (context, data, index, notification) =>
-          _buildCard(notification).paddingBottom(8.h),
-    ).padding(EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 18.h));
+      itemBuilder: (context, data, index, notification) => _buildCard(
+        notification,
+      ).paddingOnly(top: index == 0 ? 4.h : 0, bottom: 8.h),
+    ).paddingBottom(18.h);
   }
 
   Widget _buildCard(AppNotificationContent notification) {

@@ -699,12 +699,16 @@ void main() {
       const Duration(seconds: 5),
     );
   });
-  for (final bool deleteAccount in [false, true]) {
+  for (final (workspace, deleteAccount) in [
+    for (final workspace in AppWorkspace.values)
+      for (final deleteAccount in [false, true]) (workspace, deleteAccount),
+  ]) {
     testWidgets(
-      '${deleteAccount ? 'deleting the account' : 'logout'} sends only its action endpoint',
+      '${workspace.name} ${deleteAccount ? 'deleting the account' : 'logout'} sends only its action endpoint',
       (tester) async {
         _phone(tester);
         await registerAuthenticatedTestAccount();
+        await WorkspacePreferences.write('1', workspace);
         _listenForLogout();
         final devices = _HomeNotificationDeviceSource();
         injector.registerSingleton<NotificationDeviceDataSource>(devices);
@@ -718,6 +722,16 @@ void main() {
             .onDestinationSelected(4);
         await tester.pumpAndSettle();
         expect(find.byType(IndexedStack), findsOneWidget);
+        if (workspace.isOwner && deleteAccount) {
+          await tester.tap(
+            find.ancestor(
+              of: find.text(UserCubit.instance.user.name),
+              matching: find.byType(InkWell),
+            ),
+          );
+          await tester.pumpAndSettle();
+          expect(find.byType(OwnerProfileScreen), findsOneWidget);
+        }
         final int homeRequests = accountRepository.homeRequests;
         final int requests = accountRepository.endpoints.length;
 
@@ -728,7 +742,13 @@ void main() {
           button,
           300,
           scrollable: find.descendant(
-            of: find.byType(TenantProfileContentView),
+            of: find.byType(
+              workspace.isTenant
+                  ? TenantProfileContentView
+                  : deleteAccount
+                  ? OwnerProfileContentView
+                  : OwnerMoreScreen,
+            ),
             matching: find.byType(Scrollable),
           ),
         );

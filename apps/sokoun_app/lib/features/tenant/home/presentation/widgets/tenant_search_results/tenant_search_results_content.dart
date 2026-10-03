@@ -1,21 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:melos_core/config/language/locale_keys.g.dart';
-import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
-import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
-import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:pagify/pagify.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_search_result_content.dart';
 
-import 'active_filters_bar.dart';
 import 'empty_results_state.dart';
-import 'results_search_header.dart';
+import 'search_results_header.dart';
 import 'search_result_card.dart';
 
 typedef PropertySearchPageLoader =
@@ -58,51 +53,32 @@ class TenantSearchResultsContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        ResultsSearchHeader(
-          controller: queryController,
-          onChanged: onQueryChanged,
-          onSubmitted: onQuerySubmitted,
-          onFiltersTap: onFiltersPressed,
-        ),
-        ActiveFiltersBar(
-          filters: activeFilters,
-          onFilterRemoved: onFilterRemoved,
-          onClearAll: onClearFiltersPressed,
-        ),
-        ValueListenableBuilder<int?>(
-          valueListenable: resultCount,
-          builder: (context, count, _) => AppText(
-            count == null
-                ? LocaleKeys.tenantSearchResultsCount
-                : '$count ${LocaleKeys.tenantSearchResultsCount}',
-            style: AppTextStyles.semiBold.copyWith(
-              color: AppColors.sokoonGray,
-              fontSize: 13.sp,
-            ),
-          ).paddingSymmetric(horizontal: 18.w, vertical: 10.h),
-        ),
-        Expanded(
-          child: AppPagify<PropertyDetailsModel>(
-            enablePullRefresh: true,
-            pagifyController: pagifyController,
-            rankingType: Ranking.adaptiveGrid,
-            disposeController: false,
-            asyncCall: loadPage,
-            shrinkWrap: false,
-            cacheKey: cacheKey,
-            cacheToJson: (item) => item.toJson(),
-            cacheFromJson: PropertyDetailsModel.fromJson,
-            emptyListView: EmptyResultsState(
-              onResetSearchPressed: onResetSearchPressed,
-            ),
-            itemBuilder: (context, data, index, item) =>
-                SearchResultCard(item: item, filterOptions: filterOptions),
-          ).padding(EdgeInsets.fromLTRB(16.w, 0, 16.w, 18.h)),
-        ),
-      ],
-    );
+    return AppPagify<PropertyDetailsModel>(
+      header: TenantSearchResultsHeader(
+        queryController: queryController,
+        activeFilters: activeFilters,
+        resultCount: resultCount,
+        onQueryChanged: onQueryChanged,
+        onQuerySubmitted: onQuerySubmitted,
+        onFiltersPressed: onFiltersPressed,
+        onFilterRemoved: onFilterRemoved,
+        onClearFiltersPressed: onClearFiltersPressed,
+      ),
+      contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
+      enablePullRefresh: true,
+      pagifyController: pagifyController,
+      rankingType: Ranking.adaptiveGrid,
+      disposeController: false,
+      asyncCall: loadPage,
+      shrinkWrap: false,
+      cacheKey: cacheKey,
+      cacheToJson: (item) => item.toJson(),
+      cacheFromJson: PropertyDetailsModel.fromJson,
+      emptyListView: EmptyResultsState(
+        onResetSearchPressed: onResetSearchPressed,
+      ),
+      itemBuilder: (context, data, index, item) =>
+          SearchResultCard(item: item, filterOptions: filterOptions),
+    ).paddingBottom(18.h);
   }
 }

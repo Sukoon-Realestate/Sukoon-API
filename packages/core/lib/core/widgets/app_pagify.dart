@@ -53,6 +53,9 @@ class AppPagify<T> extends StatefulWidget {
 
   /// Scrolls above list/adaptive-grid content, including loading and errors.
   final Widget? header;
+
+  /// Insets collection rows and states without narrowing the scrolling header.
+  final EdgeInsetsGeometry contentPadding;
   final bool isReverse;
   final double? cacheExtent;
   final double? itemExtent;
@@ -89,6 +92,7 @@ class AppPagify<T> extends StatefulWidget {
     this.shrinkWrap = true,
     this.emptyListView,
     this.header,
+    this.contentPadding = EdgeInsets.zero,
     this.isReverse = false,
     this.cacheExtent,
     this.itemExtent,
@@ -200,6 +204,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
   }
 
   Widget _buildStateView(Widget child) {
+    final Widget content = _padContent(child);
     final Widget? header = widget.header;
     if (widget.enablePullRefresh) {
       return CustomScrollView(
@@ -213,20 +218,24 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
               behavior: ScrollConfiguration.of(
                 context,
               ).copyWith(physics: const NeverScrollableScrollPhysics()),
-              child: child,
+              child: content,
             ),
           ),
         ],
       );
     }
-    if (header == null) return child;
+    if (header == null) return content;
     return ListView(
       padding: EdgeInsets.zero,
       physics: widget.physics,
       shrinkWrap: widget.shrinkWrap,
-      children: [header, child],
+      children: [header, content],
     );
   }
+
+  Widget _padContent(Widget child) => widget.contentPadding == EdgeInsets.zero
+      ? child
+      : Padding(padding: widget.contentPadding, child: child);
 
   Widget get _loadingView => Builder(
     builder: (context) {
@@ -279,10 +288,11 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
       row = widget.itemBuilder(context, data, index, item);
     }
     final Widget? header = widget.header;
-    if (index != 0 || header == null) return row;
+    final Widget content = _padContent(row);
+    if (index != 0 || header == null) return content;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [header, row],
+      children: [header, content],
     );
   }
 
@@ -327,7 +337,11 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
     final int columns =
         widget.rankingType == Ranking.adaptiveGrid &&
             constraints.hasBoundedWidth
-        ? ((constraints.maxWidth + widget.gridSpacing) /
+        ? ((constraints.maxWidth -
+                      widget.contentPadding
+                          .resolve(Directionality.of(context))
+                          .horizontal +
+                      widget.gridSpacing) /
                   (widget.minimumItemWidth * scale + widget.gridSpacing))
               .floor()
               .clamp(1, widget.maximumColumns)
@@ -407,6 +421,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
     } else {
       return Pagify<(List<T>, PaginationData), T>.gridView(
         key: widget.key,
+        padding: widget.contentPadding,
         isReverse: widget.isReverse,
         physics: widget.physics,
         cacheExtent: widget.cacheExtent,

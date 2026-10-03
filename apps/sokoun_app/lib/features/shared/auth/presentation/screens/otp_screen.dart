@@ -154,24 +154,6 @@ class _OtpScreenState extends State<OtpScreen> {
             ),
             textAlign: TextAlign.center,
           ),
-          6.szH,
-          TextButton(
-            onPressed: () => Go.back(),
-            style: TextButton.styleFrom(
-              minimumSize: Size.zero,
-              padding: EdgeInsets.zero,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            ),
-            child: AppText(
-              LocaleKeys.changeEmail,
-              style: AppTextStyles.bold12.copyWith(
-                color: AppColors.sokoonGray,
-                fontSize: 12.sp,
-                decoration: TextDecoration.underline,
-                height: 1.45,
-              ),
-            ),
-          ),
           26.szH,
           AppText(
             LocaleKeys.otpCodeExpiresInTenMinutes,

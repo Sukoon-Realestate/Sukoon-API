@@ -88,48 +88,39 @@ class _ChatListContentState extends State<ChatListContent> with RouteAware {
   @override
   Widget build(BuildContext context) {
     final String? cacheKey = _dataSource.conversationsCacheKey;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        ChatSearchField(
-          readOnly: true,
-          onTap: _openSearch,
-        ).paddingSymmetric(horizontal: 20.w),
-        ChatPrivacyBanner(
-          text: LocaleKeys.chatPhonePrivacyInbox,
-        ).padding(EdgeInsets.fromLTRB(8.w, 12.h, 8.w, 0)),
-        Expanded(
-          child: AppPagify<ConversationContent>(
-            enablePullRefresh: true,
-            pagifyController: _pagifyController,
-            asyncCall: (_, page) =>
-                _dataSource.getConversationsPage(page: page),
-            shrinkWrap: false,
-            cacheKey: cacheKey,
-            cacheToJson: cacheKey == null
-                ? null
-                : (conversation) => conversation.toJson(),
-            cacheFromJson: cacheKey == null
-                ? null
-                : ConversationContent.fromJson,
-            emptyListView: const ChatEmptyState(),
-            itemBuilder: (context, data, index, conversation) => Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ChatListTile(
-                  key: ValueKey<String>(conversation.id),
-                  conversation: conversation,
-                ),
-                Divider(
-                  height: 1.h,
-                  thickness: 1.h,
-                  color: AppColors.sokoonBorder,
-                ),
-              ],
-            ),
+    return AppPagify<ConversationContent>(
+      enablePullRefresh: true,
+      pagifyController: _pagifyController,
+      asyncCall: (_, page) => _dataSource.getConversationsPage(page: page),
+      shrinkWrap: false,
+      cacheKey: cacheKey,
+      cacheToJson: cacheKey == null
+          ? null
+          : (conversation) => conversation.toJson(),
+      cacheFromJson: cacheKey == null ? null : ConversationContent.fromJson,
+      emptyListView: const ChatEmptyState(),
+      header: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ChatSearchField(
+            readOnly: true,
+            onTap: _openSearch,
+          ).paddingSymmetric(horizontal: 20.w),
+          ChatPrivacyBanner(
+            text: LocaleKeys.chatPhonePrivacyInbox,
+          ).padding(EdgeInsets.fromLTRB(8.w, 12.h, 8.w, 0)),
+        ],
+      ),
+      itemBuilder: (context, data, index, conversation) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ChatListTile(
+            key: ValueKey<String>(conversation.id),
+            conversation: conversation,
           ),
-        ),
-      ],
+          Divider(height: 1.h, thickness: 1.h, color: AppColors.sokoonBorder),
+        ],
+      ),
     );
   }
 }

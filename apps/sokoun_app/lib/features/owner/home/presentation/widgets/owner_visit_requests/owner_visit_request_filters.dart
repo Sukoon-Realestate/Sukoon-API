@@ -21,8 +21,9 @@ class OwnerVisitRequestFilters extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Wrap(
       spacing: 8.w,
+      runSpacing: 8.h,
       children: [
         for (int index = 0; index < filters.length; index++)
           _FilterChip(
@@ -51,62 +52,56 @@ class _FilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Material(
-        color: AppColors.transparent,
-        child: InkWell(
-          onTap: onPressed,
-          borderRadius: BorderRadius.circular(999.r),
-          child: Container(
-            height: 36.h,
-            padding: EdgeInsets.symmetric(horizontal: 13.w),
-            decoration: BoxDecoration(
-              color: isSelected ? AppColors.sokoonTeal : AppColors.white,
-              borderRadius: BorderRadius.circular(999.r),
-              border: Border.all(
-                color: isSelected ? AppColors.sokoonTeal : AppColors.grayPale,
-              ),
+    return Material(
+      color: AppColors.transparent,
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(999.r),
+        child: Container(
+          constraints: BoxConstraints(minHeight: 48.h),
+          padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 8.h),
+          decoration: BoxDecoration(
+            color: isSelected ? AppColors.sokoonTeal : AppColors.white,
+            borderRadius: BorderRadius.circular(999.r),
+            border: Border.all(
+              color: isSelected ? AppColors.sokoonTeal : AppColors.grayPale,
             ),
-            child: FittedBox(
-              child: Row(
-                spacing: 6.w,
-                children: [
-                  AppText(
-                    filter.label,
-                    style: AppTextStyles.bold12.copyWith(
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 6.w,
+            children: [
+              Flexible(
+                child: AppText(
+                  filter.label,
+                  style: AppTextStyles.bold12.copyWith(
+                    color: isSelected ? AppColors.white : AppColors.sokoonNavy,
+                    fontSize: 12.sp,
+                    height: 1.45,
+                  ),
+                ),
+              ),
+              if (count > 0)
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? AppColors.whiteAlpha40
+                        : AppColors.grayPale,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: AppText(
+                    '$count',
+                    style: AppTextStyles.bold10.copyWith(
                       color: isSelected
                           ? AppColors.white
-                          : AppColors.sokoonNavy,
-                      fontSize: 12.sp,
+                          : AppColors.sokoonGray,
+                      fontSize: 10.sp,
                       height: 1.45,
                     ),
                   ),
-                  if (count > 0)
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 6.w,
-                        vertical: 1.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? AppColors.whiteAlpha40
-                            : AppColors.grayPale,
-                        borderRadius: BorderRadius.circular(8.r),
-                      ),
-                      child: AppText(
-                        '$count',
-                        style: AppTextStyles.bold10.copyWith(
-                          color: isSelected
-                              ? AppColors.white
-                              : AppColors.sokoonGray,
-                          fontSize: 10.sp,
-                          height: 1.45,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            ),
+                ),
+            ],
           ),
         ),
       ),

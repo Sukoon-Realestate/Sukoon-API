@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:ui' as ui;
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -8,16 +13,24 @@ import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
 import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:melos_core/core/widgets/app_pagify.dart';
+import 'package:melos_core/core/widgets/exeption_view.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:sokoun_app/features/owner/home/presentation/screens/owner_visit_requests_screen.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_visit_requests/imports.dart';
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_widgets/owner_request_card.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
+import 'package:sokoun_app/features/owner/visits/data/models/owner_visit_requests_response.dart';
+import 'package:sokoun_app/features/owner/visits/data/owner_visit_requests_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_page_response.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_read_content.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_screen.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_theme.dart';
+
+late final Map<String, dynamic> _ownerEnglishTranslations;
 
 Map<String, dynamic> _ownerRequestDetailsResponse(String id) {
   final bool canChat = id == 'chat-enabled';
@@ -71,6 +84,31 @@ void main() {
           return call.method == 'getAll' ? <String, Object>{} : true;
         });
     await EasyLocalization.ensureInitialized();
+    _ownerEnglishTranslations = Map<String, dynamic>.from(
+      jsonDecode(
+            await rootBundle.loadString(
+              'packages/melos_core/assets/translations/en.json',
+            ),
+          )
+          as Map,
+    );
+    final fonts = FontLoader(ConstantManager.fontFamily);
+    for (final weight in ['Regular', 'Medium', 'Bold']) {
+      fonts.addFont(
+        rootBundle.load(
+          'packages/melos_core/assets/fonts/Tajawal/Tajawal-$weight.ttf',
+        ),
+      );
+    }
+    await fonts.load();
+    await (FontLoader(
+      'MaterialIcons',
+    )..addFont(rootBundle.load('fonts/MaterialIcons-Regular.otf'))).load();
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel('dev.fluttercommunity.plus/connectivity'),
+          (_) async => ['wifi'],
+        );
   });
 
   tearDownAll(() {
@@ -89,22 +127,35 @@ void main() {
 
   tearDown(() => injector.reset());
 
-  Widget buildScreen(Widget screen) {
+  Widget buildScreen(
+    Widget screen, {
+    String language = 'ar',
+    double textScale = 1,
+  }) {
     return EasyLocalization(
-      supportedLocales: const [Locale('ar')],
+      supportedLocales: const [Locale('ar'), Locale('en')],
       path: 'unused',
       assetLoader: const _OwnerTranslationsAssetLoader(),
-      startLocale: const Locale('ar'),
+      startLocale: Locale(language),
       fallbackLocale: const Locale('ar'),
       child: ScreenUtilInit(
         designSize: Size(ScreenSizes.width, ScreenSizes.height),
+        enableScaleWH: () => false,
+        enableScaleText: () => false,
         builder: (context, _) {
           return MaterialApp(
+            theme: SokounTheme.light,
             navigatorKey: Go.navigatorKey,
             localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,
             locale: context.locale,
-            home: screen,
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: TextScaler.linear(textScale)),
+              child: child!,
+            ),
+            home: RepaintBoundary(child: screen),
           );
         },
       ),
@@ -200,6 +251,243 @@ void main() {
       OwnerVisitRequestStatus.canceled,
     );
   });
+
+  Map<String, dynamic> requestsPage({
+    required List<OwnerVisitRequestContent> requests,
+    int count = 40,
+    int? nextPage,
+    Map<String, int> tabs = const {'all': 40, 'new': 20, 'confirmed': 20},
+  }) => {
+    'count': count,
+    'next': nextPage == null
+        ? null
+        : 'https://example.com/requests/?page=$nextPage',
+    'tabs': tabs,
+    'results': requests.map((request) => request.toJson()).toList(),
+  };
+
+  List<OwnerVisitRequestContent> pageRequests(int start, int length) =>
+      List.generate(
+        length,
+        (index) => ownerVisitRequestsFixture().first.copyWith(
+          id: 'page-request-${start + index}',
+          name: 'سارة ${start + index}',
+        ),
+      );
+
+  test(
+    'owner request pages follow server links and serialize cached metadata',
+    () async {
+      repository.visitPages[1] = requestsPage(
+        requests: pageRequests(0, 20),
+        nextPage: 3,
+      );
+      repository.visitPages[3] = requestsPage(requests: pageRequests(20, 20));
+      final data = OwnerVisitRequestsData(requests: true);
+      final first = await data.getPage(
+        page: 1,
+        filter: OwnerVisitRequestFilter.all,
+      );
+      final second = await data.getPage(
+        page: 2,
+        filter: OwnerVisitRequestFilter.all,
+      );
+      expect(
+        repository.requests.map((request) => request.queryParameters?['page']),
+        [1, 3],
+      );
+      expect(first.$2.totalPages, 2);
+      expect(second.$2.totalPages, 2);
+      expect(second.$1.results.first.id, 'page-request-20');
+      expect(
+        repository.requests.first.cacheKey,
+        isNot(repository.requests.last.cacheKey),
+      );
+      expect(OwnerVisitRequestsResponse.fromJson(first.$1.toJson()), first.$1);
+      final params =
+          repository.requests.first
+              as CrudBaseParmas<OwnerVisitRequestsResponse>;
+      expect(params.fromCacheJson!(params.toJson!(first.$1)), first.$1);
+      final refresh = await data.getPage(
+        page: 1,
+        filter: OwnerVisitRequestFilter.all,
+      );
+      expect(repository.requests.last.queryParameters, {'page': 1});
+      expect(refresh.$1.results.first.id, 'page-request-0');
+    },
+  );
+
+  test(
+    'filters continue through empty earlier pages and keep server tab counts',
+    () async {
+      repository.visitPages[1] = requestsPage(
+        requests: pageRequests(0, 2),
+        nextPage: 2,
+      );
+      repository.visitPages[2] = requestsPage(
+        requests: [ownerVisitRequestsFixture()[1]],
+        tabs: const {},
+      );
+      final data = OwnerVisitRequestsData(requests: false);
+      final filtered = await data.getPage(
+        page: 1,
+        filter: OwnerVisitRequestFilter.accepted,
+      );
+      expect(
+        repository.requests.map((request) => request.queryParameters?['page']),
+        [1, 2],
+      );
+      expect(repository.lastApi, 'properties/visits/received/');
+      expect(
+        filtered.$1.results.single.status,
+        OwnerVisitRequestStatus.accepted,
+      );
+      expect(filtered.$1.tabs['all'], 40);
+      expect(filtered.$2.totalPages, 1);
+    },
+  );
+
+  testWidgets(
+    'summary, filters and cards scroll together and load the next page',
+    (tester) async {
+      configurePhoneViewport(tester);
+      repository.visitPages[1] = requestsPage(
+        requests: pageRequests(0, 20),
+        nextPage: 2,
+      );
+      repository.visitPages[2] = requestsPage(requests: pageRequests(20, 20));
+      await tester.pumpWidget(buildScreen(const OwnerVisitRequestsScreen()));
+      await tester.pumpAndSettle();
+      final pagify = tester.widget<AppPagify<OwnerVisitRequestContent>>(
+        find.byType(AppPagify<OwnerVisitRequestContent>),
+      );
+      expect(pagify.pagifyController.items, hasLength(20));
+      expect(
+        find.descendant(
+          of: find.byType(OwnerVisitRequestSummaryGrid),
+          matching: find.text('40'),
+        ),
+        findsOneWidget,
+      );
+      final sections = [
+        find.byType(OwnerVisitRequestSummaryGrid),
+        find.byType(OwnerVisitRequestFilters),
+        find.byType(OwnerVisitRequestCard).first,
+      ];
+      final tops = [
+        for (final section in sections) tester.getTopLeft(section).dy,
+      ];
+      final scrollable = tester.state<ScrollableState>(
+        find
+            .descendant(
+              of: find.byType(AppPagify<OwnerVisitRequestContent>),
+              matching: find.byType(Scrollable),
+            )
+            .first,
+      );
+      await tester.drag(
+        find.byType(OwnerVisitRequestSummaryGrid),
+        const Offset(0, -120),
+      );
+      await tester.pumpAndSettle();
+      expect(scrollable.position.pixels, greaterThan(0));
+      for (int index = 0; index < sections.length; index++) {
+        expect(
+          tops[index] - tester.getTopLeft(sections[index]).dy,
+          closeTo(scrollable.position.pixels, 0.1),
+        );
+      }
+      scrollable.position.jumpTo(scrollable.position.maxScrollExtent);
+      await tester.pumpAndSettle();
+      expect(pagify.pagifyController.items, hasLength(40));
+      expect(
+        repository.requests.map((request) => request.queryParameters?['page']),
+        [1, 2],
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('empty and error states retain the header and refresh from it', (
+    tester,
+  ) async {
+    configurePhoneViewport(tester);
+    repository.visitsUnavailable = true;
+    await tester.pumpWidget(buildScreen(const OwnerVisitRequestsScreen()));
+    await tester.pumpAndSettle();
+    expect(find.byType(OwnerVisitRequestsHeader), findsOneWidget);
+    expect(find.byType(ExceptionView), findsOneWidget);
+    repository.visitsUnavailable = false;
+    final retry = tester.widget<ExceptionView>(find.byType(ExceptionView));
+    await retry.onRetry!();
+    await tester.pumpAndSettle();
+    expect(find.byType(OwnerVisitRequestsEmptyState), findsOneWidget);
+    expect(find.byType(OwnerVisitRequestsHeader), findsOneWidget);
+    final int requestsBeforeRefresh = repository.requests.length;
+    repository.visitPages[1] = requestsPage(
+      requests: pageRequests(0, 1),
+      count: 1,
+    );
+    await tester.drag(
+      find.byType(OwnerVisitRequestSummaryGrid),
+      const Offset(0, 350),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+    expect(repository.requests.length, requestsBeforeRefresh + 1);
+    expect(find.byType(OwnerVisitRequestCard), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  for (final width in [320.0, 390.0, 600.0, 768.0, 1024.0, 1366.0]) {
+    for (final scale in [1.0, 1.3, 2.0]) {
+      for (final language in ['ar', 'en']) {
+        testWidgets('paginated requests $language width=$width text=$scale', (
+          tester,
+        ) async {
+          tester.view.physicalSize = Size(width, width >= 1024 ? 768 : 844);
+          tester.view.devicePixelRatio = 1;
+          addTearDown(tester.view.reset);
+          repository.visitPages[1] = requestsPage(
+            requests: pageRequests(0, 20),
+          );
+          await tester.pumpWidget(
+            buildScreen(
+              const OwnerVisitRequestsScreen(),
+              language: language,
+              textScale: scale,
+            ),
+          );
+          await tester.pumpAndSettle();
+          expect(find.byType(OwnerVisitRequestsHeader), findsOneWidget);
+          expect(tester.takeException(), isNull);
+          if (scale == 1 && (width == 390 || width == 1024)) {
+            final boundary = tester.renderObject<RenderRepaintBoundary>(
+              find
+                  .ancestor(
+                    of: find.byType(OwnerVisitRequestsScreen),
+                    matching: find.byType(RepaintBoundary),
+                  )
+                  .first,
+            );
+            await tester.runAsync(() async {
+              final image = await boundary.toImage(pixelRatio: 1);
+              final bytes = await image.toByteData(
+                format: ui.ImageByteFormat.png,
+              );
+              final output = Directory('../../build/full_screen_pagination')
+                ..createSync(recursive: true);
+              await File(
+                '${output.path}/owner-requests-$language-${width.toInt()}.png',
+              ).writeAsBytes(bytes!.buffer.asUint8List());
+              image.dispose();
+            });
+          }
+        });
+      }
+    }
+  }
 
   test('maps and serializes owner visit request details', () {
     final OwnerVisitRequestDetailsContent request =
@@ -592,6 +880,8 @@ void main() {
 }
 
 class _RecordingBaseRepository implements BaseRepository {
+  final Map<int, Map<String, dynamic>> visitPages = {};
+  bool visitsUnavailable = false;
   final List<CrudBaseParmas> requests = [];
   String lastApi = '';
   HttpRequestType? lastMethod;
@@ -609,6 +899,16 @@ class _RecordingBaseRepository implements BaseRepository {
     lastBody = params.body;
     lastQuery = params.queryParameters;
     lastCacheKey = params.cacheKey;
+    if (params.api == 'properties/owner/visits/requests/' ||
+        params.api == 'properties/visits/received/') {
+      if (visitsUnavailable) return Error(ServerFailure('Unavailable'));
+      final response =
+          visitPages[params.queryParameters?['page']] ??
+          {'count': 0, 'next': null, 'results': const []};
+      return Success(
+        BaseModel<T>(key: '', msg: '', data: params.mapper!(response)),
+      );
+    }
     final List<String> pathParts = params.api.split('/');
     final dynamic response = params.api == 'chat/conversations/create/'
         ? {
@@ -703,6 +1003,9 @@ class _OwnerTranslationsAssetLoader extends AssetLoader {
 
   @override
   Future<Map<String, dynamic>> load(String path, Locale locale) async {
+    if (locale.languageCode == 'en') {
+      return _ownerEnglishTranslations;
+    }
     return {
       'owner_visits_title': 'طلبات الزيارة',
       'owner_visits_total_requests': 'إجمالي الطلبات',

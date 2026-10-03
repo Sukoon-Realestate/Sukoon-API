@@ -48,51 +48,42 @@ class FavoritesContentView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<FavoritePropertyContent>? fixtureItems = initialItems;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        ValueListenableBuilder<int>(
-          valueListenable: itemCount,
-          builder: (context, count, _) => AppText(
-            '$count ${LocaleKeys.favoritesSavedPropertiesCount}',
-            style: AppTextStyles.regular12.copyWith(
-              color: AppColors.sokoonGray,
-            ),
-          ).paddingSymmetric(horizontal: 20, vertical: 12),
-        ),
-        Expanded(
-          child: fixtureItems != null
-              ? FavoritesList(
-                  items: fixtureItems,
-                  onFavoriteRemoved: onFavoriteRemoved,
-                  isFiltered: activeFilterCount > 0,
-                  onClearFiltersPressed: onClearFiltersPressed,
-                )
-              : AppPagify<FavoritePropertyContent>(
-                  enablePullRefresh: true,
-                  pagifyController: pagifyController,
-                  rankingType: Ranking.adaptiveGrid,
-                  asyncCall: loadPage,
-                  shrinkWrap: false,
-                  cacheKey: activeFilterCount == 0
-                      ? FavoritesData.cacheKey
-                      : null,
-                  cacheToJson: (item) => item.toJson(),
-                  cacheFromJson: FavoritePropertyContent.fromJson,
-                  onUpdateStatus: onPagifyStatusChanged,
-                  emptyListView: FavoritesEmptyState(
-                    isFiltered: activeFilterCount > 0,
-                    onClearFiltersTap: onClearFiltersPressed,
-                  ),
-                  itemBuilder: (context, data, index, item) =>
-                      FavoritePropertyCard(
-                        key: ValueKey(item.id),
-                        item: item,
-                        onRemove: () => onFavoriteRemoved(item),
-                      ),
-                ).padding(EdgeInsets.fromLTRB(20.w, 0, 20.w, 16.h)),
-        ),
-      ],
+    final Widget header = ValueListenableBuilder<int>(
+      valueListenable: itemCount,
+      builder: (context, count, _) => AppText(
+        '$count ${LocaleKeys.favoritesSavedPropertiesCount}',
+        style: AppTextStyles.regular12.copyWith(color: AppColors.sokoonGray),
+      ).paddingSymmetric(horizontal: 20, vertical: 12),
     );
+    return fixtureItems != null
+        ? FavoritesList(
+            header: header,
+            items: fixtureItems,
+            onFavoriteRemoved: onFavoriteRemoved,
+            isFiltered: activeFilterCount > 0,
+            onClearFiltersPressed: onClearFiltersPressed,
+          )
+        : AppPagify<FavoritePropertyContent>(
+            header: header,
+            contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
+            enablePullRefresh: true,
+            pagifyController: pagifyController,
+            rankingType: Ranking.adaptiveGrid,
+            asyncCall: loadPage,
+            shrinkWrap: false,
+            cacheKey: activeFilterCount == 0 ? FavoritesData.cacheKey : null,
+            cacheToJson: (item) => item.toJson(),
+            cacheFromJson: FavoritePropertyContent.fromJson,
+            onUpdateStatus: onPagifyStatusChanged,
+            emptyListView: FavoritesEmptyState(
+              isFiltered: activeFilterCount > 0,
+              onClearFiltersTap: onClearFiltersPressed,
+            ),
+            itemBuilder: (context, data, index, item) => FavoritePropertyCard(
+              key: ValueKey(item.id),
+              item: item,
+              onRemove: () => onFavoriteRemoved(item),
+            ),
+          ).paddingBottom(16.h);
   }
 }

@@ -371,6 +371,53 @@ void main() {
   });
 
   for (final String language in ['en', 'ar']) {
+    testWidgets('phone field adds the Egyptian country code in $language', (
+      tester,
+    ) async {
+      final TextEditingController phone = TextEditingController();
+      final List<String?> changes = [];
+      addTearDown(phone.dispose);
+      await tester.pumpWidget(
+        _app(
+          SokoonPhoneField(controller: phone, onChanged: changes.add),
+          languageCode: language,
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(phone.text, isEmpty);
+      final field = find.byType(TextFormField);
+
+      for (final String input in [
+        '01012345678',
+        '1012345678',
+        '+201012345678',
+      ]) {
+        await tester.enterText(field, input);
+        await tester.pump();
+        expect(phone.text, '+201012345678');
+        expect(phone.selection, const TextSelection.collapsed(offset: 13));
+        expect(changes.last, phone.text);
+        expect(Validators.isValidEgyptianMobile(phone.text), isTrue);
+      }
+
+      await tester.enterText(field, '0');
+      for (final String digit in '1012345678'.split('')) {
+        tester.testTextInput.enterText('${phone.text}$digit');
+        await tester.pump();
+      }
+      expect(phone.text, '+201012345678');
+
+      await tester.enterText(field, '');
+      expect(phone.text, isEmpty);
+      expect(changes.last, isEmpty);
+      for (final String text in ['+', '+2', '+20', '+201012345678']) {
+        tester.testTextInput.enterText(text);
+        await tester.pump();
+        expect(phone.text, text);
+      }
+      expect(tester.takeException(), isNull);
+    });
+
     testWidgets(
       'shared fields show localized errors and accept corrected input in $language',
       (tester) async {

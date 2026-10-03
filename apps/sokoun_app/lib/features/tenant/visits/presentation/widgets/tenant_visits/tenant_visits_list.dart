@@ -45,6 +45,8 @@ class TenantVisitsList extends StatelessWidget {
         requests: useRequestEndpoint,
       ),
       shrinkWrap: false,
+      header: _buildHeader(),
+      contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
       cacheKey: TenantVisitsData.cacheKeyFor(
         selectedFilter,
         requests: useRequestEndpoint,
@@ -54,19 +56,35 @@ class TenantVisitsList extends StatelessWidget {
       emptyListView: _buildEmptyState(),
       itemBuilder: (context, data, index, visit) =>
           _buildVisitCard(visit).paddingBottom(12.h),
-    ).padding(EdgeInsets.fromLTRB(20.w, 0, 20.w, 18.h));
+    ).paddingBottom(18.h);
   }
 
   Widget _buildInitialList(List<TenantVisitContent> visits) {
-    if (visits.isEmpty) return _buildEmptyState();
-
-    return ListView.separated(
-      padding: EdgeInsets.fromLTRB(20.w, 0, 20.w, 18.h),
-      itemBuilder: (context, index) => _buildVisitCard(visits[index]),
-      separatorBuilder: (context, index) => 12.szH,
-      itemCount: visits.length,
+    return ListView(
+      padding: EdgeInsets.only(bottom: 18.h),
+      children: [
+        _buildHeader(),
+        if (visits.isEmpty)
+          _buildEmptyState()
+        else
+          for (final visit in visits)
+            _buildVisitCard(
+              visit,
+            ).padding(EdgeInsets.fromLTRB(20.w, 0, 20.w, 12.h)),
+      ],
     );
   }
+
+  Widget _buildHeader() => Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      TenantVisitsFilters(
+        selectedFilter: selectedFilter,
+        onFilterSelected: onFilterSelected,
+      ),
+      10.szH,
+    ],
+  );
 
   Widget _buildVisitCard(TenantVisitContent visit) {
     return TenantVisitCard(

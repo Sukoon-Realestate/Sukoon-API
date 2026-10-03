@@ -122,7 +122,7 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
       onSuccess: () {
         if (!mounted) return;
         _submitted = true;
-        Go.to(
+        Go.off(
           VisitConfirmedScreen(
             property: _property,
             selectedDay: selectedDay,
