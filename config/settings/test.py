@@ -36,9 +36,9 @@ CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}
 
 # Dummy Cloudinary config for tests to allow URL generation locally
 import cloudinary
+
 cloudinary.config(
     cloud_name="test_cloud",
     api_key="test_key",
     api_secret="test_secret",
 )
-

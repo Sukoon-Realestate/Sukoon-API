@@ -27,7 +27,6 @@ def property_type(db):
     return obj
 
 
-
 @pytest.mark.django_db
 class TestUserService:
     def test_delete_user_account_removes_user(self, user):
@@ -90,7 +89,6 @@ class TestUserService:
             city=city,
         )
         visit = PropertyVisit.objects.create(
-
             tenant=user,
             property=other_prop,
             visit_date=date(2026, 10, 1),
@@ -126,7 +124,6 @@ class TestUserService:
         assert not PropertyFavorite.objects.filter(id=favorite.id).exists()
         assert not PropertyRating.objects.filter(id=rating.id).exists()
         assert not PropertyVisit.objects.filter(id=visit.id).exists()
-
 
         # Assert ContentView user was set to NULL (SET_NULL on_delete)
         content_view.refresh_from_db()

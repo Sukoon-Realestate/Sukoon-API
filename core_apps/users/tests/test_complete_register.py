@@ -52,5 +52,7 @@ class TestCompleteRegisterAPI:
 
     def test_unauthenticated_complete_register_returns_401(self, api_client):
         url = reverse("complete-register")
-        res = api_client.post(url, {"national_id": "29505151234567"}, format="multipart")
+        res = api_client.post(
+            url, {"national_id": "29505151234567"}, format="multipart"
+        )
         assert res.status_code == status.HTTP_401_UNAUTHORIZED

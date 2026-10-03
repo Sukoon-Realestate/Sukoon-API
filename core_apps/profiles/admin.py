@@ -24,4 +24,3 @@ class UserSettingsAdmin(admin.ModelAdmin):
         "show_profile_in_search",
     ]
     list_display_links = ["id", "user"]
-

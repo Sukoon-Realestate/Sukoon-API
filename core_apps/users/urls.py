@@ -12,6 +12,7 @@ from .views import (
     UserRegisterAPIView,
     VerifyEmailAPIView,
     ResendOtpAPIView,
+    SetPasswordAPIView,
 )
 
 
@@ -22,7 +23,11 @@ urlpatterns = [
         name="provider-auth",
     ),
     path("register/", UserRegisterAPIView.as_view(), name="user-register"),
-    path("complete-register/", CompleteRegisterAPIView.as_view(), name="complete-register"),
+    path(
+        "complete-register/",
+        CompleteRegisterAPIView.as_view(),
+        name="complete-register",
+    ),
     path("verify/", VerifyEmailAPIView.as_view(), name="verify-email"),
     path("verify-email/", VerifyEmailAPIView.as_view()),
     path("verify-otp/", VerifyEmailAPIView.as_view()),
@@ -31,6 +36,7 @@ urlpatterns = [
     path("refresh/", CustomTokenRefreshView.as_view(), name="refresh"),
     path("logout/", LogoutAPIView.as_view()),
     path("delete-account/", UserDeleteAPIView.as_view(), name="user-delete"),
+    path("users/set_password/", SetPasswordAPIView.as_view(), name="user-set-password"),
     path("google/", GoogleAuthView.as_view(), name="google-login"),
     path("apple/", AppleAuthView.as_view(), name="apple-login"),
     path("facebook/", FacebookAuthView.as_view(), name="facebook-login"),

@@ -4,7 +4,7 @@ from typing import Any, Dict, Optional
 from django.contrib.auth import get_user_model
 from django.db import transaction
 
-from core_apps.profiles.models import Profile, UserSettings
+from core_apps.profiles.models import Contract, Profile, UserSettings
 
 logger = logging.getLogger(__name__)
 User = get_user_model()
@@ -139,7 +139,13 @@ class ProfileService:
         saved_count = SavedProperty.objects.filter(user=user).count()
         visits_count = PropertyVisit.objects.filter(tenant=user).count()
         reviews_count = PropertyVisitReview.objects.filter(visit__tenant=user).count()
-        contracts_count = 1 if visits_count > 0 else 0
+        active_contracts_count = Contract.objects.filter(
+            tenant=user, status=Contract.Status.ACTIVE
+        ).count()
+        if Contract.objects.filter(tenant=user).exists():
+            contracts_count = active_contracts_count
+        else:
+            contracts_count = 1 if visits_count > 0 else 0
 
         verification_label = "موثّق ✓" if user.is_verified else "غير موثّق"
 
@@ -417,4 +423,76 @@ class ProfileService:
             "unread_chat_messages_count": unread_chat_messages_count,
             "unread_notifications_count": unread_notifications_count,
             "visit_requests_count": visit_requests_count,
+        }
+
+    @classmethod
+    def get_verification_status(cls, user: Any) -> Dict[str, Any]:
+        """
+        Returns shared identity verification status for the authenticated user.
+        Allowed statuses: incomplete, pending, approved, rejected.
+        """
+        from core_apps.admin_api.models import KYCSubmission
+
+        profile, _ = Profile.objects.get_or_create(user=user)
+        full_name = user.get_full_name or user.first_name or user.email
+
+        latest_submission = (
+            KYCSubmission.objects.filter(profile=profile)
+            .order_by("-created_at")
+            .first()
+        )
+
+        if user.is_verified:
+            return {
+                "status": "approved",
+                "full_name": full_name,
+                "submitted_at": (
+                    latest_submission.created_at.isoformat()
+                    if latest_submission
+                    else (user.date_joined.isoformat() if user.date_joined else None)
+                ),
+                "rejection_reason": "",
+            }
+
+        if latest_submission:
+            if latest_submission.status == KYCSubmission.Status.APPROVED:
+                return {
+                    "status": "approved",
+                    "full_name": full_name,
+                    "submitted_at": latest_submission.created_at.isoformat(),
+                    "rejection_reason": "",
+                }
+            elif latest_submission.status == KYCSubmission.Status.REJECTED:
+                return {
+                    "status": "rejected",
+                    "full_name": full_name,
+                    "submitted_at": latest_submission.created_at.isoformat(),
+                    "rejection_reason": latest_submission.rejection_reason
+                    or "تم رفض المستندات، يرجى إعادة المحاولة.",
+                }
+            elif latest_submission.status == KYCSubmission.Status.PENDING:
+                return {
+                    "status": "pending",
+                    "full_name": full_name,
+                    "submitted_at": latest_submission.created_at.isoformat(),
+                    "rejection_reason": "",
+                }
+
+        # Check if profile has documents uploaded even if no KYCSubmission object exists yet
+        has_documents = bool(profile.id_face and profile.id_back)
+        if has_documents:
+            return {
+                "status": "pending",
+                "full_name": full_name,
+                "submitted_at": (
+                    profile.updated_at.isoformat() if profile.updated_at else None
+                ),
+                "rejection_reason": "",
+            }
+
+        return {
+            "status": "incomplete",
+            "full_name": full_name,
+            "submitted_at": None,
+            "rejection_reason": "",
         }

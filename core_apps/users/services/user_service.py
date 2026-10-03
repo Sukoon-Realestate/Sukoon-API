@@ -165,3 +165,35 @@ def complete_user_registration(user: Any, validated_data: dict) -> dict:
         "verification_status": verification_status,
         "missing_fields": missing_fields,
     }
+
+
+# * Change user password service
+@transaction.atomic
+def change_user_password(user: Any, current_password: str, new_password: str) -> None:
+    """
+    Validates current password, checks usability for social accounts,
+    and updates password while keeping current session intact.
+    Never logs credentials.
+    """
+    from rest_framework.exceptions import ValidationError
+    from django.contrib.auth.password_validation import validate_password
+    from django.core.exceptions import ValidationError as DjangoValidationError
+
+    if not user.has_usable_password():
+        raise ValidationError(
+            {
+                "message": "لا يمكن تغيير كلمة المرور لحساب تم تسجيله بواسطة وسائل التواصل الاجتماعي."
+            }
+        )
+
+    if not user.check_password(current_password):
+        raise ValidationError({"current_password": "كلمة المرور الحالية غير صحيحة."})
+
+    try:
+        validate_password(new_password, user=user)
+    except DjangoValidationError as exc:
+        raise ValidationError({"new_password": list(exc.messages)})
+
+    user.set_password(new_password)
+    user.save(update_fields=["password"])
+    logger.info("Successfully changed password for user %s", user.id)

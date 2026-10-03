@@ -9,20 +9,25 @@ from rest_framework import filters, generics, permissions, status
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.response import Response
 
-from core_apps.common.pagination import StandardResultsSetPagination
+from core_apps.common.pagination import (
+    ClientResultsSetPagination,
+    StandardResultsSetPagination,
+)
 from core_apps.common.renderers import GenericJsonRenderer
 
-from .models import Profile, UserSettings
+from .models import Contract, Profile, UserSettings
 from .serializers import (
     AccountSummaryScreenSerializer,
     MyAccountScreenSerializer,
     OwnerUnreadCountsSerializer,
     ProfileEditSerializer,
     ProfileSerializer,
+    TenantContractSerializer,
     TenantMyRateSerializer,
     TenantUnreadCountsSerializer,
     UpdateProfileSerializer,
     UserSettingsSerializer,
+    VerificationStatusSerializer,
 )
 from .services import ProfileService
 from core_apps.properties.models import PropertyVisitReview
@@ -265,5 +270,41 @@ class TenantMyRatesListAPIView(generics.ListAPIView):
         return (
             PropertyVisitReview.objects.filter(visit__tenant=self.request.user)
             .select_related("visit", "visit__property")
+            .order_by("-created_at")
+        )
+
+
+class VerificationStatusAPIView(generics.RetrieveAPIView):
+    """
+    GET profiles/verification-status/
+    Returns shared identity verification status for the authenticated user.
+    Statuses: incomplete, pending, approved, rejected.
+    """
+
+    serializer_class = VerificationStatusSerializer
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def retrieve(self, request, *args, **kwargs) -> Response:
+        data = ProfileService.get_verification_status(request.user)
+        serializer = self.get_serializer(data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class TenantContractsListAPIView(generics.ListAPIView):
+    """
+    GET profiles/contracts/?page=1&page_size=20
+    Returns paginated contracts for the authenticated tenant.
+    """
+
+    serializer_class = TenantContractSerializer
+    renderer_classes = [GenericJsonRenderer]
+    permission_classes = [permissions.IsAuthenticated]
+    pagination_class = ClientResultsSetPagination
+
+    def get_queryset(self):
+        return (
+            Contract.objects.filter(tenant=self.request.user)
+            .select_related("property")
             .order_by("-created_at")
         )

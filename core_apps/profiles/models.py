@@ -126,3 +126,45 @@ class UserSettings(TimeStampedModel):
     def __str__(self):
         return f"Settings for {self.user.email}"
 
+
+class Contract(TimeStampedModel):
+    class Status(models.TextChoices):
+        ACTIVE = "active", _("Active")
+        EXPIRED = "expired", _("Expired")
+        CANCELLED = "cancelled", _("Cancelled")
+
+    tenant = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="contracts",
+        verbose_name=_("Tenant"),
+    )
+    property = models.ForeignKey(
+        "properties.Property",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="contracts",
+        verbose_name=_("Property"),
+    )
+    property_title = models.CharField(_("Property Title"), max_length=255)
+    status = models.CharField(
+        _("Status"),
+        max_length=20,
+        choices=Status.choices,
+        default=Status.ACTIVE,
+        db_index=True,
+    )
+    start_date = models.DateField(_("Start Date"))
+    end_date = models.DateField(_("End Date"))
+    document_url = models.URLField(
+        _("Document URL"), max_length=500, blank=True, default=""
+    )
+
+    class Meta:
+        verbose_name = _("Contract")
+        verbose_name_plural = _("Contracts")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Contract {self.id} - {self.property_title} ({self.tenant.email})"

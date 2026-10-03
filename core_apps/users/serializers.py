@@ -238,3 +238,43 @@ class ResendOtpSerializer(serializers.Serializer):
 
     def validate_email(self, value: str) -> str:
         return value.strip().lower()
+
+
+class SetUserPasswordSerializer(serializers.Serializer):
+    """
+    Serializer for changing password via POST auth/users/set_password/.
+    Enforces minimum 8 chars, matching passwords, and no trimming.
+    """
+
+    current_password = serializers.CharField(
+        required=True,
+        write_only=True,
+        style={"input_type": "password"},
+    )
+    new_password = serializers.CharField(
+        required=True,
+        write_only=True,
+        min_length=8,
+        style={"input_type": "password"},
+        error_messages={
+            "min_length": "يجب ألا تقل كلمة المرور الجديدة عن 8 أحرف.",
+            "required": "كلمة المرور الجديدة مطلوبة.",
+        },
+    )
+    re_new_password = serializers.CharField(
+        required=True,
+        write_only=True,
+        min_length=8,
+        style={"input_type": "password"},
+        error_messages={
+            "min_length": "يجب ألا تقل كلمة المرور الجديدة عن 8 أحرف.",
+            "required": "تأكيد كلمة المرور مطلوب.",
+        },
+    )
+
+    def validate(self, attrs):
+        if attrs.get("new_password") != attrs.get("re_new_password"):
+            raise serializers.ValidationError(
+                {"re_new_password": "كلمتا المرور غير متطابقتين."}
+            )
+        return attrs

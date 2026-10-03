@@ -21,4 +21,3 @@ def create_user_profile(
         logger.info(f"Profile and Settings created for {instance.get_full_name}")
     else:
         logger.info(f"Profile already exists for {instance.get_full_name}")
-

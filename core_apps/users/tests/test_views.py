@@ -9,7 +9,6 @@ DELETE_ACCOUNT_URL = reverse("user-delete")
 PROFILE_DELETE_ACCOUNT_URL = reverse("profile-delete-account")
 
 
-
 @pytest.mark.django_db
 class TestLoginView:
     def test_login_success_sets_auth_cookies(self, api_client, user):
@@ -90,9 +89,7 @@ class TestSafePasswordChangedConfirmationEmail:
 
         req = RequestFactory().get("/")
         email_msg = SafePasswordChangedConfirmationEmail(req, {"user": user})
-        with patch.object(
-            SafePasswordChangedConfirmationEmail, "render"
-        ), patch(
+        with patch.object(SafePasswordChangedConfirmationEmail, "render"), patch(
             "templated_mail.mail.BaseEmailMessage.send",
             side_effect=OSError("SMTP connection timeout"),
         ):
@@ -172,4 +169,3 @@ class TestUserDeleteView:
 
         # User should NOT be deleted
         assert get_user_model().objects.filter(id=user_id).exists()
-

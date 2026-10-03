@@ -5,7 +5,7 @@ from typing import Optional
 from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import serializers
 from phonenumber_field.serializerfields import PhoneNumberField
-from .models import Profile, UserSettings
+from .models import Contract, Profile, UserSettings
 from .services.profile_service import (
     ARABIC_MONTHS,
     format_arabic_date,
@@ -471,3 +471,35 @@ class TenantMyRateSerializer(serializers.Serializer):
         if image and hasattr(image, "url"):
             return image.url
         return str(image) if image else None
+
+
+class VerificationStatusSerializer(serializers.Serializer):
+    """
+    Serializer for shared identity verification status.
+    Statuses: incomplete, pending, approved, rejected.
+    """
+
+    status = serializers.ChoiceField(
+        choices=["incomplete", "pending", "approved", "rejected"]
+    )
+    full_name = serializers.CharField(allow_blank=True)
+    submitted_at = serializers.DateTimeField(allow_null=True)
+    rejection_reason = serializers.CharField(allow_blank=True, default="")
+
+
+class TenantContractSerializer(serializers.ModelSerializer):
+    """
+    Serializer for listing tenant contracts.
+    """
+
+    class Meta:
+        model = Contract
+        fields = [
+            "id",
+            "property_title",
+            "status",
+            "start_date",
+            "end_date",
+            "document_url",
+        ]
+        read_only_fields = fields

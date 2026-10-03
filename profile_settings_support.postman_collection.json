@@ -1,0 +1,401 @@
+{
+  "info": {
+    "name": "Sokoun - Profile, Settings and Support API",
+    "description": "Endpoints implemented for Flutter mobile app handoff (Profile, Settings, Support for Tenant and Owner).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000",
+      "type": "string"
+    },
+    {
+      "key": "workspace",
+      "value": "tenant",
+      "type": "string"
+    },
+    {
+      "key": "lang",
+      "value": "ar",
+      "type": "string"
+    },
+    {
+      "key": "ticket_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Auth - Set Password",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"current_password\": \"Testpass123!\",\n  \"new_password\": \"NewSecurePass123!\",\n  \"re_new_password\": \"NewSecurePass123!\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/auth/users/set_password/",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "auth", "users", "set_password", ""]
+        },
+        "description": "Changes the authenticated user password while keeping session cookies valid."
+      },
+      "response": [
+        {
+          "name": "Success",
+          "originalRequest": {
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"current_password\": \"Testpass123!\",\n  \"new_password\": \"NewSecurePass123!\",\n  \"re_new_password\": \"NewSecurePass123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/users/set_password/"
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"message\": \"تم تغيير كلمة المرور بنجاح\",\n  \"data\": {}\n}"
+        }
+      ]
+    },
+    {
+      "name": "2. Profiles - Verification Status",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/profiles/verification-status/",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "profiles", "verification-status", ""]
+        },
+        "description": "Returns shared identity verification status for the signed-in account (incomplete, pending, approved, rejected)."
+      },
+      "response": [
+        {
+          "name": "Pending",
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": {\n    \"status\": \"pending\",\n    \"full_name\": \"محمد أحمد علي\",\n    \"submitted_at\": \"2026-10-03T10:15:00Z\",\n    \"rejection_reason\": \"\"\n  }\n}"
+        },
+        {
+          "name": "Approved",
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": {\n    \"status\": \"approved\",\n    \"full_name\": \"محمد أحمد علي\",\n    \"submitted_at\": \"2026-10-01T12:00:00Z\",\n    \"rejection_reason\": \"\"\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "3. Profiles - Tenant Contracts",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/profiles/contracts/?page=1&page_size=20",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "profiles", "contracts", ""],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "page_size",
+              "value": "20"
+            }
+          ]
+        },
+        "description": "Lists tenant lease contracts with status and signed document URLs."
+      },
+      "response": [
+        {
+          "name": "Success",
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": {\n    \"count\": 1,\n    \"per_page\": 20,\n    \"total_pages\": 1,\n    \"next\": null,\n    \"results\": [\n      {\n        \"id\": \"3fa85f64-5717-4562-b3fc-2c963f66afa6\",\n        \"property_title\": \"شقة فاخرة في المعادي\",\n        \"status\": \"active\",\n        \"start_date\": \"2026-10-01\",\n        \"end_date\": \"2027-09-30\",\n        \"document_url\": \"https://files.sukoon.com/contracts/contract-001.pdf\"\n      }\n    ]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "4. Support - Help Center",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/support/help-center/?workspace={{workspace}}&lang={{lang}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "support", "help-center", ""],
+          "query": [
+            {
+              "key": "workspace",
+              "value": "{{workspace}}"
+            },
+            {
+              "key": "lang",
+              "value": "{{lang}}"
+            }
+          ]
+        },
+        "description": "Returns support contacts and FAQs tailored for tenant or owner in Arabic or English."
+      },
+      "response": [
+        {
+          "name": "Arabic Tenant Help Center",
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": {\n    \"phone\": \"+201012345678\",\n    \"email\": \"support@sukoon.com\",\n    \"hours\": \"يومياً من 9:00 ص إلى 9:00 م\",\n    \"faqs\": [\n      {\n        \"id\": \"visit-booking\",\n        \"question\": \"كيف أحجز زيارة لعقار؟\",\n        \"answer\": \"افتح صفحة العقار، ثم اختر موعدًا متاحًا من جدول المواعيد وأرسل طلب الزيارة للمالك.\"\n      },\n      {\n        \"id\": \"contracts-info\",\n        \"question\": \"كيف أصل إلى عقود الإيجار الخاصة بي؟\",\n        \"answer\": \"يمكنك الوصول إلى جميع عقودك من خلال قسم 'عقودي' في الملف الشخصي مع إمكانية عرض وتحميل المستند.\"\n      },\n      {\n        \"id\": \"report-owner\",\n        \"question\": \"كيف أبلغ عن مشكلة مع مالك عقار؟\",\n        \"answer\": \"يمكنك إنشاء تذكرة دعم جديدة واختيار تصنيف 'إبلاغ عن مالك' وكتابة تفاصيل المشكلة مع إمكانية إرفاق صور.\"\n      }\n    ]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "5. Support - List User Tickets",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/support/tickets/?workspace={{workspace}}&page=1&page_size=20",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "support", "tickets", ""],
+          "query": [
+            {
+              "key": "workspace",
+              "value": "{{workspace}}"
+            },
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "page_size",
+              "value": "20"
+            }
+          ]
+        },
+        "description": "Lists support tickets created by authenticated user in requested workspace."
+      },
+      "response": [
+        {
+          "name": "Success",
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": {\n    \"count\": 1,\n    \"per_page\": 20,\n    \"total_pages\": 1,\n    \"next\": null,\n    \"results\": [\n      {\n        \"id\": \"c62580a6-5717-4562-b3fc-2c963f66afa6\",\n        \"reference\": \"SUP-A48F1\",\n        \"subject\": \"مشكلة في حجز الزيارة\",\n        \"category\": \"visit\",\n        \"status\": \"open\",\n        \"created_at\": \"2026-10-03T10:15:00Z\",\n        \"updated_at\": \"2026-10-03T10:15:00Z\"\n      }\n    ]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "6. Support - Create Ticket",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"workspace\": \"tenant\",\n  \"category\": \"report_owner\",\n  \"subject\": \"عدم الحضور في موعد المعاينة\",\n  \"description\": \"قمت بالانتظار أمام العقار لمدة نصف ساعة ولم يحضر المالك أو يرد على المكالمات.\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/support/tickets/",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "support", "tickets", ""]
+        },
+        "description": "Creates a new ticket. Accepts JSON or multipart/form-data for file attachments under field 'attachments'."
+      },
+      "response": [
+        {
+          "name": "Created",
+          "status": "Created",
+          "code": 201,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"message\": \"Created successfully.\",\n  \"data\": {\n    \"id\": \"c62580a6-5717-4562-b3fc-2c963f66afa6\",\n    \"reference\": \"SUP-A48F1\",\n    \"subject\": \"عدم الحضور في موعد المعاينة\",\n    \"category\": \"report_owner\",\n    \"status\": \"open\",\n    \"created_at\": \"2026-10-03T10:15:00Z\",\n    \"messages\": [\n      {\n        \"id\": \"81cb40ad-a5a4-44b2-a42e-1c606a5b7d90\",\n        \"sender\": \"user\",\n        \"body\": \"قمت بالانتظار أمام العقار لمدة نصف ساعة ولم يحضر المالك أو يرد على المكالمات.\",\n        \"created_at\": \"2026-10-03T10:15:00Z\",\n        \"attachments\": []\n      }\n    ]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "7. Support - Ticket Detail",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/v1/support/tickets/{{ticket_id}}/?workspace={{workspace}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "support", "tickets", "{{ticket_id}}", ""],
+          "query": [
+            {
+              "key": "workspace",
+              "value": "{{workspace}}"
+            }
+          ]
+        },
+        "description": "Retrieves complete conversation thread and attachments for a specific ticket."
+      },
+      "response": [
+        {
+          "name": "Success",
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": {\n    \"id\": \"c62580a6-5717-4562-b3fc-2c963f66afa6\",\n    \"reference\": \"SUP-A48F1\",\n    \"subject\": \"عدم الحضور في موعد المعاينة\",\n    \"category\": \"report_owner\",\n    \"status\": \"open\",\n    \"created_at\": \"2026-10-03T10:15:00Z\",\n    \"messages\": [\n      {\n        \"id\": \"81cb40ad-a5a4-44b2-a42e-1c606a5b7d90\",\n        \"sender\": \"user\",\n        \"body\": \"قمت بالانتظار أمام العقار لمدة نصف ساعة ولم يحضر المالك أو يرد على المكالمات.\",\n        \"created_at\": \"2026-10-03T10:15:00Z\",\n        \"attachments\": []\n      }\n    ]\n  }\n}"
+        }
+      ]
+    },
+    {
+      "name": "8. Support - Reply to Ticket",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"body\": \"تواصلت مع المالك هاتفياً الآن وتم الاتفاق على تأجيل الموعد ليوم غد.\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/support/tickets/{{ticket_id}}/replies/?workspace={{workspace}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "support", "tickets", "{{ticket_id}}", "replies", ""],
+          "query": [
+            {
+              "key": "workspace",
+              "value": "{{workspace}}"
+            }
+          ]
+        },
+        "description": "Appends a user reply to the ticket thread and returns the entire updated ticket."
+      },
+      "response": [
+        {
+          "name": "Success",
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"data\": {\n    \"id\": \"c62580a6-5717-4562-b3fc-2c963f66afa6\",\n    \"reference\": \"SUP-A48F1\",\n    \"subject\": \"عدم الحضور في موعد المعاينة\",\n    \"category\": \"report_owner\",\n    \"status\": \"open\",\n    \"created_at\": \"2026-10-03T10:15:00Z\",\n    \"messages\": [\n      {\n        \"id\": \"81cb40ad-a5a4-44b2-a42e-1c606a5b7d90\",\n        \"sender\": \"user\",\n        \"body\": \"قمت بالانتظار أمام العقار لمدة نصف ساعة ولم يحضر المالك أو يرد على المكالمات.\",\n        \"created_at\": \"2026-10-03T10:15:00Z\",\n        \"attachments\": []\n      },\n      {\n        \"id\": \"92dc50be-b6b5-55c3-b53f-2d717b6c8e01\",\n        \"sender\": \"user\",\n        \"body\": \"تواصلت مع المالك هاتفياً الآن وتم الاتفاق على تأجيل الموعد ليوم غد.\",\n        \"created_at\": \"2026-10-03T10:45:00Z\",\n        \"attachments\": []\n      }\n    ]\n  }\n}"
+        },
+        {
+          "name": "409 Conflict (Ticket Resolved/Closed)",
+          "status": "Conflict",
+          "code": 409,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"message\": \"لا يمكن الرد على تذكرة دعم تم حلها أو إغلاقها.\"\n}"
+        }
+      ]
+    }
+  ]
+}

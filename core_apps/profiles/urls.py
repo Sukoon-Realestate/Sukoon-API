@@ -12,6 +12,8 @@ from .views import (
     TenantMyRatesListAPIView,
     TenantUnreadCountsAPIView,
     UserSettingsAPIView,
+    VerificationStatusAPIView,
+    TenantContractsListAPIView,
 )
 
 urlpatterns = [
@@ -27,6 +29,14 @@ urlpatterns = [
     ),
     path("edit/", ProfileEditAPIView.as_view(), name="profile-edit"),
     path("settings/", UserSettingsAPIView.as_view(), name="user-settings"),
+    path(
+        "verification-status/",
+        VerificationStatusAPIView.as_view(),
+        name="verification-status",
+    ),
+    path(
+        "contracts/", TenantContractsListAPIView.as_view(), name="tenant-contracts-list"
+    ),
     path("delete-account/", UserDeleteAPIView.as_view(), name="profile-delete-account"),
     path(
         "owner/unread-counts/",
@@ -40,5 +50,3 @@ urlpatterns = [
     ),
     path("my-rates/", TenantMyRatesListAPIView.as_view(), name="tenant-my-rates"),
 ]
-
-

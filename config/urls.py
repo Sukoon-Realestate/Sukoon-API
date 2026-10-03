@@ -31,8 +31,8 @@ urlpatterns = [
     ),
     path("password-reset/<str:uid>/<str:token>", PasswordResetConfirmView.as_view()),
     path("", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
-    path("api/v1/auth/", include("djoser.urls")),
     path("api/v1/auth/", include("core_apps.users.urls")),
+    path("api/v1/auth/", include("djoser.urls")),
     path("api/v1/profiles/", include("core_apps.profiles.urls")),
     path(
         "api/v1/homepage/", PropertyListAPIView.as_view(), name="property-homepage-list"
@@ -41,6 +41,7 @@ urlpatterns = [
     path("api/v1/notifications/", include("core_apps.notifications.urls")),
     path("api/v1/chat/", include("core_apps.chat.urls")),
     path("api/v1/pages/", include("core_apps.common.pages_urls")),
+    path("api/v1/support/", include("core_apps.support.urls")),
     path("api/v1/admin/", include("core_apps.admin_api.urls")),
     path(settings.ADMIN_URL, admin.site.urls),
 ]

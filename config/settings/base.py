@@ -36,6 +36,7 @@ LOCAL_APPS = [
     "core_apps.notifications",
     "core_apps.chat",
     "core_apps.admin_api",
+    "core_apps.support",
 ]
 
 THIRD_PARTY_APPS = [
@@ -89,9 +90,9 @@ ASGI_APPLICATION = "config.asgi.application"
 
 # ? Redis backs the channel layer so WebSocket groups work across processes/workers
 REDIS_URL = getenv("REDIS_URL", "redis://localhost:6379/0")
-USE_IN_MEMORY_CHANNEL_LAYER = (
-    getenv("USE_IN_MEMORY_CHANNEL_LAYER", "False").lower() in ("true", "1", "yes")
-)
+USE_IN_MEMORY_CHANNEL_LAYER = getenv(
+    "USE_IN_MEMORY_CHANNEL_LAYER", "False"
+).lower() in ("true", "1", "yes")
 
 if USE_IN_MEMORY_CHANNEL_LAYER:
     CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}

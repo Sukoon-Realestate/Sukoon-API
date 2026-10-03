@@ -21,6 +21,7 @@ from core_apps.users.serializers import (
     GoogleAuthSerializer,
     AppleAuthSerializer,
     FacebookAuthSerializer,
+    SetUserPasswordSerializer,
     UserDeleteSerializer,
     VerifyEmailSerializer,
     ResendOtpSerializer,
@@ -31,6 +32,7 @@ from core_apps.users.services.social_auth_service import (
     authenticate_facebook,
 )
 from core_apps.users.services.user_service import (
+    change_user_password,
     complete_user_registration,
     delete_user_account,
     register_user,
@@ -489,3 +491,37 @@ class CompleteRegisterAPIView(APIView):
         )
 
         return Response(result, status=status.HTTP_200_OK)
+
+
+class SetPasswordAPIView(generics.GenericAPIView):
+    """
+    POST auth/users/set_password/
+    Allows authenticated users to change their password.
+    Keeps the current session/cookie valid.
+
+    Request Body:
+    {
+        "current_password": "OldPassword123!",
+        "new_password": "NewPassword123!",
+        "re_new_password": "NewPassword123!"
+    }
+    """
+
+    permission_classes = [IsAuthenticated]
+    renderer_classes = [GenericJsonRenderer]
+    serializer_class = SetUserPasswordSerializer
+
+    def post(self, request: Request, *args, **kwargs) -> Response:
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        change_user_password(
+            user=request.user,
+            current_password=serializer.validated_data["current_password"],
+            new_password=serializer.validated_data["new_password"],
+        )
+
+        return Response(
+            {"message": "تم تغيير كلمة المرور بنجاح", "data": {}},
+            status=status.HTTP_200_OK,
+        )

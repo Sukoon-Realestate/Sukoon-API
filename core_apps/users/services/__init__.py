@@ -16,4 +16,3 @@ __all__ = [
     "send_otp_email",
     "verify_email_otp",
 ]
-
