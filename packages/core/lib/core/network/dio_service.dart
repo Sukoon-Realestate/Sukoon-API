@@ -19,6 +19,7 @@ import 'account_session.dart';
 import 'extensions.dart';
 import 'fire_store.dart';
 import 'interceptors/cookie_token_header_interceptor.dart';
+import 'interceptors/headers_interceptor.dart';
 import 'interceptors/log_interceptor.dart';
 import 'interceptors/unauthorized_interceptor.dart';
 import 'interceptors/session_cookie_manager.dart';
@@ -67,14 +68,19 @@ class DioService implements NetworkService, SessionAuthService {
       ..options.receiveTimeout = const Duration(
         seconds: ConstantManager.recieveTimeoutDuration,
       )
-      ..options.headers.addAll({
-        HttpHeaders.acceptHeader: ContentType.json,
-        Headers.contentTypeHeader: Headers.jsonContentType,
-        HttpHeaders.acceptLanguageHeader:
-            initialLanguageCode ??
-            Languages.currentLanguage.locale.languageCode,
-      })
       ..options.responseType = ResponseType.json;
+
+    _dio.interceptors.add(
+      HeadersInterceptor(
+        headersProvider: () => {
+          HttpHeaders.acceptHeader: Headers.jsonContentType,
+          HttpHeaders.contentTypeHeader: Headers.jsonContentType,
+          HttpHeaders.acceptLanguageHeader:
+              initialLanguageCode ??
+              Languages.currentLanguage.locale.languageCode,
+        },
+      ),
+    );
 
     if (kDebugMode) {
       _dio.interceptors.add(LoggerInterceptor());
