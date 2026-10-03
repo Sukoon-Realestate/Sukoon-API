@@ -2,6 +2,7 @@ import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_action_footer.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_selection_feedback.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
+import 'package:melos_core/core/widgets/custom_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -103,9 +104,9 @@ class TenantPropertyBottomActions extends StatelessWidget {
                   child: isOpeningChat
                       ? SizedBox.square(
                           dimension: 19.r,
-                          child: const CircularProgressIndicator(
-                            strokeWidth: 2,
+                          child: CustomLoading.showLoadingView(
                             color: AppColors.sokoonTeal,
+                            size: 19.r,
                           ),
                         )
                       : Icon(

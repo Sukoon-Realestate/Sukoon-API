@@ -90,7 +90,7 @@ class _OwnerActionLoader extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox.square(
       dimension: 20.r,
-      child: CircularProgressIndicator(strokeWidth: 2, color: color),
+      child: CustomLoading.showLoadingView(color: color, size: 20.r),
     );
   }
 }

@@ -115,7 +115,7 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
         id: json['sender_id']?.toString() ?? '',
         name: json['sender_name']?.toString() ?? '',
         image: json['sender_image']?.toString() ?? '',
-        isFromMe: json['is_from_me'] == true,
+        isFromMe: json['is_from_me'] ?? false,
       ),
       time: json['time']?.toString(),
       messageState: MessageState.values

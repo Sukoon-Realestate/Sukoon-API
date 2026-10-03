@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/widgets/custom_loading.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 
 class OwnerVisitRequestActionRow extends StatelessWidget {
@@ -83,9 +84,9 @@ class _ActionButton extends StatelessWidget {
           child: isLoading
               ? SizedBox.square(
                   dimension: 18.r,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
+                  child: CustomLoading.showLoadingView(
                     color: foregroundColor,
+                    size: 18.r,
                   ),
                 )
               : AppText(

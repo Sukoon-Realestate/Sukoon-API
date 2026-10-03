@@ -9,6 +9,7 @@ import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
+import 'package:melos_core/core/widgets/custom_loading.dart';
 
 import '../../../permissions/data/device_permission_data.dart';
 import '../../../permissions/data/enums/device_permission.dart';
@@ -134,9 +135,9 @@ class _DeviceNotificationPermissionTileState
                   customChild: busy
                       ? SizedBox.square(
                           dimension: 18.r,
-                          child: const CircularProgressIndicator(
+                          child: CustomLoading.showLoadingView(
                             color: AppColors.white,
-                            strokeWidth: 2,
+                            size: 18.r,
                           ),
                         )
                       : null,

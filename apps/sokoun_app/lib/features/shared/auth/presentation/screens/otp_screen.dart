@@ -9,6 +9,7 @@ import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
+import 'package:melos_core/core/widgets/custom_loading.dart';
 import 'package:sokoun_app/features/shared/auth/data/models/otp.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/otp.dart';
 
@@ -247,9 +248,9 @@ class _OtpScreenState extends State<OtpScreen> {
                   child: uiState.isResending
                       ? SizedBox.square(
                           dimension: 16.r,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2.r,
+                          child: CustomLoading.showLoadingView(
                             color: AppColors.sokoonTeal,
+                            size: 16.r,
                           ),
                         )
                       : AppText(

@@ -103,7 +103,7 @@ class AccountUserContent extends Equatable {
       firstName: profileString(json['first_name']),
       lastName: profileString(json['last_name']),
       avatar: profileNullableString(json['avatar']),
-      isVerified: json['is_verified'] == true,
+      isVerified: json['is_verified'] ?? false,
       verificationBadge: profileString(json['verification_badge']),
       roleLabel: profileString(json['role_label']),
       memberSinceLabel: profileString(json['member_since_label']),
@@ -307,7 +307,7 @@ class AccountMenuItemContent extends Equatable {
       title: profileString(json['title']),
       count: profileInt(json['count']),
       subtitle: profileString(json['subtitle']),
-      isVerified: json['is_verified'] == true,
+      isVerified: json['is_verified'] ?? false,
     );
   }
 

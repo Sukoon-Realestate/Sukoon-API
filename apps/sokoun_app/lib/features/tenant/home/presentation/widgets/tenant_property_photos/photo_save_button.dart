@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/shared/base_state.dart';
+import 'package:melos_core/core/widgets/custom_loading.dart';
 import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 
 import '../../../data/property_photo_gallery_data.dart';
@@ -35,6 +36,7 @@ class TenantPropertyPhotoSaveButton extends StatelessWidget {
       },
       builder: (context, state) {
         final bool isSaving = state.status.isLoading;
+        final double? progress = state.progress;
         return SizedBox.square(
           dimension: 48.r,
           child: IconButton(
@@ -54,12 +56,16 @@ class TenantPropertyPhotoSaveButton extends StatelessWidget {
               shape: const CircleBorder(),
             ),
             icon: isSaving
-                ? SizedBox.square(
-                    dimension: 18.r,
-                    child: CircularProgressIndicator(
-                      value: state.progress,
-                      strokeWidth: 2,
-                      color: AppColors.white,
+                ? Semantics(
+                    value: progress == null
+                        ? null
+                        : '${(progress * 100).round()}%',
+                    child: SizedBox.square(
+                      dimension: 18.r,
+                      child: CustomLoading.showLoadingView(
+                        color: AppColors.white,
+                        size: 18.r,
+                      ),
                     ),
                   )
                 : Icon(Icons.download_rounded, size: 18.r),

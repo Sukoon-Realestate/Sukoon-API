@@ -204,14 +204,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(
-        tester
-            .widget<CircularProgressIndicator>(
-              find.byType(CircularProgressIndicator),
-            )
-            .value,
-        isNotNull,
-      );
+      expect(find.byType(AppLogoWidget), findsOneWidget);
       expect(tester.hasRunningAnimations, isFalse);
       expect(find.text('Refreshing'), findsOneWidget);
       expect(tester.takeException(), isNull);

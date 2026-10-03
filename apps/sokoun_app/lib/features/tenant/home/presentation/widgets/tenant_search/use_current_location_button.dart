@@ -5,6 +5,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/widgets/custom_loading.dart';
 import 'package:melos_core/core/widgets/toast_messages/custom_messages.dart';
 
 import '../../../../../shared/permissions/data/enums/device_permission.dart';
@@ -90,9 +91,9 @@ class _UseCurrentLocationButtonState extends State<UseCurrentLocationButton> {
           if (busy)
             SizedBox.square(
               dimension: 18.r,
-              child: const CircularProgressIndicator(
-                strokeWidth: 2,
+              child: CustomLoading.showLoadingView(
                 color: AppColors.sokoonTeal,
+                size: 18.r,
               ),
             )
           else

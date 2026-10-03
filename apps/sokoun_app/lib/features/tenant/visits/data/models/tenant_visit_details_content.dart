@@ -40,7 +40,7 @@ class TenantVisitDetailsContent extends Equatable {
       bedrooms: int.tryParse(property['bedrooms']?.toString() ?? ''),
       note: json['note']?.toString() ?? '',
       maskedPhone: owner['masked_phone_number']?.toString() ?? '',
-      ownerVerified: owner['is_verified'] == true,
+      ownerVerified: owner['is_verified'] ?? false,
       review: json['review'] is Map
           ? PropertyReview.fromJson(visitJsonMap(json['review']))
           : null,

@@ -35,7 +35,7 @@ class PropertyReview extends Equatable {
       cleanliness: _number(json['cleanliness_rating']),
       accuracy: _number(json['listing_accuracy_rating']),
       ownerInteraction: _number(json['owner_interaction_rating']),
-      isVerified: tenant['is_verified'] == true,
+      isVerified: tenant['is_verified'] ?? false,
       avatarUrl: tenant['avatar']?.toString() ?? '',
     );
   }

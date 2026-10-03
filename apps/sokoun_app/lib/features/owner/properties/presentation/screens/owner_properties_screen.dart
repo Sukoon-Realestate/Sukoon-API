@@ -161,10 +161,8 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
                 Positioned.fill(
                   child: ColoredBox(
                     color: AppColors.whiteAlpha60,
-                    child: const Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.sokoonTeal,
-                      ),
+                    child: CustomLoading.showLoadingView(
+                      color: AppColors.sokoonTeal,
                     ),
                   ),
                 ),

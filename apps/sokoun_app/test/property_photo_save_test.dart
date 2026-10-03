@@ -275,6 +275,7 @@ void main() {
 
   for (final bool saved in [true, false]) {
     testWidgets('save button shows the actual result: $saved', (tester) async {
+      final semantics = tester.ensureSemantics();
       final result = Completer<bool>();
       final data = _PendingGalleryData(result.future);
       final cubit = PropertyPhotoSaveCubit(galleryData: data);
@@ -290,14 +291,11 @@ void main() {
       data.reportProgress?.call(0.5);
       await tester.pump();
       expect(
-        tester
-            .widget<CircularProgressIndicator>(
-              find.byType(CircularProgressIndicator),
-            )
-            .value,
-        0.5,
+        tester.getSemantics(find.byType(IconButton)).getSemanticsData().value,
+        '50%',
       );
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      semantics.dispose();
+      expect(find.byIcon(Icons.download_rounded), findsNothing);
       expect(
         tester.widget<IconButton>(find.byType(IconButton)).onPressed,
         isNull,
@@ -309,7 +307,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 300));
       await tester.pump(const Duration(milliseconds: 300));
 
-      expect(find.byType(CircularProgressIndicator), findsNothing);
+      expect(find.byIcon(Icons.download_rounded), findsOneWidget);
       expect(
         find.text('تم حفظ الصورة في مجلد سكون'),
         saved ? findsOneWidget : findsNothing,

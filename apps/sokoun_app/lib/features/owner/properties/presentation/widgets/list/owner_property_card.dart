@@ -139,17 +139,18 @@ class OwnerPropertyCard extends StatelessWidget {
                         Go.to(OwnerPropertyAnalyticsScreen(property: property)),
                   ),
                   _OwnerPropertyCardAction(
-                    label: LocaleKeys.ownerAvailabilityTitle,
-                    foregroundColor: AppColors.sokoonTeal,
-                    backgroundColor: AppColors.mintLight,
-                    onPressed: () => Go.to(
-                      OwnerAvailabilityScreen(
-                        ownerPropertyId: property.id,
-                        availabilityStartDate: TimeZoneHelper.inLocation(
-                          'Africa/Cairo',
-                        ),
-                      ),
-                    ),
+                    label: LocaleKeys.ownerPropertiesDeleteProperty,
+                    foregroundColor: AppColors.red,
+                    backgroundColor: AppColors.red.withOpacity(.2),
+                    onPressed: (){}
+                    // onPressed: () => Go.to(
+                    //   OwnerAvailabilityScreen(
+                    //     ownerPropertyId: property.id,
+                    //     availabilityStartDate: TimeZoneHelper.inLocation(
+                    //       'Africa/Cairo',
+                    //     ),
+                    //   ),
+                    // ),
                   ),
                 ],
               ),

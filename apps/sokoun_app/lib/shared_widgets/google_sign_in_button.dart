@@ -7,6 +7,7 @@ import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/core/shared/base_state.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
+import 'package:melos_core/core/widgets/custom_loading.dart';
 import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 import 'package:sokoun_app/features/shared/auth/data/social_auth_service/google_sign_in.dart';
 
@@ -59,9 +60,9 @@ class _AppGoogleSignInButtonState extends State<AppGoogleSignInButton> {
       customChild: _busy
           ? SizedBox.square(
               dimension: 20.r,
-              child: const CircularProgressIndicator(
-                strokeWidth: 2,
+              child: CustomLoading.showLoadingView(
                 color: AppColors.sokoonTeal,
+                size: 20.r,
               ),
             )
           : Row(

@@ -13,7 +13,7 @@ class CompleteRegistrationResult extends Equatable {
 
   factory CompleteRegistrationResult.fromJson(Map<String, dynamic> json) =>
       CompleteRegistrationResult(
-        registrationComplete: json['registration_complete'] == true,
+        registrationComplete: json['registration_complete'] ?? false,
         verificationStatus: json['verification_status']?.toString() ?? '',
         missingFields: (json['missing_fields'] as List? ?? const [])
             .map((field) => field.toString())

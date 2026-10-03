@@ -47,6 +47,7 @@ import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
+import 'package:melos_core/core/widgets/custom_loading.dart';
 import 'package:melos_core/core/widgets/toast_messages/custom_messages.dart';
 import 'package:melos_core/generated/assets.dart';
 import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';

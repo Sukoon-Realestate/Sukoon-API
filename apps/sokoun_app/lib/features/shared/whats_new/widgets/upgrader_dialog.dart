@@ -7,6 +7,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/widgets/custom_loading.dart';
 import 'package:upgrader/upgrader.dart';
 
 class AppUpgradeAlert extends UpgradeAlert {
@@ -300,10 +301,9 @@ class _UpdateButton extends StatelessWidget {
                   children: [
                     SizedBox.square(
                       dimension: 16.r,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2.r,
+                      child: CustomLoading.showLoadingView(
                         color: AppColors.white,
-                        backgroundColor: AppColors.white.withValues(alpha: 0.4),
+                        size: 16.r,
                       ),
                     ),
                     Flexible(

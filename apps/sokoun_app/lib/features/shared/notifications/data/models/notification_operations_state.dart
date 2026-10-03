@@ -19,7 +19,7 @@ class NotificationOperationsState extends Equatable {
           (json['pending_notification_ids'] as List? ?? const [])
               .map((id) => id.toString())
               .toSet(),
-      isMarkingAll: json['is_marking_all'] == true,
+      isMarkingAll: json['is_marking_all'] ?? false,
     );
   }
 

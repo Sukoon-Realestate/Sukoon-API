@@ -5,6 +5,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/shared/route_observer.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/widgets/custom_loading.dart';
 import 'package:video_player/video_player.dart';
 
 typedef _Playback = ({
@@ -226,7 +227,13 @@ class _PropertyVideoSurface extends StatelessWidget {
                       ),
                     ),
                 if (loading)
-                  const CircularProgressIndicator(color: AppColors.white)
+                  SizedBox.square(
+                    dimension: 36.r,
+                    child: CustomLoading.showLoadingView(
+                      color: AppColors.white,
+                      size: 36.r,
+                    ),
+                  )
                 else
                   IconButton.filled(
                     tooltip: failed

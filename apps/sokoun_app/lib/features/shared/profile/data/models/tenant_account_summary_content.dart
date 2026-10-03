@@ -177,7 +177,7 @@ class TenantIdentityVerificationContent extends Equatable {
     Map<String, dynamic> json,
   ) {
     return TenantIdentityVerificationContent(
-      isVerified: json['is_verified'] == true,
+      isVerified: json['is_verified'] ?? false,
       title: profileString(json['title']),
       subtitle: profileString(json['subtitle']),
       statusLabel: profileString(json['status_label']),

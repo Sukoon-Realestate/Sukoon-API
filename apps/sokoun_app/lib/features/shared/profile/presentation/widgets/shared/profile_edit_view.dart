@@ -245,9 +245,9 @@ class _ProfileEditViewState extends State<ProfileEditView> {
             child: isSaving
                 ? SizedBox.square(
                     dimension: 18.r,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2.r,
+                    child: CustomLoading.showLoadingView(
                       color: _accentColor,
+                      size: 18.r,
                     ),
                   )
                 : AppText(

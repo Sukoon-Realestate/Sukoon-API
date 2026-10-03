@@ -80,9 +80,9 @@ class _ProfileDeleteAccountButtonState
                         if (state.isLoading)
                           SizedBox.square(
                             dimension: 18.r,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2.r,
+                            child: CustomLoading.showLoadingView(
                               color: AppColors.red,
+                              size: 18.r,
                             ),
                           )
                         else

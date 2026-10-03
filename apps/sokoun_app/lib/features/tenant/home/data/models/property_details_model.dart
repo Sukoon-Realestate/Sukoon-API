@@ -279,8 +279,9 @@ class PropertyDetailsModel extends Equatable {
       isVerified: json['is_verified'] as bool? ?? false,
       isOwnerVerified:
           (ownerJson['is_verified'] as bool?) ??
-          (json['owner_is_verified'] == true),
-      isOwnershipVerified: json['is_ownership_verified'] == true,
+          json['owner_is_verified'] ??
+          false,
+      isOwnershipVerified: json['is_ownership_verified'] ?? false,
       bedrooms: (json['bedrooms'] as num?)?.toInt() ?? 0,
       bathrooms: (json['bathrooms'] as num?)?.toInt() ?? 0,
       area: (json['area'] as num?)?.toInt() ?? 0,

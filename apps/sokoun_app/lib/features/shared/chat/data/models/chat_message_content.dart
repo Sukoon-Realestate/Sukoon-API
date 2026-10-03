@@ -30,7 +30,7 @@ class ChatMessageContent extends Equatable {
       id: json['id']?.toString() ?? '',
       body: json['content']?.toString() ?? json['body']?.toString() ?? '',
       time: json['time']?.toString() ?? '',
-      isFromMe: json['is_from_me'] == true,
+      isFromMe: json['is_from_me'] ?? false,
       type: json['type']?.toString() ?? 'text',
       conversationId:
           json['conversation_id']?.toString() ??

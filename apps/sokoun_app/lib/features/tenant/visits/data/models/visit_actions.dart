@@ -14,10 +14,10 @@ class VisitActions extends Equatable {
       canFindAlternative = false;
 
   factory VisitActions.fromJson(Map<String, dynamic> json) => VisitActions(
-    canCancel: json['can_cancel'] == true,
-    canChat: json['can_chat'] == true,
-    canReview: json['can_review'] == true,
-    canFindAlternative: json['can_find_alternative'] == true,
+    canCancel: json['can_cancel'],
+    canChat: json['can_chat'],
+    canReview: json['can_review'],
+    canFindAlternative: json['can_find_alternative'],
   );
   final bool canCancel;
   final bool canChat;

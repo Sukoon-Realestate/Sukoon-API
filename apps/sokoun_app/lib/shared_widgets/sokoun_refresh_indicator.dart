@@ -5,6 +5,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_logo_widget.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/widgets/custom_loading.dart';
 
 import 'sokoun_motion.dart';
 
@@ -90,16 +91,11 @@ class SokounRefreshIndicator extends StatelessWidget {
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
-                            if (loading)
+                            if (loading && visible && duration != Duration.zero)
                               Positioned.fill(
-                                child: CircularProgressIndicator(
-                                  value: visible && duration != Duration.zero
-                                      ? null
-                                      : 1,
-                                  strokeWidth: 2.r,
-                                  strokeCap: StrokeCap.round,
+                                child: CustomLoading.showLoadingView(
                                   color: AppColors.sokoonTeal,
-                                  backgroundColor: AppColors.mintLight,
+                                  size: 36.r,
                                 ),
                               ),
                             if (loading)

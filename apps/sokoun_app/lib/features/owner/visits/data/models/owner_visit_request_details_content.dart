@@ -205,12 +205,12 @@ class OwnerVisitRequestTenantContent extends Equatable {
       id: ownerVisitString(json['id']),
       name: ownerVisitString(json['name'] ?? json['full_name']),
       avatar: ownerVisitString(json['avatar']),
-      isVerified: json['is_verified'] == true,
+      isVerified: json['is_verified'] ?? false,
       memberSinceYear: (json['member_since_year'] as num?)?.toInt() ?? 0,
       membershipLabel: ownerVisitString(json['membership_label']),
       phoneNumber: ownerVisitString(json['phone_number']),
       maskedPhoneNumber: ownerVisitString(json['masked_phone_number']),
-      isPhoneRevealed: json['is_phone_revealed'] == true,
+      isPhoneRevealed: json['is_phone_revealed'] ?? false,
       phoneNotice: ownerVisitString(json['phone_notice']),
     );
   }
@@ -357,9 +357,9 @@ class OwnerVisitRequestActionsContent extends Equatable {
 
   factory OwnerVisitRequestActionsContent.fromJson(Map<String, dynamic> json) {
     return OwnerVisitRequestActionsContent(
-      canAccept: json['can_accept'] == true,
-      canReject: json['can_reject'] == true,
-      canChat: json['can_chat'] == true,
+      canAccept: json['can_accept'] ?? false,
+      canReject: json['can_reject'] ?? false,
+      canChat: json['can_chat'] ?? false,
     );
   }
 

@@ -114,7 +114,7 @@ class OwnerProfileIdentityContent extends Equatable {
       id: profileString(json['id']),
       fullName: profileString(json['full_name'] ?? json['name']),
       avatar: profileNullableString(json['avatar']),
-      isVerified: json['is_verified'] == true,
+      isVerified: json['is_verified'] ?? false,
       roleBadge: profileString(json['role_badge']),
       averageRating: profileDouble(json['average_rating']),
       reviewsCount: profileInt(json['reviews_count']),
