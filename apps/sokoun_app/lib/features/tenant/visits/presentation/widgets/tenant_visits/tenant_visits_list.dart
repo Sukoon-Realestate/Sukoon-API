@@ -4,6 +4,7 @@ class TenantVisitsList extends StatelessWidget {
   const TenantVisitsList({
     super.key,
     this.useRequestEndpoint = true,
+    this.cancelingVisitId,
     required this.selectedFilter,
     required this.initialVisits,
     required this.pagifyController,
@@ -14,6 +15,7 @@ class TenantVisitsList extends StatelessWidget {
   });
 
   final bool useRequestEndpoint;
+  final String? cancelingVisitId;
   final TenantVisitFilter selectedFilter;
   final List<TenantVisitContent>? initialVisits;
   final PagifyController<TenantVisitContent>? pagifyController;
@@ -78,6 +80,7 @@ class TenantVisitsList extends StatelessWidget {
   Widget _buildHeader() => Column(
     crossAxisAlignment: CrossAxisAlignment.stretch,
     children: [
+      VisitCollectionCount(initialCount: initialVisits?.length),
       TenantVisitsFilters(
         selectedFilter: selectedFilter,
         onFilterSelected: onFilterSelected,
@@ -90,6 +93,8 @@ class TenantVisitsList extends StatelessWidget {
     return TenantVisitCard(
       key: ValueKey(visit.id),
       visit: visit,
+      isCanceling: cancelingVisitId == visit.id,
+      canStartCancellation: cancelingVisitId == null,
       onPressed: () => onVisitPressed(visit),
       onRatePressed: () => onRatePressed(visit),
       onCancelPressed: () => onCancelPressed(visit),

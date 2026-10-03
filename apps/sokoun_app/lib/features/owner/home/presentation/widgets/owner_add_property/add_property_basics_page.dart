@@ -1,5 +1,6 @@
 import '../../../data/models/property_location.dart';
 import 'add_property_map_section.dart';
+import 'property_selection_field.dart';
 import 'add_property_details_section.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -68,13 +69,16 @@ class AddPropertyBasicsPage extends StatelessWidget {
       segmentCount: 3,
       progressSubtitle: LocaleKeys.ownerAddPropertyBasicsProgress,
       primaryLabel: LocaleKeys.ownerAddPropertyNextPhotos,
-      onPrimaryTap: form.isBasicsReady ? onNext : null,
+      onPrimaryTap: onNext,
       children: [
         AddPropertySectionCard(
-          title: LocaleKeys.ownerAddPropertyType,
-          child: AddPropertyTypeSelector(
-            selectedValue: form.propertyTypeApiValue,
-            onSelected: onPropertyTypeSelected,
+          title: '${LocaleKeys.ownerAddPropertyType} *',
+          child: PropertySelectionField(
+            isValid: form.propertyTypeApiValue.isNotEmpty,
+            child: AddPropertyTypeSelector(
+              selectedValue: form.propertyTypeApiValue,
+              onSelected: onPropertyTypeSelected,
+            ),
           ),
         ),
         AddPropertySectionCard(
@@ -108,10 +112,14 @@ class AddPropertyBasicsPage extends StatelessWidget {
           onSpaceChanged: onSpaceChanged,
           onFloorChanged: onFloorChanged,
         ),
-        AddPropertyMapSection(
-          location: form.location,
-          query: '${form.street}, ${form.locationSummary}',
-          onLocationSelected: onLocationSelected,
+        PropertySelectionField(
+          isValid: form.isLocationSelected,
+          message: LocaleKeys.ownerAddPropertySelectLocation,
+          child: AddPropertyMapSection(
+            location: form.location,
+            query: '${form.street}, ${form.locationSummary}',
+            onLocationSelected: onLocationSelected,
+          ),
         ),
       ],
     );

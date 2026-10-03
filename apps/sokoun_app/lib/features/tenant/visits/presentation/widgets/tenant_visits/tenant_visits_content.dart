@@ -4,6 +4,7 @@ class TenantVisitsScreenContent extends StatelessWidget {
   const TenantVisitsScreenContent({
     super.key,
     this.useRequestEndpoint = true,
+    this.cancelingVisitId,
     required this.selectedFilter,
     required this.initialVisits,
     required this.pagifyController,
@@ -14,6 +15,7 @@ class TenantVisitsScreenContent extends StatelessWidget {
   });
 
   final bool useRequestEndpoint;
+  final String? cancelingVisitId;
   final TenantVisitFilter selectedFilter;
   final List<TenantVisitContent>? initialVisits;
   final PagifyController<TenantVisitContent>? pagifyController;
@@ -26,6 +28,7 @@ class TenantVisitsScreenContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return TenantVisitsList(
       useRequestEndpoint: useRequestEndpoint,
+      cancelingVisitId: cancelingVisitId,
       selectedFilter: selectedFilter,
       initialVisits: initialVisits,
       pagifyController: pagifyController,

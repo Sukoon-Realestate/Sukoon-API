@@ -28,11 +28,14 @@ class ChatComposer extends StatelessWidget {
         child: Row(
           spacing: 8.w,
           children: [
-            _ComposerActionButton(
-              onPressed: onSendPressed,
-              backgroundColor: AppColors.sokoonTeal,
-              icon: Icons.send_rounded,
-              iconColor: AppColors.white,
+            ValueListenableBuilder<TextEditingValue>(
+              valueListenable: controller,
+              builder: (context, value, _) => _ComposerActionButton(
+                onPressed: value.text.trim().isEmpty ? null : onSendPressed,
+                backgroundColor: AppColors.sokoonTeal,
+                icon: Icons.send_rounded,
+                iconColor: AppColors.white,
+              ),
             ),
             Expanded(
               child: Container(
@@ -94,7 +97,7 @@ class _ComposerActionButton extends StatelessWidget {
     required this.iconColor,
   });
 
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color backgroundColor;
   final IconData icon;
   final Color iconColor;
@@ -103,11 +106,12 @@ class _ComposerActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
+      enabled: onPressed != null,
       label: LocaleKeys.chatSendMessage,
       child: SizedBox.square(
-        dimension: 44.r,
+        dimension: 48,
         child: Material(
-          color: backgroundColor,
+          color: onPressed == null ? AppColors.sokoonGray : backgroundColor,
           shape: const CircleBorder(),
           child: InkWell(
             onTap: onPressed,

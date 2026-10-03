@@ -47,6 +47,12 @@ class AppPagify<T> extends StatefulWidget {
 
   /// Uses the shared pull refresher and waits for the first page to finish.
   final bool enablePullRefresh;
+
+  /// Keeps the last successful collection visible while its first page changes.
+  /// The notice must explain that these items belong to the previous response.
+  final bool retainItemsOnRefresh;
+  final Widget Function(bool isLoading, VoidCallback retry)?
+  retainedItemsNotice;
   final FutureOr<void> Function(PagifyAsyncCallStatus)? onUpdateStatus;
   final bool shrinkWrap;
   final Widget? emptyListView;
@@ -80,6 +86,8 @@ class AppPagify<T> extends StatefulWidget {
     required this.pagifyController,
     this.disposeController = true,
     this.enablePullRefresh = false,
+    this.retainItemsOnRefresh = false,
+    this.retainedItemsNotice,
     this.physics,
     this.minimumItemWidth = 320,
     this.maximumColumns = 3,
@@ -108,7 +116,9 @@ class AppPagify<T> extends StatefulWidget {
     this.cacheToJson,
     this.cacheFromJson,
   }) : assert(header == null || rankingType != Ranking.gridView),
-       assert(header == null || itemExtent == null);
+       assert(header == null || itemExtent == null),
+       assert(!retainItemsOnRefresh || retainedItemsNotice != null),
+       assert(!retainItemsOnRefresh || rankingType != Ranking.gridView);
 
   @override
   State<AppPagify<T>> createState() => _AppPagifyState<T>();
@@ -119,6 +129,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
   int _requestGeneration = 0;
   PagifyException? _requestError;
   Completer<void>? _refreshCompleter;
+  List<T> _lastSuccessfulItems = const [];
 
   Future<void> _refresh() {
     final Completer<void>? pending = _refreshCompleter;
@@ -192,7 +203,52 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
   PagifyException _resolveError(PagifyException error) =>
       error is PagifyNetworkException ? error : _requestError ?? error;
 
+  Future<void> _onSuccess(BuildContext context, List<T> items) async {
+    if (widget.retainItemsOnRefresh) _lastSuccessfulItems = List<T>.of(items);
+    await widget.onSuccess?.call(context, items);
+  }
+
+  bool get _canRetainItems =>
+      widget.retainItemsOnRefresh &&
+      _lastSuccessfulItems.isNotEmpty &&
+      _sessionGeneration == AccountSession.generation;
+
+  Widget _buildRetainedItems({required bool isLoading}) => LayoutBuilder(
+    builder: (context, constraints) {
+      final int columns = _columnCount(context, constraints);
+      return ListView.builder(
+        physics: AlwaysScrollableScrollPhysics(parent: widget.physics),
+        shrinkWrap: widget.shrinkWrap,
+        itemCount: (_lastSuccessfulItems.length / columns).ceil() + 1,
+        itemBuilder: (context, row) {
+          if (row == 0) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (widget.header != null) widget.header!,
+                widget.retainedItemsNotice!(
+                  isLoading,
+                  () => widget.pagifyController.refresh(),
+                ),
+              ],
+            );
+          }
+          final int index = (row - 1) * columns;
+          return _buildListItem(
+            context,
+            _lastSuccessfulItems,
+            index,
+            _lastSuccessfulItems[index],
+            columns,
+            includeHeader: false,
+          );
+        },
+      );
+    },
+  );
+
   Widget _buildErrorView(PagifyException error) {
+    if (_canRetainItems) return _buildRetainedItems(isLoading: false);
     final PagifyException requestError = _resolveError(error);
     return _buildStateView(
       widget.errorBuilder?.call(requestError) ??
@@ -243,7 +299,9 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
           widget.loadingBuilder ?? CustomLoading.showLoadingView();
       // Pagify uses this same widget for its first load and pagination footer.
       return widget.pagifyController.items.isEmpty
-          ? _buildStateView(loading)
+          ? (_canRetainItems
+                ? _buildRetainedItems(isLoading: true)
+                : _buildStateView(loading))
           : loading;
     },
   );
@@ -258,8 +316,9 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
     List<T> data,
     int index,
     T item,
-    int columns,
-  ) {
+    int columns, {
+    bool includeHeader = true,
+  }) {
     late final Widget row;
     if (widget.rankingType == Ranking.adaptiveGrid) {
       if (index % columns != 0) return const SizedBox.shrink();
@@ -289,7 +348,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
     }
     final Widget? header = widget.header;
     final Widget content = _padContent(row);
-    if (index != 0 || header == null) return content;
+    if (!includeHeader || index != 0 || header == null) return content;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [header, content],
@@ -331,11 +390,10 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
         : collection;
   }
 
-  Widget _buildCollection(BuildContext context, BoxConstraints constraints) {
+  int _columnCount(BuildContext context, BoxConstraints constraints) {
     final double scale = (MediaQuery.textScalerOf(context).scale(14) / 14)
         .clamp(1, 2);
-    final int columns =
-        widget.rankingType == Ranking.adaptiveGrid &&
+    return widget.rankingType == Ranking.adaptiveGrid &&
             constraints.hasBoundedWidth
         ? ((constraints.maxWidth -
                       widget.contentPadding
@@ -346,6 +404,10 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
               .floor()
               .clamp(1, widget.maximumColumns)
         : 1;
+  }
+
+  Widget _buildCollection(BuildContext context, BoxConstraints constraints) {
+    final int columns = _columnCount(context, constraints);
     final hasCacheConfig =
         widget.cacheKey != null &&
         widget.cacheToJson != null &&
@@ -378,7 +440,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
         noConnectionText: widget.noConnectionText ?? LocaleKeys.checkInternet,
         onLoading: widget.onLoading,
         onError: _onError,
-        onSuccess: widget.onSuccess,
+        onSuccess: _onSuccess,
         listenToNetworkConnectivityChanges:
             widget.onConnectivityChanged != null,
         onConnectivityChanged: widget.onConnectivityChanged,
@@ -428,7 +490,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
         noConnectionText: widget.noConnectionText ?? LocaleKeys.checkInternet,
         onLoading: widget.onLoading,
         onError: _onError,
-        onSuccess: widget.onSuccess,
+        onSuccess: _onSuccess,
         listenToNetworkConnectivityChanges:
             widget.onConnectivityChanged != null,
         onConnectivityChanged: widget.onConnectivityChanged,

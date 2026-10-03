@@ -35,7 +35,11 @@ class VisitContactCard extends StatelessWidget {
             child: Row(
               spacing: 9.w,
               children: [
-                Icon(Icons.phone_outlined, color: AppColors.green, size: 16.r),
+                Icon(
+                  Icons.phone_outlined,
+                  color: AppColors.greenStrong,
+                  size: 16.r,
+                ),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,8 +48,8 @@ class VisitContactCard extends StatelessWidget {
                       AppText(
                         LocaleKeys.tenantVisitOwnerPhoneConfirmed,
                         style: AppTextStyles.extraBold.copyWith(
-                          color: AppColors.green,
-                          fontSize: 11.sp,
+                          color: AppColors.greenStrong,
+                          fontSize: 12.sp,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -53,7 +57,7 @@ class VisitContactCard extends StatelessWidget {
                       AppText(
                         ownerPhone,
                         style: AppTextStyles.bold15.copyWith(
-                          color: AppColors.green,
+                          color: AppColors.greenStrong,
                           fontSize: 15.sp,
                           height: 1.45,
                         ),

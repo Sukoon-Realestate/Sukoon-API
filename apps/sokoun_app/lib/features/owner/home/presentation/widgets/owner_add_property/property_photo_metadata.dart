@@ -109,8 +109,8 @@ class PhotoMetadataCard extends StatelessWidget {
                   label: LocaleKeys.ownerAddPropertyPhotoName,
                   hint: LocaleKeys.ownerAddPropertyPhotoNameHint,
                   initialValue: photo.name,
-                  errorText: Validators.validateRequired(
-                    photo.name,
+                  validator: (value) => Validators.validateRequired(
+                    value,
                     message: LocaleKeys.ownerAddPropertyPhotoNameRequired,
                   ),
                   onChanged: onNameChanged,
@@ -120,8 +120,8 @@ class PhotoMetadataCard extends StatelessWidget {
                   label: LocaleKeys.ownerAddPropertyPhotoDescription,
                   hint: LocaleKeys.ownerAddPropertyPhotoDescriptionHint,
                   initialValue: photo.description,
-                  errorText: Validators.validateRequired(
-                    photo.description,
+                  validator: (value) => Validators.validateRequired(
+                    value,
                     message:
                         LocaleKeys.ownerAddPropertyPhotoDescriptionRequired,
                   ),
@@ -141,7 +141,7 @@ class PhotoMetadataField extends StatelessWidget {
     required this.hint,
     required this.initialValue,
     required this.onChanged,
-    this.errorText,
+    this.validator,
     this.maxLines = 1,
   });
 
@@ -149,7 +149,7 @@ class PhotoMetadataField extends StatelessWidget {
   final String hint;
   final String initialValue;
   final ValueChanged<String> onChanged;
-  final String? errorText;
+  final FormFieldValidator<String>? validator;
   final int maxLines;
 
   @override
@@ -159,7 +159,7 @@ class PhotoMetadataField extends StatelessWidget {
       spacing: 6.h,
       children: [
         AppText(
-          label,
+          '$label *',
           style: AppTextStyles.semiBold.copyWith(
             color: AppColors.sokoonGray,
             fontSize: 12.sp,
@@ -169,6 +169,7 @@ class PhotoMetadataField extends StatelessWidget {
         TextFormField(
           initialValue: initialValue,
           onChanged: onChanged,
+          validator: validator,
           maxLines: maxLines,
           minLines: maxLines == 1 ? 1 : 2,
           style: AppTextStyles.medium13.copyWith(
@@ -177,8 +178,8 @@ class PhotoMetadataField extends StatelessWidget {
             height: 1.45,
           ),
           decoration: InputDecoration(
+            errorMaxLines: 3,
             hintText: hint,
-            errorText: errorText,
             filled: true,
             fillColor: AppColors.white,
             contentPadding: EdgeInsets.symmetric(

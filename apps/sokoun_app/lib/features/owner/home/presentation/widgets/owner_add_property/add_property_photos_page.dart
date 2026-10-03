@@ -4,6 +4,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 
 import 'add_property_info_banner.dart';
+import 'property_selection_field.dart';
 import 'add_property_step_shell.dart';
 
 import 'property_photo_grid.dart';
@@ -43,7 +44,7 @@ class AddPropertyPhotosPage extends StatelessWidget {
       segmentCount: 3,
       progressSubtitle: LocaleKeys.ownerAddPropertyPhotosProgress,
       primaryLabel: LocaleKeys.ownerAddPropertyPricingTitle,
-      onPrimaryTap: isReady ? onNext : null,
+      onPrimaryTap: onNext,
       children: [
         AddPropertyInfoBanner(
           title: isReady ? LocaleKeys.ownerAddPropertyPhotosReady : null,
@@ -63,11 +64,18 @@ class AddPropertyPhotosPage extends StatelessWidget {
               ? Icons.check_circle_outline_rounded
               : Icons.warning_amber_rounded,
         ),
-        PhotoGridSection(
-          photos: photos,
-          onAddPhotos: onAddPhotos,
-          onRemovePhoto: onRemovePhoto,
-          onReplacePhoto: onReplacePhoto,
+        PropertySelectionField(
+          isValid: hasEnoughPhotos,
+          message: LocaleKeys.ownerAddPropertyPhotosRemaining.replaceAll(
+            '{count}',
+            '$remaining',
+          ),
+          child: PhotoGridSection(
+            photos: photos,
+            onAddPhotos: onAddPhotos,
+            onRemovePhoto: onRemovePhoto,
+            onReplacePhoto: onReplacePhoto,
+          ),
         ),
         if (photos.isNotEmpty)
           PhotoMetadataSection(

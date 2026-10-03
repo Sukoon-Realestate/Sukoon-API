@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
@@ -19,25 +18,15 @@ class DetailsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _openDetails,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        height: 34.h,
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: AppColors.sokoonTeal,
-          borderRadius: BorderRadius.circular(10.r),
-        ),
-        child: AppText(
-          LocaleKeys.landingDetails,
-          style: AppTextStyles.extraBold13.copyWith(
-            color: AppColors.white,
-            fontSize: 13.sp,
-            height: 1.45,
-          ),
-        ),
+    return TextButton(
+      onPressed: propertyId.isEmpty ? null : _openDetails,
+      style: TextButton.styleFrom(
+        minimumSize: const Size(48, 48),
+        foregroundColor: AppColors.sokoonTeal,
+      ),
+      child: AppText(
+        LocaleKeys.landingDetails,
+        style: AppTextStyles.bold14.copyWith(color: AppColors.sokoonTeal),
       ),
     );
   }

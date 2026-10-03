@@ -9,11 +9,11 @@ class OwnerCalendarVisitCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isAccepted = visit.status.isAccepted;
     final Color statusColor = isAccepted || visit.status.isCompleted
-        ? AppColors.green
+        ? AppColors.greenStrong
         : visit.status.isRejected
-        ? AppColors.red
+        ? AppColors.sokoonRose
         : visit.status.canDecide
-        ? AppColors.amber
+        ? AppColors.brown
         : AppColors.sokoonGray;
     final Color statusBackground = isAccepted || visit.status.isCompleted
         ? AppColors.greenPale
@@ -89,7 +89,7 @@ class OwnerCalendarVisitCard extends StatelessWidget {
                         : visit.status.label,
                     style: AppTextStyles.extraBold.copyWith(
                       color: statusColor,
-                      fontSize: 11.sp,
+                      fontSize: 12.sp,
                     ),
                   ),
                 ),

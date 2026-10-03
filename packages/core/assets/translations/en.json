@@ -1260,5 +1260,15 @@
   "support_invalid_response": "The server response is incomplete. Your draft is still here. Please try again.",
   "support_status_unknown": "Status unavailable",
   "profile_verification_unknown_description": "Refresh this screen to check your verification status.",
-  "support_link_unavailable": "Unable to open this link."
+  "support_link_unavailable": "Unable to open this link.",
+  "property_positive_number": "Enter a number greater than zero.",
+  "property_description_minimum": "Enter at least 10 characters.",
+  "search_updating_previous_results": "Updating results. Previous results are shown below.",
+  "search_refresh_failed": "Unable to update results. Previous results are still shown.",
+  "search_retry": "Try again",
+  "visit_cancellation_title": "Cancel this visit?",
+  "visit_cancellation_description": "The visit will be canceled and remain in All visits.",
+  "visit_keep_booking": "Keep visit",
+  "visit_confirm_cancellation": "Confirm cancellation",
+  "property_required_fields_hint": "All marked fields are required."
 }

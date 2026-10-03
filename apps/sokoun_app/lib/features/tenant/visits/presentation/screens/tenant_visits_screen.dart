@@ -19,6 +19,8 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
   PagifyController<TenantVisitContent>? _pagifyController;
   late final List<TenantVisitContent>? _fixtureVisits;
   late final VisitCancelCubit _cancelCubit;
+  bool _isConfirmingCancellation = false;
+  final ValueNotifier<String?> _cancelingVisitId = ValueNotifier(null);
   TenantVisitFilter _selectedFilter = TenantVisitFilter.all;
 
   @override
@@ -36,6 +38,7 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
 
   @override
   void dispose() {
+    _cancelingVisitId.dispose();
     _cancelCubit.close();
     super.dispose();
   }
@@ -53,23 +56,50 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
   }
 
   Future<void> _openDetails(TenantVisitContent visit) async {
-    final bool? canceled = await Go.to<bool>(VisitDetailsScreen(visit: visit));
-    if (canceled == true && mounted) _removeVisit(visit);
+    final TenantVisitContent? updated = await Go.to<TenantVisitContent>(
+      VisitDetailsScreen(visit: visit),
+    );
+    if (updated != null && mounted) _updateVisit(updated);
   }
 
   Future<void> _cancelVisit(TenantVisitContent visit) async {
-    if (!visit.canCancel) return;
-    if (await _cancelCubit.cancel(visit.id) && mounted) _removeVisit(visit);
+    if (!visit.canCancel ||
+        _isConfirmingCancellation ||
+        _cancelingVisitId.value != null) {
+      return;
+    }
+    _isConfirmingCancellation = true;
+    try {
+      if (!await VisitCancellationDialog.confirm(context, visit) || !mounted) {
+        return;
+      }
+      _cancelingVisitId.value = visit.id;
+      if (await _cancelCubit.cancel(visit.id) && mounted) {
+        _updateVisit(visit.canceled);
+      }
+    } finally {
+      _isConfirmingCancellation = false;
+      if (mounted) _cancelingVisitId.value = null;
+    }
   }
 
-  void _removeVisit(TenantVisitContent visit) {
+  void _updateVisit(TenantVisitContent visit) {
     final List<TenantVisitContent>? fixtureVisits = _fixtureVisits;
     if (fixtureVisits != null) {
-      setState(() {
-        fixtureVisits.removeWhere((item) => item.id == visit.id);
-      });
+      final int index = fixtureVisits.indexWhere((item) => item.id == visit.id);
+      if (index >= 0) setState(() => fixtureVisits[index] = visit);
     } else {
-      _pagifyController?.removeWhere((item) => item.id == visit.id);
+      final controller = _pagifyController!;
+      final int index = controller.items.indexWhere(
+        (item) => item.id == visit.id,
+      );
+      if (index >= 0) {
+        if (_selectedFilter.accepts(visit.status)) {
+          controller.replaceWith(index, visit);
+        } else {
+          controller.removeWhere((item) => item.id == visit.id);
+        }
+      }
     }
     _showMessage(LocaleKeys.tenantVisitRequestCanceled);
   }
@@ -110,15 +140,19 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
       showBackButton: true,
       backgroundColor: AppColors.scaffoldBackground,
       body: SafeArea(
-        child: TenantVisitsScreenContent(
-          useRequestEndpoint: widget.useRequestEndpoint,
-          selectedFilter: _selectedFilter,
-          initialVisits: _fixtureVisits,
-          pagifyController: _pagifyController,
-          onFilterSelected: _selectFilter,
-          onVisitPressed: _openDetails,
-          onRatePressed: _showRating,
-          onCancelPressed: _cancelVisit,
+        child: ValueListenableBuilder<String?>(
+          valueListenable: _cancelingVisitId,
+          builder: (context, cancelingVisitId, _) => TenantVisitsScreenContent(
+            cancelingVisitId: cancelingVisitId,
+            useRequestEndpoint: widget.useRequestEndpoint,
+            selectedFilter: _selectedFilter,
+            initialVisits: _fixtureVisits,
+            pagifyController: _pagifyController,
+            onFilterSelected: _selectFilter,
+            onVisitPressed: _openDetails,
+            onRatePressed: _showRating,
+            onCancelPressed: _cancelVisit,
+          ),
         ),
       ),
     );

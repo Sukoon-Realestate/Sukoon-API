@@ -4,35 +4,19 @@ class TenantVisitCard extends StatelessWidget {
   const TenantVisitCard({
     super.key,
     required this.visit,
+    this.isCanceling = false,
+    this.canStartCancellation = true,
     required this.onPressed,
     required this.onRatePressed,
     required this.onCancelPressed,
   });
 
   final TenantVisitContent visit;
+  final bool isCanceling;
+  final bool canStartCancellation;
   final VoidCallback onPressed;
   final VoidCallback onRatePressed;
   final VoidCallback onCancelPressed;
-
-  Color get _statusColor {
-    if (visit.status.isAccepted) {
-      return AppColors.green;
-    }
-    if (visit.status.isPending) {
-      return AppColors.amber;
-    }
-    return AppColors.red;
-  }
-
-  Color get _statusBackground {
-    if (visit.status.isAccepted) {
-      return AppColors.greenPale;
-    }
-    if (visit.status.isPending) {
-      return AppColors.amberPale;
-    }
-    return AppColors.redPale;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,14 +75,14 @@ class TenantVisitCard extends StatelessWidget {
                       vertical: 5.h,
                     ),
                     decoration: BoxDecoration(
-                      color: _statusBackground,
+                      color: visit.status.backgroundColor,
                       borderRadius: BorderRadius.circular(999.r),
                     ),
                     child: AppText(
                       visit.resolvedStatusText,
                       style: AppTextStyles.bold11.copyWith(
-                        color: _statusColor,
-                        fontSize: 11.sp,
+                        color: visit.status.foregroundColor,
+                        fontSize: 12.sp,
                         height: 1.45,
                       ),
                       maxLines: 1,
@@ -130,6 +114,8 @@ class TenantVisitCard extends StatelessWidget {
               ),
               _VisitCardActions(
                 visit: visit,
+                isCanceling: isCanceling,
+                canStartCancellation: canStartCancellation,
                 onRatePressed: onRatePressed,
                 onCancelPressed: onCancelPressed,
               ),
@@ -144,11 +130,15 @@ class TenantVisitCard extends StatelessWidget {
 class _VisitCardActions extends StatelessWidget {
   const _VisitCardActions({
     required this.visit,
+    this.isCanceling = false,
+    this.canStartCancellation = true,
     required this.onRatePressed,
     required this.onCancelPressed,
   });
 
   final TenantVisitContent visit;
+  final bool isCanceling;
+  final bool canStartCancellation;
   final VoidCallback onRatePressed;
   final VoidCallback onCancelPressed;
 
@@ -176,15 +166,16 @@ class _VisitCardActions extends StatelessWidget {
           _VisitCardAction(
             label: LocaleKeys.tenantVisitRateAction,
             backgroundColor: AppColors.goldPale,
-            foregroundColor: AppColors.gold,
+            foregroundColor: AppColors.brown,
             onPressed: onRatePressed,
           ),
         if (visit.canCancel)
           _VisitCardAction(
             label: LocaleKeys.tenantVisitCancelRequest,
             backgroundColor: AppColors.redPale,
-            foregroundColor: AppColors.red,
-            onPressed: onCancelPressed,
+            foregroundColor: AppColors.sokoonRose,
+            isLoading: isCanceling,
+            onPressed: canStartCancellation ? onCancelPressed : null,
           ),
         if (visit.canFindAlternative)
           _VisitCardAction(
@@ -201,20 +192,22 @@ class _VisitCardActions extends StatelessWidget {
 class _VisitCardAction extends StatelessWidget {
   const _VisitCardAction({
     required this.label,
+    this.isLoading = false,
     required this.backgroundColor,
     required this.foregroundColor,
     required this.onPressed,
   });
 
   final String label;
+  final bool isLoading;
   final Color backgroundColor;
   final Color foregroundColor;
   final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 38.h,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 48),
       child: FilledButton(
         onPressed: onPressed,
         style: FilledButton.styleFrom(
@@ -226,15 +219,22 @@ class _VisitCardAction extends StatelessWidget {
             borderRadius: BorderRadius.circular(12.r),
           ),
         ),
-        child: AppText(
-          label,
-          style: AppTextStyles.bold12.copyWith(
-            color: foregroundColor,
-            fontSize: 12.sp,
-            height: 1.45,
-          ),
-          maxLines: 1,
-        ),
+        child: isLoading
+            ? SizedBox.square(
+                dimension: 20.r,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: foregroundColor,
+                ),
+              )
+            : AppText(
+                label,
+                style: AppTextStyles.bold12.copyWith(
+                  color: foregroundColor,
+                  fontSize: 12.sp,
+                  height: 1.45,
+                ),
+              ),
       ),
     );
   }

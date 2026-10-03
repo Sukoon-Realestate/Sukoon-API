@@ -1290,5 +1290,15 @@
   "supportInvalidResponse #$ The server response is incomplete. Your draft is still here. Please try again.": "رد الخادم غير مكتمل. مسودتك ما زالت محفوظة هنا. حاول مرة أخرى.",
   "supportStatusUnknown #$ Status unavailable": "الحالة غير متاحة",
   "profileVerificationUnknownDescription #$ Refresh this screen to check your verification status.": "حدّث هذه الشاشة للتحقق من حالة توثيق هويتك.",
-  "supportLinkUnavailable #$ Unable to open this link.": "تعذّر فتح هذا الرابط."
+  "supportLinkUnavailable #$ Unable to open this link.": "تعذّر فتح هذا الرابط.",
+  "propertyPositiveNumber #$ Enter a number greater than zero.": "أدخل رقمًا أكبر من صفر.",
+  "propertyDescriptionMinimum #$ Enter at least 10 characters.": "أدخل ١٠ أحرف على الأقل.",
+  "searchUpdatingPreviousResults #$ Updating results. Previous results are shown below.": "جارٍ تحديث النتائج. تظهر النتائج السابقة أدناه.",
+  "searchRefreshFailed #$ Unable to update results. Previous results are still shown.": "تعذّر تحديث النتائج. ما زالت النتائج السابقة معروضة.",
+  "searchRetry #$ Try again": "حاول مرة أخرى",
+  "visitCancellationTitle #$ Cancel this visit?": "هل تريد إلغاء هذه الزيارة؟",
+  "visitCancellationDescription #$ The visit will be canceled and remain in All visits.": "سيتم إلغاء الزيارة وستبقى ضمن كل الزيارات.",
+  "visitKeepBooking #$ Keep visit": "الاحتفاظ بالزيارة",
+  "visitConfirmCancellation #$ Confirm cancellation": "تأكيد الإلغاء",
+  "propertyRequiredFieldsHint #$ All marked fields are required.": "الحقول المميزة بعلامة * مطلوبة."
 }

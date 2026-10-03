@@ -10,6 +10,7 @@ import 'package:sokoun_app/features/tenant/home/data/models/property_filter_opti
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_search_result_content.dart';
 
 import 'empty_results_state.dart';
+import 'search_refresh_notice.dart';
 import 'search_results_header.dart';
 import 'search_result_card.dart';
 
@@ -66,6 +67,9 @@ class TenantSearchResultsContent extends StatelessWidget {
       ),
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
       enablePullRefresh: true,
+      retainItemsOnRefresh: true,
+      retainedItemsNotice: (isLoading, retry) =>
+          SearchRefreshNotice(isLoading: isLoading, onRetry: retry),
       pagifyController: pagifyController,
       rankingType: Ranking.adaptiveGrid,
       disposeController: false,

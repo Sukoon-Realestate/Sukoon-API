@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sokoun_app/shared_widgets/property_card_summary.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -30,15 +31,15 @@ class FavoritePropertyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _openProperty,
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: AppColors.sokoonBorder),
-        ),
-        clipBehavior: Clip.antiAlias,
+    return Material(
+      color: AppColors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.r),
+        side: const BorderSide(color: AppColors.sokoonBorder),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: item.id.isEmpty ? null : _openProperty,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -46,45 +47,21 @@ class FavoritePropertyCard extends StatelessWidget {
               onRemove: onRemove,
               imageUrl: item.mainImage,
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 4.h,
-              children: [
-                AppText(
-                  item.title,
-                  style: AppTextStyles.bold14.copyWith(
-                    color: AppColors.sokoonNavy,
-                    fontSize: 14.sp,
-                    height: 1.45,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Row(
-                  spacing: 8.w,
-                  children: [
-                    Expanded(
-                      child: _FavoritePropertyMeta(
-                        rating: item.ratingLabel,
-                        area: item.areaLabel,
-                      ),
-                    ),
-                    Flexible(
-                      child: AppText(
-                        EgyptianPoundText.format(
-                          item.price,
-                          period: item.pricePeriod,
-                        ),
-                        style: AppTextStyles.bold14.copyWith(
-                          color: AppColors.sokoonTeal,
-                          fontSize: 14.sp,
-                          height: 1.45,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+            PropertyCardSummary(
+              title: item.title,
+              location: [
+                item.district,
+                item.city,
+              ].where((value) => value.isNotEmpty).join(', '),
+              metadata: _FavoritePropertyMeta(
+                rating: item.ratingLabel,
+                area:
+                    '${item.area} ${LocaleKeys.tenantSearchResultsSquareMeters}',
+              ),
+              price: EgyptianPoundText.format(
+                item.price,
+                period: item.pricePeriod,
+              ),
             ).paddingSymmetric(horizontal: 16.w, vertical: 12.h),
           ],
         ),

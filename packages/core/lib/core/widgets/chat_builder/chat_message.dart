@@ -25,6 +25,7 @@ class Sender {
 class ChatMessages {
   final Message message;
   final Sender sender;
+  final DateTime? createdAt;
   String? time;
   MessageState? messageState;
 
@@ -32,6 +33,7 @@ class ChatMessages {
     required this.message,
     required this.sender,
     this.time,
+    this.createdAt,
     this.messageState,
   });
 }

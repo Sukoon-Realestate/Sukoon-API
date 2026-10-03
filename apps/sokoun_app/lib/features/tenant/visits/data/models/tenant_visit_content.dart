@@ -96,6 +96,12 @@ class TenantVisitContent extends Equatable {
   bool get canFindAlternative =>
       actions?.canFindAlternative ?? status.isRejected;
 
+  TenantVisitContent get canceled => copyWith(
+    status: TenantVisitStatus.canceled,
+    statusText: '',
+    actions: const VisitActions.initial(),
+  );
+
   String get dateLabel =>
       [day, time].where((value) => value.trim().isNotEmpty).join(' · ');
 

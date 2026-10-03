@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:sokoun_app/shared_widgets/localized_digits_formatter.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
@@ -65,6 +66,19 @@ class AddPropertyDetailsSection extends StatelessWidget {
                 value: '0',
                 textAlign: TextAlign.center,
               ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return LocaleKeys.fillField;
+                }
+                final bool valid = field.controller == floorController
+                    ? Validators.isInteger(value)
+                    : Validators.isPositiveNumber(value);
+                return valid
+                    ? null
+                    : field.controller == floorController
+                    ? LocaleKeys.validationInteger
+                    : LocaleKeys.propertyPositiveNumber;
+              },
               controller: field.controller,
               onChanged: field.onChanged,
               keyboardType: TextInputType.number,

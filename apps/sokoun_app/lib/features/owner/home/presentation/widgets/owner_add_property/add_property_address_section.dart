@@ -6,6 +6,7 @@ import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_co
 import 'package:sokoun_app/features/owner/properties/imports.dart';
 
 import 'add_property_field.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 import 'add_property_section_card.dart';
 
 class AddPropertyAddressSection extends StatelessWidget {
@@ -70,12 +71,13 @@ class AddPropertyAddressSection extends StatelessWidget {
             listHeight: 220.h,
             initialValue: selectedGovernorate,
             hint: LocaleKeys.ownerAddPropertyChoose,
-            title: LocaleKeys.ownerAddPropertyGovernorate,
+            title: '${LocaleKeys.ownerAddPropertyGovernorate} *',
             asyncCall: _getGovernorates,
             cacheKey: OwnerPropertiesData.governoratesCacheKey,
             cacheToJson: (item) => item.toJson(),
             cacheFromJson: OwnerPropertyLocationModel.fromJson,
             getLabel: (item) => item.name,
+            validator: (_) => Validators.validateRequired(selectedGovernorate),
             onChanged: onGovernorateChanged,
           ),
           IgnorePointer(
@@ -89,9 +91,11 @@ class AddPropertyAddressSection extends StatelessWidget {
                       ),
                       initialValue: null,
                       hint: LocaleKeys.ownerAddPropertyChoose,
-                      title: LocaleKeys.ownerAddPropertyCity,
+                      title: '${LocaleKeys.ownerAddPropertyCity} *',
                       values: const [],
                       getLabel: (item) => item.name,
+                      validator: (_) =>
+                          Validators.validateRequired(selectedCity),
                       onChanged: onCityChanged,
                     )
                   : AppDropinity<
@@ -104,7 +108,7 @@ class AddPropertyAddressSection extends StatelessWidget {
                       listHeight: 220.h,
                       initialValue: selectedCity,
                       hint: LocaleKeys.ownerAddPropertyChoose,
-                      title: LocaleKeys.ownerAddPropertyCity,
+                      title: '${LocaleKeys.ownerAddPropertyCity} *',
                       asyncCall: _getCities,
                       cacheKey: OwnerPropertiesData.citiesCacheKey(
                         governorate.id,
@@ -112,6 +116,8 @@ class AddPropertyAddressSection extends StatelessWidget {
                       cacheToJson: (item) => item.toJson(),
                       cacheFromJson: OwnerPropertyLocationModel.fromJson,
                       getLabel: (item) => item.name,
+                      validator: (_) =>
+                          Validators.validateRequired(selectedCity),
                       onChanged: onCityChanged,
                     ),
             ),

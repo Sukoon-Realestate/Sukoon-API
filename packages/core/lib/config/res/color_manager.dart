@@ -35,6 +35,7 @@ abstract class AppColors {
   static const Color tealMuted = Color(0xFF1A5F59);
 
   static const Color green = Color(0xFF16A34A);
+  static const Color greenStrong = Color(0xFF166534);
   static const Color greenAlpha06 = Color(0x1016A34A);
   static const Color greenAlpha08 = Color(0x1416A34A);
   static const Color greenAlpha09 = Color(0x1816A34A);

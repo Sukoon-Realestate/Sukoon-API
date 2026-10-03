@@ -54,7 +54,7 @@ class ResultImageHeader extends StatelessWidget {
                   '${LocaleKeys.verified} ✓',
                   style: AppTextStyles.extraBold.copyWith(
                     color: AppColors.white,
-                    fontSize: 10.sp,
+                    fontSize: 12.sp,
                   ),
                 ),
               ),
@@ -72,7 +72,7 @@ class ResultImageHeader extends StatelessWidget {
                 '$photoCount ${LocaleKeys.chatPhotos}',
                 style: AppTextStyles.semiBold.copyWith(
                   color: AppColors.white,
-                  fontSize: 10.sp,
+                  fontSize: 12.sp,
                 ),
               ),
             ),

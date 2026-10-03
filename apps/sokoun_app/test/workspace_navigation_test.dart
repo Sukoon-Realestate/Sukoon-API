@@ -329,10 +329,10 @@ void main() {
             .map((destination) => destination.badgeCount)
             .toList();
         final Finder bottomBar = find.byType(HomeBottomNavigation);
-        expect(badgeCounts(), [0, 120, 7, 4, 2]);
+        expect(badgeCounts(), [0, 0, 7, 0, 0]);
         expect(
           find.descendant(of: bottomBar, matching: find.text('99+')),
-          findsOneWidget,
+          findsNothing,
         );
         expect(find.byType(TenantProfileScreen), findsNothing);
         expect(accountRepository.profileRequests, 1);
@@ -355,7 +355,7 @@ void main() {
         navigation().onDestinationSelected(4);
         await tester.pumpAndSettle();
         expect(find.byType(TenantProfileScreen), findsOneWidget);
-        expect(badgeCounts(), [0, 120, 7, 4, 2]);
+        expect(badgeCounts(), [0, 0, 7, 0, 0]);
         expect(accountRepository.profileRequests, 1);
         expect(accountRepository.countRequests, initialCountRequests);
         expect(
@@ -367,7 +367,7 @@ void main() {
 
         unawaited(WorkspaceNavigation.open(workspace: AppWorkspace.owner));
         await tester.pumpAndSettle();
-        expect(badgeCounts(), [0, 0, 9, 7, 0]);
+        expect(badgeCounts(), [0, 0, 7, 0, 0]);
         expect(accountRepository.profileRequests, 1);
         expect(accountRepository.countRequests, initialCountRequests);
         expect(sharedProfile.isClosed, isFalse);
@@ -384,7 +384,7 @@ void main() {
         };
         unawaited(WorkspaceNavigation.open(workspace: AppWorkspace.tenant));
         await tester.pumpAndSettle();
-        expect(badgeCounts(), [0, 120, 7, 4, 2]);
+        expect(badgeCounts(), [0, 0, 7, 0, 0]);
         for (final int index in [0, 1, 2, 3, 4, 0]) {
           navigation().onDestinationSelected(index);
           await tester.pumpAndSettle();
@@ -413,7 +413,7 @@ void main() {
           tester.binding.handleAppLifecycleStateChanged(lifecycle);
         }
         await tester.pumpAndSettle();
-        expect(badgeCounts(), [0, 3, 7, 2, 1]);
+        expect(badgeCounts(), [0, 0, 7, 0, 0]);
         expect(accountRepository.profileRequests, 2);
         expect(accountRepository.countRequests, initialCountRequests + 2);
         expect(tester.takeException(), isNull);

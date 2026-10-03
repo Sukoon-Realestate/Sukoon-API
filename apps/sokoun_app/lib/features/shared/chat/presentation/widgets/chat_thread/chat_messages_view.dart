@@ -87,6 +87,7 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
         isFromMe: isFromMe,
       ),
       time: messageTime,
+      createdAt: createdAt,
       messageState: MessageState.read,
     );
   }
@@ -100,6 +101,7 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
     'sender_image': item.sender.image,
     'is_from_me': item.sender.isFromMe,
     'time': item.time,
+    'created_at': item.createdAt?.toIso8601String(),
     'message_state': item.messageState?.name,
   };
 
@@ -118,6 +120,9 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
         isFromMe: json['is_from_me'] ?? false,
       ),
       time: json['time']?.toString(),
+      createdAt: DateTime.tryParse(
+        json['created_at']?.toString() ?? '',
+      )?.toLocal(),
       messageState: MessageState.values
           .where((state) => state.name == stateName)
           .firstOrNull,
@@ -128,10 +133,10 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const ChatDayLabel(),
         Expanded(
           child: EasyChat<List<ChatMessageContent>>(
             controller: widget.controller,
+            itemHeaderBuilder: _dayHeader,
             asyncCall: _loadMessages,
             mapper: _mapMessages,
             errorMapper: PagifyErrorMapper(
@@ -170,6 +175,14 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
         ).padding(EdgeInsets.fromLTRB(16.w, 0, 16.w, 10.h)),
       ],
     );
+  }
+
+  Widget? _dayHeader(List<ChatMessages> messages, int index) {
+    final DateTime? date = messages[index].createdAt;
+    if (date == null) return null;
+    final DateTime? previous = index > 0 ? messages[index - 1].createdAt : null;
+    if (previous != null && DateUtils.isSameDay(date, previous)) return null;
+    return Center(child: ChatDayLabel(date: date));
   }
 
   MainAxisAlignment _messageAlignment(bool isFromMe) {

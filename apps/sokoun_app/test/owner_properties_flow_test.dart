@@ -206,6 +206,7 @@ void main() {
         description: '',
       ),
     );
+    basics.titleController.text = 'A new apartment';
     basics.onTitleChanged('A new apartment');
     basics.onGovernorateChanged(
       const OwnerPropertyLocationModel.initial().copyWith(
@@ -219,10 +220,15 @@ void main() {
         name: 'Nasr City',
       ),
     );
+    basics.streetController.text = 'Main street';
     basics.onStreetChanged('Main street');
+    basics.bedroomsController.text = '2';
     basics.onBedroomsChanged('2');
+    basics.bathroomsController.text = '1';
     basics.onBathroomsChanged('1');
+    basics.spaceController.text = '120';
     basics.onSpaceChanged('120');
+    basics.floorController.text = '3';
     basics.onFloorChanged('3');
     basics.onLocationSelected(
       const PropertyLocation(latitude: 30.0444, longitude: 31.2357),
@@ -239,8 +245,14 @@ void main() {
     );
     expect(photos.photos, hasLength(10));
     for (int index = 0; index < 10; index++) {
-      photos.onPhotoNameChanged(index, 'Photo $index');
-      photos.onPhotoDescriptionChanged(index, 'Description $index');
+      await tester.enterText(
+        find.byType(TextField).at(index * 2),
+        'Photo $index',
+      );
+      await tester.enterText(
+        find.byType(TextField).at(index * 2 + 1),
+        'Description $index',
+      );
     }
     await tester.pump();
     await tester.tap(find.text(LocaleKeys.ownerAddPropertyPricingTitle).last);
@@ -248,11 +260,15 @@ void main() {
     final AddPropertyPricingPage pricing = tester.widget(
       find.byType(AddPropertyPricingPage),
     );
+    pricing.monthlyPriceController.text = '6500';
     pricing.onMonthlyPriceChanged('6500');
     pricing.onSuitableForSelected('singles');
+    pricing.rentalDurationController.text = '6';
     pricing.onRentalDurationChanged('6');
     pricing.onRentalUnitChanged('monthly');
     pricing.onAmenityToggled('wifi');
+    pricing.descriptionController.text =
+        'A comfortable apartment near the metro.';
     pricing.onDescriptionChanged('A comfortable apartment near the metro.');
     await tester.pump();
   }
@@ -264,6 +280,25 @@ void main() {
     await tester.tap(find.text(LocaleKeys.ownerAddPropertySubmitReview));
     await tester.pumpAndSettle();
   }
+
+  testWidgets('Next shows required field errors and keeps the property draft', (
+    tester,
+  ) async {
+    configurePhoneViewport(tester);
+    await tester.pumpWidget(buildScreen(const OwnerPropertyFlowScreen()));
+    await tester.pumpAndSettle();
+    expect(find.text(LocaleKeys.fillField), findsNothing);
+    await tester.tap(find.text(LocaleKeys.ownerAddPropertyNextPhotos));
+    await tester.pumpAndSettle();
+    expect(find.byType(AddPropertyBasicsPage), findsOneWidget);
+    expect(find.byType(AddPropertyPhotosPage), findsNothing);
+    expect(find.text(LocaleKeys.fillField), findsWidgets);
+    final invalidFields = tester
+        .state<FormState>(find.byType(Form))
+        .validateGranularly();
+    expect(invalidFields, isNotEmpty);
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets(
     'creates once, uploads ten photos concurrently, and retries only failures',

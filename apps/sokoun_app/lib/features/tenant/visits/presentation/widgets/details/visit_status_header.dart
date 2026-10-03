@@ -5,30 +5,6 @@ class VisitStatusHeader extends StatelessWidget {
 
   final TenantVisitContent visit;
 
-  Color get _foregroundColor {
-    if (visit.status.isAccepted || visit.status.isCompleted) {
-      return AppColors.green;
-    }
-    if (visit.status.isPending) return AppColors.amber;
-    return AppColors.red;
-  }
-
-  Color get _backgroundColor {
-    if (visit.status.isAccepted || visit.status.isCompleted) {
-      return AppColors.greenPale;
-    }
-    if (visit.status.isPending) return AppColors.amberPale;
-    return AppColors.redPale;
-  }
-
-  IconData get _icon {
-    if (visit.status.isAccepted || visit.status.isCompleted) {
-      return Icons.check_circle_outline_rounded;
-    }
-    if (visit.status.isPending) return Icons.schedule_rounded;
-    return Icons.cancel_outlined;
-  }
-
   String get _title {
     if (visit.status.isCompleted || visit.status.isCanceled) {
       return visit.status.label;
@@ -51,22 +27,26 @@ class VisitStatusHeader extends StatelessWidget {
           height: 64.r,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: _backgroundColor,
+            color: visit.status.backgroundColor,
             shape: BoxShape.circle,
           ),
-          child: Icon(_icon, color: _foregroundColor, size: 29.r),
+          child: Icon(
+            visit.status.statusIcon,
+            color: visit.status.foregroundColor,
+            size: 29.r,
+          ),
         ),
         12.szH,
         Container(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
           decoration: BoxDecoration(
-            color: _backgroundColor,
+            color: visit.status.backgroundColor,
             borderRadius: BorderRadius.circular(999.r),
           ),
           child: AppText(
             visit.resolvedStatusText,
             style: AppTextStyles.bold13.copyWith(
-              color: _foregroundColor,
+              color: visit.status.foregroundColor,
               fontSize: 13.sp,
               height: 1.45,
             ),

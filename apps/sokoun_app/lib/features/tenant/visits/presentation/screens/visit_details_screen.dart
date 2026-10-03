@@ -26,7 +26,13 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
   }
 
   Future<void> _cancel() async {
-    if (await _cancelCubit.cancel(widget.visit.id) && mounted) Go.back(true);
+    final visit = _detailsCubit.data.visit;
+    if (!visit.canCancel ||
+        !await VisitCancellationDialog.confirm(context, visit) ||
+        !mounted) {
+      return;
+    }
+    if (await _cancelCubit.cancel(visit.id) && mounted) Go.back(visit.canceled);
   }
 
   Future<void> _review() async {

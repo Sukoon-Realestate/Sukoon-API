@@ -15,7 +15,7 @@ class OwnerVerifiedBadge extends StatelessWidget {
         LocaleKeys.ownerVisitVerified,
         style: AppTextStyles.bold10.copyWith(
           color: AppColors.sokoonTeal,
-          fontSize: 10.sp,
+          fontSize: 12.sp,
           height: 1.45,
         ),
       ),

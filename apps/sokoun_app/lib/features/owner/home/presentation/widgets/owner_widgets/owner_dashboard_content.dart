@@ -25,19 +25,19 @@ class OwnerDashboardContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SokounReveal(
-            child: OwnerStatsGrid(
-              visitsThisWeek: dashboard.visitsThisWeek,
-              activeProperties: dashboard.activeProperties,
-              overallRating: dashboard.overallRating,
-              pendingRequests: dashboard.pendingRequests,
+            child: OwnerPendingRequestsSection(
+              pendingVisits: dashboard.pendingVisits,
+              onRequestResolved: onRequestResolved,
             ),
           ),
           18.szH,
           SokounReveal(
             delay: const Duration(milliseconds: 60),
-            child: OwnerPendingRequestsSection(
-              pendingVisits: dashboard.pendingVisits,
-              onRequestResolved: onRequestResolved,
+            child: OwnerStatsGrid(
+              visitsThisWeek: dashboard.visitsThisWeek,
+              activeProperties: dashboard.activeProperties,
+              overallRating: dashboard.overallRating,
+              pendingRequests: dashboard.pendingRequests,
             ),
           ),
           24.szH,

@@ -165,7 +165,16 @@ class Go {
 
   /// Unlike popUntil, this honors route/form guards.
   static Future<bool> tryBackToInitial() async {
+    return tryBackUntil((route) => route.isFirst);
+  }
+
+  /// Unwinds to an existing route without discarding its state or bypassing guards.
+  static Future<bool> tryBackUntil(
+    bool Function(Route<dynamic>) predicate,
+  ) async {
     while (canPop) {
+      final Route<dynamic>? current = AppNavigationObserver.currentRoute;
+      if (current != null && predicate(current)) return true;
       final Route<dynamic>? before = AppNavigationObserver.currentRoute;
       if (!await mayPop) return false;
       if (identical(before, AppNavigationObserver.currentRoute)) return false;

@@ -37,6 +37,7 @@ class _ChatThreadContentState extends State<ChatThreadContent>
   late final TextEditingController _messageController;
   Timer? _keyboardMetricsTimer;
   bool _wasKeyboardOpen = false;
+  bool _isNearLatestMessage = true;
 
   @override
   void initState() {
@@ -59,7 +60,7 @@ class _ChatThreadContentState extends State<ChatThreadContent>
     if (!mounted) return;
 
     final bool isKeyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
-    if (isKeyboardOpen && !_wasKeyboardOpen) {
+    if (isKeyboardOpen && !_wasKeyboardOpen && _isNearLatestMessage) {
       _chatController.moveToMaxBottom();
     }
     _wasKeyboardOpen = isKeyboardOpen;
@@ -106,8 +107,9 @@ class _ChatThreadContentState extends State<ChatThreadContent>
     if (pendingMessageIndex >= 0) {
       _chatController.replaceWith(pendingMessageIndex, chatMessage);
     } else {
+      final bool shouldScroll = _isNearLatestMessage;
       _chatController.addItem(chatMessage);
-      _chatController.moveToMaxBottom();
+      if (shouldScroll) _chatController.moveToMaxBottom();
     }
 
     if (!chatMessage.sender.isFromMe) {
@@ -142,6 +144,7 @@ class _ChatThreadContentState extends State<ChatThreadContent>
         isFromMe: isFromMe,
       ),
       time: time,
+      createdAt: createdAt,
       messageState: isFromMe ? MessageState.sent : MessageState.read,
     );
   }
@@ -163,6 +166,7 @@ class _ChatThreadContentState extends State<ChatThreadContent>
         isFromMe: true,
       ),
       time: LocaleKeys.chatNow,
+      createdAt: DateTime.now(),
       messageState: MessageState.pending,
     );
     _chatController.addItem(pendingMessage);
@@ -215,24 +219,21 @@ class _ChatThreadContentState extends State<ChatThreadContent>
       ],
       child: Column(
         children: [
+          const ChatQueuedMessagesBanner(),
           Expanded(
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: ChatMessagesView(
-                    conversation: widget.conversation,
-                    controller: _chatController,
-                    initialMessagesRequest: widget.initialMessagesRequest,
-                    messagesCacheKey: widget.messagesCacheKey,
-                  ),
-                ),
-                const PositionedDirectional(
-                  top: 0,
-                  start: 0,
-                  end: 0,
-                  child: ChatQueuedMessagesBanner(),
-                ),
-              ],
+            child: NotificationListener<ScrollNotification>(
+              onNotification: (notification) {
+                if (notification.depth == 0) {
+                  _isNearLatestMessage = notification.metrics.extentAfter <= 80;
+                }
+                return false;
+              },
+              child: ChatMessagesView(
+                conversation: widget.conversation,
+                controller: _chatController,
+                initialMessagesRequest: widget.initialMessagesRequest,
+                messagesCacheKey: widget.messagesCacheKey,
+              ),
             ),
           ),
           ChatComposer(

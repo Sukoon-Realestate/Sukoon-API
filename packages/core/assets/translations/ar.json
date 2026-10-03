@@ -1260,5 +1260,15 @@
   "support_invalid_response": "رد الخادم غير مكتمل. مسودتك ما زالت محفوظة هنا. حاول مرة أخرى.",
   "support_status_unknown": "الحالة غير متاحة",
   "profile_verification_unknown_description": "حدّث هذه الشاشة للتحقق من حالة توثيق هويتك.",
-  "support_link_unavailable": "تعذّر فتح هذا الرابط."
+  "support_link_unavailable": "تعذّر فتح هذا الرابط.",
+  "property_positive_number": "أدخل رقمًا أكبر من صفر.",
+  "property_description_minimum": "أدخل ١٠ أحرف على الأقل.",
+  "search_updating_previous_results": "جارٍ تحديث النتائج. تظهر النتائج السابقة أدناه.",
+  "search_refresh_failed": "تعذّر تحديث النتائج. ما زالت النتائج السابقة معروضة.",
+  "search_retry": "حاول مرة أخرى",
+  "visit_cancellation_title": "هل تريد إلغاء هذه الزيارة؟",
+  "visit_cancellation_description": "سيتم إلغاء الزيارة وستبقى ضمن كل الزيارات.",
+  "visit_keep_booking": "الاحتفاظ بالزيارة",
+  "visit_confirm_cancellation": "تأكيد الإلغاء",
+  "property_required_fields_hint": "الحقول المميزة بعلامة * مطلوبة."
 }

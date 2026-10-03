@@ -25,7 +25,6 @@ import '../../data/enums/app_workspace.dart';
 import '../../data/enums/workspace_tab.dart';
 import '../cubits/workspace_cubit.dart';
 import '../cubits/account_cubit.dart';
-import '../../data/models/workspace_counts.dart';
 import '../workspace_navigation.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -208,16 +207,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   List<HomeNavigationDestination> _navigationDestinations({
     required int unreadCount,
-    required WorkspaceCounts counts,
-    required int reviewsCount,
   }) => _tabs
       .map((tab) {
         final int badgeCount = switch (tab.tab) {
           WorkspaceTab.messages => unreadCount,
-          WorkspaceTab.saved when _workspace.isTenant => counts.favorites,
-          WorkspaceTab.visits when _workspace.isTenant => counts.visits,
-          WorkspaceTab.requests when _workspace.isOwner => counts.visits,
-          WorkspaceTab.profile when _workspace.isTenant => reviewsCount,
           _ => 0,
         };
         return tab.destination(workspace: _workspace, badgeCount: badgeCount);
@@ -230,10 +223,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         builder: (context, counts) {
           final destinations = _navigationDestinations(
             unreadCount: counts.chatCount,
-            counts: counts.forWorkspace(_workspace),
-            reviewsCount: context.select<AccountCubit, int>(
-              (cubit) => cubit.data.stats.reviewsCount,
-            ),
           );
           return rail
               ? HomeNavigationRail(

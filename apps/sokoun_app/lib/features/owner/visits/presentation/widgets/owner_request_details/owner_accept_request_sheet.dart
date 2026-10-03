@@ -32,7 +32,7 @@ class OwnerAcceptRequestSheet extends StatelessWidget {
           DefaultButton(
             onTap: () => Go.back(true),
             title: LocaleKeys.ownerAcceptConfirm,
-            color: AppColors.green,
+            color: AppColors.greenStrong,
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(14.r),
             height: 52.h,

@@ -7,7 +7,9 @@ import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class ChatDayLabel extends StatelessWidget {
-  const ChatDayLabel({super.key});
+  const ChatDayLabel({super.key, required this.date});
+
+  final DateTime date;
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +20,12 @@ class ChatDayLabel extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: AppText(
-        LocaleKeys.chatToday,
+        DateUtils.isSameDay(date, DateTime.now())
+            ? LocaleKeys.chatToday
+            : MaterialLocalizations.of(context).formatMediumDate(date),
         style: AppTextStyles.regular11.copyWith(
           color: AppColors.sokoonGray,
-          fontSize: 11.sp,
+          fontSize: 12.sp,
           height: 1.45,
         ),
       ),

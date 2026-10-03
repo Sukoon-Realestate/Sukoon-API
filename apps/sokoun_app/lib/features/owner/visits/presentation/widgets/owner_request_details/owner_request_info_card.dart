@@ -92,7 +92,9 @@ class _OwnerRequestStatusPill extends StatelessWidget {
   final OwnerVisitRequestDetailsContent request;
 
   Color get _backgroundColor {
-    if (request.status.isAccepted) return AppColors.greenPale;
+    if (request.status.isAccepted || request.status.isCompleted) {
+      return AppColors.greenPale;
+    }
     if (request.status.isRejected) return AppColors.redPale;
     if (request.status.isPending || request.status.isNewRequest) {
       return AppColors.amberPale;
@@ -101,10 +103,12 @@ class _OwnerRequestStatusPill extends StatelessWidget {
   }
 
   Color get _foregroundColor {
-    if (request.status.isAccepted) return AppColors.green;
-    if (request.status.isRejected) return AppColors.red;
+    if (request.status.isAccepted || request.status.isCompleted) {
+      return AppColors.greenStrong;
+    }
+    if (request.status.isRejected) return AppColors.sokoonRose;
     if (request.status.isPending || request.status.isNewRequest) {
-      return AppColors.amber;
+      return AppColors.brown;
     }
     return AppColors.sokoonGray;
   }

@@ -31,7 +31,11 @@ import 'package:sokoun_app/features/shared/finance/presentation/egyptian_pound_t
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
 import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
 import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
+import 'package:sokoun_app/features/main_view/data/enums/workspace_tab.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_results_screen.dart';
+import 'presentation/widgets/tenant_visits/visit_collection_count.dart';
 import 'data/enums/visit_status.dart';
+import 'presentation/widgets/shared/visit_status_style.dart';
 import 'data/tenant_visits_data.dart';
 import 'data/models/book_visit_body.dart';
 import 'data/models/tenant_visit_content.dart';
@@ -82,3 +86,5 @@ part 'presentation/cubits/visit_cancel_cubit.dart';
 part 'presentation/cubits/visit_review_cubit.dart';
 part 'presentation/widgets/details/visit_details_extra.dart';
 part 'presentation/widgets/details/visit_note_card.dart';
+
+part 'presentation/widgets/shared/visit_cancellation_dialog.dart';

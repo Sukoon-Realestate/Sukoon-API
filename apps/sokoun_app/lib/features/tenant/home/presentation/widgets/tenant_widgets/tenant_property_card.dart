@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:sokoun_app/shared_widgets/property_card_summary.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/image_widgets/cached_image.dart';
@@ -103,71 +103,29 @@ class TenantPropertyCard extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                AppText(
-                  title,
-                  style: AppTextStyles.bold16.copyWith(
-                    color: AppColors.sokoonNavy,
-                    fontSize: 16.sp,
-                    height: 1.45,
+            child: PropertyCardSummary(
+              title: title,
+              price: price,
+              metadata: Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 6.w,
+                children: [
+                  Icon(Icons.star_rounded, color: AppColors.amber, size: 16.r),
+                  AppText(
+                    rating,
+                    style: AppTextStyles.regular12.copyWith(
+                      color: AppColors.sokoonGray,
+                    ),
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                6.szH,
-                Row(
-                  children: [
-                    Icon(
-                      Icons.star_rounded,
-                      color: AppColors.amber,
-                      size: 14.r,
+                  AppText('·', style: AppTextStyles.regular12),
+                  AppText(
+                    area,
+                    style: AppTextStyles.regular12.copyWith(
+                      color: AppColors.sokoonGray,
                     ),
-                    3.szW,
-                    AppText(
-                      rating,
-                      style: AppTextStyles.regular12.copyWith(
-                        color: AppColors.sokoonGray,
-                        fontSize: 12.sp,
-                        height: 1.45,
-                      ),
-                    ),
-                    8.szW,
-                    AppText(
-                      '·',
-                      style: AppTextStyles.regular12.copyWith(
-                        color: AppColors.sokoonGray,
-                        fontSize: 12.sp,
-                        height: 1.45,
-                      ),
-                    ),
-                    8.szW,
-                    Expanded(
-                      child: AppText(
-                        area,
-                        style: AppTextStyles.regular12.copyWith(
-                          color: AppColors.sokoonGray,
-                          fontSize: 12.sp,
-                          height: 1.45,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-                12.szH,
-                AppText(
-                  price,
-                  style: AppTextStyles.bold16.copyWith(
-                    color: AppColors.sokoonTeal,
-                    fontSize: 16.sp,
-                    height: 1.45,
                   ),
-                ),
-              ],
+                ],
+              ),
             ).paddingSymmetric(horizontal: 12.w, vertical: 11.h),
           ),
         ],

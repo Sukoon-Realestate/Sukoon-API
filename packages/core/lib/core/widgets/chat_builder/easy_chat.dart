@@ -19,6 +19,10 @@ class EasyChat<Response> extends StatelessWidget {
   final Widget Function(PagifyException e)? errorBuilder;
   final Widget Function(ChatMessages message) rightMessageBuilder;
   final Widget Function(ChatMessages message) leftMessageBuilder;
+
+  /// A header for a chronological boundary (for example a new message day).
+  final Widget? Function(List<ChatMessages> messages, int index)?
+  itemHeaderBuilder;
   final double? cacheExtent;
   final double? itemExtent;
   final String? noConnectionText;
@@ -41,6 +45,7 @@ class EasyChat<Response> extends StatelessWidget {
     required this.leftMessageBuilder,
     required this.messageAlignment,
     this.errorBuilder,
+    this.itemHeaderBuilder,
     this.loadingBuilder,
     this.cacheExtent,
     this.itemExtent,
@@ -80,13 +85,20 @@ class EasyChat<Response> extends StatelessWidget {
       cacheKey: cacheKey,
       cacheToJson: cacheToJson,
       cacheFromJson: cacheFromJson,
-      itemBuilder: (context, data, index, message) => Row(
-        mainAxisAlignment: messageAlignment(message.sender.isFromMe),
+      itemBuilder: (context, data, index, message) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          MessageWidget(
-            message: message,
-            leftMessageBuilder: leftMessageBuilder,
-            rightMessageBuilder: rightMessageBuilder,
+          if (itemHeaderBuilder?.call(data, index) case final Widget header)
+            header,
+          Row(
+            mainAxisAlignment: messageAlignment(message.sender.isFromMe),
+            children: [
+              MessageWidget(
+                message: message,
+                leftMessageBuilder: leftMessageBuilder,
+                rightMessageBuilder: rightMessageBuilder,
+              ),
+            ],
           ),
         ],
       ),

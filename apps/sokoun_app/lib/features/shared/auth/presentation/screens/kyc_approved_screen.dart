@@ -52,7 +52,7 @@ class KycApprovedScreen extends StatelessWidget {
             child: AppText(
               LocaleKeys.verified,
               style: AppTextStyles.semiBold.copyWith(
-                color: AppColors.sokoonGold,
+                color: AppColors.brown,
                 fontSize: 12.sp,
               ),
             ),

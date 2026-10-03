@@ -41,7 +41,7 @@ class AddPropertySubmittedPage extends StatelessWidget {
               ),
               child: Icon(
                 Icons.schedule_rounded,
-                color: AppColors.amber,
+                color: AppColors.brown,
                 size: 42.r,
               ),
             ),
@@ -59,13 +59,13 @@ class AddPropertySubmittedPage extends StatelessWidget {
               children: [
                 Icon(
                   Icons.schedule_rounded,
-                  color: AppColors.amber,
+                  color: AppColors.brown,
                   size: 12.r,
                 ),
                 AppText(
                   LocaleKeys.ownerPropertySubmittedStatus,
                   style: AppTextStyles.semiBold.copyWith(
-                    color: AppColors.amber,
+                    color: AppColors.brown,
                     fontSize: 12.sp,
                   ),
                 ),

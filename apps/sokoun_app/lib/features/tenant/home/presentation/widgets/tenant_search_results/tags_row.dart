@@ -26,7 +26,7 @@ class TagsRow extends StatelessWidget {
               tag,
               style: AppTextStyles.semiBold.copyWith(
                 color: AppColors.sokoonGray,
-                fontSize: 11.sp,
+                fontSize: 12.sp,
               ),
             ),
           ),

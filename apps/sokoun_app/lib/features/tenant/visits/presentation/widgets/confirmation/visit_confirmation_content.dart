@@ -83,7 +83,10 @@ class VisitConfirmationContent extends StatelessWidget {
           ),
           24.szH,
           DefaultButton(
-            onTap: () => Go.off(const TenantVisitsScreen()),
+            onTap: () => WorkspaceNavigation.open(
+              workspace: AppWorkspace.tenant,
+              tab: WorkspaceTab.visits,
+            ),
             title: LocaleKeys.tenantVisitFollowRequests,
             color: AppColors.sokoonTeal,
             textColor: AppColors.white,
@@ -96,7 +99,12 @@ class VisitConfirmationContent extends StatelessWidget {
           ),
           12.szH,
           DefaultButton(
-            onTap: () => Go.off(const TenantSearchScreen()),
+            onTap: () => Go.tryBackUntil(
+              (route) =>
+                  route.isFirst ||
+                  route.settings.name == '$TenantSearchResultsScreen' ||
+                  route.settings.name == '$TenantSearchScreen',
+            ),
             title: LocaleKeys.tenantVisitBackToSearch,
             color: AppColors.white,
             textColor: AppColors.sokoonNavy,

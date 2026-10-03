@@ -141,7 +141,6 @@ class KycIntroScreen extends StatelessWidget {
                     icon: Icons.credit_card_rounded,
                     title: LocaleKeys.nationalIdFrontBack,
                     isHighlighted: true,
-                    isComplete: true,
                   ),
                   8.szH,
                   KycRequirementTile(

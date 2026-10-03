@@ -59,14 +59,13 @@ class ChatMessageBubble extends StatelessWidget {
                       fontSize: 14.sp,
                       height: 1.4,
                     ),
-                    maxLines: 8,
                   ),
           ),
           AppText(
             message.time ?? '',
             style: AppTextStyles.regular10.copyWith(
               color: AppColors.sokoonGray,
-              fontSize: 10.sp,
+              fontSize: 12.sp,
               height: 1.45,
             ),
             maxLines: 1,
@@ -120,7 +119,7 @@ class _VoiceMessageContent extends StatelessWidget {
           duration,
           style: AppTextStyles.regular11.copyWith(
             color: foreground.withValues(alpha: .8),
-            fontSize: 11.sp,
+            fontSize: 12.sp,
             height: 1.45,
           ),
           maxLines: 1,

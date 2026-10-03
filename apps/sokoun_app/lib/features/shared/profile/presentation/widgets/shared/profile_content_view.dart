@@ -32,9 +32,9 @@ class ProfileContentView extends StatelessWidget {
         subtitle: verificationSubtitle,
       ),
       14.szH,
-      ProfileAccountDetailsCard(details: accountDetails),
-      14.szH,
       activity,
+      14.szH,
+      ProfileAccountDetailsCard(details: accountDetails),
       for (final section in additionalSections) ...[14.szH, section],
     ],
   );

@@ -4,12 +4,18 @@ import 'package:melos_core/core/error/failure.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:melos_core/core/shared/route_observer.dart';
+import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
+import 'package:sokoun_app/features/main_view/data/enums/workspace_tab.dart';
+import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
+import 'dart:async';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_home_screen.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_search_screen.dart';
 import 'package:sokoun_app/features/tenant/visits/imports.dart';
@@ -65,6 +71,7 @@ void main() {
         builder: (context, _) {
           return MaterialApp(
             navigatorKey: Go.navigatorKey,
+            navigatorObservers: [AppNavigationObserver.instance],
             localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,
             locale: context.locale,
@@ -161,13 +168,30 @@ void main() {
     await tester.tap(find.text('إلغاء الطلب'));
     await tester.pumpAndSettle();
 
+    expect(find.byType(AlertDialog), findsOneWidget);
+    expect(find.text('ستوديو، التجمع الخامس'), findsNWidgets(2));
+    await tester.tap(find.text(LocaleKeys.visitKeepBooking));
+    await tester.pumpAndSettle();
+    expect(find.byType(TenantVisitCard), findsOneWidget);
+    await tester.tap(find.text('إلغاء الطلب'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(LocaleKeys.visitConfirmCancellation));
+    await tester.pumpAndSettle();
     expect(find.text('لا توجد زيارات في هذه الفئة'), findsOneWidget);
     expect(find.text('تم إلغاء طلب الزيارة'), findsOneWidget);
 
     await tester.tap(find.text('عرض كل الزيارات'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(TenantVisitCard), findsNWidgets(2));
+    expect(find.byType(TenantVisitCard), findsNWidgets(3));
+    final cards = tester.widgetList<TenantVisitCard>(
+      find.byType(TenantVisitCard),
+    );
+    final canceled = cards.singleWhere(
+      (card) => card.visit.propertyTitle == 'ستوديو، التجمع الخامس',
+    );
+    expect(canceled.visit.status, TenantVisitStatus.canceled);
+    expect(canceled.visit.canCancel, isFalse);
     expect(tester.takeException(), isNull);
   });
 
@@ -226,8 +250,23 @@ void main() {
   testWidgets('runs booking and confirmation into my visits', (tester) async {
     configurePhoneViewport(tester);
 
+    WorkspaceTab? selectedTab;
+    Future<void> selectWorkspace(
+      AppWorkspace? workspace,
+      WorkspaceTab? tab,
+    ) async {
+      expect(workspace, AppWorkspace.tenant);
+      selectedTab = tab;
+    }
+
+    WorkspaceNavigation.attach(selectWorkspace);
+    addTearDown(() => WorkspaceNavigation.detach(selectWorkspace));
     await tester.pumpWidget(
-      buildScreen(
+      buildScreen(TenantVisitsScreen(initialVisits: _tenantVisitFixtures())),
+    );
+    await tester.pumpAndSettle();
+    unawaited(
+      Go.to(
         const BookVisitScreen(
           property: VisitPropertyContent(
             id: 'booking-property',
@@ -295,6 +334,8 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
 
+    expect(selectedTab, WorkspaceTab.visits);
+    expect(find.byType(VisitConfirmedScreen), findsNothing);
     expect(find.byType(TenantVisitsScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
   });

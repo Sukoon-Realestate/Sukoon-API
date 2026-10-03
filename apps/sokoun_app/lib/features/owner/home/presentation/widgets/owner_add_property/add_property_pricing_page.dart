@@ -9,6 +9,8 @@ import 'package:sokoun_app/features/shared/finance/presentation/egyptian_pound_t
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 
 import 'add_property_chip_wrap.dart';
+import 'property_selection_field.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/core/helpers/status_builder.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
@@ -94,9 +96,7 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
       primaryLabel: widget.isSubmitting
           ? LocaleKeys.ownerAddPropertySubmitting
           : LocaleKeys.ownerPropertyReviewAction,
-      onPrimaryTap: widget.form.isPricingReady && !widget.isSubmitting
-          ? widget.onNext
-          : null,
+      onPrimaryTap: !widget.isSubmitting ? widget.onNext : null,
       children: [
         _PriceSection(
           form: widget.form,
@@ -155,22 +155,28 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
                         ),
                       ),
                       AddPropertySectionCard(
-                        title: LocaleKeys.ownerAddPropertySuitableFor,
+                        title: '${LocaleKeys.ownerAddPropertySuitableFor} *',
                         child: options.suitableFor.isEmpty
                             ? const AddPropertyOptionsEmptyState()
-                            : AddPropertyChipWrap(
-                                chips: [
-                                  for (final option in options.suitableFor)
-                                    AddPropertyChipContent(
-                                      label: option.label,
-                                      value: option.value,
-                                      isSelected:
-                                          widget.form.suitableForApiValue ==
-                                          option.value,
-                                    ),
-                                ],
-                                onChipTap: (chip) => widget
-                                    .onSuitableForSelected(chip.selectionValue),
+                            : PropertySelectionField(
+                                isValid:
+                                    widget.form.suitableForApiValue.isNotEmpty,
+                                child: AddPropertyChipWrap(
+                                  chips: [
+                                    for (final option in options.suitableFor)
+                                      AddPropertyChipContent(
+                                        label: option.label,
+                                        value: option.value,
+                                        isSelected:
+                                            widget.form.suitableForApiValue ==
+                                            option.value,
+                                      ),
+                                  ],
+                                  onChipTap: (chip) =>
+                                      widget.onSuitableForSelected(
+                                        chip.selectionValue,
+                                      ),
+                                ),
                               ),
                       ),
                     ],
@@ -232,6 +238,9 @@ class _PriceSection extends StatelessWidget {
               isFocused: true,
               textAlign: TextAlign.start,
             ),
+            validator: (value) => Validators.isPositiveNumber(value ?? '')
+                ? null
+                : LocaleKeys.propertyPositiveNumber,
             controller: monthlyPriceController,
             onChanged: onMonthlyPriceChanged,
             keyboardType: TextInputType.number,
@@ -287,6 +296,9 @@ class _RentalPeriodSection extends StatelessWidget {
                     isFocused: true,
                     textAlign: TextAlign.center,
                   ),
+                  validator: (value) => Validators.isPositiveNumber(value ?? '')
+                      ? null
+                      : LocaleKeys.propertyPositiveNumber,
                   controller: rentalDurationController,
                   onChanged: onRentalDurationChanged,
                   keyboardType: TextInputType.number,
@@ -296,8 +308,10 @@ class _RentalPeriodSection extends StatelessWidget {
               Expanded(
                 child: DropdownButtonFormField<TenantFilterOption>(
                   isExpanded: true,
+                  validator: (_) =>
+                      Validators.validateRequired(form.rentalUnitApiValue),
                   decoration: InputDecoration(
-                    labelText: LocaleKeys.ownerAddPropertyUnit,
+                    labelText: '${LocaleKeys.ownerAddPropertyUnit} *',
                   ),
                   hint: AppText(LocaleKeys.ownerAddPropertyChoose),
                   initialValue: selected,
@@ -358,6 +372,9 @@ class _DescriptionSection extends StatelessWidget {
           label: LocaleKeys.ownerAddPropertyDescriptionLabel,
           value: LocaleKeys.ownerAddPropertyDescriptionHint,
         ),
+        validator: (value) => Validators.hasMinimumLength(value ?? '', 10)
+            ? null
+            : LocaleKeys.propertyDescriptionMinimum,
         controller: descriptionController,
         onChanged: onDescriptionChanged,
         hint: LocaleKeys.ownerAddPropertyDescriptionHint,

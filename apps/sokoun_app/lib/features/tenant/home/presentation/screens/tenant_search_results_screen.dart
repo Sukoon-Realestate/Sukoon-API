@@ -1,11 +1,13 @@
 import 'package:melos_core/core/network/network_request.dart';
+import 'package:melos_core/core/error/exceptions.dart';
+import 'package:melos_core/core/shared/base_state.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/helpers/status_builder.dart';
+import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:pagify/pagify.dart';
@@ -18,7 +20,6 @@ import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_fil
 
 import '../widgets/tenant_filter/property_filter_label_resolver.dart';
 import '../widgets/tenant_search_results/imports.dart';
-import '../widgets/tenant_search_results/search_results_loading.dart';
 import 'tenant_filter_screen.dart';
 
 class TenantSearchResultsScreen extends StatefulWidget {
@@ -102,7 +103,9 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
     await Go.to<void>(
       TenantFilterScreen(
         initialFilters: _filters,
-        initialFilterOptions: _propertyFilterOptionsCubit.data,
+        initialFilterOptions: _propertyFilterOptionsCubit.state.status.isSuccess
+            ? _propertyFilterOptionsCubit.data
+            : null,
         onFiltersApplied: _applyFilters,
       ),
     );
@@ -122,9 +125,11 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
       _paginatedFilters = filters.copyWith(page: 1);
       _searchVersion++;
     });
+    final int version = _searchVersion;
     _resultCount.value = null;
-    _pagifyController.clear();
-    await _pagifyController.refresh();
+    // Let the collection receive the submitted filters before refreshing it.
+    await WidgetsBinding.instance.endOfFrame;
+    if (mounted && version == _searchVersion) await _pagifyController.refresh();
   }
 
   Future<(List<PropertyDetailsModel>, PaginationData)> _getPropertiesPage(
@@ -148,10 +153,7 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
     );
 
     if (requestVersion != _searchVersion) {
-      return (
-        const <PropertyDetailsModel>[],
-        PaginationData(perPage: requestFilters.pageSize, totalPages: 1),
-      );
+      throw const RequestCancelledException();
     }
 
     if (page == 1 && mounted) {
@@ -200,16 +202,13 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
         contentWidth: SokounContentWidth.wide,
         body: SafeArea(
           child:
-              StatusBuilder<
+              BlocSelector<
                 PropertyFilterOptionsCubit,
+                AsyncState<PropertyFilterOptionsModel>,
                 PropertyFilterOptionsModel
-              >.withShimmer(
-                initialDataForShimmer:
-                    const PropertyFilterOptionsModel.initial(),
-                shimmerBuilder: (_) => const SearchResultsLoading(),
-                onRetry: _propertyFilterOptionsCubit.getFilterOptions,
-                errorType: ErrorType.defaultView,
-                builder: (filterOptions) => TenantSearchResultsContent(
+              >(
+                selector: (state) => state.data,
+                builder: (context, filterOptions) => TenantSearchResultsContent(
                   queryController: _queryController,
                   pagifyController: _pagifyController,
                   filterOptions: filterOptions,

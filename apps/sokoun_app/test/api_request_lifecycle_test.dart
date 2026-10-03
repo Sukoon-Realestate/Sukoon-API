@@ -345,7 +345,7 @@ void main() {
   });
 
   testWidgets(
-    'search skeleton never requests a page and filters reuse loaded options',
+    'search listings load independently and filters reuse loaded options',
     (tester) async {
       await _pump(
         tester,
@@ -354,8 +354,8 @@ void main() {
         ),
       );
       expect(repository.requests, hasLength(1));
-      expect(network.requests, isEmpty);
-      expect(find.byType(AppPagify<PropertyDetailsModel>), findsNothing);
+      expect(network.requests, hasLength(1));
+      expect(find.byType(AppPagify<PropertyDetailsModel>), findsOneWidget);
       final scaffold = tester.widget<AppScaffold>(find.byType(AppScaffold));
       repository.requests.single.complete({});
       await tester.pumpAndSettle();

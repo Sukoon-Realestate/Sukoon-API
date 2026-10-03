@@ -3778,4 +3778,34 @@ abstract class LocaleKeys {
   static const String _supportLinkUnavailable = 'support_link_unavailable';
   static String get supportLinkUnavailable => _supportLinkUnavailable.tr();
 
+  static const String _propertyPositiveNumber = 'property_positive_number';
+  static String get propertyPositiveNumber => _propertyPositiveNumber.tr();
+
+  static const String _propertyDescriptionMinimum = 'property_description_minimum';
+  static String get propertyDescriptionMinimum => _propertyDescriptionMinimum.tr();
+
+  static const String _searchUpdatingPreviousResults = 'search_updating_previous_results';
+  static String get searchUpdatingPreviousResults => _searchUpdatingPreviousResults.tr();
+
+  static const String _searchRefreshFailed = 'search_refresh_failed';
+  static String get searchRefreshFailed => _searchRefreshFailed.tr();
+
+  static const String _searchRetry = 'search_retry';
+  static String get searchRetry => _searchRetry.tr();
+
+  static const String _visitCancellationTitle = 'visit_cancellation_title';
+  static String get visitCancellationTitle => _visitCancellationTitle.tr();
+
+  static const String _visitCancellationDescription = 'visit_cancellation_description';
+  static String get visitCancellationDescription => _visitCancellationDescription.tr();
+
+  static const String _visitKeepBooking = 'visit_keep_booking';
+  static String get visitKeepBooking => _visitKeepBooking.tr();
+
+  static const String _visitConfirmCancellation = 'visit_confirm_cancellation';
+  static String get visitConfirmCancellation => _visitConfirmCancellation.tr();
+
+  static const String _propertyRequiredFieldsHint = 'property_required_fields_hint';
+  static String get propertyRequiredFieldsHint => _propertyRequiredFieldsHint.tr();
+
 }

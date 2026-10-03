@@ -7,6 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/widgets/chat_builder/chat_message.dart';
+import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_day_label.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
@@ -215,6 +218,7 @@ void main() {
 
         for (final message in ['Hello', 'Another message']) {
           await tester.enterText(find.byType(TextField).first, message);
+          await tester.pump();
           await tester.tap(find.byIcon(Icons.send_rounded));
           await tester.pumpAndSettle();
           expect(_conversationsRequestCount, 1);
@@ -314,6 +318,7 @@ void main() {
 
     expect(_messagesRequestCount, 1);
     await tester.enterText(find.byType(TextField).first, 'رسالة جديدة');
+    await tester.pump();
     await tester.tap(find.byIcon(Icons.send_rounded));
     await tester.pump();
 
@@ -475,6 +480,125 @@ void main() {
     expect(_messagesRequestCount, 1);
   });
 
+  testWidgets(
+    'incoming messages preserve older reading position and use real days',
+    (tester) async {
+      configurePhoneViewport(tester);
+      final realtime = _MemoryChatRealtimeGateway();
+      final cubit = ChatThreadCubit(
+        conversationId: _conversations.first.id,
+        otherParticipantId: 'other-user-id',
+        realtimeService: realtime,
+        dataSource: ChatData.source,
+      );
+      addTearDown(() async {
+        await cubit.close();
+        await realtime.close();
+      });
+      final messages = List.generate(
+        40,
+        (index) => ChatMessageContent(
+          id: 'history-$index',
+          body: 'Earlier message $index',
+          time: '',
+          createdAt: DateTime(2026, 9, index < 20 ? 16 : 15, 12, 40 - index),
+          isFromMe: false,
+        ),
+      );
+      await tester.pumpWidget(
+        buildScreen(
+          BlocProvider<ChatThreadCubit>.value(
+            value: cubit,
+            child: Scaffold(
+              body: ChatThreadContent(
+                conversation: _conversations.first,
+                initialMessagesRequest: Future.value(messages),
+                messagesCacheKey: null,
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await cubit.connect();
+      final list = find.byType(EasyChat<List<ChatMessageContent>>);
+      final position = tester
+          .state<ScrollableState>(
+            find.descendant(of: list, matching: find.byType(Scrollable)).first,
+          )
+          .position;
+      expect(position.extentAfter, 0);
+      await tester.drag(list, const Offset(0, 450));
+      await tester.pumpAndSettle();
+      final offset = position.pixels;
+      expect(position.extentAfter, greaterThan(80));
+      realtime.addMessage(
+        const ChatSocketMessage.initial().copyWith(
+          id: 'new-while-reading',
+          conversationId: _conversations.first.id,
+          content: 'Incoming reply',
+          createdAt: DateTime(2026, 9, 17),
+          sender: const ChatParticipantContent.initial().copyWith(
+            id: 'other-user-id',
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(position.pixels, closeTo(offset, .1));
+      expect(
+        tester
+            .widget<EasyChat<List<ChatMessageContent>>>(list)
+            .controller
+            .items
+            .last
+            .message
+            .id,
+        'new-while-reading',
+      );
+      position.jumpTo(0);
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<ChatDayLabel>(find.byType(ChatDayLabel).first).date.day,
+        15,
+      );
+      expect(find.text('النهارده'), findsNothing);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
+
+  testWidgets('long message body remains fully readable', (tester) async {
+    configurePhoneViewport(tester);
+    final body = List.generate(15, (index) => 'Message line $index').join('\n');
+    await tester.pumpWidget(
+      buildScreen(
+        Scaffold(
+          body: Align(
+            child: ChatMessageBubble(
+              message: ChatMessages(
+                message: Message(id: 'long', type: 'text', body: body),
+                sender: Sender(
+                  id: 'other',
+                  name: '',
+                  image: '',
+                  isFromMe: false,
+                ),
+              ),
+              isFromMe: false,
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final text = tester.widget<AppText>(
+      find.ancestor(of: find.text(body), matching: find.byType(AppText)),
+    );
+    expect(text.maxLines, isNull);
+    expect(tester.getSize(find.text(body)).height, greaterThan(200));
+    expect(tester.takeException(), isNull);
+  });
+
   for (final bool offline in [true, false]) {
     testWidgets(
       offline
@@ -520,6 +644,7 @@ void main() {
           find.byType(TextField).first,
           'رسالة بدون اتصال',
         );
+        await tester.pump();
         await tester.tap(find.byIcon(Icons.send_rounded));
         await tester.pump();
 

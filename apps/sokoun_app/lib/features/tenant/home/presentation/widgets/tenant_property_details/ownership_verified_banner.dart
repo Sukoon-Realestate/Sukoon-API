@@ -22,14 +22,14 @@ class TenantPropertyOwnershipVerifiedBanner extends StatelessWidget {
         children: [
           Icon(
             Icons.verified_user_outlined,
-            color: AppColors.green,
+            color: AppColors.greenStrong,
             size: 18.r,
           ),
           Expanded(
             child: AppText(
               LocaleKeys.tenantPropertyDetailsOwnershipVerified,
               style: AppTextStyles.bold13.copyWith(
-                color: AppColors.green,
+                color: AppColors.greenStrong,
                 fontSize: 13.sp,
                 height: 1.45,
               ),

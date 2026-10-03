@@ -59,7 +59,7 @@ class KycPendingScreen extends StatelessWidget {
             ),
             child: Icon(
               Icons.schedule_rounded,
-              color: AppColors.amber,
+              color: AppColors.brown,
               size: 44.r,
             ),
           ),
@@ -73,7 +73,7 @@ class KycPendingScreen extends StatelessWidget {
             child: AppText(
               LocaleKeys.kycPendingBadge,
               style: AppTextStyles.semiBold.copyWith(
-                color: AppColors.amber,
+                color: AppColors.brown,
                 fontSize: 12.sp,
               ),
             ),

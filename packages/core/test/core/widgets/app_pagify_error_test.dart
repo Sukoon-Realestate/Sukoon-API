@@ -109,6 +109,62 @@ void main() {
     },
   );
 
+  testWidgets(
+    'keeps previous results through a failed replacement and retries',
+    (tester) async {
+      final controller = PagifyController<String>();
+      final requests = <Completer<(List<String>, PaginationData)>>[];
+      await tester.pumpWidget(
+        _screen(
+          AppPagify<String>(
+            pagifyController: controller,
+            shrinkWrap: false,
+            retainItemsOnRefresh: true,
+            onError: (_, _, _) {},
+            retainedItemsNotice: (isLoading, retry) => isLoading
+                ? const Text('Updating previous results')
+                : TextButton(
+                    onPressed: retry,
+                    child: const Text('Retry previous results'),
+                  ),
+            loadingBuilder: const SizedBox.shrink(),
+            asyncCall: (_, _) {
+              final request = Completer<(List<String>, PaginationData)>();
+              requests.add(request);
+              return request.future;
+            },
+            itemBuilder: (_, _, _, item) => Text(item),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      requests.single.complete((
+        ['Previous result'],
+        PaginationData(perPage: 10, totalPages: 1),
+      ));
+      await tester.pumpAndSettle();
+      controller.refresh();
+      await tester.pumpAndSettle();
+      expect(find.text('Previous result'), findsOneWidget);
+      expect(find.text('Updating previous results'), findsOneWidget);
+      requests.last.completeError(ServerException('Replacement failed'));
+      await tester.pumpAndSettle();
+      expect(find.text('Previous result'), findsOneWidget);
+      await tester.tap(find.text('Retry previous results'));
+      await tester.pumpAndSettle();
+      requests.last.complete((
+        ['New result'],
+        PaginationData(perPage: 10, totalPages: 1),
+      ));
+      await tester.pumpAndSettle();
+      expect(controller.items, ['New result']);
+      expect(find.text('Previous result'), findsNothing);
+      expect(find.text('New result'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
+
   for (final Ranking ranking in Ranking.values) {
     for (final String kind in ['connection', 'server', 'pagify']) {
       testWidgets(

@@ -102,7 +102,7 @@ class _HomeBottomNavigationItem extends StatelessWidget {
                 destination.label,
                 style: AppTextStyles.semiBold.copyWith(
                   color: color,
-                  fontSize: 11.sp,
+                  fontSize: 12.sp,
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,

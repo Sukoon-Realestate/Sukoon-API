@@ -36,7 +36,7 @@ class OwnerRequestDetailsActions extends StatelessWidget {
             customChild: isAccepting
                 ? const _OwnerActionLoader(color: AppColors.white)
                 : null,
-            color: AppColors.green,
+            color: AppColors.greenStrong,
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(16.r),
             height: 52.h,

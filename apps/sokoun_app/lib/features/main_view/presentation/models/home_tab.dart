@@ -69,11 +69,11 @@ class HomeTab {
       AppWorkspace.owner: [
         HomeTab(tab: WorkspaceTab.home, screen: OwnerHomeScreen()),
         HomeTab(tab: WorkspaceTab.properties, screen: OwnerPropertiesScreen()),
+        messages,
         HomeTab(
           tab: WorkspaceTab.requests,
           screen: OwnerVisitRequestsScreen(showBackButton: false),
         ),
-        messages,
         HomeTab(
           tab: WorkspaceTab.profile,
           screen: ProfileScreen(workspace: AppWorkspace.owner),
