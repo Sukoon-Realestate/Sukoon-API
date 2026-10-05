@@ -42,14 +42,16 @@ class OwnerVisitRequestStatusBanner extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: _backgroundColor,
+        color: context.appColor(_backgroundColor, surface: true),
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: _foregroundColor.withValues(alpha: 0.2)),
+        border: Border.all(
+          color: context.appColor(_foregroundColor).withValues(alpha: 0.2),
+        ),
       ),
       child: AppText(
         label.trim().isNotEmpty ? label : status.label,
         style: AppTextStyles.bold13.copyWith(
-          color: _foregroundColor,
+          color: context.appColor(_foregroundColor),
           fontSize: 13.sp,
           height: 1.45,
         ),

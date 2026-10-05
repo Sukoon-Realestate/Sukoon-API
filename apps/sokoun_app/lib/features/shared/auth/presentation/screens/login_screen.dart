@@ -115,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: AppText(
                     LocaleKeys.forgotPassword,
                     style: AppTextStyles.bold12.copyWith(
-                      color: AppColors.sokoonTeal,
+                      color: context.appColor(AppColors.sokoonTeal),
                       fontSize: 12.sp,
                       height: 1.45,
                     ),
@@ -125,7 +125,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 AppLoadingButton(
                   asyncCall: (_) => submit(),
                   title: LocaleKeys.login,
-                  buttonColor: AppColors.sokoonTeal,
+                  buttonColor: context.appColor(
+                    AppColors.sokoonTeal,
+                    surface: true,
+                  ),
                   textColor: AppColors.white,
                   borderRadius: 14.r,
                   textStyle: AppTextStyles.bold16.copyWith(
@@ -163,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: AppText(
                     LocaleKeys.signInAsVisitor,
                     style: AppTextStyles.bold13.copyWith(
-                      color: AppColors.sokoonGray,
+                      color: context.appColor(AppColors.sokoonGray),
                       fontSize: 13.sp,
                       decoration: TextDecoration.underline,
                       height: 1.45,

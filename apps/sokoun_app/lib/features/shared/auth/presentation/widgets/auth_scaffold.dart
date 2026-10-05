@@ -38,7 +38,7 @@ class AuthScaffold extends StatelessWidget {
       showBackButton: showBackButton,
       onBack: onBack,
       backButton: backButton,
-      backgroundColor: backgroundColor,
+      backgroundColor: context.appColor(backgroundColor, surface: true),
       contentWidth: SokounContentWidth.form,
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       bottomBar: bottomNavigationBar,

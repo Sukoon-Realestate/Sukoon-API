@@ -37,9 +37,11 @@ class OwnerVisitRequestsHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 14.h),
-    decoration: const BoxDecoration(
-      color: AppColors.white,
-      border: Border(bottom: BorderSide(color: AppColors.grayPale)),
+    decoration: BoxDecoration(
+      color: context.appColor(AppColors.white, surface: true),
+      border: Border(
+        bottom: BorderSide(color: context.appColor(AppColors.grayPale)),
+      ),
     ),
     child: Column(
       spacing: 12.h,

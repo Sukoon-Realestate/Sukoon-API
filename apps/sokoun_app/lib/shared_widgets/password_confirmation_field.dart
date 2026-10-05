@@ -39,10 +39,10 @@ class SokoonPasswordConfirmationField extends StatelessWidget {
       valueListenable: controller,
       builder: (context, value, child) {
         final borderColor = hasError
-            ? AppColors.sokoonRose
+            ? context.appColor(AppColors.sokoonRose)
             : value.text.isNotEmpty
             ? accentColor
-            : AppColors.sokoonBorder;
+            : context.appColor(AppColors.sokoonBorder);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,14 +55,14 @@ class SokoonPasswordConfirmationField extends StatelessWidget {
               isPassword: true,
               action: action,
               borderRadius: 12.r,
-              borderColor: borderColor,
-              fillColor: AppColors.white,
+              borderColor: context.appColor(borderColor),
+              fillColor: context.appColor(AppColors.white, surface: true),
               contentPadding: EdgeInsets.symmetric(
                 horizontal: 16.w,
                 vertical: 14.h,
               ),
               style: AppTextStyles.semiBold.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 15.sp,
               ),
               onChanged: onChanged,
@@ -77,7 +77,7 @@ class SokoonPasswordConfirmationField extends StatelessWidget {
               AppText(
                 errorText!,
                 style: AppTextStyles.bold12.copyWith(
-                  color: AppColors.sokoonRose,
+                  color: context.appColor(AppColors.sokoonRose),
                   fontSize: 12.sp,
                   height: 1.45,
                 ),

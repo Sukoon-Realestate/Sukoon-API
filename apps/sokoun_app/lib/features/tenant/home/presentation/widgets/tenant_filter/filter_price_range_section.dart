@@ -53,7 +53,7 @@ class FilterPriceRangeSection extends StatelessWidget {
               AppText(
                 '—',
                 style: AppTextStyles.bold16.copyWith(
-                  color: AppColors.sokoonGray,
+                  color: context.appColor(AppColors.sokoonGray),
                   fontSize: 16.sp,
                   height: 1.45,
                 ),
@@ -89,7 +89,7 @@ class FilterPriceRangeSection extends StatelessWidget {
                         AppText(
                           LocaleKeys.searchPriceRangeError,
                           style: AppTextStyles.regular13.copyWith(
-                            color: AppColors.sokoonRose,
+                            color: context.appColor(AppColors.sokoonRose),
                             fontSize: 13.sp,
                             height: 1.45,
                           ),

@@ -172,7 +172,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 title: widget.isSubmitting
                     ? LocaleKeys.registrationSubmitting
                     : LocaleKeys.createAccount,
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal, surface: true),
                 textColor: AppColors.white,
                 borderRadius: BorderRadius.circular(14.r),
                 height: 52.h,

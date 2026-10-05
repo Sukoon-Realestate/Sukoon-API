@@ -23,19 +23,22 @@ class OtpCodeField extends StatelessWidget {
       width: 45.w,
       height: 58.h,
       textStyle: AppTextStyles.extraBold.copyWith(
-        color: AppColors.sokoonNavy,
+        color: context.appColor(AppColors.sokoonNavy),
         fontSize: 22.sp,
       ),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: AppColors.grayPale),
+        border: Border.all(color: context.appColor(AppColors.grayPale)),
       ),
     );
 
     final activeTheme = defaultTheme.copyDecorationWith(
-      color: AppColors.mintLight,
-      border: Border.all(color: AppColors.sokoonTeal, width: 1.5),
+      color: context.appColor(AppColors.mintLight, surface: true),
+      border: Border.all(
+        color: context.appColor(AppColors.sokoonTeal),
+        width: 1.5,
+      ),
       borderRadius: BorderRadius.circular(12.r),
     );
 

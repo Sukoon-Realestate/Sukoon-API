@@ -86,7 +86,7 @@ class _DeviceNotificationPermissionTileState
   Widget build(BuildContext context) => Container(
     padding: EdgeInsets.all(16.r),
     decoration: BoxDecoration(
-      color: AppColors.grayOffWhite,
+      color: context.appColor(AppColors.grayOffWhite, surface: true),
       borderRadius: BorderRadius.circular(14.r),
     ),
     child: ValueListenableBuilder<DevicePermissionStatus?>(
@@ -100,7 +100,7 @@ class _DeviceNotificationPermissionTileState
             AppText(
               LocaleKeys.deviceNotificationsTitle,
               style: AppTextStyles.bold14.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 14.sp,
                 height: 1.45,
               ),
@@ -113,7 +113,7 @@ class _DeviceNotificationPermissionTileState
                   ? LocaleKeys.deviceNotificationsEnabled
                   : LocaleKeys.deviceNotificationsDisabled,
               style: AppTextStyles.regular12.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 12.sp,
                 height: 1.5,
               ),
@@ -131,7 +131,7 @@ class _DeviceNotificationPermissionTileState
                   width: double.infinity,
                   textStyle: AppTextStyles.medium.copyWith(fontSize: 14.sp),
                   borderRadius: BorderRadius.circular(12.r),
-                  color: AppColors.blue,
+                  color: context.appColor(AppColors.blue, surface: true),
                   customChild: busy
                       ? SizedBox.square(
                           dimension: 18.r,

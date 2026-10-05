@@ -24,7 +24,7 @@ class SupportTicketThread extends StatelessWidget {
                 AppText(
                   ticket.reference,
                   style: AppTextStyles.regular14.copyWith(
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                   ),
                 ),
                 SupportTicketStatus(ticket: ticket),
@@ -33,7 +33,9 @@ class SupportTicketThread extends StatelessWidget {
             12.szH,
             AppText(
               ticket.subject,
-              style: AppTextStyles.bold16.copyWith(color: AppColors.sokoonNavy),
+              style: AppTextStyles.bold16.copyWith(
+                color: context.appColor(AppColors.sokoonNavy),
+              ),
             ),
             20.szH,
             if (ticket.messages.isEmpty) const SupportMessagesEmptyState(),
@@ -43,7 +45,7 @@ class SupportTicketThread extends StatelessWidget {
               AppText(
                 LocaleKeys.supportResolvedNotice,
                 style: AppTextStyles.regular14.copyWith(
-                  color: AppColors.sokoonTeal,
+                  color: context.appColor(AppColors.sokoonTeal),
                   height: 1.5,
                 ),
               ),

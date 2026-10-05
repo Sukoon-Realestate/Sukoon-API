@@ -35,9 +35,9 @@ class AddPropertyInfoBanner extends StatelessWidget {
         duration: SokounMotion.duration(context, milliseconds: 240),
         padding: EdgeInsets.all(14.w),
         decoration: BoxDecoration(
-          color: backgroundColor,
+          color: context.appColor(backgroundColor, surface: true),
           borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(color: borderColor),
+          border: Border.all(color: context.appColor(borderColor)),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,7 +51,7 @@ class AddPropertyInfoBanner extends StatelessWidget {
                 color: AppColors.whiteAlpha50,
                 borderRadius: BorderRadius.circular(10.r),
               ),
-              child: Icon(icon, color: iconColor, size: 18.r),
+              child: Icon(icon, color: context.appColor(iconColor), size: 18.r),
             ),
             Expanded(
               child: Column(
@@ -62,7 +62,7 @@ class AddPropertyInfoBanner extends StatelessWidget {
                     AppText(
                       title!,
                       style: AppTextStyles.bold12.copyWith(
-                        color: AppColors.sokoonNavy,
+                        color: context.appColor(AppColors.sokoonNavy),
                         fontSize: 12.sp,
                         height: 1.45,
                       ),
@@ -72,7 +72,7 @@ class AddPropertyInfoBanner extends StatelessWidget {
                   AppText(
                     text,
                     style: AppTextStyles.regular12.copyWith(
-                      color: textColor,
+                      color: context.appColor(textColor),
                       fontSize: 12.sp,
                       fontWeight: title == null
                           ? FontWeight.w700

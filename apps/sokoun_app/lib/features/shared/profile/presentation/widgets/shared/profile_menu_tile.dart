@@ -31,7 +31,11 @@ class ProfileMenuTile extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 12.h),
         decoration: BoxDecoration(
           border: showDivider
-              ? const Border(bottom: BorderSide(color: AppColors.sokoonBorder))
+              ? Border(
+                  bottom: BorderSide(
+                    color: context.appColor(AppColors.sokoonBorder),
+                  ),
+                )
               : null,
         ),
         child: Row(
@@ -40,11 +44,11 @@ class ProfileMenuTile extends StatelessWidget {
               width: 40.r,
               height: 40.r,
               decoration: BoxDecoration(
-                color: iconBackgroundColor,
+                color: context.appColor(iconBackgroundColor, surface: true),
                 borderRadius: BorderRadius.circular(12.r),
               ),
               alignment: Alignment.center,
-              child: Icon(icon, color: iconColor, size: 18.r),
+              child: Icon(icon, color: context.appColor(iconColor), size: 18.r),
             ),
             12.szW,
             Expanded(
@@ -55,7 +59,7 @@ class ProfileMenuTile extends StatelessWidget {
                   AppText(
                     label,
                     style: AppTextStyles.bold14.copyWith(
-                      color: AppColors.sokoonNavy,
+                      color: context.appColor(AppColors.sokoonNavy),
                       fontSize: 14.sp,
                       height: 1.45,
                     ),
@@ -64,7 +68,7 @@ class ProfileMenuTile extends StatelessWidget {
                     AppText(
                       subtitle!,
                       style: AppTextStyles.regular11.copyWith(
-                        color: AppColors.sokoonGray,
+                        color: context.appColor(AppColors.sokoonGray),
                         fontSize: 11.sp,
                         height: 1.45,
                       ),
@@ -76,7 +80,7 @@ class ProfileMenuTile extends StatelessWidget {
               AppText(
                 value!,
                 style: AppTextStyles.regular12.copyWith(
-                  color: AppColors.sokoonGray,
+                  color: context.appColor(AppColors.sokoonGray),
                   fontSize: 12.sp,
                   height: 1.45,
                 ),
@@ -88,7 +92,7 @@ class ProfileMenuTile extends StatelessWidget {
                 Directionality.of(context) == TextDirection.rtl
                     ? Icons.chevron_left_rounded
                     : Icons.chevron_right_rounded,
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 size: 15.r,
               ),
           ],

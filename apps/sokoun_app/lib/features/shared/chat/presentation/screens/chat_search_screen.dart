@@ -65,7 +65,7 @@ class _ChatSearchScreenState extends State<ChatSearchScreen> {
     return AppScaffold(
       title: LocaleKeys.search,
       showBackButton: true,
-      backgroundColor: AppColors.white,
+      backgroundColor: context.appColor(AppColors.white, surface: true),
       body: SafeArea(
         child: Column(
           children: [

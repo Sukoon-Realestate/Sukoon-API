@@ -18,7 +18,7 @@ class LoginIntro extends StatelessWidget {
         AppText(
           LocaleKeys.welcomeBackToSokoon,
           style: AppTextStyles.medium12.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 12.sp,
             height: 1.45,
           ),

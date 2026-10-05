@@ -38,29 +38,41 @@ class OwnerStatsGrid extends StatelessWidget {
           value: '$pendingRequests',
           label: LocaleKeys.ownerDashboardPendingRequests,
           icon: Icons.schedule_rounded,
-          iconColor: AppColors.amber,
-          iconBackgroundColor: AppColors.orangePale,
+          iconColor: context.appColor(AppColors.amber),
+          iconBackgroundColor: context.appColor(
+            AppColors.orangePale,
+            surface: true,
+          ),
         ),
         OwnerStatCard(
           value: '$visitsThisWeek',
           label: LocaleKeys.ownerDashboardVisitsThisWeek,
           icon: Icons.calendar_today_outlined,
-          iconColor: AppColors.blue,
-          iconBackgroundColor: AppColors.bluePale,
+          iconColor: context.appColor(AppColors.blue),
+          iconBackgroundColor: context.appColor(
+            AppColors.bluePale,
+            surface: true,
+          ),
         ),
         OwnerStatCard(
           value: '$activeProperties',
           label: LocaleKeys.ownerDashboardActiveProperties,
           icon: Icons.apartment_rounded,
-          iconColor: AppColors.sokoonTeal,
-          iconBackgroundColor: AppColors.mintLight,
+          iconColor: context.appColor(AppColors.sokoonTeal),
+          iconBackgroundColor: context.appColor(
+            AppColors.mintLight,
+            surface: true,
+          ),
         ),
         OwnerStatCard(
           value: _overallRatingLabel,
           label: LocaleKeys.ownerDashboardOverallRating,
           icon: Icons.star_outline_rounded,
           iconColor: AppColors.gold,
-          iconBackgroundColor: AppColors.goldPale,
+          iconBackgroundColor: context.appColor(
+            AppColors.goldPale,
+            surface: true,
+          ),
         ),
       ],
     );

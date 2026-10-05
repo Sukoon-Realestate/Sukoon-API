@@ -32,7 +32,7 @@ class _RetryButtonState extends State<RetryButton> {
     onTap: _isRetrying ? null : _retry,
     title: LocaleKeys.ownerRetryAction,
     width: 160.w,
-    color: AppColors.sokoonTeal,
+    color: context.appColor(AppColors.sokoonTeal, surface: true),
     textColor: AppColors.white,
     borderRadius: BorderRadius.circular(12.r),
     customChild: _isRetrying

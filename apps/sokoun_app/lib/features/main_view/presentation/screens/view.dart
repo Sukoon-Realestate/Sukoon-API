@@ -264,7 +264,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 final bool rail =
                     constraints.maxWidth >= SokounLayout.navigationBreakpoint;
                 return Scaffold(
-                  backgroundColor: AppColors.scaffoldBackground,
+                  backgroundColor: context.appColor(
+                    AppColors.scaffoldBackground,
+                    surface: true,
+                  ),
                   body: Row(
                     children: [
                       SizedBox(

@@ -57,7 +57,7 @@ class FavoritesEmptyState extends StatelessWidget {
                 ? LocaleKeys.tenantSearchResultsEmptyTitle
                 : LocaleKeys.favoritesEmptyTitle,
             style: AppTextStyles.bold.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: FontSize.s18,
             ),
             textAlign: TextAlign.center,
@@ -68,7 +68,7 @@ class FavoritesEmptyState extends StatelessWidget {
                 ? LocaleKeys.tenantSearchResultsEmptyDescription
                 : LocaleKeys.favoritesEmptyDescription,
             style: AppTextStyles.medium13.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: FontSize.s13,
               height: 1.45,
             ),
@@ -81,7 +81,7 @@ class FavoritesEmptyState extends StatelessWidget {
             title: isFiltered
                 ? LocaleKeys.tenantSearchResultsResetSearch
                 : LocaleKeys.favoritesBrowseProperties,
-            color: AppColors.sokoonTeal,
+            color: context.appColor(AppColors.sokoonTeal, surface: true),
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(AppCircular.r12),
             height: AppSize.sH45,

@@ -21,9 +21,11 @@ class NotificationSettingsTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 14.h),
-      decoration: const BoxDecoration(
-        color: AppColors.white,
-        border: Border(bottom: BorderSide(color: AppColors.sokoonBorder)),
+      decoration: BoxDecoration(
+        color: context.appColor(AppColors.white, surface: true),
+        border: Border(
+          bottom: BorderSide(color: context.appColor(AppColors.sokoonBorder)),
+        ),
       ),
       child: Row(
         spacing: 14.w,
@@ -36,7 +38,7 @@ class NotificationSettingsTile extends StatelessWidget {
                 AppText(
                   setting.title,
                   style: AppTextStyles.bold14.copyWith(
-                    color: AppColors.sokoonNavy,
+                    color: context.appColor(AppColors.sokoonNavy),
                     fontSize: 14.sp,
                     height: 1.45,
                   ),
@@ -46,7 +48,7 @@ class NotificationSettingsTile extends StatelessWidget {
                 AppText(
                   setting.description,
                   style: AppTextStyles.regular12.copyWith(
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                     fontSize: 12.sp,
                     height: 1.45,
                   ),
@@ -60,9 +62,9 @@ class NotificationSettingsTile extends StatelessWidget {
             value: setting.isEnabled,
             onChanged: setting.canChange && !isUpdating ? onChanged : null,
             activeThumbColor: AppColors.white,
-            activeTrackColor: AppColors.sokoonTeal,
+            activeTrackColor: context.appColor(AppColors.sokoonTeal),
             inactiveThumbColor: AppColors.white,
-            inactiveTrackColor: AppColors.grayPale,
+            inactiveTrackColor: context.appColor(AppColors.grayPale),
           ),
         ],
       ),

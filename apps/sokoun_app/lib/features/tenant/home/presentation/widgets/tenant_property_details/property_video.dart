@@ -223,7 +223,7 @@ class _PropertyVideoSurface extends StatelessWidget {
         ClipRRect(
           borderRadius: BorderRadius.circular(12.r),
           child: ColoredBox(
-            color: AppColors.sokoonNavy,
+            color: context.appColor(AppColors.sokoonNavy, surface: true),
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -232,7 +232,7 @@ class _PropertyVideoSurface extends StatelessWidget {
                       aspectRatio: 16 / 9,
                       child: Icon(
                         Icons.videocam_outlined,
-                        color: AppColors.grayPale,
+                        color: context.appColor(AppColors.grayPale),
                         size: 48.r,
                       ),
                     ),

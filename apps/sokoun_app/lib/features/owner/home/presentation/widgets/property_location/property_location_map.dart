@@ -68,7 +68,7 @@ class _PropertyLocationMapState extends State<PropertyLocationMap> {
       target: _point(widget.selected ?? const PropertyLocation.initial()),
       zoom: widget.selected == null ? 11 : 17,
     ),
-    style: widget.satellite ? null : SokounMapStyle.light,
+    style: widget.satellite ? null : SokounMapStyle.of(context),
     mapType: widget.satellite ? MapType.hybrid : MapType.normal,
     onMapCreated: (controller) {
       _controller = controller;

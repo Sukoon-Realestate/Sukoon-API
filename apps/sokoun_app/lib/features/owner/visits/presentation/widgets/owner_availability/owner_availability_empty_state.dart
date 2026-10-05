@@ -22,7 +22,7 @@ class OwnerAvailabilityEmptyState extends StatelessWidget {
         AppText(
           LocaleKeys.ownerAvailabilityEmptyTitle,
           style: AppTextStyles.bold.copyWith(
-            color: AppColors.sokoonNavy,
+            color: context.appColor(AppColors.sokoonNavy),
             fontSize: 17.sp,
           ),
           textAlign: TextAlign.center,
@@ -31,7 +31,7 @@ class OwnerAvailabilityEmptyState extends StatelessWidget {
         AppText(
           LocaleKeys.ownerAvailabilityEmptyDescription,
           style: AppTextStyles.medium13.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 13.sp,
             height: 1.45,
           ),

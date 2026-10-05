@@ -51,7 +51,7 @@ class _OwnerPropertyDeleteSheetState extends State<OwnerPropertyDeleteSheet> {
                 children: [
                   Icon(
                     Icons.delete_outline_rounded,
-                    color: AppColors.red,
+                    color: context.appColor(AppColors.red),
                     size: 44.r,
                   ),
                   AppText(
@@ -66,10 +66,10 @@ class _OwnerPropertyDeleteSheetState extends State<OwnerPropertyDeleteSheet> {
                   ),
                   if (state.isLoading) const LinearProgressIndicator(),
                   if (state.isError && state.msg?.isNotEmpty == true)
-                    AppText(state.msg!, color: AppColors.red),
+                    AppText(state.msg!, color: context.appColor(AppColors.red)),
                   DefaultButton(
                     title: LocaleKeys.ownerPropertiesDelete,
-                    color: AppColors.red,
+                    color: context.appColor(AppColors.red, surface: true),
                     onTap: state.isLoading ? null : _deleteProperty,
                   ),
                   TextButton(

@@ -41,7 +41,7 @@ class TenantVisitsEmptyState extends StatelessWidget {
             AppText(
               title,
               style: AppTextStyles.bold.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 17.sp,
               ),
               textAlign: TextAlign.center,
@@ -51,7 +51,7 @@ class TenantVisitsEmptyState extends StatelessWidget {
             AppText(
               description,
               style: AppTextStyles.medium13.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 13.sp,
                 height: 1.45,
               ),
@@ -66,7 +66,7 @@ class TenantVisitsEmptyState extends StatelessWidget {
               title: isFiltered
                   ? LocaleKeys.tenantVisitsShowAll
                   : LocaleKeys.tenantVisitsBrowseProperties,
-              color: AppColors.sokoonTeal,
+              color: context.appColor(AppColors.sokoonTeal, surface: true),
               textColor: AppColors.white,
               borderRadius: BorderRadius.circular(12.r),
               height: 45.h,

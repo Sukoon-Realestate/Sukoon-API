@@ -14,14 +14,16 @@ class FilterApplyBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 16.h),
-      decoration: const BoxDecoration(
-        color: AppColors.white,
-        border: Border(top: BorderSide(color: AppColors.grayPale)),
+      decoration: BoxDecoration(
+        color: context.appColor(AppColors.white, surface: true),
+        border: Border(
+          top: BorderSide(color: context.appColor(AppColors.grayPale)),
+        ),
       ),
       child: DefaultButton(
         onTap: onApplyPressed,
         title: LocaleKeys.tenantFilterShowResults,
-        color: AppColors.sokoonTeal,
+        color: context.appColor(AppColors.sokoonTeal, surface: true),
         textColor: AppColors.white,
         borderRadius: BorderRadius.circular(14.r),
         height: 48.h,

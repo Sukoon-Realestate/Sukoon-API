@@ -27,8 +27,8 @@ class ChatSearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color iconColor = isActive
-        ? AppColors.sokoonTeal
-        : AppColors.sokoonGray;
+        ? context.appColor(AppColors.sokoonTeal)
+        : context.appColor(AppColors.sokoonGray);
 
     return TextField(
       controller: controller,
@@ -38,25 +38,31 @@ class ChatSearchField extends StatelessWidget {
       onChanged: onChanged,
       textInputAction: TextInputAction.search,
       style: AppTextStyles.base.copyWith(
-        color: AppColors.sokoonNavy,
+        color: context.appColor(AppColors.sokoonNavy),
         fontSize: 14.sp,
       ),
       decoration: InputDecoration(
         hintText: LocaleKeys.chatSearchHint,
         hintStyle: AppTextStyles.base.copyWith(
-          color: AppColors.sokoonMuted,
+          color: context.appColor(AppColors.sokoonMuted),
           fontSize: 14.sp,
         ),
         filled: true,
-        fillColor: isActive ? AppColors.scaffoldBackground : AppColors.white,
-        prefixIcon: Icon(Icons.search_rounded, color: iconColor, size: 18.r),
+        fillColor: isActive
+            ? context.appColor(AppColors.scaffoldBackground, surface: true)
+            : context.appColor(AppColors.white, surface: true),
+        prefixIcon: Icon(
+          Icons.search_rounded,
+          color: context.appColor(iconColor),
+          size: 18.r,
+        ),
         suffixIcon: onClearPressed == null
             ? null
             : IconButton(
                 onPressed: onClearPressed,
                 icon: Icon(
                   Icons.close_rounded,
-                  color: AppColors.sokoonGray,
+                  color: context.appColor(AppColors.sokoonGray),
                   size: 18.r,
                 ),
               ),

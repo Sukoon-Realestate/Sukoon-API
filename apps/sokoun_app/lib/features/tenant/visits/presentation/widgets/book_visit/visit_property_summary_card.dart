@@ -10,9 +10,9 @@ class VisitPropertySummaryCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: AppColors.sokoonBorder),
+        border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
       ),
       child: Row(
         spacing: 12.w,
@@ -22,12 +22,12 @@ class VisitPropertySummaryCard extends StatelessWidget {
             height: 42.r,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: AppColors.mintLight,
+              color: context.appColor(AppColors.mintLight, surface: true),
               borderRadius: BorderRadius.circular(12.r),
             ),
             child: Icon(
               Icons.apartment_rounded,
-              color: AppColors.sokoonTeal,
+              color: context.appColor(AppColors.sokoonTeal),
               size: 19.r,
             ),
           ),
@@ -39,7 +39,7 @@ class VisitPropertySummaryCard extends StatelessWidget {
                 AppText(
                   property.title,
                   style: AppTextStyles.bold14.copyWith(
-                    color: AppColors.sokoonNavy,
+                    color: context.appColor(AppColors.sokoonNavy),
                     fontSize: 14.sp,
                     height: 1.45,
                   ),
@@ -49,7 +49,7 @@ class VisitPropertySummaryCard extends StatelessWidget {
                 AppText(
                   property.meta,
                   style: AppTextStyles.regular12.copyWith(
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                     fontSize: 12.sp,
                     height: 1.45,
                   ),

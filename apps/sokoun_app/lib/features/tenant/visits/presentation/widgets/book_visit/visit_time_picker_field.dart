@@ -19,29 +19,34 @@ class VisitTimePickerField extends StatelessWidget {
         return Theme(
           data: theme.copyWith(
             colorScheme: theme.colorScheme.copyWith(
-              primary: AppColors.sokoonTeal,
-              onPrimary: AppColors.white,
-              surface: AppColors.white,
-              onSurface: AppColors.sokoonNavy,
+              primary: context.appColor(AppColors.sokoonTeal),
+              onPrimary: theme.brightness == Brightness.dark
+                  ? AppColors.sokoonNavy
+                  : AppColors.white,
+              surface: context.appColor(AppColors.white, surface: true),
+              onSurface: context.appColor(AppColors.sokoonNavy),
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                foregroundColor: AppColors.sokoonTeal,
+                foregroundColor: context.appColor(AppColors.sokoonTeal),
                 textStyle: AppTextStyles.extraBold.copyWith(fontSize: 14.sp),
               ),
             ),
             timePickerTheme: TimePickerThemeData(
-              backgroundColor: AppColors.white,
+              backgroundColor: context.appColor(AppColors.white, surface: true),
               hourMinuteColor: AppColors.tealAlpha07,
-              hourMinuteTextColor: AppColors.sokoonNavy,
+              hourMinuteTextColor: context.appColor(AppColors.sokoonNavy),
               dayPeriodColor: AppColors.tealAlpha07,
-              dayPeriodTextColor: AppColors.sokoonTeal,
-              dialBackgroundColor: AppColors.grayOffWhite,
-              dialHandColor: AppColors.sokoonTeal,
-              dialTextColor: AppColors.sokoonNavy,
-              entryModeIconColor: AppColors.sokoonTeal,
+              dayPeriodTextColor: context.appColor(AppColors.sokoonTeal),
+              dialBackgroundColor: context.appColor(
+                AppColors.grayOffWhite,
+                surface: true,
+              ),
+              dialHandColor: context.appColor(AppColors.sokoonTeal),
+              dialTextColor: context.appColor(AppColors.sokoonNavy),
+              entryModeIconColor: context.appColor(AppColors.sokoonTeal),
               helpTextStyle: AppTextStyles.bold12.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 12.sp,
                 height: 1.45,
               ),
@@ -82,10 +87,14 @@ class VisitTimePickerField extends StatelessWidget {
           height: 52.h,
           padding: EdgeInsetsDirectional.symmetric(horizontal: 16.w),
           decoration: BoxDecoration(
-            color: isEnabled ? AppColors.white : AppColors.grayBackground,
+            color: isEnabled
+                ? context.appColor(AppColors.white, surface: true)
+                : context.appColor(AppColors.grayBackground, surface: true),
             borderRadius: BorderRadius.circular(12.r),
             border: Border.all(
-              color: hasValue ? AppColors.sokoonTeal : AppColors.sokoonBorder,
+              color: hasValue
+                  ? context.appColor(AppColors.sokoonTeal)
+                  : context.appColor(AppColors.sokoonBorder),
             ),
           ),
           child: Row(
@@ -96,15 +105,18 @@ class VisitTimePickerField extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: hasValue
-                      ? AppColors.mintLight
-                      : AppColors.grayBackground,
+                      ? context.appColor(AppColors.mintLight, surface: true)
+                      : context.appColor(
+                          AppColors.grayBackground,
+                          surface: true,
+                        ),
                   borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: Icon(
                   Icons.schedule_rounded,
                   color: hasValue
-                      ? AppColors.sokoonTeal
-                      : AppColors.sokoonMuted,
+                      ? context.appColor(AppColors.sokoonTeal)
+                      : context.appColor(AppColors.sokoonMuted),
                   size: 18.r,
                 ),
               ),
@@ -114,8 +126,8 @@ class VisitTimePickerField extends StatelessWidget {
                   value,
                   style: AppTextStyles.semiBold.copyWith(
                     color: hasValue
-                        ? AppColors.sokoonNavy
-                        : AppColors.sokoonMuted,
+                        ? context.appColor(AppColors.sokoonNavy)
+                        : context.appColor(AppColors.sokoonMuted),
                     fontSize: 15.sp,
                   ),
                   maxLines: 1,
@@ -125,7 +137,9 @@ class VisitTimePickerField extends StatelessWidget {
               8.szW,
               Icon(
                 Icons.keyboard_arrow_down_rounded,
-                color: isEnabled ? AppColors.sokoonTeal : AppColors.sokoonMuted,
+                color: isEnabled
+                    ? context.appColor(AppColors.sokoonTeal)
+                    : context.appColor(AppColors.sokoonMuted),
                 size: 22.r,
               ),
             ],

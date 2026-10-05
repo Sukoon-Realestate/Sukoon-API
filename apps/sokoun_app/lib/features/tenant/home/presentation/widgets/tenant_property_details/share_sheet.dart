@@ -50,7 +50,7 @@ class TenantPropertyShareSheet extends StatelessWidget {
     return Container(
       padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 26.h),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
       child: SafeArea(
@@ -63,7 +63,7 @@ class TenantPropertyShareSheet extends StatelessWidget {
               width: 42.w,
               height: 4.h,
               decoration: BoxDecoration(
-                color: AppColors.grayPale,
+                color: context.appColor(AppColors.grayPale, surface: true),
                 borderRadius: BorderRadius.circular(999.r),
               ),
             ).centerWidget,
@@ -71,7 +71,7 @@ class TenantPropertyShareSheet extends StatelessWidget {
             AppText(
               LocaleKeys.tenantPropertyDetailsShareTitle,
               style: AppTextStyles.bold16.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 16.sp,
                 height: 1.45,
               ),
@@ -81,21 +81,21 @@ class TenantPropertyShareSheet extends StatelessWidget {
             TenantPropertyShareActionRow(
               icon: Icons.link_rounded,
               label: LocaleKeys.tenantPropertyDetailsCopyLink,
-              color: AppColors.sokoonTeal,
+              color: context.appColor(AppColors.sokoonTeal),
               onActionPressed: () => _copyLink(context),
             ),
             8.szH,
             TenantPropertyShareActionRow(
               icon: Icons.ios_share_rounded,
               label: LocaleKeys.tenantPropertyDetailsShare,
-              color: AppColors.blue,
+              color: context.appColor(AppColors.blue),
               onActionPressed: () => _shareLink(context),
             ),
             8.szH,
             TenantPropertyShareActionRow(
               icon: Icons.close_rounded,
               label: LocaleKeys.cancel,
-              color: AppColors.sokoonRose,
+              color: context.appColor(AppColors.sokoonRose),
               onActionPressed: Go.back,
             ),
           ],

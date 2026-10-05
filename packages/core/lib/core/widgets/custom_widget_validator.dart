@@ -8,12 +8,13 @@ class CustomWidgetValidator<T> extends StatelessWidget {
   final FormFieldValidator<T> validator;
   final Widget? child;
   final Widget Function(FormFieldState<T> value) builder;
-  const CustomWidgetValidator(
-      {super.key,
-      this.initialValue,
-      required this.validator,
-      this.child,
-      required this.builder});
+  const CustomWidgetValidator({
+    super.key,
+    this.initialValue,
+    required this.validator,
+    this.child,
+    required this.builder,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,17 +36,17 @@ class DefaultErrorBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InputDecorator(
-        decoration: InputDecoration(
-          contentPadding:
-              value.hasError ? EdgeInsets.all(10.r) : EdgeInsets.zero,
-          errorText: value.errorText,
-          border: const OutlineInputBorder(borderSide: BorderSide.none),
-          errorBorder: UnderlineInputBorder(
-            borderSide: value.hasError
-                ? const BorderSide(color: AppColors.error)
-                : BorderSide.none,
-          ),
+      decoration: InputDecoration(
+        contentPadding: value.hasError ? EdgeInsets.all(10.r) : EdgeInsets.zero,
+        errorText: value.errorText,
+        border: const OutlineInputBorder(borderSide: BorderSide.none),
+        errorBorder: UnderlineInputBorder(
+          borderSide: value.hasError
+              ? BorderSide(color: context.appColor(AppColors.error))
+              : BorderSide.none,
         ),
-        child: child);
+      ),
+      child: child,
+    );
   }
 }

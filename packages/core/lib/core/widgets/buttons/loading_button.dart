@@ -48,24 +48,22 @@ class CustomAnimatedButton extends StatelessWidget {
         width: width ?? context.width,
         minWidth: AppSize.sW50,
         height: height ?? AppSize.sH44,
-        color: color ?? AppColors.primary,
+        color: context.appColor(color ?? AppColors.primary, surface: true),
         borderRadius: borderRadius ?? AppCircular.r5,
-        disabledColor: color ?? AppColors.buttonColor,
-        borderSide: borderSide?? BorderSide.none,
+        disabledColor:
+            color ?? context.appColor(AppColors.buttonColor, surface: true),
+        borderSide: borderSide ?? BorderSide.none,
         loader: Container(
           padding: EdgeInsets.all(AppPadding.pH10),
-          child: SpinKitFoldingCube(
-            color: AppColors.white,
-            size: AppSize.sH20,
-          ),
+          child: SpinKitFoldingCube(color: AppColors.white, size: AppSize.sH20),
         ),
         child: Text(
           title,
           style: TextStyle(
             fontFamily: ConstantManager.fontFamily,
             fontSize: fontSize,
-            color: textColor?? Colors.white,
-            fontWeight: fontWeight
+            color: textColor ?? Colors.white,
+            fontWeight: fontWeight,
           ),
         ),
       ),

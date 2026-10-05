@@ -66,7 +66,7 @@ class SokounRefreshIndicator extends StatelessWidget {
                     vertical: 8.h,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.white,
+                    color: context.appColor(AppColors.white, surface: true),
                     borderRadius: BorderRadius.circular(999.r),
                     border: Border.all(color: AppColors.tealAlpha19),
                     boxShadow: [
@@ -84,8 +84,11 @@ class SokounRefreshIndicator extends StatelessWidget {
                       Container(
                         width: 36.r,
                         height: 36.r,
-                        decoration: const BoxDecoration(
-                          color: AppColors.mintLight,
+                        decoration: BoxDecoration(
+                          color: context.appColor(
+                            AppColors.mintLight,
+                            surface: true,
+                          ),
                           shape: BoxShape.circle,
                         ),
                         child: Stack(
@@ -94,7 +97,7 @@ class SokounRefreshIndicator extends StatelessWidget {
                             if (loading && visible && duration != Duration.zero)
                               Positioned.fill(
                                 child: CircularProgressIndicator(
-                                  color: AppColors.sokoonTeal,
+                                  color: context.appColor(AppColors.sokoonTeal),
                                 ),
                               ),
                             if (loading)
@@ -107,7 +110,7 @@ class SokounRefreshIndicator extends StatelessWidget {
                                 child: Icon(
                                   Icons.arrow_downward_rounded,
                                   size: 20.r,
-                                  color: AppColors.sokoonTeal,
+                                  color: context.appColor(AppColors.sokoonTeal),
                                 ),
                               ),
                           ],
@@ -117,7 +120,7 @@ class SokounRefreshIndicator extends StatelessWidget {
                         child: AppText(
                           label,
                           style: AppTextStyles.medium13.copyWith(
-                            color: AppColors.sokoonNavy,
+                            color: context.appColor(AppColors.sokoonNavy),
                             height: 1.45,
                           ),
                           textAlign: TextAlign.start,

@@ -35,8 +35,9 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     ProfileGender.unspecified,
   );
 
-  Color get _accentColor =>
-      widget.workspace.isOwner ? AppColors.sokoonGold : AppColors.sokoonTeal;
+  Color get _accentColor => widget.workspace.isOwner
+      ? AppColors.sokoonGold
+      : context.appColor(AppColors.sokoonTeal);
 
   String get _title => widget.workspace.isOwner
       ? LocaleKeys.profileOwnerEditTitle
@@ -122,7 +123,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     final ProfileGender? gender = await showModalBottomSheet<ProfileGender>(
       context: context,
       useSafeArea: true,
-      backgroundColor: AppColors.white,
+      backgroundColor: context.appColor(AppColors.white, surface: true),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
@@ -156,7 +157,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
               AppText(
                 field.errorText ?? '',
                 style: AppTextStyles.regular11.copyWith(
-                  color: AppColors.sokoonRose,
+                  color: context.appColor(AppColors.sokoonRose),
                   fontSize: 11.sp,
                   height: 1.45,
                 ),
@@ -276,7 +277,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                       ? SizedBox.square(
                           dimension: 18.r,
                           child: CustomLoading.showLoadingView(
-                            color: AppColors.sokoonTeal,
+                            color: context.appColor(AppColors.sokoonTeal),
                             size: 18.r,
                           ),
                         )
@@ -284,8 +285,8 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                           LocaleKeys.profileSave,
                           style: AppTextStyles.bold14.copyWith(
                             color: isLoading
-                                ? AppColors.sokoonMuted
-                                : AppColors.sokoonTeal,
+                                ? context.appColor(AppColors.sokoonMuted)
+                                : context.appColor(AppColors.sokoonTeal),
                             fontSize: 14.sp,
                             height: 1.45,
                           ),
@@ -294,7 +295,10 @@ class _ProfileEditViewState extends State<ProfileEditView> {
               ),
         ),
       ],
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: context.appColor(
+        AppColors.scaffoldBackground,
+        surface: true,
+      ),
       body: SafeArea(
         child:
             BlocSelector<
@@ -332,7 +336,10 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                                             avatarUrl: avatarUrl,
                                             imageFile: avatar,
                                             accentColor: _accentColor,
-                                            backgroundColor: _accentColor,
+                                            backgroundColor: context.appColor(
+                                              _accentColor,
+                                              surface: true,
+                                            ),
                                             size: 88,
                                             useInitial: true,
                                             badgeIcon:
@@ -346,7 +353,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                               AppText(
                                 LocaleKeys.profileChangePhoto,
                                 style: AppTextStyles.bold13.copyWith(
-                                  color: _accentColor,
+                                  color: context.appColor(_accentColor),
                                   fontSize: 13.sp,
                                   height: 1.45,
                                 ),
@@ -398,7 +405,9 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                                   AppText(
                                     LocaleKeys.profileEditLoadingDetails,
                                     style: AppTextStyles.regular13.copyWith(
-                                      color: AppColors.sokoonGray,
+                                      color: context.appColor(
+                                        AppColors.sokoonGray,
+                                      ),
                                       fontSize: 13.sp,
                                       height: 1.45,
                                     ),
@@ -470,13 +479,13 @@ class _ProfileReadonlyField extends StatelessWidget {
         AppText(
           label,
           style: AppTextStyles.bold13.copyWith(
-            color: AppColors.sokoonNavy,
+            color: context.appColor(AppColors.sokoonNavy),
             fontSize: 13.sp,
             height: 1.45,
           ),
         ),
         Material(
-          color: AppColors.white,
+          color: context.appColor(AppColors.white, surface: true),
           borderRadius: BorderRadius.circular(12.r),
           child: InkWell(
             onTap: onTap,
@@ -486,7 +495,9 @@ class _ProfileReadonlyField extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: AppColors.sokoonBorder),
+                border: Border.all(
+                  color: context.appColor(AppColors.sokoonBorder),
+                ),
               ),
               child: Row(
                 children: [
@@ -494,14 +505,14 @@ class _ProfileReadonlyField extends StatelessWidget {
                     child: AppText(
                       value,
                       style: AppTextStyles.semiBold.copyWith(
-                        color: AppColors.sokoonNavy,
+                        color: context.appColor(AppColors.sokoonNavy),
                         fontSize: 14.sp,
                       ),
                     ),
                   ),
                   Icon(
                     Icons.arrow_forward_ios_rounded,
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                     size: 15.r,
                   ),
                 ],
@@ -528,7 +539,7 @@ class _ProfileGenderSheet extends StatelessWidget {
           AppText(
             LocaleKeys.gender,
             style: AppTextStyles.bold16.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 16.sp,
               height: 1.45,
             ),
@@ -538,7 +549,7 @@ class _ProfileGenderSheet extends StatelessWidget {
             label: LocaleKeys.profileMale,
             onTap: () => Go.back(ProfileGender.male),
           ),
-          const Divider(height: 1, color: AppColors.sokoonBorder),
+          Divider(height: 1, color: context.appColor(AppColors.sokoonBorder)),
           _ProfileGenderOption(
             label: LocaleKeys.profileFemale,
             onTap: () => Go.back(ProfileGender.female),
@@ -562,14 +573,14 @@ class _ProfileGenderOption extends StatelessWidget {
       title: AppText(
         label,
         style: AppTextStyles.bold14.copyWith(
-          color: AppColors.sokoonNavy,
+          color: context.appColor(AppColors.sokoonNavy),
           fontSize: 14.sp,
           height: 1.45,
         ),
       ),
       trailing: Icon(
         Icons.chevron_right_rounded,
-        color: AppColors.sokoonGray,
+        color: context.appColor(AppColors.sokoonGray),
         size: 20.r,
       ),
       onTap: onTap,

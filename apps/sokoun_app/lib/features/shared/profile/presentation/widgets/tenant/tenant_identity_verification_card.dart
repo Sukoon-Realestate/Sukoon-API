@@ -9,17 +9,17 @@ class TenantIdentityVerificationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isVerified = verification.isVerified;
     final Color accentColor = isVerified
-        ? AppColors.green
-        : AppColors.sokoonTeal;
+        ? context.appColor(AppColors.green)
+        : context.appColor(AppColors.sokoonTeal);
     final Color backgroundColor = isVerified
-        ? AppColors.greenPale
-        : AppColors.mintLight;
+        ? context.appColor(AppColors.greenPale, surface: true)
+        : context.appColor(AppColors.mintLight, surface: true);
 
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: context.appColor(backgroundColor, surface: true),
         borderRadius: BorderRadius.circular(14.r),
       ),
       child: Row(
@@ -28,7 +28,7 @@ class TenantIdentityVerificationCard extends StatelessWidget {
         children: [
           Icon(
             isVerified ? Icons.verified_outlined : Icons.badge_outlined,
-            color: accentColor,
+            color: context.appColor(accentColor),
             size: 22.r,
           ),
           Expanded(
@@ -44,7 +44,7 @@ class TenantIdentityVerificationCard extends StatelessWidget {
                             ? verification.title
                             : LocaleKeys.profileIdentityVerification,
                         style: AppTextStyles.extraBold13.copyWith(
-                          color: accentColor,
+                          color: context.appColor(accentColor),
                           fontSize: 13.sp,
                           height: 1.45,
                         ),
@@ -63,7 +63,7 @@ class TenantIdentityVerificationCard extends StatelessWidget {
                         child: AppText(
                           verification.statusLabel,
                           style: AppTextStyles.bold10.copyWith(
-                            color: accentColor,
+                            color: context.appColor(accentColor),
                             fontSize: 10.sp,
                             height: 1.45,
                           ),
@@ -74,7 +74,7 @@ class TenantIdentityVerificationCard extends StatelessWidget {
                 AppText(
                   verification.subtitle,
                   style: AppTextStyles.regular11.copyWith(
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                     fontSize: 11.sp,
                     height: 1.35,
                   ),

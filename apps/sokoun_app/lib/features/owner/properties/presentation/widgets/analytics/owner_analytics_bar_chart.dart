@@ -22,9 +22,9 @@ class OwnerAnalyticsBarChart extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: AppColors.sokoonBorder),
+        border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -32,7 +32,7 @@ class OwnerAnalyticsBarChart extends StatelessWidget {
           AppText(
             LocaleKeys.ownerAnalyticsViews,
             style: AppTextStyles.bold15.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 15.sp,
               height: 1.45,
             ),
@@ -54,7 +54,10 @@ class OwnerAnalyticsBarChart extends StatelessWidget {
                       height: (values[index] / maximum) * 112.h,
                       decoration: BoxDecoration(
                         color: index == values.length - 1
-                            ? AppColors.sokoonTeal
+                            ? context.appColor(
+                                AppColors.sokoonTeal,
+                                surface: true,
+                              )
                             : AppColors.tealAlpha19,
                         borderRadius: BorderRadius.vertical(
                           top: Radius.circular(5.r),

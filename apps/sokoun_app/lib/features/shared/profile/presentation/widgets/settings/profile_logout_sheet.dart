@@ -12,29 +12,35 @@ class ProfileLogoutSheet extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 18.h,
           children: [
-            Icon(Icons.logout_rounded, size: 36.r, color: AppColors.sokoonRose),
+            Icon(
+              Icons.logout_rounded,
+              size: 36.r,
+              color: context.appColor(AppColors.sokoonRose),
+            ),
             AppText(
               LocaleKeys.settingsLogoutTitle,
               textAlign: TextAlign.center,
-              style: AppTextStyles.bold16.copyWith(color: AppColors.sokoonNavy),
+              style: AppTextStyles.bold16.copyWith(
+                color: context.appColor(AppColors.sokoonNavy),
+              ),
             ),
             AppText(
               LocaleKeys.settingsLogoutDescription,
               textAlign: TextAlign.center,
               style: AppTextStyles.regular14.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 height: 1.5,
               ),
             ),
             DefaultButton(
               title: LocaleKeys.profileLogout,
-              color: AppColors.sokoonRose,
+              color: context.appColor(AppColors.sokoonRose, surface: true),
               onTap: () => Go.back(true),
             ),
             DefaultButton(
               title: LocaleKeys.cancel,
-              color: AppColors.white,
-              textColor: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.white, surface: true),
+              textColor: context.appColor(AppColors.sokoonNavy),
               onTap: () => Go.back(false),
             ),
           ],

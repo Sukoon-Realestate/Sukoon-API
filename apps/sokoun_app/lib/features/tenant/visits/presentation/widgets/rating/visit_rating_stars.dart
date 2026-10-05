@@ -28,7 +28,9 @@ class VisitRatingStars extends StatelessWidget {
             padding: EdgeInsets.zero,
             icon: Icon(
               star <= rating ? Icons.star_rounded : Icons.star_border_rounded,
-              color: star <= rating ? AppColors.gold : AppColors.grayPale,
+              color: star <= rating
+                  ? AppColors.gold
+                  : context.appColor(AppColors.grayPale),
               size: size.r,
             ),
           ),

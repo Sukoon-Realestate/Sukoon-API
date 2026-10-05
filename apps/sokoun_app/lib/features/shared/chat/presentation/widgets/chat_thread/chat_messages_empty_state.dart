@@ -34,7 +34,7 @@ class ChatMessagesEmptyState extends StatelessWidget {
             AppText(
               LocaleKeys.chatMessagesEmptyTitle,
               style: AppTextStyles.bold16.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 16.sp,
                 height: 1.45,
               ),
@@ -45,7 +45,7 @@ class ChatMessagesEmptyState extends StatelessWidget {
             AppText(
               LocaleKeys.chatMessagesEmptyDescription,
               style: AppTextStyles.medium13.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 13.sp,
                 height: 1.45,
               ),

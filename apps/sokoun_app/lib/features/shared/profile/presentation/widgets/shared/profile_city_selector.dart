@@ -28,7 +28,9 @@ class ProfileCitySelector extends StatelessWidget {
     children: [
       AppText(
         LocaleKeys.city,
-        style: AppTextStyles.bold13.copyWith(color: AppColors.sokoonNavy),
+        style: AppTextStyles.bold13.copyWith(
+          color: context.appColor(AppColors.sokoonNavy),
+        ),
       ),
       7.szH,
       OutlinedButton(

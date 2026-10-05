@@ -24,9 +24,13 @@ class AddPropertyPrimaryButton extends StatelessWidget {
       onTap: onTap,
       title: label,
       disabled: !isEnabled,
-      color: isOutline ? AppColors.white : AppColors.sokoonTeal,
-      textColor: isOutline ? AppColors.sokoonNavy : AppColors.white,
-      borderColor: isOutline ? AppColors.sokoonBorder : null,
+      color: isOutline
+          ? context.appColor(AppColors.white, surface: true)
+          : context.appColor(AppColors.sokoonTeal, surface: true),
+      textColor: isOutline
+          ? context.appColor(AppColors.sokoonNavy)
+          : AppColors.white,
+      borderColor: isOutline ? context.appColor(AppColors.sokoonBorder) : null,
       borderRadius: BorderRadius.circular(12.r),
       width: double.infinity,
       minHeight: 48.h,

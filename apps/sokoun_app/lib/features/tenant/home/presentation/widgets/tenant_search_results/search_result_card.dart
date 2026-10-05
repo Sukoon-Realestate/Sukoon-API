@@ -39,10 +39,10 @@ class SearchResultCard extends StatelessWidget {
     ].where((label) => label.isNotEmpty).toList(growable: false);
 
     return Material(
-      color: AppColors.white,
+      color: context.appColor(AppColors.white, surface: true),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.r),
-        side: const BorderSide(color: AppColors.grayPale),
+        side: BorderSide(color: context.appColor(AppColors.grayPale)),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(

@@ -32,7 +32,10 @@ class _TenantAccountSummaryScreenState
       child: AppScaffold(
         title: LocaleKeys.profileSummaryTitle,
         showBackButton: true,
-        backgroundColor: AppColors.scaffoldBackground,
+        backgroundColor: context.appColor(
+          AppColors.scaffoldBackground,
+          surface: true,
+        ),
         body: SafeArea(
           child:
               StatusBuilder<

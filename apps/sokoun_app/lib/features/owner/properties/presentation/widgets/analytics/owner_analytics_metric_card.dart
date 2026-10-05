@@ -21,9 +21,9 @@ class OwnerAnalyticsMetricCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(14.w),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: AppColors.sokoonBorder),
+        border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,16 +32,16 @@ class OwnerAnalyticsMetricCard extends StatelessWidget {
             width: 36.r,
             height: 36.r,
             decoration: BoxDecoration(
-              color: backgroundColor,
+              color: context.appColor(backgroundColor, surface: true),
               borderRadius: BorderRadius.circular(11.r),
             ),
-            child: Icon(icon, color: color, size: 20.r),
+            child: Icon(icon, color: context.appColor(color), size: 20.r),
           ),
           10.szH,
           AppText(
             value,
             style: AppTextStyles.extraBold.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 21.sp,
             ),
           ),
@@ -49,7 +49,7 @@ class OwnerAnalyticsMetricCard extends StatelessWidget {
           AppText(
             label,
             style: AppTextStyles.semiBold.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 12.sp,
             ),
           ),

@@ -25,7 +25,7 @@ class PhotoTipsSection extends StatelessWidget {
           ) ...[
             TipRow(text: OwnerAddPropertyContent.photoTips[index]),
             if (index < OwnerAddPropertyContent.photoTips.length - 1)
-              const Divider(color: AppColors.sokoonBorder),
+              Divider(color: context.appColor(AppColors.sokoonBorder)),
           ],
         ],
       ),
@@ -45,14 +45,14 @@ class TipRow extends StatelessWidget {
       children: [
         Icon(
           Icons.check_circle_outline_rounded,
-          color: AppColors.sokoonTeal,
+          color: context.appColor(AppColors.sokoonTeal),
           size: 16.r,
         ),
         Expanded(
           child: AppText(
             text,
             style: AppTextStyles.regular12.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 12.sp,
               height: 1.45,
             ),

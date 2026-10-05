@@ -27,13 +27,13 @@ class VisitConfirmationContent extends StatelessWidget {
               width: 96.r,
               height: 96.r,
               alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                color: AppColors.greenPale,
+              decoration: BoxDecoration(
+                color: context.appColor(AppColors.greenPale, surface: true),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.check_circle_outline_rounded,
-                color: AppColors.green,
+                color: context.appColor(AppColors.green),
                 size: 44.r,
               ),
             ),
@@ -42,7 +42,7 @@ class VisitConfirmationContent extends StatelessWidget {
           AppText(
             message,
             style: AppTextStyles.bold.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 23.sp,
             ),
             textAlign: TextAlign.center,
@@ -52,7 +52,7 @@ class VisitConfirmationContent extends StatelessWidget {
           AppText(
             LocaleKeys.tenantVisitConfirmedDescription,
             style: AppTextStyles.regular14.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 14.sp,
               height: 1.5,
             ),
@@ -90,7 +90,7 @@ class VisitConfirmationContent extends StatelessWidget {
               tab: WorkspaceTab.visits,
             ),
             title: LocaleKeys.tenantVisitFollowRequests,
-            color: AppColors.sokoonTeal,
+            color: context.appColor(AppColors.sokoonTeal, surface: true),
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(14.r),
             height: 50.h,
@@ -108,9 +108,9 @@ class VisitConfirmationContent extends StatelessWidget {
                   route.settings.name == '$TenantSearchScreen',
             ),
             title: LocaleKeys.tenantVisitBackToSearch,
-            color: AppColors.white,
-            textColor: AppColors.sokoonNavy,
-            borderColor: AppColors.sokoonBorder,
+            color: context.appColor(AppColors.white, surface: true),
+            textColor: context.appColor(AppColors.sokoonNavy),
+            borderColor: context.appColor(AppColors.sokoonBorder),
             borderRadius: BorderRadius.circular(14.r),
             height: 50.h,
             textStyle: AppTextStyles.bold15.copyWith(

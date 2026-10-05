@@ -83,7 +83,10 @@ class _OwnerRequestsCalendarScreenState
             ).paddingSymmetric(horizontal: 12),
           ),
         ],
-        backgroundColor: AppColors.scaffoldBackground,
+        backgroundColor: context.appColor(
+          AppColors.scaffoldBackground,
+          surface: true,
+        ),
         contentWidth: SokounContentWidth.wide,
         body: SafeArea(
           child: ValueListenableBuilder<Future<void>>(

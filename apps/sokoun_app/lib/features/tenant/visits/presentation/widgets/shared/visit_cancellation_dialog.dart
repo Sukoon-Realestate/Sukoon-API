@@ -37,7 +37,9 @@ class VisitCancellationDialog extends StatelessWidget {
         onPressed: () => Go.back(true),
         child: AppText(
           LocaleKeys.visitConfirmCancellation,
-          style: AppTextStyles.bold14.copyWith(color: AppColors.sokoonRose),
+          style: AppTextStyles.bold14.copyWith(
+            color: context.appColor(AppColors.sokoonRose),
+          ),
         ),
       ),
     ],

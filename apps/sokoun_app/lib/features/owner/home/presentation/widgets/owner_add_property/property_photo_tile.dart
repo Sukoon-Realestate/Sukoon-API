@@ -39,15 +39,15 @@ class PhotoTile extends StatelessWidget {
         curve: SokounMotion.curve,
         decoration: BoxDecoration(
           color: hasPhoto
-              ? AppColors.grayBluePale
-              : AppColors.scaffoldBackground,
+              ? context.appColor(AppColors.grayBluePale, surface: true)
+              : context.appColor(AppColors.scaffoldBackground, surface: true),
           borderRadius: BorderRadius.circular(14.r),
           border: Border.all(
             color: isMainPhoto
                 ? AppColors.sokoonGold
                 : hasPhoto
                 ? AppColors.transparent
-                : AppColors.sokoonBorder,
+                : context.appColor(AppColors.sokoonBorder),
             width: isMainPhoto ? 2 : 1,
           ),
         ),
@@ -65,7 +65,9 @@ class PhotoTile extends StatelessWidget {
                               errorBuilder: (context, error, stackTrace) =>
                                   Icon(
                                     Icons.broken_image_outlined,
-                                    color: AppColors.sokoonMuted,
+                                    color: context.appColor(
+                                      AppColors.sokoonMuted,
+                                    ),
                                     size: 24.r,
                                   ),
                             ),
@@ -76,13 +78,13 @@ class PhotoTile extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.add_rounded,
-                          color: AppColors.sokoonMuted,
+                          color: context.appColor(AppColors.sokoonMuted),
                           size: 20.r,
                         ),
                         AppText(
                           LocaleKeys.ownerPropertiesAddPhoto,
                           style: AppTextStyles.semiBold.copyWith(
-                            color: AppColors.sokoonMuted,
+                            color: context.appColor(AppColors.sokoonMuted),
                             fontSize: 10.sp,
                           ),
                         ),
@@ -97,7 +99,7 @@ class PhotoTile extends StatelessWidget {
                   icon: Icons.photo_camera_outlined,
                   label: LocaleKeys.ownerAddPropertyReplacePhoto,
                   onTap: onReplacePhoto!,
-                  color: AppColors.sokoonTeal,
+                  color: context.appColor(AppColors.sokoonTeal),
                 ),
               ),
             if (onRemovePhoto != null)
@@ -108,7 +110,7 @@ class PhotoTile extends StatelessWidget {
                   icon: Icons.close_rounded,
                   label: LocaleKeys.ownerPropertiesDelete,
                   onTap: onRemovePhoto!,
-                  color: AppColors.red,
+                  color: context.appColor(AppColors.red),
                 ),
               ),
             if (hasPhoto)
@@ -165,7 +167,7 @@ class PhotoTileAction extends StatelessWidget {
       tooltip: label,
       onPressed: onTap,
       style: IconButton.styleFrom(
-        backgroundColor: color,
+        backgroundColor: context.appColor(color, surface: true),
         foregroundColor: AppColors.white,
       ),
       icon: Icon(icon, size: 20.r),

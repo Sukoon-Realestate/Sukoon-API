@@ -30,7 +30,7 @@ class SingleSelectGroup extends StatelessWidget {
         AppText(
           title,
           style: AppTextStyles.semiBold.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 12.sp,
           ),
           textAlign: TextAlign.start,

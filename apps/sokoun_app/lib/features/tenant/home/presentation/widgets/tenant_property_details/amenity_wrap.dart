@@ -27,7 +27,7 @@ class TenantPropertyAmenityWrap extends StatelessWidget {
             child: AppText(
               amenity,
               style: AppTextStyles.bold12.copyWith(
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
                 fontSize: 12.sp,
                 height: 1.45,
               ),

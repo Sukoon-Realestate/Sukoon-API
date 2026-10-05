@@ -51,7 +51,7 @@ class NotificationsEmptyState extends StatelessWidget {
             AppText(
               LocaleKeys.notificationsEmptyTitle,
               style: AppTextStyles.bold.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 20.sp,
               ),
               textAlign: TextAlign.center,
@@ -61,7 +61,7 @@ class NotificationsEmptyState extends StatelessWidget {
             AppText(
               LocaleKeys.notificationsEmptyDescription,
               style: AppTextStyles.regular14.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 14.sp,
                 height: 1.7,
               ),
@@ -74,7 +74,7 @@ class NotificationsEmptyState extends StatelessWidget {
               title: role.isOwner
                   ? LocaleKeys.notificationsOwnerAddProperty
                   : LocaleKeys.notificationsExploreProperties,
-              color: AppColors.sokoonTeal,
+              color: context.appColor(AppColors.sokoonTeal, surface: true),
               textColor: AppColors.white,
               borderRadius: BorderRadius.circular(12.r),
               width: double.infinity,

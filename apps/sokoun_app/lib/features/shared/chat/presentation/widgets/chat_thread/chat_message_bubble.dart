@@ -36,7 +36,9 @@ class ChatMessageBubble extends StatelessWidget {
               vertical: _isVoice ? 11.h : 10.h,
             ),
             decoration: BoxDecoration(
-              color: isFromMe ? AppColors.white : AppColors.sokoonTeal,
+              color: isFromMe
+                  ? context.appColor(AppColors.white, surface: true)
+                  : context.appColor(AppColors.sokoonTeal, surface: true),
               borderRadius: BorderRadiusDirectional.only(
                 topStart: Radius.circular(isFromMe ? 16.r : 4.r),
                 topEnd: Radius.circular(isFromMe ? 4.r : 16.r),
@@ -44,7 +46,7 @@ class ChatMessageBubble extends StatelessWidget {
                 bottomEnd: Radius.circular(16.r),
               ),
               border: isFromMe
-                  ? Border.all(color: AppColors.sokoonBorder)
+                  ? Border.all(color: context.appColor(AppColors.sokoonBorder))
                   : null,
             ),
             child: _isVoice
@@ -55,7 +57,9 @@ class ChatMessageBubble extends StatelessWidget {
                 : AppText(
                     message.message.body,
                     style: AppTextStyles.regular14.copyWith(
-                      color: isFromMe ? AppColors.sokoonNavy : AppColors.white,
+                      color: isFromMe
+                          ? context.appColor(AppColors.sokoonNavy)
+                          : AppColors.white,
                       fontSize: 14.sp,
                       height: 1.4,
                     ),
@@ -64,7 +68,7 @@ class ChatMessageBubble extends StatelessWidget {
           AppText(
             message.time ?? '',
             style: AppTextStyles.regular10.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 12.sp,
               height: 1.45,
             ),
@@ -84,7 +88,9 @@ class _VoiceMessageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color foreground = isFromMe ? AppColors.sokoonTeal : AppColors.white;
+    final Color foreground = isFromMe
+        ? context.appColor(AppColors.sokoonTeal)
+        : AppColors.white;
 
     return Row(
       mainAxisSize: MainAxisSize.min,

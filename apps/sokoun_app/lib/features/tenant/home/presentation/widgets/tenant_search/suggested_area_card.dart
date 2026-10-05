@@ -57,7 +57,9 @@ class SuggestedAreaCard extends StatelessWidget {
           color: _backgroundColors[styleIndex % _backgroundColors.length],
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: isSelected ? AppColors.sokoonTeal : AppColors.transparent,
+            color: isSelected
+                ? context.appColor(AppColors.sokoonTeal)
+                : AppColors.transparent,
             width: 1.4,
           ),
         ),
@@ -74,7 +76,9 @@ class SuggestedAreaCard extends StatelessWidget {
             AppText(
               place.district,
               style: AppTextStyles.bold12.copyWith(
-                color: isSelected ? AppColors.sokoonTeal : AppColors.sokoonNavy,
+                color: isSelected
+                    ? context.appColor(AppColors.sokoonTeal)
+                    : context.appColor(AppColors.sokoonNavy),
                 fontSize: 12.sp,
                 height: 1.45,
               ),
@@ -89,7 +93,7 @@ class SuggestedAreaCard extends StatelessWidget {
                 place.country,
               ].where((value) => value.isNotEmpty).join('، '),
               style: AppTextStyles.semiBold.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 10.sp,
               ),
               maxLines: 1,

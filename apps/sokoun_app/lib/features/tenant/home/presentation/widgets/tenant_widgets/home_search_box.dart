@@ -18,23 +18,23 @@ class HomeSearchBox extends StatelessWidget {
         height: 52.h,
         padding: EdgeInsetsDirectional.only(start: 16.w, end: 8.w),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: context.appColor(AppColors.white, surface: true),
           borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: AppColors.sokoonBorder),
+          border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
         ),
         child: Row(
           spacing: 12.w,
           children: [
             Icon(
               Icons.search_rounded,
-              color: AppColors.sokoonMuted,
+              color: context.appColor(AppColors.sokoonMuted),
               size: 20.r,
             ),
             Expanded(
               child: AppText(
                 LocaleKeys.tenantHomeSearchAreaHint,
                 style: AppTextStyles.regular14.copyWith(
-                  color: AppColors.sokoonMuted,
+                  color: context.appColor(AppColors.sokoonMuted),
                   fontSize: 14.sp,
                   height: 1.45,
                 ),
@@ -45,7 +45,7 @@ class HomeSearchBox extends StatelessWidget {
               width: 34.r,
               height: 34.r,
               decoration: BoxDecoration(
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal, surface: true),
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Icon(

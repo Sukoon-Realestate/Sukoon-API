@@ -9,10 +9,10 @@ class ProfileSurfaceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.white,
+      color: context.appColor(AppColors.white, surface: true),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.r),
-        side: const BorderSide(color: AppColors.sokoonBorder),
+        side: BorderSide(color: context.appColor(AppColors.sokoonBorder)),
       ),
       clipBehavior: Clip.antiAlias,
       child: SizedBox(

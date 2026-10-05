@@ -45,9 +45,9 @@ class OwnerVisitRequestCard extends StatelessWidget {
             vertical: AppPadding.pH14,
           ),
           decoration: BoxDecoration(
-            color: AppColors.white,
+            color: context.appColor(AppColors.white, surface: true),
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: AppColors.grayPale),
+            border: Border.all(color: context.appColor(AppColors.grayPale)),
           ),
           child: Column(
             spacing: 12.h,

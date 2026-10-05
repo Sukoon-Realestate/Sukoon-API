@@ -27,9 +27,11 @@ class HomeBottomNavigation extends StatelessWidget {
       child: Container(
         constraints: BoxConstraints(minHeight: 76.h),
         padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
-        decoration: const BoxDecoration(
-          color: AppColors.white,
-          border: Border(top: BorderSide(color: AppColors.sokoonBorder)),
+        decoration: BoxDecoration(
+          color: context.appColor(AppColors.white, surface: true),
+          border: Border(
+            top: BorderSide(color: context.appColor(AppColors.sokoonBorder)),
+          ),
         ),
         child: Row(
           children: destinations.indexed
@@ -66,8 +68,8 @@ class _HomeBottomNavigationItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color color = isSelected
-        ? AppColors.sokoonTeal
-        : AppColors.sokoonGray;
+        ? context.appColor(AppColors.sokoonTeal)
+        : context.appColor(AppColors.sokoonGray);
 
     return Semantics(
       button: true,
@@ -88,7 +90,7 @@ class _HomeBottomNavigationItem extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? AppColors.mintLight
+                      ? context.appColor(AppColors.mintLight, surface: true)
                       : AppColors.transparent,
                   borderRadius: BorderRadius.circular(16.r),
                 ),
@@ -101,7 +103,7 @@ class _HomeBottomNavigationItem extends StatelessWidget {
               AppText(
                 destination.label,
                 style: AppTextStyles.semiBold.copyWith(
-                  color: color,
+                  color: context.appColor(color),
                   fontSize: 12.sp,
                 ),
                 maxLines: 2,

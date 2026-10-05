@@ -128,7 +128,10 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
     return AppScaffold(
       title: LocaleKeys.tenantVisitsTitle,
       showBackButton: true,
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: context.appColor(
+        AppColors.scaffoldBackground,
+        surface: true,
+      ),
       body: SafeArea(
         child: ValueListenableBuilder<String?>(
           valueListenable: _cancelingVisitId,

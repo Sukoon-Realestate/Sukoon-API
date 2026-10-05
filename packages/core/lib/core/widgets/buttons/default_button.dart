@@ -50,17 +50,19 @@ class DefaultButton extends StatelessWidget {
     this.isFitted = true,
   });
 
-  Widget get _defaultChild => Text(
+  Widget _defaultChild(BuildContext context) => Text(
     title ?? 'Click!',
     style: textStyle == null
         ? TextStyle(
-            color: textColor ?? AppColors.buttonText,
+            color: context.appColor(textColor ?? AppColors.buttonText),
             fontSize: fontSize ?? FontSize.s13,
             fontFamily: ConstantManager.fontFamily,
             fontWeight: fontWeight ?? FontWeightManager.medium,
           )
         : textStyle!.copyWith(
-            color: textColor ?? textStyle!.color ?? AppColors.buttonText,
+            color: context.appColor(
+              textColor ?? textStyle!.color ?? AppColors.buttonText,
+            ),
             fontSize: fontSize,
             fontWeight: fontWeight,
           ),
@@ -88,9 +90,17 @@ class DefaultButton extends StatelessWidget {
           onPressed: disabled == true ? null : onTap,
           style: ElevatedButton.styleFrom(
             splashFactory: InkRipple.splashFactory,
-            surfaceTintColor: color ?? AppColors.buttonColor,
-            foregroundColor: textColor ?? AppColors.buttonText,
-            backgroundColor: color ?? AppColors.primary,
+            surfaceTintColor: context.appColor(
+              color ?? AppColors.buttonColor,
+              surface: true,
+            ),
+            foregroundColor: context.appColor(
+              textColor ?? AppColors.buttonText,
+            ),
+            backgroundColor: context.appColor(
+              color ?? AppColors.primary,
+              surface: true,
+            ),
             padding: padding,
             shape: RoundedRectangleBorder(
               borderRadius:
@@ -98,7 +108,7 @@ class DefaultButton extends StatelessWidget {
                   BorderRadius.circular(controls?.radius ?? AppCircular.r5),
               side: borderColor != null
                   ? BorderSide(
-                      color: borderColor ?? Colors.grey[200]!,
+                      color: context.appColor(borderColor ?? Colors.grey[200]!),
                       width: borderWidth,
                     )
                   : BorderSide.none,
@@ -106,8 +116,8 @@ class DefaultButton extends StatelessWidget {
             elevation: elevation ?? ConstantManager.zeroAsDouble,
           ),
           child: isFitted && !grow
-              ? FittedBox(child: customChild ?? _defaultChild)
-              : customChild ?? _defaultChild,
+              ? FittedBox(child: customChild ?? _defaultChild(context))
+              : customChild ?? _defaultChild(context),
         ),
       ),
     );

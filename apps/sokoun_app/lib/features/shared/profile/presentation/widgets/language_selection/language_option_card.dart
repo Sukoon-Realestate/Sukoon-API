@@ -20,8 +20,8 @@ class LanguageOptionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final BorderRadius borderRadius = BorderRadius.circular(14.r);
     final Color borderColor = selected
-        ? AppColors.sokoonTeal
-        : AppColors.sokoonBorder;
+        ? context.appColor(AppColors.sokoonTeal)
+        : context.appColor(AppColors.sokoonBorder);
 
     return Semantics(
       checked: selected,
@@ -40,10 +40,10 @@ class LanguageOptionCard extends StatelessWidget {
               : const [],
         ),
         child: Material(
-          color: AppColors.white,
+          color: context.appColor(AppColors.white, surface: true),
           shape: RoundedRectangleBorder(
             borderRadius: borderRadius,
-            side: BorderSide(color: borderColor, width: 2.r),
+            side: BorderSide(color: context.appColor(borderColor), width: 2.r),
           ),
           child: InkWell(
             onTap: onSelected,
@@ -57,14 +57,20 @@ class LanguageOptionCard extends StatelessWidget {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: borderColor, width: 2.r),
+                    border: Border.all(
+                      color: context.appColor(borderColor),
+                      width: 2.r,
+                    ),
                   ),
                   child: selected
                       ? Container(
                           width: 12.r,
                           height: 12.r,
-                          decoration: const BoxDecoration(
-                            color: AppColors.sokoonTeal,
+                          decoration: BoxDecoration(
+                            color: context.appColor(
+                              AppColors.sokoonTeal,
+                              surface: true,
+                            ),
                             shape: BoxShape.circle,
                           ),
                         )
@@ -77,7 +83,7 @@ class LanguageOptionCard extends StatelessWidget {
                       AppText(
                         title,
                         style: AppTextStyles.extraBold.copyWith(
-                          color: AppColors.sokoonNavy,
+                          color: context.appColor(AppColors.sokoonNavy),
                           fontSize: 16.sp,
                           height: 1.5,
                         ),
@@ -85,7 +91,7 @@ class LanguageOptionCard extends StatelessWidget {
                       AppText(
                         subtitle,
                         style: AppTextStyles.medium12.copyWith(
-                          color: AppColors.sokoonGray,
+                          color: context.appColor(AppColors.sokoonGray),
                           fontSize: 12.sp,
                           height: 1.5,
                         ),

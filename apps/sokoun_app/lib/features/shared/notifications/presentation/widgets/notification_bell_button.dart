@@ -78,13 +78,15 @@ class _NotificationBellButtonState extends State<NotificationBellButton> {
                   width: 36.r,
                   height: 36.r,
                   decoration: BoxDecoration(
-                    color: AppColors.white,
+                    color: context.appColor(AppColors.white, surface: true),
                     shape: BoxShape.circle,
-                    border: Border.all(color: AppColors.sokoonBorder),
+                    border: Border.all(
+                      color: context.appColor(AppColors.sokoonBorder),
+                    ),
                   ),
                   child: Icon(
                     Icons.notifications_none_rounded,
-                    color: AppColors.sokoonNavy,
+                    color: context.appColor(AppColors.sokoonNavy),
                     size: 18.r,
                   ),
                 ),

@@ -8,7 +8,7 @@ class OwnerRejectRequestSheet extends StatelessWidget {
     return Container(
       padding: EdgeInsets.fromLTRB(24.w, 12.h, 24.w, 28.h),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
       child: Column(
@@ -21,8 +21,11 @@ class OwnerRejectRequestSheet extends StatelessWidget {
             icon: Icons.close_rounded,
             title: LocaleKeys.ownerRejectTitle,
             subtitle: LocaleKeys.ownerRejectConfirmation,
-            iconColor: AppColors.red,
-            iconBackgroundColor: AppColors.redPale,
+            iconColor: context.appColor(AppColors.red),
+            iconBackgroundColor: context.appColor(
+              AppColors.redPale,
+              surface: true,
+            ),
           ),
           12.szH,
           AppText(
@@ -33,7 +36,7 @@ class OwnerRejectRequestSheet extends StatelessWidget {
           DefaultButton(
             onTap: () => Go.back(true),
             title: LocaleKeys.ownerRejectConfirm,
-            color: AppColors.red,
+            color: context.appColor(AppColors.red, surface: true),
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(14.r),
             height: 52.h,

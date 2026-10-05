@@ -28,9 +28,9 @@ class TenantVisitCard extends StatelessWidget {
         child: Ink(
           padding: EdgeInsets.all(16.r),
           decoration: BoxDecoration(
-            color: AppColors.white,
+            color: context.appColor(AppColors.white, surface: true),
             borderRadius: BorderRadius.circular(18.r),
-            border: Border.all(color: AppColors.sokoonBorder),
+            border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -48,7 +48,7 @@ class TenantVisitCard extends StatelessWidget {
                         AppText(
                           visit.propertyTitle,
                           style: AppTextStyles.bold14.copyWith(
-                            color: AppColors.sokoonNavy,
+                            color: context.appColor(AppColors.sokoonNavy),
                             fontSize: 14.sp,
                             height: 1.45,
                           ),
@@ -59,7 +59,7 @@ class TenantVisitCard extends StatelessWidget {
                           AppText(
                             '${LocaleKeys.tenantVisitOwnerLabel} ${visit.ownerName}',
                             style: AppTextStyles.regular12.copyWith(
-                              color: AppColors.sokoonGray,
+                              color: context.appColor(AppColors.sokoonGray),
                               fontSize: 12.sp,
                               height: 1.45,
                             ),
@@ -75,13 +75,16 @@ class TenantVisitCard extends StatelessWidget {
                       vertical: 5.h,
                     ),
                     decoration: BoxDecoration(
-                      color: visit.status.backgroundColor,
+                      color: context.appColor(
+                        visit.status.backgroundColor,
+                        surface: true,
+                      ),
                       borderRadius: BorderRadius.circular(999.r),
                     ),
                     child: AppText(
                       visit.resolvedStatusText,
                       style: AppTextStyles.bold11.copyWith(
-                        color: visit.status.foregroundColor,
+                        color: context.appColor(visit.status.foregroundColor),
                         fontSize: 12.sp,
                         height: 1.45,
                       ),
@@ -95,14 +98,14 @@ class TenantVisitCard extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.calendar_today_outlined,
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                     size: 14.r,
                   ),
                   Expanded(
                     child: AppText(
                       visit.dateLabel,
                       style: AppTextStyles.regular12.copyWith(
-                        color: AppColors.sokoonGray,
+                        color: context.appColor(AppColors.sokoonGray),
                         fontSize: 12.sp,
                         height: 1.45,
                       ),
@@ -158,29 +161,38 @@ class _VisitCardActions extends StatelessWidget {
         if (visit.canChat)
           _VisitCardAction(
             label: LocaleKeys.tenantVisitChatAction,
-            backgroundColor: AppColors.bluePale,
-            foregroundColor: AppColors.blue,
+            backgroundColor: context.appColor(
+              AppColors.bluePale,
+              surface: true,
+            ),
+            foregroundColor: context.appColor(AppColors.blue),
             onPressed: _openChat,
           ),
         if (visit.canReview)
           _VisitCardAction(
             label: LocaleKeys.tenantVisitRateAction,
-            backgroundColor: AppColors.goldPale,
-            foregroundColor: AppColors.brown,
+            backgroundColor: context.appColor(
+              AppColors.goldPale,
+              surface: true,
+            ),
+            foregroundColor: context.appColor(AppColors.brown),
             onPressed: onRatePressed,
           ),
         if (visit.canCancel)
           _VisitCardAction(
             label: LocaleKeys.tenantVisitCancelRequest,
-            backgroundColor: AppColors.redPale,
-            foregroundColor: AppColors.sokoonRose,
+            backgroundColor: context.appColor(AppColors.redPale, surface: true),
+            foregroundColor: context.appColor(AppColors.sokoonRose),
             isLoading: isCanceling,
             onPressed: canStartCancellation ? onCancelPressed : null,
           ),
         if (visit.canFindAlternative)
           _VisitCardAction(
             label: LocaleKeys.tenantVisitFindAlternative,
-            backgroundColor: AppColors.sokoonTeal,
+            backgroundColor: context.appColor(
+              AppColors.sokoonTeal,
+              surface: true,
+            ),
             foregroundColor: AppColors.white,
             onPressed: _findAlternative,
           ),
@@ -212,8 +224,8 @@ class _VisitCardAction extends StatelessWidget {
         onPressed: onPressed,
         style: FilledButton.styleFrom(
           elevation: 0,
-          backgroundColor: backgroundColor,
-          foregroundColor: foregroundColor,
+          backgroundColor: context.appColor(backgroundColor, surface: true),
+          foregroundColor: context.appColor(foregroundColor),
           padding: EdgeInsets.symmetric(horizontal: 8.w),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.r),
@@ -224,13 +236,13 @@ class _VisitCardAction extends StatelessWidget {
                 dimension: 20.r,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  color: foregroundColor,
+                  color: context.appColor(foregroundColor),
                 ),
               )
             : AppText(
                 label,
                 style: AppTextStyles.bold12.copyWith(
-                  color: foregroundColor,
+                  color: context.appColor(foregroundColor),
                   fontSize: 12.sp,
                   height: 1.45,
                 ),

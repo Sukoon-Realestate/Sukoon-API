@@ -29,9 +29,9 @@ class PropertyReviewCard extends StatelessWidget {
       margin: EdgeInsets.symmetric(vertical: 6.h),
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.sokoonBorder),
+        border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -49,10 +49,13 @@ class PropertyReviewCard extends StatelessWidget {
                       height: 40.r,
                       fit: BoxFit.cover,
                       boxShape: BoxShape.circle,
-                      bgColor: AppColors.bluePale,
-                      placeHolder: const Icon(
+                      bgColor: context.appColor(
+                        AppColors.bluePale,
+                        surface: true,
+                      ),
+                      placeHolder: Icon(
                         Icons.person_outline_rounded,
-                        color: AppColors.sokoonGray,
+                        color: context.appColor(AppColors.sokoonGray),
                       ),
                     ),
                   ),
@@ -68,13 +71,16 @@ class PropertyReviewCard extends StatelessWidget {
               crossAxisAlignment: WrapCrossAlignment.center,
               spacing: 4.w,
               children: [
-                const Icon(Icons.star_rounded, color: AppColors.amber),
+                Icon(
+                  Icons.star_rounded,
+                  color: context.appColor(AppColors.amber),
+                ),
                 Directionality(
                   textDirection: TextDirection.ltr,
                   child: AppText(
                     '${review.rating!.toStringAsFixed(1)} / 5',
                     style: AppTextStyles.bold16.copyWith(
-                      color: AppColors.amber,
+                      color: context.appColor(AppColors.amber),
                     ),
                   ),
                 ),

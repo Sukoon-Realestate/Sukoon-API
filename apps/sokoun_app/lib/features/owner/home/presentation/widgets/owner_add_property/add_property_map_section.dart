@@ -55,9 +55,12 @@ class _AddPropertyMapSectionState extends State<AddPropertyMapSection> {
           AddPropertyInfoBanner(
             title: LocaleKeys.ownerAddPropertySelectedLocation,
             text: location.address.isEmpty ? widget.query : location.address,
-            backgroundColor: AppColors.greenPale,
+            backgroundColor: context.appColor(
+              AppColors.greenPale,
+              surface: true,
+            ),
             borderColor: AppColors.greenAlpha19,
-            iconColor: AppColors.green,
+            iconColor: context.appColor(AppColors.green),
             icon: Icons.location_on_outlined,
           ),
           Text(location.coordinates, textDirection: TextDirection.ltr),

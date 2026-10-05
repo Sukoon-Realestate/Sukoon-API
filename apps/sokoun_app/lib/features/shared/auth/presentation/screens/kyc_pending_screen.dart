@@ -53,13 +53,13 @@ class KycPendingScreen extends StatelessWidget {
           Container(
             width: 96.r,
             height: 96.r,
-            decoration: const BoxDecoration(
-              color: AppColors.orangePale,
+            decoration: BoxDecoration(
+              color: context.appColor(AppColors.orangePale, surface: true),
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.schedule_rounded,
-              color: AppColors.brown,
+              color: context.appColor(AppColors.brown),
               size: 44.r,
             ),
           ),
@@ -67,13 +67,13 @@ class KycPendingScreen extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
             decoration: BoxDecoration(
-              color: AppColors.orangePale,
+              color: context.appColor(AppColors.orangePale, surface: true),
               borderRadius: BorderRadius.circular(999.r),
             ),
             child: AppText(
               LocaleKeys.kycPendingBadge,
               style: AppTextStyles.semiBold.copyWith(
-                color: AppColors.brown,
+                color: context.appColor(AppColors.brown),
                 fontSize: 12.sp,
               ),
             ),
@@ -82,7 +82,7 @@ class KycPendingScreen extends StatelessWidget {
           AppText(
             LocaleKeys.kycPendingTitle,
             style: AppTextStyles.bold.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 24.sp,
             ),
             textAlign: TextAlign.center,
@@ -91,7 +91,7 @@ class KycPendingScreen extends StatelessWidget {
           AppText(
             LocaleKeys.kycPendingDescription,
             style: AppTextStyles.regular14.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 14.sp,
               height: 1.45,
             ),
@@ -106,7 +106,7 @@ class KycPendingScreen extends StatelessWidget {
             onTap: () =>
                 existingAccount ? Go.backToInitial() : Go.offAll(LoginScreen()),
             title: LocaleKeys.ok,
-            color: AppColors.sokoonTeal,
+            color: context.appColor(AppColors.sokoonTeal, surface: true),
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(14.r),
             height: 52.h,

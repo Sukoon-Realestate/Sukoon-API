@@ -75,8 +75,10 @@ class TenantPropertyRentalDetails extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 12.h),
               decoration: BoxDecoration(
                 border: index < rows.length - 1
-                    ? const Border(
-                        bottom: BorderSide(color: AppColors.sokoonBorder),
+                    ? Border(
+                        bottom: BorderSide(
+                          color: context.appColor(AppColors.sokoonBorder),
+                        ),
                       )
                     : null,
               ),
@@ -84,7 +86,11 @@ class TenantPropertyRentalDetails extends StatelessWidget {
                 spacing: 10.w,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(row.icon, color: AppColors.sokoonTeal, size: 20.r),
+                  Icon(
+                    row.icon,
+                    color: context.appColor(AppColors.sokoonTeal),
+                    size: 20.r,
+                  ),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,13 +99,13 @@ class TenantPropertyRentalDetails extends StatelessWidget {
                         AppText(
                           row.label,
                           style: AppTextStyles.regular12.copyWith(
-                            color: AppColors.sokoonGray,
+                            color: context.appColor(AppColors.sokoonGray),
                           ),
                         ),
                         AppText(
                           row.value,
                           style: AppTextStyles.medium13.copyWith(
-                            color: AppColors.sokoonNavy,
+                            color: context.appColor(AppColors.sokoonNavy),
                             fontSize: 14.sp,
                           ),
                         ),

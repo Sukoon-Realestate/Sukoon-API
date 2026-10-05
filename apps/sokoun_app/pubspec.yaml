@@ -2,7 +2,7 @@ name: sokoun_app
 environment:
   sdk: ^3.9.0
 resolution: workspace
-version: 1.0.0+4
+version: 1.0.0+6
 
 dependencies:
   flutter:

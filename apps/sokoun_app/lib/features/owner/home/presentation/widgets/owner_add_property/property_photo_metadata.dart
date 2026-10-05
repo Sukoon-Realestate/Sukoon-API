@@ -27,7 +27,9 @@ class PhotoMetadataSection extends StatelessWidget {
       children: [
         AppText(
           LocaleKeys.ownerAddPropertyPhotoMetadataRecommended,
-          style: AppTextStyles.regular12.copyWith(color: AppColors.sokoonGray),
+          style: AppTextStyles.regular12.copyWith(
+            color: context.appColor(AppColors.sokoonGray),
+          ),
         ),
         for (int index = 0; index < photos.length; index++)
           PhotoMetadataCard(
@@ -115,7 +117,7 @@ class PhotoMetadataField extends StatelessWidget {
         AppText(
           '$label (${LocaleKeys.ownerAddPropertyOptionalRecommended})',
           style: AppTextStyles.semiBold.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 12.sp,
           ),
           textAlign: TextAlign.start,
@@ -127,7 +129,7 @@ class PhotoMetadataField extends StatelessWidget {
           maxLines: maxLines,
           minLines: maxLines == 1 ? 1 : 2,
           style: AppTextStyles.medium13.copyWith(
-            color: AppColors.sokoonNavy,
+            color: context.appColor(AppColors.sokoonNavy),
             fontSize: 13.sp,
             height: 1.45,
           ),
@@ -135,26 +137,30 @@ class PhotoMetadataField extends StatelessWidget {
             errorMaxLines: 3,
             hintText: hint,
             filled: true,
-            fillColor: AppColors.white,
+            fillColor: context.appColor(AppColors.white, surface: true),
             contentPadding: EdgeInsets.symmetric(
               horizontal: 14.w,
               vertical: 12.h,
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: const BorderSide(color: AppColors.sokoonBorder),
+              borderSide: BorderSide(
+                color: context.appColor(AppColors.sokoonBorder),
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: const BorderSide(color: AppColors.sokoonTeal),
+              borderSide: BorderSide(
+                color: context.appColor(AppColors.sokoonTeal),
+              ),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: const BorderSide(color: AppColors.red),
+              borderSide: BorderSide(color: context.appColor(AppColors.red)),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
-              borderSide: const BorderSide(color: AppColors.red),
+              borderSide: BorderSide(color: context.appColor(AppColors.red)),
             ),
           ),
         ),

@@ -70,7 +70,10 @@ class _NotificationSettingsScreenState
       child: AppScaffold(
         title: LocaleKeys.notificationSettingsTitle,
         showBackButton: true,
-        backgroundColor: AppColors.scaffoldBackground,
+        backgroundColor: context.appColor(
+          AppColors.scaffoldBackground,
+          surface: true,
+        ),
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -11,7 +11,7 @@ class LanguageSelectionIntro extends StatelessWidget {
           width: 60.r,
           height: 60.r,
           decoration: BoxDecoration(
-            color: AppColors.sokoonTeal,
+            color: context.appColor(AppColors.sokoonTeal, surface: true),
             borderRadius: BorderRadius.circular(13.r),
             boxShadow: [
               BoxShadow(
@@ -32,7 +32,7 @@ class LanguageSelectionIntro extends StatelessWidget {
         AppText(
           LocaleKeys.languageSelectionSubtitle,
           style: AppTextStyles.regular14.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 14.sp,
             height: 1.5,
           ),

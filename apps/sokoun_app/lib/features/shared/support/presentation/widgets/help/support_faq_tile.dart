@@ -22,7 +22,7 @@ class _SupportFaqTileState extends State<SupportFaqTile> {
         AppText(
               widget.faq.answer,
               style: AppTextStyles.regular14.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 height: 1.6,
               ),
             )
@@ -30,12 +30,12 @@ class _SupportFaqTileState extends State<SupportFaqTile> {
             .showIf(condition: () => expanded);
     return Card(
       margin: EdgeInsets.zero,
-      color: AppColors.white,
+      color: context.appColor(AppColors.white, surface: true),
       surfaceTintColor: AppColors.transparent,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.r),
-        side: const BorderSide(color: AppColors.sokoonBorder),
+        side: BorderSide(color: context.appColor(AppColors.sokoonBorder)),
       ),
       child: ValueListenableBuilder<bool>(
         valueListenable: _expanded,
@@ -51,7 +51,7 @@ class _SupportFaqTileState extends State<SupportFaqTile> {
                 ),
                 trailing: Icon(
                   expanded ? Icons.expand_less : Icons.expand_more,
-                  color: AppColors.sokoonTeal,
+                  color: context.appColor(AppColors.sokoonTeal),
                 ),
                 onTap: () => _expanded.value = !expanded,
               ),

@@ -94,9 +94,9 @@ class _PropertyLocationSearchState extends State<PropertyLocationSearch> {
         for (final result in widget.state.results)
           ListTile(
             contentPadding: EdgeInsets.zero,
-            leading: const Icon(
+            leading: Icon(
               Icons.location_on_outlined,
-              color: AppColors.sokoonTeal,
+              color: context.appColor(AppColors.sokoonTeal),
             ),
             title: AppText(
               result.address.isEmpty ? _controller.text.trim() : result.address,

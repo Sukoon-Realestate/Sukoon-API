@@ -19,11 +19,15 @@ Future showDefaultBottomSheet({
     useRootNavigator: false,
     isScrollControlled: true,
     context: context ?? Go.context,
-    backgroundColor: backgroundColor?? Colors.white,
+    backgroundColor: (context ?? Go.context).appColor(
+      backgroundColor ?? AppColors.white,
+      surface: true,
+    ),
     barrierColor: Colors.black.withOpacity(0.8),
     builder: (context) => DefaultSheetBody(
-      child: !withPadding? child :
-      Padding(padding: EdgeInsets.all(12.r), child: child),
+      child: !withPadding
+          ? child
+          : Padding(padding: EdgeInsets.all(12.r), child: child),
     ),
   );
 }
@@ -39,8 +43,8 @@ class DefaultSheetBody extends StatelessWidget {
         children: [
           Container(
             width: 1.sw,
-            decoration: const BoxDecoration(
-              color: Colors.white,
+            decoration: BoxDecoration(
+              color: context.appColor(AppColors.white, surface: true),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(20),
                 topRight: Radius.circular(20),
@@ -54,7 +58,10 @@ class DefaultSheetBody extends StatelessWidget {
                     width: 100.w,
                     height: 5.h,
                     decoration: BoxDecoration(
-                      color: AppColors.whiteGrey,
+                      color: context.appColor(
+                        AppColors.whiteGrey,
+                        surface: true,
+                      ),
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),

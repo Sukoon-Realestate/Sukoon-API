@@ -52,7 +52,9 @@ class FavoritesContentView extends StatelessWidget {
       valueListenable: itemCount,
       builder: (context, count, _) => AppText(
         '$count ${LocaleKeys.favoritesSavedPropertiesCount}',
-        style: AppTextStyles.regular12.copyWith(color: AppColors.sokoonGray),
+        style: AppTextStyles.regular12.copyWith(
+          color: context.appColor(AppColors.sokoonGray),
+        ),
       ).paddingSymmetric(horizontal: 20, vertical: 12),
     );
     return fixtureItems != null

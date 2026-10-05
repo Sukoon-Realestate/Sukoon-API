@@ -51,7 +51,7 @@ class ExceptionView extends StatelessWidget {
             SizedBox(height: 12.h),
             AppText(
               message.isEmpty ? LocaleKeys.exceptionError : message,
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 16.sp,
               textAlign: TextAlign.center,
             ),

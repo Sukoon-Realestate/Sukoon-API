@@ -22,16 +22,18 @@ class KycRequirementTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accentColor = isHighlighted
-        ? AppColors.sokoonTeal
-        : AppColors.sokoonMuted;
+        ? context.appColor(AppColors.sokoonTeal)
+        : context.appColor(AppColors.sokoonMuted);
 
     return Container(
       padding: EdgeInsets.all(14.r),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
-          color: isHighlighted ? AppColors.tealAlpha19 : AppColors.grayPale,
+          color: isHighlighted
+              ? AppColors.tealAlpha19
+              : context.appColor(AppColors.grayPale),
         ),
       ),
       child: Row(
@@ -42,17 +44,17 @@ class KycRequirementTile extends StatelessWidget {
             decoration: BoxDecoration(
               color: isHighlighted
                   ? AppColors.tealAlpha09
-                  : AppColors.grayBackground,
+                  : context.appColor(AppColors.grayBackground, surface: true),
               borderRadius: BorderRadius.circular(10.r),
             ),
-            child: Icon(icon, color: accentColor, size: 18.r),
+            child: Icon(icon, color: context.appColor(accentColor), size: 18.r),
           ),
           12.szW,
           Expanded(
             child: AppText(
               title,
               style: AppTextStyles.semiBold.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 14.sp,
               ),
               maxLines: 2,
@@ -60,7 +62,11 @@ class KycRequirementTile extends StatelessWidget {
             ),
           ),
           if (isComplete)
-            Icon(Icons.check_rounded, color: AppColors.sokoonTeal, size: 18.r),
+            Icon(
+              Icons.check_rounded,
+              color: context.appColor(AppColors.sokoonTeal),
+              size: 18.r,
+            ),
         ],
       ),
     );

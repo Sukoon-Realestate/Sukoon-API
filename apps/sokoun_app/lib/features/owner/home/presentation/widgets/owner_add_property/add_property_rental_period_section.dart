@@ -158,7 +158,7 @@ class AddPropertyRentalPeriodSection extends StatelessWidget {
                 form.rentalDuration,
               ),
               style: AppTextStyles.bold12.copyWith(
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
                 fontSize: 12.sp,
                 height: 1.45,
               ),

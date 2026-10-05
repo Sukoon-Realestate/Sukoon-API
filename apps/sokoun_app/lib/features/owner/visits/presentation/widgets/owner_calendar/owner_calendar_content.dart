@@ -27,9 +27,11 @@ class OwnerCalendarContent extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.all(12.r),
               decoration: BoxDecoration(
-                color: AppColors.white,
+                color: context.appColor(AppColors.white, surface: true),
                 borderRadius: BorderRadius.circular(18.r),
-                border: Border.all(color: AppColors.sokoonBorder),
+                border: Border.all(
+                  color: context.appColor(AppColors.sokoonBorder),
+                ),
               ),
               child: Column(
                 spacing: 8.h,
@@ -42,7 +44,7 @@ class OwnerCalendarContent extends StatelessWidget {
                           child: AppText(
                             day,
                             style: AppTextStyles.bold11.copyWith(
-                              color: AppColors.sokoonGray,
+                              color: context.appColor(AppColors.sokoonGray),
                               fontSize: 11.sp,
                               height: 1.45,
                             ),
@@ -86,7 +88,7 @@ class OwnerCalendarContent extends StatelessWidget {
                 ? calendar.selectedDateLabel
                 : '${LocaleKeys.ownerCalendarVisitsOnDay} ${selectedDate.day}',
             style: AppTextStyles.extraBold13.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 13.sp,
               height: 1.45,
             ),

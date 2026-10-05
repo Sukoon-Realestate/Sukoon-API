@@ -16,11 +16,11 @@ class Amenity extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       spacing: 4.w,
       children: [
-        Icon(icon, color: AppColors.sokoonGray, size: 15.r),
+        Icon(icon, color: context.appColor(AppColors.sokoonGray), size: 15.r),
         AppText(
           label,
           style: AppTextStyles.regular12.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 12.sp,
             height: 1.45,
           ),

@@ -55,7 +55,10 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
     return AppScaffold(
       title: LocaleKeys.notificationDetailsTitle,
       showBackButton: true,
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: context.appColor(
+        AppColors.scaffoldBackground,
+        surface: true,
+      ),
       body: SafeArea(
         child: BlocProvider<NotificationDetailCubit>.value(
           value: _cubit,

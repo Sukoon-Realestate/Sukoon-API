@@ -17,12 +17,13 @@ class UploadImageWidget extends StatefulWidget {
   final Function(List<File>)? onUpload;
   final UploadImageType uploadImageType;
 
-  const UploadImageWidget(
-      {super.key,
-      this.removedImages,
-      this.tappedItem,
-      this.onUpload,
-      this.uploadImageType = UploadImageType.single});
+  const UploadImageWidget({
+    super.key,
+    this.removedImages,
+    this.tappedItem,
+    this.onUpload,
+    this.uploadImageType = UploadImageType.single,
+  });
 
   @override
   State<UploadImageWidget> createState() => _UploadImageWidgetState();
@@ -91,33 +92,39 @@ class _UploadImageWidgetState extends State<UploadImageWidget> {
                       clipBehavior: Clip.none,
                       children: [
                         ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: item is String
-                                ? CachedImage(
-                                    url: item,
-                                    width: 70.0.w,
-                                    height: 70.0.h,
-                                    fit: BoxFit.cover,
-                                  )
-                                : Image.file(
-                                    item,
-                                    width: 70.0.w,
-                                    height: 70.0.h,
-                                    fit: BoxFit.cover,
-                                  )),
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: item is String
+                              ? CachedImage(
+                                  url: item,
+                                  width: 70.0.w,
+                                  height: 70.0.h,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.file(
+                                  item,
+                                  width: 70.0.w,
+                                  height: 70.0.h,
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
                         PositionedDirectional(
                           top: 3,
                           end: 3,
                           child: GestureDetector(
                             onTap: () {
-                              imageValue.value =
-                                  List.from(imageValue.value..removeAt(index));
-                              _notifyUpload(imageValue.value.whereType<File>().toList());
-
+                              imageValue.value = List.from(
+                                imageValue.value..removeAt(index),
+                              );
+                              _notifyUpload(
+                                imageValue.value.whereType<File>().toList(),
+                              );
                             },
                             child: Container(
-                              decoration: const BoxDecoration(
-                                color: AppColors.white,
+                              decoration: BoxDecoration(
+                                color: context.appColor(
+                                  AppColors.white,
+                                  surface: true,
+                                ),
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(

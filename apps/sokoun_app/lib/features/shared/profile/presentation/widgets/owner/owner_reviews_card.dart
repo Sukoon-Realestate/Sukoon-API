@@ -14,7 +14,7 @@ class OwnerReviewsCard extends StatelessWidget {
           AppText(
             LocaleKeys.profileLatestReviews,
             style: AppTextStyles.bold14.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 14.sp,
               height: 1.45,
             ),
@@ -28,8 +28,10 @@ class OwnerReviewsCard extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 10.h),
               decoration: BoxDecoration(
                 border: index < reviews.length - 1
-                    ? const Border(
-                        bottom: BorderSide(color: AppColors.sokoonBorder),
+                    ? Border(
+                        bottom: BorderSide(
+                          color: context.appColor(AppColors.sokoonBorder),
+                        ),
                       )
                     : null,
               ),
@@ -45,7 +47,7 @@ class OwnerReviewsCard extends StatelessWidget {
                               ? review.reviewerName
                               : LocaleKeys.profileFallbackName,
                           style: AppTextStyles.bold12.copyWith(
-                            color: AppColors.sokoonNavy,
+                            color: context.appColor(AppColors.sokoonNavy),
                             fontSize: 12.sp,
                             height: 1.45,
                           ),
@@ -57,8 +59,8 @@ class OwnerReviewsCard extends StatelessWidget {
                           (starIndex) => Icon(
                             Icons.star_rounded,
                             color: starIndex < review.rating.round()
-                                ? AppColors.amber
-                                : AppColors.graySoft,
+                                ? context.appColor(AppColors.amber)
+                                : context.appColor(AppColors.graySoft),
                             size: 13.r,
                           ),
                         ),
@@ -68,7 +70,7 @@ class OwnerReviewsCard extends StatelessWidget {
                   AppText(
                     review.comment,
                     style: AppTextStyles.regular12.copyWith(
-                      color: AppColors.sokoonGray,
+                      color: context.appColor(AppColors.sokoonGray),
                       fontSize: 12.sp,
                       height: 1.45,
                     ),
@@ -77,7 +79,7 @@ class OwnerReviewsCard extends StatelessWidget {
                     AppText(
                       review.dateLabel,
                       style: AppTextStyles.regular10.copyWith(
-                        color: AppColors.sokoonGray,
+                        color: context.appColor(AppColors.sokoonGray),
                         fontSize: 10.sp,
                         height: 1.45,
                       ),

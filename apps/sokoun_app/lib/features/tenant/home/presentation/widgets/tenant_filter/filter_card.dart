@@ -15,9 +15,9 @@ class FilterCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.grayPale),
+        border: Border.all(color: context.appColor(AppColors.grayPale)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -26,7 +26,7 @@ class FilterCard extends StatelessWidget {
           AppText(
             title,
             style: AppTextStyles.bold14.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 14.sp,
               height: 1.45,
             ),

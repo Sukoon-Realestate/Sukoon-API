@@ -20,7 +20,7 @@ class ButtonClose extends StatelessWidget {
         child: Center(
           child: Icon(
             Icons.close,
-            color: AppColors.black,
+            color: context.appColor(AppColors.black),
             size: AppSize.sH25,
           ),
         ),

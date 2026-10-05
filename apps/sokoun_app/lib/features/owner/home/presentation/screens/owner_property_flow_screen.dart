@@ -145,7 +145,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
         isScrollControlled: true,
         useSafeArea: true,
         showDragHandle: true,
-        backgroundColor: AppColors.white,
+        backgroundColor: context.appColor(AppColors.white, surface: true),
         sheetAnimationStyle: AnimationStyle(
           duration: SokounMotion.duration(context, milliseconds: 280),
           reverseDuration: SokounMotion.duration(context, milliseconds: 220),
@@ -462,7 +462,10 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
               }
             },
             isBackEnabled: !isSubmitting,
-            backgroundColor: AppColors.scaffoldBackground,
+            backgroundColor: context.appColor(
+              AppColors.scaffoldBackground,
+              surface: true,
+            ),
             body: SafeArea(
               child: AbsorbPointer(
                 absorbing: isSubmitting,

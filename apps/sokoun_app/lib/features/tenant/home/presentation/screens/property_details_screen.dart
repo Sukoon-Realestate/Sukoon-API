@@ -161,7 +161,10 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
     return AppScaffold(
       title: LocaleKeys.tenantFilterPropertyDetails,
       showBackButton: true,
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: context.appColor(
+        AppColors.scaffoldBackground,
+        surface: true,
+      ),
       contentWidth: SokounContentWidth.wide,
       body: SafeArea(
         bottom: false,

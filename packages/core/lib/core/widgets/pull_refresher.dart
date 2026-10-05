@@ -105,7 +105,7 @@ class _PullRefresherWidgetState extends State<PullRefresherWidget> {
     }
     return RefreshIndicator(
       onRefresh: widget.onRefresh,
-      color: AppColors.primary,
+      color: context.appColor(AppColors.primary),
       backgroundColor: Colors.white,
       child: content,
     );

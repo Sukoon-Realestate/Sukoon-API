@@ -19,13 +19,13 @@ class TagsRow extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 4.h),
             decoration: BoxDecoration(
-              color: AppColors.grayBackground,
+              color: context.appColor(AppColors.grayBackground, surface: true),
               borderRadius: BorderRadius.circular(999.r),
             ),
             child: AppText(
               tag,
               style: AppTextStyles.semiBold.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 12.sp,
               ),
             ),

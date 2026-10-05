@@ -26,7 +26,7 @@ class OwnerVisitRequestSummaryGrid extends StatelessWidget {
             value: '$totalCount',
             backgroundColor: AppColors.tealAlpha07,
             borderColor: AppColors.tealAlpha19,
-            valueColor: AppColors.sokoonTeal,
+            valueColor: context.appColor(AppColors.sokoonTeal),
           ),
         ),
         Expanded(
@@ -63,9 +63,9 @@ class _SummaryCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 11.h),
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: context.appColor(backgroundColor, surface: true),
         borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(color: borderColor),
+        border: Border.all(color: context.appColor(borderColor)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +74,7 @@ class _SummaryCard extends StatelessWidget {
           AppText(
             label,
             style: AppTextStyles.regular11.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 11.sp,
               height: 1.45,
             ),
@@ -84,7 +84,7 @@ class _SummaryCard extends StatelessWidget {
           AppText(
             value,
             style: AppTextStyles.bold.copyWith(
-              color: valueColor,
+              color: context.appColor(valueColor),
               fontSize: 20.sp,
             ),
           ),

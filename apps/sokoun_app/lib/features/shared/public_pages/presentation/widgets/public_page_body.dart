@@ -27,7 +27,7 @@ class PublicPageBody extends StatelessWidget {
           page.title,
           style: AppTextStyles.bold.copyWith(
             fontSize: 20.sp,
-            color: AppColors.sokoonNavy,
+            color: context.appColor(AppColors.sokoonNavy),
           ),
         ),
         SelectableText(
@@ -38,7 +38,7 @@ class PublicPageBody extends StatelessWidget {
               ? TextDirection.ltr
               : null,
           style: AppTextStyles.regular14.copyWith(
-            color: AppColors.sokoonNavy,
+            color: context.appColor(AppColors.sokoonNavy),
             height: 1.6,
           ),
         ),

@@ -27,7 +27,7 @@ class ClearFiltersChip extends StatelessWidget {
         child: AppText(
           LocaleKeys.tenantSearchResultsClearAll,
           style: AppTextStyles.semiBold.copyWith(
-            color: AppColors.sokoonRose,
+            color: context.appColor(AppColors.sokoonRose),
             fontSize: 12.sp,
           ),
         ),

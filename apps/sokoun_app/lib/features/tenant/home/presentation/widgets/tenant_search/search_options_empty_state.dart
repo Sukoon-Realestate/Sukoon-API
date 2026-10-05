@@ -66,7 +66,7 @@ class _SearchOptionsEmptyState extends StatelessWidget {
           AppText(
             title,
             style: AppTextStyles.bold14.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 14.sp,
               height: 1.45,
             ),
@@ -76,7 +76,7 @@ class _SearchOptionsEmptyState extends StatelessWidget {
           AppText(
             description,
             style: AppTextStyles.medium12.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 12.sp,
               height: 1.45,
             ),

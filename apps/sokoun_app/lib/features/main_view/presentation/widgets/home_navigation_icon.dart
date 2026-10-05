@@ -24,16 +24,24 @@ class HomeNavigationIcon extends StatelessWidget {
         ? destination.selectedIcon
         : destination.icon;
     final Color color = isSelected
-        ? AppColors.sokoonTeal
-        : AppColors.sokoonGray;
+        ? context.appColor(AppColors.sokoonTeal)
+        : context.appColor(AppColors.sokoonGray);
     return Stack(
       clipBehavior: Clip.none,
       children: [
         SokounSelectionFeedback(
           selected: isSelected,
           child: icon is String
-              ? SvgPic(assetName: icon, color: color, size: size)
-              : Icon(icon as IconData, color: color, size: size),
+              ? SvgPic(
+                  assetName: icon,
+                  color: context.appColor(color),
+                  size: size,
+                )
+              : Icon(
+                  icon as IconData,
+                  color: context.appColor(color),
+                  size: size,
+                ),
         ),
         if (destination.badgeCount > 0)
           PositionedDirectional(

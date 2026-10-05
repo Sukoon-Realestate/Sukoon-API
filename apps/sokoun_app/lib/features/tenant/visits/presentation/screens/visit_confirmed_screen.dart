@@ -18,7 +18,10 @@ class VisitConfirmedScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppScaffold(
       showBackButton: false,
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: context.appColor(
+        AppColors.scaffoldBackground,
+        surface: true,
+      ),
       body: SafeArea(
         child: VisitConfirmationContent(
           message: message,

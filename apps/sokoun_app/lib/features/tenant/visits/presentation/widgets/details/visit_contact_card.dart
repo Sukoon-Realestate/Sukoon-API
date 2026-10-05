@@ -10,9 +10,9 @@ class VisitContactCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: AppColors.sokoonBorder),
+        border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -21,7 +21,7 @@ class VisitContactCard extends StatelessWidget {
           AppText(
             LocaleKeys.tenantVisitContactInfo,
             style: AppTextStyles.bold14.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 14.sp,
               height: 1.45,
             ),
@@ -29,7 +29,7 @@ class VisitContactCard extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 11.h),
             decoration: BoxDecoration(
-              color: AppColors.greenPale,
+              color: context.appColor(AppColors.greenPale, surface: true),
               borderRadius: BorderRadius.circular(14.r),
             ),
             child: Row(
@@ -37,7 +37,7 @@ class VisitContactCard extends StatelessWidget {
               children: [
                 Icon(
                   Icons.phone_outlined,
-                  color: AppColors.greenStrong,
+                  color: context.appColor(AppColors.greenStrong),
                   size: 16.r,
                 ),
                 Expanded(
@@ -48,7 +48,7 @@ class VisitContactCard extends StatelessWidget {
                       AppText(
                         LocaleKeys.tenantVisitOwnerPhoneConfirmed,
                         style: AppTextStyles.extraBold.copyWith(
-                          color: AppColors.greenStrong,
+                          color: context.appColor(AppColors.greenStrong),
                           fontSize: 12.sp,
                         ),
                         maxLines: 1,
@@ -57,7 +57,7 @@ class VisitContactCard extends StatelessWidget {
                       AppText(
                         ownerPhone,
                         style: AppTextStyles.bold15.copyWith(
-                          color: AppColors.greenStrong,
+                          color: context.appColor(AppColors.greenStrong),
                           fontSize: 15.sp,
                           height: 1.45,
                         ),

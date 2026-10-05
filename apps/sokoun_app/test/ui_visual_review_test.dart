@@ -43,6 +43,7 @@ import 'helpers/home_page_test_dependencies.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   const String output = String.fromEnvironment('UI_REVIEW_DIR');
+  const bool darkReview = bool.fromEnvironment('DARK_THEME_REVIEW');
   const MethodChannel preferences = MethodChannel(
     'plugins.flutter.io/shared_preferences',
   );
@@ -371,7 +372,7 @@ void main() {
                 enableScaleText: () => false,
                 fontSizeResolver: (size, _) => size.toDouble(),
                 builder: (context, _) => MaterialApp(
-                  theme: SokounTheme.light,
+                  theme: darkReview ? SokounTheme.dark : SokounTheme.light,
                   locale: context.locale,
                   supportedLocales: context.supportedLocales,
                   localizationsDelegates: context.localizationDelegates,
@@ -393,7 +394,7 @@ void main() {
               );
               await Directory(output).create(recursive: true);
               await File(
-                '$output/$subject-$locale-${width.toInt()}.png',
+                '$output/${darkReview ? 'dark-' : ''}$subject-$locale-${width.toInt()}.png',
               ).writeAsBytes(bytes!.buffer.asUint8List());
               image.dispose();
             });

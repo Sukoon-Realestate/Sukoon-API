@@ -153,11 +153,16 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
             onPressed: _reset,
             child: AppText(
               LocaleKeys.tenantFilterReset,
-              style: AppTextStyles.bold13.copyWith(color: AppColors.sokoonTeal),
+              style: AppTextStyles.bold13.copyWith(
+                color: context.appColor(AppColors.sokoonTeal),
+              ),
             ),
           ),
         ],
-        backgroundColor: AppColors.scaffoldBackground,
+        backgroundColor: context.appColor(
+          AppColors.scaffoldBackground,
+          surface: true,
+        ),
         body: SafeArea(
           child:
               StatusBuilder<

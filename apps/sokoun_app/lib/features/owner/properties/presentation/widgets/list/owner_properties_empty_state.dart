@@ -32,7 +32,7 @@ class OwnerPropertiesEmptyState extends StatelessWidget {
           AppText(
             filter.emptyTitle,
             style: AppTextStyles.bold.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 18.sp,
             ),
             textAlign: TextAlign.center,
@@ -41,7 +41,7 @@ class OwnerPropertiesEmptyState extends StatelessWidget {
           AppText(
             filter.emptyDescription,
             style: AppTextStyles.medium13.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 13.sp,
               height: 1.45,
             ),
@@ -51,7 +51,7 @@ class OwnerPropertiesEmptyState extends StatelessWidget {
           DefaultButton(
             onTap: onAddPressed,
             title: LocaleKeys.ownerPropertiesAdd,
-            color: AppColors.sokoonTeal,
+            color: context.appColor(AppColors.sokoonTeal, surface: true),
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(12.r),
             height: 46.h,

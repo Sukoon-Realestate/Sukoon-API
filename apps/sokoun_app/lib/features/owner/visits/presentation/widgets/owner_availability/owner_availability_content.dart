@@ -78,7 +78,7 @@ class OwnerAvailabilityContent extends StatelessWidget {
           AppText(
             LocaleKeys.ownerAvailabilityDescription,
             style: AppTextStyles.regular14.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 14.sp,
               height: 1.45,
             ),
@@ -109,7 +109,7 @@ class OwnerAvailabilityContent extends StatelessWidget {
                 AppText(
                   _ownerAvailabilityDateLabel(context, selectedDay),
                   style: AppTextStyles.bold14.copyWith(
-                    color: AppColors.sokoonNavy,
+                    color: context.appColor(AppColors.sokoonNavy),
                     fontSize: 14.sp,
                     height: 1.45,
                   ),
@@ -165,7 +165,10 @@ class OwnerAvailabilityContent extends StatelessWidget {
             AppLoadingButton(
               asyncCall: (_) => onSavePressed(),
               title: LocaleKeys.ownerAvailabilitySave,
-              buttonColor: AppColors.sokoonTeal,
+              buttonColor: context.appColor(
+                AppColors.sokoonTeal,
+                surface: true,
+              ),
               textColor: AppColors.white,
               borderRadius: 14.r,
               height: 52.h,

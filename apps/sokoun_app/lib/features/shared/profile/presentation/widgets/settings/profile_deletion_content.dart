@@ -10,7 +10,7 @@ class ProfileDeletionContent extends StatelessWidget {
       Container(
         padding: EdgeInsets.all(20.r),
         decoration: BoxDecoration(
-          color: AppColors.redPale,
+          color: context.appColor(AppColors.redPale, surface: true),
           borderRadius: BorderRadius.circular(16.r),
         ),
         child: Column(
@@ -18,19 +18,21 @@ class ProfileDeletionContent extends StatelessWidget {
           children: [
             Icon(
               Icons.warning_amber_rounded,
-              color: AppColors.sokoonRose,
+              color: context.appColor(AppColors.sokoonRose),
               size: 36.r,
             ),
             AppText(
               LocaleKeys.settingsDeleteWarning,
               textAlign: TextAlign.center,
-              style: AppTextStyles.bold16.copyWith(color: AppColors.sokoonRose),
+              style: AppTextStyles.bold16.copyWith(
+                color: context.appColor(AppColors.sokoonRose),
+              ),
             ),
             AppText(
               LocaleKeys.deletingWillRemoveAllYourData,
               textAlign: TextAlign.center,
               style: AppTextStyles.regular14.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 height: 1.6,
               ),
             ),
@@ -52,14 +54,14 @@ class ProfileDeletionContent extends StatelessWidget {
           children: [
             Icon(
               Icons.remove_circle_outline_rounded,
-              color: AppColors.sokoonRose,
+              color: context.appColor(AppColors.sokoonRose),
               size: 20.r,
             ),
             Expanded(
               child: AppText(
                 label,
                 style: AppTextStyles.regular14.copyWith(
-                  color: AppColors.sokoonGray,
+                  color: context.appColor(AppColors.sokoonGray),
                   height: 1.5,
                 ),
               ),

@@ -27,16 +27,19 @@ class OwnerRevenueContentView extends StatelessWidget {
         Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: AppColors.white,
+            color: context.appColor(AppColors.white, surface: true),
             borderRadius: BorderRadius.circular(18.r),
-            border: Border.all(color: AppColors.sokoonBorder),
+            border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
           ),
           child: Column(
             children: [
               for (final item in data.transactions) ...[
                 OwnerTransactionRow(transaction: item),
                 if (item != data.transactions.last)
-                  const Divider(height: 24, color: AppColors.sokoonBorder),
+                  Divider(
+                    height: 24,
+                    color: context.appColor(AppColors.sokoonBorder),
+                  ),
               ],
             ],
           ),
@@ -53,7 +56,7 @@ class OwnerRevenueSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     padding: EdgeInsets.all(20.w),
     decoration: BoxDecoration(
-      color: AppColors.sokoonTeal,
+      color: context.appColor(AppColors.sokoonTeal, surface: true),
       borderRadius: BorderRadius.circular(20.r),
     ),
     child: Column(

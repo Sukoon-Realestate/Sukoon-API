@@ -42,7 +42,7 @@ class LocationPermissionView extends StatelessWidget {
         children: [
           PermissionHeader(
             icon: Icons.location_on_outlined,
-            color: AppColors.sokoonTeal,
+            color: context.appColor(AppColors.sokoonTeal),
             backgroundColor: AppColors.tealAlpha06,
             title: LocaleKeys.locationPermissionTitle,
             description: LocaleKeys.locationPermissionDescription,
@@ -54,19 +54,19 @@ class LocationPermissionView extends StatelessWidget {
               PermissionBenefitRow(
                 title: LocaleKeys.locationPermissionNearbyTitle,
                 description: LocaleKeys.locationPermissionNearbyDescription,
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
               ),
               PermissionBenefitRow(
                 title: LocaleKeys.locationPermissionMapTitle,
                 description: LocaleKeys.locationPermissionMapDescription,
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
               ),
             ],
           ),
           20.szH,
           PermissionActions(
             allowLabel: LocaleKeys.locationPermissionAllow,
-            color: AppColors.sokoonTeal,
+            color: context.appColor(AppColors.sokoonTeal),
             shadowColor: AppColors.tealAlpha19,
             onAllowPressed: onAllowPressed,
             onNotNowPressed: onNotNowPressed,

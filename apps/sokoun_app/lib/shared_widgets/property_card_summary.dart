@@ -30,7 +30,9 @@ class PropertyCardSummary extends StatelessWidget {
     children: [
       AppText(
         title,
-        style: AppTextStyles.bold16.copyWith(color: AppColors.sokoonNavy),
+        style: AppTextStyles.bold16.copyWith(
+          color: context.appColor(AppColors.sokoonNavy),
+        ),
         maxLines: 2,
         overflow: TextOverflow.ellipsis,
       ),
@@ -40,14 +42,14 @@ class PropertyCardSummary extends StatelessWidget {
           children: [
             Icon(
               Icons.location_on_outlined,
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               size: 16.r,
             ),
             Expanded(
               child: AppText(
                 location,
                 style: AppTextStyles.regular13.copyWith(
-                  color: AppColors.sokoonGray,
+                  color: context.appColor(AppColors.sokoonGray),
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -66,7 +68,7 @@ class PropertyCardSummary extends StatelessWidget {
           AppText(
             price,
             style: AppTextStyles.bold.copyWith(
-              color: AppColors.sokoonTeal,
+              color: context.appColor(AppColors.sokoonTeal),
               fontSize: 18.sp,
             ),
           ),

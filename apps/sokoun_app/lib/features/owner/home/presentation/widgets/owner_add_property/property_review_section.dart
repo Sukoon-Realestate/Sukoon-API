@@ -21,8 +21,8 @@ class PropertyReviewSection extends StatelessWidget {
     margin: const EdgeInsets.only(bottom: 12),
     padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 8, 16),
     decoration: BoxDecoration(
-      color: AppColors.white,
-      border: Border.all(color: AppColors.sokoonBorder),
+      color: context.appColor(AppColors.white, surface: true),
+      border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
       borderRadius: BorderRadius.circular(16),
     ),
     child: Column(
@@ -35,7 +35,7 @@ class PropertyReviewSection extends StatelessWidget {
                 title,
                 style: AppTextStyles.bold16.copyWith(
                   fontSize: 16,
-                  color: AppColors.sokoonNavy,
+                  color: context.appColor(AppColors.sokoonNavy),
                   height: 1.45,
                 ),
               ),
@@ -43,10 +43,10 @@ class PropertyReviewSection extends StatelessWidget {
             IconButton(
               tooltip: '${LocaleKeys.editData}: $title',
               onPressed: onEdit,
-              icon: const Icon(
+              icon: Icon(
                 Icons.edit_outlined,
                 size: 20,
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
               ),
             ),
           ],
@@ -59,7 +59,7 @@ class PropertyReviewSection extends StatelessWidget {
               style: AppTextStyles.regular14.copyWith(
                 fontSize: 14,
                 height: 1.5,
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
               ),
             ),
           ),

@@ -1,4 +1,9 @@
 {
+  "appearanceTitle #$ Appearance": "المظهر",
+  "appearanceDescription #$ Choose a light or dark appearance, or follow your device settings. Your choice is saved automatically.": "اختر المظهر الفاتح أو الداكن، أو اتبع إعدادات جهازك. يُحفظ اختيارك تلقائيًا.",
+  "appearanceSystem #$ Use device settings": "حسب إعدادات الجهاز",
+  "appearanceLight #$ Light mode": "المظهر الفاتح",
+  "appearanceDark #$ Dark mode": "المظهر الداكن",
   "validationIdentityRequired #$ Enter your identity number": "أدخل رقم الهوية",
   "validationFieldRequired #$ {field} is required": "{field} مطلوب",
   "validationInteger #$ Enter a whole number": "أدخل عددًا صحيحًا دون كسور",

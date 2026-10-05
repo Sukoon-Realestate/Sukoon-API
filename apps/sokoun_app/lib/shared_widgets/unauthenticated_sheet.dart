@@ -18,7 +18,7 @@ class UnauthenticatedSheet extends StatelessWidget {
     return Container(
       padding: EdgeInsets.fromLTRB(24.w, 24.h, 24.w, 0),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
       child: SafeArea(
@@ -34,7 +34,7 @@ class UnauthenticatedSheet extends StatelessWidget {
                 width: 40.w,
                 height: 4.h,
                 decoration: BoxDecoration(
-                  color: AppColors.grayPale,
+                  color: context.appColor(AppColors.grayPale, surface: true),
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
@@ -53,7 +53,7 @@ class UnauthenticatedSheet extends StatelessWidget {
                 child: Icon(
                   Icons.lock_outline_rounded,
                   size: 30.r,
-                  color: AppColors.sokoonTeal,
+                  color: context.appColor(AppColors.sokoonTeal),
                 ),
               ),
             ),
@@ -61,7 +61,7 @@ class UnauthenticatedSheet extends StatelessWidget {
             AppText(
               LocaleKeys.unauthenticatedSheetTitle,
               style: AppTextStyles.extraBold.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 18.sp,
               ),
               textAlign: TextAlign.center,
@@ -74,7 +74,7 @@ class UnauthenticatedSheet extends StatelessWidget {
                 child: AppText(
                   LocaleKeys.unauthenticatedSheetDescription,
                   style: AppTextStyles.regular13.copyWith(
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                     fontSize: 13.sp,
                     height: 1.6,
                   ),
@@ -86,7 +86,7 @@ class UnauthenticatedSheet extends StatelessWidget {
             DefaultButton(
               onTap: () => Go.back(UnauthenticatedSheetAction.login),
               title: LocaleKeys.login,
-              color: AppColors.sokoonTeal,
+              color: context.appColor(AppColors.sokoonTeal, surface: true),
               textColor: AppColors.white,
               borderRadius: BorderRadius.circular(14.r),
               height: 52.h,
@@ -104,8 +104,11 @@ class UnauthenticatedSheet extends StatelessWidget {
                 onPressed: () =>
                     Go.back(UnauthenticatedSheetAction.createAccount),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor: AppColors.sokoonNavy,
-                  side: BorderSide(color: AppColors.grayPale, width: 1.5.w),
+                  foregroundColor: context.appColor(AppColors.sokoonNavy),
+                  side: BorderSide(
+                    color: context.appColor(AppColors.grayPale),
+                    width: 1.5.w,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12.r),
                   ),
@@ -113,7 +116,7 @@ class UnauthenticatedSheet extends StatelessWidget {
                 child: AppText(
                   LocaleKeys.createAccount,
                   style: AppTextStyles.semiBold.copyWith(
-                    color: AppColors.sokoonNavy,
+                    color: context.appColor(AppColors.sokoonNavy),
                     fontSize: 15.sp,
                   ),
                 ),

@@ -26,9 +26,9 @@ class TenantPropertyShareActionRow extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(14.w),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: context.appColor(AppColors.white, surface: true),
           borderRadius: BorderRadius.circular(14.r),
-          border: Border.all(color: AppColors.grayPale),
+          border: Border.all(color: context.appColor(AppColors.grayPale)),
         ),
         child: Row(
           spacing: 12.w,
@@ -38,15 +38,18 @@ class TenantPropertyShareActionRow extends StatelessWidget {
               height: 38.r,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: AppColors.grayBackground,
+                color: context.appColor(
+                  AppColors.grayBackground,
+                  surface: true,
+                ),
                 borderRadius: BorderRadius.circular(12.r),
               ),
-              child: Icon(icon, color: color, size: 18.r),
+              child: Icon(icon, color: context.appColor(color), size: 18.r),
             ),
             AppText(
               label,
               style: AppTextStyles.extraBold.copyWith(
-                color: color,
+                color: context.appColor(color),
                 fontSize: 14.sp,
               ),
             ),

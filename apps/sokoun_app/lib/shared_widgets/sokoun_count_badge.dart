@@ -17,7 +17,7 @@ class SokounCountBadge extends StatelessWidget {
     alignment: Alignment.center,
     padding: EdgeInsets.symmetric(horizontal: 4.w),
     decoration: BoxDecoration(
-      color: AppColors.red,
+      color: context.appColor(AppColors.red, surface: true),
       borderRadius: BorderRadius.circular(size),
       border: Border.all(color: AppColors.white),
     ),

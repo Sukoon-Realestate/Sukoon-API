@@ -35,7 +35,7 @@ class TenantVisitBanner extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 13.h),
           decoration: BoxDecoration(
-            color: AppColors.mintLight,
+            color: context.appColor(AppColors.mintLight, surface: true),
             borderRadius: BorderRadius.circular(16.r),
             border: Border.all(color: AppColors.tealAlpha19),
           ),
@@ -50,7 +50,7 @@ class TenantVisitBanner extends StatelessWidget {
                 ),
                 child: Icon(
                   Icons.calendar_today_outlined,
-                  color: AppColors.sokoonTeal,
+                  color: context.appColor(AppColors.sokoonTeal),
                   size: 17.r,
                 ),
               ),
@@ -63,7 +63,7 @@ class TenantVisitBanner extends StatelessWidget {
                     AppText(
                       text,
                       style: AppTextStyles.bold14.copyWith(
-                        color: AppColors.sokoonTeal,
+                        color: context.appColor(AppColors.sokoonTeal),
                         fontSize: 14.sp,
                         height: 1.45,
                       ),
@@ -71,7 +71,10 @@ class TenantVisitBanner extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right_rounded, color: AppColors.sokoonTeal),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: context.appColor(AppColors.sokoonTeal),
+              ),
             ],
           ),
         ),

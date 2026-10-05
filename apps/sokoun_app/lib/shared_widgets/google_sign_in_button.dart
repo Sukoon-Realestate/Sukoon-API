@@ -52,8 +52,8 @@ class _AppGoogleSignInButtonState extends State<AppGoogleSignInButton> {
     return DefaultButton(
       onTap: _signIn,
       disabled: _busy,
-      color: AppColors.white,
-      borderColor: AppColors.sokoonBorder,
+      color: context.appColor(AppColors.white, surface: true),
+      borderColor: context.appColor(AppColors.sokoonBorder),
       borderRadius: BorderRadius.circular(12.r),
       height: 48.h,
       width: double.infinity,
@@ -61,7 +61,7 @@ class _AppGoogleSignInButtonState extends State<AppGoogleSignInButton> {
           ? SizedBox.square(
               dimension: 20.r,
               child: CustomLoading.showLoadingView(
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
                 size: 20.r,
               ),
             )
@@ -79,7 +79,7 @@ class _AppGoogleSignInButtonState extends State<AppGoogleSignInButton> {
                   child: AppText(
                     LocaleKeys.continueWithGoogle,
                     style: AppTextStyles.bold14.copyWith(
-                      color: AppColors.sokoonNavy,
+                      color: context.appColor(AppColors.sokoonNavy),
                       fontSize: 14.sp,
                       height: 1.45,
                     ),

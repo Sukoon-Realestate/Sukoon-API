@@ -24,7 +24,7 @@ class OwnerAnalyticsContent extends StatelessWidget {
         AppText(
           propertyTitle,
           style: AppTextStyles.semiBold.copyWith(
-            color: AppColors.sokoonNavy,
+            color: context.appColor(AppColors.sokoonNavy),
             fontSize: 16.sp,
           ),
         ),
@@ -39,29 +39,41 @@ class OwnerAnalyticsContent extends StatelessWidget {
               label: LocaleKeys.ownerAnalyticsViews,
               value: content.views.toString(),
               icon: Icons.visibility_outlined,
-              color: AppColors.blue,
-              backgroundColor: AppColors.bluePale,
+              color: context.appColor(AppColors.blue),
+              backgroundColor: context.appColor(
+                AppColors.bluePale,
+                surface: true,
+              ),
             ),
             OwnerAnalyticsMetricCard(
               label: LocaleKeys.ownerAnalyticsVisitRequests,
               value: content.visitRequests.toString(),
               icon: Icons.event_available_outlined,
-              color: AppColors.sokoonTeal,
-              backgroundColor: AppColors.mintLight,
+              color: context.appColor(AppColors.sokoonTeal),
+              backgroundColor: context.appColor(
+                AppColors.mintLight,
+                surface: true,
+              ),
             ),
             OwnerAnalyticsMetricCard(
               label: LocaleKeys.ownerAnalyticsSaved,
               value: content.saves.toString(),
               icon: Icons.favorite_border_rounded,
-              color: AppColors.red,
-              backgroundColor: AppColors.redPale,
+              color: context.appColor(AppColors.red),
+              backgroundColor: context.appColor(
+                AppColors.redPale,
+                surface: true,
+              ),
             ),
             OwnerAnalyticsMetricCard(
               label: LocaleKeys.ownerAnalyticsAcceptanceRate,
               value: '${ownerFormattedNumber(content.acceptanceRate)}%',
               icon: Icons.trending_up_rounded,
-              color: AppColors.green,
-              backgroundColor: AppColors.greenPale,
+              color: context.appColor(AppColors.green),
+              backgroundColor: context.appColor(
+                AppColors.greenPale,
+                surface: true,
+              ),
             ),
           ],
         ),

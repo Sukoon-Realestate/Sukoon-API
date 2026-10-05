@@ -16,9 +16,11 @@ class SokounActionFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => DecoratedBox(
-    decoration: const BoxDecoration(
-      color: AppColors.white,
-      border: Border(top: BorderSide(color: AppColors.sokoonBorder)),
+    decoration: BoxDecoration(
+      color: context.appColor(AppColors.white, surface: true),
+      border: Border(
+        top: BorderSide(color: context.appColor(AppColors.sokoonBorder)),
+      ),
     ),
     child: SafeArea(
       top: false,

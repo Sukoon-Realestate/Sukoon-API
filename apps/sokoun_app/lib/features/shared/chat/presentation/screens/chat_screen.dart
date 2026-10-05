@@ -73,7 +73,10 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         showBackButton: true,
         toolbarHeight: 56 + MediaQuery.textScalerOf(context).scale(16),
         actions: const [ChatReportButton()],
-        backgroundColor: AppColors.scaffoldBackground,
+        backgroundColor: context.appColor(
+          AppColors.scaffoldBackground,
+          surface: true,
+        ),
         resizeToAvoidBottomInset: true,
         body: SafeArea(
           bottom: false,

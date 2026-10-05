@@ -10,14 +10,16 @@ class ForgotPasswordSecurityHint extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color accentColor = AppColors.sokoonTeal;
+    final Color accentColor = context.appColor(AppColors.sokoonTeal);
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
       decoration: BoxDecoration(
-        color: AppColors.mintLight,
+        color: context.appColor(AppColors.mintLight, surface: true),
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: accentColor.withValues(alpha: .2)),
+        border: Border.all(
+          color: context.appColor(accentColor).withValues(alpha: .2),
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,10 +29,16 @@ class ForgotPasswordSecurityHint extends StatelessWidget {
             width: 34.r,
             height: 34.r,
             decoration: BoxDecoration(
-              color: accentColor.withValues(alpha: .12),
+              color: context
+                  .appColor(accentColor, surface: true)
+                  .withValues(alpha: .12),
               borderRadius: BorderRadius.circular(10.r),
             ),
-            child: Icon(Icons.shield_outlined, color: accentColor, size: 19.r),
+            child: Icon(
+              Icons.shield_outlined,
+              color: context.appColor(accentColor),
+              size: 19.r,
+            ),
           ),
           Expanded(
             child: Column(
@@ -40,7 +48,7 @@ class ForgotPasswordSecurityHint extends StatelessWidget {
                 AppText(
                   LocaleKeys.recoveryLinkValidFor24Hours,
                   style: AppTextStyles.extraBold13.copyWith(
-                    color: AppColors.sokoonNavy,
+                    color: context.appColor(AppColors.sokoonNavy),
                     fontSize: 13.sp,
                     height: 1.45,
                   ),
@@ -48,7 +56,7 @@ class ForgotPasswordSecurityHint extends StatelessWidget {
                 AppText(
                   LocaleKeys.recoverySecurityHint,
                   style: AppTextStyles.medium11.copyWith(
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                     fontSize: 11.sp,
                     height: 1.55,
                   ),

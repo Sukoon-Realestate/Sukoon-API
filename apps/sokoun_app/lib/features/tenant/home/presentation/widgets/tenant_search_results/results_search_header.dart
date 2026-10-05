@@ -22,9 +22,11 @@ class ResultsSearchHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
-      decoration: const BoxDecoration(
-        color: AppColors.white,
-        border: Border(bottom: BorderSide(color: AppColors.grayPale)),
+      decoration: BoxDecoration(
+        color: context.appColor(AppColors.white, surface: true),
+        border: Border(
+          bottom: BorderSide(color: context.appColor(AppColors.grayPale)),
+        ),
       ),
       child: Row(
         spacing: 10.w,
@@ -34,7 +36,10 @@ class ResultsSearchHeader extends StatelessWidget {
               height: 44.h,
               padding: EdgeInsets.symmetric(horizontal: 14.w),
               decoration: BoxDecoration(
-                color: AppColors.grayBackground,
+                color: context.appColor(
+                  AppColors.grayBackground,
+                  surface: true,
+                ),
                 borderRadius: BorderRadius.circular(22.r),
               ),
               child: Row(
@@ -42,7 +47,7 @@ class ResultsSearchHeader extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.search_rounded,
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                     size: 20.r,
                   ),
                   Expanded(
@@ -53,7 +58,7 @@ class ResultsSearchHeader extends StatelessWidget {
                       textInputAction: TextInputAction.search,
                       textAlign: TextAlign.start,
                       style: AppTextStyles.semiBold.copyWith(
-                        color: AppColors.sokoonNavy,
+                        color: context.appColor(AppColors.sokoonNavy),
                         fontSize: 14.sp,
                       ),
                       decoration: InputDecoration(
@@ -61,7 +66,7 @@ class ResultsSearchHeader extends StatelessWidget {
                         border: InputBorder.none,
                         hintText: LocaleKeys.tenantSearchResultsHint,
                         hintStyle: AppTextStyles.regular14.copyWith(
-                          color: AppColors.sokoonGray,
+                          color: context.appColor(AppColors.sokoonGray),
                           fontSize: 14.sp,
                           height: 1.45,
                         ),
@@ -85,7 +90,7 @@ class ResultsSearchHeader extends StatelessWidget {
               ),
               child: Icon(
                 Icons.tune_rounded,
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
                 size: 21.r,
               ),
             ),

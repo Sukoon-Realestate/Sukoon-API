@@ -40,7 +40,7 @@ class NotificationSettingsContentView extends StatelessWidget {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
           decoration: BoxDecoration(
-            color: AppColors.mintLight,
+            color: context.appColor(AppColors.mintLight, surface: true),
             borderRadius: BorderRadius.circular(14.r),
           ),
           child: Row(
@@ -49,7 +49,7 @@ class NotificationSettingsContentView extends StatelessWidget {
             children: [
               Icon(
                 Icons.info_outline_rounded,
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
                 size: 18.r,
               ),
               Expanded(
@@ -58,7 +58,7 @@ class NotificationSettingsContentView extends StatelessWidget {
                       ? LocaleKeys.notificationSettingsInfo
                       : settings.footerNote,
                   style: AppTextStyles.regular12.copyWith(
-                    color: AppColors.sokoonTeal,
+                    color: context.appColor(AppColors.sokoonTeal),
                     fontSize: 12.sp,
                     height: 1.6,
                   ),

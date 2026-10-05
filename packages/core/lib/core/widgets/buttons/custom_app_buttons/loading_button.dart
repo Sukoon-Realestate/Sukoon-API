@@ -66,8 +66,14 @@ class _LoadingButtonState extends State<LoadingButton> {
             child: ElevatedButton(
               onPressed: loading ? null : _asyncCall,
               style: ElevatedButton.styleFrom(
-                backgroundColor: widget.btnColor,
-                disabledBackgroundColor: widget.btnColor,
+                backgroundColor: context.appColor(
+                  widget.btnColor,
+                  surface: true,
+                ),
+                disabledBackgroundColor: context.appColor(
+                  widget.btnColor,
+                  surface: true,
+                ),
                 foregroundColor: AppColors.white,
                 padding: EdgeInsets.symmetric(
                   horizontal: 16.w,

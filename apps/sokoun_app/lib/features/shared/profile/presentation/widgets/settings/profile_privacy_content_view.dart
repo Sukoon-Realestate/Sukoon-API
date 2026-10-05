@@ -45,7 +45,7 @@ class ProfilePrivacyContentView extends StatelessWidget {
                           ? LocaleKeys.settingsLocationDescription
                           : LocaleKeys.settingsSearchProfileDescription,
                       style: AppTextStyles.regular12.copyWith(
-                        color: AppColors.sokoonGray,
+                        color: context.appColor(AppColors.sokoonGray),
                         height: 1.5,
                       ),
                     ),

@@ -15,18 +15,18 @@ class OwnerRequestPrivacyBanner extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: AppColors.bluePale,
+        color: context.appColor(AppColors.bluePale, surface: true),
         borderRadius: BorderRadius.circular(14.r),
       ),
       child: Row(
         spacing: 9.w,
         children: [
-          Icon(icon, color: AppColors.blue, size: 17.r),
+          Icon(icon, color: context.appColor(AppColors.blue), size: 17.r),
           Expanded(
             child: AppText(
               message,
               style: AppTextStyles.semiBold.copyWith(
-                color: AppColors.blue,
+                color: context.appColor(AppColors.blue),
                 fontSize: 12.sp,
               ),
               maxLines: 2,

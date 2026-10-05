@@ -27,7 +27,7 @@ class VisitDetailsActions extends StatelessWidget {
           DefaultButton(
             onTap: () => Go.to(const TenantSearchScreen()),
             title: LocaleKeys.tenantVisitFindAlternative,
-            color: AppColors.sokoonTeal,
+            color: context.appColor(AppColors.sokoonTeal, surface: true),
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(14.r),
             height: 50.h,
@@ -40,7 +40,7 @@ class VisitDetailsActions extends StatelessWidget {
           DefaultButton(
             onTap: visit.ownerId.isEmpty ? null : _openChat,
             title: LocaleKeys.tenantVisitOpenOwnerChat,
-            color: AppColors.sokoonTeal,
+            color: context.appColor(AppColors.sokoonTeal, surface: true),
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(14.r),
             height: 50.h,
@@ -60,8 +60,8 @@ class VisitDetailsActions extends StatelessWidget {
             title: visit.status.isPending
                 ? LocaleKeys.tenantVisitCancelRequest
                 : LocaleKeys.tenantVisitCancelVisit,
-            buttonColor: AppColors.white,
-            textColor: AppColors.sokoonRose,
+            buttonColor: context.appColor(AppColors.white, surface: true),
+            textColor: context.appColor(AppColors.sokoonRose),
           ),
       ],
     );

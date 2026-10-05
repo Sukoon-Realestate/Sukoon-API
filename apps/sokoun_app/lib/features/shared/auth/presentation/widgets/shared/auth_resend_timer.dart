@@ -23,7 +23,7 @@ class AuthResendTimer extends StatelessWidget {
       return AppText(
         LocaleKeys.youCanResendCodeNow,
         style: AppTextStyles.medium13.copyWith(
-          color: AppColors.sokoonGray,
+          color: context.appColor(AppColors.sokoonGray),
           fontSize: 13.sp,
           height: 1.45,
         ),
@@ -40,7 +40,7 @@ class AuthResendTimer extends StatelessWidget {
           TextSpan(
             text: '${LocaleKeys.resendAfter} ',
             style: AppTextStyles.medium13.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 13.sp,
               height: 1.45,
             ),
@@ -48,7 +48,7 @@ class AuthResendTimer extends StatelessWidget {
               TextSpan(
                 text: timeString,
                 style: AppTextStyles.extraBold.copyWith(
-                  color: AppColors.sokoonTeal,
+                  color: context.appColor(AppColors.sokoonTeal),
                 ),
               ),
             ],

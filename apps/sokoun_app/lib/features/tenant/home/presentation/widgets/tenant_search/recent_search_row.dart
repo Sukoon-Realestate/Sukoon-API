@@ -26,14 +26,16 @@ class RecentSearchRow extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       child: Container(
         constraints: BoxConstraints(minHeight: 48.h),
-        decoration: const BoxDecoration(
-          border: Border(bottom: BorderSide(color: AppColors.sokoonBorder)),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(color: context.appColor(AppColors.sokoonBorder)),
+          ),
         ),
         child: Row(
           children: [
             Icon(
               Icons.history_rounded,
-              color: AppColors.sokoonMuted,
+              color: context.appColor(AppColors.sokoonMuted),
               size: 18.r,
             ),
             12.szW,
@@ -41,7 +43,7 @@ class RecentSearchRow extends StatelessWidget {
               child: AppText(
                 search.title,
                 style: AppTextStyles.medium.copyWith(
-                  color: AppColors.sokoonNavy,
+                  color: context.appColor(AppColors.sokoonNavy),
                   fontSize: 14.sp,
                 ),
                 maxLines: 1,
@@ -54,7 +56,7 @@ class RecentSearchRow extends StatelessWidget {
                 onPressed: onRemove,
                 icon: Icon(
                   Icons.close_rounded,
-                  color: AppColors.sokoonGray,
+                  color: context.appColor(AppColors.sokoonGray),
                   size: 18.r,
                 ),
               ),

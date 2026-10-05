@@ -10,7 +10,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/languages.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
-import 'package:melos_core/core/helpers/helpers.dart';
 import 'package:melos_core/core/helpers/nsfw_detector.dart';
 import 'package:melos_core/core/local_db/objectbox_cache_service.dart';
 import 'package:melos_core/core/network/dio_service.dart';
@@ -25,7 +24,6 @@ import 'firebase_options_dev.dart' as dev;
 import 'features/main_view/data/workspace_preferences.dart';
 
 void main() async {
-  Helpers.changeStatusbarColor(statusBarColor: AppColors.white);
   Bloc.observer = AppBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
   await Future.wait([

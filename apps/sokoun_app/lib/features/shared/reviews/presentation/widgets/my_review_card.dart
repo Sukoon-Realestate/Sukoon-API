@@ -17,11 +17,11 @@ class MyReviewCard extends StatelessWidget {
     final DateTime? createdAt = DateTime.tryParse(review.createdAt);
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 6.h),
-      color: AppColors.white,
+      color: context.appColor(AppColors.white, surface: true),
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.r),
-        side: const BorderSide(color: AppColors.sokoonBorder),
+        side: BorderSide(color: context.appColor(AppColors.sokoonBorder)),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(16.r),
@@ -54,7 +54,7 @@ class MyReviewCard extends StatelessWidget {
                     child: AppText(
                       review.propertyTitle,
                       style: AppTextStyles.bold16.copyWith(
-                        color: AppColors.sokoonNavy,
+                        color: context.appColor(AppColors.sokoonNavy),
                       ),
                     ),
                   ),
@@ -65,7 +65,10 @@ class MyReviewCard extends StatelessWidget {
                 crossAxisAlignment: WrapCrossAlignment.center,
                 spacing: 4.w,
                 children: [
-                  const Icon(Icons.star_rounded, color: AppColors.amber),
+                  Icon(
+                    Icons.star_rounded,
+                    color: context.appColor(AppColors.amber),
+                  ),
                   Directionality(
                     textDirection: TextDirection.ltr,
                     child: AppText(
@@ -89,7 +92,7 @@ class MyReviewCard extends StatelessWidget {
                     context.locale.languageCode,
                   ).format(createdAt.toLocal()),
                   style: AppTextStyles.regular12.copyWith(
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                   ),
                 ),
               ],

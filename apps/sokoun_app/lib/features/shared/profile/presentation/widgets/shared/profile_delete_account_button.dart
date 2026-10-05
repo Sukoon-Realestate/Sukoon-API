@@ -5,8 +5,8 @@ class ProfileDeleteAccountButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => DefaultButton(
     title: LocaleKeys.deleteAccount,
-    color: AppColors.white,
-    textColor: AppColors.sokoonRose,
+    color: context.appColor(AppColors.white, surface: true),
+    textColor: context.appColor(AppColors.sokoonRose),
     borderColor: AppColors.roseAlpha07,
     onTap: () => Go.to(const ProfileDeleteAccountScreen()),
   );

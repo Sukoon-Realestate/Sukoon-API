@@ -39,9 +39,11 @@ class KycIntroScreen extends StatelessWidget {
       bottomNavigationBar: SafeArea(
         child: Container(
           padding: EdgeInsets.fromLTRB(16.w, 12.h, 16.w, 16.h),
-          decoration: const BoxDecoration(
-            color: AppColors.white,
-            border: Border(top: BorderSide(color: AppColors.grayPale)),
+          decoration: BoxDecoration(
+            color: context.appColor(AppColors.white, surface: true),
+            border: Border(
+              top: BorderSide(color: context.appColor(AppColors.grayPale)),
+            ),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -55,7 +57,7 @@ class KycIntroScreen extends StatelessWidget {
                       ),
                     ),
                 title: LocaleKeys.uploadDocuments,
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal, surface: true),
                 textColor: AppColors.white,
                 borderRadius: BorderRadius.circular(14.r),
                 height: 52.h,
@@ -70,8 +72,11 @@ class KycIntroScreen extends StatelessWidget {
                 AppLoadingButton(
                   asyncCall: (c) async => await onSkip!(),
                   title: LocaleKeys.skip,
-                  buttonColor: AppColors.whiteGreyColor,
-                  textColor: AppColors.sokoonTeal,
+                  buttonColor: context.appColor(
+                    AppColors.whiteGreyColor,
+                    surface: true,
+                  ),
+                  textColor: context.appColor(AppColors.sokoonTeal),
                   borderRadius: 14.r,
                   height: 48.h,
                   width: double.infinity,
@@ -105,7 +110,7 @@ class KycIntroScreen extends StatelessWidget {
                     ),
                     child: Icon(
                       Icons.verified_user_outlined,
-                      color: AppColors.sokoonTeal,
+                      color: context.appColor(AppColors.sokoonTeal),
                       size: 36.r,
                     ),
                   ).centerWidget,
@@ -113,7 +118,7 @@ class KycIntroScreen extends StatelessWidget {
                   AppText(
                     LocaleKeys.verifyIdentityAndStart,
                     style: AppTextStyles.bold.copyWith(
-                      color: AppColors.sokoonNavy,
+                      color: context.appColor(AppColors.sokoonNavy),
                       fontSize: 20.sp,
                     ),
                     textAlign: TextAlign.center,
@@ -122,7 +127,7 @@ class KycIntroScreen extends StatelessWidget {
                   AppText(
                     LocaleKeys.kycIntroDescription,
                     style: AppTextStyles.regular13.copyWith(
-                      color: AppColors.sokoonGray,
+                      color: context.appColor(AppColors.sokoonGray),
                       fontSize: 13.sp,
                       height: 1.45,
                     ),
@@ -132,7 +137,7 @@ class KycIntroScreen extends StatelessWidget {
                   AppText(
                     LocaleKeys.requiredDocuments,
                     style: AppTextStyles.extraBold.copyWith(
-                      color: AppColors.sokoonNavy,
+                      color: context.appColor(AppColors.sokoonNavy),
                       fontSize: 14.sp,
                     ),
                   ),

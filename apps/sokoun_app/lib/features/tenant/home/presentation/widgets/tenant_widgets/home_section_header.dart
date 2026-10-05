@@ -20,7 +20,7 @@ class HomeSectionHeader extends StatelessWidget {
           child: AppText(
             LocaleKeys.tenantHomeSuggestedForYou,
             style: AppTextStyles.bold15.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 15.sp,
               height: 1.45,
             ),
@@ -44,7 +44,7 @@ class HomeSectionHeader extends StatelessWidget {
             child: AppText(
               LocaleKeys.tenantHomeViewAll,
               style: AppTextStyles.bold12.copyWith(
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
                 fontSize: 12.sp,
                 height: 1.45,
               ),

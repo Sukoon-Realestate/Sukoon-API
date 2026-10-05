@@ -54,7 +54,10 @@ class _StartConversationScreenState extends State<StartConversationScreen> {
     return AppScaffold(
       title: LocaleKeys.chatConversationsTitle,
       showBackButton: true,
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: context.appColor(
+        AppColors.scaffoldBackground,
+        surface: true,
+      ),
       body: SafeArea(
         child: BlocProvider<CreateConversationCubit>.value(
           value: _cubit,

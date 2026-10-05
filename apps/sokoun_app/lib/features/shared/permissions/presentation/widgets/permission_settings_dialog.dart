@@ -19,18 +19,18 @@ class PermissionSettingsDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-    backgroundColor: AppColors.white,
+    backgroundColor: context.appColor(AppColors.white, surface: true),
     title: AppText(
       LocaleKeys.permissionSettingsTitle,
       style: AppTextStyles.bold.copyWith(
-        color: AppColors.sokoonNavy,
+        color: context.appColor(AppColors.sokoonNavy),
         fontSize: 18.sp,
       ),
     ),
     content: AppText(
       description,
       style: AppTextStyles.regular14.copyWith(
-        color: AppColors.sokoonGray,
+        color: context.appColor(AppColors.sokoonGray),
         fontSize: 14.sp,
         height: 1.5,
       ),
@@ -40,14 +40,18 @@ class PermissionSettingsDialog extends StatelessWidget {
         onPressed: () => Go.back(false),
         child: AppText(
           LocaleKeys.permissionNotNow,
-          style: AppTextStyles.regular.copyWith(color: AppColors.sokoonGray),
+          style: AppTextStyles.regular.copyWith(
+            color: context.appColor(AppColors.sokoonGray),
+          ),
         ),
       ),
       TextButton(
         onPressed: () => Go.back(true),
         child: AppText(
           LocaleKeys.permissionOpenSettings,
-          style: AppTextStyles.bold.copyWith(color: AppColors.sokoonTeal),
+          style: AppTextStyles.bold.copyWith(
+            color: context.appColor(AppColors.sokoonTeal),
+          ),
         ),
       ),
     ],

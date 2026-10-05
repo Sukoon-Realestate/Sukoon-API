@@ -68,7 +68,7 @@ class AddPropertyField extends StatelessWidget {
                 (value) =>
                     isRequired ? Validators.validateRequired(value) : null,
             style: AppTextStyles.medium.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 15.sp,
             ),
             decoration: InputDecoration(
@@ -106,6 +106,8 @@ class AddPropertyFieldLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AppText(
     isRequired ? '$label *' : label,
-    style: AppTextStyles.medium13.copyWith(color: AppColors.sokoonGray),
+    style: AppTextStyles.medium13.copyWith(
+      color: context.appColor(AppColors.sokoonGray),
+    ),
   );
 }

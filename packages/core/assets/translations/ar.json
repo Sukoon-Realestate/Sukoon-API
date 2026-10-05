@@ -1,4 +1,9 @@
 {
+  "appearance_title": "المظهر",
+  "appearance_description": "اختر المظهر الفاتح أو الداكن، أو اتبع إعدادات جهازك. يُحفظ اختيارك تلقائيًا.",
+  "appearance_system": "حسب إعدادات الجهاز",
+  "appearance_light": "المظهر الفاتح",
+  "appearance_dark": "المظهر الداكن",
   "validation_identity_required": "أدخل رقم الهوية",
   "validation_field_required": "{field} مطلوب",
   "validation_integer": "أدخل عددًا صحيحًا دون كسور",

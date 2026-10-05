@@ -17,7 +17,7 @@ class HomeSectionHeader extends StatelessWidget {
           child: AppText(
             title,
             style: AppTextStyles.bold15.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 15.sp,
               height: 1.45,
             ),

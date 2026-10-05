@@ -27,10 +27,14 @@ class OwnerAvailabilityDayChip extends StatelessWidget {
               (MediaQuery.textScalerOf(context).scale(14) / 14).clamp(1, 2),
           padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 7.h),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.sokoonTeal : AppColors.white,
+            color: isSelected
+                ? context.appColor(AppColors.sokoonTeal, surface: true)
+                : context.appColor(AppColors.white, surface: true),
             borderRadius: BorderRadius.circular(16.r),
             border: Border.all(
-              color: isSelected ? AppColors.sokoonTeal : AppColors.sokoonBorder,
+              color: isSelected
+                  ? context.appColor(AppColors.sokoonTeal)
+                  : context.appColor(AppColors.sokoonBorder),
             ),
           ),
           child: Column(
@@ -41,7 +45,9 @@ class OwnerAvailabilityDayChip extends StatelessWidget {
               AppText(
                 day.localizedShortWeekday,
                 style: AppTextStyles.medium12.copyWith(
-                  color: isSelected ? AppColors.white : AppColors.sokoonGray,
+                  color: isSelected
+                      ? AppColors.white
+                      : context.appColor(AppColors.sokoonGray),
                   fontSize: 12.sp,
                   height: 1.45,
                 ),
@@ -50,7 +56,9 @@ class OwnerAvailabilityDayChip extends StatelessWidget {
               AppText(
                 '${day.dateValue?.day ?? ''}',
                 style: AppTextStyles.bold14.copyWith(
-                  color: isSelected ? AppColors.white : AppColors.sokoonNavy,
+                  color: isSelected
+                      ? AppColors.white
+                      : context.appColor(AppColors.sokoonNavy),
                   fontSize: 14.sp,
                   height: 1.45,
                 ),

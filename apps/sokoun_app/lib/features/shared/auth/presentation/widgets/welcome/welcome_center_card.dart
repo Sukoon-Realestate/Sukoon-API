@@ -26,9 +26,9 @@ class WelcomeCenterCard extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 17.w, vertical: 13.h),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: AppColors.sokoonBorder),
+        border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
       ),
       child: Row(
         spacing: 14.w,
@@ -37,10 +37,10 @@ class WelcomeCenterCard extends StatelessWidget {
             width: 40.r,
             height: 40.r,
             decoration: BoxDecoration(
-              color: iconBackgroundColor,
+              color: context.appColor(iconBackgroundColor, surface: true),
               borderRadius: BorderRadius.circular(8.r),
             ),
-            child: Icon(icon, color: iconColor, size: 19.r),
+            child: Icon(icon, color: context.appColor(iconColor), size: 19.r),
           ),
           Expanded(
             child: Column(
@@ -51,7 +51,7 @@ class WelcomeCenterCard extends StatelessWidget {
                 AppText(
                   title,
                   style: AppTextStyles.bold14.copyWith(
-                    color: AppColors.sokoonNavy,
+                    color: context.appColor(AppColors.sokoonNavy),
                     fontSize: 14.sp,
                     height: 1.45,
                   ),
@@ -61,7 +61,7 @@ class WelcomeCenterCard extends StatelessWidget {
                 AppText(
                   subtitle,
                   style: AppTextStyles.regular12.copyWith(
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                     fontSize: 12.sp,
                     height: 1.45,
                   ),

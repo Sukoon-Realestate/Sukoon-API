@@ -154,9 +154,17 @@ class _AppDropinityState<FullResponse, Model>
             fontSize: 11.sp,
           ),
           buttonData: ButtonData(
-            hint: AppText(widget.hint, color: Colors.grey, fontSize: 12.sp),
+            hint: AppText(
+              widget.hint,
+              color: Theme.of(context).extension<AppColorTheme>() == null
+                  ? Colors.grey
+                  : context.appColor(AppColors.sokoonMuted),
+              fontSize: 12.sp,
+            ),
             initialValue: widget.initialValue,
-            color: Colors.grey[50],
+            color: Theme.of(context).extension<AppColorTheme>() == null
+                ? Colors.grey[50]
+                : context.appColor(AppColors.white, surface: true),
             buttonBorderRadius: ConstantManager.buttonBorderRadius,
             selectedItemWidget: (e) =>
                 AppText(widget.getLabel.call(e as Model)),
@@ -215,9 +223,17 @@ class _AppDropinityState<FullResponse, Model>
             fontSize: 11.sp,
           ),
           buttonData: ButtonData(
-            hint: AppText(widget.hint, color: Colors.grey, fontSize: 12.sp),
+            hint: AppText(
+              widget.hint,
+              color: Theme.of(context).extension<AppColorTheme>() == null
+                  ? Colors.grey
+                  : context.appColor(AppColors.sokoonMuted),
+              fontSize: 12.sp,
+            ),
             initialValue: widget.initialValue,
-            color: Colors.grey[50],
+            color: Theme.of(context).extension<AppColorTheme>() == null
+                ? Colors.grey[50]
+                : context.appColor(AppColors.white, surface: true),
             buttonBorderRadius: ConstantManager.buttonBorderRadius,
             selectedItemWidget: (e) =>
                 AppText(widget.getLabel.call(e as Model)),

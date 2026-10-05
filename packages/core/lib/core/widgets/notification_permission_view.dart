@@ -39,19 +39,22 @@ class NotificationPermissionView extends StatelessWidget {
         children: [
           PermissionHeader(
             icon: Icons.notifications_none_rounded,
-            color: AppColors.blue,
+            color: context.appColor(AppColors.blue),
             backgroundColor: AppColors.blueAlpha06,
             title: LocaleKeys.notificationPermissionTitle,
             description: LocaleKeys.notificationPermissionDescription,
           ),
           18.szH,
           PermissionBenefits(
-            backgroundColor: AppColors.grayOffWhite,
+            backgroundColor: context.appColor(
+              AppColors.grayOffWhite,
+              surface: true,
+            ),
             children: [
               PermissionBenefitRow(
                 title: LocaleKeys.notificationPermissionVisitsTitle,
                 description: LocaleKeys.notificationPermissionVisitsDescription,
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
                 backgroundColor: AppColors.tealAlpha08,
               ),
               PermissionBenefitRow(
@@ -65,7 +68,7 @@ class NotificationPermissionView extends StatelessWidget {
                 title: LocaleKeys.notificationPermissionPropertiesTitle,
                 description:
                     LocaleKeys.notificationPermissionPropertiesDescription,
-                color: AppColors.green,
+                color: context.appColor(AppColors.green),
                 backgroundColor: AppColors.greenAlpha08,
               ),
             ],
@@ -73,7 +76,7 @@ class NotificationPermissionView extends StatelessWidget {
           20.szH,
           PermissionActions(
             allowLabel: LocaleKeys.notificationPermissionTitle,
-            color: AppColors.blue,
+            color: context.appColor(AppColors.blue),
             shadowColor: AppColors.blueAlpha19,
             onAllowPressed: onAllowPressed,
             onNotNowPressed: onNotNowPressed,

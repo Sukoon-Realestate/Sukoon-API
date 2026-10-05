@@ -61,7 +61,10 @@ class _OwnerHomeScreenState extends State<OwnerHomeScreen> {
             ),
         showBackButton: false,
         toolbarHeight: 96 + MediaQuery.textScalerOf(context).scale(38),
-        backgroundColor: AppColors.scaffoldBackground,
+        backgroundColor: context.appColor(
+          AppColors.scaffoldBackground,
+          surface: true,
+        ),
         contentWidth: SokounContentWidth.wide,
         body: SafeArea(
           child:

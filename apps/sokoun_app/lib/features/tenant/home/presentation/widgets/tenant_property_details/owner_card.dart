@@ -16,15 +16,15 @@ class TenantPropertyOwnerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final avatarFallback = Icon(
       Icons.person_outline_rounded,
-      color: AppColors.sokoonTeal,
+      color: context.appColor(AppColors.sokoonTeal),
       size: 22.r,
     );
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: AppColors.sokoonBorder),
+        border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
       ),
       child: Column(
         spacing: 12.h,
@@ -65,7 +65,7 @@ class TenantPropertyOwnerCard extends StatelessWidget {
                           child: AppText(
                             property.ownerName,
                             style: AppTextStyles.bold14.copyWith(
-                              color: AppColors.sokoonNavy,
+                              color: context.appColor(AppColors.sokoonNavy),
                               fontSize: 14.sp,
                               height: 1.45,
                             ),
@@ -80,7 +80,10 @@ class TenantPropertyOwnerCard extends StatelessWidget {
                               vertical: 2.h,
                             ),
                             decoration: BoxDecoration(
-                              color: AppColors.sokoonTeal,
+                              color: context.appColor(
+                                AppColors.sokoonTeal,
+                                surface: true,
+                              ),
                               borderRadius: BorderRadius.circular(6.r),
                             ),
                             child: AppText(
@@ -96,7 +99,7 @@ class TenantPropertyOwnerCard extends StatelessWidget {
                     AppText(
                       property.ownerMeta,
                       style: AppTextStyles.medium12.copyWith(
-                        color: AppColors.sokoonGray,
+                        color: context.appColor(AppColors.sokoonGray),
                         fontSize: 12.sp,
                         height: 1.45,
                       ),
@@ -109,7 +112,7 @@ class TenantPropertyOwnerCard extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(10.w),
             decoration: BoxDecoration(
-              color: AppColors.grayOffWhite,
+              color: context.appColor(AppColors.grayOffWhite, surface: true),
               borderRadius: BorderRadius.circular(10.r),
             ),
             child: Row(
@@ -117,14 +120,14 @@ class TenantPropertyOwnerCard extends StatelessWidget {
               children: [
                 Icon(
                   Icons.lock_outline_rounded,
-                  color: AppColors.sokoonGray,
+                  color: context.appColor(AppColors.sokoonGray),
                   size: 16.r,
                 ),
                 Expanded(
                   child: AppText(
                     LocaleKeys.tenantPropertyDetailsPhonePrivacy,
                     style: AppTextStyles.medium11.copyWith(
-                      color: AppColors.sokoonGray,
+                      color: context.appColor(AppColors.sokoonGray),
                       fontSize: 11.sp,
                       height: 1.45,
                     ),

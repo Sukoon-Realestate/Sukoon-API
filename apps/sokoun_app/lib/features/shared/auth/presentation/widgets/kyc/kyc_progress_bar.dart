@@ -25,7 +25,9 @@ class KycProgressBar extends StatelessWidget {
               end: index == totalSteps - 1 ? 0 : 6.w,
             ),
             decoration: BoxDecoration(
-              color: isActive ? AppColors.sokoonTeal : AppColors.grayPale,
+              color: isActive
+                  ? context.appColor(AppColors.sokoonTeal, surface: true)
+                  : context.appColor(AppColors.grayPale, surface: true),
               borderRadius: BorderRadius.circular(999.r),
             ),
           ),

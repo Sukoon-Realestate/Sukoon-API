@@ -63,9 +63,13 @@ class _AddPropertyStepShellState extends State<AddPropertyStepShell> {
           children: [
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-              decoration: const BoxDecoration(
-                color: AppColors.white,
-                border: Border(bottom: BorderSide(color: AppColors.grayPale)),
+              decoration: BoxDecoration(
+                color: context.appColor(AppColors.white, surface: true),
+                border: Border(
+                  bottom: BorderSide(
+                    color: context.appColor(AppColors.grayPale),
+                  ),
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -81,8 +85,14 @@ class _AddPropertyStepShellState extends State<AddPropertyStepShell> {
                             height: 4.h,
                             decoration: BoxDecoration(
                               color: index < widget.activeSegments
-                                  ? AppColors.sokoonTeal
-                                  : AppColors.grayPale,
+                                  ? context.appColor(
+                                      AppColors.sokoonTeal,
+                                      surface: true,
+                                    )
+                                  : context.appColor(
+                                      AppColors.grayPale,
+                                      surface: true,
+                                    ),
                               borderRadius: BorderRadius.circular(999.r),
                             ),
                           ),
@@ -92,14 +102,14 @@ class _AddPropertyStepShellState extends State<AddPropertyStepShell> {
                   AppText(
                     LocaleKeys.propertyRequiredFieldsHint,
                     style: AppTextStyles.regular12.copyWith(
-                      color: AppColors.sokoonGray,
+                      color: context.appColor(AppColors.sokoonGray),
                     ),
                   ),
                   if (widget.progressSubtitle != null)
                     AppText(
                       widget.progressSubtitle!,
                       style: AppTextStyles.regular11.copyWith(
-                        color: AppColors.sokoonGray,
+                        color: context.appColor(AppColors.sokoonGray),
                         fontSize: 12.sp,
                         height: 1.45,
                       ),

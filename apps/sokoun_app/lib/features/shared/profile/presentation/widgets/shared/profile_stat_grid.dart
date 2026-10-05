@@ -32,8 +32,11 @@ class ProfileStatGrid extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
               decoration: BoxDecoration(
                 color: withCards
-                    ? AppColors.white
-                    : AppColors.scaffoldBackground,
+                    ? context.appColor(AppColors.white, surface: true)
+                    : context.appColor(
+                        AppColors.scaffoldBackground,
+                        surface: true,
+                      ),
                 borderRadius: BorderRadius.circular(14.r),
                 boxShadow: withCards
                     ? const [
@@ -52,7 +55,7 @@ class ProfileStatGrid extends StatelessWidget {
                   AppText(
                     stat.value,
                     style: AppTextStyles.bold.copyWith(
-                      color: valueColor,
+                      color: context.appColor(valueColor),
                       fontSize: withCards ? 22.sp : 16.sp,
                     ),
                     textAlign: TextAlign.center,
@@ -60,7 +63,7 @@ class ProfileStatGrid extends StatelessWidget {
                   AppText(
                     stat.label,
                     style: AppTextStyles.medium.copyWith(
-                      color: AppColors.sokoonGray,
+                      color: context.appColor(AppColors.sokoonGray),
                       fontSize: withCards ? 10.sp : 11.sp,
                     ),
                     textAlign: TextAlign.center,

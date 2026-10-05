@@ -39,7 +39,9 @@ class TenantPropertyHeroGallery extends StatelessWidget {
 
     return Container(
       height: 258.h,
-      decoration: const BoxDecoration(color: AppColors.grayBluePale),
+      decoration: BoxDecoration(
+        color: context.appColor(AppColors.grayBluePale, surface: true),
+      ),
       child: Stack(
         children: [
           if (hasImages)
@@ -82,7 +84,7 @@ class TenantPropertyHeroGallery extends StatelessWidget {
                 if (property.isVerified)
                   _HeroPill(
                     label: '${LocaleKeys.verified} ✓',
-                    color: AppColors.sokoonTeal,
+                    color: context.appColor(AppColors.sokoonTeal),
                     textColor: AppColors.white,
                   ),
                 if (hasImages)
@@ -118,7 +120,7 @@ class TenantPropertyHeroGallery extends StatelessWidget {
                       child: Container(
                         width: index == 0 ? 64.w : 58.w,
                         decoration: BoxDecoration(
-                          color: color,
+                          color: context.appColor(color, surface: true),
                           borderRadius: BorderRadius.circular(10.r),
                           border: index == 0
                               ? Border.all(color: AppColors.white, width: 2)
@@ -200,13 +202,13 @@ class _HeroPill extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
       decoration: BoxDecoration(
-        color: color,
+        color: context.appColor(color, surface: true),
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: AppText(
         label,
         style: AppTextStyles.extraBold.copyWith(
-          color: textColor,
+          color: context.appColor(textColor),
           fontSize: 11.sp,
         ),
       ),

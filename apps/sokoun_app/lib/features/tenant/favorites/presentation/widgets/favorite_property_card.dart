@@ -32,10 +32,10 @@ class FavoritePropertyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.white,
+      color: context.appColor(AppColors.white, surface: true),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.r),
-        side: const BorderSide(color: AppColors.sokoonBorder),
+        side: BorderSide(color: context.appColor(AppColors.sokoonBorder)),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
@@ -84,7 +84,7 @@ class _FavoritePropertyImage extends StatelessWidget {
     return AspectRatio(
       aspectRatio: 1.8,
       child: ColoredBox(
-        color: AppColors.grayBluePale,
+        color: context.appColor(AppColors.grayBluePale, surface: true),
         child: Stack(
           children: [
             Positioned.fill(
@@ -110,12 +110,14 @@ class _FavoritePropertyImage extends StatelessWidget {
                     height: 48.r,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: AppColors.white.withValues(alpha: .9),
+                      color: context
+                          .appColor(AppColors.white, surface: true)
+                          .withValues(alpha: .9),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(
                       Icons.favorite_rounded,
-                      color: AppColors.red,
+                      color: context.appColor(AppColors.red),
                       size: 14.r,
                     ),
                   ),
@@ -135,7 +137,7 @@ class _FavoriteImagePlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: AppColors.grayBluePale,
+      color: context.appColor(AppColors.grayBluePale, surface: true),
       child: Icon(
         Icons.apartment_rounded,
         color: AppColors.blueGrayLight,
@@ -156,12 +158,16 @@ class _FavoritePropertyMeta extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.star_rounded, color: AppColors.amber, size: 12.r),
+        Icon(
+          Icons.star_rounded,
+          color: context.appColor(AppColors.amber),
+          size: 12.r,
+        ),
         6.szW,
         AppText(
           rating,
           style: AppTextStyles.regular12.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 12.sp,
             height: 1.45,
           ),
@@ -170,7 +176,7 @@ class _FavoritePropertyMeta extends StatelessWidget {
         AppText(
           '·',
           style: AppTextStyles.regular12.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 12.sp,
             height: 1.45,
           ),
@@ -180,7 +186,7 @@ class _FavoritePropertyMeta extends StatelessWidget {
           child: AppText(
             area,
             style: AppTextStyles.regular12.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 12.sp,
               height: 1.45,
             ),

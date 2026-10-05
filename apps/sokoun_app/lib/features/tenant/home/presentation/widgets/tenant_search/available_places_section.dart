@@ -32,7 +32,7 @@ class AvailablePlacesSection extends StatelessWidget {
       return AppText(
         LocaleKeys.tenantSearchSelectPropertyType,
         style: AppTextStyles.regular12.copyWith(
-          color: AppColors.sokoonMuted,
+          color: context.appColor(AppColors.sokoonMuted),
           fontSize: 12.sp,
           height: 1.45,
         ),

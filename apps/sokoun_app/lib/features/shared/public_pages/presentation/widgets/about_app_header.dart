@@ -42,7 +42,7 @@ class _AboutAppHeaderState extends State<AboutAppHeader> {
                       .replaceAll('{version}', info.version)
                       .replaceAll('{build}', info.buildNumber),
                   style: AppTextStyles.regular12.copyWith(
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                   ),
                 );
         },

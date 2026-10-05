@@ -119,7 +119,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           showBackButton: true,
           isScrollable: false,
           padding: EdgeInsets.zero,
-          backgroundColor: AppColors.offWhite,
+          backgroundColor: context.appColor(AppColors.offWhite, surface: true),
           onBack: _handleBack,
           title: uiState.emailSent
               ? LocaleKeys.checkYourEmail

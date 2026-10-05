@@ -105,13 +105,17 @@ class _AddPropertyPhotosPageState extends State<AddPropertyPhotosPage> {
                   '$remaining',
                 ),
           backgroundColor: widget.isReady
-              ? AppColors.greenPale
-              : AppColors.orangePale,
+              ? context.appColor(AppColors.greenPale, surface: true)
+              : context.appColor(AppColors.orangePale, surface: true),
           borderColor: widget.isReady
               ? AppColors.greenAlpha19
               : AppColors.goldAlpha15,
-          iconColor: widget.isReady ? AppColors.green : AppColors.brown,
-          textColor: widget.isReady ? AppColors.sokoonNavy : AppColors.brown,
+          iconColor: widget.isReady
+              ? context.appColor(AppColors.green)
+              : context.appColor(AppColors.brown),
+          textColor: widget.isReady
+              ? context.appColor(AppColors.sokoonNavy)
+              : context.appColor(AppColors.brown),
           icon: widget.isReady
               ? Icons.check_circle_outline_rounded
               : Icons.warning_amber_rounded,

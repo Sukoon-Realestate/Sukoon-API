@@ -11,7 +11,9 @@ class ProfileVerifiedBadge extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
       decoration: BoxDecoration(
-        color: isVerified ? AppColors.goldPale : AppColors.grayBackground,
+        color: isVerified
+            ? context.appColor(AppColors.goldPale, surface: true)
+            : context.appColor(AppColors.grayBackground, surface: true),
         borderRadius: BorderRadius.circular(999.r),
       ),
       child: Row(
@@ -22,14 +24,18 @@ class ProfileVerifiedBadge extends StatelessWidget {
             isVerified
                 ? Icons.check_circle_outline_rounded
                 : Icons.shield_outlined,
-            color: isVerified ? AppColors.sokoonGold : AppColors.sokoonGray,
+            color: isVerified
+                ? AppColors.sokoonGold
+                : context.appColor(AppColors.sokoonGray),
             size: 11.r,
           ),
           Flexible(
             child: AppText(
               text ?? LocaleKeys.verified,
               style: AppTextStyles.bold10.copyWith(
-                color: isVerified ? AppColors.sokoonNavy : AppColors.sokoonGray,
+                color: isVerified
+                    ? context.appColor(AppColors.sokoonNavy)
+                    : context.appColor(AppColors.sokoonGray),
                 fontSize: 10.sp,
                 height: 1.45,
               ),

@@ -15,7 +15,7 @@ class OwnerVisitRequestTimeRow extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
       decoration: BoxDecoration(
-        color: AppColors.grayOffWhite,
+        color: context.appColor(AppColors.grayOffWhite, surface: true),
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: Row(
@@ -23,14 +23,14 @@ class OwnerVisitRequestTimeRow extends StatelessWidget {
         children: [
           Icon(
             Icons.calendar_today_outlined,
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             size: 14.r,
           ),
           Expanded(
             child: AppText(
               dateLabel,
               style: AppTextStyles.regular12.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 12.sp,
                 height: 1.45,
               ),

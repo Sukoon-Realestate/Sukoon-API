@@ -28,7 +28,7 @@ class ActiveFilterChip extends StatelessWidget {
           AppText(
             filter.label,
             style: AppTextStyles.semiBold.copyWith(
-              color: AppColors.sokoonTeal,
+              color: context.appColor(AppColors.sokoonTeal),
               fontSize: 12.sp,
             ),
           ),
@@ -37,7 +37,7 @@ class ActiveFilterChip extends StatelessWidget {
             behavior: HitTestBehavior.opaque,
             child: Icon(
               Icons.close_rounded,
-              color: AppColors.sokoonTeal,
+              color: context.appColor(AppColors.sokoonTeal),
               size: 14.r,
             ),
           ),

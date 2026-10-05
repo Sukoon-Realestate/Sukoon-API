@@ -33,7 +33,7 @@ class OwnerPendingRequestsEmptyState extends StatelessWidget {
           AppText(
             LocaleKeys.ownerDashboardNoPendingTitle,
             style: AppTextStyles.bold15.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 15.sp,
               height: 1.45,
             ),
@@ -44,7 +44,7 @@ class OwnerPendingRequestsEmptyState extends StatelessWidget {
           AppText(
             LocaleKeys.ownerDashboardNoPendingDescription,
             style: AppTextStyles.medium12.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 12.sp,
               height: 1.45,
             ),

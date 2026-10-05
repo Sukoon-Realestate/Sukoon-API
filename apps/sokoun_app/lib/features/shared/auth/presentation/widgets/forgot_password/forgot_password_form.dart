@@ -51,7 +51,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
 
   @override
   Widget build(BuildContext context) {
-    final Color accentColor = AppColors.sokoonTeal;
+    final Color accentColor = context.appColor(AppColors.sokoonTeal);
 
     return FirstValidationErrorForm(
       validationFields: _validationFields,
@@ -71,13 +71,13 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
             action: TextInputAction.done,
             prefixIcon: Icon(
               Icons.mail_outline_rounded,
-              color: AppColors.sokoonMuted,
+              color: context.appColor(AppColors.sokoonMuted),
               size: 20.r,
             ),
             suffixIcon: widget.isEmailValid
                 ? Icon(
                     Icons.check_circle_rounded,
-                    color: accentColor,
+                    color: context.appColor(accentColor),
                     size: 20.r,
                   )
                 : null,
@@ -89,7 +89,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
           AppText(
             LocaleKeys.forgotPasswordEmailHint,
             style: AppTextStyles.medium11.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 11.sp,
               height: 1.45,
             ),
@@ -114,7 +114,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
                 child: AppText(
                   LocaleKeys.rememberedPassword,
                   style: AppTextStyles.medium12.copyWith(
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                     fontSize: 12.sp,
                     height: 1.45,
                   ),
@@ -130,7 +130,7 @@ class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
                 child: AppText(
                   LocaleKeys.login,
                   style: AppTextStyles.extraBold.copyWith(
-                    color: accentColor,
+                    color: context.appColor(accentColor),
                     fontSize: 12.sp,
                     decoration: TextDecoration.underline,
                   ),

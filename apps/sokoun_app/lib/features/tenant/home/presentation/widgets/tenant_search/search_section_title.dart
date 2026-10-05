@@ -14,7 +14,7 @@ class SearchSectionTitle extends StatelessWidget {
     return AppText(
       title,
       style: AppTextStyles.bold13.copyWith(
-        color: AppColors.sokoonGray,
+        color: context.appColor(AppColors.sokoonGray),
         fontSize: 13.sp,
         height: 1.45,
       ),

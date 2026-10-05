@@ -7,4 +7,5 @@ import '../language/languages.dart';
 
 part 'app_sizes.dart';
 part 'color_manager.dart';
+part 'app_color_theme.dart';
 part 'constants_manager.dart';

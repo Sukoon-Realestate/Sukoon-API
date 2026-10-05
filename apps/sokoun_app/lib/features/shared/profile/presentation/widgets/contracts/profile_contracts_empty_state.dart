@@ -23,14 +23,16 @@ class ProfileContractsEmptyState extends StatelessWidget {
           AppText(
             LocaleKeys.profileContractsEmptyTitle,
             textAlign: TextAlign.center,
-            style: AppTextStyles.bold16.copyWith(color: AppColors.sokoonNavy),
+            style: AppTextStyles.bold16.copyWith(
+              color: context.appColor(AppColors.sokoonNavy),
+            ),
           ),
           8.szH,
           AppText(
             LocaleKeys.profileContractsEmptyDescription,
             textAlign: TextAlign.center,
             style: AppTextStyles.regular14.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               height: 1.5,
             ),
           ),

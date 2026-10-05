@@ -9,7 +9,8 @@ import 'app_text.dart';
 import 'toast_messages/toast_message.dart';
 import '../shared/base_state.dart';
 
-enum OptionsRanking{vertical, horizontal}
+enum OptionsRanking { vertical, horizontal }
+
 class ChooseFromOptionsWidget extends StatefulWidget {
   final OptionsRanking ranking;
   final void Function(String selectedOption) onSelectOption;
@@ -20,7 +21,8 @@ class ChooseFromOptionsWidget extends StatefulWidget {
   final bool canChoose;
   final double? height;
 
-  const ChooseFromOptionsWidget({super.key,
+  const ChooseFromOptionsWidget({
+    super.key,
     required this.onSelectOption,
     required this.titles,
     this.ranking = OptionsRanking.horizontal,
@@ -32,7 +34,8 @@ class ChooseFromOptionsWidget extends StatefulWidget {
   });
 
   @override
-  State<ChooseFromOptionsWidget> createState() => _ChooseFromOptionsWidgetState();
+  State<ChooseFromOptionsWidget> createState() =>
+      _ChooseFromOptionsWidgetState();
 }
 
 class _ChooseFromOptionsWidgetState extends State<ChooseFromOptionsWidget> {
@@ -41,90 +44,94 @@ class _ChooseFromOptionsWidgetState extends State<ChooseFromOptionsWidget> {
   @override
   Widget build(BuildContext context) {
     return FittedBox(
-      child: widget.ranking == OptionsRanking.horizontal?
-      Row(
-        spacing: 10.w,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: List.generate(
-          widget.titles.length,
-              (index) => InkWell(
-            onTap: () {
-              if(widget.canChoose){
-                final String selectedOption = widget.titles[index];
-                widget.onSelectOption(selectedOption);
-                setState(() => option = selectedOption);
-
-              }else{
-                Messages.showToast(
-                  msg: LocaleKeys.youCanNotChooseNow,
-                  status: BaseStatus.error,
-                );
-              }
-            },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 150),
-              curve: Curves.linear,
-              width: context.width / widget.titles.length,
-              height: widget.height,
-              decoration: BoxDecoration(
-                color: option == widget.titles[index] ?
-                AppColors.primary : AppColors.white,
-                borderRadius: BorderRadius.circular(30.r),
-              ),
-              child: Center(
-                child: FittedBox(
-                  child: Padding(
-                    padding: widget.childPadding ?? EdgeInsets.zero,
-                    child: AppText(
-                      widget.titles[index],
-                      color: option == widget.titles[index] ?
-                      Colors.white : AppColors.black,
-                      fontSize: widget.fontSize,
-                      fontWeight: widget.fontWeight ?? FontWeight.normal,
+      child: widget.ranking == OptionsRanking.horizontal
+          ? Row(
+              spacing: 10.w,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: List.generate(
+                widget.titles.length,
+                (index) => InkWell(
+                  onTap: () {
+                    if (widget.canChoose) {
+                      final String selectedOption = widget.titles[index];
+                      widget.onSelectOption(selectedOption);
+                      setState(() => option = selectedOption);
+                    } else {
+                      Messages.showToast(
+                        msg: LocaleKeys.youCanNotChooseNow,
+                        status: BaseStatus.error,
+                      );
+                    }
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 150),
+                    curve: Curves.linear,
+                    width: context.width / widget.titles.length,
+                    height: widget.height,
+                    decoration: BoxDecoration(
+                      color: option == widget.titles[index]
+                          ? context.appColor(AppColors.primary, surface: true)
+                          : context.appColor(AppColors.white, surface: true),
+                      borderRadius: BorderRadius.circular(30.r),
+                    ),
+                    child: Center(
+                      child: FittedBox(
+                        child: Padding(
+                          padding: widget.childPadding ?? EdgeInsets.zero,
+                          child: AppText(
+                            widget.titles[index],
+                            color: option == widget.titles[index]
+                                ? Colors.white
+                                : context.appColor(AppColors.black),
+                            fontSize: widget.fontSize,
+                            fontWeight: widget.fontWeight ?? FontWeight.normal,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ),
-      ).paddingSymmetric(vertical: 10.h) : Column(
-        spacing: 10.w,
-        children: List.generate(
-          widget.titles.length,
-              (index) => InkWell(
-            onTap: () {
-              final String selectedOption = widget.titles[index];
-              widget.onSelectOption(selectedOption);
-              setState(() => option = selectedOption);
-            },
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 150),
-              curve: Curves.linear,
-              width: context.width,
-              decoration: BoxDecoration(
-                color: option == widget.titles[index] ?
-                AppColors.primary : AppColors.white,
-                borderRadius: BorderRadius.circular(30.r),
-              ),
-              child: Center(
-                child: FittedBox(
-                  child: Padding(
-                    padding: widget.childPadding ?? EdgeInsets.zero,
-                    child: AppText(
-                      widget.titles[index],
-                      color: option == widget.titles[index] ?
-                      Colors.white : AppColors.black,
-                      fontSize: widget.fontSize,
-                      fontWeight: widget.fontWeight ?? FontWeight.normal,
+            ).paddingSymmetric(vertical: 10.h)
+          : Column(
+              spacing: 10.w,
+              children: List.generate(
+                widget.titles.length,
+                (index) => InkWell(
+                  onTap: () {
+                    final String selectedOption = widget.titles[index];
+                    widget.onSelectOption(selectedOption);
+                    setState(() => option = selectedOption);
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 150),
+                    curve: Curves.linear,
+                    width: context.width,
+                    decoration: BoxDecoration(
+                      color: option == widget.titles[index]
+                          ? context.appColor(AppColors.primary, surface: true)
+                          : context.appColor(AppColors.white, surface: true),
+                      borderRadius: BorderRadius.circular(30.r),
+                    ),
+                    child: Center(
+                      child: FittedBox(
+                        child: Padding(
+                          padding: widget.childPadding ?? EdgeInsets.zero,
+                          child: AppText(
+                            widget.titles[index],
+                            color: option == widget.titles[index]
+                                ? Colors.white
+                                : context.appColor(AppColors.black),
+                            fontSize: widget.fontSize,
+                            fontWeight: widget.fontWeight ?? FontWeight.normal,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ),
-      ).paddingSymmetric(vertical: 10.h),
+            ).paddingSymmetric(vertical: 10.h),
     );
   }
 }

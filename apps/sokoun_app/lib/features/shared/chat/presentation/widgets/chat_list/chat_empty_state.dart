@@ -41,7 +41,7 @@ class ChatEmptyState extends StatelessWidget {
             AppText(
               LocaleKeys.chatEmptyTitle,
               style: AppTextStyles.bold.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 20.sp,
               ),
               textAlign: TextAlign.center,
@@ -52,7 +52,7 @@ class ChatEmptyState extends StatelessWidget {
               AppText(
                 LocaleKeys.chatEmptyDescription,
                 style: AppTextStyles.regular14.copyWith(
-                  color: AppColors.sokoonGray,
+                  color: context.appColor(AppColors.sokoonGray),
                   fontSize: 14.sp,
                   height: 1.7,
                 ),
@@ -70,7 +70,7 @@ class ChatEmptyState extends StatelessWidget {
                 title: UserTypeHelper.instance.currentUserType.isTenant
                     ? LocaleKeys.chatExploreProperties
                     : LocaleKeys.ownerAddPropertyTitle,
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal, surface: true),
                 textColor: AppColors.white,
                 borderRadius: BorderRadius.circular(16.r),
                 width: double.infinity,

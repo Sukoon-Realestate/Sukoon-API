@@ -153,7 +153,10 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
         child: AppScaffold(
           title: LocaleKeys.tenantVisitBookTitle,
           showBackButton: true,
-          backgroundColor: AppColors.scaffoldBackground,
+          backgroundColor: context.appColor(
+            AppColors.scaffoldBackground,
+            surface: true,
+          ),
           body: SafeArea(
             child: ValueListenableBuilder<({int dayIndex, TimeOfDay? time})>(
               valueListenable: _selection,

@@ -24,10 +24,10 @@ class ProfileVerificationTile extends StatelessWidget {
           : LocaleKeys.ownerHomeUnverified,
       iconColor: workspace.isOwner
           ? AppColors.sokoonGold
-          : AppColors.sokoonTeal,
+          : context.appColor(AppColors.sokoonTeal),
       iconBackgroundColor: workspace.isOwner
-          ? AppColors.goldPale
-          : AppColors.mintLight,
+          ? context.appColor(AppColors.goldPale, surface: true)
+          : context.appColor(AppColors.mintLight, surface: true),
       onTap: () => Go.to(ProfileVerificationScreen(workspace: workspace)),
     ),
   );

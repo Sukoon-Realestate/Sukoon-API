@@ -37,7 +37,9 @@ class ProfileContractCard extends StatelessWidget {
       children: [
         AppText(
           contract.propertyTitle,
-          style: AppTextStyles.bold16.copyWith(color: AppColors.sokoonNavy),
+          style: AppTextStyles.bold16.copyWith(
+            color: context.appColor(AppColors.sokoonNavy),
+          ),
         ),
         AppText(
           switch (contract.status) {
@@ -46,7 +48,9 @@ class ProfileContractCard extends StatelessWidget {
             'cancelled' => LocaleKeys.profileContractCancelled,
             _ => LocaleKeys.profileContractUnknown,
           },
-          style: AppTextStyles.regular14.copyWith(color: AppColors.sokoonGray),
+          style: AppTextStyles.regular14.copyWith(
+            color: context.appColor(AppColors.sokoonGray),
+          ),
         ),
         if (contract.startDate.isNotEmpty)
           AppText(

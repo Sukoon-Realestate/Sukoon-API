@@ -46,7 +46,7 @@ class OwnerCalendarDay extends StatelessWidget {
                 AppText(
                   '$day',
                   style: AppTextStyles.regular13.copyWith(
-                    color: AppColors.sokoonNavy,
+                    color: context.appColor(AppColors.sokoonNavy),
                     fontSize: 13.sp,
                     fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                     height: 1.45,
@@ -60,8 +60,14 @@ class OwnerCalendarDay extends StatelessWidget {
                       height: 5.r,
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? AppColors.sokoonNavy
-                            : AppColors.sokoonTeal,
+                            ? context.appColor(
+                                AppColors.sokoonNavy,
+                                surface: true,
+                              )
+                            : context.appColor(
+                                AppColors.sokoonTeal,
+                                surface: true,
+                              ),
                         shape: BoxShape.circle,
                       ),
                     ),

@@ -35,7 +35,7 @@ class ProfileMenuSection extends StatelessWidget {
         AppText(
           title,
           style: AppTextStyles.bold12.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 12.sp,
             height: 1.45,
           ),
@@ -50,8 +50,11 @@ class ProfileMenuSection extends StatelessWidget {
                   return ProfileMenuTile(
                     icon: item.icon,
                     label: item.label,
-                    iconColor: item.color,
-                    iconBackgroundColor: item.backgroundColor,
+                    iconColor: context.appColor(item.color),
+                    iconBackgroundColor: context.appColor(
+                      item.backgroundColor,
+                      surface: true,
+                    ),
                     onTap: item.onTap,
                     showDivider: index < items.length - 1,
                   );

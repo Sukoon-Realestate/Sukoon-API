@@ -52,9 +52,11 @@ class NotificationDetailsContent extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(24.r),
             decoration: BoxDecoration(
-              color: AppColors.white,
+              color: context.appColor(AppColors.white, surface: true),
               borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(color: AppColors.sokoonBorder),
+              border: Border.all(
+                color: context.appColor(AppColors.sokoonBorder),
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,7 +71,7 @@ class NotificationDetailsContent extends StatelessWidget {
                   AppText(
                     notification.category,
                     style: AppTextStyles.bold11.copyWith(
-                      color: AppColors.sokoonGray,
+                      color: context.appColor(AppColors.sokoonGray),
                       fontSize: 11.sp,
                       height: 1.45,
                     ),
@@ -80,7 +82,7 @@ class NotificationDetailsContent extends StatelessWidget {
                 AppText(
                   notification.title,
                   style: AppTextStyles.bold.copyWith(
-                    color: AppColors.sokoonNavy,
+                    color: context.appColor(AppColors.sokoonNavy),
                     fontSize: 20.sp,
                   ),
                   maxLines: 3,
@@ -89,7 +91,7 @@ class NotificationDetailsContent extends StatelessWidget {
                 AppText(
                   notification.description,
                   style: AppTextStyles.regular14.copyWith(
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                     fontSize: 14.sp,
                     height: 1.7,
                   ),
@@ -107,7 +109,7 @@ class NotificationDetailsContent extends StatelessWidget {
                         ? notification.formattedTime
                         : notification.time,
                     style: AppTextStyles.regular11.copyWith(
-                      color: AppColors.sokoonGray,
+                      color: context.appColor(AppColors.sokoonGray),
                       fontSize: 11.sp,
                       height: 1.45,
                     ),
@@ -124,7 +126,7 @@ class NotificationDetailsContent extends StatelessWidget {
                 child: DefaultButton(
                   onTap: onPrimaryPressed,
                   title: _primaryActionLabel,
-                  color: AppColors.sokoonTeal,
+                  color: context.appColor(AppColors.sokoonTeal, surface: true),
                   textColor: AppColors.white,
                   borderRadius: BorderRadius.circular(16.r),
                   height: 50.h,
@@ -135,9 +137,9 @@ class NotificationDetailsContent extends StatelessWidget {
                 child: DefaultButton(
                   onTap: onDismissPressed,
                   title: _secondaryActionLabel,
-                  color: AppColors.white,
-                  textColor: AppColors.sokoonNavy,
-                  borderColor: AppColors.sokoonBorder,
+                  color: context.appColor(AppColors.white, surface: true),
+                  textColor: context.appColor(AppColors.sokoonNavy),
+                  borderColor: context.appColor(AppColors.sokoonBorder),
                   borderRadius: BorderRadius.circular(16.r),
                   height: 50.h,
                   textStyle: AppTextStyles.extraBold.copyWith(fontSize: 14.sp),
@@ -161,7 +163,7 @@ class _NotificationContextCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
       decoration: BoxDecoration(
-        color: AppColors.mintLight,
+        color: context.appColor(AppColors.mintLight, surface: true),
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Column(
@@ -171,7 +173,7 @@ class _NotificationContextCard extends StatelessWidget {
             AppText(
               notification.detailLabel,
               style: AppTextStyles.extraBold13.copyWith(
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
                 fontSize: 13.sp,
                 height: 1.45,
               ),
@@ -183,7 +185,7 @@ class _NotificationContextCard extends StatelessWidget {
             AppText(
               notification.detailDate,
               style: AppTextStyles.regular13.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 13.sp,
                 height: 1.45,
               ),
@@ -194,7 +196,7 @@ class _NotificationContextCard extends StatelessWidget {
             AppText(
               notification.detailLocation,
               style: AppTextStyles.regular12.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 12.sp,
                 height: 1.45,
               ),

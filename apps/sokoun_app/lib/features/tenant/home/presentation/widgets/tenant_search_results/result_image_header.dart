@@ -47,7 +47,7 @@ class ResultImageHeader extends StatelessWidget {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: AppColors.sokoonTeal,
+                  color: context.appColor(AppColors.sokoonTeal, surface: true),
                   borderRadius: BorderRadius.circular(7.r),
                 ),
                 child: AppText(

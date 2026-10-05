@@ -186,14 +186,18 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
                 ? widget.maxLines ?? 7
                 : 1,
             minLines: widget.minLines,
-            style: widget.style,
+            style: widget.style?.copyWith(
+              color: widget.style?.color == null
+                  ? null
+                  : context.appColor(widget.style!.color!),
+            ),
             onFieldSubmitted: widget.onSubmitted,
             textInputAction: widget.action,
             enableSuggestions: false,
             autocorrect: false,
             autofocus: widget.autoFocus,
             focusNode: widget.focusNode,
-            cursorColor: AppColors.primary,
+            cursorColor: context.appColor(AppColors.primary),
             decoration: InputDecoration(
               isDense: true,
               errorMaxLines: 3,
@@ -216,15 +220,20 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
                     )
                   : widget.suffixIcon,
               prefix: widget.prefixWidget,
-              fillColor: widget.fillColor ?? Colors.white,
+              fillColor: context.appColor(
+                widget.fillColor ?? AppColors.white,
+                surface: true,
+              ),
               hintText: widget.title,
               label: isLabel ? Text(widget.label!) : null,
               labelStyle: isLabel
-                  ? const TextStyle(color: AppColors.primary)
+                  ? TextStyle(color: context.appColor(AppColors.primary))
                   : null,
               hintStyle: TextStyle(
                 fontSize: 13,
-                color: Colors.grey[600],
+                color: Theme.of(context).extension<AppColorTheme>() == null
+                    ? Colors.grey[600]
+                    : context.appColor(AppColors.sokoonMuted),
                 fontWeight: FontWeight.w300,
                 fontFamily: ConstantManager.fontFamily,
               ),
@@ -233,14 +242,20 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
                   widget.borderRadius ?? AppCircular.r12,
                 ),
                 borderSide: widget.hasBorderColor == true
-                    ? BorderSide(color: widget.borderColor ?? AppColors.border)
+                    ? BorderSide(
+                        color: context.appColor(
+                          widget.borderColor ?? AppColors.border,
+                        ),
+                      )
                     : BorderSide.none,
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(
                   widget.borderRadius ?? AppCircular.r12,
                 ),
-                borderSide: const BorderSide(color: AppColors.primary),
+                borderSide: BorderSide(
+                  color: context.appColor(AppColors.primary),
+                ),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(

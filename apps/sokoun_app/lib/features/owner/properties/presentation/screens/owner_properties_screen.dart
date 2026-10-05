@@ -170,7 +170,10 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
             icon: const Icon(Icons.add_rounded),
           ),
         ],
-        backgroundColor: AppColors.scaffoldBackground,
+        backgroundColor: context.appColor(
+          AppColors.scaffoldBackground,
+          surface: true,
+        ),
         contentWidth: SokounContentWidth.wide,
         body: SafeArea(
           child: ValueListenableBuilder<bool>(
@@ -209,7 +212,7 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
                     child: ColoredBox(
                       color: AppColors.whiteAlpha60,
                       child: CustomLoading.showLoadingView(
-                        color: AppColors.sokoonTeal,
+                        color: context.appColor(AppColors.sokoonTeal),
                       ),
                     ),
                   ),

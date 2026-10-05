@@ -28,7 +28,10 @@ class OwnerVisitRequestActionRow extends StatelessWidget {
         Expanded(
           child: _ActionButton(
             label: LocaleKeys.ownerVisitAccept,
-            backgroundColor: AppColors.sokoonTeal,
+            backgroundColor: context.appColor(
+              AppColors.sokoonTeal,
+              surface: true,
+            ),
             foregroundColor: AppColors.white,
             onPressed: onAcceptPressed,
             isLoading: isAccepting,
@@ -37,9 +40,9 @@ class OwnerVisitRequestActionRow extends StatelessWidget {
         Expanded(
           child: _ActionButton(
             label: LocaleKeys.ownerVisitReject,
-            backgroundColor: AppColors.white,
-            foregroundColor: AppColors.sokoonRose,
-            borderColor: AppColors.sokoonRose,
+            backgroundColor: context.appColor(AppColors.white, surface: true),
+            foregroundColor: context.appColor(AppColors.sokoonRose),
+            borderColor: context.appColor(AppColors.sokoonRose),
             onPressed: onRejectPressed,
             isLoading: isRejecting,
           ),
@@ -77,22 +80,24 @@ class _ActionButton extends StatelessWidget {
           height: 40.h,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: backgroundColor,
+            color: context.appColor(backgroundColor, surface: true),
             borderRadius: BorderRadius.circular(10.r),
-            border: Border.all(color: borderColor ?? backgroundColor),
+            border: Border.all(
+              color: context.appColor(borderColor ?? backgroundColor),
+            ),
           ),
           child: isLoading
               ? SizedBox.square(
                   dimension: 18.r,
                   child: CustomLoading.showLoadingView(
-                    color: foregroundColor,
+                    color: context.appColor(foregroundColor),
                     size: 18.r,
                   ),
                 )
               : AppText(
                   label,
                   style: AppTextStyles.bold14.copyWith(
-                    color: foregroundColor,
+                    color: context.appColor(foregroundColor),
                     fontSize: 14.sp,
                     height: 1.45,
                   ),

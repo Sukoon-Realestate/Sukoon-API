@@ -7,9 +7,9 @@ class VisitNoteCard extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     padding: EdgeInsets.all(16.r),
     decoration: BoxDecoration(
-      color: AppColors.white,
+      color: context.appColor(AppColors.white, surface: true),
       borderRadius: BorderRadius.circular(16.r),
-      border: Border.all(color: AppColors.sokoonBorder),
+      border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
     ),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

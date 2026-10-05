@@ -50,7 +50,10 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
     return AppScaffold(
       title: LocaleKeys.languageSelectionTitle,
       showBackButton: true,
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: context.appColor(
+        AppColors.scaffoldBackground,
+        surface: true,
+      ),
       body: SafeArea(
         child: Stack(
           fit: StackFit.expand,
@@ -88,7 +91,10 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                         child: AppLoadingButton(
                           asyncCall: _confirmLanguage,
                           title: LocaleKeys.confirm,
-                          buttonColor: AppColors.sokoonTeal,
+                          buttonColor: context.appColor(
+                            AppColors.sokoonTeal,
+                            surface: true,
+                          ),
                           borderRadius: 12.r,
                           height: 48.h,
                           textStyle: AppTextStyles.bold15.copyWith(

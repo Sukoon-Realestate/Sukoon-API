@@ -19,7 +19,7 @@ class KycPrivacyCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
       decoration: BoxDecoration(
-        color: AppColors.mintPale,
+        color: context.appColor(AppColors.mintPale, surface: true),
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(color: AppColors.tealAlpha13),
       ),
@@ -36,7 +36,7 @@ class KycPrivacyCard extends StatelessWidget {
             ),
             child: Icon(
               Icons.lock_outline_rounded,
-              color: AppColors.sokoonTeal,
+              color: context.appColor(AppColors.sokoonTeal),
               size: 18.r,
             ),
           ),
@@ -49,7 +49,7 @@ class KycPrivacyCard extends StatelessWidget {
                 AppText(
                   title,
                   style: AppTextStyles.extraBold13.copyWith(
-                    color: AppColors.sokoonNavy,
+                    color: context.appColor(AppColors.sokoonNavy),
                     fontSize: 13.sp,
                     height: 1.45,
                   ),
@@ -59,7 +59,7 @@ class KycPrivacyCard extends StatelessWidget {
                 AppText(
                   subtitle,
                   style: AppTextStyles.regular11.copyWith(
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                     fontSize: 11.sp,
                     height: 1.45,
                   ),

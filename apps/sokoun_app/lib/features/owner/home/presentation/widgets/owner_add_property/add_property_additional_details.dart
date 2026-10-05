@@ -254,7 +254,7 @@ class _AddPropertyAdditionalDetailsState
         AppText(LocaleKeys.ownerAddPropertyProofTitle),
         AppText(
           LocaleKeys.ownerAddPropertyProofInternal,
-          color: AppColors.sokoonGray,
+          color: context.appColor(AppColors.sokoonGray),
         ),
         if (widget.form.hasOwnershipProof)
           AppText(LocaleKeys.ownerAddPropertyProofAttached),
@@ -283,13 +283,13 @@ class _AddPropertyAdditionalDetailsState
                             removeOwnershipProof: true,
                           ),
                         ),
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.delete_outline_rounded,
-                    color: AppColors.red,
+                    color: context.appColor(AppColors.red),
                   ),
                   label: AppText(
                     LocaleKeys.ownerPropertiesDelete,
-                    color: AppColors.red,
+                    color: context.appColor(AppColors.red),
                   ),
                 ),
             ],

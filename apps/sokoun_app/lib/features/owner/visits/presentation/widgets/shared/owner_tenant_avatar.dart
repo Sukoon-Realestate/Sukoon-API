@@ -29,7 +29,9 @@ class OwnerTenantAvatar extends StatelessWidget {
     final Widget fallback = Center(
       child: AppText(
         label,
-        style: AppTextStyles.bold16.copyWith(color: AppColors.sokoonTeal),
+        style: AppTextStyles.bold16.copyWith(
+          color: context.appColor(AppColors.sokoonTeal),
+        ),
       ),
     );
     return ExcludeSemantics(

@@ -61,10 +61,14 @@ class _FilterChip extends StatelessWidget {
           constraints: BoxConstraints(minHeight: 48.h),
           padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 8.h),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.sokoonTeal : AppColors.white,
+            color: isSelected
+                ? context.appColor(AppColors.sokoonTeal, surface: true)
+                : context.appColor(AppColors.white, surface: true),
             borderRadius: BorderRadius.circular(999.r),
             border: Border.all(
-              color: isSelected ? AppColors.sokoonTeal : AppColors.grayPale,
+              color: isSelected
+                  ? context.appColor(AppColors.sokoonTeal)
+                  : context.appColor(AppColors.grayPale),
             ),
           ),
           child: Row(
@@ -75,7 +79,9 @@ class _FilterChip extends StatelessWidget {
                 child: AppText(
                   filter.label,
                   style: AppTextStyles.bold12.copyWith(
-                    color: isSelected ? AppColors.white : AppColors.sokoonNavy,
+                    color: isSelected
+                        ? AppColors.white
+                        : context.appColor(AppColors.sokoonNavy),
                     fontSize: 12.sp,
                     height: 1.45,
                   ),
@@ -87,7 +93,7 @@ class _FilterChip extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? AppColors.whiteAlpha40
-                        : AppColors.grayPale,
+                        : context.appColor(AppColors.grayPale, surface: true),
                     borderRadius: BorderRadius.circular(8.r),
                   ),
                   child: AppText(
@@ -95,7 +101,7 @@ class _FilterChip extends StatelessWidget {
                     style: AppTextStyles.bold10.copyWith(
                       color: isSelected
                           ? AppColors.white
-                          : AppColors.sokoonGray,
+                          : context.appColor(AppColors.sokoonGray),
                       fontSize: 10.sp,
                       height: 1.45,
                     ),

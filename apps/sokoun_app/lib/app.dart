@@ -1,13 +1,11 @@
 import 'dart:async';
 
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/notification/inactivity_notification_service.dart';
-import 'package:melos_core/core/shared/route_observer.dart';
 import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 import 'package:melos_core/core/network/account_session.dart';
 import 'package:sokoun_app/features/main_view/presentation/cubits/workspace_cubit.dart';
@@ -17,7 +15,9 @@ import 'package:sokoun_app/features/shared/notifications/data/notification_devic
 import 'package:sokoun_app/features/shared/chat/data/chat_realtime_service.dart';
 import 'features/splash_screen.dart';
 import 'package:toastification/toastification.dart';
-import 'package:sokoun_app/shared_widgets/sokoun_theme.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_themed_app.dart';
+import 'features/shared/appearance/data/theme_preferences.dart';
+import 'features/shared/appearance/presentation/cubits/theme_cubit.dart';
 
 class Sokoon extends StatefulWidget {
   const Sokoon({super.key});
@@ -27,12 +27,14 @@ class Sokoon extends StatefulWidget {
 }
 
 class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
+  late final ThemeCubit _themeCubit;
   StreamSubscription<void>? _expiredSubscription;
   StreamSubscription<UserState>? _userSubscription;
   bool _hadSession = false;
   @override
   void initState() {
     super.initState();
+    _themeCubit = ThemeCubit(initialMode: ThemePreferences.read());
     WidgetsBinding.instance.addObserver(this);
     if (!injector.isRegistered<WorkspaceCubit>()) {
       injector.registerSingleton<WorkspaceCubit>(WorkspaceCubit());
@@ -65,6 +67,7 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     _expiredSubscription?.cancel();
     _userSubscription?.cancel();
+    _themeCubit.close();
     super.dispose();
   }
 
@@ -86,25 +89,13 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
       enableScaleText: () => false,
       fontSizeResolver: (size, _) => size.toDouble(),
       builder: (ctx, child) {
-        return BlocProvider(
-          create: (context) => injector<UserCubit>(),
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => injector<UserCubit>()),
+            BlocProvider.value(value: _themeCubit),
+          ],
           child: ToastificationWrapper(
-            child: MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: ConstantManager.projectName,
-              theme: SokounTheme.light,
-              localizationsDelegates: context.localizationDelegates,
-              supportedLocales: context.supportedLocales,
-              locale: context.locale,
-              navigatorKey: Go.navigatorKey,
-              home: SplashScreen(),
-              builder: (context, child) {
-                return Overlay(
-                  initialEntries: [OverlayEntry(builder: (context) => child!)],
-                );
-              },
-              navigatorObservers: [AppNavigationObserver.instance],
-            ),
+            child: SokounThemedApp(home: SplashScreen()),
           ),
         );
       },

@@ -65,7 +65,7 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
       heightFactor: .88,
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: context.appColor(AppColors.white, surface: true),
           borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
         ),
         child: SafeArea(
@@ -105,34 +105,43 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
                               minLines: 3,
                               maxLines: 4,
                               style: AppTextStyles.base.copyWith(
-                                color: AppColors.sokoonNavy,
+                                color: context.appColor(AppColors.sokoonNavy),
                                 fontSize: 14.sp,
                               ),
                               decoration: InputDecoration(
                                 hintText: LocaleKeys.chatReportDetailsHint,
                                 hintStyle: AppTextStyles.base.copyWith(
-                                  color: AppColors.sokoonMuted,
+                                  color: context.appColor(
+                                    AppColors.sokoonMuted,
+                                  ),
                                   fontSize: 14.sp,
                                 ),
                                 filled: true,
-                                fillColor: AppColors.white,
+                                fillColor: context.appColor(
+                                  AppColors.white,
+                                  surface: true,
+                                ),
                                 contentPadding: EdgeInsets.all(14.r),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(16.r),
-                                  borderSide: const BorderSide(
-                                    color: AppColors.sokoonBorder,
+                                  borderSide: BorderSide(
+                                    color: context.appColor(
+                                      AppColors.sokoonBorder,
+                                    ),
                                   ),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(16.r),
-                                  borderSide: const BorderSide(
-                                    color: AppColors.sokoonBorder,
+                                  borderSide: BorderSide(
+                                    color: context.appColor(
+                                      AppColors.sokoonBorder,
+                                    ),
                                   ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(16.r),
-                                  borderSide: const BorderSide(
-                                    color: AppColors.red,
+                                  borderSide: BorderSide(
+                                    color: context.appColor(AppColors.red),
                                   ),
                                 ),
                               ),
@@ -144,7 +153,10 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
                           DefaultButton(
                             onTap: submit,
                             title: LocaleKeys.chatSubmitReport,
-                            color: AppColors.red,
+                            color: context.appColor(
+                              AppColors.red,
+                              surface: true,
+                            ),
                             textColor: AppColors.white,
                             borderRadius: BorderRadius.circular(16.r),
                             width: double.infinity,
@@ -160,7 +172,7 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
                             child: AppText(
                               LocaleKeys.cancel,
                               style: AppTextStyles.semiBold.copyWith(
-                                color: AppColors.sokoonGray,
+                                color: context.appColor(AppColors.sokoonGray),
                                 fontSize: 14.sp,
                               ),
                             ),
@@ -190,7 +202,7 @@ class _ReportHeader extends StatelessWidget {
           width: 48.w,
           height: 6.h,
           decoration: BoxDecoration(
-            color: AppColors.sokoonBorder,
+            color: context.appColor(AppColors.sokoonBorder, surface: true),
             borderRadius: BorderRadius.circular(3.r),
           ),
         ),
@@ -202,7 +214,7 @@ class _ReportHeader extends StatelessWidget {
               child: AppText(
                 LocaleKeys.chatReportProblemTitle,
                 style: AppTextStyles.bold.copyWith(
-                  color: AppColors.sokoonNavy,
+                  color: context.appColor(AppColors.sokoonNavy),
                   fontSize: 18.sp,
                 ),
                 textAlign: TextAlign.center,
@@ -214,7 +226,7 @@ class _ReportHeader extends StatelessWidget {
               onPressed: Go.back,
               icon: Icon(
                 Icons.close_rounded,
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 size: 20.r,
               ),
             ),
@@ -223,7 +235,7 @@ class _ReportHeader extends StatelessWidget {
         AppText(
           LocaleKeys.chatReportReasonPrompt,
           style: AppTextStyles.regular14.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 14.sp,
             height: 1.45,
           ),
@@ -254,10 +266,14 @@ class _ReportReasonTile extends StatelessWidget {
         duration: const Duration(milliseconds: 160),
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 13.h),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.redPale : AppColors.scaffoldBackground,
+          color: isSelected
+              ? context.appColor(AppColors.redPale, surface: true)
+              : context.appColor(AppColors.scaffoldBackground, surface: true),
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: isSelected ? AppColors.red : AppColors.sokoonBorder,
+            color: isSelected
+                ? context.appColor(AppColors.red)
+                : context.appColor(AppColors.sokoonBorder),
           ),
         ),
         child: Row(
@@ -270,14 +286,16 @@ class _ReportReasonTile extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected ? AppColors.red : AppColors.sokoonBorder,
+                  color: isSelected
+                      ? context.appColor(AppColors.red)
+                      : context.appColor(AppColors.sokoonBorder),
                   width: 2.w,
                 ),
               ),
               child: isSelected
-                  ? const DecoratedBox(
+                  ? DecoratedBox(
                       decoration: BoxDecoration(
-                        color: AppColors.red,
+                        color: context.appColor(AppColors.red, surface: true),
                         shape: BoxShape.circle,
                       ),
                     )
@@ -287,7 +305,7 @@ class _ReportReasonTile extends StatelessWidget {
               child: AppText(
                 label,
                 style: AppTextStyles.regular14.copyWith(
-                  color: AppColors.sokoonNavy,
+                  color: context.appColor(AppColors.sokoonNavy),
                   fontSize: 14.sp,
                   height: 1.45,
                 ),

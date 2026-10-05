@@ -185,7 +185,10 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
       child: AppScaffold(
         title: LocaleKeys.ownerAvailabilityTitle,
         showBackButton: true,
-        backgroundColor: AppColors.scaffoldBackground,
+        backgroundColor: context.appColor(
+          AppColors.scaffoldBackground,
+          surface: true,
+        ),
         body: SafeArea(
           child:
               StatusBuilder<

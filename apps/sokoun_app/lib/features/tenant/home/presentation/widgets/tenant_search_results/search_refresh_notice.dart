@@ -31,7 +31,7 @@ class SearchRefreshNotice extends StatelessWidget {
                 ? LocaleKeys.searchUpdatingPreviousResults
                 : errorMessage ?? '',
             style: AppTextStyles.regular13.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
             ),
           ),
           if (isLoading)

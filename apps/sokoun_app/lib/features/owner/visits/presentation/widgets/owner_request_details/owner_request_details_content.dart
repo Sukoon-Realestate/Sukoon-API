@@ -46,9 +46,9 @@ class _OwnerTenantNoteCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.sokoonBorder),
+        border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -57,7 +57,7 @@ class _OwnerTenantNoteCard extends StatelessWidget {
           AppText(
             LocaleKeys.ownerVisitTenantNoteTitle,
             style: AppTextStyles.bold14.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 14.sp,
               height: 1.45,
             ),
@@ -65,7 +65,7 @@ class _OwnerTenantNoteCard extends StatelessWidget {
           AppText(
             note,
             style: AppTextStyles.regular14.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 14.sp,
               height: 1.45,
             ),

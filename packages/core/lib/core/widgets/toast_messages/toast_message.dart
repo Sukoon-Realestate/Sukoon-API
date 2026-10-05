@@ -18,6 +18,7 @@ class Messages {
     Duration autoCloseDuration = const Duration(seconds: 4),
   }) {
     assert((actionLabel == null) == (onAction == null));
+    final BuildContext context = Go.context;
     final _ToastDesign design = _ToastDesign.fromStatus(status);
     final Widget description = AppText(
       msg,
@@ -62,20 +63,20 @@ class Messages {
                     onAction();
                   },
                   style: TextButton.styleFrom(
-                    foregroundColor: design.accentColor,
+                    foregroundColor: context.appColor(design.accentColor),
                   ),
                   child: AppText(actionLabel!),
                 ),
               ],
             ),
       icon: _ToastIcon(design: design),
-      primaryColor: design.accentColor,
-      backgroundColor: design.backgroundColor,
-      foregroundColor: design.accentColor,
+      primaryColor: context.appColor(design.accentColor),
+      backgroundColor: context.appColor(design.backgroundColor, surface: true),
+      foregroundColor: context.appColor(design.accentColor),
       padding: EdgeInsetsDirectional.fromSTEB(14.w, 12.h, 10.w, 12.h),
       margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       borderRadius: BorderRadius.circular(16.r),
-      borderSide: BorderSide(color: design.borderColor),
+      borderSide: BorderSide(color: context.appColor(design.borderColor)),
       boxShadow: const [
         BoxShadow(
           color: AppColors.shadowBlack04,
@@ -84,7 +85,7 @@ class Messages {
         ),
       ],
       progressBarTheme: ProgressIndicatorThemeData(
-        color: design.accentColor,
+        color: context.appColor(design.accentColor),
         linearMinHeight: 2.r,
         linearTrackColor: design.borderColor,
       ),
@@ -97,7 +98,7 @@ class Messages {
           constraints: BoxConstraints.tight(Size(32.r, 32.r)),
           icon: Icon(
             Icons.close_rounded,
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             size: 18.r,
           ),
         ),
@@ -123,10 +124,14 @@ class _ToastIcon extends StatelessWidget {
       width: 32.r,
       height: 32.r,
       decoration: BoxDecoration(
-        color: design.iconBackgroundColor,
+        color: context.appColor(design.iconBackgroundColor, surface: true),
         borderRadius: BorderRadius.circular(12.r),
       ),
-      child: Icon(design.icon, color: design.accentColor, size: 18.r),
+      child: Icon(
+        design.icon,
+        color: context.appColor(design.accentColor),
+        size: 18.r,
+      ),
     );
   }
 }

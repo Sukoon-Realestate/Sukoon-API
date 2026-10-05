@@ -14,16 +14,18 @@ class ProfileVerificationBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color color = isPrivacy ? AppColors.blue : AppColors.green;
+    final Color color = isPrivacy
+        ? context.appColor(AppColors.blue)
+        : context.appColor(AppColors.green);
     final Color backgroundColor = isPrivacy
-        ? AppColors.bluePale
-        : AppColors.greenPale;
+        ? context.appColor(AppColors.bluePale, surface: true)
+        : context.appColor(AppColors.greenPale, surface: true);
 
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 13.h),
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: context.appColor(backgroundColor, surface: true),
         borderRadius: BorderRadius.circular(14.r),
       ),
       child: Row(
@@ -33,7 +35,7 @@ class ProfileVerificationBanner extends StatelessWidget {
             isPrivacy
                 ? Icons.lock_outline_rounded
                 : Icons.check_circle_outline_rounded,
-            color: color,
+            color: context.appColor(color),
             size: isPrivacy ? 17.r : 22.r,
           ),
           Expanded(
@@ -45,7 +47,7 @@ class ProfileVerificationBanner extends StatelessWidget {
                   AppText(
                     title,
                     style: AppTextStyles.extraBold13.copyWith(
-                      color: color,
+                      color: context.appColor(color),
                       fontSize: 13.sp,
                       height: 1.45,
                     ),
@@ -53,7 +55,9 @@ class ProfileVerificationBanner extends StatelessWidget {
                 AppText(
                   description,
                   style: AppTextStyles.regular11.copyWith(
-                    color: isPrivacy ? color : AppColors.sokoonGray,
+                    color: isPrivacy
+                        ? color
+                        : context.appColor(AppColors.sokoonGray),
                     fontSize: 11.sp,
                     height: 1.35,
                     fontWeight: isPrivacy ? FontWeight.w600 : FontWeight.w400,

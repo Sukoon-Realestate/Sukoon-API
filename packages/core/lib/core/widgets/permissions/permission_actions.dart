@@ -63,9 +63,9 @@ class PermissionActions extends StatelessWidget {
         10.szH,
         DefaultButton(
           onTap: onNotNowPressed,
-          color: AppColors.white,
+          color: context.appColor(AppColors.white, surface: true),
           borderRadius: radius,
-          borderColor: AppColors.sokoonBorder,
+          borderColor: context.appColor(AppColors.sokoonBorder),
           borderWidth: 1.5,
           width: double.infinity,
           minHeight: 44.h,
@@ -73,7 +73,7 @@ class PermissionActions extends StatelessWidget {
           isFitted: false,
           customChild: AppText(
             LocaleKeys.permissionNotNow,
-            color: AppColors.sokoonNavy,
+            color: context.appColor(AppColors.sokoonNavy),
             fontSize: 14.sp,
             fontWeight: FontWeight.w500,
             textAlign: TextAlign.center,

@@ -277,7 +277,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           onPressed: _openFilters,
         ),
       ],
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: context.appColor(
+        AppColors.scaffoldBackground,
+        surface: true,
+      ),
       contentWidth: SokounContentWidth.wide,
       body: SafeArea(
         child: FavoritesContentView(

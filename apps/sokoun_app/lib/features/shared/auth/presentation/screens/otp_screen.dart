@@ -127,12 +127,12 @@ class _OtpScreenState extends State<OtpScreen> {
               width: 64.r,
               height: 64.r,
               decoration: BoxDecoration(
-                color: AppColors.mintLight,
+                color: context.appColor(AppColors.mintLight, surface: true),
                 borderRadius: BorderRadius.circular(18.r),
               ),
               child: Icon(
                 Icons.mail_outline_rounded,
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
                 size: 30.r,
               ),
             ).centerWidget,
@@ -140,7 +140,7 @@ class _OtpScreenState extends State<OtpScreen> {
             AppText(
               LocaleKeys.otpSentToEmail,
               style: AppTextStyles.extraBold.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 18.sp,
               ),
               textAlign: TextAlign.center,
@@ -149,7 +149,7 @@ class _OtpScreenState extends State<OtpScreen> {
             AppText(
               _maskedEmail,
               style: AppTextStyles.bold14.copyWith(
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
                 fontSize: 14.sp,
                 height: 1.45,
               ),
@@ -159,7 +159,7 @@ class _OtpScreenState extends State<OtpScreen> {
             AppText(
               LocaleKeys.otpCodeExpiresInTenMinutes,
               style: AppTextStyles.regular12.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
               ),
               textAlign: TextAlign.center,
             ),
@@ -186,7 +186,10 @@ class _OtpScreenState extends State<OtpScreen> {
                   AppLoadingButton(
                     asyncCall: (_) => submit(),
                     title: LocaleKeys.confirmLogin,
-                    buttonColor: AppColors.sokoonTeal,
+                    buttonColor: context.appColor(
+                      AppColors.sokoonTeal,
+                      surface: true,
+                    ),
                     textColor: AppColors.white,
                     borderRadius: 14.r,
                     height: 52.h,
@@ -213,7 +216,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         ? SizedBox.square(
                             dimension: 16.r,
                             child: CustomLoading.showLoadingView(
-                              color: AppColors.sokoonTeal,
+                              color: context.appColor(AppColors.sokoonTeal),
                               size: 16.r,
                             ),
                           )
@@ -221,8 +224,8 @@ class _OtpScreenState extends State<OtpScreen> {
                             LocaleKeys.resendCode,
                             style: AppTextStyles.bold13.copyWith(
                               color: uiState.canResend
-                                  ? AppColors.sokoonTeal
-                                  : AppColors.sokoonMuted,
+                                  ? context.appColor(AppColors.sokoonTeal)
+                                  : context.appColor(AppColors.sokoonMuted),
                               fontSize: 13.sp,
                               height: 1.45,
                             ),

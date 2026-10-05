@@ -16,18 +16,22 @@ class ChatVerificationWarning extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: AppColors.orangePale,
+        color: context.appColor(AppColors.orangePale, surface: true),
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Row(
         children: [
-          Icon(Icons.warning_amber_rounded, color: AppColors.amber, size: 16.r),
+          Icon(
+            Icons.warning_amber_rounded,
+            color: context.appColor(AppColors.amber),
+            size: 16.r,
+          ),
           8.szW,
           Expanded(
             child: AppText(
               LocaleKeys.chatVerifiedOnlyBanner,
               style: AppTextStyles.medium12.copyWith(
-                color: AppColors.brown,
+                color: context.appColor(AppColors.brown),
                 fontSize: 12.sp,
                 height: 1.45,
               ),
@@ -39,7 +43,7 @@ class ChatVerificationWarning extends StatelessWidget {
             child: AppText(
               LocaleKeys.chatVerifyNow,
               style: AppTextStyles.extraBold.copyWith(
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
                 fontSize: 12.sp,
               ),
             ),

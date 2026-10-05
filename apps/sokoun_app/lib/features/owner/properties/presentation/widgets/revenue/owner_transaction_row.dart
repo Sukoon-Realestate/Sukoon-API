@@ -8,8 +8,8 @@ class OwnerTransactionRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color amountColor = transaction.isCredit
-        ? AppColors.green
-        : AppColors.red;
+        ? context.appColor(AppColors.green)
+        : context.appColor(AppColors.red);
     final String sign = transaction.isCredit ? '+' : '-';
 
     return Row(
@@ -19,15 +19,15 @@ class OwnerTransactionRow extends StatelessWidget {
           height: 40.r,
           decoration: BoxDecoration(
             color: transaction.isCredit
-                ? AppColors.greenPale
-                : AppColors.redPale,
+                ? context.appColor(AppColors.greenPale, surface: true)
+                : context.appColor(AppColors.redPale, surface: true),
             borderRadius: BorderRadius.circular(12.r),
           ),
           child: Icon(
             transaction.isCredit
                 ? Icons.south_west_rounded
                 : Icons.north_east_rounded,
-            color: amountColor,
+            color: context.appColor(amountColor),
             size: 20.r,
           ),
         ),
@@ -40,7 +40,7 @@ class OwnerTransactionRow extends StatelessWidget {
               AppText(
                 transaction.title,
                 style: AppTextStyles.extraBold13.copyWith(
-                  color: AppColors.sokoonNavy,
+                  color: context.appColor(AppColors.sokoonNavy),
                   fontSize: 13.sp,
                   height: 1.45,
                 ),
@@ -48,7 +48,7 @@ class OwnerTransactionRow extends StatelessWidget {
               AppText(
                 transaction.date,
                 style: AppTextStyles.regular11.copyWith(
-                  color: AppColors.sokoonMuted,
+                  color: context.appColor(AppColors.sokoonMuted),
                   fontSize: 11.sp,
                   height: 1.45,
                 ),
@@ -59,7 +59,7 @@ class OwnerTransactionRow extends StatelessWidget {
         AppText(
           '$sign${EgyptianPoundText.format(transaction.amount.abs())}',
           style: AppTextStyles.bold13.copyWith(
-            color: amountColor,
+            color: context.appColor(amountColor),
             fontSize: 13.sp,
             height: 1.45,
           ),

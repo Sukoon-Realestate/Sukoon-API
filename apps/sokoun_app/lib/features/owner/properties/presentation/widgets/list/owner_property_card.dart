@@ -26,7 +26,7 @@ class OwnerPropertyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.white,
+      color: context.appColor(AppColors.white, surface: true),
       borderRadius: BorderRadius.circular(20.r),
       child: InkWell(
         onTap: _openProperty,
@@ -35,7 +35,7 @@ class OwnerPropertyCard extends StatelessWidget {
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(color: AppColors.sokoonBorder),
+            border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
             boxShadow: const [
               BoxShadow(
                 color: AppColors.shadowBlack04,
@@ -55,7 +55,10 @@ class OwnerPropertyCard extends StatelessWidget {
                     width: 80.r,
                     height: 80.r,
                     decoration: BoxDecoration(
-                      color: AppColors.grayBluePale,
+                      color: context.appColor(
+                        AppColors.grayBluePale,
+                        surface: true,
+                      ),
                       borderRadius: BorderRadius.circular(16.r),
                     ),
                     child: property.mainImage.isEmpty
@@ -84,7 +87,7 @@ class OwnerPropertyCard extends StatelessWidget {
                         AppText(
                           property.title,
                           style: AppTextStyles.bold14.copyWith(
-                            color: AppColors.sokoonNavy,
+                            color: context.appColor(AppColors.sokoonNavy),
                             fontSize: 14.sp,
                             height: 1.45,
                           ),
@@ -101,7 +104,7 @@ class OwnerPropertyCard extends StatelessWidget {
                             period: property.pricePeriod,
                           ),
                           style: AppTextStyles.bold16.copyWith(
-                            color: AppColors.sokoonTeal,
+                            color: context.appColor(AppColors.sokoonTeal),
                             fontSize: 16.sp,
                             height: 1.45,
                           ),
@@ -112,7 +115,7 @@ class OwnerPropertyCard extends StatelessWidget {
                           '${property.views} ${LocaleKeys.ownerPropertiesViewUnit}'
                           ' · ${property.visitRequests} ${LocaleKeys.ownerPropertiesVisitUnit}',
                           style: AppTextStyles.regular12.copyWith(
-                            color: AppColors.sokoonGray,
+                            color: context.appColor(AppColors.sokoonGray),
                             fontSize: 12.sp,
                             height: 1.45,
                           ),
@@ -129,21 +132,29 @@ class OwnerPropertyCard extends StatelessWidget {
                 children: [
                   _OwnerPropertyCardAction(
                     label: LocaleKeys.ownerPropertiesEdit,
-                    foregroundColor: AppColors.blue,
-                    backgroundColor: AppColors.bluePale,
+                    foregroundColor: context.appColor(AppColors.blue),
+                    backgroundColor: context.appColor(
+                      AppColors.bluePale,
+                      surface: true,
+                    ),
                     onPressed: onEditPressed,
                   ),
                   _OwnerPropertyCardAction(
                     label: LocaleKeys.ownerAnalyticsTitle,
-                    foregroundColor: AppColors.sokoonTeal,
-                    backgroundColor: AppColors.mintLight,
+                    foregroundColor: context.appColor(AppColors.sokoonTeal),
+                    backgroundColor: context.appColor(
+                      AppColors.mintLight,
+                      surface: true,
+                    ),
                     onPressed: () =>
                         Go.to(OwnerPropertyAnalyticsScreen(property: property)),
                   ),
                   _OwnerPropertyCardAction(
                     label: LocaleKeys.ownerPropertiesDeleteProperty,
-                    foregroundColor: AppColors.red,
-                    backgroundColor: AppColors.red.withValues(alpha: .2),
+                    foregroundColor: context.appColor(AppColors.red),
+                    backgroundColor: context
+                        .appColor(AppColors.red, surface: true)
+                        .withValues(alpha: .2),
                     onPressed: onDeletePressed,
                   ),
                 ],
@@ -172,7 +183,7 @@ class _OwnerPropertyCardAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: backgroundColor,
+      color: context.appColor(backgroundColor, surface: true),
       borderRadius: BorderRadius.circular(12.r),
       child: InkWell(
         onTap: onPressed,
@@ -182,7 +193,7 @@ class _OwnerPropertyCardAction extends StatelessWidget {
           child: AppText(
             label,
             style: AppTextStyles.bold12.copyWith(
-              color: foregroundColor,
+              color: context.appColor(foregroundColor),
               fontSize: 12.sp,
               height: 1.45,
             ),

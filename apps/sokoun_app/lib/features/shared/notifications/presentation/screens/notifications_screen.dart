@@ -164,7 +164,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             ),
           ),
         ],
-        backgroundColor: AppColors.scaffoldBackground,
+        backgroundColor: context.appColor(
+          AppColors.scaffoldBackground,
+          surface: true,
+        ),
         body: SafeArea(
           child: ValueListenableBuilder<List<AppNotificationContent>?>(
             valueListenable: _fixtureNotifications,

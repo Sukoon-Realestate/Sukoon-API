@@ -201,7 +201,10 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
           icon: const Icon(Icons.calendar_month_outlined),
         ),
       ],
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: context.appColor(
+        AppColors.scaffoldBackground,
+        surface: true,
+      ),
       body: SafeArea(
         child:
             ValueListenableBuilder<

@@ -63,7 +63,8 @@ class AppLoadingButton extends StatelessWidget {
           ConstantManager.buttonBorderRadiusNumber,
       height: height ?? controls?.minimumHeight ?? 45.h,
       width: width ?? double.infinity,
-      btnColor: buttonColor ?? AppColors.primary,
+      btnColor:
+          buttonColor ?? context.appColor(AppColors.primary, surface: true),
       loadingWidget: SizedBox.square(
         dimension: 15.sp,
         child: const CircularProgressIndicator(

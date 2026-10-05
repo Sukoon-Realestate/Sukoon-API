@@ -174,7 +174,10 @@ class _TenantPropertyPhotoViewerState extends State<TenantPropertyPhotoViewer> {
                     selected: photoIndex == index,
                     label: '${photoIndex + 1} / ${urls.length}',
                     child: Material(
-                      color: AppColors.slateGray,
+                      color: context.appColor(
+                        AppColors.slateGray,
+                        surface: true,
+                      ),
                       borderRadius: BorderRadius.circular(10.r),
                       clipBehavior: Clip.antiAlias,
                       child: InkWell(
@@ -195,7 +198,7 @@ class _TenantPropertyPhotoViewerState extends State<TenantPropertyPhotoViewer> {
                             fit: BoxFit.cover,
                             width: 56.w,
                             height: 56.h,
-                            bgColor: AppColors.slateGray,
+                            bgColor: context.appColor(AppColors.slateGray),
                           ),
                         ),
                       ),

@@ -8,8 +8,8 @@ class OwnerProfileActions extends StatelessWidget {
     child: ProfileMenuTile(
       icon: Icons.account_balance_wallet_outlined,
       label: LocaleKeys.ownerRevenueTitle,
-      iconColor: AppColors.sokoonTeal,
-      iconBackgroundColor: AppColors.mintLight,
+      iconColor: context.appColor(AppColors.sokoonTeal),
+      iconBackgroundColor: context.appColor(AppColors.mintLight, surface: true),
       onTap: () => Go.to(const OwnerRevenueScreen()),
     ),
   );

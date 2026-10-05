@@ -42,10 +42,10 @@ class SokoonEmailField extends StatelessWidget {
       valueListenable: controller,
       builder: (context, value, child) {
         final borderColor = hasError
-            ? AppColors.sokoonRose
+            ? context.appColor(AppColors.sokoonRose)
             : value.text.isNotEmpty
             ? accentColor
-            : AppColors.sokoonBorder;
+            : context.appColor(AppColors.sokoonBorder);
 
         return DefaultTextField.withTitle(
           controller: controller,
@@ -58,14 +58,14 @@ class SokoonEmailField extends StatelessWidget {
           suffixIcon: suffixIcon,
           onSubmitted: onSubmitted,
           borderRadius: 12.r,
-          borderColor: borderColor,
-          fillColor: AppColors.white,
+          borderColor: context.appColor(borderColor),
+          fillColor: context.appColor(AppColors.white, surface: true),
           contentPadding: EdgeInsets.symmetric(
             horizontal: 16.w,
             vertical: 14.h,
           ),
           style: AppTextStyles.semiBold.copyWith(
-            color: AppColors.sokoonNavy,
+            color: context.appColor(AppColors.sokoonNavy),
             fontSize: 15.sp,
           ),
           onChanged: onChanged,

@@ -72,13 +72,13 @@ class TenantPropertyListingInformation extends StatelessWidget {
                   AppText(
                     fact.label,
                     style: AppTextStyles.regular12.copyWith(
-                      color: AppColors.sokoonGray,
+                      color: context.appColor(AppColors.sokoonGray),
                     ),
                   ),
                   AppText(
                     fact.value,
                     style: AppTextStyles.medium13.copyWith(
-                      color: AppColors.sokoonNavy,
+                      color: context.appColor(AppColors.sokoonNavy),
                     ),
                   ),
                 ],

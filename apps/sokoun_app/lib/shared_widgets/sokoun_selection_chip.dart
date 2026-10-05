@@ -37,10 +37,14 @@ class SokounSelectionChip extends StatelessWidget {
             constraints: const BoxConstraints(minHeight: 48),
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: selected ? AppColors.tealAlpha07 : AppColors.white,
+              color: selected
+                  ? AppColors.tealAlpha07
+                  : context.appColor(AppColors.white, surface: true),
               borderRadius: BorderRadius.circular(999),
               border: Border.all(
-                color: selected ? AppColors.sokoonTeal : AppColors.grayPale,
+                color: selected
+                    ? context.appColor(AppColors.sokoonTeal)
+                    : context.appColor(AppColors.grayPale),
               ),
             ),
             child: Row(
@@ -58,13 +62,13 @@ class SokounSelectionChip extends StatelessWidget {
                         child: Opacity(opacity: value, child: child),
                       ),
                     ),
-                    child: const ExcludeSemantics(
+                    child: ExcludeSemantics(
                       child: SizedBox(
                         width: 20,
                         child: Icon(
                           Icons.check_rounded,
                           size: 16,
-                          color: AppColors.sokoonTeal,
+                          color: context.appColor(AppColors.sokoonTeal),
                         ),
                       ),
                     ),
@@ -74,8 +78,8 @@ class SokounSelectionChip extends StatelessWidget {
                     label,
                     style: AppTextStyles.bold12.copyWith(
                       color: selected
-                          ? AppColors.sokoonTeal
-                          : AppColors.sokoonNavy,
+                          ? context.appColor(AppColors.sokoonTeal)
+                          : context.appColor(AppColors.sokoonNavy),
                       height: 1.45,
                     ),
                   ),

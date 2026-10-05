@@ -75,7 +75,7 @@ class _SupportHelpContentViewState extends State<SupportHelpContentView> {
                 AppText(
                   widget.content.hours,
                   style: AppTextStyles.regular12.copyWith(
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                   ),
                 ).paddingAll(12),
             ],
@@ -92,7 +92,9 @@ class _SupportHelpContentViewState extends State<SupportHelpContentView> {
       16.szH,
       AppText(
         LocaleKeys.supportFaqTitle,
-        style: AppTextStyles.bold16.copyWith(color: AppColors.sokoonNavy),
+        style: AppTextStyles.bold16.copyWith(
+          color: context.appColor(AppColors.sokoonNavy),
+        ),
       ),
       12.szH,
       ValueListenableBuilder<TextEditingValue>(

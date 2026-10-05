@@ -16,7 +16,11 @@ class OwnerProfileRating extends StatelessWidget {
   Widget build(BuildContext context) => Row(
     spacing: 4.w,
     children: [
-      Icon(Icons.star_rounded, color: AppColors.amber, size: 14.r),
+      Icon(
+        Icons.star_rounded,
+        color: context.appColor(AppColors.amber),
+        size: 14.r,
+      ),
       Flexible(
         child: AppText(
           label.isNotEmpty
@@ -25,7 +29,7 @@ class OwnerProfileRating extends StatelessWidget {
                     .replaceAll('{rating}', rating.toStringAsFixed(1))
                     .replaceAll('{count}', '$reviewsCount'),
           style: AppTextStyles.regular12.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             height: 1.45,
           ),
         ),

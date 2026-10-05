@@ -19,6 +19,7 @@ belongs to the existing product before introducing a new visual pattern.
 - App theme: `apps/sokoun_app/lib/shared_widgets/sokoun_theme.dart`
 - Responsive layout: `apps/sokoun_app/lib/shared_widgets/sokoun_layout.dart`
 - Motion policy: `apps/sokoun_app/lib/shared_widgets/sokoun_motion.dart`
+- Appearance defaults: `apps/sokoun_app/lib/shared_widgets/sokoun_theme_config.dart`
 - Sokoun-specific widgets: `apps/sokoun_app/lib/shared_widgets/`
 - Feature UI: `apps/sokoun_app/lib/features/`
 - Cross-app widgets: `packages/core/lib/core/widgets/`
@@ -27,7 +28,7 @@ belongs to the existing product before introducing a new visual pattern.
 Use token names in code. Do not duplicate raw color values or hardcode sizes
 unless a value is genuinely one-off.
 
-`SokounTheme.light` sets Tajawal, the semantic color scheme, typography,
+`SokounTheme.light` and `SokounTheme.dark` set Tajawal, the semantic color scheme, typography,
 fields, buttons, sheets, and feedback surfaces. `AppControlTheme` opts Sokoun
 into natural-height controls with a minimum 48-pixel target and 12-pixel
 corners; other apps retain their existing control sizing.
@@ -112,6 +113,55 @@ Use these helpers when a control changes with the selected user type:
 Tenant flows lean teal. Owner flows use gold for identity, verification, and
 premium moments. Primary actions and active bottom navigation remain teal
 unless a role-selection flow explicitly uses the role-aware helpers.
+
+### Dark appearance
+
+Appearance is available under Settings → Appearance in both workspaces. Choose
+device settings (the default), light, or dark. The device-wide preference is
+saved through `ThemePreferences` and owned by the app's `ThemeCubit`, so it
+survives navigation, app restarts, and account changes. Device settings follows
+platform brightness whenever that option is selected.
+
+| Dark token | Hex | Use |
+| --- | --- | --- |
+| `AppColors.sokoonDarkCanvas` | `#0F172A` | Page canvas |
+| `AppColors.sokoonDarkSurface` | `#182334` | Cards, fields, sheets, navigation |
+| `AppColors.sokoonDarkRaised` | `#223047` | Grouped surfaces |
+| `AppColors.sokoonDarkBorder` | `#334155` | Borders and dividers |
+| `AppColors.sokoonDarkText` | `#F3F4F6` | Titles and body text |
+| `AppColors.sokoonDarkSecondary` | `#A7B3C4` | Secondary copy |
+| `AppColors.sokoonDarkMuted` | `#94A3B8` | Hints and inactive content |
+| `AppColors.sokoonDarkTeal` | `#5EEAD4` | Teal text and icons |
+
+Gold remains the owner accent. Solid teal actions retain white labels; semantic
+badges pair readable success/error/information/warning ink with dark tinted
+surfaces. The packaged splash logo keeps its matching mint canvas, and photo
+overlays keep their high-contrast white controls.
+
+Use `Theme.of(context).colorScheme` for Material controls. Existing brand tokens
+resolve through the opt-in `AppColorTheme` extension:
+
+```dart
+context.appColor(AppColors.sokoonNavy) // foreground
+context.appColor(AppColors.white, surface: true) // card or field surface
+```
+
+Resolve colors inside `build`, including colors passed from models or widget
+properties. Keep fixed action labels and media controls white. Other apps that
+do not install `AppColorTheme` retain their existing token values.
+
+`SokounThemeConfig` centralizes the default mode, storage key, transition time,
+and curve. Theme and custom palette changes interpolate over 320ms with
+`easeInOutCubic`, retaining route and widget state. `SokounMotion.duration`
+disables the transition for reduced motion and accessible navigation. The
+appearance cards use the existing 180ms selection feedback. Status/navigation
+bar colors and the standard location map follow the effective appearance.
+
+Run `flutter test test/appearance_theme_test.dart` from `apps/sokoun_app` for
+preference, transition, system-mode, state-retention, contrast, and responsive
+checks. The existing visual review fixtures also support dark-mode inspection
+with `--dart-define=DARK_THEME_REVIEW=true` and optional PNG export through
+`--dart-define=UI_REVIEW_DIR=/tmp/sokoun-dark-review`.
 
 ## Typography
 

@@ -12,14 +12,14 @@ class ProfileVerificationContentView extends StatelessWidget {
   Widget build(BuildContext context) {
     final ProfileVerificationStatus status = content.status;
     final Color accent = status.isApproved
-        ? AppColors.green
+        ? context.appColor(AppColors.green)
         : status.isRejected
-        ? AppColors.sokoonRose
+        ? context.appColor(AppColors.sokoonRose)
         : status.isPending
-        ? AppColors.amber
+        ? context.appColor(AppColors.amber)
         : workspace.isOwner
         ? AppColors.sokoonGold
-        : AppColors.sokoonTeal;
+        : context.appColor(AppColors.sokoonTeal);
     final String title = switch (status) {
       ProfileVerificationStatus.approved => LocaleKeys.kycApprovedTitle,
       ProfileVerificationStatus.pending => LocaleKeys.kycPendingTitle,
@@ -35,7 +35,9 @@ class ProfileVerificationContentView extends StatelessWidget {
         Container(
           padding: EdgeInsets.all(24.r),
           decoration: BoxDecoration(
-            color: accent.withValues(alpha: .08),
+            color: context
+                .appColor(accent, surface: true)
+                .withValues(alpha: .08),
             borderRadius: BorderRadius.circular(20.r),
           ),
           child: Column(
@@ -50,13 +52,13 @@ class ProfileVerificationContentView extends StatelessWidget {
                     ? Icons.error_outline_rounded
                     : Icons.badge_outlined,
                 size: 48.r,
-                color: accent,
+                color: context.appColor(accent),
               ),
               AppText(
                 title,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.bold16.copyWith(
-                  color: AppColors.sokoonNavy,
+                  color: context.appColor(AppColors.sokoonNavy),
                 ),
               ),
               AppText(
@@ -71,7 +73,7 @@ class ProfileVerificationContentView extends StatelessWidget {
                     : LocaleKeys.kycIntroDescription,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.regular14.copyWith(
-                  color: AppColors.sokoonGray,
+                  color: context.appColor(AppColors.sokoonGray),
                   height: 1.6,
                 ),
               ),

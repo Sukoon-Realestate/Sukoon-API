@@ -56,7 +56,7 @@ class AppText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle effectiveStyle = style == null
+    TextStyle effectiveStyle = style == null
         ? TextStyle(
             decoration: decoration,
             color: color,
@@ -73,6 +73,10 @@ class AppText extends StatelessWidget {
             fontWeight: _fontWeight,
             height: height,
           );
+    final Color? ink = effectiveStyle.color;
+    if (ink != null) {
+      effectiveStyle = effectiveStyle.copyWith(color: context.appColor(ink));
+    }
     switch (withIcon) {
       case true:
         return Row(

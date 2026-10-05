@@ -12,8 +12,11 @@ import '../custom_widget_validator.dart';
 class CustomPinTextField extends StatelessWidget {
   final ValueChanged<String>? onCompleted;
   final TextEditingController controller;
-  const CustomPinTextField(
-      {super.key, required this.controller, this.onCompleted});
+  const CustomPinTextField({
+    super.key,
+    required this.controller,
+    this.onCompleted,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,16 +25,16 @@ class CustomPinTextField extends StatelessWidget {
       height: AppSize.sH60,
       textStyle: const TextStyle().setMainTextColor.s14.medium,
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(context.width.r),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(color: context.appColor(AppColors.border)),
       ),
     );
     final focusedPinTheme = defaultPinTheme.copyDecorationWith(
-      border: Border.all(color: AppColors.primary),
+      border: Border.all(color: context.appColor(AppColors.primary)),
     );
     final errorPinTheme = defaultPinTheme.copyDecorationWith(
-      border: Border.all(color: AppColors.error),
+      border: Border.all(color: context.appColor(AppColors.error)),
     );
     return Directionality(
       textDirection: TextDirection.ltr,

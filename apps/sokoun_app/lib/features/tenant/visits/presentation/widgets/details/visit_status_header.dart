@@ -27,12 +27,15 @@ class VisitStatusHeader extends StatelessWidget {
           height: 64.r,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: visit.status.backgroundColor,
+            color: context.appColor(
+              visit.status.backgroundColor,
+              surface: true,
+            ),
             shape: BoxShape.circle,
           ),
           child: Icon(
             visit.status.statusIcon,
-            color: visit.status.foregroundColor,
+            color: context.appColor(visit.status.foregroundColor),
             size: 29.r,
           ),
         ),
@@ -40,13 +43,16 @@ class VisitStatusHeader extends StatelessWidget {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
           decoration: BoxDecoration(
-            color: visit.status.backgroundColor,
+            color: context.appColor(
+              visit.status.backgroundColor,
+              surface: true,
+            ),
             borderRadius: BorderRadius.circular(999.r),
           ),
           child: AppText(
             visit.resolvedStatusText,
             style: AppTextStyles.bold13.copyWith(
-              color: visit.status.foregroundColor,
+              color: context.appColor(visit.status.foregroundColor),
               fontSize: 13.sp,
               height: 1.45,
             ),
@@ -57,7 +63,7 @@ class VisitStatusHeader extends StatelessWidget {
         AppText(
           _title,
           style: AppTextStyles.bold.copyWith(
-            color: AppColors.sokoonNavy,
+            color: context.appColor(AppColors.sokoonNavy),
             fontSize: 18.sp,
           ),
           textAlign: TextAlign.center,

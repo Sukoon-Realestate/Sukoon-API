@@ -34,7 +34,7 @@ class _PropertyDescriptionState extends State<PropertyDescription> {
       final style = AppTextStyles.regular14.copyWith(
         fontSize: 14,
         height: 1.5,
-        color: AppColors.sokoonGray,
+        color: context.appColor(AppColors.sokoonGray),
       );
       final painter = TextPainter(
         text: TextSpan(text: widget.description, style: style),

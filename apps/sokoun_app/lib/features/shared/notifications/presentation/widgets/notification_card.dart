@@ -29,13 +29,13 @@ class NotificationCard extends StatelessWidget {
           padding: EdgeInsets.all(16.r),
           decoration: BoxDecoration(
             color: notification.isUnread
-                ? AppColors.white
-                : AppColors.scaffoldBackground,
+                ? context.appColor(AppColors.white, surface: true)
+                : context.appColor(AppColors.scaffoldBackground, surface: true),
             borderRadius: BorderRadius.circular(16.r),
             border: Border.all(
               color: notification.isUnread
                   ? AppColors.tealAlpha19
-                  : AppColors.sokoonBorder,
+                  : context.appColor(AppColors.sokoonBorder),
             ),
             boxShadow: notification.isUnread
                 ? const [
@@ -64,7 +64,7 @@ class NotificationCard extends StatelessWidget {
                           child: AppText(
                             notification.title,
                             style: AppTextStyles.bold14.copyWith(
-                              color: AppColors.sokoonNavy,
+                              color: context.appColor(AppColors.sokoonNavy),
                               fontSize: 14.sp,
                               height: 1.45,
                             ),
@@ -77,8 +77,11 @@ class NotificationCard extends StatelessWidget {
                             width: 8.r,
                             height: 8.r,
                             margin: EdgeInsets.only(top: 4.h),
-                            decoration: const BoxDecoration(
-                              color: AppColors.sokoonTeal,
+                            decoration: BoxDecoration(
+                              color: context.appColor(
+                                AppColors.sokoonTeal,
+                                surface: true,
+                              ),
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -88,7 +91,7 @@ class NotificationCard extends StatelessWidget {
                     AppText(
                       notification.description,
                       style: AppTextStyles.regular12.copyWith(
-                        color: AppColors.sokoonGray,
+                        color: context.appColor(AppColors.sokoonGray),
                         fontSize: 12.sp,
                         height: 1.45,
                       ),
@@ -99,7 +102,7 @@ class NotificationCard extends StatelessWidget {
                     AppText(
                       notification.time,
                       style: AppTextStyles.regular11.copyWith(
-                        color: AppColors.graySoft,
+                        color: context.appColor(AppColors.graySoft),
                         fontSize: 11.sp,
                         height: 1.45,
                       ),

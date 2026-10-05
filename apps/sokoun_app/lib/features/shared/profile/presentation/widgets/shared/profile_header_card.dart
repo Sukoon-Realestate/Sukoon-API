@@ -38,10 +38,10 @@ class ProfileHeaderCard extends StatelessWidget {
               avatarUrl: avatarUrl,
               accentColor: workspace.isOwner
                   ? AppColors.sokoonGold
-                  : AppColors.sokoonTeal,
+                  : context.appColor(AppColors.sokoonTeal),
               backgroundColor: workspace.isOwner
-                  ? AppColors.goldPale
-                  : AppColors.mintLight,
+                  ? context.appColor(AppColors.goldPale, surface: true)
+                  : context.appColor(AppColors.mintLight, surface: true),
             ),
             details: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +55,7 @@ class ProfileHeaderCard extends StatelessWidget {
                     AppText(
                       displayName,
                       style: AppTextStyles.bold.copyWith(
-                        color: AppColors.sokoonNavy,
+                        color: context.appColor(AppColors.sokoonNavy),
                         fontSize: 18.sp,
                       ),
                     ),
@@ -69,7 +69,7 @@ class ProfileHeaderCard extends StatelessWidget {
                 AppText(
                   membership,
                   style: AppTextStyles.regular13.copyWith(
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                     height: 1.45,
                   ),
                 ),
@@ -77,7 +77,7 @@ class ProfileHeaderCard extends StatelessWidget {
             ),
           ),
           14.szH,
-          const Divider(height: 1, color: AppColors.sokoonBorder),
+          Divider(height: 1, color: context.appColor(AppColors.sokoonBorder)),
           12.szH,
           ProfileStatGrid(stats: stats),
           12.szH,

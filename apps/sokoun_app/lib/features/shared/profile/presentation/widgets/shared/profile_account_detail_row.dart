@@ -16,7 +16,7 @@ class ProfileAccountDetailRow extends StatelessWidget {
     final labelText = AppText(
       label,
       style: AppTextStyles.regular12.copyWith(
-        color: AppColors.sokoonGray,
+        color: context.appColor(AppColors.sokoonGray),
         height: 1.45,
       ),
     );
@@ -27,7 +27,7 @@ class ProfileAccountDetailRow extends StatelessWidget {
           ? TextAlign.right
           : TextAlign.left,
       style: AppTextStyles.bold14.copyWith(
-        color: AppColors.sokoonNavy,
+        color: context.appColor(AppColors.sokoonNavy),
         height: 1.45,
       ),
     );

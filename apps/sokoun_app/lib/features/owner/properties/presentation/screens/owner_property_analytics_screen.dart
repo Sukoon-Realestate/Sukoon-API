@@ -40,7 +40,10 @@ class _OwnerPropertyAnalyticsScreenState
     child: AppScaffold(
       title: LocaleKeys.ownerAnalyticsTitle,
       showBackButton: true,
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: context.appColor(
+        AppColors.scaffoldBackground,
+        surface: true,
+      ),
       contentWidth: SokounContentWidth.wide,
       body: SafeArea(
         child: Column(

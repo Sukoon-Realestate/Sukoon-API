@@ -24,10 +24,14 @@ class NotificationIconBadge extends StatelessWidget {
       height: size.r,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: visual.backgroundColor,
+        color: context.appColor(visual.backgroundColor, surface: true),
         borderRadius: BorderRadius.circular(size >= 50 ? 16.r : 14.r),
       ),
-      child: Icon(visual.icon, color: visual.color, size: iconSize.r),
+      child: Icon(
+        visual.icon,
+        color: context.appColor(visual.color),
+        size: iconSize.r,
+      ),
     );
   }
 

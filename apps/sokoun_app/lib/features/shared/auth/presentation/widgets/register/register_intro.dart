@@ -18,7 +18,7 @@ class RegisterIntro extends StatelessWidget {
         AppText(
           LocaleKeys.workspaceAccountDescription,
           style: AppTextStyles.medium.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 14.sp,
           ),
         ),

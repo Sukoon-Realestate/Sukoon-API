@@ -21,13 +21,13 @@ class PropertyFilterButton extends StatelessWidget {
       button: true,
       label: LocaleKeys.filter,
       child: Material(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.r),
           side: BorderSide(
             color: activeCount > 0
-                ? AppColors.sokoonTeal
-                : AppColors.sokoonBorder,
+                ? context.appColor(AppColors.sokoonTeal)
+                : context.appColor(AppColors.sokoonBorder),
           ),
         ),
         child: InkWell(
@@ -41,7 +41,7 @@ class PropertyFilterButton extends StatelessWidget {
                 Center(
                   child: Icon(
                     Icons.tune_rounded,
-                    color: AppColors.sokoonTeal,
+                    color: context.appColor(AppColors.sokoonTeal),
                     size: 21.r,
                   ),
                 ),
@@ -54,8 +54,11 @@ class PropertyFilterButton extends StatelessWidget {
                       height: 17.r,
                       padding: EdgeInsets.symmetric(horizontal: 4.w),
                       alignment: Alignment.center,
-                      decoration: const BoxDecoration(
-                        color: AppColors.sokoonTeal,
+                      decoration: BoxDecoration(
+                        color: context.appColor(
+                          AppColors.sokoonTeal,
+                          surface: true,
+                        ),
                         shape: BoxShape.circle,
                       ),
                       child: AppText(

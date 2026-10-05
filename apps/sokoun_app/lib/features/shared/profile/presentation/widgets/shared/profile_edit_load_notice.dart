@@ -31,14 +31,14 @@ class ProfileEditLoadNotice extends StatelessWidget {
             children: [
               Icon(
                 Icons.error_outline,
-                color: AppColors.sokoonRose,
+                color: context.appColor(AppColors.sokoonRose),
                 size: 22.r,
               ),
               Expanded(
                 child: AppText(
                   LocaleKeys.profileEditDetailsUnavailable,
                   style: AppTextStyles.bold14.copyWith(
-                    color: AppColors.sokoonNavy,
+                    color: context.appColor(AppColors.sokoonNavy),
                     fontSize: 14.sp,
                     height: 1.45,
                   ),
@@ -49,7 +49,7 @@ class ProfileEditLoadNotice extends StatelessWidget {
           AppText(
             LocaleKeys.profileEditKnownDetailsHint,
             style: AppTextStyles.regular13.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 13.sp,
               height: 1.45,
             ),
@@ -58,7 +58,7 @@ class ProfileEditLoadNotice extends StatelessWidget {
             AppText(
               message!,
               style: AppTextStyles.regular13.copyWith(
-                color: AppColors.sokoonRose,
+                color: context.appColor(AppColors.sokoonRose),
                 fontSize: 13.sp,
                 height: 1.45,
               ),

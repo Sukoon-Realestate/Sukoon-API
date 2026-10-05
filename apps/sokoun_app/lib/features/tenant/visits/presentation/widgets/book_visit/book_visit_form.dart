@@ -76,7 +76,7 @@ class _BookVisitFormState extends State<BookVisitForm> {
                   ? AppText(
                       LocaleKeys.tenantVisitNoAvailableDays,
                       style: AppTextStyles.regular12.copyWith(
-                        color: AppColors.sokoonMuted,
+                        color: context.appColor(AppColors.sokoonMuted),
                         fontSize: 12.sp,
                         height: 1.45,
                       ),
@@ -122,16 +122,18 @@ class _BookVisitFormState extends State<BookVisitForm> {
               constraints: BoxConstraints(minHeight: 80.h),
               padding: EdgeInsets.symmetric(horizontal: 14.w),
               decoration: BoxDecoration(
-                color: AppColors.white,
+                color: context.appColor(AppColors.white, surface: true),
                 borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(color: AppColors.sokoonBorder),
+                border: Border.all(
+                  color: context.appColor(AppColors.sokoonBorder),
+                ),
               ),
               child: TextField(
                 controller: widget.noteController,
                 maxLines: 3,
                 textAlign: TextAlign.start,
                 style: AppTextStyles.medium13.copyWith(
-                  color: AppColors.sokoonNavy,
+                  color: context.appColor(AppColors.sokoonNavy),
                   fontSize: 13.sp,
                   height: 1.45,
                 ),
@@ -157,7 +159,10 @@ class _BookVisitFormState extends State<BookVisitForm> {
                 child: AppLoadingButton(
                   asyncCall: (_) => submit(),
                   title: LocaleKeys.tenantVisitConfirmRequest,
-                  buttonColor: AppColors.sokoonTeal,
+                  buttonColor: context.appColor(
+                    AppColors.sokoonTeal,
+                    surface: true,
+                  ),
                   textColor: AppColors.white,
                   borderRadius: 14.r,
                   height: 50.h,
@@ -185,7 +190,7 @@ class _BookVisitSectionTitle extends StatelessWidget {
     return AppText(
       title,
       style: AppTextStyles.bold14.copyWith(
-        color: AppColors.sokoonNavy,
+        color: context.appColor(AppColors.sokoonNavy),
         fontSize: 14.sp,
         height: 1.45,
       ),

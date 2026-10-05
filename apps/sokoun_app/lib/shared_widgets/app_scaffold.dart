@@ -49,8 +49,8 @@ class AppScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-      backgroundColor: backgroundColor,
-      appBar: _hasAppBar ? _buildAppBar() : null,
+      backgroundColor: context.appColor(backgroundColor, surface: true),
+      appBar: _hasAppBar ? _buildAppBar(context) : null,
       body: SokounContent(width: contentWidth, child: body),
       bottomNavigationBar: bottomBar == null
           ? null
@@ -65,10 +65,10 @@ class AppScaffold extends StatelessWidget {
     );
   }
 
-  PreferredSizeWidget _buildAppBar() {
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
-      backgroundColor: backgroundColor,
+      backgroundColor: context.appColor(backgroundColor, surface: true),
       surfaceTintColor: AppColors.transparent,
       elevation: 0,
       scrolledUnderElevation: 0,
@@ -82,13 +82,13 @@ class AppScaffold extends StatelessWidget {
                   SokoonBackButton(onTap: onBack, enabled: isBackEnabled),
             )
           : null,
-      title: titleWidget ?? _buildTitle(),
+      title: titleWidget ?? _buildTitle(context),
       actions: actions,
       actionsPadding: EdgeInsetsDirectional.only(end: 8.w),
     );
   }
 
-  Widget? _buildTitle() {
+  Widget? _buildTitle(BuildContext context) {
     final title = this.title;
     if (title == null) {
       return null;
@@ -97,7 +97,7 @@ class AppScaffold extends StatelessWidget {
     return AppText(
       title,
       style: AppTextStyles.extraBold.copyWith(
-        color: AppColors.sokoonNavy,
+        color: context.appColor(AppColors.sokoonNavy),
         fontSize: 16.sp,
       ),
       overflow: TextOverflow.ellipsis,

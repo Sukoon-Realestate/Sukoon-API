@@ -18,14 +18,16 @@ Future<DateTime?> showCustomDatePicker({
     builder: (context, child) {
       return Theme(
         data: Theme.of(context).copyWith(
-          colorScheme: const ColorScheme.light(
-            primary: AppColors.primary,
-            onPrimary: AppColors.white,
-            onSurface: AppColors.primary,
-          ),
+          colorScheme: Theme.of(context).extension<AppColorTheme>() != null
+              ? Theme.of(context).colorScheme
+              : const ColorScheme.light(
+                  primary: AppColors.primary,
+                  onPrimary: AppColors.white,
+                  onSurface: AppColors.primary,
+                ),
           textButtonTheme: TextButtonThemeData(
             style: TextButton.styleFrom(
-              foregroundColor: AppColors.primary,
+              foregroundColor: context.appColor(AppColors.primary),
             ),
           ),
         ),
@@ -34,9 +36,10 @@ Future<DateTime?> showCustomDatePicker({
     },
   );
   if (pickedDate != null) {
-    final String formattedDate = DateFormat(dateFormat ?? 'EEE, M/d/y',
-            Languages.currentLanguage.locale.languageCode)
-        .format(pickedDate);
+    final String formattedDate = DateFormat(
+      dateFormat ?? 'EEE, M/d/y',
+      Languages.currentLanguage.locale.languageCode,
+    ).format(pickedDate);
     controller.text = formattedDate;
   }
   return pickedDate;

@@ -32,7 +32,7 @@ class SokounValidationField extends StatelessWidget {
               child: AppText(
                 field.errorText!,
                 style: AppTextStyles.regular13.copyWith(
-                  color: AppColors.sokoonRose,
+                  color: context.appColor(AppColors.sokoonRose),
                 ),
               ),
             ),

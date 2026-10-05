@@ -54,7 +54,7 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
 
   @override
   Widget build(BuildContext context) {
-    final Color accentColor = AppColors.sokoonTeal;
+    final Color accentColor = context.appColor(AppColors.sokoonTeal);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -63,7 +63,7 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
           width: 96.r,
           height: 96.r,
           decoration: BoxDecoration(
-            color: AppColors.mintLight,
+            color: context.appColor(AppColors.mintLight, surface: true),
             borderRadius: BorderRadius.circular(28.r),
           ),
           child: Stack(
@@ -71,7 +71,7 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
             children: [
               Icon(
                 Icons.mark_email_read_outlined,
-                color: accentColor,
+                color: context.appColor(accentColor),
                 size: 44.r,
               ),
               PositionedDirectional(
@@ -80,8 +80,8 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
                 child: Container(
                   width: 22.r,
                   height: 22.r,
-                  decoration: const BoxDecoration(
-                    color: AppColors.green,
+                  decoration: BoxDecoration(
+                    color: context.appColor(AppColors.green, surface: true),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -98,7 +98,7 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
         AppText(
           widget.message,
           style: AppTextStyles.bold.copyWith(
-            color: AppColors.sokoonNavy,
+            color: context.appColor(AppColors.sokoonNavy),
             fontSize: 20.sp,
           ),
           textAlign: TextAlign.center,
@@ -107,7 +107,7 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
         AppText(
           LocaleKeys.resetLinkSentDescription,
           style: AppTextStyles.medium13.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 13.sp,
             height: 1.45,
           ),
@@ -117,7 +117,7 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
         AppText(
           widget.maskedEmail,
           style: AppTextStyles.extraBold.copyWith(
-            color: accentColor,
+            color: context.appColor(accentColor),
             fontSize: 14.sp,
           ),
           textAlign: TextAlign.center,
@@ -144,16 +144,16 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
         Container(
           padding: EdgeInsets.all(16.r),
           decoration: BoxDecoration(
-            color: AppColors.white,
+            color: context.appColor(AppColors.white, surface: true),
             borderRadius: BorderRadius.circular(14.r),
-            border: Border.all(color: AppColors.grayPale),
+            border: Border.all(color: context.appColor(AppColors.grayPale)),
           ),
           child: Column(
             children: [
               AppText(
                 LocaleKeys.emailNotReceived,
                 style: AppTextStyles.extraBold13.copyWith(
-                  color: AppColors.sokoonNavy,
+                  color: context.appColor(AppColors.sokoonNavy),
                   fontSize: 13.sp,
                   height: 1.45,
                 ),
@@ -163,7 +163,7 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
               AppText(
                 LocaleKeys.checkSpamFirst,
                 style: AppTextStyles.medium11.copyWith(
-                  color: AppColors.sokoonGray,
+                  color: context.appColor(AppColors.sokoonGray),
                   fontSize: 11.sp,
                   height: 1.45,
                 ),
@@ -190,7 +190,10 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
                         title: LocaleKeys.resend,
                         buttonColor: canResend
                             ? accentColor
-                            : AppColors.sokoonMuted,
+                            : context.appColor(
+                                AppColors.sokoonMuted,
+                                surface: true,
+                              ),
                         textColor: AppColors.white,
                         borderRadius: 12.r,
                         height: 46.h,
@@ -216,13 +219,13 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
           onTap: widget.onChangeEmail,
           height: 50.h,
           width: double.infinity,
-          color: AppColors.white,
-          borderColor: accentColor,
+          color: context.appColor(AppColors.white, surface: true),
+          borderColor: context.appColor(accentColor),
           borderRadius: BorderRadius.circular(14.r),
           customChild: AppText(
             LocaleKeys.changeEmail,
             style: AppTextStyles.extraBold.copyWith(
-              color: accentColor,
+              color: context.appColor(accentColor),
               fontSize: 14.sp,
             ),
           ),
@@ -249,7 +252,7 @@ class _RecoveryStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color accentColor = AppColors.sokoonTeal;
+    final Color accentColor = context.appColor(AppColors.sokoonTeal);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,13 +263,13 @@ class _RecoveryStep extends StatelessWidget {
           height: 34.r,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: AppColors.mintLight,
+            color: context.appColor(AppColors.mintLight, surface: true),
             shape: BoxShape.circle,
           ),
           child: AppText(
             '$number',
             style: AppTextStyles.bold13.copyWith(
-              color: accentColor,
+              color: context.appColor(accentColor),
               fontSize: 13.sp,
               height: 1.45,
             ),
@@ -280,7 +283,7 @@ class _RecoveryStep extends StatelessWidget {
               AppText(
                 title,
                 style: AppTextStyles.extraBold13.copyWith(
-                  color: AppColors.sokoonNavy,
+                  color: context.appColor(AppColors.sokoonNavy),
                   fontSize: 13.sp,
                   height: 1.45,
                 ),
@@ -288,7 +291,7 @@ class _RecoveryStep extends StatelessWidget {
               AppText(
                 description,
                 style: AppTextStyles.medium11.copyWith(
-                  color: AppColors.sokoonGray,
+                  color: context.appColor(AppColors.sokoonGray),
                   fontSize: 11.sp,
                   height: 1.45,
                 ),

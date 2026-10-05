@@ -65,7 +65,7 @@ class _SupportTicketAttachmentsState extends State<SupportTicketAttachments> {
       AppText(
         LocaleKeys.supportAttachmentLimit,
         style: AppTextStyles.regular12.copyWith(
-          color: AppColors.sokoonGray,
+          color: context.appColor(AppColors.sokoonGray),
           height: 1.5,
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:melos_core/config/res/config_imports.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeAvatar extends StatelessWidget {
@@ -20,17 +21,20 @@ class HomeAvatar extends StatelessWidget {
     return Container(
       width: 36.r,
       height: 36.r,
-      decoration: BoxDecoration(color: backgroundColor, shape: BoxShape.circle),
+      decoration: BoxDecoration(
+        color: context.appColor(backgroundColor, surface: true),
+        shape: BoxShape.circle,
+      ),
       child: imageUrl?.isNotEmpty ?? false
           ? ClipOval(
               child: Image.network(
                 imageUrl!,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) =>
-                    Icon(icon, color: iconColor, size: 18.r),
+                    Icon(icon, color: context.appColor(iconColor), size: 18.r),
               ),
             )
-          : Icon(icon, color: iconColor, size: 18.r),
+          : Icon(icon, color: context.appColor(iconColor), size: 18.r),
     );
   }
 }

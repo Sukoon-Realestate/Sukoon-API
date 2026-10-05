@@ -10,9 +10,9 @@ class VisitSummaryCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: AppColors.sokoonBorder),
+        border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
         boxShadow: const [
           BoxShadow(
             color: AppColors.shadowBlack04,
@@ -26,7 +26,10 @@ class VisitSummaryCard extends StatelessWidget {
           for (int index = 0; index < rows.length; index++) ...[
             _VisitSummaryRow(row: rows[index]),
             if (index < rows.length - 1)
-              const Divider(height: 1, color: AppColors.sokoonBorder),
+              Divider(
+                height: 1,
+                color: context.appColor(AppColors.sokoonBorder),
+              ),
           ],
         ],
       ),
@@ -50,7 +53,7 @@ class _VisitSummaryRow extends StatelessWidget {
             child: AppText(
               row.value,
               style: AppTextStyles.extraBold13.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 13.sp,
                 height: 1.45,
               ),
@@ -61,7 +64,7 @@ class _VisitSummaryRow extends StatelessWidget {
           AppText(
             row.label,
             style: AppTextStyles.regular12.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 12.sp,
               height: 1.45,
             ),

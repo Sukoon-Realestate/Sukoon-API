@@ -22,7 +22,8 @@ class AppScaffold extends StatelessWidget {
   final FutureOr<void> Function()? onBack;
   // final FutureOr<void> Function(BuildContext context)? onRefresh;
 
-  const AppScaffold({super.key,
+  const AppScaffold({
+    super.key,
     required this.body,
     this.appBarTitle,
     this.customTitle,
@@ -40,31 +41,43 @@ class AppScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-      backgroundColor: scaffoldBackgroundColor?? Colors.white,
+      backgroundColor: scaffoldBackgroundColor ?? Colors.white,
       appBar: PreferredSize(
-          preferredSize: Size(context.width, appBarHeight ?? 60),
-          child: AppBar(
-            actionsPadding: EdgeInsets.all(10.r),
-            backgroundColor: AppColors.whiteGreyColor,
-            centerTitle: true,
-            title: customTitle??AppText(appBarTitle??'', fontWeight: FontWeight.bold, fontSize: 16.sp, color: Colors.black,),
-            leading: ModalRoute.of(context)!.canPop?
-            AppBackButton(onBack: onBack) : null,
-            bottom: bottomWidget,
-            actions: actions?.map((e)
-                => SizedBox.square(dimension: 30.sp, child: e)).toList(),
-          )
-      ),
-      body: isScrollable?
-      SingleChildScrollView(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16.r)
-            ),
-            child: body.defaultScreenPadding(),
+        preferredSize: Size(context.width, appBarHeight ?? 60),
+        child: AppBar(
+          actionsPadding: EdgeInsets.all(10.r),
+          backgroundColor: context.appColor(
+            AppColors.whiteGreyColor,
+            surface: true,
           ),
-        ) :
-      body.defaultScreenPadding(),
+          centerTitle: true,
+          title:
+              customTitle ??
+              AppText(
+                appBarTitle ?? '',
+                fontWeight: FontWeight.bold,
+                fontSize: 16.sp,
+                color: Colors.black,
+              ),
+          leading: ModalRoute.of(context)!.canPop
+              ? AppBackButton(onBack: onBack)
+              : null,
+          bottom: bottomWidget,
+          actions: actions
+              ?.map((e) => SizedBox.square(dimension: 30.sp, child: e))
+              .toList(),
+        ),
+      ),
+      body: isScrollable
+          ? SingleChildScrollView(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: body.defaultScreenPadding(),
+              ),
+            )
+          : body.defaultScreenPadding(),
       bottomNavigationBar: bottomBar,
     );
   }
@@ -81,15 +94,19 @@ class AppBackButton extends StatelessWidget {
       child: FittedBox(
         child: Container(
           decoration: const BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle
+            color: Colors.white,
+            shape: BoxShape.circle,
           ),
           child: IconButton(
-              onPressed: () async{
-                onBack?.call();
-                Go.back();
-              },
-              icon: const Icon(Icons.arrow_back_ios_sharp, color: Colors.black, size: 14)
+            onPressed: () async {
+              onBack?.call();
+              Go.back();
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios_sharp,
+              color: Colors.black,
+              size: 14,
+            ),
           ),
         ).paddingAll(12.r),
       ),

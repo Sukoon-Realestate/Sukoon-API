@@ -55,7 +55,7 @@ class TenantSearchResultsHeader extends StatelessWidget {
               ? LocaleKeys.tenantSearchResultsCount
               : '$count ${LocaleKeys.tenantSearchResultsCount}',
           style: AppTextStyles.semiBold.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 13.sp,
           ),
         ).paddingSymmetric(horizontal: 18.w, vertical: 10.h),

@@ -36,7 +36,7 @@ class OwnerRequestDetailsActions extends StatelessWidget {
             customChild: isAccepting
                 ? const _OwnerActionLoader(color: AppColors.white)
                 : null,
-            color: AppColors.greenStrong,
+            color: context.appColor(AppColors.greenStrong, surface: true),
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(16.r),
             height: 52.h,
@@ -51,11 +51,11 @@ class OwnerRequestDetailsActions extends StatelessWidget {
             onTap: isUpdating ? null : onRejectPressed,
             title: LocaleKeys.ownerVisitRejectRequest,
             customChild: isRejecting
-                ? const _OwnerActionLoader(color: AppColors.red)
+                ? _OwnerActionLoader(color: context.appColor(AppColors.red))
                 : null,
-            color: AppColors.white,
-            textColor: AppColors.red,
-            borderColor: AppColors.red,
+            color: context.appColor(AppColors.white, surface: true),
+            textColor: context.appColor(AppColors.red),
+            borderColor: context.appColor(AppColors.red),
             borderRadius: BorderRadius.circular(16.r),
             height: 50.h,
             textStyle: AppTextStyles.bold14.copyWith(
@@ -67,8 +67,12 @@ class OwnerRequestDetailsActions extends StatelessWidget {
         DefaultButton(
           onTap: isUpdating || !canOpenChat ? null : _openChat,
           title: LocaleKeys.ownerVisitOpenChat,
-          color: canOpenChat ? AppColors.bluePale : AppColors.grayBackground,
-          textColor: canOpenChat ? AppColors.blue : AppColors.sokoonMuted,
+          color: canOpenChat
+              ? context.appColor(AppColors.bluePale, surface: true)
+              : context.appColor(AppColors.grayBackground, surface: true),
+          textColor: canOpenChat
+              ? context.appColor(AppColors.blue)
+              : context.appColor(AppColors.sokoonMuted),
           borderRadius: BorderRadius.circular(16.r),
           height: 50.h,
           textStyle: AppTextStyles.bold14.copyWith(
@@ -90,7 +94,10 @@ class _OwnerActionLoader extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox.square(
       dimension: 20.r,
-      child: CustomLoading.showLoadingView(color: color, size: 20.r),
+      child: CustomLoading.showLoadingView(
+        color: context.appColor(color),
+        size: 20.r,
+      ),
     );
   }
 }

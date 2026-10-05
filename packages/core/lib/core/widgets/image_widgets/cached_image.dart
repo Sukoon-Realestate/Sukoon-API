@@ -45,21 +45,24 @@ class CachedImage extends StatelessWidget {
       memCacheHeight: height != null
           ? min((height! * devicePixelRatio).toInt(), 2048)
           : null,
-      memCacheWidth:
-          width != null ? min((width! * devicePixelRatio).toInt(), 2048) : null,
+      memCacheWidth: width != null
+          ? min((width! * devicePixelRatio).toInt(), 2048)
+          : null,
       maxHeightDiskCache: height != null
           ? min((height! * devicePixelRatio).toInt(), 2048)
           : null,
-      maxWidthDiskCache:
-          width != null ? min((width! * devicePixelRatio).toInt(), 2048) : null,
+      maxWidthDiskCache: width != null
+          ? min((width! * devicePixelRatio).toInt(), 2048)
+          : null,
       imageBuilder: (context, imageProvider) => Container(
         width: width,
         height: height,
         decoration: BoxDecoration(
           image: DecorationImage(
-              image: imageProvider,
-              fit: fit ?? BoxFit.fill,
-              colorFilter: colorFilter),
+            image: imageProvider,
+            fit: fit ?? BoxFit.fill,
+            colorFilter: colorFilter,
+          ),
           borderRadius: haveRadius
               ? borderRadius ?? BorderRadius.circular(AppCircular.r2)
               : null,
@@ -80,13 +83,19 @@ class CachedImage extends StatelessWidget {
           borderRadius: haveRadius
               ? borderRadius ?? BorderRadius.circular(AppCircular.r2)
               : null,
-          border:
-              Border.all(color: borderColor ?? Colors.transparent, width: 1),
+          border: Border.all(
+            color: borderColor ?? Colors.transparent,
+            width: 1,
+          ),
           shape: boxShape ?? BoxShape.rectangle,
-          color: bgColor ?? AppColors.primary.withValues(alpha: .5),
+          color:
+              bgColor ??
+              context
+                  .appColor(AppColors.primary, surface: true)
+                  .withValues(alpha: .5),
         ),
         child: SpinKitFadingCircle(
-          color: AppColors.primary,
+          color: context.appColor(AppColors.primary),
           size: AppSize.sH30,
         ),
       ),
@@ -95,7 +104,11 @@ class CachedImage extends StatelessWidget {
         height: height,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: bgColor ?? AppColors.primary.withValues(alpha: .5),
+          color:
+              bgColor ??
+              context
+                  .appColor(AppColors.primary, surface: true)
+                  .withValues(alpha: .5),
           borderRadius: haveRadius
               ? borderRadius ?? BorderRadius.circular(AppCircular.r2)
               : null,
@@ -106,10 +119,7 @@ class CachedImage extends StatelessWidget {
           shape: boxShape ?? BoxShape.rectangle,
         ),
         child: Stack(
-          children: [
-            placeHolder ?? child ?? Container(),
-            child ?? Container(),
-          ],
+          children: [placeHolder ?? child ?? Container(), child ?? Container()],
         ),
       ),
     );

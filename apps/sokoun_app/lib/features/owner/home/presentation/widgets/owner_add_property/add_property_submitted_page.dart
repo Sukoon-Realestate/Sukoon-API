@@ -37,13 +37,13 @@ class AddPropertySubmittedPage extends StatelessWidget {
               width: 96.r,
               height: 96.r,
               alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                color: AppColors.orangePale,
+              decoration: BoxDecoration(
+                color: context.appColor(AppColors.orangePale, surface: true),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.schedule_rounded,
-                color: AppColors.brown,
+                color: context.appColor(AppColors.brown),
                 size: 42.r,
               ),
             ),
@@ -52,7 +52,7 @@ class AddPropertySubmittedPage extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
             decoration: BoxDecoration(
-              color: AppColors.orangePale,
+              color: context.appColor(AppColors.orangePale, surface: true),
               borderRadius: BorderRadius.circular(999.r),
             ),
             child: Row(
@@ -61,13 +61,13 @@ class AddPropertySubmittedPage extends StatelessWidget {
               children: [
                 Icon(
                   Icons.schedule_rounded,
-                  color: AppColors.brown,
+                  color: context.appColor(AppColors.brown),
                   size: 12.r,
                 ),
                 AppText(
                   LocaleKeys.ownerPropertySubmittedStatus,
                   style: AppTextStyles.semiBold.copyWith(
-                    color: AppColors.brown,
+                    color: context.appColor(AppColors.brown),
                     fontSize: 12.sp,
                   ),
                 ),
@@ -78,7 +78,7 @@ class AddPropertySubmittedPage extends StatelessWidget {
           AppText(
             message,
             style: AppTextStyles.bold.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 23.sp,
             ),
             textAlign: TextAlign.center,
@@ -87,7 +87,7 @@ class AddPropertySubmittedPage extends StatelessWidget {
           AppText(
             LocaleKeys.ownerPropertySubmittedDescription,
             style: AppTextStyles.regular14.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 14.sp,
               height: 1.45,
             ),
@@ -127,9 +127,9 @@ class _SubmittedSummaryCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: AppColors.sokoonBorder),
+        border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
         boxShadow: const [
           BoxShadow(
             color: AppColors.shadowBlack04,
@@ -143,7 +143,7 @@ class _SubmittedSummaryCard extends StatelessWidget {
           for (int index = 0; index < items.length; index++) ...[
             _SummaryRow(item: items[index]),
             if (index < items.length - 1)
-              const Divider(color: AppColors.sokoonBorder),
+              Divider(color: context.appColor(AppColors.sokoonBorder)),
           ],
         ],
       ),
@@ -168,7 +168,7 @@ class _SummaryRow extends StatelessWidget {
             child: AppText(
               item.value,
               style: AppTextStyles.bold13.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 13.sp,
                 height: 1.45,
               ),
@@ -182,7 +182,7 @@ class _SummaryRow extends StatelessWidget {
             child: AppText(
               item.label,
               style: AppTextStyles.regular12.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 12.sp,
                 height: 1.45,
               ),

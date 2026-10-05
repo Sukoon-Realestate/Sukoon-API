@@ -98,22 +98,25 @@ class TenantPropertyBottomActions extends StatelessWidget {
                   height: 48.r,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: AppColors.grayBackground,
+                    color: context.appColor(
+                      AppColors.grayBackground,
+                      surface: true,
+                    ),
                     borderRadius: BorderRadius.circular(14.r),
                   ),
                   child: isOpeningChat
                       ? SizedBox.square(
                           dimension: 19.r,
                           child: CustomLoading.showLoadingView(
-                            color: AppColors.sokoonTeal,
+                            color: context.appColor(AppColors.sokoonTeal),
                             size: 19.r,
                           ),
                         )
                       : Icon(
                           Icons.chat_bubble_outline_rounded,
                           color: onChatPressed == null
-                              ? AppColors.sokoonMuted
-                              : AppColors.sokoonTeal,
+                              ? context.appColor(AppColors.sokoonMuted)
+                              : context.appColor(AppColors.sokoonTeal),
                           size: 21.r,
                         ),
                 ),
@@ -125,7 +128,10 @@ class TenantPropertyBottomActions extends StatelessWidget {
             onPressed: onSavedPressed,
             isSelected: isSaved,
             style: IconButton.styleFrom(
-              backgroundColor: AppColors.grayBackground,
+              backgroundColor: context.appColor(
+                AppColors.grayBackground,
+                surface: true,
+              ),
               minimumSize: Size(48.r, 48.r),
             ),
             icon: SokounSelectionFeedback(
@@ -134,7 +140,7 @@ class TenantPropertyBottomActions extends StatelessWidget {
                 isSaved
                     ? Icons.bookmark_rounded
                     : Icons.bookmark_border_rounded,
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
                 size: 22.r,
               ),
             ),

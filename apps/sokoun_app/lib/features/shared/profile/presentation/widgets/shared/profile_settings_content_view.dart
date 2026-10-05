@@ -12,7 +12,7 @@ class ProfileSettingsContentView extends StatelessWidget {
             ? LocaleKeys.settingsOwnerIntro
             : LocaleKeys.settingsTenantIntro,
         style: AppTextStyles.regular14.copyWith(
-          color: AppColors.sokoonGray,
+          color: context.appColor(AppColors.sokoonGray),
           height: 1.5,
         ),
       ),
@@ -21,17 +21,33 @@ class ProfileSettingsContentView extends StatelessWidget {
         title: LocaleKeys.settingsPreferences,
         items: [
           ProfileMenuItem(
+            icon: Icons.brightness_6_outlined,
+            label: LocaleKeys.appearanceTitle,
+            color: context.appColor(AppColors.sokoonTeal),
+            backgroundColor: context.appColor(
+              AppColors.mintLight,
+              surface: true,
+            ),
+            onTap: () => Go.to(const AppearanceScreen()),
+          ),
+          ProfileMenuItem(
             icon: Icons.language_rounded,
             label: LocaleKeys.changeLanguage,
-            color: AppColors.sokoonTeal,
-            backgroundColor: AppColors.mintLight,
+            color: context.appColor(AppColors.sokoonTeal),
+            backgroundColor: context.appColor(
+              AppColors.mintLight,
+              surface: true,
+            ),
             onTap: () => Go.to(const LanguageSelectionScreen()),
           ),
           ProfileMenuItem(
             icon: Icons.notifications_outlined,
             label: LocaleKeys.notificationSettingsTitle,
-            color: AppColors.sokoonTeal,
-            backgroundColor: AppColors.mintLight,
+            color: context.appColor(AppColors.sokoonTeal),
+            backgroundColor: context.appColor(
+              AppColors.mintLight,
+              surface: true,
+            ),
             onTap: () => Go.to(
               NotificationSettingsScreen(
                 role: workspace.isOwner
@@ -49,15 +65,21 @@ class ProfileSettingsContentView extends StatelessWidget {
           ProfileMenuItem(
             icon: Icons.privacy_tip_outlined,
             label: LocaleKeys.settingsPrivacyOptions,
-            color: AppColors.sokoonTeal,
-            backgroundColor: AppColors.mintLight,
+            color: context.appColor(AppColors.sokoonTeal),
+            backgroundColor: context.appColor(
+              AppColors.mintLight,
+              surface: true,
+            ),
             onTap: () => Go.to(ProfilePrivacyScreen(workspace: workspace)),
           ),
           ProfileMenuItem(
             icon: Icons.lock_outline_rounded,
             label: LocaleKeys.settingsChangePassword,
-            color: AppColors.sokoonTeal,
-            backgroundColor: AppColors.mintLight,
+            color: context.appColor(AppColors.sokoonTeal),
+            backgroundColor: context.appColor(
+              AppColors.mintLight,
+              surface: true,
+            ),
             onTap: () => Go.to(const ChangePasswordScreen()),
           ),
         ],
@@ -65,7 +87,9 @@ class ProfileSettingsContentView extends StatelessWidget {
       18.szH,
       AppText(
         LocaleKeys.settingsLegal,
-        style: AppTextStyles.bold12.copyWith(color: AppColors.sokoonGray),
+        style: AppTextStyles.bold12.copyWith(
+          color: context.appColor(AppColors.sokoonGray),
+        ),
       ),
       8.szH,
       const ProfileSurfaceCard(child: PublicPageMenu()),

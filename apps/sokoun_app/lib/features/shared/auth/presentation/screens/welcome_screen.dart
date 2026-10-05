@@ -33,7 +33,10 @@ class WelcomeScreen extends StatelessWidget {
             width: 64.r,
             height: 64.r,
             decoration: BoxDecoration(
-              color: content.headerIconBackgroundColor,
+              color: context.appColor(
+                content.headerIconBackgroundColor,
+                surface: true,
+              ),
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: AppLogoWidget(),
@@ -42,7 +45,7 @@ class WelcomeScreen extends StatelessWidget {
           AppText(
             content.title,
             style: AppTextStyles.bold.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 24.sp,
             ),
             textAlign: TextAlign.center,
@@ -51,7 +54,7 @@ class WelcomeScreen extends StatelessWidget {
           AppText(
             content.description,
             style: AppTextStyles.regular14.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 14.sp,
               height: 1.45,
             ),
@@ -63,7 +66,7 @@ class WelcomeScreen extends StatelessWidget {
           DefaultButton(
             onTap: () => Go.to(const RegisterFlowScreen()),
             title: content.primaryButtonTitle,
-            color: AppColors.sokoonTeal,
+            color: context.appColor(AppColors.sokoonTeal, surface: true),
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(8.r),
             height: 52.h,
@@ -83,7 +86,7 @@ class WelcomeScreen extends StatelessWidget {
             child: AppText(
               content.loginButtonTitle,
               style: AppTextStyles.semiBold.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 14.sp,
               ),
               textAlign: TextAlign.center,

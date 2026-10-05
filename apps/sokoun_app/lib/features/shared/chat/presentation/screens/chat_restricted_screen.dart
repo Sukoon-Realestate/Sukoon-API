@@ -18,7 +18,10 @@ class ChatRestrictedScreen extends StatelessWidget {
       titleWidget: ChatParticipantTitle(conversation: conversation),
       showBackButton: true,
       toolbarHeight: 56 + MediaQuery.textScalerOf(context).scale(16),
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: context.appColor(
+        AppColors.scaffoldBackground,
+        surface: true,
+      ),
       body: SafeArea(
         bottom: false,
         child: Column(

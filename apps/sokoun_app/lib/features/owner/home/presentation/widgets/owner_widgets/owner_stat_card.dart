@@ -27,9 +27,9 @@ class OwnerStatCard extends StatelessWidget {
       constraints: BoxConstraints(minHeight: 108.h),
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.sokoonBorder),
+        border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,16 +41,20 @@ class OwnerStatCard extends StatelessWidget {
                 width: 32.r,
                 height: 32.r,
                 decoration: BoxDecoration(
-                  color: iconBackgroundColor,
+                  color: context.appColor(iconBackgroundColor, surface: true),
                   borderRadius: BorderRadius.circular(10.r),
                 ),
-                child: Icon(icon, color: iconColor, size: 18.r),
+                child: Icon(
+                  icon,
+                  color: context.appColor(iconColor),
+                  size: 18.r,
+                ),
               ),
               Expanded(
                 child: AppText(
                   value,
                   style: AppTextStyles.bold.copyWith(
-                    color: AppColors.sokoonNavy,
+                    color: context.appColor(AppColors.sokoonNavy),
                     fontSize: 22.sp,
                   ),
                 ),
@@ -61,7 +65,7 @@ class OwnerStatCard extends StatelessWidget {
           AppText(
             label,
             style: AppTextStyles.regular13.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 13.sp,
               height: 1.45,
             ),

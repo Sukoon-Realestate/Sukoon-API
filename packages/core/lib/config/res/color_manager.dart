@@ -130,4 +130,23 @@ abstract class AppColors {
   static const Color sokoonMuted = grayLight;
   static const Color sokoonBorder = grayMist;
   static const Color sokoonSplashBackground = Color(0xFFEDFDF3);
+
+  static const Color sokoonDarkCanvas = slate;
+  static const Color sokoonDarkSurface = Color(0xFF182334);
+  static const Color sokoonDarkRaised = Color(0xFF223047);
+  static const Color sokoonDarkBorder = slateGray;
+  static const Color sokoonDarkText = grayBackground;
+  static const Color sokoonDarkSecondary = Color(0xFFA7B3C4);
+  static const Color sokoonDarkMuted = blueGrayLight;
+  static const Color sokoonDarkTeal = Color(0xFF5EEAD4);
+  static const Color sokoonDarkTealSurface = Color(0xFF123C3B);
+  static const Color sokoonDarkGoldSurface = Color(0xFF382E1B);
+  static const Color sokoonDarkSuccess = Color(0xFF4ADE80);
+  static const Color sokoonDarkSuccessSurface = Color(0xFF173729);
+  static const Color sokoonDarkError = Color(0xFFFB7185);
+  static const Color sokoonDarkErrorSurface = Color(0xFF40232F);
+  static const Color sokoonDarkInfo = Color(0xFF93C5FD);
+  static const Color sokoonDarkInfoSurface = Color(0xFF203452);
+  static const Color sokoonDarkWarning = Color(0xFFFBBF24);
+  static const Color sokoonDarkWarningSurface = Color(0xFF3B301B);
 }

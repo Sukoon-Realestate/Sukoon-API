@@ -28,13 +28,13 @@ class AppRetryView extends StatelessWidget {
               isConnectionError
                   ? Icons.cloud_off_outlined
                   : Icons.error_outline,
-              color: AppColors.sokoonMuted,
+              color: context.appColor(AppColors.sokoonMuted),
               size: 44.r,
             ),
             12.szH,
             AppText(
               LocaleKeys.exceptionError,
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 18.sp,
               fontWeight: FontWeight.w900,
               textAlign: TextAlign.center,
@@ -43,7 +43,7 @@ class AppRetryView extends StatelessWidget {
               6.szH,
               AppText(
                 LocaleKeys.checkInternet,
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 13.sp,
                 textAlign: TextAlign.center,
               ),

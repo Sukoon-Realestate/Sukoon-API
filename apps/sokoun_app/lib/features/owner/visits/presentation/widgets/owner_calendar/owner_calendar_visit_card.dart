@@ -9,26 +9,26 @@ class OwnerCalendarVisitCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isAccepted = visit.status.isAccepted;
     final Color statusColor = isAccepted || visit.status.isCompleted
-        ? AppColors.greenStrong
+        ? context.appColor(AppColors.greenStrong)
         : visit.status.isRejected
-        ? AppColors.sokoonRose
+        ? context.appColor(AppColors.sokoonRose)
         : visit.status.canDecide
-        ? AppColors.brown
-        : AppColors.sokoonGray;
+        ? context.appColor(AppColors.brown)
+        : context.appColor(AppColors.sokoonGray);
     final Color statusBackground = isAccepted || visit.status.isCompleted
-        ? AppColors.greenPale
+        ? context.appColor(AppColors.greenPale, surface: true)
         : visit.status.isRejected
-        ? AppColors.redPale
+        ? context.appColor(AppColors.redPale, surface: true)
         : visit.status.canDecide
-        ? AppColors.amberPale
-        : AppColors.grayBackground;
+        ? context.appColor(AppColors.amberPale, surface: true)
+        : context.appColor(AppColors.grayBackground, surface: true);
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: AppColors.sokoonBorder),
+        border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
       ),
       child: Row(
         children: [
@@ -46,7 +46,7 @@ class OwnerCalendarVisitCard extends StatelessWidget {
                 AppText(
                   visit.tenant.name,
                   style: AppTextStyles.extraBold.copyWith(
-                    color: AppColors.sokoonNavy,
+                    color: context.appColor(AppColors.sokoonNavy),
                     fontSize: 14.sp,
                   ),
                   maxLines: 1,
@@ -55,7 +55,7 @@ class OwnerCalendarVisitCard extends StatelessWidget {
                 AppText(
                   visit.property.title,
                   style: AppTextStyles.medium12.copyWith(
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                     fontSize: 12.sp,
                     height: 1.45,
                   ),
@@ -67,7 +67,7 @@ class OwnerCalendarVisitCard extends StatelessWidget {
                       ? visit.timeFormatted
                       : _formatOwnerCalendarVisitTime(context, visit.visitTime),
                   style: AppTextStyles.regular12.copyWith(
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                     fontSize: 12.sp,
                     height: 1.45,
                   ),
@@ -78,7 +78,7 @@ class OwnerCalendarVisitCard extends StatelessWidget {
                     vertical: 5.h,
                   ),
                   decoration: BoxDecoration(
-                    color: statusBackground,
+                    color: context.appColor(statusBackground, surface: true),
                     borderRadius: BorderRadius.circular(999.r),
                   ),
                   child: AppText(
@@ -88,7 +88,7 @@ class OwnerCalendarVisitCard extends StatelessWidget {
                         ? LocaleKeys.ownerCalendarConfirmed
                         : visit.status.label,
                     style: AppTextStyles.extraBold.copyWith(
-                      color: statusColor,
+                      color: context.appColor(statusColor),
                       fontSize: 12.sp,
                     ),
                   ),

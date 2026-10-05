@@ -31,13 +31,13 @@ class KycApprovedScreen extends StatelessWidget {
             child: Container(
               width: 112.r,
               height: 112.r,
-              decoration: const BoxDecoration(
-                color: AppColors.mintLight,
+              decoration: BoxDecoration(
+                color: context.appColor(AppColors.mintLight, surface: true),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.shield_outlined,
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
                 size: 52.r,
               ),
             ),
@@ -46,13 +46,13 @@ class KycApprovedScreen extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
             decoration: BoxDecoration(
-              color: AppColors.goldPale,
+              color: context.appColor(AppColors.goldPale, surface: true),
               borderRadius: BorderRadius.circular(999.r),
             ),
             child: AppText(
               LocaleKeys.verified,
               style: AppTextStyles.semiBold.copyWith(
-                color: AppColors.brown,
+                color: context.appColor(AppColors.brown),
                 fontSize: 12.sp,
               ),
             ),
@@ -61,7 +61,7 @@ class KycApprovedScreen extends StatelessWidget {
           AppText(
             LocaleKeys.kycApprovedTitle,
             style: AppTextStyles.bold.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 24.sp,
             ),
             textAlign: TextAlign.center,
@@ -70,7 +70,7 @@ class KycApprovedScreen extends StatelessWidget {
           AppText(
             LocaleKeys.kycApprovedDescription,
             style: AppTextStyles.regular14.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 14.sp,
               height: 1.45,
             ),
@@ -95,7 +95,7 @@ class KycApprovedScreen extends StatelessWidget {
           DefaultButton(
             onTap: () => Go.offAll(const TenantSearchScreen()),
             title: LocaleKeys.startHousingSearch,
-            color: AppColors.sokoonTeal,
+            color: context.appColor(AppColors.sokoonTeal, surface: true),
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(14.r),
             height: 52.h,

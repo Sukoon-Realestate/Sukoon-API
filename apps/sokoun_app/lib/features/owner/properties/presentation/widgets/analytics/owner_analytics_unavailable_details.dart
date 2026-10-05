@@ -17,7 +17,7 @@ class OwnerAnalyticsUnavailableDetails extends StatelessWidget {
       AppText(
         propertyTitle,
         style: AppTextStyles.semiBold.copyWith(
-          color: AppColors.sokoonNavy,
+          color: context.appColor(AppColors.sokoonNavy),
           fontSize: 16.sp,
         ),
       ),
@@ -26,14 +26,14 @@ class OwnerAnalyticsUnavailableDetails extends StatelessWidget {
         label: LocaleKeys.ownerAnalyticsViews,
         value: '$views',
         icon: Icons.visibility_outlined,
-        color: AppColors.blue,
-        backgroundColor: AppColors.bluePale,
+        color: context.appColor(AppColors.blue),
+        backgroundColor: context.appColor(AppColors.bluePale, surface: true),
       ),
       14.szH,
       AppText(
         LocaleKeys.ownerAnalyticsUnavailableDescription,
         style: AppTextStyles.regular14.copyWith(
-          color: AppColors.sokoonGray,
+          color: context.appColor(AppColors.sokoonGray),
           fontSize: 14.sp,
           height: 1.45,
         ),

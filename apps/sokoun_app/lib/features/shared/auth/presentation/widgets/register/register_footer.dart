@@ -40,7 +40,7 @@ class _RegisterFooterState extends State<RegisterFooter> {
           TextSpan(
             text: '${LocaleKeys.alreadyHaveAnAccount}؟ ',
             style: AppTextStyles.medium13.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 13.sp,
               height: 1.45,
             ),
@@ -49,7 +49,7 @@ class _RegisterFooterState extends State<RegisterFooter> {
                 text: LocaleKeys.login,
                 recognizer: _loginRecognizer,
                 style: AppTextStyles.extraBold.copyWith(
-                  color: AppColors.sokoonTeal,
+                  color: context.appColor(AppColors.sokoonTeal),
                 ),
               ),
             ],

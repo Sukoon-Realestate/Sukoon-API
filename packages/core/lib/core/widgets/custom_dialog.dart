@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 
 import '../../config/res/config_imports.dart';
 
-Future showCustomDialog(BuildContext context,
-    {required Widget child,
-    BorderRadiusGeometry? borderRadius,
-    EdgeInsetsGeometry? padding,
-    EdgeInsetsGeometry? margin,
-    bool barrierDismissible = true,
-    Color? color}) async {
+Future showCustomDialog(
+  BuildContext context, {
+  required Widget child,
+  BorderRadiusGeometry? borderRadius,
+  EdgeInsetsGeometry? padding,
+  EdgeInsetsGeometry? margin,
+  bool barrierDismissible = true,
+  Color? color,
+}) async {
   showGeneralDialog(
     context: context,
     barrierLabel: ConstantManager.emptyText,
@@ -24,7 +26,7 @@ Future showCustomDialog(BuildContext context,
             margin: margin ?? EdgeInsets.symmetric(horizontal: AppPadding.pH20),
             padding: padding ?? EdgeInsets.all(AppPadding.pH20),
             decoration: BoxDecoration(
-              color: color ?? AppColors.white,
+              color: color ?? context.appColor(AppColors.white, surface: true),
               borderRadius: borderRadius ?? BorderRadius.circular(AppSize.sH25),
             ),
             child: child,
@@ -35,10 +37,7 @@ Future showCustomDialog(BuildContext context,
     transitionBuilder: (_, anim, __, child) {
       return ScaleTransition(
         scale: anim,
-        child: FadeTransition(
-          opacity: anim,
-          child: child,
-        ),
+        child: FadeTransition(opacity: anim, child: child),
       );
     },
   );

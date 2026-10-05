@@ -14,18 +14,22 @@ class ChatPrivacyBanner extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 11.h),
       decoration: BoxDecoration(
-        color: AppColors.bluePale,
+        color: context.appColor(AppColors.bluePale, surface: true),
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Row(
         spacing: 8.w,
         children: [
-          Icon(Icons.lock_outline_rounded, color: AppColors.blue, size: 14.r),
+          Icon(
+            Icons.lock_outline_rounded,
+            color: context.appColor(AppColors.blue),
+            size: 14.r,
+          ),
           Expanded(
             child: AppText(
               text,
               style: AppTextStyles.medium12.copyWith(
-                color: AppColors.blue,
+                color: context.appColor(AppColors.blue),
                 fontSize: 12.sp,
                 height: 1.45,
               ),

@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../config/language/locale_keys.g.dart';
 import 'buttons/app_loading_button.dart';
 
-enum OptionsRanking{vertical, horizontal}
+enum OptionsRanking { vertical, horizontal }
 
 // T is the dataType
 class RadioSelectionWidget<T> extends StatefulWidget {
@@ -25,7 +25,8 @@ class RadioSelectionWidget<T> extends StatefulWidget {
   final Color selectedBackgroundColor;
   final Color unSelectedBackgroundColor;
 
-  const RadioSelectionWidget({super.key,
+  const RadioSelectionWidget({
+    super.key,
     required this.title,
     required this.onSubmit,
     required this.values,
@@ -43,20 +44,21 @@ class RadioSelectionWidget<T> extends StatefulWidget {
   }) : assert(values.length == titles.length);
 
   @override
-  State<RadioSelectionWidget<T>> createState() => _RadioSelectionWidgetState<T>();
+  State<RadioSelectionWidget<T>> createState() =>
+      _RadioSelectionWidgetState<T>();
 }
 
 class _RadioSelectionWidgetState<T> extends State<RadioSelectionWidget<T>> {
   T? groupValue;
   int _currentIndex = -1;
 
-  void _changeValue({required int index, T? newVal}){
+  void _changeValue({required int index, T? newVal}) {
     setState(() {
       _currentIndex = index;
       groupValue = newVal;
     });
 
-    if(!widget.showSubmitButton){
+    if (!widget.showSubmitButton) {
       widget.onSubmit.call(context, groupValue!);
     }
   }
@@ -67,39 +69,45 @@ class _RadioSelectionWidgetState<T> extends State<RadioSelectionWidget<T>> {
     super.initState();
   }
 
-  List<Widget> get _children =>  List.generate(
+  List<Widget> get _children => List.generate(
     widget.values.length,
-        (index) => index != widget.values.length -1? _RadioItem<T?>(
-      title: widget.titles[index],
-      value: widget.values[index],
-      groupValue: groupValue,
-      isSelected: _currentIndex == index,
-      selectedBackgroundColor: widget.selectedBackgroundColor,
-      unSelectedBackgroundColor: widget.unSelectedBackgroundColor,
-      onChanged: (newVal) => _changeValue(index: index, newVal: newVal),
-    ) : Column(
-      spacing: 10.h,
-      children: [
-        _RadioItem<T?>(
-          isSelected: _currentIndex == index,
-          selectedBackgroundColor: widget.selectedBackgroundColor,
-          unSelectedBackgroundColor: widget.unSelectedBackgroundColor,
-          title: widget.titles[index],
-          value: widget.values[index],
-          groupValue: groupValue,
-          onChanged: (newVal) => _changeValue(index: index, newVal: newVal),
-        ),
-        if(widget.showSubmitButton)
-          AppLoadingButton(
-            title: widget.btnTitle?? LocaleKeys.confirm,
-            asyncCall: (context) async => groupValue == null? null :
-            await widget.onSubmit(context, groupValue as T),
-            height: widget.btnHeight?? 40.h,
-            buttonColor: groupValue == null?
-            Colors.grey[300] : widget.btnColor ?? AppColors.primary,
+    (index) => index != widget.values.length - 1
+        ? _RadioItem<T?>(
+            title: widget.titles[index],
+            value: widget.values[index],
+            groupValue: groupValue,
+            isSelected: _currentIndex == index,
+            selectedBackgroundColor: widget.selectedBackgroundColor,
+            unSelectedBackgroundColor: widget.unSelectedBackgroundColor,
+            onChanged: (newVal) => _changeValue(index: index, newVal: newVal),
+          )
+        : Column(
+            spacing: 10.h,
+            children: [
+              _RadioItem<T?>(
+                isSelected: _currentIndex == index,
+                selectedBackgroundColor: widget.selectedBackgroundColor,
+                unSelectedBackgroundColor: widget.unSelectedBackgroundColor,
+                title: widget.titles[index],
+                value: widget.values[index],
+                groupValue: groupValue,
+                onChanged: (newVal) =>
+                    _changeValue(index: index, newVal: newVal),
+              ),
+              if (widget.showSubmitButton)
+                AppLoadingButton(
+                  title: widget.btnTitle ?? LocaleKeys.confirm,
+                  asyncCall: (context) async => groupValue == null
+                      ? null
+                      : await widget.onSubmit(context, groupValue as T),
+                  height: widget.btnHeight ?? 40.h,
+                  buttonColor: groupValue == null
+                      ? Colors.grey[300]
+                      : widget.btnColor ??
+                            context.appColor(AppColors.primary, surface: true),
+                ),
+            ],
           ),
-      ],
-    ),
   );
 
   @override
@@ -114,19 +122,13 @@ class _RadioSelectionWidgetState<T> extends State<RadioSelectionWidget<T>> {
           spacing: 16.h,
           children: [
             Align(
-                alignment: widget.titleAlignment,
-                child: Text(widget.title, style: widget.titleTextStyle)),
-            if(widget.ranking == OptionsRanking.vertical)
-              Column(
-                spacing: 10.h,
-                children: _children,
-              )
+              alignment: widget.titleAlignment,
+              child: Text(widget.title, style: widget.titleTextStyle),
+            ),
+            if (widget.ranking == OptionsRanking.vertical)
+              Column(spacing: 10.h, children: _children)
             else
-              Wrap(
-                spacing: 10.w,
-                runSpacing: 10.h,
-                children: _children,
-              )
+              Wrap(spacing: 10.w, runSpacing: 10.h, children: _children),
           ],
         ).paddingAll(12.r),
       ),
@@ -143,7 +145,8 @@ class _RadioItem<T> extends StatelessWidget {
   final Color selectedBackgroundColor;
   final Color unSelectedBackgroundColor;
 
-  const _RadioItem({super.key,
+  const _RadioItem({
+    super.key,
     required this.title,
     required this.value,
     required this.groupValue,
@@ -162,13 +165,11 @@ class _RadioItem<T> extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(7.r),
           border: Border.all(
-              color: isSelected?
-              selectedBackgroundColor :
-              Colors.grey
+            color: isSelected ? selectedBackgroundColor : Colors.grey,
           ),
-          color: isSelected?
-          selectedBackgroundColor :
-          unSelectedBackgroundColor,
+          color: isSelected
+              ? selectedBackgroundColor
+              : unSelectedBackgroundColor,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -177,7 +178,7 @@ class _RadioItem<T> extends StatelessWidget {
               value: value,
               groupValue: groupValue,
               onChanged: onChanged,
-              activeColor: AppColors.primary,
+              activeColor: context.appColor(AppColors.primary),
             ),
             title,
           ],

@@ -83,13 +83,16 @@ class _ProfileDeleteAccountScreenState
                 ? AppLoadingButton(
                     asyncCall: _delete,
                     title: LocaleKeys.settingsDeletePermanently,
-                    buttonColor: AppColors.sokoonRose,
+                    buttonColor: context.appColor(
+                      AppColors.sokoonRose,
+                      surface: true,
+                    ),
                   )
                 : DefaultButton(
                     title: LocaleKeys.settingsDeletePermanently,
                     disabled: true,
-                    color: AppColors.grayPale,
-                    textColor: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.grayPale, surface: true),
+                    textColor: context.appColor(AppColors.sokoonGray),
                   ),
           ),
         ),

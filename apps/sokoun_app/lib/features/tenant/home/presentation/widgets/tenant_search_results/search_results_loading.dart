@@ -10,14 +10,17 @@ class SearchResultsLoading extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(18),
       children: [
-        Container(height: 48, color: AppColors.white),
+        Container(
+          height: 48,
+          color: context.appColor(AppColors.white, surface: true),
+        ),
         const SizedBox(height: 20),
         for (int index = 0; index < 3; index++)
           Container(
             height: 200,
             margin: const EdgeInsets.only(bottom: 16),
             decoration: BoxDecoration(
-              color: AppColors.white,
+              color: context.appColor(AppColors.white, surface: true),
               borderRadius: BorderRadius.circular(16),
             ),
           ),

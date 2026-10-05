@@ -179,7 +179,10 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
             title: LocaleKeys.ownerRequestDetailsTitle,
             showBackButton: true,
             isBackEnabled: !isUpdating,
-            backgroundColor: AppColors.scaffoldBackground,
+            backgroundColor: context.appColor(
+              AppColors.scaffoldBackground,
+              surface: true,
+            ),
             body: body,
           ),
         ),

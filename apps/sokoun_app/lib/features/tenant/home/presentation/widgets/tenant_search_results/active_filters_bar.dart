@@ -25,9 +25,11 @@ class ActiveFiltersBar extends StatelessWidget {
         ? const SizedBox(width: double.infinity)
         : Container(
             padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-            decoration: const BoxDecoration(
-              color: AppColors.white,
-              border: Border(bottom: BorderSide(color: AppColors.grayPale)),
+            decoration: BoxDecoration(
+              color: context.appColor(AppColors.white, surface: true),
+              border: Border(
+                bottom: BorderSide(color: context.appColor(AppColors.grayPale)),
+              ),
             ),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,

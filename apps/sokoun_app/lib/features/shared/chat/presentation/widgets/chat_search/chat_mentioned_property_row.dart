@@ -13,8 +13,10 @@ class ChatMentionedPropertyRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 12.h),
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: AppColors.sokoonBorder)),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: context.appColor(AppColors.sokoonBorder)),
+        ),
       ),
       child: Row(
         spacing: 12.w,
@@ -24,7 +26,7 @@ class ChatMentionedPropertyRow extends StatelessWidget {
             height: 36.r,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: AppColors.grayBluePale,
+              color: context.appColor(AppColors.grayBluePale, surface: true),
               borderRadius: BorderRadius.circular(12.r),
             ),
             child: Icon(
@@ -37,7 +39,7 @@ class ChatMentionedPropertyRow extends StatelessWidget {
             child: AppText(
               property,
               style: AppTextStyles.regular14.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 14.sp,
                 height: 1.45,
               ),

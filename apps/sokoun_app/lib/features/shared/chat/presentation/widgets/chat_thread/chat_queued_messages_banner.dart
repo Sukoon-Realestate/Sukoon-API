@@ -28,9 +28,9 @@ class ChatQueuedMessagesBanner extends StatelessWidget {
             margin: EdgeInsetsDirectional.fromSTEB(16.w, 0, 16.w, 8.h),
             padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 9.h),
             decoration: BoxDecoration(
-              color: AppColors.amberPale,
+              color: context.appColor(AppColors.amberPale, surface: true),
               borderRadius: BorderRadius.circular(12.r),
-              border: Border.all(color: AppColors.amber),
+              border: Border.all(color: context.appColor(AppColors.amber)),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -38,14 +38,14 @@ class ChatQueuedMessagesBanner extends StatelessWidget {
               children: [
                 Icon(
                   Icons.schedule_send_rounded,
-                  color: AppColors.brown,
+                  color: context.appColor(AppColors.brown),
                   size: 17.r,
                 ),
                 Flexible(
                   child: AppText(
                     LocaleKeys.chatQueuedMessages,
                     style: AppTextStyles.semiBold.copyWith(
-                      color: AppColors.brown,
+                      color: context.appColor(AppColors.brown),
                       fontSize: 12.sp,
                     ),
                     textAlign: TextAlign.center,

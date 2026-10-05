@@ -1,4 +1,9 @@
 {
+  "appearance_title": "Appearance",
+  "appearance_description": "Choose a light or dark appearance, or follow your device settings. Your choice is saved automatically.",
+  "appearance_system": "Use device settings",
+  "appearance_light": "Light mode",
+  "appearance_dark": "Dark mode",
   "validation_identity_required": "Enter your identity number",
   "validation_field_required": "{field} is required",
   "validation_integer": "Enter a whole number",

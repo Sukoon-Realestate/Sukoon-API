@@ -13,19 +13,23 @@ class OwnerVisitVerificationWarning extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     padding: EdgeInsets.all(12.r),
     decoration: BoxDecoration(
-      color: AppColors.amberPale,
+      color: context.appColor(AppColors.amberPale, surface: true),
       borderRadius: BorderRadius.circular(12.r),
     ),
     child: Row(
       spacing: 8.w,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(Icons.shield_outlined, color: AppColors.amber, size: 20.r),
+        Icon(
+          Icons.shield_outlined,
+          color: context.appColor(AppColors.amber),
+          size: 20.r,
+        ),
         Expanded(
           child: AppText(
             message,
             style: AppTextStyles.regular12.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
             ),
           ),
         ),

@@ -22,7 +22,7 @@ class HomeNavigationRail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Material(
-    color: AppColors.white,
+    color: context.appColor(AppColors.white, surface: true),
     child: SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 24),
@@ -53,7 +53,10 @@ class HomeNavigationRail extends StatelessWidget {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: i == currentIndex
-                            ? AppColors.mintLight
+                            ? context.appColor(
+                                AppColors.mintLight,
+                                surface: true,
+                              )
                             : AppColors.transparent,
                         borderRadius: BorderRadius.circular(16),
                       ),
@@ -72,8 +75,8 @@ class HomeNavigationRail extends StatelessWidget {
                               style: AppTextStyles.regular12.copyWith(
                                 fontSize: 12,
                                 color: i == currentIndex
-                                    ? AppColors.sokoonTeal
-                                    : AppColors.sokoonGray,
+                                    ? context.appColor(AppColors.sokoonTeal)
+                                    : context.appColor(AppColors.sokoonGray),
                                 fontWeight: i == currentIndex
                                     ? FontWeight.w700
                                     : FontWeight.w500,

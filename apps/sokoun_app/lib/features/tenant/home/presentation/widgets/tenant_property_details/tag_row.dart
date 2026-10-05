@@ -21,19 +21,22 @@ class TenantPropertyTagRow extends StatelessWidget {
         _SmallTag(
           label: property.propertyType,
           backgroundColor: AppColors.tealAlpha09,
-          textColor: AppColors.sokoonTeal,
+          textColor: context.appColor(AppColors.sokoonTeal),
         ),
         if (property.isFurnished)
           _SmallTag(
             label: LocaleKeys.tenantPropertyDetailsFurnished,
-            backgroundColor: AppColors.grayBackground,
-            textColor: AppColors.sokoonGray,
+            backgroundColor: context.appColor(
+              AppColors.grayBackground,
+              surface: true,
+            ),
+            textColor: context.appColor(AppColors.sokoonGray),
           ),
         if (property.isVerified)
           _SmallTag(
             label: '${LocaleKeys.verified} ✓',
             backgroundColor: AppColors.greenAlpha09,
-            textColor: AppColors.green,
+            textColor: context.appColor(AppColors.green),
           ),
       ],
     );
@@ -56,13 +59,13 @@ class _SmallTag extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 4.h),
       decoration: BoxDecoration(
-        color: backgroundColor,
+        color: context.appColor(backgroundColor, surface: true),
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: AppText(
         label,
         style: AppTextStyles.extraBold.copyWith(
-          color: textColor,
+          color: context.appColor(textColor),
           fontSize: 11.sp,
         ),
       ),

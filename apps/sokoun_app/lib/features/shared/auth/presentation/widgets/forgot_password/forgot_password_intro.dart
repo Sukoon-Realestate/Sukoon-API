@@ -12,7 +12,7 @@ class ForgotPasswordIntro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color accentColor = AppColors.sokoonTeal;
+    final Color accentColor = context.appColor(AppColors.sokoonTeal);
 
     return Column(
       children: [
@@ -20,16 +20,20 @@ class ForgotPasswordIntro extends StatelessWidget {
           width: 80.r,
           height: 80.r,
           decoration: BoxDecoration(
-            color: AppColors.mintLight,
+            color: context.appColor(AppColors.mintLight, surface: true),
             borderRadius: BorderRadius.circular(24.r),
           ),
-          child: Icon(Icons.lock_reset_rounded, color: accentColor, size: 38.r),
+          child: Icon(
+            Icons.lock_reset_rounded,
+            color: context.appColor(accentColor),
+            size: 38.r,
+          ),
         ).centerWidget,
         20.szH,
         AppText(
           LocaleKeys.forgotPassword,
           style: AppTextStyles.bold.copyWith(
-            color: AppColors.sokoonNavy,
+            color: context.appColor(AppColors.sokoonNavy),
             fontSize: 20.sp,
           ),
           textAlign: TextAlign.center,
@@ -38,7 +42,7 @@ class ForgotPasswordIntro extends StatelessWidget {
         AppText(
           LocaleKeys.forgotPasswordDescription,
           style: AppTextStyles.medium13.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 13.sp,
             height: 1.7,
           ),

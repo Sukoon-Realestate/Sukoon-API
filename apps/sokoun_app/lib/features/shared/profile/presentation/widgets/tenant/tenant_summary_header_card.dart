@@ -22,10 +22,10 @@ class TenantSummaryHeaderCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 22.h),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           begin: AlignmentDirectional.topStart,
           end: AlignmentDirectional.bottomEnd,
-          colors: [AppColors.sokoonTeal, AppColors.tealDark],
+          colors: [context.appColor(AppColors.sokoonTeal), AppColors.tealDark],
         ),
         borderRadius: BorderRadius.circular(20.r),
       ),
@@ -37,7 +37,7 @@ class TenantSummaryHeaderCard extends StatelessWidget {
               ProfileAvatar(
                 name: userName,
                 avatarUrl: user.avatar,
-                accentColor: AppColors.sokoonTeal,
+                accentColor: context.appColor(AppColors.sokoonTeal),
                 backgroundColor: AppColors.whiteAlpha10,
                 size: 56,
                 useInitial: true,

@@ -89,7 +89,7 @@ class _UseCurrentLocationButtonState extends State<UseCurrentLocationButton> {
       onPressed: busy ? null : _locate,
       style: TextButton.styleFrom(
         minimumSize: Size(0, 44.h),
-        foregroundColor: AppColors.sokoonTeal,
+        foregroundColor: context.appColor(AppColors.sokoonTeal),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -99,7 +99,7 @@ class _UseCurrentLocationButtonState extends State<UseCurrentLocationButton> {
             SizedBox.square(
               dimension: 18.r,
               child: CustomLoading.showLoadingView(
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
                 size: 18.r,
               ),
             )
@@ -111,7 +111,7 @@ class _UseCurrentLocationButtonState extends State<UseCurrentLocationButton> {
                   ? LocaleKeys.currentLocationLoading
                   : LocaleKeys.useMyLocation,
               style: AppTextStyles.bold14.copyWith(
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
                 fontSize: 14.sp,
                 height: 1.45,
               ),

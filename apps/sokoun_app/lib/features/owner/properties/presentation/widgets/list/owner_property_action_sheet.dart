@@ -10,7 +10,7 @@ class OwnerPropertyActionSheet extends StatelessWidget {
     return Container(
       padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 24.h),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
       ),
       child: Column(
@@ -21,7 +21,7 @@ class OwnerPropertyActionSheet extends StatelessWidget {
             width: 42.w,
             height: 4.h,
             decoration: BoxDecoration(
-              color: AppColors.graySoft,
+              color: context.appColor(AppColors.graySoft, surface: true),
               borderRadius: BorderRadius.circular(99.r),
             ),
           ).centerWidget,
@@ -29,7 +29,7 @@ class OwnerPropertyActionSheet extends StatelessWidget {
           AppText(
             LocaleKeys.ownerPropertiesOptions,
             style: AppTextStyles.bold.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 20.sp,
             ),
             textAlign: TextAlign.center,
@@ -54,7 +54,7 @@ class _OwnerPropertyActionRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.white,
+      color: context.appColor(AppColors.white, surface: true),
       borderRadius: BorderRadius.circular(16.r),
       child: InkWell(
         onTap: () => Go.back(action),
@@ -62,7 +62,7 @@ class _OwnerPropertyActionRow extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(12.w),
           decoration: BoxDecoration(
-            border: Border.all(color: AppColors.sokoonBorder),
+            border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
             borderRadius: BorderRadius.circular(16.r),
           ),
           child: Row(
@@ -71,12 +71,15 @@ class _OwnerPropertyActionRow extends StatelessWidget {
                 width: 42.r,
                 height: 42.r,
                 decoration: BoxDecoration(
-                  color: action.backgroundColor,
+                  color: context.appColor(
+                    action.backgroundColor,
+                    surface: true,
+                  ),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Icon(
                   action.icon,
-                  color: action.foregroundColor,
+                  color: context.appColor(action.foregroundColor),
                   size: 22.r,
                 ),
               ),
@@ -85,14 +88,14 @@ class _OwnerPropertyActionRow extends StatelessWidget {
                 child: AppText(
                   action.label(isHidden: property.status.isHidden),
                   style: AppTextStyles.extraBold.copyWith(
-                    color: action.foregroundColor,
+                    color: context.appColor(action.foregroundColor),
                     fontSize: 14.sp,
                   ),
                 ),
               ),
               Icon(
                 Icons.arrow_forward_ios_rounded,
-                color: AppColors.sokoonMuted,
+                color: context.appColor(AppColors.sokoonMuted),
                 size: 16.r,
               ),
             ],

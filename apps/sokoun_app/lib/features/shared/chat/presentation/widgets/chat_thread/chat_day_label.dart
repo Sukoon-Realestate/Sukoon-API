@@ -16,7 +16,7 @@ class ChatDayLabel extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 9.w, vertical: 3.h),
       decoration: BoxDecoration(
-        color: AppColors.scaffoldBackground,
+        color: context.appColor(AppColors.scaffoldBackground, surface: true),
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: AppText(
@@ -24,7 +24,7 @@ class ChatDayLabel extends StatelessWidget {
             ? LocaleKeys.chatToday
             : MaterialLocalizations.of(context).formatMediumDate(date),
         style: AppTextStyles.regular11.copyWith(
-          color: AppColors.sokoonGray,
+          color: context.appColor(AppColors.sokoonGray),
           fontSize: 12.sp,
           height: 1.45,
         ),

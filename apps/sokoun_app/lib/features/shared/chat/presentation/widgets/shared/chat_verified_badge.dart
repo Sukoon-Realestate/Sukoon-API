@@ -13,7 +13,7 @@ class ChatVerifiedBadge extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 7.w, vertical: 3.h),
       decoration: BoxDecoration(
-        color: AppColors.goldPale,
+        color: context.appColor(AppColors.goldPale, surface: true),
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Row(

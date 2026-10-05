@@ -28,7 +28,10 @@ class _OwnerRevenueScreenState extends State<OwnerRevenueScreen> {
     child: AppScaffold(
       title: LocaleKeys.ownerRevenueTitle,
       showBackButton: widget.showBackButton,
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: context.appColor(
+        AppColors.scaffoldBackground,
+        surface: true,
+      ),
       contentWidth: SokounContentWidth.wide,
       body: SafeArea(
         child:

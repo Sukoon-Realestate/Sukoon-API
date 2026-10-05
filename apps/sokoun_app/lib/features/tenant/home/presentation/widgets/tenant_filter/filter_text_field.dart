@@ -34,7 +34,7 @@ class FilterTextField extends StatelessWidget {
         AppText(
           label,
           style: AppTextStyles.semiBold.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 12.sp,
           ),
           textAlign: TextAlign.start,
@@ -43,9 +43,9 @@ class FilterTextField extends StatelessWidget {
           constraints: BoxConstraints(minHeight: 48.h),
           padding: EdgeInsets.symmetric(horizontal: 12.w),
           decoration: BoxDecoration(
-            color: AppColors.grayOffWhite,
+            color: context.appColor(AppColors.grayOffWhite, surface: true),
             borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(color: AppColors.grayPale),
+            border: Border.all(color: context.appColor(AppColors.grayPale)),
           ),
           child: TextField(
             controller: controller,
@@ -54,7 +54,7 @@ class FilterTextField extends StatelessWidget {
             inputFormatters: inputFormatters,
             textAlign: textAlign,
             style: AppTextStyles.semiBold.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 13.sp,
             ),
             decoration: InputDecoration(

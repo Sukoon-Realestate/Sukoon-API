@@ -15,8 +15,8 @@ class SupportHelpHeader extends StatelessWidget {
             padding: EdgeInsets.all(12.r),
             decoration: BoxDecoration(
               color: workspace.isOwner
-                  ? AppColors.goldPale
-                  : AppColors.mintLight,
+                  ? context.appColor(AppColors.goldPale, surface: true)
+                  : context.appColor(AppColors.mintLight, surface: true),
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: Icon(
@@ -25,7 +25,7 @@ class SupportHelpHeader extends StatelessWidget {
                   : Icons.support_agent_rounded,
               color: workspace.isOwner
                   ? AppColors.sokoonGold
-                  : AppColors.sokoonTeal,
+                  : context.appColor(AppColors.sokoonTeal),
               size: 28.r,
             ),
           ),
@@ -35,7 +35,7 @@ class SupportHelpHeader extends StatelessWidget {
                   ? LocaleKeys.supportOwnerIntro
                   : LocaleKeys.supportTenantIntro,
               style: AppTextStyles.regular14.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 height: 1.5,
               ),
             ),
@@ -53,8 +53,8 @@ class SupportHelpHeader extends StatelessWidget {
           ),
           DefaultButton(
             title: LocaleKeys.supportMyTickets,
-            color: AppColors.white,
-            textColor: AppColors.sokoonNavy,
+            color: context.appColor(AppColors.white, surface: true),
+            textColor: context.appColor(AppColors.sokoonNavy),
             onTap: () => Go.to(SupportTicketsScreen(workspace: workspace)),
           ),
         ],

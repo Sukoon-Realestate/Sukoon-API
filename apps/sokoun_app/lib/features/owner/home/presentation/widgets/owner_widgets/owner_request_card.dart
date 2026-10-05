@@ -44,9 +44,9 @@ class OwnerRequestCard extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(14.w),
           decoration: BoxDecoration(
-            color: AppColors.white,
+            color: context.appColor(AppColors.white, surface: true),
             borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(color: AppColors.sokoonBorder),
+            border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
             boxShadow: const [
               BoxShadow(
                 color: AppColors.shadowBlack04,
@@ -60,8 +60,8 @@ class OwnerRequestCard extends StatelessWidget {
               Container(
                 width: 38.r,
                 height: 38.r,
-                decoration: const BoxDecoration(
-                  color: AppColors.bluePale,
+                decoration: BoxDecoration(
+                  color: context.appColor(AppColors.bluePale, surface: true),
                   shape: BoxShape.circle,
                 ),
                 child: avatarUrl?.isNotEmpty ?? false
@@ -71,14 +71,14 @@ class OwnerRequestCard extends StatelessWidget {
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) => Icon(
                             Icons.person_outline,
-                            color: AppColors.blue,
+                            color: context.appColor(AppColors.blue),
                             size: 20.r,
                           ),
                         ),
                       )
                     : Icon(
                         Icons.person_outline,
-                        color: AppColors.blue,
+                        color: context.appColor(AppColors.blue),
                         size: 20.r,
                       ),
               ),
@@ -91,7 +91,7 @@ class OwnerRequestCard extends StatelessWidget {
                     AppText(
                       name,
                       style: AppTextStyles.bold14.copyWith(
-                        color: AppColors.sokoonNavy,
+                        color: context.appColor(AppColors.sokoonNavy),
                         fontSize: 14.sp,
                         height: 1.45,
                       ),
@@ -101,7 +101,7 @@ class OwnerRequestCard extends StatelessWidget {
                     AppText(
                       details,
                       style: AppTextStyles.regular12.copyWith(
-                        color: AppColors.sokoonGray,
+                        color: context.appColor(AppColors.sokoonGray),
                         fontSize: 12.sp,
                         height: 1.45,
                       ),
@@ -115,8 +115,8 @@ class OwnerRequestCard extends StatelessWidget {
               DefaultButton(
                 onTap: _openDetails,
                 title: LocaleKeys.ownerRequestDetailsTitle,
-                color: AppColors.bluePale,
-                textColor: AppColors.blue,
+                color: context.appColor(AppColors.bluePale, surface: true),
+                textColor: context.appColor(AppColors.blue),
                 borderRadius: BorderRadius.circular(10.r),
                 padding: EdgeInsets.symmetric(horizontal: 8.w),
                 width: 90.w,

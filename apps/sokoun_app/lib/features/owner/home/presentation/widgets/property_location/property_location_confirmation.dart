@@ -45,7 +45,7 @@ class PropertyLocationConfirmation extends StatelessWidget {
                       ? LocaleKeys.ownerAddPropertySelectedLocation
                       : selected!.address,
                   style: AppTextStyles.regular14.copyWith(
-                    color: AppColors.sokoonNavy,
+                    color: context.appColor(AppColors.sokoonNavy),
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,

@@ -31,11 +31,11 @@ class TenantSearchField extends StatelessWidget {
       textAlign: TextAlign.start,
       title: LocaleKeys.tenantSearchFieldHint,
       borderRadius: 16.r,
-      borderColor: AppColors.sokoonTeal,
-      fillColor: AppColors.white,
+      borderColor: context.appColor(AppColors.sokoonTeal),
+      fillColor: context.appColor(AppColors.white, surface: true),
       contentPadding: EdgeInsets.symmetric(vertical: 15.h),
       style: AppTextStyles.semiBold.copyWith(
-        color: AppColors.sokoonNavy,
+        color: context.appColor(AppColors.sokoonNavy),
         fontSize: 14.sp,
       ),
       prefixIcon: GestureDetector(
@@ -44,26 +44,30 @@ class TenantSearchField extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
           decoration: BoxDecoration(
-            color: AppColors.mintLight,
+            color: context.appColor(AppColors.mintLight, surface: true),
             borderRadius: BorderRadius.circular(12.r),
           ),
           child: AppText(
             LocaleKeys.search,
             style: AppTextStyles.extraBold.copyWith(
-              color: AppColors.sokoonTeal,
+              color: context.appColor(AppColors.sokoonTeal),
               fontSize: 12.sp,
             ),
           ),
         ),
       ).paddingOnlyDirectional(start: 8.w),
       suffixIcon: controller == null
-          ? Icon(Icons.search_rounded, color: AppColors.sokoonMuted, size: 20.r)
+          ? Icon(
+              Icons.search_rounded,
+              color: context.appColor(AppColors.sokoonMuted),
+              size: 20.r,
+            )
           : ValueListenableBuilder<TextEditingValue>(
               valueListenable: controller!,
               builder: (context, value, _) => value.text.isEmpty
                   ? Icon(
                       Icons.search_rounded,
-                      color: AppColors.sokoonMuted,
+                      color: context.appColor(AppColors.sokoonMuted),
                       size: 20.r,
                     )
                   : IconButton(
@@ -74,7 +78,7 @@ class TenantSearchField extends StatelessWidget {
                       },
                       icon: Icon(
                         Icons.close_rounded,
-                        color: AppColors.sokoonGray,
+                        color: context.appColor(AppColors.sokoonGray),
                         size: 20.r,
                       ),
                     ),

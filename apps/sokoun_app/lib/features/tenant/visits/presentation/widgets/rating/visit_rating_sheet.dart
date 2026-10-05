@@ -89,7 +89,7 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
         MediaQuery.viewInsetsOf(context).bottom + 24.h,
       ),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
       child: FirstValidationErrorForm(
@@ -103,7 +103,10 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
                 width: 48.w,
                 height: 5.h,
                 decoration: BoxDecoration(
-                  color: AppColors.sokoonBorder,
+                  color: context.appColor(
+                    AppColors.sokoonBorder,
+                    surface: true,
+                  ),
                   borderRadius: BorderRadius.circular(999.r),
                 ),
               ).centerWidget,
@@ -112,8 +115,8 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
                 width: 56.r,
                 height: 56.r,
                 alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  color: AppColors.goldPale,
+                decoration: BoxDecoration(
+                  color: context.appColor(AppColors.goldPale, surface: true),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -126,7 +129,7 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
               AppText(
                 LocaleKeys.tenantVisitRateTitle,
                 style: AppTextStyles.bold.copyWith(
-                  color: AppColors.sokoonNavy,
+                  color: context.appColor(AppColors.sokoonNavy),
                   fontSize: 20.sp,
                 ),
                 textAlign: TextAlign.center,
@@ -136,7 +139,7 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
               AppText(
                 widget.propertyTitle,
                 style: AppTextStyles.regular14.copyWith(
-                  color: AppColors.sokoonGray,
+                  color: context.appColor(AppColors.sokoonGray),
                   fontSize: 14.sp,
                   height: 1.45,
                 ),
@@ -170,21 +173,23 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
                 height: 80.h,
                 padding: EdgeInsets.symmetric(horizontal: 14.w),
                 decoration: BoxDecoration(
-                  color: AppColors.white,
+                  color: context.appColor(AppColors.white, surface: true),
                   borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(color: AppColors.sokoonBorder),
+                  border: Border.all(
+                    color: context.appColor(AppColors.sokoonBorder),
+                  ),
                 ),
                 child: TextField(
                   controller: _commentController,
                   maxLines: 3,
                   style: AppTextStyles.base.copyWith(
-                    color: AppColors.sokoonNavy,
+                    color: context.appColor(AppColors.sokoonNavy),
                     fontSize: 13.sp,
                   ),
                   decoration: InputDecoration(
                     hintText: LocaleKeys.tenantVisitRatingCommentHint,
                     hintStyle: AppTextStyles.base.copyWith(
-                      color: AppColors.sokoonGray,
+                      color: context.appColor(AppColors.sokoonGray),
                       fontSize: 13.sp,
                     ),
                     border: InputBorder.none,
@@ -203,7 +208,10 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
                     : AppLoadingButton(
                         asyncCall: (_) => submit(),
                         title: LocaleKeys.tenantVisitRatingSubmit,
-                        buttonColor: AppColors.sokoonTeal,
+                        buttonColor: context.appColor(
+                          AppColors.sokoonTeal,
+                          surface: true,
+                        ),
                       ),
               ),
             ],
@@ -233,7 +241,7 @@ class _VisitRatingCriterion extends StatelessWidget {
           child: AppText(
             label,
             style: AppTextStyles.bold14.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 14.sp,
               height: 1.45,
             ),

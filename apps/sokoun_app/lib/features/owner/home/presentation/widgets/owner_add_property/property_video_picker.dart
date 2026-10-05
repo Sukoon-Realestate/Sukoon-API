@@ -98,7 +98,7 @@ class _PropertyVideoPickerState extends State<PropertyVideoPicker> {
             AppText(LocaleKeys.ownerPropertyVideoPreparing),
           ],
           if (selection.error case final error?)
-            AppText(error, color: AppColors.red),
+            AppText(error, color: context.appColor(AppColors.red)),
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -120,13 +120,13 @@ class _PropertyVideoPickerState extends State<PropertyVideoPicker> {
               if (widget.file != null || widget.existingUrl.isNotEmpty)
                 TextButton.icon(
                   onPressed: selection.preparing ? null : widget.onVideoRemoved,
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.delete_outline_rounded,
-                    color: AppColors.red,
+                    color: context.appColor(AppColors.red),
                   ),
                   label: AppText(
                     LocaleKeys.ownerPropertyVideoRemove,
-                    color: AppColors.red,
+                    color: context.appColor(AppColors.red),
                   ),
                 ),
             ],

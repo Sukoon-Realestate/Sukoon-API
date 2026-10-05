@@ -21,8 +21,8 @@ class AppFacebookSignInButton extends StatelessWidget {
           await onSuccess.call(userToken);
         }
       },
-      color: AppColors.white,
-      borderColor: AppColors.sokoonBorder,
+      color: context.appColor(AppColors.white, surface: true),
+      borderColor: context.appColor(AppColors.sokoonBorder),
       borderRadius: BorderRadius.circular(12.r),
       height: 48.h,
       width: double.infinity,

@@ -27,12 +27,12 @@ class ChatRestrictedContent extends StatelessWidget {
             height: 80.r,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: AppColors.orangePale,
+              color: context.appColor(AppColors.orangePale, surface: true),
               borderRadius: BorderRadius.circular(24.r),
             ),
             child: Icon(
               Icons.lock_outline_rounded,
-              color: AppColors.amber,
+              color: context.appColor(AppColors.amber),
               size: 34.r,
             ),
           ),
@@ -40,7 +40,7 @@ class ChatRestrictedContent extends StatelessWidget {
           AppText(
             LocaleKeys.chatRestrictedTitle,
             style: AppTextStyles.bold.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 18.sp,
             ),
             textAlign: TextAlign.center,
@@ -50,7 +50,7 @@ class ChatRestrictedContent extends StatelessWidget {
           AppText(
             LocaleKeys.chatRestrictedDescription,
             style: AppTextStyles.regular14.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 14.sp,
               height: 1.55,
             ),
@@ -63,7 +63,7 @@ class ChatRestrictedContent extends StatelessWidget {
           DefaultButton(
             onTap: _openVerification,
             title: LocaleKeys.chatStartKyc,
-            color: AppColors.sokoonTeal,
+            color: context.appColor(AppColors.sokoonTeal, surface: true),
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(16.r),
             width: double.infinity,
@@ -77,9 +77,9 @@ class ChatRestrictedContent extends StatelessWidget {
           DefaultButton(
             onTap: _openVerification,
             title: LocaleKeys.chatLearnMoreVerification,
-            color: AppColors.white,
-            textColor: AppColors.sokoonNavy,
-            borderColor: AppColors.sokoonBorder,
+            color: context.appColor(AppColors.white, surface: true),
+            textColor: context.appColor(AppColors.sokoonNavy),
+            borderColor: context.appColor(AppColors.sokoonBorder),
             borderRadius: BorderRadius.circular(16.r),
             width: double.infinity,
             height: 52.h,

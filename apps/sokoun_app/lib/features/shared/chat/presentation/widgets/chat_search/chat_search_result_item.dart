@@ -49,7 +49,7 @@ class ChatSearchResultItem extends StatelessWidget {
                       child: AppText(
                         conversation.name,
                         style: AppTextStyles.bold14.copyWith(
-                          color: AppColors.sokoonNavy,
+                          color: context.appColor(AppColors.sokoonNavy),
                           fontSize: 14.sp,
                           height: 1.45,
                         ),
@@ -60,7 +60,7 @@ class ChatSearchResultItem extends StatelessWidget {
                     AppText(
                       conversation.time,
                       style: AppTextStyles.regular11.copyWith(
-                        color: AppColors.sokoonGray,
+                        color: context.appColor(AppColors.sokoonGray),
                         fontSize: 11.sp,
                         height: 1.45,
                       ),
@@ -72,7 +72,7 @@ class ChatSearchResultItem extends StatelessWidget {
                 AppText(
                   conversation.property,
                   style: AppTextStyles.regular12.copyWith(
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                     fontSize: 12.sp,
                     height: 1.45,
                   ),
@@ -83,7 +83,7 @@ class ChatSearchResultItem extends StatelessWidget {
                 AppText(
                   conversation.lastMessage,
                   style: AppTextStyles.regular12.copyWith(
-                    color: AppColors.sokoonTeal,
+                    color: context.appColor(AppColors.sokoonTeal),
                     fontSize: 12.sp,
                     height: 1.45,
                   ),

@@ -85,7 +85,9 @@ class KycUploadDocumentsView extends StatelessWidget {
                                 child: AppText(
                                   message,
                                   style: AppTextStyles.regular13.copyWith(
-                                    color: AppColors.sokoonRose,
+                                    color: context.appColor(
+                                      AppColors.sokoonRose,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -95,7 +97,7 @@ class KycUploadDocumentsView extends StatelessWidget {
                           ? LocaleKeys.kycExistingDocumentsHint
                           : LocaleKeys.uploadClearIdImage,
                       style: AppTextStyles.regular13.copyWith(
-                        color: AppColors.sokoonGray,
+                        color: context.appColor(AppColors.sokoonGray),
                         fontSize: 13.sp,
                         height: 1.45,
                       ),
@@ -193,13 +195,15 @@ class _NationalIdField extends StatelessWidget {
           TextSpan(
             text: '${LocaleKeys.nationalId} ',
             style: AppTextStyles.extraBold.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 14.sp,
             ),
             children: [
               TextSpan(
                 text: isRequired ? '*' : '',
-                style: AppTextStyles.base.copyWith(color: AppColors.sokoonRose),
+                style: AppTextStyles.base.copyWith(
+                  color: context.appColor(AppColors.sokoonRose),
+                ),
               ),
             ],
           ),
@@ -215,14 +219,14 @@ class _NationalIdField extends StatelessWidget {
           maxLength: Validators.nationalIdLength,
           textAlign: TextAlign.start,
           borderRadius: 12.r,
-          fillColor: AppColors.white,
-          borderColor: AppColors.grayPale,
+          fillColor: context.appColor(AppColors.white, surface: true),
+          borderColor: context.appColor(AppColors.grayPale),
           contentPadding: EdgeInsets.symmetric(
             horizontal: 16.w,
             vertical: 14.h,
           ),
           style: AppTextStyles.semiBold.copyWith(
-            color: AppColors.sokoonNavy,
+            color: context.appColor(AppColors.sokoonNavy),
             fontSize: 15.sp,
           ),
           onChanged: onChanged,
@@ -231,7 +235,7 @@ class _NationalIdField extends StatelessWidget {
         AppText(
           '$valueLength/${Validators.nationalIdLength} ${LocaleKeys.digits}',
           style: AppTextStyles.regular11.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 11.sp,
             height: 1.45,
           ),
@@ -240,7 +244,7 @@ class _NationalIdField extends StatelessWidget {
         Container(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
           decoration: BoxDecoration(
-            color: AppColors.mintPale,
+            color: context.appColor(AppColors.mintPale, surface: true),
             borderRadius: BorderRadius.circular(8.r),
             border: Border.all(color: AppColors.tealAlpha09),
           ),
@@ -249,14 +253,14 @@ class _NationalIdField extends StatelessWidget {
             children: [
               Icon(
                 Icons.info_outline_rounded,
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
                 size: 16.r,
               ),
               Expanded(
                 child: AppText(
                   LocaleKeys.nationalIdPrivacyHint,
                   style: AppTextStyles.regular11.copyWith(
-                    color: AppColors.sokoonTeal,
+                    color: context.appColor(AppColors.sokoonTeal),
                     fontSize: 11.sp,
                     height: 1.45,
                   ),
@@ -300,7 +304,7 @@ class _KycUploadValidationField extends StatelessWidget {
             AppText(
               field.errorText ?? '',
               style: AppTextStyles.regular11.copyWith(
-                color: AppColors.sokoonRose,
+                color: context.appColor(AppColors.sokoonRose),
                 fontSize: 11.sp,
                 height: 1.45,
               ),
@@ -325,9 +329,11 @@ class _KycUploadSubmitBar extends StatelessWidget {
     return SafeArea(
       child: Container(
         padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 16.h),
-        decoration: const BoxDecoration(
-          color: AppColors.white,
-          border: Border(top: BorderSide(color: AppColors.grayPale)),
+        decoration: BoxDecoration(
+          color: context.appColor(AppColors.white, surface: true),
+          border: Border(
+            top: BorderSide(color: context.appColor(AppColors.grayPale)),
+          ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -338,7 +344,7 @@ class _KycUploadSubmitBar extends StatelessWidget {
                   ? LocaleKeys.kycExistingDocumentsHint
                   : LocaleKeys.enterNationalIdToContinue,
               style: AppTextStyles.regular12.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 12.sp,
                 height: 1.45,
               ),
@@ -347,7 +353,10 @@ class _KycUploadSubmitBar extends StatelessWidget {
             AppLoadingButton(
               asyncCall: (_) => onSubmit(),
               title: LocaleKeys.nextReviewData,
-              buttonColor: AppColors.sokoonTeal,
+              buttonColor: context.appColor(
+                AppColors.sokoonTeal,
+                surface: true,
+              ),
               textColor: AppColors.white,
               borderRadius: 14.r,
               height: 52.h,

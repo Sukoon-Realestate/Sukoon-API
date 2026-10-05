@@ -55,14 +55,14 @@ class PermissionBenefitRow extends StatelessWidget {
             children: [
               AppText(
                 title,
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 13.sp,
                 fontWeight: FontWeight.w700,
                 height: 1.5,
               ),
               AppText(
                 description,
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 12.sp,
                 height: 1.5,
               ),

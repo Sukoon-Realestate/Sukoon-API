@@ -16,8 +16,8 @@ class SokoonAppleSignInButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultButton(
       onTap: onTap,
-      color: AppColors.white,
-      borderColor: AppColors.sokoonBorder,
+      color: context.appColor(AppColors.white, surface: true),
+      borderColor: context.appColor(AppColors.sokoonBorder),
       borderRadius: BorderRadius.circular(12.r),
       height: 48.h,
       width: double.infinity,
@@ -26,12 +26,16 @@ class SokoonAppleSignInButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         spacing: 10.w,
         children: [
-          Icon(Icons.apple, color: AppColors.sokoonNavy, size: 20.r),
+          Icon(
+            Icons.apple,
+            color: context.appColor(AppColors.sokoonNavy),
+            size: 20.r,
+          ),
           Flexible(
             child: AppText(
               label ?? LocaleKeys.continueWithApple,
               style: AppTextStyles.bold14.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 14.sp,
                 height: 1.45,
               ),

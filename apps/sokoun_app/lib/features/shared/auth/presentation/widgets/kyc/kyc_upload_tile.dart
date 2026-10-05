@@ -34,7 +34,9 @@ class KycUploadTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderColor = _isUploaded ? AppColors.sokoonTeal : AppColors.grayPale;
+    final borderColor = _isUploaded
+        ? context.appColor(AppColors.sokoonTeal)
+        : context.appColor(AppColors.grayPale);
     final backgroundColor = _isUploaded
         ? AppColors.tealAlpha03
         : AppColors.white;
@@ -46,7 +48,7 @@ class KycUploadTile extends StatelessWidget {
         AppText(
           title,
           style: AppTextStyles.extraBold.copyWith(
-            color: AppColors.sokoonNavy,
+            color: context.appColor(AppColors.sokoonNavy),
             fontSize: 14.sp,
           ),
           maxLines: 1,
@@ -59,9 +61,12 @@ class KycUploadTile extends StatelessWidget {
             constraints: BoxConstraints(minHeight: 120.h),
             padding: EdgeInsets.all(12.r),
             decoration: BoxDecoration(
-              color: backgroundColor,
+              color: context.appColor(backgroundColor, surface: true),
               borderRadius: BorderRadius.circular(14.r),
-              border: Border.all(color: borderColor, width: 1.2),
+              border: Border.all(
+                color: context.appColor(borderColor),
+                width: 1.2,
+              ),
             ),
             alignment: Alignment.center,
             child: _isUploaded ? _UploadedContent(this) : _EmptyContent(this),
@@ -98,7 +103,7 @@ class _UploadedContent extends StatelessWidget {
         ] else
           Icon(
             Icons.check_circle_outline_rounded,
-            color: AppColors.sokoonTeal,
+            color: context.appColor(AppColors.sokoonTeal),
             size: 28.r,
           ),
         Row(
@@ -106,14 +111,14 @@ class _UploadedContent extends StatelessWidget {
           children: [
             Icon(
               Icons.check_circle_outline_rounded,
-              color: AppColors.sokoonTeal,
+              color: context.appColor(AppColors.sokoonTeal),
               size: 18.r,
             ),
             Expanded(
               child: AppText(
                 tile.fileName ?? LocaleKeys.uploaded,
                 style: AppTextStyles.bold12.copyWith(
-                  color: AppColors.sokoonTeal,
+                  color: context.appColor(AppColors.sokoonTeal),
                   fontSize: 12.sp,
                   height: 1.45,
                 ),
@@ -139,12 +144,16 @@ class _EmptyContent extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(tile.emptyIcon, color: AppColors.sokoonGray, size: 28.r),
+        Icon(
+          tile.emptyIcon,
+          color: context.appColor(AppColors.sokoonGray),
+          size: 28.r,
+        ),
         8.szH,
         AppText(
           tile.emptyTitle ?? LocaleKeys.tapToUpload,
           style: AppTextStyles.extraBold13.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 13.sp,
             height: 1.45,
           ),
@@ -156,7 +165,7 @@ class _EmptyContent extends StatelessWidget {
         AppText(
           tile.emptySubtitle ?? Validators.accountDocumentUploadHint,
           style: AppTextStyles.regular11.copyWith(
-            color: AppColors.sokoonMuted,
+            color: context.appColor(AppColors.sokoonMuted),
             fontSize: 11.sp,
             height: 1.45,
           ),

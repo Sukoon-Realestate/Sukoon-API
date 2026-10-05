@@ -92,7 +92,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                       AppText(
                         LocaleKeys.settingsPasswordIntro,
                         style: AppTextStyles.regular14.copyWith(
-                          color: AppColors.sokoonGray,
+                          color: context.appColor(AppColors.sokoonGray),
                           height: 1.5,
                         ),
                       ),

@@ -22,11 +22,13 @@ class DetailsButton extends StatelessWidget {
       onPressed: propertyId.isEmpty ? null : _openDetails,
       style: TextButton.styleFrom(
         minimumSize: const Size(48, 48),
-        foregroundColor: AppColors.sokoonTeal,
+        foregroundColor: context.appColor(AppColors.sokoonTeal),
       ),
       child: AppText(
         LocaleKeys.landingDetails,
-        style: AppTextStyles.bold14.copyWith(color: AppColors.sokoonTeal),
+        style: AppTextStyles.bold14.copyWith(
+          color: context.appColor(AppColors.sokoonTeal),
+        ),
       ),
     );
   }

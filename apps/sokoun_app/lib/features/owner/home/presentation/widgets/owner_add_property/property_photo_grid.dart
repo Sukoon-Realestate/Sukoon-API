@@ -39,7 +39,9 @@ class PhotoGridSection extends StatelessWidget {
       children: [
         AppText(
           '${LocaleKeys.ownerPropertiesPhotos} *',
-          style: AppTextStyles.semiBold.copyWith(color: AppColors.sokoonNavy),
+          style: AppTextStyles.semiBold.copyWith(
+            color: context.appColor(AppColors.sokoonNavy),
+          ),
         ),
         AnimatedPropertyPhotoGrid(
           photos: photos,
@@ -56,7 +58,9 @@ class PhotoGridSection extends StatelessWidget {
                 '${OwnerAddPropertyContent.minimumPhotoCount}',
               ),
           style: AppTextStyles.bold12.copyWith(
-            color: hasEnoughPhotos ? AppColors.green : AppColors.sokoonGray,
+            color: hasEnoughPhotos
+                ? context.appColor(AppColors.green)
+                : context.appColor(AppColors.sokoonGray),
             fontSize: 12.sp,
             height: 1.45,
           ),

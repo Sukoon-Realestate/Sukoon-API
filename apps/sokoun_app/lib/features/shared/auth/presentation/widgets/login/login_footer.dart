@@ -36,7 +36,7 @@ class _LoginFooterState extends State<LoginFooter> {
       TextSpan(
         text: '${LocaleKeys.doNotHaveAnAccount}؟ ',
         style: AppTextStyles.medium13.copyWith(
-          color: AppColors.sokoonGray,
+          color: context.appColor(AppColors.sokoonGray),
           fontSize: 13.sp,
           height: 1.45,
         ),
@@ -45,7 +45,7 @@ class _LoginFooterState extends State<LoginFooter> {
             text: LocaleKeys.signUp,
             recognizer: _signUpRecognizer,
             style: AppTextStyles.extraBold.copyWith(
-              color: AppColors.sokoonTeal,
+              color: context.appColor(AppColors.sokoonTeal),
             ),
           ),
         ],

@@ -99,7 +99,7 @@ class _SupportTicketFormState extends State<SupportTicketForm> {
                             AppText(
                               LocaleKeys.supportTicketIntro,
                               style: AppTextStyles.regular14.copyWith(
-                                color: AppColors.sokoonGray,
+                                color: context.appColor(AppColors.sokoonGray),
                                 height: 1.5,
                               ),
                             ),

@@ -26,7 +26,7 @@ class TenantAccountSummaryContentView extends StatelessWidget {
         18.szH,
         ProfileStatGrid(
           withCards: true,
-          valueColor: AppColors.sokoonTeal,
+          valueColor: context.appColor(AppColors.sokoonTeal),
           stats: [
             ProfileStat(
               value: summary.stats.savedPropertiesCount.toString(),
@@ -53,8 +53,11 @@ class TenantAccountSummaryContentView extends StatelessWidget {
                     ? shortcuts.savedProperties.title
                     : LocaleKeys.profileSavedProperties,
                 value: _shortcutLabel(shortcuts.savedProperties),
-                iconColor: AppColors.sokoonTeal,
-                iconBackgroundColor: AppColors.mintLight,
+                iconColor: context.appColor(AppColors.sokoonTeal),
+                iconBackgroundColor: context.appColor(
+                  AppColors.mintLight,
+                  surface: true,
+                ),
                 onTap: () => Go.to(const FavoritesScreen()),
                 showDivider: true,
               ),
@@ -64,8 +67,11 @@ class TenantAccountSummaryContentView extends StatelessWidget {
                     ? shortcuts.visitsHistory.title
                     : LocaleKeys.profileVisitHistory,
                 value: _shortcutLabel(shortcuts.visitsHistory),
-                iconColor: AppColors.sokoonTeal,
-                iconBackgroundColor: AppColors.mintLight,
+                iconColor: context.appColor(AppColors.sokoonTeal),
+                iconBackgroundColor: context.appColor(
+                  AppColors.mintLight,
+                  surface: true,
+                ),
                 onTap: () => Go.to(const TenantVisitsScreen()),
                 showDivider: true,
               ),
@@ -78,11 +84,11 @@ class TenantAccountSummaryContentView extends StatelessWidget {
                     ? shortcuts.identityVerification.label
                     : summary.identityVerification.statusLabel,
                 iconColor: summary.identityVerification.isVerified
-                    ? AppColors.green
-                    : AppColors.sokoonGray,
+                    ? context.appColor(AppColors.green)
+                    : context.appColor(AppColors.sokoonGray),
                 iconBackgroundColor: summary.identityVerification.isVerified
-                    ? AppColors.greenPale
-                    : AppColors.grayBackground,
+                    ? context.appColor(AppColors.greenPale, surface: true)
+                    : context.appColor(AppColors.grayBackground, surface: true),
                 onTap: () => Go.to(
                   const ProfileVerificationScreen(
                     workspace: AppWorkspace.tenant,

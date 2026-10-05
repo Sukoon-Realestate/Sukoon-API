@@ -10,9 +10,9 @@ class OwnerPropertyInterestCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(18.r),
-        border: Border.all(color: AppColors.sokoonBorder),
+        border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -20,7 +20,7 @@ class OwnerPropertyInterestCard extends StatelessWidget {
           AppText(
             LocaleKeys.ownerAnalyticsTopInterests,
             style: AppTextStyles.bold15.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 15.sp,
               height: 1.45,
             ),
@@ -59,7 +59,7 @@ class _InterestProgress extends StatelessWidget {
               child: AppText(
                 item.label,
                 style: AppTextStyles.bold13.copyWith(
-                  color: AppColors.sokoonGray,
+                  color: context.appColor(AppColors.sokoonGray),
                   fontSize: 13.sp,
                   height: 1.45,
                 ),
@@ -68,7 +68,7 @@ class _InterestProgress extends StatelessWidget {
             AppText(
               '${ownerFormattedNumber(item.value)}%',
               style: AppTextStyles.bold13.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 13.sp,
                 height: 1.45,
               ),
@@ -80,9 +80,12 @@ class _InterestProgress extends StatelessWidget {
           child: LinearProgressIndicator(
             value: (item.value / 100).clamp(0, 1),
             minHeight: 7.h,
-            backgroundColor: AppColors.grayBackground,
-            valueColor: const AlwaysStoppedAnimation<Color>(
-              AppColors.sokoonTeal,
+            backgroundColor: context.appColor(
+              AppColors.grayBackground,
+              surface: true,
+            ),
+            valueColor: AlwaysStoppedAnimation<Color>(
+              context.appColor(AppColors.sokoonTeal),
             ),
           ),
         ),

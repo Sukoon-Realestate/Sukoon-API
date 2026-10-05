@@ -41,7 +41,7 @@ class OwnerVisitRequestIdentityRow extends StatelessWidget {
                     child: AppText(
                       request.name,
                       style: AppTextStyles.bold14.copyWith(
-                        color: AppColors.sokoonNavy,
+                        color: context.appColor(AppColors.sokoonNavy),
                         fontSize: 14.sp,
                         height: 1.45,
                       ),
@@ -57,7 +57,7 @@ class OwnerVisitRequestIdentityRow extends StatelessWidget {
                     ? request.subtitle
                     : request.property,
                 style: AppTextStyles.regular11.copyWith(
-                  color: AppColors.sokoonGray,
+                  color: context.appColor(AppColors.sokoonGray),
                   fontSize: 11.sp,
                   height: 1.45,
                 ),
@@ -82,15 +82,18 @@ class OwnerVisitRequestIdentityRow extends StatelessWidget {
                 minimumSize: Size.square(48.r),
                 maximumSize: Size.square(48.r),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                backgroundColor: AppColors.white,
+                backgroundColor: context.appColor(
+                  AppColors.white,
+                  surface: true,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.r),
-                  side: const BorderSide(color: AppColors.grayPale),
+                  side: BorderSide(color: context.appColor(AppColors.grayPale)),
                 ),
               ),
               icon: Icon(
                 Icons.chat_bubble_outline_rounded,
-                color: AppColors.sokoonTeal,
+                color: context.appColor(AppColors.sokoonTeal),
                 size: 16.r,
               ),
             ),

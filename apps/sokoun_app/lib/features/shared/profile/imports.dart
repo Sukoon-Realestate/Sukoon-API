@@ -31,6 +31,7 @@ import 'package:sokoun_app/features/shared/unread_counts/presentation/cubits/unr
 import 'package:sokoun_app/features/main_view/data/models/workspace_counts.dart';
 import 'package:sokoun_app/features/shared/reviews/presentation/screens/my_reviews_screen.dart';
 import 'package:sokoun_app/features/shared/public_pages/presentation/widgets/public_page_menu.dart';
+import 'package:sokoun_app/features/shared/appearance/presentation/screens/appearance_screen.dart';
 import 'dart:io';
 import 'dart:async';
 import 'package:sokoun_app/features/owner/properties/imports.dart';

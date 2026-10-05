@@ -31,16 +31,22 @@ class SearchChip extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.sokoonTeal : AppColors.white,
+            color: isSelected
+                ? context.appColor(AppColors.sokoonTeal, surface: true)
+                : context.appColor(AppColors.white, surface: true),
             borderRadius: BorderRadius.circular(999.r),
             border: Border.all(
-              color: isSelected ? AppColors.sokoonTeal : AppColors.sokoonBorder,
+              color: isSelected
+                  ? context.appColor(AppColors.sokoonTeal)
+                  : context.appColor(AppColors.sokoonBorder),
             ),
           ),
           child: AppText(
             label,
             style: AppTextStyles.extraBold.copyWith(
-              color: isSelected ? AppColors.white : AppColors.sokoonNavy,
+              color: isSelected
+                  ? AppColors.white
+                  : context.appColor(AppColors.sokoonNavy),
               fontSize: 12.sp,
             ),
           ),

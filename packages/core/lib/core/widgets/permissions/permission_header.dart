@@ -45,7 +45,7 @@ class PermissionHeader extends StatelessWidget {
           child: AppText(
             title,
             textAlign: TextAlign.center,
-            color: AppColors.sokoonNavy,
+            color: context.appColor(AppColors.sokoonNavy),
             fontSize: 17.sp,
             fontWeight: FontWeight.w900,
             height: 1.5,
@@ -55,7 +55,7 @@ class PermissionHeader extends StatelessWidget {
         AppText(
           description,
           textAlign: TextAlign.center,
-          color: AppColors.sokoonGray,
+          color: context.appColor(AppColors.sokoonGray),
           fontSize: 13.sp,
           height: 1.75,
         ),

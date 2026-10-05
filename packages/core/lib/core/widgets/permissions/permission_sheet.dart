@@ -37,7 +37,7 @@ class PermissionSheet extends StatelessWidget {
       width: double.infinity,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
         boxShadow: [
           BoxShadow(
@@ -60,7 +60,7 @@ class PermissionSheet extends StatelessWidget {
                   width: 42.w,
                   height: 4.h,
                   decoration: BoxDecoration(
-                    color: AppColors.graySoft,
+                    color: context.appColor(AppColors.graySoft, surface: true),
                     borderRadius: BorderRadius.circular(2.r),
                   ),
                 ).centerWidget,

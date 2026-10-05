@@ -24,14 +24,14 @@ class TenantPropertyPrice extends StatelessWidget {
         AppText(
           price,
           style: AppTextStyles.extraBold.copyWith(
-            color: AppColors.sokoonTeal,
+            color: context.appColor(AppColors.sokoonTeal),
             fontSize: 24.sp,
           ),
         ),
         AppText(
           periodLabel,
           style: AppTextStyles.medium13.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 13.sp,
             height: 1.45,
           ),

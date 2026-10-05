@@ -57,7 +57,7 @@ class PropertyReviewSheet extends StatelessWidget {
                 LocaleKeys.ownerPropertyReviewHint,
                 style: AppTextStyles.regular14.copyWith(
                   fontSize: 14,
-                  color: AppColors.sokoonGray,
+                  color: context.appColor(AppColors.sokoonGray),
                   height: 1.45,
                 ),
               ),

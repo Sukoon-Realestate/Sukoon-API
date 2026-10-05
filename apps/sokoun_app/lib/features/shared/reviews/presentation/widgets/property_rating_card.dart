@@ -38,9 +38,9 @@ class PropertyRatingCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.sokoonBorder),
+        border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -52,7 +52,7 @@ class PropertyRatingCard extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(10.r),
                   decoration: BoxDecoration(
-                    color: AppColors.goldPale,
+                    color: context.appColor(AppColors.goldPale, surface: true),
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Icon(
@@ -69,7 +69,7 @@ class PropertyRatingCard extends StatelessWidget {
                     AppText(
                       LocaleKeys.propertyReviewsTitle,
                       style: AppTextStyles.bold16.copyWith(
-                        color: AppColors.sokoonNavy,
+                        color: context.appColor(AppColors.sokoonNavy),
                         fontSize: 16.sp,
                         height: 1.45,
                       ),
@@ -78,7 +78,7 @@ class PropertyRatingCard extends StatelessWidget {
                     AppText(
                       LocaleKeys.propertyReviewsVisitHint,
                       style: AppTextStyles.regular12.copyWith(
-                        color: AppColors.sokoonGray,
+                        color: context.appColor(AppColors.sokoonGray),
                         fontSize: 12.sp,
                         height: 1.45,
                       ),
@@ -95,7 +95,7 @@ class PropertyRatingCard extends StatelessWidget {
             AppText(
               LocaleKeys.propertyReviewsEmptyTitle,
               style: AppTextStyles.medium.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 14.sp,
                 height: 1.45,
               ),
@@ -104,7 +104,7 @@ class PropertyRatingCard extends StatelessWidget {
             AppText(
               LocaleKeys.propertyReviewsEmptyDescription,
               style: AppTextStyles.regular13.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 13.sp,
                 height: 1.45,
               ),
@@ -113,20 +113,20 @@ class PropertyRatingCard extends StatelessWidget {
             AppText(
               reviewCount,
               style: AppTextStyles.regular13.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 13.sp,
                 height: 1.45,
               ),
             ),
           12.szH,
-          const Divider(height: 1, color: AppColors.sokoonBorder),
+          Divider(height: 1, color: context.appColor(AppColors.sokoonBorder)),
           4.szH,
           TextButton(
             onPressed: propertyId.isEmpty
                 ? null
                 : () => Go.to(PropertyReviewsScreen(propertyId: propertyId)),
             style: TextButton.styleFrom(
-              foregroundColor: AppColors.sokoonTeal,
+              foregroundColor: context.appColor(AppColors.sokoonTeal),
               minimumSize: Size(48.w, 48.h),
               padding: EdgeInsets.symmetric(vertical: 12.h),
               alignment: AlignmentDirectional.centerStart,
@@ -138,7 +138,7 @@ class PropertyRatingCard extends StatelessWidget {
                   child: AppText(
                     LocaleKeys.propertyReviewsViewAction,
                     style: AppTextStyles.bold14.copyWith(
-                      color: AppColors.sokoonTeal,
+                      color: context.appColor(AppColors.sokoonTeal),
                       fontSize: 14.sp,
                       height: 1.45,
                     ),
@@ -184,7 +184,7 @@ class _PropertyRatingScore extends StatelessWidget {
             AppText(
               score,
               style: AppTextStyles.extraBold.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 38.sp,
                 height: 1.1,
               ),
@@ -192,7 +192,7 @@ class _PropertyRatingScore extends StatelessWidget {
             AppText(
               '/ ${NumberFormat.decimalPattern(context.locale.languageCode).format(5)}',
               style: AppTextStyles.regular14.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 14.sp,
               ),
             ),
@@ -224,7 +224,7 @@ class _PropertyRatingScore extends StatelessWidget {
         AppText(
           reviewCount,
           style: AppTextStyles.regular13.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 13.sp,
             height: 1.45,
           ),

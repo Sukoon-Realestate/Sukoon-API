@@ -33,7 +33,7 @@ class TenantSuggestedPropertiesEmptyState extends StatelessWidget {
           AppText(
             LocaleKeys.tenantHomeEmptyTitle,
             style: AppTextStyles.bold16.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 16.sp,
               height: 1.45,
             ),
@@ -44,7 +44,7 @@ class TenantSuggestedPropertiesEmptyState extends StatelessWidget {
           AppText(
             LocaleKeys.tenantHomeEmptyDescription,
             style: AppTextStyles.medium13.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 13.sp,
               height: 1.45,
             ),

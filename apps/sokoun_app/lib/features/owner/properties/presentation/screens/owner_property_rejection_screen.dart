@@ -57,7 +57,10 @@ class _OwnerPropertyRejectionScreenState
     return AppScaffold(
       title: LocaleKeys.ownerPropertyRejectionTitle,
       showBackButton: true,
-      backgroundColor: AppColors.scaffoldBackground,
+      backgroundColor: context.appColor(
+        AppColors.scaffoldBackground,
+        surface: true,
+      ),
       body: SafeArea(
         child: ListView(
           padding: EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 24.h),
@@ -65,13 +68,13 @@ class _OwnerPropertyRejectionScreenState
             Container(
               width: 88.r,
               height: 88.r,
-              decoration: const BoxDecoration(
-                color: AppColors.redPale,
+              decoration: BoxDecoration(
+                color: context.appColor(AppColors.redPale, surface: true),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.error_outline_rounded,
-                color: AppColors.red,
+                color: context.appColor(AppColors.red),
                 size: 42.r,
               ),
             ).centerWidget,
@@ -83,7 +86,7 @@ class _OwnerPropertyRejectionScreenState
             AppText(
               LocaleKeys.ownerPropertyRejectedHeadline,
               style: AppTextStyles.bold.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 22.sp,
               ),
               textAlign: TextAlign.center,
@@ -92,7 +95,7 @@ class _OwnerPropertyRejectionScreenState
             AppText(
               property.title,
               style: AppTextStyles.semiBold.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 14.sp,
               ),
               textAlign: TextAlign.center,
@@ -101,14 +104,16 @@ class _OwnerPropertyRejectionScreenState
             Container(
               padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
-                color: AppColors.white,
+                color: context.appColor(AppColors.white, surface: true),
                 borderRadius: BorderRadius.circular(18.r),
-                border: Border.all(color: AppColors.sokoonBorder),
+                border: Border.all(
+                  color: context.appColor(AppColors.sokoonBorder),
+                ),
               ),
               child: AppText(
                 LocaleKeys.ownerPropertyRejectionDetailsUnavailable,
                 style: AppTextStyles.regular13.copyWith(
-                  color: AppColors.sokoonGray,
+                  color: context.appColor(AppColors.sokoonGray),
                   fontSize: 13.sp,
                   height: 1.55,
                 ),
@@ -118,9 +123,11 @@ class _OwnerPropertyRejectionScreenState
             Container(
               padding: EdgeInsets.all(14.w),
               decoration: BoxDecoration(
-                color: AppColors.orangePale,
+                color: context.appColor(AppColors.orangePale, surface: true),
                 borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(color: AppColors.yellowPale),
+                border: Border.all(
+                  color: context.appColor(AppColors.yellowPale, surface: true),
+                ),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,14 +135,14 @@ class _OwnerPropertyRejectionScreenState
                 children: [
                   Icon(
                     Icons.info_outline_rounded,
-                    color: AppColors.amber,
+                    color: context.appColor(AppColors.amber),
                     size: 21.r,
                   ),
                   Expanded(
                     child: AppText(
                       LocaleKeys.ownerPropertyRejectionWarning,
                       style: AppTextStyles.bold12.copyWith(
-                        color: AppColors.brown,
+                        color: context.appColor(AppColors.brown),
                         fontSize: 12.sp,
                         height: 1.45,
                       ),

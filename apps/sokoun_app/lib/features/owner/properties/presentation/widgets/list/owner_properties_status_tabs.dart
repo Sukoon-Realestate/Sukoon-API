@@ -12,16 +12,16 @@ class OwnerPropertiesStatusTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ColoredBox(
-    color: AppColors.white,
+    color: context.appColor(AppColors.white, surface: true),
     child: TabBar(
       indicatorSize: TabBarIndicatorSize.tab,
       isScrollable: true,
       tabAlignment: TabAlignment.center,
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       labelPadding: EdgeInsets.symmetric(horizontal: 16.w),
-      indicatorColor: AppColors.sokoonTeal,
+      indicatorColor: context.appColor(AppColors.sokoonTeal, surface: true),
       indicatorWeight: 2,
-      dividerColor: AppColors.sokoonBorder,
+      dividerColor: context.appColor(AppColors.sokoonBorder),
       onTap: (index) => onFilterSelected(OwnerPropertyFilter.values[index]),
       tabs: [
         for (final filter in OwnerPropertyFilter.values)
@@ -36,8 +36,8 @@ class OwnerPropertiesStatusTabs extends StatelessWidget {
                       .copyWith(
                         fontSize: 14.sp,
                         color: selectedFilter == filter
-                            ? AppColors.sokoonTeal
-                            : AppColors.sokoonGray,
+                            ? context.appColor(AppColors.sokoonTeal)
+                            : context.appColor(AppColors.sokoonGray),
                       ),
             ),
           ),

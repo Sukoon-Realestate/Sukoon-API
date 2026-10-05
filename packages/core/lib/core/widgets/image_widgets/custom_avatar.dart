@@ -26,16 +26,14 @@ class CustomAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: color ?? AppColors.scaffoldBackground,
+        color:
+            color ??
+            context.appColor(AppColors.scaffoldBackground, surface: true),
         borderRadius: BorderRadius.circular(radius ?? AppCircular.r8),
       ),
       child: Padding(
         padding: padding ?? EdgeInsets.all(AppPadding.pH8),
-        child: SvgPicture.asset(
-          icon,
-          height: height,
-          width: width,
-        ),
+        child: SvgPicture.asset(icon, height: height, width: width),
       ),
     );
   }

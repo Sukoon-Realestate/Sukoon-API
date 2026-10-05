@@ -39,9 +39,11 @@ class SupportMessageBubble extends StatelessWidget {
         margin: EdgeInsets.only(bottom: 14.h),
         padding: EdgeInsets.all(16.r),
         decoration: BoxDecoration(
-          color: message.isFromUser ? AppColors.mintLight : AppColors.white,
+          color: message.isFromUser
+              ? context.appColor(AppColors.mintLight, surface: true)
+              : context.appColor(AppColors.white, surface: true),
           borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(color: AppColors.sokoonBorder),
+          border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,12 +53,14 @@ class SupportMessageBubble extends StatelessWidget {
               message.isFromUser
                   ? LocaleKeys.supportYou
                   : LocaleKeys.supportTeam,
-              style: AppTextStyles.bold12.copyWith(color: AppColors.sokoonTeal),
+              style: AppTextStyles.bold12.copyWith(
+                color: context.appColor(AppColors.sokoonTeal),
+              ),
             ),
             SelectableText(
               message.body,
               style: AppTextStyles.regular14.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 height: 1.6,
               ),
             ),
@@ -75,7 +79,7 @@ class SupportMessageBubble extends StatelessWidget {
             AppText(
               supportDate(message.createdAt, context),
               style: AppTextStyles.regular12.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
               ),
             ),
           ],

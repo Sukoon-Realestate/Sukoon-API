@@ -15,19 +15,19 @@ class KycFeatureTile extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 13.h),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: AppColors.sokoonBorder),
+        border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
       ),
       child: Row(
         spacing: 10.w,
         children: [
-          Icon(icon, color: AppColors.sokoonTeal, size: 18.r),
+          Icon(icon, color: context.appColor(AppColors.sokoonTeal), size: 18.r),
           Expanded(
             child: AppText(
               title,
               style: AppTextStyles.extraBold.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 14.sp,
               ),
               maxLines: 1,

@@ -47,7 +47,7 @@ class TenantPropertyDetailsContentView extends StatelessWidget {
           AppText(
             property.title,
             style: AppTextStyles.bold.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 19.sp,
             ),
             textAlign: TextAlign.start,
@@ -61,14 +61,14 @@ class TenantPropertyDetailsContentView extends StatelessWidget {
               children: [
                 Icon(
                   Icons.location_on_outlined,
-                  color: AppColors.sokoonGray,
+                  color: context.appColor(AppColors.sokoonGray),
                   size: 18.r,
                 ),
                 Expanded(
                   child: AppText(
                     property.location,
                     style: AppTextStyles.medium13.copyWith(
-                      color: AppColors.sokoonGray,
+                      color: context.appColor(AppColors.sokoonGray),
                       fontSize: 13.sp,
                       height: 1.45,
                     ),

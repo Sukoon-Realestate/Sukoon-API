@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../config/res/config_imports.dart';
 import '../../extensions/context_extension.dart';
 import 'cached_image.dart';
- 
+
 class ImageSlider extends StatefulWidget {
   final Color? activeColor;
   final Color? inActiveColor;
@@ -40,21 +40,18 @@ class _ImageSliderState extends State<ImageSlider> {
   }
 
   void _startAutoScroll() {
-    timer = Timer.periodic(
-      const Duration(seconds: 3),
-      (timer) {
-        if (_currentIndex.value < widget.images.length - 1) {
-          _currentIndex.value++;
-        } else {
-          _currentIndex.value = 0;
-        }
-        _pageController.animateToPage(
-          _currentIndex.value,
-          duration: const Duration(milliseconds: 800),
-          curve: Curves.fastOutSlowIn,
-        );
-      },
-    );
+    timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+      if (_currentIndex.value < widget.images.length - 1) {
+        _currentIndex.value++;
+      } else {
+        _currentIndex.value = 0;
+      }
+      _pageController.animateToPage(
+        _currentIndex.value,
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.fastOutSlowIn,
+      );
+    });
   }
 
   @override
@@ -88,28 +85,30 @@ class _ImageSliderState extends State<ImageSlider> {
               visible: widget.showPointer,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: widget.images.asMap().entries.map(
-                  (entry) {
-                    final index = entry.key;
-                    final isActive = index == value;
-                    return AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      width: AppSize.sH6,
-                      height: AppSize.sH6,
-                      margin: EdgeInsets.symmetric(horizontal: AppMargin.mW2),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(AppCircular.r20),
-                        color: isActive
-                            ? widget.activeColor ?? AppColors.primary
-                            : widget.inActiveColor ?? Colors.grey,
-                      ),
-                    );
-                  },
-                ).toList(),
+                children: widget.images.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final isActive = index == value;
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    width: AppSize.sH6,
+                    height: AppSize.sH6,
+                    margin: EdgeInsets.symmetric(horizontal: AppMargin.mW2),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(AppCircular.r20),
+                      color: isActive
+                          ? widget.activeColor ??
+                                context.appColor(
+                                  AppColors.primary,
+                                  surface: true,
+                                )
+                          : widget.inActiveColor ?? Colors.grey,
+                    ),
+                  );
+                }).toList(),
               ),
             );
           },
-        )
+        ),
       ],
     );
   }

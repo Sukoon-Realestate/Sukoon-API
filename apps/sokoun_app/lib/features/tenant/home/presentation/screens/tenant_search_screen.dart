@@ -230,7 +230,10 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
       child: AppScaffold(
         title: LocaleKeys.tenantSearchTitle,
         showBackButton: true,
-        backgroundColor: AppColors.scaffoldBackground,
+        backgroundColor: context.appColor(
+          AppColors.scaffoldBackground,
+          surface: true,
+        ),
         body: SafeArea(
           child:
               ValueListenableBuilder<

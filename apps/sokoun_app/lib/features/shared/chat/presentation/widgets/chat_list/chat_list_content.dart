@@ -118,7 +118,11 @@ class _ChatListContentState extends State<ChatListContent> with RouteAware {
             key: ValueKey<String>(conversation.id),
             conversation: conversation,
           ),
-          Divider(height: 1.h, thickness: 1.h, color: AppColors.sokoonBorder),
+          Divider(
+            height: 1.h,
+            thickness: 1.h,
+            color: context.appColor(AppColors.sokoonBorder),
+          ),
         ],
       ),
     );

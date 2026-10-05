@@ -33,7 +33,7 @@ class ChatSearchResults extends StatelessWidget {
         AppText(
           '${LocaleKeys.chatSearchResultsFor} "$query"',
           style: AppTextStyles.bold12.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 12.sp,
             height: 1.45,
           ),
@@ -50,14 +50,17 @@ class ChatSearchResults extends StatelessWidget {
               conversation: conversations[index],
             ),
             if (index < conversations.length - 1)
-              Divider(height: 1.h, color: AppColors.sokoonBorder),
+              Divider(
+                height: 1.h,
+                color: context.appColor(AppColors.sokoonBorder),
+              ),
           ],
           if (mentionedProperties.isNotEmpty) ...[
             16.szH,
             AppText(
               LocaleKeys.chatMentionedProperties,
               style: AppTextStyles.bold12.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 12.sp,
                 height: 1.45,
               ),

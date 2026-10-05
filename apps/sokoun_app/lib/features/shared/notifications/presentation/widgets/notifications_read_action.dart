@@ -31,7 +31,7 @@ class NotificationsReadAction extends StatelessWidget {
         TextButton(
           onPressed: canMarkAll ? onMarkAllPressed : null,
           style: TextButton.styleFrom(
-            foregroundColor: AppColors.sokoonTeal,
+            foregroundColor: context.appColor(AppColors.sokoonTeal),
             padding: EdgeInsets.symmetric(horizontal: 6.w),
             minimumSize: const Size(48, 48),
           ),
@@ -40,7 +40,9 @@ class NotificationsReadAction extends StatelessWidget {
                 ? LocaleKeys.notificationsMarkAll
                 : LocaleKeys.notificationsMarkAllRead,
             style: AppTextStyles.semiBold.copyWith(
-              color: canMarkAll ? AppColors.sokoonTeal : AppColors.sokoonMuted,
+              color: canMarkAll
+                  ? context.appColor(AppColors.sokoonTeal)
+                  : context.appColor(AppColors.sokoonMuted),
               fontSize: 14.sp,
             ),
           ),

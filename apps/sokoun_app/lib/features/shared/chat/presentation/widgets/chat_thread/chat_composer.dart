@@ -40,9 +40,11 @@ class _ChatComposerState extends State<ChatComposer> {
       hideKeyboardOnSubmit: false,
       builder: (context, submit) => Container(
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 11.h),
-        decoration: const BoxDecoration(
-          color: AppColors.white,
-          border: Border(top: BorderSide(color: AppColors.sokoonBorder)),
+        decoration: BoxDecoration(
+          color: context.appColor(AppColors.white, surface: true),
+          border: Border(
+            top: BorderSide(color: context.appColor(AppColors.sokoonBorder)),
+          ),
         ),
         child: SafeArea(
           top: false,
@@ -53,7 +55,10 @@ class _ChatComposerState extends State<ChatComposer> {
                 valueListenable: widget.controller,
                 builder: (context, value, _) => _ComposerActionButton(
                   onPressed: value.text.trim().isEmpty ? null : submit,
-                  backgroundColor: AppColors.sokoonTeal,
+                  backgroundColor: context.appColor(
+                    AppColors.sokoonTeal,
+                    surface: true,
+                  ),
                   icon: Icons.send_rounded,
                   iconColor: AppColors.white,
                 ),
@@ -63,9 +68,14 @@ class _ChatComposerState extends State<ChatComposer> {
                   constraints: BoxConstraints(minHeight: 40.h),
                   padding: EdgeInsets.symmetric(horizontal: 10.w),
                   decoration: BoxDecoration(
-                    color: AppColors.scaffoldBackground,
+                    color: context.appColor(
+                      AppColors.scaffoldBackground,
+                      surface: true,
+                    ),
                     borderRadius: BorderRadius.circular(16.r),
-                    border: Border.all(color: AppColors.sokoonBorder),
+                    border: Border.all(
+                      color: context.appColor(AppColors.sokoonBorder),
+                    ),
                   ),
                   child: Row(
                     children: [
@@ -87,13 +97,13 @@ class _ChatComposerState extends State<ChatComposer> {
                           textInputAction: TextInputAction.send,
                           onEditingComplete: submit,
                           style: AppTextStyles.base.copyWith(
-                            color: AppColors.sokoonNavy,
+                            color: context.appColor(AppColors.sokoonNavy),
                             fontSize: 14.sp,
                           ),
                           decoration: InputDecoration(
                             hintText: LocaleKeys.chatMessageHint,
                             hintStyle: AppTextStyles.base.copyWith(
-                              color: AppColors.sokoonMuted,
+                              color: context.appColor(AppColors.sokoonMuted),
                               fontSize: 14.sp,
                             ),
                             border: InputBorder.none,
@@ -135,12 +145,14 @@ class _ComposerActionButton extends StatelessWidget {
       child: SizedBox.square(
         dimension: 48,
         child: Material(
-          color: onPressed == null ? AppColors.sokoonGray : backgroundColor,
+          color: onPressed == null
+              ? context.appColor(AppColors.sokoonGray, surface: true)
+              : backgroundColor,
           shape: const CircleBorder(),
           child: InkWell(
             onTap: onPressed,
             customBorder: const CircleBorder(),
-            child: Icon(icon, color: iconColor, size: 18.r),
+            child: Icon(icon, color: context.appColor(iconColor), size: 18.r),
           ),
         ),
       ),

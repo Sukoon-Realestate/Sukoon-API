@@ -33,18 +33,22 @@ class _MetricCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 11.h),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(14.r),
-        border: Border.all(color: AppColors.grayPale),
+        border: Border.all(color: context.appColor(AppColors.grayPale)),
       ),
       child: Column(
         children: [
-          Icon(metric.icon, color: AppColors.sokoonTeal, size: 18.r),
+          Icon(
+            metric.icon,
+            color: context.appColor(AppColors.sokoonTeal),
+            size: 18.r,
+          ),
           5.szH,
           AppText(
             metric.value,
             style: AppTextStyles.extraBold.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 14.sp,
             ),
           ),
@@ -52,7 +56,7 @@ class _MetricCard extends StatelessWidget {
           AppText(
             metric.label,
             style: AppTextStyles.medium10.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 10.sp,
               height: 1.45,
             ),

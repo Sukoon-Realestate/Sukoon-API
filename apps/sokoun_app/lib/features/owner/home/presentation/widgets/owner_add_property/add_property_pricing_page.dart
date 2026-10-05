@@ -326,7 +326,10 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
         if (widget.form.unsupportedAmenities.isNotEmpty)
           AddPropertyInfoBanner(
             text: _unsupportedAmenitiesError,
-            backgroundColor: AppColors.amberPale,
+            backgroundColor: context.appColor(
+              AppColors.amberPale,
+              surface: true,
+            ),
             icon: Icons.info_outline_rounded,
           ),
         AddPropertyInfoBanner(
@@ -334,17 +337,17 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
               ? LocaleKeys.ownerAddPropertyPricingReady
               : LocaleKeys.ownerAddPropertyPricingRequired,
           backgroundColor: widget.form.isPricingReady
-              ? AppColors.greenPale
-              : AppColors.amberPale,
+              ? context.appColor(AppColors.greenPale, surface: true)
+              : context.appColor(AppColors.amberPale, surface: true),
           borderColor: widget.form.isPricingReady
               ? AppColors.greenAlpha19
               : AppColors.goldAlpha15,
           iconColor: widget.form.isPricingReady
-              ? AppColors.green
-              : AppColors.brown,
+              ? context.appColor(AppColors.green)
+              : context.appColor(AppColors.brown),
           textColor: widget.form.isPricingReady
-              ? AppColors.sokoonNavy
-              : AppColors.brown,
+              ? context.appColor(AppColors.sokoonNavy)
+              : context.appColor(AppColors.brown),
           icon: widget.form.isPricingReady
               ? Icons.check_circle_outline_rounded
               : Icons.info_outline_rounded,
@@ -392,7 +395,7 @@ class _PriceSection extends StatelessWidget {
             suffix: AppText(
               EgyptianPoundText.symbol,
               style: AppTextStyles.bold13.copyWith(
-                color: AppColors.sokoonGray,
+                color: context.appColor(AppColors.sokoonGray),
                 fontSize: 13.sp,
                 height: 1.45,
               ),

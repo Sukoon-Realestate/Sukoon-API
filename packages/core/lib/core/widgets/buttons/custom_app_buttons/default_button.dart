@@ -6,7 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../config/res/config_imports.dart';
 import '../default_button.dart';
 
-enum ShapeType{withBorderColor, withBackGroundColor}
+enum ShapeType { withBorderColor, withBackGroundColor }
+
 class AppDefaultButton extends StatelessWidget {
   final ShapeType shapeType;
   final Color? backgroundColor;
@@ -14,15 +15,17 @@ class AppDefaultButton extends StatelessWidget {
   final String title;
   final Color? borderColor;
   final FutureOr<void> Function()? onTap;
-  const AppDefaultButton.withBorderColor({super.key,
+  const AppDefaultButton.withBorderColor({
+    super.key,
     required this.title,
     required this.onTap,
     this.borderColor,
   }) : shapeType = ShapeType.withBorderColor,
-        backgroundColor = null,
-        textColor = null;
+       backgroundColor = null,
+       textColor = null;
 
-  const AppDefaultButton.withBackGroundColor({super.key,
+  const AppDefaultButton.withBackGroundColor({
+    super.key,
     required this.title,
     required this.onTap,
     this.backgroundColor,
@@ -33,15 +36,18 @@ class AppDefaultButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultButton(
-      color: shapeType == ShapeType.withBorderColor?
-      AppColors.white : backgroundColor?? AppColors.primary,
+      color: shapeType == ShapeType.withBorderColor
+          ? context.appColor(AppColors.white, surface: true)
+          : backgroundColor ??
+                context.appColor(AppColors.primary, surface: true),
       title: title,
       fontSize: 16.sp,
       fontWeight: FontWeight.w400,
       borderRadius: ConstantManager.buttonBorderRadius,
-      borderColor: borderColor?? AppColors.primary,
-      textColor: shapeType == ShapeType.withBorderColor?
-      AppColors.primary : textColor?? AppColors.white,
+      borderColor: borderColor ?? context.appColor(AppColors.primary),
+      textColor: shapeType == ShapeType.withBorderColor
+          ? context.appColor(AppColors.primary)
+          : textColor ?? AppColors.white,
       onTap: onTap,
     );
   }

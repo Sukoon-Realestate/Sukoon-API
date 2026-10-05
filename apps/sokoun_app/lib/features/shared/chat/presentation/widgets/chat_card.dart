@@ -34,7 +34,7 @@ class ChatCard extends StatelessWidget {
                     child: AppText(
                       conversation.name,
                       style: AppTextStyles.bold14.copyWith(
-                        color: AppColors.sokoonNavy,
+                        color: context.appColor(AppColors.sokoonNavy),
                         fontSize: 14.sp,
                         height: 1.45,
                       ),
@@ -47,7 +47,7 @@ class ChatCard extends StatelessWidget {
                       message: LocaleKeys.verified,
                       child: Icon(
                         Icons.verified_rounded,
-                        color: AppColors.sokoonTeal,
+                        color: context.appColor(AppColors.sokoonTeal),
                         size: 18.r,
                       ),
                     ),
@@ -61,7 +61,7 @@ class ChatCard extends StatelessWidget {
                     child: AppText(
                       _displayTime(context),
                       style: AppTextStyles.regular11.copyWith(
-                        color: AppColors.sokoonGray,
+                        color: context.appColor(AppColors.sokoonGray),
                         fontSize: 11.sp,
                         height: 1.45,
                       ),
@@ -73,7 +73,7 @@ class ChatCard extends StatelessWidget {
                     child: AppText(
                       LocaleKeys.chatActiveNow,
                       style: AppTextStyles.regular11.copyWith(
-                        color: AppColors.green,
+                        color: context.appColor(AppColors.green),
                         fontSize: 11.sp,
                         height: 1.45,
                       ),
@@ -88,7 +88,7 @@ class ChatCard extends StatelessWidget {
                 AppText(
                   conversation.property,
                   style: AppTextStyles.regular12.copyWith(
-                    color: AppColors.sokoonGray,
+                    color: context.appColor(AppColors.sokoonGray),
                     fontSize: 12.sp,
                     height: 1.45,
                   ),
@@ -101,8 +101,8 @@ class ChatCard extends StatelessWidget {
                 conversation.lastMessage,
                 style: AppTextStyles.regular12.copyWith(
                   color: conversation.unreadCount > 0
-                      ? AppColors.sokoonNavy
-                      : AppColors.sokoonMuted,
+                      ? context.appColor(AppColors.sokoonNavy)
+                      : context.appColor(AppColors.sokoonMuted),
                   fontSize: 12.sp,
                   fontWeight: conversation.unreadCount > 0
                       ? FontWeight.w700
@@ -159,7 +159,7 @@ class _ConversationAvatar extends StatelessWidget {
               width: 12.r,
               height: 12.r,
               decoration: BoxDecoration(
-                color: AppColors.green,
+                color: context.appColor(AppColors.green, surface: true),
                 shape: BoxShape.circle,
                 border: Border.all(color: AppColors.white, width: 2.r),
               ),
@@ -173,8 +173,8 @@ class _ConversationAvatar extends StatelessWidget {
                 constraints: BoxConstraints(minWidth: 20.r, minHeight: 20.r),
                 padding: EdgeInsets.all(4.r),
                 alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  color: AppColors.red,
+                decoration: BoxDecoration(
+                  color: context.appColor(AppColors.red, surface: true),
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                 ),
                 child: AppText(

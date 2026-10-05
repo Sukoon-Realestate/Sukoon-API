@@ -56,15 +56,15 @@ class _OwnerAvailabilityLegendItem extends StatelessWidget {
           width: 16.r,
           height: 16.r,
           decoration: BoxDecoration(
-            color: _backgroundColor,
+            color: context.appColor(_backgroundColor, surface: true),
             borderRadius: BorderRadius.circular(4.r),
-            border: Border.all(color: _borderColor),
+            border: Border.all(color: context.appColor(_borderColor)),
           ),
         ),
         AppText(
           state.label,
           style: AppTextStyles.medium11.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 11.sp,
             height: 1.45,
           ),

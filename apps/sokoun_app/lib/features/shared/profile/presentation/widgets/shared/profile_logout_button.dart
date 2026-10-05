@@ -27,7 +27,7 @@ class _ProfileLogoutButtonState extends State<ProfileLogoutButton> {
     final bool? confirmed = await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppColors.white,
+      backgroundColor: context.appColor(AppColors.white, surface: true),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
@@ -53,8 +53,8 @@ class _ProfileLogoutButtonState extends State<ProfileLogoutButton> {
           onTap: () => _logout(context),
           title: LocaleKeys.profileLogout,
           disabled: state.isLoading,
-          color: AppColors.redPale,
-          textColor: AppColors.sokoonNavy,
+          color: context.appColor(AppColors.redPale, surface: true),
+          textColor: context.appColor(AppColors.sokoonNavy),
           customChild: state.isLoading
               ? Semantics(
                   label: LocaleKeys.profileLogout,

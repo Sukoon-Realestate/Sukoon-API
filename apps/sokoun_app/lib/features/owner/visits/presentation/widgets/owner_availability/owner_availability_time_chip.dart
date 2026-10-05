@@ -46,15 +46,15 @@ class OwnerAvailabilityTimeChip extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 10.h),
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: _backgroundColor,
+            color: context.appColor(_backgroundColor, surface: true),
             borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(color: _foregroundColor),
+            border: Border.all(color: context.appColor(_foregroundColor)),
           ),
           child: AppText(
             state.isBooked ? '$label ×' : label,
             textAlign: TextAlign.center,
             style: AppTextStyles.bold12.copyWith(
-              color: _foregroundColor,
+              color: context.appColor(_foregroundColor),
               fontSize: 12.sp,
               height: 1.45,
             ),

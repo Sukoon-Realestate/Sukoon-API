@@ -38,7 +38,7 @@ class ProfileAccountDetailsCard extends StatelessWidget {
           AppText(
             LocaleKeys.profileAccountData,
             style: AppTextStyles.bold14.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 14.sp,
               height: 1.45,
             ),
@@ -51,8 +51,10 @@ class ProfileAccountDetailsCard extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 10.h),
               decoration: BoxDecoration(
                 border: index < rows.length - 1
-                    ? const Border(
-                        bottom: BorderSide(color: AppColors.sokoonBorder),
+                    ? Border(
+                        bottom: BorderSide(
+                          color: context.appColor(AppColors.sokoonBorder),
+                        ),
                       )
                     : null,
               ),

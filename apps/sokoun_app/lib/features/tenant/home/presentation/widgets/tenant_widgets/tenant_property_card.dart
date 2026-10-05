@@ -33,9 +33,9 @@ class TenantPropertyCard extends StatelessWidget {
     return Container(
       constraints: BoxConstraints(minHeight: 112.h),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.sokoonBorder),
+        border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
       ),
       clipBehavior: Clip.antiAlias,
       padding: EdgeInsetsDirectional.only(start: 10.w),
@@ -47,7 +47,7 @@ class TenantPropertyCard extends StatelessWidget {
             height: 96.h,
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
-              color: AppColors.grayBluePale,
+              color: context.appColor(AppColors.grayBluePale, surface: true),
               borderRadius: BorderRadius.circular(10.r),
             ),
             child: Stack(
@@ -110,18 +110,22 @@ class TenantPropertyCard extends StatelessWidget {
                 crossAxisAlignment: WrapCrossAlignment.center,
                 spacing: 6.w,
                 children: [
-                  Icon(Icons.star_rounded, color: AppColors.amber, size: 16.r),
+                  Icon(
+                    Icons.star_rounded,
+                    color: context.appColor(AppColors.amber),
+                    size: 16.r,
+                  ),
                   AppText(
                     rating,
                     style: AppTextStyles.regular12.copyWith(
-                      color: AppColors.sokoonGray,
+                      color: context.appColor(AppColors.sokoonGray),
                     ),
                   ),
                   AppText('·', style: AppTextStyles.regular12),
                   AppText(
                     area,
                     style: AppTextStyles.regular12.copyWith(
-                      color: AppColors.sokoonGray,
+                      color: context.appColor(AppColors.sokoonGray),
                     ),
                   ),
                 ],

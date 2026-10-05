@@ -27,8 +27,11 @@ class ChatParticipantAvatar extends StatelessWidget {
         child: ClipOval(
           child: avatarUrl.isEmpty
               ? _AvatarFallback(
-                  backgroundColor: backgroundColor,
-                  iconColor: iconColor,
+                  backgroundColor: context.appColor(
+                    backgroundColor,
+                    surface: true,
+                  ),
+                  iconColor: context.appColor(iconColor),
                   iconSize: size * .48,
                 )
               : Image.network(
@@ -36,8 +39,11 @@ class ChatParticipantAvatar extends StatelessWidget {
                   fit: BoxFit.cover,
                   excludeFromSemantics: true,
                   errorBuilder: (context, error, stackTrace) => _AvatarFallback(
-                    backgroundColor: backgroundColor,
-                    iconColor: iconColor,
+                    backgroundColor: context.appColor(
+                      backgroundColor,
+                      surface: true,
+                    ),
+                    iconColor: context.appColor(iconColor),
                     iconSize: size * .48,
                   ),
                 ),
@@ -61,11 +67,11 @@ class _AvatarFallback extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ColoredBox(
-      color: backgroundColor,
+      color: context.appColor(backgroundColor, surface: true),
       child: Center(
         child: Icon(
           Icons.person_outline_rounded,
-          color: iconColor,
+          color: context.appColor(iconColor),
           size: iconSize,
         ),
       ),

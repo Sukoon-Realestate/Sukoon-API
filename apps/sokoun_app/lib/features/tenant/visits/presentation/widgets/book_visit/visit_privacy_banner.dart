@@ -8,18 +8,22 @@ class VisitPrivacyBanner extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: AppColors.bluePale,
+        color: context.appColor(AppColors.bluePale, surface: true),
         borderRadius: BorderRadius.circular(14.r),
       ),
       child: Row(
         spacing: 8.w,
         children: [
-          Icon(Icons.privacy_tip_outlined, color: AppColors.blue, size: 16.r),
+          Icon(
+            Icons.privacy_tip_outlined,
+            color: context.appColor(AppColors.blue),
+            size: 16.r,
+          ),
           Expanded(
             child: AppText(
               LocaleKeys.tenantVisitPrivacyMessage,
               style: AppTextStyles.semiBold.copyWith(
-                color: AppColors.blue,
+                color: context.appColor(AppColors.blue),
                 fontSize: 12.sp,
               ),
               maxLines: 2,

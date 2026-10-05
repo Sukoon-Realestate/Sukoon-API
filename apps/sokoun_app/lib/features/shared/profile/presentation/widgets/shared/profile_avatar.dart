@@ -47,7 +47,7 @@ class ProfileAvatar extends StatelessWidget {
             width: avatarSize,
             height: avatarSize,
             decoration: BoxDecoration(
-              color: backgroundColor,
+              color: context.appColor(backgroundColor, surface: true),
               shape: BoxShape.circle,
             ),
             alignment: Alignment.center,
@@ -77,7 +77,7 @@ class ProfileAvatar extends StatelessWidget {
               end: -2.w,
               bottom: -2.h,
               child: Material(
-                color: accentColor,
+                color: context.appColor(accentColor, surface: true),
                 shape: const CircleBorder(),
                 child: InkWell(
                   onTap: onBadgePressed,

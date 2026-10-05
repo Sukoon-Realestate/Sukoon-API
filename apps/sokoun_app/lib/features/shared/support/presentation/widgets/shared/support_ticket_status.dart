@@ -6,16 +6,16 @@ class SupportTicketStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color color = ticket.isResolved
-        ? AppColors.green
+        ? context.appColor(AppColors.green)
         : ticket.isWaiting
-        ? AppColors.blue
+        ? context.appColor(AppColors.blue)
         : ticket.status == SupportTicketState.open
-        ? AppColors.sokoonTeal
-        : AppColors.sokoonGray;
+        ? context.appColor(AppColors.sokoonTeal)
+        : context.appColor(AppColors.sokoonGray);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: .08),
+        color: context.appColor(color, surface: true).withValues(alpha: .08),
         borderRadius: BorderRadius.circular(99.r),
       ),
       child: AppText(
@@ -27,7 +27,9 @@ class SupportTicketStatus extends StatelessWidget {
             ? LocaleKeys.supportStatusOpen
             : LocaleKeys.supportStatusUnknown,
         style: AppTextStyles.bold12.copyWith(
-          color: ticket.isResolved ? AppColors.sokoonTeal : color,
+          color: ticket.isResolved
+              ? context.appColor(AppColors.sokoonTeal)
+              : color,
         ),
       ),
     );

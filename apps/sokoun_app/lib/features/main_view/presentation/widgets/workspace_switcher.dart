@@ -41,9 +41,11 @@ class WorkspaceSwitcher extends StatelessWidget {
       label: LocaleKeys.workspaceSwitch,
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 4.w),
-        decoration: const ShapeDecoration(
-          color: AppColors.grayBackground,
-          shape: StadiumBorder(side: BorderSide(color: AppColors.sokoonBorder)),
+        decoration: ShapeDecoration(
+          color: context.appColor(AppColors.grayBackground, surface: true),
+          shape: StadiumBorder(
+            side: BorderSide(color: context.appColor(AppColors.sokoonBorder)),
+          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -53,7 +55,7 @@ class WorkspaceSwitcher extends StatelessWidget {
                 final bool isSelected = workspace == item;
                 final Color foregroundColor = isSelected
                     ? AppColors.white
-                    : AppColors.sokoonGray;
+                    : context.appColor(AppColors.sokoonGray);
 
                 return Flexible(
                   child: ChoiceChip(
@@ -66,8 +68,8 @@ class WorkspaceSwitcher extends StatelessWidget {
                     side: BorderSide.none,
                     backgroundColor: AppColors.transparent,
                     selectedColor: item.isOwner
-                        ? AppColors.sokoonNavy
-                        : AppColors.sokoonTeal,
+                        ? context.appColor(AppColors.sokoonNavy)
+                        : context.appColor(AppColors.sokoonTeal),
                     padding: EdgeInsets.symmetric(
                       horizontal: 6.w,
                       vertical: 4.h,
@@ -88,7 +90,7 @@ class WorkspaceSwitcher extends StatelessWidget {
                           : LocaleKeys.workspaceTenant,
                       style: AppTextStyles.bold12.copyWith(
                         fontSize: 12.sp,
-                        color: foregroundColor,
+                        color: context.appColor(foregroundColor),
                         height: 1.45,
                       ),
                       maxLines: 1,

@@ -10,9 +10,9 @@ class OwnerRequestInfoCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(color: AppColors.sokoonBorder),
+        border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
       ),
       child: Column(
         children: [
@@ -35,7 +35,7 @@ class OwnerRequestInfoCard extends StatelessWidget {
                           child: AppText(
                             request.tenant.name,
                             style: AppTextStyles.bold16.copyWith(
-                              color: AppColors.sokoonNavy,
+                              color: context.appColor(AppColors.sokoonNavy),
                               fontSize: 16.sp,
                               height: 1.45,
                             ),
@@ -52,7 +52,7 @@ class OwnerRequestInfoCard extends StatelessWidget {
                       AppText(
                         request.tenant.membershipLabel,
                         style: AppTextStyles.regular12.copyWith(
-                          color: AppColors.sokoonGray,
+                          color: context.appColor(AppColors.sokoonGray),
                           fontSize: 12.sp,
                           height: 1.45,
                         ),
@@ -120,13 +120,13 @@ class _OwnerRequestStatusPill extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 9.h),
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: _backgroundColor,
+        color: context.appColor(_backgroundColor, surface: true),
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: AppText(
         request.displayStatus,
         style: AppTextStyles.extraBold13.copyWith(
-          color: _foregroundColor,
+          color: context.appColor(_foregroundColor),
           fontSize: 13.sp,
           height: 1.45,
         ),
@@ -154,7 +154,11 @@ class _OwnerRequestInfoRow extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 10.h),
       decoration: BoxDecoration(
         border: showDivider
-            ? const Border(bottom: BorderSide(color: AppColors.sokoonBorder))
+            ? Border(
+                bottom: BorderSide(
+                  color: context.appColor(AppColors.sokoonBorder),
+                ),
+              )
             : null,
       ),
       child: Row(
@@ -163,7 +167,7 @@ class _OwnerRequestInfoRow extends StatelessWidget {
           AppText(
             label,
             style: AppTextStyles.regular12.copyWith(
-              color: AppColors.sokoonGray,
+              color: context.appColor(AppColors.sokoonGray),
               fontSize: 12.sp,
               height: 1.45,
             ),
@@ -172,7 +176,7 @@ class _OwnerRequestInfoRow extends StatelessWidget {
             child: AppText(
               value,
               style: AppTextStyles.extraBold13.copyWith(
-                color: AppColors.sokoonNavy,
+                color: context.appColor(AppColors.sokoonNavy),
                 fontSize: 13.sp,
                 height: 1.45,
               ),

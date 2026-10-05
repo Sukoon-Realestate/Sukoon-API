@@ -21,7 +21,11 @@ class PropertyEditReviewSheet extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 16.h,
         children: [
-          Icon(Icons.schedule_rounded, color: AppColors.amber, size: 48.r),
+          Icon(
+            Icons.schedule_rounded,
+            color: context.appColor(AppColors.amber),
+            size: 48.r,
+          ),
           AppText(
             message,
             style: AppTextStyles.bold.copyWith(fontSize: 20.sp),

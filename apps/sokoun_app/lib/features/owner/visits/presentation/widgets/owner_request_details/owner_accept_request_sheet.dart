@@ -10,7 +10,7 @@ class OwnerAcceptRequestSheet extends StatelessWidget {
     return Container(
       padding: EdgeInsets.fromLTRB(24.w, 12.h, 24.w, 28.h),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: context.appColor(AppColors.white, surface: true),
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
       child: Column(
@@ -23,8 +23,11 @@ class OwnerAcceptRequestSheet extends StatelessWidget {
             icon: Icons.check_circle_outline_rounded,
             title: LocaleKeys.ownerAcceptTitle,
             subtitle: LocaleKeys.ownerAcceptSubtitle,
-            iconColor: AppColors.green,
-            iconBackgroundColor: AppColors.greenPale,
+            iconColor: context.appColor(AppColors.green),
+            iconBackgroundColor: context.appColor(
+              AppColors.greenPale,
+              surface: true,
+            ),
           ),
           18.szH,
           _OwnerAcceptSummary(request: request),
@@ -32,7 +35,7 @@ class OwnerAcceptRequestSheet extends StatelessWidget {
           DefaultButton(
             onTap: () => Go.back(true),
             title: LocaleKeys.ownerAcceptConfirm,
-            color: AppColors.greenStrong,
+            color: context.appColor(AppColors.greenStrong, surface: true),
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(14.r),
             height: 52.h,
@@ -45,9 +48,9 @@ class OwnerAcceptRequestSheet extends StatelessWidget {
           DefaultButton(
             onTap: () => Go.back(false),
             title: LocaleKeys.ownerRequestCancel,
-            color: AppColors.white,
-            textColor: AppColors.sokoonNavy,
-            borderColor: AppColors.sokoonBorder,
+            color: context.appColor(AppColors.white, surface: true),
+            textColor: context.appColor(AppColors.sokoonNavy),
+            borderColor: context.appColor(AppColors.sokoonBorder),
             borderRadius: BorderRadius.circular(14.r),
             height: 48.h,
             textStyle: AppTextStyles.extraBold.copyWith(fontSize: 14.sp),
@@ -68,7 +71,7 @@ class _OwnerAcceptSummary extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
-        color: AppColors.grayBackground,
+        color: context.appColor(AppColors.grayBackground, surface: true),
         borderRadius: BorderRadius.circular(14.r),
       ),
       child: Column(
@@ -106,7 +109,7 @@ class _OwnerAcceptSummaryRow extends StatelessWidget {
         AppText(
           label,
           style: AppTextStyles.regular13.copyWith(
-            color: AppColors.sokoonGray,
+            color: context.appColor(AppColors.sokoonGray),
             fontSize: 13.sp,
             height: 1.45,
           ),
@@ -115,7 +118,7 @@ class _OwnerAcceptSummaryRow extends StatelessWidget {
           child: AppText(
             value,
             style: AppTextStyles.extraBold13.copyWith(
-              color: AppColors.sokoonNavy,
+              color: context.appColor(AppColors.sokoonNavy),
               fontSize: 13.sp,
               height: 1.45,
             ),
@@ -138,7 +141,7 @@ class _OwnerSheetHandle extends StatelessWidget {
       width: 36.w,
       height: 4.h,
       decoration: BoxDecoration(
-        color: AppColors.grayPale,
+        color: context.appColor(AppColors.grayPale, surface: true),
         borderRadius: BorderRadius.circular(2.r),
       ),
     ).centerWidget;
@@ -170,10 +173,10 @@ class _OwnerDecisionSheetHeader extends StatelessWidget {
           height: 40.r,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: iconBackgroundColor,
+            color: context.appColor(iconBackgroundColor, surface: true),
             borderRadius: BorderRadius.circular(12.r),
           ),
-          child: Icon(icon, color: iconColor, size: 22.r),
+          child: Icon(icon, color: context.appColor(iconColor), size: 22.r),
         ),
         Expanded(
           child: Column(
@@ -183,7 +186,7 @@ class _OwnerDecisionSheetHeader extends StatelessWidget {
               AppText(
                 title,
                 style: AppTextStyles.bold16.copyWith(
-                  color: AppColors.sokoonNavy,
+                  color: context.appColor(AppColors.sokoonNavy),
                   fontSize: 16.sp,
                   height: 1.45,
                 ),
@@ -191,7 +194,7 @@ class _OwnerDecisionSheetHeader extends StatelessWidget {
               AppText(
                 subtitle,
                 style: AppTextStyles.regular12.copyWith(
-                  color: AppColors.sokoonGray,
+                  color: context.appColor(AppColors.sokoonGray),
                   fontSize: 12.sp,
                   height: 1.45,
                 ),
