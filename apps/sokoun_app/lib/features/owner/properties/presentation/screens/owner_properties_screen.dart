@@ -82,9 +82,10 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
     PropertyDetailsModel details,
   ) {
     final String location = [
+      details.street,
       details.district,
       details.city.name,
-      details.city.governorateName,
+      details.governorateName,
     ].where((part) => part.trim().isNotEmpty).join('، ');
     return property.copyWith(
       title: details.title,
@@ -96,9 +97,7 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
       area: details.area,
       description: details.description,
       photoCount: details.imageUrls.length,
-      status: property.status.isRejected
-          ? OwnerPropertyStatus.pending
-          : property.status,
+      status: OwnerPropertyStatusX.fromName(details.status),
     );
   }
 
@@ -120,6 +119,20 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
       return;
     }
     _pagifyController.replaceWith(index, property);
+  }
+
+  Future<void> _deleteProperty(OwnerPropertyContent property) async {
+    final bool? deleted = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      isDismissible: false,
+      enableDrag: false,
+      builder: (_) => OwnerPropertyDeleteSheet(property: property),
+    );
+    if (!mounted || deleted != true) return;
+    _pagifyController.removeWhere((item) => item.id == property.id);
+    _showMessage(LocaleKeys.ownerPropertiesDeleted);
   }
 
   void _showMessage(String message) {
@@ -153,6 +166,7 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
             onAddPressed: _openAddProperty,
             onEditPressed: _openEdit,
             onRejectedPressed: _openRejection,
+            onDeletePressed: _deleteProperty,
           ),
           builder: (context, isLoading, child) => Stack(
             children: [

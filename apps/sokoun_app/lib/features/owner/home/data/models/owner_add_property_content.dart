@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 import 'property_location.dart';
 
 import 'package:flutter/material.dart';
@@ -125,12 +126,7 @@ class OwnerPropertyPhotoDraft {
   final String description;
 
   bool get isExisting => existingUrl.trim().isNotEmpty;
-  bool get canRemove => !isExisting;
-  bool get isMetadataReady => Validators.isValidPhotoMetadata(
-    isExisting: isExisting,
-    name: name,
-    description: description,
-  );
+  bool get canRemove => true;
   String get id => isExisting
       ? (existingId.isNotEmpty ? existingId : existingUrl)
       : file?.path ?? '';
@@ -176,6 +172,19 @@ class OwnerAddPropertyFormState {
     required this.suitableFor,
     this.submittedAt,
     this.optionLabels = const {},
+    this.videoFile,
+    this.videoUrl = '',
+    this.videoDuration,
+    this.removeVideo = false,
+    this.isVideoPreparing = false,
+    this.country = '',
+    this.neighborhood = '',
+    this.buildingYear = '',
+    this.deposit = '',
+    this.smokingAllowed,
+    this.ownershipProofFile,
+    this.ownershipProofUrl = '',
+    this.removeOwnershipProof = false,
   });
 
   factory OwnerAddPropertyFormState.initial() {
@@ -225,6 +234,32 @@ class OwnerAddPropertyFormState {
   final String suitableFor;
   final DateTime? submittedAt;
   final Map<String, String> optionLabels;
+  final File? videoFile;
+  final String videoUrl;
+  final int? videoDuration;
+  final bool removeVideo;
+  final bool isVideoPreparing;
+  final String country;
+  final String neighborhood;
+  final String buildingYear;
+  final String deposit;
+  final bool? smokingAllowed;
+  final File? ownershipProofFile;
+  final String ownershipProofUrl;
+  final bool removeOwnershipProof;
+  bool get hasVideo => videoFile != null || videoUrl.trim().isNotEmpty;
+  bool get hasOwnershipProof =>
+      ownershipProofFile != null || ownershipProofUrl.trim().isNotEmpty;
+  bool get isBuildingYearReady =>
+      (buildingYear.trim().isEmpty ||
+      (int.tryParse(buildingYear) != null &&
+          int.parse(buildingYear) >= 1800 &&
+          int.parse(buildingYear) <= DateTime.now().year));
+  bool get isDepositReady =>
+      (deposit.trim().isEmpty ||
+      {'none', 'half_month', 'one_month', 'two_months'}.contains(deposit) ||
+      (num.tryParse(deposit) != null && num.parse(deposit) >= 0));
+  bool get isAdditionalDetailsReady => isBuildingYearReady && isDepositReady;
   String get rentalUnitLabel =>
       optionLabels['price_period:$rentalUnitApiValue'] ?? rentalUnit;
   String get suitableForLabel =>
@@ -259,18 +294,26 @@ class OwnerAddPropertyFormState {
     hasValidLocation: isLocationSelected,
   );
 
-  bool get isPhotosReady => Validators.isValidPropertyPhotos(
-    count: photoCount,
-    metadataStates: photoDrafts.map((photo) => photo.isMetadataReady),
-  );
+  bool get isPhotosReady =>
+      Validators.isValidPropertyPhotos(count: photoCount) &&
+      photoDrafts.every((photo) => photo.file != null || photo.isExisting) &&
+      !isVideoPreparing &&
+      (videoFile == null ||
+          (videoDuration != null &&
+              Validators.validatePropertyVideoDuration(
+                    Duration(seconds: videoDuration!),
+                  ) ==
+                  null));
 
-  bool get isPricingReady => Validators.isValidPropertyPricing(
-    monthlyPrice: monthlyPrice,
-    rentalDuration: rentalDuration,
-    rentalUnit: rentalUnit,
-    suitableFor: suitableFor,
-    description: description,
-  );
+  bool get isPricingReady =>
+      Validators.isValidPropertyPricing(
+        monthlyPrice: monthlyPrice,
+        rentalDuration: rentalDuration,
+        rentalUnit: rentalUnit,
+        suitableFor: suitableFor,
+        description: description,
+      ) &&
+      isAdditionalDetailsReady;
 
   String get locationSummary => '$district، $governorate';
 
@@ -301,6 +344,12 @@ class OwnerAddPropertyFormState {
       AddPropertySummaryContent(
         label: LocaleKeys.ownerAddPropertyPhotosSummary,
         value: photoSummary,
+      ),
+      AddPropertySummaryContent(
+        label: LocaleKeys.ownerPropertyVideoTitle,
+        value: hasVideo
+            ? LocaleKeys.ownerPropertyVideoSelected
+            : LocaleKeys.ownerAddPropertyVideoSkipped,
       ),
       for (int index = 0; index < photoDrafts.length; index++)
         if (photoDrafts[index].name.trim().isNotEmpty ||
@@ -342,6 +391,22 @@ class OwnerAddPropertyFormState {
     String? suitableFor,
     DateTime? submittedAt,
     Map<String, String>? optionLabels,
+    File? videoFile,
+    String? videoUrl,
+    int? videoDuration,
+    bool? removeVideo,
+    bool? isVideoPreparing,
+    bool clearVideo = false,
+    String? country,
+    String? neighborhood,
+    String? buildingYear,
+    String? deposit,
+    bool? smokingAllowed,
+    bool clearSmokingAllowed = false,
+    File? ownershipProofFile,
+    String? ownershipProofUrl,
+    bool? removeOwnershipProof,
+    bool clearOwnershipProof = false,
   }) {
     return OwnerAddPropertyFormState(
       title: title ?? this.title,
@@ -366,11 +431,34 @@ class OwnerAddPropertyFormState {
       suitableFor: suitableFor ?? this.suitableFor,
       submittedAt: submittedAt ?? this.submittedAt,
       optionLabels: optionLabels ?? this.optionLabels,
+      videoFile: clearVideo ? null : videoFile ?? this.videoFile,
+      videoUrl: clearVideo ? '' : videoUrl ?? this.videoUrl,
+      videoDuration: clearVideo ? null : videoDuration ?? this.videoDuration,
+      removeVideo: removeVideo ?? this.removeVideo,
+      isVideoPreparing: isVideoPreparing ?? this.isVideoPreparing,
+      country: country ?? this.country,
+      neighborhood: neighborhood ?? this.neighborhood,
+      buildingYear: buildingYear ?? this.buildingYear,
+      deposit: deposit ?? this.deposit,
+      smokingAllowed: clearSmokingAllowed
+          ? null
+          : smokingAllowed ?? this.smokingAllowed,
+      ownershipProofFile: clearOwnershipProof
+          ? null
+          : ownershipProofFile ?? this.ownershipProofFile,
+      ownershipProofUrl: clearOwnershipProof
+          ? ''
+          : ownershipProofUrl ?? this.ownershipProofUrl,
+      removeOwnershipProof: removeOwnershipProof ?? this.removeOwnershipProof,
     );
   }
 
-  Map<String, dynamic> toJson({bool includeMainImage = true}) {
+  Map<String, dynamic> toJson({
+    bool includeMainImage = true,
+    bool isEditing = false,
+  }) {
     final Set<String> selectedAmenities = amenities;
+    final OwnerPropertyPhotoDraft? mainPhoto = photoDrafts.firstOrNull;
     return {
       'title': title.trim(),
       'description': description.trim(),
@@ -393,12 +481,49 @@ class OwnerAddPropertyFormState {
       'suitable_for': _suitableForValue(suitableFor),
       'governorate': governorateId,
       'city': districtId,
-      'district': street.trim(),
+      'district': isEditing || neighborhood.trim().isNotEmpty
+          ? neighborhood.trim()
+          : street.trim(),
+      'street': street.trim(),
+      'country': country.trim(),
+      'building_year': buildingYear.trim(),
+      'deposit': deposit.trim(),
+      'smoking_allowed': smokingAllowed ?? '',
       if (location?.isValid == true) ...{
         'latitude': location!.latitude,
         'longitude': location!.longitude,
       },
-      if (includeMainImage && photos.isNotEmpty) 'main_image': photos.first,
+      if (includeMainImage && mainPhoto?.file != null)
+        'main_image': mainPhoto!.file,
+      if (mainPhoto != null) ...{
+        'main_image_name': mainPhoto.name.trim(),
+        'main_image_description': mainPhoto.description.trim(),
+        if (mainPhoto.isExisting && mainPhoto.existingId.isNotEmpty)
+          'main_image_id': mainPhoto.existingId,
+      },
+      if (isEditing) ...{
+        'retained_image_ids': jsonEncode([
+          for (final photo in photoDrafts)
+            if (photo.isExisting && photo.existingId.isNotEmpty)
+              photo.existingId,
+        ]),
+        'images_metadata': jsonEncode([
+          for (final photo in photoDrafts)
+            if (photo.isExisting && photo.existingId.isNotEmpty)
+              {
+                'id': photo.existingId,
+                'name': photo.name.trim(),
+                'description': photo.description.trim(),
+              },
+        ]),
+      },
+      if (videoFile != null) ...{
+        'video': videoFile,
+        if (videoDuration != null) 'video_duration': videoDuration,
+      },
+      if (removeVideo) 'remove_video': true,
+      if (ownershipProofFile != null) 'ownership_proof': ownershipProofFile,
+      if (removeOwnershipProof) 'remove_ownership_proof': true,
       'has_wifi': _containsOption(
         selectedAmenities,
         localized: LocaleKeys.ownerAddPropertyWifi,
@@ -457,6 +582,9 @@ class OwnerAddPropertyFormState {
         arabic: 'غاز طبيعي',
         english: 'Natural gas',
       ),
+      'amenities': jsonEncode(
+        amenityApiValues.where((value) => value != 'furnished').toList(),
+      ),
     };
   }
 
@@ -466,8 +594,8 @@ class OwnerAddPropertyFormState {
 
   String get rentalUnitApiValue => _rentalUnitValue(rentalUnit);
   String get suitableForApiValue => _suitableForValue(suitableFor);
-  Set<String> get amenityApiValues => {
-    for (final entry in {
+  Set<String> get amenityApiValues {
+    final Map<String, String> labels = {
       'furnished': LocaleKeys.ownerAddPropertyFurnished,
       'wifi': LocaleKeys.ownerAddPropertyWifi,
       'elevator': LocaleKeys.ownerAddPropertyElevator,
@@ -479,10 +607,41 @@ class OwnerAddPropertyFormState {
       'natural_gas': LocaleKeys.ownerAddPropertyNaturalGas,
       'electricity_meter': LocaleKeys.ownerAddPropertyElectricityMeter,
       'water_meter': LocaleKeys.ownerAddPropertyWaterMeter,
-    }.entries)
-      if (amenities.contains(entry.key) || amenities.contains(entry.value))
-        entry.key,
-  };
+    };
+    const Map<String, String> aliases = {
+      'مفروش': 'furnished',
+      'Furnished': 'furnished',
+      'واي فاي': 'wifi',
+      'WiFi': 'wifi',
+      'أسانسير': 'elevator',
+      'Elevator': 'elevator',
+      'جراج': 'garage',
+      'Garage': 'garage',
+      'أمن': 'security',
+      'Security': 'security',
+      'بلكونة': 'balcony',
+      'Balcony': 'balcony',
+      'تكييف': 'air_conditioning',
+      'Air conditioning': 'air_conditioning',
+      'قريب من المترو': 'near_metro',
+      'Near the metro': 'near_metro',
+      'غاز طبيعي': 'natural_gas',
+      'Natural gas': 'natural_gas',
+      'عداد كهرباء': 'electricity_meter',
+      'Electricity meter': 'electricity_meter',
+      'عداد مياه': 'water_meter',
+      'Water meter': 'water_meter',
+    };
+    return {
+      for (final value in amenities)
+        labels.entries
+                .where((entry) => entry.value == value)
+                .firstOrNull
+                ?.key ??
+            aliases[value] ??
+            value,
+    };
+  }
 
   static String _propertyTypeValue(String value) {
     return {

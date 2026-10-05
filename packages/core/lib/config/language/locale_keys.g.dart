@@ -3808,4 +3808,82 @@ abstract class LocaleKeys {
   static const String _propertyRequiredFieldsHint = 'property_required_fields_hint';
   static String get propertyRequiredFieldsHint => _propertyRequiredFieldsHint.tr();
 
+  static const String _optional = 'optional';
+  static String get optional => _optional.tr();
+
+  static const String _ownerAddPropertyOptionalRecommended = 'owner_add_property_optional_recommended';
+  static String get ownerAddPropertyOptionalRecommended => _ownerAddPropertyOptionalRecommended.tr();
+
+  static const String _ownerAddPropertyPhotoMetadataRecommended = 'owner_add_property_photo_metadata_recommended';
+  static String get ownerAddPropertyPhotoMetadataRecommended => _ownerAddPropertyPhotoMetadataRecommended.tr();
+
+  static const String _ownerAddPropertyReplacePhoto = 'owner_add_property_replace_photo';
+  static String get ownerAddPropertyReplacePhoto => _ownerAddPropertyReplacePhoto.tr();
+
+  static const String _ownerAddPropertySetMainPhoto = 'owner_add_property_set_main_photo';
+  static String get ownerAddPropertySetMainPhoto => _ownerAddPropertySetMainPhoto.tr();
+
+  static const String _ownerPropertyVideoSelected = 'owner_property_video_selected';
+  static String get ownerPropertyVideoSelected => _ownerPropertyVideoSelected.tr();
+
+  static const String _ownerAddPropertyAdditionalDetails = 'owner_add_property_additional_details';
+  static String get ownerAddPropertyAdditionalDetails => _ownerAddPropertyAdditionalDetails.tr();
+
+  static const String _ownerAddPropertyCountry = 'owner_add_property_country';
+  static String get ownerAddPropertyCountry => _ownerAddPropertyCountry.tr();
+
+  static const String _ownerAddPropertyNeighborhood = 'owner_add_property_neighborhood';
+  static String get ownerAddPropertyNeighborhood => _ownerAddPropertyNeighborhood.tr();
+
+  static const String _ownerAddPropertyBuildingYearInvalid = 'owner_add_property_building_year_invalid';
+  static String get ownerAddPropertyBuildingYearInvalid => _ownerAddPropertyBuildingYearInvalid.tr();
+
+  static const String _ownerAddPropertyDepositHint = 'owner_add_property_deposit_hint';
+  static String get ownerAddPropertyDepositHint => _ownerAddPropertyDepositHint.tr();
+
+  static const String _ownerAddPropertyDepositInvalid = 'owner_add_property_deposit_invalid';
+  static String get ownerAddPropertyDepositInvalid => _ownerAddPropertyDepositInvalid.tr();
+
+  static const String _ownerAddPropertyNotSpecified = 'owner_add_property_not_specified';
+  static String get ownerAddPropertyNotSpecified => _ownerAddPropertyNotSpecified.tr();
+
+  static const String _ownerPropertyEditReviewTitle = 'owner_property_edit_review_title';
+  static String get ownerPropertyEditReviewTitle => _ownerPropertyEditReviewTitle.tr();
+
+  static const String _ownerPropertyEditReviewDescription = 'owner_property_edit_review_description';
+  static String get ownerPropertyEditReviewDescription => _ownerPropertyEditReviewDescription.tr();
+
+  static const String _ownerPropertyEditReviewDone = 'owner_property_edit_review_done';
+  static String get ownerPropertyEditReviewDone => _ownerPropertyEditReviewDone.tr();
+
+  static const String _ownerPropertiesDeleteConfirmation = 'owner_properties_delete_confirmation';
+  static String get ownerPropertiesDeleteConfirmation => _ownerPropertiesDeleteConfirmation.tr();
+
+  static const String _ownerPropertiesDeleted = 'owner_properties_deleted';
+  static String get ownerPropertiesDeleted => _ownerPropertiesDeleted.tr();
+
+  static const String _ownerPropertyReviewVideo = 'owner_property_review_video';
+  static String get ownerPropertyReviewVideo => _ownerPropertyReviewVideo.tr();
+
+  static const String _ownerPropertyReviewProof = 'owner_property_review_proof';
+  static String get ownerPropertyReviewProof => _ownerPropertyReviewProof.tr();
+
+  static const String _ownerPropertyReviewNoProof = 'owner_property_review_no_proof';
+  static String get ownerPropertyReviewNoProof => _ownerPropertyReviewNoProof.tr();
+
+  static const String _ownerAddPropertyCustomDeposit = 'owner_add_property_custom_deposit';
+  static String get ownerAddPropertyCustomDeposit => _ownerAddPropertyCustomDeposit.tr();
+
+  static const String _tenantPropertyDetailsListingInformation = 'tenant_property_details_listing_information';
+  static String get tenantPropertyDetailsListingInformation => _tenantPropertyDetailsListingInformation.tr();
+
+  static const String _tenantPropertyDetailsListingStatus = 'tenant_property_details_listing_status';
+  static String get tenantPropertyDetailsListingStatus => _tenantPropertyDetailsListingStatus.tr();
+
+  static const String _tenantPropertyDetailsListedAt = 'tenant_property_details_listed_at';
+  static String get tenantPropertyDetailsListedAt => _tenantPropertyDetailsListedAt.tr();
+
+  static const String _tenantPropertyDetailsUpdatedAt = 'tenant_property_details_updated_at';
+  static String get tenantPropertyDetailsUpdatedAt => _tenantPropertyDetailsUpdatedAt.tr();
+
 }

@@ -22,6 +22,7 @@ class AddPropertyField extends StatelessWidget {
     this.maxLines = 1,
     this.minLines,
     this.validator,
+    this.isRequired = true,
   });
 
   final AddPropertyFieldContent field;
@@ -36,6 +37,7 @@ class AddPropertyField extends StatelessWidget {
   final int maxLines;
   final int? minLines;
   final FormFieldValidator<String>? validator;
+  final bool isRequired;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,7 @@ class AddPropertyField extends StatelessWidget {
       spacing: 6.h,
       children: [
         AppText(
-          '${field.label} *',
+          isRequired ? '${field.label} *' : field.label,
           style: AppTextStyles.medium13.copyWith(color: AppColors.sokoonGray),
         ),
         if (controller != null)
@@ -62,7 +64,9 @@ class AddPropertyField extends StatelessWidget {
                 ? TextInputAction.next
                 : TextInputAction.newline,
             validator:
-                validator ?? (value) => Validators.validateRequired(value),
+                validator ??
+                (value) =>
+                    isRequired ? Validators.validateRequired(value) : null,
             style: AppTextStyles.medium.copyWith(
               color: AppColors.sokoonNavy,
               fontSize: 15.sp,

@@ -29,7 +29,7 @@ void main() {
         'has_elevator': true,
       });
 
-      expect(property.amenities, ['wifi', 'garage', 'security']);
+      expect(property.amenities, ['wifi', 'garage', 'security', 'elevator']);
       expect(property.isFav, isTrue);
       expect(property.isSaved, isFalse);
       expect(property.rating, 4.7);

@@ -21,6 +21,8 @@ import 'tag_row.dart';
 import 'property_description.dart';
 import 'property_video.dart';
 import 'rental_details.dart';
+import 'listing_information.dart';
+import 'photo_details.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_reveal.dart';
 
 class TenantPropertyDetailsContentView extends StatelessWidget {
@@ -51,7 +53,6 @@ class TenantPropertyDetailsContentView extends StatelessWidget {
               fontSize: 19.sp,
             ),
             textAlign: TextAlign.start,
-            maxLines: 2,
           ),
           8.szH,
           GestureDetector(
@@ -74,8 +75,6 @@ class TenantPropertyDetailsContentView extends StatelessWidget {
                       height: 1.45,
                     ),
                     textAlign: TextAlign.start,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
@@ -94,12 +93,18 @@ class TenantPropertyDetailsContentView extends StatelessWidget {
           TenantPropertyMetricsGrid(property: property),
           14.szH,
           TenantPropertyRentalDetails(property: property),
+          14.szH,
+          TenantPropertyListingInformation(property: property),
           if (property.videoUrl?.isNotEmpty ?? false) ...[
             14.szH,
             PropertyVideo(
               url: property.videoUrl!,
               durationSeconds: property.videoDuration,
             ),
+          ],
+          if (property.imageUrls.isNotEmpty) ...[
+            14.szH,
+            TenantPropertyPhotoDetails(property: property),
           ],
           14.szH,
           TenantPropertyInfoSection(

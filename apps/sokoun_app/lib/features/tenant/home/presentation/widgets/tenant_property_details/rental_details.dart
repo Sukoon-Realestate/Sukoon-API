@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:sokoun_app/features/shared/finance/presentation/egyptian_pound_text.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
@@ -59,7 +59,7 @@ class TenantPropertyRentalDetails extends StatelessWidget {
         (
           icon: Icons.account_balance_wallet_outlined,
           label: LocaleKeys.tenantPropertyDetailsDeposit,
-          value: EgyptianPoundText.format(property.deposit),
+          value: PropertyDetailsModel.depositLabelFor(property.deposit),
         ),
     ];
     if (rows.isEmpty) return const SizedBox.shrink();

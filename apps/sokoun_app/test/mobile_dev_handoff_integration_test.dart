@@ -603,7 +603,7 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('owned property actions open real analytics and availability', (
+  testWidgets('owned property analytics opens the real endpoint', (
     tester,
   ) async {
     await pump(
@@ -615,6 +615,7 @@ void main() {
               property: _property,
               onEditPressed: () {},
               onRejectedPressed: () {},
+              onDeletePressed: () {},
             ),
           ],
         ),
@@ -626,15 +627,6 @@ void main() {
     expect(
       repository.requests.last.api,
       ApiConstants.propertyStatistics('property-1'),
-    );
-    Go.back();
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Availability times'));
-    await tester.pumpAndSettle();
-    expect(find.byType(OwnerAvailabilityScreen), findsOneWidget);
-    expect(
-      repository.requests.last.api,
-      ApiConstants.ownerPropertyAvailability('property-1'),
     );
     expect(tester.takeException(), isNull);
   });
@@ -674,6 +666,7 @@ void main() {
               form = form.copyWith(rentalUnit: value),
           onAmenityToggled: (value) => form = form.copyWith(amenities: {value}),
           onDescriptionChanged: (_) {},
+          onAdditionalDetailsChanged: (value) => form = value,
           onOptionLabelsLoaded: (labels) =>
               form = form.copyWith(optionLabels: labels),
           onNext: () {},
@@ -693,7 +686,10 @@ void main() {
       (chip) => chip.selectionValue == 'electricity_meter',
     );
     wraps.first.onChipTap!(meter);
-    wraps.last.onChipTap!(wraps.last.chips.single);
+    final residents = wraps.firstWhere(
+      (wrap) => wrap.chips.any((chip) => chip.selectionValue == 'students'),
+    );
+    residents.onChipTap!(residents.chips.single);
     expect(form.toJson()['has_electricity_meter'], isTrue);
     expect(form.toJson()['suitable_for'], 'students');
     tester

@@ -114,6 +114,7 @@ void main() {
             ),
             onEditPressed: () {},
             onRejectedPressed: () {},
+            onDeletePressed: () {},
           ),
           FavoritePropertyCard(
             item: const FavoritePropertyContent.initial().copyWith(

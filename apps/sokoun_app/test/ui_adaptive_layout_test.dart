@@ -23,6 +23,11 @@ import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_sear
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/details_body.dart';
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_widgets/owner_stats_grid.dart';
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/add_property_photos_page.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/add_property_additional_details.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/property_edit_review_sheet.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/property_photo_metadata.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/photo_details.dart';
+import 'package:sokoun_app/features/owner/properties/imports.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
 import 'package:sokoun_app/features/tenant/visits/imports.dart';
 import 'package:sokoun_app/features/shared/profile/imports.dart';
@@ -80,6 +85,11 @@ void main() {
           'dashboard',
           'photos',
           'property_review',
+          'property_terms',
+          'photo_metadata',
+          'photo_details',
+          'property_edit_review',
+          'property_delete',
           'booking',
           'availability',
           'profile',
@@ -109,6 +119,24 @@ void main() {
               'images': [],
               'video': 'https://cdn.example.com/tour.mp4',
               'video_duration': 45,
+              'country': 'Egypt',
+              'governorate': {
+                'id': 'cairo',
+                'name': locale == 'ar' ? 'القاهرة' : 'Cairo',
+              },
+              'city': {
+                'id': 'maadi',
+                'name': locale == 'ar' ? 'المعادي' : 'Maadi',
+              },
+              'district': title,
+              'street': title,
+              'space': '120',
+              'deposit': 'one_month',
+              'building_year': 2020,
+              'smoking_allowed': false,
+              'status': 'under_review',
+              'created_at': '2026-10-01T10:00:00Z',
+              'updated_at': '2026-10-05T12:00:00Z',
             });
             Widget scroll(Widget child) => AppScaffold(
               showBackButton: false,
@@ -179,11 +207,16 @@ void main() {
               ),
               'photos' => page(
                 AddPropertyPhotosPage(
+                  form: OwnerAddPropertyFormState.initial(),
                   photos: const [],
                   isReady: false,
                   onAddPhotos: () {},
                   onRemovePhoto: (_) {},
                   onReplacePhoto: (_) {},
+                  onMainPhotoSelected: (_) {},
+                  onVideoSelected: (_, _) {},
+                  onVideoRemoved: () {},
+                  onVideoPreparingChanged: (_) {},
                   onPhotoNameChanged: (_, _) {},
                   onPhotoDescriptionChanged: (_, _) {},
                   onNext: () {},
@@ -196,6 +229,58 @@ void main() {
                     description: title,
                   ),
                   isEditing: false,
+                ),
+              ),
+              'property_terms' => scroll(
+                AddPropertyAdditionalDetails(
+                  form: OwnerAddPropertyFormState.initial().copyWith(
+                    country: 'Egypt',
+                    neighborhood: title,
+                    buildingYear: '2020',
+                    deposit: 'one_month',
+                    smokingAllowed: false,
+                    ownershipProofUrl: 'https://example.com/proof.jpg',
+                  ),
+                  onDetailsChanged: (_) {},
+                ),
+              ),
+              'photo_metadata' => scroll(
+                PhotoMetadataSection(
+                  photos: [
+                    OwnerPropertyPhotoDraft(
+                      existingId: 'photo',
+                      existingUrl: 'https://example.com/room.jpg',
+                      name: title,
+                      description: title,
+                    ),
+                  ],
+                  onPhotoNameChanged: (_, _) {},
+                  onPhotoDescriptionChanged: (_, _) {},
+                ),
+              ),
+              'photo_details' => scroll(
+                TenantPropertyPhotoDetails(
+                  property: TenantPropertyDetailsContent.fromModel(
+                    PropertyDetailsModel.fromJson({
+                      'images': [
+                        {
+                          'id': 'photo',
+                          'image': 'https://example.com/room.jpg',
+                          'name': title,
+                          'description': '$title. $title.',
+                        },
+                      ],
+                    }),
+                  ),
+                ),
+              ),
+              'property_edit_review' => page(const PropertyEditReviewSheet()),
+              'property_delete' => page(
+                OwnerPropertyDeleteSheet(
+                  property: OwnerPropertyContent.initial().copyWith(
+                    id: 'property',
+                    title: title,
+                  ),
                 ),
               ),
               'booking' => page(

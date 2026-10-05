@@ -20,6 +20,7 @@ import 'add_property_field.dart';
 import 'add_property_info_banner.dart';
 import 'add_property_section_card.dart';
 import 'add_property_step_shell.dart';
+import 'add_property_additional_details.dart';
 
 class AddPropertyPricingPage extends StatefulWidget {
   const AddPropertyPricingPage({
@@ -37,6 +38,7 @@ class AddPropertyPricingPage extends StatefulWidget {
     required this.onNext,
     this.isSubmitting = false,
     this.onOptionLabelsLoaded,
+    required this.onAdditionalDetailsChanged,
   });
 
   final OwnerAddPropertyFormState form;
@@ -52,6 +54,7 @@ class AddPropertyPricingPage extends StatefulWidget {
   final VoidCallback onNext;
   final bool isSubmitting;
   final ValueChanged<Map<String, String>>? onOptionLabelsLoaded;
+  final ValueChanged<OwnerAddPropertyFormState> onAdditionalDetailsChanged;
 
   @override
   State<AddPropertyPricingPage> createState() => _AddPropertyPricingPageState();
@@ -149,6 +152,20 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
                                 isSelected: widget.form.amenityApiValues
                                     .contains(option.value),
                               ),
+                            for (final value in widget.form.amenityApiValues)
+                              if (value != 'furnished' &&
+                                  !options.amenities.any(
+                                    (option) => option.value == value,
+                                  ))
+                                AddPropertyChipContent(
+                                  label:
+                                      widget
+                                          .form
+                                          .optionLabels['amenity:$value'] ??
+                                      value,
+                                  value: value,
+                                  isSelected: true,
+                                ),
                           ],
                           onChipTap: (chip) =>
                               widget.onAmenityToggled(chip.selectionValue),
@@ -187,6 +204,10 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
         _DescriptionSection(
           descriptionController: widget.descriptionController,
           onDescriptionChanged: widget.onDescriptionChanged,
+        ),
+        AddPropertyAdditionalDetails(
+          form: widget.form,
+          onDetailsChanged: widget.onAdditionalDetailsChanged,
         ),
         AddPropertyInfoBanner(
           text: widget.form.isPricingReady

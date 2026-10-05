@@ -11,6 +11,103 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test(
+    'complete property media, nested regions, and terms survive cache and reach details',
+    () {
+      final property = PropertyDetailsModel.fromJson({
+        'id': 'complete-property',
+        'owner': {'id': 'owner-id', 'full_name': 'Ahmed', 'is_verified': true},
+        'main_image': 'https://example.com/cover.jpg',
+        'main_image_id': 'cover-id',
+        'main_image_name': 'Entrance',
+        'main_image_description': 'Private entrance',
+        'images': [
+          {
+            'id': 'room-id',
+            'image': 'https://example.com/room.jpg',
+            'name': null,
+            'description': 'Room facing the garden',
+          },
+        ],
+        'video': {'url': 'https://example.com/tour.mp4'},
+        'video_duration': '45',
+        'status': 'under_review',
+        'country': 'Egypt',
+        'governorate': {'id': 'cairo-id', 'name': 'Cairo', 'slug': 'cairo'},
+        'city': {
+          'id': 'nasr-city-id',
+          'name': 'Nasr City',
+          'governorate': 'cairo-id',
+        },
+        'district': 'Seventh district',
+        'street': 'Main street',
+        'space': '120',
+        'floor': 0,
+        'building_year': '2020',
+        'deposit': 'half_month',
+        'smoking_allowed': false,
+        'price_period': 'weekly',
+        'rental_period': '6',
+        'amenities': ['wifi', 'swimming_pool'],
+        'has_electricity_meter': true,
+        'created_at': '2026-10-01T10:00:00Z',
+        'updated_at': '2026-10-05T12:00:00Z',
+      });
+      final cached = PropertyDetailsModel.fromJson(property.toJson());
+      expect(cached, property);
+      expect(cached.ownerId, 'owner-id');
+      expect(cached.governorateId, 'cairo-id');
+      expect(cached.amenities, ['wifi', 'swimming_pool', 'electricity_meter']);
+      final content = TenantPropertyDetailsContent.fromModel(cached);
+      expect(content.photoLabels.first, 'Entrance');
+      expect(content.photoDescriptions, [
+        'Private entrance',
+        'Room facing the garden',
+      ]);
+      expect(content.imageUrls, hasLength(2));
+      expect(content.videoUrl, 'https://example.com/tour.mp4');
+      expect(content.videoDuration, 45);
+      expect(content.country, 'Egypt');
+      expect(content.governorateName, 'Cairo');
+      expect(content.cityName, 'Nasr City');
+      expect(content.district, 'Seventh district');
+      expect(content.street, 'Main street');
+      expect(content.floor, 0);
+      expect(content.buildingYear, 2020);
+      expect(content.deposit, 'half_month');
+      expect(content.smokingAllowed, isFalse);
+      expect(content.status, 'under_review');
+      expect(content.createdAt, cached.createdAt);
+      expect(content.updatedAt, cached.updatedAt);
+      expect(content.metrics[2].value, '120');
+      expect(content.metrics.last.value, '6');
+      expect(content.metrics.last.label, cached.rentalPeriodUnitLabel);
+    },
+  );
+
+  test(
+    'raw region IDs remain editable while older nested-city governorates still work',
+    () {
+      final raw = PropertyDetailsModel.fromJson({
+        'city': 'city-id',
+        'governorate': 'governorate-id',
+        'governorate_name': 'Cairo',
+      });
+      expect(raw.city.id, 'city-id');
+      expect(raw.governorateId, 'governorate-id');
+      expect(raw.governorateName, 'Cairo');
+      final legacy = PropertyDetailsModel.fromJson({
+        'city': {
+          'id': 'city-id',
+          'governorate': 'gov-id',
+          'governorate_name': 'Giza',
+        },
+      });
+      expect(legacy.governorateId, 'gov-id');
+      expect(legacy.governorateName, 'Giza');
+    },
+  );
+
+  test(
     'collection property rental details survive caching and reach presentation',
     () {
       final json = collectionResponseData(r'/properties/[a-f0-9-]+/$');

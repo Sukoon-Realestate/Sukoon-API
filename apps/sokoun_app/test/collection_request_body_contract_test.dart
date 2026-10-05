@@ -36,6 +36,19 @@ void main() {
         'has_electricity_meter': false,
         'has_water_meter': false,
       });
+      // Proposed property extensions are defined in
+      // docs/property_media_edit_delete_backend.md; collection.json still
+      // records the existing server contract until the backend is deployed.
+      expected.addAll({
+        'street': '',
+        'country': '',
+        'building_year': '',
+        'deposit': '',
+        'smoking_allowed': '',
+        'main_image_name': '',
+        'main_image_description': '',
+        'amenities': '[]',
+      });
     }
     expect(
       body.keys.toSet().difference(expected.keys.toSet()),
@@ -131,7 +144,7 @@ void main() {
     },
   );
   test(
-    'property body includes a real pin and cover without unsupported controls',
+    'property body keeps the existing contract and adds the proposed property fields',
     () {
       final form = _property();
       final body = form.toJson();
@@ -239,13 +252,10 @@ OwnerAddPropertyFormState _property() =>
       rentalUnit: 'monthly',
       suitableFor: 'individuals',
       description: 'Studio near the metro',
-      photoDrafts: [
-        OwnerPropertyPhotoDraft(
-          file: File('/tmp/cover.jpg'),
-          name: 'Cover',
-          description: 'Room',
-        ),
-      ],
+      photoDrafts: List.generate(
+        10,
+        (index) => OwnerPropertyPhotoDraft(file: File('/tmp/photo-$index.jpg')),
+      ),
     );
 
 List<Map<String, dynamic>> _requests() {

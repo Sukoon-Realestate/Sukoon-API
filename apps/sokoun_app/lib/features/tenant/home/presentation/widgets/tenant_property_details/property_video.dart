@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -15,8 +16,15 @@ typedef _Playback = ({
 });
 
 class PropertyVideo extends StatefulWidget {
-  const PropertyVideo({super.key, required this.url, this.durationSeconds});
+  const PropertyVideo({super.key, required this.url, this.durationSeconds})
+    : file = null;
+  const PropertyVideo.local({
+    super.key,
+    required this.file,
+    this.durationSeconds,
+  }) : url = '';
   final String url;
+  final File? file;
   final int? durationSeconds;
   @override
   State<PropertyVideo> createState() => _PropertyVideoState();
@@ -53,7 +61,8 @@ class _PropertyVideoState extends State<PropertyVideo>
   @override
   void didUpdateWidget(covariant PropertyVideo oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.url != widget.url) {
+    if (oldWidget.url != widget.url ||
+        oldWidget.file?.path != widget.file?.path) {
       _generation++;
       _controller?.dispose();
       _controller = null;
@@ -121,16 +130,17 @@ class _PropertyVideoState extends State<PropertyVideo>
     if (existing != null) await existing.dispose();
     if (!mounted || generation != _generation) return;
     final Uri? uri = Uri.tryParse(widget.url);
-    if (uri == null ||
-        !['https', 'http'].contains(uri.scheme) ||
-        uri.host.isEmpty) {
+    if (widget.file == null &&
+        (uri == null ||
+            !['https', 'http'].contains(uri.scheme) ||
+            uri.host.isEmpty)) {
       _controller = null;
       _playback.value = (loading: false, failed: true, controller: null);
       return;
     }
-    final VideoPlayerController controller = VideoPlayerController.networkUrl(
-      uri,
-    );
+    final VideoPlayerController controller = widget.file != null
+        ? VideoPlayerController.file(widget.file!)
+        : VideoPlayerController.networkUrl(uri!);
     _controller = controller;
     try {
       await controller.initialize();

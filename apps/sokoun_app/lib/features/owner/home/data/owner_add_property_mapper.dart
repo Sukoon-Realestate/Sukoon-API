@@ -3,6 +3,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:sokoun_app/features/owner/properties/data/models/owner_property_location_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/property_governorate_model.dart';
 
 class OwnerPropertyFormSeed {
   const OwnerPropertyFormSeed({
@@ -18,12 +19,9 @@ class OwnerPropertyFormSeed {
 
 abstract final class OwnerAddPropertyMapper {
   static OwnerPropertyFormSeed fromProperty(PropertyDetailsModel property) {
-    final Set<String> amenities = property.amenities
-        .map(_amenityLabel)
-        .where(OwnerAddPropertyContent.amenityOptions.contains)
-        .toSet();
+    final Set<String> amenities = property.amenities.toSet();
     if (property.isFurnished) {
-      amenities.add(LocaleKeys.ownerAddPropertyFurnished);
+      amenities.add('furnished');
     }
 
     return OwnerPropertyFormSeed(
@@ -32,13 +30,17 @@ abstract final class OwnerAddPropertyMapper {
       form: OwnerAddPropertyFormState.initial().copyWith(
         title: property.title,
         propertyType: _propertyTypeLabel(property.propertyType),
-        governorateId: property.city.governorate,
-        governorate: property.city.governorateName,
+        propertyTypeValue: property.propertyType,
+        governorateId: property.governorateId,
+        governorate: property.governorateName,
         districtId: property.city.id,
         district: property.city.name.isNotEmpty
             ? property.city.name
             : property.district,
-        street: property.district,
+        street: property.street.isNotEmpty
+            ? property.street
+            : property.district,
+        neighborhood: property.district,
         bedrooms: _positiveNumberText(property.bedrooms),
         bathrooms: _positiveNumberText(property.bathrooms),
         space: property.space.isNotEmpty
@@ -53,6 +55,13 @@ abstract final class OwnerAddPropertyMapper {
         amenities: amenities,
         description: property.description,
         suitableFor: _suitableForLabel(property.suitableFor),
+        videoUrl: property.video ?? '',
+        videoDuration: property.videoDuration,
+        country: property.country,
+        buildingYear: _positiveNumberText(property.buildingYear),
+        deposit: property.deposit,
+        smokingAllowed: property.smokingAllowed,
+        ownershipProofUrl: property.ownershipProof,
       ),
     );
   }
@@ -64,24 +73,40 @@ abstract final class OwnerAddPropertyMapper {
     required OwnerPropertyLocationModel? selectedGovernorate,
     required OwnerPropertyLocationModel? selectedCity,
   }) {
-    final Map<String, dynamic> body = form.toJson();
-    final List<String> amenities = [
-      if (body['has_wifi'] == true) 'wifi',
-      if (body['has_elevator'] == true) 'elevator',
-      if (body['has_garage'] == true) 'garage',
-      if (body['has_security'] == true) 'security',
-      if (body['has_balcony'] == true) 'balcony',
-      if (body['has_air_conditioning'] == true) 'air_conditioning',
-      if (body['near_metro'] == true) 'near_metro',
-      if (body['has_natural_gas'] == true) 'natural_gas',
-      if (body['has_electricity_meter'] == true) 'electricity_meter',
-      if (body['has_water_meter'] == true) 'water_meter',
-    ];
+    final Map<String, dynamic> body = form.toJson(isEditing: true);
+    final List<String> amenities = form.amenityApiValues
+        .where((value) => value != 'furnished')
+        .toList();
     final PropertyDetailsModel property = original.copyWith(
       mainImage: response.mainImage.isEmpty
           ? original.mainImage
           : response.mainImage,
-      images: response.images.isEmpty ? original.images : response.images,
+      images: response.images.isEmpty
+          ? [
+              for (final photo in form.photoDrafts)
+                if (photo.isExisting && photo.existingId.isNotEmpty)
+                  original.images
+                      .firstWhere(
+                        (image) => image.id == photo.existingId,
+                        orElse: PropertyImageModel.initial,
+                      )
+                      .copyWith(
+                        id: photo.existingId,
+                        image: photo.existingUrl,
+                        name: photo.name.trim(),
+                        description: photo.description.trim(),
+                      ),
+            ]
+          : response.images,
+      video: response.video ?? original.video,
+      videoDuration: response.videoDuration ?? original.videoDuration,
+      clearVideo: form.removeVideo,
+      status: response.status.isEmpty ? 'under_review' : response.status,
+      isVerified: response.isVerified,
+      isOwnershipVerified: response.isOwnershipVerified,
+      updatedAt: response.updatedAt.isEmpty
+          ? original.updatedAt
+          : response.updatedAt,
     );
     final CityModel city = selectedCity == null
         ? property.city
@@ -108,11 +133,36 @@ abstract final class OwnerAddPropertyMapper {
       rentalPeriod: int.parse(form.rentalDuration),
       suitableFor: body['suitable_for'] as String,
       city: city,
-      district: form.street.trim(),
+      governorate: selectedGovernorate == null
+          ? property.governorate
+          : PropertyGovernorateModel(
+              id: selectedGovernorate.id,
+              name: selectedGovernorate.name,
+              slug: selectedGovernorate.slug,
+              createdAt: selectedGovernorate.createdAt,
+              updatedAt: selectedGovernorate.updatedAt,
+            ),
+      district: body['district'] as String,
       latitude: form.location?.latitude.toString() ?? property.latitude,
       longitude: form.location?.longitude.toString() ?? property.longitude,
       street: form.street.trim(),
       amenities: amenities,
+      mainImageId: response.mainImageId.isEmpty
+          ? form.photoDrafts.firstOrNull?.existingId ?? ''
+          : response.mainImageId,
+      mainImageName: form.photoDrafts.firstOrNull?.name.trim() ?? '',
+      mainImageDescription:
+          form.photoDrafts.firstOrNull?.description.trim() ?? '',
+      country: form.country.trim(),
+      buildingYear: int.tryParse(form.buildingYear) ?? 0,
+      deposit: form.deposit.trim(),
+      smokingAllowed: form.smokingAllowed,
+      clearSmokingAllowed: form.smokingAllowed == null,
+      ownershipProof: form.removeOwnershipProof
+          ? ''
+          : response.ownershipProof.isEmpty
+          ? original.ownershipProof
+          : response.ownershipProof,
     );
   }
 
@@ -129,15 +179,15 @@ abstract final class OwnerAddPropertyMapper {
   static OwnerPropertyLocationModel? _governorateFromProperty(
     PropertyDetailsModel property,
   ) {
-    final String id = property.city.governorate;
-    final String name = property.city.governorateName;
+    final String id = property.governorateId;
+    final String name = property.governorateName;
     if (id.isEmpty && name.isEmpty) return null;
     return OwnerPropertyLocationModel(
       id: id,
       name: name,
-      slug: '',
-      createdAt: '',
-      updatedAt: '',
+      slug: property.governorate.slug,
+      createdAt: property.governorate.createdAt,
+      updatedAt: property.governorate.updatedAt,
     );
   }
 
@@ -167,21 +217,6 @@ abstract final class OwnerAddPropertyMapper {
       }[value] ??
       value;
 
-  static String _amenityLabel(String value) =>
-      {
-        'wifi': LocaleKeys.ownerAddPropertyWifi,
-        'elevator': LocaleKeys.ownerAddPropertyElevator,
-        'garage': LocaleKeys.ownerAddPropertyGarage,
-        'security': LocaleKeys.ownerAddPropertySecurity,
-        'balcony': LocaleKeys.ownerAddPropertyBalcony,
-        'air_conditioning': LocaleKeys.ownerAddPropertyAirConditioning,
-        'natural_gas': LocaleKeys.ownerAddPropertyNaturalGas,
-        'electricity_meter': LocaleKeys.ownerAddPropertyElectricityMeter,
-        'water_meter': LocaleKeys.ownerAddPropertyWaterMeter,
-        'near_metro': LocaleKeys.ownerAddPropertyNearMetro,
-      }[value] ??
-      value;
-
   static String _rentalUnitLabel(String value) =>
       {
         'daily': LocaleKeys.ownerAddPropertyDay,
@@ -194,23 +229,26 @@ abstract final class OwnerAddPropertyMapper {
   static List<OwnerPropertyPhotoDraft> _photoDraftsFromProperty(
     PropertyDetailsModel property,
   ) {
-    final List<OwnerPropertyPhotoDraft> photos = [
-      if (property.mainImage.trim().isNotEmpty)
-        OwnerPropertyPhotoDraft(existingUrl: property.mainImage),
-      ...property.images
-          .where((image) => image.image.trim().isNotEmpty)
-          .map(
-            (image) => OwnerPropertyPhotoDraft(
-              existingId: image.id,
-              existingUrl: image.image,
-              name: image.name,
-              description: image.description,
-            ),
+    final PropertyImageModel main = property.images.firstWhere(
+      (image) => image.image == property.mainImage,
+      orElse: () => PropertyImageModel.initial().copyWith(
+        id: property.mainImageId,
+        image: property.mainImage,
+        name: property.mainImageName,
+        description: property.mainImageDescription,
+      ),
+    );
+    final Set<String> seen = {};
+    return [
+      for (final image in [main, ...property.images])
+        if (image.image.trim().isNotEmpty && seen.add(image.image))
+          OwnerPropertyPhotoDraft(
+            existingId: image.id,
+            existingUrl: image.image,
+            name: image.name,
+            description: image.description,
           ),
     ];
-    return photos
-        .take(OwnerAddPropertyContent.maxPhotoCount)
-        .toList(growable: false);
   }
 
   static String _suitableForLabel(String value) =>

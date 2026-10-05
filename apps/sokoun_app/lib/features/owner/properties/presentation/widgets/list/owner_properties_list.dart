@@ -8,6 +8,7 @@ class OwnerPropertiesList extends StatelessWidget {
     required this.onAddPressed,
     required this.onEditPressed,
     required this.onRejectedPressed,
+    required this.onDeletePressed,
   });
 
   final List<OwnerPropertyContent>? initialProperties;
@@ -15,6 +16,7 @@ class OwnerPropertiesList extends StatelessWidget {
   final VoidCallback onAddPressed;
   final ValueChanged<OwnerPropertyContent> onEditPressed;
   final ValueChanged<OwnerPropertyContent> onRejectedPressed;
+  final ValueChanged<OwnerPropertyContent> onDeletePressed;
 
   Future<(List<OwnerPropertyContent>, PaginationData)> _loadPage(int page) {
     final List<OwnerPropertyContent>? fixtures = initialProperties;
@@ -46,6 +48,7 @@ class OwnerPropertiesList extends StatelessWidget {
         property: property,
         onEditPressed: () => onEditPressed(property),
         onRejectedPressed: () => onRejectedPressed(property),
+        onDeletePressed: () => onDeletePressed(property),
       ),
     ).padding(EdgeInsets.fromLTRB(20.w, 8.h, 20.w, 20.h));
   }

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
-import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 
@@ -27,8 +25,13 @@ class PhotoMetadataSection extends StatelessWidget {
     return Column(
       spacing: 10.h,
       children: [
+        AppText(
+          LocaleKeys.ownerAddPropertyPhotoMetadataRecommended,
+          style: AppTextStyles.regular12.copyWith(color: AppColors.sokoonGray),
+        ),
         for (int index = 0; index < photos.length; index++)
           PhotoMetadataCard(
+            key: ValueKey(photos[index].id),
             photo: photos[index],
             index: index,
             onNameChanged: (value) => onPhotoNameChanged(index, value),
@@ -61,75 +64,26 @@ class PhotoMetadataCard extends StatelessWidget {
         '{number}',
         '${index + 1}',
       ),
-      child: photo.isExisting
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (photo.name.trim().isNotEmpty)
-                  AppText(
-                    photo.name,
-                    style: AppTextStyles.extraBold13.copyWith(
-                      color: AppColors.sokoonNavy,
-                      fontSize: 13.sp,
-                      height: 1.45,
-                    ),
-                    textAlign: TextAlign.start,
-                  ),
-                if (photo.description.trim().isNotEmpty) ...[
-                  4.szH,
-                  AppText(
-                    photo.description,
-                    style: AppTextStyles.regular12.copyWith(
-                      color: AppColors.sokoonGray,
-                      fontSize: 12.sp,
-                      height: 1.45,
-                    ),
-                    textAlign: TextAlign.start,
-                  ),
-                ],
-                if (photo.name.trim().isNotEmpty ||
-                    photo.description.trim().isNotEmpty)
-                  8.szH,
-                AppText(
-                  LocaleKeys.ownerAddPropertyExistingPhotoPreserved,
-                  style: AppTextStyles.regular11.copyWith(
-                    color: AppColors.sokoonGray,
-                    fontSize: 11.sp,
-                    height: 1.45,
-                  ),
-                  textAlign: TextAlign.start,
-                ),
-              ],
-            )
-          : Column(
-              spacing: 10.h,
-              children: [
-                PhotoMetadataField(
-                  key: ValueKey('photo-name-${photo.id}'),
-                  label: LocaleKeys.ownerAddPropertyPhotoName,
-                  hint: LocaleKeys.ownerAddPropertyPhotoNameHint,
-                  initialValue: photo.name,
-                  validator: (value) => Validators.validateRequired(
-                    value,
-                    message: LocaleKeys.ownerAddPropertyPhotoNameRequired,
-                  ),
-                  onChanged: onNameChanged,
-                ),
-                PhotoMetadataField(
-                  key: ValueKey('photo-description-${photo.id}'),
-                  label: LocaleKeys.ownerAddPropertyPhotoDescription,
-                  hint: LocaleKeys.ownerAddPropertyPhotoDescriptionHint,
-                  initialValue: photo.description,
-                  validator: (value) => Validators.validateRequired(
-                    value,
-                    message:
-                        LocaleKeys.ownerAddPropertyPhotoDescriptionRequired,
-                  ),
-                  onChanged: onDescriptionChanged,
-                  maxLines: 3,
-                ),
-              ],
-            ),
+      child: Column(
+        spacing: 10.h,
+        children: [
+          PhotoMetadataField(
+            key: ValueKey('photo-name-${photo.id}'),
+            label: LocaleKeys.ownerAddPropertyPhotoName,
+            hint: LocaleKeys.ownerAddPropertyPhotoNameHint,
+            initialValue: photo.name,
+            onChanged: onNameChanged,
+          ),
+          PhotoMetadataField(
+            key: ValueKey('photo-description-${photo.id}'),
+            label: LocaleKeys.ownerAddPropertyPhotoDescription,
+            hint: LocaleKeys.ownerAddPropertyPhotoDescriptionHint,
+            initialValue: photo.description,
+            onChanged: onDescriptionChanged,
+            maxLines: 3,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -159,7 +113,7 @@ class PhotoMetadataField extends StatelessWidget {
       spacing: 6.h,
       children: [
         AppText(
-          '$label *',
+          '$label (${LocaleKeys.ownerAddPropertyOptionalRecommended})',
           style: AppTextStyles.semiBold.copyWith(
             color: AppColors.sokoonGray,
             fontSize: 12.sp,

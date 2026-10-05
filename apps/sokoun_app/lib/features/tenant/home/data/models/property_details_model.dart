@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:sokoun_app/features/shared/finance/data/egyptian_pound.dart';
+import 'property_governorate_model.dart';
 
 class PropertyImageModel extends Equatable {
   const PropertyImageModel({
@@ -23,8 +24,8 @@ class PropertyImageModel extends Equatable {
 
   factory PropertyImageModel.fromJson(Map<String, dynamic> json) {
     return PropertyImageModel(
-      id: json['id'] as String? ?? '',
-      image: json['image'] as String? ?? '',
+      id: json['id']?.toString() ?? '',
+      image: _propertyFileUrl(json['image']),
       name: json['name'] as String? ?? '',
       description: json['description'] as String? ?? '',
       createdAt: json['created_at'] as String? ?? '',
@@ -166,6 +167,11 @@ class PropertyDetailsModel extends Equatable {
     this.propertyLink = '',
     this.isOwnerVerified = false,
     this.isOwnershipVerified = false,
+    this.mainImageId = '',
+    this.mainImageName = '',
+    this.mainImageDescription = '',
+    this.status = '',
+    this.governorate = const PropertyGovernorateModel.initial(),
     required this.id,
     required this.owner,
     required this.ownerId,
@@ -209,6 +215,11 @@ class PropertyDetailsModel extends Equatable {
       propertyLink = '',
       isOwnerVerified = false,
       isOwnershipVerified = false,
+      mainImageId = '',
+      mainImageName = '',
+      mainImageDescription = '',
+      status = '',
+      governorate = const PropertyGovernorateModel.initial(),
       id = '',
       owner = '',
       ownerId = '',
@@ -260,16 +271,28 @@ class PropertyDetailsModel extends Equatable {
         json['owner_name']?.toString() ??
         (ownerStringIsId ? '' : ownerString);
     return PropertyDetailsModel(
-      video: json['video'] as String?,
-      videoDuration: (json['video_duration'] as num?)?.toInt(),
+      video: json['video'] == null ? null : _propertyFileUrl(json['video']),
+      videoDuration: int.tryParse('${json['video_duration'] ?? ''}'),
+      mainImageId: json['main_image_id']?.toString() ?? '',
+      mainImageName: json['main_image_name']?.toString() ?? '',
+      mainImageDescription: json['main_image_description']?.toString() ?? '',
+      status: json['status']?.toString() ?? '',
+      governorate: json['governorate'] is Map
+          ? PropertyGovernorateModel.fromJson(
+              Map<String, dynamic>.from(json['governorate'] as Map),
+            )
+          : const PropertyGovernorateModel.initial().copyWith(
+              id: json['governorate']?.toString() ?? '',
+              name: json['governorate_name']?.toString() ?? '',
+            ),
       propertyLink: json['property_link'] as String? ?? '',
-      id: json['id'] as String? ?? '',
+      id: json['id']?.toString() ?? '',
       owner: ownerName,
       ownerId:
           ownerJson['id']?.toString() ??
           json['owner_id']?.toString() ??
           (ownerStringIsId ? ownerString : ''),
-      mainImage: json['main_image'] as String? ?? '',
+      mainImage: _propertyFileUrl(json['main_image']),
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
       price: json['price']?.toString() ?? '',
@@ -282,18 +305,20 @@ class PropertyDetailsModel extends Equatable {
           json['owner_is_verified'] ??
           false,
       isOwnershipVerified: json['is_ownership_verified'] ?? false,
-      bedrooms: (json['bedrooms'] as num?)?.toInt() ?? 0,
-      bathrooms: (json['bathrooms'] as num?)?.toInt() ?? 0,
-      area: (json['area'] as num?)?.toInt() ?? 0,
+      bedrooms: int.tryParse('${json['bedrooms'] ?? ''}') ?? 0,
+      bathrooms: int.tryParse('${json['bathrooms'] ?? ''}') ?? 0,
+      area: int.tryParse('${json['area'] ?? ''}') ?? 0,
       space: json['space']?.toString() ?? '',
       floor: int.tryParse(json['floor']?.toString() ?? ''),
-      rentalPeriod: (json['rental_period'] as num?)?.toInt() ?? 0,
+      rentalPeriod: int.tryParse('${json['rental_period'] ?? ''}') ?? 0,
       suitableFor: json['suitable_for'] as String? ?? '',
       smokingAllowed: json['smoking_allowed'] as bool?,
       country: json['country'] as String? ?? '',
       city: json['city'] is Map
           ? CityModel.fromJson(Map<String, dynamic>.from(json['city'] as Map))
-          : const CityModel.initial(),
+          : const CityModel.initial().copyWith(
+              id: json['city']?.toString() ?? '',
+            ),
       district: json['district'] as String? ?? '',
       street: json['street'] as String? ?? '',
       buildingYear: int.tryParse('${json['building_year'] ?? ''}') ?? 0,
@@ -301,14 +326,15 @@ class PropertyDetailsModel extends Equatable {
       ownershipProof: _propertyFileUrl(json['ownership_proof']),
       latitude: json['latitude']?.toString() ?? '',
       longitude: json['longitude']?.toString() ?? '',
-      amenities:
-          (json['amenities'] as List?)?.whereType<String>().toList(
-            growable: false,
-          ) ??
-          const [],
+      amenities: {
+        ...(json['amenities'] as List?)?.whereType<String>() ??
+            const <String>[],
+        for (final entry in _amenityFields.entries)
+          if (json[entry.key] == true) entry.value,
+      }.toList(growable: false),
       isFav: json['is_fav'] as bool? ?? false,
       isSaved: json['is_saved'] as bool? ?? false,
-      rating: (json['rating'] as num?)?.toDouble() ?? 0,
+      rating: double.tryParse('${json['rating'] ?? ''}') ?? 0,
       images:
           (json['images'] as List?)
               ?.whereType<Map>()
@@ -331,6 +357,15 @@ class PropertyDetailsModel extends Equatable {
   final int? videoDuration;
   final String propertyLink;
   final String mainImage;
+  final String mainImageId;
+  final String mainImageName;
+  final String mainImageDescription;
+  final String status;
+  final PropertyGovernorateModel governorate;
+  String get governorateId =>
+      governorate.id.isNotEmpty ? governorate.id : city.governorate;
+  String get governorateName =>
+      governorate.name.isNotEmpty ? governorate.name : city.governorateName;
   final String title;
   final String description;
   final String price;
@@ -373,6 +408,11 @@ class PropertyDetailsModel extends Equatable {
     'video_duration': videoDuration,
     'property_link': propertyLink,
     'main_image': mainImage,
+    'main_image_id': mainImageId,
+    'main_image_name': mainImageName,
+    'main_image_description': mainImageDescription,
+    'status': status,
+    'governorate': governorate.toJson(),
     'title': title,
     'description': description,
     'price': price,
@@ -416,6 +456,13 @@ class PropertyDetailsModel extends Equatable {
     String? owner,
     String? ownerId,
     String? mainImage,
+    String? mainImageId,
+    String? mainImageName,
+    String? mainImageDescription,
+    String? status,
+    PropertyGovernorateModel? governorate,
+    bool clearVideo = false,
+    bool clearSmokingAllowed = false,
     String? title,
     String? description,
     String? price,
@@ -451,13 +498,18 @@ class PropertyDetailsModel extends Equatable {
     String? updatedAt,
   }) {
     return PropertyDetailsModel(
-      video: video ?? this.video,
-      videoDuration: videoDuration ?? this.videoDuration,
+      video: clearVideo ? null : video ?? this.video,
+      videoDuration: clearVideo ? null : videoDuration ?? this.videoDuration,
       propertyLink: propertyLink ?? this.propertyLink,
       id: id ?? this.id,
       owner: owner ?? this.owner,
       ownerId: ownerId ?? this.ownerId,
       mainImage: mainImage ?? this.mainImage,
+      mainImageId: mainImageId ?? this.mainImageId,
+      mainImageName: mainImageName ?? this.mainImageName,
+      mainImageDescription: mainImageDescription ?? this.mainImageDescription,
+      status: status ?? this.status,
+      governorate: governorate ?? this.governorate,
       title: title ?? this.title,
       description: description ?? this.description,
       price: price ?? this.price,
@@ -474,7 +526,9 @@ class PropertyDetailsModel extends Equatable {
       floor: floor ?? this.floor,
       rentalPeriod: rentalPeriod ?? this.rentalPeriod,
       suitableFor: suitableFor ?? this.suitableFor,
-      smokingAllowed: smokingAllowed ?? this.smokingAllowed,
+      smokingAllowed: clearSmokingAllowed
+          ? null
+          : smokingAllowed ?? this.smokingAllowed,
       country: country ?? this.country,
       city: city ?? this.city,
       district: district ?? this.district,
@@ -513,6 +567,25 @@ class PropertyDetailsModel extends Equatable {
 
   String get propertyTypeLabel => propertyTypeLabelFor(propertyType);
 
+  String get rentalPeriodUnitLabel => switch (pricePeriod) {
+    'daily' => LocaleKeys.ownerAddPropertyDay,
+    'weekly' => LocaleKeys.ownerAddPropertyWeek,
+    'monthly' => LocaleKeys.ownerAddPropertyMonth,
+    'yearly' => LocaleKeys.ownerAddPropertyYear,
+    _ => LocaleKeys.ownerAddPropertyRentalPeriod,
+  };
+
+  static String depositLabelFor(String value) => switch (value) {
+    'none' => LocaleKeys.ownerAddPropertyNoDeposit,
+    'half_month' => LocaleKeys.ownerAddPropertyHalfMonth,
+    'one_month' => LocaleKeys.ownerAddPropertyOneMonth,
+    'two_months' => LocaleKeys.ownerAddPropertyTwoMonths,
+    _ =>
+      EgyptianPound.parseAmount(value) != null
+          ? '${EgyptianPound.formatAmount(value)} ${LocaleKeys.egyptianPoundShort}'
+          : value,
+  };
+
   static String propertyTypeLabelFor(String value) {
     switch (value) {
       case 'apartment':
@@ -546,7 +619,12 @@ class PropertyDetailsModel extends Equatable {
     if (mainImage.trim().isNotEmpty) {
       final PropertyImageModel main = images.firstWhere(
         (image) => image.image == mainImage,
-        orElse: () => PropertyImageModel.initial().copyWith(image: mainImage),
+        orElse: () => PropertyImageModel.initial().copyWith(
+          id: mainImageId,
+          image: mainImage,
+          name: mainImageName,
+          description: mainImageDescription,
+        ),
       );
       photos.add(
         main.copyWith(
@@ -618,6 +696,11 @@ class PropertyDetailsModel extends Equatable {
     videoDuration,
     propertyLink,
     mainImage,
+    mainImageId,
+    mainImageName,
+    mainImageDescription,
+    status,
+    governorate,
     title,
     description,
     price,
@@ -653,6 +736,19 @@ class PropertyDetailsModel extends Equatable {
     updatedAt,
   ];
 }
+
+const Map<String, String> _amenityFields = {
+  'has_wifi': 'wifi',
+  'has_elevator': 'elevator',
+  'has_garage': 'garage',
+  'has_security': 'security',
+  'has_balcony': 'balcony',
+  'has_air_conditioning': 'air_conditioning',
+  'near_metro': 'near_metro',
+  'has_natural_gas': 'natural_gas',
+  'has_electricity_meter': 'electricity_meter',
+  'has_water_meter': 'water_meter',
+};
 
 String _propertyFileUrl(dynamic value) {
   if (value is Map) {

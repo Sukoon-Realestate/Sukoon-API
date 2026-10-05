@@ -5,6 +5,7 @@ import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/asy
 import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/network/account_session.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
+import 'package:melos_core/core/local_db/objectbox_cache_service.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:sokoun_app/features/owner/home/data/models/upload_property_image_body.dart';
@@ -58,6 +59,8 @@ class UploadPropertyImagesCubit extends AsyncCubit<List<PropertyImageModel>> {
             if (uploaded != null &&
                 !isClosed &&
                 generation == AccountSession.generation) {
+              ObjectBoxCacheService.remove('property_details_$propertyId');
+              ObjectBoxCacheService.remove('owner_properties');
               onPhotoUploaded(photo: photo, image: uploaded.data);
             }
             return result;
@@ -75,7 +78,11 @@ class UploadPropertyImagesCubit extends AsyncCubit<List<PropertyImageModel>> {
         if (failure != null) return Error(failure);
         return Success(BaseModel(key: '', msg: '', data: images));
       },
-      onSuccess: (_) => onSuccess(),
+      onSuccess: (_) {
+        ObjectBoxCacheService.remove('property_details_$propertyId');
+        ObjectBoxCacheService.remove('owner_properties');
+        onSuccess();
+      },
     );
   }
 }

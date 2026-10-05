@@ -15,12 +15,14 @@ class PhotoGridSection extends StatelessWidget {
     required this.onAddPhotos,
     required this.onRemovePhoto,
     required this.onReplacePhoto,
+    required this.onMainPhotoSelected,
   });
 
   final List<OwnerPropertyPhotoDraft> photos;
   final VoidCallback onAddPhotos;
   final ValueChanged<int> onRemovePhoto;
   final ValueChanged<int> onReplacePhoto;
+  final ValueChanged<int> onMainPhotoSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +50,16 @@ class PhotoGridSection extends StatelessWidget {
             }
             final OwnerPropertyPhotoDraft photo = photos[index];
             return PhotoTile(
+              key: ValueKey(photo.id),
               photo: photo,
-              onReplacePhoto: photo.isExisting
-                  ? null
-                  : () => onReplacePhoto(index),
+              onReplacePhoto: () => onReplacePhoto(index),
               onRemovePhoto: photo.canRemove
                   ? () => onRemovePhoto(index)
                   : null,
+              isMainPhoto: index == 0,
+              onMainPhotoSelected: index == 0
+                  ? null
+                  : () => onMainPhotoSelected(index),
             );
           },
         ),
@@ -84,12 +89,16 @@ class PhotoTile extends StatelessWidget {
     this.onAddPhotos,
     this.onReplacePhoto,
     this.onRemovePhoto,
+    this.isMainPhoto = false,
+    this.onMainPhotoSelected,
   });
 
   final OwnerPropertyPhotoDraft? photo;
   final VoidCallback? onAddPhotos;
   final VoidCallback? onReplacePhoto;
   final VoidCallback? onRemovePhoto;
+  final bool isMainPhoto;
+  final VoidCallback? onMainPhotoSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -152,6 +161,7 @@ class PhotoTile extends StatelessWidget {
                 end: 6.r,
                 child: PhotoTileAction(
                   icon: Icons.photo_camera_outlined,
+                  label: LocaleKeys.ownerAddPropertyReplacePhoto,
                   onTap: onReplacePhoto!,
                   color: AppColors.sokoonTeal,
                 ),
@@ -162,25 +172,32 @@ class PhotoTile extends StatelessWidget {
                 start: 6.r,
                 child: PhotoTileAction(
                   icon: Icons.close_rounded,
+                  label: LocaleKeys.ownerPropertiesDelete,
                   onTap: onRemovePhoto!,
                   color: AppColors.red,
                 ),
               ),
-            if (selectedPhoto?.isExisting ?? false)
+            if (hasPhoto)
               PositionedDirectional(
-                bottom: 6.r,
+                top: 6.r,
                 end: 6.r,
-                child: Container(
-                  width: 24.r,
-                  height: 24.r,
-                  decoration: const BoxDecoration(
-                    color: AppColors.blackAlpha45,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.lock_outline_rounded,
-                    color: AppColors.white,
-                    size: 14.r,
+                child: Tooltip(
+                  message: isMainPhoto
+                      ? LocaleKeys.tenantPropertyDetailsMainPhoto
+                      : LocaleKeys.ownerAddPropertySetMainPhoto,
+                  child: IconButton.filled(
+                    onPressed: onMainPhotoSelected,
+                    style: IconButton.styleFrom(
+                      backgroundColor: AppColors.blackAlpha45,
+                      disabledBackgroundColor: AppColors.blackAlpha45,
+                      foregroundColor: AppColors.white,
+                      disabledForegroundColor: AppColors.sokoonGold,
+                    ),
+                    icon: Icon(
+                      isMainPhoto
+                          ? Icons.star_rounded
+                          : Icons.star_border_rounded,
+                    ),
                   ),
                 ),
               ),
@@ -197,24 +214,24 @@ class PhotoTileAction extends StatelessWidget {
     required this.icon,
     required this.onTap,
     required this.color,
+    required this.label,
   });
 
   final IconData icon;
   final VoidCallback onTap;
   final Color color;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        width: 24.r,
-        height: 24.r,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-        child: Icon(icon, color: AppColors.white, size: 14.r),
+    return IconButton.filled(
+      tooltip: label,
+      onPressed: onTap,
+      style: IconButton.styleFrom(
+        backgroundColor: color,
+        foregroundColor: AppColors.white,
       ),
+      icon: Icon(icon, size: 20.r),
     );
   }
 }

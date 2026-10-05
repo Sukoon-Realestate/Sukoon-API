@@ -6,11 +6,13 @@ class OwnerPropertyCard extends StatelessWidget {
     required this.property,
     required this.onEditPressed,
     required this.onRejectedPressed,
+    required this.onDeletePressed,
   });
 
   final OwnerPropertyContent property;
   final VoidCallback onEditPressed;
   final VoidCallback onRejectedPressed;
+  final VoidCallback onDeletePressed;
 
   void _openProperty() {
     if (property.status.isRejected) {
@@ -141,16 +143,8 @@ class OwnerPropertyCard extends StatelessWidget {
                   _OwnerPropertyCardAction(
                     label: LocaleKeys.ownerPropertiesDeleteProperty,
                     foregroundColor: AppColors.red,
-                    backgroundColor: AppColors.red.withOpacity(.2),
-                    onPressed: (){}
-                    // onPressed: () => Go.to(
-                    //   OwnerAvailabilityScreen(
-                    //     ownerPropertyId: property.id,
-                    //     availabilityStartDate: TimeZoneHelper.inLocation(
-                    //       'Africa/Cairo',
-                    //     ),
-                    //   ),
-                    // ),
+                    backgroundColor: AppColors.red.withValues(alpha: .2),
+                    onPressed: onDeletePressed,
                   ),
                 ],
               ),

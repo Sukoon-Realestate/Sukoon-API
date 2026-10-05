@@ -15,6 +15,7 @@ import 'package:sokoun_app/shared_widgets/unsaved_changes_guard.dart';
 import '../../data/owner_add_property_mapper.dart';
 import '../../data/enums/property_review_action.dart';
 import '../widgets/owner_add_property/property_review_sheet.dart';
+import '../widgets/owner_add_property/property_edit_review_sheet.dart';
 import '../../data/models/owner_add_property_content.dart';
 import '../cubits/property_submission_cubit.dart';
 import '../cubits/upload_property_images_cubit.dart';
@@ -106,6 +107,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
   OwnerAddPropertyFormState get _form => _formNotifier.value;
 
   void _updateForm(OwnerAddPropertyFormState Function() update) {
+    if (_isSubmitting.value) return;
     _hasChanges = true;
     _formNotifier.value = update();
   }
@@ -256,13 +258,23 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
   Future<void> _replacePhoto(int index) async {
     if (index < 0 || index >= _form.photoCount) return;
     final OwnerPropertyPhotoDraft current = _form.photoDrafts[index];
-    if (current.isExisting) return;
     final File? replacement = await Helpers.getImage();
     if (!mounted || replacement == null) return;
     final List<OwnerPropertyPhotoDraft> photoDrafts =
         List<OwnerPropertyPhotoDraft>.of(_form.photoDrafts);
-    photoDrafts[index] = current.copyWith(file: replacement);
+    photoDrafts[index] = current.copyWith(
+      file: replacement,
+      existingId: '',
+      existingUrl: '',
+    );
     _updateForm(() => _form.copyWith(photoDrafts: photoDrafts));
+  }
+
+  void _selectMainPhoto(int index) {
+    if (index <= 0 || index >= _form.photoCount) return;
+    final List<OwnerPropertyPhotoDraft> photos = List.of(_form.photoDrafts);
+    photos.insert(0, photos.removeAt(index));
+    _updateForm(() => _form.copyWith(photoDrafts: photos));
   }
 
   void _updatePhotoMetadata({
@@ -317,6 +329,14 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
     if (!mounted || !wasSubmitted) return;
     _hasChanges = false;
     if (_isEditing) {
+      await showModalBottomSheet<void>(
+        context: context,
+        isScrollControlled: true,
+        useSafeArea: true,
+        showDragHandle: true,
+        builder: (_) => const PropertyEditReviewSheet(),
+      );
+      if (!mounted) return;
       Go.back(_savedProperty);
     } else {
       _formNotifier.value = _form.copyWith(submittedAt: DateTime.now());
@@ -335,6 +355,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
       propertyId: property?.id,
       form: form,
       onSuccess: (response) {
+        if (!mounted) return;
         _savedProperty = property == null
             ? response
             : OwnerAddPropertyMapper.mergeIntoProperty(
@@ -344,10 +365,37 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
                 selectedGovernorate: _selectedGovernorate,
                 selectedCity: _selectedCity,
               );
+        final OwnerPropertyPhotoDraft? mainPhoto = form.photoDrafts.firstOrNull;
+        if (mainPhoto?.file != null && response.mainImage.isNotEmpty) {
+          final PropertyImageModel main = response.images.firstWhere(
+            (image) => image.image == response.mainImage,
+            orElse: () => PropertyImageModel.initial().copyWith(
+              id: response.mainImageId,
+              image: response.mainImage,
+              name: response.mainImageName,
+              description: response.mainImageDescription,
+            ),
+          );
+          _recordUploadedPhoto(photo: mainPhoto!, image: main);
+        }
+        if (form.videoFile != null && response.video?.isNotEmpty == true) {
+          _formNotifier.value = _form
+              .copyWith(clearVideo: true)
+              .copyWith(
+                videoUrl: response.video,
+                videoDuration: response.videoDuration,
+              );
+        }
+        if (form.ownershipProofFile != null &&
+            response.ownershipProof.isNotEmpty) {
+          _formNotifier.value = _form
+              .copyWith(clearOwnershipProof: true)
+              .copyWith(ownershipProofUrl: response.ownershipProof);
+        }
         wasSaved = true;
       },
     );
-    if (wasSaved) _savedForm = form;
+    if (wasSaved) _savedForm = _form;
     return wasSaved;
   }
 
@@ -362,14 +410,22 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
     photos[index] = OwnerPropertyPhotoDraft(
       existingId: image.id,
       existingUrl: image.image,
-      name: image.name,
-      description: image.description,
+      name: photo.name.trim(),
+      description: photo.description.trim(),
     );
     _formNotifier.value = _form.copyWith(photoDrafts: photos);
     _savedForm = _form;
     final PropertyDetailsModel? property = _savedProperty;
     if (property != null) {
-      _savedProperty = property.copyWith(images: [...property.images, image]);
+      _savedProperty = property.copyWith(
+        images: [
+          ...property.images.where((existing) => existing.image != image.image),
+          image.copyWith(
+            name: photo.name.trim(),
+            description: photo.description.trim(),
+          ),
+        ],
+      );
     }
   }
 
@@ -403,102 +459,131 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
             isBackEnabled: !isSubmitting,
             backgroundColor: AppColors.scaffoldBackground,
             body: SafeArea(
-              child: PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  _listenToForm(
-                    (form) => AddPropertyBasicsPage(
-                      form: form,
-                      titleController: _titleController,
-                      streetController: _streetController,
-                      bedroomsController: _bedroomsController,
-                      bathroomsController: _bathroomsController,
-                      spaceController: _spaceController,
-                      floorController: _floorController,
-                      selectedGovernorate: _selectedGovernorate,
-                      selectedCity: _selectedCity,
-                      locationDropdownGeneration: _locationDropdownGeneration,
-                      onPropertyTypeSelected: (value) => _updateForm(
-                        () => _form.copyWith(
-                          propertyType: value.name,
-                          propertyTypeValue: value.slug,
+              child: AbsorbPointer(
+                absorbing: isSubmitting,
+                child: PageView(
+                  controller: _pageController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    _listenToForm(
+                      (form) => AddPropertyBasicsPage(
+                        form: form,
+                        titleController: _titleController,
+                        streetController: _streetController,
+                        bedroomsController: _bedroomsController,
+                        bathroomsController: _bathroomsController,
+                        spaceController: _spaceController,
+                        floorController: _floorController,
+                        selectedGovernorate: _selectedGovernorate,
+                        selectedCity: _selectedCity,
+                        locationDropdownGeneration: _locationDropdownGeneration,
+                        onPropertyTypeSelected: (value) => _updateForm(
+                          () => _form.copyWith(
+                            propertyType: value.name,
+                            propertyTypeValue: value.slug,
+                          ),
+                        ),
+                        onTitleChanged: (value) =>
+                            _updateForm(() => _form.copyWith(title: value)),
+                        onGovernorateChanged: _selectGovernorate,
+                        onCityChanged: _selectCity,
+                        onStreetChanged: (value) => _updateForm(
+                          () => _form.copyWith(
+                            street: value,
+                            clearLocation: true,
+                          ),
+                        ),
+                        onBedroomsChanged: (value) =>
+                            _updateForm(() => _form.copyWith(bedrooms: value)),
+                        onBathroomsChanged: (value) =>
+                            _updateForm(() => _form.copyWith(bathrooms: value)),
+                        onSpaceChanged: (value) =>
+                            _updateForm(() => _form.copyWith(space: value)),
+                        onFloorChanged: (value) =>
+                            _updateForm(() => _form.copyWith(floor: value)),
+                        onLocationSelected: _selectLocation,
+                        onNext: () => _goToPage(1),
+                      ),
+                    ),
+                    _listenToForm(
+                      (form) => AddPropertyPhotosPage(
+                        form: form,
+                        photos: form.photoDrafts,
+                        isReady: form.isPhotosReady,
+                        onAddPhotos: _addPhotos,
+                        onRemovePhoto: _removePhoto,
+                        onReplacePhoto: _replacePhoto,
+                        onMainPhotoSelected: _selectMainPhoto,
+                        onVideoSelected: (file, durationSeconds) => _updateForm(
+                          () => _form.copyWith(
+                            videoFile: file,
+                            videoDuration: durationSeconds,
+                            removeVideo: false,
+                          ),
+                        ),
+                        onVideoRemoved: () => _updateForm(
+                          () => _form.copyWith(
+                            clearVideo: true,
+                            removeVideo: true,
+                          ),
+                        ),
+                        onVideoPreparingChanged: (preparing) =>
+                            _formNotifier.value = _form.copyWith(
+                              isVideoPreparing: preparing,
+                            ),
+                        onPhotoNameChanged: (index, value) =>
+                            _updatePhotoMetadata(index: index, name: value),
+                        onPhotoDescriptionChanged: (index, value) =>
+                            _updatePhotoMetadata(
+                              index: index,
+                              description: value,
+                            ),
+                        onNext: () => _goToPage(2),
+                      ),
+                    ),
+                    _listenToForm(
+                      (form) => AddPropertyPricingPage(
+                        form: form,
+                        monthlyPriceController: _monthlyPriceController,
+                        rentalDurationController: _rentalDurationController,
+                        descriptionController: _descriptionController,
+                        onMonthlyPriceChanged: (value) => _updateForm(
+                          () => _form.copyWith(monthlyPrice: value),
+                        ),
+                        onRentalDurationChanged: (value) => _updateForm(
+                          () => _form.copyWith(rentalDuration: value),
+                        ),
+                        onRentalUnitChanged: (value) => _updateForm(
+                          () => _form.copyWith(rentalUnit: value),
+                        ),
+                        onAmenityToggled: _toggleAmenity,
+                        onDescriptionChanged: (value) => _updateForm(
+                          () => _form.copyWith(description: value),
+                        ),
+                        onSuitableForSelected: (value) => _updateForm(
+                          () => _form.copyWith(suitableFor: value),
+                        ),
+                        isSubmitting: isSubmitting,
+                        onOptionLabelsLoaded: (labels) {
+                          _formNotifier.value = _form.copyWith(
+                            optionLabels: labels,
+                          );
+                        },
+                        onNext: _reviewAndSubmit,
+                        onAdditionalDetailsChanged: (form) =>
+                            _updateForm(() => form),
+                      ),
+                    ),
+                    if (!_isEditing)
+                      _listenToForm(
+                        (form) => AddPropertySubmittedPage(
+                          summaryItems: form.submittedSummary,
+                          onAddAnother: _resetFlow,
                         ),
                       ),
-                      onTitleChanged: (value) =>
-                          _updateForm(() => _form.copyWith(title: value)),
-                      onGovernorateChanged: _selectGovernorate,
-                      onCityChanged: _selectCity,
-                      onStreetChanged: (value) => _updateForm(
-                        () =>
-                            _form.copyWith(street: value, clearLocation: true),
-                      ),
-                      onBedroomsChanged: (value) =>
-                          _updateForm(() => _form.copyWith(bedrooms: value)),
-                      onBathroomsChanged: (value) =>
-                          _updateForm(() => _form.copyWith(bathrooms: value)),
-                      onSpaceChanged: (value) =>
-                          _updateForm(() => _form.copyWith(space: value)),
-                      onFloorChanged: (value) =>
-                          _updateForm(() => _form.copyWith(floor: value)),
-                      onLocationSelected: _selectLocation,
-                      onNext: () => _goToPage(1),
-                    ),
-                  ),
-                  _listenToForm(
-                    (form) => AddPropertyPhotosPage(
-                      photos: form.photoDrafts,
-                      isReady: form.isPhotosReady,
-                      onAddPhotos: _addPhotos,
-                      onRemovePhoto: _removePhoto,
-                      onReplacePhoto: _replacePhoto,
-                      onPhotoNameChanged: (index, value) =>
-                          _updatePhotoMetadata(index: index, name: value),
-                      onPhotoDescriptionChanged: (index, value) =>
-                          _updatePhotoMetadata(
-                            index: index,
-                            description: value,
-                          ),
-                      onNext: () => _goToPage(2),
-                    ),
-                  ),
-                  _listenToForm(
-                    (form) => AddPropertyPricingPage(
-                      form: form,
-                      monthlyPriceController: _monthlyPriceController,
-                      rentalDurationController: _rentalDurationController,
-                      descriptionController: _descriptionController,
-                      onMonthlyPriceChanged: (value) => _updateForm(
-                        () => _form.copyWith(monthlyPrice: value),
-                      ),
-                      onRentalDurationChanged: (value) => _updateForm(
-                        () => _form.copyWith(rentalDuration: value),
-                      ),
-                      onRentalUnitChanged: (value) =>
-                          _updateForm(() => _form.copyWith(rentalUnit: value)),
-                      onAmenityToggled: _toggleAmenity,
-                      onDescriptionChanged: (value) =>
-                          _updateForm(() => _form.copyWith(description: value)),
-                      onSuitableForSelected: (value) =>
-                          _updateForm(() => _form.copyWith(suitableFor: value)),
-                      isSubmitting: isSubmitting,
-                      onOptionLabelsLoaded: (labels) {
-                        _formNotifier.value = _form.copyWith(
-                          optionLabels: labels,
-                        );
-                      },
-                      onNext: _reviewAndSubmit,
-                    ),
-                  ),
-                  if (!_isEditing)
-                    _listenToForm(
-                      (form) => AddPropertySubmittedPage(
-                        summaryItems: form.submittedSummary,
-                        onAddAnother: _resetFlow,
-                      ),
-                    ),
-                ],
-                onPageChanged: (step) => _currentStep.value = step,
+                  ],
+                  onPageChanged: (step) => _currentStep.value = step,
+                ),
               ),
             ),
           ),

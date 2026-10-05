@@ -52,6 +52,15 @@ class TenantPropertyDetailsContent {
     this.buildingYear = 0,
     this.deposit = '',
     this.photoDescriptions = const [],
+    this.country = '',
+    this.cityName = '',
+    this.governorateName = '',
+    this.district = '',
+    this.street = '',
+    this.space = '',
+    this.status = '',
+    this.createdAt = '',
+    this.updatedAt = '',
   });
 
   factory TenantPropertyDetailsContent.fromModel(PropertyDetailsModel model) {
@@ -81,13 +90,13 @@ class TenantPropertyDetailsContent {
         ),
         TenantPropertyMetricContent(
           icon: Icons.square_foot_outlined,
-          value: '${model.area}',
+          value: model.area > 0 ? '${model.area}' : model.space,
           label: LocaleKeys.tenantSearchResultsSquareMeters,
         ),
         TenantPropertyMetricContent(
           icon: Icons.calendar_month_outlined,
           value: '${model.rentalPeriod}',
-          label: LocaleKeys.tenantPropertyDetailsRentalMonths,
+          label: model.rentalPeriodUnitLabel,
         ),
       ],
       description: model.description,
@@ -115,6 +124,15 @@ class TenantPropertyDetailsContent {
       bedrooms: model.bedrooms,
       latitude: model.latitude,
       longitude: model.longitude,
+      country: model.country,
+      cityName: model.city.name,
+      governorateName: model.governorateName,
+      district: model.district,
+      street: model.street,
+      space: model.space,
+      status: model.status,
+      createdAt: model.createdAt,
+      updatedAt: model.updatedAt,
     );
   }
 
@@ -152,6 +170,15 @@ class TenantPropertyDetailsContent {
   final int buildingYear;
   final String deposit;
   final List<String> photoDescriptions;
+  final String country;
+  final String cityName;
+  final String governorateName;
+  final String district;
+  final String street;
+  final String space;
+  final String status;
+  final String createdAt;
+  final String updatedAt;
 
   String get shortTitle => title;
   String get shareUrl {

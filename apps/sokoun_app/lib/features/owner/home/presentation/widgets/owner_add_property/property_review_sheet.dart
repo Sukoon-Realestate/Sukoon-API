@@ -12,6 +12,7 @@ import 'package:sokoun_app/shared_widgets/sokoun_reveal.dart';
 import '../../../data/enums/property_review_action.dart';
 import '../../../data/models/owner_add_property_content.dart';
 import 'property_review_section.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 
 class PropertyReviewSheet extends StatelessWidget {
   const PropertyReviewSheet({
@@ -83,6 +84,11 @@ class PropertyReviewSheet extends StatelessWidget {
                   title: LocaleKeys.ownerAddPropertyPhotosSummary,
                   lines: [
                     '${LocaleKeys.ownerAddPropertyCount}: ${form.photoCount}',
+                    for (final (index, photo) in form.photoDrafts.indexed)
+                      if (photo.name.trim().isNotEmpty ||
+                          photo.description.trim().isNotEmpty)
+                        '${LocaleKeys.ownerAddPropertyPhotoNumber.replaceAll('{number}', '${index + 1}')}: ${[photo.name.trim(), photo.description.trim()].where((value) => value.isNotEmpty).join(' — ')}',
+                    '${LocaleKeys.ownerPropertyReviewVideo}: ${form.hasVideo ? LocaleKeys.ownerPropertyVideoSelected : LocaleKeys.ownerAddPropertyVideoSkipped}',
                   ],
                   onEdit: () => Go.back(PropertyReviewAction.photos),
                 ),
@@ -97,6 +103,30 @@ class PropertyReviewSheet extends StatelessWidget {
                     '${LocaleKeys.ownerAddPropertyRentalPeriod}: ${form.rentalDuration} ${form.rentalUnitLabel}',
                     form.amenityLabels.join(' · '),
                     form.description,
+                  ],
+                  onEdit: () => Go.back(PropertyReviewAction.pricing),
+                ),
+              ),
+              SokounReveal(
+                delay: const Duration(milliseconds: 160),
+                child: PropertyReviewSection(
+                  title: LocaleKeys.ownerAddPropertyAdditionalDetails,
+                  lines: [
+                    if (form.country.isNotEmpty)
+                      '${LocaleKeys.ownerAddPropertyCountry}: ${form.country}',
+                    if (form.neighborhood.isNotEmpty)
+                      '${LocaleKeys.ownerAddPropertyNeighborhood}: ${form.neighborhood}',
+                    if (form.buildingYear.isNotEmpty)
+                      '${LocaleKeys.tenantPropertyDetailsBuildingYear}: ${form.buildingYear}',
+                    if (form.deposit.isNotEmpty)
+                      '${LocaleKeys.ownerAddPropertyDeposit}: ${PropertyDetailsModel.depositLabelFor(form.deposit)}',
+                    if (form.smokingAllowed != null)
+                      form.smokingAllowed == true
+                          ? LocaleKeys.tenantPropertyDetailsSmokingAllowed
+                          : LocaleKeys.tenantPropertyDetailsSmokingNotAllowed,
+                    form.hasOwnershipProof
+                        ? LocaleKeys.ownerPropertyReviewProof
+                        : LocaleKeys.ownerPropertyReviewNoProof,
                   ],
                   onEdit: () => Go.back(PropertyReviewAction.pricing),
                 ),

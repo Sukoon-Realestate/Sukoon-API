@@ -3,8 +3,8 @@ import 'dart:io';
 class UploadPropertyImageBody {
   const UploadPropertyImageBody({
     required this.image,
-    required this.name,
-    required this.description,
+    this.name = '',
+    this.description = '',
   });
 
   const UploadPropertyImageBody.initial()

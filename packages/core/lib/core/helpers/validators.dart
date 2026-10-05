@@ -345,19 +345,8 @@ class Validators {
       isInteger(floor) &&
       hasValidLocation;
 
-  static bool isValidPhotoMetadata({
-    required bool isExisting,
-    required String name,
-    required String description,
-  }) => isExisting || (isNonBlank(name) && isNonBlank(description));
-
-  static bool isValidPropertyPhotos({
-    required int count,
-    required Iterable<bool> metadataStates,
-  }) =>
-      count >= propertyMinPhotoCount &&
-      count <= propertyMaxPhotoCount &&
-      metadataStates.every((valid) => valid);
+  static bool isValidPropertyPhotos({required int count}) =>
+      count >= propertyMinPhotoCount && count <= propertyMaxPhotoCount;
 
   static bool canAddPropertyPhoto(int count) => count < propertyMaxPhotoCount;
   static bool hasEnoughPropertyPhotos(int count) =>

@@ -541,7 +541,7 @@ void main() {
             await tester.tap(find.text('Open review'));
             await tester.pumpAndSettle();
             expect(find.byType(PropertyReviewSheet), findsOneWidget);
-            expect(find.byType(PropertyReviewSection), findsNWidgets(3));
+            expect(find.byType(PropertyReviewSection), findsNWidgets(4));
             expect(
               find.textContaining(
                 language == 'ar' ? '18,000 ج.م' : '18,000 EGP',

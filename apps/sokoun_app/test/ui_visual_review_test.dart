@@ -26,6 +26,14 @@ import 'package:sokoun_app/features/shared/reviews/presentation/widgets/my_revie
 import 'package:sokoun_app/features/shared/public_pages/data/models/public_page_content.dart';
 import 'package:sokoun_app/features/shared/public_pages/presentation/widgets/public_page_body.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/property_video.dart';
+import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/add_property_additional_details.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/property_edit_review_sheet.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/property_photo_metadata.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/listing_information.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/photo_details.dart';
 
 /// Opt-in PNG export; the same fixtures are used before and after refinement.
 /// flutter test test/ui_visual_review_test.dart --dart-define=UI_REVIEW_DIR=/tmp/review
@@ -75,12 +83,94 @@ void main() {
         'my_review',
         'public_page',
         'property_video',
+        'property_metadata',
+        'property_terms',
+        'property_edit_review',
+        'property_listing_information',
       ]) {
         testWidgets('$subject $locale at $width', (tester) async {
           tester.view.physicalSize = Size(width, width > 600 ? 768 : 844);
           tester.view.devicePixelRatio = 1;
           addTearDown(tester.view.reset);
+          final String caption = locale == 'ar'
+              ? 'غرفة المعيشة'
+              : 'Living room';
+          final String description = locale == 'ar'
+              ? 'غرفة واسعة بإضاءة طبيعية تطل على الحديقة.'
+              : 'A spacious room with natural light overlooking the garden.';
+          final listing = TenantPropertyDetailsContent.fromModel(
+            PropertyDetailsModel.fromJson({
+              'country': locale == 'ar' ? 'مصر' : 'Egypt',
+              'city': {'name': locale == 'ar' ? 'المعادي' : 'Maadi'},
+              'governorate': {'name': locale == 'ar' ? 'القاهرة' : 'Cairo'},
+              'district': locale == 'ar' ? 'دجلة' : 'Degla',
+              'street': locale == 'ar' ? 'شارع ٢٠٠' : 'Street 200',
+              'space': '120',
+              'status': 'approved',
+              'created_at': '2026-10-01T10:00:00Z',
+              'updated_at': '2026-10-05T12:00:00Z',
+              'images': [
+                {
+                  'image': 'https://example.com/room.jpg',
+                  'name': caption,
+                  'description': description,
+                },
+              ],
+            }),
+          );
           final Widget screen = switch (subject) {
+            'property_metadata' => AppScaffold(
+              title: locale == 'ar' ? 'صور العقار' : 'Property photos',
+              body: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: PhotoMetadataSection(
+                  photos: [
+                    OwnerPropertyPhotoDraft(
+                      existingId: 'room',
+                      existingUrl: 'https://example.com/room.jpg',
+                      name: caption,
+                      description: description,
+                    ),
+                  ],
+                  onPhotoNameChanged: (_, _) {},
+                  onPhotoDescriptionChanged: (_, _) {},
+                ),
+              ),
+            ),
+            'property_terms' => AppScaffold(
+              title: locale == 'ar' ? 'تفاصيل العقار' : 'Property details',
+              body: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: AddPropertyAdditionalDetails(
+                  form: OwnerAddPropertyFormState.initial().copyWith(
+                    country: listing.country,
+                    neighborhood: listing.district,
+                    buildingYear: '2020',
+                    deposit: 'one_month',
+                    smokingAllowed: false,
+                    ownershipProofUrl: 'https://example.com/proof.jpg',
+                  ),
+                  onDetailsChanged: (_) {},
+                ),
+              ),
+            ),
+            'property_edit_review' => const AppScaffold(
+              showBackButton: false,
+              body: PropertyEditReviewSheet(),
+            ),
+            'property_listing_information' => AppScaffold(
+              title: locale == 'ar' ? 'معلومات الإعلان' : 'Listing information',
+              body: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    TenantPropertyListingInformation(property: listing),
+                    const SizedBox(height: 16),
+                    TenantPropertyPhotoDetails(property: listing),
+                  ],
+                ),
+              ),
+            ),
             'my_review' => AppScaffold(
               title: locale == 'ar' ? 'تقييماتي' : 'My Reviews',
               body: SingleChildScrollView(

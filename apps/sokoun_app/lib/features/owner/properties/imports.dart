@@ -1,5 +1,4 @@
 import 'package:melos_core/core/helpers/text_style_manager.dart';
-import 'package:melos_core/core/helpers/time_zone_helper.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
@@ -31,7 +30,7 @@ import 'package:sokoun_app/features/owner/home/presentation/screens/owner_proper
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_details_cubit.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/property_details_screen.dart';
-import 'package:sokoun_app/features/owner/visits/imports.dart';
+import 'presentation/cubits/delete_owner_property_cubit.dart';
 import 'data/enums/owner_property_action.dart';
 import 'data/enums/owner_property_status.dart';
 import 'data/enums/owner_revenue_status.dart';
@@ -70,6 +69,7 @@ part 'presentation/widgets/list/owner_properties_empty_state.dart';
 part 'presentation/widgets/list/owner_properties_list.dart';
 part 'presentation/widgets/list/owner_property_action_sheet.dart';
 part 'presentation/widgets/list/owner_property_card.dart';
+part 'presentation/widgets/list/owner_property_delete_sheet.dart';
 part 'presentation/widgets/list/owner_property_status_badge.dart';
 part 'presentation/widgets/revenue/owner_revenue_property_card.dart';
 part 'presentation/widgets/revenue/owner_transaction_row.dart';

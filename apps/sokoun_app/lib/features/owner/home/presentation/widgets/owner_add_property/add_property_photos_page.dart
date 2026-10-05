@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -10,6 +11,7 @@ import 'add_property_step_shell.dart';
 import 'property_photo_grid.dart';
 import 'property_photo_metadata.dart';
 import 'property_photo_tips.dart';
+import 'property_video_picker.dart';
 
 class AddPropertyPhotosPage extends StatelessWidget {
   const AddPropertyPhotosPage({
@@ -22,6 +24,11 @@ class AddPropertyPhotosPage extends StatelessWidget {
     required this.onPhotoNameChanged,
     required this.onPhotoDescriptionChanged,
     required this.onNext,
+    required this.onMainPhotoSelected,
+    required this.form,
+    required this.onVideoSelected,
+    required this.onVideoRemoved,
+    required this.onVideoPreparingChanged,
   });
 
   final List<OwnerPropertyPhotoDraft> photos;
@@ -32,6 +39,11 @@ class AddPropertyPhotosPage extends StatelessWidget {
   final void Function(int index, String value) onPhotoNameChanged;
   final void Function(int index, String value) onPhotoDescriptionChanged;
   final VoidCallback onNext;
+  final ValueChanged<int> onMainPhotoSelected;
+  final OwnerAddPropertyFormState form;
+  final void Function(File file, int durationSeconds) onVideoSelected;
+  final VoidCallback onVideoRemoved;
+  final ValueChanged<bool> onVideoPreparingChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +56,14 @@ class AddPropertyPhotosPage extends StatelessWidget {
       segmentCount: 3,
       progressSubtitle: LocaleKeys.ownerAddPropertyPhotosProgress,
       primaryLabel: LocaleKeys.ownerAddPropertyPricingTitle,
-      onPrimaryTap: onNext,
+      onPrimaryTap: form.isVideoPreparing ? null : onNext,
       children: [
         AddPropertyInfoBanner(
           title: isReady ? LocaleKeys.ownerAddPropertyPhotosReady : null,
           text: isReady
               ? LocaleKeys.ownerAddPropertyPhotosReadyDescription
               : hasEnoughPhotos
-              ? LocaleKeys.ownerAddPropertyPhotoMetadataRequired
+              ? LocaleKeys.ownerAddPropertyPhotoMetadataRecommended
               : LocaleKeys.ownerAddPropertyPhotosRemaining.replaceAll(
                   '{count}',
                   '$remaining',
@@ -75,6 +87,7 @@ class AddPropertyPhotosPage extends StatelessWidget {
             onAddPhotos: onAddPhotos,
             onRemovePhoto: onRemovePhoto,
             onReplacePhoto: onReplacePhoto,
+            onMainPhotoSelected: onMainPhotoSelected,
           ),
         ),
         if (photos.isNotEmpty)
@@ -84,6 +97,14 @@ class AddPropertyPhotosPage extends StatelessWidget {
             onPhotoDescriptionChanged: onPhotoDescriptionChanged,
           ),
         const PhotoTipsSection(),
+        PropertyVideoPicker(
+          file: form.videoFile,
+          existingUrl: form.videoUrl,
+          durationSeconds: form.videoDuration,
+          onVideoSelected: onVideoSelected,
+          onVideoRemoved: onVideoRemoved,
+          onPreparingChanged: onVideoPreparingChanged,
+        ),
       ],
     );
   }
