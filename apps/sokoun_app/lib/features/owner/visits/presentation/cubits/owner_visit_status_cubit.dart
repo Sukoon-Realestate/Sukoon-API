@@ -38,6 +38,7 @@ class OwnerVisitStatusCubit extends AsyncCubit<bool> {
   }) async {
     if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
+      showMsgOnSuccess: true,
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<bool>(
           api: api,

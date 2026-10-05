@@ -4,6 +4,8 @@ import 'property_selection_field.dart';
 import 'add_property_details_section.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:melos_core/core/helpers/validators.dart';
+import 'package:melos_core/core/widgets/first_validation_error_form.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_types_model.dart';
@@ -13,8 +15,9 @@ import 'add_property_type_selector.dart';
 import 'add_property_field.dart';
 import 'add_property_section_card.dart';
 import 'add_property_step_shell.dart';
+import 'property_form_validation.dart';
 
-class AddPropertyBasicsPage extends StatelessWidget {
+class AddPropertyBasicsPage extends StatefulWidget {
   const AddPropertyBasicsPage({
     super.key,
     required this.form,
@@ -63,62 +66,154 @@ class AddPropertyBasicsPage extends StatelessWidget {
   final VoidCallback onNext;
 
   @override
+  State<AddPropertyBasicsPage> createState() => _AddPropertyBasicsPageState();
+}
+
+class _AddPropertyBasicsPageState extends State<AddPropertyBasicsPage> {
+  final GlobalKey _typeFieldKey = GlobalKey();
+  final GlobalKey _titleFieldKey = GlobalKey();
+  final GlobalKey _governorateFieldKey = GlobalKey();
+  final GlobalKey _cityFieldKey = GlobalKey();
+  final GlobalKey _streetFieldKey = GlobalKey();
+  final GlobalKey _bedroomsFieldKey = GlobalKey();
+  final GlobalKey _bathroomsFieldKey = GlobalKey();
+  final GlobalKey _spaceFieldKey = GlobalKey();
+  final GlobalKey _floorFieldKey = GlobalKey();
+  final GlobalKey _locationFieldKey = GlobalKey();
+
+  List<FirstValidationErrorField> _validationFields() => [
+    FirstValidationErrorField(
+      fieldKey: _typeFieldKey,
+      title: LocaleKeys.ownerAddPropertyType,
+      value: widget.form.propertyTypeApiValue,
+      validator: Validators.validateRequired,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _titleFieldKey,
+      title: LocaleKeys.ownerAddPropertyTitleLabel,
+      value: widget.titleController.text,
+      validator: Validators.validateRequired,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _governorateFieldKey,
+      title: LocaleKeys.ownerAddPropertyGovernorate,
+      value: widget.selectedGovernorate?.id,
+      validator: Validators.validateRequired,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _cityFieldKey,
+      title: LocaleKeys.ownerAddPropertyCity,
+      value: widget.selectedCity?.id,
+      validator: Validators.validateRequired,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _streetFieldKey,
+      title: LocaleKeys.propertyDistrict,
+      value: widget.streetController.text,
+      validator: Validators.validateRequired,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _bedroomsFieldKey,
+      title: LocaleKeys.ownerAddPropertyBedrooms,
+      value: widget.bedroomsController.text,
+      validator: PropertyFormValidation.positiveInteger,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _bathroomsFieldKey,
+      title: LocaleKeys.ownerAddPropertyBathrooms,
+      value: widget.bathroomsController.text,
+      validator: PropertyFormValidation.positiveInteger,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _spaceFieldKey,
+      title: LocaleKeys.ownerAddPropertySpace,
+      value: widget.spaceController.text,
+      validator: PropertyFormValidation.positiveInteger,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _floorFieldKey,
+      title: LocaleKeys.ownerAddPropertyFloor,
+      value: widget.floorController.text,
+      validator: PropertyFormValidation.floor,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _locationFieldKey,
+      title: LocaleKeys.ownerAddPropertyMapTitle,
+      value: null,
+      validator: (_) => widget.form.isLocationSelected
+          ? null
+          : LocaleKeys.ownerAddPropertySelectLocation,
+    ),
+  ];
+
+  @override
   Widget build(BuildContext context) {
     return AddPropertyStepShell(
+      validationFields: _validationFields,
       activeSegments: 1,
       segmentCount: 3,
       progressSubtitle: LocaleKeys.ownerAddPropertyBasicsProgress,
       primaryLabel: LocaleKeys.ownerAddPropertyNextPhotos,
-      onPrimaryTap: onNext,
+      onPrimaryTap: widget.onNext,
       children: [
         AddPropertySectionCard(
           title: '${LocaleKeys.ownerAddPropertyType} *',
           child: PropertySelectionField(
-            isValid: form.propertyTypeApiValue.isNotEmpty,
+            key: _typeFieldKey,
+            isValid: widget.form.propertyTypeApiValue.isNotEmpty,
             child: AddPropertyTypeSelector(
-              selectedValue: form.propertyTypeApiValue,
-              onSelected: onPropertyTypeSelected,
+              selectedValue: widget.form.propertyTypeApiValue,
+              onSelected: widget.onPropertyTypeSelected,
             ),
           ),
         ),
         AddPropertySectionCard(
           title: LocaleKeys.ownerAddPropertyNameSection,
           child: AddPropertyField(
+            key: _titleFieldKey,
             field: AddPropertyFieldContent(
               label: LocaleKeys.ownerAddPropertyTitleLabel,
               value: LocaleKeys.ownerAddPropertyTitleExample,
             ),
-            controller: titleController,
-            onChanged: onTitleChanged,
+            controller: widget.titleController,
+            onChanged: widget.onTitleChanged,
             hint: LocaleKeys.ownerAddPropertyTitleHint,
           ),
         ),
         AddPropertyAddressSection(
-          streetController: streetController,
-          selectedGovernorate: selectedGovernorate,
-          selectedCity: selectedCity,
-          dropdownGeneration: locationDropdownGeneration,
-          onGovernorateChanged: onGovernorateChanged,
-          onCityChanged: onCityChanged,
-          onStreetChanged: onStreetChanged,
+          governorateFieldKey: _governorateFieldKey,
+          cityFieldKey: _cityFieldKey,
+          streetFieldKey: _streetFieldKey,
+          streetController: widget.streetController,
+          selectedGovernorate: widget.selectedGovernorate,
+          selectedCity: widget.selectedCity,
+          dropdownGeneration: widget.locationDropdownGeneration,
+          onGovernorateChanged: widget.onGovernorateChanged,
+          onCityChanged: widget.onCityChanged,
+          onStreetChanged: widget.onStreetChanged,
         ),
         AddPropertyDetailsSection(
-          bedroomsController: bedroomsController,
-          bathroomsController: bathroomsController,
-          spaceController: spaceController,
-          floorController: floorController,
-          onBedroomsChanged: onBedroomsChanged,
-          onBathroomsChanged: onBathroomsChanged,
-          onSpaceChanged: onSpaceChanged,
-          onFloorChanged: onFloorChanged,
+          bedroomsFieldKey: _bedroomsFieldKey,
+          bathroomsFieldKey: _bathroomsFieldKey,
+          spaceFieldKey: _spaceFieldKey,
+          floorFieldKey: _floorFieldKey,
+          bedroomsController: widget.bedroomsController,
+          bathroomsController: widget.bathroomsController,
+          spaceController: widget.spaceController,
+          floorController: widget.floorController,
+          onBedroomsChanged: widget.onBedroomsChanged,
+          onBathroomsChanged: widget.onBathroomsChanged,
+          onSpaceChanged: widget.onSpaceChanged,
+          onFloorChanged: widget.onFloorChanged,
         ),
         PropertySelectionField(
-          isValid: form.isLocationSelected,
+          key: _locationFieldKey,
+          isValid: widget.form.isLocationSelected,
           message: LocaleKeys.ownerAddPropertySelectLocation,
           child: AddPropertyMapSection(
-            location: form.location,
-            query: '${form.street}, ${form.locationSummary}',
-            onLocationSelected: onLocationSelected,
+            location: widget.form.location,
+            query: '${widget.form.street}, ${widget.form.locationSummary}',
+            onLocationSelected: widget.onLocationSelected,
           ),
         ),
       ],

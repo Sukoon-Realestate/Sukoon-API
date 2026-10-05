@@ -4,14 +4,19 @@ import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_respon
 import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/network/network_request.dart';
 import 'package:melos_core/core/network/network_service.dart';
+import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 /// Registers a fake [BaseCrudUseCase] so widget tests can pump screens
 /// that use Cubits or AppPagify without a network.
-void registerHomePageTestDependencies() {
+void registerHomePageTestDependencies({
+  Map<String, dynamic>? propertyFilterOptions,
+}) {
   if (!injector.isRegistered<BaseCrudUseCase>()) {
     injector.registerLazySingleton<BaseCrudUseCase>(
-      () => BaseCrudUseCase(repository: _FakeBaseRepository()),
+      () => BaseCrudUseCase(
+        repository: _FakeBaseRepository(propertyFilterOptions),
+      ),
     );
   }
   if (!injector.isRegistered<NetworkService>()) {
@@ -46,6 +51,9 @@ class _FakeNetworkService implements NetworkService {
 }
 
 class _FakeBaseRepository implements BaseRepository {
+  _FakeBaseRepository(this.propertyFilterOptions);
+
+  final Map<String, dynamic>? propertyFilterOptions;
   @override
   Future<Result<List<T>, Failure>> getBaseIdAndNameEntity<T extends BaseEntity>(
     GetBaseEntityParams? param,
@@ -56,11 +64,16 @@ class _FakeBaseRepository implements BaseRepository {
     CrudBaseParmas<T> params,
   ) async {
     final T data = params.mapper != null
-        ? params.mapper!(const <String, dynamic>{
-            'count': 0,
-            'results': [],
-            'banner': 'visit',
-          })
+        ? params.mapper!(
+            params.api == ApiConstants.propertyFilterOptions &&
+                    propertyFilterOptions != null
+                ? propertyFilterOptions!
+                : const <String, dynamic>{
+                    'count': 0,
+                    'results': [],
+                    'banner': 'visit',
+                  },
+          )
         : throw UnimplementedError();
     return Success(BaseModel<T>(key: '', msg: '', data: data));
   }

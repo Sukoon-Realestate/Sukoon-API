@@ -8,6 +8,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/helpers.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import 'package:sokoun_app/shared_widgets/unsaved_changes_guard.dart';
@@ -38,6 +39,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
   UploadPropertyImagesCubit? _uploadPropertyImagesCubit;
   PropertyDetailsModel? _savedProperty;
   OwnerAddPropertyFormState? _savedForm;
+  String _submissionMessage = '';
   late final ValueNotifier<OwnerAddPropertyFormState> _formNotifier;
   OwnerPropertyLocationModel? _selectedGovernorate;
   OwnerPropertyLocationModel? _selectedCity;
@@ -180,6 +182,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
   void _resetFlow() {
     _hasChanges = false;
     _savedProperty = null;
+    _submissionMessage = '';
     _savedForm = null;
     _selectedGovernorate = null;
     _selectedCity = null;
@@ -321,20 +324,28 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
         propertyId: property.id,
         photos: _form.photoDrafts,
         onPhotoUploaded: _recordUploadedPhoto,
-        onSuccess: () => wasSubmitted = true,
+        onSuccess: () {
+          wasSubmitted = true;
+          if (_submissionMessage.isEmpty) {
+            _submissionMessage = cubit.state.msg ?? '';
+          }
+        },
       );
     } finally {
       if (mounted) _isSubmitting.value = false;
     }
     if (!mounted || !wasSubmitted) return;
     _hasChanges = false;
+    if (_submissionMessage.isNotEmpty) {
+      Messages.showToast(msg: _submissionMessage);
+    }
     if (_isEditing) {
       await showModalBottomSheet<void>(
         context: context,
         isScrollControlled: true,
         useSafeArea: true,
         showDragHandle: true,
-        builder: (_) => const PropertyEditReviewSheet(),
+        builder: (_) => PropertyEditReviewSheet(message: _submissionMessage),
       );
       if (!mounted) return;
       Go.back(_savedProperty);
@@ -356,15 +367,8 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
       form: form,
       onSuccess: (response) {
         if (!mounted) return;
-        _savedProperty = property == null
-            ? response
-            : OwnerAddPropertyMapper.mergeIntoProperty(
-                original: property,
-                response: response,
-                form: form,
-                selectedGovernorate: _selectedGovernorate,
-                selectedCity: _selectedCity,
-              );
+        _savedProperty = response;
+        _submissionMessage = cubit.state.msg ?? '';
         final OwnerPropertyPhotoDraft? mainPhoto = form.photoDrafts.firstOrNull;
         if (mainPhoto?.file != null && response.mainImage.isNotEmpty) {
           final PropertyImageModel main = response.images.firstWhere(
@@ -410,8 +414,8 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
     photos[index] = OwnerPropertyPhotoDraft(
       existingId: image.id,
       existingUrl: image.image,
-      name: photo.name.trim(),
-      description: photo.description.trim(),
+      name: image.name,
+      description: image.description,
     );
     _formNotifier.value = _form.copyWith(photoDrafts: photos);
     _savedForm = _form;
@@ -419,11 +423,12 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
     if (property != null) {
       _savedProperty = property.copyWith(
         images: [
-          ...property.images.where((existing) => existing.image != image.image),
-          image.copyWith(
-            name: photo.name.trim(),
-            description: photo.description.trim(),
+          if (image.id == property.mainImageId) image,
+          ...property.images.where(
+            (existing) =>
+                existing.id != image.id && existing.image != image.image,
           ),
+          if (image.id != property.mainImageId) image,
         ],
       );
     }
@@ -577,6 +582,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
                     if (!_isEditing)
                       _listenToForm(
                         (form) => AddPropertySubmittedPage(
+                          message: _submissionMessage,
                           summaryItems: form.submittedSummary,
                           onAddAnother: _resetFlow,
                         ),

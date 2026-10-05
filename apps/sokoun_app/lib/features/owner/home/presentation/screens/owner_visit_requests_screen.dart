@@ -1,10 +1,8 @@
-import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
-import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
 import 'package:pagify/pagify.dart';
 
@@ -174,19 +172,6 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
       if (index >= 0) _pagifyController.replaceWith(index, updatedRequest);
       _pagifyController.refresh();
     }
-    _showMessage(
-      resolution.isAccepted
-          ? LocaleKeys.ownerVisitAcceptedMessage
-          : LocaleKeys.ownerVisitRejectedMessage,
-    );
-  }
-
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(content: AppText(message, style: AppTextStyles.regular)),
-      );
   }
 
   @override

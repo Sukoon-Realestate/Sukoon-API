@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../extensions/context_extension.dart';
@@ -5,7 +7,7 @@ import '../shared/base_state.dart';
 import 'toast_messages/toast_message.dart';
 
 typedef FirstValidationErrorFormBuilder =
-    Widget Function(BuildContext context, VoidCallback submit);
+    Widget Function(BuildContext context, Future<void> Function() submit);
 
 typedef FirstValidationErrorFieldsBuilder =
     List<FirstValidationErrorField> Function();
@@ -29,7 +31,7 @@ class FirstValidationErrorForm extends StatefulWidget {
 
   final GlobalKey<FormState>? formKey;
   final FirstValidationErrorFieldsBuilder validationFields;
-  final VoidCallback onValid;
+  final FutureOr<void> Function() onValid;
   final FirstValidationErrorFormBuilder builder;
   final AutovalidateMode? autovalidateMode;
   final bool hideKeyboardOnSubmit;
@@ -47,24 +49,33 @@ class FirstValidationErrorForm extends StatefulWidget {
 
 class _FirstValidationErrorFormState extends State<FirstValidationErrorForm> {
   final GlobalKey<FormState> _fallbackFormKey = GlobalKey<FormState>();
+  bool _isSubmitting = false;
 
   GlobalKey<FormState> get _formKey => widget.formKey ?? _fallbackFormKey;
 
-  void _submit() {
+  Future<void> _submit() async {
+    if (!mounted || _isSubmitting) return;
+
     if (widget.hideKeyboardOnSubmit) {
       context.hideKeyboard();
     }
 
     final FirstValidationError? firstValidationError = _firstValidationError;
 
-    if (_formKey.currentState?.validate() != true) {
+    if (_formKey.currentState?.validate() != true ||
+        firstValidationError != null) {
       if (firstValidationError != null) {
         _handleValidationError(firstValidationError);
       }
       return;
     }
 
-    widget.onValid();
+    _isSubmitting = true;
+    try {
+      await widget.onValid();
+    } finally {
+      _isSubmitting = false;
+    }
   }
 
   FirstValidationError? get _firstValidationError {

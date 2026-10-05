@@ -10,6 +10,7 @@ class ProfileEditCubit extends AsyncCubit<Map<String, dynamic>> {
   }) async {
     if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
+      showMsgOnSuccess: true,
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<Map<String, dynamic>>(
           api: updateUser

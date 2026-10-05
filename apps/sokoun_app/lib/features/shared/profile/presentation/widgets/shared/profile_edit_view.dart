@@ -15,7 +15,8 @@ class ProfileEditView extends StatefulWidget {
 }
 
 class _ProfileEditViewState extends State<ProfileEditView> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey _nameFieldKey = GlobalKey();
+  final GlobalKey _phoneFieldKey = GlobalKey();
   final GlobalKey<FormFieldState<ProfileGender>> _genderFieldKey =
       GlobalKey<FormFieldState<ProfileGender>>();
   late final TextEditingController _nameController;
@@ -110,7 +111,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
       );
       if (!mounted) return;
       if (error != null) {
-        MessageUtils.showSnackBar(error, context: context);
+        Messages.showToast(msg: error, status: BaseStatus.error);
         return;
       }
       _avatar.value = avatar;
@@ -167,9 +168,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   }
 
   Future<void> _save() async {
-    if (_editCubit.isLoading ||
-        _profileCubit.isLoading ||
-        _formKey.currentState?.validate() != true) {
+    if (_editCubit.isLoading || _profileCubit.isLoading) {
       return;
     }
 
@@ -188,7 +187,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     );
     if (!mounted || _editCubit.isLoading) return;
     if (imageError != null) {
-      MessageUtils.showSnackBar(imageError, context: context);
+      Messages.showToast(msg: imageError, status: BaseStatus.error);
       return;
     }
 
@@ -208,14 +207,29 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     if (!mounted) {
       return;
     }
-    MessageUtils.showSnackBar(
-      LocaleKeys.profileUpdatedSuccessfully,
-      backgroundColor: AppColors.green,
-      textColor: AppColors.white,
-      context: context,
-    );
     Go.back(updatedUser);
   }
+
+  List<FirstValidationErrorField> _validationFields() => [
+    FirstValidationErrorField(
+      fieldKey: _nameFieldKey,
+      title: LocaleKeys.fullName,
+      value: _nameController.text,
+      validator: Validators.validateFullName,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _phoneFieldKey,
+      title: LocaleKeys.phoneNumber,
+      value: _phoneController.text,
+      validator: Validators.validateEgyptianMobile,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _genderFieldKey,
+      title: LocaleKeys.gender,
+      value: _gender.value.apiValue,
+      validator: Validators.validateGender,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -231,13 +245,17 @@ class _ProfileEditViewState extends State<ProfileEditView> {
         isSaving: () => _editCubit.isLoading,
         child: BlocProvider<UserProfileCubit>.value(
           value: _profileCubit,
-          child: _buildScaffold(),
+          child: FirstValidationErrorForm(
+            validationFields: _validationFields,
+            onValid: _save,
+            builder: (context, submit) => _buildScaffold(submit),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildScaffold() {
+  Widget _buildScaffold(VoidCallback submit) {
     return AppScaffold(
       title: _title,
       showBackButton: true,
@@ -253,7 +271,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
               >(
                 selector: (state) => state.isLoading,
                 builder: (context, isSaving) => TextButton(
-                  onPressed: isSaving || isLoading ? null : _save,
+                  onPressed: isSaving || isLoading ? null : submit,
                   child: isSaving
                       ? SizedBox.square(
                           dimension: 18.r,
@@ -289,10 +307,10 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                 excluding: isSaving,
                 child: AbsorbPointer(
                   absorbing: isSaving,
-                  child: Form(
-                    key: _formKey,
-                    child: ListView(
-                      padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 28.h),
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.fromLTRB(20.w, 24.h, 20.w, 28.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         ValueListenableBuilder<File?>(
                           valueListenable: _avatar,
@@ -338,6 +356,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                         ),
                         24.szH,
                         SokoonNameField(
+                          key: _nameFieldKey,
                           controller: _nameController,
                           label: LocaleKeys.fullName,
                           hintText: LocaleKeys.fullNameHint,
@@ -346,6 +365,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                         ),
                         14.szH,
                         SokoonPhoneField(
+                          key: _phoneFieldKey,
                           controller: _phoneController,
                           accentColor: _accentColor,
                           validator: Validators.validateEgyptianMobile,

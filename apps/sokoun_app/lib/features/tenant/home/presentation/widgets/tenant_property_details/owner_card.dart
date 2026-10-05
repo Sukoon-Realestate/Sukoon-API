@@ -4,6 +4,7 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/widgets/image_widgets/cached_image.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
 
 class TenantPropertyOwnerCard extends StatelessWidget {
@@ -13,6 +14,11 @@ class TenantPropertyOwnerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final avatarFallback = Icon(
+      Icons.person_outline_rounded,
+      color: AppColors.sokoonTeal,
+      size: 22.r,
+    );
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -34,10 +40,17 @@ class TenantPropertyOwnerCard extends StatelessWidget {
                   color: AppColors.tealAlpha13,
                   borderRadius: BorderRadius.circular(22.r),
                 ),
-                child: Icon(
-                  Icons.person_outline_rounded,
-                  color: AppColors.sokoonTeal,
-                  size: 22.r,
+                child: ExcludeSemantics(
+                  child: property.ownerAvatar.trim().isEmpty
+                      ? avatarFallback
+                      : CachedImage(
+                          url: property.ownerAvatar,
+                          width: 44.r,
+                          height: 44.r,
+                          boxShape: BoxShape.circle,
+                          fit: BoxFit.cover,
+                          placeHolder: avatarFallback,
+                        ),
                 ),
               ),
               Expanded(

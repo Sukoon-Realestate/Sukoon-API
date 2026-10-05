@@ -5,22 +5,29 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/helpers.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/shared/base_state.dart';
+import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 import 'package:sokoun_app/shared_widgets/localized_digits_formatter.dart';
 
 import '../../../data/models/owner_add_property_content.dart';
 import 'add_property_field.dart';
 import 'add_property_section_card.dart';
 import 'add_property_chip_wrap.dart';
+import 'property_form_validation.dart';
 
 class AddPropertyAdditionalDetails extends StatefulWidget {
   const AddPropertyAdditionalDetails({
     super.key,
     required this.form,
     required this.onDetailsChanged,
+    this.buildingYearFieldKey,
+    this.depositFieldKey,
   });
 
   final OwnerAddPropertyFormState form;
   final ValueChanged<OwnerAddPropertyFormState> onDetailsChanged;
+  final GlobalKey? buildingYearFieldKey;
+  final GlobalKey? depositFieldKey;
 
   @override
   State<AddPropertyAdditionalDetails> createState() =>
@@ -36,6 +43,7 @@ class _AddPropertyAdditionalDetailsState
     'two_months',
   };
   late final TextEditingController _country;
+  late final TextEditingController _areaDescription;
   late final TextEditingController _neighborhood;
   late final TextEditingController _buildingYear;
   late final TextEditingController _deposit;
@@ -45,6 +53,7 @@ class _AddPropertyAdditionalDetailsState
   void initState() {
     super.initState();
     _country = TextEditingController(text: widget.form.country);
+    _areaDescription = TextEditingController(text: widget.form.areaDescription);
     _neighborhood = TextEditingController(text: widget.form.neighborhood);
     _buildingYear = TextEditingController(text: widget.form.buildingYear);
     _deposit = TextEditingController(
@@ -77,6 +86,7 @@ class _AddPropertyAdditionalDetailsState
 
   Map<TextEditingController, String> get _controllerValues => {
     _country: widget.form.country,
+    _areaDescription: widget.form.areaDescription,
     _neighborhood: widget.form.neighborhood,
     _buildingYear: widget.form.buildingYear,
     _deposit: _depositPresets.contains(widget.form.deposit)
@@ -87,6 +97,7 @@ class _AddPropertyAdditionalDetailsState
   @override
   void dispose() {
     _country.dispose();
+    _areaDescription.dispose();
     _neighborhood.dispose();
     _buildingYear.dispose();
     _deposit.dispose();
@@ -108,9 +119,10 @@ class _AddPropertyAdditionalDetailsState
       );
     } catch (_) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: AppText(LocaleKeys.exceptionError)));
+        Messages.showToast(
+          msg: LocaleKeys.exceptionError,
+          status: BaseStatus.error,
+        );
       }
     } finally {
       if (mounted) _isPickingProof.value = false;
@@ -124,6 +136,17 @@ class _AddPropertyAdditionalDetailsState
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: 12,
       children: [
+        AddPropertyField(
+          field: AddPropertyFieldContent(
+            label: LocaleKeys.ownerAddPropertyAreaDescription,
+            value: '',
+          ),
+          controller: _areaDescription,
+          isRequired: false,
+          onChanged: (value) => widget.onDetailsChanged(
+            widget.form.copyWith(areaDescription: value),
+          ),
+        ),
         AddPropertyField(
           field: AddPropertyFieldContent(
             label: LocaleKeys.ownerAddPropertyCountry,
@@ -151,16 +174,11 @@ class _AddPropertyAdditionalDetailsState
             value: '',
           ),
           controller: _buildingYear,
+          key: widget.buildingYearFieldKey,
           isRequired: false,
           keyboardType: TextInputType.number,
           inputFormatters: [const LocalizedDigitsFormatter()],
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) return null;
-            final int? year = int.tryParse(value);
-            return year != null && year >= 1800 && year <= DateTime.now().year
-                ? null
-                : LocaleKeys.ownerAddPropertyBuildingYearInvalid;
-          },
+          validator: PropertyFormValidation.buildingYear,
           onChanged: (value) => widget.onDetailsChanged(
             widget.form.copyWith(buildingYear: value),
           ),
@@ -189,6 +207,7 @@ class _AddPropertyAdditionalDetailsState
         ),
         if (!_depositPresets.contains(widget.form.deposit))
           AddPropertyField(
+            key: widget.depositFieldKey,
             field: AddPropertyFieldContent(
               label: LocaleKeys.ownerAddPropertyDeposit,
               value: '',
@@ -197,7 +216,9 @@ class _AddPropertyAdditionalDetailsState
             hint: LocaleKeys.ownerAddPropertyDepositHint,
             isRequired: false,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [const LocalizedDigitsFormatter()],
+            inputFormatters: [
+              const LocalizedDigitsFormatter(allowDecimal: true),
+            ],
             validator: (_) => widget.form.isDepositReady
                 ? null
                 : LocaleKeys.ownerAddPropertyDepositInvalid,

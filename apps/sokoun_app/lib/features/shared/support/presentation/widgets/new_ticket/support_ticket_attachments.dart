@@ -32,9 +32,9 @@ class _SupportTicketAttachmentsState extends State<SupportTicketAttachments> {
         if (!['jpg', 'jpeg', 'png', 'webp'].contains(suffix) ||
             await file.length() > 5 * 1024 * 1024) {
           if (mounted) {
-            MessageUtils.showSnackBar(
-              LocaleKeys.supportAttachmentLimit,
-              context: context,
+            Messages.showToast(
+              msg: LocaleKeys.supportAttachmentLimit,
+              status: BaseStatus.error,
             );
           }
           continue;
@@ -46,9 +46,9 @@ class _SupportTicketAttachmentsState extends State<SupportTicketAttachments> {
       }
     } catch (_) {
       if (mounted) {
-        MessageUtils.showSnackBar(
-          LocaleKeys.supportAttachmentUnavailable,
-          context: context,
+        Messages.showToast(
+          msg: LocaleKeys.supportAttachmentUnavailable,
+          status: BaseStatus.error,
         );
       }
     } finally {

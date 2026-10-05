@@ -22,7 +22,7 @@ import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_cont
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_filter/filter_price_range_section.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_filter/property_filter_label_resolver.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
-import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/price_and_rating.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/price.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/rental_details.dart';
 import 'package:sokoun_app/features/tenant/visits/imports.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_theme.dart';
@@ -100,7 +100,10 @@ void main() {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 12,
         children: [
-          TenantPropertyPriceAndRating(property: property),
+          TenantPropertyPrice(
+            price: property.price,
+            periodLabel: property.pricePeriodLabel,
+          ),
           TenantPropertyRentalDetails(property: property),
           VisitDetailsExtra(
             details: const TenantVisitDetailsContent.initial().copyWith(

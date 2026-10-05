@@ -24,9 +24,10 @@ import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_prop
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_widgets/owner_stats_grid.dart';
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/add_property_photos_page.dart';
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/add_property_additional_details.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/add_property_pricing_page.dart';
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/property_edit_review_sheet.dart';
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/property_photo_metadata.dart';
-import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/photo_details.dart';
+import 'package:sokoun_app/features/shared/reviews/presentation/widgets/property_rating_card.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
 import 'package:sokoun_app/features/tenant/visits/imports.dart';
@@ -66,7 +67,14 @@ void main() {
         );
     await EasyLocalization.ensureInitialized();
     await CacheStorage.init();
-    registerHomePageTestDependencies();
+    registerHomePageTestDependencies(
+      propertyFilterOptions: {
+        'amenities': [
+          {'value': 'wifi', 'label': 'Wi-Fi'},
+          {'value': 'electricity_meter', 'label': 'Electricity meter'},
+        ],
+      },
+    );
   });
   for (final double width in [320, 390, 600, 768, 1024, 1366]) {
     for (final double scale in [1, 1.3, 2]) {
@@ -86,8 +94,10 @@ void main() {
           'photos',
           'property_review',
           'property_terms',
+          'property_pricing',
           'photo_metadata',
-          'photo_details',
+          'property_rating',
+          'property_rating_empty',
           'property_edit_review',
           'property_delete',
           'booking',
@@ -105,6 +115,12 @@ void main() {
             addTearDown(tester.view.reset);
             final controller = TextEditingController();
             addTearDown(controller.dispose);
+            final priceController = TextEditingController(text: '18500.50');
+            final rentalController = TextEditingController(text: '6');
+            final descriptionController = TextEditingController();
+            addTearDown(priceController.dispose);
+            addTearDown(rentalController.dispose);
+            addTearDown(descriptionController.dispose);
             final String title = locale == 'ar'
                 ? 'شقة واسعة بإضاءة طبيعية في منطقة هادئة بالمعادي'
                 : 'Bright spacious apartment in a quiet Maadi neighborhood';
@@ -231,6 +247,29 @@ void main() {
                   isEditing: false,
                 ),
               ),
+              'property_pricing' => page(
+                AddPropertyPricingPage(
+                  form: OwnerAddPropertyFormState.initial().copyWith(
+                    monthlyPrice: '18500.50',
+                    rentalDuration: '6',
+                    rentalUnit: 'weekly',
+                    suitableFor: 'female_students',
+                    description: '$title. $title.',
+                    amenities: {'wifi'},
+                  ),
+                  monthlyPriceController: priceController,
+                  rentalDurationController: rentalController,
+                  descriptionController: descriptionController,
+                  onMonthlyPriceChanged: (_) {},
+                  onSuitableForSelected: (_) {},
+                  onRentalDurationChanged: (_) {},
+                  onRentalUnitChanged: (_) {},
+                  onAmenityToggled: (_) {},
+                  onDescriptionChanged: (_) {},
+                  onAdditionalDetailsChanged: (_) {},
+                  onNext: () {},
+                ),
+              ),
               'property_terms' => scroll(
                 AddPropertyAdditionalDetails(
                   form: OwnerAddPropertyFormState.initial().copyWith(
@@ -258,20 +297,11 @@ void main() {
                   onPhotoDescriptionChanged: (_, _) {},
                 ),
               ),
-              'photo_details' => scroll(
-                TenantPropertyPhotoDetails(
-                  property: TenantPropertyDetailsContent.fromModel(
-                    PropertyDetailsModel.fromJson({
-                      'images': [
-                        {
-                          'id': 'photo',
-                          'image': 'https://example.com/room.jpg',
-                          'name': title,
-                          'description': '$title. $title.',
-                        },
-                      ],
-                    }),
-                  ),
+              'property_rating' || 'property_rating_empty' => scroll(
+                PropertyRatingCard(
+                  propertyId: 'property',
+                  averageRating: subject == 'property_rating' ? 4.6 : null,
+                  totalReviews: subject == 'property_rating' ? 123456 : 0,
                 ),
               ),
               'property_edit_review' => page(const PropertyEditReviewSheet()),

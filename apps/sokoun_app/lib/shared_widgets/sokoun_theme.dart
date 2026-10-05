@@ -125,11 +125,6 @@ abstract final class SokounTheme {
         unselectedIconTheme: IconThemeData(color: AppColors.sokoonGray),
         useIndicator: true,
       ),
-      snackBarTheme: SnackBarThemeData(
-        backgroundColor: AppColors.sokoonNavy,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
     );
   }
 }

@@ -6,10 +6,10 @@ import 'package:melos_core/core/extensions/align_helper.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/helpers/validators.dart';
-import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
 import 'package:melos_core/core/widgets/custom_loading.dart';
+import 'package:melos_core/core/widgets/first_validation_error_form.dart';
 import 'package:sokoun_app/features/shared/auth/data/models/otp.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/otp.dart';
 
@@ -28,14 +28,13 @@ class OtpScreen extends StatefulWidget {
 }
 
 class _OtpScreenState extends State<OtpScreen> {
+  final GlobalKey _otpFieldKey = GlobalKey();
   final TextEditingController _otpController = TextEditingController();
   late final OtpCubit _otpCubit;
-  final ValueNotifier<({bool canResend, bool isResending, bool isCodeComplete})>
-  _uiState =
-      ValueNotifier<({bool canResend, bool isResending, bool isCodeComplete})>((
+  final ValueNotifier<({bool canResend, bool isResending})> _uiState =
+      ValueNotifier<({bool canResend, bool isResending})>((
         canResend: false,
         isResending: false,
-        isCodeComplete: false,
       ));
 
   @override
@@ -66,26 +65,27 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   Future<void> _confirm(BuildContext _) async {
-    if (!Validators.isValidOtpCode(_otpController.text)) {
-      return;
-    }
-
     await _otpCubit.verifyOtp(
       body: VerifyOtpBody(email: widget.email, otp: _otpController.text),
       onSuccess: widget.onVerified,
     );
   }
 
+  List<FirstValidationErrorField> _validationFields() => [
+    FirstValidationErrorField(
+      fieldKey: _otpFieldKey,
+      title: LocaleKeys.verificationCode,
+      value: _otpController.text,
+      validator: Validators.validateOtpCode,
+    ),
+  ];
+
   Future<void> _resend() async {
     if (!_uiState.value.canResend || _uiState.value.isResending) {
       return;
     }
 
-    _uiState.value = (
-      canResend: _uiState.value.canResend,
-      isResending: true,
-      isCodeComplete: _uiState.value.isCodeComplete,
-    );
+    _uiState.value = (canResend: _uiState.value.canResend, isResending: true);
     try {
       await _otpCubit.resendOtp(
         body: ResendOtpBody(email: widget.email.trim()),
@@ -98,7 +98,6 @@ class _OtpScreenState extends State<OtpScreen> {
           _uiState.value = (
             canResend: false,
             isResending: _uiState.value.isResending,
-            isCodeComplete: false,
           );
         },
       );
@@ -107,7 +106,6 @@ class _OtpScreenState extends State<OtpScreen> {
         _uiState.value = (
           canResend: _uiState.value.canResend,
           isResending: false,
-          isCodeComplete: _uiState.value.isCodeComplete,
         );
       }
     }
@@ -118,92 +116,77 @@ class _OtpScreenState extends State<OtpScreen> {
     return AuthScaffold(
       showBackButton: true,
       title: LocaleKeys.verificationCode,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          36.szH,
-          Container(
-            width: 64.r,
-            height: 64.r,
-            decoration: BoxDecoration(
-              color: AppColors.mintLight,
-              borderRadius: BorderRadius.circular(18.r),
+      child: FirstValidationErrorForm(
+        validationFields: _validationFields,
+        onValid: () => _confirm(context),
+        builder: (context, submit) => Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            36.szH,
+            Container(
+              width: 64.r,
+              height: 64.r,
+              decoration: BoxDecoration(
+                color: AppColors.mintLight,
+                borderRadius: BorderRadius.circular(18.r),
+              ),
+              child: Icon(
+                Icons.mail_outline_rounded,
+                color: AppColors.sokoonTeal,
+                size: 30.r,
+              ),
+            ).centerWidget,
+            18.szH,
+            AppText(
+              LocaleKeys.otpSentToEmail,
+              style: AppTextStyles.extraBold.copyWith(
+                color: AppColors.sokoonNavy,
+                fontSize: 18.sp,
+              ),
+              textAlign: TextAlign.center,
             ),
-            child: Icon(
-              Icons.mail_outline_rounded,
-              color: AppColors.sokoonTeal,
-              size: 30.r,
+            8.szH,
+            AppText(
+              _maskedEmail,
+              style: AppTextStyles.bold14.copyWith(
+                color: AppColors.sokoonTeal,
+                fontSize: 14.sp,
+                height: 1.45,
+              ),
+              textAlign: TextAlign.center,
             ),
-          ).centerWidget,
-          18.szH,
-          AppText(
-            LocaleKeys.otpSentToEmail,
-            style: AppTextStyles.extraBold.copyWith(
-              color: AppColors.sokoonNavy,
-              fontSize: 18.sp,
+            26.szH,
+            AppText(
+              LocaleKeys.otpCodeExpiresInTenMinutes,
+              style: AppTextStyles.regular12.copyWith(
+                color: AppColors.sokoonGray,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
-          8.szH,
-          AppText(
-            _maskedEmail,
-            style: AppTextStyles.bold14.copyWith(
-              color: AppColors.sokoonTeal,
-              fontSize: 14.sp,
-              height: 1.45,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          26.szH,
-          AppText(
-            LocaleKeys.otpCodeExpiresInTenMinutes,
-            style: AppTextStyles.regular12.copyWith(
-              color: AppColors.sokoonGray,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          12.szH,
-          ValueListenableBuilder<
-            ({bool canResend, bool isResending, bool isCodeComplete})
-          >(
-            valueListenable: _uiState,
-            builder: (context, uiState, _) => Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                OtpCodeField(
-                  controller: _otpController,
-                  onChanged: (_) {
-                    _uiState.value = (
-                      canResend: uiState.canResend,
-                      isResending: uiState.isResending,
-                      isCodeComplete: Validators.isValidOtpCode(
-                        _otpController.text,
-                      ),
-                    );
-                  },
-                ),
-                20.szH,
-                AuthResendTimer(
-                  canResend: uiState.canResend,
-                  onTimerEnds: () {
-                    if (mounted) {
-                      _uiState.value = (
-                        canResend: true,
-                        isResending: _uiState.value.isResending,
-                        isCodeComplete: _uiState.value.isCodeComplete,
-                      );
-                    }
-                  },
-                ),
-                18.szH,
-                IgnorePointer(
-                  ignoring: !uiState.isCodeComplete,
-                  child: AppLoadingButton(
-                    asyncCall: _confirm,
+            12.szH,
+            ValueListenableBuilder<({bool canResend, bool isResending})>(
+              valueListenable: _uiState,
+              builder: (context, uiState, _) => Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  OtpCodeField(key: _otpFieldKey, controller: _otpController),
+                  20.szH,
+                  AuthResendTimer(
+                    canResend: uiState.canResend,
+                    onTimerEnds: () {
+                      if (mounted) {
+                        _uiState.value = (
+                          canResend: true,
+                          isResending: _uiState.value.isResending,
+                        );
+                      }
+                    },
+                  ),
+                  18.szH,
+                  AppLoadingButton(
+                    asyncCall: (_) => submit(),
                     title: LocaleKeys.confirmLogin,
-                    buttonColor: uiState.isCodeComplete
-                        ? AppColors.sokoonTeal
-                        : AppColors.sokoonMuted,
+                    buttonColor: AppColors.sokoonTeal,
                     textColor: AppColors.white,
                     borderRadius: 14.r,
                     height: 52.h,
@@ -213,43 +196,43 @@ class _OtpScreenState extends State<OtpScreen> {
                       height: 1.45,
                     ),
                   ),
-                ),
-                14.szH,
-                TextButton(
-                  onPressed: uiState.canResend && !uiState.isResending
-                      ? _resend
-                      : null,
-                  style: TextButton.styleFrom(
-                    minimumSize: Size.zero,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 8.w,
-                      vertical: 4.h,
+                  14.szH,
+                  TextButton(
+                    onPressed: uiState.canResend && !uiState.isResending
+                        ? _resend
+                        : null,
+                    style: TextButton.styleFrom(
+                      minimumSize: Size.zero,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 4.h,
+                      ),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  child: uiState.isResending
-                      ? SizedBox.square(
-                          dimension: 16.r,
-                          child: CustomLoading.showLoadingView(
-                            color: AppColors.sokoonTeal,
-                            size: 16.r,
+                    child: uiState.isResending
+                        ? SizedBox.square(
+                            dimension: 16.r,
+                            child: CustomLoading.showLoadingView(
+                              color: AppColors.sokoonTeal,
+                              size: 16.r,
+                            ),
+                          )
+                        : AppText(
+                            LocaleKeys.resendCode,
+                            style: AppTextStyles.bold13.copyWith(
+                              color: uiState.canResend
+                                  ? AppColors.sokoonTeal
+                                  : AppColors.sokoonMuted,
+                              fontSize: 13.sp,
+                              height: 1.45,
+                            ),
                           ),
-                        )
-                      : AppText(
-                          LocaleKeys.resendCode,
-                          style: AppTextStyles.bold13.copyWith(
-                            color: uiState.canResend
-                                ? AppColors.sokoonTeal
-                                : AppColors.sokoonMuted,
-                            fontSize: 13.sp,
-                            height: 1.45,
-                          ),
-                        ),
-                ).centerWidget,
-              ],
+                  ).centerWidget,
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -75,7 +75,7 @@ class _PropertyVideoPickerState extends State<PropertyVideoPicker> {
 
   @override
   Widget build(BuildContext context) => AddPropertySectionCard(
-    title: '${LocaleKeys.ownerPropertyVideoTitle} (${LocaleKeys.optional})',
+    title: '${LocaleKeys.ownerPropertyVideoTitle} *',
     child: ValueListenableBuilder<({bool preparing, String? error})>(
       valueListenable: _selection,
       builder: (context, selection, _) => Column(

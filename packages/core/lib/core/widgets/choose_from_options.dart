@@ -6,7 +6,8 @@ import '../../config/res/config_imports.dart';
 import '../extensions/context_extension.dart';
 import '../extensions/padding_extension.dart';
 import 'app_text.dart';
-import 'toast_messages/custom_messages.dart';
+import 'toast_messages/toast_message.dart';
+import '../shared/base_state.dart';
 
 enum OptionsRanking{vertical, horizontal}
 class ChooseFromOptionsWidget extends StatefulWidget {
@@ -54,7 +55,10 @@ class _ChooseFromOptionsWidgetState extends State<ChooseFromOptionsWidget> {
                 setState(() => option = selectedOption);
 
               }else{
-                MessageUtils.showSnackBar(LocaleKeys.youCanNotChooseNow);
+                Messages.showToast(
+                  msg: LocaleKeys.youCanNotChooseNow,
+                  status: BaseStatus.error,
+                );
               }
             },
             child: AnimatedContainer(

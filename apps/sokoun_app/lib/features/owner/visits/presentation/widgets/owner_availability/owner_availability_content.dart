@@ -15,6 +15,7 @@ class OwnerAvailabilityContent extends StatelessWidget {
     this.onNextWeek,
     this.isSaving = false,
     this.canSave,
+    this.dayFieldKey,
   });
 
   final List<OwnerAvailabilityDayContent> days;
@@ -27,6 +28,7 @@ class OwnerAvailabilityContent extends StatelessWidget {
   final VoidCallback? onAddTimePressed, onPreviousWeek, onNextWeek;
   final bool isSaving;
   final bool? canSave;
+  final GlobalKey? dayFieldKey;
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +85,7 @@ class OwnerAvailabilityContent extends StatelessWidget {
           ),
           16.szH,
           SingleChildScrollView(
+            key: dayFieldKey,
             scrollDirection: Axis.horizontal,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,

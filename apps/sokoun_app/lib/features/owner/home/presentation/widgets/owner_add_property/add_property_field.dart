@@ -23,6 +23,7 @@ class AddPropertyField extends StatelessWidget {
     this.minLines,
     this.validator,
     this.isRequired = true,
+    this.showLabel = true,
   });
 
   final AddPropertyFieldContent field;
@@ -38,6 +39,7 @@ class AddPropertyField extends StatelessWidget {
   final int? minLines;
   final FormFieldValidator<String>? validator;
   final bool isRequired;
+  final bool showLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +47,8 @@ class AddPropertyField extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: 6.h,
       children: [
-        AppText(
-          isRequired ? '${field.label} *' : field.label,
-          style: AppTextStyles.medium13.copyWith(color: AppColors.sokoonGray),
-        ),
+        if (showLabel)
+          AddPropertyFieldLabel(label: field.label, isRequired: isRequired),
         if (controller != null)
           TextFormField(
             controller: controller,
@@ -91,4 +91,21 @@ class AddPropertyField extends StatelessWidget {
       ],
     );
   }
+}
+
+class AddPropertyFieldLabel extends StatelessWidget {
+  const AddPropertyFieldLabel({
+    super.key,
+    required this.label,
+    this.isRequired = true,
+  });
+
+  final String label;
+  final bool isRequired;
+
+  @override
+  Widget build(BuildContext context) => AppText(
+    isRequired ? '$label *' : label,
+    style: AppTextStyles.medium13.copyWith(color: AppColors.sokoonGray),
+  );
 }

@@ -14,6 +14,7 @@ class VisitReviewCubit extends AsyncCubit<bool> {
     }
     bool succeeded = false;
     await executeAsyncWithBaseModel(
+      showMsgOnSuccess: true,
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<bool>(
           api: ApiConstants.reviewPropertyVisit(visitId),

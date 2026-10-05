@@ -22,7 +22,8 @@ import '../extensions/padding_extension.dart';
 import '../navigation/navigator.dart';
 import '../widgets/app_bottom_sheet.dart';
 import '../widgets/custom_loading.dart';
-import '../widgets/toast_messages/custom_messages.dart';
+import '../widgets/toast_messages/toast_message.dart';
+import '../shared/base_state.dart';
 import 'nsfw_detector.dart';
 import 'permission_handler/handler.dart';
 import 'permission_handler/model.dart';
@@ -223,12 +224,16 @@ class Helpers {
                         Go.back();
                       },
                       onDenied: (permission) {
-                        MessageUtils.showSnackBar(
-                            LocaleKeys.unableToAccessPhotosPleaseOpenIt);
+                        Messages.showToast(
+                          msg: LocaleKeys.unableToAccessPhotosPleaseOpenIt,
+                          status: BaseStatus.error,
+                        );
                       },
                       onDeniedForever: (permission) {
-                        MessageUtils.showSnackBar(
-                            LocaleKeys.unableToAccessPhotosPleaseOpenIt);
+                        Messages.showToast(
+                          msg: LocaleKeys.unableToAccessPhotosPleaseOpenIt,
+                          status: BaseStatus.error,
+                        );
                         openAppSettings();
                       },
                       onLimited: (permission) async {
@@ -277,12 +282,16 @@ class Helpers {
                         Go.back();
                       },
                       onDenied: (permission) {
-                        MessageUtils.showSnackBar(
-                            LocaleKeys.unableToAccessCameraPleaseOpenIt);
+                        Messages.showToast(
+                          msg: LocaleKeys.unableToAccessCameraPleaseOpenIt,
+                          status: BaseStatus.error,
+                        );
                       },
                       onDeniedForever: (permission) {
-                        MessageUtils.showSnackBar(
-                            LocaleKeys.unableToAccessCameraPleaseOpenIt);
+                        Messages.showToast(
+                          msg: LocaleKeys.unableToAccessCameraPleaseOpenIt,
+                          status: BaseStatus.error,
+                        );
                         openAppSettings();
                       },
                     );

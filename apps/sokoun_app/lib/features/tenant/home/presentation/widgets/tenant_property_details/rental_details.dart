@@ -20,6 +20,8 @@ class TenantPropertyRentalDetails extends StatelessWidget {
     'females_only' => LocaleKeys.ownerAddPropertyFemalesOnly,
     'families' => LocaleKeys.ownerAddPropertyFamilies,
     'individuals' || 'singles' => LocaleKeys.ownerAddPropertyIndividuals,
+    'students' => LocaleKeys.ownerAddPropertyStudents,
+    'female_students' => LocaleKeys.ownerAddPropertyFemaleStudents,
     'shared' => LocaleKeys.ownerAddPropertyShared,
     _ => property.suitableFor,
   };

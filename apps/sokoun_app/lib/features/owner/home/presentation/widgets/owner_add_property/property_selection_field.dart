@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
-import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/helpers/text_style_manager.dart';
-import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_validation_field.dart';
 
 /// Registers non-text controls with the step's form validation.
 class PropertySelectionField extends StatelessWidget {
@@ -18,26 +16,9 @@ class PropertySelectionField extends StatelessWidget {
   final String? message;
 
   @override
-  Widget build(BuildContext context) => FormField<bool>(
+  Widget build(BuildContext context) => SokounValidationField(
+    value: isValid ? 'selected' : null,
     validator: (_) => isValid ? null : message ?? LocaleKeys.fillField,
-    builder: (state) => Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        child,
-        if (state.errorText != null)
-          Semantics(
-            liveRegion: true,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: AppText(
-                state.errorText!,
-                style: AppTextStyles.regular13.copyWith(
-                  color: AppColors.sokoonRose,
-                ),
-              ),
-            ),
-          ),
-      ],
-    ),
+    child: child,
   );
 }

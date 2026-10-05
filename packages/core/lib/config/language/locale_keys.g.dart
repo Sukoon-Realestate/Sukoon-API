@@ -91,6 +91,9 @@ abstract class LocaleKeys {
   static const String _ownerPropertyVideoDurationInvalid = 'owner_property_video_duration_invalid';
   static String get ownerPropertyVideoDurationInvalid => _ownerPropertyVideoDurationInvalid.tr();
 
+  static const String _ownerPropertyVideoRequired = 'owner_property_video_required';
+  static String get ownerPropertyVideoRequired => _ownerPropertyVideoRequired.tr();
+
   static const String _kycExistingDocumentsHint = 'kyc_existing_documents_hint';
   static String get kycExistingDocumentsHint => _kycExistingDocumentsHint.tr();
 
@@ -2143,6 +2146,12 @@ abstract class LocaleKeys {
   static const String _ownerAddPropertyFloor = 'owner_add_property_floor';
   static String get ownerAddPropertyFloor => _ownerAddPropertyFloor.tr();
 
+  static const String _ownerAddPropertyFloorHint = 'owner_add_property_floor_hint';
+  static String get ownerAddPropertyFloorHint => _ownerAddPropertyFloorHint.tr();
+
+  static const String _ownerAddPropertyAreaDescription = 'owner_add_property_area_description';
+  static String get ownerAddPropertyAreaDescription => _ownerAddPropertyAreaDescription.tr();
+
   static const String _ownerAddPropertyBuildingYear = 'owner_add_property_building_year';
   static String get ownerAddPropertyBuildingYear => _ownerAddPropertyBuildingYear.tr();
 
@@ -2320,6 +2329,15 @@ abstract class LocaleKeys {
   static const String _ownerAddPropertyRentalPeriod = 'owner_add_property_rental_period';
   static String get ownerAddPropertyRentalPeriod => _ownerAddPropertyRentalPeriod.tr();
 
+  static const String _ownerAddPropertyMinimumRentalMonths = 'owner_add_property_minimum_rental_months';
+  static String get ownerAddPropertyMinimumRentalMonths => _ownerAddPropertyMinimumRentalMonths.tr();
+
+  static const String _ownerAddPropertyPricePeriod = 'owner_add_property_price_period';
+  static String get ownerAddPropertyPricePeriod => _ownerAddPropertyPricePeriod.tr();
+
+  static const String _ownerAddPropertyPriceSummary = 'owner_add_property_price_summary';
+  static String get ownerAddPropertyPriceSummary => _ownerAddPropertyPriceSummary.tr();
+
   static const String _ownerAddPropertyCount = 'owner_add_property_count';
   static String get ownerAddPropertyCount => _ownerAddPropertyCount.tr();
 
@@ -2439,6 +2457,12 @@ abstract class LocaleKeys {
 
   static const String _ownerAddPropertyShared = 'owner_add_property_shared';
   static String get ownerAddPropertyShared => _ownerAddPropertyShared.tr();
+
+  static const String _ownerAddPropertyStudents = 'owner_add_property_students';
+  static String get ownerAddPropertyStudents => _ownerAddPropertyStudents.tr();
+
+  static const String _ownerAddPropertyFemaleStudents = 'owner_add_property_female_students';
+  static String get ownerAddPropertyFemaleStudents => _ownerAddPropertyFemaleStudents.tr();
 
   static const String _ownerAddPropertyAreaSummary = 'owner_add_property_area_summary';
   static String get ownerAddPropertyAreaSummary => _ownerAddPropertyAreaSummary.tr();
@@ -3334,6 +3358,18 @@ abstract class LocaleKeys {
   static const String _propertyReviewsTitle = 'property_reviews_title';
   static String get propertyReviewsTitle => _propertyReviewsTitle.tr();
 
+  static const String _propertyReviewsViewAction = 'property_reviews_view_action';
+  static String get propertyReviewsViewAction => _propertyReviewsViewAction.tr();
+
+  static const String _propertyReviewsVisitHint = 'property_reviews_visit_hint';
+  static String get propertyReviewsVisitHint => _propertyReviewsVisitHint.tr();
+
+  static const String _propertyReviewsCountLabel = 'property_reviews_count_label';
+  static String get propertyReviewsCountLabel => _propertyReviewsCountLabel.tr();
+
+  static const String _propertyReviewsScoreLabel = 'property_reviews_score_label';
+  static String get propertyReviewsScoreLabel => _propertyReviewsScoreLabel.tr();
+
   static const String _propertyReviewsEmptyTitle = 'property_reviews_empty_title';
   static String get propertyReviewsEmptyTitle => _propertyReviewsEmptyTitle.tr();
 
@@ -3861,6 +3897,12 @@ abstract class LocaleKeys {
 
   static const String _ownerPropertiesDeleted = 'owner_properties_deleted';
   static String get ownerPropertiesDeleted => _ownerPropertiesDeleted.tr();
+
+  static const String _ownerPropertiesDeleteFailed = 'owner_properties_delete_failed';
+  static String get ownerPropertiesDeleteFailed => _ownerPropertiesDeleteFailed.tr();
+
+  static const String _ownerPropertyUnsupportedAmenities = 'owner_property_unsupported_amenities';
+  static String get ownerPropertyUnsupportedAmenities => _ownerPropertyUnsupportedAmenities.tr();
 
   static const String _ownerPropertyReviewVideo = 'owner_property_review_video';
   static String get ownerPropertyReviewVideo => _ownerPropertyReviewVideo.tr();

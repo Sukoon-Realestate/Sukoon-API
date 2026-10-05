@@ -8,6 +8,8 @@ import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
+import 'package:melos_core/core/widgets/first_validation_error_form.dart';
+import 'package:melos_core/core/helpers/validators.dart';
 
 import '../shared/chat_privacy_banner.dart';
 
@@ -19,6 +21,7 @@ class ChatReportSheet extends StatefulWidget {
 }
 
 class _ChatReportSheetState extends State<ChatReportSheet> {
+  final GlobalKey _detailsFieldKey = GlobalKey();
   late final TextEditingController _detailsController;
   final ValueNotifier<int> _selectedReason = ValueNotifier<int>(0);
 
@@ -46,6 +49,16 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
 
   void _submit() => Go.back(true);
 
+  List<FirstValidationErrorField> _validationFields() => [
+    if (_selectedReason.value == _reasons.length - 1)
+      FirstValidationErrorField(
+        fieldKey: _detailsFieldKey,
+        title: LocaleKeys.chatReportDetailsHint,
+        value: _detailsController.text,
+        validator: Validators.skipValidation,
+      ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
@@ -57,102 +70,108 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
         ),
         child: SafeArea(
           top: false,
-          child: Column(
-            children: [
-              const _ReportHeader(),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 20.h),
-                  child: ValueListenableBuilder<int>(
-                    valueListenable: _selectedReason,
-                    builder: (context, selectedReason, _) => Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        for (
-                          int index = 0;
-                          index < _reasons.length;
-                          index++
-                        ) ...[
-                          _ReportReasonTile(
-                            label: _reasons[index],
-                            isSelected: selectedReason == index,
-                            onPressed: () => _selectedReason.value = index,
-                          ),
-                          if (index < _reasons.length - 1) 8.szH,
-                        ],
-                        if (selectedReason == _reasons.length - 1) ...[
-                          12.szH,
-                          TextField(
-                            controller: _detailsController,
-                            minLines: 3,
-                            maxLines: 4,
-                            style: AppTextStyles.base.copyWith(
-                              color: AppColors.sokoonNavy,
-                              fontSize: 14.sp,
+          child: FirstValidationErrorForm(
+            validationFields: _validationFields,
+            onValid: _submit,
+            builder: (context, submit) => Column(
+              children: [
+                const _ReportHeader(),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 20.h),
+                    child: ValueListenableBuilder<int>(
+                      valueListenable: _selectedReason,
+                      builder: (context, selectedReason, _) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          for (
+                            int index = 0;
+                            index < _reasons.length;
+                            index++
+                          ) ...[
+                            _ReportReasonTile(
+                              label: _reasons[index],
+                              isSelected: selectedReason == index,
+                              onPressed: () => _selectedReason.value = index,
                             ),
-                            decoration: InputDecoration(
-                              hintText: LocaleKeys.chatReportDetailsHint,
-                              hintStyle: AppTextStyles.base.copyWith(
-                                color: AppColors.sokoonMuted,
+                            if (index < _reasons.length - 1) 8.szH,
+                          ],
+                          if (selectedReason == _reasons.length - 1) ...[
+                            12.szH,
+                            TextFormField(
+                              key: _detailsFieldKey,
+                              validator: Validators.skipValidation,
+                              controller: _detailsController,
+                              minLines: 3,
+                              maxLines: 4,
+                              style: AppTextStyles.base.copyWith(
+                                color: AppColors.sokoonNavy,
                                 fontSize: 14.sp,
                               ),
-                              filled: true,
-                              fillColor: AppColors.white,
-                              contentPadding: EdgeInsets.all(14.r),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16.r),
-                                borderSide: const BorderSide(
-                                  color: AppColors.sokoonBorder,
+                              decoration: InputDecoration(
+                                hintText: LocaleKeys.chatReportDetailsHint,
+                                hintStyle: AppTextStyles.base.copyWith(
+                                  color: AppColors.sokoonMuted,
+                                  fontSize: 14.sp,
+                                ),
+                                filled: true,
+                                fillColor: AppColors.white,
+                                contentPadding: EdgeInsets.all(14.r),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.sokoonBorder,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.sokoonBorder,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                  borderSide: const BorderSide(
+                                    color: AppColors.red,
+                                  ),
                                 ),
                               ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16.r),
-                                borderSide: const BorderSide(
-                                  color: AppColors.sokoonBorder,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16.r),
-                                borderSide: const BorderSide(
-                                  color: AppColors.red,
-                                ),
+                            ),
+                          ],
+                          16.szH,
+                          ChatPrivacyBanner(text: LocaleKeys.chatReportPrivacy),
+                          16.szH,
+                          DefaultButton(
+                            onTap: submit,
+                            title: LocaleKeys.chatSubmitReport,
+                            color: AppColors.red,
+                            textColor: AppColors.white,
+                            borderRadius: BorderRadius.circular(16.r),
+                            width: double.infinity,
+                            height: 52.h,
+                            textStyle: AppTextStyles.extraBold15.copyWith(
+                              fontSize: 15.sp,
+                              height: 1.45,
+                            ),
+                          ),
+                          6.szH,
+                          TextButton(
+                            onPressed: () => Go.back(),
+                            child: AppText(
+                              LocaleKeys.cancel,
+                              style: AppTextStyles.semiBold.copyWith(
+                                color: AppColors.sokoonGray,
+                                fontSize: 14.sp,
                               ),
                             ),
                           ),
                         ],
-                        16.szH,
-                        ChatPrivacyBanner(text: LocaleKeys.chatReportPrivacy),
-                        16.szH,
-                        DefaultButton(
-                          onTap: _submit,
-                          title: LocaleKeys.chatSubmitReport,
-                          color: AppColors.red,
-                          textColor: AppColors.white,
-                          borderRadius: BorderRadius.circular(16.r),
-                          width: double.infinity,
-                          height: 52.h,
-                          textStyle: AppTextStyles.extraBold15.copyWith(
-                            fontSize: 15.sp,
-                            height: 1.45,
-                          ),
-                        ),
-                        6.szH,
-                        TextButton(
-                          onPressed: () => Go.back(),
-                          child: AppText(
-                            LocaleKeys.cancel,
-                            style: AppTextStyles.semiBold.copyWith(
-                              color: AppColors.sokoonGray,
-                              fontSize: 14.sp,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +10,6 @@ import 'package:sokoun_app/features/shared/auth/data/models/register.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/register.dart';
 import '../widgets/kyc/kyc_upload_documents_view.dart';
 import '../cubits/complete_registration_cubit.dart';
-import '../../data/models/complete_registration_result.dart';
 import 'kyc_pending_screen.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/shared_widgets/unsaved_changes_guard.dart';
@@ -45,7 +43,6 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
   final ValueNotifier<KycUploadDocumentsData> _dataNotifier = ValueNotifier(
     const KycUploadDocumentsData(),
   );
-  Completer<void>? _submitCompleter;
   CompleteRegistrationCubit? _completionCubit;
   final ValueNotifier<String?> _submissionMessage = ValueNotifier(null);
   bool _submitted = false;
@@ -62,7 +59,6 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
     _dataNotifier.dispose();
     _completionCubit?.close();
     _submissionMessage.dispose();
-    _completeSubmit();
     super.dispose();
   }
 
@@ -107,7 +103,7 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
             _submitted = true;
             Go.off(const KycPendingScreen(existingAccount: true));
           } else {
-            _submissionMessage.value = _missingFieldsMessage(result);
+            _submissionMessage.value = _completionCubit!.state.msg;
           }
         },
       );
@@ -131,23 +127,6 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
     );
 
     await registerCubit.register(onSuccess: widget.onRegisterSuccess);
-  }
-
-  String _missingFieldsMessage(CompleteRegistrationResult result) {
-    final String fields = result.missingFields
-        .map(
-          (field) => switch (field) {
-            'national_id' => LocaleKeys.nationalId,
-            'front_id_image' => LocaleKeys.idFrontLabel,
-            'back_id_image' => LocaleKeys.idBackLabel,
-            'selfie_image' => LocaleKeys.selfiePhoto,
-            _ => field,
-          },
-        )
-        .join(', ');
-    return fields.isEmpty
-        ? LocaleKeys.kycIncompleteSubmission
-        : '${LocaleKeys.kycMissingFields}: $fields';
   }
 
   String _fileNameFrom(File image) {
@@ -210,35 +189,11 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
     _selfieFieldKey.currentState?.didChange(fileName);
   }
 
-  Future<void> _submitForm(VoidCallback submit) async {
-    if (_submitCompleter != null) return;
-    final Completer<void> completer = Completer<void>();
-    _submitCompleter = completer;
-    submit();
-    await completer.future;
-  }
-
-  void _completeSubmit() {
-    final Completer<void>? completer = _submitCompleter;
-    _submitCompleter = null;
-
-    if (completer != null && !completer.isCompleted) {
-      completer.complete();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final Widget form = FirstValidationErrorForm(
       validationFields: _validationFields,
-      onValidationError: (_) => _completeSubmit(),
-      onValid: () async {
-        try {
-          await _submit(context);
-        } finally {
-          _completeSubmit();
-        }
-      },
+      onValid: () => _submit(context),
       builder: (context, submit) {
         return KycUploadDocumentsView(
           dataListenable: _dataNotifier,
@@ -253,7 +208,7 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
           onPickFrontId: _pickFrontIdImage,
           onPickBackId: _pickBackIdImage,
           onCaptureSelfie: _captureSelfieImage,
-          onSubmit: () => _submitForm(submit),
+          onSubmit: submit,
           onBack: widget.onBack,
           existingAccount: widget.existingAccount,
           submissionMessage: _submissionMessage,

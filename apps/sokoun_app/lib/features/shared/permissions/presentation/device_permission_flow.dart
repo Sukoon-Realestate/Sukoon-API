@@ -6,7 +6,6 @@ import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/shared/base_state.dart';
 import 'package:melos_core/core/widgets/location_permission_view.dart';
 import 'package:melos_core/core/widgets/notification_permission_view.dart';
-import 'package:melos_core/core/widgets/toast_messages/custom_messages.dart';
 import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 
 import '../../notifications/data/notification_device_data.dart';
@@ -39,7 +38,10 @@ abstract final class DevicePermissionFlow {
       if (status == DevicePermissionStatus.granted) return true;
       if (status == DevicePermissionStatus.restricted) {
         if (!automatic) {
-          Messages.showToast(status: BaseStatus.error ,msg: LocaleKeys.permissionRestricted);
+          Messages.showToast(
+            status: BaseStatus.error,
+            msg: LocaleKeys.permissionRestricted,
+          );
         }
         return false;
       }
@@ -57,7 +59,10 @@ abstract final class DevicePermissionFlow {
         if (!await source.openSettings() &&
             context.mounted &&
             _isActive(context)) {
-          Messages.showToast(status: BaseStatus.error ,msg: LocaleKeys.permissionSettingsUnavailable);
+          Messages.showToast(
+            status: BaseStatus.error,
+            msg: LocaleKeys.permissionSettingsUnavailable,
+          );
         }
         // Opening settings is not a permission grant. The next action/resume
         // checks the actual OS status again.
@@ -87,10 +92,10 @@ abstract final class DevicePermissionFlow {
       if (!context.mounted || !_isActive(context)) return false;
       if (result != DevicePermissionStatus.granted) {
         Messages.showToast(
-            status: BaseStatus.error,
-            msg: result == DevicePermissionStatus.restricted
-                ? LocaleKeys.permissionRestricted
-                : LocaleKeys.permissionDenied,
+          status: BaseStatus.error,
+          msg: result == DevicePermissionStatus.restricted
+              ? LocaleKeys.permissionRestricted
+              : LocaleKeys.permissionDenied,
         );
 
         return false;
@@ -102,7 +107,10 @@ abstract final class DevicePermissionFlow {
     } catch (error, stackTrace) {
       log('Permission flow failed.', error: error, stackTrace: stackTrace);
       if (!automatic && context.mounted && _isActive(context)) {
-        Messages.showToast(status: BaseStatus.error, msg: LocaleKeys.permissionUnavailable);
+        Messages.showToast(
+          status: BaseStatus.error,
+          msg: LocaleKeys.permissionUnavailable,
+        );
       }
       return false;
     } finally {

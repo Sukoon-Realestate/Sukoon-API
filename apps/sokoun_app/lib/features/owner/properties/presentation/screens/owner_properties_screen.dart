@@ -32,7 +32,6 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
       const OwnerPropertyFlowScreen(),
     );
     if (shouldReturnToProperties == true && mounted) {
-      _showMessage(LocaleKeys.ownerPropertiesSubmittedMessage);
       if (widget.initialProperties == null) {
         await _pagifyController.refresh();
       }
@@ -53,7 +52,6 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
       return;
     }
     _replaceProperty(_mergePropertyDetails(property, updated));
-    _showMessage(LocaleKeys.ownerPropertiesSaved);
   }
 
   Future<PropertyDetailsModel?> _loadPropertyDetails(String propertyId) async {
@@ -107,7 +105,6 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
     );
     if (updated != null && mounted) {
       _replaceProperty(_mergePropertyDetails(property, updated));
-      _showMessage(LocaleKeys.ownerPropertiesResubmitted);
     }
   }
 
@@ -132,15 +129,6 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
     );
     if (!mounted || deleted != true) return;
     _pagifyController.removeWhere((item) => item.id == property.id);
-    _showMessage(LocaleKeys.ownerPropertiesDeleted);
-  }
-
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(content: AppText(message, style: AppTextStyles.regular)),
-      );
   }
 
   @override

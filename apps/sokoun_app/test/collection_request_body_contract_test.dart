@@ -48,6 +48,8 @@ void main() {
         'main_image_name': '',
         'main_image_description': '',
         'amenities': '[]',
+        'video': '',
+        'video_duration': 0,
       });
     }
     expect(
@@ -149,8 +151,8 @@ void main() {
       final form = _property();
       final body = form.toJson();
       matches(body, 'POST', '/properties/create/', partial: true);
-      expect(body['latitude'], 30.0444);
-      expect(body['longitude'], 31.2357);
+      expect(body['latitude'], '30.044400');
+      expect(body['longitude'], '31.235700');
       expect(body['district'], 'Maadi');
       expect(body['city'], 'city-id');
       expect(body['suitable_for'], 'singles');
@@ -179,18 +181,22 @@ void main() {
       );
       final cubit = PropertySubmissionCubit();
       addTearDown(cubit.close);
+      final form = _property().copyWith(
+        videoFile: File('/tmp/tour.mp4'),
+        videoDuration: 45,
+      );
       await cubit.save(
-        form: _property().copyWith(clearLocation: true),
+        form: form.copyWith(clearLocation: true),
         onSuccess: (_) {},
       );
       await cubit.save(
-        form: _property().copyWith(
+        form: form.copyWith(
           location: const PropertyLocation(latitude: 100, longitude: 200),
         ),
         onSuccess: (_) {},
       );
       expect(repository.calls, isEmpty);
-      await cubit.save(form: _property(), onSuccess: (_) {});
+      await cubit.save(form: form, onSuccess: (_) {});
       expect(repository.calls.single.isFromData, isTrue);
       matches(
         repository.calls.single.body!,

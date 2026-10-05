@@ -8,7 +8,8 @@ class SupportTicketForm extends StatefulWidget {
 }
 
 class _SupportTicketFormState extends State<SupportTicketForm> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey _subjectFieldKey = GlobalKey();
+  final GlobalKey _descriptionFieldKey = GlobalKey();
   final TextEditingController _subject = TextEditingController();
   final TextEditingController _description = TextEditingController();
   late final SupportTicketSubmitCubit _cubit;
@@ -33,18 +34,15 @@ class _SupportTicketFormState extends State<SupportTicketForm> {
   }
 
   Future<void> _submit(BuildContext context) async {
-    if (_cubit.isLoading || !(_formKey.currentState?.validate() ?? false)) {
+    if (_cubit.isLoading) {
       return;
     }
     FocusScope.of(context).unfocus();
     final SupportTicketContent? ticket = await _cubit.submit(_body.value);
     if (!context.mounted) return;
     if (ticket == null) {
-      if (_cubit.state.isSuccess) {
-        MessageUtils.showSnackBar(
-          LocaleKeys.supportInvalidResponse,
-          context: context,
-        );
+      if (_cubit.state.isSuccess && _cubit.state.msg?.isNotEmpty == true) {
+        Messages.showToast(msg: _cubit.state.msg!, status: BaseStatus.error);
       }
       return;
     }
@@ -58,26 +56,42 @@ class _SupportTicketFormState extends State<SupportTicketForm> {
       (value?.trim().length ?? 0) < minimum
       ? LocaleKeys.supportFieldMinimum.replaceAll('{min}', '$minimum')
       : null;
+
+  List<FirstValidationErrorField> _validationFields() => [
+    FirstValidationErrorField(
+      fieldKey: _subjectFieldKey,
+      title: LocaleKeys.supportSubject,
+      value: _subject.text,
+      validator: (value) => _validate(value, 3),
+    ),
+    FirstValidationErrorField(
+      fieldKey: _descriptionFieldKey,
+      title: LocaleKeys.supportDetails,
+      value: _description.text,
+      validator: (value) => _validate(value, 10),
+    ),
+  ];
   @override
   Widget build(BuildContext context) => BlocProvider.value(
     value: _cubit,
     child: UnsavedChangesGuard(
       hasChanges: () => !_submitted && _body.value.hasChanges,
       isSaving: () => _cubit.isLoading,
-      child: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(20.r),
-              child:
-                  BlocBuilder<
-                    SupportTicketSubmitCubit,
-                    AsyncState<SupportTicketContent>
-                  >(
-                    builder: (context, state) => AbsorbPointer(
-                      absorbing: state.isLoading,
-                      child: Form(
-                        key: _formKey,
+      child: FirstValidationErrorForm(
+        validationFields: _validationFields,
+        onValid: () => _submit(context),
+        builder: (context, submit) => Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(20.r),
+                child:
+                    BlocBuilder<
+                      SupportTicketSubmitCubit,
+                      AsyncState<SupportTicketContent>
+                    >(
+                      builder: (context, state) => AbsorbPointer(
+                        absorbing: state.isLoading,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           spacing: 18.h,
@@ -112,6 +126,7 @@ class _SupportTicketFormState extends State<SupportTicketForm> {
                               ),
                             ),
                             DefaultTextField.withTitle(
+                              key: _subjectFieldKey,
                               controller: _subject,
                               upperTitle: LocaleKeys.supportSubject,
                               title: LocaleKeys.supportSubjectHint,
@@ -122,6 +137,7 @@ class _SupportTicketFormState extends State<SupportTicketForm> {
                                   .copyWith(subject: value ?? ''),
                             ),
                             DefaultTextField.withTitle(
+                              key: _descriptionFieldKey,
                               controller: _description,
                               upperTitle: LocaleKeys.supportDetails,
                               title: LocaleKeys.supportDetailsHint,
@@ -146,17 +162,17 @@ class _SupportTicketFormState extends State<SupportTicketForm> {
                         ),
                       ),
                     ),
-                  ),
+              ),
             ),
-          ),
-          SokounActionFooter(
-            width: SokounContentWidth.form,
-            child: AppLoadingButton(
-              asyncCall: _submit,
-              title: LocaleKeys.supportSendTicket,
+            SokounActionFooter(
+              width: SokounContentWidth.form,
+              child: AppLoadingButton(
+                asyncCall: (_) => submit(),
+                title: LocaleKeys.supportSendTicket,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     ),
   );

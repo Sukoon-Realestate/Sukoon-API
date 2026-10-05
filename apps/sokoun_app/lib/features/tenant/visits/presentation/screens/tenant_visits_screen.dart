@@ -101,7 +101,6 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
         }
       }
     }
-    _showMessage(LocaleKeys.tenantVisitRequestCanceled);
   }
 
   Future<void> _showRating(TenantVisitContent visit) async {
@@ -120,17 +119,8 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
     );
 
     if (submitted == true && mounted) {
-      _showMessage(LocaleKeys.tenantVisitRatingSubmitted);
       await _pagifyController?.refresh();
     }
-  }
-
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(content: AppText(message, style: AppTextStyles.regular)),
-      );
   }
 
   @override

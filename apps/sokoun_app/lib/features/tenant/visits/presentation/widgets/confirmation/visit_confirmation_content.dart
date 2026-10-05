@@ -3,11 +3,13 @@ part of '../../../imports.dart';
 class VisitConfirmationContent extends StatelessWidget {
   const VisitConfirmationContent({
     super.key,
+    this.message = '',
     required this.property,
     required this.selectedDay,
     required this.selectedTime,
   });
 
+  final String message;
   final VisitPropertyContent property;
   final VisitDayContent selectedDay;
   final VisitTimeSlotContent selectedTime;
@@ -38,7 +40,7 @@ class VisitConfirmationContent extends StatelessWidget {
           ).centerWidget,
           20.szH,
           AppText(
-            LocaleKeys.tenantVisitConfirmedTitle,
+            message,
             style: AppTextStyles.bold.copyWith(
               color: AppColors.sokoonNavy,
               fontSize: 23.sp,

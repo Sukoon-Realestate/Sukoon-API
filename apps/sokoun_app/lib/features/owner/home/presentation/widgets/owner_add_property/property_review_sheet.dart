@@ -73,7 +73,10 @@ class PropertyReviewSheet extends StatelessWidget {
                       location.coordinates,
                     '${LocaleKeys.ownerAddPropertyBedrooms}: ${form.bedrooms} · ${LocaleKeys.ownerAddPropertyBathrooms}: ${form.bathrooms}',
                     '${LocaleKeys.ownerAddPropertySpace}: ${form.space}',
-                    '${LocaleKeys.ownerAddPropertyFloor}: ${form.floor}',
+                    if (form.areaDescription.trim().isNotEmpty)
+                      '${LocaleKeys.ownerAddPropertyAreaDescription}: ${form.areaDescription}',
+                    if (form.floor.trim().isNotEmpty)
+                      '${LocaleKeys.ownerAddPropertyFloor}: ${form.floor}',
                   ],
                   onEdit: () => Go.back(PropertyReviewAction.basics),
                 ),
@@ -88,7 +91,7 @@ class PropertyReviewSheet extends StatelessWidget {
                       if (photo.name.trim().isNotEmpty ||
                           photo.description.trim().isNotEmpty)
                         '${LocaleKeys.ownerAddPropertyPhotoNumber.replaceAll('{number}', '${index + 1}')}: ${[photo.name.trim(), photo.description.trim()].where((value) => value.isNotEmpty).join(' — ')}',
-                    '${LocaleKeys.ownerPropertyReviewVideo}: ${form.hasVideo ? LocaleKeys.ownerPropertyVideoSelected : LocaleKeys.ownerAddPropertyVideoSkipped}',
+                    '${LocaleKeys.ownerPropertyReviewVideo}: ${form.hasVideo ? LocaleKeys.ownerPropertyVideoSelected : LocaleKeys.ownerPropertyVideoRequired}',
                   ],
                   onEdit: () => Go.back(PropertyReviewAction.photos),
                 ),
@@ -99,8 +102,9 @@ class PropertyReviewSheet extends StatelessWidget {
                   title: LocaleKeys.ownerAddPropertyPricingTitle,
                   lines: [
                     '${LocaleKeys.ownerAddPropertyPrice}: ${EgyptianPoundText.format(form.monthlyPrice)}',
+                    '${LocaleKeys.ownerAddPropertyPricePeriod}: ${form.rentalUnitLabel}',
                     '${LocaleKeys.ownerAddPropertySuitableFor}: ${form.suitableForLabel}',
-                    '${LocaleKeys.ownerAddPropertyRentalPeriod}: ${form.rentalDuration} ${form.rentalUnitLabel}',
+                    '${LocaleKeys.ownerAddPropertyMinimumRentalMonths}: ${form.rentalDuration}',
                     form.amenityLabels.join(' · '),
                     form.description,
                   ],

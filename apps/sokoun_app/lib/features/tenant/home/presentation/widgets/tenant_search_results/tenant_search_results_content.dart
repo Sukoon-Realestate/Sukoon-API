@@ -5,6 +5,8 @@ import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:pagify/pagify.dart';
+import 'package:melos_core/core/shared/base_state.dart';
+import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_search_result_content.dart';
@@ -20,7 +22,7 @@ typedef PropertySearchPageLoader =
       int page,
     );
 
-class TenantSearchResultsContent extends StatelessWidget {
+class TenantSearchResultsContent extends StatefulWidget {
   const TenantSearchResultsContent({
     super.key,
     required this.queryController,
@@ -53,36 +55,65 @@ class TenantSearchResultsContent extends StatelessWidget {
   final VoidCallback onResetSearchPressed;
 
   @override
+  State<TenantSearchResultsContent> createState() =>
+      _TenantSearchResultsContentState();
+}
+
+class _TenantSearchResultsContentState
+    extends State<TenantSearchResultsContent> {
+  final ValueNotifier<String?> _errorMessage = ValueNotifier(null);
+
+  @override
+  void dispose() {
+    _errorMessage.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AppPagify<PropertyDetailsModel>(
       header: TenantSearchResultsHeader(
-        queryController: queryController,
-        activeFilters: activeFilters,
-        resultCount: resultCount,
-        onQueryChanged: onQueryChanged,
-        onQuerySubmitted: onQuerySubmitted,
-        onFiltersPressed: onFiltersPressed,
-        onFilterRemoved: onFilterRemoved,
-        onClearFiltersPressed: onClearFiltersPressed,
+        queryController: widget.queryController,
+        activeFilters: widget.activeFilters,
+        resultCount: widget.resultCount,
+        onQueryChanged: widget.onQueryChanged,
+        onQuerySubmitted: widget.onQuerySubmitted,
+        onFiltersPressed: widget.onFiltersPressed,
+        onFilterRemoved: widget.onFilterRemoved,
+        onClearFiltersPressed: widget.onClearFiltersPressed,
       ),
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
       enablePullRefresh: true,
       retainItemsOnRefresh: true,
       retainedItemsNotice: (isLoading, retry) =>
-          SearchRefreshNotice(isLoading: isLoading, onRetry: retry),
-      pagifyController: pagifyController,
+          ValueListenableBuilder<String?>(
+            valueListenable: _errorMessage,
+            builder: (context, message, _) => SearchRefreshNotice(
+              isLoading: isLoading,
+              errorMessage: message,
+              onRetry: retry,
+            ),
+          ),
+      onSuccess: (_, _) => _errorMessage.value = null,
+      onError: (_, _, error) {
+        _errorMessage.value = error.msg;
+        if (error.msg.isNotEmpty) {
+          Messages.showToast(msg: error.msg, status: BaseStatus.error);
+        }
+      },
+      pagifyController: widget.pagifyController,
       rankingType: Ranking.adaptiveGrid,
       disposeController: false,
-      asyncCall: loadPage,
+      asyncCall: widget.loadPage,
       shrinkWrap: false,
-      cacheKey: cacheKey,
+      cacheKey: widget.cacheKey,
       cacheToJson: (item) => item.toJson(),
       cacheFromJson: PropertyDetailsModel.fromJson,
       emptyListView: EmptyResultsState(
-        onResetSearchPressed: onResetSearchPressed,
+        onResetSearchPressed: widget.onResetSearchPressed,
       ),
       itemBuilder: (context, data, index, item) =>
-          SearchResultCard(item: item, filterOptions: filterOptions),
+          SearchResultCard(item: item, filterOptions: widget.filterOptions),
     ).paddingBottom(18.h);
   }
 }

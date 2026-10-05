@@ -14,11 +14,13 @@ import '../shared/auth_resend_timer.dart';
 class ForgotPasswordSentView extends StatefulWidget {
   const ForgotPasswordSentView({
     super.key,
+    this.message = '',
     required this.maskedEmail,
     required this.onResend,
     required this.onChangeEmail,
   });
 
+  final String message;
   final String maskedEmail;
   final Future<void> Function(VoidCallback onSuccess) onResend;
   final VoidCallback onChangeEmail;
@@ -94,7 +96,7 @@ class _ForgotPasswordSentViewState extends State<ForgotPasswordSentView> {
         ).centerWidget,
         20.szH,
         AppText(
-          LocaleKeys.resetLinkSent,
+          widget.message,
           style: AppTextStyles.bold.copyWith(
             color: AppColors.sokoonNavy,
             fontSize: 20.sp,

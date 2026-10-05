@@ -1,3 +1,4 @@
+import 'package:toastification/toastification.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
 import 'package:melos_core/core/error/failure.dart';
@@ -58,6 +59,8 @@ void main() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(connectivityChannel, null);
   });
+
+  setUp(() => toastification.managers.clear());
 
   Widget buildScreen(Widget screen) {
     return EasyLocalization(
@@ -143,10 +146,14 @@ void main() {
     }
     await tester.enterText(find.byType(TextField), 'تجربة ممتازة');
     await tester.tap(find.text('إرسال التقييم'));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
 
     expect(find.byType(VisitRatingSheet), findsNothing);
-    expect(find.text('تم إرسال تقييمك بنجاح'), findsOneWidget);
+    expect(find.text('Server accepted the visit rating'), findsOneWidget);
+    toastification.dismissAll(delayForAnimation: false);
+    await tester.pump(const Duration(seconds: 1));
     expect(tester.takeException(), isNull);
   });
 
@@ -176,9 +183,13 @@ void main() {
     await tester.tap(find.text('إلغاء الطلب'));
     await tester.pumpAndSettle();
     await tester.tap(find.text(LocaleKeys.visitConfirmCancellation));
-    await tester.pumpAndSettle();
+    await tester.pump();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
     expect(find.text('لا توجد زيارات في هذه الفئة'), findsOneWidget);
-    expect(find.text('تم إلغاء طلب الزيارة'), findsOneWidget);
+    expect(find.text('Server canceled the visit request'), findsOneWidget);
+    toastification.dismissAll(delayForAnimation: false);
+    await tester.pump(const Duration(seconds: 1));
 
     await tester.tap(find.text('عرض كل الزيارات'));
     await tester.pumpAndSettle();
@@ -322,7 +333,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(VisitConfirmedScreen), findsOneWidget);
-    expect(find.text('تم إرسال طلب الزيارة!'), findsOneWidget);
+    expect(find.text('Server received the visit request'), findsOneWidget);
     final VisitConfirmedScreen confirmedScreen = tester.widget(
       find.byType(VisitConfirmedScreen),
     );
@@ -517,7 +528,16 @@ class _VisitsRepository implements BaseRepository {
     final json =
         visit?.toJson() ??
         const <String, dynamic>{'count': 0, 'results': [], 'banner': 'visit'};
-    return Success(BaseModel<T>(key: '', msg: '', data: params.mapper!(json)));
+    final String message = params.api.endsWith('/review/')
+        ? 'Server accepted the visit rating'
+        : params.httpRequestType == HttpRequestType.patch
+        ? 'Server canceled the visit request'
+        : params.httpRequestType == HttpRequestType.post
+        ? 'Server received the visit request'
+        : '';
+    return Success(
+      BaseModel<T>(key: '', msg: message, data: params.mapper!(json)),
+    );
   }
 
   @override

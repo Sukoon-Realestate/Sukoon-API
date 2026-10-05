@@ -16,11 +16,13 @@ import 'add_property_primary_button.dart';
 class AddPropertySubmittedPage extends StatelessWidget {
   const AddPropertySubmittedPage({
     super.key,
+    this.message = '',
     required this.summaryItems,
     required this.onAddAnother,
   });
 
   final List<AddPropertySummaryContent> summaryItems;
+  final String message;
   final VoidCallback onAddAnother;
 
   @override
@@ -74,7 +76,7 @@ class AddPropertySubmittedPage extends StatelessWidget {
           ).centerWidget,
           14.szH,
           AppText(
-            LocaleKeys.ownerPropertySubmittedTitle,
+            message,
             style: AppTextStyles.bold.copyWith(
               color: AppColors.sokoonNavy,
               fontSize: 23.sp,

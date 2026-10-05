@@ -15,6 +15,7 @@ class VisitRatingSheet extends StatefulWidget {
 }
 
 class _VisitRatingSheetState extends State<VisitRatingSheet> {
+  final List<GlobalKey> _ratingFieldKeys = List.generate(3, (_) => GlobalKey());
   late final TextEditingController _commentController;
   final ValueNotifier<List<int>> _criteriaRatings = ValueNotifier<List<int>>(
     <int>[0, 0, 0],
@@ -25,6 +26,21 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
     LocaleKeys.tenantVisitRatingCleanliness,
     LocaleKeys.tenantVisitRatingAccuracy,
     LocaleKeys.tenantVisitRatingOwnerTreatment,
+  ];
+
+  String? _validateRating(String? value) =>
+      Validators.isValidRatings([int.tryParse(value ?? '') ?? 0])
+      ? null
+      : LocaleKeys.fillField;
+
+  List<FirstValidationErrorField> _validationFields() => [
+    for (int index = 0; index < _criteria.length; index++)
+      FirstValidationErrorField(
+        fieldKey: _ratingFieldKeys[index],
+        title: _criteria[index],
+        value: '${_criteriaRatings.value[index]}',
+        validator: _validateRating,
+      ),
   ];
 
   @override
@@ -76,114 +92,122 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
         color: AppColors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              width: 48.w,
-              height: 5.h,
-              decoration: BoxDecoration(
-                color: AppColors.sokoonBorder,
-                borderRadius: BorderRadius.circular(999.r),
-              ),
-            ).centerWidget,
-            16.szH,
-            Container(
-              width: 56.r,
-              height: 56.r,
-              alignment: Alignment.center,
-              decoration: const BoxDecoration(
-                color: AppColors.goldPale,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.star_rounded,
-                color: AppColors.gold,
-                size: 28.r,
-              ),
-            ).centerWidget,
-            12.szH,
-            AppText(
-              LocaleKeys.tenantVisitRateTitle,
-              style: AppTextStyles.bold.copyWith(
-                color: AppColors.sokoonNavy,
-                fontSize: 20.sp,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-            ),
-            4.szH,
-            AppText(
-              widget.propertyTitle,
-              style: AppTextStyles.regular14.copyWith(
-                color: AppColors.sokoonGray,
-                fontSize: 14.sp,
-                height: 1.45,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            14.szH,
-            ValueListenableBuilder<List<int>>(
-              valueListenable: _criteriaRatings,
-              builder: (context, criteriaRatings, _) => Column(
-                spacing: 8.h,
-                children: [
-                  for (int index = 0; index < _criteria.length; index++)
-                    _VisitRatingCriterion(
-                      label: _criteria[index],
-                      rating: criteriaRatings[index],
-                      onRatingSelected: (rating) =>
-                          _updateCriterion(index, rating),
-                    ),
-                ],
-              ),
-            ),
-            16.szH,
-            Container(
-              height: 80.h,
-              padding: EdgeInsets.symmetric(horizontal: 14.w),
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(color: AppColors.sokoonBorder),
-              ),
-              child: TextField(
-                controller: _commentController,
-                maxLines: 3,
-                style: AppTextStyles.base.copyWith(
-                  color: AppColors.sokoonNavy,
-                  fontSize: 13.sp,
+      child: FirstValidationErrorForm(
+        validationFields: _validationFields,
+        onValid: _submit,
+        builder: (context, submit) => SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                width: 48.w,
+                height: 5.h,
+                decoration: BoxDecoration(
+                  color: AppColors.sokoonBorder,
+                  borderRadius: BorderRadius.circular(999.r),
                 ),
-                decoration: InputDecoration(
-                  hintText: LocaleKeys.tenantVisitRatingCommentHint,
-                  hintStyle: AppTextStyles.base.copyWith(
-                    color: AppColors.sokoonGray,
+              ).centerWidget,
+              16.szH,
+              Container(
+                width: 56.r,
+                height: 56.r,
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                  color: AppColors.goldPale,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.star_rounded,
+                  color: AppColors.gold,
+                  size: 28.r,
+                ),
+              ).centerWidget,
+              12.szH,
+              AppText(
+                LocaleKeys.tenantVisitRateTitle,
+                style: AppTextStyles.bold.copyWith(
+                  color: AppColors.sokoonNavy,
+                  fontSize: 20.sp,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+              ),
+              4.szH,
+              AppText(
+                widget.propertyTitle,
+                style: AppTextStyles.regular14.copyWith(
+                  color: AppColors.sokoonGray,
+                  fontSize: 14.sp,
+                  height: 1.45,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              14.szH,
+              ValueListenableBuilder<List<int>>(
+                valueListenable: _criteriaRatings,
+                builder: (context, criteriaRatings, _) => Column(
+                  spacing: 8.h,
+                  children: [
+                    for (int index = 0; index < _criteria.length; index++)
+                      SokounValidationField(
+                        key: _ratingFieldKeys[index],
+                        value: '${criteriaRatings[index]}',
+                        validator: _validateRating,
+                        child: _VisitRatingCriterion(
+                          label: _criteria[index],
+                          rating: criteriaRatings[index],
+                          onRatingSelected: (rating) =>
+                              _updateCriterion(index, rating),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              16.szH,
+              Container(
+                height: 80.h,
+                padding: EdgeInsets.symmetric(horizontal: 14.w),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(color: AppColors.sokoonBorder),
+                ),
+                child: TextField(
+                  controller: _commentController,
+                  maxLines: 3,
+                  style: AppTextStyles.base.copyWith(
+                    color: AppColors.sokoonNavy,
                     fontSize: 13.sp,
                   ),
-                  border: InputBorder.none,
+                  decoration: InputDecoration(
+                    hintText: LocaleKeys.tenantVisitRatingCommentHint,
+                    hintStyle: AppTextStyles.base.copyWith(
+                      color: AppColors.sokoonGray,
+                      fontSize: 13.sp,
+                    ),
+                    border: InputBorder.none,
+                  ),
                 ),
               ),
-            ),
-            14.szH,
-            ValueListenableBuilder<List<int>>(
-              valueListenable: _criteriaRatings,
-              builder: (context, ratings, _) =>
-                  !Validators.isValidRatings(ratings) ||
-                      !Validators.isNonBlank(widget.visitId)
-                  ? DefaultButton(
-                      onTap: null,
-                      title: LocaleKeys.tenantVisitRatingSubmit,
-                    )
-                  : AppLoadingButton(
-                      asyncCall: (_) => _submit(),
-                      title: LocaleKeys.tenantVisitRatingSubmit,
-                      buttonColor: AppColors.sokoonTeal,
-                    ),
-            ),
-          ],
+              14.szH,
+              ValueListenableBuilder<List<int>>(
+                valueListenable: _criteriaRatings,
+                builder: (context, ratings, _) =>
+                    !Validators.isNonBlank(widget.visitId)
+                    ? DefaultButton(
+                        onTap: null,
+                        title: LocaleKeys.tenantVisitRatingSubmit,
+                      )
+                    : AppLoadingButton(
+                        asyncCall: (_) => submit(),
+                        title: LocaleKeys.tenantVisitRatingSubmit,
+                        buttonColor: AppColors.sokoonTeal,
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );

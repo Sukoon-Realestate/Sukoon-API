@@ -68,15 +68,16 @@ class UploadPropertyImagesCubit extends AsyncCubit<List<PropertyImageModel>> {
         );
         final List<PropertyImageModel> images = [];
         Failure? firstFailure;
+        String message = '';
         for (final result in results) {
-          result.when(
-            (model) => images.add(model.data),
-            (failure) => firstFailure ??= failure,
-          );
+          result.when((model) {
+            images.add(model.data);
+            if (model.msg.isNotEmpty) message = model.msg;
+          }, (failure) => firstFailure ??= failure);
         }
         final Failure? failure = firstFailure;
         if (failure != null) return Error(failure);
-        return Success(BaseModel(key: '', msg: '', data: images));
+        return Success(BaseModel(key: '', msg: message, data: images));
       },
       onSuccess: (_) {
         ObjectBoxCacheService.remove('property_details_$propertyId');

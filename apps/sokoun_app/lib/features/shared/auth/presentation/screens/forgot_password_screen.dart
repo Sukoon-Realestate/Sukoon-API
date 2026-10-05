@@ -18,7 +18,6 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   late final ForgotPasswordCubit _cubit;
   final ValueNotifier<({bool submitted, bool emailSent, String email})>
@@ -56,16 +55,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return '${localPart.substring(0, visibleLength)}****@${parts.last}';
   }
 
-  Future<void> _sendResetLink(BuildContext _) async {
+  void _markSubmitted() {
     _uiState.value = (
       submitted: true,
       emailSent: _uiState.value.emailSent,
       email: _emailController.text,
     );
-    if (_formKey.currentState?.validate() != true) {
-      return;
-    }
+  }
 
+  Future<void> _sendResetLink(BuildContext _) async {
+    _markSubmitted();
     await _cubit.sendResetLink(
       email: _emailController.text,
       onSuccess: () {
@@ -134,12 +133,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   padding: EdgeInsets.fromLTRB(24.w, 32.h, 24.w, 28.h),
                   child: uiState.emailSent
                       ? ForgotPasswordSentView(
+                          message: _cubit.state.msg ?? '',
                           maskedEmail: _maskedEmail,
                           onResend: _resend,
                           onChangeEmail: _showEmailForm,
                         )
                       : ForgotPasswordForm(
-                          formKey: _formKey,
                           emailController: _emailController,
                           hasSubmittedInvalidEmail:
                               uiState.submitted && !_looksLikeValidEmail,
@@ -152,6 +151,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             );
                           },
                           onSubmit: _sendResetLink,
+                          onInvalidEmail: _markSubmitted,
                           onBackToLogin: Go.back,
                         ),
                 ),

@@ -2,6 +2,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/widgets/first_validation_error_form.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'dart:async';
 
@@ -38,6 +39,7 @@ class TenantFilterScreen extends StatefulWidget {
 }
 
 class _TenantFilterScreenState extends State<TenantFilterScreen> {
+  final GlobalKey _priceRangeFieldKey = GlobalKey();
   late final ValueNotifier<PropertySearchFilters> _filters;
   late final TextEditingController _cityController;
   late final TextEditingController _districtController;
@@ -97,12 +99,22 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
       _filters.value = filters;
 
   Future<void> _apply() async {
-    if (!_filters.value.hasValidPriceRange) return;
     FocusManager.instance.primaryFocus?.unfocus();
     final PropertySearchFilters filters = _filters.value.copyWith(page: 1);
     Go.back();
     await widget.onFiltersApplied(filters);
   }
+
+  List<FirstValidationErrorField> _validationFields() => [
+    FirstValidationErrorField(
+      fieldKey: _priceRangeFieldKey,
+      title: LocaleKeys.tenantFilterPriceRange,
+      value: _maxPriceController.text,
+      validator: (_) => _filters.value.hasValidPriceRange
+          ? null
+          : LocaleKeys.searchPriceRangeError,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -159,27 +171,29 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
                 builder: (filterOptions) =>
                     ValueListenableBuilder<PropertySearchFilters>(
                       valueListenable: _filters,
-                      builder: (context, filters, _) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Expanded(
-                            child: TenantFilterContent(
-                              filters: filters,
-                              filterOptions: filterOptions,
-                              cityController: _cityController,
-                              districtController: _districtController,
-                              minPriceController: _minPriceController,
-                              maxPriceController: _maxPriceController,
-                              onFiltersChanged: _updateFilters,
+                      builder: (context, filters, _) =>
+                          FirstValidationErrorForm(
+                            validationFields: _validationFields,
+                            onValid: _apply,
+                            builder: (context, submit) => Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Expanded(
+                                  child: TenantFilterContent(
+                                    priceRangeFieldKey: _priceRangeFieldKey,
+                                    filters: filters,
+                                    filterOptions: filterOptions,
+                                    cityController: _cityController,
+                                    districtController: _districtController,
+                                    minPriceController: _minPriceController,
+                                    maxPriceController: _maxPriceController,
+                                    onFiltersChanged: _updateFilters,
+                                  ),
+                                ),
+                                FilterApplyBar(onApplyPressed: submit),
+                              ],
                             ),
                           ),
-                          FilterApplyBar(
-                            onApplyPressed: filters.hasValidPriceRange
-                                ? _apply
-                                : null,
-                          ),
-                        ],
-                      ),
                     ),
               ),
         ),

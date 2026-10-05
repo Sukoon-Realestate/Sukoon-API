@@ -162,6 +162,7 @@ class CityModel extends Equatable {
 
 class PropertyDetailsModel extends Equatable {
   const PropertyDetailsModel({
+    this.ownerAvatar = '',
     this.video,
     this.videoDuration,
     this.propertyLink = '',
@@ -222,6 +223,7 @@ class PropertyDetailsModel extends Equatable {
       governorate = const PropertyGovernorateModel.initial(),
       id = '',
       owner = '',
+      ownerAvatar = '',
       ownerId = '',
       mainImage = '',
       title = '',
@@ -288,6 +290,9 @@ class PropertyDetailsModel extends Equatable {
       propertyLink: json['property_link'] as String? ?? '',
       id: json['id']?.toString() ?? '',
       owner: ownerName,
+      ownerAvatar: _propertyFileUrl(
+        ownerJson['avatar'] ?? json['owner_avatar'],
+      ),
       ownerId:
           ownerJson['id']?.toString() ??
           json['owner_id']?.toString() ??
@@ -352,6 +357,7 @@ class PropertyDetailsModel extends Equatable {
 
   final String id;
   final String owner;
+  final String ownerAvatar;
   final String ownerId;
   final String? video;
   final int? videoDuration;
@@ -403,6 +409,7 @@ class PropertyDetailsModel extends Equatable {
   Map<String, dynamic> toJson() => {
     'id': id,
     'owner': owner,
+    'owner_avatar': ownerAvatar,
     'owner_id': ownerId,
     'video': video,
     'video_duration': videoDuration,
@@ -454,6 +461,7 @@ class PropertyDetailsModel extends Equatable {
     String? propertyLink,
     String? id,
     String? owner,
+    String? ownerAvatar,
     String? ownerId,
     String? mainImage,
     String? mainImageId,
@@ -503,6 +511,7 @@ class PropertyDetailsModel extends Equatable {
       propertyLink: propertyLink ?? this.propertyLink,
       id: id ?? this.id,
       owner: owner ?? this.owner,
+      ownerAvatar: ownerAvatar ?? this.ownerAvatar,
       ownerId: ownerId ?? this.ownerId,
       mainImage: mainImage ?? this.mainImage,
       mainImageId: mainImageId ?? this.mainImageId,
@@ -567,13 +576,7 @@ class PropertyDetailsModel extends Equatable {
 
   String get propertyTypeLabel => propertyTypeLabelFor(propertyType);
 
-  String get rentalPeriodUnitLabel => switch (pricePeriod) {
-    'daily' => LocaleKeys.ownerAddPropertyDay,
-    'weekly' => LocaleKeys.ownerAddPropertyWeek,
-    'monthly' => LocaleKeys.ownerAddPropertyMonth,
-    'yearly' => LocaleKeys.ownerAddPropertyYear,
-    _ => LocaleKeys.ownerAddPropertyRentalPeriod,
-  };
+  String get rentalPeriodUnitLabel => LocaleKeys.ownerAddPropertyMonth;
 
   static String depositLabelFor(String value) => switch (value) {
     'none' => LocaleKeys.ownerAddPropertyNoDeposit,
@@ -691,6 +694,7 @@ class PropertyDetailsModel extends Equatable {
   List<Object?> get props => [
     id,
     owner,
+    ownerAvatar,
     ownerId,
     video,
     videoDuration,

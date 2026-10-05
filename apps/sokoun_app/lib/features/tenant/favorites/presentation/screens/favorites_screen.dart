@@ -1,12 +1,12 @@
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
 import 'package:sokoun_app/shared_widgets/property_filter_button.dart';
-import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:pagify/helpers/status_stream.dart';
 import 'package:pagify/pagify.dart';
@@ -91,7 +91,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         _itemCount = initialFavorites.length;
       });
       _visibleCount.value = _visibleItemCount;
-      _showRemovedMessage(item: item, removedIndex: removedIndex);
+      _showRemovedMessage(
+        message: LocaleKeys.favoritesRemovedMessage,
+        item: item,
+        removedIndex: removedIndex,
+      );
       return;
     }
 
@@ -123,32 +127,30 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         },
       );
       _pendingPropertyIds.remove(item.id);
-      if (!mounted || requestFailed) return;
+      if (!mounted || requestFailed || !saveCubit.state.isSuccess) return;
+      final String message = saveCubit.state.msg ?? '';
+      _showRemovedMessage(
+        message: message,
+        item: item,
+        removedIndex: removedIndex,
+      );
     }
-
-    _showRemovedMessage(item: item, removedIndex: removedIndex);
   }
 
   void _showRemovedMessage({
+    required String message,
     required FavoritePropertyContent item,
     required int removedIndex,
   }) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(
-            LocaleKeys.favoritesRemovedMessage,
-            style: AppTextStyles.base,
-          ),
-          action: SnackBarAction(
-            label: LocaleKeys.favoritesUndoAction,
-            textColor: AppColors.mint,
-            onPressed: () =>
-                _restoreFavorite(item: item, removedIndex: removedIndex),
-          ),
-        ),
-      );
+    Messages.showToast(
+      msg: message,
+      actionLabel: LocaleKeys.favoritesUndoAction,
+      onAction: () {
+        if (mounted) {
+          _restoreFavorite(item: item, removedIndex: removedIndex);
+        }
+      },
+    );
   }
 
   Future<void> _restoreFavorite({

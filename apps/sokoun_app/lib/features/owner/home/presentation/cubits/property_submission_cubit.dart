@@ -17,6 +17,7 @@ class PropertySubmissionCubit extends AsyncCubit<PropertyDetailsModel> {
   }) async {
     if (isClosed ||
         isLoading ||
+        (propertyId == null && form.videoFile == null) ||
         !form.isBasicsReady ||
         !form.isPhotosReady ||
         !form.isPricingReady) {

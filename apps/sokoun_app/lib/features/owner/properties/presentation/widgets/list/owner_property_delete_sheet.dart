@@ -34,7 +34,10 @@ class _OwnerPropertyDeleteSheetState extends State<OwnerPropertyDeleteSheet> {
 
   @override
   Widget build(BuildContext context) =>
-      BlocBuilder<DeleteOwnerPropertyCubit, AsyncState<bool>>(
+      BlocBuilder<
+        DeleteOwnerPropertyCubit,
+        AsyncState<OwnerPropertyDeletionModel>
+      >(
         bloc: _cubit,
         builder: (context, state) => PopScope(
           canPop: !state.isLoading,

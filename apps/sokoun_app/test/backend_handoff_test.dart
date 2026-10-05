@@ -353,10 +353,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text(LocaleKeys.nextReviewData));
       await tester.pumpAndSettle();
-      expect(
-        find.text('${LocaleKeys.kycMissingFields}: ${LocaleKeys.idBackLabel}'),
-        findsOneWidget,
-      );
+      expect(find.text('Server requires the back ID image'), findsOneWidget);
       expect(find.byType(KycPendingScreen), findsNothing);
       repository.kycResponse = {
         'registration_complete': true,
@@ -515,7 +512,15 @@ class _BackendRepository implements BaseRepository {
         'language': params.queryParameters?['lang'] ?? 'en',
       };
     }
-    return Success(BaseModel<T>(key: '', msg: '', data: params.mapper!(json)));
+    return Success(
+      BaseModel<T>(
+        key: '',
+        msg: params.api == ApiConstants.completeRegister
+            ? 'Server requires the back ID image'
+            : '',
+        data: params.mapper!(json),
+      ),
+    );
   }
 
   @override

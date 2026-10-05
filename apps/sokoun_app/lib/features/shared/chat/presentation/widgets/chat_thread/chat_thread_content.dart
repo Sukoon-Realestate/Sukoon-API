@@ -5,7 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/widgets/chat_builder/chat_message.dart';
-import 'package:melos_core/core/widgets/toast_messages/custom_messages.dart';
+import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
+import 'package:melos_core/core/shared/base_state.dart';
 import 'package:pagify/pagify.dart';
 
 import '../../../data/models/chat_content.dart';
@@ -186,9 +187,9 @@ class _ChatThreadContentState extends State<ChatThreadContent>
         .read<ChatThreadCubit>()
         .sendTextMessage(text, localMessageId: localMessageId);
     if (!result.isSent && !result.isQueued && mounted) {
-      MessageUtils.showSnackBar(
-        LocaleKeys.waitingForConnection,
-        context: context,
+      Messages.showToast(
+        msg: LocaleKeys.waitingForConnection,
+        status: BaseStatus.error,
       );
     }
   }

@@ -1,3 +1,4 @@
+import 'package:toastification/toastification.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -118,6 +119,7 @@ void main() {
     )..addFont(rootBundle.load('fonts/MaterialIcons-Regular.otf'))).load();
   });
   setUp(() async {
+    toastification.managers.clear();
     await injector.reset();
     repository = _Repository();
     network = _Network();
@@ -147,6 +149,8 @@ void main() {
   }) async {
     await tester.pumpWidget(_app(screen, locale: locale, scale: scale));
     await tester.pumpAndSettle();
+    toastification.dismissAll(delayForAnimation: false);
+    await tester.pump(const Duration(seconds: 1));
   }
 
   test('new response models preserve all data across cache serialization', () {
@@ -757,6 +761,7 @@ void main() {
     (tester) async {
       viewport(tester);
       repository.ticket = {..._ticket, 'id': ''};
+      repository.message = 'Server could not create this ticket';
       await mount(
         tester,
         const SupportNewTicketScreen(workspace: AppWorkspace.tenant),
@@ -768,7 +773,10 @@ void main() {
       );
       await tester.tap(find.text(LocaleKeys.supportSendTicket));
       await tester.pump();
-      expect(find.text(LocaleKeys.supportInvalidResponse), findsOneWidget);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 250));
+      expect(find.text(repository.message), findsOneWidget);
+      expect(find.text(LocaleKeys.supportInvalidResponse), findsNothing);
       await tester.pumpAndSettle();
       expect(find.byType(SupportTicketDetailScreen), findsNothing);
       expect(
@@ -1136,6 +1144,7 @@ class _Repository implements BaseRepository {
   final List<CrudBaseParmas<dynamic>> requests = [];
   bool fail = false;
   String failureMessage = 'تعذّر حفظ الطلب';
+  String message = '';
   Completer<void>? pending;
   Map<String, dynamic> help = Map.of(_help);
   Map<String, dynamic> ticket = Map.of(_ticket);
@@ -1191,7 +1200,7 @@ class _Repository implements BaseRepository {
         params.api.startsWith(ApiConstants.supportTickets) ? ticket : const {},
     };
     return Success(
-      BaseModel<T>(key: 'success', msg: '', data: params.mapper!(payload)),
+      BaseModel<T>(key: 'success', msg: message, data: params.mapper!(payload)),
     );
   }
 

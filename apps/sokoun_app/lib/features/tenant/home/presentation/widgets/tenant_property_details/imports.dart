@@ -7,7 +7,7 @@ export 'info_section.dart';
 export 'metrics_grid.dart';
 export 'owner_card.dart';
 export 'ownership_verified_banner.dart';
-export 'price_and_rating.dart';
+export 'price.dart';
 export 'share_action_row.dart';
 export 'share_sheet.dart';
 export 'tag_row.dart';

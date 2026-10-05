@@ -6,6 +6,7 @@ class VisitCancelCubit extends AsyncCubit<bool> {
     if (isClosed || isLoading || visitId.isEmpty) return false;
     bool succeeded = false;
     await executeAsyncWithBaseModel(
+      showMsgOnSuccess: true,
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<bool>(
           api: ApiConstants.updatePropertyVisit(visitId),

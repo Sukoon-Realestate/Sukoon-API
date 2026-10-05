@@ -20,9 +20,12 @@ import 'package:sokoun_app/features/owner/visits/imports.dart';
 import 'package:sokoun_app/features/shared/profile/imports.dart';
 import 'package:sokoun_app/features/shared/reviews/data/models/property_review_summary.dart';
 import 'package:sokoun_app/features/shared/reviews/presentation/widgets/property_rating_summary.dart';
+import 'package:sokoun_app/features/shared/reviews/presentation/screens/property_reviews_screen.dart';
+import 'package:sokoun_app/features/shared/reviews/presentation/widgets/property_reviews_empty_state.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
 import 'package:sokoun_app/features/tenant/visits/imports.dart';
+import 'helpers/home_page_test_dependencies.dart';
 
 final Map<String, Map<String, dynamic>> _translations = {};
 
@@ -133,7 +136,7 @@ void main() {
   ) async {
     await pump(tester, const PropertyRatingSummary(propertyId: 'first'));
     expect(find.text('4.6'), findsOneWidget);
-    expect(find.text('(19)'), findsOneWidget);
+    expect(find.text('19 reviews'), findsOneWidget);
     final params =
         repository.requests.single as CrudBaseParmas<PropertyReviewSummary>;
     expect(params.api, ApiConstants.propertyReviews('first'));
@@ -160,6 +163,50 @@ void main() {
     );
     expect(find.byIcon(Icons.star_rounded), findsNothing);
     expect(find.text('(0)'), findsNothing);
+    expect(find.text('No property reviews yet'), findsNothing);
+    expect(find.text('View reviews'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('zero reviews show an empty state without a rating score', (
+    tester,
+  ) async {
+    repository.summary = const {'total_reviews': 0, 'average_rating': null};
+    await pump(tester, const PropertyRatingSummary(propertyId: 'unreviewed'));
+
+    expect(find.text('No property reviews yet'), findsOneWidget);
+    expect(find.text('0.0'), findsNothing);
+    expect(find.text('View reviews'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('the rating card opens reviews for the current property', (
+    tester,
+  ) async {
+    registerHomePageTestDependencies();
+    await pump(tester, const PropertyRatingSummary(propertyId: 'current'));
+
+    await tester.tap(find.text('View reviews'));
+    await tester.pumpAndSettle();
+
+    final PropertyReviewsScreen screen = tester.widget(
+      find.byType(PropertyReviewsScreen),
+    );
+    expect(screen.propertyId, 'current');
+    expect(find.byType(PropertyReviewsEmptyState), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('reviews remain accessible when the summary request fails', (
+    tester,
+  ) async {
+    repository.fail = true;
+    await pump(tester, const PropertyRatingSummary(propertyId: 'failed'));
+
+    expect(find.text('View reviews'), findsOneWidget);
+    expect(find.text('No property reviews yet'), findsNothing);
+    expect(find.byIcon(Icons.star_rounded), findsNothing);
+    expect(find.byType(ExceptionView), findsNothing);
     expect(tester.takeException(), isNull);
   });
 
@@ -268,7 +315,7 @@ void main() {
       tester,
       ListView(
         children: [
-          OwnerProfileHeaderCard(profile: owner, onEditPressed: () {},),
+          OwnerProfileHeaderCard(profile: owner, onEditPressed: () {}),
           TenantProfileActions(menuItems: menu),
         ],
       ),

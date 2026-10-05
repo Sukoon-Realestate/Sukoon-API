@@ -14,6 +14,7 @@ class OwnerAvailabilityScreen extends StatefulWidget {
 }
 
 class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
+  final GlobalKey _dayFieldKey = GlobalKey();
   late final OwnerAvailabilityCubit _availabilityCubit, _saveCubit;
   late DateTime _weekStart, _requestedDate;
   // Selecting a date or editing slots intentionally recomposes the schedule grid.
@@ -100,9 +101,9 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
     if (_slots.any(
       (slot) => Validators.normalizeVisitTime(slot.time) == time,
     )) {
-      MessageUtils.showSnackBar(
-        LocaleKeys.ownerAvailabilityTimeAlreadyExists,
-        context: context,
+      Messages.showToast(
+        msg: LocaleKeys.ownerAvailabilityTimeAlreadyExists,
+        status: BaseStatus.error,
       );
       return;
     }
@@ -166,6 +167,15 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
     }
   }
 
+  List<FirstValidationErrorField> _validationFields() => [
+    FirstValidationErrorField(
+      fieldKey: _dayFieldKey,
+      title: LocaleKeys.ownerAvailabilityTitle,
+      value: _days.isEmpty ? null : _selectedDate,
+      validator: Validators.validateRequired,
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) => BlocProvider.value(
     value: _availabilityCubit,
@@ -188,31 +198,38 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
                 shimmerBuilder: (_) => const SizedBox.expand(),
                 builder: (schedule) => schedule.days.isEmpty
                     ? const OwnerAvailabilityEmptyState()
-                    : ValueListenableBuilder<bool>(
-                        valueListenable: _isSaving,
-                        builder: (context, saving, _) =>
-                            OwnerAvailabilityContent(
-                              days: _days,
-                              slots: _slots
-                                  .map(
-                                    (slot) => OwnerAvailabilitySlotBody(
-                                      time: slot.time,
-                                      isEnabled: slot.isEnabled,
-                                    ),
-                                  )
-                                  .toList(growable: false),
-                              slotStates: _slots
-                                  .map((slot) => slot.slotState)
-                                  .toList(growable: false),
-                              selectedDayIndex: _selectedDayIndex,
-                              onDaySelected: _selectDay,
-                              onTimePressed: _toggleSlot,
-                              onSavePressed: _saveAvailability,
-                              onAddTimePressed: _addTime,
-                              onPreviousWeek: () => _changeWeek(-1),
-                              onNextWeek: () => _changeWeek(1),
-                              isSaving: saving,
-                              canSave: _drafts.isNotEmpty || _slots.isNotEmpty,
+                    : FirstValidationErrorForm(
+                        validationFields: _validationFields,
+                        onValid: _saveAvailability,
+                        builder: (context, submit) =>
+                            ValueListenableBuilder<bool>(
+                              valueListenable: _isSaving,
+                              builder: (context, saving, _) =>
+                                  OwnerAvailabilityContent(
+                                    dayFieldKey: _dayFieldKey,
+                                    days: _days,
+                                    slots: _slots
+                                        .map(
+                                          (slot) => OwnerAvailabilitySlotBody(
+                                            time: slot.time,
+                                            isEnabled: slot.isEnabled,
+                                          ),
+                                        )
+                                        .toList(growable: false),
+                                    slotStates: _slots
+                                        .map((slot) => slot.slotState)
+                                        .toList(growable: false),
+                                    selectedDayIndex: _selectedDayIndex,
+                                    onDaySelected: _selectDay,
+                                    onTimePressed: _toggleSlot,
+                                    onSavePressed: submit,
+                                    onAddTimePressed: _addTime,
+                                    onPreviousWeek: () => _changeWeek(-1),
+                                    onNextWeek: () => _changeWeek(1),
+                                    isSaving: saving,
+                                    canSave:
+                                        _drafts.isNotEmpty || _slots.isNotEmpty,
+                                  ),
                             ),
                       ),
               ),

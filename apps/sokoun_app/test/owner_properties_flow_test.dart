@@ -1,3 +1,5 @@
+import 'package:toastification/toastification.dart';
+import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_types_model.dart';
 import 'package:sokoun_app/features/owner/home/data/models/property_location.dart';
 import 'dart:async';
@@ -25,6 +27,11 @@ import 'package:sokoun_app/features/owner/home/presentation/screens/owner_proper
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/imports.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/property_video_picker.dart';
+import 'package:video_player_platform_interface/video_player_platform_interface.dart';
+
+import 'helpers/fake_property_video_platform.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -57,6 +64,7 @@ void main() {
   });
 
   setUp(() async {
+    toastification.managers.clear();
     await injector.reset();
     repository = _OwnerPropertiesRepository();
     injector.registerSingleton<BaseCrudUseCase>(
@@ -168,6 +176,15 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
     expect(find.byType(PropertyEditReviewSheet), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byType(PropertyEditReviewSheet),
+        matching: find.text('Server saved the property changes'),
+      ),
+      findsOneWidget,
+    );
+    toastification.dismissAll(delayForAnimation: false);
+    await tester.pump(const Duration(seconds: 1));
     await tester.tap(find.text(LocaleKeys.ownerPropertyEditReviewDone));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
@@ -176,7 +193,8 @@ void main() {
   Future<void> prepareCreateFlow(
     WidgetTester tester, {
     bool addCaptions = true,
-    bool addVideo = false,
+    bool addVideo = true,
+    bool recordVideo = false,
   }) async {
     configurePhoneViewport(tester);
     final Directory images = Directory.systemTemp.createTempSync(
@@ -190,14 +208,25 @@ void main() {
       file.writeAsBytesSync(bytes);
       return file.path;
     });
+    final video = File('${images.path}/tour.mp4')
+      ..writeAsBytesSync(utf8.encode('video upload bytes'));
+    final videoPlatform = FakePropertyVideoPlatform();
+    final originalVideoPlatform = VideoPlayerPlatform.instance;
+    if (addVideo) VideoPlayerPlatform.instance = videoPlatform;
+    final pickedVideos = <MethodCall>[];
     const MethodChannel picker = MethodChannel(
       'plugins.flutter.io/image_picker',
     );
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(picker, (call) async {
+          if (call.method == 'pickVideo') {
+            pickedVideos.add(call);
+            return video.path;
+          }
           return call.method == 'pickMultiImage' ? paths : paths.first;
         });
     addTearDown(() {
+      if (addVideo) VideoPlayerPlatform.instance = originalVideoPlatform;
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(picker, null);
       images.deleteSync(recursive: true);
@@ -254,6 +283,48 @@ void main() {
       find.byType(AddPropertyPhotosPage),
     );
     expect(photos.photos, hasLength(10));
+    if (addVideo) {
+      final picker = find.byType(PropertyVideoPicker);
+      final upload = find.descendant(
+        of: picker,
+        matching: find.ancestor(
+          of: find.byIcon(Icons.video_library_outlined),
+          matching: find.byWidgetPredicate(
+            (widget) => widget is OutlinedButton,
+          ),
+        ),
+      );
+      final record = find.descendant(
+        of: picker,
+        matching: find.ancestor(
+          of: find.byIcon(Icons.videocam_outlined),
+          matching: find.byWidgetPredicate(
+            (widget) => widget is OutlinedButton,
+          ),
+        ),
+      );
+      expect(upload.hitTestable(), findsOneWidget);
+      expect(record.hitTestable(), findsOneWidget);
+      await tester.runAsync(() async {
+        await tester.tap(recordVideo ? record : upload);
+        await Future<void>.delayed(Duration.zero);
+      });
+      await tester.pumpAndSettle();
+      expect(pickedVideos, hasLength(1));
+      expect(pickedVideos.single.arguments['source'], recordVideo ? 0 : 1);
+      if (recordVideo) {
+        expect(pickedVideos.single.arguments['maxDuration'], 60);
+      }
+      expect(videoPlatform.sources.single.uri, Uri.file(video.path).toString());
+      expect(videoPlatform.disposed, 1);
+      final selectedForm = tester
+          .widget<AddPropertyPhotosPage>(find.byType(AddPropertyPhotosPage))
+          .form;
+      expect(selectedForm.videoFile?.path, video.path);
+      expect(selectedForm.videoDuration, 45);
+      expect(selectedForm.isVideoPreparing, isFalse);
+      expect(selectedForm.isPhotosReady, isTrue);
+    }
     for (int index = 0; addCaptions && index < 10; index++) {
       await tester.enterText(
         find.byType(TextField).at(index * 2),
@@ -264,7 +335,7 @@ void main() {
         'Description $index',
       );
     }
-    if (addVideo) photos.onVideoSelected(File('${images.path}/tour.mp4'), 45);
+    if (!addVideo) return;
     await tester.pump();
     await tester.tap(find.text(LocaleKeys.ownerAddPropertyPricingTitle).last);
     await tester.pumpAndSettle();
@@ -428,35 +499,80 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  for (final recordVideo in [false, true]) {
+    testWidgets(
+      'visible ${recordVideo ? 'record' : 'upload'} button creates a listing with video in the same request',
+      (tester) async {
+        repository.createResponse = Completer<bool>();
+        await prepareCreateFlow(
+          tester,
+          addCaptions: false,
+          addVideo: true,
+          recordVideo: recordVideo,
+        );
+        await submitCreateFlow(tester);
+        final request = repository.createRequests.single;
+        expect(request.api, ApiConstants.createProperty);
+        expect(request.body!['main_image_name'], '');
+        expect(request.body!['main_image_description'], '');
+        expect(request.body!['video'], isA<File>());
+        expect(request.body!['video_duration'], 45);
+        repository.createResponse!.complete(true);
+        await tester.pumpAndSettle();
+        expect(repository.imageRequests, hasLength(9));
+        final savedForm = tester
+            .widget<AddPropertyPricingPage>(find.byType(AddPropertyPricingPage))
+            .form;
+        expect(savedForm.videoUrl, 'https://example.com/tour.mp4');
+        expect(savedForm.videoFile, isNull);
+        for (final request in repository.imageRequests) {
+          expect(request.body!['name'], '');
+          expect(request.body!['description'], '');
+        }
+        for (final response in repository.imageResponses) {
+          response.complete(true);
+        }
+        await tester.pumpAndSettle();
+        expect(find.byType(AddPropertySubmittedPage), findsOneWidget);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
   testWidgets(
-    'creates a listing with blank captions and video in the same request',
+    'photos and a video are both required before continuing to pricing',
     (tester) async {
-      repository.createResponse = Completer<bool>();
-      await prepareCreateFlow(tester, addCaptions: false, addVideo: true);
-      await submitCreateFlow(tester);
-      final request = repository.createRequests.single;
-      expect(request.api, ApiConstants.createProperty);
-      expect(request.body!['main_image_name'], '');
-      expect(request.body!['main_image_description'], '');
-      expect(request.body!['video'], isA<File>());
-      expect(request.body!['video_duration'], 45);
-      repository.createResponse!.complete(true);
+      await prepareCreateFlow(tester, addCaptions: false, addVideo: false);
+      await tester.tap(find.text(LocaleKeys.ownerAddPropertyPricingTitle).last);
       await tester.pumpAndSettle();
-      expect(repository.imageRequests, hasLength(9));
-      final savedForm = tester
-          .widget<AddPropertyPricingPage>(find.byType(AddPropertyPricingPage))
+      expect(
+        tester.widget<AppScaffold>(find.byType(AppScaffold)).title,
+        LocaleKeys.ownerPropertiesPhotos,
+      );
+      final photos = tester.widget<AddPropertyPhotosPage>(
+        find.byType(AddPropertyPhotosPage),
+      );
+      expect(photos.form.isPhotosReady, isFalse);
+      expect(repository.createRequests, isEmpty);
+      photos.onVideoSelected(
+        File('${photos.photos.first.file!.parent.path}/tour.mp4'),
+        45,
+      );
+      photos.onRemovePhoto(0);
+      await tester.pumpAndSettle();
+      final form = tester
+          .widget<AddPropertyPhotosPage>(find.byType(AddPropertyPhotosPage))
           .form;
-      expect(savedForm.videoUrl, 'https://example.com/tour.mp4');
-      expect(savedForm.videoFile, isNull);
-      for (final request in repository.imageRequests) {
-        expect(request.body!['name'], '');
-        expect(request.body!['description'], '');
-      }
-      for (final response in repository.imageResponses) {
-        response.complete(true);
-      }
+      expect(form.isVideoReady, isTrue);
+      expect(form.photoCount, 9);
+      expect(form.isPhotosReady, isFalse);
+      await tester.tap(find.text(LocaleKeys.ownerAddPropertyPricingTitle).last);
       await tester.pumpAndSettle();
-      expect(find.byType(AddPropertySubmittedPage), findsOneWidget);
+      expect(
+        tester.widget<AppScaffold>(find.byType(AppScaffold)).title,
+        LocaleKeys.ownerPropertiesPhotos,
+      );
+      expect(repository.createRequests, isEmpty);
       expect(tester.takeException(), isNull);
     },
   );
@@ -552,15 +668,15 @@ void main() {
     final Map<String, dynamic> body = form.toJson();
 
     expect(form.isBasicsReady, isTrue);
-    expect(form.isPhotosReady, isTrue);
+    expect(form.isPhotosReady, isFalse);
     expect(form.isPricingReady, isTrue);
     expect(body['property_type'], 'studio');
     expect(body['price_period'], 'monthly');
     expect(body['governorate'], 'cairo-governorate-id');
     expect(body['city'], 'nasr-city-id');
     expect(body['district'], 'شارع النصر');
-    expect(body['latitude'], 30.0444);
-    expect(body['longitude'], 31.2357);
+    expect(body['latitude'], '30.044400');
+    expect(body['longitude'], '31.235700');
     expect(body['suitable_for'], 'singles');
     expect(body['main_image'], same(photos.first));
     expect(body, isNot(contains('images')));
@@ -574,7 +690,10 @@ void main() {
       unorderedEquals(['wifi', 'garage']),
     );
     expect(OwnerAddPropertyContent.maxPhotoCount, 25);
-    expect(OwnerAddPropertyContent.rentalUnitOptions, isNot(contains('أسبوع')));
+    expect(
+      OwnerAddPropertyContent.rentalUnitOptions,
+      contains(LocaleKeys.ownerAddPropertyWeek),
+    );
   });
 
   test('accepts blank optional metadata for every newly selected photo', () {
@@ -584,7 +703,10 @@ void main() {
           OwnerPropertyPhotoDraft(file: File('/tmp/new-photo-$index.jpg')),
     );
     final OwnerAddPropertyFormState form = OwnerAddPropertyFormState.initial()
-        .copyWith(photoDrafts: incomplete);
+        .copyWith(
+          photoDrafts: incomplete,
+          videoUrl: 'https://example.com/tour.mp4',
+        );
 
     expect(form.isPhotosReady, isTrue);
     expect(
@@ -624,6 +746,8 @@ void main() {
       expect(seed.smokingAllowed, isFalse);
       expect(seed.ownershipProofUrl, property.ownershipProof);
       expect(seed.videoUrl, property.video);
+      expect(seed.unsupportedAmenities, {'swimming_pool'});
+      expect(seed.isPricingReady, isFalse);
       final photos = List<OwnerPropertyPhotoDraft>.of(seed.photoDrafts);
       photos[1] = photos[1].copyWith(name: '', description: '');
       photos.insert(0, photos.removeAt(1));
@@ -636,7 +760,7 @@ void main() {
         clearSmokingAllowed: true,
       );
       final body = form.toJson(isEditing: true);
-      expect(form.isPhotosReady, isTrue);
+      expect(form.isPhotosReady, isFalse);
       expect(body['main_image_id'], 'image-0');
       expect(body, isNot(contains('main_image')));
       expect(jsonDecode(body['retained_image_ids'] as String), [
@@ -670,9 +794,10 @@ void main() {
 
   testWidgets('goes from photos to documented pricing fields', (tester) async {
     configurePhoneViewport(tester);
-    final PropertyDetailsModel property = PropertyDetailsModel.fromJson(
-      repository._propertyDetailsJson('video-flow-property'),
-    );
+    final PropertyDetailsModel property = PropertyDetailsModel.fromJson({
+      ...repository._propertyDetailsJson('video-flow-property'),
+      'amenities': ['wifi', 'swimming_pool'],
+    });
 
     await tester.pumpWidget(
       buildScreen(OwnerPropertyFlowScreen(property: property)),
@@ -688,6 +813,46 @@ void main() {
     expect(tester.takeException(), isNull);
 
     expect(find.byType(AddPropertyPricingPage), findsOneWidget);
+    expect(
+      tester
+          .widget<AddPropertyPricingPage>(find.byType(AddPropertyPricingPage))
+          .form
+          .isPricingReady,
+      isFalse,
+    );
+    final unavailableAmenity = find.text('Swimming pool');
+    await tester.tap(find.text(LocaleKeys.ownerPropertyReviewAction));
+    await tester.pump();
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
+    expect(find.text(LocaleKeys.ownerAddPropertyAmenities), findsNWidgets(2));
+    expect(find.byType(PropertyReviewSheet), findsNothing);
+    await tester.ensureVisible(unavailableAmenity);
+    await tester.tap(unavailableAmenity);
+    await tester.pumpAndSettle();
+    final updated = tester
+        .widget<AddPropertyPricingPage>(find.byType(AddPropertyPricingPage))
+        .form;
+    expect(updated.unsupportedAmenities, isEmpty);
+    expect(updated.isPricingReady, isTrue);
+    expect(find.text('Swimming pool'), findsNothing);
+    expect(
+      find.text(LocaleKeys.ownerAddPropertyFemaleStudents),
+      findsOneWidget,
+    );
+    final periods = tester.widget<DropdownButton<TenantFilterOption>>(
+      find.byType(DropdownButton<TenantFilterOption>),
+    );
+    expect(periods.items!.map((item) => item.value!.value), [
+      'daily',
+      'weekly',
+      'monthly',
+      'yearly',
+    ]);
+    expect(
+      find.text('${LocaleKeys.ownerAddPropertyMinimumRentalMonths} *'),
+      findsOneWidget,
+    );
     expect(find.text(LocaleKeys.ownerAddPropertyDeposit), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
@@ -772,7 +937,6 @@ void main() {
 
     await submitEditFlow(tester);
     expect(find.byType(OwnerPropertiesScreen), findsOneWidget);
-    expect(find.text('تم حفظ تعديلات العقار'), findsOneWidget);
     expect(repository.updateRequestCount, 1);
     expect(repository.lastUpdateBody?['governorate'], 'cairo-governorate-id');
     expect(repository.lastUpdateBody?['city'], 'cairo-city-id');
@@ -824,7 +988,6 @@ void main() {
 
     expect(find.byType(OwnerPropertiesScreen), findsOneWidget);
     expect(find.text('قيد المراجعة'), findsOneWidget);
-    expect(find.text('تمت إعادة إرسال العقار للمراجعة'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -836,6 +999,7 @@ void main() {
         'video': 'https://example.com/old-tour.mp4',
         'video_duration': 35,
       };
+      repository.saveResponseOverrides = {'title': 'Server-normalized listing'};
       final property = ownerPropertiesFixture().first;
       await tester.pumpWidget(
         buildScreen(OwnerPropertiesScreen(initialProperties: [property])),
@@ -848,6 +1012,8 @@ void main() {
       );
       basics.streetController.text = 'Updated street';
       basics.onStreetChanged('Updated street');
+      basics.floorController.clear();
+      basics.onFloorChanged('');
       basics.onLocationSelected(
         const PropertyLocation(latitude: 30.0444, longitude: 31.2357),
       );
@@ -874,8 +1040,10 @@ void main() {
         tester
             .widget<AddPropertyPhotosPage>(find.byType(AddPropertyPhotosPage))
             .isReady,
-        isTrue,
+        isFalse,
       );
+      photos.onVideoSelected(File('/tmp/replacement-tour.mp4'), 45);
+      await tester.pump();
       await tester.tap(find.text(LocaleKeys.ownerAddPropertyPricingTitle).last);
       await tester.pumpAndSettle();
       final pricing = tester.widget<AddPropertyPricingPage>(
@@ -887,6 +1055,7 @@ void main() {
           neighborhood: 'New district',
           buildingYear: '2018',
           deposit: '5000',
+          areaDescription: '120 m² of usable space',
           clearSmokingAllowed: true,
           clearOwnershipProof: true,
           removeOwnershipProof: true,
@@ -910,17 +1079,23 @@ void main() {
         'description': 'Overlooks the garden',
       });
       expect(body['street'], 'Updated street');
+      expect(body['floor'], '');
+      expect(body['area'], 120);
+      expect(body['space'], '120 m² of usable space');
       expect(body['district'], 'New district');
       expect(body['country'], 'Egypt');
       expect(body['building_year'], '2018');
       expect(body['deposit'], '5000');
       expect(body['smoking_allowed'], '');
-      expect(body['remove_video'], isTrue);
+      expect(body.containsKey('remove_video'), isFalse);
+      expect(body['video'], isA<File>());
+      expect(body['video_duration'], 45);
       expect(body['remove_ownership_proof'], isTrue);
       await tester.tap(find.text(LocaleKeys.ownerPropertyEditReviewDone));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));
       expect(find.text(LocaleKeys.ownerPropertyStatusPending), findsOneWidget);
+      expect(find.text('Server-normalized listing'), findsOneWidget);
       expect(tester.takeException(), isNull);
     },
   );
@@ -974,15 +1149,25 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(OwnerPropertyDeleteSheet), findsOneWidget);
       expect(find.byKey(ValueKey(property.id)), findsOneWidget);
+      expect(
+        find.text(
+          'Cannot delete property with active or upcoming visit requests.',
+        ),
+        findsOneWidget,
+      );
 
       await tester.tap(find.text(LocaleKeys.ownerPropertiesDelete));
       await tester.pump();
       expect(repository.deleteRequests, hasLength(2));
       repository.deleteResponses.last.complete(true);
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
       expect(find.byType(OwnerPropertyDeleteSheet), findsNothing);
       expect(find.byKey(ValueKey(property.id)), findsNothing);
-      expect(find.text(LocaleKeys.ownerPropertiesDeleted), findsOneWidget);
+      expect(find.text('Server deleted the property'), findsOneWidget);
+      toastification.dismissAll(delayForAnimation: false);
+      await tester.pump(const Duration(seconds: 1));
       expect(tester.takeException(), isNull);
     },
   );
@@ -1016,6 +1201,7 @@ class _OwnerPropertiesRepository implements BaseRepository {
   final List<CrudBaseParmas> deleteRequests = [];
   final List<Completer<bool>> deleteResponses = [];
   Map<String, dynamic> detailsOverrides = {};
+  Map<String, dynamic> saveResponseOverrides = {};
 
   @override
   Future<Result<BaseModel<T>, Failure>> crudCall<T>(
@@ -1030,6 +1216,8 @@ class _OwnerPropertiesRepository implements BaseRepository {
             'price_periods': [
               {'value': 'monthly', 'label': 'شهر'},
               {'value': 'daily', 'label': 'يوم'},
+              {'value': 'weekly', 'label': 'أسبوع'},
+              {'value': 'yearly', 'label': 'سنة'},
             ],
             'suitable_for': [
               {'value': 'families', 'label': 'عائلات'},
@@ -1041,6 +1229,7 @@ class _OwnerPropertiesRepository implements BaseRepository {
                 'label': 'واي فاي',
                 'query_parameter': 'has_wifi',
               },
+              {'value': 'swimming_pool', 'label': 'Swimming pool'},
             ],
           }),
         ),
@@ -1069,18 +1258,13 @@ class _OwnerPropertiesRepository implements BaseRepository {
         BaseModel(
           key: '',
           msg: '',
-          data: params.mapper!({
-            'id': 'created-property',
-            'main_image': 'https://example.com/cover.jpg',
-            'main_image_id': 'created-cover',
-            'main_image_name': params.body!['main_image_name'],
-            'main_image_description': params.body!['main_image_description'],
-            'status': 'under_review',
-            if (params.body!.containsKey('video')) ...{
-              'video': 'https://example.com/tour.mp4',
-              'video_duration': params.body!['video_duration'],
-            },
-          }),
+          data: params.mapper!(
+            _savedPropertyJson(
+              'created-property',
+              params.body!,
+              isCreating: true,
+            ),
+          ),
         ),
       );
     }
@@ -1112,10 +1296,21 @@ class _OwnerPropertiesRepository implements BaseRepository {
       final response = Completer<bool>();
       deleteResponses.add(response);
       if (!await response.future) {
-        return const Error(ServerFailure('Deletion failed'));
+        return const Error(
+          ServerFailure(
+            'Cannot delete property with active or upcoming visit requests.',
+          ),
+        );
       }
       return Success(
-        BaseModel<T>(key: '', msg: '', data: params.mapper!({'deleted': true})),
+        BaseModel<T>(
+          key: '',
+          msg: 'Server deleted the property',
+          data: params.mapper!({
+            'id': params.api.split('/')[1],
+            'deleted': true,
+          }),
+        ),
       );
     }
     final List<String> pathSegments = params.api
@@ -1131,14 +1326,26 @@ class _OwnerPropertiesRepository implements BaseRepository {
       updateRequestCount++;
       lastUpdateBody = params.body;
     }
-    final T data = params.mapper!(_propertyDetailsJson(propertyId));
-    return Success(BaseModel<T>(key: '', msg: '', data: data));
+    final T data = params.mapper!(
+      params.httpRequestType == HttpRequestType.patch
+          ? _savedPropertyJson(propertyId, params.body!)
+          : _propertyDetailsJson(propertyId),
+    );
+    return Success(
+      BaseModel<T>(
+        key: '',
+        msg: params.httpRequestType == HttpRequestType.patch
+            ? 'Server saved the property changes'
+            : '',
+        data: data,
+      ),
+    );
   }
 
   Map<String, dynamic> _propertyDetailsJson(String propertyId) {
     return {
       'id': propertyId,
-      'owner': 'owner-id',
+      'owner': {'id': 'owner-id', 'full_name': 'Ahmed', 'avatar': ''},
       'main_image': 'https://example.com/main.jpg',
       'main_image_id': 'cover-id',
       'title': 'شقة مفروشة — مدينة نصر',
@@ -1153,7 +1360,7 @@ class _OwnerPropertiesRepository implements BaseRepository {
       'space': '120',
       'floor': 3,
       'rental_period': 6,
-      'suitable_for': 'individuals',
+      'suitable_for': 'singles',
       'smoking_allowed': false,
       'country': 'Egypt',
       'city': {
@@ -1168,22 +1375,123 @@ class _OwnerPropertiesRepository implements BaseRepository {
       'building_year': 2020,
       'deposit': 'one_month',
       'ownership_proof': 'https://example.com/ownership-proof.jpg',
+      'video': 'https://example.com/tour.mp4',
+      'video_duration': 45,
       'latitude': '30.0444',
       'longitude': '31.2357',
       'amenities': ['wifi', 'garage'],
-      'images': List<Map<String, dynamic>>.generate(
-        9,
-        (index) => {
-          'id': 'image-$index',
-          'image': 'https://example.com/property-$index.jpg',
-          'name': 'image-$index',
+      'images': [
+        {
+          'id': 'cover-id',
+          'image': 'https://example.com/main.jpg',
+          'name': '',
           'description': '',
-          'created_at': '',
-          'updated_at': '',
         },
-      ),
+        ...List<Map<String, dynamic>>.generate(
+          9,
+          (index) => {
+            'id': 'image-$index',
+            'image': 'https://example.com/property-$index.jpg',
+            'name': 'image-$index',
+            'description': '',
+            'created_at': '',
+            'updated_at': '',
+          },
+        ),
+      ],
       ...detailsOverrides,
     };
+  }
+
+  Map<String, dynamic> _savedPropertyJson(
+    String propertyId,
+    Map<String, dynamic> body, {
+    bool isCreating = false,
+  }) {
+    final json = _propertyDetailsJson(propertyId);
+    for (final field in [
+      'title',
+      'description',
+      'price_period',
+      'property_type',
+      'is_furnished',
+      'bedrooms',
+      'bathrooms',
+      'area',
+      'space',
+      'rental_period',
+      'suitable_for',
+      'country',
+      'district',
+      'street',
+      'latitude',
+      'longitude',
+      'deposit',
+    ]) {
+      if (body.containsKey(field)) json[field] = body[field];
+    }
+    json['price'] = double.parse(body['price'] as String).toStringAsFixed(2);
+    for (final field in ['floor', 'building_year', 'smoking_allowed']) {
+      json[field] = body[field] == '' ? null : body[field];
+    }
+    json['amenities'] = jsonDecode(body['amenities'] as String);
+    json['status'] = 'under_review';
+    json['is_verified'] = false;
+    json['updated_at'] = '2026-10-05T12:00:00+03:00';
+    final retained = isCreating
+        ? <dynamic>[]
+        : jsonDecode(body['retained_image_ids'] as String) as List;
+    final metadata = isCreating
+        ? <dynamic>[]
+        : jsonDecode(body['images_metadata'] as String) as List;
+    final images = <Map<String, dynamic>>[
+      for (final id in retained)
+        {
+          ...(json['images'] as List).cast<Map<String, dynamic>>().firstWhere(
+            (image) => image['id'] == id,
+          ),
+          ...metadata.cast<Map<String, dynamic>>().firstWhere(
+            (image) => image['id'] == id,
+          ),
+        },
+    ];
+    if (body['main_image'] is File) {
+      images.insert(0, {
+        'id': isCreating ? 'created-cover' : 'replaced-cover',
+        'image': 'https://example.com/cover.jpg',
+        'name': body['main_image_name'],
+        'description': body['main_image_description'],
+      });
+    } else {
+      final index = images.indexWhere(
+        (image) => image['id'] == body['main_image_id'],
+      );
+      images.insert(0, images.removeAt(index));
+      images.first.addAll({
+        'name': body['main_image_name'],
+        'description': body['main_image_description'],
+      });
+    }
+    json.addAll({
+      'main_image_id': images.first['id'],
+      'main_image': images.first['image'],
+      'main_image_name': images.first['name'],
+      'main_image_description': images.first['description'],
+      'images': images,
+    });
+    if (isCreating || body['remove_video'] == true) {
+      json['video'] = null;
+      json['video_duration'] = null;
+    }
+    if (body['video'] is File) {
+      json['video'] = 'https://example.com/tour.mp4';
+      json['video_duration'] = body['video_duration'];
+    }
+    if (isCreating || body['remove_ownership_proof'] == true) {
+      json['ownership_proof'] = null;
+      json['is_ownership_verified'] = false;
+    }
+    return {...json, ...saveResponseOverrides};
   }
 
   @override
@@ -1262,6 +1570,13 @@ class _OwnerPropertiesAssetLoader extends AssetLoader {
       'owner_add_property_bathrooms': 'عدد الحمامات',
       'owner_add_property_space': 'المساحة (م²)',
       'owner_add_property_floor': 'الدور',
+      'owner_add_property_floor_hint': 'اختياري: 0 للأرضي، و-1 للبدروم',
+      'owner_add_property_area_description': 'وصف المساحة',
+      'owner_add_property_minimum_rental_months': 'أقل مدة إيجار (بالشهور)',
+      'owner_add_property_price_period': 'فترة السعر',
+      'owner_add_property_price_summary': '{price} ج.م / {unit}',
+      'owner_add_property_students': 'طلاب',
+      'owner_add_property_female_students': 'طالبات',
       'owner_add_property_building_year': 'سنة البناء',
       'owner_add_property_details': 'تفاصيل العقار',
       'owner_add_property_map_title': 'موقع العقار على الخريطة',
@@ -1327,7 +1642,7 @@ class _OwnerPropertiesAssetLoader extends AssetLoader {
       'owner_add_property_rental_period': 'فترة التأجير',
       'owner_add_property_count': 'العدد',
       'owner_add_property_unit': 'الوحدة',
-      'owner_add_property_rental_summary': 'فترة التأجير: {count} {unit}',
+      'owner_add_property_rental_summary': 'أقل مدة إيجار: {count} شهور',
       'owner_add_property_description': 'وصف العقار',
       'owner_add_property_description_label': 'الوصف',
       'owner_add_property_description_hint': 'اكتب وصفاً جذاباً للعقار…',

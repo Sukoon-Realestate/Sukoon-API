@@ -7,7 +7,6 @@ import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/shared/base_state.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/custom_loading.dart';
-import 'package:melos_core/core/widgets/toast_messages/custom_messages.dart';
 import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 
 import '../../../../../shared/permissions/data/enums/device_permission.dart';
@@ -48,7 +47,10 @@ class _UseCurrentLocationButtonState extends State<UseCurrentLocationButton> {
           return;
         }
         if (!await source.openLocationSettings() && mounted) {
-          Messages.showToast(status: BaseStatus.error, msg: LocaleKeys.permissionSettingsUnavailable);
+          Messages.showToast(
+            status: BaseStatus.error,
+            msg: LocaleKeys.permissionSettingsUnavailable,
+          );
         }
         return;
       }
@@ -64,7 +66,10 @@ class _UseCurrentLocationButtonState extends State<UseCurrentLocationButton> {
       widget.onAreaResolved(area);
     } catch (_) {
       if (mounted && ModalRoute.of(context)?.isCurrent == true) {
-        Messages.showToast(status: BaseStatus.error, msg: LocaleKeys.currentLocationUnavailable);
+        Messages.showToast(
+          status: BaseStatus.error,
+          msg: LocaleKeys.currentLocationUnavailable,
+        );
       }
     } finally {
       if (mounted) _isLocating.value = false;

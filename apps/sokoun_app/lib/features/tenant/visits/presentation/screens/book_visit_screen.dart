@@ -124,6 +124,7 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
         _submitted = true;
         Go.off(
           VisitConfirmedScreen(
+            message: _bookVisitCubit.state.msg ?? '',
             property: _property,
             selectedDay: selectedDay,
             selectedTime: selectedTime,

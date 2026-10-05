@@ -9,10 +9,12 @@ class SearchRefreshNotice extends StatelessWidget {
   const SearchRefreshNotice({
     super.key,
     required this.isLoading,
+    this.errorMessage,
     required this.onRetry,
   });
 
   final bool isLoading;
+  final String? errorMessage;
   final VoidCallback onRetry;
 
   @override
@@ -27,7 +29,7 @@ class SearchRefreshNotice extends StatelessWidget {
           AppText(
             isLoading
                 ? LocaleKeys.searchUpdatingPreviousResults
-                : LocaleKeys.searchRefreshFailed,
+                : errorMessage ?? '',
             style: AppTextStyles.regular13.copyWith(
               color: AppColors.sokoonGray,
             ),

@@ -9,6 +9,8 @@ import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/helpers/helpers.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/shared/base_state.dart';
+import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 
 import 'share_action_row.dart';
 
@@ -28,25 +30,19 @@ class TenantPropertyShareSheet extends StatelessWidget {
       );
     } catch (_) {
       if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(LocaleKeys.operationFaild)));
+        Messages.showToast(
+          msg: LocaleKeys.operationFaild,
+          status: BaseStatus.error,
+        );
       }
     }
   }
 
   Future<void> _copyLink(BuildContext context) async {
-    final ScaffoldMessengerState messenger = ScaffoldMessenger.of(context);
     await Clipboard.setData(ClipboardData(text: shareUrl));
+    if (!context.mounted) return;
     Go.back();
-    messenger.showSnackBar(
-      SnackBar(
-        content: Text(
-          LocaleKeys.tenantPropertyDetailsLinkCopied,
-          style: AppTextStyles.base,
-        ),
-      ),
-    );
+    Messages.showToast(msg: LocaleKeys.tenantPropertyDetailsLinkCopied);
   }
 
   @override

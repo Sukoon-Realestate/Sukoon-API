@@ -27,17 +27,27 @@ class Validators {
 
   static TextEditingValue formatLocalizedDigits(
     TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
+    TextEditingValue newValue, {
+    bool allowNegative = false,
+    bool allowDecimal = false,
+  }) {
     final TextEditingValue normalized = newValue.copyWith(
       text: String.fromCharCodes(
         newValue.text.runes.map((rune) {
           if (rune >= 0x0660 && rune <= 0x0669) return rune - 0x0660 + 0x30;
           if (rune >= 0x06f0 && rune <= 0x06f9) return rune - 0x06f0 + 0x30;
+          if (allowDecimal && rune == 0x066b) return 0x2e;
           return rune;
         }),
       ),
     );
+    if (allowNegative || allowDecimal) {
+      final String sign = allowNegative ? '-?' : '';
+      final String decimal = allowDecimal ? r'(\.[0-9]*)?' : '';
+      return RegExp('^$sign[0-9]*$decimal\$').hasMatch(normalized.text)
+          ? normalized
+          : oldValue;
+    }
     return asciiDigitsOnly.formatEditUpdate(oldValue, normalized);
   }
 
@@ -319,6 +329,8 @@ class Validators {
   }
 
   static bool isInteger(String value) => int.tryParse(value.trim()) != null;
+  static bool isPositiveInteger(String value) =>
+      isInteger(value) && int.parse(value.trim()) > 0;
   static bool hasMinimumLength(String value, int minimum) =>
       value.trim().length >= minimum;
   static bool isValidRating(int value) => value >= 1 && value <= 5;
@@ -341,8 +353,8 @@ class Validators {
     required bool hasValidLocation,
   }) =>
       requiredFields.every(isNonBlank) &&
-      positiveNumbers.every(isPositiveNumber) &&
-      isInteger(floor) &&
+      positiveNumbers.every(isPositiveInteger) &&
+      (floor.trim().isEmpty || isInteger(floor)) &&
       hasValidLocation;
 
   static bool isValidPropertyPhotos({required int count}) =>
@@ -360,7 +372,7 @@ class Validators {
     required String description,
   }) =>
       isPositiveNumber(monthlyPrice) &&
-      isPositiveNumber(rentalDuration) &&
+      isPositiveInteger(rentalDuration) &&
       isNonBlank(rentalUnit) &&
       isNonBlank(suitableFor) &&
       hasMinimumLength(description, 10);

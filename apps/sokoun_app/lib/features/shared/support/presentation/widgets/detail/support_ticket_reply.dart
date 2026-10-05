@@ -17,6 +17,7 @@ class SupportTicketReply extends StatefulWidget {
 }
 
 class _SupportTicketReplyState extends State<SupportTicketReply> {
+  final GlobalKey _replyFieldKey = GlobalKey();
   final TextEditingController _controller = TextEditingController();
   late final SupportReplyCubit _cubit;
   @override
@@ -32,9 +33,7 @@ class _SupportTicketReplyState extends State<SupportTicketReply> {
   }
 
   Future<void> _send(BuildContext context) async {
-    if (!widget.enabled ||
-        _cubit.isLoading ||
-        _controller.text.trim().isEmpty) {
+    if (!widget.enabled || _cubit.isLoading) {
       return;
     }
     final String submittedBody = _controller.text;
@@ -46,11 +45,8 @@ class _SupportTicketReplyState extends State<SupportTicketReply> {
     );
     if (!context.mounted) return;
     if (ticket == null) {
-      if (_cubit.state.isSuccess) {
-        MessageUtils.showSnackBar(
-          LocaleKeys.supportInvalidResponse,
-          context: context,
-        );
+      if (_cubit.state.isSuccess && _cubit.state.msg?.isNotEmpty == true) {
+        Messages.showToast(msg: _cubit.state.msg!, status: BaseStatus.error);
       }
       return;
     }
@@ -58,37 +54,52 @@ class _SupportTicketReplyState extends State<SupportTicketReply> {
     widget.onTicketUpdated(ticket);
   }
 
+  List<FirstValidationErrorField> _validationFields() => [
+    FirstValidationErrorField(
+      fieldKey: _replyFieldKey,
+      title: LocaleKeys.supportReplyHint,
+      value: _controller.text,
+      validator: Validators.validateRequired,
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) => UnsavedChangesGuard(
     hasChanges: () => _controller.text.trim().isNotEmpty,
     isSaving: () => _cubit.isLoading,
-    child: SokounActionFooter(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        spacing: 10.h,
-        children: [
-          BlocBuilder<SupportReplyCubit, AsyncState<SupportTicketContent>>(
-            bloc: _cubit,
-            builder: (context, state) => DefaultTextField(
-              readOnly: !widget.enabled || state.isLoading,
-              controller: _controller,
-              title: LocaleKeys.supportReplyHint,
-              maxLength: 4000,
-              minLines: 1,
-              maxLines: 3,
-              inputType: TextInputType.multiline,
+    child: FirstValidationErrorForm(
+      validationFields: _validationFields,
+      onValid: () => _send(context),
+      builder: (context, submit) => SokounActionFooter(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 10.h,
+          children: [
+            BlocBuilder<SupportReplyCubit, AsyncState<SupportTicketContent>>(
+              bloc: _cubit,
+              builder: (context, state) => DefaultTextField(
+                key: _replyFieldKey,
+                readOnly: !widget.enabled || state.isLoading,
+                controller: _controller,
+                title: LocaleKeys.supportReplyHint,
+                maxLength: 4000,
+                minLines: 1,
+                maxLines: 3,
+                inputType: TextInputType.multiline,
+                validator: Validators.validateRequired,
+              ),
             ),
-          ),
-          widget.enabled
-              ? AppLoadingButton(
-                  asyncCall: _send,
-                  title: LocaleKeys.supportSendReply,
-                )
-              : DefaultButton(
-                  title: LocaleKeys.supportSendReply,
-                  disabled: true,
-                ),
-        ],
+            widget.enabled
+                ? AppLoadingButton(
+                    asyncCall: (_) => submit(),
+                    title: LocaleKeys.supportSendReply,
+                  )
+                : DefaultButton(
+                    title: LocaleKeys.supportSendReply,
+                    disabled: true,
+                  ),
+          ],
+        ),
       ),
     ),
   );

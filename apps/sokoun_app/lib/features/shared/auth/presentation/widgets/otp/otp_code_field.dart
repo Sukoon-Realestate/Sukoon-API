@@ -44,6 +44,7 @@ class OtpCodeField extends StatelessWidget {
       child: Pinput(
         length: Validators.otpLength,
         controller: controller,
+        validator: Validators.validateOtpCode,
         keyboardType: TextInputType.number,
         inputFormatters: [Validators.asciiDigitsOnly],
         defaultPinTheme: defaultTheme,

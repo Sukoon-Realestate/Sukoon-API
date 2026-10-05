@@ -28,12 +28,15 @@ import 'package:sokoun_app/features/shared/public_pages/presentation/widgets/pub
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/property_video.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/add_property_additional_details.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/add_property_pricing_page.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/add_property_photos_page.dart';
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/property_edit_review_sheet.dart';
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/property_photo_metadata.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/listing_information.dart';
-import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/photo_details.dart';
+import 'package:sokoun_app/features/shared/reviews/presentation/widgets/property_rating_card.dart';
+import 'helpers/home_page_test_dependencies.dart';
 
 /// Opt-in PNG export; the same fixtures are used before and after refinement.
 /// flutter test test/ui_visual_review_test.dart --dart-define=UI_REVIEW_DIR=/tmp/review
@@ -52,6 +55,23 @@ void main() {
         );
     await EasyLocalization.ensureInitialized();
     await CacheStorage.init();
+    for (final channel in [
+      const MethodChannel('dev.fluttercommunity.plus/connectivity'),
+      const MethodChannel('dev.fluttercommunity.plus/connectivity_status'),
+    ]) {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (call) async => call.method == 'check' ? ['wifi'] : null,
+          );
+    }
+    registerHomePageTestDependencies(
+      propertyFilterOptions: {
+        'amenities': [
+          {'value': 'wifi', 'label': 'Wi-Fi'},
+        ],
+      },
+    );
     final FontLoader fonts = FontLoader(ConstantManager.fontFamily);
     for (final String weight in [
       'Regular',
@@ -85,8 +105,12 @@ void main() {
         'property_video',
         'property_metadata',
         'property_terms',
+        'property_pricing',
+        'property_photos',
         'property_edit_review',
         'property_listing_information',
+        'property_rating',
+        'property_rating_empty',
       ]) {
         testWidgets('$subject $locale at $width', (tester) async {
           tester.view.physicalSize = Size(width, width > 600 ? 768 : 844);
@@ -118,7 +142,67 @@ void main() {
               ],
             }),
           );
+          final priceController = TextEditingController(text: '6500.50');
+          final rentalController = TextEditingController(text: '6');
+          final descriptionController = TextEditingController(
+            text: description,
+          );
+          addTearDown(priceController.dispose);
+          addTearDown(rentalController.dispose);
+          addTearDown(descriptionController.dispose);
           final Widget screen = switch (subject) {
+            'property_photos' => AppScaffold(
+              title: locale == 'ar' ? 'صور العقار' : 'Property photos',
+              body: AddPropertyPhotosPage(
+                form: OwnerAddPropertyFormState.initial(),
+                photos: [
+                  for (var index = 0; index < 10; index++)
+                    OwnerPropertyPhotoDraft(
+                      existingId: 'photo-$index',
+                      existingUrl: 'https://example.com/room-$index.jpg',
+                      name: caption,
+                      description: description,
+                    ),
+                ],
+                isReady: false,
+                onAddPhotos: () {},
+                onRemovePhoto: (_) {},
+                onReplacePhoto: (_) {},
+                onMainPhotoSelected: (_) {},
+                onPhotoNameChanged: (_, _) {},
+                onPhotoDescriptionChanged: (_, _) {},
+                onVideoSelected: (_, _) {},
+                onVideoRemoved: () {},
+                onVideoPreparingChanged: (_) {},
+                onNext: () {},
+              ),
+            ),
+            'property_pricing' => AppScaffold(
+              title: locale == 'ar'
+                  ? 'التسعير والوصف'
+                  : 'Pricing and description',
+              body: AddPropertyPricingPage(
+                form: OwnerAddPropertyFormState.initial().copyWith(
+                  monthlyPrice: '6500.50',
+                  rentalDuration: '6',
+                  rentalUnit: 'weekly',
+                  suitableFor: 'female_students',
+                  description: description,
+                  amenities: {'wifi'},
+                ),
+                monthlyPriceController: priceController,
+                rentalDurationController: rentalController,
+                descriptionController: descriptionController,
+                onMonthlyPriceChanged: (_) {},
+                onSuitableForSelected: (_) {},
+                onRentalDurationChanged: (_) {},
+                onRentalUnitChanged: (_) {},
+                onAmenityToggled: (_) {},
+                onDescriptionChanged: (_) {},
+                onAdditionalDetailsChanged: (_) {},
+                onNext: () {},
+              ),
+            ),
             'property_metadata' => AppScaffold(
               title: locale == 'ar' ? 'صور العقار' : 'Property photos',
               body: SingleChildScrollView(
@@ -162,12 +246,17 @@ void main() {
               title: locale == 'ar' ? 'معلومات الإعلان' : 'Listing information',
               body: SingleChildScrollView(
                 padding: const EdgeInsets.all(20),
-                child: Column(
-                  children: [
-                    TenantPropertyListingInformation(property: listing),
-                    const SizedBox(height: 16),
-                    TenantPropertyPhotoDetails(property: listing),
-                  ],
+                child: TenantPropertyListingInformation(property: listing),
+              ),
+            ),
+            'property_rating' || 'property_rating_empty' => AppScaffold(
+              title: locale == 'ar' ? 'تفاصيل العقار' : 'Property details',
+              body: SingleChildScrollView(
+                padding: const EdgeInsets.all(18),
+                child: PropertyRatingCard(
+                  propertyId: 'property',
+                  averageRating: subject == 'property_rating' ? 4.6 : null,
+                  totalReviews: subject == 'property_rating' ? 19 : 0,
                 ),
               ),
             ),

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
-import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/shared/base_state.dart';
+import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 
 import '../../../data/models/tenant_search_content.dart';
@@ -30,39 +31,25 @@ class RecentSearchesSection extends StatelessWidget {
         ? await cubit.clearRecentSearches()
         : await cubit.removeRecentSearch(search);
     if (!context.mounted) return;
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: AppText(
-            saved
-                ? LocaleKeys.searchHistoryRemoved
-                : LocaleKeys.searchHistorySaveFailed,
-            style: AppTextStyles.regular,
-          ),
-          action: saved
-              ? SnackBarAction(
-                  label: LocaleKeys.undoAction,
-                  onPressed: () async {
-                    if (cubit.isClosed) return;
-                    final restored = await cubit.restoreRecentSearches(
-                      snapshot,
-                    );
-                    if (!restored && context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: AppText(
-                            LocaleKeys.searchHistorySaveFailed,
-                            style: AppTextStyles.regular,
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                )
-              : null,
-        ),
-      );
+    Messages.showToast(
+      msg: saved
+          ? LocaleKeys.searchHistoryRemoved
+          : LocaleKeys.searchHistorySaveFailed,
+      status: saved ? BaseStatus.success : BaseStatus.error,
+      actionLabel: saved ? LocaleKeys.undoAction : null,
+      onAction: saved
+          ? () async {
+              if (!context.mounted || cubit.isClosed) return;
+              final restored = await cubit.restoreRecentSearches(snapshot);
+              if (!restored && context.mounted) {
+                Messages.showToast(
+                  msg: LocaleKeys.searchHistorySaveFailed,
+                  status: BaseStatus.error,
+                );
+              }
+            }
+          : null,
+    );
   }
 
   @override

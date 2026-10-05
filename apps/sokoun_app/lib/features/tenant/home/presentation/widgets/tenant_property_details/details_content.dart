@@ -1,5 +1,3 @@
-import 'package:melos_core/core/navigation/navigator.dart';
-import 'package:sokoun_app/features/shared/reviews/presentation/screens/property_reviews_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -9,6 +7,7 @@ import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/lancher_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:sokoun_app/features/shared/reviews/presentation/widgets/property_rating_summary.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
 
 import 'amenity_wrap.dart';
@@ -16,13 +15,12 @@ import 'info_section.dart';
 import 'metrics_grid.dart';
 import 'owner_card.dart';
 import 'ownership_verified_banner.dart';
-import 'price_and_rating.dart';
+import 'price.dart';
 import 'tag_row.dart';
 import 'property_description.dart';
 import 'property_video.dart';
 import 'rental_details.dart';
 import 'listing_information.dart';
-import 'photo_details.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_reveal.dart';
 
 class TenantPropertyDetailsContentView extends StatelessWidget {
@@ -81,14 +79,10 @@ class TenantPropertyDetailsContentView extends StatelessWidget {
             ),
           ),
           12.szH,
-          TenantPropertyPriceAndRating(property: property),
-          if (property.id.isNotEmpty)
-            TextButton.icon(
-              onPressed: () =>
-                  Go.to(PropertyReviewsScreen(propertyId: property.id)),
-              icon: const Icon(Icons.reviews_outlined),
-              label: AppText(LocaleKeys.propertyReviewsTitle),
-            ),
+          TenantPropertyPrice(
+            price: property.price,
+            periodLabel: property.pricePeriodLabel,
+          ),
           14.szH,
           TenantPropertyMetricsGrid(property: property),
           14.szH,
@@ -102,10 +96,6 @@ class TenantPropertyDetailsContentView extends StatelessWidget {
               durationSeconds: property.videoDuration,
             ),
           ],
-          if (property.imageUrls.isNotEmpty) ...[
-            14.szH,
-            TenantPropertyPhotoDetails(property: property),
-          ],
           14.szH,
           TenantPropertyInfoSection(
             title: LocaleKeys.tenantPropertyDetailsDescription,
@@ -117,6 +107,10 @@ class TenantPropertyDetailsContentView extends StatelessWidget {
             child: TenantPropertyAmenityWrap(amenities: property.amenities),
           ),
           12.szH,
+          if (property.id.isNotEmpty) ...[
+            PropertyRatingSummary(propertyId: property.id),
+            16.szH,
+          ],
           if (property.isOwnershipVerified)
             const TenantPropertyOwnershipVerifiedBanner(),
           24.szH,

@@ -6,6 +6,7 @@ class ChangePasswordCubit extends AsyncCubit<bool> {
     if (isClosed || isLoading) return false;
     bool saved = false;
     await executeAsyncWithBaseModel(
+      showMsgOnSuccess: true,
       operation: () => baseCrudUseCase.call(
         CrudBaseParmas<bool>(
           api: ApiConstants.changePassword,

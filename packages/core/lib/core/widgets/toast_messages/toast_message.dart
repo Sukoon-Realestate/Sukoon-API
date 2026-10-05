@@ -13,11 +13,25 @@ class Messages {
     required String msg,
     BaseStatus status = BaseStatus.success,
     String? title,
+    String? actionLabel,
+    VoidCallback? onAction,
     Duration autoCloseDuration = const Duration(seconds: 4),
   }) {
+    assert((actionLabel == null) == (onAction == null));
     final _ToastDesign design = _ToastDesign.fromStatus(status);
+    final Widget description = AppText(
+      msg,
+      color: AppColors.sokoonGray,
+      fontSize: 12.sp,
+      fontWeight: FontWeight.w500,
+      maxLines: 3,
+      overflow: TextOverflow.ellipsis,
+      height: 1.25,
+    );
+    late final ToastificationItem toast;
+    bool actionHandled = false;
 
-    return Toastification().show(
+    toast = Toastification().show(
       context: Go.context,
       overlayState: Go.navigatorKey.currentState?.overlay,
       alignment: Alignment.topCenter,
@@ -33,15 +47,27 @@ class Messages {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
-      description: AppText(
-        msg,
-        color: AppColors.sokoonGray,
-        fontSize: 12.sp,
-        fontWeight: FontWeight.w500,
-        maxLines: 3,
-        overflow: TextOverflow.ellipsis,
-        height: 1.25,
-      ),
+      description: onAction == null
+          ? description
+          : Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                description,
+                TextButton(
+                  onPressed: () {
+                    if (actionHandled) return;
+                    actionHandled = true;
+                    Toastification().dismiss(toast);
+                    onAction();
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: design.accentColor,
+                  ),
+                  child: AppText(actionLabel!),
+                ),
+              ],
+            ),
       icon: _ToastIcon(design: design),
       primaryColor: design.accentColor,
       backgroundColor: design.backgroundColor,
@@ -82,6 +108,7 @@ class Messages {
       pauseOnHover: true,
       showProgressBar: true,
     );
+    return toast;
   }
 }
 

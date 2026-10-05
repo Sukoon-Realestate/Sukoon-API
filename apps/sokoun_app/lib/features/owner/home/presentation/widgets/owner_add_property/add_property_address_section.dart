@@ -19,6 +19,9 @@ class AddPropertyAddressSection extends StatelessWidget {
     required this.onGovernorateChanged,
     required this.onCityChanged,
     required this.onStreetChanged,
+    this.governorateFieldKey,
+    this.cityFieldKey,
+    this.streetFieldKey,
   });
 
   final TextEditingController streetController;
@@ -28,6 +31,9 @@ class AddPropertyAddressSection extends StatelessWidget {
   final ValueChanged<OwnerPropertyLocationModel> onGovernorateChanged;
   final ValueChanged<OwnerPropertyLocationModel> onCityChanged;
   final ValueChanged<String> onStreetChanged;
+  final GlobalKey? governorateFieldKey;
+  final GlobalKey? cityFieldKey;
+  final GlobalKey? streetFieldKey;
 
   Future<List<OwnerPropertyLocationModel>> _getGovernorates(
     BuildContext context,
@@ -63,24 +69,32 @@ class AddPropertyAddressSection extends StatelessWidget {
       child: Column(
         spacing: 10.h,
         children: [
-          AppDropinity<
-            List<OwnerPropertyLocationModel>,
-            OwnerPropertyLocationModel
-          >.withApiRequest(
-            key: ValueKey('owner-property-governorate-$dropdownGeneration'),
-            listHeight: 220.h,
-            initialValue: selectedGovernorate,
-            hint: LocaleKeys.ownerAddPropertyChoose,
-            title: '${LocaleKeys.ownerAddPropertyGovernorate} *',
-            asyncCall: _getGovernorates,
-            cacheKey: OwnerPropertiesData.governoratesCacheKey,
-            cacheToJson: (item) => item.toJson(),
-            cacheFromJson: OwnerPropertyLocationModel.fromJson,
-            getLabel: (item) => item.name,
-            validator: (_) => Validators.validateRequired(selectedGovernorate),
-            onChanged: onGovernorateChanged,
+          KeyedSubtree(
+            key: governorateFieldKey,
+            child:
+                AppDropinity<
+                  List<OwnerPropertyLocationModel>,
+                  OwnerPropertyLocationModel
+                >.withApiRequest(
+                  key: ValueKey(
+                    'owner-property-governorate-$dropdownGeneration',
+                  ),
+                  listHeight: 220.h,
+                  initialValue: selectedGovernorate,
+                  hint: LocaleKeys.ownerAddPropertyChoose,
+                  title: '${LocaleKeys.ownerAddPropertyGovernorate} *',
+                  asyncCall: _getGovernorates,
+                  cacheKey: OwnerPropertiesData.governoratesCacheKey,
+                  cacheToJson: (item) => item.toJson(),
+                  cacheFromJson: OwnerPropertyLocationModel.fromJson,
+                  getLabel: (item) => item.name,
+                  validator: (_) =>
+                      Validators.validateRequired(selectedGovernorate),
+                  onChanged: onGovernorateChanged,
+                ),
           ),
           IgnorePointer(
+            key: cityFieldKey,
             ignoring: governorate == null,
             child: Opacity(
               opacity: governorate == null ? 0.55 : 1,
@@ -123,6 +137,7 @@ class AddPropertyAddressSection extends StatelessWidget {
             ),
           ),
           AddPropertyField(
+            key: streetFieldKey,
             field: AddPropertyFieldContent(
               label: LocaleKeys.propertyDistrict,
               value: LocaleKeys.propertyDistrictHint,

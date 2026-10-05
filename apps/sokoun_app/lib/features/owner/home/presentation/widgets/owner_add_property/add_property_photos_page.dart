@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/widgets/first_validation_error_form.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 
 import 'add_property_info_banner.dart';
@@ -12,8 +13,9 @@ import 'property_photo_grid.dart';
 import 'property_photo_metadata.dart';
 import 'property_photo_tips.dart';
 import 'property_video_picker.dart';
+import 'property_form_validation.dart';
 
-class AddPropertyPhotosPage extends StatelessWidget {
+class AddPropertyPhotosPage extends StatefulWidget {
   const AddPropertyPhotosPage({
     super.key,
     required this.photos,
@@ -46,65 +48,106 @@ class AddPropertyPhotosPage extends StatelessWidget {
   final ValueChanged<bool> onVideoPreparingChanged;
 
   @override
+  State<AddPropertyPhotosPage> createState() => _AddPropertyPhotosPageState();
+}
+
+class _AddPropertyPhotosPageState extends State<AddPropertyPhotosPage> {
+  final GlobalKey _photosFieldKey = GlobalKey();
+  final GlobalKey _videoFieldKey = GlobalKey();
+
+  String get _photosError =>
+      LocaleKeys.ownerAddPropertyPhotosRemaining.replaceAll(
+        '{count}',
+        '${OwnerAddPropertyContent.minimumPhotoCount - widget.photos.length}',
+      );
+
+  List<FirstValidationErrorField> _validationFields() => [
+    FirstValidationErrorField(
+      fieldKey: _videoFieldKey,
+      title: LocaleKeys.ownerPropertyVideoTitle,
+      value: widget.form.hasVideo ? 'selected' : null,
+      validator: (_) => PropertyFormValidation.video(widget.form),
+    ),
+    FirstValidationErrorField(
+      fieldKey: _photosFieldKey,
+      title: LocaleKeys.ownerPropertiesPhotos,
+      value: '${widget.photos.length}',
+      validator: (_) =>
+          widget.photos.length >= OwnerAddPropertyContent.minimumPhotoCount
+          ? null
+          : _photosError,
+    ),
+  ];
+
+  @override
   Widget build(BuildContext context) {
     final int remaining =
-        OwnerAddPropertyContent.minimumPhotoCount - photos.length;
+        OwnerAddPropertyContent.minimumPhotoCount - widget.photos.length;
     final bool hasEnoughPhotos = remaining <= 0;
 
     return AddPropertyStepShell(
+      validationFields: _validationFields,
       activeSegments: 2,
       segmentCount: 3,
       progressSubtitle: LocaleKeys.ownerAddPropertyPhotosProgress,
       primaryLabel: LocaleKeys.ownerAddPropertyPricingTitle,
-      onPrimaryTap: form.isVideoPreparing ? null : onNext,
+      onPrimaryTap: widget.form.isVideoPreparing ? null : widget.onNext,
       children: [
         AddPropertyInfoBanner(
-          title: isReady ? LocaleKeys.ownerAddPropertyPhotosReady : null,
-          text: isReady
+          title: widget.isReady ? LocaleKeys.ownerAddPropertyPhotosReady : null,
+          text: widget.isReady
               ? LocaleKeys.ownerAddPropertyPhotosReadyDescription
               : hasEnoughPhotos
-              ? LocaleKeys.ownerAddPropertyPhotoMetadataRecommended
+              ? PropertyFormValidation.video(widget.form) ??
+                    LocaleKeys.ownerAddPropertyPhotoMetadataRecommended
               : LocaleKeys.ownerAddPropertyPhotosRemaining.replaceAll(
                   '{count}',
                   '$remaining',
                 ),
-          backgroundColor: isReady ? AppColors.greenPale : AppColors.orangePale,
-          borderColor: isReady ? AppColors.greenAlpha19 : AppColors.goldAlpha15,
-          iconColor: isReady ? AppColors.green : AppColors.brown,
-          textColor: isReady ? AppColors.sokoonNavy : AppColors.brown,
-          icon: isReady
+          backgroundColor: widget.isReady
+              ? AppColors.greenPale
+              : AppColors.orangePale,
+          borderColor: widget.isReady
+              ? AppColors.greenAlpha19
+              : AppColors.goldAlpha15,
+          iconColor: widget.isReady ? AppColors.green : AppColors.brown,
+          textColor: widget.isReady ? AppColors.sokoonNavy : AppColors.brown,
+          icon: widget.isReady
               ? Icons.check_circle_outline_rounded
               : Icons.warning_amber_rounded,
         ),
         PropertySelectionField(
-          isValid: hasEnoughPhotos,
-          message: LocaleKeys.ownerAddPropertyPhotosRemaining.replaceAll(
-            '{count}',
-            '$remaining',
-          ),
-          child: PhotoGridSection(
-            photos: photos,
-            onAddPhotos: onAddPhotos,
-            onRemovePhoto: onRemovePhoto,
-            onReplacePhoto: onReplacePhoto,
-            onMainPhotoSelected: onMainPhotoSelected,
+          key: _videoFieldKey,
+          isValid: widget.form.isVideoReady,
+          message: PropertyFormValidation.video(widget.form),
+          child: PropertyVideoPicker(
+            file: widget.form.videoFile,
+            existingUrl: widget.form.videoUrl,
+            durationSeconds: widget.form.videoDuration,
+            onVideoSelected: widget.onVideoSelected,
+            onVideoRemoved: widget.onVideoRemoved,
+            onPreparingChanged: widget.onVideoPreparingChanged,
           ),
         ),
-        if (photos.isNotEmpty)
+        PropertySelectionField(
+          key: _photosFieldKey,
+          isValid: hasEnoughPhotos,
+          message: _photosError,
+          child: PhotoGridSection(
+            photos: widget.photos,
+            onAddPhotos: widget.onAddPhotos,
+            onRemovePhoto: widget.onRemovePhoto,
+            onReplacePhoto: widget.onReplacePhoto,
+            onMainPhotoSelected: widget.onMainPhotoSelected,
+          ),
+        ),
+        if (widget.photos.isNotEmpty)
           PhotoMetadataSection(
-            photos: photos,
-            onPhotoNameChanged: onPhotoNameChanged,
-            onPhotoDescriptionChanged: onPhotoDescriptionChanged,
+            photos: widget.photos,
+            onPhotoNameChanged: widget.onPhotoNameChanged,
+            onPhotoDescriptionChanged: widget.onPhotoDescriptionChanged,
           ),
         const PhotoTipsSection(),
-        PropertyVideoPicker(
-          file: form.videoFile,
-          existingUrl: form.videoUrl,
-          durationSeconds: form.videoDuration,
-          onVideoSelected: onVideoSelected,
-          onVideoRemoved: onVideoRemoved,
-          onPreparingChanged: onVideoPreparingChanged,
-        ),
       ],
     );
   }

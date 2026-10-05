@@ -2,7 +2,9 @@
 
 Date: 2026-10-05.
 
-The Flutter client is wired to the contracts below. New fields and the delete route are **proposed server changes**, not evidence that they are deployed. This repository contains the mobile app and checked-in API examples (`collection.json`), but no backend server implementation. Implement these changes in the backend repository, then update the authoritative API collection with real responses.
+The backend supplied [MOBILE_PROPERTY_MEDIA_EDITING_DELETION_HANDOFF.md](../MOBILE_PROPERTY_MEDIA_EDITING_DELETION_HANDOFF.md). The Flutter client now follows that returned contract. The sections below record the original proposal; where they differ, use the backend's handoff. Live deployment is not verified in this repository.
+
+The returned contract defines a nullable signed floor, a minimum rental period in months independent of the price period, and tenant types `families`, `singles`, `students`, `female_students`, and `all`. Images include the cover first with its stable ID. Create/edit responses are complete property snapshots, and deletion succeeds only when `data.id` identifies the requested property and `data.deleted` is `true`; active visits or leases produce HTTP 409.
 
 ## Routes
 
@@ -54,7 +56,7 @@ The client requires 10–25 photos to submit. Property saving happens before add
 
 ## Video in the existing property endpoint
 
-The app selects or records one optional video. It validates duration from the selected file: 1–60 seconds. Accept it on `POST properties/create/` and `PATCH properties/{property_id}/`, alongside the other property fields; do not require a separate video endpoint.
+The app requires 10–25 photos and one selected or existing video before creating or resubmitting a property. It validates duration from a newly selected file: 1–60 seconds. Accept video on `POST properties/create/` and `PATCH properties/{property_id}/`, alongside the other property fields; do not require a separate video endpoint. On PATCH, omitting the video upload preserves an existing video. Removing a video in the app requires selecting a replacement before submitting.
 
 | Multipart field | Semantics |
 | --- | --- |
@@ -78,7 +80,7 @@ Use multipart parsers on both POST and PATCH. Form fields arrive as strings; nor
 | `rental_period`, `suitable_for` | Rental duration and intended residents from filter options. |
 | `governorate`, `city` | Region IDs; validate that the city belongs to the selected governorate. |
 | `district`, `street`, `country` | Neighborhood, street, and country; keep neighborhood and street separate in responses. |
-| `latitude`, `longitude` | Selected valid geographic coordinates. |
+| `latitude`, `longitude` | Selected valid geographic coordinates, sent as decimal strings rounded to exactly six places (for example `"30.044400"`, `"31.235700"`). |
 | `building_year` | Optional integer (client supports 1800 through the current year); blank clears it. |
 | `deposit` | Optional non-negative EGP amount, or existing choices `none`, `half_month`, `one_month`, `two_months`; blank clears it. Return the persisted value. |
 | `smoking_allowed` | `true`, `false`, or blank to clear to `null`. |

@@ -13,6 +13,14 @@ import 'package:sokoun_app/features/tenant/favorites/presentation/widgets/favori
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_search_results/empty_results_state.dart';
 
 import 'helpers/home_page_test_dependencies.dart';
+import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
+import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
+import 'package:melos_core/core/error/failure.dart';
+import 'package:multiple_result/multiple_result.dart';
+import 'package:pagify/helpers/data_and_pagination_data.dart';
+import 'package:sokoun_app/features/tenant/favorites/data/favorites_data.dart';
+import 'package:sokoun_app/features/tenant/favorites/data/models/saved_properties_response.dart';
+import 'package:toastification/toastification.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -45,6 +53,7 @@ void main() {
   });
 
   setUp(() async {
+    toastification.managers.clear();
     await injector.reset();
     registerHomePageTestDependencies();
   });
@@ -131,6 +140,89 @@ void main() {
     await tester.tap(find.text('إعادة ضبط البحث والفلاتر'));
     expect(resetSearch, isTrue);
   });
+
+  for (final message in ['Server removed the saved property', '']) {
+    testWidgets(
+      'API favorites removal preserves its message and Undo: $message',
+      (tester) async {
+        final repository = _FavoritesMutationRepository(message);
+        await injector.unregister<BaseCrudUseCase>();
+        injector.registerSingleton<BaseCrudUseCase>(
+          BaseCrudUseCase(repository: repository),
+        );
+        injector.registerSingleton<FavoritesDataSource>(
+          const _FavoritesSource(),
+        );
+        await tester.pumpWidget(buildScreen());
+        await tester.pumpAndSettle();
+        expect(find.byType(FavoritePropertyCard), findsOneWidget);
+
+        await tester.tap(find.bySemanticsLabel('إزالة من المحفوظات'));
+        await tester.pump();
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+        if (message.isNotEmpty) expect(find.text(message), findsOneWidget);
+        expect(find.text('تمت إزالة العقار من المحفوظات'), findsNothing);
+        expect(find.byType(FavoritePropertyCard), findsNothing);
+        expect(
+          repository.requests.single.httpRequestType,
+          HttpRequestType.delete,
+        );
+
+        await tester.tap(find.text('تراجع'));
+        await tester.pumpAndSettle();
+        expect(find.byType(FavoritePropertyCard), findsOneWidget);
+        expect(repository.requests.last.httpRequestType, HttpRequestType.post);
+        expect(find.byType(SnackBar), findsNothing);
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+}
+
+class _FavoritesMutationRepository implements BaseRepository {
+  _FavoritesMutationRepository(this.message);
+  final String message;
+  final List<CrudBaseParmas> requests = [];
+
+  @override
+  Future<Result<BaseModel<T>, Failure>> crudCall<T>(
+    CrudBaseParmas<T> params,
+  ) async {
+    requests.add(params);
+    return Success(
+      BaseModel<T>(key: 'success', msg: message, data: params.mapper!({})),
+    );
+  }
+
+  @override
+  Future<Result<List<T>, Failure>> getBaseIdAndNameEntity<T extends BaseEntity>(
+    GetBaseEntityParams? param,
+  ) => throw UnimplementedError();
+}
+
+class _FavoritesSource implements FavoritesDataSource {
+  const _FavoritesSource();
+  @override
+  String get cacheKey => 'test_api_favorites';
+
+  @override
+  Future<SavedPropertiesResponse> getSavedProperties({
+    required int page,
+  }) async => SavedPropertiesResponse(
+    count: 1,
+    perPage: 9,
+    totalPages: 1,
+    results: [FavoritesFixtures.initialItems.first],
+  );
+
+  @override
+  Future<(SavedPropertiesResponse, PaginationData)> getSavedPropertiesPage({
+    required int page,
+  }) async => (
+    await getSavedProperties(page: page),
+    PaginationData(perPage: 9, totalPages: 1),
+  );
 }
 
 class _FavoritesTestAssetLoader extends AssetLoader {

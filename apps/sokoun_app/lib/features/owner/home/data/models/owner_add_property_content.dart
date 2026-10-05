@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:convert';
 import 'property_location.dart';
+import '../enums/property_tenant_type.dart';
+import '../enums/property_price_period.dart';
 
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -52,11 +54,8 @@ abstract final class OwnerAddPropertyContent {
   static const minimumPhotoCount = Validators.propertyMinPhotoCount;
   static const maxPhotoCount = Validators.propertyMaxPhotoCount;
 
-  static List<String> get rentalUnitOptions => [
-    LocaleKeys.ownerAddPropertyDay,
-    LocaleKeys.ownerAddPropertyMonth,
-    LocaleKeys.ownerAddPropertyYear,
-  ];
+  static List<String> get rentalUnitOptions =>
+      PropertyPricePeriod.values.map((period) => period.label).toList();
 
   static List<String> get amenityOptions => [
     LocaleKeys.ownerAddPropertyWifi,
@@ -72,14 +71,22 @@ abstract final class OwnerAddPropertyContent {
     LocaleKeys.ownerAddPropertyWaterMeter,
   ];
 
-  static List<String> get suitableForOptions => [
-    LocaleKeys.ownerAddPropertyEveryone,
-    LocaleKeys.ownerAddPropertyMalesOnly,
-    LocaleKeys.ownerAddPropertyFemalesOnly,
-    LocaleKeys.ownerAddPropertyFamilies,
-    LocaleKeys.ownerAddPropertyIndividuals,
-    LocaleKeys.ownerAddPropertyShared,
-  ];
+  static List<String> get suitableForOptions =>
+      PropertyTenantType.values.map((type) => type.label).toList();
+
+  static const supportedAmenityValues = {
+    'wifi',
+    'elevator',
+    'garage',
+    'security',
+    'balcony',
+    'air_conditioning',
+    'near_metro',
+    'natural_gas',
+    'electricity_meter',
+    'water_meter',
+    'furnished',
+  };
 
   static List<AddPropertyChipContent> singleSelectedChips({
     required List<String> labels,
@@ -178,6 +185,7 @@ class OwnerAddPropertyFormState {
     this.removeVideo = false,
     this.isVideoPreparing = false,
     this.country = '',
+    this.areaDescription = '',
     this.neighborhood = '',
     this.buildingYear = '',
     this.deposit = '',
@@ -208,6 +216,7 @@ class OwnerAddPropertyFormState {
       amenities: {},
       description: '',
       suitableFor: '',
+      country: 'Egypt',
     );
   }
 
@@ -240,6 +249,7 @@ class OwnerAddPropertyFormState {
   final bool removeVideo;
   final bool isVideoPreparing;
   final String country;
+  final String areaDescription;
   final String neighborhood;
   final String buildingYear;
   final String deposit;
@@ -255,15 +265,27 @@ class OwnerAddPropertyFormState {
       (int.tryParse(buildingYear) != null &&
           int.parse(buildingYear) >= 1800 &&
           int.parse(buildingYear) <= DateTime.now().year));
-  bool get isDepositReady =>
-      (deposit.trim().isEmpty ||
-      {'none', 'half_month', 'one_month', 'two_months'}.contains(deposit) ||
-      (num.tryParse(deposit) != null && num.parse(deposit) >= 0));
-  bool get isAdditionalDetailsReady => isBuildingYearReady && isDepositReady;
+  bool get isDepositReady {
+    if (deposit.trim().isEmpty ||
+        {'none', 'half_month', 'one_month', 'two_months'}.contains(deposit)) {
+      return true;
+    }
+    final amount = num.tryParse(deposit);
+    return amount != null && amount.isFinite && amount >= 0;
+  }
+
+  bool get isAdditionalDetailsReady =>
+      isBuildingYearReady &&
+      isDepositReady &&
+      !(ownershipProofFile != null && removeOwnershipProof);
   String get rentalUnitLabel =>
-      optionLabels['price_period:$rentalUnitApiValue'] ?? rentalUnit;
+      optionLabels['price_period:$rentalUnitApiValue'] ??
+      PropertyPricePeriod.fromValue(rentalUnitApiValue)?.label ??
+      rentalUnit;
   String get suitableForLabel =>
-      optionLabels['suitable_for:$suitableForApiValue'] ?? suitableFor;
+      optionLabels['suitable_for:$suitableForApiValue'] ??
+      PropertyTenantType.fromValue(suitableForApiValue)?.label ??
+      suitableFor;
   List<String> get amenityLabels => optionLabels.isEmpty
       ? amenities.toList(growable: false)
       : amenityApiValues
@@ -294,16 +316,21 @@ class OwnerAddPropertyFormState {
     hasValidLocation: isLocationSelected,
   );
 
-  bool get isPhotosReady =>
-      Validators.isValidPropertyPhotos(count: photoCount) &&
-      photoDrafts.every((photo) => photo.file != null || photo.isExisting) &&
+  bool get isVideoReady =>
+      hasVideo &&
       !isVideoPreparing &&
+      !removeVideo &&
       (videoFile == null ||
           (videoDuration != null &&
               Validators.validatePropertyVideoDuration(
                     Duration(seconds: videoDuration!),
                   ) ==
                   null));
+
+  bool get isPhotosReady =>
+      Validators.isValidPropertyPhotos(count: photoCount) &&
+      photoDrafts.every((photo) => photo.file != null || photo.isExisting) &&
+      isVideoReady;
 
   bool get isPricingReady =>
       Validators.isValidPropertyPricing(
@@ -313,6 +340,9 @@ class OwnerAddPropertyFormState {
         suitableFor: suitableFor,
         description: description,
       ) &&
+      PropertyTenantType.fromValue(suitableForApiValue) != null &&
+      PropertyPricePeriod.fromValue(rentalUnitApiValue) != null &&
+      unsupportedAmenities.isEmpty &&
       isAdditionalDetailsReady;
 
   String get locationSummary => '$district، $governorate';
@@ -321,7 +351,9 @@ class OwnerAddPropertyFormState {
     final price = EgyptianPound.formatAmount(
       monthlyPrice.trim().isEmpty ? '0' : monthlyPrice,
     );
-    return LocaleKeys.ownerAddPropertyMonthlyPrice.replaceAll('{price}', price);
+    return LocaleKeys.ownerAddPropertyPriceSummary
+        .replaceAll('{price}', price)
+        .replaceAll('{unit}', rentalUnitLabel);
   }
 
   String get photoSummary => LocaleKeys.ownerAddPropertyPhotoCountSummary
@@ -349,7 +381,7 @@ class OwnerAddPropertyFormState {
         label: LocaleKeys.ownerPropertyVideoTitle,
         value: hasVideo
             ? LocaleKeys.ownerPropertyVideoSelected
-            : LocaleKeys.ownerAddPropertyVideoSkipped,
+            : LocaleKeys.ownerPropertyVideoRequired,
       ),
       for (int index = 0; index < photoDrafts.length; index++)
         if (photoDrafts[index].name.trim().isNotEmpty ||
@@ -398,6 +430,7 @@ class OwnerAddPropertyFormState {
     bool? isVideoPreparing,
     bool clearVideo = false,
     String? country,
+    String? areaDescription,
     String? neighborhood,
     String? buildingYear,
     String? deposit,
@@ -437,6 +470,7 @@ class OwnerAddPropertyFormState {
       removeVideo: removeVideo ?? this.removeVideo,
       isVideoPreparing: isVideoPreparing ?? this.isVideoPreparing,
       country: country ?? this.country,
+      areaDescription: areaDescription ?? this.areaDescription,
       neighborhood: neighborhood ?? this.neighborhood,
       buildingYear: buildingYear ?? this.buildingYear,
       deposit: deposit ?? this.deposit,
@@ -475,8 +509,8 @@ class OwnerAddPropertyFormState {
       'bedrooms': int.parse(bedrooms),
       'bathrooms': int.parse(bathrooms),
       'area': int.parse(space),
-      'space': space.trim(),
-      'floor': int.parse(floor),
+      'space': areaDescription.trim(),
+      'floor': floor.trim().isEmpty ? '' : int.parse(floor),
       'rental_period': int.parse(rentalDuration),
       'suitable_for': _suitableForValue(suitableFor),
       'governorate': governorateId,
@@ -490,8 +524,8 @@ class OwnerAddPropertyFormState {
       'deposit': deposit.trim(),
       'smoking_allowed': smokingAllowed ?? '',
       if (location?.isValid == true) ...{
-        'latitude': location!.latitude,
-        'longitude': location!.longitude,
+        'latitude': location!.latitude.toStringAsFixed(6),
+        'longitude': location!.longitude.toStringAsFixed(6),
       },
       if (includeMainImage && mainPhoto?.file != null)
         'main_image': mainPhoto!.file,
@@ -594,6 +628,9 @@ class OwnerAddPropertyFormState {
 
   String get rentalUnitApiValue => _rentalUnitValue(rentalUnit);
   String get suitableForApiValue => _suitableForValue(suitableFor);
+  Set<String> get unsupportedAmenities => amenityApiValues.difference(
+    OwnerAddPropertyContent.supportedAmenityValues,
+  );
   Set<String> get amenityApiValues {
     final Map<String, String> labels = {
       'furnished': LocaleKeys.ownerAddPropertyFurnished,
@@ -696,6 +733,10 @@ class OwnerAddPropertyFormState {
   }
 
   static String _suitableForValue(String value) {
+    final PropertyTenantType? type = PropertyTenantType.values
+        .where((type) => type.value == value || type.label == value)
+        .firstOrNull;
+    if (type != null) return type.value;
     return {
           'all': 'all',
           'Everyone': 'all',
@@ -717,6 +758,10 @@ class OwnerAddPropertyFormState {
           'Individuals': 'singles',
           'أفراد': 'singles',
           LocaleKeys.ownerAddPropertyIndividuals: 'singles',
+          'Students': 'students',
+          'طلاب': 'students',
+          'Female students': 'female_students',
+          'طالبات': 'female_students',
           'shared': 'shared',
           'Shared': 'shared',
           'مشاركة': 'shared',

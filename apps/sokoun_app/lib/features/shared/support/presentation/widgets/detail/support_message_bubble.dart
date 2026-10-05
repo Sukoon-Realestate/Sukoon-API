@@ -21,9 +21,9 @@ class SupportMessageBubble extends StatelessWidget {
       // Preserve the conversation when an external viewer is unavailable.
     }
     if (!opened && context.mounted) {
-      MessageUtils.showSnackBar(
-        LocaleKeys.supportLinkUnavailable,
-        context: context,
+      Messages.showToast(
+        msg: LocaleKeys.supportLinkUnavailable,
+        status: BaseStatus.error,
       );
     }
   }

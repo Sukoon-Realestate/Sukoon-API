@@ -10,6 +10,7 @@ import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
+import 'package:melos_core/core/widgets/first_validation_error_form.dart';
 import 'package:sokoun_app/features/main_view/presentation/screens/view.dart';
 import 'package:sokoun_app/features/shared/auth/data/models/google_login.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/google_login.dart';
@@ -31,7 +32,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
+  final _emailFieldKey = GlobalKey();
+  final _passwordFieldKey = GlobalKey();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -43,16 +45,27 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _submit(BuildContext ctx) async {
-    if (_formKey.currentState?.validate() != true) {
-      return;
-    }
-
     await ctx.read<LoginCubit>().login(
       email: _emailController.text.trim(),
       password: _passwordController.text,
       onSuccess: () => Go.offAll(const HomeScreen()),
     );
   }
+
+  List<FirstValidationErrorField> _validationFields() => [
+    FirstValidationErrorField(
+      fieldKey: _emailFieldKey,
+      title: LocaleKeys.email,
+      value: _emailController.text,
+      validator: Validators.validateEmail,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _passwordFieldKey,
+      title: LocaleKeys.password,
+      value: _passwordController.text,
+      validator: Validators.validateLoginPassword,
+    ),
+  ];
 
   Future<void> _submitGoogle(BuildContext context, String token) async {
     if (!context.mounted) return;
@@ -71,89 +84,97 @@ class _LoginScreenState extends State<LoginScreen> {
       ],
       child: AuthScaffold(
         title: LocaleKeys.login,
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const LoginIntro(),
-              24.szH,
-              SokoonEmailField(
-                controller: _emailController,
-                hintText: 'ahmed@gmail.com',
-              ),
-              16.szH,
-              SokoonPasswordField(
-                controller: _passwordController,
-                validator: Validators.validateLoginPassword,
-              ),
-              10.szH,
-              TextButton(
-                onPressed: () => Go.to(const ForgotPasswordScreen()),
-                style: TextButton.styleFrom(
-                  minimumSize: Size.zero,
-                  padding: EdgeInsets.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        child: Builder(
+          builder: (context) => FirstValidationErrorForm(
+            validationFields: _validationFields,
+            onValid: () => _submit(context),
+            builder: (context, submit) => Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const LoginIntro(),
+                24.szH,
+                SokoonEmailField(
+                  key: _emailFieldKey,
+                  controller: _emailController,
+                  hintText: 'ahmed@gmail.com',
                 ),
-                child: AppText(
-                  LocaleKeys.forgotPassword,
-                  style: AppTextStyles.bold12.copyWith(
-                    color: AppColors.sokoonTeal,
-                    fontSize: 12.sp,
+                16.szH,
+                SokoonPasswordField(
+                  key: _passwordFieldKey,
+                  controller: _passwordController,
+                  validator: Validators.validateLoginPassword,
+                ),
+                10.szH,
+                TextButton(
+                  onPressed: () => Go.to(const ForgotPasswordScreen()),
+                  style: TextButton.styleFrom(
+                    minimumSize: Size.zero,
+                    padding: EdgeInsets.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: AppText(
+                    LocaleKeys.forgotPassword,
+                    style: AppTextStyles.bold12.copyWith(
+                      color: AppColors.sokoonTeal,
+                      fontSize: 12.sp,
+                      height: 1.45,
+                    ),
+                  ),
+                ).startWidget,
+                14.szH,
+                AppLoadingButton(
+                  asyncCall: (_) => submit(),
+                  title: LocaleKeys.login,
+                  buttonColor: AppColors.sokoonTeal,
+                  textColor: AppColors.white,
+                  borderRadius: 14.r,
+                  textStyle: AppTextStyles.bold16.copyWith(
+                    fontSize: 16.sp,
                     height: 1.45,
                   ),
                 ),
-              ).startWidget,
-              14.szH,
-              AppLoadingButton(
-                asyncCall: _submit,
-                title: LocaleKeys.login,
-                buttonColor: AppColors.sokoonTeal,
-                textColor: AppColors.white,
-                borderRadius: 14.r,
-                textStyle: AppTextStyles.bold16.copyWith(
-                  fontSize: 16.sp,
-                  height: 1.45,
-                ),
-              ),
-              20.szH,
-              const LoginDivider(),
-              18.szH,
-              Builder(
-                builder: (context) => AppGoogleSignInButton(
-                  onSuccess: (token) => _submitGoogle(context, token),
-                ),
-              ),
-              12.szH,
-              // 12.szH,
-              // AppFacebookSignInButton(onSuccess: (token) async {}),
-              // 12.szH,
-              // SokoonAppleSignInButton(),
-              // 16.szH,
-              TextButton(
-                onPressed: () {
-                  WorkspaceNavigation.clearPending();
-                  Go.offAll(const HomeScreen());
-                },
-                style: TextButton.styleFrom(
-                  minimumSize: Size.zero,
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-                child: AppText(
-                  LocaleKeys.signInAsVisitor,
-                  style: AppTextStyles.bold13.copyWith(
-                    color: AppColors.sokoonGray,
-                    fontSize: 13.sp,
-                    decoration: TextDecoration.underline,
-                    height: 1.45,
+                20.szH,
+                const LoginDivider(),
+                18.szH,
+                Builder(
+                  builder: (context) => AppGoogleSignInButton(
+                    onSuccess: (token) => _submitGoogle(context, token),
                   ),
                 ),
-              ).centerWidget,
-              18.szH,
-              LoginFooter(),
-              24.szH,
-            ],
+                12.szH,
+                // 12.szH,
+                // AppFacebookSignInButton(onSuccess: (token) async {}),
+                // 12.szH,
+                // SokoonAppleSignInButton(),
+                // 16.szH,
+                TextButton(
+                  onPressed: () {
+                    WorkspaceNavigation.clearPending();
+                    Go.offAll(const HomeScreen());
+                  },
+                  style: TextButton.styleFrom(
+                    minimumSize: Size.zero,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 4.h,
+                    ),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: AppText(
+                    LocaleKeys.signInAsVisitor,
+                    style: AppTextStyles.bold13.copyWith(
+                      color: AppColors.sokoonGray,
+                      fontSize: 13.sp,
+                      decoration: TextDecoration.underline,
+                      height: 1.45,
+                    ),
+                  ),
+                ).centerWidget,
+                18.szH,
+                LoginFooter(),
+                24.szH,
+              ],
+            ),
           ),
         ),
       ),

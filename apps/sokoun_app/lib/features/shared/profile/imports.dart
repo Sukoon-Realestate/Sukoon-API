@@ -1,3 +1,5 @@
+import 'package:melos_core/core/shared/base_state.dart';
+import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 import 'data/profile_json.dart';
 import 'data/enums/profile_verification_status.dart';
 import 'data/models/change_password_body.dart';
@@ -55,10 +57,10 @@ import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/widgets/first_validation_error_form.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
 import 'package:melos_core/core/widgets/buttons/retry_button.dart';
 import 'package:melos_core/core/widgets/custom_loading.dart';
-import 'package:melos_core/core/widgets/toast_messages/custom_messages.dart';
 import 'package:melos_core/generated/assets.dart';
 import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
 import 'package:sokoun_app/features/shared/notifications/data/notification_device_data.dart';

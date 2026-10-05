@@ -11,6 +11,7 @@ import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/exeption_view.dart';
 import 'package:multiple_result/multiple_result.dart';
+import 'package:sokoun_app/features/shared/reviews/presentation/widgets/property_rating_card.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/imports.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/property_details_screen.dart';
 import 'helpers/account_test_dependencies.dart';
@@ -90,6 +91,7 @@ void main() {
 
     expect(find.byType(TenantPropertyDetailsBody), findsOneWidget);
     expect(find.byType(TenantPropertyDetailsContentView), findsOneWidget);
+    expect(find.byType(PropertyRatingCard), findsOneWidget);
     expect(find.byIcon(Icons.bookmark_border_rounded), findsOneWidget);
     expect(repository.detailsCacheKey, 'property_details_property-id');
     expect(repository.hasCacheDeserializer, isTrue);
@@ -219,6 +221,11 @@ class _PropertyDetailsAssetLoader extends AssetLoader {
       'tenant_property_details_monthly_price_unit': 'ج / شهر',
       'tenant_property_details_photo_count_unit': 'صورة',
       'tenant_property_details_photos': 'صور',
+      'property_reviews_title': 'تقييمات العقار',
+      'property_reviews_view_action': 'عرض التقييمات',
+      'property_reviews_visit_hint': 'بناءً على زيارات المستأجرين',
+      'property_reviews_count_label': '{count} تقييمات',
+      'property_reviews_score_label': '{rating} من 5',
     };
   }
 }

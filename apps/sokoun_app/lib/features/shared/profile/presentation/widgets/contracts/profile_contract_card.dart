@@ -22,9 +22,9 @@ class ProfileContractCard extends StatelessWidget {
       // Keep the contracts list available if no document viewer is installed.
     }
     if (!opened && context.mounted) {
-      MessageUtils.showSnackBar(
-        LocaleKeys.supportLinkUnavailable,
-        context: context,
+      Messages.showToast(
+        msg: LocaleKeys.supportLinkUnavailable,
+        status: BaseStatus.error,
       );
     }
   }

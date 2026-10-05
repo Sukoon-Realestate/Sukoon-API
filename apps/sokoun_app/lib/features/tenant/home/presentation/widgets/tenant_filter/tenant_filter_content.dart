@@ -21,6 +21,7 @@ class TenantFilterContent extends StatelessWidget {
     required this.minPriceController,
     required this.maxPriceController,
     required this.onFiltersChanged,
+    this.priceRangeFieldKey,
   });
 
   final PropertySearchFilters filters;
@@ -30,6 +31,7 @@ class TenantFilterContent extends StatelessWidget {
   final TextEditingController minPriceController;
   final TextEditingController maxPriceController;
   final ValueChanged<PropertySearchFilters> onFiltersChanged;
+  final GlobalKey? priceRangeFieldKey;
 
   List<TenantFilterOption> _withAll(List<TenantFilterOption> options) => [
     TenantFilterOption(value: '', label: LocaleKeys.tenantSearchAll),
@@ -86,6 +88,7 @@ class TenantFilterContent extends StatelessWidget {
             onFiltersChanged: onFiltersChanged,
           ),
           FilterPriceRangeSection(
+            key: priceRangeFieldKey,
             filters: filters,
             minPriceController: minPriceController,
             maxPriceController: maxPriceController,

@@ -8,7 +8,9 @@ import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/default_button.dart';
 
 class PropertyEditReviewSheet extends StatelessWidget {
-  const PropertyEditReviewSheet({super.key});
+  const PropertyEditReviewSheet({super.key, this.message = ''});
+
+  final String message;
 
   @override
   Widget build(BuildContext context) => SafeArea(
@@ -21,7 +23,7 @@ class PropertyEditReviewSheet extends StatelessWidget {
         children: [
           Icon(Icons.schedule_rounded, color: AppColors.amber, size: 48.r),
           AppText(
-            LocaleKeys.ownerPropertyEditReviewTitle,
+            message,
             style: AppTextStyles.bold.copyWith(fontSize: 20.sp),
             textAlign: TextAlign.center,
           ),

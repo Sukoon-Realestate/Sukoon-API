@@ -23,9 +23,9 @@ class _SupportHelpContentViewState extends State<SupportHelpContentView> {
       // A missing phone/mail app should leave the help center usable.
     }
     if (!opened && mounted) {
-      MessageUtils.showSnackBar(
-        LocaleKeys.supportContactUnavailable,
-        context: context,
+      Messages.showToast(
+        msg: LocaleKeys.supportContactUnavailable,
+        status: BaseStatus.error,
       );
     }
   }

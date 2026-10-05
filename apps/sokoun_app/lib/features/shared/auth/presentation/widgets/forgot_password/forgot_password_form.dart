@@ -7,54 +7,74 @@ import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/helpers/validators.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
+import 'package:melos_core/core/widgets/first_validation_error_form.dart';
 import 'package:sokoun_app/shared_widgets/email_field.dart';
 
 import 'forgot_password_intro.dart';
 import 'forgot_password_security_hint.dart';
 
-class ForgotPasswordForm extends StatelessWidget {
+class ForgotPasswordForm extends StatefulWidget {
   const ForgotPasswordForm({
     super.key,
-    required this.formKey,
     required this.emailController,
     required this.hasSubmittedInvalidEmail,
     required this.isEmailValid,
     required this.onEmailChanged,
     required this.onSubmit,
     required this.onBackToLogin,
+    this.onInvalidEmail,
   });
 
-  final GlobalKey<FormState> formKey;
   final TextEditingController emailController;
   final bool hasSubmittedInvalidEmail;
   final bool isEmailValid;
   final VoidCallback onEmailChanged;
   final Future<void> Function(BuildContext context) onSubmit;
   final VoidCallback onBackToLogin;
+  final VoidCallback? onInvalidEmail;
+
+  @override
+  State<ForgotPasswordForm> createState() => _ForgotPasswordFormState();
+}
+
+class _ForgotPasswordFormState extends State<ForgotPasswordForm> {
+  final GlobalKey _emailFieldKey = GlobalKey();
+
+  List<FirstValidationErrorField> _validationFields() => [
+    FirstValidationErrorField(
+      fieldKey: _emailFieldKey,
+      title: LocaleKeys.email,
+      value: widget.emailController.text,
+      validator: Validators.validateEmail,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     final Color accentColor = AppColors.sokoonTeal;
 
-    return Form(
-      key: formKey,
-      child: Column(
+    return FirstValidationErrorForm(
+      validationFields: _validationFields,
+      onValid: () => widget.onSubmit(context),
+      onValidationError: (_) => widget.onInvalidEmail?.call(),
+      builder: (context, submit) => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const ForgotPasswordIntro(),
           30.szH,
           SokoonEmailField(
-            controller: emailController,
+            key: _emailFieldKey,
+            controller: widget.emailController,
             hintText: 'ahmed@gmail.com',
             accentColor: accentColor,
-            hasError: hasSubmittedInvalidEmail,
+            hasError: widget.hasSubmittedInvalidEmail,
             action: TextInputAction.done,
             prefixIcon: Icon(
               Icons.mail_outline_rounded,
               color: AppColors.sokoonMuted,
               size: 20.r,
             ),
-            suffixIcon: isEmailValid
+            suffixIcon: widget.isEmailValid
                 ? Icon(
                     Icons.check_circle_rounded,
                     color: accentColor,
@@ -62,8 +82,8 @@ class ForgotPasswordForm extends StatelessWidget {
                   )
                 : null,
             validator: Validators.validateEmail,
-            onChanged: (_) => onEmailChanged(),
-            onSubmitted: (_) => onSubmit(context),
+            onChanged: (_) => widget.onEmailChanged(),
+            onSubmitted: (_) => submit(),
           ),
           7.szH,
           AppText(
@@ -76,7 +96,7 @@ class ForgotPasswordForm extends StatelessWidget {
           ),
           22.szH,
           AppLoadingButton(
-            asyncCall: onSubmit,
+            asyncCall: (_) => submit(),
             title: LocaleKeys.sendRecoveryLink,
             buttonColor: accentColor,
             textColor: AppColors.white,
@@ -101,7 +121,7 @@ class ForgotPasswordForm extends StatelessWidget {
                 ),
               ),
               TextButton(
-                onPressed: onBackToLogin,
+                onPressed: widget.onBackToLogin,
                 style: TextButton.styleFrom(
                   minimumSize: Size.zero,
                   padding: EdgeInsets.zero,

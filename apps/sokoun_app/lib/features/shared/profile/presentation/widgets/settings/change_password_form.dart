@@ -7,7 +7,9 @@ class ChangePasswordForm extends StatefulWidget {
 }
 
 class _ChangePasswordFormState extends State<ChangePasswordForm> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey _currentFieldKey = GlobalKey();
+  final GlobalKey _passwordFieldKey = GlobalKey();
+  final GlobalKey _confirmationFieldKey = GlobalKey();
   final TextEditingController _current = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final TextEditingController _confirmation = TextEditingController();
@@ -30,19 +32,38 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
   }
 
   Future<void> _save(BuildContext context) async {
-    if (_cubit.isLoading || !(_formKey.currentState?.validate() ?? false)) {
+    if (_cubit.isLoading) {
       return;
     }
     FocusScope.of(context).unfocus();
     if (!await _cubit.save(_body) || !context.mounted) return;
     _saved = true;
-    MessageUtils.showSnackBar(
-      LocaleKeys.settingsPasswordSaved,
-      textColor: AppColors.sokoonTeal,
-      context: context,
-    );
     Go.back();
   }
+
+  List<FirstValidationErrorField> _validationFields() => [
+    FirstValidationErrorField(
+      fieldKey: _currentFieldKey,
+      title: LocaleKeys.settingsCurrentPassword,
+      value: _current.text,
+      validator: Validators.validateLoginPassword,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _passwordFieldKey,
+      title: LocaleKeys.createNewPassword,
+      value: _password.text,
+      validator: Validators.validatePassword,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _confirmationFieldKey,
+      title: LocaleKeys.confirmPassword,
+      value: _confirmation.text,
+      validator: (value) => Validators.validatePasswordConfirmation(
+        value,
+        password: _password.text,
+      ),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) => UnsavedChangesGuard(
@@ -52,17 +73,18 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
             _password.text.isNotEmpty ||
             _confirmation.text.isNotEmpty),
     isSaving: () => _cubit.isLoading,
-    child: Column(
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(20.r),
-            child: BlocBuilder<ChangePasswordCubit, AsyncState<bool>>(
-              bloc: _cubit,
-              builder: (context, state) => AbsorbPointer(
-                absorbing: state.isLoading,
-                child: Form(
-                  key: _formKey,
+    child: FirstValidationErrorForm(
+      validationFields: _validationFields,
+      onValid: () => _save(context),
+      builder: (context, submit) => Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(20.r),
+              child: BlocBuilder<ChangePasswordCubit, AsyncState<bool>>(
+                bloc: _cubit,
+                builder: (context, state) => AbsorbPointer(
+                  absorbing: state.isLoading,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     spacing: 20.h,
@@ -75,6 +97,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                         ),
                       ),
                       SokoonPasswordField(
+                        key: _currentFieldKey,
                         controller: _current,
                         label: LocaleKeys.settingsCurrentPassword,
                         action: TextInputAction.next,
@@ -84,6 +107,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                         ),
                       ),
                       SokoonPasswordField(
+                        key: _passwordFieldKey,
                         controller: _password,
                         label: LocaleKeys.createNewPassword,
                         action: TextInputAction.next,
@@ -91,6 +115,7 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
                             _body = _body.copyWith(newPassword: value ?? ''),
                       ),
                       SokoonPasswordConfirmationField(
+                        key: _confirmationFieldKey,
                         controller: _confirmation,
                         passwordController: _password,
                         onChanged: (value) =>
@@ -108,15 +133,15 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
               ),
             ),
           ),
-        ),
-        SokounActionFooter(
-          width: SokounContentWidth.form,
-          child: AppLoadingButton(
-            asyncCall: _save,
-            title: LocaleKeys.settingsSavePassword,
+          SokounActionFooter(
+            width: SokounContentWidth.form,
+            child: AppLoadingButton(
+              asyncCall: (_) => submit(),
+              title: LocaleKeys.settingsSavePassword,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }

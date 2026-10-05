@@ -36,6 +36,7 @@ import 'data/enums/owner_property_status.dart';
 import 'data/enums/owner_revenue_status.dart';
 import 'data/models/owner_property_analytics_content.dart';
 import 'data/models/owner_property_content.dart';
+import 'data/models/owner_property_deletion_model.dart';
 import 'data/models/owner_revenue_content.dart';
 import 'data/owner_properties_data.dart';
 import 'data/owner_property_json.dart';

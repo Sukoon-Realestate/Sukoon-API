@@ -5,22 +5,25 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/widgets/first_validation_error_form.dart';
 import 'package:sokoun_app/features/shared/finance/presentation/egyptian_pound_text.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
+import 'package:sokoun_app/features/owner/home/data/enums/property_tenant_type.dart';
+import 'package:sokoun_app/features/owner/home/data/enums/property_price_period.dart';
 
 import 'add_property_chip_wrap.dart';
 import 'property_selection_field.dart';
-import 'package:melos_core/core/helpers/validators.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/core/helpers/status_builder.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_filter_options_cubit.dart';
-import 'add_property_options_empty_state.dart';
 import 'add_property_field.dart';
 import 'add_property_info_banner.dart';
 import 'add_property_section_card.dart';
 import 'add_property_step_shell.dart';
 import 'add_property_additional_details.dart';
+import 'add_property_rental_period_section.dart';
+import 'property_form_validation.dart';
 
 class AddPropertyPricingPage extends StatefulWidget {
   const AddPropertyPricingPage({
@@ -61,7 +64,76 @@ class AddPropertyPricingPage extends StatefulWidget {
 }
 
 class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
+  final GlobalKey _priceFieldKey = GlobalKey();
+  final GlobalKey _durationFieldKey = GlobalKey();
+  final GlobalKey _unitFieldKey = GlobalKey();
+  final GlobalKey _amenitiesFieldKey = GlobalKey();
+  final GlobalKey _suitableForFieldKey = GlobalKey();
+  final GlobalKey _descriptionFieldKey = GlobalKey();
+  final GlobalKey _buildingYearFieldKey = GlobalKey();
+  final GlobalKey _depositFieldKey = GlobalKey();
   late final PropertyFilterOptionsCubit _optionsCubit;
+
+  String get _unsupportedAmenitiesError => LocaleKeys
+      .ownerPropertyUnsupportedAmenities
+      .replaceAll('{items}', widget.form.unsupportedAmenities.join(', '));
+
+  List<FirstValidationErrorField> _validationFields() => [
+    FirstValidationErrorField(
+      fieldKey: _priceFieldKey,
+      title: LocaleKeys.ownerAddPropertyPrice,
+      value: widget.monthlyPriceController.text,
+      validator: PropertyFormValidation.price,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _durationFieldKey,
+      title: LocaleKeys.ownerAddPropertyMinimumRentalMonths,
+      value: widget.rentalDurationController.text,
+      validator: PropertyFormValidation.rentalDuration,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _unitFieldKey,
+      title: LocaleKeys.ownerAddPropertyPricePeriod,
+      value: widget.form.rentalUnitApiValue,
+      validator: PropertyFormValidation.rentalUnit,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _amenitiesFieldKey,
+      title: LocaleKeys.ownerAddPropertyAmenities,
+      value: widget.form.amenityApiValues.join(', '),
+      validator: (_) => widget.form.unsupportedAmenities.isEmpty
+          ? null
+          : _unsupportedAmenitiesError,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _suitableForFieldKey,
+      title: LocaleKeys.ownerAddPropertySuitableFor,
+      value: widget.form.suitableForApiValue,
+      validator: (value) => PropertyTenantType.fromValue(value ?? '') != null
+          ? null
+          : LocaleKeys.fillField,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _descriptionFieldKey,
+      title: LocaleKeys.ownerAddPropertyDescriptionLabel,
+      value: widget.descriptionController.text,
+      validator: PropertyFormValidation.description,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _buildingYearFieldKey,
+      title: LocaleKeys.tenantPropertyDetailsBuildingYear,
+      value: widget.form.buildingYear,
+      validator: PropertyFormValidation.buildingYear,
+    ),
+    FirstValidationErrorField(
+      fieldKey: _depositFieldKey,
+      title: LocaleKeys.ownerAddPropertyDeposit,
+      value: widget.form.deposit,
+      validator: (_) => widget.form.isDepositReady
+          ? null
+          : LocaleKeys.ownerAddPropertyDepositInvalid,
+    ),
+  ];
   @override
   void initState() {
     super.initState();
@@ -78,8 +150,22 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
           'amenity:${option.value}': option.label,
         for (final option in options.suitableFor)
           'suitable_for:${option.value}': option.label,
+        for (final type in PropertyTenantType.values)
+          'suitable_for:${type.value}':
+              options.suitableFor
+                  .where((option) => option.value == type.value)
+                  .firstOrNull
+                  ?.label ??
+              type.label,
         for (final option in options.pricePeriods)
           'price_period:${option.value}': option.label,
+        for (final period in PropertyPricePeriod.values)
+          'price_period:${period.value}':
+              options.pricePeriods
+                  .where((option) => option.value == period.value)
+                  .firstOrNull
+                  ?.label ??
+              period.label,
       });
     },
   );
@@ -93,6 +179,7 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
   @override
   Widget build(BuildContext context) {
     return AddPropertyStepShell(
+      validationFields: _validationFields,
       activeSegments: 3,
       segmentCount: 3,
       progressSubtitle: LocaleKeys.ownerAddPropertyPricingProgress,
@@ -102,6 +189,7 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
       onPrimaryTap: !widget.isSubmitting ? widget.onNext : null,
       children: [
         _PriceSection(
+          priceFieldKey: _priceFieldKey,
           form: widget.form,
           monthlyPriceController: widget.monthlyPriceController,
           onMonthlyPriceChanged: widget.onMonthlyPriceChanged,
@@ -118,23 +206,32 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
                 onRetry: _loadOptions,
                 shimmerBuilder: (_) => const SizedBox(height: 120),
                 builder: (options) {
-                  if (options.pricePeriods.isEmpty &&
-                      options.suitableFor.isEmpty &&
-                      options.amenities.isEmpty) {
-                    return const AddPropertyOptionsEmptyState();
-                  }
                   return Column(
                     spacing: 16,
                     children: [
-                      _RentalPeriodSection(
+                      AddPropertyRentalPeriodSection(
+                        durationFieldKey: _durationFieldKey,
+                        unitFieldKey: _unitFieldKey,
                         form: widget.form,
                         rentalDurationController:
                             widget.rentalDurationController,
                         onRentalDurationChanged: widget.onRentalDurationChanged,
                         onRentalUnitChanged: widget.onRentalUnitChanged,
-                        options: options.pricePeriods,
+                        options: [
+                          for (final period in PropertyPricePeriod.values)
+                            options.pricePeriods
+                                    .where(
+                                      (option) => option.value == period.value,
+                                    )
+                                    .firstOrNull ??
+                                TenantFilterOption(
+                                  value: period.value,
+                                  label: period.label,
+                                ),
+                        ],
                       ),
                       AddPropertySectionCard(
+                        key: _amenitiesFieldKey,
                         title: LocaleKeys.ownerAddPropertyAmenities,
                         child: AddPropertyChipWrap(
                           chips: [
@@ -146,17 +243,22 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
                               ),
                             ),
                             for (final option in options.amenities)
-                              AddPropertyChipContent(
-                                label: option.label,
-                                value: option.value,
-                                isSelected: widget.form.amenityApiValues
-                                    .contains(option.value),
-                              ),
+                              if (OwnerAddPropertyContent.supportedAmenityValues
+                                  .contains(option.value))
+                                AddPropertyChipContent(
+                                  label: option.label,
+                                  value: option.value,
+                                  isSelected: widget.form.amenityApiValues
+                                      .contains(option.value),
+                                ),
                             for (final value in widget.form.amenityApiValues)
                               if (value != 'furnished' &&
-                                  !options.amenities.any(
-                                    (option) => option.value == value,
-                                  ))
+                                  (!OwnerAddPropertyContent
+                                          .supportedAmenityValues
+                                          .contains(value) ||
+                                      !options.amenities.any(
+                                        (option) => option.value == value,
+                                      )))
                                 AddPropertyChipContent(
                                   label:
                                       widget
@@ -173,28 +275,37 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
                       ),
                       AddPropertySectionCard(
                         title: '${LocaleKeys.ownerAddPropertySuitableFor} *',
-                        child: options.suitableFor.isEmpty
-                            ? const AddPropertyOptionsEmptyState()
-                            : PropertySelectionField(
-                                isValid:
-                                    widget.form.suitableForApiValue.isNotEmpty,
-                                child: AddPropertyChipWrap(
-                                  chips: [
-                                    for (final option in options.suitableFor)
-                                      AddPropertyChipContent(
-                                        label: option.label,
-                                        value: option.value,
-                                        isSelected:
-                                            widget.form.suitableForApiValue ==
-                                            option.value,
-                                      ),
-                                  ],
-                                  onChipTap: (chip) =>
-                                      widget.onSuitableForSelected(
-                                        chip.selectionValue,
-                                      ),
+                        child: PropertySelectionField(
+                          key: _suitableForFieldKey,
+                          isValid:
+                              PropertyTenantType.fromValue(
+                                widget.form.suitableForApiValue,
+                              ) !=
+                              null,
+                          child: AddPropertyChipWrap(
+                            chips: [
+                              for (final type in PropertyTenantType.values)
+                                AddPropertyChipContent(
+                                  label:
+                                      options.suitableFor
+                                          .where(
+                                            (option) =>
+                                                option.value == type.value,
+                                          )
+                                          .firstOrNull
+                                          ?.label ??
+                                      type.label,
+                                  value: type.value,
+                                  isSelected:
+                                      widget.form.suitableForApiValue ==
+                                      type.value,
                                 ),
-                              ),
+                            ],
+                            onChipTap: (chip) => widget.onSuitableForSelected(
+                              chip.selectionValue,
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   );
@@ -202,13 +313,22 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
               ),
         ),
         _DescriptionSection(
+          descriptionFieldKey: _descriptionFieldKey,
           descriptionController: widget.descriptionController,
           onDescriptionChanged: widget.onDescriptionChanged,
         ),
         AddPropertyAdditionalDetails(
+          buildingYearFieldKey: _buildingYearFieldKey,
+          depositFieldKey: _depositFieldKey,
           form: widget.form,
           onDetailsChanged: widget.onAdditionalDetailsChanged,
         ),
+        if (widget.form.unsupportedAmenities.isNotEmpty)
+          AddPropertyInfoBanner(
+            text: _unsupportedAmenitiesError,
+            backgroundColor: AppColors.amberPale,
+            icon: Icons.info_outline_rounded,
+          ),
         AddPropertyInfoBanner(
           text: widget.form.isPricingReady
               ? LocaleKeys.ownerAddPropertyPricingReady
@@ -239,11 +359,13 @@ class _PriceSection extends StatelessWidget {
     required this.form,
     required this.monthlyPriceController,
     required this.onMonthlyPriceChanged,
+    required this.priceFieldKey,
   });
 
   final OwnerAddPropertyFormState form;
   final TextEditingController monthlyPriceController;
   final ValueChanged<String> onMonthlyPriceChanged;
+  final GlobalKey priceFieldKey;
 
   @override
   Widget build(BuildContext context) {
@@ -253,19 +375,20 @@ class _PriceSection extends StatelessWidget {
         spacing: 10.h,
         children: [
           AddPropertyField(
+            key: priceFieldKey,
             field: AddPropertyFieldContent(
               label: LocaleKeys.ownerAddPropertyPrice,
               value: '0',
               isFocused: true,
               textAlign: TextAlign.start,
             ),
-            validator: (value) => Validators.isPositiveNumber(value ?? '')
-                ? null
-                : LocaleKeys.propertyPositiveNumber,
+            validator: PropertyFormValidation.price,
             controller: monthlyPriceController,
             onChanged: onMonthlyPriceChanged,
-            keyboardType: TextInputType.number,
-            inputFormatters: [const LocalizedDigitsFormatter()],
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [
+              const LocalizedDigitsFormatter(allowDecimal: true),
+            ],
             suffix: AppText(
               EgyptianPoundText.symbol,
               style: AppTextStyles.bold13.copyWith(
@@ -281,121 +404,28 @@ class _PriceSection extends StatelessWidget {
   }
 }
 
-class _RentalPeriodSection extends StatelessWidget {
-  const _RentalPeriodSection({
-    required this.form,
-    required this.rentalDurationController,
-    required this.onRentalDurationChanged,
-    required this.onRentalUnitChanged,
-    required this.options,
-  });
-
-  final OwnerAddPropertyFormState form;
-  final List<TenantFilterOption> options;
-  final TextEditingController rentalDurationController;
-  final ValueChanged<String> onRentalDurationChanged;
-  final ValueChanged<String> onRentalUnitChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final selected = options
-        .where((option) => option.value == form.rentalUnitApiValue)
-        .firstOrNull;
-    return AddPropertySectionCard(
-      title: LocaleKeys.ownerAddPropertyRentalPeriod,
-      child: Column(
-        spacing: 12.h,
-        children: [
-          Row(
-            spacing: 10.w,
-            children: [
-              Expanded(
-                child: AddPropertyField(
-                  field: AddPropertyFieldContent(
-                    label: LocaleKeys.ownerAddPropertyCount,
-                    value: '0',
-                    isFocused: true,
-                    textAlign: TextAlign.center,
-                  ),
-                  validator: (value) => Validators.isPositiveNumber(value ?? '')
-                      ? null
-                      : LocaleKeys.propertyPositiveNumber,
-                  controller: rentalDurationController,
-                  onChanged: onRentalDurationChanged,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [const LocalizedDigitsFormatter()],
-                ),
-              ),
-              Expanded(
-                child: DropdownButtonFormField<TenantFilterOption>(
-                  isExpanded: true,
-                  validator: (_) =>
-                      Validators.validateRequired(form.rentalUnitApiValue),
-                  decoration: InputDecoration(
-                    labelText: '${LocaleKeys.ownerAddPropertyUnit} *',
-                  ),
-                  hint: AppText(LocaleKeys.ownerAddPropertyChoose),
-                  initialValue: selected,
-                  items: [
-                    for (final option in options)
-                      DropdownMenuItem(
-                        value: option,
-                        child: AppText(option.label),
-                      ),
-                  ],
-                  onChanged: (option) {
-                    if (option != null) onRentalUnitChanged(option.value);
-                  },
-                ),
-              ),
-            ],
-          ),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-            decoration: BoxDecoration(
-              color: AppColors.tealAlpha03,
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: AppText(
-              LocaleKeys.ownerAddPropertyRentalSummary
-                  .replaceAll('{count}', form.rentalDuration)
-                  .replaceAll('{unit}', selected?.label ?? form.rentalUnit),
-              style: AppTextStyles.bold12.copyWith(
-                color: AppColors.sokoonTeal,
-                fontSize: 12.sp,
-                height: 1.45,
-              ),
-              textAlign: TextAlign.start,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _DescriptionSection extends StatelessWidget {
   const _DescriptionSection({
     required this.descriptionController,
     required this.onDescriptionChanged,
+    required this.descriptionFieldKey,
   });
 
   final TextEditingController descriptionController;
   final ValueChanged<String> onDescriptionChanged;
+  final GlobalKey descriptionFieldKey;
 
   @override
   Widget build(BuildContext context) {
     return AddPropertySectionCard(
       title: LocaleKeys.ownerAddPropertyDescription,
       child: AddPropertyField(
+        key: descriptionFieldKey,
         field: AddPropertyFieldContent(
           label: LocaleKeys.ownerAddPropertyDescriptionLabel,
           value: LocaleKeys.ownerAddPropertyDescriptionHint,
         ),
-        validator: (value) => Validators.hasMinimumLength(value ?? '', 10)
-            ? null
-            : LocaleKeys.propertyDescriptionMinimum,
+        validator: PropertyFormValidation.description,
         controller: descriptionController,
         onChanged: onDescriptionChanged,
         hint: LocaleKeys.ownerAddPropertyDescriptionHint,
