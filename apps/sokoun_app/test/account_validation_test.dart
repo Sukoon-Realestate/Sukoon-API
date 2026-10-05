@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:easy_localization/easy_localization.dart';
+import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -386,11 +386,18 @@ void main() {
       await tester.pumpAndSettle();
       expect(phone.text, isEmpty);
       final field = find.byType(TextFormField);
+      expect(find.text('+201xxxxxxxxx'), findsOneWidget);
+      expect(
+        tester.widget<EditableText>(find.byType(EditableText)).textDirection,
+        TextDirection.ltr,
+      );
 
       for (final String input in [
         '01012345678',
         '1012345678',
         '+201012345678',
+        '010 1234-5678',
+        '+20 (10) 1234-5678',
       ]) {
         await tester.enterText(field, input);
         await tester.pump();
@@ -415,6 +422,51 @@ void main() {
         await tester.pump();
         expect(phone.text, text);
       }
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('phone field enforces +201 and digits in $language', (
+      tester,
+    ) async {
+      final TextEditingController phone = TextEditingController();
+      addTearDown(phone.dispose);
+      await tester.pumpWidget(
+        _app(SokoonPhoneField(controller: phone), languageCode: language),
+      );
+      await tester.pumpAndSettle();
+      final field = find.byType(TextFormField);
+
+      await tester.enterText(field, '01069897625');
+      await tester.pump();
+      expect(phone.text, '+201069897625');
+      expect(Validators.validateEgyptianMobile(phone.text), isNull);
+
+      for (final String input in [
+        '2',
+        '+966512345678',
+        '+202069897625',
+        '+20106989762a',
+        '+2010698976250',
+        '++201069897625',
+      ]) {
+        await tester.enterText(field, input);
+        await tester.pump();
+        expect(phone.text, '+201069897625', reason: input);
+      }
+
+      tester.testTextInput.updateEditingValue(
+        const TextEditingValue(
+          text: '+201069897635',
+          selection: TextSelection.collapsed(offset: 12),
+        ),
+      );
+      await tester.pump();
+      expect(phone.text, '+201069897635');
+      expect(phone.selection, const TextSelection.collapsed(offset: 12));
+
+      await tester.enterText(field, '');
+      await tester.pump();
+      expect(phone.text, isEmpty);
       expect(tester.takeException(), isNull);
     });
 

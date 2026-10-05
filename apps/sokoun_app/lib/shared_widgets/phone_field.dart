@@ -11,18 +11,21 @@ import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 
 class SokoonPhoneField extends StatelessWidget {
   static const String _countryCode = '+20';
+  static final RegExp _phoneInput = RegExp(
+    r'^(?:\+|\+2|\+20|\+201[0-9]{0,9})$',
+  );
 
   const SokoonPhoneField({
     super.key,
     required this.controller,
     this.label,
-    this.hintText = '01xxxxxxxxx',
+    this.hintText = '+201xxxxxxxxx',
     this.accentColor = AppColors.sokoonTeal,
     this.hasError = false,
     this.onChanged,
     this.validator,
     this.action = TextInputAction.next,
-    this.maxLength,
+    this.maxLength = 13,
   });
 
   final TextEditingController controller;
@@ -39,15 +42,18 @@ class SokoonPhoneField extends StatelessWidget {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    final String text = newValue.text.trimLeft();
-    if (text.isEmpty ||
-        text.startsWith('+') ||
-        !newValue.composing.isCollapsed) {
+    if (newValue.text.isEmpty || !newValue.composing.isCollapsed) {
       return newValue;
     }
 
-    final String phone =
-        '$_countryCode${text.startsWith('0') ? text.substring(1) : text}';
+    final String text = Validators.normalizeEgyptianMobile(newValue.text);
+    if (text.isEmpty) return oldValue;
+
+    final String phone = text.startsWith('+')
+        ? text
+        : '$_countryCode${text.startsWith('0') ? text.substring(1) : text}';
+    if (!_phoneInput.hasMatch(phone)) return oldValue;
+
     final int offset = phone.length - newValue.text.length;
     return newValue.copyWith(
       text: phone,
@@ -83,6 +89,7 @@ class SokoonPhoneField extends StatelessWidget {
           upperTitle: label ?? LocaleKeys.phoneNumber,
           title: hintText,
           inputType: TextInputType.phone,
+          textDirection: TextDirection.ltr,
           inputFormatters: [TextInputFormatter.withFunction(_addCountryCode)],
           suffixIcon: Directionality(
             textDirection: TextDirection.ltr,

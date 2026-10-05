@@ -23,6 +23,7 @@ class DefaultTextField extends StatefulWidget {
   final bool filled;
   final int? maxLength;
   final TextAlign? textAlign;
+  final TextDirection? textDirection;
   final EdgeInsetsGeometry? contentPadding;
   final GestureTapCallback? onTap;
   final String? suffixText;
@@ -66,6 +67,7 @@ class DefaultTextField extends StatefulWidget {
     this.filled = true,
     this.readOnly = false,
     this.textAlign = TextAlign.start,
+    this.textDirection,
     this.action = TextInputAction.next,
     this.focusNode,
     this.autoFocus = false,
@@ -102,6 +104,7 @@ class DefaultTextField extends StatefulWidget {
     this.filled = true,
     this.readOnly = false,
     this.textAlign = TextAlign.start,
+    this.textDirection,
     this.action = TextInputAction.next,
     this.focusNode,
     this.autoFocus = false,
@@ -178,6 +181,7 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
             maxLength: widget.maxLength,
             readOnly: widget.readOnly,
             textAlign: widget.textAlign!,
+            textDirection: widget.textDirection,
             maxLines: widget.inputType == TextInputType.multiline
                 ? widget.maxLines ?? 7
                 : 1,
