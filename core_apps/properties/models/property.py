@@ -85,7 +85,9 @@ class Property(TimeStampedModel):
         choices=SuitableFor.choices,
         default=SuitableFor.ALL,
     )
-    smoking_allowed = models.BooleanField(_("Smoking Allowed"), default=False)
+    smoking_allowed = models.BooleanField(
+        _("Smoking Allowed"), null=True, blank=True, default=False
+    )
 
     # Location
     governorate = models.ForeignKey(
@@ -101,6 +103,21 @@ class Property(TimeStampedModel):
         verbose_name=_("City"),
     )
     district = models.CharField(_("District"), max_length=100)
+    street = models.CharField(_("Street"), max_length=255, blank=True, default="")
+    country = models.CharField(_("Country"), max_length=100, blank=True, default="Egypt")
+    building_year = models.PositiveIntegerField(
+        _("Building Year"), null=True, blank=True
+    )
+    deposit = models.CharField(_("Deposit"), max_length=50, blank=True, default="")
+    ownership_proof = CloudinaryField(
+        folder="properties/ownership_proofs/",
+        null=True,
+        blank=True,
+        verbose_name=_("Ownership Proof"),
+    )
+    is_ownership_verified = models.BooleanField(
+        _("Is Ownership Verified"), default=False
+    )
     latitude = models.DecimalField(
         _("Latitude"), max_digits=9, decimal_places=6, null=True, blank=True
     )

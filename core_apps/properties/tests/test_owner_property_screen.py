@@ -366,7 +366,7 @@ class TestPropertyScreenActions:
         )
         url = reverse("property-delete", kwargs={"id": prop.id})
         response = auth_client.delete(url)
-        assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert response.status_code in (status.HTTP_200_OK, status.HTTP_204_NO_CONTENT)
         assert not Property.objects.filter(id=prop.id).exists()
 
 

@@ -287,9 +287,9 @@ class PropertyCreateAPIView(generics.CreateAPIView):
         serializer.save(owner=self.request.user)
 
 
-class PropertyDetailAPIView(generics.RetrieveAPIView):
+class PropertyDetailAPIView(generics.RetrieveUpdateAPIView):
     """
-    API view to retrieve details of a single property listing.
+    API view to retrieve or update details of a single property listing.
     """
 
     serializer_class = PropertyDetailSerializer
@@ -343,6 +343,25 @@ class PropertyDetailAPIView(generics.RetrieveAPIView):
         )
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
+
+    def patch(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if not request.user.is_authenticated or (
+            instance.owner != request.user and not getattr(request.user, "is_staff", False)
+        ):
+            raise permissions.exceptions.PermissionDenied(
+                "You are not the owner of this property listing."
+            )
+        serializer = PropertySerializer(
+            instance, data=request.data, partial=True, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        updated_instance = serializer.save()
+        data = PropertyDetailSerializer(updated_instance, context={"request": request}).data
+        return Response(
+            {"message": "Property changes submitted for review.", **data},
+            status=status.HTTP_200_OK,
+        )
 
 
 class MyPropertyListAPIView(generics.ListAPIView):
@@ -411,6 +430,19 @@ class PropertyUpdateAPIView(generics.UpdateAPIView):
         self.check_object_permissions(self.request, obj)
         return obj
 
+    def patch(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=True, context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        updated_instance = serializer.save()
+        data = PropertyDetailSerializer(updated_instance, context={"request": request}).data
+        return Response(
+            {"message": "Property changes submitted for review.", **data},
+            status=status.HTTP_200_OK,
+        )
+
 
 class PropertyDeleteAPIView(generics.DestroyAPIView):
     """
@@ -424,13 +456,25 @@ class PropertyDeleteAPIView(generics.DestroyAPIView):
     )
     serializer_class = PropertySerializer
     renderer_classes = [GenericJsonRenderer]
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
     lookup_field = "id"
 
     def get_object(self):
         obj = get_object_or_404(self.get_queryset(), id=self.kwargs["id"])
         self.check_object_permissions(self.request, obj)
         return obj
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        property_id = PropertyService.delete_property(instance, request.user)
+        return Response(
+            {
+                "message": "Property deleted successfully.",
+                "id": property_id,
+                "deleted": True,
+            },
+            status=status.HTTP_200_OK,
+        )
 
 
 class PropertyImageUploadAPIView(generics.CreateAPIView):
@@ -443,15 +487,27 @@ class PropertyImageUploadAPIView(generics.CreateAPIView):
     renderer_classes = [GenericJsonRenderer]
     permission_classes = [permissions.IsAuthenticated]
 
-    def perform_create(self, serializer):
+    def create(self, request, *args, **kwargs):
         property_obj = get_object_or_404(
             Property.objects.all(), id=self.kwargs["property_id"]
         )
-        if property_obj.owner != self.request.user:
+        if property_obj.owner != request.user and not getattr(request.user, "is_staff", False):
             raise permissions.exceptions.PermissionDenied(
                 "You are not the owner of this property listing."
             )
-        serializer.save(property=property_obj)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        img_obj = PropertyService.upload_property_image(
+            property_obj=property_obj,
+            image=serializer.validated_data["image"],
+            name=serializer.validated_data.get("name", ""),
+            description=serializer.validated_data.get("description", ""),
+        )
+        data = PropertyImageSerializer(img_obj, context={"request": request}).data
+        return Response(
+            {"message": "Image uploaded successfully.", **data},
+            status=status.HTTP_201_CREATED,
+        )
 
 
 class PropertyImageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
