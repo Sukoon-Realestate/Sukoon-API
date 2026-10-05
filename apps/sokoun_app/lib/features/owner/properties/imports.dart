@@ -32,6 +32,7 @@ import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_det
 import 'package:sokoun_app/features/tenant/home/presentation/screens/property_details_screen.dart';
 import 'presentation/cubits/delete_owner_property_cubit.dart';
 import 'data/enums/owner_property_action.dart';
+import 'data/enums/owner_property_filter.dart';
 import 'data/enums/owner_property_status.dart';
 import 'data/enums/owner_revenue_status.dart';
 import 'data/models/owner_property_analytics_content.dart';
@@ -42,6 +43,7 @@ import 'data/owner_properties_data.dart';
 import 'data/owner_property_json.dart';
 
 export 'data/enums/owner_property_action.dart';
+export 'data/enums/owner_property_filter.dart';
 export 'data/enums/owner_property_status.dart';
 export 'data/enums/owner_revenue_status.dart';
 export 'data/models/owner_property_analytics_content.dart';
@@ -68,6 +70,7 @@ part 'presentation/widgets/analytics/owner_analytics_metric_card.dart';
 part 'presentation/widgets/analytics/owner_property_interest_card.dart';
 part 'presentation/widgets/list/owner_properties_empty_state.dart';
 part 'presentation/widgets/list/owner_properties_list.dart';
+part 'presentation/widgets/list/owner_properties_status_tabs.dart';
 part 'presentation/widgets/list/owner_property_action_sheet.dart';
 part 'presentation/widgets/list/owner_property_card.dart';
 part 'presentation/widgets/list/owner_property_delete_sheet.dart';

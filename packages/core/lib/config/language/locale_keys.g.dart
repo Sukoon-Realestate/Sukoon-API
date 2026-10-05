@@ -2545,6 +2545,9 @@ abstract class LocaleKeys {
   static const String _ownerPropertyStatusPending = 'owner_property_status_pending';
   static String get ownerPropertyStatusPending => _ownerPropertyStatusPending.tr();
 
+  static const String _ownerPropertyStatusAccepted = 'owner_property_status_accepted';
+  static String get ownerPropertyStatusAccepted => _ownerPropertyStatusAccepted.tr();
+
   static const String _ownerPropertyStatusHidden = 'owner_property_status_hidden';
   static String get ownerPropertyStatusHidden => _ownerPropertyStatusHidden.tr();
 
@@ -2559,6 +2562,24 @@ abstract class LocaleKeys {
 
   static const String _ownerPropertiesEmptyDescription = 'owner_properties_empty_description';
   static String get ownerPropertiesEmptyDescription => _ownerPropertiesEmptyDescription.tr();
+
+  static const String _ownerPropertiesReviewEmptyTitle = 'owner_properties_review_empty_title';
+  static String get ownerPropertiesReviewEmptyTitle => _ownerPropertiesReviewEmptyTitle.tr();
+
+  static const String _ownerPropertiesReviewEmptyDescription = 'owner_properties_review_empty_description';
+  static String get ownerPropertiesReviewEmptyDescription => _ownerPropertiesReviewEmptyDescription.tr();
+
+  static const String _ownerPropertiesAcceptedEmptyTitle = 'owner_properties_accepted_empty_title';
+  static String get ownerPropertiesAcceptedEmptyTitle => _ownerPropertiesAcceptedEmptyTitle.tr();
+
+  static const String _ownerPropertiesAcceptedEmptyDescription = 'owner_properties_accepted_empty_description';
+  static String get ownerPropertiesAcceptedEmptyDescription => _ownerPropertiesAcceptedEmptyDescription.tr();
+
+  static const String _ownerPropertiesRejectedEmptyTitle = 'owner_properties_rejected_empty_title';
+  static String get ownerPropertiesRejectedEmptyTitle => _ownerPropertiesRejectedEmptyTitle.tr();
+
+  static const String _ownerPropertiesRejectedEmptyDescription = 'owner_properties_rejected_empty_description';
+  static String get ownerPropertiesRejectedEmptyDescription => _ownerPropertiesRejectedEmptyDescription.tr();
 
   static const String _ownerPropertiesSubmittedMessage = 'owner_properties_submitted_message';
   static String get ownerPropertiesSubmittedMessage => _ownerPropertiesSubmittedMessage.tr();

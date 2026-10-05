@@ -2,6 +2,9 @@ part of '../../imports.dart';
 
 extension OwnerPropertyStatusPresentation on OwnerPropertyStatus {
   String get label {
+    if (isAccepted) {
+      return LocaleKeys.ownerPropertyStatusAccepted;
+    }
     if (isVerified) {
       return LocaleKeys.ownerPropertyStatusVerified;
     }
@@ -18,6 +21,9 @@ extension OwnerPropertyStatusPresentation on OwnerPropertyStatus {
   }
 
   IconData get icon {
+    if (isAccepted) {
+      return Icons.check_circle_outline_rounded;
+    }
     if (isVerified) {
       return Icons.verified_rounded;
     }
@@ -34,6 +40,9 @@ extension OwnerPropertyStatusPresentation on OwnerPropertyStatus {
   }
 
   Color get foregroundColor {
+    if (isAccepted) {
+      return AppColors.green;
+    }
     if (isVerified) {
       return AppColors.gold;
     }
@@ -50,6 +59,9 @@ extension OwnerPropertyStatusPresentation on OwnerPropertyStatus {
   }
 
   Color get backgroundColor {
+    if (isAccepted) {
+      return AppColors.greenPale;
+    }
     if (isVerified) {
       return AppColors.goldPale;
     }
@@ -64,6 +76,32 @@ extension OwnerPropertyStatusPresentation on OwnerPropertyStatus {
     }
     return AppColors.greenPale;
   }
+}
+
+extension OwnerPropertyFilterPresentation on OwnerPropertyFilter {
+  String get label => switch (this) {
+    OwnerPropertyFilter.underReview => LocaleKeys.ownerPropertyStatusPending,
+    OwnerPropertyFilter.accepted => LocaleKeys.ownerPropertyStatusAccepted,
+    OwnerPropertyFilter.rejected => LocaleKeys.ownerPropertyStatusRejected,
+  };
+
+  String get emptyTitle => switch (this) {
+    OwnerPropertyFilter.underReview =>
+      LocaleKeys.ownerPropertiesReviewEmptyTitle,
+    OwnerPropertyFilter.accepted =>
+      LocaleKeys.ownerPropertiesAcceptedEmptyTitle,
+    OwnerPropertyFilter.rejected =>
+      LocaleKeys.ownerPropertiesRejectedEmptyTitle,
+  };
+
+  String get emptyDescription => switch (this) {
+    OwnerPropertyFilter.underReview =>
+      LocaleKeys.ownerPropertiesReviewEmptyDescription,
+    OwnerPropertyFilter.accepted =>
+      LocaleKeys.ownerPropertiesAcceptedEmptyDescription,
+    OwnerPropertyFilter.rejected =>
+      LocaleKeys.ownerPropertiesRejectedEmptyDescription,
+  };
 }
 
 extension OwnerRevenueStatusPresentation on OwnerRevenueStatus {

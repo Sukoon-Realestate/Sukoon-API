@@ -10,7 +10,11 @@ class OwnerPropertiesScreen extends StatefulWidget {
 }
 
 class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
-  late final PagifyController<OwnerPropertyContent> _pagifyController;
+  late PagifyController<OwnerPropertyContent> _pagifyController;
+  late final List<OwnerPropertyContent>? _fixtureProperties;
+  final ValueNotifier<OwnerPropertyFilter> _selectedFilter = ValueNotifier(
+    OwnerPropertyFilter.underReview,
+  );
   final ValueNotifier<bool> _isLoadingPropertyDetails = ValueNotifier<bool>(
     false,
   );
@@ -19,12 +23,23 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
   void initState() {
     super.initState();
     _pagifyController = PagifyController<OwnerPropertyContent>();
+    final List<OwnerPropertyContent>? properties = widget.initialProperties;
+    _fixtureProperties = properties == null ? null : List.of(properties);
   }
 
   @override
   void dispose() {
     _isLoadingPropertyDetails.dispose();
+    _selectedFilter.dispose();
     super.dispose();
+  }
+
+  void _selectFilter(OwnerPropertyFilter filter) {
+    if (_selectedFilter.value == filter) return;
+    // A fresh keyed list starts at page one and isolates previous tab responses.
+    // AppPagify owns disposal of each controller when its list is replaced.
+    _pagifyController = PagifyController<OwnerPropertyContent>();
+    _selectedFilter.value = filter;
   }
 
   Future<void> _openAddProperty() async {
@@ -109,13 +124,21 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
   }
 
   void _replaceProperty(OwnerPropertyContent property) {
+    final List<OwnerPropertyContent>? fixtures = _fixtureProperties;
+    final int fixtureIndex =
+        fixtures?.indexWhere((item) => item.id == property.id) ?? -1;
+    if (fixtureIndex >= 0) fixtures![fixtureIndex] = property;
     final int index = _pagifyController.items.indexWhere(
       (item) => item.id == property.id,
     );
     if (index < 0) {
       return;
     }
-    _pagifyController.replaceWith(index, property);
+    if (_selectedFilter.value.accepts(property.status)) {
+      _pagifyController.replaceWith(index, property);
+    } else {
+      _pagifyController.removeWhere((item) => item.id == property.id);
+    }
   }
 
   Future<void> _deleteProperty(OwnerPropertyContent property) async {
@@ -128,47 +151,70 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
       builder: (_) => OwnerPropertyDeleteSheet(property: property),
     );
     if (!mounted || deleted != true) return;
+    _fixtureProperties?.removeWhere((item) => item.id == property.id);
     _pagifyController.removeWhere((item) => item.id == property.id);
   }
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      title: LocaleKeys.ownerPropertiesTitle,
-      showBackButton: true,
-      actions: [
-        IconButton(
-          tooltip: LocaleKeys.ownerPropertiesAdd,
-          onPressed: _openAddProperty,
-          icon: const Icon(Icons.add_rounded),
-        ),
-      ],
-      backgroundColor: AppColors.scaffoldBackground,
-      contentWidth: SokounContentWidth.wide,
-      body: SafeArea(
-        child: ValueListenableBuilder<bool>(
-          valueListenable: _isLoadingPropertyDetails,
-          child: OwnerPropertiesList(
-            initialProperties: widget.initialProperties,
-            pagifyController: _pagifyController,
-            onAddPressed: _openAddProperty,
-            onEditPressed: _openEdit,
-            onRejectedPressed: _openRejection,
-            onDeletePressed: _deleteProperty,
+    return DefaultTabController(
+      length: OwnerPropertyFilter.values.length,
+      animationDuration: SokounMotion.duration(context, milliseconds: 240),
+      child: AppScaffold(
+        title: LocaleKeys.ownerPropertiesTitle,
+        showBackButton: true,
+        actions: [
+          IconButton(
+            tooltip: LocaleKeys.ownerPropertiesAdd,
+            onPressed: _openAddProperty,
+            icon: const Icon(Icons.add_rounded),
           ),
-          builder: (context, isLoading, child) => Stack(
-            children: [
-              child!,
-              if (isLoading)
-                Positioned.fill(
-                  child: ColoredBox(
-                    color: AppColors.whiteAlpha60,
-                    child: CustomLoading.showLoadingView(
-                      color: AppColors.sokoonTeal,
+        ],
+        backgroundColor: AppColors.scaffoldBackground,
+        contentWidth: SokounContentWidth.wide,
+        body: SafeArea(
+          child: ValueListenableBuilder<bool>(
+            valueListenable: _isLoadingPropertyDetails,
+            child: ValueListenableBuilder<OwnerPropertyFilter>(
+              valueListenable: _selectedFilter,
+              builder: (context, filter, _) {
+                final String statusId = filter.apiValue;
+                return Column(
+                  children: [
+                    OwnerPropertiesStatusTabs(
+                      selectedFilter: filter,
+                      onFilterSelected: _selectFilter,
+                    ),
+                    Expanded(
+                      child: OwnerPropertiesList(
+                        key: ValueKey(statusId),
+                        filter: filter,
+                        initialProperties: _fixtureProperties,
+                        pagifyController: _pagifyController,
+                        onAddPressed: _openAddProperty,
+                        onEditPressed: _openEdit,
+                        onRejectedPressed: _openRejection,
+                        onDeletePressed: _deleteProperty,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+            builder: (context, isLoading, child) => Stack(
+              children: [
+                child!,
+                if (isLoading)
+                  Positioned.fill(
+                    child: ColoredBox(
+                      color: AppColors.whiteAlpha60,
+                      child: CustomLoading.showLoadingView(
+                        color: AppColors.sokoonTeal,
+                      ),
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

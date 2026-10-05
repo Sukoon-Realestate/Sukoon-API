@@ -111,6 +111,23 @@ void main() {
     addTearDown(tester.view.reset);
   }
 
+  Future<void> selectPropertyTab(
+    WidgetTester tester,
+    OwnerPropertyFilter filter,
+  ) async {
+    final Finder tab = find.descendant(
+      of: find.byType(TabBar),
+      matching: find.text(filter.label),
+    );
+    await tester.ensureVisible(tab);
+    await tester.pump();
+    await tester.tap(tab);
+    await tester.pump();
+    // A refreshed card may load a remote thumbnail; check the tab transition
+    // without waiting for that unrelated image placeholder to stop animating.
+    await tester.pump(const Duration(milliseconds: 400));
+  }
+
   List<OwnerPropertyContent> ownerPropertiesFixture() {
     return const [
       OwnerPropertyContent(
@@ -911,6 +928,7 @@ void main() {
 
     expect(find.text('عقاراتي'), findsWidgets);
     expect(find.byType(OwnerPropertyCard), findsWidgets);
+    await selectPropertyTab(tester, OwnerPropertyFilter.accepted);
     expect(find.text('شقة مفروشة — مدينة نصر'), findsOneWidget);
     expect(tester.takeException(), isNull);
 
@@ -960,6 +978,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
+    await selectPropertyTab(tester, OwnerPropertyFilter.rejected);
     await tester.tap(find.byKey(const ValueKey('nasr-city-rejected')));
     await tester.pumpAndSettle();
 
@@ -987,7 +1006,9 @@ void main() {
     await submitEditFlow(tester);
 
     expect(find.byType(OwnerPropertiesScreen), findsOneWidget);
-    expect(find.text('قيد المراجعة'), findsOneWidget);
+    expect(find.byKey(const ValueKey('nasr-city-rejected')), findsNothing);
+    await selectPropertyTab(tester, OwnerPropertyFilter.underReview);
+    expect(find.byKey(const ValueKey('nasr-city-rejected')), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 
@@ -1005,6 +1026,7 @@ void main() {
         buildScreen(OwnerPropertiesScreen(initialProperties: [property])),
       );
       await tester.pumpAndSettle();
+      await selectPropertyTab(tester, OwnerPropertyFilter.accepted);
       await tester.tap(find.text(LocaleKeys.ownerPropertiesEdit));
       await tester.pumpAndSettle();
       final basics = tester.widget<AddPropertyBasicsPage>(
@@ -1094,7 +1116,8 @@ void main() {
       await tester.tap(find.text(LocaleKeys.ownerPropertyEditReviewDone));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));
-      expect(find.text(LocaleKeys.ownerPropertyStatusPending), findsOneWidget);
+      expect(find.text('Server-normalized listing'), findsNothing);
+      await selectPropertyTab(tester, OwnerPropertyFilter.underReview);
       expect(find.text('Server-normalized listing'), findsOneWidget);
       expect(tester.takeException(), isNull);
     },
@@ -1109,6 +1132,7 @@ void main() {
         buildScreen(OwnerPropertiesScreen(initialProperties: [property])),
       );
       await tester.pumpAndSettle();
+      await selectPropertyTab(tester, OwnerPropertyFilter.accepted);
 
       Future<void> openDeleteSheet() async {
         final delete = find.text(LocaleKeys.ownerPropertiesDeleteProperty);
@@ -1534,6 +1558,7 @@ class _OwnerPropertiesAssetLoader extends AssetLoader {
       'owner_properties_visit_unit': 'زيارة',
       'owner_property_status_verified': 'موثّق',
       'owner_property_status_pending': 'قيد المراجعة',
+      'owner_property_status_accepted': 'مقبول',
       'owner_property_status_hidden': 'مخفي',
       'owner_property_status_rejected': 'مرفوض',
       'owner_property_status_rented': 'مؤجّر',

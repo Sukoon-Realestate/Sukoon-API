@@ -1,4 +1,5 @@
 import 'models/owner_properties_response.dart';
+import 'enums/owner_property_filter.dart';
 import 'models/owner_property_content.dart';
 import 'models/owner_property_location_model.dart';
 import 'package:melos_core/config/res/config_imports.dart' show injector;
@@ -23,6 +24,7 @@ abstract interface class OwnerPropertiesDataSource {
 
   Future<(List<OwnerPropertyContent>, PaginationData)> getOwnedPropertiesPage({
     required int page,
+    required OwnerPropertyFilter filter,
   });
 }
 
@@ -79,12 +81,14 @@ final class OwnerPropertiesApiDataSource implements OwnerPropertiesDataSource {
   @override
   Future<(List<OwnerPropertyContent>, PaginationData)> getOwnedPropertiesPage({
     required int page,
+    required OwnerPropertyFilter filter,
   }) async {
     final response = await injector<NetworkService>().callApi(
       NetworkRequest(
         method: RequestMethod.get,
         path: ApiConstants.ownedProperties,
         queryParameters: {
+          'status': filter.apiValue,
           'page': page,
           'page_size': OwnerPropertiesData.pageSize,
         },
@@ -93,22 +97,15 @@ final class OwnerPropertiesApiDataSource implements OwnerPropertiesDataSource {
     );
 
     final OwnerPropertiesResponse data = response.data;
-    final int totalPages = data.count == 0
-        ? 1
-        : (data.count + OwnerPropertiesData.pageSize - 1) ~/
-              OwnerPropertiesData.pageSize;
     return (
       data.results,
-      PaginationData(
-        perPage: OwnerPropertiesData.pageSize,
-        totalPages: totalPages,
-      ),
+      PaginationData(perPage: data.perPage, totalPages: data.totalPages),
     );
   }
 }
 
 abstract final class OwnerPropertiesData {
-  static const int pageSize = 10;
+  static const int pageSize = OwnerPropertiesResponse.defaultPerPage;
   static const String cacheKey = 'owner_properties';
   static const String governoratesCacheKey = 'owner_property_governorates';
 
@@ -120,6 +117,9 @@ abstract final class OwnerPropertiesData {
   static String citiesCacheKey(String governorateId) =>
       source.citiesCacheKey(governorateId);
 
+  static String cacheKeyFor(OwnerPropertyFilter filter) =>
+      '${source.cacheKey}_${filter.apiValue}';
+
   static Future<OwnerPropertyLocationsResponse> getGovernorates() =>
       source.getGovernorates();
 
@@ -129,6 +129,8 @@ abstract final class OwnerPropertiesData {
   }) => source.getCities(governorateId: governorateId, search: search);
 
   static Future<(List<OwnerPropertyContent>, PaginationData)>
-  getOwnedPropertiesPage({required int page}) =>
-      source.getOwnedPropertiesPage(page: page);
+  getOwnedPropertiesPage({
+    required int page,
+    required OwnerPropertyFilter filter,
+  }) => source.getOwnedPropertiesPage(page: page, filter: filter);
 }

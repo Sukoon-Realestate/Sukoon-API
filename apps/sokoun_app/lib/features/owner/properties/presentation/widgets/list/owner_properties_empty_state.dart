@@ -1,13 +1,18 @@
 part of '../../../imports.dart';
 
 class OwnerPropertiesEmptyState extends StatelessWidget {
-  const OwnerPropertiesEmptyState({super.key, required this.onAddPressed});
+  const OwnerPropertiesEmptyState({
+    super.key,
+    required this.filter,
+    required this.onAddPressed,
+  });
 
+  final OwnerPropertyFilter filter;
   final VoidCallback onAddPressed;
 
   @override
   Widget build(BuildContext context) {
-    final bool reduceMotion = MediaQuery.of(context).disableAnimations;
+    final bool reduceMotion = SokounMotion.duration(context) == Duration.zero;
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(horizontal: 36.w, vertical: 24.h),
       child: Column(
@@ -25,24 +30,22 @@ class OwnerPropertiesEmptyState extends StatelessWidget {
           ),
           10.szH,
           AppText(
-            LocaleKeys.ownerPropertiesEmptyTitle,
+            filter.emptyTitle,
             style: AppTextStyles.bold.copyWith(
               color: AppColors.sokoonNavy,
               fontSize: 18.sp,
             ),
             textAlign: TextAlign.center,
-            maxLines: 2,
           ),
           7.szH,
           AppText(
-            LocaleKeys.ownerPropertiesEmptyDescription,
+            filter.emptyDescription,
             style: AppTextStyles.medium13.copyWith(
               color: AppColors.sokoonGray,
               fontSize: 13.sp,
               height: 1.45,
             ),
             textAlign: TextAlign.center,
-            maxLines: 3,
           ),
           20.szH,
           DefaultButton(
