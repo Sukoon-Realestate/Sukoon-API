@@ -22,7 +22,8 @@ BOLD = "\033[1m"
 RESET = "\033[0m"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-FRONTEND_DIR = BASE_DIR / "frontend"
+REPO_ROOT = BASE_DIR.parent
+FRONTEND_DIR = REPO_ROOT / "frontend"
 
 
 def stream_logs(process, prefix, color):
