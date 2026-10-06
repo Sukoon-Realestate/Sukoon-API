@@ -1,59 +1,71 @@
-# ── Configuration ───────────────────────────────────────
-# Python interpreter (override with: make run PYTHON=python3.12)
+# ── Sukoon Backend Makefile ──────────────────────────────
 PYTHON ?= python
+PIPENV ?= pipenv
 
 .DEFAULT_GOAL := help
 
 # ── Help ────────────────────────────────────────────────
 help:
-	@echo "Available commands:"
-	@echo "  install          - Install Python dependencies"
-	@echo "  run              - Run the development server"
+	@echo "Sukoon Backend - Available commands:"
+	@echo "  install          - Install dependencies using pipenv"
+	@echo "  run              - Run the development server (uvicorn/runserver)"
 	@echo "  migrate          - Apply database migrations"
-	@echo "  migrations       - Create new migrations"
-	@echo "  shell            - Open the Django shell"
-	@echo "  test             - Run the test suite"
+	@echo "  makemigrations   - Create new migrations"
+	@echo "  shell            - Open Django shell_plus / shell"
+	@echo "  test             - Run pytest test suite"
+	@echo "  test-cov         - Run pytest with coverage"
 	@echo "  superuser        - Create a superuser"
 	@echo "  static           - Collect static files"
 	@echo "  check            - Run Django system checks"
+	@echo "  seed             - Seed SQLite database with test data"
 	@echo "  clean            - Remove __pycache__ and *.pyc files"
-	@echo "  clean-migrations - Delete migration files (keeps __init__.py)"
 
-# ── Django ──────────────────────────────────────────────
+# ── Setup & Run ─────────────────────────────────────────
 install:
-	$(PYTHON) -m pip install -r requirements.txt
+	$(PIPENV) install
 
 run:
-	$(PYTHON) manage.py runserver
+	$(PIPENV) run uvicorn config.asgi:application --reload --host 127.0.0.1 --port 8000
 
-mi:
-	$(PYTHON) manage.py migrate
+run-manage:
+	$(PIPENV) run python manage.py runserver
 
-make:
-	$(PYTHON) manage.py makemigrations
+migrate:
+	$(PIPENV) run python manage.py migrate
+
+makemigrations:
+	$(PIPENV) run python manage.py makemigrations
 
 shell:
-	$(PYTHON) manage.py shell
+	$(PIPENV) run python manage.py shell_plus
 
+# ── Testing & Quality ───────────────────────────────────
 test:
-	$(PYTHON) manage.py test
+	$(PIPENV) run pytest
 
-superuser:
-	$(PYTHON) manage.py createsuperuser
-
-static:
-	$(PYTHON) manage.py collectstatic --noinput
+test-cov:
+	$(PIPENV) run pytest --cov=core_apps --cov-report=term-missing
 
 check:
-	$(PYTHON) manage.py check
+	$(PIPENV) run python manage.py check
+
+lint:
+	$(PIPENV) run flake8 .
+
+# ── Management ──────────────────────────────────────────
+superuser:
+	$(PIPENV) run python manage.py createsuperuser
+
+static:
+	$(PIPENV) run python manage.py collectstatic --noinput
+
+seed:
+	$(PIPENV) run python manage.py seed_db --settings=config.settings.local_sqlite
 
 # ── Utilities ───────────────────────────────────────────
 clean:
 	find . -name "*.pyc" -delete
 	find . -name "__pycache__" -type d -exec rm -rf {} +
+	rm -rf .pytest_cache .coverage
 
-clean-migrations:
-	find apps -path "*/migrations/*.py" ! -name "__init__.py" -delete
-	find apps -path "*/migrations/*.pyc" -delete
-
-.PHONY: help install run migrate migrations shell test superuser static check clean clean-migrations
+.PHONY: help install run run-manage migrate makemigrations shell test test-cov check lint superuser static seed clean

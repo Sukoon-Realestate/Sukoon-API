@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sokoun Feature Architecture"
+  short_description: "Build Sokoun features with clean Cubit layers"
+  default_prompt: "Use $sokoun-feature-architecture to build or refactor this feature with the project data and presentation structure."

@@ -1,8 +1,8 @@
-# CLAUDE.md — GeenadeProject
+# CLAUDE.md — Sukoon Backend API
 
-Django 5.0 + DRF + SimpleJWT + Unfold admin. Settings package `Project/` with a `settings_modules/`
-split, apps under `apps/`, single repo-root `.env`, `Makefile` shortcuts, virtualenv at `./Venv/`.
-All API views are **function-based** (`@api_view`); keep code human-readable and minimal.
+Django + DRF + SimpleJWT + Unfold admin. Settings package `config/settings/`, apps under `core_apps/`,
+Pipenv virtualenv, API views with DRF serializers and services. All API views follow clean modular
+patterns with function-based or class-based conventions as established in `core_apps/`.
 
 ---
 

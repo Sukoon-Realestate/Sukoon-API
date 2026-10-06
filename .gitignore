@@ -1,27 +1,79 @@
-# Environments
+# ── Environments & Secrets ──────────────────────────────
 .env
+.env*
+!.env.example
 .venv
 env/
 venv/
 ENV/
-
-# Python cache
-__pycache__/
-*.py[cod]
-*$py.class
-
-# IDE and OS
-.DS_Store
-.idea/
-.vscode/
-
-# Django local files
-db.sqlite3
-*.log
-local_settings.py
-media/support/
-
-# Credentials and secrets
 credentials/
 config/credentials/
 *service_account*.json
+
+# ── Python / Django ─────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.sqlite3
+dev.sqlite3
+db.sqlite3
+local_settings.py
+media/support/
+media/profile_documents/
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# ── Node / Next.js (Frontend) ───────────────────────────
+node_modules/
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+.next/
+out/
+dist/
+.vercel
+*.tsbuildinfo
+next-env.d.ts
+
+# ── Flutter / Dart / Melos (Mobile) ─────────────────────
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+build/
+/build/
+mobile/**/build/
+**/build/
+coverage/
+/coverage/
+app.*.symbols
+app.*.map.json
+/android/app/debug
+/android/app/profile
+/android/app/release
+.metadata
+
+# ── Operating System & IDEs ─────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.swp
+*.swo
