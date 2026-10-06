@@ -1,177 +1,234 @@
-# Project Guidelines
+# CLAUDE.md — GeenadeProject
 
-## Command Guide
-- **Run Dev Server**: `pipenv run uvicorn config.asgi:application --reload --host 127.0.0.1 --port 8000`
-- **Run Tests**: `PIPENV_DONT_LOAD_ENV=1 DJANGO_SETTINGS_MODULE=config.settings.test pipenv run pytest`
-- **Generate Migrations**: `pipenv run python manage.py makemigrations`
-- **Apply Migrations**: `pipenv run python manage.py migrate`
+Django 5.0 + DRF + SimpleJWT + Unfold admin. Settings package `Project/` with a `settings_modules/`
+split, apps under `apps/`, single repo-root `.env`, `Makefile` shortcuts, virtualenv at `./Venv/`.
+All API views are **function-based** (`@api_view`); keep code human-readable and minimal.
 
-# Project Rules
+---
 
-## Code Quality
-- Write clean, readable, maintainable code
-- Use clear, descriptive variable and function names
-- Avoid overly complex logic — prefer simplicity
-- Keep functions small and focused (single responsibility)
-- Avoid magic values — use constants
-- Follow consistent formatting (Black)
+## CORE RULE — Auto-route every task
 
-## Comments (Better Comments Convention)
-Use comment prefixes consistently so intent is scannable at a glance:
+**Before answering directly, always check the routing table below.** If a prompt matches the
+keywords of an agent or skill, **invoke it automatically** — do not wait for the user to name it.
+If several match, pick the most specific; for multi-part work, chain them (e.g. build → review →
+test). Only answer inline when nothing fits (simple questions, quick edits, conversation).
 
-| Prefix | Meaning | Example |
-|--------|---------|---------|
-| `# *`  | Highlight — important note or section marker | `# * Access token settings` |
-| `# ?`  | Explanation — why this exists or how it works | `# ? Lax prevents CSRF while allowing top-level nav` |
-| `# !`  | Warning / side effect / critical info | `# ! Modifies the response object directly` |
-| `# TODO` | Work remaining | `# TODO refactor into service layer` |
+Matching is case-insensitive and partial — a keyword anywhere in the prompt counts.
 
-- Never write comments that just restate the code (`# loop through users`)
-- Block comments explaining a setting or decision use `# ?`
-- Side-effect warnings use `# !`
+---
 
-## API Architecture
-- Use Django REST Framework
-- Use `Response` with proper HTTP status codes
-- Always version URLs: `/api/v1/<app>/`
-- Use `django-filter` when more than one filter is needed
-- Separate list, detail, create, update into distinct view classes — never combine unrelated actions in one class
-- List endpoints must always be paginated (use the default `PageNumberPagination`)
+## SKILLS (invoke with the Skill tool)
 
-## Project Structure
-```
-<app>/models/         # one file per model or logical domain
-<app>/serializers/    # one file per domain
-<app>/views/          # one file per domain
-<app>/services/       # business logic, one file per domain
-<app>/filters.py      # django-filter FilterSet classes
-<app>/permissions.py  # custom DRF permission classes
-<app>/signals.py      # signal handlers (connected in apps.py)
-<app>/urls.py
-<app>/tests/          # test_models.py, test_views.py, test_serializers.py, test_services.py
-```
+### `/django-feature`  ← preferred for almost all feature work here
+Encodes THIS project's layout (settings split, `apps/`, Makefile, JWT, django-filter, Unfold).
+**Trigger words:** add, create, build, scaffold, new app, new model, model, field, migration,
+migrate, makemigrations, serializer, serialize, viewset, view, endpoint, route, url, api, crud,
+list/detail/create/update/delete endpoint, filter, django-filter, pagination, permission,
+authenticate, jwt, token, login, signup, register, admin, unfold, register model, queryset,
+manager, signal, app, feature, generic view, apiview.
 
-## Conventions
-- Use `ModelSerializer`
-- Follow existing project patterns exactly
-- Use `select_related` / `prefetch_related` to optimize querysets
-- Default auth: JWT (cookie-based via `CookieAuthentication`), `IsAuthenticated`
+### `/code-review`
+Review the working diff for bugs + cleanups (effort: low/medium/high/max/ultra).
+**Trigger words:** review, review my changes, review the diff, check my code, look over, feedback
+on, is this correct, code review, pr review, before i commit, before i push, find bugs in my diff.
 
-## Model Conventions
-- Always inherit from `TimeStampedModel` (provides `pkid`, `id`, `created_at`, `updated_at`)
-- Every model must define `__str__` returning a human-readable identifier
-- Always define `class Meta` with at least `verbose_name`, `verbose_name_plural`, and `ordering`
-- Use `UUID` for public-facing IDs (`id`), `BigAutoField` for internal PKs (`pkid`) — follow existing User/Profile pattern
-- Never use `null=True` on string fields (`CharField`, `TextField`) — use `blank=True` with empty string default instead
+### `/security-review`
+Security pass on pending branch changes.
+**Trigger words:** security review, security check, is this secure, vulnerability, vuln, exploit,
+injection, xss, csrf, secure my changes, audit the diff, owasp.
 
-## Serializer Conventions
-- Use `read_only_fields` in `Meta` for fields that must never be written (e.g. `id`, `created_at`)
-- Prefer `PrimaryKeyRelatedField` over nested serializers for write operations; use nested serializers for read-only representations
-- `SerializerMethodField` is acceptable for computed/derived values — name the method `get_<field>`
-- Use `validate_<field>` for single-field validation, `validate` for cross-field validation
-- Never put business logic inside serializer `create`/`update` — delegate to a service
+### `/init`
+Generate/update project documentation in CLAUDE.md.
+**Trigger words:** init, document the project, generate claude.md, project docs, onboarding doc.
 
-## URL & Naming Conventions
-- URL names: `<domain>-list`, `<domain>-detail`, `<domain>-create`, `<domain>-update`, `<domain>-delete`
-- View class names: `<Domain>ListAPIView`, `<Domain>DetailAPIView`, `<Domain>CreateAPIView`, `<Domain>UpdateAPIView`
-- Serializer names: `<Domain>Serializer`, `<Domain>CreateSerializer`, `<Domain>UpdateSerializer` when shapes differ
-- Filter class names: `<Domain>Filter` in `<app>/filters.py`
-- Permission class names: `Is<Role>` or `Can<Action>` in `<app>/permissions.py`
+### `/run`
+Launch/drive the actual app to see a change working.
+**Trigger words:** run, run the app, start, start server, runserver, launch, boot, serve,
+open the app, dev server, screenshot the app.
 
-## Permissions
-- Default: `IsAuthenticated` — never leave a view with no permission class
-- Write custom permissions in `<app>/permissions.py` as `BasePermission` subclasses
-- Object-level permissions go in `has_object_permission` — always call `self.check_object_permissions(request, obj)` in the view before returning the object
-- Ownership check pattern: `return obj.user == request.user`
+### `/verify`
+Run the app and confirm a fix/feature actually works.
+**Trigger words:** verify, confirm it works, does it work, test manually, validate, check the fix,
+make sure it works, prove it works.
 
-## Signals
-- Signals are acceptable ONLY for decoupled side effects: auto-creating related objects (e.g. Profile on User creation), invalidating caches
-- Never put business logic or multi-step transactions in signals — put them in services
-- Keep signal handlers in `<app>/signals.py` and connect them in `<app>/apps.py` via `ready()`
+### `/webapp-testing`
+Playwright-driven browser testing of the running app.
+**Trigger words:** test in browser, e2e, end to end, playwright, browser test, click through,
+test the ui, frontend test, integration test in browser.
 
-## Error Handling
-- Services raise `rest_framework.exceptions.ValidationError` for business rule violations — DRF converts these to `400` automatically
-- Services raise `rest_framework.exceptions.PermissionDenied` for authorization failures → `403`
-- Services raise `django.core.exceptions.ObjectDoesNotExist` (or `Model.DoesNotExist`) for missing resources — views convert these to `404` via `get_object_or_404` or explicit `try/except`
-- Never raise raw `Exception` or `ValueError` from services — always use typed exceptions
-- Views do not need `try/except` for `ValidationError` — DRF handles it; only catch `DoesNotExist`
+### `/simplify`
+Quality-only cleanup of changed code (reuse, simplify, efficiency). No bug hunting.
+**Trigger words:** simplify, clean up, refactor lightly, tidy, dry up, reduce duplication,
+make cleaner, polish the code.
 
-## Logging
-- Every view file must define: `logger = logging.getLogger(__name__)`
-- Log errors with `logger.error(...)`, unexpected states with `logger.warning(...)`
-- Never log sensitive data (passwords, tokens, personal data)
-- Do not log normal request flow — only log errors and unexpected branches
+### `/fewer-permission-prompts`
+Add an allowlist to cut permission prompts.
+**Trigger words:** stop asking permission, fewer prompts, allowlist, auto-approve commands,
+reduce permission prompts.
 
-## Documentation
-- Write docstrings for views, helper functions, and non-trivial logic
-- For POST/PUT/PATCH: include `request.body` example in docstring
-- For filters: document parameter keys and example values
+### `/skill-creator`
+Create or improve a skill.
+**Trigger words:** create a skill, new skill, make a skill, edit skill, improve skill, build skill.
 
-## Database Performance (MANDATORY)
-- Prevent N+1 queries — analyze queryset relations before writing queries
-- `select_related` → ForeignKey / OneToOne
-- `prefetch_related` → ManyToMany / reverse relations
-- Never query inside loops
-- Never serialize unoptimized querysets
-- Do not access related fields in serializers without prior queryset optimization
+### Other skills (invoke when clearly relevant)
+- `/docx` → **word doc, .docx, letter, memo, report (Word)**
+- `/pdf` → **pdf, .pdf, merge pdf, split pdf, extract from pdf, fill form, ocr**
+- `/pptx` → **slides, deck, presentation, .pptx, pitch deck**
+- `/claude-api` → **claude, anthropic, opus, sonnet, haiku, anthropic sdk, model id, prompt caching, tool use, llm pricing**
+- `/deep-research` → **deep research, research report, investigate thoroughly, multi-source, cited report**
+- `/frontend-design` / `/web-artifacts-builder` / `/canvas-design` → **UI design, poster, visual art, react artifact** (rarely needed for this backend project)
 
-## Testing
-- **Tests are mandatory whenever a new feature is created** — include happy path, error cases, and edge cases
-- Tests live in `<app>/tests/` package
-- One file per concern: `test_models.py`, `test_views.py`, `test_serializers.py`, `test_services.py`
-- Use pytest + pytest-django
-- Use `APIClient.force_authenticate()` for authenticated view tests — never set JWT cookies manually
-- When a bug is found, write a failing test before fixing it
-- Coverage floor: 70% (enforced in CI via `--cov-fail-under=70`)
-- Test services independently — no `APIClient`, just call the function directly with `@pytest.mark.django_db`
-- For views using `select_related`/`prefetch_related`, add a query-count assertion using `django.test.utils.CaptureQueriesContext`
-- Every endpoint must have: unauthenticated → 401, happy path, invalid payload → 400, not found → 404
+---
 
-## Strict Exclusions
-- NEVER run `makemigrations` or `migrate`
-- No templates
-- No Django forms (except admin)
-- No unrelated features or abstractions
+## AGENTS (spawn with the Agent tool — `subagent_type`)
 
-## Performance Mode
-- Prefer minimal diffs over full rewrites
-- Modify only necessary lines/functions
-- Assume existing code is correct unless stated otherwise
-- Minimize token usage: no unnecessary context, no over-generation
+### django-developer  ← deep Django work beyond a single feature
+**Trigger words:** django, drf, rest framework, async view, async orm, middleware, settings,
+celery, channels, websocket, signal, custom user, abstractuser, model inheritance, manager,
+queryset optimization, select_related, prefetch_related, django 5, enterprise pattern, modernize.
 
-## Service Layer
+### python-pro
+**Trigger words:** python, type hint, typing, mypy, dataclass, asyncio, async/await, decorator,
+generator, context manager, pytest, packaging, pip, poetry, uv, script, utility, refactor python.
 
-Place business logic in a `services/` package inside the app, not in views or serializers.
+### api-designer
+**Trigger words:** api design, design api, rest, restful, graphql, openapi, swagger, spec,
+contract, versioning, api versioning, endpoint design, resource modeling, rate limit, pagination
+design, idempotency, webhook design, hateoas.
 
-### Structure
-```
-<app>/services/
-    <domain>_service.py
-    __init__.py
-```
+### backend-developer
+**Trigger words:** backend, server-side, service, microservice, business logic, scalability,
+architecture (backend), throughput, queue, worker, background job, caching layer, redis.
 
-### Rules
-- Services handle business logic only — no request/response handling, no serializers, no HTTP logic
-- Views stay thin: validate input via serializer, call service, return response
-- Use `@transaction.atomic` for multi-step operations
-- Name functions with clear action verbs: `create_order`, `cancel_order`, `complete_order`
-- Serializer validates input format/types; service validates business rules
-- DB performance rules apply inside services (no queries in loops, use select_related/prefetch_related)
-- Handle external integrations (email, payments) inside services, not views
+### fullstack-developer
+**Trigger words:** fullstack, full stack, end-to-end feature, frontend and backend, ui plus api,
+whole feature across layers.
 
-### Responsibilities
-- **Serializer** → input validation (format, types)
-- **Service** → business validation + execution
-- **View** → orchestration only (call serializer → call service → return Response)
+### database-administrator
+**Trigger words:** database setup, postgres, postgresql, mysql, replication, high availability,
+backup, restore, disaster recovery, connection pool, db config, provisioning, failover.
 
-### Anti-Patterns (NEVER do these)
-- Business logic inside views
-- Calling serializers inside services
-- Using `request` inside services
+### database-optimizer
+**Trigger words:** slow query, query optimization, optimize query, index, indexing, n+1,
+explain analyze, query plan, db performance, slow page, optimize database, denormalize.
 
-### Testing Services
-- Test services independently with `@pytest.mark.django_db` — no APIClient needed
-- Add `test_services.py` to `<app>/tests/`
+### performance-engineer
+**Trigger words:** performance, slow, latency, speed up, optimize, bottleneck, profiling, profile,
+memory leak, cpu, load test, benchmark, throughput, response time.
 
-### When to Use
-Use a service when logic involves multiple models, transactions, non-trivial business rules, or needs reuse across views.
+### security-auditor
+**Trigger words:** security audit, audit security, secure, vulnerability assessment, threat,
+risk, compliance, hardening, jwt security, cors, secrets, auth review, owasp, pentest review.
+
+### penetration-tester
+**Trigger words:** pentest, penetration test, exploit, attack, offensive security, ctf,
+exploit a vuln, prove the vulnerability.
+
+### code-reviewer
+**Trigger words:** code review (agent), review code quality, best practices, maintainability,
+review for, quality check, lint review, style review.
+
+### architect-reviewer
+**Trigger words:** architecture, system design, design decision, tradeoff, technology choice,
+should i use, pattern, structure the project, macro design, evaluate design.
+
+### refactoring-specialist
+**Trigger words:** refactor, restructure, clean architecture, reduce complexity, extract,
+decouple, technical debt, code smell, rewrite messy code, modularize.
+
+### test-automator
+**Trigger words:** test, tests, write tests, unit test, test coverage, coverage, pytest,
+test framework, automated tests, ci tests, factory, fixture, mock.
+
+### qa-expert
+**Trigger words:** qa, quality assurance, test plan, test strategy, test cases, acceptance
+criteria, quality metrics, regression plan.
+
+### debugger
+**Trigger words:** debug, bug, error, exception, traceback, stack trace, crash, not working,
+broken, fails, fix the error, why is this failing, 500 error.
+
+### error-detective
+**Trigger words:** investigate error, correlate errors, root cause, logs, log analysis,
+recurring error, intermittent, flaky, error spike, across services.
+
+### deployment-engineer
+**Trigger words:** deploy, deployment, ci/cd, ci pipeline, pipeline, github actions, release,
+rollout, build pipeline, automate deploy.
+
+### devops-engineer
+**Trigger words:** devops, docker, dockerfile, compose, container, nginx, infrastructure,
+infra, automation, kubernetes, k8s, terraform, environment, env config, provisioning.
+
+### build-engineer
+**Trigger words:** build, build system, compile, build time, build performance, makefile,
+build cache, monorepo build.
+
+### dependency-manager
+**Trigger words:** dependency, dependencies, requirements.txt, upgrade package, update package,
+version conflict, vulnerable dependency, audit deps, pip freeze, bump version.
+
+### documentation-engineer
+**Trigger words:** documentation, docs, document, api docs, write guide, tutorial, reference docs,
+docstring (large scale), readme system.
+
+### readme-generator
+**Trigger words:** readme, generate readme, readme.md, project readme.
+
+### git-workflow-manager
+**Trigger words:** git workflow, branching strategy, git flow, merge strategy, rebase strategy,
+commit convention, pr workflow, release branching.
+
+### compliance-auditor / gdpr-ccpa-compliance
+**Trigger words:** compliance, gdpr, ccpa, hipaa, pci, soc 2, iso, data privacy, consent,
+right to deletion, data subject, regulatory.
+
+### accessibility-tester
+**Trigger words:** accessibility, a11y, wcag, screen reader, aria, contrast, keyboard navigation.
+
+### ui-designer / ui-ux-tester
+**Trigger words:** ui, ux, design system, component, visual design, usability, user flow,
+mockup, layout, interface design.
+
+### chaos-engineer
+**Trigger words:** chaos, resilience, failure injection, game day, fault tolerance,
+disaster simulation.
+
+### Specialist agents (use only when explicitly relevant)
+- ad-security-reviewer → **active directory, kerberos, ldap, domain controller**
+- powershell-security-hardening → **powershell, ps1, remoting, execution policy**
+- electron-pro → **electron, desktop app**
+- ai-writing-auditor → **ai writing, remove ai patterns, humanize text**
+
+---
+
+## Project conventions (always honor)
+- Use the `Makefile` targets and the `./Venv/` virtualenv for commands.
+- Respect the settings layout: `Project/settings.py` + the `Project/settings_modules/*` split
+  (`DJANGO_SETTINGS_MODULE = "Project.settings"`); env comes from a single repo-root `.env`.
+- All API views are function-based (`@api_view`) — no APIView/ViewSet/generic class views.
+  Favor short, human-readable code; inline serializers/helpers a feature doesn't need.
+- New code goes in `apps/<appname>/`.
+- DRF endpoints use SimpleJWT auth, django-filter, and the configured DRF pagination.
+- Admin uses django-unfold.
+
+---
+
+## ALWAYS — Log every completed task to WORKLOG.md
+
+After you finish **any task the user asked for** (a feature, fix, refactor, config change, etc.),
+append an entry to `WORKLOG.md` before ending your turn. This is the user's daily record for
+tech-lead/Plane review, so each entry must be self-contained.
+
+- Append under today's date heading (`## YYYY-MM-DD`); create that heading if it's a new day.
+- Use the entry template at the bottom of `WORKLOG.md`:
+  ```
+  ### <short task title>
+  - **What:** <one line on what was done>
+  - **Why:** <reason / ticket context>
+  - **Details:** <key changes, decisions, anything the tech lead should notice>
+  - **Files:** <files touched>
+  ```
+- Write it as a finished, copy-pasteable summary — past tense, no "I will". Note any follow-ups or
+  caveats the tech lead should see.
+- Skip only for pure questions/conversation where nothing was changed. When in doubt, log it.

@@ -1,52 +1,59 @@
-PIPENV ?= pipenv
+# ── Configuration ───────────────────────────────────────
+# Python interpreter (override with: make run PYTHON=python3.12)
+PYTHON ?= python
 
-test:
-	$(PIPENV) run pytest
+.DEFAULT_GOAL := help
 
-test-cov:
-	$(PIPENV) run pytest --cov=core_apps --cov-report=term-missing
+# ── Help ────────────────────────────────────────────────
+help:
+	@echo "Available commands:"
+	@echo "  install          - Install Python dependencies"
+	@echo "  run              - Run the development server"
+	@echo "  migrate          - Apply database migrations"
+	@echo "  migrations       - Create new migrations"
+	@echo "  shell            - Open the Django shell"
+	@echo "  test             - Run the test suite"
+	@echo "  superuser        - Create a superuser"
+	@echo "  static           - Collect static files"
+	@echo "  check            - Run Django system checks"
+	@echo "  clean            - Remove __pycache__ and *.pyc files"
+	@echo "  clean-migrations - Delete migration files (keeps __init__.py)"
 
-dev:
-	$(PIPENV) run python scripts/dev.py
-
-dev-seed:
-	$(PIPENV) run python scripts/dev.py --seed
-
-dev-reset:
-	$(PIPENV) run python scripts/dev.py --reset
-
-seed:
-	$(PIPENV) run python manage.py seed_db --settings=config.settings.local_sqlite
+# ── Django ──────────────────────────────────────────────
+install:
+	$(PYTHON) -m pip install -r requirements.txt
 
 run:
-	$(PIPENV) run uvicorn config.asgi:application --reload --host 127.0.0.1 --port 8000
+	$(PYTHON) manage.py runserver
 
-makemigrations:
-	$(PIPENV) run python manage.py makemigrations
+mi:
+	$(PYTHON) manage.py migrate
 
-migrate:
-	$(PIPENV) run python manage.py migrate
-
-collectstatic:
-	$(PIPENV) run python manage.py collectstatic --no-input --clear
-
-build:
-	$(PIPENV) install && $(PIPENV) run python manage.py collectstatic --no-input
-
-superuser:
-	$(PIPENV) run python manage.py createsuperuser
+make:
+	$(PYTHON) manage.py makemigrations
 
 shell:
-	$(PIPENV) run python manage.py shell_plus
+	$(PYTHON) manage.py shell
 
-django_shell:
-	$(PIPENV) run python manage.py shell_plus
+test:
+	$(PYTHON) manage.py test
 
-lint:
-	$(PIPENV) run flake8 .
+superuser:
+	$(PYTHON) manage.py createsuperuser
 
-lint-check:
-	$(PIPENV) run black --check .
+static:
+	$(PYTHON) manage.py collectstatic --noinput
 
-generate_token:
-	python -c "import secrets; print(secrets.token_urlsafe(38))"
+check:
+	$(PYTHON) manage.py check
+
+# ── Utilities ───────────────────────────────────────────
+clean:
+	find . -name "*.pyc" -delete
+	find . -name "__pycache__" -type d -exec rm -rf {} +
+
+clean-migrations:
+	find apps -path "*/migrations/*.py" ! -name "__init__.py" -delete
+	find apps -path "*/migrations/*.pyc" -delete
+
+.PHONY: help install run migrate migrations shell test superuser static check clean clean-migrations
