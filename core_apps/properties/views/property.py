@@ -92,7 +92,10 @@ class PropertyFilterOptionsAPIView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        return Response(PropertyService.get_filter_options())
+        accept_lang = request.headers.get("Accept-Language", "").lower()
+        lang_param = (request.GET.get("lang") or "").lower()
+        lang = "en" if (lang_param.startswith("en") or (accept_lang.startswith("en") and "ar" not in accept_lang)) else "ar"
+        return Response(PropertyService.get_filter_options(lang))
 
 
 class AvailablePlacesAPIView(generics.GenericAPIView):

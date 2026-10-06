@@ -167,6 +167,15 @@ class PropertyNewListSerializer(serializers.ModelSerializer):
             if active:
                 tags.append(label)
 
+        request = self.context.get("request")
+        if request:
+            accept_lang = request.headers.get("Accept-Language", "").lower()
+            lang_param = (request.GET.get("lang") or "").lower()
+            if lang_param.startswith("en") or (accept_lang.startswith("en") and "ar" not in accept_lang):
+                from core_apps.common.translation import translate_tag
+
+                return [translate_tag(t, "en") for t in tags]
+
         return tags
 
 

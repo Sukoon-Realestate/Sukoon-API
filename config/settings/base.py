@@ -58,6 +58,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "core_apps.common.locale_middleware.MobileLocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -153,6 +154,15 @@ TIME_ZONE = "Africa/Cairo"
 USE_I18N = True
 
 USE_TZ = True
+
+LANGUAGES = [
+    ("en", "English"),
+    ("ar", "Arabic"),
+]
+
+LOCALE_PATHS = [
+    BASE_DIR / "locale",
+]
 
 SITE_ID = 1
 

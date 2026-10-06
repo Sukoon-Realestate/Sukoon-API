@@ -1,3 +1,5 @@
+from typing import Optional
+
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 from django.db.models import Avg, Count, FloatField, Q
@@ -22,8 +24,9 @@ class PropertyService:
     }
 
     @staticmethod
-    def get_filter_options():
+    def get_filter_options(language: Optional[str] = None):
         """Return the option catalog supported by the property list filters."""
+        is_en = bool(language and language.lower().startswith("en"))
         property_types = PropertyType.objects.only("id", "name", "slug").order_by(
             "name"
         )
@@ -32,78 +35,82 @@ class PropertyService:
                 {
                     "id": str(property_type.id),
                     "value": property_type.slug,
-                    "label": PropertyService.PROPERTY_TYPE_LABELS.get(
-                        property_type.slug, property_type.name
+                    "label": (
+                        property_type.name
+                        if is_en
+                        else PropertyService.PROPERTY_TYPE_LABELS.get(
+                            property_type.slug, property_type.name
+                        )
                     ),
                 }
                 for property_type in property_types
             ],
             "ordering": [
-                {"value": "-created_at", "label": "الأحدث"},
-                {"value": "created_at", "label": "الأقدم"},
-                {"value": "price", "label": "السعر الأقل"},
-                {"value": "-price", "label": "السعر الأعلى"},
+                {"value": "-created_at", "label": "Newest" if is_en else "الأحدث"},
+                {"value": "created_at", "label": "Oldest" if is_en else "الأقدم"},
+                {"value": "price", "label": "Lowest Price" if is_en else "السعر الأقل"},
+                {"value": "-price", "label": "Highest Price" if is_en else "السعر الأعلى"},
             ],
             "bedrooms": "number",
             "bathrooms": "number",
             "price_periods": [
-                {"value": Property.PricePeriod.DAILY, "label": "يومي"},
-                {"value": Property.PricePeriod.WEEKLY, "label": "أسبوعي"},
-                {"value": Property.PricePeriod.MONTHLY, "label": "شهري"},
-                {"value": Property.PricePeriod.YEARLY, "label": "سنوي"},
+                {"value": Property.PricePeriod.DAILY, "label": "Daily" if is_en else "يومي"},
+                {"value": Property.PricePeriod.WEEKLY, "label": "Weekly" if is_en else "أسبوعي"},
+                {"value": Property.PricePeriod.MONTHLY, "label": "Monthly" if is_en else "شهري"},
+                {"value": Property.PricePeriod.YEARLY, "label": "Yearly" if is_en else "سنوي"},
             ],
             "suitable_for": [
-                {"value": Property.SuitableFor.FAMILIES, "label": "عائلات"},
-                {"value": Property.SuitableFor.SINGLES, "label": "أفراد"},
-                {"value": Property.SuitableFor.STUDENTS, "label": "طلاب"},
+                {"value": Property.SuitableFor.FAMILIES, "label": "Families" if is_en else "عائلات"},
+                {"value": Property.SuitableFor.SINGLES, "label": "Singles" if is_en else "أفراد"},
+                {"value": Property.SuitableFor.STUDENTS, "label": "Students" if is_en else "طلاب"},
                 {
                     "value": Property.SuitableFor.FEMALE_STUDENTS,
-                    "label": "طالبات فقط",
+                    "label": "Female Students Only" if is_en else "طالبات فقط",
                 },
-                {"value": Property.SuitableFor.ALL, "label": "الكل"},
+                {"value": Property.SuitableFor.ALL, "label": "All" if is_en else "الكل"},
             ],
             "amenities": [
-                {"value": "wifi", "query_parameter": "has_wifi", "label": "واي فاي"},
+                {"value": "wifi", "query_parameter": "has_wifi", "label": "WiFi" if is_en else "واي فاي"},
                 {
                     "value": "elevator",
                     "query_parameter": "has_elevator",
-                    "label": "أسانسير",
+                    "label": "Elevator" if is_en else "أسانسير",
                 },
-                {"value": "garage", "query_parameter": "has_garage", "label": "جراج"},
+                {"value": "garage", "query_parameter": "has_garage", "label": "Garage" if is_en else "جراج"},
                 {
                     "value": "security",
                     "query_parameter": "has_security",
-                    "label": "حراسة",
+                    "label": "Security" if is_en else "حراسة",
                 },
                 {
                     "value": "balcony",
                     "query_parameter": "has_balcony",
-                    "label": "بلكونة",
+                    "label": "Balcony" if is_en else "بلكونة",
                 },
                 {
                     "value": "air_conditioning",
                     "query_parameter": "has_air_conditioning",
-                    "label": "تكييف",
+                    "label": "Air Conditioning" if is_en else "تكييف",
                 },
                 {
                     "value": "near_metro",
                     "query_parameter": "near_metro",
-                    "label": "قريب من المترو",
+                    "label": "Near Metro" if is_en else "قريب من المترو",
                 },
                 {
                     "value": "natural_gas",
                     "query_parameter": "has_natural_gas",
-                    "label": "غاز طبيعي",
+                    "label": "Natural Gas" if is_en else "غاز طبيعي",
                 },
                 {
                     "value": "electricity_meter",
                     "query_parameter": "has_electricity_meter",
-                    "label": "عداد كهرباء",
+                    "label": "Electricity Meter" if is_en else "عداد كهرباء",
                 },
                 {
                     "value": "water_meter",
                     "query_parameter": "has_water_meter",
-                    "label": "عداد مياه",
+                    "label": "Water Meter" if is_en else "عداد مياه",
                 },
             ],
             "defaults": {"ordering": "-created_at"},
