@@ -1,6 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 
 abstract class LocaleKeys {
+  static const String _toolsBoostDuration = 'tools_boost_duration';
+  static String get toolsBoostDuration => _toolsBoostDuration.tr();
+
   static const String _freeLoadMoreResults = 'free_load_more_results';
   static String get freeLoadMoreResults => _freeLoadMoreResults.tr();
 
@@ -5387,4 +5390,284 @@ abstract class LocaleKeys {
       'tenant_property_details_updated_at';
   static String get tenantPropertyDetailsUpdatedAt =>
       _tenantPropertyDetailsUpdatedAt.tr();
+
+  static const String _toolsTitle = 'tools_title';
+  static String get toolsTitle => _toolsTitle.tr();
+
+  static const String _toolsSubtitle = 'tools_subtitle';
+  static String get toolsSubtitle => _toolsSubtitle.tr();
+
+  static const String _paidListingBoost = 'paid_listing_boost';
+  static String get paidListingBoost => _paidListingBoost.tr();
+
+  static const String _paidPriorityAlerts = 'paid_priority_alerts';
+  static String get paidPriorityAlerts => _paidPriorityAlerts.tr();
+
+  static const String _paidAdvancedAnalytics = 'paid_advanced_analytics';
+  static String get paidAdvancedAnalytics => _paidAdvancedAnalytics.tr();
+
+  static const String _paidAiAssistant = 'paid_ai_assistant';
+  static String get paidAiAssistant => _paidAiAssistant.tr();
+
+  static const String _paidDigitalLeases = 'paid_digital_leases';
+  static String get paidDigitalLeases => _paidDigitalLeases.tr();
+
+  static const String _paidRentManagement = 'paid_rent_management';
+  static String get paidRentManagement => _paidRentManagement.tr();
+
+  static const String _paidInvalidResponse = 'paid_invalid_response';
+  static String get paidInvalidResponse => _paidInvalidResponse.tr();
+
+  static const String _paidUnavailable = 'paid_unavailable';
+  static String get paidUnavailable => _paidUnavailable.tr();
+
+  static const String _paidUnavailableBody = 'paid_unavailable_body';
+  static String get paidUnavailableBody => _paidUnavailableBody.tr();
+
+  static const String _paidCachedNotice = 'paid_cached_notice';
+  static String get paidCachedNotice => _paidCachedNotice.tr();
+
+  static const String _paidRefresh = 'paid_refresh';
+  static String get paidRefresh => _paidRefresh.tr();
+
+  static const String _paidActionSaved = 'paid_action_saved';
+  static String get paidActionSaved => _paidActionSaved.tr();
+
+  static const String _paidOpenFailed = 'paid_open_failed';
+  static String get paidOpenFailed => _paidOpenFailed.tr();
+
+  static const String _paidUnknownStatus = 'paid_unknown_status';
+  static String get paidUnknownStatus => _paidUnknownStatus.tr();
+
+  static const String _paidDraft = 'paid_draft';
+  static String get paidDraft => _paidDraft.tr();
+
+  static const String _paidPending = 'paid_pending';
+  static String get paidPending => _paidPending.tr();
+
+  static const String _paidActive = 'paid_active';
+  static String get paidActive => _paidActive.tr();
+
+  static const String _paidPaused = 'paid_paused';
+  static String get paidPaused => _paidPaused.tr();
+
+  static const String _paidCompleted = 'paid_completed';
+  static String get paidCompleted => _paidCompleted.tr();
+
+  static const String _paidCancelled = 'paid_cancelled';
+  static String get paidCancelled => _paidCancelled.tr();
+
+  static const String _paidExpired = 'paid_expired';
+  static String get paidExpired => _paidExpired.tr();
+
+  static const String _paidFailed = 'paid_failed';
+  static String get paidFailed => _paidFailed.tr();
+
+  static const String _paidSigned = 'paid_signed';
+  static String get paidSigned => _paidSigned.tr();
+
+  static const String _paidDue = 'paid_due';
+  static String get paidDue => _paidDue.tr();
+
+  static const String _paidPaid = 'paid_paid';
+  static String get paidPaid => _paidPaid.tr();
+
+  static const String _paidOverdue = 'paid_overdue';
+  static String get paidOverdue => _paidOverdue.tr();
+
+  static const String _paidSelectProperty = 'paid_select_property';
+  static String get paidSelectProperty => _paidSelectProperty.tr();
+
+  static const String _paidBoostExplanation = 'paid_boost_explanation';
+  static String get paidBoostExplanation => _paidBoostExplanation.tr();
+
+  static const String _paidBoostDuration = 'paid_boost_duration';
+  static String get paidBoostDuration => _paidBoostDuration.tr();
+
+  static const String _paidStartBoost = 'paid_start_boost';
+  static String get paidStartBoost => _paidStartBoost.tr();
+
+  static const String _paidConfirmBoost = 'paid_confirm_boost';
+  static String get paidConfirmBoost => _paidConfirmBoost.tr();
+
+  static const String _paidCampaignsTitle = 'paid_campaigns_title';
+  static String get paidCampaignsTitle => _paidCampaignsTitle.tr();
+
+  static const String _paidCampaignsEmpty = 'paid_campaigns_empty';
+  static String get paidCampaignsEmpty => _paidCampaignsEmpty.tr();
+
+  static const String _paidCampaignsEmptyBody = 'paid_campaigns_empty_body';
+  static String get paidCampaignsEmptyBody => _paidCampaignsEmptyBody.tr();
+
+  static const String _paidSponsored = 'paid_sponsored';
+  static String get paidSponsored => _paidSponsored.tr();
+
+  static const String _paidImpressions = 'paid_impressions';
+  static String get paidImpressions => _paidImpressions.tr();
+
+  static const String _paidAlertsExplanation = 'paid_alerts_explanation';
+  static String get paidAlertsExplanation => _paidAlertsExplanation.tr();
+
+  static const String _paidAlertName = 'paid_alert_name';
+  static String get paidAlertName => _paidAlertName.tr();
+
+  static const String _paidAlertCadence = 'paid_alert_cadence';
+  static String get paidAlertCadence => _paidAlertCadence.tr();
+
+  static const String _paidAlertInstant = 'paid_alert_instant';
+  static String get paidAlertInstant => _paidAlertInstant.tr();
+
+  static const String _paidAlertDaily = 'paid_alert_daily';
+  static String get paidAlertDaily => _paidAlertDaily.tr();
+
+  static const String _paidCreateAlert = 'paid_create_alert';
+  static String get paidCreateAlert => _paidCreateAlert.tr();
+
+  static const String _paidAlertsEmpty = 'paid_alerts_empty';
+  static String get paidAlertsEmpty => _paidAlertsEmpty.tr();
+
+  static const String _paidAlertsEmptyBody = 'paid_alerts_empty_body';
+  static String get paidAlertsEmptyBody => _paidAlertsEmptyBody.tr();
+
+  static const String _paidAlertPause = 'paid_alert_pause';
+  static String get paidAlertPause => _paidAlertPause.tr();
+
+  static const String _paidAlertResume = 'paid_alert_resume';
+  static String get paidAlertResume => _paidAlertResume.tr();
+
+  static const String _paidAlertOpenResults = 'paid_alert_open_results';
+  static String get paidAlertOpenResults => _paidAlertOpenResults.tr();
+
+  static const String _paidAnalyticsExplanation = 'paid_analytics_explanation';
+  static String get paidAnalyticsExplanation => _paidAnalyticsExplanation.tr();
+
+  static const String _paidAnalyticsEmpty = 'paid_analytics_empty';
+  static String get paidAnalyticsEmpty => _paidAnalyticsEmpty.tr();
+
+  static const String _paidAnalyticsEmptyBody = 'paid_analytics_empty_body';
+  static String get paidAnalyticsEmptyBody => _paidAnalyticsEmptyBody.tr();
+
+  static const String _paidAnalyticsExport = 'paid_analytics_export';
+  static String get paidAnalyticsExport => _paidAnalyticsExport.tr();
+
+  static const String _paidMeasuredAt = 'paid_measured_at';
+  static String get paidMeasuredAt => _paidMeasuredAt.tr();
+
+  static const String _paidAiExplanation = 'paid_ai_explanation';
+  static String get paidAiExplanation => _paidAiExplanation.tr();
+
+  static const String _paidAiConsent = 'paid_ai_consent';
+  static String get paidAiConsent => _paidAiConsent.tr();
+
+  static const String _paidAiGenerate = 'paid_ai_generate';
+  static String get paidAiGenerate => _paidAiGenerate.tr();
+
+  static const String _paidAiReview = 'paid_ai_review';
+  static String get paidAiReview => _paidAiReview.tr();
+
+  static const String _paidAiTitle = 'paid_ai_title';
+  static String get paidAiTitle => _paidAiTitle.tr();
+
+  static const String _paidAiDescription = 'paid_ai_description';
+  static String get paidAiDescription => _paidAiDescription.tr();
+
+  static const String _paidAiApply = 'paid_ai_apply';
+  static String get paidAiApply => _paidAiApply.tr();
+
+  static const String _paidAiEditNotice = 'paid_ai_edit_notice';
+  static String get paidAiEditNotice => _paidAiEditNotice.tr();
+
+  static const String _paidAiCopy = 'paid_ai_copy';
+  static String get paidAiCopy => _paidAiCopy.tr();
+
+  static const String _paidAiCopied = 'paid_ai_copied';
+  static String get paidAiCopied => _paidAiCopied.tr();
+
+  static const String _paidLeasesExplanation = 'paid_leases_explanation';
+  static String get paidLeasesExplanation => _paidLeasesExplanation.tr();
+
+  static const String _paidLeasesEmpty = 'paid_leases_empty';
+  static String get paidLeasesEmpty => _paidLeasesEmpty.tr();
+
+  static const String _paidLeasesEmptyBody = 'paid_leases_empty_body';
+  static String get paidLeasesEmptyBody => _paidLeasesEmptyBody.tr();
+
+  static const String _paidCreateLease = 'paid_create_lease';
+  static String get paidCreateLease => _paidCreateLease.tr();
+
+  static const String _paidLeaseTemplate = 'paid_lease_template';
+  static String get paidLeaseTemplate => _paidLeaseTemplate.tr();
+
+  static const String _paidLeaseStart = 'paid_lease_start';
+  static String get paidLeaseStart => _paidLeaseStart.tr();
+
+  static const String _paidLeaseEnd = 'paid_lease_end';
+  static String get paidLeaseEnd => _paidLeaseEnd.tr();
+
+  static const String _paidMonthlyRent = 'paid_monthly_rent';
+  static String get paidMonthlyRent => _paidMonthlyRent.tr();
+
+  static const String _paidLeaseInvalid = 'paid_lease_invalid';
+  static String get paidLeaseInvalid => _paidLeaseInvalid.tr();
+
+  static const String _paidLeaseDocument = 'paid_lease_document';
+  static String get paidLeaseDocument => _paidLeaseDocument.tr();
+
+  static const String _paidLeaseSign = 'paid_lease_sign';
+  static String get paidLeaseSign => _paidLeaseSign.tr();
+
+  static const String _paidLeaseCancel = 'paid_lease_cancel';
+  static String get paidLeaseCancel => _paidLeaseCancel.tr();
+
+  static const String _paidLeaseConfirmCancel = 'paid_lease_confirm_cancel';
+  static String get paidLeaseConfirmCancel => _paidLeaseConfirmCancel.tr();
+
+  static const String _paidLeaseRefreshNotice = 'paid_lease_refresh_notice';
+  static String get paidLeaseRefreshNotice => _paidLeaseRefreshNotice.tr();
+
+  static const String _paidInvoicesExplanation = 'paid_invoices_explanation';
+  static String get paidInvoicesExplanation => _paidInvoicesExplanation.tr();
+
+  static const String _paidInvoicesEmpty = 'paid_invoices_empty';
+  static String get paidInvoicesEmpty => _paidInvoicesEmpty.tr();
+
+  static const String _paidInvoicesEmptyBody = 'paid_invoices_empty_body';
+  static String get paidInvoicesEmptyBody => _paidInvoicesEmptyBody.tr();
+
+  static const String _paidPayRent = 'paid_pay_rent';
+  static String get paidPayRent => _paidPayRent.tr();
+
+  static const String _paidViewReceipt = 'paid_view_receipt';
+  static String get paidViewReceipt => _paidViewReceipt.tr();
+
+  static const String _paidConfirmRent = 'paid_confirm_rent';
+  static String get paidConfirmRent => _paidConfirmRent.tr();
+
+  static const String _paidRentReference = 'paid_rent_reference';
+  static String get paidRentReference => _paidRentReference.tr();
+
+  static const String _paidDueDate = 'paid_due_date';
+  static String get paidDueDate => _paidDueDate.tr();
+
+  static const String _paidVerifyRent = 'paid_verify_rent';
+  static String get paidVerifyRent => _paidVerifyRent.tr();
+
+  static const String _paidPropertyEmpty = 'paid_property_empty';
+  static String get paidPropertyEmpty => _paidPropertyEmpty.tr();
+
+  static const String _paidPropertyEmptyBody = 'paid_property_empty_body';
+  static String get paidPropertyEmptyBody => _paidPropertyEmptyBody.tr();
+
+  static const String _paidLeaseTenant = 'paid_lease_tenant';
+  static String get paidLeaseTenant => _paidLeaseTenant.tr();
+
+  static const String _paidLeaseTenantEmpty = 'paid_lease_tenant_empty';
+  static String get paidLeaseTenantEmpty => _paidLeaseTenantEmpty.tr();
+
+  static const String _paidLeaseTenantEmptyBody =
+      'paid_lease_tenant_empty_body';
+  static String get paidLeaseTenantEmptyBody => _paidLeaseTenantEmptyBody.tr();
+
+  static const String _paidRemoveAlert = 'paid_remove_alert';
+  static String get paidRemoveAlert => _paidRemoveAlert.tr();
 }

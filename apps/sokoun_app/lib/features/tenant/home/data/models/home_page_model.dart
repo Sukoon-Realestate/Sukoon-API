@@ -70,6 +70,7 @@ class HomePropertyModel extends Equatable {
   final String propertyType;
   final int area;
   final double rate;
+  final bool isSponsored;
 
   const HomePropertyModel({
     required this.id,
@@ -81,6 +82,7 @@ class HomePropertyModel extends Equatable {
     required this.propertyType,
     required this.area,
     required this.rate,
+    this.isSponsored = false,
   });
 
   const HomePropertyModel.initial()
@@ -92,7 +94,8 @@ class HomePropertyModel extends Equatable {
       pricePeriod = '',
       propertyType = '',
       area = 0,
-      rate = 0;
+      rate = 0,
+      isSponsored = false;
 
   factory HomePropertyModel.fromJson(Map<String, dynamic> json) =>
       HomePropertyModel(
@@ -105,6 +108,7 @@ class HomePropertyModel extends Equatable {
         propertyType: json['property_type'] ?? '',
         area: (json['area'] as num?)?.toInt() ?? 0,
         rate: (json['rate'] as num?)?.toDouble() ?? 0,
+        isSponsored: json['is_sponsored'] == true,
       );
 
   Map<String, dynamic> toJson() => {
@@ -117,6 +121,7 @@ class HomePropertyModel extends Equatable {
     'property_type': propertyType,
     'area': area,
     'rate': rate,
+    'is_sponsored': isSponsored,
   };
 
   HomePropertyModel copyWith({
@@ -129,6 +134,7 @@ class HomePropertyModel extends Equatable {
     String? propertyType,
     int? area,
     double? rate,
+    bool? isSponsored,
   }) => HomePropertyModel(
     id: id ?? this.id,
     mainImage: mainImage ?? this.mainImage,
@@ -139,6 +145,7 @@ class HomePropertyModel extends Equatable {
     propertyType: propertyType ?? this.propertyType,
     area: area ?? this.area,
     rate: rate ?? this.rate,
+    isSponsored: isSponsored ?? this.isSponsored,
   );
 
   @override
@@ -152,5 +159,6 @@ class HomePropertyModel extends Equatable {
     propertyType,
     area,
     rate,
+    isSponsored,
   ];
 }

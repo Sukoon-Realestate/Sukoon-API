@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/tenant/premium_alerts/presentation/screens/premium_alert_detail_screen.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/owner/home/presentation/screens/owner_listings_screen.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
@@ -52,6 +53,11 @@ abstract final class NotificationNavigation {
 
     if (actionType == 'dismiss') {
       Go.back();
+      return;
+    }
+
+    if (actionType == 'open_search_alert' && targetId.isNotEmpty) {
+      await Go.to<void>(PremiumAlertDetailScreen(alertId: targetId));
       return;
     }
 

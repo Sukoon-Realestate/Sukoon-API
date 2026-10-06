@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/premium/presentation/widgets/shared/sponsored_listing_badge.dart';
 import 'package:flutter/material.dart';
 import 'package:sokoun_app/shared_widgets/property_card_summary.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,6 +19,7 @@ class TenantPropertyCard extends StatelessWidget {
     required this.icon,
     this.imageUrl,
     this.imageCount = 0,
+    this.isSponsored = false,
   });
 
   final String title;
@@ -27,6 +29,7 @@ class TenantPropertyCard extends StatelessWidget {
   final IconData icon;
   final String? imageUrl;
   final int imageCount;
+  final bool isSponsored;
 
   @override
   Widget build(BuildContext context) {
@@ -103,34 +106,40 @@ class TenantPropertyCard extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: PropertyCardSummary(
-              title: title,
-              price: price,
-              metadata: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                spacing: 6.w,
-                children: [
-                  Icon(
-                    Icons.star_rounded,
-                    color: context.appColor(AppColors.amber),
-                    size: 16.r,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (isSponsored) const SponsoredListingBadge(),
+                PropertyCardSummary(
+                  title: title,
+                  price: price,
+                  metadata: Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    spacing: 6.w,
+                    children: [
+                      Icon(
+                        Icons.star_rounded,
+                        color: context.appColor(AppColors.amber),
+                        size: 16.r,
+                      ),
+                      AppText(
+                        rating,
+                        style: AppTextStyles.regular12.copyWith(
+                          color: context.appColor(AppColors.sokoonGray),
+                        ),
+                      ),
+                      AppText('·', style: AppTextStyles.regular12),
+                      AppText(
+                        area,
+                        style: AppTextStyles.regular12.copyWith(
+                          color: context.appColor(AppColors.sokoonGray),
+                        ),
+                      ),
+                    ],
                   ),
-                  AppText(
-                    rating,
-                    style: AppTextStyles.regular12.copyWith(
-                      color: context.appColor(AppColors.sokoonGray),
-                    ),
-                  ),
-                  AppText('·', style: AppTextStyles.regular12),
-                  AppText(
-                    area,
-                    style: AppTextStyles.regular12.copyWith(
-                      color: context.appColor(AppColors.sokoonGray),
-                    ),
-                  ),
-                ],
-              ),
-            ).paddingSymmetric(horizontal: 12.w, vertical: 11.h),
+                ).paddingSymmetric(horizontal: 12.w, vertical: 11.h),
+              ],
+            ),
           ),
         ],
       ),

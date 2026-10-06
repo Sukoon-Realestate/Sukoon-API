@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/premium/presentation/widgets/shared/sponsored_listing_badge.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/shared_widgets/property_card_summary.dart';
@@ -61,6 +62,10 @@ class SearchResultCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             ResultImageHeader(item: item),
+            if (item.isSponsored)
+              const SponsoredListingBadge()
+                  .paddingSymmetric(horizontal: 14)
+                  .paddingOnly(top: 12),
             PropertyCardSummary(
               title: item.title.isEmpty ? '••••••••••••' : item.title,
               location: [

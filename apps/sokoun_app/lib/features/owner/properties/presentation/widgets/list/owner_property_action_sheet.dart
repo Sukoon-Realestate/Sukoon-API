@@ -35,6 +35,8 @@ class OwnerPropertyActionSheet extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           16.szH,
+          OwnerPropertyPremiumActions(property: property),
+          16.szH,
           for (final action in OwnerPropertyAction.values) ...[
             _OwnerPropertyActionRow(action: action, property: property),
             if (!action.isDelete) 10.szH,

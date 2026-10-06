@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/owner/ai_assistant/presentation/widgets/listing_ai_entry.dart';
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
@@ -745,6 +746,20 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
                     _listenToForm(
                       (form) => AddPropertyPricingPage(
                         form: form,
+                        listingAssistant: ListingAiEntry(
+                          form: form,
+                          onApplied: (suggestion) {
+                            _titleController.text = suggestion.suggestedTitle;
+                            _descriptionController.text =
+                                suggestion.suggestedDescription;
+                            _updateForm(
+                              () => _form.copyWith(
+                                title: suggestion.suggestedTitle,
+                                description: suggestion.suggestedDescription,
+                              ),
+                            );
+                          },
+                        ),
                         monthlyPriceController: _monthlyPriceController,
                         rentalDurationController: _rentalDurationController,
                         descriptionController: _descriptionController,

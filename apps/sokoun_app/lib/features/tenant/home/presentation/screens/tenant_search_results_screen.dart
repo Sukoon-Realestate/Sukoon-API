@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/tenant/premium_alerts/presentation/widgets/premium_alert_entry.dart';
 import 'package:melos_core/core/network/network_request.dart';
 import 'package:melos_core/core/error/exceptions.dart';
 import 'package:melos_core/core/shared/base_state.dart';
@@ -201,6 +202,7 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
       child: AppScaffold(
         title: LocaleKeys.searchResult,
         actions: [
+          PremiumAlertEntry(filters: _paginatedFilters, compact: true),
           SaveSearchButton(filters: _filters),
           IconButton(
             tooltip: LocaleKeys.freeMapResults,

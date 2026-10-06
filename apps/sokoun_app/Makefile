@@ -7,7 +7,7 @@ SHELL := /bin/bash
 
 .PHONY: help clean run apk ipa appbundle ios upgrade \
 	handlePods openXcode flutterfireSetup translations \
-	architectureCheck accountCheck accountUiReview freeFeaturesCheck freeFeaturesUiReview gradleFix clearGradleCache buildIos distribute \
+	architectureCheck accountCheck accountUiReview freeFeaturesCheck freeFeaturesUiReview featureToolsCheck featureToolsUiReview gradleFix clearGradleCache buildIos distribute \
 	distributeAndroid fingerPrint kill sha
 
 # Show available commands
@@ -29,6 +29,8 @@ help:
 	@echo "  make accountUiReview REVIEW_DIR=/tmp/sokoun-account-ui"
 	@echo "  make freeFeaturesCheck"
 	@echo "  make freeFeaturesUiReview FREE_REVIEW_DIR=/tmp/sokoun-free-after"
+	@echo "  make featureToolsCheck"
+	@echo "  make featureToolsUiReview TOOLS_REVIEW_DIR=/tmp/sokoun-tools-after"
 	@echo "  make gradleFix"
 	@echo "  make clearGradleCache"
 	@echo "  make buildIos"
@@ -109,6 +111,16 @@ FREE_REVIEW_DIR ?= /tmp/sokoun-free-after
 ## Render the free features in Arabic/English, both themes, six widths and three text sizes.
 freeFeaturesUiReview:
 	flutter test --no-pub test/free_features_ui_review_test.dart --dart-define=FREE_UI_REVIEW_DIR=$(FREE_REVIEW_DIR)
+
+## Verify free feature tools, data contracts, flows and architecture.
+featureToolsCheck:
+	flutter analyze --no-pub lib/features/shared/premium lib/features/shared/digital_leases lib/features/shared/rent_management lib/features/owner/promotions lib/features/owner/advanced_analytics lib/features/owner/ai_assistant lib/features/tenant/premium_alerts test/feature_tools_contracts_test.dart test/feature_tools_flows_test.dart test/feature_tools_ui_review_test.dart test/helpers/feature_tools_test_dependencies.dart
+	flutter test --no-pub test/feature_tools_contracts_test.dart test/feature_tools_flows_test.dart test/feature_tools_ui_review_test.dart test/feature_architecture_test.dart
+
+TOOLS_REVIEW_DIR ?= /tmp/sokoun-tools-after
+## Render free tool workflows in both languages and themes across six widths and three text scales.
+featureToolsUiReview:
+	flutter test --no-pub test/feature_tools_ui_review_test.dart --dart-define=FEATURE_TOOLS_UI_REVIEW_DIR=$(TOOLS_REVIEW_DIR)
 
 # Stop Gradle and remove lock files
 gradleFix:

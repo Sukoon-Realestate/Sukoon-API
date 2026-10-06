@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/tenant/premium_alerts/presentation/widgets/premium_alert_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
@@ -142,17 +143,24 @@ class DecisionNotebookView extends StatelessWidget {
         for (final search in notebook.searches)
           Card(
             key: ValueKey(search.id),
-            child: ListTile(
-              title: AppText(search.name),
-              subtitle: AppText(search.filters.combinedSearch),
-              onTap: () => Go.to(
-                TenantSearchResultsScreen(initialFilters: search.filters),
-              ),
-              trailing: IconButton(
-                tooltip: LocaleKeys.freeRemove,
-                onPressed: () => _mutate(() => cubit.removeSearch(search.id)),
-                icon: const Icon(Icons.delete_outline),
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ListTile(
+                  title: AppText(search.name),
+                  subtitle: AppText(search.filters.combinedSearch),
+                  onTap: () => Go.to(
+                    TenantSearchResultsScreen(initialFilters: search.filters),
+                  ),
+                  trailing: IconButton(
+                    tooltip: LocaleKeys.freeRemove,
+                    onPressed: () =>
+                        _mutate(() => cubit.removeSearch(search.id)),
+                    icon: const Icon(Icons.delete_outline),
+                  ),
+                ),
+                PremiumAlertEntry(filters: search.filters, name: search.name),
+              ],
             ),
           ),
         const SizedBox(height: 24),

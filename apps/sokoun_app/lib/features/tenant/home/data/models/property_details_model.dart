@@ -186,6 +186,7 @@ class PropertyDetailsModel extends Equatable {
     required this.propertyType,
     required this.isFurnished,
     required this.isVerified,
+    this.isSponsored = false,
     required this.bedrooms,
     required this.bathrooms,
     required this.area,
@@ -235,6 +236,7 @@ class PropertyDetailsModel extends Equatable {
       propertyType = '',
       isFurnished = false,
       isVerified = false,
+      isSponsored = false,
       bedrooms = 0,
       bathrooms = 0,
       area = 0,
@@ -313,6 +315,7 @@ class PropertyDetailsModel extends Equatable {
       propertyType: json['property_type'] as String? ?? '',
       isFurnished: json['is_furnished'] as bool? ?? false,
       isVerified: json['is_verified'] as bool? ?? false,
+      isSponsored: json['is_sponsored'] == true,
       isOwnerVerified:
           (ownerJson['is_verified'] as bool?) ??
           json['owner_is_verified'] ??
@@ -389,6 +392,7 @@ class PropertyDetailsModel extends Equatable {
   final String propertyType;
   final bool isFurnished;
   final bool isVerified;
+  final bool isSponsored;
   final bool isOwnerVerified;
   final bool isOwnershipVerified;
   final int bedrooms;
@@ -440,6 +444,7 @@ class PropertyDetailsModel extends Equatable {
     'property_type': propertyType,
     'is_furnished': isFurnished,
     'is_verified': isVerified,
+    'is_sponsored': isSponsored,
     'owner_is_verified': isOwnerVerified,
     'is_ownership_verified': isOwnershipVerified,
     'bedrooms': bedrooms,
@@ -493,6 +498,7 @@ class PropertyDetailsModel extends Equatable {
     String? propertyType,
     bool? isFurnished,
     bool? isVerified,
+    bool? isSponsored,
     bool? isOwnerVerified,
     bool? isOwnershipVerified,
     int? bedrooms,
@@ -544,6 +550,7 @@ class PropertyDetailsModel extends Equatable {
       propertyType: propertyType ?? this.propertyType,
       isFurnished: isFurnished ?? this.isFurnished,
       isVerified: isVerified ?? this.isVerified,
+      isSponsored: isSponsored ?? this.isSponsored,
       isOwnerVerified: isOwnerVerified ?? this.isOwnerVerified,
       isOwnershipVerified: isOwnershipVerified ?? this.isOwnershipVerified,
       bedrooms: bedrooms ?? this.bedrooms,
@@ -732,6 +739,7 @@ class PropertyDetailsModel extends Equatable {
     propertyType,
     isFurnished,
     isVerified,
+    isSponsored,
     isOwnerVerified,
     isOwnershipVerified,
     bedrooms,

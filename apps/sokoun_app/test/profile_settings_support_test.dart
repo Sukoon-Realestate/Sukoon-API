@@ -269,9 +269,11 @@ void main() {
         expect(find.byType(ProfileLogoutButton), findsNothing);
         expect(find.byType(ProfileDeleteAccountButton), findsNothing);
 
-        final edit = find.widgetWithText(
-          OutlinedButton,
-          LocaleKeys.profileEditAction,
+        final edit = find.ancestor(
+          of: find.text(LocaleKeys.profileEditAction),
+          matching: find.byWidgetPredicate(
+            (widget) => widget is OutlinedButton,
+          ),
         );
         expect(edit, findsOneWidget);
         expect(tester.getSize(edit).height, greaterThanOrEqualTo(48));

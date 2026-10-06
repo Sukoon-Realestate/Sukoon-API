@@ -11,6 +11,12 @@ class NotificationDestination {
   final WorkspaceTab? tab;
 
   factory NotificationDestination.resolve(AppNotificationContent notification) {
+    if (notification.primaryActionType == 'open_search_alert') {
+      return const NotificationDestination(
+        workspace: AppWorkspace.tenant,
+        tab: WorkspaceTab.home,
+      );
+    }
     return switch (notification.kind) {
       AppNotificationKind.visitRequest => const NotificationDestination(
         workspace: AppWorkspace.owner,

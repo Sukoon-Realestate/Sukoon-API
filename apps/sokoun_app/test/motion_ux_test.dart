@@ -328,11 +328,13 @@ void main() {
         await tester.pumpAndSettle();
         final node = tester.getSemantics(find.byType(SokounSelectionChip));
         expect(
-          node.getSemanticsData().flagsCollection.isSelected,
-          ui.Tristate.isTrue,
+          node,
+          containsSemantics(
+            isSelected: true,
+            isButton: true,
+            label: 'Elevator',
+          ),
         );
-        expect(node.getSemanticsData().flagsCollection.isButton, isTrue);
-        expect(node.label, 'Elevator');
       } finally {
         semantics.dispose();
       }

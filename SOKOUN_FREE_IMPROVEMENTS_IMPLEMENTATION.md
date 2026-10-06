@@ -1,5 +1,7 @@
 # Sokoun — free improvements implemented
 
+> Historical record of the original free batch. For the current all-free feature policy, complete backend contracts and backend response format, use [SOKOUN_ALL_FEATURES_BACKEND_HANDOFF.md](SOKOUN_ALL_FEATURES_BACKEND_HANDOFF.md). Send that consolidated file to the backend.
+
 This document describes the client changes in this batch. The features have no subscription or paywall. Backend-dependent additions are listed separately so implemented screens are not confused with services that still need server work.
 
 ## Features and where to find them

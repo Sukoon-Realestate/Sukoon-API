@@ -41,9 +41,11 @@ class AddPropertyPricingPage extends StatefulWidget {
     required this.onNext,
     this.isSubmitting = false,
     this.onOptionLabelsLoaded,
+    this.listingAssistant,
     required this.onAdditionalDetailsChanged,
   });
 
+  final Widget? listingAssistant;
   final OwnerAddPropertyFormState form;
   final TextEditingController monthlyPriceController;
   final TextEditingController rentalDurationController;
@@ -312,6 +314,7 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
                 },
               ),
         ),
+        if (widget.listingAssistant != null) widget.listingAssistant!,
         _DescriptionSection(
           descriptionFieldKey: _descriptionFieldKey,
           descriptionController: widget.descriptionController,

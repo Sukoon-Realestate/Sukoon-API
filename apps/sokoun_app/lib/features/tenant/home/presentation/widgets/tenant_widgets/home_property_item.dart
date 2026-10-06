@@ -21,6 +21,7 @@ class HomePropertyItem extends StatelessWidget {
             ? null
             : () => Go.to(PropertyDetailsScreen(propertyId: property.id)),
         child: TenantPropertyCard(
+          isSponsored: property.isSponsored,
           title: property.title,
           rating: property.rate >= 0 && property.rate <= 5
               ? property.rate.toStringAsFixed(1)
