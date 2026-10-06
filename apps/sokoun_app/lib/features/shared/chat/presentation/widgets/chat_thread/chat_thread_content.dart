@@ -1,3 +1,6 @@
+import 'package:melos_core/core/widgets/app_text.dart';
+import 'chat_recovered_messages.dart';
+import '../chat_unavailable_indicator.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -37,6 +40,7 @@ class _ChatThreadContentState extends State<ChatThreadContent>
   late final PagifyController<ChatMessages> _chatController;
   late final TextEditingController _messageController;
   Timer? _keyboardMetricsTimer;
+  final ValueNotifier<bool> _isSending = ValueNotifier(false);
   bool _wasKeyboardOpen = false;
   bool _isNearLatestMessage = true;
 
@@ -45,7 +49,10 @@ class _ChatThreadContentState extends State<ChatThreadContent>
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _chatController = PagifyController<ChatMessages>();
-    _messageController = TextEditingController();
+    _messageController = TextEditingController(
+      text: context.read<ChatThreadCubit>().state.draft,
+    );
+    _messageController.addListener(_draftChanged);
   }
 
   @override
@@ -71,6 +78,8 @@ class _ChatThreadContentState extends State<ChatThreadContent>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _keyboardMetricsTimer?.cancel();
+    _messageController.removeListener(_draftChanged);
+    _isSending.dispose();
     _messageController.dispose();
     super.dispose();
   }
@@ -150,7 +159,11 @@ class _ChatThreadContentState extends State<ChatThreadContent>
     );
   }
 
+  void _draftChanged() =>
+      context.read<ChatThreadCubit>().updateDraft(_messageController.text);
+
   Future<void> _sendTextMessage() async {
+    if (_isSending.value || !context.read<ChatThreadCubit>().canSend) return;
     final String text = _messageController.text.trim();
     if (text.isEmpty) return;
 
@@ -172,14 +185,26 @@ class _ChatThreadContentState extends State<ChatThreadContent>
     );
     _chatController.addItem(pendingMessage);
     _chatController.moveToMaxBottom();
-    _messageController.clear();
-    await _sendMessage(
-      text,
-      localMessageId: pendingMessage.message.id.toString(),
-    );
+    _isSending.value = true;
+    try {
+      final result = await _sendMessage(
+        text,
+        localMessageId: pendingMessage.message.id.toString(),
+      );
+      if (!mounted) return;
+      if (result.isSent || result.isQueued) {
+        if (_messageController.text.trim() == text) _messageController.clear();
+      } else {
+        _chatController.removeWhere(
+          (item) => item.message.id == pendingMessage.message.id,
+        );
+      }
+    } finally {
+      if (mounted) _isSending.value = false;
+    }
   }
 
-  Future<void> _sendMessage(
+  Future<ChatSendResult> _sendMessage(
     String text, {
     required String localMessageId,
   }) async {
@@ -192,12 +217,24 @@ class _ChatThreadContentState extends State<ChatThreadContent>
         status: BaseStatus.error,
       );
     }
+    return result;
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
+        BlocListener<ChatThreadCubit, ChatThreadState>(
+          listenWhen: (previous, current) => previous.draft != current.draft,
+          listener: (context, state) {
+            if (_messageController.text != state.draft) {
+              _messageController.value = TextEditingValue(
+                text: state.draft,
+                selection: TextSelection.collapsed(offset: state.draft.length),
+              );
+            }
+          },
+        ),
         BlocListener<ChatThreadCubit, ChatThreadState>(
           listenWhen: (previous, current) =>
               previous.receivedMessageRevision !=
@@ -221,6 +258,16 @@ class _ChatThreadContentState extends State<ChatThreadContent>
       child: Column(
         children: [
           const ChatQueuedMessagesBanner(),
+          const ChatRecoveredMessages(),
+          BlocSelector<ChatThreadCubit, ChatThreadState, bool>(
+            selector: (state) => state.localSaveFailed,
+            builder: (context, failed) => failed
+                ? Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: AppText(LocaleKeys.freeChatDraftSaveFailed),
+                  )
+                : const SizedBox.shrink(),
+          ),
           Expanded(
             child: NotificationListener<ScrollNotification>(
               onNotification: (notification) {
@@ -237,10 +284,22 @@ class _ChatThreadContentState extends State<ChatThreadContent>
               ),
             ),
           ),
-          ChatComposer(
-            controller: _messageController,
-            onSendPressed: _sendTextMessage,
-          ),
+          if (widget.conversation.canSend == false)
+            ChatUnavailableIndicator(
+              message: LocaleKeys.freeChatUnavailable,
+              icon: Icons.lock_outline,
+            )
+          else
+            ValueListenableBuilder<bool>(
+              valueListenable: _isSending,
+              builder: (context, sending, _) => AbsorbPointer(
+                absorbing: sending,
+                child: ChatComposer(
+                  controller: _messageController,
+                  onSendPressed: _sendTextMessage,
+                ),
+              ),
+            ),
         ],
       ),
     );

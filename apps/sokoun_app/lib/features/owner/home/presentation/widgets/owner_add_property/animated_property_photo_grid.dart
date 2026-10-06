@@ -20,6 +20,7 @@ class AnimatedPropertyPhotoGrid extends StatefulWidget {
     required this.onRemovePhoto,
     required this.onReplacePhoto,
     required this.onMainPhotoSelected,
+    this.onPhotoMoved,
   });
 
   final List<OwnerPropertyPhotoDraft> photos;
@@ -27,6 +28,7 @@ class AnimatedPropertyPhotoGrid extends StatefulWidget {
   final ValueChanged<int> onRemovePhoto;
   final ValueChanged<int> onReplacePhoto;
   final ValueChanged<int> onMainPhotoSelected;
+  final ValueChanged<({int from, int to})>? onPhotoMoved;
 
   @override
   State<AnimatedPropertyPhotoGrid> createState() =>
@@ -137,6 +139,16 @@ class _AnimatedPropertyPhotoGridState extends State<AnimatedPropertyPhotoGrid> {
                 curve: SokounMotion.curve,
                 child: PhotoTile(
                   photo: photo,
+                  onMoveEarlier: widget.onPhotoMoved == null || index == 0
+                      ? null
+                      : () =>
+                            widget.onPhotoMoved!((from: index, to: index - 1)),
+                  onMoveLater:
+                      widget.onPhotoMoved == null ||
+                          index == widget.photos.length - 1
+                      ? null
+                      : () =>
+                            widget.onPhotoMoved!((from: index, to: index + 1)),
                   isMainPhoto: index == 0,
                   onReplacePhoto: () => widget.onReplacePhoto(index),
                   onRemovePhoto: photo.canRemove

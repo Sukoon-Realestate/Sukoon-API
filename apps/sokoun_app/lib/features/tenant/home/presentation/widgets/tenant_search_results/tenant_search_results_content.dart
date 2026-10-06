@@ -15,6 +15,7 @@ import 'empty_results_state.dart';
 import 'search_refresh_notice.dart';
 import 'search_results_header.dart';
 import 'search_result_card.dart';
+import '../../../data/models/property_search_model.dart';
 
 typedef PropertySearchPageLoader =
     Future<(List<PropertyDetailsModel>, PaginationData)> Function(
@@ -32,6 +33,7 @@ class TenantSearchResultsContent extends StatefulWidget {
     required this.resultCount,
     required this.cacheKey,
     required this.loadPage,
+    this.preferences,
     required this.onQueryChanged,
     required this.onQuerySubmitted,
     required this.onFiltersPressed,
@@ -47,6 +49,7 @@ class TenantSearchResultsContent extends StatefulWidget {
   final ValueListenable<int?> resultCount;
   final String cacheKey;
   final PropertySearchPageLoader loadPage;
+  final PropertySearchFilters? preferences;
   final ValueChanged<String> onQueryChanged;
   final ValueChanged<String> onQuerySubmitted;
   final VoidCallback onFiltersPressed;
@@ -112,8 +115,11 @@ class _TenantSearchResultsContentState
       emptyListView: EmptyResultsState(
         onResetSearchPressed: widget.onResetSearchPressed,
       ),
-      itemBuilder: (context, data, index, item) =>
-          SearchResultCard(item: item, filterOptions: widget.filterOptions),
+      itemBuilder: (context, data, index, item) => SearchResultCard(
+        item: item,
+        filterOptions: widget.filterOptions,
+        preferences: widget.preferences,
+      ),
     ).paddingBottom(18.h);
   }
 }

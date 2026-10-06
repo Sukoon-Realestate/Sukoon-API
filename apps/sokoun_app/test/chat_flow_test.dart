@@ -1,3 +1,11 @@
+import 'package:sokoun_app/features/shared/chat/data/chat_local_data.dart';
+import 'package:sokoun_app/features/shared/chat/data/models/chat_local_state.dart';
+import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
+import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
+import 'package:melos_core/core/error/failure.dart';
+import 'package:melos_core/core/network/api_endpoints.dart';
+import 'package:multiple_result/multiple_result.dart';
+import 'package:sokoun_app/features/main_view/presentation/cubits/workspace_cubit.dart';
 import 'dart:async';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -116,6 +124,15 @@ void main() {
   );
 
   setUpAll(() async {
+    injector.registerSingleton<BaseCrudUseCase>(
+      BaseCrudUseCase(repository: _ReportRepository()),
+    );
+    injector.registerSingleton<WorkspaceCubit>(WorkspaceCubit());
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel('plugins.it_nomads.com/flutter_secure_storage'),
+          (call) async => null,
+        );
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(sharedPreferencesChannel, (call) async {
           return call.method == 'getAll' ? <String, Object>{} : true;
@@ -136,6 +153,9 @@ void main() {
   });
 
   setUp(() async {
+    _reportRequests.clear();
+    _reportFailure = false;
+    _reportReceiptMissing = false;
     _messagesRequestCount = 0;
     _conversationsRequestCount = 0;
     if (injector.isRegistered<ChatDataSource>()) {
@@ -306,6 +326,43 @@ void main() {
     },
   );
 
+  for (final missingReceipt in [false, true]) {
+    testWidgets(
+      'report ${missingReceipt ? 'without receipt' : 'failure'} retains details and permits retry',
+      (tester) async {
+        configurePhoneViewport(tester);
+        await tester.pumpWidget(
+          buildScreen(ChatScreen(conversation: _conversations.first)),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.byIcon(Icons.more_vert_rounded));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('سبب آخر'));
+        await tester.pump();
+        await tester.enterText(
+          find.byType(TextField).last,
+          'Keep these report details',
+        );
+        _reportFailure = !missingReceipt;
+        _reportReceiptMissing = missingReceipt;
+        await tester.ensureVisible(find.text('إرسال البلاغ'));
+        await tester.tap(find.text('إرسال البلاغ'));
+        await tester.pumpAndSettle();
+        expect(find.byType(ChatReportSheet), findsOneWidget);
+        expect(find.text('Keep these report details'), findsOneWidget);
+        expect(_reportRequests, hasLength(1));
+        _reportFailure = false;
+        _reportReceiptMissing = false;
+        await tester.tap(find.text('إرسال البلاغ'));
+        await tester.pumpAndSettle();
+        expect(find.byType(ChatReportSheet), findsNothing);
+        expect(find.byType(ChatScreen), findsOneWidget);
+        expect(_reportRequests, hasLength(2));
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
+
   testWidgets('sends optimistically and handles report submission', (
     tester,
   ) async {
@@ -337,7 +394,14 @@ void main() {
     await tester.tap(find.text('إرسال البلاغ'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(ChatsScreen), findsOneWidget);
+    expect(find.byType(ChatReportSheet), findsNothing);
+    expect(find.byType(ChatScreen), findsOneWidget);
+    expect(_reportRequests, hasLength(1));
+    expect(_reportRequests.single['category'], 'report_owner');
+    expect(
+      _reportRequests.single['description'],
+      contains(_conversations.first.id),
+    );
     expect(tester.takeException(), isNull);
   });
 
@@ -416,11 +480,15 @@ void main() {
       conversationId: _conversations.first.id,
       otherParticipantId: 'other-user-id',
       realtimeService: realtime,
+      localStore: _MemoryChatLocalStore(),
       dataSource: ChatData.source,
     );
     addTearDown(() async {
-      await cubit.close();
-      await realtime.close();
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.runAsync(() async {
+        await cubit.close();
+        await realtime.close();
+      });
     });
     final ChatThreadData chatThreadData = ChatThreadData(
       conversationId: _conversations.first.id,
@@ -444,7 +512,9 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await cubit.connect();
+    final connecting = cubit.connect();
+    await tester.pump();
+    await connecting;
 
     final ChatSocketMessage ownMessage = ChatSocketMessage.fromJson(const {
       'id': 'socket-own-message',
@@ -489,11 +559,15 @@ void main() {
         conversationId: _conversations.first.id,
         otherParticipantId: 'other-user-id',
         realtimeService: realtime,
+        localStore: _MemoryChatLocalStore(),
         dataSource: ChatData.source,
       );
       addTearDown(() async {
-        await cubit.close();
-        await realtime.close();
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.runAsync(() async {
+          await cubit.close();
+          await realtime.close();
+        });
       });
       final messages = List.generate(
         40,
@@ -520,7 +594,9 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      await cubit.connect();
+      final connecting = cubit.connect();
+      await tester.pump();
+      await connecting;
       final list = find.byType(EasyChat<List<ChatMessageContent>>);
       final position = tester
           .state<ScrollableState>(
@@ -613,11 +689,15 @@ void main() {
           conversationId: _conversations.first.id,
           otherParticipantId: 'other-user-id',
           realtimeService: realtime,
+          localStore: _MemoryChatLocalStore(),
           dataSource: ChatData.source,
         );
         addTearDown(() async {
-          await cubit.close();
-          await realtime.close();
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.runAsync(() async {
+            await cubit.close();
+            await realtime.close();
+          });
         });
         final ChatThreadData chatThreadData = ChatThreadData(
           conversationId: _conversations.first.id,
@@ -709,32 +789,36 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('shows the API empty and restricted chat states', (tester) async {
-    configurePhoneViewport(tester);
-    await injector.unregister<ChatDataSource>();
-    injector.registerSingleton<ChatDataSource>(
-      const _MemoryChatDataSource(conversations: []),
-    );
+  testWidgets(
+    'participant verification does not grant or deny current account messaging',
+    (tester) async {
+      configurePhoneViewport(tester);
+      await injector.unregister<ChatDataSource>();
+      injector.registerSingleton<ChatDataSource>(
+        const _MemoryChatDataSource(conversations: []),
+      );
 
-    await tester.pumpWidget(buildScreen(const ChatsScreen()));
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(buildScreen(const ChatsScreen()));
+      await tester.pumpAndSettle();
 
-    expect(find.byType(ChatEmptyState), findsOneWidget);
-    expect(tester.takeException(), isNull);
+      expect(find.byType(ChatEmptyState), findsOneWidget);
+      expect(tester.takeException(), isNull);
 
-    await tester.pumpWidget(const SizedBox.shrink());
-    await injector.unregister<ChatDataSource>();
-    injector.registerSingleton<ChatDataSource>(
-      const _MemoryChatDataSource(conversations: _conversations),
-    );
-    await tester.pumpWidget(buildScreen(const ChatsScreen()));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('conversation-3')));
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(const SizedBox.shrink());
+      await injector.unregister<ChatDataSource>();
+      injector.registerSingleton<ChatDataSource>(
+        const _MemoryChatDataSource(conversations: _conversations),
+      );
+      await tester.pumpWidget(buildScreen(const ChatsScreen()));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('conversation-3')));
+      await tester.pumpAndSettle();
 
-    expect(find.byType(ChatRestrictedScreen), findsOneWidget);
-    expect(tester.takeException(), isNull);
-  });
+      expect(find.byType(ChatScreen), findsOneWidget);
+      expect(find.byType(ChatRestrictedScreen), findsNothing);
+      expect(tester.takeException(), isNull);
+    },
+  );
 }
 
 class _MemoryChatDataSource implements ChatDataSource {
@@ -936,5 +1020,61 @@ class _MemoryChatRealtimeGateway implements ChatRealtimeGateway {
       _readReceipts.close(),
       _statuses.close(),
     ]);
+  }
+}
+
+final List<Map<String, dynamic>> _reportRequests = [];
+bool _reportFailure = false;
+bool _reportReceiptMissing = false;
+
+class _ReportRepository implements BaseRepository {
+  @override
+  Future<Result<BaseModel<T>, Failure>> crudCall<T>(
+    CrudBaseParmas<T> params,
+  ) async {
+    if (params.api != ApiConstants.supportTickets) {
+      throw StateError('Unexpected report request');
+    }
+    _reportRequests.add(Map.of(params.body!));
+    if (_reportFailure) {
+      return const Error(ServerFailure('Report could not be saved'));
+    }
+    return Success(
+      BaseModel(
+        key: 'success',
+        msg: '',
+        data: params.mapper!({
+          'id': 'ticket-1',
+          'reference': _reportReceiptMissing ? '' : 'SUP-001',
+          'subject': params.body!['subject'],
+          'status': 'open',
+          'created_at': '2026-10-06T10:00:00Z',
+          'messages': [
+            {
+              'id': 'message-1',
+              'sender': 'user',
+              'body': params.body!['description'],
+              'created_at': '2026-10-06T10:00:00Z',
+              'attachments': [],
+            },
+          ],
+        }),
+      ),
+    );
+  }
+
+  @override
+  Future<Result<List<T>, Failure>> getBaseIdAndNameEntity<T extends BaseEntity>(
+    GetBaseEntityParams? param,
+  ) => throw UnimplementedError();
+}
+
+class _MemoryChatLocalStore implements ChatLocalStore {
+  ChatLocalState state = const ChatLocalState.initial();
+  @override
+  Future<ChatLocalState> read() async => state;
+  @override
+  Future<void> write(ChatLocalState next) async {
+    state = next;
   }
 }

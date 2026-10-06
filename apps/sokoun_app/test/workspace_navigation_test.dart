@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/tenant/visits/data/visit_schedule_rules.dart';
 import 'package:sokoun_app/features/main_view/presentation/cubits/account_cubit.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_widgets/tenant_home_content.dart';
 import 'package:sokoun_app/features/main_view/presentation/widgets/home_navigation_rail.dart';
@@ -553,14 +554,17 @@ void main() {
       final submission = form().onConfirmPressed(
         tester.element(find.byType(BookVisitForm)),
       );
+      await tester.pumpAndSettle();
+      expect(find.byType(VisitRequestReviewSheet), findsOneWidget);
+      await tester.tap(find.text(LocaleKeys.tenantVisitConfirmRequest).last);
       await tester.pump();
       await WorkspaceNavigation.open(workspace: AppWorkspace.owner);
       await tester.pump();
       expect(find.byType(BookVisitScreen), findsOneWidget);
       expect(WorkspaceCubit.instance.state, AppWorkspace.tenant);
       gate.complete();
-      await submission;
       await tester.pumpAndSettle();
+      await submission;
       expect(find.byType(VisitConfirmedScreen), findsOneWidget);
       expect(accountRepository.bookings, 1);
       expect(tester.takeException(), isNull);
@@ -1041,6 +1045,33 @@ class _AccountStatsRepository implements BaseRepository {
     CrudBaseParmas<T> params,
   ) async {
     endpoints.add(params.api);
+    if (params.api == ApiConstants.propertyAvailableDates('property-1')) {
+      final now = VisitScheduleRules.now();
+      final date = DateTime(
+        now.year,
+        now.month,
+        now.day + 1,
+      ).toIso8601String().split('T').first;
+      final json = params.queryParameters?['date'] == null
+          ? {
+              'days': [
+                {'day': 'monday', 'date': date, 'visit_date': date},
+              ],
+            }
+          : {
+              'times': [
+                {
+                  'time': '2.30 PM',
+                  'visit_time': '14:30:00',
+                  'is_available': true,
+                },
+              ],
+            };
+      return Success(
+        BaseModel<T>(key: '', msg: '', data: params.mapper!(json)),
+      );
+    }
+
     if (params.api == ApiConstants.propertyVisits('property-1') &&
         params.httpRequestType == HttpRequestType.post) {
       bookings++;

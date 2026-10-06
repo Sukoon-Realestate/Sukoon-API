@@ -689,7 +689,9 @@ void main() {
     final residents = wraps.firstWhere(
       (wrap) => wrap.chips.any((chip) => chip.selectionValue == 'students'),
     );
-    residents.onChipTap!(residents.chips.single);
+    residents.onChipTap!(
+      residents.chips.firstWhere((chip) => chip.selectionValue == 'students'),
+    );
     expect(form.toJson()['has_electricity_meter'], isTrue);
     expect(form.toJson()['suitable_for'], 'students');
     tester

@@ -27,6 +27,7 @@ class AddPropertyPhotosPage extends StatefulWidget {
     required this.onPhotoDescriptionChanged,
     required this.onNext,
     required this.onMainPhotoSelected,
+    this.onPhotoMoved,
     required this.form,
     required this.onVideoSelected,
     required this.onVideoRemoved,
@@ -42,6 +43,7 @@ class AddPropertyPhotosPage extends StatefulWidget {
   final void Function(int index, String value) onPhotoDescriptionChanged;
   final VoidCallback onNext;
   final ValueChanged<int> onMainPhotoSelected;
+  final ValueChanged<({int from, int to})>? onPhotoMoved;
   final OwnerAddPropertyFormState form;
   final void Function(File file, int durationSeconds) onVideoSelected;
   final VoidCallback onVideoRemoved;
@@ -143,6 +145,7 @@ class _AddPropertyPhotosPageState extends State<AddPropertyPhotosPage> {
             onRemovePhoto: widget.onRemovePhoto,
             onReplacePhoto: widget.onReplacePhoto,
             onMainPhotoSelected: widget.onMainPhotoSelected,
+            onPhotoMoved: widget.onPhotoMoved,
           ),
         ),
         if (widget.photos.isNotEmpty)

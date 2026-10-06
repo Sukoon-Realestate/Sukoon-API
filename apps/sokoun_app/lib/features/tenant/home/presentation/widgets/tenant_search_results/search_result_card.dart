@@ -12,6 +12,7 @@ import 'package:sokoun_app/features/tenant/home/data/models/property_filter_opti
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_filter/property_filter_label_resolver.dart';
 
 import 'amenity_row.dart';
+import '../../../data/models/property_search_model.dart';
 import 'details_button.dart';
 import 'result_image_header.dart';
 import 'tags_row.dart';
@@ -21,10 +22,12 @@ class SearchResultCard extends StatelessWidget {
     super.key,
     required this.item,
     required this.filterOptions,
+    this.preferences,
   });
 
   final PropertyDetailsModel item;
   final PropertyFilterOptionsModel filterOptions;
+  final PropertySearchFilters? preferences;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +51,12 @@ class SearchResultCard extends StatelessWidget {
       child: InkWell(
         onTap: item.id.isEmpty
             ? null
-            : () => Go.to(PropertyDetailsScreen(propertyId: item.id)),
+            : () => Go.to(
+                PropertyDetailsScreen(
+                  propertyId: item.id,
+                  searchPreferences: preferences,
+                ),
+              ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -65,7 +73,10 @@ class SearchResultCard extends StatelessWidget {
                 item.price,
                 period: item.pricePeriod,
               ),
-              action: DetailsButton(propertyId: item.id),
+              action: DetailsButton(
+                propertyId: item.id,
+                preferences: preferences,
+              ),
             ).paddingAll(14.w),
           ],
         ),

@@ -19,6 +19,7 @@ class PhotoGridSection extends StatelessWidget {
     required this.onRemovePhoto,
     required this.onReplacePhoto,
     required this.onMainPhotoSelected,
+    this.onPhotoMoved,
   });
 
   final List<OwnerPropertyPhotoDraft> photos;
@@ -26,6 +27,7 @@ class PhotoGridSection extends StatelessWidget {
   final ValueChanged<int> onRemovePhoto;
   final ValueChanged<int> onReplacePhoto;
   final ValueChanged<int> onMainPhotoSelected;
+  final ValueChanged<({int from, int to})>? onPhotoMoved;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,7 @@ class PhotoGridSection extends StatelessWidget {
           onRemovePhoto: onRemovePhoto,
           onReplacePhoto: onReplacePhoto,
           onMainPhotoSelected: onMainPhotoSelected,
+          onPhotoMoved: onPhotoMoved,
         ),
         AppText(
           LocaleKeys.ownerAddPropertyPhotosCount

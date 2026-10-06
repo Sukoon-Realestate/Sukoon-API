@@ -14,6 +14,9 @@ class ChatThreadState extends Equatable {
     required this.queuedMessageCount,
     this.showQueuedMessages = false,
     this.receivedMessage,
+    this.draft = '',
+    this.localSaveFailed = false,
+    this.recoveredMessages = const [],
     this.confirmedLocalMessageId,
   });
 
@@ -24,9 +27,15 @@ class ChatThreadState extends Equatable {
       queuedMessageCount = 0,
       showQueuedMessages = false,
       confirmedLocalMessageId = null,
-      receivedMessage = null;
+      receivedMessage = null,
+      draft = '',
+      localSaveFailed = false,
+      recoveredMessages = const [];
 
   final ChatSocketStatus status;
+  final String draft;
+  final bool localSaveFailed;
+  final List<SavedChatMessage> recoveredMessages;
   final ChatSocketMessage? receivedMessage;
   final String? confirmedLocalMessageId;
   final int receivedMessageRevision;
@@ -36,6 +45,9 @@ class ChatThreadState extends Equatable {
 
   ChatThreadState copyWith({
     ChatSocketStatus? status,
+    String? draft,
+    bool? localSaveFailed,
+    List<SavedChatMessage>? recoveredMessages,
     ChatSocketMessage? receivedMessage,
     Object? confirmedLocalMessageId = _notProvided,
     int? receivedMessageRevision,
@@ -45,6 +57,9 @@ class ChatThreadState extends Equatable {
   }) {
     return ChatThreadState(
       status: status ?? this.status,
+      draft: draft ?? this.draft,
+      localSaveFailed: localSaveFailed ?? this.localSaveFailed,
+      recoveredMessages: recoveredMessages ?? this.recoveredMessages,
       receivedMessage: receivedMessage ?? this.receivedMessage,
       confirmedLocalMessageId: identical(confirmedLocalMessageId, _notProvided)
           ? this.confirmedLocalMessageId
@@ -60,6 +75,9 @@ class ChatThreadState extends Equatable {
   @override
   List<Object?> get props => [
     status,
+    draft,
+    localSaveFailed,
+    recoveredMessages,
     receivedMessage,
     confirmedLocalMessageId,
     receivedMessageRevision,

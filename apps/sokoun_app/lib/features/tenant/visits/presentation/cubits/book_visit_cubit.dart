@@ -19,6 +19,14 @@ class BookVisitCubit extends AsyncCubit<Map<String, dynamic>> {
       onError?.call(LocaleKeys.workspaceSelfActionBlocked);
       return;
     }
+    if (!VisitScheduleRules.isFuture(
+      visitDate,
+      BookVisitBody.formatApiTime(hour: visitHour, minute: visitMinute),
+    )) {
+      setError(errorMessage: LocaleKeys.freeVisitPastTime);
+      onError?.call(LocaleKeys.freeVisitPastTime);
+      return;
+    }
     final BookVisitBody body = BookVisitBody.fromTime(
       visitDate: visitDate,
       hour: visitHour,

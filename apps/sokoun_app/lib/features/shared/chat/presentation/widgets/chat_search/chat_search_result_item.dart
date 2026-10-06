@@ -7,7 +7,6 @@ import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
-import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_restricted_screen.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/screens/chat_screen.dart';
 
 import '../shared/chat_participant_avatar.dart';
@@ -18,12 +17,7 @@ class ChatSearchResultItem extends StatelessWidget {
   final ConversationContent conversation;
 
   void _openConversation() {
-    if (conversation.isVerified) {
-      Go.to(ChatScreen(conversation: conversation));
-      return;
-    }
-
-    Go.to(ChatRestrictedScreen(conversation: conversation));
+    Go.to(ChatScreen(conversation: conversation));
   }
 
   @override

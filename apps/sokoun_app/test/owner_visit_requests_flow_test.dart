@@ -797,7 +797,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(OwnerVisitRequestsScreen), findsOneWidget);
-    expect(find.text('تم قبول طلب الزيارة'), findsOneWidget);
+    expect(find.byType(OwnerAcceptRequestSheet), findsNothing);
     expect(find.text('تم القبول'), findsNWidgets(2));
     expect(
       repository.lastApi,
@@ -832,7 +832,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(OwnerVisitRequestsScreen), findsOneWidget);
-    expect(find.text('تم رفض طلب الزيارة'), findsOneWidget);
+    expect(find.byType(OwnerRejectRequestSheet), findsNothing);
     expect(find.text('تم الرفض'), findsOneWidget);
     expect(
       repository.lastApi,

@@ -21,6 +21,9 @@ import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_fil
 import '../widgets/tenant_filter/property_filter_label_resolver.dart';
 import '../widgets/tenant_search_results/imports.dart';
 import 'tenant_filter_screen.dart';
+import 'property_map_screen.dart';
+import 'package:sokoun_app/features/tenant/decision_tools/presentation/widgets/save_search_button.dart';
+import 'package:sokoun_app/features/tenant/decision_tools/presentation/screens/decision_tools_screen.dart';
 
 class TenantSearchResultsScreen extends StatefulWidget {
   const TenantSearchResultsScreen({
@@ -197,6 +200,19 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
       value: _propertyFilterOptionsCubit,
       child: AppScaffold(
         title: LocaleKeys.searchResult,
+        actions: [
+          SaveSearchButton(filters: _filters),
+          IconButton(
+            tooltip: LocaleKeys.freeMapResults,
+            icon: const Icon(Icons.map_outlined),
+            onPressed: () => Go.to(PropertyMapScreen(filters: _filters)),
+          ),
+          IconButton(
+            tooltip: LocaleKeys.freeDecisionTools,
+            icon: const Icon(Icons.checklist),
+            onPressed: () => Go.to(const DecisionToolsScreen()),
+          ),
+        ],
         showBackButton: true,
         backgroundColor: context.appColor(
           AppColors.scaffoldBackground,
@@ -213,6 +229,7 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
                 selector: (state) => state.data,
                 builder: (context, filterOptions) => TenantSearchResultsContent(
                   queryController: _queryController,
+                  preferences: _filters,
                   pagifyController: _pagifyController,
                   filterOptions: filterOptions,
                   activeFilters: _activeFilters(filterOptions),

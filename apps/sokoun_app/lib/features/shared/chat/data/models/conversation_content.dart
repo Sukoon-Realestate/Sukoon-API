@@ -15,6 +15,7 @@ class ConversationContent extends Equatable {
     this.otherParticipant = const ChatParticipantContent.initial(),
     this.lastMessageAt,
     this.updatedAt,
+    this.canSend,
   });
 
   const ConversationContent.initial()
@@ -28,7 +29,8 @@ class ConversationContent extends Equatable {
       isOnline = false,
       otherParticipant = const ChatParticipantContent.initial(),
       lastMessageAt = null,
-      updatedAt = null;
+      updatedAt = null,
+      canSend = null;
 
   factory ConversationContent.fromJson(Map<String, dynamic> json) {
     final Object? participantJson = json['other_participant'];
@@ -40,6 +42,7 @@ class ConversationContent extends Equatable {
 
     return ConversationContent(
       id: json['id']?.toString() ?? '',
+      canSend: json['can_send'] as bool?,
       name: participant.fullName.isNotEmpty
           ? participant.fullName
           : json['name']?.toString() ?? '',
@@ -63,6 +66,9 @@ class ConversationContent extends Equatable {
   }
 
   final String id;
+
+  /// Permission for the current account. Participant verification is a badge.
+  final bool? canSend;
   final String name;
   final String property;
   final String lastMessage;
@@ -93,6 +99,7 @@ class ConversationContent extends Equatable {
     'unread_count': unreadCount,
     'is_verified': isVerified,
     'is_online': isOnline,
+    if (canSend != null) 'can_send': canSend,
     'last_message_at': lastMessageAt?.toIso8601String(),
     'updated_at': updatedAt?.toIso8601String(),
   };
@@ -109,9 +116,11 @@ class ConversationContent extends Equatable {
     ChatParticipantContent? otherParticipant,
     DateTime? lastMessageAt,
     DateTime? updatedAt,
+    bool? canSend,
   }) {
     return ConversationContent(
       id: id ?? this.id,
+      canSend: canSend ?? this.canSend,
       name: name ?? this.name,
       property: property ?? this.property,
       lastMessage: lastMessage ?? this.lastMessage,
@@ -128,6 +137,7 @@ class ConversationContent extends Equatable {
   @override
   List<Object?> get props => [
     id,
+    canSend,
     name,
     property,
     lastMessage,

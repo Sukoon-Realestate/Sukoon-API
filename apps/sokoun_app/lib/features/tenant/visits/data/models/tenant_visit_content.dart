@@ -1,5 +1,6 @@
 import '../enums/visit_status.dart';
 import '../visit_json.dart';
+import '../visit_schedule_rules.dart';
 import 'package:equatable/equatable.dart';
 import 'visit_actions.dart';
 
@@ -12,6 +13,8 @@ class TenantVisitContent extends Equatable {
     required this.status,
     required this.statusText,
     this.ownerName = '',
+    this.visitDate = '',
+    this.visitTime = '',
     this.ownerPhone = '',
     this.ownerId = '',
     this.actions,
@@ -25,6 +28,8 @@ class TenantVisitContent extends Equatable {
       status = TenantVisitStatus.pending,
       statusText = '',
       ownerName = '',
+      visitDate = '',
+      visitTime = '',
       ownerPhone = '',
       ownerId = '',
       actions = null;
@@ -38,7 +43,9 @@ class TenantVisitContent extends Equatable {
         ? Map<String, dynamic>.from(ownerValue)
         : const {};
     return TenantVisitContent(
-      id: json['id'] as String? ?? '',
+      id: json['id']?.toString() ?? '',
+      visitDate: json['visit_date']?.toString() ?? '',
+      visitTime: json['visit_time']?.toString() ?? '',
       propertyTitle:
           property['title']?.toString() ??
           json['title'] as String? ??
@@ -52,7 +59,7 @@ class TenantVisitContent extends Equatable {
           json['visit_date'] as String? ??
           '',
       time:
-          (json['time_label'] ?? json['visit_time'] ?? json['time'])
+          (json['time_label'] ?? json['time'] ?? json['visit_time'])
               ?.toString() ??
           '',
       status: TenantVisitStatusX.fromApiValue(
@@ -77,6 +84,8 @@ class TenantVisitContent extends Equatable {
   }
 
   final String id;
+  final String visitDate;
+  final String visitTime;
   final String propertyTitle;
   final String day;
   final String time;
@@ -91,8 +100,16 @@ class TenantVisitContent extends Equatable {
       actions?.canCancel ?? (status.isPending || status.isAccepted);
   bool get canChat =>
       (actions?.canChat ?? status.isAccepted) && ownerId.isNotEmpty;
-  bool get canReview =>
-      actions?.canReview ?? (status.isAccepted || status.isCompleted);
+  bool get canReview {
+    final serverPermission = actions?.canReview;
+    if (serverPermission != null) return serverPermission;
+    if (status.isCompleted) return true;
+    final appointment = VisitScheduleRules.appointment(visitDate, visitTime);
+    return status.isAccepted &&
+        appointment != null &&
+        appointment.isBefore(VisitScheduleRules.now());
+  }
+
   bool get canFindAlternative =>
       actions?.canFindAlternative ?? status.isRejected;
 
@@ -112,6 +129,8 @@ class TenantVisitContent extends Equatable {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    if (visitDate.isNotEmpty) 'visit_date': visitDate,
+    if (visitTime.isNotEmpty) 'visit_time': visitTime,
     'title': propertyTitle,
     'day': day,
     'time': time,
@@ -125,6 +144,8 @@ class TenantVisitContent extends Equatable {
 
   TenantVisitContent copyWith({
     String? id,
+    String? visitDate,
+    String? visitTime,
     String? propertyTitle,
     String? day,
     String? time,
@@ -137,6 +158,8 @@ class TenantVisitContent extends Equatable {
   }) {
     return TenantVisitContent(
       id: id ?? this.id,
+      visitDate: visitDate ?? this.visitDate,
+      visitTime: visitTime ?? this.visitTime,
       propertyTitle: propertyTitle ?? this.propertyTitle,
       day: day ?? this.day,
       time: time ?? this.time,
@@ -152,6 +175,8 @@ class TenantVisitContent extends Equatable {
   @override
   List<Object?> get props => [
     id,
+    visitDate,
+    visitTime,
     propertyTitle,
     day,
     time,

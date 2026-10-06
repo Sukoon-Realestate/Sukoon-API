@@ -9,6 +9,8 @@ import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/network/account_session.dart';
 
 import '../../data/chat_data.dart';
+import '../../data/chat_local_data.dart';
+import '../../data/models/chat_local_state.dart';
 import '../../data/chat_realtime_service.dart';
 import '../../data/chat_unread_refresh_bus.dart';
 import '../../data/models/chat_content.dart';
@@ -43,8 +45,16 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
     this.otherParticipantId = '',
     ChatRealtimeGateway? realtimeService,
     ChatDataSource? dataSource,
+    ChatLocalStore? localStore,
+    this.canSend = true,
   }) : _realtime = realtimeService ?? ChatRealtimeService.instance,
        _dataSource = dataSource ?? ChatData.source,
+       _localStore =
+           localStore ??
+           ChatLocalData(
+             accountId: UserModel.currentUser?.id ?? '',
+             conversationId: conversationId,
+           ),
        super(const ChatThreadState.initial());
 
   static const Duration _confirmationTimeout = Duration(seconds: 5);
@@ -55,6 +65,86 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   final String otherParticipantId;
   final ChatRealtimeGateway _realtime;
   final ChatDataSource _dataSource;
+  final ChatLocalStore _localStore;
+  final bool canSend;
+  Future<void>? _localLoad;
+  bool _draftEdited = false;
+  Future<void>? _localWrites;
+  Timer? _draftTimer;
+
+  Future<void> _loadLocal() => _localLoad ??= () async {
+    try {
+      final saved = await _localStore.read();
+      if (!isClosed && _sessionGeneration == AccountSession.generation) {
+        emit(
+          state.copyWith(
+            draft: _draftEdited ? state.draft : saved.draft,
+            recoveredMessages: saved.messages,
+          ),
+        );
+      }
+    } catch (_) {
+      if (_hasCurrentSession) emit(state.copyWith(localSaveFailed: true));
+    }
+  }();
+
+  Future<void> _persistLocal() {
+    final previous = _localWrites;
+    final write = () async {
+      if (previous != null) await previous;
+      await _loadLocal();
+      if (_sessionGeneration != AccountSession.generation) return;
+      final snapshot = ChatLocalState(
+        draft: state.draft,
+        messages: [
+          ...state.recoveredMessages,
+          for (final message in _outbox)
+            SavedChatMessage(
+              id: message.localMessageId,
+              content: message.content,
+            ),
+        ],
+      );
+      try {
+        await _localStore.write(snapshot);
+        if (_hasCurrentSession) emit(state.copyWith(localSaveFailed: false));
+      } catch (_) {
+        if (_hasCurrentSession) emit(state.copyWith(localSaveFailed: true));
+        rethrow;
+      }
+    }();
+    _localWrites = write.catchError((Object _) {});
+    return write;
+  }
+
+  void updateDraft(String value) {
+    if (!_hasCurrentSession || !canSend) return;
+    _draftEdited = true;
+    emit(state.copyWith(draft: value));
+    _draftTimer?.cancel();
+    _draftTimer = Timer(const Duration(milliseconds: 350), () {
+      unawaited(_persistLocal().catchError((Object _) {}));
+    });
+  }
+
+  Future<bool> restoreMessageDraft(SavedChatMessage message) async {
+    if (!_hasCurrentSession || !canSend || state.draft.trim().isNotEmpty) {
+      return false;
+    }
+    _draftEdited = true;
+    // Recovery requires an explicit send: the server has no idempotency contract.
+    emit(
+      state.copyWith(
+        draft: message.content,
+        recoveredMessages: state.recoveredMessages
+            .where((item) => item.id != message.id)
+            .toList(),
+      ),
+    );
+    await _persistLocal();
+    return true;
+  }
+
   final int _sessionGeneration = AccountSession.generation;
   final List<_QueuedChatMessage> _outbox = [];
   final Map<String, List<_SocketConfirmation>> _confirmations = {};
@@ -73,6 +163,8 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
 
   Future<void> connect() async {
     if (!_hasCurrentSession || !_shouldBeConnected) return;
+    await _loadLocal();
+    if (!_hasCurrentSession || !canSend) return;
     _realtime.setActiveConversation(conversationId);
     _messageSubscription ??= _realtime.messages.listen(_receiveMessage);
     _readSubscription ??= _realtime.readReceipts.listen(_receiveReadReceipt);
@@ -88,6 +180,8 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
     String rawContent, {
     String? localMessageId,
   }) async {
+    if (!_hasCurrentSession || !canSend) return const ChatSendResult.failed();
+    await _loadLocal();
     if (!_hasCurrentSession) return const ChatSendResult.failed();
     final String content = rawContent.trim();
     if (!Validators.isValidChatContent(content)) {
@@ -100,6 +194,12 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
       content: content,
     );
     _outbox.add(queuedMessage);
+    try {
+      await _persistLocal();
+    } catch (_) {
+      _outbox.remove(queuedMessage);
+      return const ChatSendResult.failed();
+    }
     queuedMessage.noticeTimer = Timer(_queuedNoticeDelay, () {
       if (!_hasCurrentSession || !_outbox.contains(queuedMessage)) return;
       queuedMessage.showQueuedNotice = true;
@@ -159,6 +259,11 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
     _shouldBeConnected =
         lifecycle == AppLifecycleState.resumed ||
         lifecycle == AppLifecycleState.inactive;
+    if (lifecycle != AppLifecycleState.resumed) {
+      _draftTimer?.cancel();
+      // Storage cannot delay socket ownership during rapid pause/resume events.
+      unawaited(_persistLocal().catchError((Object _) {}));
+    }
     switch (lifecycle) {
       case AppLifecycleState.resumed:
         await connect();
@@ -263,6 +368,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
       queuedMessage.result = result;
       queuedMessage.noticeTimer?.cancel();
       _outbox.removeAt(0);
+      await _persistLocal();
       _emitQueuedMessageCount();
     }
   }
@@ -383,22 +489,32 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
 
   @override
   Future<void> close() async {
+    final flushDraft =
+        _draftTimer?.isActive == true ||
+        (state.localSaveFailed && _draftEdited);
     _closing = true;
     _shouldBeConnected = false;
     _queueRetryTimer?.cancel();
+    _draftTimer?.cancel();
     for (final message in _outbox) {
       message.noticeTimer?.cancel();
     }
+    // Start storage and connection cleanup together. Disk IO must not retain a socket.
+    final cleanup = <Future<void>>[];
+    if (flushDraft && _sessionGeneration == AccountSession.generation) {
+      cleanup.add(_persistLocal().catchError((Object _) {}));
+    }
     if (_realtime.activeConversationId == conversationId) {
       _realtime.setActiveConversation(null);
-      await _realtime.disconnect();
+      cleanup.add(_realtime.disconnect());
     }
-    await _messageSubscription?.cancel();
-    await _readSubscription?.cancel();
-    await _statusSubscription?.cancel();
-    for (final List<_SocketConfirmation> confirmations
-        in _confirmations.values) {
-      for (final _SocketConfirmation confirmation in confirmations) {
+    if (_messageSubscription != null) {
+      cleanup.add(_messageSubscription!.cancel());
+    }
+    if (_readSubscription != null) cleanup.add(_readSubscription!.cancel());
+    if (_statusSubscription != null) cleanup.add(_statusSubscription!.cancel());
+    for (final confirmations in _confirmations.values) {
+      for (final confirmation in confirmations) {
         if (!confirmation.completer.isCompleted) {
           confirmation.completer.completeError(
             StateError('Chat thread was closed.'),
@@ -407,7 +523,12 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
       }
     }
     _confirmations.clear();
-    return super.close();
+    try {
+      await Future.wait(cleanup);
+      await _localWrites;
+    } finally {
+      await super.close();
+    }
   }
 }
 

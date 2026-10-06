@@ -163,6 +163,8 @@ class CityModel extends Equatable {
 class PropertyDetailsModel extends Equatable {
   const PropertyDetailsModel({
     this.ownerAvatar = '',
+    this.availabilityConfirmedAt,
+    this.rejectionReason = '',
     this.video,
     this.videoDuration,
     this.propertyLink = '',
@@ -256,7 +258,9 @@ class PropertyDetailsModel extends Equatable {
       rating = 0,
       images = const [],
       createdAt = '',
-      updatedAt = '';
+      updatedAt = '',
+      availabilityConfirmedAt = null,
+      rejectionReason = '';
 
   factory PropertyDetailsModel.fromJson(Map<String, dynamic> json) {
     final Object? ownerValue = json['owner'];
@@ -279,6 +283,10 @@ class PropertyDetailsModel extends Equatable {
       mainImageName: json['main_image_name']?.toString() ?? '',
       mainImageDescription: json['main_image_description']?.toString() ?? '',
       status: json['status']?.toString() ?? '',
+      availabilityConfirmedAt: DateTime.tryParse(
+        json['availability_confirmed_at']?.toString() ?? '',
+      ),
+      rejectionReason: json['rejection_reason']?.toString() ?? '',
       governorate: json['governorate'] is Map
           ? PropertyGovernorateModel.fromJson(
               Map<String, dynamic>.from(json['governorate'] as Map),
@@ -356,6 +364,8 @@ class PropertyDetailsModel extends Equatable {
   }
 
   final String id;
+  final DateTime? availabilityConfirmedAt;
+  final String rejectionReason;
   final String owner;
   final String ownerAvatar;
   final String ownerId;
@@ -408,6 +418,9 @@ class PropertyDetailsModel extends Equatable {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    if (availabilityConfirmedAt != null)
+      'availability_confirmed_at': availabilityConfirmedAt!.toIso8601String(),
+    if (rejectionReason.isNotEmpty) 'rejection_reason': rejectionReason,
     'owner': owner,
     'owner_avatar': ownerAvatar,
     'owner_id': ownerId,
@@ -460,6 +473,8 @@ class PropertyDetailsModel extends Equatable {
     int? videoDuration,
     String? propertyLink,
     String? id,
+    DateTime? availabilityConfirmedAt,
+    String? rejectionReason,
     String? owner,
     String? ownerAvatar,
     String? ownerId,
@@ -510,6 +525,9 @@ class PropertyDetailsModel extends Equatable {
       videoDuration: clearVideo ? null : videoDuration ?? this.videoDuration,
       propertyLink: propertyLink ?? this.propertyLink,
       id: id ?? this.id,
+      availabilityConfirmedAt:
+          availabilityConfirmedAt ?? this.availabilityConfirmedAt,
+      rejectionReason: rejectionReason ?? this.rejectionReason,
       owner: owner ?? this.owner,
       ownerAvatar: ownerAvatar ?? this.ownerAvatar,
       ownerId: ownerId ?? this.ownerId,
@@ -693,6 +711,8 @@ class PropertyDetailsModel extends Equatable {
   @override
   List<Object?> get props => [
     id,
+    availabilityConfirmedAt,
+    rejectionReason,
     owner,
     ownerAvatar,
     ownerId,

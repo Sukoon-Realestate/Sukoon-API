@@ -1,3 +1,10 @@
+import 'package:sokoun_app/features/shared/support/imports.dart';
+import 'package:sokoun_app/features/main_view/presentation/cubits/workspace_cubit.dart';
+import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
+import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
+import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
+import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -7,14 +14,13 @@ import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
-import 'package:melos_core/core/widgets/buttons/default_button.dart';
 import 'package:melos_core/core/widgets/first_validation_error_form.dart';
-import 'package:melos_core/core/helpers/validators.dart';
 
 import '../shared/chat_privacy_banner.dart';
 
 class ChatReportSheet extends StatefulWidget {
-  const ChatReportSheet({super.key});
+  const ChatReportSheet({super.key, required this.conversation});
+  final ConversationContent conversation;
 
   @override
   State<ChatReportSheet> createState() => _ChatReportSheetState();
@@ -23,6 +29,7 @@ class ChatReportSheet extends StatefulWidget {
 class _ChatReportSheetState extends State<ChatReportSheet> {
   final GlobalKey _detailsFieldKey = GlobalKey();
   late final TextEditingController _detailsController;
+  late final SupportTicketSubmitCubit _submitCubit;
   final ValueNotifier<int> _selectedReason = ValueNotifier<int>(0);
 
   List<String> get _reasons => [
@@ -38,16 +45,45 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
   void initState() {
     super.initState();
     _detailsController = TextEditingController();
+    _submitCubit = SupportTicketSubmitCubit();
   }
 
   @override
   void dispose() {
+    _submitCubit.close();
     _detailsController.dispose();
     _selectedReason.dispose();
     super.dispose();
   }
 
-  void _submit() => Go.back(true);
+  Future<void> _submit() async {
+    if (_submitCubit.isLoading || widget.conversation.id.isEmpty) return;
+    final workspace = WorkspaceCubit.instance.state;
+    final reason = _reasons[_selectedReason.value];
+    final ticket = await _submitCubit.submit(
+      SupportTicketBody(
+        workspace: workspace,
+        topic: workspace.isOwner
+            ? SupportTopic.reportTenant
+            : SupportTopic.reportOwner,
+        subject: reason,
+        description:
+            '$reason\nConversation: ${widget.conversation.id}\nParticipant: ${widget.conversation.otherParticipant.id}\nProperty: ${widget.conversation.property}\n${_detailsController.text.trim()}',
+      ),
+    );
+    if (!mounted) return;
+    if (ticket == null) {
+      Messages.showToast(msg: LocaleKeys.freeReportNotSubmitted);
+      return;
+    }
+    Messages.showToast(
+      msg: LocaleKeys.freeReportSubmitted.replaceAll(
+        '{reference}',
+        ticket.reference,
+      ),
+    );
+    Go.back(true);
+  }
 
   List<FirstValidationErrorField> _validationFields() => [
     if (_selectedReason.value == _reasons.length - 1)
@@ -55,7 +91,9 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
         fieldKey: _detailsFieldKey,
         title: LocaleKeys.chatReportDetailsHint,
         value: _detailsController.text,
-        validator: Validators.skipValidation,
+        validator: (value) => value == null || value.trim().length < 10
+            ? LocaleKeys.freeReportDetailsRequired
+            : null,
       ),
   ];
 
@@ -100,10 +138,14 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
                             12.szH,
                             TextFormField(
                               key: _detailsFieldKey,
-                              validator: Validators.skipValidation,
+                              validator: (value) =>
+                                  value == null || value.trim().length < 10
+                                  ? LocaleKeys.freeReportDetailsRequired
+                                  : null,
                               controller: _detailsController,
                               minLines: 3,
                               maxLines: 4,
+                              maxLength: 3000,
                               style: AppTextStyles.base.copyWith(
                                 color: context.appColor(AppColors.sokoonNavy),
                                 fontSize: 14.sp,
@@ -150,16 +192,15 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
                           16.szH,
                           ChatPrivacyBanner(text: LocaleKeys.chatReportPrivacy),
                           16.szH,
-                          DefaultButton(
-                            onTap: submit,
+                          AppLoadingButton(
+                            asyncCall: (_) => submit(),
                             title: LocaleKeys.chatSubmitReport,
-                            color: context.appColor(
+                            buttonColor: context.appColor(
                               AppColors.red,
                               surface: true,
                             ),
                             textColor: AppColors.white,
-                            borderRadius: BorderRadius.circular(16.r),
-                            width: double.infinity,
+                            borderRadius: 16.r,
                             height: 52.h,
                             textStyle: AppTextStyles.extraBold15.copyWith(
                               fontSize: 15.sp,
@@ -263,7 +304,7 @@ class _ReportReasonTile extends StatelessWidget {
       onTap: onPressed,
       borderRadius: BorderRadius.circular(16.r),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 160),
+        duration: SokounMotion.duration(context, milliseconds: 160),
         padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 13.h),
         decoration: BoxDecoration(
           color: isSelected

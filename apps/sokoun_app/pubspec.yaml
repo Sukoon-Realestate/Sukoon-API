@@ -1,4 +1,5 @@
 name: sokoun_app
+publish_to: none
 environment:
   sdk: ^3.9.0
 resolution: workspace
@@ -39,6 +40,9 @@ dependencies:
     path: ../../packages/core
   flutter_svg: ^2.2.3
   google_maps_flutter: ^2.14.2
+  path_provider: ^2.1.5
+  timezone: ^0.10.1
+  share_plus: ^12.0.2
 
 flutter_launcher_icons:
   android: true

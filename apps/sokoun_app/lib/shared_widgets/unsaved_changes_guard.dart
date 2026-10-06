@@ -12,11 +12,13 @@ class UnsavedChangesGuard extends StatefulWidget {
     required this.hasChanges,
     required this.isSaving,
     required this.child,
+    this.confirmLeave,
   });
 
   final bool Function() hasChanges;
   final bool Function() isSaving;
   final Widget child;
+  final Future<bool> Function()? confirmLeave;
 
   @override
   State<UnsavedChangesGuard> createState() => _UnsavedChangesGuardState();
@@ -43,38 +45,44 @@ class _UnsavedChangesGuardState extends State<UnsavedChangesGuard> {
     if (!mounted || widget.isSaving() || _confirming) return false;
     _confirming = true;
     try {
-      final bool leave =
-          !widget.hasChanges() ||
-          await showDialog<bool>(
-                context: context,
-                builder: (_) => AlertDialog(
-                  title: AppText(
-                    LocaleKeys.workspaceDiscardTitle,
-                    style: AppTextStyles.regular,
-                  ),
-                  content: AppText(
-                    LocaleKeys.workspaceDiscardMessage,
-                    style: AppTextStyles.regular,
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Go.back(false),
-                      child: AppText(
-                        LocaleKeys.workspaceStay,
-                        style: AppTextStyles.regular,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () => Go.back(true),
-                      child: AppText(
-                        LocaleKeys.workspaceDiscard,
-                        style: AppTextStyles.regular,
-                      ),
-                    ),
-                  ],
+      final bool leave;
+      if (!widget.hasChanges()) {
+        leave = true;
+      } else if (widget.confirmLeave != null) {
+        leave = await widget.confirmLeave!();
+      } else {
+        leave =
+            await showDialog<bool>(
+              context: context,
+              builder: (_) => AlertDialog(
+                title: AppText(
+                  LocaleKeys.workspaceDiscardTitle,
+                  style: AppTextStyles.regular,
                 ),
-              ) ==
-              true;
+                content: AppText(
+                  LocaleKeys.workspaceDiscardMessage,
+                  style: AppTextStyles.regular,
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Go.back(false),
+                    child: AppText(
+                      LocaleKeys.workspaceStay,
+                      style: AppTextStyles.regular,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => Go.back(true),
+                    child: AppText(
+                      LocaleKeys.workspaceDiscard,
+                      style: AppTextStyles.regular,
+                    ),
+                  ),
+                ],
+              ),
+            ) ==
+            true;
+      }
       if (!mounted || !leave) return false;
       _allowPop.value = true;
       await WidgetsBinding.instance.endOfFrame;

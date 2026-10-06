@@ -14,12 +14,14 @@ class TenantPropertyDetailsBody extends StatelessWidget {
     required this.onSavedPressed,
     this.onChatPressed,
     this.isOpeningChat = false,
+    this.decisionTools,
   }) : bottomActions = null;
 
   const TenantPropertyDetailsBody.withActions({
     super.key,
     required this.property,
     required Widget this.bottomActions,
+    this.decisionTools,
   }) : isSaved = false,
        onSavedPressed = null,
        onChatPressed = null,
@@ -31,6 +33,7 @@ class TenantPropertyDetailsBody extends StatelessWidget {
   final Widget? bottomActions;
   final VoidCallback? onChatPressed;
   final bool isOpeningChat;
+  final Widget? decisionTools;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +51,7 @@ class TenantPropertyDetailsBody extends StatelessWidget {
                 );
                 final Widget details = TenantPropertyDetailsContentView(
                   property: property,
+                  decisionTools: decisionTools,
                 );
                 return wide
                     ? Row(

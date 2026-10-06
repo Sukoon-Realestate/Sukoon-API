@@ -11,6 +11,7 @@ class BookVisitForm extends StatefulWidget {
     required this.onDaySelected,
     required this.onTimeSelected,
     required this.onConfirmPressed,
+    this.timeSelector,
   });
 
   final VisitPropertyContent property;
@@ -21,6 +22,7 @@ class BookVisitForm extends StatefulWidget {
   final ValueChanged<int> onDaySelected;
   final ValueChanged<TimeOfDay> onTimeSelected;
   final Future<void> Function(BuildContext context) onConfirmPressed;
+  final Widget? timeSelector;
 
   @override
   State<BookVisitForm> createState() => _BookVisitFormState();
@@ -108,12 +110,14 @@ class _BookVisitFormState extends State<BookVisitForm> {
               key: _timeFieldKey,
               value: widget.selectedTime?.toString(),
               validator: _validateTime,
-              child: VisitTimePickerField(
-                selectedTime: widget.selectedTime,
-                onTimeSelected: widget.days.isEmpty
-                    ? null
-                    : widget.onTimeSelected,
-              ),
+              child:
+                  widget.timeSelector ??
+                  VisitTimePickerField(
+                    selectedTime: widget.selectedTime,
+                    onTimeSelected: widget.days.isEmpty
+                        ? null
+                        : widget.onTimeSelected,
+                  ),
             ),
             22.szH,
             _BookVisitSectionTitle(LocaleKeys.tenantVisitNoteLabel),
@@ -131,6 +135,7 @@ class _BookVisitFormState extends State<BookVisitForm> {
               child: TextField(
                 controller: widget.noteController,
                 maxLines: 3,
+                maxLength: 1000,
                 textAlign: TextAlign.start,
                 style: AppTextStyles.medium13.copyWith(
                   color: context.appColor(AppColors.sokoonNavy),

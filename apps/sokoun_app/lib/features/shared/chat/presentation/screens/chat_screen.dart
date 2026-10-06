@@ -32,6 +32,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     _chatThreadCubit = ChatThreadCubit(
       conversationId: widget.conversation.id,
+      canSend: widget.conversation.canSend != false,
       otherParticipantId: widget.conversation.otherParticipant.id,
     );
     _chatThreadData = ChatThreadData(conversationId: widget.conversation.id);
@@ -72,7 +73,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         titleWidget: ChatParticipantTitle(conversation: widget.conversation),
         showBackButton: true,
         toolbarHeight: 56 + MediaQuery.textScalerOf(context).scale(16),
-        actions: const [ChatReportButton()],
+        actions: [ChatReportButton(conversation: widget.conversation)],
         backgroundColor: context.appColor(
           AppColors.scaffoldBackground,
           surface: true,

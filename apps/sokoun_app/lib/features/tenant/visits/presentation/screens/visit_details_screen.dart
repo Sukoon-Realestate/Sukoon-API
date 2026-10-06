@@ -37,6 +37,7 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
 
   Future<void> _review() async {
     final TenantVisitContent visit = _detailsCubit.data.visit;
+    if (!visit.canReview || _detailsCubit.data.review != null) return;
     final bool? submitted = await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,

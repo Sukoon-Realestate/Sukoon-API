@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'listing_quality_card.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
@@ -62,6 +63,7 @@ class PropertyReviewSheet extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
+              ListingQualityCard(form: form),
               SokounReveal(
                 child: PropertyReviewSection(
                   title: LocaleKeys.ownerPropertyReviewBasics,

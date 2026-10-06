@@ -319,7 +319,9 @@ void main() {
               ),
               toolbarHeight: 72,
               onBack: () {},
-              actions: const [ChatReportButton()],
+              actions: const [
+                ChatReportButton(conversation: ConversationContent.initial()),
+              ],
               body: const SizedBox.expand(),
             ),
             'dashboard' => AppScaffold(

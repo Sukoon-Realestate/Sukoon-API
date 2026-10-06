@@ -1,6 +1,302 @@
 import 'package:easy_localization/easy_localization.dart';
 
 abstract class LocaleKeys {
+  static const String _freeLoadMoreResults = 'free_load_more_results';
+  static String get freeLoadMoreResults => _freeLoadMoreResults.tr();
+
+  static const String _freeComparisonScroll = 'free_comparison_scroll';
+  static String get freeComparisonScroll => _freeComparisonScroll.tr();
+
+  static const String _freeListingQuality = 'free_listing_quality';
+  static String get freeListingQuality => _freeListingQuality.tr();
+
+  static const String _freeQualityExplanation = 'free_quality_explanation';
+  static String get freeQualityExplanation => _freeQualityExplanation.tr();
+
+  static const String _freeQualityPhotos = 'free_quality_photos';
+  static String get freeQualityPhotos => _freeQualityPhotos.tr();
+
+  static const String _freeQualityLocation = 'free_quality_location';
+  static String get freeQualityLocation => _freeQualityLocation.tr();
+
+  static const String _freeQualityDescription = 'free_quality_description';
+  static String get freeQualityDescription => _freeQualityDescription.tr();
+
+  static const String _freeQualityDeposit = 'free_quality_deposit';
+  static String get freeQualityDeposit => _freeQualityDeposit.tr();
+
+  static const String _freeQualityCaptions = 'free_quality_captions';
+  static String get freeQualityCaptions => _freeQualityCaptions.tr();
+
+  static const String _freeQualityVideo = 'free_quality_video';
+  static String get freeQualityVideo => _freeQualityVideo.tr();
+
+  static const String _freeAvailabilityConfirmed =
+      'free_availability_confirmed';
+  static String get freeAvailabilityConfirmed =>
+      _freeAvailabilityConfirmed.tr();
+
+  static const String _freeAvailabilityUnknown = 'free_availability_unknown';
+  static String get freeAvailabilityUnknown => _freeAvailabilityUnknown.tr();
+
+  static const String _freeMapResults = 'free_map_results';
+  static String get freeMapResults => _freeMapResults.tr();
+
+  static const String _freeMapLoadedExplanation = 'free_map_loaded_explanation';
+  static String get freeMapLoadedExplanation => _freeMapLoadedExplanation.tr();
+
+  static const String _freeFilterLoadedArea = 'free_filter_loaded_area';
+  static String get freeFilterLoadedArea => _freeFilterLoadedArea.tr();
+
+  static const String _freeShowAllLoaded = 'free_show_all_loaded';
+  static String get freeShowAllLoaded => _freeShowAllLoaded.tr();
+
+  static const String _freeMapNoLoadedMatches = 'free_map_no_loaded_matches';
+  static String get freeMapNoLoadedMatches => _freeMapNoLoadedMatches.tr();
+
+  static const String _freeMapMissingLocation = 'free_map_missing_location';
+  static String get freeMapMissingLocation => _freeMapMissingLocation.tr();
+
+  static const String _freeMapNoResults = 'free_map_no_results';
+  static String get freeMapNoResults => _freeMapNoResults.tr();
+
+  static const String _freeMapUnavailable = 'free_map_unavailable';
+  static String get freeMapUnavailable => _freeMapUnavailable.tr();
+
+  static const String _freeWhyMatches = 'free_why_matches';
+  static String get freeWhyMatches => _freeWhyMatches.tr();
+
+  static const String _freeMatchPrice = 'free_match_price';
+  static String get freeMatchPrice => _freeMatchPrice.tr();
+
+  static const String _freeMatchPeriod = 'free_match_period';
+  static String get freeMatchPeriod => _freeMatchPeriod.tr();
+
+  static const String _freeMatchType = 'free_match_type';
+  static String get freeMatchType => _freeMatchType.tr();
+
+  static const String _freeMatchAmenities = 'free_match_amenities';
+  static String get freeMatchAmenities => _freeMatchAmenities.tr();
+
+  static const String _freeMatchBedrooms = 'free_match_bedrooms';
+  static String get freeMatchBedrooms => _freeMatchBedrooms.tr();
+
+  static const String _freeMatchVerified = 'free_match_verified';
+  static String get freeMatchVerified => _freeMatchVerified.tr();
+
+  static const String _freeReorderPhoto = 'free_reorder_photo';
+  static String get freeReorderPhoto => _freeReorderPhoto.tr();
+
+  static const String _freeMoveEarlier = 'free_move_earlier';
+  static String get freeMoveEarlier => _freeMoveEarlier.tr();
+
+  static const String _freeMoveLater = 'free_move_later';
+  static String get freeMoveLater => _freeMoveLater.tr();
+
+  static const String _freeExportVisitCalendar = 'free_export_visit_calendar';
+  static String get freeExportVisitCalendar => _freeExportVisitCalendar.tr();
+
+  static const String _freeCalendarExportFailed = 'free_calendar_export_failed';
+  static String get freeCalendarExportFailed => _freeCalendarExportFailed.tr();
+
+  static const String _freeAvailabilityOffline = 'free_availability_offline';
+  static String get freeAvailabilityOffline => _freeAvailabilityOffline.tr();
+
+  static const String _freeNoVisitTimes = 'free_no_visit_times';
+  static String get freeNoVisitTimes => _freeNoVisitTimes.tr();
+
+  static const String _freeReviewVisit = 'free_review_visit';
+  static String get freeReviewVisit => _freeReviewVisit.tr();
+
+  static const String _freeVisitPendingExplanation =
+      'free_visit_pending_explanation';
+  static String get freeVisitPendingExplanation =>
+      _freeVisitPendingExplanation.tr();
+
+  static const String _freeVisitRequestSent = 'free_visit_request_sent';
+  static String get freeVisitRequestSent => _freeVisitRequestSent.tr();
+
+  static const String _freeVisitPastTime = 'free_visit_past_time';
+  static String get freeVisitPastTime => _freeVisitPastTime.tr();
+
+  static const String _freeAskOwner = 'free_ask_owner';
+  static String get freeAskOwner => _freeAskOwner.tr();
+
+  static const String _freeKnownCosts = 'free_known_costs';
+  static String get freeKnownCosts => _freeKnownCosts.tr();
+
+  static const String _freeRent = 'free_rent';
+  static String get freeRent => _freeRent.tr();
+
+  static const String _freeDeposit = 'free_deposit';
+  static String get freeDeposit => _freeDeposit.tr();
+
+  static const String _freeKnownSubtotal = 'free_known_subtotal';
+  static String get freeKnownSubtotal => _freeKnownSubtotal.tr();
+
+  static const String _freeCostsUnknown = 'free_costs_unknown';
+  static String get freeCostsUnknown => _freeCostsUnknown.tr();
+
+  static const String _freePrivateDeviceNotes = 'free_private_device_notes';
+  static String get freePrivateDeviceNotes => _freePrivateDeviceNotes.tr();
+
+  static const String _freeDecisionList = 'free_decision_list';
+  static String get freeDecisionList => _freeDecisionList.tr();
+
+  static const String _freeDecisionListExample = 'free_decision_list_example';
+  static String get freeDecisionListExample => _freeDecisionListExample.tr();
+
+  static const String _freePrivateNotes = 'free_private_notes';
+  static String get freePrivateNotes => _freePrivateNotes.tr();
+
+  static const String _freeViewingChecklist = 'free_viewing_checklist';
+  static String get freeViewingChecklist => _freeViewingChecklist.tr();
+
+  static const String _freeCheckWater = 'free_check_water';
+  static String get freeCheckWater => _freeCheckWater.tr();
+
+  static const String _freeCheckLight = 'free_check_light';
+  static String get freeCheckLight => _freeCheckLight.tr();
+
+  static const String _freeCheckNoise = 'free_check_noise';
+  static String get freeCheckNoise => _freeCheckNoise.tr();
+
+  static const String _freeCheckMaintenance = 'free_check_maintenance';
+  static String get freeCheckMaintenance => _freeCheckMaintenance.tr();
+
+  static const String _freeCheckInternet = 'free_check_internet';
+  static String get freeCheckInternet => _freeCheckInternet.tr();
+
+  static const String _freeCheckCosts = 'free_check_costs';
+  static String get freeCheckCosts => _freeCheckCosts.tr();
+
+  static const String _freeCheckSafety = 'free_check_safety';
+  static String get freeCheckSafety => _freeCheckSafety.tr();
+
+  static const String _freeSaveNotes = 'free_save_notes';
+  static String get freeSaveNotes => _freeSaveNotes.tr();
+
+  static const String _freeLocalSaveFailed = 'free_local_save_failed';
+  static String get freeLocalSaveFailed => _freeLocalSaveFailed.tr();
+
+  static const String _freeCompare = 'free_compare';
+  static String get freeCompare => _freeCompare.tr();
+
+  static const String _freeComparisonExplanation =
+      'free_comparison_explanation';
+  static String get freeComparisonExplanation =>
+      _freeComparisonExplanation.tr();
+
+  static const String _freeListingVerified = 'free_listing_verified';
+  static String get freeListingVerified => _freeListingVerified.tr();
+
+  static const String _freeOwnerVerified = 'free_owner_verified';
+  static String get freeOwnerVerified => _freeOwnerVerified.tr();
+
+  static const String _freeOwnershipVerified = 'free_ownership_verified';
+  static String get freeOwnershipVerified => _freeOwnershipVerified.tr();
+
+  static const String _freeYes = 'free_yes';
+  static String get freeYes => _freeYes.tr();
+
+  static const String _freeNotVerified = 'free_not_verified';
+  static String get freeNotVerified => _freeNotVerified.tr();
+
+  static const String _freeSquareMeters = 'free_square_meters';
+  static String get freeSquareMeters => _freeSquareMeters.tr();
+
+  static const String _freeListingUnavailable = 'free_listing_unavailable';
+  static String get freeListingUnavailable => _freeListingUnavailable.tr();
+
+  static const String _freeCachedListing = 'free_cached_listing';
+  static String get freeCachedListing => _freeCachedListing.tr();
+
+  static const String _freeOpenListing = 'free_open_listing';
+  static String get freeOpenListing => _freeOpenListing.tr();
+
+  static const String _freeRemove = 'free_remove';
+  static String get freeRemove => _freeRemove.tr();
+
+  static const String _freeDecisionTools = 'free_decision_tools';
+  static String get freeDecisionTools => _freeDecisionTools.tr();
+
+  static const String _freeDecisionEmpty = 'free_decision_empty';
+  static String get freeDecisionEmpty => _freeDecisionEmpty.tr();
+
+  static const String _freeUnfiled = 'free_unfiled';
+  static String get freeUnfiled => _freeUnfiled.tr();
+
+  static const String _freeCompareLimit = 'free_compare_limit';
+  static String get freeCompareLimit => _freeCompareLimit.tr();
+
+  static const String _freeSavedSearches = 'free_saved_searches';
+  static String get freeSavedSearches => _freeSavedSearches.tr();
+
+  static const String _freeSavedSearchManual = 'free_saved_search_manual';
+  static String get freeSavedSearchManual => _freeSavedSearchManual.tr();
+
+  static const String _freeSaveSearch = 'free_save_search';
+  static String get freeSaveSearch => _freeSaveSearch.tr();
+
+  static const String _freeSearchName = 'free_search_name';
+  static String get freeSearchName => _freeSearchName.tr();
+
+  static const String _freeResumeDraft = 'free_resume_draft';
+  static String get freeResumeDraft => _freeResumeDraft.tr();
+
+  static const String _freeKeepDraft = 'free_keep_draft';
+  static String get freeKeepDraft => _freeKeepDraft.tr();
+
+  static const String _freeDraftRecovery = 'free_draft_recovery';
+  static String get freeDraftRecovery => _freeDraftRecovery.tr();
+
+  static const String _freeDraftExitDescription = 'free_draft_exit_description';
+  static String get freeDraftExitDescription => _freeDraftExitDescription.tr();
+
+  static const String _freeDiscardLocalDraft = 'free_discard_local_draft';
+  static String get freeDiscardLocalDraft => _freeDiscardLocalDraft.tr();
+
+  static const String _freeSaveAndExit = 'free_save_and_exit';
+  static String get freeSaveAndExit => _freeSaveAndExit.tr();
+
+  static const String _freeSaveDraft = 'free_save_draft';
+  static String get freeSaveDraft => _freeSaveDraft.tr();
+
+  static const String _freeDraftSaved = 'free_draft_saved';
+  static String get freeDraftSaved => _freeDraftSaved.tr();
+
+  static const String _freeDraftMissingFiles = 'free_draft_missing_files';
+  static String get freeDraftMissingFiles => _freeDraftMissingFiles.tr();
+
+  static const String _freeDraftLoadFailed = 'free_draft_load_failed';
+  static String get freeDraftLoadFailed => _freeDraftLoadFailed.tr();
+
+  static const String _freeReportNotSubmitted = 'free_report_not_submitted';
+  static String get freeReportNotSubmitted => _freeReportNotSubmitted.tr();
+
+  static const String _freeReportSubmitted = 'free_report_submitted';
+  static String get freeReportSubmitted => _freeReportSubmitted.tr();
+
+  static const String _freeReportDetailsRequired =
+      'free_report_details_required';
+  static String get freeReportDetailsRequired =>
+      _freeReportDetailsRequired.tr();
+
+  static const String _freeRecoveredChat = 'free_recovered_chat';
+  static String get freeRecoveredChat => _freeRecoveredChat.tr();
+
+  static const String _freeChatDraftExists = 'free_chat_draft_exists';
+  static String get freeChatDraftExists => _freeChatDraftExists.tr();
+
+  static const String _freeRestoreMessage = 'free_restore_message';
+  static String get freeRestoreMessage => _freeRestoreMessage.tr();
+
+  static const String _freeChatDraftSaveFailed = 'free_chat_draft_save_failed';
+  static String get freeChatDraftSaveFailed => _freeChatDraftSaveFailed.tr();
+
+  static const String _freeChatUnavailable = 'free_chat_unavailable';
+  static String get freeChatUnavailable => _freeChatUnavailable.tr();
+
   static const String _appearanceTitle = 'appearance_title';
   static String get appearanceTitle => _appearanceTitle.tr();
 

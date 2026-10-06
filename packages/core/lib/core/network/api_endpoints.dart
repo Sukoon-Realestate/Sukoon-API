@@ -101,6 +101,9 @@ class ApiConstants {
   static String propertyVisits(String propertyId) =>
       '$properties$propertyId/$visits';
 
+  static String propertyAvailableDates(String propertyId) =>
+      '${propertyDetails(propertyId)}available_dates/';
+
   static String propertyVisitDetails(String visitId) =>
       '$tenantVisits$visitId/';
 

@@ -45,12 +45,19 @@ class VisitDetailsContent extends StatelessWidget {
             VisitContactCard(ownerPhone: visit.ownerPhone),
           ],
           if (details != null) VisitDetailsExtra(details: details!),
+          if (details?.propertyId.isNotEmpty == true)
+            PrivateViewingNotesButton(
+              propertyId: details!.propertyId,
+              title: visit.propertyTitle,
+            ),
           14.szH,
           VisitDetailsActions(
             visit: visit,
             onCancel: onCancel,
-            onReview: onReview,
+            onReview: details?.review == null ? onReview : null,
           ),
+          const SizedBox(height: 12),
+          VisitCalendarButton(visit: visit),
         ],
       ),
     );

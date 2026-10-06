@@ -17,6 +17,7 @@ class OwnerPropertyContent extends Equatable {
     required this.description,
     required this.photoCount,
     required this.status,
+    this.rejectionReason = '',
   });
 
   factory OwnerPropertyContent.initial() {
@@ -40,6 +41,7 @@ class OwnerPropertyContent extends Equatable {
   factory OwnerPropertyContent.fromJson(Map<String, dynamic> json) {
     return OwnerPropertyContent(
       id: json['id'] ?? '',
+      rejectionReason: json['rejection_reason']?.toString() ?? '',
       title: json['title'] ?? '',
       mainImage: json['main_image'] ?? '',
       location: json['location'] ?? '',
@@ -64,6 +66,7 @@ class OwnerPropertyContent extends Equatable {
   }
 
   final String id;
+  final String rejectionReason;
   final String title;
   final String mainImage;
   final String location;
@@ -81,6 +84,7 @@ class OwnerPropertyContent extends Equatable {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      if (rejectionReason.isNotEmpty) 'rejection_reason': rejectionReason,
       'title': title,
       'main_image': mainImage,
       'location': location,
@@ -98,6 +102,7 @@ class OwnerPropertyContent extends Equatable {
 
   OwnerPropertyContent copyWith({
     String? id,
+    String? rejectionReason,
     String? title,
     String? mainImage,
     String? location,
@@ -113,6 +118,7 @@ class OwnerPropertyContent extends Equatable {
   }) {
     return OwnerPropertyContent(
       id: id ?? this.id,
+      rejectionReason: rejectionReason ?? this.rejectionReason,
       title: title ?? this.title,
       mainImage: mainImage ?? this.mainImage,
       location: location ?? this.location,
@@ -131,6 +137,7 @@ class OwnerPropertyContent extends Equatable {
   @override
   List<Object?> get props => [
     id,
+    rejectionReason,
     title,
     mainImage,
     location,

@@ -19,6 +19,7 @@ import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_sav
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_filter_screen.dart';
 
 import '../widgets/imports.dart';
+import 'package:sokoun_app/features/tenant/decision_tools/presentation/screens/decision_tools_screen.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key, this.initialItems});
@@ -272,6 +273,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       title: LocaleKeys.favoritesTitle,
       showBackButton: true,
       actions: [
+        IconButton(
+          tooltip: LocaleKeys.freeDecisionTools,
+          icon: const Icon(Icons.checklist),
+          onPressed: () => Go.to(const DecisionToolsScreen()),
+        ),
         PropertyFilterButton(
           activeCount: _filters.activeCount,
           onPressed: _openFilters,

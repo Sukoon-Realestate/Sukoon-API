@@ -1,3 +1,13 @@
+import 'dart:async';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
+import 'package:melos_core/core/widgets/exeption_view.dart';
+import '../../data/owner_draft_data.dart';
+import '../../data/models/owner_property_draft.dart';
+import '../../data/enums/owner_draft_action.dart';
+import '../cubits/owner_draft_cubit.dart';
+import '../widgets/owner_add_property/owner_draft_dialog.dart';
+import '../widgets/owner_add_property/owner_draft_save_warning.dart';
 import '../../data/models/property_location.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
@@ -32,8 +42,12 @@ class OwnerPropertyFlowScreen extends StatefulWidget {
       _OwnerPropertyFlowScreenState();
 }
 
-class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
+class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
+    with WidgetsBindingObserver {
   late final PageController _pageController;
+  late final OwnerDraftCubit _draftCubit;
+  late Future<void> _draftRequest;
+  bool _restoringDraft = false;
   final ValueNotifier<int> _currentStep = ValueNotifier(0);
   PropertySubmissionCubit? _submissionCubit;
   UploadPropertyImagesCubit? _uploadPropertyImagesCubit;
@@ -82,10 +96,22 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
       text: _form.rentalDuration,
     );
     _descriptionController = TextEditingController(text: _form.description);
+    WidgetsBinding.instance.addObserver(this);
+    _draftCubit = OwnerDraftCubit(
+      store: OwnerDraftData(
+        accountId: UserModel.currentUser?.id ?? '',
+        propertyId: widget.property?.id ?? '',
+      ),
+    );
+    _formNotifier.addListener(_scheduleDraft);
+    _draftRequest = _restoreDraft();
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _formNotifier.removeListener(_scheduleDraft);
+    unawaited(_draftCubit.close().catchError((Object _) {}));
     _pageController.dispose();
     _currentStep.dispose();
     _formNotifier.dispose();
@@ -102,6 +128,94 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
     _rentalDurationController.dispose();
     _descriptionController.dispose();
     super.dispose();
+  }
+
+  OwnerPropertyDraft get _draft => OwnerPropertyDraft(
+    form: _form,
+    savedProperty: _savedProperty,
+    isServerSnapshotCurrent: identical(_savedForm, _form),
+    step: _currentStep.value.clamp(0, 2),
+  );
+
+  void _scheduleDraft() {
+    if (!_restoringDraft && _hasChanges && _form.submittedAt == null) {
+      _draftCubit.schedule(_draft);
+    }
+  }
+
+  Future<void> _persistDraft() => _draftCubit.save(_draft);
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed) {
+      unawaited(_draftCubit.flush().catchError((Object _) {}));
+    }
+  }
+
+  Future<void> _restoreDraft() async {
+    await _draftCubit.load();
+    if (!mounted || _draftCubit.state.form == null) return;
+    await WidgetsBinding.instance.endOfFrame;
+    if (!mounted) return;
+    final action = await showDialog<OwnerDraftAction>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const OwnerDraftDialog(isRecovery: true),
+    );
+    if (!mounted) return;
+    if (action == OwnerDraftAction.discard) {
+      await _draftCubit.clear();
+      return;
+    }
+    final draft = _draftCubit.state;
+    final form = draft.form;
+    if (form == null) return;
+    _restoringDraft = true;
+    _savedProperty = draft.savedProperty;
+    _savedForm = draft.isServerSnapshotCurrent ? form : null;
+    _selectedGovernorate = form.governorateId.isEmpty
+        ? null
+        : const OwnerPropertyLocationModel.initial().copyWith(
+            id: form.governorateId,
+            name: form.governorate,
+          );
+    _selectedCity = form.districtId.isEmpty
+        ? null
+        : const OwnerPropertyLocationModel.initial().copyWith(
+            id: form.districtId,
+            name: form.district,
+          );
+    _locationDropdownGeneration++;
+    _formNotifier.value = form;
+    _syncControllers();
+    _hasChanges = true;
+    _restoringDraft = false;
+    if (draft.hasMissingFiles) {
+      Messages.showToast(msg: LocaleKeys.freeDraftMissingFiles);
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _goToPage(draft.step);
+    });
+  }
+
+  Future<bool> _confirmLeave() async {
+    final action = await showDialog<OwnerDraftAction>(
+      context: context,
+      builder: (_) => const OwnerDraftDialog(isRecovery: false),
+    );
+    if (action == null || action == OwnerDraftAction.stay) return false;
+    try {
+      if (action == OwnerDraftAction.discard) {
+        await _draftCubit.clear();
+      } else {
+        await _persistDraft();
+      }
+      _hasChanges = false;
+      return true;
+    } catch (_) {
+      Messages.showToast(msg: LocaleKeys.freeLocalSaveFailed);
+      return false;
+    }
   }
 
   bool get _isEditing => widget.property != null;
@@ -273,6 +387,18 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
     _updateForm(() => _form.copyWith(photoDrafts: photoDrafts));
   }
 
+  void _movePhoto(({int from, int to}) move) {
+    if (move.from < 0 ||
+        move.to < 0 ||
+        move.from >= _form.photoCount ||
+        move.to >= _form.photoCount) {
+      return;
+    }
+    final photos = List<OwnerPropertyPhotoDraft>.of(_form.photoDrafts);
+    photos.insert(move.to, photos.removeAt(move.from));
+    _updateForm(() => _form.copyWith(photoDrafts: photos));
+  }
+
   void _selectMainPhoto(int index) {
     if (index <= 0 || index >= _form.photoCount) return;
     final List<OwnerPropertyPhotoDraft> photos = List.of(_form.photoDrafts);
@@ -331,10 +457,18 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
           }
         },
       );
+    } catch (_) {
+      if (mounted) Messages.showToast(msg: LocaleKeys.freeLocalSaveFailed);
     } finally {
       if (mounted) _isSubmitting.value = false;
     }
     if (!mounted || !wasSubmitted) return;
+    try {
+      await _draftCubit.clear();
+    } catch (_) {
+      Messages.showToast(msg: LocaleKeys.freeLocalSaveFailed);
+    }
+    if (!mounted) return;
     _hasChanges = false;
     if (_submissionMessage.isNotEmpty) {
       Messages.showToast(msg: _submissionMessage);
@@ -399,14 +533,17 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
         wasSaved = true;
       },
     );
-    if (wasSaved) _savedForm = _form;
+    if (wasSaved) {
+      _savedForm = _form;
+      await _persistDraft();
+    }
     return wasSaved;
   }
 
-  void _recordUploadedPhoto({
+  Future<void> _recordUploadedPhoto({
     required OwnerPropertyPhotoDraft photo,
     required PropertyImageModel image,
-  }) {
+  }) async {
     if (!mounted) return;
     final List<OwnerPropertyPhotoDraft> photos = List.of(_form.photoDrafts);
     final int index = photos.indexOf(photo);
@@ -432,14 +569,46 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
         ],
       );
     }
+    try {
+      await _persistDraft();
+    } catch (_) {
+      Messages.showToast(msg: LocaleKeys.freeLocalSaveFailed);
+    }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => FutureBuilder<void>(
+    future: _draftRequest,
+    builder: (context, snapshot) {
+      if (snapshot.hasError) {
+        return AppScaffold(
+          title: LocaleKeys.ownerAddPropertyTitle,
+          body: ExceptionView(
+            msg: LocaleKeys.freeDraftLoadFailed,
+            onRetry: () async {
+              // Recovery gates all editor fields and page state as one coherent screen.
+              setState(() => _draftRequest = _restoreDraft());
+              await _draftRequest;
+            },
+          ),
+        );
+      }
+      if (snapshot.connectionState != ConnectionState.done) {
+        return AppScaffold(
+          title: LocaleKeys.ownerAddPropertyTitle,
+          body: const Center(child: CircularProgressIndicator()),
+        );
+      }
+      return _buildFlow(context);
+    },
+  );
+
+  Widget _buildFlow(BuildContext context) {
     return ValueListenableBuilder<bool>(
       valueListenable: _isSubmitting,
       builder: (context, isSubmitting, _) => UnsavedChangesGuard(
         hasChanges: () => _hasChanges,
+        confirmLeave: _confirmLeave,
         isSaving: () => _isSubmitting.value,
         child: ValueListenableBuilder<int>(
           valueListenable: _currentStep,
@@ -454,6 +623,29 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
               _ => null,
             },
             showBackButton: step < 3,
+            actions: [
+              if (step < 3 && UserModel.currentUser?.id.isNotEmpty == true)
+                IconButton(
+                  tooltip: LocaleKeys.freeSaveDraft,
+                  icon: const Icon(Icons.save_outlined),
+                  onPressed: isSubmitting
+                      ? null
+                      : () async {
+                          try {
+                            await _persistDraft();
+                            if (mounted) {
+                              Messages.showToast(
+                                msg: LocaleKeys.freeDraftSaved,
+                              );
+                            }
+                          } catch (_) {
+                            Messages.showToast(
+                              msg: LocaleKeys.freeLocalSaveFailed,
+                            );
+                          }
+                        },
+                ),
+            ],
             onBack: () {
               if (step == 0) {
                 Go.mayPop;
@@ -466,7 +658,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
               AppColors.scaffoldBackground,
               surface: true,
             ),
-            body: SafeArea(
+            body: _draftAwareBody(
               child: AbsorbPointer(
                 absorbing: isSubmitting,
                 child: PageView(
@@ -522,6 +714,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
                         onRemovePhoto: _removePhoto,
                         onReplacePhoto: _replacePhoto,
                         onMainPhotoSelected: _selectMainPhoto,
+                        onPhotoMoved: _movePhoto,
                         onVideoSelected: (file, durationSeconds) => _updateForm(
                           () => _form.copyWith(
                             videoFile: file,
@@ -591,7 +784,10 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
                         ),
                       ),
                   ],
-                  onPageChanged: (step) => _currentStep.value = step,
+                  onPageChanged: (step) {
+                    _currentStep.value = step;
+                    _scheduleDraft();
+                  },
                 ),
               ),
             ),
@@ -600,6 +796,27 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen> {
       ),
     );
   }
+
+  Widget _draftAwareBody({required Widget child}) => SafeArea(
+    child: BlocBuilder<OwnerDraftCubit, OwnerPropertyDraft>(
+      bloc: _draftCubit,
+      builder: (context, draft) => Column(
+        children: [
+          if (draft.localSaveFailed)
+            OwnerDraftSaveWarning(
+              onRetry: () async {
+                try {
+                  await _persistDraft();
+                } catch (_) {
+                  Messages.showToast(msg: LocaleKeys.freeLocalSaveFailed);
+                }
+              },
+            ),
+          Expanded(child: child),
+        ],
+      ),
+    ),
+  );
 
   Widget _listenToForm(
     Widget Function(OwnerAddPropertyFormState form) builder,

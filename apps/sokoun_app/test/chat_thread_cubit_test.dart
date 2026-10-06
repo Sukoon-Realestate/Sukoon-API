@@ -1,3 +1,5 @@
+import 'package:sokoun_app/features/shared/chat/data/chat_local_data.dart';
+import 'package:sokoun_app/features/shared/chat/data/models/chat_local_state.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_participant_content.dart';
 import 'dart:async';
 
@@ -48,9 +50,120 @@ void main() {
     await CacheStorage.delete('user');
   });
 
+  test(
+    'recovered messages require explicit review and sending after restart',
+    () async {
+      final store = _MemoryChatLocalStore()
+        ..state = const ChatLocalState(
+          draft: 'New draft',
+          messages: [
+            SavedChatMessage(
+              id: 'uncertain-send',
+              content: 'Review before resending',
+            ),
+          ],
+        );
+      final realtime = _FakeChatRealtimeGateway()..echoSentMessages = true;
+      final cubit = ChatThreadCubit(
+        conversationId: 'conversation-1',
+        localStore: store,
+        realtimeService: realtime,
+        dataSource: _ReadTrackingDataSource(),
+      );
+      await cubit.connect();
+      expect(cubit.state.draft, 'New draft');
+      expect(cubit.state.recoveredMessages, hasLength(1));
+      expect(cubit.queuedMessageCount, 0);
+      expect(realtime.sentContents, isEmpty);
+      expect(
+        await cubit.restoreMessageDraft(cubit.state.recoveredMessages.single),
+        isFalse,
+      );
+      cubit.updateDraft('');
+      expect(
+        await cubit.restoreMessageDraft(cubit.state.recoveredMessages.single),
+        isTrue,
+      );
+      expect(cubit.state.draft, 'Review before resending');
+      expect(store.state.messages, isEmpty);
+      final result = await cubit.sendTextMessage(cubit.state.draft);
+      expect(result.isSent, isTrue);
+      expect(realtime.sentContents, ['Review before resending']);
+      expect(store.state.messages, isEmpty);
+      cubit.updateDraft('');
+      await cubit.close();
+      await realtime.close();
+      expect(store.state, const ChatLocalState.initial());
+    },
+  );
+
+  test(
+    'a server send restriction preserves history without opening a socket',
+    () async {
+      final realtime = _FakeChatRealtimeGateway();
+      final cubit = ChatThreadCubit(
+        conversationId: 'read-only',
+        canSend: false,
+        localStore: _MemoryChatLocalStore(),
+        realtimeService: realtime,
+      );
+      await cubit.connect();
+      expect(realtime.connectCount, 0);
+      expect(
+        (await cubit.sendTextMessage('Blocked')).status,
+        ChatSendStatus.failed,
+      );
+      expect(realtime.sentContents, isEmpty);
+      await cubit.close();
+      await realtime.close();
+    },
+  );
+
+  test(
+    'failed durable storage retains the composer and sends nothing',
+    () async {
+      final store = _MemoryChatLocalStore()..fail = true;
+      final realtime = _FakeChatRealtimeGateway();
+      final cubit = ChatThreadCubit(
+        conversationId: 'conversation-1',
+        localStore: store,
+        realtimeService: realtime,
+      );
+      await cubit.connect();
+      cubit.updateDraft('Keep my text');
+      expect(
+        (await cubit.sendTextMessage('Keep my text')).status,
+        ChatSendStatus.failed,
+      );
+      expect(cubit.state.draft, 'Keep my text');
+      expect(cubit.state.localSaveFailed, isTrue);
+      expect(cubit.queuedMessageCount, 0);
+      expect(realtime.sentContents, isEmpty);
+      store.fail = false;
+      await cubit.close();
+      await realtime.close();
+      expect(store.state.draft, 'Keep my text');
+    },
+  );
+
+  test(
+    'encrypted chat keys cannot collide between account and conversation pairs',
+    () {
+      expect(
+        ChatLocalData.keyFor('a_b', 'c'),
+        isNot(ChatLocalData.keyFor('a', 'b_c')),
+      );
+      expect(
+        ChatLocalData.keyFor('alice', 'c'),
+        isNot(ChatLocalData.keyFor('bob', 'c')),
+      );
+    },
+  );
+
   test('closing a chat disconnects its socket', () async {
     final realtime = _FakeChatRealtimeGateway();
     final cubit = ChatThreadCubit(
+      localStore: _MemoryChatLocalStore(),
       conversationId: 'conversation-1',
       realtimeService: realtime,
     );
@@ -68,10 +181,12 @@ void main() {
     () async {
       final realtime = _FakeChatRealtimeGateway();
       final first = ChatThreadCubit(
+        localStore: _MemoryChatLocalStore(),
         conversationId: 'conversation-1',
         realtimeService: realtime,
       );
       final second = ChatThreadCubit(
+        localStore: _MemoryChatLocalStore(),
         conversationId: 'conversation-2',
         realtimeService: realtime,
       );
@@ -96,6 +211,7 @@ void main() {
           ..connectGate = Completer<void>();
         final data = _ReadTrackingDataSource();
         final cubit = ChatThreadCubit(
+          localStore: _MemoryChatLocalStore(),
           conversationId: 'conversation-1',
           realtimeService: realtime,
           dataSource: data,
@@ -105,6 +221,7 @@ void main() {
           await realtime.close();
         });
         final connecting = cubit.connect();
+        await pumpEventQueue();
         if (closeThread) {
           await cubit.close();
         } else {
@@ -126,6 +243,7 @@ void main() {
     () async {
       final _FakeChatRealtimeGateway realtime = _FakeChatRealtimeGateway();
       final ChatThreadCubit cubit = ChatThreadCubit(
+        localStore: _MemoryChatLocalStore(),
         conversationId: 'conversation-uuid',
         otherParticipantId: 'other-user-id',
         realtimeService: realtime,
@@ -153,6 +271,7 @@ void main() {
   test('connects the socket before sending when it is disconnected', () async {
     final _FakeChatRealtimeGateway realtime = _FakeChatRealtimeGateway();
     final ChatThreadCubit cubit = ChatThreadCubit(
+      localStore: _MemoryChatLocalStore(),
       conversationId: 'conversation-uuid',
       otherParticipantId: 'other-user-id',
       realtimeService: realtime,
@@ -180,6 +299,7 @@ void main() {
   test('successful sends never show the queued-message notice', () async {
     final realtime = _FakeChatRealtimeGateway()..echoSentMessages = true;
     final cubit = ChatThreadCubit(
+      localStore: _MemoryChatLocalStore(),
       conversationId: 'conversation-uuid',
       realtimeService: realtime,
     );
@@ -202,16 +322,19 @@ void main() {
     (tester) async {
       final realtime = _FakeChatRealtimeGateway();
       final cubit = ChatThreadCubit(
+        localStore: _MemoryChatLocalStore(),
         conversationId: 'conversation-uuid',
         realtimeService: realtime,
       );
       addTearDown(() async {
-        await cubit.close();
+        final closing = cubit.close();
+        await _flushWrites(tester);
+        await closing;
         await realtime.close();
       });
       await cubit.connect();
       final sending = cubit.sendTextMessage('Slow message');
-      await tester.pump();
+      await _flushWrites(tester);
       expect(cubit.state.queuedMessageCount, 1);
       expect(cubit.state.showQueuedMessages, isFalse);
       await tester.pump(const Duration(milliseconds: 1999));
@@ -225,7 +348,7 @@ void main() {
           content: 'Slow message',
         ),
       );
-      await tester.pump();
+      await _flushWrites(tester);
       expect((await sending).isSent, isTrue);
       expect(cubit.state.queuedMessageCount, 0);
       expect(cubit.state.showQueuedMessages, isFalse);
@@ -237,11 +360,14 @@ void main() {
   ) async {
     final realtime = _FakeChatRealtimeGateway();
     final cubit = ChatThreadCubit(
+      localStore: _MemoryChatLocalStore(),
       conversationId: 'conversation-uuid',
       realtimeService: realtime,
     );
     addTearDown(() async {
-      await cubit.close();
+      final closing = cubit.close();
+      await _flushWrites(tester);
+      await closing;
       await realtime.close();
     });
     await cubit.connect();
@@ -257,7 +383,7 @@ void main() {
         content: 'First',
       ),
     );
-    await tester.pump();
+    await _flushWrites(tester);
     expect(cubit.state.queuedMessageCount, 1);
     expect(cubit.state.showQueuedMessages, isFalse);
     await tester.pump(const Duration(milliseconds: 1499));
@@ -271,7 +397,7 @@ void main() {
         content: 'Second',
       ),
     );
-    await tester.pump();
+    await _flushWrites(tester);
     await Future.wait([first, second]);
     expect(cubit.state.showQueuedMessages, isFalse);
   });
@@ -281,6 +407,7 @@ void main() {
       ..canConnect = false
       ..echoSentMessages = true;
     final ChatThreadCubit cubit = ChatThreadCubit(
+      localStore: _MemoryChatLocalStore(),
       conversationId: 'conversation-uuid',
       otherParticipantId: 'other-user-id',
       realtimeService: realtime,
@@ -320,6 +447,7 @@ void main() {
     () async {
       final _FakeChatRealtimeGateway realtime = _FakeChatRealtimeGateway();
       final ChatThreadCubit cubit = ChatThreadCubit(
+        localStore: _MemoryChatLocalStore(),
         conversationId: 'conversation-uuid',
         otherParticipantId: 'other-user-id',
         realtimeService: realtime,
@@ -347,6 +475,7 @@ void main() {
     () async {
       final _FakeChatRealtimeGateway realtime = _FakeChatRealtimeGateway();
       final ChatThreadCubit cubit = ChatThreadCubit(
+        localStore: _MemoryChatLocalStore(),
         conversationId: 'conversation-uuid',
         otherParticipantId: 'other-user-id',
         realtimeService: realtime,
@@ -509,4 +638,22 @@ class _ReadTrackingDataSource implements ChatDataSource {
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+class _MemoryChatLocalStore implements ChatLocalStore {
+  bool fail = false;
+  ChatLocalState state = const ChatLocalState.initial();
+  @override
+  Future<ChatLocalState> read() async => state;
+  @override
+  Future<void> write(ChatLocalState value) async {
+    if (fail) throw StateError('Device storage is unavailable');
+    state = value;
+  }
+}
+
+Future<void> _flushWrites(WidgetTester tester) async {
+  for (var step = 0; step < 5; step++) {
+    await tester.pump();
+  }
 }

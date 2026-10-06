@@ -18,6 +18,8 @@ class PhotoTile extends StatelessWidget {
     this.onRemovePhoto,
     this.isMainPhoto = false,
     this.onMainPhotoSelected,
+    this.onMoveEarlier,
+    this.onMoveLater,
   });
 
   final OwnerPropertyPhotoDraft? photo;
@@ -26,6 +28,8 @@ class PhotoTile extends StatelessWidget {
   final VoidCallback? onRemovePhoto;
   final bool isMainPhoto;
   final VoidCallback? onMainPhotoSelected;
+  final VoidCallback? onMoveEarlier;
+  final VoidCallback? onMoveLater;
 
   @override
   Widget build(BuildContext context) {
@@ -91,6 +95,35 @@ class PhotoTile extends StatelessWidget {
                       ],
                     ).centerWidget,
             ),
+            if (onMoveEarlier != null || onMoveLater != null)
+              PositionedDirectional(
+                bottom: 6.r,
+                start: 6.r,
+                child: PopupMenuButton<int>(
+                  tooltip: LocaleKeys.freeReorderPhoto,
+                  icon: const Icon(Icons.swap_vert, color: AppColors.white),
+                  color: context.appColor(AppColors.white, surface: true),
+                  onSelected: (direction) {
+                    if (direction < 0) {
+                      onMoveEarlier?.call();
+                    } else {
+                      onMoveLater?.call();
+                    }
+                  },
+                  itemBuilder: (_) => [
+                    if (onMoveEarlier != null)
+                      PopupMenuItem(
+                        value: -1,
+                        child: AppText(LocaleKeys.freeMoveEarlier),
+                      ),
+                    if (onMoveLater != null)
+                      PopupMenuItem(
+                        value: 1,
+                        child: AppText(LocaleKeys.freeMoveLater),
+                      ),
+                  ],
+                ),
+              ),
             if (onReplacePhoto != null)
               PositionedDirectional(
                 bottom: 6.r,

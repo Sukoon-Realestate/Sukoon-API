@@ -19,11 +19,18 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
 import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
+import 'package:sokoun_app/features/tenant/decision_tools/presentation/widgets/property_decision_tools.dart';
+import '../../data/models/property_search_model.dart';
 
 class PropertyDetailsScreen extends StatefulWidget {
-  const PropertyDetailsScreen({super.key, required this.propertyId});
+  const PropertyDetailsScreen({
+    super.key,
+    required this.propertyId,
+    this.searchPreferences,
+  });
 
   final String propertyId;
+  final PropertySearchFilters? searchPreferences;
 
   @override
   State<PropertyDetailsScreen> createState() => _PropertyDetailsScreenState();
@@ -33,6 +40,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   late final PropertyDetailsCubit _detailsCubit;
   late final PropertySaveCubit _saveCubit;
   late final CreateConversationCubit _conversationCubit;
+  late final Future<void> _detailsRequest;
   final ValueNotifier<({bool? savedOverride, bool isUpdating})> _savedState =
       ValueNotifier<({bool? savedOverride, bool isUpdating})>((
         savedOverride: null,
@@ -45,7 +53,7 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
     _detailsCubit = PropertyDetailsCubit();
     _saveCubit = PropertySaveCubit();
     _conversationCubit = CreateConversationCubit();
-    _detailsCubit.getPropertyDetails(widget.propertyId);
+    _detailsRequest = _detailsCubit.getPropertyDetails(widget.propertyId);
   }
 
   @override
@@ -110,6 +118,11 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
         TenantPropertyDetailsContent.fromModel(data);
     return TenantPropertyDetailsBody.withActions(
       property: property,
+      decisionTools: PropertyDecisionTools(
+        key: ValueKey(data.id),
+        property: data,
+        searchPreferences: widget.searchPreferences,
+      ),
       bottomActions:
           BlocSelector<
             CreateConversationCubit,
@@ -175,20 +188,24 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
               value: _conversationCubit,
             ),
           ],
-          child:
-              StatusBuilder<
-                    PropertyDetailsCubit,
-                    PropertyDetailsModel
-                  >.withShimmer(
-                    initialDataForShimmer: const PropertyDetailsModel.initial(),
-                    onRetry: () =>
-                        _detailsCubit.getPropertyDetails(widget.propertyId),
-                    builder: _buildDetails,
-                  )
-                  .withPullRefresher(
-                    onRefresh: () =>
-                        _detailsCubit.getPropertyDetails(widget.propertyId),
-                  ),
+          child: FutureBuilder<void>(
+            future: _detailsRequest,
+            builder: (context, snapshot) =>
+                StatusBuilder<
+                      PropertyDetailsCubit,
+                      PropertyDetailsModel
+                    >.withShimmer(
+                      initialDataForShimmer:
+                          const PropertyDetailsModel.initial(),
+                      onRetry: () =>
+                          _detailsCubit.getPropertyDetails(widget.propertyId),
+                      builder: _buildDetails,
+                    )
+                    .withPullRefresher(
+                      onRefresh: () =>
+                          _detailsCubit.getPropertyDetails(widget.propertyId),
+                    ),
+          ),
         ),
       ),
     );

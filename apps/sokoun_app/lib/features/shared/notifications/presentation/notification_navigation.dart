@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/owner/home/presentation/screens/owner_listings_screen.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
@@ -16,7 +15,6 @@ import '../data/models/app_notification_content.dart';
 import '../data/notification_destination.dart';
 import 'screens/notification_detail_screen.dart';
 import 'screens/notifications_screen.dart';
-import 'package:melos_core/config/res/config_imports.dart';
 import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
 import 'package:sokoun_app/features/main_view/presentation/cubits/workspace_cubit.dart';
 import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
@@ -93,6 +91,10 @@ abstract final class NotificationNavigation {
       final String chatId = notification.payload.chatId.isNotEmpty
           ? notification.payload.chatId
           : targetId;
+      if (chatId.isEmpty) {
+        await Go.to<void>(const NotificationsScreen());
+        return;
+      }
       await Go.to<void>(
         ChatScreen(
           conversation: ConversationContent(
@@ -123,12 +125,18 @@ abstract final class NotificationNavigation {
     }
 
     if (notification.kind == AppNotificationKind.visitReview) {
-      await showModalBottomSheet<bool>(
-        context: Go.context,
-        useSafeArea: true,
-        isScrollControlled: true,
-        backgroundColor: AppColors.transparent,
-        builder: (_) => VisitRatingSheet(propertyTitle: notification.title),
+      final visitId = notification.payload.visitId;
+      if (visitId.isEmpty) {
+        await Go.to<void>(const TenantVisitsScreen());
+        return;
+      }
+      await Go.to<void>(
+        VisitDetailsScreen(
+          visit: const TenantVisitContent.initial().copyWith(
+            id: visitId,
+            propertyTitle: notification.title,
+          ),
+        ),
       );
       return;
     }
@@ -175,7 +183,7 @@ abstract final class NotificationNavigation {
     if (notification.kind == AppNotificationKind.promotion &&
         notification.payload.promoUrl.isNotEmpty) {
       final Uri? uri = Uri.tryParse(notification.payload.promoUrl);
-      if (uri != null) {
+      if (uri != null && uri.scheme == 'https' && uri.host.isNotEmpty) {
         await launchUrl(uri, mode: LaunchMode.inAppBrowserView);
       }
       return;

@@ -7,7 +7,7 @@ SHELL := /bin/bash
 
 .PHONY: help clean run apk ipa appbundle ios upgrade \
 	handlePods openXcode flutterfireSetup translations \
-	architectureCheck accountCheck accountUiReview gradleFix clearGradleCache buildIos distribute \
+	architectureCheck accountCheck accountUiReview freeFeaturesCheck freeFeaturesUiReview gradleFix clearGradleCache buildIos distribute \
 	distributeAndroid fingerPrint kill sha
 
 # Show available commands
@@ -27,6 +27,8 @@ help:
 	@echo "  make architectureCheck"
 	@echo "  make accountCheck"
 	@echo "  make accountUiReview REVIEW_DIR=/tmp/sokoun-account-ui"
+	@echo "  make freeFeaturesCheck"
+	@echo "  make freeFeaturesUiReview FREE_REVIEW_DIR=/tmp/sokoun-free-after"
 	@echo "  make gradleFix"
 	@echo "  make clearGradleCache"
 	@echo "  make buildIos"
@@ -97,6 +99,16 @@ REVIEW_DIR ?= /tmp/sokoun-account-ui
 ## Run responsive account checks and export Arabic screenshots for UI review.
 accountUiReview:
 	flutter test --no-pub test/profile_settings_support_test.dart --dart-define=ACCOUNT_UI_REVIEW_DIR=$(REVIEW_DIR)
+
+## Check all app flows, including persistence, booking conflicts, and architecture.
+freeFeaturesCheck:
+	flutter analyze --no-pub --no-fatal-infos --no-fatal-warnings
+	flutter test --no-pub
+
+FREE_REVIEW_DIR ?= /tmp/sokoun-free-after
+## Render the free features in Arabic/English, both themes, six widths and three text sizes.
+freeFeaturesUiReview:
+	flutter test --no-pub test/free_features_ui_review_test.dart --dart-define=FREE_UI_REVIEW_DIR=$(FREE_REVIEW_DIR)
 
 # Stop Gradle and remove lock files
 gradleFix:

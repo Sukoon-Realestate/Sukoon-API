@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import '../profile_json.dart';
 import 'profile_account_details_content.dart';
 
@@ -193,6 +194,7 @@ class OwnerProfileStatsContent extends Equatable {
     required this.acceptanceRate,
     required this.acceptanceLabel,
     required this.formattedAcceptanceRate,
+    this.hasAcceptanceRate = true,
   });
 
   const OwnerProfileStatsContent.initial()
@@ -202,9 +204,11 @@ class OwnerProfileStatsContent extends Equatable {
       reviewsLabel = '',
       acceptanceRate = 0,
       acceptanceLabel = '',
-      formattedAcceptanceRate = '';
+      formattedAcceptanceRate = '',
+      hasAcceptanceRate = false;
 
   factory OwnerProfileStatsContent.fromJson(Map<String, dynamic> json) {
+    final rate = double.tryParse(json['acceptance_rate']?.toString() ?? '');
     return OwnerProfileStatsContent(
       propertiesCount: profileInt(json['properties_count']),
       propertiesLabel: profileString(json['properties_label']),
@@ -213,6 +217,9 @@ class OwnerProfileStatsContent extends Equatable {
       acceptanceRate: profileInt(json['acceptance_rate']),
       acceptanceLabel: profileString(json['acceptance_label']),
       formattedAcceptanceRate: profileString(json['formatted_acceptance_rate']),
+      hasAcceptanceRate:
+          (rate != null && rate.isFinite && rate >= 0 && rate <= 100) ||
+          profileString(json['formatted_acceptance_rate']).isNotEmpty,
     );
   }
 
@@ -223,17 +230,20 @@ class OwnerProfileStatsContent extends Equatable {
   final int acceptanceRate;
   final String acceptanceLabel;
   final String formattedAcceptanceRate;
+  final bool hasAcceptanceRate;
 
   String get displayAcceptanceRate => formattedAcceptanceRate.isNotEmpty
       ? formattedAcceptanceRate
-      : '$acceptanceRate%';
+      : hasAcceptanceRate
+      ? '$acceptanceRate%'
+      : LocaleKeys.notSetYet;
 
   Map<String, dynamic> toJson() => {
     'properties_count': propertiesCount,
     'properties_label': propertiesLabel,
     'reviews_count': reviewsCount,
     'reviews_label': reviewsLabel,
-    'acceptance_rate': acceptanceRate,
+    if (hasAcceptanceRate) 'acceptance_rate': acceptanceRate,
     'acceptance_label': acceptanceLabel,
     'formatted_acceptance_rate': formattedAcceptanceRate,
   };
@@ -246,6 +256,7 @@ class OwnerProfileStatsContent extends Equatable {
     int? acceptanceRate,
     String? acceptanceLabel,
     String? formattedAcceptanceRate,
+    bool? hasAcceptanceRate,
   }) {
     return OwnerProfileStatsContent(
       propertiesCount: propertiesCount ?? this.propertiesCount,
@@ -256,6 +267,11 @@ class OwnerProfileStatsContent extends Equatable {
       acceptanceLabel: acceptanceLabel ?? this.acceptanceLabel,
       formattedAcceptanceRate:
           formattedAcceptanceRate ?? this.formattedAcceptanceRate,
+      hasAcceptanceRate:
+          hasAcceptanceRate ??
+          (acceptanceRate != null || formattedAcceptanceRate?.isNotEmpty == true
+              ? true
+              : this.hasAcceptanceRate),
     );
   }
 
@@ -268,6 +284,7 @@ class OwnerProfileStatsContent extends Equatable {
     acceptanceRate,
     acceptanceLabel,
     formattedAcceptanceRate,
+    hasAcceptanceRate,
   ];
 }
 

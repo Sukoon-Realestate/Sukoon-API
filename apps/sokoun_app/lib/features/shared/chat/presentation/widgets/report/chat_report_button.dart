@@ -1,30 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
-import 'package:melos_core/core/navigation/navigator.dart';
 
-import '../../screens/chats_screen.dart';
+import '../../../data/models/chat_content.dart';
 import 'chat_report_sheet.dart';
 
 class ChatReportButton extends StatelessWidget {
-  const ChatReportButton({super.key});
+  const ChatReportButton({super.key, required this.conversation});
+  final ConversationContent conversation;
 
   Future<void> _showReportSheet(BuildContext context) async {
-    final bool? submitted = await showModalBottomSheet<bool>(
+    await showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
       backgroundColor: AppColors.transparent,
       barrierColor: AppColors.blackAlpha50,
-      builder: (_) => const ChatReportSheet(),
+      builder: (_) => ChatReportSheet(conversation: conversation),
     );
-    if (submitted == true && context.mounted) Go.off(const ChatsScreen());
   }
 
   @override
   Widget build(BuildContext context) => IconButton(
     tooltip: LocaleKeys.chatReportProblemTitle,
-    onPressed: () => _showReportSheet(context),
+    onPressed: conversation.id.isEmpty ? null : () => _showReportSheet(context),
     icon: const Icon(Icons.more_vert_rounded),
   );
 }

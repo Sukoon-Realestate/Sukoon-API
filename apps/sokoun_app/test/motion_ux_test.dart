@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:toastification/toastification.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
@@ -41,6 +42,7 @@ import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_filt
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
+  setUp(() => toastification.managers.clear());
   setUpAll(() async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
@@ -325,7 +327,10 @@ void main() {
         await tester.tap(find.text('Elevator'));
         await tester.pumpAndSettle();
         final node = tester.getSemantics(find.byType(SokounSelectionChip));
-        expect(node.getSemanticsData().flagsCollection.isSelected, isTrue);
+        expect(
+          node.getSemanticsData().flagsCollection.isSelected,
+          ui.Tristate.isTrue,
+        );
         expect(node.getSemanticsData().flagsCollection.isButton, isTrue);
         expect(node.label, 'Elevator');
       } finally {
@@ -490,14 +495,18 @@ void main() {
             await tester.tap(
               find.byTooltip('${LocaleKeys.removeRecentSearch}: Zamalek'),
             );
-            await tester.pumpAndSettle();
+            await tester.pump();
+            await tester.pump(const Duration(milliseconds: 400));
             expect(cubit.state.single.title, 'Maadi');
+            await _waitForUndo(tester);
             await tester.tap(find.text(LocaleKeys.undoAction));
             await tester.pumpAndSettle();
             expect(cubit.state.map((item) => item.title), ['Zamalek', 'Maadi']);
             await tester.tap(find.text(LocaleKeys.clearSearchHistory));
-            await tester.pumpAndSettle();
+            await tester.pump();
+            await tester.pump(const Duration(milliseconds: 400));
             expect(cubit.state, isEmpty);
+            await _waitForUndo(tester);
             await tester.tap(find.text(LocaleKeys.undoAction));
             await tester.pumpAndSettle();
             expect(cubit.state.map((item) => item.title), ['Zamalek', 'Maadi']);
@@ -811,4 +820,19 @@ Future<void> _capture(WidgetTester tester, String name) async {
     await File('$output/$name.png').writeAsBytes(bytes!.buffer.asUint8List());
     image.dispose();
   });
+}
+
+Future<void> _waitForUndo(WidgetTester tester) async {
+  // Persistence and the toast overlay each complete on a later frame.
+  for (
+    var frame = 0;
+    frame < 10 && find.text(LocaleKeys.undoAction).evaluate().isEmpty;
+    frame++
+  ) {
+    await tester.pump(const Duration(milliseconds: 50));
+  }
+  expect(find.text(LocaleKeys.undoAction), findsOneWidget);
+  await tester.pump(const Duration(milliseconds: 250));
+  await tester.pump();
+  expect(find.text(LocaleKeys.undoAction).hitTestable(), findsOneWidget);
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../data/models/property_search_model.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
@@ -7,13 +8,19 @@ import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/property_details_screen.dart';
 
 class DetailsButton extends StatelessWidget {
-  const DetailsButton({super.key, required this.propertyId});
+  const DetailsButton({super.key, required this.propertyId, this.preferences});
 
   final String propertyId;
+  final PropertySearchFilters? preferences;
 
   void _openDetails() {
     if (propertyId.isEmpty) return;
-    Go.to(PropertyDetailsScreen(propertyId: propertyId));
+    Go.to(
+      PropertyDetailsScreen(
+        propertyId: propertyId,
+        searchPreferences: preferences,
+      ),
+    );
   }
 
   @override

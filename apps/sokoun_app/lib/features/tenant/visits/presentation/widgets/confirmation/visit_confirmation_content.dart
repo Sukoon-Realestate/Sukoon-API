@@ -40,7 +40,7 @@ class VisitConfirmationContent extends StatelessWidget {
           ).centerWidget,
           20.szH,
           AppText(
-            message,
+            LocaleKeys.freeVisitRequestSent,
             style: AppTextStyles.bold.copyWith(
               color: context.appColor(AppColors.sokoonNavy),
               fontSize: 23.sp,
@@ -50,7 +50,7 @@ class VisitConfirmationContent extends StatelessWidget {
           ),
           8.szH,
           AppText(
-            LocaleKeys.tenantVisitConfirmedDescription,
+            LocaleKeys.freeVisitPendingExplanation,
             style: AppTextStyles.regular14.copyWith(
               color: context.appColor(AppColors.sokoonGray),
               fontSize: 14.sp,

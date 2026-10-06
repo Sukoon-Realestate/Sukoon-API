@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/tenant/visits/data/visit_schedule_rules.dart';
 import 'package:toastification/toastification.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
@@ -60,7 +61,11 @@ void main() {
         .setMockMethodCallHandler(connectivityChannel, null);
   });
 
-  setUp(() => toastification.managers.clear());
+  setUp(() {
+    toastification.managers.clear();
+    _slotTaken = false;
+    _bookingPosts = 0;
+  });
 
   Widget buildScreen(Widget screen) {
     return EasyLocalization(
@@ -258,6 +263,43 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets(
+    'a slot taken during selection clears the choice and submits nothing',
+    (tester) async {
+      configurePhoneViewport(tester);
+      await tester.pumpWidget(
+        buildScreen(
+          const BookVisitScreen(
+            property: VisitPropertyContent(
+              id: 'property-conflict',
+              ownerId: 'other-owner',
+              title: 'Test property',
+              meta: '',
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final label = const TimeOfDay(
+        hour: 14,
+        minute: 0,
+      ).format(tester.element(find.byType(VisitAvailableTimes)));
+      await tester.tap(find.widgetWithText(ChoiceChip, label));
+      await tester.pump();
+      _slotTaken = true;
+      await tester.tap(find.text('تأكيد طلب الزيارة'));
+      await tester.pumpAndSettle();
+      expect(find.byType(VisitRequestReviewSheet), findsNothing);
+      expect(find.byType(VisitConfirmedScreen), findsNothing);
+      expect(
+        tester.widget<BookVisitForm>(find.byType(BookVisitForm)).selectedTime,
+        isNull,
+      );
+      expect(_bookingPosts, 0);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets('runs booking and confirmation into my visits', (tester) async {
     configurePhoneViewport(tester);
 
@@ -292,53 +334,36 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.text('احجز زيارة'), findsOneWidget);
-    final DateTime today = DateUtils.dateOnly(DateTime.now());
-    final BookVisitForm form = tester.widget<BookVisitForm>(
-      find.byType(BookVisitForm),
-    );
-    expect(form.days, hasLength(7));
+    final today = _bookingDate();
+    final form = tester.widget<BookVisitForm>(find.byType(BookVisitForm));
+    expect(form.days, hasLength(3));
     expect(form.days.first.visitDate, _formatVisitDate(today));
-    for (int index = 0; index < form.days.length; index++) {
-      final DateTime expectedDate = DateTime(
-        today.year,
-        today.month,
-        today.day + index,
-      );
-      expect(form.days[index].visitDate, _formatVisitDate(expectedDate));
-    }
-    expect(
-      find.text('رقمك لن يُشارك مع المالك حتى تأكيد الزيارة'),
-      findsOneWidget,
-    );
-
-    final Finder todayChip = find.text(today.day.toString());
-    await tester.ensureVisible(todayChip);
-    await tester.pumpAndSettle();
-    await tester.tap(todayChip);
-    await tester.tap(find.byType(VisitTimePickerField));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(TimePickerDialog), findsOneWidget);
-    final BuildContext pickerContext = tester.element(
-      find.byType(TimePickerDialog),
-    );
-    final String okLabel = MaterialLocalizations.of(
-      pickerContext,
-    ).okButtonLabel;
-    await tester.tap(find.widgetWithText(TextButton, okLabel).last);
-    await tester.pumpAndSettle();
-
-    expect(find.text('2:00 PM'), findsOneWidget);
+    expect(find.byType(VisitTimePickerField), findsNothing);
+    expect(find.byType(TimePickerDialog), findsNothing);
+    final timeLabel = const TimeOfDay(
+      hour: 14,
+      minute: 0,
+    ).format(tester.element(find.byType(VisitAvailableTimes)));
+    await tester.ensureVisible(find.widgetWithText(ChoiceChip, timeLabel));
+    await tester.tap(find.widgetWithText(ChoiceChip, timeLabel));
+    await tester.pump();
     await tester.tap(find.text('تأكيد طلب الزيارة'));
+    // The original button stays busy while the review sheet is awaiting a choice.
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 350));
+    await tester.pump();
+
+    expect(find.byType(VisitConfirmedScreen), findsNothing);
+    await tester.tap(find.text(LocaleKeys.tenantVisitConfirmRequest).last);
     await tester.pumpAndSettle();
 
     expect(find.byType(VisitConfirmedScreen), findsOneWidget);
-    expect(find.text('Server received the visit request'), findsOneWidget);
+    expect(find.text(LocaleKeys.freeVisitRequestSent), findsOneWidget);
     final VisitConfirmedScreen confirmedScreen = tester.widget(
       find.byType(VisitConfirmedScreen),
     );
     expect(confirmedScreen.selectedDay.visitDate, _formatVisitDate(today));
-    expect(find.text('2:00 PM'), findsOneWidget);
+    expect(find.text(timeLabel), findsOneWidget);
     expect(tester.takeException(), isNull);
 
     await tester.tap(find.text('متابعة طلباتي'));
@@ -489,6 +514,8 @@ List<TenantVisitContent> _tenantVisitFixtures() {
   return const [
     TenantVisitContent(
       id: 'accepted-nasr-city',
+      visitDate: '2025-06-15',
+      visitTime: '14:00:00',
       propertyTitle: 'شقة مفروشة، مدينة نصر',
       day: 'السبت 15 يونيو 2025',
       time: '2:00 م',
@@ -518,16 +545,72 @@ List<TenantVisitContent> _tenantVisitFixtures() {
   ];
 }
 
+DateTime _bookingDate() {
+  final current = VisitScheduleRules.now();
+  return DateTime(current.year, current.month, current.day + 1);
+}
+
+bool _slotTaken = false;
+int _bookingPosts = 0;
+
 class _VisitsRepository implements BaseRepository {
   @override
   Future<Result<BaseModel<T>, Failure>> crudCall<T>(
     CrudBaseParmas<T> params,
   ) async {
+    if (params.httpRequestType == HttpRequestType.post &&
+        params.api.contains('properties/')) {
+      _bookingPosts++;
+    }
     final String id = params.api.split('/').where((s) => s.isNotEmpty).last;
     final visit = _tenantVisitFixtures().where((v) => v.id == id).firstOrNull;
-    final json =
-        visit?.toJson() ??
-        const <String, dynamic>{'count': 0, 'results': [], 'banner': 'visit'};
+    final Map<String, dynamic> json = params.api.endsWith('/available_dates/')
+        ? (params.queryParameters?['date'] == null
+              ? <String, dynamic>{
+                  'days': [
+                    for (var index = 0; index < 3; index++)
+                      {
+                        'day':
+                            [
+                              'monday',
+                              'tuesday',
+                              'wednesday',
+                              'thursday',
+                              'friday',
+                              'saturday',
+                              'sunday',
+                            ][_bookingDate()
+                                    .add(Duration(days: index))
+                                    .weekday -
+                                1],
+                        'date':
+                            '${_bookingDate().add(Duration(days: index)).day}/${_bookingDate().month}',
+                        'visit_date': _formatVisitDate(
+                          _bookingDate().add(Duration(days: index)),
+                        ),
+                      },
+                  ],
+                }
+              : <String, dynamic>{
+                  'times': [
+                    {
+                      'time': '2:00 PM',
+                      'visit_time': '14:00:00',
+                      'is_available': !_slotTaken,
+                    },
+                    {
+                      'time': '4:00 PM',
+                      'visit_time': '16:00:00',
+                      'is_available': false,
+                    },
+                  ],
+                })
+        : visit?.toJson() ??
+              const <String, dynamic>{
+                'count': 0,
+                'results': [],
+                'banner': 'visit',
+              };
     final String message = params.api.endsWith('/review/')
         ? 'Server accepted the visit rating'
         : params.httpRequestType == HttpRequestType.patch

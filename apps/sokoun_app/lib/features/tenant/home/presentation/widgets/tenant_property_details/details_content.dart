@@ -24,9 +24,14 @@ import 'listing_information.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_reveal.dart';
 
 class TenantPropertyDetailsContentView extends StatelessWidget {
-  const TenantPropertyDetailsContentView({super.key, required this.property});
+  const TenantPropertyDetailsContentView({
+    super.key,
+    required this.property,
+    this.decisionTools,
+  });
 
   final TenantPropertyDetailsContent property;
+  final Widget? decisionTools;
 
   Future<void> _openLocation() async {
     await LauncherHelper.launchGoogleMaps(
@@ -87,6 +92,7 @@ class TenantPropertyDetailsContentView extends StatelessWidget {
           TenantPropertyMetricsGrid(property: property),
           14.szH,
           TenantPropertyRentalDetails(property: property),
+          if (decisionTools != null) ...[14.szH, decisionTools!],
           14.szH,
           TenantPropertyListingInformation(property: property),
           if (property.videoUrl?.isNotEmpty ?? false) ...[

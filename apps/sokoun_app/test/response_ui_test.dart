@@ -185,11 +185,15 @@ void main() {
                 );
               case 'profile_actions':
                 expect(
-                  find.text(account.menuItems.visitRequests.title),
+                  find.text(
+                    account.menuItems.contracts.title.isNotEmpty
+                        ? account.menuItems.contracts.title
+                        : LocaleKeys.profileContracts,
+                  ),
                   findsOneWidget,
                 );
                 expect(
-                  find.text(account.menuItems.verification.subtitle),
+                  find.text(LocaleKeys.profileSummaryTitle),
                   findsOneWidget,
                 );
               case 'gallery':

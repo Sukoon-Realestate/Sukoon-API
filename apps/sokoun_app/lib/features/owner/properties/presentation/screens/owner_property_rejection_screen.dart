@@ -111,7 +111,9 @@ class _OwnerPropertyRejectionScreenState
                 ),
               ),
               child: AppText(
-                LocaleKeys.ownerPropertyRejectionDetailsUnavailable,
+                property.rejectionReason.trim().isEmpty
+                    ? LocaleKeys.ownerPropertyRejectionDetailsUnavailable
+                    : property.rejectionReason,
                 style: AppTextStyles.regular13.copyWith(
                   color: context.appColor(AppColors.sokoonGray),
                   fontSize: 13.sp,

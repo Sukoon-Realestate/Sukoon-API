@@ -19,7 +19,14 @@ class SupportTicketSubmitCubit extends AsyncCubit<SupportTicketContent> {
         ObjectBoxCacheService.remove(
           SupportTicketsData.cacheKey(body.workspace),
         );
-        if (response.data.id.isNotEmpty) created = response.data;
+        final ticket = response.data;
+        if (ticket.id.isNotEmpty &&
+            ticket.reference.isNotEmpty &&
+            ticket.messages.any(
+              (message) => message.id.isNotEmpty && message.body.isNotEmpty,
+            )) {
+          created = ticket;
+        }
       },
     );
     return isClosed ? null : created;

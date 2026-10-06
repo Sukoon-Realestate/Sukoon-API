@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
@@ -17,7 +18,7 @@ class UploadPropertyImagesCubit extends AsyncCubit<List<PropertyImageModel>> {
   Future<void> uploadImages({
     required String propertyId,
     required List<OwnerPropertyPhotoDraft> photos,
-    required void Function({
+    required FutureOr<void> Function({
       required OwnerPropertyPhotoDraft photo,
       required PropertyImageModel image,
     })
@@ -61,7 +62,7 @@ class UploadPropertyImagesCubit extends AsyncCubit<List<PropertyImageModel>> {
                 generation == AccountSession.generation) {
               ObjectBoxCacheService.remove('property_details_$propertyId');
               ObjectBoxCacheService.remove('owner_properties');
-              onPhotoUploaded(photo: photo, image: uploaded.data);
+              await onPhotoUploaded(photo: photo, image: uploaded.data);
             }
             return result;
           }),
