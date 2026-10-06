@@ -1,0 +1,44 @@
+part of '../../../imports.dart';
+
+class LanguageSelectionIntro extends StatelessWidget {
+  const LanguageSelectionIntro({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: 60.r,
+          height: 60.r,
+          decoration: BoxDecoration(
+            color: context.appColor(AppColors.sokoonTeal, surface: true),
+            borderRadius: BorderRadius.circular(13.r),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.tealAlpha19,
+                blurRadius: 16.r,
+                offset: Offset(0, 6.h),
+              ),
+            ],
+          ),
+          child: Icon(
+            Icons.translate_rounded,
+            color: AppColors.white,
+            size: 36.r,
+          ),
+        ),
+        24.szH,
+        8.szH,
+        AppText(
+          LocaleKeys.languageSelectionSubtitle,
+          style: AppTextStyles.regular14.copyWith(
+            color: context.appColor(AppColors.sokoonGray),
+            fontSize: 14.sp,
+            height: 1.5,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+}

@@ -1,0 +1,657 @@
+Create a complete responsive marketing landing page for “Sokoon | سكون” based on the existing mobile app design.
+
+IMPORTANT:
+- Use the current Sokoon mobile app UI as the main source of truth.
+- Do NOT create a new visual identity.
+- Do NOT redesign the logo, colors, typography, buttons, cards, or icon style.
+- Extract and reuse the existing design language from the mobile app, then adapt it properly for a modern responsive website.
+- The landing page should feel like the web extension of the same Sokoon product.
+- Keep all Arabic content in correct RTL direction.
+- Use Tajawal as the primary font across the website.
+
+Create a new Figma page/section called:
+
+“Marketing Website — Landing Page”
+
+==================================================
+1. LANDING PAGE GOAL
+==================================================
+
+Create a polished one-page marketing website for Sokoon, an Egyptian real-estate rental marketplace connecting:
+
+1. Tenant / المستأجر
+2. Owner / المالك
+
+The landing page should explain:
+- What Sokoon is
+- How tenants can find housing
+- How owners can list and manage properties
+- How verification and privacy work
+- The main mobile app features
+- How users can start using the platform
+
+The page should feel:
+- Calm
+- Premium
+- Trustworthy
+- Modern
+- Friendly
+- Simple
+- Real-estate focused
+- Suitable for the Egyptian market
+
+Do not make it look like a generic corporate real-estate website.
+
+==================================================
+2. RESPONSIVE VERSIONS
+==================================================
+
+Create three responsive landing page frames:
+
+1. Desktop
+- Frame name: LP-DESKTOP-01
+- Width: 1440px
+
+2. Tablet
+- Frame name: LP-TABLET-01
+- Width: 1024px
+
+3. Mobile
+- Frame name: LP-MOBILE-01
+- Width: 390px
+
+Use Auto Layout and responsive constraints.
+
+Desktop content maximum width:
+- Approximately 1200–1240px
+
+Responsive rules:
+- Desktop sections can use two-column layouts.
+- Tablet sections should reduce columns when needed.
+- Mobile sections should stack vertically.
+- Navigation becomes a hamburger menu on mobile.
+- Buttons should remain easy to tap.
+- Arabic RTL alignment must remain correct at every breakpoint.
+
+==================================================
+3. DESIGN SYSTEM
+==================================================
+
+Use the same existing Sokoon visual identity.
+
+Typography:
+- Primary font: Tajawal
+- Hero headline: Tajawal Bold 700, 52–64px on desktop
+- Section headline: Tajawal Bold 700, 36–44px
+- Card title: Tajawal SemiBold 600, 18–22px
+- Body text: Tajawal Regular/Medium 400–500, 16–18px
+- Button text: Tajawal SemiBold 600, 16px
+- Mobile sizes should scale down appropriately.
+
+Color palette:
+- Primary Teal: #0F766E
+- Deep Teal / Navy: use the existing dark brand colors
+- Accent Blue: #2563EB
+- Verification Gold: #D6A84F
+- Success Green: #22C55E
+- Warning Amber: #F59E0B
+- Background: #FAFAF8
+- Card Background: #FFFFFF
+- Main Text: #111827
+- Secondary Text: #6B7280
+- Light Border: #EEF0F3
+
+Style:
+- Soft rounded cards
+- Rounded corners between 18px and 28px
+- Subtle shadows
+- Soft gradients only where they match the existing app
+- Pastel icon backgrounds
+- Generous spacing
+- Clean and premium compositions
+- Avoid heavy shadows and visual clutter
+
+Reuse the same:
+- Logo
+- Button styles
+- Icons
+- Verification badges
+- Property cards
+- Privacy banners
+- Status chips
+- Mobile screenshots
+- App colors
+
+==================================================
+4. WEBSITE HEADER
+==================================================
+
+Create a sticky transparent-to-solid header.
+
+Header content:
+- Sokoon logo: “سكون | Sokoon”
+- Navigation links:
+  - الرئيسية
+  - للمستأجر
+  - للمالك
+  - الأمان والتوثيق
+  - كيف يعمل؟
+  - الأسئلة الشائعة
+
+Header actions:
+- Secondary button:
+  “تسجيل الدخول”
+- Primary button:
+  “ابدأ الآن”
+
+Interactions:
+- Navigation links should smoothly scroll to the correct page section.
+- “تسجيل الدخول” should open or link to the existing authentication choice.
+- “ابدأ الآن” should scroll to or open the Tenant / Owner selection CTA.
+- On mobile, use a hamburger menu with an RTL side drawer or dropdown.
+
+==================================================
+5. HERO SECTION
+==================================================
+
+Create a strong premium hero section.
+
+Suggested headline:
+“سكنك المناسب، بطريقة أسهل وأأمن”
+
+Supporting text:
+“دور على شقة أو ستوديو أو غرفة، أو اعرض عقارك وتابع الطلبات من مكان واحد.”
+
+Primary CTA:
+“ابحث عن سكن”
+
+Secondary CTA:
+“اعرض عقارك”
+
+Optional third text link:
+“تصفح كزائر”
+
+CTA prototype links:
+- “ابحث عن سكن” → existing Tenant login/signup flow, such as T-LOGIN-EMAIL
+- “اعرض عقارك” → existing Owner login/signup flow, such as O-LOGIN-EMAIL
+- “تصفح كزائر” → existing Tenant visitor-mode Home
+
+Hero visual:
+- Use actual existing Sokoon mobile UI screens.
+- Show one Tenant Home screen and one Owner Dashboard or Property Details screen.
+- Place them inside full realistic device mockups.
+- Use an iPhone 16 / iPhone 16 Pro mockup for the iOS example.
+- Use a modern Android phone mockup for the Android example.
+- The entire phone must be visible.
+- Do not crop the top, bottom, or sides of the device.
+- Keep the mobile UI readable.
+- Do not create fake replacement UI inside the phone.
+
+Add subtle supporting shapes inspired by:
+- Home arches
+- Doorways
+- Location pins
+- Calm curved lines
+- Soft architectural geometry
+
+==================================================
+6. TRUST BENEFITS STRIP
+==================================================
+
+Create a trust strip directly under the hero.
+
+Use four compact cards or benefits:
+
+1. “حسابات موثقة”
+   Supporting text:
+   “توثيق الهوية يقلل الحسابات الوهمية”
+
+2. “أرقام مخفية”
+   Supporting text:
+   “رقمك مش بيظهر غير بموافقتك”
+
+3. “عقارات تحت المراجعة”
+   Supporting text:
+   “بيانات العقار وإثبات الملكية تخضع للمراجعة”
+
+4. “طلبات زيارة منظمة”
+   Supporting text:
+   “احجز وتابع الموعد من داخل التطبيق”
+
+Use icons:
+- Verified shield
+- Hidden phone
+- Verified home
+- Calendar / visit
+
+==================================================
+7. TENANT SECTION
+==================================================
+
+Create a dedicated section called:
+
+“للمستأجر”
+
+Headline:
+“دور، قارن، واحجز زيارة بسهولة”
+
+Supporting text:
+“كل الأدوات اللي تحتاجها عشان تلاقي السكن المناسب وتتعامل بأمان مع المالك.”
+
+Show actual Tenant mobile screens such as:
+- Tenant Home
+- Search and filters
+- Property Details
+- Saved properties
+- Safe Chat
+- Visit booking
+
+Feature cards:
+1. “بحث وفلاتر ذكية”
+   - نوع العقار
+   - المنطقة
+   - السعر
+   - فترة التأجير
+   - مناسب لعائلات، أفراد، ولاد أو بنات
+   - التدخين
+   - المرافق
+
+2. “تفاصيل عقار كاملة”
+   - السعر
+   - الموقع
+   - الصور والفيديو
+   - الغرف والمساحة
+   - قواعد السكن
+   - التوثيق
+
+3. “حفظ ومقارنة”
+   - حفظ العقارات المفضلة
+   - الرجوع إليها بسهولة
+
+4. “شات آمن”
+   - أرقام الهاتف مخفية
+   - صور ورسائل صوتية
+   - الحسابات غير الموثقة عليها قيود
+
+5. “حجز زيارة”
+   - اختيار اليوم والوقت
+   - متابعة حالة الطلب
+   - تعديل أو إلغاء الموعد
+
+CTA:
+“ابدأ البحث عن سكن”
+
+==================================================
+8. OWNER SECTION
+==================================================
+
+Create a separate section called:
+
+“للمالك”
+
+Headline:
+“اعرض عقارك وأدر كل شيء من مكان واحد”
+
+Supporting text:
+“أضف بيانات العقار، ارفع الصور والفيديو، وتابع المشاهدات وطلبات الزيارة والمحادثات.”
+
+Show actual Owner app screens:
+- Owner Dashboard
+- Add Property flow
+- My Properties
+- Visit Requests
+- Owner Chat
+- Property Status
+
+Feature cards:
+1. “إضافة عقار منظمة”
+   - نوع العقار
+   - السعر
+   - الموقع على الخريطة
+   - الغرف والمساحة
+   - فترة التأجير
+   - مناسب لمن
+   - قواعد التدخين
+   - المرافق
+
+2. “صور وفيديو واضح”
+   - اسم ووصف لكل صورة
+   - فيديو للعقار لا يزيد عن دقيقة
+
+3. “إثبات ملكية”
+   - رفع وصل كهرباء أو مياه أو عقد ملكية
+   - المستند للمراجعة الداخلية فقط
+   - لا يظهر للمستخدمين
+
+4. “إدارة طلبات الزيارة”
+   - قبول
+   - رفض
+   - فتح الشات
+   - متابعة المواعيد
+
+5. “إدارة حالة العقار”
+   - قيد المراجعة
+   - مقبول
+   - مرفوض
+   - مخفي
+   - تم تأجيره
+
+6. “متابعة الأداء”
+   - المشاهدات
+   - مرات الحفظ
+   - الرسائل
+   - طلبات الزيارة
+
+CTA:
+“ابدأ عرض عقارك”
+
+==================================================
+9. HOW IT WORKS SECTION
+==================================================
+
+Create a section called:
+
+“سكون بيشتغل إزاي؟”
+
+Use a two-tab layout:
+
+Tab 1:
+“أنا مستأجر”
+
+Steps:
+1. “حدد المنطقة ونوع السكن”
+2. “راجع التفاصيل والتوثيق”
+3. “احفظ العقارات المناسبة”
+4. “تواصل واحجز زيارة”
+
+Tab 2:
+“أنا مالك”
+
+Steps:
+1. “أضف بيانات العقار”
+2. “ارفع الصور والفيديو وإثبات الملكية”
+3. “انتظر مراجعة سكون”
+4. “استقبل الطلبات وأدر عقارك”
+
+The tabs should be clickable in the prototype.
+
+Use a clean timeline or numbered cards.
+Do not make the steps visually crowded.
+
+==================================================
+10. PROPERTY DISCOVERY SHOWCASE
+==================================================
+
+Create a section showing sample property cards based on the real mobile app property cards.
+
+Section headline:
+“خيارات سكن تناسب احتياجات مختلفة”
+
+Use 3 or 4 responsive property cards.
+
+Each card can show:
+- Image
+- Property title
+- Price
+- Location
+- Rooms
+- Area
+- Rating
+- Verified badge
+- Suitable-for chip
+- Rental period
+- Favorite button
+- Share button
+
+Do not invent unsupported live inventory statistics.
+Use representative demo content only.
+
+CTA:
+“استكشف العقارات”
+
+==================================================
+11. PRIVACY AND VERIFICATION SECTION
+==================================================
+
+Create a high-trust section with a dark teal or soft premium background.
+
+Headline:
+“خصوصيتك وثقتك جزء من التجربة”
+
+Show four points:
+
+1. “رقمك مخفي”
+   “مش بيظهر لأي طرف غير بموافقة واضحة”
+
+2. “مستندات الهوية خاصة”
+   “صور البطاقة والرقم القومي للمراجعة الداخلية فقط، ولا تظهر للمستخدمين”
+
+3. “إثبات الملكية محمي”
+   “مستندات الملكية لا تظهر للمستأجرين، ويظهر فقط وضع التحقق”
+
+4. “الشات داخل سكون”
+   “التواصل داخل المنصة يساعد في تقليل الاحتيال وحماية الطرفين”
+
+Use:
+- Shield graphics
+- Lock
+- Eye-off
+- Verified home icon
+
+Do not show:
+- Real National IDs
+- Full phone numbers
+- Ownership documents
+- Private personal data
+
+==================================================
+12. MOBILE APP SHOWCASE
+==================================================
+
+Create a visual section called:
+
+“كل احتياجاتك في تطبيق واحد”
+
+Use a horizontal screenshot carousel or tabs.
+
+Suggested screenshots:
+- Tenant Home
+- Property Details
+- Chat
+- Visit Booking
+- Owner Dashboard
+- My Properties
+- Visit Requests
+- Profile / Verification
+
+Use the existing mobile app screens exactly.
+Do not redraw or simplify them.
+
+Device rules:
+- Use full visible phone mockups.
+- Do not crop the phones.
+- Use correct iPhone and Android frames.
+- Keep the UI readable.
+- The carousel arrows and indicators should be interactive.
+
+==================================================
+13. DOWNLOAD / FINAL CTA SECTION
+==================================================
+
+Create a strong final CTA section.
+
+Headline:
+“ابدأ تجربتك مع سكون”
+
+Supporting text:
+“سواء بتدور على سكن أو عايز تعرض عقارك، سكون بيجمعلك كل الخطوات في مكان واحد.”
+
+Buttons:
+- “ابدأ كمستأجر”
+- “ابدأ كمالك”
+
+Optional store assets:
+- App Store badge
+- Google Play badge
+- QR code placeholder
+
+Important:
+- Use placeholders if the app is not publicly released yet.
+- Do not claim the app is available unless that is confirmed.
+- Do not add fake download numbers or rankings.
+
+==================================================
+14. FAQ SECTION
+==================================================
+
+Create an accordion section called:
+
+“أسئلة شائعة”
+
+Questions:
+1. “هل رقم الموبايل بيظهر للمالك أو المستأجر؟”
+2. “إزاي أوثق حسابي؟”
+3. “هل مستندات البطاقة بتظهر لأي مستخدم؟”
+4. “إزاي أحجز زيارة للعقار؟”
+5. “إزاي المالك يضيف عقار؟”
+6. “إيه المستندات المطلوبة لإثبات الملكية؟”
+7. “هل ممكن استخدم التطبيق كزائر؟”
+8. “إيه اللي يحصل لو العقار اترفض في المراجعة؟”
+
+Use collapsible accordion interactions.
+Only one or multiple items can expand based on the cleanest behavior.
+
+==================================================
+15. FOOTER
+==================================================
+
+Create a full footer with:
+
+Brand:
+- Sokoon logo
+- Short description:
+  “منصة عقارات للإيجار تساعد المستأجر والمالك يتعاملوا بسهولة وثقة.”
+
+Links:
+المنصة:
+- الرئيسية
+- للمستأجر
+- للمالك
+- كيف يعمل؟
+
+المساعدة:
+- مركز المساعدة
+- تواصل معنا
+- الأسئلة الشائعة
+
+قانوني:
+- الشروط والأحكام
+- سياسة الخصوصية
+
+Social icons:
+- Facebook
+- Instagram
+- LinkedIn
+
+Bottom text:
+“© Sokoon. All rights reserved.”
+
+Use placeholder social links if real links do not exist.
+
+==================================================
+16. PROTOTYPE INTERACTIONS
+==================================================
+
+Make the landing page interactive:
+
+- Sticky header
+- Smooth scrolling navigation
+- Tenant / Owner tabs
+- FAQ accordion
+- App screenshot carousel
+- Mobile hamburger menu
+- CTA buttons connected to existing Auth flows
+- “ابحث عن سكن” → Tenant Auth / Visitor flow
+- “اعرض عقارك” → Owner Auth flow
+- Property cards → existing T-PROP-01 where appropriate
+- “تسجيل الدخول” → role-based login choice
+- Store buttons → placeholder until real links are available
+
+Do not leave primary buttons dead.
+
+==================================================
+17. FIGMA ORGANIZATION
+==================================================
+
+Inside “Marketing Website — Landing Page”, create:
+
+1. Landing Page — Desktop
+2. Landing Page — Tablet
+3. Landing Page — Mobile
+4. Landing Page Components
+5. Landing Page Prototype
+
+Reusable web components should include:
+- Header
+- Mobile navigation
+- Hero CTA buttons
+- Feature cards
+- Trust cards
+- Property cards
+- Tenant / Owner tabs
+- FAQ accordion
+- Screenshot carousel
+- Footer
+- Download CTA
+- Section headers
+
+Use Auto Layout throughout.
+Name components clearly:
+
+- WEB-NAV-HEADER
+- WEB-HERO
+- WEB-CARD-TRUST
+- WEB-CARD-FEATURE
+- WEB-CARD-PROPERTY
+- WEB-TABS-USERTYPE
+- WEB-CAROUSEL-APP
+- WEB-ACCORDION-FAQ
+- WEB-CTA-DOWNLOAD
+- WEB-FOOTER
+
+==================================================
+18. DO NOT INCLUDE
+==================================================
+
+Do not include:
+- Admin Dashboard in the public landing page
+- Fake user testimonials
+- Fake download numbers
+- Fake property inventory numbers
+- Pricing plans that are not already approved
+- Full phone numbers
+- Private ID documents
+- Ownership document previews
+- Unrelated stock-style real-estate branding
+- A new logo or a new color palette
+
+==================================================
+19. FINAL CHECKLIST
+==================================================
+
+Before finishing, confirm:
+
+- The website looks like the same brand as the Sokoon mobile app.
+- Existing mobile screens are used as the visual source.
+- Desktop, tablet, and mobile versions exist.
+- Arabic RTL is correct.
+- Tajawal font is used everywhere.
+- Tenant and Owner journeys are both clearly explained.
+- Privacy and verification are clearly communicated.
+- Device mockups show the complete phone.
+- All main CTAs are clickable.
+- The page uses reusable web components.
+- The result is polished, responsive, and ready for developer handoff.
+
+Final output:
+Create a complete responsive Sokoon marketing landing page based on the existing mobile app design, with a clear Tenant journey, Owner journey, trust and verification messaging, actual app UI showcases, interactive sections, and desktop/tablet/mobile layouts.

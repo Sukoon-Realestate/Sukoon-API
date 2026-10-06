@@ -1,0 +1,43 @@
+import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/network/api_endpoints.dart';
+import 'package:melos_core/core/network/network_service.dart';
+import 'package:melos_core/core/network/network_request.dart';
+import 'package:pagify/helpers/data_and_pagination_data.dart';
+import 'models/profile_city.dart';
+import 'profile_json.dart';
+
+abstract final class ProfileCitiesData {
+  static const cacheKey = 'profile_city_choices';
+  static const pageSize = 10;
+
+  static Future<(List<ProfileCity>, PaginationData)> getPage(int page) async {
+    final response = await injector<NetworkService>().callApi(
+      NetworkRequest(
+        path: ApiConstants.propertyCities,
+        method: RequestMethod.get,
+        queryParameters: {'page': page, 'page_size': pageSize},
+      ),
+      mapper: (json) {
+        final Map<String, dynamic> data = profileJsonMap(json);
+        final cities = (data['results'] as List? ?? const [])
+            .whereType<Map>()
+            .map(
+              (item) => ProfileCity.fromJson(Map<String, dynamic>.from(item)),
+            )
+            .where((city) => city.id.isNotEmpty)
+            .toList(growable: false);
+        final count = profileInt(data['count']);
+        final int totalPages = count > 0
+            ? (count + pageSize - 1) ~/ pageSize
+            : data['next'] != null
+            ? page + 1
+            : page;
+        return (
+          cities,
+          PaginationData(perPage: pageSize, totalPages: totalPages),
+        );
+      },
+    );
+    return response.data;
+  }
+}

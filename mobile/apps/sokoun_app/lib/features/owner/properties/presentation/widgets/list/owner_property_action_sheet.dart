@@ -1,0 +1,107 @@
+part of '../../../imports.dart';
+
+class OwnerPropertyActionSheet extends StatelessWidget {
+  const OwnerPropertyActionSheet({super.key, required this.property});
+
+  final OwnerPropertyContent property;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 24.h),
+      decoration: BoxDecoration(
+        color: context.appColor(AppColors.white, surface: true),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(28.r)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            width: 42.w,
+            height: 4.h,
+            decoration: BoxDecoration(
+              color: context.appColor(AppColors.graySoft, surface: true),
+              borderRadius: BorderRadius.circular(99.r),
+            ),
+          ).centerWidget,
+          18.szH,
+          AppText(
+            LocaleKeys.ownerPropertiesOptions,
+            style: AppTextStyles.bold.copyWith(
+              color: context.appColor(AppColors.sokoonNavy),
+              fontSize: 20.sp,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          16.szH,
+          for (final action in OwnerPropertyAction.values) ...[
+            _OwnerPropertyActionRow(action: action, property: property),
+            if (!action.isDelete) 10.szH,
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _OwnerPropertyActionRow extends StatelessWidget {
+  const _OwnerPropertyActionRow({required this.action, required this.property});
+
+  final OwnerPropertyAction action;
+  final OwnerPropertyContent property;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: context.appColor(AppColors.white, surface: true),
+      borderRadius: BorderRadius.circular(16.r),
+      child: InkWell(
+        onTap: () => Go.back(action),
+        borderRadius: BorderRadius.circular(16.r),
+        child: Container(
+          padding: EdgeInsets.all(12.w),
+          decoration: BoxDecoration(
+            border: Border.all(color: context.appColor(AppColors.sokoonBorder)),
+            borderRadius: BorderRadius.circular(16.r),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 42.r,
+                height: 42.r,
+                decoration: BoxDecoration(
+                  color: context.appColor(
+                    action.backgroundColor,
+                    surface: true,
+                  ),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Icon(
+                  action.icon,
+                  color: context.appColor(action.foregroundColor),
+                  size: 22.r,
+                ),
+              ),
+              12.szW,
+              Expanded(
+                child: AppText(
+                  action.label(isHidden: property.status.isHidden),
+                  style: AppTextStyles.extraBold.copyWith(
+                    color: context.appColor(action.foregroundColor),
+                    fontSize: 14.sp,
+                  ),
+                ),
+              ),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: context.appColor(AppColors.sokoonMuted),
+                size: 16.r,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

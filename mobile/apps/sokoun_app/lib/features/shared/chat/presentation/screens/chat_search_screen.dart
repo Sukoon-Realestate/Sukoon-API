@@ -1,0 +1,94 @@
+import '../widgets/chat_list/chat_search_field.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
+import 'package:flutter/material.dart';
+import 'package:melos_core/config/res/config_imports.dart';
+
+import '../../data/models/chat_content.dart';
+import '../widgets/chat_search/chat_search_results.dart';
+
+class ChatSearchScreen extends StatefulWidget {
+  const ChatSearchScreen({super.key, required this.conversations});
+
+  final List<ConversationContent> conversations;
+
+  @override
+  State<ChatSearchScreen> createState() => _ChatSearchScreenState();
+}
+
+class _ChatSearchScreenState extends State<ChatSearchScreen> {
+  late final TextEditingController _searchController;
+
+  final ValueNotifier<String> _query = ValueNotifier<String>('');
+
+  List<ConversationContent> _results(String query) => widget.conversations
+      .where((conversation) => conversation.matchesQuery(query))
+      .toList(growable: false);
+
+  List<String> _mentionedProperties(String query) {
+    final List<String> properties = widget.conversations
+        .map((conversation) => conversation.property.trim())
+        .where((property) => property.isNotEmpty)
+        .toSet()
+        .toList(growable: false);
+    final String normalizedQuery = query.trim();
+    if (normalizedQuery.isEmpty) return properties;
+
+    return properties
+        .where((property) => property.contains(normalizedQuery))
+        .toList(growable: false);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _query.dispose();
+    super.dispose();
+  }
+
+  void _updateQuery(String value) => _query.value = value;
+
+  void _clearQuery() {
+    _searchController.clear();
+    _query.value = '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AppScaffold(
+      title: LocaleKeys.search,
+      showBackButton: true,
+      backgroundColor: context.appColor(AppColors.white, surface: true),
+      body: SafeArea(
+        child: Column(
+          children: [
+            ChatSearchField(
+              controller: _searchController,
+              autofocus: false,
+              isActive: true,
+              onChanged: _updateQuery,
+              onClearPressed: _clearQuery,
+            ).paddingAll(16),
+            Expanded(
+              child: ValueListenableBuilder<String>(
+                valueListenable: _query,
+                builder: (context, query, _) => ChatSearchResults(
+                  query: query,
+                  conversations: _results(query),
+                  mentionedProperties: _mentionedProperties(query),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "661591953888",
+    "project_id": "sokoun-99c7b",
+    "storage_bucket": "sokoun-99c7b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:661591953888:android:787f2357d03a79bb0a5b85",
+        "android_client_info": {
+          "package_name": "com.app.sokoon.real.estate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "661591953888-n40dmqcpbdtpug5la02ibs3tr52n77qf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.sokoon.real.estate",
+            "certificate_hash": "e3a0af58fb0a0d91acc71fa430d6884e141def5b"
+          }
+        },
+        {
+          "client_id": "661591953888-47uqssp26r6din2adb35qe6soggjiruh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuA6HPrJPq2wxk-83W_pd1FeTeSZ_kmjQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "661591953888-47uqssp26r6din2adb35qe6soggjiruh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "661591953888-1uq6l54hhfpo1jdhs1lq19m7rmf8lv8f.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.sokoon.real.estate"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:661591953888:android:d305d3e9384684e20a5b85",
+        "android_client_info": {
+          "package_name": "com.app.sokoon.real.estate.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "661591953888-47uqssp26r6din2adb35qe6soggjiruh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuA6HPrJPq2wxk-83W_pd1FeTeSZ_kmjQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "661591953888-47uqssp26r6din2adb35qe6soggjiruh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "661591953888-1uq6l54hhfpo1jdhs1lq19m7rmf8lv8f.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.sokoon.real.estate"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

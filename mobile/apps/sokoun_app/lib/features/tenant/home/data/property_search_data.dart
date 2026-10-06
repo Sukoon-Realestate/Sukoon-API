@@ -1,0 +1,63 @@
+import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/network/api_endpoints.dart';
+import 'package:melos_core/core/network/network_request.dart';
+import 'package:melos_core/core/network/network_service.dart';
+import 'package:pagify/helpers/data_and_pagination_data.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/property_search_model.dart';
+
+abstract interface class PropertySearchDataSource {
+  String cacheKeyFor(PropertySearchFilters filters);
+
+  Future<(PropertySearchResponseModel, PaginationData)> getPropertiesPage(
+    PropertySearchFilters filters, {
+    CancelToken? cancelToken,
+  });
+}
+
+final class PropertySearchApiDataSource implements PropertySearchDataSource {
+  const PropertySearchApiDataSource();
+
+  @override
+  String cacheKeyFor(PropertySearchFilters filters) => filters.cacheKey;
+
+  @override
+  Future<(PropertySearchResponseModel, PaginationData)> getPropertiesPage(
+    PropertySearchFilters filters, {
+    CancelToken? cancelToken,
+  }) async {
+    final response = await injector<NetworkService>().callApi(
+      NetworkRequest(
+        method: RequestMethod.get,
+        cancelToken: cancelToken,
+        path: ApiConstants.properties,
+        queryParameters: filters.toQueryParameters(),
+      ),
+      mapper: (json) => PropertySearchResponseModel.fromJson(json),
+    );
+
+    final PropertySearchResponseModel data = response.data;
+    final int totalPages = data.count == 0
+        ? 1
+        : (data.count + filters.pageSize - 1) ~/ filters.pageSize;
+    return (
+      data,
+      PaginationData(perPage: filters.pageSize, totalPages: totalPages),
+    );
+  }
+}
+
+abstract final class PropertySearchData {
+  static PropertySearchDataSource get source =>
+      injector.isRegistered<PropertySearchDataSource>()
+      ? injector<PropertySearchDataSource>()
+      : const PropertySearchApiDataSource();
+
+  static String cacheKeyFor(PropertySearchFilters filters) =>
+      source.cacheKeyFor(filters);
+
+  static Future<(PropertySearchResponseModel, PaginationData)>
+  getPropertiesPage(
+    PropertySearchFilters filters, {
+    CancelToken? cancelToken,
+  }) => source.getPropertiesPage(filters, cancelToken: cancelToken);
+}

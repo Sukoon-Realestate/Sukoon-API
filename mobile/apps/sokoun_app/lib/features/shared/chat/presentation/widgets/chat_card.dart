@@ -1,0 +1,197 @@
+import 'package:flutter/material.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
+import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/extensions/widget_extension.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/widgets/app_text.dart';
+
+import '../../data/models/chat_content.dart';
+import 'shared/chat_participant_avatar.dart';
+
+class ChatCard extends StatelessWidget {
+  const ChatCard({super.key, required this.conversation});
+
+  final ConversationContent conversation;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 12.w,
+      children: [
+        _ConversationAvatar(conversation: conversation),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                spacing: 6.w,
+                children: [
+                  Expanded(
+                    child: AppText(
+                      conversation.name,
+                      style: AppTextStyles.bold14.copyWith(
+                        color: context.appColor(AppColors.sokoonNavy),
+                        fontSize: 14.sp,
+                        height: 1.45,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  if (conversation.isVerified)
+                    Tooltip(
+                      message: LocaleKeys.verified,
+                      child: Icon(
+                        Icons.verified_rounded,
+                        color: context.appColor(AppColors.sokoonTeal),
+                        size: 18.r,
+                      ),
+                    ),
+                ],
+              ),
+              4.szH,
+              Row(
+                spacing: 8.w,
+                children: [
+                  Expanded(
+                    child: AppText(
+                      _displayTime(context),
+                      style: AppTextStyles.regular11.copyWith(
+                        color: context.appColor(AppColors.sokoonGray),
+                        fontSize: 11.sp,
+                        height: 1.45,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Flexible(
+                    child: AppText(
+                      LocaleKeys.chatActiveNow,
+                      style: AppTextStyles.regular11.copyWith(
+                        color: context.appColor(AppColors.green),
+                        fontSize: 11.sp,
+                        height: 1.45,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ).showIf(condition: () => conversation.isOnline),
+                ],
+              ),
+              if (conversation.property.isNotEmpty) ...[
+                2.szH,
+                AppText(
+                  conversation.property,
+                  style: AppTextStyles.regular12.copyWith(
+                    color: context.appColor(AppColors.sokoonGray),
+                    fontSize: 12.sp,
+                    height: 1.45,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+              3.szH,
+              AppText(
+                conversation.lastMessage,
+                style: AppTextStyles.regular12.copyWith(
+                  color: conversation.unreadCount > 0
+                      ? context.appColor(AppColors.sokoonNavy)
+                      : context.appColor(AppColors.sokoonMuted),
+                  fontSize: 12.sp,
+                  fontWeight: conversation.unreadCount > 0
+                      ? FontWeight.w700
+                      : FontWeight.w400,
+                  height: 1.45,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ],
+    ).paddingSymmetric(horizontal: 20.w, vertical: 14.h);
+  }
+
+  String _displayTime(BuildContext context) {
+    final DateTime? value = conversation.lastMessageAt?.toLocal();
+    if (value == null) return conversation.time;
+    final DateTime now = DateTime.now();
+    final MaterialLocalizations localizations = MaterialLocalizations.of(
+      context,
+    );
+    if (value.year == now.year &&
+        value.month == now.month &&
+        value.day == now.day) {
+      return localizations.formatTimeOfDay(TimeOfDay.fromDateTime(value));
+    }
+    return localizations.formatShortDate(value);
+  }
+}
+
+class _ConversationAvatar extends StatelessWidget {
+  const _ConversationAvatar({required this.conversation});
+
+  final ConversationContent conversation;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.square(
+      dimension: 48.r,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          ChatParticipantAvatar(
+            name: conversation.name,
+            avatarUrl: conversation.otherParticipant.avatarUrl,
+            size: 48.r,
+          ),
+          PositionedDirectional(
+            bottom: 0,
+            end: 0,
+            child: Container(
+              width: 12.r,
+              height: 12.r,
+              decoration: BoxDecoration(
+                color: context.appColor(AppColors.green, surface: true),
+                shape: BoxShape.circle,
+                border: Border.all(color: AppColors.white, width: 2.r),
+              ),
+            ),
+          ).showIf(condition: () => conversation.isOnline),
+          if (conversation.unreadCount > 0)
+            PositionedDirectional(
+              top: -4.h,
+              end: -4.w,
+              child: Container(
+                constraints: BoxConstraints(minWidth: 20.r, minHeight: 20.r),
+                padding: EdgeInsets.all(4.r),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: context.appColor(AppColors.red, surface: true),
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                child: AppText(
+                  conversation.unreadCount > 99
+                      ? '99+'
+                      : '${conversation.unreadCount}',
+                  style: AppTextStyles.bold10.copyWith(
+                    color: AppColors.white,
+                    fontSize: 10.sp,
+                    height: 1.45,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}

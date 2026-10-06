@@ -1,0 +1,19 @@
+{
+  "name": "سكون | Sokoon",
+  "short_name": "Sokoon",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#FAFBF8",
+  "theme_color": "#0C6254",
+  "description": "منصة الإيجار الموثوقة في مصر",
+  "orientation": "any",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

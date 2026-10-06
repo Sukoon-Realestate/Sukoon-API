@@ -1,0 +1,434 @@
+I already have the Sokoon app screens designed.
+
+Now I want you to turn the whole project into a clean, clickable, presentation-ready prototype on device mockups.
+
+Do NOT redesign the UI from scratch.
+Use the existing screens, existing components, existing colors, existing typography, and existing layout style.
+
+The goal:
+Create a complete interactive Figma prototype for the Sokoon app, where all screens are organized correctly, connected with clickable buttons, and presented inside realistic mockups.
+
+Project:
+Sokoon | سكون
+Arabic RTL real estate rental marketplace.
+
+Design system to keep:
+- Arabic RTL
+- Tajawal font
+- Clean iOS-like mobile UI
+- Soft rounded cards
+- Teal / emerald brand palette
+- Pastel icons
+- Premium, calm, trustworthy real estate style
+- Same spacing, buttons, badges, cards, modals, bottom sheets, and navigation style already used
+
+==================================================
+1. ORGANIZE THE SCREENS FIRST
+==================================================
+
+Create a new page/section called:
+
+“Prototype — Sokoon Full App”
+
+Inside it, organize the screens into clear separated flows:
+
+1. Auth — Tenant
+2. Auth — Owner
+3. Tenant App Flow
+4. Owner App Flow
+5. Admin Dashboard Flow
+6. Mockup Presentation
+7. Components / Prototype Elements
+
+Do not mix Tenant, Owner, and Admin screens randomly.
+Each flow should be placed in its own clean row or section.
+
+Use clear section titles above every group.
+
+Keep screen names clear and structured, for example:
+- AUTH-T-01
+- AUTH-O-01
+- T-HOME-01
+- T-SAVED-01
+- T-CHAT-01
+- T-NOTIF-01
+- T-PROFILE-01
+- O-HOME-01
+- O-PROPERTIES-01
+- O-REQUESTS-01
+- O-CHAT-01
+- O-PROFILE-01
+- A-DASH-01
+
+==================================================
+2. CREATE CLICKABLE PROTOTYPE CONNECTIONS
+==================================================
+
+Make all important buttons, tabs, icons, and CTAs clickable.
+
+Use prototype arrows and interactions.
+
+General interaction rules:
+- Primary buttons should go to the next logical screen.
+- Back buttons should go to the previous screen.
+- Bottom navigation tabs should navigate to the correct tab screen.
+- Menu items should open their relevant screens.
+- Filter buttons should open filter bottom sheets as overlays.
+- More buttons should open action bottom sheets.
+- Modals and bottom sheets should appear as overlays.
+- Cancel / close buttons should dismiss overlays.
+- Success actions should navigate to confirmation screens or show success states.
+- Error / rejected states should link to correction or re-upload screens.
+- If a button has no final screen yet, create a simple placeholder state called “Coming Soon / Under Construction” instead of leaving it dead.
+
+Use smart animate where suitable, especially for:
+- Bottom sheets
+- Modals
+- Save/favorite interaction
+- Tab switching
+- Success states
+- Loading to loaded states
+
+==================================================
+3. AUTH FLOW INTERACTIONS
+==================================================
+
+Connect the Auth flow properly.
+
+Start:
+Splash / Welcome
+
+Flow:
+Splash → Onboarding → Role Selection
+
+Role Selection:
+- Tenant card → Tenant Auth Flow
+- Owner card → Owner Auth Flow
+
+Tenant Auth:
+- Login → Tenant Home
+- Register → KYC intro
+- KYC steps → Pending Verification
+- Pending Verification → Tenant Home with restricted state
+- Approved Verification → Tenant Home verified state
+- Rejected Verification → Re-upload / Edit KYC
+
+Owner Auth:
+- Login → Owner Dashboard
+- Register → Owner KYC / verification
+- Pending Verification → Owner Dashboard with pending banner
+- Approved Verification → Owner Dashboard verified state
+- Rejected Verification → Re-upload / Edit verification
+
+Forgot password:
+Login → Forgot Password → Reset Password → Login
+
+Logout:
+Profile / Settings → Logout Bottom Sheet → Login
+
+==================================================
+4. TENANT APP PROTOTYPE
+==================================================
+
+Connect the Tenant mobile app flow.
+
+Tenant bottom navigation:
+- الرئيسية → Tenant Home
+- المحفوظات → Saved
+- الشات → Chat Inbox
+- الإشعارات → Notifications
+- الحساب → Profile / More
+
+Tenant Home interactions:
+- Search bar → Search Focus
+- Search suggestion → Search Results
+- Filter icon → Filter Bottom Sheet overlay
+- Category pills → update selected state
+- Property card → Property Details
+- Nearby “عرض الكل” → Nearby Properties
+- Favorite heart → Saved toast / saved state
+- Notification icon → Notifications
+- Profile avatar → Profile
+
+Property Details interactions:
+- Back → Previous screen
+- Gallery image → Fullscreen Gallery
+- Favorite → Saved state / toast
+- Share → Share sheet placeholder
+- “احجز زيارة” → Book Visit Bottom Sheet
+- “شات” → Chat Detail if verified
+- “شات” → Pending Chat Restricted if unverified
+- “حفظ” → Saved toast
+
+Book Visit:
+Book Visit Bottom Sheet → Send Request → Visit Request Sent
+Visit Request Sent:
+- “متابعة الطلب” → Tenant Visit Request Detail
+- “العودة للتفاصيل” → Property Details
+
+Saved:
+- Saved card → Property Details
+- Filter/sort → Saved Filter Bottom Sheet
+- Remove saved → Undo toast or Remove Bottom Sheet
+- Empty state CTA → Tenant Home
+
+Chat:
+- Chat Inbox card → Chat Detail
+- Search → Chat Search Results
+- Attachment icon → Attachments Bottom Sheet
+- Mic icon → Voice Note Recording State
+- More icon → Report / Block Bottom Sheet
+- Restricted chat CTA → Verification Status / KYC
+
+Notifications:
+- Notification item → Notification Detail
+- Notification action buttons:
+  - “فتح الشات” → Chat Detail
+  - “عرض العقار” → Property Details
+  - “متابعة الطلب” → Visit Request Detail
+- Notification settings → Notification Settings
+
+Visits:
+- Visit request card → Visit Request Detail
+- “تعديل الموعد” → Reschedule Bottom Sheet
+- “إلغاء الطلب” → Cancel Visit Bottom Sheet
+- “فتح الشات” → Chat Detail
+- “عرض العقار” → Property Details
+
+Profile / More:
+- Edit Profile → Tenant Edit Profile
+- Verification Status → Tenant Verification Status
+- Saved shortcut → Saved
+- Visit Requests shortcut → Tenant Visits
+- Privacy & Security → Privacy Settings
+- Settings → Tenant Settings
+- Help Center → Tenant Help Center
+- Report Problem → New Support Ticket
+- Terms → Terms
+- About → About
+- Delete Account → Delete Account
+- Logout → Logout Bottom Sheet
+
+==================================================
+5. OWNER APP PROTOTYPE
+==================================================
+
+Connect the Owner mobile app flow.
+
+Owner bottom navigation:
+- الرئيسية → Owner Dashboard
+- عقاراتي → My Properties
+- الطلبات → Owner Requests
+- الشات → Owner Chat Inbox
+- المزيد → Owner Profile / More
+
+Owner Dashboard interactions:
+- Metric card → Metrics Expanded
+- Add Property button → Add Property Wizard
+- Booking request card → Request Detail
+- Accept → Accept Request Bottom Sheet
+- Reject → Reject Request Bottom Sheet
+- Chat → Owner Chat Detail
+- Notification icon → Owner Notifications
+- Profile avatar → Owner Profile
+
+Add Property:
+Connect all wizard steps:
+Intro → Media Upload → Basic Details → Map Pin → Structure Details → Amenities → Review & Submit → Property Pending Review
+
+Property Pending Review:
+- “عرض عقاراتي” → My Properties
+- “إضافة عقار آخر” → Add Property Intro
+
+My Properties:
+- Property card → Property Management Detail
+- Edit → Property Edit Sections
+- More menu → Property Actions Bottom Sheet
+- Status chip → Property Status / Rejection Notes
+- Add Property → Add Property Wizard
+
+Property Management:
+- “تعديل البيانات” → Property Edit Sections
+- “إخفاء من البحث” → Hide Confirmation Bottom Sheet
+- “تم تأجيره” → Mark as Rented Bottom Sheet
+- “حذف العقار” → Delete Confirmation Bottom Sheet
+
+Owner Requests:
+- Request card → Request Detail
+- Accept → Accept Bottom Sheet
+- Reject → Reject Bottom Sheet
+- Chat → Owner Chat Detail
+- Calendar toggle → Requests History / Calendar
+
+Owner Chat:
+- Inbox card → Chat Detail
+- More icon → Report / Block Tenant Sheet
+- Attachment icon → Attachments Bottom Sheet
+- Mic icon → Voice Note State
+
+Owner Notifications:
+- Notification item → Notification Detail
+- “عرض الطلب” → Request Detail
+- “فتح الشات” → Owner Chat Detail
+- “عرض العقار” → Property Management Detail
+- “تعديل العقار” → Property Edit Sections
+
+Owner Profile / More:
+- My Properties shortcut → My Properties
+- Requests shortcut → Owner Requests
+- Chat shortcut → Owner Chat Inbox
+- Settings → Owner Settings
+- Edit Profile → Owner Edit Profile
+- Privacy Options → Owner Privacy Options
+- Help Center → Owner Help Center
+- Terms → Owner Terms
+- About → Owner About
+- Delete Account → Owner Delete Account
+- Logout → Logout Bottom Sheet
+
+==================================================
+6. ADMIN DASHBOARD PROTOTYPE
+==================================================
+
+Admin screens should be desktop/laptop mockup style, not mobile.
+
+Connect the Admin Dashboard flow:
+
+Admin Dashboard:
+- Sidebar items should navigate to their pages:
+  - Dashboard
+  - Users
+  - Inventory / Listings
+  - Reports
+  - Support
+  - Chat Monitoring
+  - Finance / Refunds
+  - Roles & Permissions
+  - System Health / Audit Logs
+
+Users:
+- User row → User Profile Dashboard
+- Suspend → User Action Modal
+- Ban → User Action Modal
+- Force Verify → User Action Modal
+- Delete → Delete Confirmation Modal
+
+Inventory:
+- Listing row → Listing Review Detail
+- Approve → Listing Decision Modal
+- Reject → Listing Decision Modal
+- Hide → Listing Decision Modal
+- Delete → Listing Decision Modal
+- Feature Property → Feature Property Modal
+
+Reports:
+- Report row → Report Detail
+- Enforcement action → Enforcement Action Modal
+
+Support:
+- Ticket row → Ticket Detail
+- Reply → reply state
+- Assign → assign modal
+- Mark solved → solved state
+
+Finance:
+- Refund row → Refund Request Detail
+- Approve / Reject / Request More Evidence → Refund Decision Modal
+
+System:
+- Audit row → Audit detail placeholder
+- Filters should open filter dropdowns or bottom sheets/modals
+
+==================================================
+7. MOCKUP PRESENTATION PAGE
+==================================================
+
+Create a separate page/section called:
+
+“Mockup Presentation”
+
+Use realistic device mockups:
+- iPhone mockups for mobile screens
+- Laptop/desktop mockups for Admin Dashboard
+
+Create a polished presentation layout showing the most important screens:
+
+Mobile mockups:
+1. Auth / Welcome
+2. Tenant Home
+3. Property Details
+4. Chat
+5. Visit Booking
+6. Saved
+7. Profile / More
+8. Owner Dashboard
+9. My Properties
+10. Owner Requests
+
+Desktop mockups:
+1. Admin Dashboard
+2. User Operations
+3. Listing Moderation
+4. Report Detail
+
+Presentation style:
+- Dark or soft neutral background
+- Large section titles
+- Clean spacing
+- Screens placed inside device frames
+- Short Arabic captions under each mockup
+- Keep it client-ready and portfolio-ready
+
+Example captions:
+- “دور على سكنك بسهولة”
+- “تفاصيل واضحة قبل ما تختار”
+- “تواصل بأمان داخل سكون”
+- “احجز زيارة في خطوات بسيطة”
+- “إدارة عقاراتك من مكان واحد”
+- “لوحة إدارة كاملة للمنصة”
+
+==================================================
+8. PROTOTYPE START POINTS
+==================================================
+
+Set prototype starting points:
+
+1. Main Mobile Prototype:
+Start at Splash / Welcome
+
+2. Tenant Quick Preview:
+Start at Tenant Home
+
+3. Owner Quick Preview:
+Start at Owner Dashboard
+
+4. Admin Prototype:
+Start at Admin Dashboard
+
+5. Mockup Presentation:
+Start at Mockup Presentation Cover
+
+==================================================
+9. QUALITY CHECKLIST
+==================================================
+
+Before finishing, check:
+
+- Every main CTA is clickable
+- Every bottom nav item works
+- Every back button works
+- Every modal has close/cancel action
+- Every bottom sheet opens as overlay
+- Auth routes correctly to Tenant or Owner
+- Tenant flow is separated from Owner flow
+- Admin dashboard is separated from mobile app
+- No duplicate screens unless needed for states
+- No dead buttons on important actions
+- No full phone numbers shown
+- Privacy banners remain visible where needed
+- Arabic RTL layout is correct
+- Tajawal font is used everywhere
+- Mockups are clean and presentation-ready
+
+Final output:
+Create a complete clickable Sokoon prototype using the existing screens, organize all flows properly, connect all buttons and navigation interactions, and create a polished mockup presentation page for mobile and admin screens.

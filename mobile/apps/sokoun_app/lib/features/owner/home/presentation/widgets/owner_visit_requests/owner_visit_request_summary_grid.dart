@@ -1,0 +1,95 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
+
+class OwnerVisitRequestSummaryGrid extends StatelessWidget {
+  const OwnerVisitRequestSummaryGrid({
+    super.key,
+    required this.totalCount,
+    required this.pendingCount,
+  });
+
+  final int totalCount;
+  final int pendingCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 8.w,
+      children: [
+        Expanded(
+          child: _SummaryCard(
+            label: LocaleKeys.ownerVisitsTotalRequests,
+            value: '$totalCount',
+            backgroundColor: AppColors.tealAlpha07,
+            borderColor: AppColors.tealAlpha19,
+            valueColor: context.appColor(AppColors.sokoonTeal),
+          ),
+        ),
+        Expanded(
+          child: _SummaryCard(
+            label: LocaleKeys.ownerVisitsWaitingForReply,
+            value: '$pendingCount',
+            backgroundColor: AppColors.goldAlpha15,
+            borderColor: AppColors.goldAlpha15,
+            valueColor: AppColors.gold,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SummaryCard extends StatelessWidget {
+  const _SummaryCard({
+    required this.label,
+    required this.value,
+    required this.backgroundColor,
+    required this.borderColor,
+    required this.valueColor,
+  });
+
+  final String label;
+  final String value;
+  final Color backgroundColor;
+  final Color borderColor;
+  final Color valueColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 11.h),
+      decoration: BoxDecoration(
+        color: context.appColor(backgroundColor, surface: true),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: context.appColor(borderColor)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 4.h,
+        children: [
+          AppText(
+            label,
+            style: AppTextStyles.regular11.copyWith(
+              color: context.appColor(AppColors.sokoonGray),
+              fontSize: 11.sp,
+              height: 1.45,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          AppText(
+            value,
+            style: AppTextStyles.bold.copyWith(
+              color: context.appColor(valueColor),
+              fontSize: 20.sp,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

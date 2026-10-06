@@ -1,0 +1,362 @@
+import 'package:sokoun_app/features/shared/support/imports.dart';
+import 'package:sokoun_app/features/main_view/presentation/cubits/workspace_cubit.dart';
+import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
+import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
+import 'package:melos_core/core/widgets/buttons/app_loading_button.dart';
+import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
+import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
+import 'package:melos_core/core/extensions/sized_box_helper.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/core/widgets/first_validation_error_form.dart';
+
+import '../shared/chat_privacy_banner.dart';
+
+class ChatReportSheet extends StatefulWidget {
+  const ChatReportSheet({super.key, required this.conversation});
+  final ConversationContent conversation;
+
+  @override
+  State<ChatReportSheet> createState() => _ChatReportSheetState();
+}
+
+class _ChatReportSheetState extends State<ChatReportSheet> {
+  final GlobalKey _detailsFieldKey = GlobalKey();
+  late final TextEditingController _detailsController;
+  late final SupportTicketSubmitCubit _submitCubit;
+  final ValueNotifier<int> _selectedReason = ValueNotifier<int>(0);
+
+  List<String> get _reasons => [
+    LocaleKeys.chatReportIncorrectProperty,
+    LocaleKeys.chatReportOffensiveContent,
+    LocaleKeys.chatReportPotentialFraud,
+    LocaleKeys.chatReportPhoneInPhotos,
+    LocaleKeys.chatReportUnavailableProperty,
+    LocaleKeys.chatReportOtherReason,
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _detailsController = TextEditingController();
+    _submitCubit = SupportTicketSubmitCubit();
+  }
+
+  @override
+  void dispose() {
+    _submitCubit.close();
+    _detailsController.dispose();
+    _selectedReason.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    if (_submitCubit.isLoading || widget.conversation.id.isEmpty) return;
+    final workspace = WorkspaceCubit.instance.state;
+    final reason = _reasons[_selectedReason.value];
+    final ticket = await _submitCubit.submit(
+      SupportTicketBody(
+        workspace: workspace,
+        topic: workspace.isOwner
+            ? SupportTopic.reportTenant
+            : SupportTopic.reportOwner,
+        subject: reason,
+        description:
+            '$reason\nConversation: ${widget.conversation.id}\nParticipant: ${widget.conversation.otherParticipant.id}\nProperty: ${widget.conversation.property}\n${_detailsController.text.trim()}',
+      ),
+    );
+    if (!mounted) return;
+    if (ticket == null) {
+      Messages.showToast(msg: LocaleKeys.freeReportNotSubmitted);
+      return;
+    }
+    Messages.showToast(
+      msg: LocaleKeys.freeReportSubmitted.replaceAll(
+        '{reference}',
+        ticket.reference,
+      ),
+    );
+    Go.back(true);
+  }
+
+  List<FirstValidationErrorField> _validationFields() => [
+    if (_selectedReason.value == _reasons.length - 1)
+      FirstValidationErrorField(
+        fieldKey: _detailsFieldKey,
+        title: LocaleKeys.chatReportDetailsHint,
+        value: _detailsController.text,
+        validator: (value) => value == null || value.trim().length < 10
+            ? LocaleKeys.freeReportDetailsRequired
+            : null,
+      ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return FractionallySizedBox(
+      heightFactor: .88,
+      child: Container(
+        decoration: BoxDecoration(
+          color: context.appColor(AppColors.white, surface: true),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+        ),
+        child: SafeArea(
+          top: false,
+          child: FirstValidationErrorForm(
+            validationFields: _validationFields,
+            onValid: _submit,
+            builder: (context, submit) => Column(
+              children: [
+                const _ReportHeader(),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.fromLTRB(20.w, 4.h, 20.w, 20.h),
+                    child: ValueListenableBuilder<int>(
+                      valueListenable: _selectedReason,
+                      builder: (context, selectedReason, _) => Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          for (
+                            int index = 0;
+                            index < _reasons.length;
+                            index++
+                          ) ...[
+                            _ReportReasonTile(
+                              label: _reasons[index],
+                              isSelected: selectedReason == index,
+                              onPressed: () => _selectedReason.value = index,
+                            ),
+                            if (index < _reasons.length - 1) 8.szH,
+                          ],
+                          if (selectedReason == _reasons.length - 1) ...[
+                            12.szH,
+                            TextFormField(
+                              key: _detailsFieldKey,
+                              validator: (value) =>
+                                  value == null || value.trim().length < 10
+                                  ? LocaleKeys.freeReportDetailsRequired
+                                  : null,
+                              controller: _detailsController,
+                              minLines: 3,
+                              maxLines: 4,
+                              maxLength: 3000,
+                              style: AppTextStyles.base.copyWith(
+                                color: context.appColor(AppColors.sokoonNavy),
+                                fontSize: 14.sp,
+                              ),
+                              decoration: InputDecoration(
+                                hintText: LocaleKeys.chatReportDetailsHint,
+                                hintStyle: AppTextStyles.base.copyWith(
+                                  color: context.appColor(
+                                    AppColors.sokoonMuted,
+                                  ),
+                                  fontSize: 14.sp,
+                                ),
+                                filled: true,
+                                fillColor: context.appColor(
+                                  AppColors.white,
+                                  surface: true,
+                                ),
+                                contentPadding: EdgeInsets.all(14.r),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                  borderSide: BorderSide(
+                                    color: context.appColor(
+                                      AppColors.sokoonBorder,
+                                    ),
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                  borderSide: BorderSide(
+                                    color: context.appColor(
+                                      AppColors.sokoonBorder,
+                                    ),
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16.r),
+                                  borderSide: BorderSide(
+                                    color: context.appColor(AppColors.red),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                          16.szH,
+                          ChatPrivacyBanner(text: LocaleKeys.chatReportPrivacy),
+                          16.szH,
+                          AppLoadingButton(
+                            asyncCall: (_) => submit(),
+                            title: LocaleKeys.chatSubmitReport,
+                            buttonColor: context.appColor(
+                              AppColors.red,
+                              surface: true,
+                            ),
+                            textColor: AppColors.white,
+                            borderRadius: 16.r,
+                            height: 52.h,
+                            textStyle: AppTextStyles.extraBold15.copyWith(
+                              fontSize: 15.sp,
+                              height: 1.45,
+                            ),
+                          ),
+                          6.szH,
+                          TextButton(
+                            onPressed: () => Go.back(),
+                            child: AppText(
+                              LocaleKeys.cancel,
+                              style: AppTextStyles.semiBold.copyWith(
+                                color: context.appColor(AppColors.sokoonGray),
+                                fontSize: 14.sp,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ReportHeader extends StatelessWidget {
+  const _ReportHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: 48.w,
+          height: 6.h,
+          decoration: BoxDecoration(
+            color: context.appColor(AppColors.sokoonBorder, surface: true),
+            borderRadius: BorderRadius.circular(3.r),
+          ),
+        ),
+        14.szH,
+        Row(
+          children: [
+            SizedBox(width: 40.r),
+            Expanded(
+              child: AppText(
+                LocaleKeys.chatReportProblemTitle,
+                style: AppTextStyles.bold.copyWith(
+                  color: context.appColor(AppColors.sokoonNavy),
+                  fontSize: 18.sp,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            IconButton(
+              onPressed: Go.back,
+              icon: Icon(
+                Icons.close_rounded,
+                color: context.appColor(AppColors.sokoonNavy),
+                size: 20.r,
+              ),
+            ),
+          ],
+        ),
+        AppText(
+          LocaleKeys.chatReportReasonPrompt,
+          style: AppTextStyles.regular14.copyWith(
+            color: context.appColor(AppColors.sokoonGray),
+            fontSize: 14.sp,
+            height: 1.45,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    ).padding(EdgeInsets.fromLTRB(20.w, 12.h, 20.w, 10.h));
+  }
+}
+
+class _ReportReasonTile extends StatelessWidget {
+  const _ReportReasonTile({
+    required this.label,
+    required this.isSelected,
+    required this.onPressed,
+  });
+
+  final String label;
+  final bool isSelected;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(16.r),
+      child: AnimatedContainer(
+        duration: SokounMotion.duration(context, milliseconds: 160),
+        padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 13.h),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? context.appColor(AppColors.redPale, surface: true)
+              : context.appColor(AppColors.scaffoldBackground, surface: true),
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(
+            color: isSelected
+                ? context.appColor(AppColors.red)
+                : context.appColor(AppColors.sokoonBorder),
+          ),
+        ),
+        child: Row(
+          spacing: 12.w,
+          children: [
+            Container(
+              width: 20.r,
+              height: 20.r,
+              padding: EdgeInsets.all(4.r),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isSelected
+                      ? context.appColor(AppColors.red)
+                      : context.appColor(AppColors.sokoonBorder),
+                  width: 2.w,
+                ),
+              ),
+              child: isSelected
+                  ? DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: context.appColor(AppColors.red, surface: true),
+                        shape: BoxShape.circle,
+                      ),
+                    )
+                  : null,
+            ),
+            Expanded(
+              child: AppText(
+                label,
+                style: AppTextStyles.regular14.copyWith(
+                  color: context.appColor(AppColors.sokoonNavy),
+                  fontSize: 14.sp,
+                  height: 1.45,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

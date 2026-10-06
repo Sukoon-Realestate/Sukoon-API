@@ -1,0 +1,40 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/helpers/text_style_manager.dart';
+import 'package:melos_core/core/widgets/app_text.dart';
+
+class FilterCard extends StatelessWidget {
+  const FilterCard({super.key, required this.title, required this.child});
+
+  final String title;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: context.appColor(AppColors.white, surface: true),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: context.appColor(AppColors.grayPale)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 12.h,
+        children: [
+          AppText(
+            title,
+            style: AppTextStyles.bold14.copyWith(
+              color: context.appColor(AppColors.sokoonNavy),
+              fontSize: 14.sp,
+              height: 1.45,
+            ),
+            textAlign: TextAlign.start,
+          ),
+          child,
+        ],
+      ),
+    );
+  }
+}

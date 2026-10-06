@@ -1,0 +1,4 @@
+interface:
+  display_name: "Feature Readiness"
+  short_description: "Assess Flutter features for production release"
+  default_prompt: "Use $feature-readiness to review this feature for production readiness and report evidence-backed blockers and verification gaps."
