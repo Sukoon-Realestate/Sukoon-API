@@ -1,3 +1,4 @@
+import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 import '../../data/models/lease_tenant.dart';
 import 'lease_tenant_selector.dart';
 import 'package:flutter/material.dart';
@@ -23,9 +24,11 @@ class LeaseDraftForm extends StatefulWidget {
     super.key,
     required this.templates,
     required this.isFresh,
+    this.property,
   });
   final List<LeaseTemplate> templates;
   final bool isFresh;
+  final OwnerPropertyContent? property;
   @override
   State<LeaseDraftForm> createState() => _LeaseDraftFormState();
 }
@@ -55,6 +58,12 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
   void initState() {
     super.initState();
     _cubit = LeaseDraftCubit();
+    _selection.value = (
+      property: widget.property,
+      tenant: null,
+      templateId: '',
+      error: null,
+    );
   }
 
   @override
@@ -113,7 +122,7 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
                     16.szH,
                     PremiumPropertySelector(
                       property: selection.property,
-                      enabled: canChange,
+                      enabled: canChange && widget.property == null,
                       onSelected: (property) {
                         _changed();
                         _selection.value = (
@@ -178,7 +187,7 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
                     if (template != null)
                       AppText('${template.title} ${template.version}'),
                     8.szH,
-                    TextFormField(
+                    DefaultTextField(
                       controller: _start,
                       readOnly: true,
                       enabled: canChange,
@@ -189,7 +198,7 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
                       onTap: () => _pickDate(_start),
                     ),
                     16.szH,
-                    TextFormField(
+                    DefaultTextField(
                       controller: _end,
                       readOnly: true,
                       enabled: canChange,
@@ -200,13 +209,15 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
                       onTap: () => _pickDate(_end),
                     ),
                     16.szH,
-                    TextFormField(
+                    DefaultTextField(
                       controller: _rent,
                       enabled: canChange,
-                      keyboardType: const TextInputType.numberWithOptions(
+                      inputType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
-                      inputFormatters: [LocalizedDigitsFormatter()],
+                      inputFormatters: [
+                        const LocalizedDigitsFormatter(allowDecimal: true),
+                      ],
                       decoration: InputDecoration(
                         labelText: LocaleKeys.paidMonthlyRent,
                       ),

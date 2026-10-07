@@ -7,7 +7,6 @@ class OwnerProfileActions extends StatelessWidget {
   Widget build(BuildContext context) => Column(
     spacing: 8.h,
     children: [
-      const PremiumEntryTile(workspace: AppWorkspace.owner),
       ProfileSurfaceCard(
         child: ProfileMenuTile(
           icon: Icons.account_balance_wallet_outlined,

@@ -91,7 +91,7 @@ class OwnerPropertyCard extends StatelessWidget {
                             fontSize: 14.sp,
                             height: 1.45,
                           ),
-                          maxLines: 1,
+                          maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.start,
                         ),
@@ -159,6 +159,8 @@ class OwnerPropertyCard extends StatelessWidget {
                   ),
                 ],
               ),
+              if (property.id.isNotEmpty)
+                OwnerPropertyPremiumActions(property: property),
             ],
           ),
         ),

@@ -10,10 +10,12 @@ import '../../data/models/digital_lease.dart';
 import '../screens/lease_draft_screen.dart';
 import 'digital_leases_empty_state.dart';
 import 'digital_lease_card.dart';
+import 'package:sokoun_app/features/owner/properties/data/models/owner_property_content.dart';
 
 class DigitalLeasesList extends StatefulWidget {
-  const DigitalLeasesList({super.key, required this.workspace});
+  const DigitalLeasesList({super.key, required this.workspace, this.property});
   final AppWorkspace workspace;
+  final OwnerPropertyContent? property;
   @override
   State<DigitalLeasesList> createState() => _DigitalLeasesListState();
 }
@@ -29,12 +31,14 @@ class _DigitalLeasesListState extends State<DigitalLeasesList> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          if (widget.property != null)
+            AppText(widget.property!.title, fontWeight: FontWeight.bold),
           AppText(LocaleKeys.paidLeasesExplanation),
           if (widget.workspace.isOwner)
             FilledButton.icon(
               onPressed: () async {
                 final lease = await Go.to<DigitalLease>(
-                  const LeaseDraftScreen(),
+                  LeaseDraftScreen(property: widget.property),
                 );
                 if (lease != null && mounted) _controller.refresh();
               },
@@ -44,11 +48,17 @@ class _DigitalLeasesListState extends State<DigitalLeasesList> {
         ],
       ),
     ),
-    cacheKey: DigitalLeasesData.cacheKey(widget.workspace),
+    cacheKey: DigitalLeasesData.cacheKey(
+      widget.workspace,
+      propertyId: widget.property?.id ?? '',
+    ),
     cacheToJson: (lease) => lease.toJson(),
     cacheFromJson: DigitalLease.fromJson,
-    asyncCall: (_, page) =>
-        DigitalLeasesData.getPage(page: page, workspace: widget.workspace),
+    asyncCall: (_, page) => DigitalLeasesData.getPage(
+      page: page,
+      workspace: widget.workspace,
+      propertyId: widget.property?.id ?? '',
+    ),
     emptyListView: const DigitalLeasesEmptyState(),
     itemBuilder: (_, __, ___, lease) => DigitalLeaseCard(
       key: ValueKey(lease.id),

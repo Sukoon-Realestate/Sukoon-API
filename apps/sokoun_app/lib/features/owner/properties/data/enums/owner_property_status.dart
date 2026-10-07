@@ -14,6 +14,7 @@ extension OwnerPropertyStatusX on OwnerPropertyStatus {
   bool get isRejected => this == OwnerPropertyStatus.rejected;
   bool get isRented => this == OwnerPropertyStatus.rented;
   bool get isAccepted => this == OwnerPropertyStatus.accepted;
+  bool get isPublished => isVerified || isAccepted;
 
   static OwnerPropertyStatus fromName(String? name) {
     if (name == 'under_review') {

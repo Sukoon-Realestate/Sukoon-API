@@ -1,3 +1,4 @@
+import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -54,7 +55,8 @@ class _PremiumAlertComposerState extends State<PremiumAlertComposer> {
       children: [
         AppText(widget.filters.combinedSearch),
         16.szH,
-        TextFormField(
+        DefaultTextField(
+          autovalidateMode: AutovalidateMode.disabled,
           controller: _name,
           enabled: widget.canChange,
           maxLength: 80,

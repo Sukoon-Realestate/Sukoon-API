@@ -5,6 +5,7 @@ import 'package:sokoun_app/features/owner/home/data/models/owner_dashboard_model
 
 import 'owner_pending_requests_section.dart';
 import 'owner_stats_grid.dart';
+import 'owner_operations_section.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_reveal.dart';
 
 class OwnerDashboardContent extends StatelessWidget {
@@ -40,6 +41,8 @@ class OwnerDashboardContent extends StatelessWidget {
               pendingRequests: dashboard.pendingRequests,
             ),
           ),
+          24.szH,
+          const OwnerOperationsSection(),
           24.szH,
         ],
       ),

@@ -1,3 +1,4 @@
+import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -80,27 +81,23 @@ class _ChatComposerState extends State<ChatComposer> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: TextFormField(
+                        child: DefaultTextField(
                           key: _messageFieldKey,
+                          autovalidateMode: AutovalidateMode.disabled,
                           controller: widget.controller,
                           validator: Validators.validateRequired,
                           maxLength: Validators.chatMessageMaxLength,
-                          buildCounter:
-                              (
-                                _, {
-                                required currentLength,
-                                required isFocused,
-                                maxLength,
-                              }) => null,
+                          inputType: TextInputType.multiline,
                           minLines: 1,
                           maxLines: 4,
-                          textInputAction: TextInputAction.send,
+                          action: TextInputAction.send,
                           onEditingComplete: submit,
                           style: AppTextStyles.base.copyWith(
                             color: context.appColor(AppColors.sokoonNavy),
                             fontSize: 14.sp,
                           ),
                           decoration: InputDecoration(
+                            counterText: '',
                             hintText: LocaleKeys.chatMessageHint,
                             hintStyle: AppTextStyles.base.copyWith(
                               color: context.appColor(AppColors.sokoonMuted),
@@ -138,21 +135,23 @@ class _ComposerActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
-      enabled: onPressed != null,
-      label: LocaleKeys.chatSendMessage,
-      child: SizedBox.square(
-        dimension: 48,
-        child: Material(
-          color: onPressed == null
-              ? context.appColor(AppColors.sokoonGray, surface: true)
-              : backgroundColor,
-          shape: const CircleBorder(),
-          child: InkWell(
-            onTap: onPressed,
-            customBorder: const CircleBorder(),
-            child: Icon(icon, color: context.appColor(iconColor), size: 18.r),
+    return TextFieldTapRegion(
+      child: Semantics(
+        button: true,
+        enabled: onPressed != null,
+        label: LocaleKeys.chatSendMessage,
+        child: SizedBox.square(
+          dimension: 48,
+          child: Material(
+            color: onPressed == null
+                ? context.appColor(AppColors.sokoonGray, surface: true)
+                : backgroundColor,
+            shape: const CircleBorder(),
+            child: InkWell(
+              onTap: onPressed,
+              customBorder: const CircleBorder(),
+              child: Icon(icon, color: context.appColor(iconColor), size: 18.r),
+            ),
           ),
         ),
       ),

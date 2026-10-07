@@ -1,3 +1,4 @@
+import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -30,13 +31,13 @@ class ChatSearchField extends StatelessWidget {
         ? context.appColor(AppColors.sokoonTeal)
         : context.appColor(AppColors.sokoonGray);
 
-    return TextField(
+    return DefaultTextField(
       controller: controller,
       readOnly: readOnly,
-      autofocus: autofocus,
+      autoFocus: autofocus,
       onTap: onTap,
-      onChanged: onChanged,
-      textInputAction: TextInputAction.search,
+      onChanged: (value) => onChanged?.call(value ?? ''),
+      action: TextInputAction.search,
       style: AppTextStyles.base.copyWith(
         color: context.appColor(AppColors.sokoonNavy),
         fontSize: 14.sp,

@@ -1,3 +1,4 @@
+import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -122,11 +123,18 @@ class PhotoMetadataField extends StatelessWidget {
           ),
           textAlign: TextAlign.start,
         ),
-        TextFormField(
+        DefaultTextField(
+          autovalidateMode: AutovalidateMode.disabled,
           initialValue: initialValue,
-          onChanged: onChanged,
+          onChanged: (value) => onChanged(value ?? ''),
           validator: validator,
           maxLines: maxLines,
+          inputType: maxLines == 1
+              ? TextInputType.text
+              : TextInputType.multiline,
+          action: maxLines == 1
+              ? TextInputAction.next
+              : TextInputAction.newline,
           minLines: maxLines == 1 ? 1 : 2,
           style: AppTextStyles.medium13.copyWith(
             color: context.appColor(AppColors.sokoonNavy),

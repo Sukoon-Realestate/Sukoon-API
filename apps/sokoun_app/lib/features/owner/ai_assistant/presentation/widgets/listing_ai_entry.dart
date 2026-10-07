@@ -12,14 +12,20 @@ class ListingAiEntry extends StatelessWidget {
     super.key,
     required this.form,
     required this.onApplied,
+    this.propertyId = '',
   });
   final OwnerAddPropertyFormState form;
+  final String propertyId;
   final ValueChanged<ListingSuggestion> onApplied;
   @override
   Widget build(BuildContext context) => OutlinedButton.icon(
     onPressed: () async {
       final result = await Go.to<ListingSuggestion>(
-        ListingAiScreen(facts: ListingAiFacts.fromForm(form), canApply: true),
+        ListingAiScreen(
+          propertyId: propertyId,
+          facts: ListingAiFacts.fromForm(form),
+          canApply: true,
+        ),
       );
       if (result != null && context.mounted) onApplied(result);
     },

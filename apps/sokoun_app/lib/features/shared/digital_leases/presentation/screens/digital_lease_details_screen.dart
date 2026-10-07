@@ -21,7 +21,7 @@ class DigitalLeaseDetailsScreen extends StatelessWidget {
     body: FeatureWorkspaceGuard(
       feature: PremiumFeature.digitalLeases,
       workspace: workspace,
-      child: DigitalLeaseDetailsContent(leaseId: leaseId),
+      child: DigitalLeaseDetailsContent(leaseId: leaseId, workspace: workspace),
     ),
   );
 }

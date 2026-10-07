@@ -1,8 +1,13 @@
 part of '../../../imports.dart';
 
 class ProfileContractCard extends StatelessWidget {
-  const ProfileContractCard({super.key, required this.contract});
+  const ProfileContractCard({
+    super.key,
+    required this.contract,
+    this.workspace = AppWorkspace.tenant,
+  });
   final ProfileContractContent contract;
+  final AppWorkspace workspace;
   Uri? get _document {
     final Uri? uri = Uri.tryParse(contract.documentUrl);
     return uri != null &&
@@ -71,6 +76,8 @@ class ProfileContractCard extends StatelessWidget {
             ),
             onPressed: () => _openDocument(context),
           ),
+        if (contract.leaseId.isNotEmpty)
+          ContractLeaseEntry(leaseId: contract.leaseId, workspace: workspace),
       ],
     ),
   ).paddingOnly(bottom: 12);

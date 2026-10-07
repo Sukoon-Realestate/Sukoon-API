@@ -10,7 +10,6 @@ class TenantProfileActions extends StatelessWidget {
     return Column(
       spacing: 8.h,
       children: [
-        const PremiumEntryTile(workspace: AppWorkspace.tenant),
         ProfileSurfaceCard(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 2.h),
           child: ProfileMenuTile(

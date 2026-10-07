@@ -7,7 +7,7 @@ SHELL := /bin/bash
 
 .PHONY: help clean run apk ipa appbundle ios upgrade \
 	handlePods openXcode flutterfireSetup translations \
-	architectureCheck accountCheck accountUiReview freeFeaturesCheck freeFeaturesUiReview featureToolsCheck featureToolsUiReview gradleFix clearGradleCache buildIos distribute \
+	architectureCheck accountCheck accountUiReview freeFeaturesCheck freeFeaturesUiReview featureToolsCheck featureToolsUiReview mainJourneyCheck mainJourneyUiReview gradleFix clearGradleCache buildIos distribute \
 	distributeAndroid fingerPrint kill sha
 
 # Show available commands
@@ -30,6 +30,8 @@ help:
 	@echo "  make freeFeaturesCheck"
 	@echo "  make freeFeaturesUiReview FREE_REVIEW_DIR=/tmp/sokoun-free-after"
 	@echo "  make featureToolsCheck"
+	@echo "  make mainJourneyCheck"
+	@echo "  make mainJourneyUiReview JOURNEY_REVIEW_DIR=/tmp/sokoun-main-flow-after"
 	@echo "  make featureToolsUiReview TOOLS_REVIEW_DIR=/tmp/sokoun-tools-after"
 	@echo "  make gradleFix"
 	@echo "  make clearGradleCache"
@@ -121,6 +123,16 @@ TOOLS_REVIEW_DIR ?= /tmp/sokoun-tools-after
 ## Render free tool workflows in both languages and themes across six widths and three text scales.
 featureToolsUiReview:
 	flutter test --no-pub test/feature_tools_ui_review_test.dart --dart-define=FEATURE_TOOLS_UI_REVIEW_DIR=$(TOOLS_REVIEW_DIR)
+
+## Verify contextual main journeys, resource/cache boundaries and responsive layouts.
+mainJourneyCheck:
+	flutter analyze --no-pub --no-fatal-infos --no-fatal-warnings
+	flutter test --no-pub test/main_journey_features_test.dart test/main_journey_ui_review_test.dart test/feature_tools_contracts_test.dart test/feature_tools_flows_test.dart test/feature_architecture_test.dart
+
+JOURNEY_REVIEW_DIR ?= /tmp/sokoun-main-flow-after
+## Render main app placements in both languages/themes, six widths and three text sizes.
+mainJourneyUiReview:
+	flutter test --no-pub test/main_journey_ui_review_test.dart --dart-define=MAIN_JOURNEY_UI_REVIEW_DIR=$(JOURNEY_REVIEW_DIR)
 
 # Stop Gradle and remove lock files
 gradleFix:

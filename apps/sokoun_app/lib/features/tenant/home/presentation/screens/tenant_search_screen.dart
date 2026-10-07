@@ -158,7 +158,6 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
     }
 
     _isOpeningResults = true;
-    FocusManager.instance.primaryFocus?.unfocus();
     try {
       await _recentSearchesCubit.addRecentSearch(query);
       if (!mounted) return;

@@ -1,3 +1,4 @@
+import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 import 'package:sokoun_app/features/shared/support/imports.dart';
 import 'package:sokoun_app/features/main_view/presentation/cubits/workspace_cubit.dart';
 import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
@@ -136,13 +137,16 @@ class _ChatReportSheetState extends State<ChatReportSheet> {
                           ],
                           if (selectedReason == _reasons.length - 1) ...[
                             12.szH,
-                            TextFormField(
+                            DefaultTextField(
                               key: _detailsFieldKey,
+                              autovalidateMode: AutovalidateMode.disabled,
                               validator: (value) =>
                                   value == null || value.trim().length < 10
                                   ? LocaleKeys.freeReportDetailsRequired
                                   : null,
                               controller: _detailsController,
+                              inputType: TextInputType.multiline,
+                              action: TextInputAction.newline,
                               minLines: 3,
                               maxLines: 4,
                               maxLength: 3000,

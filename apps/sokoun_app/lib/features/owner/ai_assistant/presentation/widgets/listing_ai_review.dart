@@ -1,3 +1,4 @@
+import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -57,16 +58,20 @@ class _ListingAiReviewState extends State<ListingAiReview> {
         AppText(LocaleKeys.paidAiReview, fontWeight: FontWeight.bold),
         for (final warning in widget.suggestion.warnings) AppText(warning),
         16.szH,
-        TextFormField(
+        DefaultTextField(
           controller: _title,
+          autovalidateMode: AutovalidateMode.disabled,
           maxLength: 150,
           decoration: InputDecoration(labelText: LocaleKeys.paidAiTitle),
           validator: (text) =>
               text?.trim().isNotEmpty == true ? null : LocaleKeys.fillField,
         ),
         16.szH,
-        TextFormField(
+        DefaultTextField(
           controller: _description,
+          autovalidateMode: AutovalidateMode.disabled,
+          inputType: TextInputType.multiline,
+          action: TextInputAction.newline,
           maxLines: null,
           minLines: 4,
           maxLength: 5000,

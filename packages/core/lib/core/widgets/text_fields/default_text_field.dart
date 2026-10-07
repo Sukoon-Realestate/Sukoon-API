@@ -14,9 +14,14 @@ class DefaultTextField extends StatefulWidget {
   final bool secure;
   final TextInputType inputType;
   final TextEditingController? controller;
+  final String? initialValue;
+  final bool enabled;
   final FormFieldValidator<String?>? validator;
+  final AutovalidateMode autovalidateMode;
   final String? label;
   final Function(String?)? onSubmitted;
+  final VoidCallback? onEditingComplete;
+  final InputDecoration? decoration;
   final Color? fillColor;
   final Widget? prefixIcon;
   final bool readOnly;
@@ -34,6 +39,8 @@ class DefaultTextField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final Widget? suffixIcon;
   final bool? isPassword;
+
+  /// Multiline fields default to seven lines; null allows unlimited growth.
   final int? maxLines;
   final int? minLines;
   final bool? hasBorderColor;
@@ -52,12 +59,17 @@ class DefaultTextField extends StatefulWidget {
     this.borderColor,
     this.onTap,
     this.controller,
+    this.initialValue,
+    this.enabled = true,
     this.contentPadding,
     this.closeWhenTapOutSide = true,
     this.hasBorderColor = true,
     this.validator,
+    this.autovalidateMode = AutovalidateMode.onUserInteraction,
     this.label,
     this.onSubmitted,
+    this.onEditingComplete,
+    this.decoration,
     this.isPassword = false,
     this.fillColor,
     this.inputFormatters,
@@ -73,11 +85,12 @@ class DefaultTextField extends StatefulWidget {
     this.autoFocus = false,
     this.suffixText,
     this.suffixIcon,
-    this.maxLines,
+    this.maxLines = 7,
     this.minLines,
     this.onChanged,
     this.style,
-  }) : upperTitle = null,
+  }) : assert(initialValue == null || controller == null),
+       upperTitle = null,
        withTitle = TitleStatus.withoutTitle;
 
   const DefaultTextField.withTitle({
@@ -89,12 +102,17 @@ class DefaultTextField extends StatefulWidget {
     this.borderColor,
     this.onTap,
     this.controller,
+    this.initialValue,
+    this.enabled = true,
     this.contentPadding,
     this.closeWhenTapOutSide = true,
     this.hasBorderColor = true,
     this.validator,
+    this.autovalidateMode = AutovalidateMode.onUserInteraction,
     this.label,
     this.onSubmitted,
+    this.onEditingComplete,
+    this.decoration,
     this.isPassword = false,
     this.fillColor,
     this.inputFormatters,
@@ -110,12 +128,13 @@ class DefaultTextField extends StatefulWidget {
     this.autoFocus = false,
     this.suffixText,
     this.suffixIcon,
-    this.maxLines,
+    this.maxLines = 7,
     this.minLines,
     this.onChanged,
     this.style,
     required this.upperTitle,
-  }) : withTitle = TitleStatus.withTitle;
+  }) : assert(initialValue == null || controller == null),
+       withTitle = TitleStatus.withTitle;
 
   @override
   State<DefaultTextField> createState() => _DefaultTextFieldState();
@@ -149,6 +168,7 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
   Widget build(BuildContext context) {
     final bool isLabel = widget.label != null;
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 5.h,
       children: [
@@ -164,8 +184,10 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
         ValueListenableBuilder<bool>(
           valueListenable: _isSecure,
           builder: (context, secure, _) => TextFormField(
-            autovalidateMode: AutovalidateMode.onUserInteraction,
+            autovalidateMode: widget.autovalidateMode,
             controller: widget.controller,
+            initialValue: widget.initialValue,
+            enabled: widget.enabled,
             onChanged: _debounce,
             inputFormatters: widget.inputFormatters,
             obscureText: widget.isPassword == true ? secure : widget.secure,
@@ -183,7 +205,7 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
             textAlign: widget.textAlign!,
             textDirection: widget.textDirection,
             maxLines: widget.inputType == TextInputType.multiline
-                ? widget.maxLines ?? 7
+                ? widget.maxLines
                 : 1,
             minLines: widget.minLines,
             style: widget.style?.copyWith(
@@ -192,84 +214,87 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
                   : context.appColor(widget.style!.color!),
             ),
             onFieldSubmitted: widget.onSubmitted,
+            onEditingComplete: widget.onEditingComplete,
             textInputAction: widget.action,
             enableSuggestions: false,
             autocorrect: false,
             autofocus: widget.autoFocus,
             focusNode: widget.focusNode,
             cursorColor: context.appColor(AppColors.primary),
-            decoration: InputDecoration(
-              isDense: true,
-              errorMaxLines: 3,
-              contentPadding: widget.contentPadding,
-              counterText: ConstantManager.emptyText,
-              filled: widget.filled,
-              suffixText: widget.suffixText,
-              prefixIcon: widget.isPassword == true
-                  ? const Icon(Icons.lock_outline, color: Colors.grey)
-                  : widget.prefixIcon,
-              suffixIcon: widget.isPassword == true
-                  ? IconButton(
-                      onPressed: () => _isSecure.value = !secure,
-                      icon: Icon(
-                        secure
-                            ? Icons.visibility_outlined
-                            : Icons.visibility_off_outlined,
-                        color: Colors.grey,
-                      ),
-                    )
-                  : widget.suffixIcon,
-              prefix: widget.prefixWidget,
-              fillColor: context.appColor(
-                widget.fillColor ?? AppColors.white,
-                surface: true,
-              ),
-              hintText: widget.title,
-              label: isLabel ? Text(widget.label!) : null,
-              labelStyle: isLabel
-                  ? TextStyle(color: context.appColor(AppColors.primary))
-                  : null,
-              hintStyle: TextStyle(
-                fontSize: 13,
-                color: Theme.of(context).extension<AppColorTheme>() == null
-                    ? Colors.grey[600]
-                    : context.appColor(AppColors.sokoonMuted),
-                fontWeight: FontWeight.w300,
-                fontFamily: ConstantManager.fontFamily,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(
-                  widget.borderRadius ?? AppCircular.r12,
+            decoration:
+                widget.decoration ??
+                InputDecoration(
+                  isDense: true,
+                  errorMaxLines: 3,
+                  contentPadding: widget.contentPadding,
+                  counterText: ConstantManager.emptyText,
+                  filled: widget.filled,
+                  suffixText: widget.suffixText,
+                  prefixIcon: widget.isPassword == true
+                      ? const Icon(Icons.lock_outline, color: Colors.grey)
+                      : widget.prefixIcon,
+                  suffixIcon: widget.isPassword == true
+                      ? IconButton(
+                          onPressed: () => _isSecure.value = !secure,
+                          icon: Icon(
+                            secure
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined,
+                            color: Colors.grey,
+                          ),
+                        )
+                      : widget.suffixIcon,
+                  prefix: widget.prefixWidget,
+                  fillColor: context.appColor(
+                    widget.fillColor ?? AppColors.white,
+                    surface: true,
+                  ),
+                  hintText: widget.title,
+                  label: isLabel ? Text(widget.label!) : null,
+                  labelStyle: isLabel
+                      ? TextStyle(color: context.appColor(AppColors.primary))
+                      : null,
+                  hintStyle: TextStyle(
+                    fontSize: 13,
+                    color: Theme.of(context).extension<AppColorTheme>() == null
+                        ? Colors.grey[600]
+                        : context.appColor(AppColors.sokoonMuted),
+                    fontWeight: FontWeight.w300,
+                    fontFamily: ConstantManager.fontFamily,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      widget.borderRadius ?? AppCircular.r12,
+                    ),
+                    borderSide: widget.hasBorderColor == true
+                        ? BorderSide(
+                            color: context.appColor(
+                              widget.borderColor ?? AppColors.border,
+                            ),
+                          )
+                        : BorderSide.none,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      widget.borderRadius ?? AppCircular.r12,
+                    ),
+                    borderSide: BorderSide(
+                      color: context.appColor(AppColors.primary),
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      widget.borderRadius ?? AppCircular.r12,
+                    ),
+                    borderSide: const BorderSide(color: Colors.red),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(
+                      widget.borderRadius ?? AppCircular.r12,
+                    ),
+                    borderSide: const BorderSide(color: Colors.red),
+                  ),
                 ),
-                borderSide: widget.hasBorderColor == true
-                    ? BorderSide(
-                        color: context.appColor(
-                          widget.borderColor ?? AppColors.border,
-                        ),
-                      )
-                    : BorderSide.none,
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(
-                  widget.borderRadius ?? AppCircular.r12,
-                ),
-                borderSide: BorderSide(
-                  color: context.appColor(AppColors.primary),
-                ),
-              ),
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(
-                  widget.borderRadius ?? AppCircular.r12,
-                ),
-                borderSide: const BorderSide(color: Colors.red),
-              ),
-              focusedErrorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(
-                  widget.borderRadius ?? AppCircular.r12,
-                ),
-                borderSide: const BorderSide(color: Colors.red),
-              ),
-            ),
           ),
         ),
       ],

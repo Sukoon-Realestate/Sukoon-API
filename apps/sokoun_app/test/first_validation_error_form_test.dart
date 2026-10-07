@@ -22,6 +22,7 @@ import 'package:sokoun_app/features/shared/auth/presentation/screens/otp_screen.
 import 'package:sokoun_app/features/shared/auth/presentation/widgets/forgot_password/forgot_password_form.dart';
 import 'package:sokoun_app/features/shared/profile/imports.dart'
     show ChangePasswordScreen;
+import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_composer.dart';
 import 'package:sokoun_app/features/shared/support/imports.dart'
     show SupportNewTicketScreen;
 import 'package:sokoun_app/features/tenant/visits/imports.dart';
@@ -62,6 +63,56 @@ void main() {
           const MethodChannel('plugins.flutter.io/shared_preferences'),
           null,
         );
+  });
+
+  testWidgets('chat send keeps the keyboard open and outside taps dismiss it', (
+    tester,
+  ) async {
+    final controller = TextEditingController();
+    addTearDown(controller.dispose);
+    int submissions = 0;
+    await _mount(
+      tester,
+      Scaffold(
+        body: Column(
+          children: [
+            TextButton(onPressed: () {}, child: const Text('Outside composer')),
+            ChatComposer(
+              controller: controller,
+              onSendPressed: () {
+                submissions++;
+                controller.clear();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+    await tester.enterText(find.byType(TextField), 'Message');
+    await tester.pump();
+    final focus = tester
+        .widget<EditableText>(find.byType(EditableText))
+        .focusNode;
+    expect(focus.hasFocus, isTrue);
+    await tester.tap(find.byIcon(Icons.send_rounded));
+    await tester.pump();
+    expect(submissions, 1);
+    expect(focus.hasFocus, isTrue);
+    expect(controller.text, isEmpty);
+    expect(
+      tester.state<FormFieldState<String>>(find.byType(TextFormField)).hasError,
+      isFalse,
+    );
+    await tester.enterText(find.byType(TextField), 'Another message');
+    await tester.pump();
+    await tester.testTextInput.receiveAction(TextInputAction.send);
+    await tester.pump();
+    expect(submissions, 2);
+    expect(focus.hasFocus, isTrue);
+    await tester.tap(find.text('Outside composer'));
+    await tester.pump();
+    expect(focus.hasFocus, isFalse);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets(

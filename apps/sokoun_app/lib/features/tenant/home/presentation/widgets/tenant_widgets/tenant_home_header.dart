@@ -6,11 +6,15 @@ import 'home_search_box.dart';
 import 'home_section_header.dart';
 import 'tenant_home_app_bar_title.dart';
 import 'tenant_visit_banner.dart';
+import 'tenant_search_tools.dart';
+import 'package:sokoun_app/features/shared/profile/presentation/widgets/contracts/contracts_entry.dart';
+import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
 
 class TenantHomeHeader extends StatelessWidget {
-  const TenantHomeHeader({super.key, required this.banner});
+  const TenantHomeHeader({super.key, required this.banner, this.rentOverview});
 
   final String? banner;
+  final Widget? rentOverview;
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -21,6 +25,12 @@ class TenantHomeHeader extends StatelessWidget {
         const TenantHomeAppBarTitle(),
         20.szH,
         const HomeSearchBox(),
+        const TenantSearchTools(),
+        if (rentOverview != null) ...[
+          12.szH,
+          rentOverview!,
+          const ContractsEntry(workspace: AppWorkspace.tenant),
+        ],
         if (banner?.trim().isNotEmpty == true) ...[
           16.szH,
           TenantVisitBanner(text: banner!.trim()),

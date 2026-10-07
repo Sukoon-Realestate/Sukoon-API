@@ -99,7 +99,6 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
       _filters.value = filters;
 
   Future<void> _apply() async {
-    FocusManager.instance.primaryFocus?.unfocus();
     final PropertySearchFilters filters = _filters.value.copyWith(page: 1);
     Go.back();
     await widget.onFiltersApplied(filters);

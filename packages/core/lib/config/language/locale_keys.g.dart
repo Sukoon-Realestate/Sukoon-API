@@ -1,6 +1,49 @@
 import 'package:easy_localization/easy_localization.dart';
 
 abstract class LocaleKeys {
+  static const String _journeyRentEntryBody = 'journey_rent_entry_body';
+  static String get journeyRentEntryBody => _journeyRentEntryBody.tr();
+
+  static const String _journeyAnalyticsEntryBody =
+      'journey_analytics_entry_body';
+  static String get journeyAnalyticsEntryBody =>
+      _journeyAnalyticsEntryBody.tr();
+
+  static const String _journeyContractsEntryBody =
+      'journey_contracts_entry_body';
+  static String get journeyContractsEntryBody =>
+      _journeyContractsEntryBody.tr();
+
+  static const String _journeyDigitalLeasesBody = 'journey_digital_leases_body';
+  static String get journeyDigitalLeasesBody => _journeyDigitalLeasesBody.tr();
+
+  static const String _journeyOwnerOperations = 'journey_owner_operations';
+  static String get journeyOwnerOperations => _journeyOwnerOperations.tr();
+
+  static const String _journeySavedSearches = 'journey_saved_searches';
+  static String get journeySavedSearches => _journeySavedSearches.tr();
+
+  static const String _journeyRentDue = 'journey_rent_due';
+  static String get journeyRentDue => _journeyRentDue.tr();
+
+  static const String _journeyYourRent = 'journey_your_rent';
+  static String get journeyYourRent => _journeyYourRent.tr();
+
+  static const String _journeyRentCached = 'journey_rent_cached';
+  static String get journeyRentCached => _journeyRentCached.tr();
+
+  static const String _journeyViewInvoice = 'journey_view_invoice';
+  static String get journeyViewInvoice => _journeyViewInvoice.tr();
+
+  static const String _journeyNoRentDue = 'journey_no_rent_due';
+  static String get journeyNoRentDue => _journeyNoRentDue.tr();
+
+  static const String _journeyLeaseInvoices = 'journey_lease_invoices';
+  static String get journeyLeaseInvoices => _journeyLeaseInvoices.tr();
+
+  static const String _journeyViewLease = 'journey_view_lease';
+  static String get journeyViewLease => _journeyViewLease.tr();
+
   static const String _toolsBoostDuration = 'tools_boost_duration';
   static String get toolsBoostDuration => _toolsBoostDuration.tr();
 

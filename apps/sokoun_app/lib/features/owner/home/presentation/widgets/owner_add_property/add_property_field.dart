@@ -1,3 +1,4 @@
+import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -50,17 +51,18 @@ class AddPropertyField extends StatelessWidget {
         if (showLabel)
           AddPropertyFieldLabel(label: field.label, isRequired: isRequired),
         if (controller != null)
-          TextFormField(
+          DefaultTextField(
+            autovalidateMode: AutovalidateMode.disabled,
             controller: controller,
-            onChanged: onChanged,
+            onChanged: (value) => onChanged?.call(value ?? ''),
             readOnly: readOnly,
             onTap: onTap,
-            keyboardType: keyboardType,
+            inputType: maxLines == 1 ? keyboardType : TextInputType.multiline,
             inputFormatters: inputFormatters,
             maxLines: maxLines,
             minLines: minLines,
             textAlign: field.textAlign,
-            textInputAction: maxLines == 1
+            action: maxLines == 1
                 ? TextInputAction.next
                 : TextInputAction.newline,
             validator:

@@ -29,7 +29,6 @@ class _AddPropertyMapSectionState extends State<AddPropertyMapSection> {
   Future<void> _pick() async {
     if (_isOpen) return;
     _isOpen = true;
-    FocusManager.instance.primaryFocus?.unfocus();
     try {
       final location = await Go.to<PropertyLocation>(
         PropertyLocationPickerScreen(

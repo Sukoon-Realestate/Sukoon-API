@@ -1,3 +1,4 @@
+import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
@@ -56,7 +57,7 @@ class _DecisionEditorState extends State<DecisionEditor> {
           const SizedBox(height: 8),
           AppText(LocaleKeys.freePrivateDeviceNotes),
           const SizedBox(height: 16),
-          TextField(
+          DefaultTextField(
             controller: _list,
             maxLength: 60,
             decoration: InputDecoration(
@@ -64,8 +65,10 @@ class _DecisionEditorState extends State<DecisionEditor> {
               hintText: LocaleKeys.freeDecisionListExample,
             ),
           ),
-          TextField(
+          DefaultTextField(
             controller: _note,
+            inputType: TextInputType.multiline,
+            action: TextInputAction.newline,
             maxLines: 4,
             maxLength: 4000,
             decoration: InputDecoration(labelText: LocaleKeys.freePrivateNotes),

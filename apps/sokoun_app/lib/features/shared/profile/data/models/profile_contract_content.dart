@@ -9,6 +9,7 @@ class ProfileContractContent extends Equatable {
     required this.startDate,
     required this.endDate,
     required this.documentUrl,
+    this.leaseId = '',
   });
   const ProfileContractContent.initial()
     : id = '',
@@ -16,6 +17,7 @@ class ProfileContractContent extends Equatable {
       status = '',
       startDate = '',
       endDate = '',
+      leaseId = '',
       documentUrl = '';
   factory ProfileContractContent.fromJson(Map<String, dynamic> json) =>
       ProfileContractContent(
@@ -25,6 +27,7 @@ class ProfileContractContent extends Equatable {
         startDate: profileString(json['start_date']),
         endDate: profileString(json['end_date']),
         documentUrl: profileString(json['document_url']),
+        leaseId: profileString(json['lease_id']),
       );
   final String id;
   final String propertyTitle;
@@ -32,6 +35,7 @@ class ProfileContractContent extends Equatable {
   final String startDate;
   final String endDate;
   final String documentUrl;
+  final String leaseId;
   Map<String, dynamic> toJson() => {
     'id': id,
     'property_title': propertyTitle,
@@ -39,6 +43,7 @@ class ProfileContractContent extends Equatable {
     'start_date': startDate,
     'end_date': endDate,
     'document_url': documentUrl,
+    if (leaseId.isNotEmpty) 'lease_id': leaseId,
   };
   ProfileContractContent copyWith({
     String? id,
@@ -47,6 +52,7 @@ class ProfileContractContent extends Equatable {
     String? startDate,
     String? endDate,
     String? documentUrl,
+    String? leaseId,
   }) => ProfileContractContent(
     id: id ?? this.id,
     propertyTitle: propertyTitle ?? this.propertyTitle,
@@ -54,6 +60,7 @@ class ProfileContractContent extends Equatable {
     startDate: startDate ?? this.startDate,
     endDate: endDate ?? this.endDate,
     documentUrl: documentUrl ?? this.documentUrl,
+    leaseId: leaseId ?? this.leaseId,
   );
   @override
   List<Object?> get props => [
@@ -63,5 +70,6 @@ class ProfileContractContent extends Equatable {
     startDate,
     endDate,
     documentUrl,
+    leaseId,
   ];
 }

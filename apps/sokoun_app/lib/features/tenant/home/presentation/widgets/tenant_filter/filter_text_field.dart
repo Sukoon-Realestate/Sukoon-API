@@ -1,3 +1,4 @@
+import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,10 +48,10 @@ class FilterTextField extends StatelessWidget {
             borderRadius: BorderRadius.circular(12.r),
             border: Border.all(color: context.appColor(AppColors.grayPale)),
           ),
-          child: TextField(
+          child: DefaultTextField(
             controller: controller,
-            onChanged: onChanged,
-            keyboardType: keyboardType,
+            onChanged: (value) => onChanged(value ?? ''),
+            inputType: keyboardType ?? TextInputType.text,
             inputFormatters: inputFormatters,
             textAlign: textAlign,
             style: AppTextStyles.semiBold.copyWith(

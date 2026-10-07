@@ -179,8 +179,10 @@ class _VisitRatingSheetState extends State<VisitRatingSheet> {
                     color: context.appColor(AppColors.sokoonBorder),
                   ),
                 ),
-                child: TextField(
+                child: DefaultTextField(
                   controller: _commentController,
+                  inputType: TextInputType.multiline,
+                  action: TextInputAction.newline,
                   maxLines: 3,
                   style: AppTextStyles.base.copyWith(
                     color: context.appColor(AppColors.sokoonNavy),

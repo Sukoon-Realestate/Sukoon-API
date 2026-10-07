@@ -1,10 +1,14 @@
 part of '../../imports.dart';
 
 class ProfileContractsScreen extends StatelessWidget {
-  const ProfileContractsScreen({super.key});
+  const ProfileContractsScreen({
+    super.key,
+    this.workspace = AppWorkspace.tenant,
+  });
+  final AppWorkspace workspace;
   @override
   Widget build(BuildContext context) => AppScaffold(
     title: LocaleKeys.profileContracts,
-    body: const SafeArea(child: ProfileContractsList()),
+    body: SafeArea(child: ProfileContractsList(workspace: workspace)),
   );
 }

@@ -521,6 +521,7 @@ void main() {
         tester,
         Scaffold(
           body: DigitalLeaseDetailsView(
+            workspace: AppWorkspace.tenant,
             lease: lease,
             isFresh: true,
             onRefresh: () async {},
@@ -548,6 +549,7 @@ void main() {
         tester,
         Scaffold(
           body: DigitalLeaseDetailsView(
+            workspace: AppWorkspace.tenant,
             lease: lease,
             isFresh: true,
             onRefresh: () async {},

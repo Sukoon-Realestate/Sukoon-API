@@ -10,8 +10,15 @@ import 'rent_invoice_card.dart';
 import 'rent_invoices_empty_state.dart';
 
 class RentInvoicesList extends StatefulWidget {
-  const RentInvoicesList({super.key, required this.workspace});
+  const RentInvoicesList({
+    super.key,
+    required this.workspace,
+    this.leaseId = '',
+    this.propertyTitle = '',
+  });
   final AppWorkspace workspace;
+  final String leaseId;
+  final String propertyTitle;
   @override
   State<RentInvoicesList> createState() => _RentInvoicesListState();
 }
@@ -24,13 +31,26 @@ class _RentInvoicesListState extends State<RentInvoicesList> {
     enablePullRefresh: true,
     header: Padding(
       padding: const EdgeInsets.all(20),
-      child: AppText(LocaleKeys.paidInvoicesExplanation),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (widget.propertyTitle.isNotEmpty)
+            AppText(widget.propertyTitle, fontWeight: FontWeight.bold),
+          AppText(LocaleKeys.paidInvoicesExplanation),
+        ],
+      ),
     ),
-    cacheKey: RentManagementData.cacheKey(widget.workspace),
+    cacheKey: RentManagementData.cacheKey(
+      widget.workspace,
+      leaseId: widget.leaseId,
+    ),
     cacheToJson: (invoice) => invoice.toJson(),
     cacheFromJson: RentInvoice.fromJson,
-    asyncCall: (_, page) =>
-        RentManagementData.getPage(page: page, workspace: widget.workspace),
+    asyncCall: (_, page) => RentManagementData.getPage(
+      page: page,
+      workspace: widget.workspace,
+      leaseId: widget.leaseId,
+    ),
     emptyListView: const RentInvoicesEmptyState(),
     itemBuilder: (_, __, ___, invoice) => RentInvoiceCard(
       key: ValueKey(invoice.id),

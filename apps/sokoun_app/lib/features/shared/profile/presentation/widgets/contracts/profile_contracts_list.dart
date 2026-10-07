@@ -1,7 +1,8 @@
 part of '../../../imports.dart';
 
 class ProfileContractsList extends StatefulWidget {
-  const ProfileContractsList({super.key});
+  const ProfileContractsList({super.key, this.workspace = AppWorkspace.tenant});
+  final AppWorkspace workspace;
   @override
   State<ProfileContractsList> createState() => _ProfileContractsListState();
 }
@@ -15,12 +16,16 @@ class _ProfileContractsListState extends State<ProfileContractsList> {
     enablePullRefresh: true,
     shrinkWrap: false,
     contentPadding: EdgeInsets.all(20.r),
+    header: ContractsJourneyActions(workspace: widget.workspace),
     asyncCall: (_, page) => ProfileContractsData.getPage(page),
     cacheKey: ProfileContractsData.cacheKey,
     cacheToJson: (contract) => contract.toJson(),
     cacheFromJson: ProfileContractContent.fromJson,
     emptyListView: const ProfileContractsEmptyState(),
-    itemBuilder: (_, __, ___, contract) =>
-        ProfileContractCard(key: ValueKey(contract.id), contract: contract),
+    itemBuilder: (_, __, ___, contract) => ProfileContractCard(
+      key: ValueKey(contract.id),
+      contract: contract,
+      workspace: widget.workspace,
+    ),
   );
 }

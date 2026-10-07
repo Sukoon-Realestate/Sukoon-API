@@ -186,6 +186,7 @@ void main() {
                   isFresh: true,
                 ),
                 'lease': DigitalLeaseDetailsView(
+                  workspace: AppWorkspace.tenant,
                   lease: DigitalLease(
                     id: 'lease',
                     propertyId: property.id,

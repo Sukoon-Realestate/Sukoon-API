@@ -37,7 +37,6 @@ class _SupportTicketFormState extends State<SupportTicketForm> {
     if (_cubit.isLoading) {
       return;
     }
-    FocusScope.of(context).unfocus();
     final SupportTicketContent? ticket = await _cubit.submit(_body.value);
     if (!context.mounted) return;
     if (ticket == null) {

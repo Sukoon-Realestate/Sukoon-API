@@ -7,8 +7,15 @@ import 'package:sokoun_app/features/shared/premium/presentation/widgets/shared/f
 import '../widgets/rent_invoices_list.dart';
 
 class RentManagementScreen extends StatelessWidget {
-  const RentManagementScreen({super.key, required this.workspace});
+  const RentManagementScreen({
+    super.key,
+    required this.workspace,
+    this.leaseId = '',
+    this.propertyTitle = '',
+  });
   final AppWorkspace workspace;
+  final String leaseId;
+  final String propertyTitle;
   @override
   Widget build(BuildContext context) => AppScaffold(
     title: LocaleKeys.paidRentManagement,
@@ -16,7 +23,11 @@ class RentManagementScreen extends StatelessWidget {
     body: FeatureWorkspaceGuard(
       feature: PremiumFeature.rentManagement,
       workspace: workspace,
-      child: RentInvoicesList(workspace: workspace),
+      child: RentInvoicesList(
+        workspace: workspace,
+        leaseId: leaseId,
+        propertyTitle: propertyTitle,
+      ),
     ),
   );
 }

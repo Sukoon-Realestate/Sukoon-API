@@ -23,7 +23,7 @@ When asked to create shared UI like auth fields or social sign-in buttons:
 - Put each component in its own file.
 - Reuse ready components from `packages/core/lib/core/widgets` instead of building controls from scratch.
 - Add app-specific colors to `packages/core/lib/config/res/color_manager.dart`.
-- Add plain user-facing text to `packages/core/assets/translations/lang.json`.
+- Add app-owned user-facing text to `packages/core/assets/translations/lang.json`. Display backend-localized messages and labels directly, following the Translations section below.
 - Run `dart run generate/strings/main.dart` after translation changes.
 
 ---
@@ -342,7 +342,7 @@ CacheException, ForbiddenException, BlockedException
 
 ## Validation — `Validators`
 
-All validation returns `String?` (null = valid, string = error message in locale key format).
+Client-side validation returns `String?` (null = valid, otherwise a localized error string from `LocaleKeys`). Backend validation messages are already localized and must be preserved directly.
 
 ```dart
 Validators.validateEmpty(value)
@@ -645,7 +645,7 @@ AppLifecycleManager(
 ## Conventions
 
 - **ScreenUtil sizing**: always use `.w`, `.h`, `.sp` — never raw pixel values
-- **Locale keys**: always use `LocaleKeys.*` — never hardcode strings
+- **Localization**: use `LocaleKeys.*` for app-owned copy; display backend-localized text directly. Never hardcode user-facing copy or translate server messages again.
 - **Injection**: `injector<Type>()` from GetIt
 - **Enums**: use `is*` extension checks, not equality comparisons
 - **Backend type**: `BackendConfiguation.type.isPhp` / `.isAsp`
@@ -1400,19 +1400,75 @@ The screen file imports from `widgets/`. Widgets do not import the screen file.
 
 ## Translations
 
-### Source of truth — `assets/translations/lang.json`
+### Backend contract and translation ownership
 
-This is the **only file you ever edit** for translations. Never touch the generated files.
+Read [MOBILE_LOCALIZATION_TRANSLATION_HANDOFF.md](../../MOBILE_LOCALIZATION_TRANSLATION_HANDOFF.md) before implementing or changing API localization. It defines localization for mobile-consumed `/api/v1/` HTTP endpoints, including Auth, Profiles, Properties, Visits, Notifications, Support, Pages, and Chat. `/api/v1/admin/*` and `/admin/` are excluded.
+
+Choose the translation source by who owns the text:
+
+| Text | Required handling |
+| --- | --- |
+| App-owned buttons, headings, hints, empty states, client-side validation, and fallback messages | Use `LocaleKeys.*`, generated from `packages/core/assets/translations/lang.json`. |
+| Backend success, validation, authentication, authorization, and other HTTP error `message` values | Display the returned text directly through the existing message/error flow. |
+| Backend filter `label` values, property `tags`, and static/legal page content | Render the returned localized text directly. |
+| IDs, slugs, enum/status codes, option `value` fields, ordering values, and `query_parameter` names | Preserve the API values for comparisons, selections, requests, and persistence. Display the accompanying localized label when available. |
+| User-entered names, property descriptions, chat messages, and other user content | Preserve the content; do not treat it as a translation key. |
+
+Do not call `.tr()` on server messages, labels, tags, or user content. Do not add copies of backend text to `lang.json`, translate English API sentences on the client, or select business behavior by comparing localized display text.
+
+### Request and response language
+
+- Send `Accept-Language: ar` or `Accept-Language: en` on every mobile API HTTP request, including requests before login. The backend accepts regional variants such as `ar-EG` and `en-US`; the app should send its active `Languages.currentLanguage.languageCode`.
+- Use the existing `DioService` and `HeadersInterceptor` to supply the language globally. Do not create a new HTTP client or add per-screen language-header boilerplate.
+- Resolve the active locale when a request is sent. Changing the app language must affect subsequent requests without restarting the app; do not freeze the startup language in client options or a production constructor override.
+- The protocol specification says an omitted header defaults to English. Always send the header explicitly instead of relying on the fallback. The property-feed example's Arabic "or default" wording conflicts with that specification and must not be used to assume an Arabic default.
+- `?lang=ar`, `?lang=en`, and the `?language=` alternative are supported for explicit overrides or testing. Use the global header for normal app requests; do not assume an undocumented precedence between query parameters and headers.
+- The backend returns `Content-Language: ar` or `en` and `Vary: Accept-Language`. Use `Content-Language` when verifying response language. `Vary` controls HTTP caches; it does not partition the app's own cache automatically.
+
+### Backend messages and labels
+
+Preserve the envelope's `message` through the existing `BaseModel.msg`, exceptions/failures, and Cubit `state.msg` flow. Show the backend message directly in toasts, snackbars, dialogs, and error views. Use a local `LocaleKeys` fallback only when the response has no usable message, or for a client-side condition such as a connection failure. Keep HTTP status codes for authentication, retries, and other control flow; do not use them to replace a supplied localized message with generic copy.
+
+```dart
+// App-owned copy is translated locally.
+AppText(LocaleKeys.confirmCode)
+
+// Backend messages and option labels are already translated.
+Messages.showToast(msg: model.msg)
+AppText(option.label)
+
+// Use the stable API value for a request, never the displayed label.
+filters.copyWith(ordering: option.value)
+```
+
+Keep localized filter labels separate from `value`, `id`, and `query_parameter`. For example, `label: 'الأحدث'` and `label: 'Newest'` both retain `value: '-created_at'`; Arabic and English amenities both retain their original query names such as `has_wifi`.
+
+### Language changes and offline caches
+
+- Include the requested language in every app cache key whose response contains localized text. This applies to `CrudBaseParmas`, `AppPagify`, and `AppDropinity`, alongside the existing resource IDs and query dimensions. For example, use `property_filter_options_ar` and `property_filter_options_en` instead of one shared `property_filter_options` entry.
+- Preserve localized fields and stable API values in the existing symmetric `fromJson`/`toJson` cache serializers. Do not serve a cached response from another language as if it were localized for the current language.
+- When the user switches language, refresh API-backed labels, tags, pages, and other localized content. Rebuilding `LocaleKeys` text alone does not translate an already-loaded response. Prevent an older request in the previous language from replacing content loaded for the new locale.
+- Keep the existing offline-first behavior: restore a valid cache for the requested language when available, and retain the normal localized error/retry state when it is unavailable.
+
+### Localization verification
+
+For changes to API localization, verify Arabic and English requests, a language switch on an existing client, and the resulting success/error messages and localized labels. Check that stable API values remain identical across languages, localized caches stay separate, and stale responses cannot overwrite the active locale's content. Use the handoff's examples in fixtures; check `Content-Language` and `Vary: Accept-Language` in integration checks when a backend is available. Check RTL/LTR rendering and report any unavailable live-backend coverage.
+
+### App-owned source of truth — `packages/core/assets/translations/lang.json`
+
+This is the **only file edited manually for app-owned translations**. Backend-owned text follows the contract above. Never edit the generated translation files manually.
 
 Generated files (do not edit manually):
-- `assets/translations/en.json` — English locale
-- `assets/translations/ar.json` — Arabic locale
-- `lib/src/config/language/locale_keys.g.dart` — Dart constants
 
-After editing `lang.json`, regenerate everything with:
-```
-make translations
-# or directly:
+- `packages/core/assets/translations/en.json` — English locale
+- `packages/core/assets/translations/ar.json` — Arabic locale
+- `packages/core/lib/config/language/locale_keys.g.dart` — Dart getters, which already return translated text
+
+After editing `lang.json`, regenerate from the workspace root with:
+
+```sh
+make -C apps/sokoun_app translations
+# Or run the generator directly from the workspace root:
 dart run generate/strings/main.dart
 ```
 
@@ -1441,17 +1497,17 @@ Two formats are supported:
 
 ---
 
-### Adding a new string
+### Adding a new app-owned string
 
-1. Open `assets/translations/lang.json`
+1. Open `packages/core/assets/translations/lang.json`
 2. Add the entry using the appropriate format:
    ```json
    "myNewKey #$ My New Label": "تسمية جديدة"
    ```
-3. Run `make translations` to regenerate
+3. From the workspace root, run `dart run generate/strings/main.dart` (or `make -C apps/sokoun_app translations`) to regenerate
 4. Use `LocaleKeys.myNewKey` in Dart
 
-**Never** hardcode display strings — always go through `LocaleKeys.*`.
+**Never** hardcode app-owned display strings — use `LocaleKeys.*`. Render backend-localized and user-provided text directly as described above.
 
 ---
 
@@ -1467,7 +1523,7 @@ Two formats are supported:
 
 ---
 
-### Rule 36 — Always add new strings to `lang.json`, never hardcode
+### Rule 36 — Add new app-owned strings to `lang.json`, never hardcode
 
 ```dart
 // CORRECT
@@ -1620,7 +1676,7 @@ For form features, use this flow:
 4. Cubit submits `body.toJson()` through `baseCrudUseCase` / `CrudBaseParmas`.
 5. Screen handles success: show `MessageUtils`, navigate with `Go`, and trigger analytics or follow-up flow if needed.
 
-Do not bypass validation, do not navigate from cubits, and do not hardcode display strings outside `LocaleKeys`.
+Do not bypass validation, do not navigate from cubits, and do not hardcode app-owned display strings. Use `LocaleKeys` for app-owned copy and preserve backend-localized text directly.
 
 ### Rule 45 — Screen build skill
 
@@ -1631,7 +1687,7 @@ Use this workflow when building or refactoring any Sokoun screen from Figma:
 3. Put the screen under its feature's `screens/` folder and name the public widget by the screen role only, for example `LoginScreen`. Do not prefix screen classes with the app name.
 4. Put screen-specific presentational widgets under `screens/widgets/<screen_name>/`, for example `screens/widgets/login/LoginHeader` and `LoginDivider`.
 5. Keep the screen responsible for flow-level orchestration only: form key, controllers or callbacks, submit handling, and screen layout. Move reusable visual chunks into widgets.
-6. Use `LocaleKeys` for every user-facing string. If keys are missing, add translations through the repo localization flow and keep generated keys in sync.
+6. Use `LocaleKeys` for app-owned user-facing strings. If keys are missing, add translations through the repo localization flow and keep generated keys in sync. Render backend-localized messages, labels, tags, and page content directly according to the Translations section.
 7. Reuse `packages/core` UI primitives (`AppText`, `DefaultButton`) and narrow extension imports such as `sized_box_helper.dart` for spacing.
 8. If a shared widget blocks correct behavior, extend it with optional parameters instead of duplicating its styling. Preserve existing defaults for other call sites.
 9. Wire the screen into `MaterialApp.home` only when the task requires making it immediately visible.

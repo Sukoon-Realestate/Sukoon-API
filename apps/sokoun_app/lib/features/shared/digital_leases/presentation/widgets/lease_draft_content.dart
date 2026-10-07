@@ -6,9 +6,11 @@ import 'package:sokoun_app/features/shared/premium/presentation/widgets/shared/p
 import '../../data/models/lease_configuration.dart';
 import '../cubits/lease_configuration_cubit.dart';
 import 'lease_draft_form.dart';
+import 'package:sokoun_app/features/owner/properties/data/models/owner_property_content.dart';
 
 class LeaseDraftContent extends StatefulWidget {
-  const LeaseDraftContent({super.key});
+  const LeaseDraftContent({super.key, this.property});
+  final OwnerPropertyContent? property;
   @override
   State<LeaseDraftContent> createState() => _LeaseDraftContentState();
 }
@@ -48,6 +50,7 @@ class _LeaseDraftContentState extends State<LeaseDraftContent> {
                 ),
               )
             : LeaseDraftForm(
+                property: widget.property,
                 templates: configuration.templates,
                 isFresh: !_cubit.isCached,
               ),

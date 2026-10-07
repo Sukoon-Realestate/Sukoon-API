@@ -4,10 +4,16 @@ import 'package:sokoun_app/features/shared/premium/presentation/widgets/shared/p
 import '../../data/models/digital_lease.dart';
 import '../cubits/digital_lease_details_cubit.dart';
 import 'digital_lease_details_view.dart';
+import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
 
 class DigitalLeaseDetailsContent extends StatefulWidget {
-  const DigitalLeaseDetailsContent({super.key, required this.leaseId});
+  const DigitalLeaseDetailsContent({
+    super.key,
+    required this.leaseId,
+    required this.workspace,
+  });
   final String leaseId;
+  final AppWorkspace workspace;
   @override
   State<DigitalLeaseDetailsContent> createState() =>
       _DigitalLeaseDetailsContentState();
@@ -42,6 +48,7 @@ class _DigitalLeaseDetailsContentState
             ? const DigitalLeasesEmptyState()
             : DigitalLeaseDetailsView(
                 lease: lease,
+                workspace: widget.workspace,
                 isFresh: !_cubit.isCached,
                 onRefresh: _load,
               ),

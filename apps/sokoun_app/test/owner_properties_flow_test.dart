@@ -979,7 +979,12 @@ void main() {
     await tester.pumpAndSettle();
 
     await selectPropertyTab(tester, OwnerPropertyFilter.rejected);
-    await tester.tap(find.byKey(const ValueKey('nasr-city-rejected')));
+    await tester.tap(
+      find.descendant(
+        of: find.byKey(const ValueKey('nasr-city-rejected')),
+        matching: find.text(rejected.title),
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(find.byType(OwnerPropertyRejectionScreen), findsOneWidget);

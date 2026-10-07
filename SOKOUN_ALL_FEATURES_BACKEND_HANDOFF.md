@@ -1,6 +1,6 @@
 # Sokoun — all features backend implementation guide
 
-Date: **2026-10-06**. Mobile project: `apps/sokoun_app`.
+Date: **2026-10-07**. Mobile project: `apps/sokoun_app`.
 
 **Send this single file to the backend developer.** It consolidates the implementation details, backend handoff and backend response template previously split across the three paid-feature documents, together with every improvement in `SOKOUN_FREE_IMPROVEMENTS_IMPLEMENTATION.md`. This guide is the current integration contract and supersedes the previous paid-feature requirements.
 
@@ -19,7 +19,7 @@ Backend must implement/confirm the contracts, deploy them to staging, then retur
 - Promotion cannot buy verification or bypass moderation. Listing verification, owner identity verification and proof of ownership remain distinct.
 - Existing listing validators remain **10–25 unique photos and a required, valid video of 1–60 seconds**. Listing billing period and minimum stay remain separate concepts.
 
-The mobile subscription SDKs and purchase lifecycle have been removed. The profile entry is **Sokoun tools / أدوات سكون**. Its role-appropriate destinations appear without a catalog, subscription or native-store request. All prior free entry points remain available.
+The mobile subscription SDKs and purchase lifecycle have been removed. Feature destinations appear in the main owner/tenant journeys without a catalog, subscription or native-store request. The **Sokoun tools / أدوات سكون** shortcuts have been removed from both profiles; use the contextual entry points in section 2.1.
 
 **Deployment boundary:** client flows are implemented and unlocked. This Flutter workspace contains no backend implementation of the new feature APIs, alert workers, AI provider, signing service or rent payment service. Making the client free does not deploy these services. Configure real services and respond with honest empty/error states while work is incomplete; do not fabricate success, balances, matches, signatures or payments.
 
@@ -48,6 +48,27 @@ Promotion/alert configuration is owned by a stable content Cubit. Paginated hist
 
 Translations originate in `packages/core/assets/translations/lang.json`. Arabic, English and `LocaleKeys` are generated. Navigation uses `Go` and existing workspace routing. Native billing packages are absent; the updated app resolves with **Flutter 3.35.1 / Dart 3.9.0**.
 
+### 2.1 Main app journeys and resource context
+
+The tools now use the main app journeys as their entry points. The duplicate Profile → Sokoun tools shortcuts have been removed; existing bottom tabs remain in place.
+
+| Journey | Mobile wiring | Backend responsibility |
+|---|---|---|
+| Owner writes a listing | Add/edit → description section → AI → review/edit → explicitly apply to the local form | Return a suggestion for the supplied facts/property; normal submission and moderation still publish the listing |
+| Owner promotes a published listing | Properties → accepted/verified listing card → Promote listing; listing action sheet also retains access | Authorize the actual `property_id`; enforce publication, availability and campaign eligibility |
+| Owner reviews performance | Home → Manage your rentals → Advanced analytics → select listing; listing card opens its own analytics | Authorize property and return real period-specific measurements |
+| Tenant resumes a search | Home → Saved searches and decisions; Home → Search alerts; results/saved search → alert with its full filters | Persist authorized alerts and match the complete filter set; opening saved searches alone does not create an alert |
+| Parties manage a lease | Tenant Home/owner dashboard → Contracts → Digital leases; owner listing → Digital leases for that property → Create lease | Filter `GET leases/` by optional `property_id`; draft keeps that property selected and requires an eligible tenant from `lease-tenants/` |
+| Tenant reviews due rent | Signed-in tenant Home → real earliest due/overdue invoice → invoice details → optional real checkout | Return the due-invoice preview query described in section 5.6; fresh detail/mutation authorizes payment |
+| Parties review lease invoices | A server-reported signed/active lease → Rent invoices for this lease | Filter `GET rent-invoices/` by `lease_id` and current workspace before pagination |
+| Owner tracks rent | Home → Manage your rentals → Rent management | Read authorized invoice history; client does not invent income totals or collect a feature fee |
+
+Existing `profiles/contracts/` document items may include an optional **`lease_id`** pointing to the actual `features/v1/leases/{id}/` resource. The app then offers “View digital lease”. Existing document IDs are never treated as lease IDs. Items without this field keep their existing document viewer, and the Contracts header still opens the digital lease collection.
+
+**Accepting a viewing is not agreement to rent.** The app never creates a lease or invoice automatically from visit acceptance. Backend must define an explicit agreed-tenancy/participant-eligibility process, restrict tenant selection accordingly, and create rent obligations from approved lease/ledger rules. Opening a listing's lease flow supplies a property ID only; it does not select a tenant or confirm eligibility.
+
+The Home rent preview owns one lifecycle-managed Cubit outside the paginated discovery header, so feed rebuilds do not restart invoice loading. It loads independently of discovery, refreshes on Home pull-to-refresh and after returning from invoice details, and is not requested for guest users. Property-scoped lease and lease-scoped invoice caches include account, workspace and resource IDs. Invalid mixed-resource responses are rejected rather than shown as the selected resource's data.
+
 ## 3. Shared API conventions and endpoint inventory
 
 All paths below are relative to the configured API base. Preserve current authentication/session handling; document the actual staging/production base, prefixes and environment differences in the backend delivery file.
@@ -58,7 +79,7 @@ Detail/mutation success envelope:
 {"key":"success","msg":"","data":{"id":"resource-id"}}
 ```
 
-New feature collection envelope; requests send `page` and `page_size=20`:
+New feature collection envelope; collection screens send `page` and `page_size=20`. The single-invoice Home preview uses `page_size=1`:
 
 ```json
 {"key":"success","msg":"","data":{"results":[],"count":0,"per_page":20,"total_pages":1,"next":null,"previous":null}}
@@ -94,12 +115,12 @@ These are **proposed contracts already wired in the client**, not proof of deplo
 | POST | `features/v1/listing-suggestions/` | Property ID/public facts, language, request key | Suggestion |
 | GET | `features/v1/lease-configuration/` | `lang=ar\|en` | Creation permission and approved templates |
 | GET | `features/v1/lease-tenants/` | Owned `property_id`, paging | Eligible tenant page |
-| GET | `features/v1/leases/` | `workspace`, paging | Lease page |
+| GET | `features/v1/leases/` | `workspace`, optional `property_id`, paging | Authorized, filtered lease page |
 | POST | `features/v1/leases/` | Lease draft body | Created lease |
 | GET | `features/v1/leases/{id}/` | Authorized lease ID | Lease |
 | POST | `features/v1/leases/{id}/signing-session/` | `revision`, `request_key` | Hosted signing receipt |
 | POST | `features/v1/leases/{id}/cancel/` | `revision`, `request_key` | Action receipt |
-| GET | `features/v1/rent-invoices/` | `workspace`, paging | Invoice page |
+| GET | `features/v1/rent-invoices/` | `workspace`, optional `lease_id`, `status`, `ordering`, paging | Authorized, filtered invoice page or Home due preview |
 | GET | `features/v1/rent-invoices/{id}/` | Authorized invoice ID | Invoice |
 | POST | `features/v1/rent-invoices/{id}/checkout/` | `invoice_id`, `request_key` | Hosted rent receipt and quote |
 
@@ -299,12 +320,14 @@ All six capabilities below are available in the client without subscriptions or 
 
 | Feature | In-app entry |
 |---|---|
-| Promotion | Owner profile → Sokoun tools → Promote a listing; owner listing action sheet |
-| Search alerts | Tenant profile → Sokoun tools → Search alerts; saved search/results → create alert using all filters |
-| Advanced analytics | Owner profile → Sokoun tools; owner listing action sheet |
-| AI listing assistant | Owner profile → Sokoun tools; owner editor → pricing/details step → assistant |
-| Digital leases/signing | Owner/tenant profile → Sokoun tools; owner creates draft, authorized parties read/sign |
-| Rent management | Owner/tenant profile → Sokoun tools; authorized tenant invoice → real rent checkout |
+| Promotion | Published owner listing card → Promote a listing; listing action sheet |
+| Search alerts | Tenant Home → Search alerts; saved search/results → create alert using all filters |
+| Advanced analytics | Owner dashboard → Advanced analytics; owner listing card/action sheet |
+| AI listing assistant | Owner editor → description section → assistant → review and apply |
+| Digital leases/signing | Home/dashboard → Contracts → Digital leases; owner listing → property-specific leases and draft |
+| Rent management | Tenant Home due-invoice preview; signed/active lease → its invoices; owner dashboard → invoice history |
+
+All six are accessible through the main-flow entry points above. The placement reuses the same feature screens and request contracts, with contextual IDs and filters and no feature payment gate. Profile no longer links to the tools hub.
 
 ### 5.1 Free listing promotion
 
@@ -376,6 +399,8 @@ Keep provider credentials and prompt execution on the backend. Support `ar|en`, 
 
 The assistant produces a suggestion only. It never publishes, verifies or changes a live listing. Owners review/edit it; applying changes the local draft's title/description and leaves normal listing validation/moderation intact. The owner still needs the normal submission flow to publish.
 
+The editor entry supplies the actual persisted property ID when editing or resuming a saved property. An unsaved new draft supplies an empty ID. In both cases `facts` come from the current form, including edits that have not yet been submitted; authorize the property ID without discarding those owner-provided draft facts. Suggestions remain local until the owner applies and submits them through the normal editor.
+
 ### 5.5 Free digital lease drafts and signing
 
 Configuration data:
@@ -384,7 +409,9 @@ Configuration data:
 {"can_create":true,"templates":[{"id":"approved-template-id","title":"Residential lease","jurisdiction":"EG","language":"ar","version":"approved-version"}]}
 ```
 
-Tenant option page items: `{"id":"eligible-tenant-account-id","display_name":"Tenant name"}`. Scope the query to the owned `property_id` and authorized participants, for example an approved tenancy/viewing flow defined by the business. Do not expose an unrestricted user directory. The mobile form selects names and sends the selected opaque ID; it does not ask users to enter internal IDs.
+Tenant option page items: `{"id":"eligible-tenant-account-id","display_name":"Tenant name"}`. Scope the query to the owned `property_id` and participants eligible under the agreed-tenancy process. Do not infer agreement from an accepted viewing or expose an unrestricted user directory. The mobile form selects names and sends the selected opaque ID; it does not ask users to enter internal IDs. Empty eligible-tenant results must remain a real empty response rather than a fabricated tenant.
+
+`GET leases/?workspace=owner&property_id=...&page=1&page_size=20` returns only that authorized property's leases. Apply resource filtering before computing count/pagination. The unfiltered Contracts/tools entry still requests all authorized leases in the selected workspace. Document any actual filter naming changes in the returned delivery file.
 
 Lease draft body:
 
@@ -400,6 +427,8 @@ Signing session and cancellation bodies are `{"revision":2,"request_key":"client
 
 Mobile refreshes after returning to the app and supports manual refresh. It never marks a lease signed locally. Draft cancellation is shown only for a draft with `can_cancel=true`; return `subject_id=lease-id`, `status=cancelled`. Define participant invitation, decline, countersigning, recovery and notification delivery on the backend. Keep existing free contract viewing compatible with these completed documents.
 
+Only server-reported `signed`/`active` leases offer the contextual invoice shortcut. The shortcut reads existing authorized invoices for the actual lease ID; it does not generate them. Supply `lease_id` in legacy contract document items when those documents have a corresponding digital lease, and specify the mapping in the backend delivery.
+
 ### 5.6 Free rent management with real rent checkout
 
 Invoice response/page item:
@@ -409,6 +438,20 @@ Invoice response/page item:
 ```
 
 Owners read their invoices; tenants read/pay only invoices where they are an authorized party. Generate immutable references and amounts from approved lease/ledger rules. Define scheduling, late payments, cancellations, refunds, fees, partial payments and settlements. The implemented client currently pays a complete invoice; partial-payment and refund request flows require additional contracts/UI.
+
+The collection endpoint supports these main-flow reads using the same envelope:
+
+```text
+# All authorized invoices for a lease, filtered before pagination:
+GET features/v1/rent-invoices/?workspace=tenant&lease_id=lease-id&page=1&page_size=20
+
+# Tenant Home preview: status is an OR filter, sorted earliest due date first:
+GET features/v1/rent-invoices/?workspace=tenant&status=due,overdue&ordering=due_date&page=1&page_size=1
+```
+
+Support the lease filter for both owner and tenant workspaces and authorize the lease participants. The Home response must contain `results` with zero or one invoice and a nonnegative integer `count` for **all matching authorized due/overdue invoices**. Return `results:[], count:0` only when none are due; use a real error for unsupported queries or service failures. Do not return paid/cancelled invoices for this query, silently ignore the filter, or manufacture zero/amounts. Use deterministic ordering for invoices with the same due date and document the time zone for determining overdue status.
+
+Home displays the actual invoice's amount/status/date and offers “View invoice”. It does not treat the first page as a total balance, collect rent directly from cached preview data, or show an income forecast. Unknown amounts remain unknown. Invoice details fetch the real ID and refresh payment permission before checkout; returning to Home refreshes the preview after a payment or other invoice change.
 
 Checkout body: `{"invoice_id":"same-id-as-path","request_key":"client-generated-uuid"}`. Resolve the actual payable amount, fees, recipient and currency on the server; never accept an amount from the client. Receipt example:
 
@@ -494,8 +537,8 @@ Provide sanitized actual success, empty, validation, permission, conflict and pr
 | Chat/support | Caller `can_send`, KYC enforcement, REST/socket client ID/ack/status schema, deduplication, durable ticket receipts, moderation/block policy |
 | Analytics | Actual metrics/definitions/windows/time zone, null versus zero, aggregation evidence and authorized export format/expiry |
 | AI | Provider/model, facts whitelist, ownership lookup, ar/en support, consent/retention, output limits, factual validation, operational rate limits, retries and no user charge |
-| Leases/signing | Approved template IDs/versions/jurisdiction, eligible tenant source, participant invitations/consent, document access, states/revisions, provider and reconciled signing events |
-| Rent | Invoice schedule/ownership/amounts/references, quote calculation, no feature-use surcharge, checkout idempotency, provider/settlement evidence, receipts and any partial/refund/settlement gaps |
+| Leases/signing | Approved template IDs/versions/jurisdiction, explicit agreed-tenancy and eligible tenant source, `property_id` collection filter, legacy contract `lease_id` mapping, participant invitations/consent, document access, states/revisions, provider and reconciled signing events |
+| Rent | `lease_id` filtering and Home `status=due,overdue&ordering=due_date&page_size=1` query with honest count/empty/error behavior, invoice schedule/ownership/amounts/references, quote calculation, no feature-use surcharge, checkout idempotency, provider/settlement evidence, receipts and any partial/refund/settlement gaps |
 | Local/private extensions | Which optional sync/lifecycle/map/blocked-user contracts exist, exact privacy/authorization, and remaining client wiring |
 
 Provide actual hosted signing/payment/export/document domains, expiry, return URLs, deep-link requirements and environment differences. Identify any new native configuration needed for real rent/signing integrations; no native subscription/IAP setup is requested.
@@ -520,17 +563,22 @@ List unsupported statuses, schema/pagination changes, remaining notification rou
 
 ## 8. Mobile verification and remaining integration checks
 
-Verified on **2026-10-06** using **Flutter 3.35.1 / Dart 3.9.0**.
+Verified on **2026-10-07** using **Flutter 3.35.1 / Dart 3.9.0**.
 
 | Check | Result |
 |---|---|
-| Dependency resolution | Successful; no `in_app_purchase` or `in_app_purchase_android` dependency |
-| Complete Sokoun app tests, including architecture and both feature matrices | **2,839 passed, 0 failed** |
+| Dependency compatibility | Previously resolved successfully; no new dependency for main-flow placement and no `in_app_purchase` or `in_app_purchase_android` dependency |
+| Complete Sokoun app tests, including architecture and all three feature matrices | **2,931 passed, 0 failed** |
 | Free tool contract/flow/architecture coverage within the passing suite | 11 contract tests, 22 flow tests and 8 architecture tests |
+| Main-journey contracts and behavior | **18 passed**; actual property/lease/invoice IDs, workspace routing, eligible-tenant selection, filter/cache isolation, invalid response rejection, explicit AI apply, guest privacy, independent Home loading and refresh |
+| Main-journey rendered review | 72 configurations × 8 panels = **576 layouts**, plus 2 keyboard/landscape/split-view input scenarios; **256 PNGs** in `/tmp/sokoun-main-flow-after` |
+| Owner dashboard before/after comparison | **8 PNGs** using the original committed widget and updated widget with identical fixture data, Arabic/English at 390/1024, in `/tmp/sokoun-main-flow-comparison` |
 | Feature tools rendered review | 72 matrix configurations × 10 panels = 720 layouts, plus 4 keyboard/landscape/split-view scenarios; **320 PNGs** |
 | Original free feature rendered review | 72 configurations × 7 panels = 504 layouts; **56 PNGs** in `/tmp/sokoun-free-tools-free-final` |
 | App analysis | **0 errors**; 2 existing unused-import warnings in `lib/generated/assets.dart` and `lib/shared_widgets/sokoun_refresh_indicator.dart` |
 | Formatting, translation JSON and whitespace | Checked successfully |
+
+Follow-up Profile/Home verification on **2026-10-07** used the workspace's current **Flutter 3.44.7 / Dart 3.12.2**. **502 focused tests passed** across `main_journey_features_test.dart`, `tenant_home_pagination_test.dart`, `profile_flow_test.dart`, `profile_settings_support_test.dart` and `feature_architecture_test.dart`, including **19 main-journey tests**. Both profiles omit the tools shortcut, and the actual tenant Home screen's greeting, search, tools, rent preview and listings move together in one scroll area without a fixed AppBar. Focused analysis found no issues; formatting and whitespace checks passed. This follow-up changes no backend contracts.
 
 Relevant commands are:
 
@@ -538,11 +586,15 @@ Relevant commands are:
 cd apps/sokoun_app
 make featureToolsCheck
 make featureToolsUiReview TOOLS_REVIEW_DIR=/tmp/sokoun-tools-final
+make mainJourneyCheck
+make mainJourneyUiReview JOURNEY_REVIEW_DIR=/tmp/sokoun-main-flow-after
 make freeFeaturesCheck
 ```
 
 Use the project SDK on PATH when running these Make targets. They cover free owner/tenant destinations, AI consent/generation without purchase allowances, promotion creation without credits/charges, independent alert history during configuration failures, cache isolation/serialization, mutation retries, real lease/invoice access, authoritative signing/rent statuses and the existing architecture contracts.
 
 Rendered review covers Arabic/English, light/dark, widths 320/390/600/768/1024/1366, scales 1/1.3/2 and additional keyboard/landscape/split-view flows. The feature-tools fixtures render 720 panel cases plus four interaction/layout scenarios; representative PNGs are in `/tmp/sokoun-tools-final`. Original free-feature fixtures also exercise 504 panel layouts.
+
+Main-journey fixtures cover the owner dashboard, owner listing cards, tenant Home header with a real-shaped due invoice, explicit rent empty and cached/unknown-money states, Contracts/document links, a property-specific draft and an active lease's invoice entry. Decimal rent input now preserves the decimal separator (for example `6500.50`) across keyboard/viewport changes; rent card dates use the app's language and listing titles have room for two lines. Existing bottom tabs, listing moderation/rejection/resubmission and real rent checkout are preserved. The duplicate Profile tools shortcuts have been removed. Tenant Home keeps its greeting toolbar, search, rent preview and property results in one scroll area.
 
 Automated client checks do not prove backend deployment, actual provider webhook/settlement/signature behavior, native map rendering, calendar import, picker permissions, device process-kill recovery or a native release build. Complete those integration/device checks after the backend returns its actual delivery file. No backend completion is asserted by this guide.

@@ -1,3 +1,4 @@
+import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -39,6 +40,7 @@ class _PropertyLocationSearchState extends State<PropertyLocationSearch> {
   }
 
   void _search() {
+    // The search icon is inside the field, so outside-tap dismissal won't run.
     FocusManager.instance.primaryFocus?.unfocus();
     context.read<PropertyLocationCubit>().search(_controller.text);
   }
@@ -50,9 +52,9 @@ class _PropertyLocationSearchState extends State<PropertyLocationSearch> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        TextField(
+        DefaultTextField(
           controller: _controller,
-          textInputAction: TextInputAction.search,
+          action: TextInputAction.search,
           onSubmitted: (_) => _search(),
           onChanged: (_) => cubit.clearSearch(),
           decoration: InputDecoration(
@@ -106,7 +108,6 @@ class _PropertyLocationSearchState extends State<PropertyLocationSearch> {
               textDirection: TextDirection.ltr,
             ),
             onTap: () {
-              FocusManager.instance.primaryFocus?.unfocus();
               cubit.select(result);
             },
           ),

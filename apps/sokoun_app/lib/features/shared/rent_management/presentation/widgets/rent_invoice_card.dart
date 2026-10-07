@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:melos_core/config/language/languages.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
 import 'package:sokoun_app/features/shared/premium/presentation/widgets/shared/premium_status_badge.dart';
@@ -30,7 +31,7 @@ class RentInvoiceCard extends StatelessWidget {
           PremiumStatusBadge(status: invoice.status),
           if (invoice.dueDate != null)
             AppText(
-              '${LocaleKeys.paidDueDate} ${DateFormat.yMMMd().format(invoice.dueDate!)}',
+              '${LocaleKeys.paidDueDate} ${DateFormat.yMMMd(Languages.currentLanguage.languageCode).format(invoice.dueDate!)}',
             ),
         ],
       ),

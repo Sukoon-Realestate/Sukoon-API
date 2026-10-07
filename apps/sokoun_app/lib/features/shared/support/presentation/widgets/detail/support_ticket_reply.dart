@@ -37,7 +37,6 @@ class _SupportTicketReplyState extends State<SupportTicketReply> {
       return;
     }
     final String submittedBody = _controller.text;
-    FocusScope.of(context).unfocus();
     final SupportTicketContent? ticket = await _cubit.reply(
       id: widget.id,
       body: submittedBody,

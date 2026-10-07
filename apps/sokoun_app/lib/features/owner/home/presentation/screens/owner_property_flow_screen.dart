@@ -230,6 +230,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
   }
 
   void _goToPage(int page) {
+    // Programmatic step changes can leave the previous page's input focused.
     FocusManager.instance.primaryFocus?.unfocus();
     if (!_pageController.hasClients) return;
     final duration = SokounMotion.duration(context, milliseconds: 280);
@@ -253,7 +254,6 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
       return;
     }
     _isReviewOpen = true;
-    FocusManager.instance.primaryFocus?.unfocus();
     try {
       final action = await showModalBottomSheet<PropertyReviewAction>(
         context: context,
@@ -748,6 +748,8 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
                         form: form,
                         listingAssistant: ListingAiEntry(
                           form: form,
+                          propertyId:
+                              (_savedProperty ?? widget.property)?.id ?? '',
                           onApplied: (suggestion) {
                             _titleController.text = suggestion.suggestedTitle;
                             _descriptionController.text =

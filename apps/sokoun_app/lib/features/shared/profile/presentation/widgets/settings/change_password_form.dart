@@ -35,7 +35,6 @@ class _ChangePasswordFormState extends State<ChangePasswordForm> {
     if (_cubit.isLoading) {
       return;
     }
-    FocusScope.of(context).unfocus();
     if (!await _cubit.save(_body) || !context.mounted) return;
     _saved = true;
     Go.back();

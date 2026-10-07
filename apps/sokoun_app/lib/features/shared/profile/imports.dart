@@ -1,4 +1,5 @@
-import 'package:sokoun_app/features/shared/premium/presentation/widgets/premium_dashboard/premium_entry_tile.dart';
+import 'presentation/widgets/contracts/contracts_journey_actions.dart';
+import 'package:sokoun_app/features/shared/digital_leases/presentation/widgets/contract_lease_entry.dart';
 import 'package:melos_core/core/shared/base_state.dart';
 import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 import 'data/profile_json.dart';

@@ -261,6 +261,8 @@ void main() {
         await mount(tester, ProfileScreen(workspace: role, user: _user));
         expect(find.text(LocaleKeys.profile), findsOneWidget);
         expect(find.byType(ProfileHeaderCard), findsOneWidget);
+        expect(find.text(LocaleKeys.toolsTitle), findsNothing);
+        expect(find.byIcon(Icons.apps_outlined), findsNothing);
         expect(find.byType(ProfileVerificationTile), findsOneWidget);
         expect(find.byIcon(Icons.settings_outlined), findsOneWidget);
         expect(find.byIcon(Icons.support_agent_rounded), findsOneWidget);

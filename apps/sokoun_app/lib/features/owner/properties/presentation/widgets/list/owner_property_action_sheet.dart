@@ -35,7 +35,7 @@ class OwnerPropertyActionSheet extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           16.szH,
-          OwnerPropertyPremiumActions(property: property),
+          OwnerPropertyPremiumActions(property: property, inActionSheet: true),
           16.szH,
           for (final action in OwnerPropertyAction.values) ...[
             _OwnerPropertyActionRow(action: action, property: property),

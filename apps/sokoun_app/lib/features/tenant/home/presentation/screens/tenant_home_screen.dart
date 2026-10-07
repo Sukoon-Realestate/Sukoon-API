@@ -8,6 +8,8 @@ class TenantHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => AppScaffold(
+    // TenantHomeContent renders the greeting toolbar inside its paginated
+    // header, so the toolbar and body share one scrolling surface.
     showBackButton: false,
     contentWidth: SokounContentWidth.wide,
     body: const SafeArea(child: TenantHomeContent()),

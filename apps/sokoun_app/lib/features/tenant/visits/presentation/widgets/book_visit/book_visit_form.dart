@@ -132,8 +132,10 @@ class _BookVisitFormState extends State<BookVisitForm> {
                   color: context.appColor(AppColors.sokoonBorder),
                 ),
               ),
-              child: TextField(
+              child: DefaultTextField(
                 controller: widget.noteController,
+                inputType: TextInputType.multiline,
+                action: TextInputAction.newline,
                 maxLines: 3,
                 maxLength: 1000,
                 textAlign: TextAlign.start,

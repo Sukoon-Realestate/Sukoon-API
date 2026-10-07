@@ -1,3 +1,4 @@
+import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
@@ -40,7 +41,7 @@ class SaveSearchButton extends StatelessWidget {
                 const SizedBox(height: 8),
                 AppText(LocaleKeys.freeSavedSearchManual),
                 const SizedBox(height: 12),
-                TextField(
+                DefaultTextField(
                   controller: name,
                   maxLength: 80,
                   decoration: InputDecoration(

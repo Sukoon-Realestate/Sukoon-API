@@ -13,6 +13,9 @@ import 'package:sokoun_app/features/shared/premium/presentation/widgets/shared/p
 import 'package:sokoun_app/features/shared/premium/presentation/widgets/shared/premium_feedback.dart';
 import '../../data/models/digital_lease.dart';
 import '../cubits/lease_action_cubit.dart';
+import 'lease_rent_entry.dart';
+import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
+import 'package:sokoun_app/features/shared/premium/data/enums/premium_status.dart';
 
 class DigitalLeaseDetailsView extends StatefulWidget {
   const DigitalLeaseDetailsView({
@@ -20,8 +23,10 @@ class DigitalLeaseDetailsView extends StatefulWidget {
     required this.lease,
     required this.isFresh,
     required this.onRefresh,
+    required this.workspace,
   });
   final DigitalLease lease;
+  final AppWorkspace workspace;
   final bool isFresh;
   final Future<void> Function() onRefresh;
   @override
@@ -78,6 +83,13 @@ class _DigitalLeaseDetailsViewState extends State<DigitalLeaseDetailsView>
               ),
             16.szH,
             AppText(LocaleKeys.paidLeasesExplanation),
+            if (lease.id.isNotEmpty &&
+                (lease.status == PremiumStatus.signed || lease.status.isActive))
+              LeaseRentEntry(
+                leaseId: lease.id,
+                propertyTitle: lease.propertyTitle,
+                workspace: widget.workspace,
+              ),
             if (PremiumHostedData.httpsUri(lease.documentUrl) != null)
               OutlinedButton(
                 onPressed: () async {

@@ -1,3 +1,4 @@
+import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -51,11 +52,11 @@ class ResultsSearchHeader extends StatelessWidget {
                     size: 20.r,
                   ),
                   Expanded(
-                    child: TextField(
+                    child: DefaultTextField(
                       controller: controller,
-                      onChanged: onChanged,
-                      onSubmitted: onSubmitted,
-                      textInputAction: TextInputAction.search,
+                      onChanged: (value) => onChanged?.call(value ?? ''),
+                      onSubmitted: (value) => onSubmitted?.call(value ?? ''),
+                      action: TextInputAction.search,
                       textAlign: TextAlign.start,
                       style: AppTextStyles.semiBold.copyWith(
                         color: context.appColor(AppColors.sokoonNavy),

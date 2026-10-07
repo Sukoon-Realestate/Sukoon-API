@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
@@ -10,6 +11,9 @@ import 'package:sokoun_app/features/tenant/home/data/tenant_home_data.dart';
 import 'home_property_item.dart';
 import 'tenant_home_header.dart';
 import 'tenant_suggested_properties_empty_state.dart';
+import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
+import 'package:sokoun_app/features/shared/rent_management/presentation/cubits/rent_overview_cubit.dart';
+import 'package:sokoun_app/features/shared/rent_management/presentation/widgets/rent_overview_section.dart';
 
 class TenantHomeContent extends StatefulWidget {
   const TenantHomeContent({super.key});
@@ -24,12 +28,28 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
     _data.readCachedPage()?.banner,
   );
   int _requestGeneration = 0;
+  RentOverviewCubit? _rentCubit;
+  Future<void>? _rentRequest;
+
+  @override
+  void initState() {
+    super.initState();
+    if (WorkspaceNavigation.isAuthenticated) {
+      _rentCubit = RentOverviewCubit();
+      _rentRequest = _refreshRent();
+    }
+  }
+
+  Future<void> _refreshRent() async => _rentCubit?.load();
 
   Future<(List<HomePropertyModel>, PaginationData)> _getPage(
     BuildContext context,
     int page,
   ) async {
-    if (page == 1) _requestGeneration++;
+    if (page == 1) {
+      _requestGeneration++;
+      if (_requestGeneration > 1) unawaited(_refreshRent());
+    }
     final int generation = _requestGeneration;
     final (model, pagination) = await _data.getPage(page: page);
     if (mounted && generation == _requestGeneration && page == 1) {
@@ -41,6 +61,7 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
   @override
   void dispose() {
     _banner.dispose();
+    _rentCubit?.close();
     super.dispose();
   }
 
@@ -56,7 +77,16 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
       rankingType: Ranking.adaptiveGrid,
       header: ValueListenableBuilder<String?>(
         valueListenable: _banner,
-        builder: (context, banner, _) => TenantHomeHeader(banner: banner),
+        builder: (context, banner, _) => TenantHomeHeader(
+          banner: banner,
+          rentOverview: _rentCubit == null
+              ? null
+              : RentOverviewSection(
+                  cubit: _rentCubit!,
+                  request: _rentRequest!,
+                  onRefresh: _refreshRent,
+                ),
+        ),
       ),
       cacheKey: TenantHomeData.cacheKey,
       cacheToJson: (item) => item.toJson(),
