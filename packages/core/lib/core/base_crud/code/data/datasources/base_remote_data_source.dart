@@ -36,6 +36,7 @@ class BaseRemoteDataSourceImpl implements BaseRemoteDataSource {
         body: param.body,
         isFormData: param.isFromData,
         queryParameters: param.queryParameters,
+        headers: param.headers,
         onSendProgress: param.onSendProgress,
         onReceiveProgress: param.onReceiveProgress,
         cancelToken: param.cancelToken,

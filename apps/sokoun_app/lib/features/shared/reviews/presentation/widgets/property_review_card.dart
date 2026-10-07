@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -104,6 +105,8 @@ class PropertyReviewCard extends StatelessWidget {
                   ),
                 ],
               ),
+          if (review.rentalSelection != null)
+            AppText(RentalOfferLabels.accommodation(review.rentalSelection!)),
           if (review.comment.isNotEmpty)
             AppText(review.comment, style: AppTextStyles.regular14),
           if (date != null)

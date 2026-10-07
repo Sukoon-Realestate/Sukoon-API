@@ -73,6 +73,7 @@ abstract final class NotificationNavigation {
         VisitDetailsScreen(
           visit: TenantVisitContent(
             id: targetId,
+            rentalSelection: notification.payload.rentalSelection,
             propertyTitle: notification.detailLocation.isNotEmpty
                 ? notification.detailLocation
                 : notification.title,
@@ -103,6 +104,7 @@ abstract final class NotificationNavigation {
       }
       await Go.to<void>(
         ChatScreen(
+          rentalContext: notification.payload.rentalSelection,
           conversation: ConversationContent(
             id: chatId,
             name: notification.payload.senderName.isNotEmpty
@@ -140,6 +142,7 @@ abstract final class NotificationNavigation {
         VisitDetailsScreen(
           visit: const TenantVisitContent.initial().copyWith(
             id: visitId,
+            rentalSelection: notification.payload.rentalSelection,
             propertyTitle: notification.title,
           ),
         ),
@@ -202,7 +205,14 @@ abstract final class NotificationNavigation {
         (notification.kind == AppNotificationKind.newProperty ||
             notification.kind == AppNotificationKind.propertyUpdate ||
             notification.kind == AppNotificationKind.visitRejected)) {
-      await Go.to<void>(PropertyDetailsScreen(propertyId: propertyId));
+      await Go.to<void>(
+        PropertyDetailsScreen(
+          propertyId: propertyId,
+          offerId: notification.payload.offerId.isEmpty
+              ? null
+              : notification.payload.offerId,
+        ),
+      );
       return;
     }
 

@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
 import '../enums/owner_revenue_status.dart';
 import '../owner_property_json.dart';
 import 'package:equatable/equatable.dart';
@@ -96,6 +97,7 @@ class OwnerRevenueContent extends Equatable {
 
 class OwnerRevenuePropertyContent extends Equatable {
   const OwnerRevenuePropertyContent({
+    this.rentalSelection,
     required this.id,
     required this.title,
     required this.amount,
@@ -106,7 +108,8 @@ class OwnerRevenuePropertyContent extends Equatable {
     this.statusLabel = '',
   });
   const OwnerRevenuePropertyContent.initial()
-    : id = '',
+    : rentalSelection = null,
+      id = '',
       title = '',
       amount = 0,
       dueDate = '',
@@ -116,6 +119,7 @@ class OwnerRevenuePropertyContent extends Equatable {
       statusLabel = '';
   factory OwnerRevenuePropertyContent.fromJson(Map<String, dynamic> json) =>
       OwnerRevenuePropertyContent(
+        rentalSelection: RentalSelection.fromRecord(json),
         id: json['id']?.toString() ?? '',
         title: json['title']?.toString() ?? '',
         amount: EgyptianPound.parseAmount(json['amount'])?.toDouble() ?? 0,
@@ -125,12 +129,17 @@ class OwnerRevenuePropertyContent extends Equatable {
         currency: json['currency']?.toString() ?? '',
         statusLabel: json['status_label']?.toString() ?? '',
       );
+  final RentalSelection? rentalSelection;
   final String id, title, dueDate, formattedAmount, currency, statusLabel;
   final double amount;
   final OwnerRevenueStatus status;
   String get amountLabel => EgyptianPound.formatAmount(amount);
   Map<String, dynamic> toJson() => {
     'id': id,
+    if (rentalSelection != null) ...{
+      'offer_id': rentalSelection!.offerId,
+      'offer_snapshot': rentalSelection!.toJson(),
+    },
     'title': title,
     'amount': amount,
     'due_date': dueDate,
@@ -140,6 +149,7 @@ class OwnerRevenuePropertyContent extends Equatable {
     'status_label': statusLabel,
   };
   OwnerRevenuePropertyContent copyWith({
+    RentalSelection? rentalSelection,
     String? id,
     String? title,
     double? amount,
@@ -149,6 +159,7 @@ class OwnerRevenuePropertyContent extends Equatable {
     String? currency,
     String? statusLabel,
   }) => OwnerRevenuePropertyContent(
+    rentalSelection: rentalSelection ?? this.rentalSelection,
     id: id ?? this.id,
     title: title ?? this.title,
     amount: amount ?? this.amount,
@@ -160,6 +171,7 @@ class OwnerRevenuePropertyContent extends Equatable {
   );
   @override
   List<Object?> get props => [
+    rentalSelection,
     id,
     title,
     amount,
@@ -173,6 +185,7 @@ class OwnerRevenuePropertyContent extends Equatable {
 
 class OwnerTransactionContent extends Equatable {
   const OwnerTransactionContent({
+    this.rentalSelection,
     required this.id,
     required this.title,
     required this.date,
@@ -184,7 +197,8 @@ class OwnerTransactionContent extends Equatable {
     bool? isCredit,
   }) : _isCredit = isCredit;
   const OwnerTransactionContent.initial()
-    : id = '',
+    : rentalSelection = null,
+      id = '',
       title = '',
       date = '',
       amount = 0,
@@ -195,6 +209,7 @@ class OwnerTransactionContent extends Equatable {
       _isCredit = null;
   factory OwnerTransactionContent.fromJson(Map<String, dynamic> json) =>
       OwnerTransactionContent(
+        rentalSelection: RentalSelection.fromRecord(json),
         id: json['id']?.toString() ?? '',
         title: json['title']?.toString() ?? '',
         date: json['date']?.toString() ?? '',
@@ -205,6 +220,7 @@ class OwnerTransactionContent extends Equatable {
         type: json['type']?.toString() ?? '',
         isCredit: json['is_credit'] as bool?,
       );
+  final RentalSelection? rentalSelection;
   final String id, title, date, formattedAmount, currency, dateIso, type;
   final double amount;
   final bool? _isCredit;
@@ -212,6 +228,10 @@ class OwnerTransactionContent extends Equatable {
   String get amountLabel => EgyptianPound.formatAmount(amount.abs());
   Map<String, dynamic> toJson() => {
     'id': id,
+    if (rentalSelection != null) ...{
+      'offer_id': rentalSelection!.offerId,
+      'offer_snapshot': rentalSelection!.toJson(),
+    },
     'title': title,
     'date': date,
     'amount': amount,
@@ -222,6 +242,7 @@ class OwnerTransactionContent extends Equatable {
     if (_isCredit != null) 'is_credit': _isCredit,
   };
   OwnerTransactionContent copyWith({
+    RentalSelection? rentalSelection,
     String? id,
     String? title,
     String? date,
@@ -232,6 +253,7 @@ class OwnerTransactionContent extends Equatable {
     String? type,
     bool? isCredit,
   }) => OwnerTransactionContent(
+    rentalSelection: rentalSelection ?? this.rentalSelection,
     id: id ?? this.id,
     title: title ?? this.title,
     date: date ?? this.date,
@@ -244,6 +266,7 @@ class OwnerTransactionContent extends Equatable {
   );
   @override
   List<Object?> get props => [
+    rentalSelection,
     id,
     title,
     date,

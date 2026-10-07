@@ -192,6 +192,13 @@ void main() {
           final bool usesDomainId = RegExp(
             r'\.\s*id\b|\b[A-Za-z_][A-Za-z0-9_]*Id\b',
           ).hasMatch(identity);
+          // Rental reference getters resolve to a permanent ID or a stable
+          // client draft key. They preserve room/bed/offer fields during reorder
+          // and reset the conditional form when its accommodation changes.
+          final bool usesRentalReference =
+              identity.contains('.reference') &&
+              (file.path.contains('/rental_offers/') ||
+                  file.path.contains('/owner/home/'));
           final bool resetsOwnedState =
               identity.contains('ResetKey') ||
               identity.contains('dropdownGeneration');
@@ -199,7 +206,10 @@ void main() {
               source.contains('AnimatedSwitcher(') &&
               (identity.contains('update-loading') ||
                   identity.contains('update-idle'));
-          if (!usesDomainId && !resetsOwnedState && !switchesAnimatedState) {
+          if (!usesDomainId &&
+              !usesRentalReference &&
+              !resetsOwnedState &&
+              !switchesAnimatedState) {
             violations.add(
               '${_relativePath(file)} uses ValueKey($identity) without stable identity',
             );

@@ -11,6 +11,8 @@ import 'package:sokoun_app/features/tenant/home/data/tenant_home_data.dart';
 import 'home_property_item.dart';
 import 'tenant_home_header.dart';
 import 'tenant_suggested_properties_empty_state.dart';
+import '../rental_home/rental_home_sections.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/rental_offer_capabilities.dart';
 import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
 import 'package:sokoun_app/features/shared/rent_management/presentation/cubits/rent_overview_cubit.dart';
 import 'package:sokoun_app/features/shared/rent_management/presentation/widgets/rent_overview_section.dart';
@@ -28,6 +30,7 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
     _data.readCachedPage()?.banner,
   );
   int _requestGeneration = 0;
+  final ValueNotifier<int> _sectionRefresh = ValueNotifier(0);
   RentOverviewCubit? _rentCubit;
   Future<void>? _rentRequest;
 
@@ -48,7 +51,10 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
   ) async {
     if (page == 1) {
       _requestGeneration++;
-      if (_requestGeneration > 1) unawaited(_refreshRent());
+      if (_requestGeneration > 1) {
+        unawaited(_refreshRent());
+        _sectionRefresh.value++;
+      }
     }
     final int generation = _requestGeneration;
     final (model, pagination) = await _data.getPage(page: page);
@@ -61,6 +67,8 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
   @override
   void dispose() {
     _banner.dispose();
+    _sectionRefresh.dispose();
+    _controller.dispose();
     _rentCubit?.close();
     super.dispose();
   }
@@ -71,6 +79,7 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
     child: AppPagify<HomePropertyModel>(
       enablePullRefresh: true,
       pagifyController: _controller,
+      disposeController: false,
       asyncCall: _getPage,
       shrinkWrap: false,
       physics: const AlwaysScrollableScrollPhysics(),
@@ -79,6 +88,13 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
         valueListenable: _banner,
         builder: (context, banner, _) => TenantHomeHeader(
           banner: banner,
+          rentalSections: RentalOfferCapabilities.configured.canSearch
+              ? ValueListenableBuilder<int>(
+                  valueListenable: _sectionRefresh,
+                  builder: (context, generation, _) =>
+                      RentalHomeSections(refreshGeneration: generation),
+                )
+              : null,
           rentOverview: _rentCubit == null
               ? null
               : RentOverviewSection(

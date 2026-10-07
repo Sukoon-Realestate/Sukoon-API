@@ -131,7 +131,7 @@ class PropertyNavigation implements NotificationNavigation {
   void navigate({required Map<String, dynamic> data}) {
     final NotificationPayload payload = NotificationPayload.fromMap(data);
     NotificationRoutes._navigate(
-      _notificationRouteWithId('/properties', payload.propertyId),
+      '${_notificationRouteWithId('/properties', payload.propertyId)}${payload.offerId.isEmpty ? '' : '?offer_id=${Uri.encodeQueryComponent(payload.offerId)}'}',
       data: data,
     );
   }

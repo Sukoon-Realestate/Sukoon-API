@@ -1,3 +1,9 @@
+import 'package:melos_core/core/widgets/app_text.dart';
+import '../../data/owner_accommodation_draft_data.dart';
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
+import 'package:melos_core/core/shared/base_state.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/rental_draft_editing.dart';
+import '../widgets/owner_add_property/rental_scope_selector.dart';
 import 'package:sokoun_app/features/owner/ai_assistant/presentation/widgets/listing_ai_entry.dart';
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +13,7 @@ import '../../data/owner_draft_data.dart';
 import '../../data/models/owner_property_draft.dart';
 import '../../data/enums/owner_draft_action.dart';
 import '../cubits/owner_draft_cubit.dart';
+import '../cubits/owner_property_photos_cubit.dart';
 import '../widgets/owner_add_property/owner_draft_dialog.dart';
 import '../widgets/owner_add_property/owner_draft_save_warning.dart';
 import '../../data/models/property_location.dart';
@@ -34,9 +41,10 @@ import '../cubits/upload_property_images_cubit.dart';
 import '../widgets/owner_add_property/imports.dart';
 
 class OwnerPropertyFlowScreen extends StatefulWidget {
-  const OwnerPropertyFlowScreen({super.key, this.property});
+  const OwnerPropertyFlowScreen({super.key, this.property, this.offerId});
 
   final PropertyDetailsModel? property;
+  final String? offerId;
 
   @override
   State<OwnerPropertyFlowScreen> createState() =>
@@ -51,6 +59,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
   bool _restoringDraft = false;
   final ValueNotifier<int> _currentStep = ValueNotifier(0);
   PropertySubmissionCubit? _submissionCubit;
+  OwnerPropertyPhotosCubit? _photosCubit;
   UploadPropertyImagesCubit? _uploadPropertyImagesCubit;
   PropertyDetailsModel? _savedProperty;
   OwnerAddPropertyFormState? _savedForm;
@@ -80,9 +89,14 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
     final PropertyDetailsModel? property = widget.property;
     final OwnerPropertyFormSeed? seed = property == null
         ? null
-        : OwnerAddPropertyMapper.fromProperty(property);
+        : OwnerAddPropertyMapper.fromProperty(
+            property,
+            offerId: widget.offerId,
+          );
     _formNotifier = ValueNotifier<OwnerAddPropertyFormState>(
-      seed?.form ?? OwnerAddPropertyFormState.initial(),
+      (seed?.form ?? OwnerAddPropertyFormState.initial()).copyWith(
+        submissionKey: RentalDraftEditing.key(),
+      ),
     );
     _selectedGovernorate = seed?.governorate;
     _selectedCity = seed?.city;
@@ -118,6 +132,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
     _formNotifier.dispose();
     _isSubmitting.dispose();
     _submissionCubit?.close();
+    _photosCubit?.close();
     _uploadPropertyImagesCubit?.close();
     _titleController.dispose();
     _streetController.dispose();
@@ -227,6 +242,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
     if (_isSubmitting.value) return;
     _hasChanges = true;
     _formNotifier.value = update();
+    _syncControllers();
   }
 
   void _goToPage(int page) {
@@ -255,6 +271,26 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
     }
     _isReviewOpen = true;
     try {
+      _isSubmitting.value = true;
+      final checked = await (_photosCubit ??= OwnerPropertyPhotosCubit()).check(
+        _form.photoDrafts,
+      );
+      if (!mounted) return;
+      _isSubmitting.value = false;
+      if (checked == null) return;
+      if (checked.photos.indexed.any(
+        (entry) => !identical(entry.$2, _form.photoDrafts[entry.$1]),
+      )) {
+        _updateForm(() => _form.copyWith(photoDrafts: checked.photos));
+      }
+      if (checked.hasDuplicates) {
+        Messages.showToast(
+          msg: LocaleKeys.rentalDuplicatePhotos,
+          status: BaseStatus.error,
+        );
+        _goToPage(1);
+        return;
+      }
       final action = await showModalBottomSheet<PropertyReviewAction>(
         context: context,
         isScrollControlled: true,
@@ -279,19 +315,24 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
       }
     } finally {
       _isReviewOpen = false;
+      if (mounted) _isSubmitting.value = false;
     }
   }
 
   void _syncControllers() {
-    _titleController.text = _form.title;
-    _streetController.text = _form.street;
-    _bedroomsController.text = _form.bedrooms;
-    _bathroomsController.text = _form.bathrooms;
-    _spaceController.text = _form.space;
-    _floorController.text = _form.floor;
-    _monthlyPriceController.text = _form.monthlyPrice;
-    _rentalDurationController.text = _form.rentalDuration;
-    _descriptionController.text = _form.description;
+    for (final entry in {
+      _titleController: _form.title,
+      _streetController: _form.street,
+      _bedroomsController: _form.bedrooms,
+      _bathroomsController: _form.bathrooms,
+      _spaceController: _form.space,
+      _floorController: _form.floor,
+      _monthlyPriceController: _form.monthlyPrice,
+      _rentalDurationController: _form.rentalDuration,
+      _descriptionController: _form.description,
+    }.entries) {
+      if (entry.key.text != entry.value) entry.key.text = entry.value;
+    }
   }
 
   void _resetFlow() {
@@ -302,7 +343,9 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
     _selectedGovernorate = null;
     _selectedCity = null;
     _locationDropdownGeneration++;
-    _formNotifier.value = OwnerAddPropertyFormState.initial();
+    _formNotifier.value = OwnerAddPropertyFormState.initial().copyWith(
+      submissionKey: RentalDraftEditing.key(),
+    );
     _syncControllers();
     if (_pageController.hasClients) {
       _pageController.jumpToPage(0);
@@ -345,20 +388,26 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
   }
 
   Future<void> _addPhotos() async {
-    if (_form.photoCount >= OwnerAddPropertyContent.maxPhotoCount) {
+    if (_isSubmitting.value ||
+        _form.photoCount >= OwnerAddPropertyContent.maxPhotoCount) {
       return;
     }
     final int remaining =
         OwnerAddPropertyContent.maxPhotoCount - _form.photoCount;
     final List<File> selectedPhotos = await Helpers.getImages(limit: remaining);
-    if (!mounted || selectedPhotos.isEmpty) {
+    if (!mounted || _isSubmitting.value || selectedPhotos.isEmpty) {
       return;
     }
     final List<OwnerPropertyPhotoDraft> photoDrafts = [
       ..._form.photoDrafts,
       ...selectedPhotos
           .take(remaining)
-          .map((photo) => OwnerPropertyPhotoDraft(file: photo)),
+          .map(
+            (photo) => OwnerPropertyPhotoDraft(
+              file: photo,
+              draftKey: RentalDraftEditing.key(),
+            ),
+          ),
     ];
     _updateForm(() => _form.copyWith(photoDrafts: photoDrafts));
   }
@@ -368,24 +417,52 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
       return;
     }
     if (!_form.photoDrafts[index].canRemove) return;
+    final removed = _form.photoDrafts[index];
+    final removedId = removed.existingId;
     final List<OwnerPropertyPhotoDraft> photoDrafts =
         List<OwnerPropertyPhotoDraft>.of(_form.photoDrafts)..removeAt(index);
-    _updateForm(() => _form.copyWith(photoDrafts: photoDrafts));
+    _updateForm(
+      () => _form.copyWith(
+        photoDrafts: photoDrafts,
+        rentalInventory: RentalDraftEditing.withoutMedia(
+          RentalDraftEditing.withoutMedia(
+            _form.rentalInventory,
+            removed.reference,
+          ),
+          removedId,
+        ),
+      ),
+    );
   }
 
   Future<void> _replacePhoto(int index) async {
-    if (index < 0 || index >= _form.photoCount) return;
+    if (_isSubmitting.value || index < 0 || index >= _form.photoCount) return;
     final OwnerPropertyPhotoDraft current = _form.photoDrafts[index];
     final File? replacement = await Helpers.getImage();
-    if (!mounted || replacement == null) return;
+    if (!mounted ||
+        _isSubmitting.value ||
+        replacement == null ||
+        index >= _form.photoCount ||
+        _form.photoDrafts[index] != current) {
+      return;
+    }
     final List<OwnerPropertyPhotoDraft> photoDrafts =
         List<OwnerPropertyPhotoDraft>.of(_form.photoDrafts);
     photoDrafts[index] = current.copyWith(
       file: replacement,
       existingId: '',
       existingUrl: '',
+      contentFingerprint: '',
     );
-    _updateForm(() => _form.copyWith(photoDrafts: photoDrafts));
+    _updateForm(
+      () => _form.copyWith(
+        photoDrafts: photoDrafts,
+        rentalInventory: RentalDraftEditing.withoutMedia(
+          _form.rentalInventory,
+          current.existingId,
+        ),
+      ),
+    );
   }
 
   void _movePhoto(({int from, int to}) move) {
@@ -433,6 +510,24 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
   }
 
   Future<void> _submitForReview() async {
+    if (_isSubmitting.value) return;
+    if (!_form.canSaveToServer()) {
+      _isSubmitting.value = true;
+      try {
+        await _persistDraft();
+        if (mounted) Messages.showToast(msg: LocaleKeys.rentalDraftSaved);
+      } catch (_) {
+        if (mounted) {
+          Messages.showToast(
+            msg: LocaleKeys.freeLocalSaveFailed,
+            status: BaseStatus.error,
+          );
+        }
+      } finally {
+        if (mounted) _isSubmitting.value = false;
+      }
+      return;
+    }
     if (_isSubmitting.value ||
         !_form.isBasicsReady ||
         !_form.isPhotosReady ||
@@ -491,6 +586,12 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
   }
 
   Future<bool> _saveProperty() async {
+    if (_form.submissionKey.isEmpty) {
+      _formNotifier.value = _form.copyWith(
+        submissionKey: RentalDraftEditing.key(),
+      );
+    }
+    if (_form.needsOfferCapability) await _persistDraft();
     final OwnerAddPropertyFormState form = _form;
     if (identical(_savedForm, form)) return true;
     final PropertyDetailsModel? property = _savedProperty ?? widget.property;
@@ -503,6 +604,11 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
       onSuccess: (response) {
         if (!mounted) return;
         _savedProperty = response;
+        if (response.rentalInventory != null) {
+          _formNotifier.value = _form.copyWith(
+            rentalInventory: response.rentalInventory,
+          );
+        }
         _submissionMessage = cubit.state.msg ?? '';
         final OwnerPropertyPhotoDraft? mainPhoto = form.photoDrafts.firstOrNull;
         if (mainPhoto?.file != null && response.mainImage.isNotEmpty) {
@@ -534,6 +640,16 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
         wasSaved = true;
       },
     );
+    if (!wasSaved && cubit.recoveryProperty != null) {
+      _savedProperty = cubit.recoveryProperty;
+      await _persistDraft();
+      if (mounted) {
+        Messages.showToast(
+          msg: cubit.state.msg ?? LocaleKeys.rentalIncompatibleResponse,
+          status: BaseStatus.error,
+        );
+      }
+    }
     if (wasSaved) {
       _savedForm = _form;
       await _persistDraft();
@@ -554,6 +670,8 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
       existingUrl: image.image,
       name: image.name,
       description: image.description,
+      contentFingerprint: photo.contentFingerprint,
+      draftKey: photo.reference,
     );
     _formNotifier.value = _form.copyWith(photoDrafts: photos);
     _savedForm = _form;
@@ -623,11 +741,22 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
               2 => LocaleKeys.ownerAddPropertyPricingTitle,
               _ => null,
             },
+            titleWidget: step == 0
+                ? _listenToForm(
+                    (form) => AppText(
+                      RentalOfferLabels.formTitle(
+                        form.rentalScope,
+                        editing: _isEditing,
+                      ),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                : null,
             showBackButton: step < 3,
             actions: [
               if (step < 3 && UserModel.currentUser?.id.isNotEmpty == true)
                 IconButton(
-                  tooltip: LocaleKeys.freeSaveDraft,
+                  tooltip: LocaleKeys.rentalSaveLocalDraft,
                   icon: const Icon(Icons.save_outlined),
                   onPressed: isSubmitting
                       ? null
@@ -636,7 +765,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
                             await _persistDraft();
                             if (mounted) {
                               Messages.showToast(
-                                msg: LocaleKeys.freeDraftSaved,
+                                msg: LocaleKeys.rentalDraftSaved,
                               );
                             }
                           } catch (_) {
@@ -668,7 +797,34 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
                   children: [
                     _listenToForm(
                       (form) => AddPropertyBasicsPage(
+                        key: ValueKey((
+                          form.rentalScope,
+                          form.selectedOffer?.reference,
+                        )),
                         form: form,
+                        onFormChanged: (changed) => _updateForm(() => changed),
+                        rentalScopeSelector: RentalScopeSelector(
+                          inventory: form.rentalInventory,
+                          selectedScope: form.rentalScope,
+                          showLocalNotice: false,
+                          selectedOfferPersisted:
+                              form.selectedOffer?.id.isNotEmpty == true,
+                          onScopeSelected: (scope) {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            _updateForm(
+                              () => OwnerAccommodationDraftData.chooseScope(
+                                _form,
+                                scope,
+                              ),
+                            );
+                          },
+                          onChanged: (inventory) => _updateForm(
+                            () => _form.copyWith(rentalInventory: inventory),
+                          ),
+                          onLegacy: () => _updateForm(
+                            () => _form.copyWith(clearRentalInventory: true),
+                          ),
+                        ),
                         titleController: _titleController,
                         streetController: _streetController,
                         bedroomsController: _bedroomsController,
@@ -710,6 +866,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
                       (form) => AddPropertyPhotosPage(
                         form: form,
                         photos: form.photoDrafts,
+                        onFormChanged: (changed) => _updateForm(() => changed),
                         isReady: form.isPhotosReady,
                         onAddPhotos: _addPhotos,
                         onRemovePhoto: _removePhoto,
@@ -746,22 +903,27 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
                     _listenToForm(
                       (form) => AddPropertyPricingPage(
                         form: form,
-                        listingAssistant: ListingAiEntry(
-                          form: form,
-                          propertyId:
-                              (_savedProperty ?? widget.property)?.id ?? '',
-                          onApplied: (suggestion) {
-                            _titleController.text = suggestion.suggestedTitle;
-                            _descriptionController.text =
-                                suggestion.suggestedDescription;
-                            _updateForm(
-                              () => _form.copyWith(
-                                title: suggestion.suggestedTitle,
-                                description: suggestion.suggestedDescription,
+                        listingAssistant: form.rentalInventory != null
+                            ? null
+                            : ListingAiEntry(
+                                form: form,
+                                propertyId:
+                                    (_savedProperty ?? widget.property)?.id ??
+                                    '',
+                                onApplied: (suggestion) {
+                                  _titleController.text =
+                                      suggestion.suggestedTitle;
+                                  _descriptionController.text =
+                                      suggestion.suggestedDescription;
+                                  _updateForm(
+                                    () => _form.copyWith(
+                                      title: suggestion.suggestedTitle,
+                                      description:
+                                          suggestion.suggestedDescription,
+                                    ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
                         monthlyPriceController: _monthlyPriceController,
                         rentalDurationController: _rentalDurationController,
                         descriptionController: _descriptionController,
@@ -829,6 +991,14 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
                 }
               },
             ),
+          _listenToForm(
+            (form) => !form.canSaveToServer()
+                ? Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: AppText(LocaleKeys.rentalLocalOnly),
+                  )
+                : const SizedBox.shrink(),
+          ),
           Expanded(child: child),
         ],
       ),

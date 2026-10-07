@@ -183,74 +183,78 @@ class _AddPropertyAdditionalDetailsState
             widget.form.copyWith(buildingYear: value),
           ),
         ),
-        AppText(LocaleKeys.ownerAddPropertyDeposit),
-        AddPropertyChipWrap(
-          chips: [
-            for (final entry in {
-              'none': LocaleKeys.ownerAddPropertyNoDeposit,
-              'half_month': LocaleKeys.ownerAddPropertyHalfMonth,
-              'one_month': LocaleKeys.ownerAddPropertyOneMonth,
-              'two_months': LocaleKeys.ownerAddPropertyTwoMonths,
-              '': LocaleKeys.ownerAddPropertyCustomDeposit,
-            }.entries)
-              AddPropertyChipContent(
-                label: entry.value,
-                value: entry.key,
-                isSelected: entry.key.isEmpty
-                    ? !_depositPresets.contains(widget.form.deposit)
-                    : widget.form.deposit == entry.key,
-              ),
-          ],
-          onChipTap: (chip) => widget.onDetailsChanged(
-            widget.form.copyWith(deposit: chip.value),
-          ),
-        ),
-        if (!_depositPresets.contains(widget.form.deposit))
-          AddPropertyField(
-            key: widget.depositFieldKey,
-            field: AddPropertyFieldContent(
-              label: LocaleKeys.ownerAddPropertyDeposit,
-              value: '',
-            ),
-            controller: _deposit,
-            hint: LocaleKeys.ownerAddPropertyDepositHint,
-            isRequired: false,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [
-              const LocalizedDigitsFormatter(allowDecimal: true),
+        if (!widget.form.isPartialOffering) ...[
+          AppText(LocaleKeys.ownerAddPropertyDeposit),
+          AddPropertyChipWrap(
+            chips: [
+              for (final entry in {
+                'none': LocaleKeys.ownerAddPropertyNoDeposit,
+                'half_month': LocaleKeys.ownerAddPropertyHalfMonth,
+                'one_month': LocaleKeys.ownerAddPropertyOneMonth,
+                'two_months': LocaleKeys.ownerAddPropertyTwoMonths,
+                '': LocaleKeys.ownerAddPropertyCustomDeposit,
+              }.entries)
+                AddPropertyChipContent(
+                  label: entry.value,
+                  value: entry.key,
+                  isSelected: entry.key.isEmpty
+                      ? !_depositPresets.contains(widget.form.deposit)
+                      : widget.form.deposit == entry.key,
+                ),
             ],
-            validator: (_) => widget.form.isDepositReady
-                ? null
-                : LocaleKeys.ownerAddPropertyDepositInvalid,
-            onChanged: (value) =>
-                widget.onDetailsChanged(widget.form.copyWith(deposit: value)),
-          ),
-        AppText(LocaleKeys.ownerAddPropertySmokingQuestion),
-        AddPropertyChipWrap(
-          chips: [
-            AddPropertyChipContent(
-              label: LocaleKeys.tenantPropertyDetailsSmokingAllowed,
-              value: 'allowed',
-              isSelected: widget.form.smokingAllowed == true,
-            ),
-            AddPropertyChipContent(
-              label: LocaleKeys.tenantPropertyDetailsSmokingNotAllowed,
-              value: 'not_allowed',
-              isSelected: widget.form.smokingAllowed == false,
-            ),
-            AddPropertyChipContent(
-              label: LocaleKeys.ownerAddPropertyNotSpecified,
-              value: 'unspecified',
-              isSelected: widget.form.smokingAllowed == null,
-            ),
-          ],
-          onChipTap: (chip) => widget.onDetailsChanged(
-            widget.form.copyWith(
-              smokingAllowed: chip.value == 'allowed',
-              clearSmokingAllowed: chip.value == 'unspecified',
+            onChipTap: (chip) => widget.onDetailsChanged(
+              widget.form.copyWith(deposit: chip.value),
             ),
           ),
-        ),
+          if (!_depositPresets.contains(widget.form.deposit))
+            AddPropertyField(
+              key: widget.depositFieldKey,
+              field: AddPropertyFieldContent(
+                label: LocaleKeys.ownerAddPropertyDeposit,
+                value: '',
+              ),
+              controller: _deposit,
+              hint: LocaleKeys.ownerAddPropertyDepositHint,
+              isRequired: false,
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
+              inputFormatters: [
+                const LocalizedDigitsFormatter(allowDecimal: true),
+              ],
+              validator: (_) => widget.form.isDepositReady
+                  ? null
+                  : LocaleKeys.ownerAddPropertyDepositInvalid,
+              onChanged: (value) =>
+                  widget.onDetailsChanged(widget.form.copyWith(deposit: value)),
+            ),
+          AppText(LocaleKeys.ownerAddPropertySmokingQuestion),
+          AddPropertyChipWrap(
+            chips: [
+              AddPropertyChipContent(
+                label: LocaleKeys.tenantPropertyDetailsSmokingAllowed,
+                value: 'allowed',
+                isSelected: widget.form.smokingAllowed == true,
+              ),
+              AddPropertyChipContent(
+                label: LocaleKeys.tenantPropertyDetailsSmokingNotAllowed,
+                value: 'not_allowed',
+                isSelected: widget.form.smokingAllowed == false,
+              ),
+              AddPropertyChipContent(
+                label: LocaleKeys.ownerAddPropertyNotSpecified,
+                value: 'unspecified',
+                isSelected: widget.form.smokingAllowed == null,
+              ),
+            ],
+            onChipTap: (chip) => widget.onDetailsChanged(
+              widget.form.copyWith(
+                smokingAllowed: chip.value == 'allowed',
+                clearSmokingAllowed: chip.value == 'unspecified',
+              ),
+            ),
+          ),
+        ],
         AppText(LocaleKeys.ownerAddPropertyProofTitle),
         AppText(
           LocaleKeys.ownerAddPropertyProofInternal,

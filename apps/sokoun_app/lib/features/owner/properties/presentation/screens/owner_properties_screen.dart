@@ -18,6 +18,9 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
   final ValueNotifier<bool> _isLoadingPropertyDetails = ValueNotifier<bool>(
     false,
   );
+  final ValueNotifier<RentalListingCategory> _category = ValueNotifier(
+    RentalListingCategory.all,
+  );
 
   @override
   void initState() {
@@ -31,6 +34,7 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
   void dispose() {
     _isLoadingPropertyDetails.dispose();
     _selectedFilter.dispose();
+    _category.dispose();
     super.dispose();
   }
 
@@ -41,6 +45,9 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
     _pagifyController = PagifyController<OwnerPropertyContent>();
     _selectedFilter.value = filter;
   }
+
+  void _selectCategory(RentalListingCategory category) =>
+      _category.value = category;
 
   Future<void> _openAddProperty() async {
     final bool? shouldReturnToProperties = await Go.to<bool>(
@@ -53,7 +60,10 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
     }
   }
 
-  Future<void> _openEdit(OwnerPropertyContent property) async {
+  Future<void> _openEdit(
+    OwnerPropertyContent property, {
+    String? offerId,
+  }) async {
     final PropertyDetailsModel? details = await _loadPropertyDetails(
       property.id,
     );
@@ -61,7 +71,7 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
       return;
     }
     final PropertyDetailsModel? updated = await Go.to<PropertyDetailsModel>(
-      OwnerPropertyFlowScreen(property: details),
+      OwnerPropertyFlowScreen(property: details, offerId: offerId),
     );
     if (updated == null || !mounted) {
       return;
@@ -106,11 +116,14 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
       location: location.isEmpty ? property.location : location,
       monthlyPrice: EgyptianPound.parseAmount(details.price) ?? 0,
       pricePeriod: details.pricePeriod,
+      propertyType: details.propertyType,
       bedrooms: details.bedrooms,
       area: details.area,
       description: details.description,
       photoCount: details.imageUrls.length,
       status: OwnerPropertyStatusX.fromName(details.status),
+      rentalInventory: details.rentalInventory,
+      rentalSummary: details.rentalSummary,
     );
   }
 
@@ -161,7 +174,7 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
       length: OwnerPropertyFilter.values.length,
       animationDuration: SokounMotion.duration(context, milliseconds: 240),
       child: AppScaffold(
-        title: LocaleKeys.ownerPropertiesTitle,
+        title: LocaleKeys.rentalManageListings,
         showBackButton: true,
         actions: [
           IconButton(
@@ -189,15 +202,26 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
                       onFilterSelected: _selectFilter,
                     ),
                     Expanded(
-                      child: OwnerPropertiesList(
-                        key: ValueKey(statusId),
-                        filter: filter,
-                        initialProperties: _fixtureProperties,
-                        pagifyController: _pagifyController,
-                        onAddPressed: _openAddProperty,
-                        onEditPressed: _openEdit,
-                        onRejectedPressed: _openRejection,
-                        onDeletePressed: _deleteProperty,
+                      child: ValueListenableBuilder<RentalListingCategory>(
+                        valueListenable: _category,
+                        builder: (context, category, _) => OwnerPropertiesList(
+                          key: ValueKey(statusId),
+                          category: category,
+                          onCategorySelected: _selectCategory,
+                          filter: filter,
+                          initialProperties: _fixtureProperties,
+                          pagifyController: _pagifyController,
+                          onAddPressed: _openAddProperty,
+                          onEditPressed: _openEdit,
+                          onEditOfferPressed: (property, id) =>
+                              _openEdit(property, offerId: id),
+                          onRejectedPressed: _openRejection,
+                          onDeletePressed: _deleteProperty,
+                          onInventoryChanged: (property, updated) =>
+                              _replaceProperty(
+                                _mergePropertyDetails(property, updated),
+                              ),
+                        ),
                       ),
                     ),
                   ],

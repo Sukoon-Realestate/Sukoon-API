@@ -26,6 +26,9 @@ class VisitRequestReviewSheet extends StatelessWidget {
             style: AppTextStyles.bold.copyWith(fontSize: 18),
           ),
           const SizedBox(height: 16),
+          if (property.selection != null)
+            RentalSelectionPanel(selection: property.selection!),
+          if (property.hasRentalOffers) AppText(LocaleKeys.rentalViewingOnly),
           VisitSummaryCard(
             rows: [
               (

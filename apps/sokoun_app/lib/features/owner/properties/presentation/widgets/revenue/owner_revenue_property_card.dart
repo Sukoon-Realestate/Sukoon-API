@@ -53,6 +53,10 @@ class OwnerRevenuePropertyCard extends StatelessWidget {
                     height: 1.45,
                   ),
                 ),
+                if (item.rentalSelection != null)
+                  AppText(
+                    RentalOfferLabels.accommodation(item.rentalSelection!),
+                  ),
               ],
             ),
           ),

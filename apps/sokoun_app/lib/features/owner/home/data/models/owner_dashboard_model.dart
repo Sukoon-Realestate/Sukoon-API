@@ -1,7 +1,9 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
 import 'package:equatable/equatable.dart';
 
 class OwnerDashboardModel extends Equatable {
   const OwnerDashboardModel({
+    this.activeOffers,
     required this.owner,
     required this.visitsThisWeek,
     required this.activeProperties,
@@ -11,7 +13,8 @@ class OwnerDashboardModel extends Equatable {
   });
 
   const OwnerDashboardModel.initial()
-    : owner = const OwnerDashboardOwnerModel.initial(),
+    : activeOffers = null,
+      owner = const OwnerDashboardOwnerModel.initial(),
       visitsThisWeek = 0,
       activeProperties = 0,
       overallRating = 0,
@@ -21,6 +24,9 @@ class OwnerDashboardModel extends Equatable {
   factory OwnerDashboardModel.fromJson(Map<String, dynamic> json) {
     final Object? ownerJson = json['owner'];
     return OwnerDashboardModel(
+      activeOffers: json['active_offers'] is num
+          ? (json['active_offers'] as num).toInt()
+          : null,
       owner: ownerJson is Map<String, dynamic>
           ? OwnerDashboardOwnerModel.fromJson(ownerJson)
           : const OwnerDashboardOwnerModel.initial(),
@@ -37,6 +43,7 @@ class OwnerDashboardModel extends Equatable {
     );
   }
 
+  final int? activeOffers;
   final OwnerDashboardOwnerModel owner;
   final int visitsThisWeek;
   final int activeProperties;
@@ -45,6 +52,7 @@ class OwnerDashboardModel extends Equatable {
   final List<OwnerDashboardPendingVisitModel> pendingVisits;
 
   Map<String, dynamic> toJson() => {
+    if (activeOffers != null) 'active_offers': activeOffers,
     'owner': owner.toJson(),
     'visits_this_week': visitsThisWeek,
     'active_properties': activeProperties,
@@ -56,6 +64,7 @@ class OwnerDashboardModel extends Equatable {
   };
 
   OwnerDashboardModel copyWith({
+    int? activeOffers,
     OwnerDashboardOwnerModel? owner,
     int? visitsThisWeek,
     int? activeProperties,
@@ -64,6 +73,7 @@ class OwnerDashboardModel extends Equatable {
     List<OwnerDashboardPendingVisitModel>? pendingVisits,
   }) {
     return OwnerDashboardModel(
+      activeOffers: activeOffers ?? this.activeOffers,
       owner: owner ?? this.owner,
       visitsThisWeek: visitsThisWeek ?? this.visitsThisWeek,
       activeProperties: activeProperties ?? this.activeProperties,
@@ -75,6 +85,7 @@ class OwnerDashboardModel extends Equatable {
 
   @override
   List<Object?> get props => [
+    activeOffers,
     owner,
     visitsThisWeek,
     activeProperties,
@@ -133,6 +144,7 @@ class OwnerDashboardOwnerModel extends Equatable {
 
 class OwnerDashboardPendingVisitModel extends Equatable {
   const OwnerDashboardPendingVisitModel({
+    this.rentalSelection,
     required this.id,
     required this.tenantName,
     required this.tenantAvatar,
@@ -142,7 +154,8 @@ class OwnerDashboardPendingVisitModel extends Equatable {
   });
 
   const OwnerDashboardPendingVisitModel.initial()
-    : id = '',
+    : rentalSelection = null,
+      id = '',
       tenantName = '',
       tenantAvatar = null,
       propertyTitle = '',
@@ -151,6 +164,7 @@ class OwnerDashboardPendingVisitModel extends Equatable {
 
   factory OwnerDashboardPendingVisitModel.fromJson(Map<String, dynamic> json) {
     return OwnerDashboardPendingVisitModel(
+      rentalSelection: RentalSelection.fromRecord(json),
       id: json['id'] as String? ?? '',
       tenantName: json['tenant_name'] as String? ?? '',
       tenantAvatar: _nullableString(json['tenant_avatar']),
@@ -160,6 +174,7 @@ class OwnerDashboardPendingVisitModel extends Equatable {
     );
   }
 
+  final RentalSelection? rentalSelection;
   final String id;
   final String tenantName;
   final String? tenantAvatar;
@@ -169,6 +184,10 @@ class OwnerDashboardPendingVisitModel extends Equatable {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    if (rentalSelection != null) ...{
+      'offer_id': rentalSelection!.offerId,
+      'offer_snapshot': rentalSelection!.toJson(),
+    },
     'tenant_name': tenantName,
     'tenant_avatar': tenantAvatar,
     'property_title': propertyTitle,
@@ -177,6 +196,7 @@ class OwnerDashboardPendingVisitModel extends Equatable {
   };
 
   OwnerDashboardPendingVisitModel copyWith({
+    RentalSelection? rentalSelection,
     String? id,
     String? tenantName,
     String? tenantAvatar,
@@ -186,6 +206,7 @@ class OwnerDashboardPendingVisitModel extends Equatable {
     String? scheduledAt,
   }) {
     return OwnerDashboardPendingVisitModel(
+      rentalSelection: rentalSelection ?? this.rentalSelection,
       id: id ?? this.id,
       tenantName: tenantName ?? this.tenantName,
       tenantAvatar: clearTenantAvatar
@@ -199,6 +220,7 @@ class OwnerDashboardPendingVisitModel extends Equatable {
 
   @override
   List<Object?> get props => [
+    rentalSelection,
     id,
     tenantName,
     tenantAvatar,

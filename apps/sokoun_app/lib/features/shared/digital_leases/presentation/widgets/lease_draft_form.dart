@@ -1,3 +1,4 @@
+import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 import '../../data/models/lease_tenant.dart';
 import 'lease_tenant_selector.dart';
@@ -235,7 +236,15 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
                           : () async {
                               if (!_form.currentState!.validate()) return;
                               _requestKey ??= const Uuid().v4();
+                              if (selection.property?.rentalInventory != null) {
+                                Messages.showToast(
+                                  msg: LocaleKeys.rentalUnavailableCapability,
+                                );
+                                return;
+                              }
                               final body = LeaseDraftBody(
+                                hasRentalOffers:
+                                    selection.property?.rentalInventory != null,
                                 propertyId: selection.property?.id ?? '',
                                 tenantId: selection.tenant?.id ?? '',
                                 templateId: template?.id ?? '',

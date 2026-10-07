@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/enums/rental_scope.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:sokoun_app/features/shared/finance/presentation/egyptian_pound_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
@@ -18,6 +19,9 @@ class PropertyFilterLabelResolver {
         return '${LocaleKeys.tenantFilterFrom} ${EgyptianPoundText.format(filter.value)}';
       case 'price_max':
         return '${LocaleKeys.tenantFilterTo} ${EgyptianPoundText.format(filter.value)}';
+      case 'rental_scope':
+        return RentalScope.fromValue(filter.value)?.label ??
+            LocaleKeys.rentalUnknownScope;
       case 'property_type':
         return propertyTypeLabel(filter.value);
       case 'price_period':
@@ -41,8 +45,12 @@ class PropertyFilterLabelResolver {
     }
   }
 
-  String propertyTypeLabel(String value) =>
-      _label(options.propertyTypes, value);
+  String propertyTypeLabel(String value) {
+    final label = _label(options.propertyTypes, value);
+    return label == value
+        ? PropertyDetailsModel.propertyTypeLabelFor(value)
+        : label;
+  }
 
   String suitableForLabel(String value) => _label(options.suitableFor, value);
 

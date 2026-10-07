@@ -1,3 +1,7 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:melos_core/core/widgets/app_text.dart';
 import '../widgets/report/chat_report_button.dart';
 import '../widgets/chat/chat_participant_title.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
@@ -13,7 +17,8 @@ import '../cubits/chat_thread_cubit.dart';
 import '../widgets/chat_thread/chat_thread_content.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key, required this.conversation});
+  const ChatScreen({super.key, required this.conversation, this.rentalContext});
+  final RentalSelection? rentalContext;
 
   final ConversationContent conversation;
 
@@ -81,10 +86,26 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         resizeToAvoidBottomInset: true,
         body: SafeArea(
           bottom: false,
-          child: ChatThreadContent(
-            conversation: widget.conversation,
-            initialMessagesRequest: _initialMessagesRequest,
-            messagesCacheKey: _chatThreadData.messagesCacheKey,
+          child: Column(
+            children: [
+              if (widget.rentalContext != null)
+                ExpansionTile(
+                  title: AppText(
+                    LocaleKeys.rentalChatContext.replaceAll(
+                      '{offer}',
+                      RentalOfferLabels.accommodation(widget.rentalContext!),
+                    ),
+                  ),
+                  children: [AppText(LocaleKeys.rentalChatContextHelp)],
+                ),
+              Expanded(
+                child: ChatThreadContent(
+                  conversation: widget.conversation,
+                  initialMessagesRequest: _initialMessagesRequest,
+                  messagesCacheKey: _chatThreadData.messagesCacheKey,
+                ),
+              ),
+            ],
           ),
         ),
       ),

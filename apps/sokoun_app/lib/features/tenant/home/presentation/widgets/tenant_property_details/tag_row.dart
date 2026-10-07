@@ -18,12 +18,20 @@ class TenantPropertyTagRow extends StatelessWidget {
       runSpacing: 7.h,
       alignment: WrapAlignment.end,
       children: [
+        if (property.selection?.scope case final scope?)
+          _SmallTag(
+            label: scope.label,
+            backgroundColor: AppColors.tealAlpha09,
+            textColor: context.appColor(AppColors.sokoonTeal),
+          ),
         _SmallTag(
-          label: property.propertyType,
+          label: property.hasRentalOffers
+              ? '${LocaleKeys.rentalParentPropertyType}: ${property.propertyType}'
+              : property.propertyType,
           backgroundColor: AppColors.tealAlpha09,
           textColor: context.appColor(AppColors.sokoonTeal),
         ),
-        if (property.isFurnished)
+        if (property.isFurnished && !property.hasRentalOffers)
           _SmallTag(
             label: LocaleKeys.tenantPropertyDetailsFurnished,
             backgroundColor: context.appColor(

@@ -25,6 +25,7 @@ import 'tenant_filter_screen.dart';
 import 'property_map_screen.dart';
 import 'package:sokoun_app/features/tenant/decision_tools/presentation/widgets/save_search_button.dart';
 import 'package:sokoun_app/features/tenant/decision_tools/presentation/screens/decision_tools_screen.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/enums/rental_listing_category.dart';
 
 class TenantSearchResultsScreen extends StatefulWidget {
   const TenantSearchResultsScreen({
@@ -91,6 +92,10 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
   Future<void> _removeFilter(ActiveFilterContent filter) async {
     await _search(_filters.removeFilter(filter.id));
   }
+
+  Future<void> _selectCategory(RentalListingCategory category) => _search(
+    _filters.copyWith(rentalScope: category.scope?.value ?? '', page: 1),
+  );
 
   Future<void> _clearFilters() async {
     final PropertySearchFilters clearedFilters = _filters.clearFilters();
@@ -244,6 +249,7 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
                   onFilterRemoved: _removeFilter,
                   onClearFiltersPressed: _clearFilters,
                   onResetSearchPressed: _resetSearchAndFilters,
+                  onCategorySelected: _selectCategory,
                 ),
               ),
         ),

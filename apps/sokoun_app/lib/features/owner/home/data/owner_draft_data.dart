@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:path_provider/path_provider.dart';
 import 'models/owner_add_property_content.dart';
 import 'models/owner_property_draft.dart';
@@ -91,14 +92,19 @@ class OwnerDraftData implements OwnerDraftStore {
   @override
   Future<OwnerPropertyDraft> write(OwnerPropertyDraft draft) async {
     if (accountId.isEmpty || accountId == '0' || draft.form == null) {
-      return draft;
+      throw StateError(LocaleKeys.freeLocalSaveFailed);
     }
     final directory = await _directory();
     await directory.create(recursive: true);
     final form = draft.form!;
     final photos = <OwnerPropertyPhotoDraft>[];
     for (final photo in form.photoDrafts) {
-      photos.add(photo.copyWith(file: await _copy(photo.file, directory)));
+      photos.add(
+        photo.copyWith(
+          file: await _copy(photo.file, directory),
+          draftKey: photo.reference,
+        ),
+      );
     }
     final saved = draft.copyWith(
       form: form.copyWith(

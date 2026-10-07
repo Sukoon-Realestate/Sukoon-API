@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
 import 'package:melos_core/core/error/failure.dart';
@@ -11,14 +13,26 @@ import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/exeption_view.dart';
 import 'package:multiple_result/multiple_result.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_picker.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/property_search_model.dart';
+import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
+import 'package:sokoun_app/features/shared/auth/presentation/screens/login_screen.dart';
+import 'package:sokoun_app/shared_widgets/unauthenticated_sheet.dart';
+import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
+import 'package:melos_core/core/shared/route_observer.dart';
+import 'package:sokoun_app/features/shared/reviews/data/models/my_review.dart';
+import 'package:sokoun_app/features/shared/reviews/presentation/widgets/my_review_card.dart';
 import 'package:sokoun_app/features/shared/reviews/presentation/widgets/property_rating_card.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/imports.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/screens/property_details_screen.dart';
 import 'helpers/account_test_dependencies.dart';
+import 'helpers/rental_offer_fixtures.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late _PropertyDetailsRepository repository;
+  late TestAccountCubit account;
 
   const MethodChannel sharedPreferencesChannel = MethodChannel(
     'plugins.flutter.io/shared_preferences',
@@ -45,7 +59,8 @@ void main() {
       'email': 'tenant@example.com',
       'type': 'tenant',
     });
-    await registerAuthenticatedTestAccount();
+    account = await registerAuthenticatedTestAccount();
+    WorkspaceNavigation.clearPending();
   });
 
   tearDown(() async {
@@ -58,7 +73,7 @@ void main() {
         .setMockMethodCallHandler(sharedPreferencesChannel, null);
   });
 
-  Widget buildScreen() {
+  Widget buildScreen({Widget? home}) {
     return EasyLocalization(
       supportedLocales: const [Locale('ar')],
       path: 'unused',
@@ -70,10 +85,12 @@ void main() {
         builder: (context, _) {
           return MaterialApp(
             navigatorKey: Go.navigatorKey,
+            navigatorObservers: [AppNavigationObserver.instance],
             localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,
             locale: context.locale,
-            home: const PropertyDetailsScreen(propertyId: 'property-id'),
+            home:
+                home ?? const PropertyDetailsScreen(propertyId: 'property-id'),
           );
         },
       ),
@@ -147,9 +164,183 @@ void main() {
     expect(find.byType(TenantPropertyDetailsBody), findsNothing);
     await tester.pump(const Duration(seconds: 5));
   });
+
+  testWidgets(
+    'deep-link choice needs confirmation and changed terms require confirmation again',
+    (tester) async {
+      tester.view.physicalSize = const Size(390, 900);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      final inventory = rentalInventory();
+      repository.propertyJson = rentalProperty(
+        inventory: inventory,
+      ).copyWith(mainImage: '', images: [], video: '').toJson();
+      await tester.pumpWidget(
+        buildScreen(
+          home: PropertyDetailsScreen(
+            propertyId: 'property-a',
+            offerId: bedOffer.id,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      TenantPropertyBottomActions actions() =>
+          tester.widget(find.byType(TenantPropertyBottomActions));
+      expect(actions().property.selection!.bedId, 'bed-a1');
+      expect(actions().property.selectionConfirmed, isFalse);
+      expect(actions().onChatPressed, isNull);
+      final confirm = find.descendant(
+        of: find.byType(RentalOfferPicker),
+        matching: find.text(LocaleKeys.rentalConfirmAccommodation),
+      );
+      await tester.ensureVisible(confirm);
+      await tester.tap(confirm);
+      await tester.pumpAndSettle();
+      expect(actions().property.selectionConfirmed, isTrue);
+      expect(actions().onChatPressed, isNotNull);
+      final original = actions().property.selection;
+      final changed = bedOffer.copyWith(
+        terms: offerTerms.copyWith(price: '1800'),
+      );
+      repository.propertyJson = rentalProperty(
+        inventory: inventory.copyWith(offers: [changed]),
+      ).copyWith(mainImage: '', images: [], video: '').toJson();
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpWidget(
+        buildScreen(
+          home: PropertyDetailsScreen(
+            propertyId: 'property-a',
+            offerId: bedOffer.id,
+            confirmedSelection: original,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(actions().property.selection!.offerId, bedOffer.id);
+      expect(actions().property.selection!.bedId, 'bed-a1');
+      expect(actions().property.selection!.terms.price, '1800');
+      expect(actions().property.selectionConfirmed, isFalse);
+      expect(actions().onChatPressed, isNull);
+      expect(find.text(LocaleKeys.rentalTermsChanged), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'explicit bed confirmation and discovery context survive the sign-in return',
+    (tester) async {
+      tester.view.physicalSize = const Size(390, 900);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      account.signOut();
+      repository.propertyJson = rentalProperty(
+        inventory: rentalInventory(),
+      ).copyWith(mainImage: '', images: [], video: '').toJson();
+      const filters = PropertySearchFilters.initial(
+        rentalScope: 'bed',
+        pricePeriod: 'monthly',
+      );
+      await tester.pumpWidget(
+        buildScreen(
+          home: PropertyDetailsScreen(
+            propertyId: 'property-a',
+            offerId: bedOffer.id,
+            searchPreferences: filters,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final confirm = find.descendant(
+        of: find.byType(RentalOfferPicker),
+        matching: find.text(LocaleKeys.rentalConfirmAccommodation),
+      );
+      await tester.ensureVisible(confirm);
+      await tester.tap(confirm);
+      await tester.pumpAndSettle();
+      final actions = tester.widget<TenantPropertyBottomActions>(
+        find.byType(TenantPropertyBottomActions),
+      );
+      expect(actions.property.selectionConfirmed, isTrue);
+      actions.onChatPressed!();
+      await tester.pumpAndSettle();
+      expect(find.byType(UnauthenticatedSheet), findsOneWidget);
+      await tester.tap(
+        find.descendant(
+          of: find.byType(UnauthenticatedSheet),
+          matching: find.text(LocaleKeys.login),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(LoginScreen), findsOneWidget);
+      await injector.unregister<UserCubit>();
+      await registerAuthenticatedTestAccount();
+      Future<void> select(_, _) async {}
+      WorkspaceNavigation.attach(select);
+      addTearDown(() {
+        WorkspaceNavigation.detach(select);
+        WorkspaceNavigation.clearPending();
+      });
+      unawaited(WorkspaceNavigation.resumePending());
+      await tester.pumpAndSettle();
+      final restored = tester.widget<PropertyDetailsScreen>(
+        find.byType(PropertyDetailsScreen),
+      );
+      expect(restored.propertyId, 'property-a');
+      expect(restored.offerId, bedOffer.id);
+      expect(restored.confirmedSelection!.bedId, 'bed-a1');
+      expect(restored.searchPreferences, filters);
+      final restoredActions = tester.widget<TenantPropertyBottomActions>(
+        find.byType(TenantPropertyBottomActions),
+      );
+      expect(restoredActions.property.selectionConfirmed, isTrue);
+      expect(restoredActions.property.selection!.scopeValue, 'bed');
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'review navigation preserves the exact historical offer reference',
+    (tester) async {
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      for (final selection in [
+        RentalSelection.fromOffer(
+          propertyId: 'property-id',
+          inventory: rentalInventory(),
+          offer: bedOffer,
+        ),
+        null,
+      ]) {
+        final review = const MyReview.initial().copyWith(
+          propertyId: 'property-id',
+          propertyTitle: 'Reviewed accommodation',
+          rentalSelection: selection,
+        );
+        await tester.pumpWidget(
+          buildScreen(
+            home: Scaffold(body: MyReviewCard(review: review)),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Reviewed accommodation'));
+        await tester.pumpAndSettle();
+
+        final screen = tester.widget<PropertyDetailsScreen>(
+          find.byType(PropertyDetailsScreen),
+        );
+        expect(screen.propertyId, review.propertyId);
+        expect(screen.offerId, selection?.offerId);
+        expect(tester.takeException(), isNull);
+        await tester.pumpWidget(const SizedBox());
+        await tester.pumpAndSettle();
+      }
+    },
+  );
 }
 
 class _PropertyDetailsRepository implements BaseRepository {
+  Map<String, dynamic>? propertyJson;
   bool failDetailsRequest = false;
   String? detailsCacheKey;
   bool hasCacheDeserializer = false;
@@ -172,17 +363,20 @@ class _PropertyDetailsRepository implements BaseRepository {
       detailsCacheKey = params.cacheKey;
       hasCacheDeserializer = params.fromCacheJson != null;
       hasCacheSerializer = params.toJson != null;
-      final T data = params.mapper!(const {
-        'id': 'property-id',
-        'owner': 'أحمد محمد إبراهيم',
-        'title': 'شقة مفروشة 3 غرف',
-        'property_type': 'apartment',
-        'district': 'مدينة نصر',
-        'city': {'name': 'القاهرة'},
-        'price': '6500',
-        'is_furnished': true,
-        'is_saved': false,
-      });
+      final T data = params.mapper!(
+        propertyJson ??
+            const {
+              'id': 'property-id',
+              'owner': 'أحمد محمد إبراهيم',
+              'title': 'شقة مفروشة 3 غرف',
+              'property_type': 'apartment',
+              'district': 'مدينة نصر',
+              'city': {'name': 'القاهرة'},
+              'price': '6500',
+              'is_furnished': true,
+              'is_saved': false,
+            },
+      );
       final Map<String, dynamic> cachedJson = params.toJson!(data);
       final T restoredData = params.fromCacheJson!(cachedJson);
       return Success(BaseModel<T>(key: '', msg: '', data: restoredData));

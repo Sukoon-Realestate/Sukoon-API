@@ -29,6 +29,7 @@ class CrudBaseParmas<T> {
   final HttpRequestType httpRequestType;
   final Map<String, dynamic>? body;
   final Map<String, dynamic>? queryParameters;
+  final Map<String, dynamic>? headers;
   final T Function(dynamic json)? mapper;
   final T Function(Map<String, dynamic> json)? fromCacheJson;
   final bool isFromData;
@@ -43,6 +44,7 @@ class CrudBaseParmas<T> {
     this.cacheKey,
     this.body,
     this.queryParameters,
+    this.headers,
     this.onSendProgress,
     this.onReceiveProgress,
     this.cancelToken,
@@ -58,6 +60,7 @@ class CrudBaseParmas<T> {
     HttpRequestType? httpRequestType,
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? headers,
     T Function(dynamic)? mapper,
     T Function(Map<String, dynamic>)? fromCacheJson,
     void Function(int, int)? onSendProgress,
@@ -79,6 +82,7 @@ class CrudBaseParmas<T> {
       httpRequestType: httpRequestType ?? this.httpRequestType,
       body: body ?? this.body,
       queryParameters: queryParameters ?? this.queryParameters,
+      headers: headers ?? this.headers,
       mapper: mapper ?? this.mapper,
       isFromData: isFromData ?? this.isFromData,
       toJson: toJson ?? this.toJson,

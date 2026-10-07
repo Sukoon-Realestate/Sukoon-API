@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
 import '../enums/owner_visit_request_state.dart';
 import '../owner_visit_json.dart';
 import 'package:equatable/equatable.dart';
@@ -200,6 +201,7 @@ class OwnerCalendarDayContent extends Equatable {
 
 class OwnerCalendarVisitContent extends Equatable {
   const OwnerCalendarVisitContent({
+    this.rentalSelection,
     required this.id,
     required this.tenant,
     required this.property,
@@ -210,7 +212,8 @@ class OwnerCalendarVisitContent extends Equatable {
   });
 
   const OwnerCalendarVisitContent.initial()
-    : id = '',
+    : rentalSelection = null,
+      id = '',
       tenant = const OwnerCalendarTenantContent.initial(),
       property = const OwnerCalendarPropertyContent.initial(),
       visitTime = '',
@@ -220,6 +223,7 @@ class OwnerCalendarVisitContent extends Equatable {
 
   factory OwnerCalendarVisitContent.fromJson(Map<String, dynamic> json) {
     return OwnerCalendarVisitContent(
+      rentalSelection: RentalSelection.fromRecord(json),
       id: json['id'] as String? ?? '',
       tenant: OwnerCalendarTenantContent.fromJson(
         ownerVisitJsonMap(json['tenant']),
@@ -236,6 +240,7 @@ class OwnerCalendarVisitContent extends Equatable {
     );
   }
 
+  final RentalSelection? rentalSelection;
   final String id;
   final OwnerCalendarTenantContent tenant;
   final OwnerCalendarPropertyContent property;
@@ -252,6 +257,10 @@ class OwnerCalendarVisitContent extends Equatable {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    if (rentalSelection != null) ...{
+      'offer_id': rentalSelection!.offerId,
+      'offer_snapshot': rentalSelection!.toJson(),
+    },
     'tenant': tenant.toJson(),
     'property': property.toJson(),
     'visit_time': visitTime,
@@ -261,6 +270,7 @@ class OwnerCalendarVisitContent extends Equatable {
   };
 
   OwnerCalendarVisitContent copyWith({
+    RentalSelection? rentalSelection,
     String? id,
     OwnerCalendarTenantContent? tenant,
     OwnerCalendarPropertyContent? property,
@@ -270,6 +280,7 @@ class OwnerCalendarVisitContent extends Equatable {
     String? statusLabel,
   }) {
     return OwnerCalendarVisitContent(
+      rentalSelection: rentalSelection ?? this.rentalSelection,
       id: id ?? this.id,
       tenant: tenant ?? this.tenant,
       property: property ?? this.property,
@@ -282,6 +293,7 @@ class OwnerCalendarVisitContent extends Equatable {
 
   @override
   List<Object?> get props => [
+    rentalSelection,
     id,
     tenant,
     property,

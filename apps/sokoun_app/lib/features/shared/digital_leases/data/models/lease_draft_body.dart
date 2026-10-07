@@ -4,6 +4,7 @@ import 'package:sokoun_app/features/shared/premium/data/models/premium_money.dar
 
 class LeaseDraftBody extends Equatable {
   const LeaseDraftBody({
+    this.hasRentalOffers = false,
     this.propertyId = '',
     this.tenantId = '',
     this.templateId = '',
@@ -24,6 +25,7 @@ class LeaseDraftBody extends Equatable {
     rent: PremiumMoney.fromJson(premiumMap(json['rent'])),
     requestKey: premiumString(json['request_key']),
   );
+  final bool hasRentalOffers;
   final String propertyId;
   final String tenantId;
   final String templateId;
@@ -44,6 +46,7 @@ class LeaseDraftBody extends Equatable {
     'request_key': requestKey,
   };
   LeaseDraftBody copyWith({
+    bool? hasRentalOffers,
     String? propertyId,
     String? tenantId,
     String? templateId,
@@ -53,6 +56,7 @@ class LeaseDraftBody extends Equatable {
     PremiumMoney? rent,
     String? requestKey,
   }) => LeaseDraftBody(
+    hasRentalOffers: hasRentalOffers ?? this.hasRentalOffers,
     propertyId: propertyId ?? this.propertyId,
     tenantId: tenantId ?? this.tenantId,
     templateId: templateId ?? this.templateId,
@@ -64,6 +68,7 @@ class LeaseDraftBody extends Equatable {
   );
   @override
   List<Object?> get props => [
+    hasRentalOffers,
     propertyId,
     tenantId,
     templateId,

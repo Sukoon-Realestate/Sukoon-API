@@ -18,7 +18,14 @@ class OwnerPropertyFormSeed {
 }
 
 abstract final class OwnerAddPropertyMapper {
-  static OwnerPropertyFormSeed fromProperty(PropertyDetailsModel property) {
+  static OwnerPropertyFormSeed fromProperty(
+    PropertyDetailsModel property, {
+    String? offerId,
+  }) {
+    final inventory = property.rentalInventory;
+    final whole = inventory?.mode == 'whole' && inventory!.offers.length == 1
+        ? inventory.resolved(inventory.offers.single).terms
+        : null;
     final Set<String> amenities = property.amenities.toSet();
     if (property.isFurnished) {
       amenities.add('furnished');
@@ -28,6 +35,11 @@ abstract final class OwnerAddPropertyMapper {
       governorate: _governorateFromProperty(property),
       city: _cityFromProperty(property),
       form: OwnerAddPropertyFormState.initial().copyWith(
+        rentalInventory: property.rentalInventory,
+        selectedOfferRef:
+            offerId ??
+            property.rentalInventory?.offers.firstOrNull?.reference ??
+            '',
         title: property.title,
         propertyType: _propertyTypeLabel(property.propertyType),
         propertyTypeValue: property.propertyType,
@@ -48,18 +60,24 @@ abstract final class OwnerAddPropertyMapper {
         floor: property.floor?.toString() ?? '',
         location: _locationFromProperty(property),
         photoDrafts: _photoDraftsFromProperty(property),
-        monthlyPrice: property.price,
-        rentalDuration: _positiveNumberText(property.rentalPeriod),
-        rentalUnit: _rentalUnitLabel(property.pricePeriod),
+        monthlyPrice: whole?.price ?? property.price,
+        rentalDuration: _positiveNumberText(
+          whole?.minimumMonths ?? property.rentalPeriod,
+        ),
+        rentalUnit: _rentalUnitLabel(
+          whole?.pricePeriod ?? property.pricePeriod,
+        ),
         amenities: amenities,
-        description: property.description,
-        suitableFor: _suitableForLabel(property.suitableFor),
+        description: whole?.description ?? property.description,
+        suitableFor: _suitableForLabel(
+          whole?.suitableFor ?? property.suitableFor,
+        ),
         videoUrl: property.video ?? '',
         videoDuration: property.videoDuration,
         country: property.country,
         buildingYear: _positiveNumberText(property.buildingYear),
-        deposit: property.deposit,
-        smokingAllowed: property.smokingAllowed,
+        deposit: whole?.deposit ?? property.deposit,
+        smokingAllowed: whole?.smokingAllowed ?? property.smokingAllowed,
         ownershipProofUrl: property.ownershipProof,
       ),
     );

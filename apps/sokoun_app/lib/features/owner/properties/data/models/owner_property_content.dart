@@ -1,15 +1,20 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_inventory.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_listing_summary.dart';
 import '../enums/owner_property_status.dart';
 import 'package:equatable/equatable.dart';
 import 'package:sokoun_app/features/shared/finance/data/egyptian_pound.dart';
 
 class OwnerPropertyContent extends Equatable {
   const OwnerPropertyContent({
+    this.rentalInventory,
+    this.rentalSummary,
     required this.id,
     required this.title,
     required this.mainImage,
     required this.location,
     required this.monthlyPrice,
     this.pricePeriod = '',
+    this.propertyType = '',
     required this.views,
     required this.visitRequests,
     required this.bedrooms,
@@ -40,6 +45,8 @@ class OwnerPropertyContent extends Equatable {
 
   factory OwnerPropertyContent.fromJson(Map<String, dynamic> json) {
     return OwnerPropertyContent(
+      rentalInventory: RentalInventory.read(json),
+      rentalSummary: RentalListingSummary.read(json),
       id: json['id'] ?? '',
       rejectionReason: json['rejection_reason']?.toString() ?? '',
       title: json['title'] ?? '',
@@ -49,6 +56,7 @@ class OwnerPropertyContent extends Equatable {
           EgyptianPound.parseAmount(json['price'] ?? json['monthly_price']) ??
           0,
       pricePeriod: json['price_period']?.toString() ?? '',
+      propertyType: json['property_type']?.toString() ?? '',
       views:
           (json['views_count'] as num?)?.toInt() ??
           (json['views'] as num?)?.toInt() ??
@@ -65,13 +73,15 @@ class OwnerPropertyContent extends Equatable {
     );
   }
 
+  final RentalInventory? rentalInventory;
+  final RentalListingSummary? rentalSummary;
   final String id;
   final String rejectionReason;
   final String title;
   final String mainImage;
   final String location;
   final num monthlyPrice;
-  final String pricePeriod;
+  final String pricePeriod, propertyType;
 
   final int views;
   final int visitRequests;
@@ -84,12 +94,16 @@ class OwnerPropertyContent extends Equatable {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      if (rentalInventory != null)
+        'rental_inventory': rentalInventory!.toJson(),
+      if (rentalSummary != null) 'rental_summary': rentalSummary!.toJson(),
       if (rejectionReason.isNotEmpty) 'rejection_reason': rejectionReason,
       'title': title,
       'main_image': mainImage,
       'location': location,
       'monthly_price': monthlyPrice,
       'price_period': pricePeriod,
+      'property_type': propertyType,
       'views': views,
       'visit_requests': visitRequests,
       'bedrooms': bedrooms,
@@ -101,6 +115,8 @@ class OwnerPropertyContent extends Equatable {
   }
 
   OwnerPropertyContent copyWith({
+    RentalInventory? rentalInventory,
+    RentalListingSummary? rentalSummary,
     String? id,
     String? rejectionReason,
     String? title,
@@ -108,6 +124,7 @@ class OwnerPropertyContent extends Equatable {
     String? location,
     num? monthlyPrice,
     String? pricePeriod,
+    String? propertyType,
     int? views,
     int? visitRequests,
     int? bedrooms,
@@ -117,6 +134,8 @@ class OwnerPropertyContent extends Equatable {
     OwnerPropertyStatus? status,
   }) {
     return OwnerPropertyContent(
+      rentalInventory: rentalInventory ?? this.rentalInventory,
+      rentalSummary: rentalSummary ?? this.rentalSummary,
       id: id ?? this.id,
       rejectionReason: rejectionReason ?? this.rejectionReason,
       title: title ?? this.title,
@@ -124,6 +143,7 @@ class OwnerPropertyContent extends Equatable {
       location: location ?? this.location,
       monthlyPrice: monthlyPrice ?? this.monthlyPrice,
       pricePeriod: pricePeriod ?? this.pricePeriod,
+      propertyType: propertyType ?? this.propertyType,
       views: views ?? this.views,
       visitRequests: visitRequests ?? this.visitRequests,
       bedrooms: bedrooms ?? this.bedrooms,
@@ -136,6 +156,8 @@ class OwnerPropertyContent extends Equatable {
 
   @override
   List<Object?> get props => [
+    rentalInventory,
+    rentalSummary,
     id,
     rejectionReason,
     title,
@@ -143,6 +165,7 @@ class OwnerPropertyContent extends Equatable {
     location,
     monthlyPrice,
     pricePeriod,
+    propertyType,
     views,
     visitRequests,
     bedrooms,

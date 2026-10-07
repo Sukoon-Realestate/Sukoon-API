@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
 import 'package:intl/intl.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -27,6 +28,8 @@ class RentInvoiceCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           AppText(invoice.reference),
+          if (invoice.rentalSelection != null)
+            AppText(RentalOfferLabels.accommodation(invoice.rentalSelection!)),
           AppText(invoice.amount.display),
           PremiumStatusBadge(status: invoice.status),
           if (invoice.dueDate != null)

@@ -78,7 +78,9 @@ void main() {
       expect(content.status, 'under_review');
       expect(content.createdAt, cached.createdAt);
       expect(content.updatedAt, cached.updatedAt);
-      expect(content.metrics[2].value, '120');
+      // Missing physical counts stay unknown instead of becoming zero-valued
+      // bedrooms/bathrooms. The legacy property's known area and term survive.
+      expect(content.metrics.map((metric) => metric.value), ['120', '6']);
       expect(content.metrics.last.value, '6');
       expect(content.metrics.last.label, cached.rentalPeriodUnitLabel);
     },

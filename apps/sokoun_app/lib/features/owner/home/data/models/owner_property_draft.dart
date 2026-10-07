@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_inventory.dart';
 import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
@@ -89,6 +90,10 @@ abstract final class OwnerDraftFormCodec {
   static File? _file(Object? value) =>
       value is String && value.isNotEmpty ? File(value) : null;
   static Map<String, dynamic> encode(OwnerAddPropertyFormState form) => {
+    'submission_key': form.submissionKey,
+    'selected_offer_ref': form.selectedOfferRef,
+    if (form.rentalInventory != null)
+      'rental_inventory': form.rentalInventory!.toDraftJson(),
     'title': form.title,
     'property_type': form.propertyType,
     'property_type_value': form.propertyTypeValue,
@@ -110,6 +115,8 @@ abstract final class OwnerDraftFormCodec {
           'url': photo.existingUrl,
           'name': photo.name,
           'description': photo.description,
+          'local_sha256': photo.contentFingerprint,
+          'local_key': photo.draftKey,
         },
     ],
     'price': form.monthlyPrice,
@@ -135,6 +142,13 @@ abstract final class OwnerDraftFormCodec {
   };
   static OwnerAddPropertyFormState decode(Map<String, dynamic> json) =>
       OwnerAddPropertyFormState(
+        rentalInventory: json['rental_inventory'] is Map
+            ? RentalInventory.fromDraftJson(
+                Map<String, dynamic>.from(json['rental_inventory']),
+              )
+            : RentalInventory.read(json),
+        selectedOfferRef: json['selected_offer_ref']?.toString() ?? '',
+        submissionKey: json['submission_key']?.toString() ?? '',
         title: json['title'] as String? ?? '',
         propertyType: json['property_type'] as String? ?? '',
         propertyTypeValue: json['property_type_value'] as String? ?? '',
@@ -161,6 +175,8 @@ abstract final class OwnerDraftFormCodec {
                 existingUrl: photo['url'] as String? ?? '',
                 name: photo['name'] as String? ?? '',
                 description: photo['description'] as String? ?? '',
+                contentFingerprint: photo['local_sha256'] as String? ?? '',
+                draftKey: photo['local_key'] as String? ?? '',
               ),
             )
             .toList(growable: false),

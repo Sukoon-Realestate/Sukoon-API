@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
 import '../enums/visit_status.dart';
 import '../visit_json.dart';
 import '../visit_schedule_rules.dart';
@@ -6,6 +7,7 @@ import 'visit_actions.dart';
 
 class TenantVisitContent extends Equatable {
   const TenantVisitContent({
+    this.rentalSelection,
     required this.id,
     required this.propertyTitle,
     required this.day,
@@ -21,7 +23,8 @@ class TenantVisitContent extends Equatable {
   });
 
   const TenantVisitContent.initial()
-    : id = '',
+    : rentalSelection = null,
+      id = '',
       propertyTitle = '',
       day = '',
       time = '',
@@ -43,6 +46,7 @@ class TenantVisitContent extends Equatable {
         ? Map<String, dynamic>.from(ownerValue)
         : const {};
     return TenantVisitContent(
+      rentalSelection: RentalSelection.fromRecord(json),
       id: json['id']?.toString() ?? '',
       visitDate: json['visit_date']?.toString() ?? '',
       visitTime: json['visit_time']?.toString() ?? '',
@@ -83,6 +87,7 @@ class TenantVisitContent extends Equatable {
     );
   }
 
+  final RentalSelection? rentalSelection;
   final String id;
   final String visitDate;
   final String visitTime;
@@ -129,6 +134,10 @@ class TenantVisitContent extends Equatable {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    if (rentalSelection != null) ...{
+      'offer_id': rentalSelection!.offerId,
+      'offer_snapshot': rentalSelection!.toJson(),
+    },
     if (visitDate.isNotEmpty) 'visit_date': visitDate,
     if (visitTime.isNotEmpty) 'visit_time': visitTime,
     'title': propertyTitle,
@@ -143,6 +152,7 @@ class TenantVisitContent extends Equatable {
   };
 
   TenantVisitContent copyWith({
+    RentalSelection? rentalSelection,
     String? id,
     String? visitDate,
     String? visitTime,
@@ -157,6 +167,7 @@ class TenantVisitContent extends Equatable {
     VisitActions? actions,
   }) {
     return TenantVisitContent(
+      rentalSelection: rentalSelection ?? this.rentalSelection,
       id: id ?? this.id,
       visitDate: visitDate ?? this.visitDate,
       visitTime: visitTime ?? this.visitTime,
@@ -174,6 +185,7 @@ class TenantVisitContent extends Equatable {
 
   @override
   List<Object?> get props => [
+    rentalSelection,
     id,
     visitDate,
     visitTime,

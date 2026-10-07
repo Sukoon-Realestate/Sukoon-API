@@ -1,3 +1,6 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_picker.dart';
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -7,9 +10,10 @@ import 'package:sokoun_app/features/tenant/home/presentation/screens/property_de
 import '../../data/models/comparison_property.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import '../../data/models/property_cost_breakdown.dart';
+import 'package:sokoun_app/features/owner/home/data/enums/property_price_period.dart';
 import 'property_cost_card.dart';
 
-class ComparisonTable extends StatelessWidget {
+class ComparisonTable extends StatefulWidget {
   const ComparisonTable({
     super.key,
     required this.properties,
@@ -20,23 +24,77 @@ class ComparisonTable extends StatelessWidget {
   final ValueChanged<String> onRemove;
   final Map<String, String> savedTitles;
   @override
-  Widget build(BuildContext context) {
+  State<ComparisonTable> createState() => _ComparisonTableState();
+}
+
+class _ComparisonTableState extends State<ComparisonTable> {
+  final ValueNotifier<Map<String, String>> _offers = ValueNotifier(const {});
+  List<ComparisonProperty> get properties => widget.properties;
+  ValueChanged<String> get onRemove => widget.onRemove;
+  Map<String, String> get savedTitles => widget.savedTitles;
+  RentalSelection? _selectionFor(ComparisonProperty item) {
+    final inventory = item.property.rentalInventory;
+    final offer = inventory?.offerById(_offers.value[item.propertyId] ?? '');
+    return offer == null
+        ? null
+        : RentalSelection.fromOffer(
+            propertyId: item.propertyId,
+            inventory: inventory!,
+            offer: offer,
+          );
+  }
+
+  @override
+  void dispose() {
+    _offers.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) =>
+      ValueListenableBuilder<Map<String, String>>(
+        valueListenable: _offers,
+        builder: (_, _, _) => _build(context),
+      );
+  Widget _build(BuildContext context) {
     final rows = <(String, String Function(ComparisonProperty))>[
       (
+        LocaleKeys.rentalOfferedAccommodation,
+        (item) => _selectionFor(item) != null
+            ? RentalOfferLabels.accommodation(_selectionFor(item)!)
+            : item.property.hasRentalOffers
+            ? LocaleKeys.rentalSelectOffer
+            : LocaleKeys.rentalLegacyScope,
+      ),
+      (
         LocaleKeys.freeRent,
-        (item) =>
-            '${item.property.formattedPrice} ${item.property.pricePeriodLabel}',
+        (item) => _selectionFor(item) != null
+            ? RentalOfferLabels.price(_selectionFor(item)!)
+            : item.property.rentalInventory != null
+            ? LocaleKeys.rentalSelectForPrice
+            : '${item.property.formattedPrice} ${item.property.pricePeriodLabel}',
       ),
       (
         LocaleKeys.freeDeposit,
-        (item) => item.property.deposit.isEmpty
+        (item) =>
+            item.property.rentalInventory != null && _selectionFor(item) == null
+            ? LocaleKeys.rentalSelectForPrice
+            : (_selectionFor(item)?.terms.deposit ?? item.property.deposit)
+                  .isEmpty
             ? LocaleKeys.freeAskOwner
-            : PropertyDetailsModel.depositLabelFor(item.property.deposit),
+            : PropertyDetailsModel.depositLabelFor(
+                _selectionFor(item)?.terms.deposit ?? item.property.deposit,
+              ),
       ),
       (
         LocaleKeys.ownerAddPropertyMinimumRentalMonths,
-        (item) => item.property.rentalPeriod > 0
-            ? '${item.property.rentalPeriod} ${item.property.rentalPeriodUnitLabel}'
+        (item) =>
+            item.property.rentalInventory != null && _selectionFor(item) == null
+            ? LocaleKeys.rentalSelectForPrice
+            : (_selectionFor(item)?.terms.minimumMonths ??
+                      item.property.rentalPeriod) >
+                  0
+            ? '${_selectionFor(item)?.terms.minimumMonths ?? item.property.rentalPeriod} ${item.property.rentalPeriodUnitLabel}'
             : LocaleKeys.freeAskOwner,
       ),
       (
@@ -44,20 +102,27 @@ class ComparisonTable extends StatelessWidget {
         (item) => item.property.propertyTypeLabel,
       ),
       (
-        LocaleKeys.ownerAddPropertyBedrooms,
-        (item) => '${item.property.bedrooms}',
+        properties.any((item) => item.property.rentalInventory != null)
+            ? LocaleKeys.rentalPropertyRooms
+            : LocaleKeys.ownerAddPropertyBedrooms,
+        (item) => item.property.bedrooms > 0
+            ? '${item.property.bedrooms}'
+            : LocaleKeys.rentalUnspecified,
       ),
       (
-        LocaleKeys.ownerAddPropertyBathrooms,
-        (item) => '${item.property.bathrooms}',
+        LocaleKeys.rentalParentPropertyBathrooms,
+        (item) => item.property.bathrooms > 0
+            ? '${item.property.bathrooms}'
+            : LocaleKeys.rentalUnspecified,
       ),
       (
-        LocaleKeys.ownerAddPropertySpace,
-        (item) =>
-            '${item.property.space.isEmpty ? item.property.area : item.property.space} ${LocaleKeys.freeSquareMeters}',
+        LocaleKeys.rentalParentPropertyArea,
+        (item) => item.property.area > 0
+            ? '${item.property.area} ${LocaleKeys.freeSquareMeters}'
+            : LocaleKeys.rentalUnspecified,
       ),
       (
-        LocaleKeys.tenantPropertyDetailsAmenities,
+        LocaleKeys.rentalSharedSpaces,
         (item) => item.property.amenityLabels.isEmpty
             ? LocaleKeys.freeAskOwner
             : item.property.amenityLabels.join(' • '),
@@ -84,6 +149,20 @@ class ComparisonTable extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        for (final item in properties)
+          if (item.property.rentalInventory != null)
+            ExpansionTile(
+              title: AppText(item.property.title),
+              children: [
+                RentalOfferPicker(
+                  propertyId: item.propertyId,
+                  inventory: item.property.rentalInventory!,
+                  selectedId: _offers.value[item.propertyId],
+                  onSelected: (id) =>
+                      _offers.value = {..._offers.value, item.propertyId: id},
+                ),
+              ],
+            ),
         AppText(LocaleKeys.freeComparisonExplanation),
         const SizedBox(height: 16),
         AppText(LocaleKeys.freeComparisonScroll),
@@ -131,6 +210,7 @@ class ComparisonTable extends StatelessWidget {
                               onPressed: () => Go.to(
                                 PropertyDetailsScreen(
                                   propertyId: item.propertyId,
+                                  offerId: _offers.value[item.propertyId],
                                 ),
                               ),
                               child: AppText(LocaleKeys.freeOpenListing),
@@ -179,8 +259,18 @@ class ComparisonTable extends StatelessWidget {
                           ? PropertyCostCard(
                               cost: PropertyCostBreakdown.fromProperty(
                                 item.property,
+                                selection: _selectionFor(item),
                               ),
-                              periodLabel: item.property.pricePeriodLabel,
+                              periodLabel: _selectionFor(item) != null
+                                  ? PropertyPricePeriod.fromValue(
+                                          _selectionFor(
+                                            item,
+                                          )!.terms.pricePeriod,
+                                        )?.label ??
+                                        ''
+                                  : item.property.rentalInventory != null
+                                  ? ''
+                                  : item.property.pricePeriodLabel,
                             )
                           : AppText(LocaleKeys.freeListingUnavailable),
                     ),

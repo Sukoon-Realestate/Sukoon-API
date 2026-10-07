@@ -6,12 +6,24 @@ import '../../../data/models/owner_add_property_content.dart';
 
 /// The same rules are used by the fields and the step's first-error list.
 class PropertyFormValidation {
+  static String? photos(OwnerAddPropertyFormState form) =>
+      form.hasDuplicatePhotos
+      ? LocaleKeys.rentalDuplicatePhotos
+      : Validators.isValidPropertyPhotos(count: form.photoCount)
+      ? null
+      : form.photoCount < OwnerAddPropertyContent.minimumPhotoCount
+      ? LocaleKeys.ownerAddPropertyPhotosRemaining.replaceAll(
+          '{count}',
+          '${OwnerAddPropertyContent.minimumPhotoCount - form.photoCount}',
+        )
+      : LocaleKeys.ownerAddPropertyPhotoTipLimits;
+
   static String? video(OwnerAddPropertyFormState form) {
     if (form.isVideoPreparing) return LocaleKeys.ownerPropertyVideoPreparing;
     if (!form.hasVideo || form.removeVideo) {
       return LocaleKeys.ownerPropertyVideoRequired;
     }
-    if (form.videoFile != null) {
+    if (form.videoFile != null || form.videoDuration != null) {
       return Validators.validatePropertyVideoDuration(
         Duration(seconds: form.videoDuration ?? 0),
       );

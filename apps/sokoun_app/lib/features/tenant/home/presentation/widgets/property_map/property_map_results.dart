@@ -5,6 +5,7 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
+import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:pagify/pagify.dart';
 import '../../../data/models/property_details_model.dart';
 import '../../../data/models/property_map_viewport.dart';
@@ -12,10 +13,21 @@ import '../../../data/models/property_search_model.dart';
 import '../../../data/property_search_data.dart';
 import '../../screens/property_details_screen.dart';
 import 'package:sokoun_app/features/tenant/decision_tools/presentation/widgets/decision_tools_empty.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/enums/rental_listing_category.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/rental_collection_filter.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/rental_offer_capabilities.dart';
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_listing_categories.dart';
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_collection_footer.dart';
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
 
 class PropertyMapResults extends StatefulWidget {
-  const PropertyMapResults({super.key, required this.filters});
+  const PropertyMapResults({
+    super.key,
+    required this.filters,
+    required this.onCategorySelected,
+  });
   final PropertySearchFilters filters;
+  final ValueChanged<RentalListingCategory> onCategorySelected;
   @override
   State<PropertyMapResults> createState() => _PropertyMapResultsState();
 }
@@ -23,7 +35,6 @@ class PropertyMapResults extends StatefulWidget {
 class _PropertyMapResultsState extends State<PropertyMapResults> {
   final PagifyController<PropertyDetailsModel> _pagination = PagifyController();
   bool _centeredOnResults = false;
-  final ValueNotifier<bool> _hasMore = ValueNotifier(false);
   final ValueNotifier<List<PropertyDetailsModel>> _loaded = ValueNotifier(
     const [],
   );
@@ -34,9 +45,18 @@ class _PropertyMapResultsState extends State<PropertyMapResults> {
     _loaded.dispose();
     _viewport.dispose();
     _map.dispose();
-    _hasMore.dispose();
     super.dispose();
   }
+
+  String _price(PropertyDetailsModel property) =>
+      RentalOfferLabels.listingPrice(
+        property.rentalSummary,
+        hasInventory: property.hasRentalOffers,
+        legacyPrice: property.price,
+        legacyPeriod: property.pricePeriod,
+        contextScope: widget.filters.rentalScope,
+        contextPricePeriod: widget.filters.pricePeriod,
+      );
 
   Future<void> _centerOnResults() async {
     final controller = _map.value;
@@ -86,6 +106,18 @@ class _PropertyMapResultsState extends State<PropertyMapResults> {
         children: [
           Padding(
             padding: const EdgeInsets.all(16),
+            child: RentalListingCategories(
+              selected: RentalListingCategory.fromScope(
+                widget.filters.rentalScope,
+              ),
+              onSelected: widget.onCategorySelected,
+              includeUnspecified: false,
+              scopeSearchUnavailable:
+                  !RentalOfferCapabilities.configured.canSearch,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
             child: AppText(
               LocaleKeys.freeMapLoadedExplanation
                   .replaceAll('{count}', '${properties.length}')
@@ -123,8 +155,7 @@ class _PropertyMapResultsState extends State<PropertyMapResults> {
                     ),
                     infoWindow: InfoWindow(
                       title: property.title,
-                      snippet:
-                          '${property.formattedPrice} ${property.pricePeriodLabel}',
+                      snippet: _price(property),
                       onTap: () => Go.to(
                         PropertyDetailsScreen(
                           propertyId: property.id,
@@ -151,20 +182,6 @@ class _PropertyMapResultsState extends State<PropertyMapResults> {
                   TextButton(
                     onPressed: () => _viewport.value = null,
                     child: AppText(LocaleKeys.freeShowAllLoaded),
-                  ),
-                  ValueListenableBuilder<bool>(
-                    valueListenable: _hasMore,
-                    builder: (context, hasMore, _) => hasMore
-                        ? TextButton.icon(
-                            onPressed: () {
-                              if (!_pagination.isLoading) {
-                                _pagination.loadMore();
-                              }
-                            },
-                            icon: const Icon(Icons.expand_more),
-                            label: AppText(LocaleKeys.freeLoadMoreResults),
-                          )
-                        : const SizedBox.shrink(),
                   ),
                 ],
               ),
@@ -197,12 +214,15 @@ class _PropertyMapResultsState extends State<PropertyMapResults> {
       final (response, pagination) = await PropertySearchData.getPropertiesPage(
         widget.filters.copyWith(page: page),
       );
-      if (mounted) _hasMore.value = page < pagination.totalPages;
       return (response.results, pagination);
     },
     onSuccess: (context, properties) {
       if (mounted) {
-        _loaded.value = List.unmodifiable(properties);
+        _loaded.value = RentalCollectionFilter.properties(
+          properties,
+          identity: (property) => property.id,
+          matches: (_) => true,
+        );
         _centerOnResults();
       }
     },
@@ -210,6 +230,18 @@ class _PropertyMapResultsState extends State<PropertyMapResults> {
       title: LocaleKeys.freeMapResults,
       description: LocaleKeys.freeMapNoResults,
     ),
+    filterItems: (items) => RentalCollectionFilter.properties(
+      items,
+      identity: (property) => property.id,
+      matches: (_) => true,
+    ),
+    filteredFooterBuilder: (context, hasMore, isLoading, error, loadMore) =>
+        RentalCollectionFooter(
+          hasMorePages: hasMore,
+          isLoading: isLoading,
+          errorMessage: error,
+          onLoadMore: loadMore,
+        ).paddingAll(16),
     itemBuilder: (context, properties, index, property) =>
         ValueListenableBuilder<PropertyMapViewport?>(
           valueListenable: _viewport,
@@ -225,7 +257,17 @@ class _PropertyMapResultsState extends State<PropertyMapResults> {
                   child: ListTile(
                     title: AppText(property.title),
                     subtitle: AppText(
-                      '${property.formattedPrice} ${property.pricePeriodLabel}${const PropertyMapViewport.initial().contains(property) ? '' : '\n${LocaleKeys.freeMapMissingLocation}'}',
+                      [
+                        ...RentalOfferLabels.listingFacts(
+                          property.rentalSummary,
+                          contextScope: widget.filters.rentalScope,
+                        ),
+                        _price(property),
+                        if (!const PropertyMapViewport.initial().contains(
+                          property,
+                        ))
+                          LocaleKeys.freeMapMissingLocation,
+                      ].join('\n'),
                     ),
                     onTap: () => Go.to(
                       PropertyDetailsScreen(

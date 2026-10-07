@@ -1,15 +1,40 @@
 import 'package:sokoun_app/features/tenant/favorites/data/models/favorites_content.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_search_model.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/enums/rental_listing_category.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/rental_collection_filter.dart';
 
 abstract final class FavoritePropertyFilter {
   static List<FavoritePropertyContent> apply(
     Iterable<FavoritePropertyContent> items,
-    PropertySearchFilters filters,
-  ) {
-    final List<FavoritePropertyContent> results = items
-        .where((item) => _matches(item, filters))
-        .toList(growable: true);
-    _sort(results, filters.ordering);
+    PropertySearchFilters filters, {
+    RentalListingCategory category = RentalListingCategory.all,
+  }) {
+    final List<FavoritePropertyContent> results =
+        RentalCollectionFilter.properties(
+              items,
+              identity: (item) => item.id,
+              matches: (item) => category.acceptsScopes(
+                item.savedOffers.map((offer) => offer.scope),
+              ),
+            )
+            .map((item) {
+              if (item.savedOffers.isEmpty) return item;
+              return item.copyWith(
+                savedOffers: item.savedOffers
+                    .where(
+                      (offer) =>
+                          category.accepts(offer.scope) &&
+                          _matchesOffer(offer, item, filters),
+                    )
+                    .toList(growable: false),
+              );
+            })
+            .where((item) => _matches(item, filters))
+            .toList(growable: true);
+    if (!results.any((item) => item.hasRentalOffers)) {
+      _sort(results, filters.ordering);
+    }
     return results;
   }
 
@@ -17,6 +42,20 @@ abstract final class FavoritePropertyFilter {
     FavoritePropertyContent item,
     PropertySearchFilters filters,
   ) {
+    if (item.hasRentalOffers) {
+      if (!_matchesPropertyContext(item, filters)) return false;
+      if (item.savedOffers.isNotEmpty) return true;
+      // A missing saved snapshot cannot inherit a discovery offer's scope,
+      // price or terms. Keep it accessible only without offer-specific filters.
+      return filters.rentalScope.isEmpty &&
+          filters.pricePeriod.isEmpty &&
+          filters.priceMin.isEmpty &&
+          filters.priceMax.isEmpty &&
+          filters.suitableFor.isEmpty &&
+          filters.smokingAllowed.isEmpty &&
+          _contains(_normalize(item.title), filters.search);
+    }
+    if (filters.rentalScope.isNotEmpty) return false;
     final String title = _normalize(item.title);
     if (!_contains(title, filters.search) ||
         !_matchesLocation(item.city, title, filters.city) ||
@@ -41,6 +80,60 @@ abstract final class FavoritePropertyFilter {
     }
     if (maximumPrice != null && (price == null || price > maximumPrice)) {
       return false;
+    }
+    return true;
+  }
+
+  static bool _matchesPropertyContext(
+    FavoritePropertyContent item,
+    PropertySearchFilters filters,
+  ) =>
+      _matchesLocation(item.city, _normalize(item.title), filters.city) &&
+      _matchesLocation(
+        item.district,
+        _normalize(item.title),
+        filters.district,
+      ) &&
+      _equals(item.propertyType, filters.propertyType) &&
+      _matchesBoolean(item.isFurnished, filters.isFurnished) &&
+      _matchesNullableBoolean(item.isVerified, filters.isVerified) &&
+      _matchesCount(item.bedrooms, filters.bedrooms) &&
+      _matchesCount(item.bathrooms, filters.bathrooms) &&
+      _matchesAmenities(item.amenities, filters.amenities);
+
+  static bool _matchesOffer(
+    RentalSelection offer,
+    FavoritePropertyContent property,
+    PropertySearchFilters filters,
+  ) {
+    if (!_equals(offer.scopeValue ?? '', filters.rentalScope) ||
+        !_equals(offer.terms.pricePeriod, filters.pricePeriod) ||
+        !_equals(offer.terms.suitableFor, filters.suitableFor) ||
+        !_matchesNullableBoolean(
+          offer.terms.smokingAllowed,
+          filters.smokingAllowed,
+        ) ||
+        !_contains(
+          _normalize(
+            [
+              property.title,
+              offer.name,
+              ...offer.roomNames,
+              offer.bedName,
+            ].join(' '),
+          ),
+          filters.search,
+        )) {
+      return false;
+    }
+    final double? minimum = _number(filters.priceMin);
+    final double? maximum = _number(filters.priceMax);
+    final double? price = _number(offer.terms.price);
+    if (minimum != null || maximum != null) {
+      // Weekly and monthly amounts are not interchangeable.
+      if (filters.pricePeriod.isEmpty || price == null) return false;
+      if (minimum != null && price < minimum) return false;
+      if (maximum != null && price > maximum) return false;
     }
     return true;
   }

@@ -115,6 +115,10 @@ class TenantVisitCard extends StatelessWidget {
                   ),
                 ],
               ),
+              if (visit.rentalSelection != null)
+                AppText(
+                  RentalOfferLabels.accommodation(visit.rentalSelection!),
+                ),
               _VisitCardActions(
                 visit: visit,
                 isCanceling: isCanceling,
@@ -147,7 +151,12 @@ class _VisitCardActions extends StatelessWidget {
 
   void _openChat() {
     if (visit.ownerId.isEmpty) return;
-    Go.to(StartConversationScreen(userId: visit.ownerId));
+    Go.to(
+      StartConversationScreen(
+        userId: visit.ownerId,
+        rentalContext: visit.rentalSelection,
+      ),
+    );
   }
 
   void _findAlternative() => Go.to(const TenantSearchScreen());

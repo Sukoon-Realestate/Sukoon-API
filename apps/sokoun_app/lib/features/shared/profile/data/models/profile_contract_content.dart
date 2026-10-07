@@ -1,8 +1,10 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
 import 'package:equatable/equatable.dart';
 import '../profile_json.dart';
 
 class ProfileContractContent extends Equatable {
   const ProfileContractContent({
+    this.rentalSelection,
     required this.id,
     required this.propertyTitle,
     required this.status,
@@ -12,7 +14,8 @@ class ProfileContractContent extends Equatable {
     this.leaseId = '',
   });
   const ProfileContractContent.initial()
-    : id = '',
+    : rentalSelection = null,
+      id = '',
       propertyTitle = '',
       status = '',
       startDate = '',
@@ -21,6 +24,7 @@ class ProfileContractContent extends Equatable {
       documentUrl = '';
   factory ProfileContractContent.fromJson(Map<String, dynamic> json) =>
       ProfileContractContent(
+        rentalSelection: RentalSelection.fromRecord(json),
         id: profileString(json['id']),
         propertyTitle: profileString(json['property_title']),
         status: profileString(json['status']),
@@ -29,6 +33,7 @@ class ProfileContractContent extends Equatable {
         documentUrl: profileString(json['document_url']),
         leaseId: profileString(json['lease_id']),
       );
+  final RentalSelection? rentalSelection;
   final String id;
   final String propertyTitle;
   final String status;
@@ -38,6 +43,10 @@ class ProfileContractContent extends Equatable {
   final String leaseId;
   Map<String, dynamic> toJson() => {
     'id': id,
+    if (rentalSelection != null) ...{
+      'offer_id': rentalSelection!.offerId,
+      'offer_snapshot': rentalSelection!.toJson(),
+    },
     'property_title': propertyTitle,
     'status': status,
     'start_date': startDate,
@@ -46,6 +55,7 @@ class ProfileContractContent extends Equatable {
     if (leaseId.isNotEmpty) 'lease_id': leaseId,
   };
   ProfileContractContent copyWith({
+    RentalSelection? rentalSelection,
     String? id,
     String? propertyTitle,
     String? status,
@@ -54,6 +64,7 @@ class ProfileContractContent extends Equatable {
     String? documentUrl,
     String? leaseId,
   }) => ProfileContractContent(
+    rentalSelection: rentalSelection ?? this.rentalSelection,
     id: id ?? this.id,
     propertyTitle: propertyTitle ?? this.propertyTitle,
     status: status ?? this.status,
@@ -64,6 +75,7 @@ class ProfileContractContent extends Equatable {
   );
   @override
   List<Object?> get props => [
+    rentalSelection,
     id,
     propertyTitle,
     status,

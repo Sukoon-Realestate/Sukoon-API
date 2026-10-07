@@ -1,3 +1,5 @@
+import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
@@ -41,6 +43,10 @@ class OwnerDashboardContent extends StatelessWidget {
               pendingRequests: dashboard.pendingRequests,
             ),
           ),
+          if (dashboard.activeOffers != null)
+            AppText(
+              '${LocaleKeys.rentalActiveOffers}: ${dashboard.activeOffers}',
+            ),
           24.szH,
           const OwnerOperationsSection(),
           24.szH,

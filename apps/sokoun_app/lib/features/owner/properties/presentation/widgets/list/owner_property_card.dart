@@ -7,12 +7,18 @@ class OwnerPropertyCard extends StatelessWidget {
     required this.onEditPressed,
     required this.onRejectedPressed,
     required this.onDeletePressed,
+    this.onInventoryChanged,
+    this.onEditOfferPressed,
+    this.category = RentalListingCategory.all,
   });
 
   final OwnerPropertyContent property;
   final VoidCallback onEditPressed;
   final VoidCallback onRejectedPressed;
   final VoidCallback onDeletePressed;
+  final ValueChanged<PropertyDetailsModel>? onInventoryChanged;
+  final ValueChanged<String>? onEditOfferPressed;
+  final RentalListingCategory category;
 
   void _openProperty() {
     if (property.status.isRejected) {
@@ -20,7 +26,14 @@ class OwnerPropertyCard extends StatelessWidget {
       return;
     }
 
-    Go.to(PropertyDetailsScreen(propertyId: property.id));
+    Go.to(
+      PropertyDetailsScreen(
+        propertyId: property.id,
+        searchPreferences: PropertySearchFilters.initial(
+          rentalScope: category.scope?.value ?? '',
+        ),
+      ),
+    );
   }
 
   @override
@@ -96,12 +109,41 @@ class OwnerPropertyCard extends StatelessWidget {
                           textAlign: TextAlign.start,
                         ),
                         6.szH,
+                        if (property.propertyType.isNotEmpty ||
+                            property.location.isNotEmpty)
+                          AppText(
+                            [
+                              PropertyDetailsModel.propertyTypeLabelFor(
+                                property.propertyType,
+                              ),
+                              property.location,
+                            ].where((part) => part.isNotEmpty).join(' · '),
+                          ),
                         OwnerPropertyStatusBadge(status: property.status),
+                        AppText(
+                          category != RentalListingCategory.all
+                              ? RentalListingCategories.label(category)
+                              : property.rentalInventory != null
+                              ? property.rentalInventory!.offers
+                                    .map(
+                                      (offer) =>
+                                          offer.scope?.label ??
+                                          LocaleKeys.rentalCategoryUnspecified,
+                                    )
+                                    .toSet()
+                                    .join(' · ')
+                              : RentalOfferLabels.listingFacts(
+                                  property.rentalSummary,
+                                ).join(' · '),
+                        ),
                         8.szH,
                         AppText(
-                          EgyptianPoundText.format(
-                            property.monthlyPrice,
-                            period: property.pricePeriod,
+                          RentalOfferLabels.listingPrice(
+                            property.rentalSummary,
+                            hasInventory: property.rentalInventory != null,
+                            legacyPrice: property.monthlyPrice.toString(),
+                            legacyPeriod: property.pricePeriod,
+                            contextScope: category.scope?.value ?? '',
                           ),
                           style: AppTextStyles.bold16.copyWith(
                             color: context.appColor(AppColors.sokoonTeal),
@@ -126,12 +168,22 @@ class OwnerPropertyCard extends StatelessWidget {
                   ),
                 ],
               ),
+              if (property.rentalInventory != null)
+                OwnerRentalOffersPanel(
+                  propertyId: property.id,
+                  inventory: property.rentalInventory!,
+                  onConfirmed: onInventoryChanged,
+                  onEditOffer: onEditOfferPressed,
+                  category: category,
+                ),
               Wrap(
                 spacing: 8.w,
                 runSpacing: 8.h,
                 children: [
                   _OwnerPropertyCardAction(
-                    label: LocaleKeys.ownerPropertiesEdit,
+                    label: property.rentalInventory == null
+                        ? LocaleKeys.ownerPropertiesEdit
+                        : LocaleKeys.rentalEditSharedProperty,
                     foregroundColor: context.appColor(AppColors.blue),
                     backgroundColor: context.appColor(
                       AppColors.bluePale,

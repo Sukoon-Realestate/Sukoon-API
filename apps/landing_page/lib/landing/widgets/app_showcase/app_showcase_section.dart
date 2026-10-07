@@ -5,6 +5,7 @@ import '../../models/landing_content.dart';
 import '../../theme/landing_theme.dart';
 import '../phone_mockup/phone_mockup.dart';
 import '../shared/imports.dart';
+import 'demo_video_card.dart';
 
 class AppShowcaseSection extends StatefulWidget {
   const AppShowcaseSection({super.key});
@@ -29,6 +30,8 @@ class _AppShowcaseSectionState extends State<AppShowcaseSection> {
             subtitle: LocaleKeys.landingPreviewDisclaimer,
           ),
           const SizedBox(height: 28),
+          const DemoVideoCard(),
+          const SizedBox(height: 40),
           AudienceToggle(
             value: _audience,
             onChanged: (value) => setState(() => _audience = value),

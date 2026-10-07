@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
@@ -73,6 +74,8 @@ class _DigitalLeaseDetailsViewState extends State<DigitalLeaseDetailsView>
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             AppText(lease.propertyTitle, fontWeight: FontWeight.bold),
+            if (lease.rentalSelection != null)
+              AppText(RentalOfferLabels.accommodation(lease.rentalSelection!)),
             PremiumStatusBadge(status: lease.status),
             AppText(lease.ownerName),
             AppText(lease.tenantName),

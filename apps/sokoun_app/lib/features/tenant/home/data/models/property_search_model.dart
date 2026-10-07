@@ -1,3 +1,6 @@
+import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/rental_offer_capabilities.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/enums/rental_scope.dart';
 import 'package:equatable/equatable.dart';
 import 'package:melos_core/core/helpers/validators.dart';
 
@@ -34,6 +37,11 @@ class PropertySearchFilterEntry extends Equatable {
 class PropertySearchFilters extends Equatable {
   bool get hasValidPriceRange =>
       Validators.isValidPriceRange(min: priceMin, max: priceMax);
+  bool get requiresPricePeriod =>
+      priceMin.isNotEmpty ||
+      priceMax.isNotEmpty ||
+      ordering == 'price' ||
+      ordering == '-price';
 
   final String search;
   final String city;
@@ -43,6 +51,7 @@ class PropertySearchFilters extends Equatable {
   final int pageSize;
   final String priceMin;
   final String priceMax;
+  final String rentalScope;
   final String propertyType;
   final String pricePeriod;
   final String suitableFor;
@@ -54,6 +63,7 @@ class PropertySearchFilters extends Equatable {
   final Set<String> amenities;
 
   const PropertySearchFilters({
+    this.rentalScope = '',
     required this.search,
     required this.city,
     required this.district,
@@ -74,6 +84,7 @@ class PropertySearchFilters extends Equatable {
   });
 
   const PropertySearchFilters.initial({
+    this.rentalScope = '',
     this.search = '',
     this.city = '',
     this.district = '',
@@ -95,6 +106,7 @@ class PropertySearchFilters extends Equatable {
 
   factory PropertySearchFilters.fromJson(Map<String, dynamic> json) {
     return PropertySearchFilters(
+      rentalScope: json['rental_scope']?.toString() ?? '',
       search: json['search'] as String? ?? '',
       city: json['city'] as String? ?? '',
       district: json['district'] as String? ?? '',
@@ -126,8 +138,12 @@ class PropertySearchFilters extends Equatable {
   int get activeCount => activeFilters.length;
 
   String get cacheKey {
-    final Map<String, dynamic> cacheDimensions = toQueryParameters()
-      ..remove('page');
+    final Map<String, dynamic> cacheDimensions = {
+      ...toJson(),
+      'rental_offers_version': RentalOfferCapabilities.configured.canSearch
+          ? 1
+          : 0,
+    }..remove('page');
     final List<String> keys = cacheDimensions.keys.toList()..sort();
     final String identity = keys
         .map(
@@ -147,6 +163,8 @@ class PropertySearchFilters extends Equatable {
       PropertySearchFilterEntry(id: 'price_min', value: priceMin.trim()),
     if (priceMax.trim().isNotEmpty)
       PropertySearchFilterEntry(id: 'price_max', value: priceMax.trim()),
+    if (rentalScope.isNotEmpty)
+      PropertySearchFilterEntry(id: 'rental_scope', value: rentalScope),
     if (propertyType.isNotEmpty)
       PropertySearchFilterEntry(id: 'property_type', value: propertyType),
     if (pricePeriod.isNotEmpty)
@@ -169,8 +187,20 @@ class PropertySearchFilters extends Equatable {
       PropertySearchFilterEntry(id: 'ordering', value: ordering),
   ];
 
-  Map<String, dynamic> toQueryParameters() {
+  Map<String, dynamic> toQueryParameters({
+    RentalOfferCapabilities capabilities = RentalOfferCapabilities.configured,
+  }) {
+    if (rentalScope.isNotEmpty &&
+        (!capabilities.canSearch ||
+            RentalScope.fromValue(rentalScope) == null)) {
+      throw StateError(LocaleKeys.rentalScopeFilterUnavailable);
+    }
+    if (capabilities.canSearch && pricePeriod.isEmpty && requiresPricePeriod) {
+      throw StateError(LocaleKeys.rentalPricePeriodRequired);
+    }
     final Map<String, dynamic> queryParameters = {
+      if (capabilities.canSearch) 'rental_offers_version': 1,
+      if (rentalScope.isNotEmpty) 'rental_scope': rentalScope,
       'ordering': ordering,
       'page': page,
       'page_size': pageSize,
@@ -208,6 +238,7 @@ class PropertySearchFilters extends Equatable {
     'page_size': pageSize,
     'price_min': priceMin,
     'price_max': priceMax,
+    'rental_scope': rentalScope,
     'property_type': propertyType,
     'price_period': pricePeriod,
     'suitable_for': suitableFor,
@@ -227,6 +258,7 @@ class PropertySearchFilters extends Equatable {
       district: id == 'district' ? '' : district,
       priceMin: id == 'price_min' ? '' : priceMin,
       priceMax: id == 'price_max' ? '' : priceMax,
+      rentalScope: id == 'rental_scope' ? '' : rentalScope,
       propertyType: id == 'property_type' ? '' : propertyType,
       pricePeriod: id == 'price_period' ? '' : pricePeriod,
       suitableFor: id == 'suitable_for' ? '' : suitableFor,
@@ -245,6 +277,7 @@ class PropertySearchFilters extends Equatable {
       PropertySearchFilters.initial(search: search, pageSize: pageSize);
 
   PropertySearchFilters copyWith({
+    String? rentalScope,
     String? search,
     String? city,
     String? district,
@@ -263,6 +296,7 @@ class PropertySearchFilters extends Equatable {
     String? bathrooms,
     Set<String>? amenities,
   }) => PropertySearchFilters(
+    rentalScope: rentalScope ?? this.rentalScope,
     search: search ?? this.search,
     city: city ?? this.city,
     district: district ?? this.district,
@@ -284,6 +318,7 @@ class PropertySearchFilters extends Equatable {
 
   @override
   List<Object?> get props => [
+    rentalScope,
     search,
     city,
     district,

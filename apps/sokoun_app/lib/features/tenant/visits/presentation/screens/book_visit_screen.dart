@@ -18,6 +18,8 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
   );
   final ValueNotifier<({int dayIndex, TimeOfDay? time})> _selection =
       ValueNotifier((dayIndex: 0, time: null));
+  late final ValueNotifier<VisitPropertyContent> _currentProperty =
+      ValueNotifier(widget.property);
   bool _submitted = false;
   bool _confirming = false;
 
@@ -58,6 +60,7 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
   @override
   void dispose() {
     _noteController.dispose();
+    _currentProperty.dispose();
     _selection.dispose();
     _timesRequest.dispose();
     _bookVisitCubit.close();
@@ -72,7 +75,7 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
       await WorkspaceNavigation.open(
         workspace: AppWorkspace.tenant,
         showLoginSheet: true,
-        detail: () => Go.to(BookVisitScreen(property: widget.property)),
+        detail: () => Go.to(BookVisitScreen(property: _currentProperty.value)),
       );
       return;
     }
@@ -90,6 +93,43 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
     );
     _confirming = true;
     try {
+      final rental = _currentProperty.value.selection;
+      if (_currentProperty.value.hasRentalOffers &&
+          (!RentalOfferCapabilities.configured.canRequestViewing ||
+              rental == null)) {
+        Messages.showToast(
+          msg: LocaleKeys.rentalUnavailableCapability,
+          status: BaseStatus.error,
+        );
+        return;
+      }
+      if (rental != null) {
+        try {
+          final fresh = await RentalOfferReadData(
+            _bookVisitCubit.baseCrudUseCase,
+          ).freshSelection(rental);
+          if (!mounted) return;
+          _currentProperty.value = _currentProperty.value.copyWith(
+            selection: fresh,
+            meta: RentalOfferLabels.price(fresh),
+          );
+          if (!rental.sameTermsAs(fresh)) {
+            Messages.showToast(
+              msg: LocaleKeys.rentalTermsChanged,
+              status: BaseStatus.error,
+            );
+            return;
+          }
+        } catch (error) {
+          if (mounted) {
+            Messages.showToast(
+              msg: error is StateError ? error.message : error.toString(),
+              status: BaseStatus.error,
+            );
+          }
+          return;
+        }
+      }
       // Recheck on the server. Cached availability never authorizes a booking.
       final request = _timesCubit.load(widget.property.id, date: day.visitDate);
       _timesRequest.value = request;
@@ -114,7 +154,7 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
         isScrollControlled: true,
         showDragHandle: true,
         builder: (_) => VisitRequestReviewSheet(
-          property: widget.property,
+          property: _currentProperty.value,
           day: day,
           time: time,
           note: _noteController.text,
@@ -128,6 +168,8 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
       await _bookVisitCubit.bookVisit(
         propertyId: widget.property.id,
         ownerId: widget.property.ownerId,
+        selection: _currentProperty.value.selection,
+        hasRentalOffers: _currentProperty.value.hasRentalOffers,
         visitDate: day.visitDate,
         visitHour: time.hour,
         visitMinute: time.minute,
@@ -138,7 +180,7 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
           Go.off(
             VisitConfirmedScreen(
               message: _bookVisitCubit.state.msg ?? '',
-              property: widget.property,
+              property: _currentProperty.value,
               selectedDay: day,
               selectedTime: VisitTimeSlotContent(
                 label: time.format(context),
@@ -166,57 +208,61 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
         valueListenable: _selection,
         builder: (context, selection, _) {
           final days = _days;
-          return BookVisitForm(
-            property: widget.property,
-            days: days,
-            selectedDayIndex: selection.dayIndex,
-            selectedTime: selection.time,
-            noteController: _noteController,
-            onDaySelected: _selectDay,
-            onTimeSelected: (time) {
-              if (!_confirming) {
-                _selection.value = (dayIndex: selection.dayIndex, time: time);
-              }
-            },
-            onConfirmPressed: _confirmVisit,
-            timeSelector: days.isEmpty
-                ? const SizedBox.shrink()
-                : BlocProvider.value(
-                    value: _timesCubit,
-                    child: ValueListenableBuilder<Future<void>>(
-                      valueListenable: _timesRequest,
-                      builder: (context, request, _) => FutureBuilder<void>(
-                        future: request,
-                        builder: (context, snapshot) =>
-                            StatusBuilder<
-                              VisitAvailabilityCubit,
-                              VisitAvailabilityContent
-                            >.withShimmer(
-                              initialDataForShimmer:
-                                  const VisitAvailabilityContent.initial(),
-                              shimmerBuilder: (_) => const SizedBox(height: 80),
-                              onRetry: () => _timesCubit.load(
-                                widget.property.id,
-                                date: days[selection.dayIndex].visitDate,
+          return ValueListenableBuilder<VisitPropertyContent>(
+            valueListenable: _currentProperty,
+            builder: (_, property, _) => BookVisitForm(
+              property: _currentProperty.value,
+              days: days,
+              selectedDayIndex: selection.dayIndex,
+              selectedTime: selection.time,
+              noteController: _noteController,
+              onDaySelected: _selectDay,
+              onTimeSelected: (time) {
+                if (!_confirming) {
+                  _selection.value = (dayIndex: selection.dayIndex, time: time);
+                }
+              },
+              onConfirmPressed: _confirmVisit,
+              timeSelector: days.isEmpty
+                  ? const SizedBox.shrink()
+                  : BlocProvider.value(
+                      value: _timesCubit,
+                      child: ValueListenableBuilder<Future<void>>(
+                        valueListenable: _timesRequest,
+                        builder: (context, request, _) => FutureBuilder<void>(
+                          future: request,
+                          builder: (context, snapshot) =>
+                              StatusBuilder<
+                                VisitAvailabilityCubit,
+                                VisitAvailabilityContent
+                              >.withShimmer(
+                                initialDataForShimmer:
+                                    const VisitAvailabilityContent.initial(),
+                                shimmerBuilder: (_) =>
+                                    const SizedBox(height: 80),
+                                onRetry: () => _timesCubit.load(
+                                  widget.property.id,
+                                  date: days[selection.dayIndex].visitDate,
+                                ),
+                                builder: (content) => VisitAvailableTimes(
+                                  date: days[selection.dayIndex].visitDate,
+                                  slots: content.times,
+                                  isCached: content.isCached,
+                                  selectedTime: selection.time,
+                                  onSelected: (time) {
+                                    if (!_confirming) {
+                                      _selection.value = (
+                                        dayIndex: selection.dayIndex,
+                                        time: time,
+                                      );
+                                    }
+                                  },
+                                ),
                               ),
-                              builder: (content) => VisitAvailableTimes(
-                                date: days[selection.dayIndex].visitDate,
-                                slots: content.times,
-                                isCached: content.isCached,
-                                selectedTime: selection.time,
-                                onSelected: (time) {
-                                  if (!_confirming) {
-                                    _selection.value = (
-                                      dayIndex: selection.dayIndex,
-                                      time: time,
-                                    );
-                                  }
-                                },
-                              ),
-                            ),
+                        ),
                       ),
                     ),
-                  ),
+            ),
           );
         },
       );

@@ -4,6 +4,8 @@ import 'package:melos_core/core/network/network_request.dart';
 import 'package:melos_core/core/network/network_service.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_search_model.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/rental_offer_capabilities.dart';
+import 'rental_property_discovery_data.dart';
 
 abstract interface class PropertySearchDataSource {
   String cacheKeyFor(PropertySearchFilters filters);
@@ -32,7 +34,9 @@ final class PropertySearchApiDataSource implements PropertySearchDataSource {
         path: ApiConstants.properties,
         queryParameters: filters.toQueryParameters(),
       ),
-      mapper: (json) => PropertySearchResponseModel.fromJson(json),
+      mapper: (json) => RentalOfferCapabilities.configured.canSearch
+          ? RentalPropertyDiscoveryData.read(json, filters)
+          : PropertySearchResponseModel.fromJson(json),
     );
 
     final PropertySearchResponseModel data = response.data;

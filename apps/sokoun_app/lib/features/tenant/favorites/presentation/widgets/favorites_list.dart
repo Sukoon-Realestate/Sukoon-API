@@ -7,6 +7,7 @@ import 'package:sokoun_app/features/tenant/favorites/data/models/favorites_conte
 
 import 'favorite_property_card.dart';
 import 'favorites_empty_state.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/enums/rental_listing_category.dart';
 
 class FavoritesList extends StatelessWidget {
   const FavoritesList({
@@ -16,6 +17,8 @@ class FavoritesList extends StatelessWidget {
     required this.onFavoriteRemoved,
     required this.isFiltered,
     required this.onClearFiltersPressed,
+    this.category = RentalListingCategory.all,
+    this.onOfferRemoved,
   });
 
   final List<FavoritePropertyContent> items;
@@ -23,6 +26,8 @@ class FavoritesList extends StatelessWidget {
   final void Function(FavoritePropertyContent item) onFavoriteRemoved;
   final bool isFiltered;
   final VoidCallback onClearFiltersPressed;
+  final RentalListingCategory category;
+  final VoidCallback? onOfferRemoved;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +42,7 @@ class FavoritesList extends StatelessWidget {
               hasScrollBody: false,
               child: FavoritesEmptyState(
                 isFiltered: isFiltered,
+                categoryFiltered: category != RentalListingCategory.all,
                 onClearFiltersTap: onClearFiltersPressed,
               ),
             )
@@ -49,6 +55,8 @@ class FavoritesList extends StatelessWidget {
                       key: ValueKey(item.id),
                       item: item,
                       onRemove: () => onFavoriteRemoved(item),
+                      onOfferRemoved: onOfferRemoved,
+                      category: category,
                     ),
                 ],
               ).padding(EdgeInsets.fromLTRB(20.w, 0, 20.w, 16.h)),

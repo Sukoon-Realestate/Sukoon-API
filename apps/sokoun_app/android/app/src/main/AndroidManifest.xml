@@ -42,6 +42,14 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- Domain verification still requires the hosted assetlinks.json. -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="https" android:host="sokoun.app" android:pathPrefix="/properties/"/>
+                <data android:scheme="https" android:host="www.sokoun.app" android:pathPrefix="/properties/"/>
+            </intent-filter>
         </activity>
         <!-- Google Maps API Key -->
         <meta-data android:name="com.google.android.geo.API_KEY"

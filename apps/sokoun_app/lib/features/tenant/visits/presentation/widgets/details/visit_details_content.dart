@@ -40,6 +40,11 @@ class VisitDetailsContent extends StatelessWidget {
         children: [
           VisitStatusHeader(visit: visit),
           VisitSummaryCard(rows: _summaryRows),
+          if (visit.rentalSelection != null)
+            RentalSelectionPanel(
+              selection: visit.rentalSelection!,
+              historical: true,
+            ),
           if (visit.status.isAccepted && visit.ownerPhone.isNotEmpty) ...[
             12.szH,
             VisitContactCard(ownerPhone: visit.ownerPhone),

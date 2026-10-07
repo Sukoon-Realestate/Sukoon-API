@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:sokoun_app/features/shared/finance/data/egyptian_pound.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
@@ -8,25 +9,43 @@ class PropertyCostBreakdown extends Equatable {
     : rent = null,
       deposit = null,
       period = '';
-  factory PropertyCostBreakdown.fromProperty(PropertyDetailsModel property) {
-    final amount = EgyptianPound.parseAmount(property.price)?.toDouble();
+  factory PropertyCostBreakdown.fromProperty(
+    PropertyDetailsModel property, {
+    RentalSelection? selection,
+  }) {
+    if (property.rentalInventory != null &&
+        (selection == null ||
+            selection.propertyId != property.id ||
+            !selection.canIdentify)) {
+      return const PropertyCostBreakdown.initial();
+    }
+    return PropertyCostBreakdown.fromAmounts(
+      price: selection?.terms.price ?? property.price,
+      pricePeriod: selection?.terms.pricePeriod ?? property.pricePeriod,
+      depositValue: selection?.terms.deposit ?? property.deposit,
+    );
+  }
+  factory PropertyCostBreakdown.fromAmounts({
+    required String price,
+    required String pricePeriod,
+    required String depositValue,
+  }) {
+    final amount = EgyptianPound.parseAmount(price)?.toDouble();
     final rent = amount != null && amount > 0 ? amount : null;
-    final customDeposit = EgyptianPound.parseAmount(
-      property.deposit,
-    )?.toDouble();
-    final double? deposit = switch (property.deposit) {
+    final customDeposit = EgyptianPound.parseAmount(depositValue)?.toDouble();
+    final double? deposit = switch (depositValue) {
       'none' => 0,
       'half_month' =>
-        property.pricePeriod == 'monthly' && rent != null ? rent / 2 : null,
-      'one_month' => property.pricePeriod == 'monthly' ? rent : null,
+        pricePeriod == 'monthly' && rent != null ? rent / 2 : null,
+      'one_month' => pricePeriod == 'monthly' ? rent : null,
       'two_months' =>
-        property.pricePeriod == 'monthly' && rent != null ? rent * 2 : null,
+        pricePeriod == 'monthly' && rent != null ? rent * 2 : null,
       _ => customDeposit != null && customDeposit >= 0 ? customDeposit : null,
     };
     return PropertyCostBreakdown(
       rent: rent,
       deposit: deposit,
-      period: property.pricePeriod,
+      period: pricePeriod,
     );
   }
   factory PropertyCostBreakdown.fromJson(Map<String, dynamic> json) =>

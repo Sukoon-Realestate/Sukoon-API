@@ -16,10 +16,12 @@ class FavoritesEmptyState extends StatelessWidget {
     super.key,
     this.isFiltered = false,
     this.onClearFiltersTap,
+    this.categoryFiltered = false,
   });
 
   final bool isFiltered;
   final VoidCallback? onClearFiltersTap;
+  final bool categoryFiltered;
 
   void _handleAction() {
     if (isFiltered && onClearFiltersTap != null) {
@@ -53,7 +55,9 @@ class FavoritesEmptyState extends StatelessWidget {
           ),
           AppSize.sH8.szH,
           AppText(
-            isFiltered
+            categoryFiltered
+                ? LocaleKeys.rentalCategoryEmptyTitle
+                : isFiltered
                 ? LocaleKeys.tenantSearchResultsEmptyTitle
                 : LocaleKeys.favoritesEmptyTitle,
             style: AppTextStyles.bold.copyWith(
@@ -64,7 +68,9 @@ class FavoritesEmptyState extends StatelessWidget {
           ),
           AppSize.sH8.szH,
           AppText(
-            isFiltered
+            categoryFiltered
+                ? LocaleKeys.rentalCategoryEmptyHint
+                : isFiltered
                 ? LocaleKeys.tenantSearchResultsEmptyDescription
                 : LocaleKeys.favoritesEmptyDescription,
             style: AppTextStyles.medium13.copyWith(

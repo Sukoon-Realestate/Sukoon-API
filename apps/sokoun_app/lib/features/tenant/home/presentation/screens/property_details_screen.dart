@@ -1,5 +1,12 @@
+import 'package:sokoun_app/features/tenant/decision_tools/data/models/property_cost_breakdown.dart';
+import 'package:sokoun_app/features/tenant/decision_tools/presentation/widgets/property_cost_card.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/rental_offer_capabilities.dart';
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_picker.dart';
+import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 import 'package:melos_core/core/extensions/widget_extension.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:flutter/material.dart';
@@ -27,9 +34,16 @@ class PropertyDetailsScreen extends StatefulWidget {
     super.key,
     required this.propertyId,
     this.searchPreferences,
+    this.offerId,
+    this.confirmedSelection,
   });
 
   final String propertyId;
+  final String? offerId;
+
+  /// Passed only when returning from a user's explicit confirmation/sign-in.
+  final RentalSelection? confirmedSelection;
+
   final PropertySearchFilters? searchPreferences;
 
   @override
@@ -41,6 +55,11 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   late final PropertySaveCubit _saveCubit;
   late final CreateConversationCubit _conversationCubit;
   late final Future<void> _detailsRequest;
+  late final ValueNotifier<({String? id, RentalSelection? confirmed})>
+  _selectedOffer = ValueNotifier((
+    id: widget.offerId,
+    confirmed: widget.confirmedSelection,
+  ));
   final ValueNotifier<({bool? savedOverride, bool isUpdating})> _savedState =
       ValueNotifier<({bool? savedOverride, bool isUpdating})>((
         savedOverride: null,
@@ -62,16 +81,35 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
     _saveCubit.close();
     _conversationCubit.close();
     _savedState.dispose();
+    _selectedOffer.dispose();
     super.dispose();
   }
 
   Future<void> _toggleSaved(TenantPropertyDetailsContent property) async {
+    if (property.hasRentalOffers &&
+        (!property.selectionConfirmed ||
+            property.selection == null ||
+            !RentalOfferCapabilities.configured.canFavorite)) {
+      Messages.showToast(
+        msg: !property.selectionConfirmed || property.selection == null
+            ? LocaleKeys.rentalConfirmAccommodation
+            : LocaleKeys.rentalUnavailableCapability,
+      );
+      return;
+    }
     if (!WorkspaceNavigation.isAuthenticated) {
+      final choice = _selectedOffer.value;
       await WorkspaceNavigation.open(
         workspace: AppWorkspace.tenant,
         showLoginSheet: true,
-        detail: () =>
-            Go.to(PropertyDetailsScreen(propertyId: widget.propertyId)),
+        detail: () => Go.to(
+          PropertyDetailsScreen(
+            propertyId: widget.propertyId,
+            offerId: choice.id,
+            confirmedSelection: choice.confirmed,
+            searchPreferences: widget.searchPreferences,
+          ),
+        ),
       );
       return;
     }
@@ -98,31 +136,115 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
     if (nextValue) {
       await _saveCubit.saveProperty(
         propertyId: propertyId,
+        selection: property.selection,
+        hasRentalOffers: property.hasRentalOffers,
         onError: rollbackSavedState,
       );
     } else {
       await _saveCubit.unsaveProperty(
         propertyId: propertyId,
+        selection: property.selection,
+        hasRentalOffers: property.hasRentalOffers,
         onError: rollbackSavedState,
       );
     }
     if (!mounted) return;
+    if (_saveCubit.state.isSuccess && property.selection != null) {
+      final current = _detailsCubit.data;
+      final inventory = current.rentalInventory;
+      if (inventory != null) {
+        _detailsCubit.updateData(
+          current.copyWith(
+            rentalInventory: inventory.copyWith(
+              offers: [
+                for (final offer in inventory.offers)
+                  offer.id == property.selection!.offerId
+                      ? offer.copyWith(isSaved: nextValue)
+                      : offer,
+              ],
+            ),
+          ),
+        );
+      }
+    }
     _savedState.value = (
       savedOverride: _savedState.value.savedOverride,
       isUpdating: false,
     );
   }
 
-  Widget _buildDetails(PropertyDetailsModel data) {
+  Widget _buildDetails(PropertyDetailsModel data) =>
+      ValueListenableBuilder<({String? id, RentalSelection? confirmed})>(
+        valueListenable: _selectedOffer,
+        builder: (_, choice, _) => _buildSelectedDetails(data, choice),
+      );
+
+  Widget _buildSelectedDetails(
+    PropertyDetailsModel data,
+    ({String? id, RentalSelection? confirmed}) choice,
+  ) {
+    final selectedId = choice.id;
+    final inventory = data.rentalInventory;
+    final offer = inventory?.offerById(selectedId ?? '');
+    final selection = offer != null && inventory?.isSupported == true
+        ? RentalSelection.fromOffer(
+            propertyId: data.id,
+            inventory: inventory!,
+            offer: offer,
+          )
+        : selectedId == null
+        ? null
+        : RentalSelection(propertyId: data.id, offerId: selectedId);
     final TenantPropertyDetailsContent property =
-        TenantPropertyDetailsContent.fromModel(data);
+        TenantPropertyDetailsContent.fromModel(
+          data,
+          selection: selection,
+          selectionConfirmed:
+              choice.confirmed != null &&
+              selection != null &&
+              selection.sameTermsAs(choice.confirmed!),
+        );
     return TenantPropertyDetailsBody.withActions(
       property: property,
-      decisionTools: PropertyDecisionTools(
-        key: ValueKey(data.id),
-        property: data,
-        searchPreferences: widget.searchPreferences,
-      ),
+      offerPicker: inventory == null
+          ? property.hasRentalOffers
+                ? AppText(LocaleKeys.rentalIncompatibleResponse)
+                : null
+          : ValueListenableBuilder<({bool? savedOverride, bool isUpdating})>(
+              valueListenable: _savedState,
+              builder: (_, state, _) => RentalOfferPicker(
+                propertyId: data.id,
+                inventory: inventory,
+                selectedId: selectedId,
+                confirmedSelection: choice.confirmed,
+                contextScope: widget.searchPreferences?.rentalScope ?? '',
+                contextPricePeriod: widget.searchPreferences?.pricePeriod ?? '',
+                enabled: !state.isUpdating,
+                onSelected: (id) {
+                  _selectedOffer.value = (id: id, confirmed: null);
+                  _savedState.value = (savedOverride: null, isUpdating: false);
+                },
+                onConfirmed: (selected) => _selectedOffer.value = (
+                  id: selected.offerId,
+                  confirmed: selected,
+                ),
+              ),
+            ),
+      decisionTools: property.hasRentalOffers
+          ? selection == null || !selection.canIdentify
+                ? null
+                : PropertyCostCard(
+                    cost: PropertyCostBreakdown.fromProperty(
+                      data,
+                      selection: selection,
+                    ),
+                    periodLabel: property.pricePeriodLabel,
+                  )
+          : PropertyDecisionTools(
+              key: ValueKey(data.id),
+              property: data,
+              searchPreferences: widget.searchPreferences,
+            ),
       bottomActions:
           BlocSelector<
             CreateConversationCubit,
@@ -139,11 +261,23 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                       TenantPropertyBottomActions(
                         property: property,
                         isSaved: savedState.savedOverride ?? property.isSaved,
-                        onSavedPressed: () => _toggleSaved(property),
+                        onSavedPressed:
+                            property.hasRentalOffers &&
+                                (!property.selectionConfirmed ||
+                                    selection?.canIdentify != true ||
+                                    inventory?.isSupported != true ||
+                                    !RentalOfferCapabilities
+                                        .configured
+                                        .canFavorite)
+                            ? null
+                            : () => _toggleSaved(property),
                         isOpeningChat: isOpeningChat,
                         onChatPressed:
                             property.ownerId.isEmpty ||
-                                property.ownerId == UserModel.currentUser?.id
+                                property.ownerId == UserModel.currentUser?.id ||
+                                (property.hasRentalOffers &&
+                                    (!property.selectionConfirmed ||
+                                        selection?.isAvailable != true))
                             ? null
                             : () => _openChat(property),
                       ),
@@ -154,18 +288,29 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
 
   Future<void> _openChat(TenantPropertyDetailsContent property) async {
     if (!WorkspaceNavigation.isAuthenticated) {
+      final choice = _selectedOffer.value;
       await WorkspaceNavigation.open(
         workspace: AppWorkspace.tenant,
         showLoginSheet: true,
-        detail: () =>
-            Go.to(PropertyDetailsScreen(propertyId: widget.propertyId)),
+        detail: () => Go.to(
+          PropertyDetailsScreen(
+            propertyId: widget.propertyId,
+            offerId: choice.id,
+            confirmedSelection: choice.confirmed,
+            searchPreferences: widget.searchPreferences,
+          ),
+        ),
       );
       return;
     }
     await _conversationCubit.createOrGet(
       userId: property.ownerId,
-      onSuccess: (conversation) =>
-          Go.to(ChatScreen(conversation: conversation)),
+      onSuccess: (conversation) => Go.to(
+        ChatScreen(
+          conversation: conversation,
+          rentalContext: property.selection,
+        ),
+      ),
     );
   }
 

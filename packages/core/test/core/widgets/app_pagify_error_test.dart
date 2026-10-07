@@ -269,6 +269,58 @@ void main() {
       await tester.pumpWidget(const SizedBox.shrink());
     });
   }
+  testWidgets(
+    'a filtered pagination failure retries the same page without losing source items',
+    (tester) async {
+      final controller = PagifyController<String>();
+      final requests = <int>[];
+      bool failNextPage = true;
+      String? message;
+      await tester.pumpWidget(
+        _screen(
+          AppPagify<String>(
+            pagifyController: controller,
+            loadingBuilder: const SizedBox.shrink(),
+            onError: (_, _, error) => message = error.msg,
+            filterItems: (items) =>
+                items.where((item) => item == 'bed').toList(),
+            emptyListView: const Text('No matching loaded accommodation'),
+            filteredFooterBuilder:
+                (context, hasMore, isLoading, error, loadMore) => hasMore
+                ? TextButton(
+                    onPressed: isLoading ? null : loadMore,
+                    child: Text(error ?? 'Next page'),
+                  )
+                : const SizedBox.shrink(),
+            asyncCall: (_, page) async {
+              requests.add(page);
+              if (page == 2 && failNextPage) {
+                failNextPage = false;
+                throw const ServerException('Bed page unavailable');
+              }
+              return (
+                [page == 1 ? 'room' : 'bed'],
+                PaginationData(perPage: 1, totalPages: 2),
+              );
+            },
+            itemBuilder: (_, _, _, item) => Text(item),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Next page'));
+      await tester.pumpAndSettle();
+      expect(message, 'Bed page unavailable');
+      expect(controller.items, ['room']);
+      expect(find.text('Bed page unavailable'), findsOneWidget);
+      await tester.tap(find.text('Bed page unavailable'));
+      await tester.pumpAndSettle();
+      expect(requests, [1, 2, 2]);
+      expect(controller.items, ['room', 'bed']);
+      expect(find.text('bed'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
 }
 
 Widget _screen(Widget child) => EasyLocalization(

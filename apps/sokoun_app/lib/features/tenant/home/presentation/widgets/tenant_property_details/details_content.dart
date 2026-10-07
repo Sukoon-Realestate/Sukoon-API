@@ -28,10 +28,12 @@ class TenantPropertyDetailsContentView extends StatelessWidget {
     super.key,
     required this.property,
     this.decisionTools,
+    this.offerPicker,
   });
 
   final TenantPropertyDetailsContent property;
   final Widget? decisionTools;
+  final Widget? offerPicker;
 
   Future<void> _openLocation() async {
     await LauncherHelper.launchGoogleMaps(
@@ -84,14 +86,25 @@ class TenantPropertyDetailsContentView extends StatelessWidget {
             ),
           ),
           12.szH,
-          TenantPropertyPrice(
-            price: property.price,
-            periodLabel: property.pricePeriodLabel,
-          ),
+          if (!property.hasRentalOffers)
+            TenantPropertyPrice(
+              price: property.price,
+              periodLabel: property.pricePeriodLabel,
+            ),
           14.szH,
+          if (offerPicker != null) offerPicker!,
+          if (property.hasRentalOffers) ...[
+            AppText(
+              LocaleKeys.rentalPropertyDetails,
+              fontWeight: FontWeight.bold,
+            ),
+            8.szH,
+            AppText(property.propertyTitle),
+          ],
           TenantPropertyMetricsGrid(property: property),
           14.szH,
-          TenantPropertyRentalDetails(property: property),
+          if (!property.hasRentalOffers)
+            TenantPropertyRentalDetails(property: property),
           if (decisionTools != null) ...[14.szH, decisionTools!],
           14.szH,
           TenantPropertyListingInformation(property: property),
@@ -104,12 +117,20 @@ class TenantPropertyDetailsContentView extends StatelessWidget {
           ],
           14.szH,
           TenantPropertyInfoSection(
-            title: LocaleKeys.tenantPropertyDetailsDescription,
-            child: PropertyDescription(description: property.description),
+            title: property.hasRentalOffers
+                ? LocaleKeys.rentalPropertyDescription
+                : LocaleKeys.tenantPropertyDetailsDescription,
+            child: PropertyDescription(
+              description: property.hasRentalOffers
+                  ? property.propertyDescription
+                  : property.description,
+            ),
           ),
           12.szH,
           TenantPropertyInfoSection(
-            title: LocaleKeys.tenantPropertyDetailsAmenities,
+            title: property.hasRentalOffers
+                ? LocaleKeys.rentalSharedSpaces
+                : LocaleKeys.tenantPropertyDetailsAmenities,
             child: TenantPropertyAmenityWrap(amenities: property.amenities),
           ),
           12.szH,

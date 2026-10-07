@@ -43,6 +43,10 @@ class OwnerCalendarVisitCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 3.h,
               children: [
+                if (visit.rentalSelection != null)
+                  AppText(
+                    RentalOfferLabels.accommodation(visit.rentalSelection!),
+                  ),
                 AppText(
                   visit.tenant.name,
                   style: AppTextStyles.extraBold.copyWith(

@@ -1,3 +1,5 @@
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_selection_panel.dart';
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
 import 'package:melos_core/core/shared/base_state.dart';
 import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 import 'package:melos_core/core/network/network_request.dart';

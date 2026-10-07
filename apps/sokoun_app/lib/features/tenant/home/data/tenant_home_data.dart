@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/rental_offer_capabilities.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
@@ -8,10 +9,15 @@ import 'package:melos_core/core/local_db/objectbox_cache_service.dart';
 
 /// Endpoint paging metadata only; AppPagify owns collection and scroll state.
 class TenantHomeData {
-  static const String cacheKey = 'tenant_home_properties';
+  static String get cacheKey => RentalOfferCapabilities.configured.canSearch
+      ? 'tenant_home_properties_offers_v1'
+      : 'tenant_home_properties';
+  static String get _pageKey => RentalOfferCapabilities.configured.canSearch
+      ? 'tenant_home_page_offers_v1'
+      : 'tenant_home_page';
 
   HomePageModel? readCachedPage() {
-    final json = ObjectBoxCacheService.read('tenant_home_page');
+    final json = ObjectBoxCacheService.read(_pageKey);
     if (json == null) return null;
     return HomePageModel.fromJson(json);
   }
@@ -32,10 +38,12 @@ class TenantHomeData {
       CrudBaseParmas<HomePageModel>(
         api: ApiConstants.homePage,
         httpRequestType: HttpRequestType.get,
-        queryParameters: {'page': serverPage},
-        cacheKey: serverPage == 1
-            ? 'tenant_home_page'
-            : 'tenant_home_page_$serverPage',
+        queryParameters: {
+          'page': serverPage,
+          if (RentalOfferCapabilities.configured.canSearch)
+            'rental_offers_version': 1,
+        },
+        cacheKey: serverPage == 1 ? _pageKey : '${_pageKey}_$serverPage',
         mapper: (json) => HomePageModel.fromJson(json),
         fromCacheJson: HomePageModel.fromJson,
         toJson: (model) => model.toJson(),

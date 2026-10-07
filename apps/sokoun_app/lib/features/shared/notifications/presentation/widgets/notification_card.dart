@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
@@ -99,6 +100,12 @@ class NotificationCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     5.szH,
+                    if (notification.payload.rentalSelection != null)
+                      AppText(
+                        RentalOfferLabels.accommodation(
+                          notification.payload.rentalSelection!,
+                        ),
+                      ),
                     AppText(
                       notification.time,
                       style: AppTextStyles.regular11.copyWith(

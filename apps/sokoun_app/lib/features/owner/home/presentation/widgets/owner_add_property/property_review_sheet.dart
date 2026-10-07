@@ -1,3 +1,5 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_selection_panel.dart';
 import 'package:flutter/material.dart';
 import 'listing_quality_card.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -13,6 +15,7 @@ import 'package:sokoun_app/shared_widgets/sokoun_reveal.dart';
 import '../../../data/enums/property_review_action.dart';
 import '../../../data/models/owner_add_property_content.dart';
 import 'property_review_section.dart';
+import 'rental_media_review_summary.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 
 class PropertyReviewSheet extends StatelessWidget {
@@ -63,18 +66,39 @@ class PropertyReviewSheet extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              ListingQualityCard(form: form),
+              if (form.submissionInventory case final inventory?) ...[
+                for (final offer in inventory.offers)
+                  RentalSelectionPanel(
+                    inventory: inventory,
+                    selection: RentalSelection.fromOffer(
+                      propertyId: '',
+                      inventory: inventory,
+                      offer: offer,
+                    ),
+                  ),
+                if (inventory.hasLocalOnlyDetails)
+                  AppText(LocaleKeys.rentalDraftDetailsHelp),
+              ],
+              if (form.rentalInventory == null) ListingQualityCard(form: form),
               SokounReveal(
                 child: PropertyReviewSection(
-                  title: LocaleKeys.ownerPropertyReviewBasics,
+                  title: form.rentalInventory == null
+                      ? LocaleKeys.ownerPropertyReviewBasics
+                      : form.isPartialOffering
+                      ? LocaleKeys.rentalPropertyContext
+                      : LocaleKeys.rentalPropertyDetails,
                   lines: [
                     form.title,
                     form.propertyType,
                     '${form.locationSummary}، ${form.street}',
                     if (form.location case final location?)
                       location.coordinates,
-                    '${LocaleKeys.ownerAddPropertyBedrooms}: ${form.bedrooms} · ${LocaleKeys.ownerAddPropertyBathrooms}: ${form.bathrooms}',
-                    '${LocaleKeys.ownerAddPropertySpace}: ${form.space}',
+                    if (form.bedrooms.isNotEmpty)
+                      '${LocaleKeys.rentalPropertyRooms}: ${form.bedrooms}',
+                    if (form.bathrooms.isNotEmpty)
+                      '${LocaleKeys.rentalParentPropertyBathrooms}: ${form.bathrooms}',
+                    if (form.space.isNotEmpty)
+                      '${LocaleKeys.rentalParentPropertyArea}: ${form.space}',
                     if (form.areaDescription.trim().isNotEmpty)
                       '${LocaleKeys.ownerAddPropertyAreaDescription}: ${form.areaDescription}',
                     if (form.floor.trim().isNotEmpty)
@@ -98,21 +122,42 @@ class PropertyReviewSheet extends StatelessWidget {
                   onEdit: () => Go.back(PropertyReviewAction.photos),
                 ),
               ),
-              SokounReveal(
-                delay: const Duration(milliseconds: 120),
-                child: PropertyReviewSection(
-                  title: LocaleKeys.ownerAddPropertyPricingTitle,
-                  lines: [
-                    '${LocaleKeys.ownerAddPropertyPrice}: ${EgyptianPoundText.format(form.monthlyPrice)}',
-                    '${LocaleKeys.ownerAddPropertyPricePeriod}: ${form.rentalUnitLabel}',
-                    '${LocaleKeys.ownerAddPropertySuitableFor}: ${form.suitableForLabel}',
-                    '${LocaleKeys.ownerAddPropertyMinimumRentalMonths}: ${form.rentalDuration}',
-                    form.amenityLabels.join(' · '),
-                    form.description,
-                  ],
-                  onEdit: () => Go.back(PropertyReviewAction.pricing),
+              RentalMediaReviewSummary(form: form),
+              if (form.submissionInventory != null) ...[
+                AppText(LocaleKeys.rentalOfferingMode),
+                AppText(
+                  form.isPartialOffering
+                      ? LocaleKeys.rentalPartialMode
+                      : LocaleKeys.rentalEntireProperty,
                 ),
-              ),
+                AppText(LocaleKeys.rentalSharedSpaces),
+                AppText(
+                  [
+                    ...form.amenityLabels,
+                    ...form.submissionInventory!.draftDetails.facilities,
+                  ].join(' · '),
+                ),
+                if (form.submissionInventory!.draftDetails.rules.isNotEmpty)
+                  AppText(
+                    form.submissionInventory!.draftDetails.rules.join('\n'),
+                  ),
+              ],
+              if (form.rentalInventory == null)
+                SokounReveal(
+                  delay: const Duration(milliseconds: 120),
+                  child: PropertyReviewSection(
+                    title: LocaleKeys.ownerAddPropertyPricingTitle,
+                    lines: [
+                      '${LocaleKeys.ownerAddPropertyPrice}: ${EgyptianPoundText.format(form.monthlyPrice)}',
+                      '${LocaleKeys.ownerAddPropertyPricePeriod}: ${form.rentalUnitLabel}',
+                      '${LocaleKeys.ownerAddPropertySuitableFor}: ${form.suitableForLabel}',
+                      '${LocaleKeys.ownerAddPropertyMinimumRentalMonths}: ${form.rentalDuration}',
+                      form.amenityLabels.join(' · '),
+                      form.description,
+                    ],
+                    onEdit: () => Go.back(PropertyReviewAction.pricing),
+                  ),
+                ),
               SokounReveal(
                 delay: const Duration(milliseconds: 160),
                 child: PropertyReviewSection(
@@ -124,9 +169,9 @@ class PropertyReviewSheet extends StatelessWidget {
                       '${LocaleKeys.ownerAddPropertyNeighborhood}: ${form.neighborhood}',
                     if (form.buildingYear.isNotEmpty)
                       '${LocaleKeys.tenantPropertyDetailsBuildingYear}: ${form.buildingYear}',
-                    if (form.deposit.isNotEmpty)
+                    if (!form.isPartialOffering && form.deposit.isNotEmpty)
                       '${LocaleKeys.ownerAddPropertyDeposit}: ${PropertyDetailsModel.depositLabelFor(form.deposit)}',
-                    if (form.smokingAllowed != null)
+                    if (!form.isPartialOffering && form.smokingAllowed != null)
                       form.smokingAllowed == true
                           ? LocaleKeys.tenantPropertyDetailsSmokingAllowed
                           : LocaleKeys.tenantPropertyDetailsSmokingNotAllowed,
@@ -143,7 +188,9 @@ class PropertyReviewSheet extends StatelessWidget {
       ),
       SokounActionFooter(
         child: DefaultButton(
-          title: isEditing
+          title: !form.canSaveToServer()
+              ? LocaleKeys.rentalSaveLocalDraft
+              : isEditing
               ? LocaleKeys.ownerPropertiesSaveChanges
               : LocaleKeys.ownerAddPropertySubmitReview,
           onTap: () => Go.back(PropertyReviewAction.submit),

@@ -1,3 +1,4 @@
+import 'shared/rental_offers/presentation/rental_property_link_navigation.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -65,6 +66,7 @@ class _SplashScreenState extends State<SplashScreen> {
         curve: Curves.easeInOutCubic,
       ),
     );
+    RentalPropertyLinkNavigation.ready();
   }
 
   @override

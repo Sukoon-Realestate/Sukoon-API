@@ -1,11 +1,16 @@
 part of '../../imports.dart';
 
 class BookVisitCubit extends AsyncCubit<Map<String, dynamic>> {
-  BookVisitCubit() : super(const {});
+  BookVisitCubit({this.capabilities = RentalOfferCapabilities.configured})
+    : super(const {});
+  final RentalOfferCapabilities capabilities;
+  bool _validating = false;
 
   Future<void> bookVisit({
     required String propertyId,
     String ownerId = '',
+    RentalSelection? selection,
+    bool hasRentalOffers = false,
     required String visitDate,
     required int visitHour,
     required int visitMinute,
@@ -13,7 +18,38 @@ class BookVisitCubit extends AsyncCubit<Map<String, dynamic>> {
     required void Function() onSuccess,
     void Function(String message)? onError,
   }) async {
-    if (isLoading || isClosed) return;
+    if (isLoading || isClosed || _validating) return;
+    if ((hasRentalOffers || selection != null) &&
+        (!capabilities.canRequestViewing ||
+            selection?.canIdentify != true ||
+            selection?.propertyId != propertyId)) {
+      setError(errorMessage: LocaleKeys.rentalUnavailableCapability);
+      onError?.call(LocaleKeys.rentalUnavailableCapability);
+      return;
+    }
+    if (selection != null) {
+      _validating = true;
+      try {
+        final fresh = await RentalOfferReadData(
+          baseCrudUseCase,
+        ).freshSelection(selection);
+        if (!selection.sameTermsAs(fresh)) {
+          throw StateError(LocaleKeys.rentalTermsChanged);
+        }
+      } catch (error) {
+        if (!isClosed) {
+          final message = error is StateError
+              ? error.message
+              : error.toString();
+          setError(errorMessage: message);
+          onError?.call(message);
+        }
+        return;
+      } finally {
+        _validating = false;
+      }
+      if (isClosed) return;
+    }
     if (ownerId.isNotEmpty && ownerId == UserModel.currentUser?.id) {
       setError(errorMessage: LocaleKeys.workspaceSelfActionBlocked);
       onError?.call(LocaleKeys.workspaceSelfActionBlocked);
@@ -28,6 +64,7 @@ class BookVisitCubit extends AsyncCubit<Map<String, dynamic>> {
       return;
     }
     final BookVisitBody body = BookVisitBody.fromTime(
+      selection: selection,
       visitDate: visitDate,
       hour: visitHour,
       minute: visitMinute,
@@ -38,9 +75,15 @@ class BookVisitCubit extends AsyncCubit<Map<String, dynamic>> {
         CrudBaseParmas<Map<String, dynamic>>(
           api: ApiConstants.propertyVisits(propertyId),
           httpRequestType: HttpRequestType.post,
-          body: body.toJson(),
-          mapper: (json) =>
-              json is Map<String, dynamic> ? json : <String, dynamic>{},
+          body: body.toJson(capabilities: capabilities),
+          mapper: (json) {
+            if (selection != null &&
+                (json is! Map ||
+                    json['offer_id']?.toString() != selection.offerId)) {
+              throw FormatException(LocaleKeys.rentalIncompatibleResponse);
+            }
+            return json is Map<String, dynamic> ? json : <String, dynamic>{};
+          },
         ),
       ),
       onSuccess: (_) {

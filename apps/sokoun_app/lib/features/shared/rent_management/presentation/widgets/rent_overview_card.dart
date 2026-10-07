@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -31,6 +32,8 @@ class RentOverviewCard extends StatelessWidget {
           AppText(LocaleKeys.journeyRentDue, fontWeight: FontWeight.bold),
           8.szH,
           AppText(invoice.propertyTitle),
+          if (invoice.rentalSelection != null)
+            AppText(RentalOfferLabels.accommodation(invoice.rentalSelection!)),
           AppText(
             invoice.amount.display,
             fontSize: 20,

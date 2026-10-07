@@ -1,3 +1,5 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_inventory.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_listing_summary.dart';
 import 'package:equatable/equatable.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:sokoun_app/features/shared/finance/data/egyptian_pound.dart';
@@ -162,6 +164,8 @@ class CityModel extends Equatable {
 
 class PropertyDetailsModel extends Equatable {
   const PropertyDetailsModel({
+    this.rentalInventory,
+    this.rentalSummary,
     this.ownerAvatar = '',
     this.availabilityConfirmedAt,
     this.rejectionReason = '',
@@ -214,7 +218,9 @@ class PropertyDetailsModel extends Equatable {
   });
 
   const PropertyDetailsModel.initial()
-    : video = null,
+    : rentalInventory = null,
+      rentalSummary = null,
+      video = null,
       videoDuration = null,
       propertyLink = '',
       isOwnerVerified = false,
@@ -279,6 +285,8 @@ class PropertyDetailsModel extends Equatable {
         json['owner_name']?.toString() ??
         (ownerStringIsId ? '' : ownerString);
     return PropertyDetailsModel(
+      rentalInventory: RentalInventory.read(json),
+      rentalSummary: RentalListingSummary.read(json),
       video: json['video'] == null ? null : _propertyFileUrl(json['video']),
       videoDuration: int.tryParse('${json['video_duration'] ?? ''}'),
       mainImageId: json['main_image_id']?.toString() ?? '',
@@ -412,6 +420,9 @@ class PropertyDetailsModel extends Equatable {
   final String ownershipProof;
   final String latitude;
   final String longitude;
+  final RentalInventory? rentalInventory;
+  final RentalListingSummary? rentalSummary;
+  bool get hasRentalOffers => rentalInventory != null || rentalSummary != null;
   final List<String> amenities;
   final bool isFav;
   final bool isSaved;
@@ -422,6 +433,8 @@ class PropertyDetailsModel extends Equatable {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    if (rentalInventory != null) 'rental_inventory': rentalInventory!.toJson(),
+    if (rentalSummary != null) 'rental_summary': rentalSummary!.toJson(),
     if (availabilityConfirmedAt != null)
       'availability_confirmed_at': availabilityConfirmedAt!.toIso8601String(),
     if (rejectionReason.isNotEmpty) 'rejection_reason': rejectionReason,
@@ -474,6 +487,8 @@ class PropertyDetailsModel extends Equatable {
   };
 
   PropertyDetailsModel copyWith({
+    RentalInventory? rentalInventory,
+    RentalListingSummary? rentalSummary,
     String? video,
     int? videoDuration,
     String? propertyLink,
@@ -527,6 +542,8 @@ class PropertyDetailsModel extends Equatable {
     String? updatedAt,
   }) {
     return PropertyDetailsModel(
+      rentalInventory: rentalInventory ?? this.rentalInventory,
+      rentalSummary: rentalSummary ?? this.rentalSummary,
       video: clearVideo ? null : video ?? this.video,
       videoDuration: clearVideo ? null : videoDuration ?? this.videoDuration,
       propertyLink: propertyLink ?? this.propertyLink,
@@ -717,6 +734,8 @@ class PropertyDetailsModel extends Equatable {
 
   @override
   List<Object?> get props => [
+    rentalInventory,
+    rentalSummary,
     id,
     availabilityConfirmedAt,
     rejectionReason,

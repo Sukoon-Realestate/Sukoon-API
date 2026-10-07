@@ -10,6 +10,9 @@ import 'package:sokoun_app/features/tenant/home/data/models/tenant_search_result
 
 import 'active_filters_bar.dart';
 import 'results_search_header.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/enums/rental_listing_category.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/rental_offer_capabilities.dart';
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_listing_categories.dart';
 
 class TenantSearchResultsHeader extends StatelessWidget {
   const TenantSearchResultsHeader({
@@ -22,6 +25,8 @@ class TenantSearchResultsHeader extends StatelessWidget {
     required this.onFiltersPressed,
     required this.onFilterRemoved,
     required this.onClearFiltersPressed,
+    required this.category,
+    required this.onCategorySelected,
   });
 
   final TextEditingController queryController;
@@ -32,6 +37,8 @@ class TenantSearchResultsHeader extends StatelessWidget {
   final VoidCallback onFiltersPressed;
   final ValueChanged<ActiveFilterContent> onFilterRemoved;
   final VoidCallback onClearFiltersPressed;
+  final RentalListingCategory category;
+  final ValueChanged<RentalListingCategory> onCategorySelected;
 
   @override
   Widget build(BuildContext context) => Column(
@@ -43,6 +50,12 @@ class TenantSearchResultsHeader extends StatelessWidget {
         onSubmitted: onQuerySubmitted,
         onFiltersTap: onFiltersPressed,
       ),
+      RentalListingCategories(
+        selected: category,
+        onSelected: onCategorySelected,
+        includeUnspecified: false,
+        scopeSearchUnavailable: !RentalOfferCapabilities.configured.canSearch,
+      ).paddingSymmetric(horizontal: 18, vertical: 12),
       ActiveFiltersBar(
         filters: activeFilters,
         onFilterRemoved: onFilterRemoved,

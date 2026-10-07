@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:sokoun_app/features/shared/premium/data/premium_json.dart';
 import 'package:sokoun_app/features/shared/premium/data/enums/premium_status.dart';
@@ -5,6 +6,7 @@ import 'package:sokoun_app/features/shared/premium/data/models/premium_money.dar
 
 class DigitalLease extends Equatable {
   const DigitalLease({
+    this.rentalSelection,
     this.id = '',
     this.propertyId = '',
     this.propertyTitle = '',
@@ -21,6 +23,7 @@ class DigitalLease extends Equatable {
   });
   const DigitalLease.initial() : this();
   factory DigitalLease.fromJson(Map<String, dynamic> json) => DigitalLease(
+    rentalSelection: RentalSelection.fromRecord(json),
     id: premiumString(json['id']),
     propertyId: premiumString(json['property_id']),
     propertyTitle: premiumString(json['property_title']),
@@ -35,6 +38,7 @@ class DigitalLease extends Equatable {
     canSign: json['can_sign'] == true,
     canCancel: json['can_cancel'] == true,
   );
+  final RentalSelection? rentalSelection;
   final String id;
   final String propertyId;
   final String propertyTitle;
@@ -51,6 +55,10 @@ class DigitalLease extends Equatable {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    if (rentalSelection != null) ...{
+      'offer_id': rentalSelection!.offerId,
+      'offer_snapshot': rentalSelection!.toJson(),
+    },
     'property_id': propertyId,
     'property_title': propertyTitle,
     'owner_name': ownerName,
@@ -65,6 +73,7 @@ class DigitalLease extends Equatable {
     'can_cancel': canCancel,
   };
   DigitalLease copyWith({
+    RentalSelection? rentalSelection,
     String? id,
     String? propertyId,
     String? propertyTitle,
@@ -79,6 +88,7 @@ class DigitalLease extends Equatable {
     bool? canSign,
     bool? canCancel,
   }) => DigitalLease(
+    rentalSelection: rentalSelection ?? this.rentalSelection,
     id: id ?? this.id,
     propertyId: propertyId ?? this.propertyId,
     propertyTitle: propertyTitle ?? this.propertyTitle,
@@ -95,6 +105,7 @@ class DigitalLease extends Equatable {
   );
   @override
   List<Object?> get props => [
+    rentalSelection,
     id,
     propertyId,
     propertyTitle,

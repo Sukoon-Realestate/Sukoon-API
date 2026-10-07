@@ -1,3 +1,10 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_inventory.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_terms.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_offer.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_accommodation_draft_details.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/enums/rental_scope.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/rental_inventory_validation.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/rental_offer_capabilities.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'property_location.dart';
@@ -124,6 +131,8 @@ class OwnerPropertyPhotoDraft {
     this.existingUrl = '',
     this.name = '',
     this.description = '',
+    this.contentFingerprint = '',
+    this.draftKey = '',
   });
 
   final File? file;
@@ -132,11 +141,21 @@ class OwnerPropertyPhotoDraft {
   final String name;
   final String description;
 
+  /// Local-only checksum; never part of the property API body.
+  final String contentFingerprint;
+  final String draftKey;
+  String get reference => draftKey.isNotEmpty ? draftKey : id;
+
   bool get isExisting => existingUrl.trim().isNotEmpty;
   bool get canRemove => true;
   String get id => isExisting
       ? (existingId.isNotEmpty ? existingId : existingUrl)
       : file?.path ?? '';
+  String get uniquenessKey => contentFingerprint.isNotEmpty
+      ? 'sha256:$contentFingerprint'
+      : isExisting
+      ? 'url:$existingUrl'
+      : 'path:${file?.path ?? ''}';
 
   OwnerPropertyPhotoDraft copyWith({
     File? file,
@@ -144,6 +163,8 @@ class OwnerPropertyPhotoDraft {
     String? existingUrl,
     String? name,
     String? description,
+    String? contentFingerprint,
+    String? draftKey,
   }) {
     return OwnerPropertyPhotoDraft(
       file: file ?? this.file,
@@ -151,12 +172,17 @@ class OwnerPropertyPhotoDraft {
       existingUrl: existingUrl ?? this.existingUrl,
       name: name ?? this.name,
       description: description ?? this.description,
+      contentFingerprint: contentFingerprint ?? this.contentFingerprint,
+      draftKey: draftKey ?? this.draftKey,
     );
   }
 }
 
 class OwnerAddPropertyFormState {
   const OwnerAddPropertyFormState({
+    this.rentalInventory,
+    this.selectedOfferRef = '',
+    this.submissionKey = '',
     required this.title,
     required this.propertyType,
     this.propertyTypeValue = '',
@@ -220,6 +246,111 @@ class OwnerAddPropertyFormState {
     );
   }
 
+  final RentalInventory? rentalInventory;
+  final String selectedOfferRef;
+  RentalOffer? get selectedOffer => selectedOfferRef.isEmpty
+      ? rentalInventory?.offers.firstOrNull
+      : rentalInventory?.offers
+            .where((offer) => offer.reference == selectedOfferRef)
+            .firstOrNull;
+  RentalScope? get rentalScope => selectedOffer?.scope;
+  bool canSaveToServer([
+    RentalOfferCapabilities capabilities = RentalOfferCapabilities.configured,
+  ]) =>
+      !needsOfferCapability ||
+      (capabilities.canWrite &&
+          submissionInventory?.hasLocalOnlyDetails != true);
+  final String submissionKey;
+  bool get isPartialOffering => rentalInventory?.isPartial == true;
+  bool get needsOfferCapability => rentalInventory != null;
+  RentalInventory? get submissionInventory {
+    final inventory = rentalInventory;
+    if (inventory == null) return null;
+    if (inventory.isPartial) {
+      final refs = inventory.offers.expand((offer) => offer.roomRefs).toSet();
+      final bedRooms = inventory.offers
+          .where((offer) => offer.scope == RentalScope.bed)
+          .expand((offer) => offer.roomRefs)
+          .toSet();
+      final bedRefs = inventory.offers
+          .where((offer) => offer.scope == RentalScope.bed)
+          .map((offer) => offer.bedRef)
+          .toSet();
+      return inventory.copyWith(
+        offers: [
+          for (final offer in inventory.offers)
+            offer.scope == RentalScope.roomGroup
+                ? offer
+                : offer.copyWith(draftDetails: const RentalOfferDraftDetails()),
+        ],
+        rooms: [
+          for (final room in inventory.rooms)
+            if (room.id.isNotEmpty || refs.contains(room.reference))
+              room.copyWith(
+                draftDetails: refs.contains(room.reference)
+                    ? room.draftDetails
+                    : const RentalRoomDraftDetails(),
+                beds: [
+                  for (final bed in room.beds)
+                    if (bed.id.isNotEmpty ||
+                        bedRefs.contains(bed.reference) ||
+                        (bedRooms.contains(room.reference) &&
+                            bed.name.trim().isNotEmpty))
+                      bed.copyWith(
+                        draftDetails: bedRefs.contains(bed.reference)
+                            ? bed.draftDetails
+                            : const RentalBedDraftDetails(),
+                      ),
+                ],
+              ),
+        ],
+      );
+    }
+    return inventory.copyWith(
+      // Hidden partial drafts remain recoverable but cannot block whole mode.
+      // Existing room identities remain in edits to retain their dependencies.
+      draftDetails: const RentalSharedDraftDetails(),
+      rooms: [
+        for (final room in inventory.rooms)
+          if (room.id.isNotEmpty)
+            room.copyWith(
+              draftDetails: const RentalRoomDraftDetails(),
+              beds: [
+                for (final bed in room.beds)
+                  if (bed.id.isNotEmpty)
+                    bed.copyWith(draftDetails: const RentalBedDraftDetails()),
+              ],
+            ),
+      ],
+      offers: [
+        for (final offer in inventory.offers)
+          offer.copyWith(
+            draftDetails: const RentalOfferDraftDetails(),
+            inheritedFields: const {},
+            terms: RentalTerms(
+              price: monthlyPrice,
+              pricePeriod: rentalUnitApiValue,
+              minimumMonths: int.tryParse(rentalDuration) ?? 0,
+              deposit: deposit,
+              suitableFor: suitableForApiValue,
+              description: description,
+              smokingAllowed: smokingAllowed,
+              rules: offer.terms.rules,
+            ),
+          ),
+      ],
+    );
+  }
+
+  bool get isInventoryReady =>
+      rentalInventory == null ||
+      RentalInventoryValidation.validate(
+        submissionInventory!,
+        totalBedrooms: (int.tryParse(bedrooms) ?? 0) > 0
+            ? int.parse(bedrooms)
+            : null,
+      ).isEmpty;
+
   final String title;
   final String propertyType;
   final String propertyTypeValue;
@@ -276,7 +407,7 @@ class OwnerAddPropertyFormState {
 
   bool get isAdditionalDetailsReady =>
       isBuildingYearReady &&
-      isDepositReady &&
+      (isPartialOffering || isDepositReady) &&
       !(ownershipProofFile != null && removeOwnershipProof);
   String get rentalUnitLabel =>
       optionLabels['price_period:$rentalUnitApiValue'] ??
@@ -301,47 +432,82 @@ class OwnerAddPropertyFormState {
       .map((photo) => photo.file)
       .whereType<File>()
       .toList(growable: false);
-  bool get isBasicsReady => Validators.isValidPropertyBasics(
-    requiredFields: [
-      title,
-      propertyType,
-      governorateId,
-      governorate,
-      districtId,
-      district,
-      street,
-    ],
-    positiveNumbers: [bedrooms, bathrooms, space],
-    floor: floor,
-    hasValidLocation: isLocationSelected,
-  );
+  bool get isAccommodationReady =>
+      rentalInventory == null ||
+      (selectedOffer != null &&
+          RentalInventoryValidation.validate(
+            submissionInventory!,
+            totalBedrooms: (int.tryParse(bedrooms) ?? 0) > 0
+                ? int.parse(bedrooms)
+                : null,
+            includeTerms: false,
+          ).isEmpty);
+  bool get isBasicsReady =>
+      (rentalInventory == null ||
+          (isPartialOffering
+              ? submissionInventory!.offers.every(
+                  (offer) =>
+                      submissionInventory!
+                          .resolved(offer)
+                          .terms
+                          .description
+                          .trim()
+                          .length >=
+                      10,
+                )
+              : Validators.hasMinimumLength(description, 10))) &&
+      isAccommodationReady &&
+      Validators.isValidPropertyBasics(
+        requiredFields: [
+          title,
+          propertyType,
+          governorateId,
+          governorate,
+          districtId,
+          district,
+          street,
+        ],
+        positiveNumbers: isPartialOffering
+            ? const []
+            : [bedrooms, bathrooms, space],
+        floor: floor,
+        hasValidLocation: isLocationSelected,
+      );
 
   bool get isVideoReady =>
       hasVideo &&
       !isVideoPreparing &&
       !removeVideo &&
-      (videoFile == null ||
-          (videoDuration != null &&
-              Validators.validatePropertyVideoDuration(
-                    Duration(seconds: videoDuration!),
-                  ) ==
-                  null));
+      ((videoFile == null && videoDuration == null) ||
+          Validators.validatePropertyVideoDuration(
+                Duration(seconds: videoDuration ?? 0),
+              ) ==
+              null);
+
+  bool get hasDuplicatePhotos =>
+      photoDrafts.map((photo) => photo.id).toSet().length != photoCount ||
+      photoDrafts.map((photo) => photo.uniquenessKey).toSet().length !=
+          photoCount;
 
   bool get isPhotosReady =>
       Validators.isValidPropertyPhotos(count: photoCount) &&
+      !hasDuplicatePhotos &&
       photoDrafts.every((photo) => photo.file != null || photo.isExisting) &&
       isVideoReady;
 
   bool get isPricingReady =>
-      Validators.isValidPropertyPricing(
-        monthlyPrice: monthlyPrice,
-        rentalDuration: rentalDuration,
-        rentalUnit: rentalUnit,
-        suitableFor: suitableFor,
-        description: description,
-      ) &&
-      PropertyTenantType.fromValue(suitableForApiValue) != null &&
-      PropertyPricePeriod.fromValue(rentalUnitApiValue) != null &&
+      (isPartialOffering
+          ? isInventoryReady
+          : Validators.isValidPropertyPricing(
+                  monthlyPrice: monthlyPrice,
+                  rentalDuration: rentalDuration,
+                  rentalUnit: rentalUnit,
+                  suitableFor: suitableFor,
+                  description: description,
+                ) &&
+                PropertyTenantType.fromValue(suitableForApiValue) != null &&
+                PropertyPricePeriod.fromValue(rentalUnitApiValue) != null) &&
+      isInventoryReady &&
       unsupportedAmenities.isEmpty &&
       isAdditionalDetailsReady;
 
@@ -369,10 +535,28 @@ class OwnerAddPropertyFormState {
         label: LocaleKeys.ownerAddPropertyAreaSummary,
         value: locationSummary,
       ),
-      AddPropertySummaryContent(
-        label: LocaleKeys.ownerAddPropertyPrice,
-        value: priceSummary,
-      ),
+      if (rentalInventory == null)
+        AddPropertySummaryContent(
+          label: LocaleKeys.ownerAddPropertyPrice,
+          value: priceSummary,
+        )
+      else
+        for (final offer in submissionInventory!.offers)
+          AddPropertySummaryContent(
+            label: offer.name.isEmpty
+                ? offer.scope?.label ?? LocaleKeys.rentalUnknownScope
+                : offer.name,
+            value: [
+              EgyptianPound.formatAmount(
+                submissionInventory!.resolved(offer).terms.price,
+              ),
+              PropertyPricePeriod.fromValue(
+                    submissionInventory!.resolved(offer).terms.pricePeriod,
+                  )?.label ??
+                  '',
+              offer.scope?.priceBasis ?? LocaleKeys.rentalUnknownScope,
+            ].join(' · '),
+          ),
       AddPropertySummaryContent(
         label: LocaleKeys.ownerAddPropertyPhotosSummary,
         value: photoSummary,
@@ -400,6 +584,10 @@ class OwnerAddPropertyFormState {
   }
 
   OwnerAddPropertyFormState copyWith({
+    RentalInventory? rentalInventory,
+    String? selectedOfferRef,
+    bool clearRentalInventory = false,
+    String? submissionKey,
     String? title,
     String? propertyType,
     String? propertyTypeValue,
@@ -442,6 +630,13 @@ class OwnerAddPropertyFormState {
     bool clearOwnershipProof = false,
   }) {
     return OwnerAddPropertyFormState(
+      rentalInventory: clearRentalInventory
+          ? null
+          : rentalInventory ?? this.rentalInventory,
+      selectedOfferRef: clearRentalInventory
+          ? ''
+          : selectedOfferRef ?? this.selectedOfferRef,
+      submissionKey: submissionKey ?? this.submissionKey,
       title: title ?? this.title,
       propertyType: propertyType ?? this.propertyType,
       propertyTypeValue: propertyTypeValue ?? this.propertyTypeValue,
@@ -490,14 +685,29 @@ class OwnerAddPropertyFormState {
   Map<String, dynamic> toJson({
     bool includeMainImage = true,
     bool isEditing = false,
+    RentalOfferCapabilities capabilities = RentalOfferCapabilities.configured,
   }) {
+    if (!canSaveToServer(capabilities)) {
+      throw StateError('Rental offer persistence is unavailable');
+    }
+    if (rentalInventory != null && !isInventoryReady) {
+      throw StateError('Invalid rental inventory');
+    }
     final Set<String> selectedAmenities = amenities;
     final OwnerPropertyPhotoDraft? mainPhoto = photoDrafts.firstOrNull;
     return {
       'title': title.trim(),
-      'description': description.trim(),
-      'price': monthlyPrice.trim(),
-      'price_period': _rentalUnitValue(rentalUnit),
+      if (!isPartialOffering) ...{
+        'description': description.trim(),
+        'price': monthlyPrice.trim(),
+        'price_period': _rentalUnitValue(rentalUnit),
+      },
+      if (rentalInventory != null)
+        'rental_inventory': jsonEncode(
+          submissionInventory!.toRequestJson(
+            includeMedia: capabilities.canAssociateMedia,
+          ),
+        ),
       'property_type': propertyTypeApiValue,
       'is_furnished': _containsOption(
         selectedAmenities,
@@ -506,13 +716,18 @@ class OwnerAddPropertyFormState {
         arabic: 'مفروش',
         english: 'Furnished',
       ),
-      'bedrooms': int.parse(bedrooms),
-      'bathrooms': int.parse(bathrooms),
-      'area': int.parse(space),
+      if (!isPartialOffering || (int.tryParse(bedrooms) ?? 0) > 0)
+        'bedrooms': int.parse(bedrooms),
+      if (!isPartialOffering || (int.tryParse(bathrooms) ?? 0) > 0)
+        'bathrooms': int.parse(bathrooms),
+      if (!isPartialOffering || (int.tryParse(space) ?? 0) > 0)
+        'area': int.parse(space),
       'space': areaDescription.trim(),
       'floor': floor.trim().isEmpty ? '' : int.parse(floor),
-      'rental_period': int.parse(rentalDuration),
-      'suitable_for': _suitableForValue(suitableFor),
+      if (!isPartialOffering) ...{
+        'rental_period': int.parse(rentalDuration),
+        'suitable_for': _suitableForValue(suitableFor),
+      },
       'governorate': governorateId,
       'city': districtId,
       'district': isEditing || neighborhood.trim().isNotEmpty
@@ -521,8 +736,10 @@ class OwnerAddPropertyFormState {
       'street': street.trim(),
       'country': country.trim(),
       'building_year': buildingYear.trim(),
-      'deposit': deposit.trim(),
-      'smoking_allowed': smokingAllowed ?? '',
+      if (!isPartialOffering) ...{
+        'deposit': deposit.trim(),
+        'smoking_allowed': smokingAllowed ?? '',
+      },
       if (location?.isValid == true) ...{
         'latitude': location!.latitude.toStringAsFixed(6),
         'longitude': location!.longitude.toStringAsFixed(6),

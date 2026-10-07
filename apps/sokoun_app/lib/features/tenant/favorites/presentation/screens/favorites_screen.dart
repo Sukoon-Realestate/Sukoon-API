@@ -1,3 +1,5 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/rental_offer_capabilities.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/enums/rental_listing_category.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
 import 'package:sokoun_app/shared_widgets/property_filter_button.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_layout.dart';
@@ -39,7 +41,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   final ValueNotifier<int> _visibleCount = ValueNotifier(0);
   late PropertySearchFilters _filters;
   PropertyFilterOptionsModel? _filterOptions;
-  final List<FavoritePropertyContent> _loadedFavorites = [];
+  final ValueNotifier<RentalListingCategory> _category = ValueNotifier(
+    RentalListingCategory.all,
+  );
   final Set<String> _pendingPropertyIds = {};
 
   @override
@@ -59,6 +63,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   void dispose() {
     _saveCubit?.close();
     _visibleCount.dispose();
+    _category.dispose();
+    _pagifyController.dispose();
     super.dispose();
   }
 
@@ -66,9 +72,13 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     BuildContext context,
     int page,
   ) async {
-    if (page == 1) _loadedFavorites.clear();
-    final (SavedPropertiesResponse response, PaginationData pagination) =
-        await FavoritesData.getSavedPropertiesPage(page: page);
+    final (
+      SavedPropertiesResponse response,
+      PaginationData pagination,
+    ) = await FavoritesData.getSavedPropertiesPage(
+      page: page,
+      filters: _filters,
+    );
     if (page == 1 && mounted && _itemCount != response.count) {
       _itemCount = response.count;
       _visibleCount.value = _visibleItemCount;
@@ -78,6 +88,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   }
 
   Future<void> _removeFavorite(FavoritePropertyContent item) async {
+    if (item.hasRentalOffers) {
+      Messages.showToast(msg: LocaleKeys.rentalSelectOffer);
+      return;
+    }
     if (_pendingPropertyIds.contains(item.id)) return;
 
     final List<FavoritePropertyContent>? initialFavorites = _initialFavorites;
@@ -100,13 +114,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       return;
     }
 
-    final int removedIndex = _loadedFavorites.indexWhere(
+    final int removedIndex = _pagifyController.items.indexWhere(
       (favorite) => favorite.id == item.id,
     );
     if (removedIndex < 0) return;
 
     final PropertySaveCubit? saveCubit = _saveCubit;
-    _loadedFavorites.removeAt(removedIndex);
     _pagifyController.removeWhere((favorite) => favorite.id == item.id);
     if (_itemCount > 0) _itemCount--;
     _visibleCount.value = _visibleItemCount;
@@ -118,8 +131,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         onError: (_) {
           requestFailed = true;
           if (!mounted) return;
-          _loadedFavorites.insert(
-            removedIndex.clamp(0, _loadedFavorites.length),
+          _pagifyController.addItemAt(
+            removedIndex.clamp(0, _pagifyController.items.length),
             item.copyWith(isSaved: true),
           );
           _applyFiltersToPagify();
@@ -172,13 +185,16 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     }
 
     if (_pendingPropertyIds.contains(item.id) ||
-        _loadedFavorites.any((favorite) => favorite.id == item.id)) {
+        _pagifyController.items.any((favorite) => favorite.id == item.id)) {
       return;
     }
 
     final PropertySaveCubit? saveCubit = _saveCubit;
-    final int restoredIndex = removedIndex.clamp(0, _loadedFavorites.length);
-    _loadedFavorites.insert(restoredIndex, item.copyWith(isSaved: true));
+    final int restoredIndex = removedIndex.clamp(
+      0,
+      _pagifyController.items.length,
+    );
+    _pagifyController.addItemAt(restoredIndex, item.copyWith(isSaved: true));
     _applyFiltersToPagify();
     _itemCount++;
     _visibleCount.value = _visibleItemCount;
@@ -188,7 +204,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         propertyId: item.id,
         onError: (_) {
           if (!mounted) return;
-          _loadedFavorites.removeWhere((favorite) => favorite.id == item.id);
+          _pagifyController.removeWhere((favorite) => favorite.id == item.id);
           _applyFiltersToPagify();
           if (_itemCount > 0) _itemCount--;
           _visibleCount.value = _visibleItemCount;
@@ -201,17 +217,33 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   List<FavoritePropertyContent>? get _visibleInitialFavorites {
     final List<FavoritePropertyContent>? favorites = _initialFavorites;
     if (favorites == null) return null;
-    return FavoritePropertyFilter.apply(favorites, _filters);
+    return FavoritePropertyFilter.apply(
+      favorites,
+      _filters,
+      category: _category.value,
+    );
   }
 
   bool get _hasLocalFilters =>
-      _filters.search.trim().isNotEmpty || _filters.activeCount > 0;
+      _filters.search.trim().isNotEmpty ||
+      _filters.activeCount > 0 ||
+      _category.value != RentalListingCategory.all;
+
+  bool get _usesLocalFiltering =>
+      !RentalOfferCapabilities.configured.canFavorite ||
+      _category.value == RentalListingCategory.unspecified;
 
   int get _visibleItemCount {
     final List<FavoritePropertyContent>? initialFavorites =
         _visibleInitialFavorites;
     if (initialFavorites != null) return initialFavorites.length;
-    return _hasLocalFilters ? _pagifyController.items.length : _itemCount;
+    return _usesLocalFiltering && _hasLocalFilters
+        ? FavoritePropertyFilter.apply(
+            _pagifyController.items,
+            _filters,
+            category: _category.value,
+          ).length
+        : _itemCount;
   }
 
   Future<void> _openFilters() async {
@@ -228,7 +260,14 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   void _applyFilters(PropertySearchFilters filters) {
     if (!mounted) return;
     setState(() => _filters = filters.copyWith(page: 1));
-    if (_initialFavorites == null) _applyFiltersToPagify();
+    _category.value = RentalListingCategory.fromScope(filters.rentalScope);
+    if (_initialFavorites == null) {
+      if (RentalOfferCapabilities.configured.canFavorite) {
+        _pagifyController.refresh();
+      } else {
+        _applyFiltersToPagify();
+      }
+    }
     _visibleCount.value = _visibleItemCount;
   }
 
@@ -236,34 +275,32 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     _applyFilters(PropertySearchFilters.initial(pageSize: _filters.pageSize));
   }
 
-  void _onPagifyStatusChanged(PagifyAsyncCallStatus status) {
-    if (!status.isSuccess || !mounted) return;
-    for (final FavoritePropertyContent item in _pagifyController.items) {
-      final int index = _loadedFavorites.indexWhere(
-        (favorite) => favorite.id == item.id,
-      );
-      if (index < 0) {
-        _loadedFavorites.add(item);
+  void _selectCategory(RentalListingCategory category) {
+    if (_category.value == category) return;
+    _filters = _filters.copyWith(
+      rentalScope: category.scope?.value ?? '',
+      page: 1,
+    );
+    _category.value = category;
+    if (_initialFavorites == null) {
+      if (RentalOfferCapabilities.configured.canFavorite) {
+        _pagifyController.refresh();
       } else {
-        _loadedFavorites[index] = item;
+        _applyFiltersToPagify();
       }
     }
-    if (_hasLocalFilters) {
-      _applyFiltersToPagify();
-    } else {
-      _visibleCount.value = _visibleItemCount;
-    }
+    _visibleCount.value = _visibleItemCount;
+  }
+
+  void _onPagifyStatusChanged(PagifyAsyncCallStatus status) {
+    if (!status.isSuccess || !mounted) return;
+    _visibleCount.value = _visibleItemCount;
   }
 
   void _applyFiltersToPagify() {
-    final List<FavoritePropertyContent> filtered = FavoritePropertyFilter.apply(
-      _loadedFavorites,
-      _filters,
-    );
-    _pagifyController.clear();
-    for (final FavoritePropertyContent item in filtered) {
-      _pagifyController.addItem(item);
-    }
+    // Recompose the visible projection without deleting other categories or
+    // changing Pagify's server page position and raw cache contents.
+    _pagifyController.reload();
     if (mounted) _visibleCount.value = _visibleItemCount;
   }
 
@@ -278,9 +315,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           icon: const Icon(Icons.checklist),
           onPressed: () => Go.to(const DecisionToolsScreen()),
         ),
-        PropertyFilterButton(
-          activeCount: _filters.activeCount,
-          onPressed: _openFilters,
+        ValueListenableBuilder<RentalListingCategory>(
+          valueListenable: _category,
+          builder: (context, category, _) => PropertyFilterButton(
+            activeCount: _filters.activeCount,
+            onPressed: _openFilters,
+          ),
         ),
       ],
       backgroundColor: context.appColor(
@@ -289,15 +329,28 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       ),
       contentWidth: SokounContentWidth.wide,
       body: SafeArea(
-        child: FavoritesContentView(
-          itemCount: _visibleCount,
-          initialItems: _visibleInitialFavorites,
-          pagifyController: _pagifyController,
-          loadPage: _getFavoritesPage,
-          onFavoriteRemoved: _removeFavorite,
-          activeFilterCount: _filters.activeCount,
-          onClearFiltersPressed: _clearFilters,
-          onPagifyStatusChanged: _onPagifyStatusChanged,
+        child: ValueListenableBuilder<RentalListingCategory>(
+          valueListenable: _category,
+          builder: (context, category, _) => FavoritesContentView(
+            category: category,
+            onCategorySelected: _selectCategory,
+            usesLocalFiltering:
+                _initialFavorites == null &&
+                _usesLocalFiltering &&
+                _hasLocalFilters,
+            itemCount: _visibleCount,
+            initialItems: _visibleInitialFavorites,
+            pagifyController: _pagifyController,
+            loadPage: _getFavoritesPage,
+            onFavoriteRemoved: _removeFavorite,
+            onOfferRemoved: () => _pagifyController.refresh(),
+            filters: _filters,
+            activeFilterCount:
+                _filters.activeCount +
+                (category == RentalListingCategory.unspecified ? 1 : 0),
+            onClearFiltersPressed: _clearFilters,
+            onPagifyStatusChanged: _onPagifyStatusChanged,
+          ),
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'features/shared/rental_offers/presentation/rental_property_link_navigation.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -36,6 +37,11 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
     super.initState();
     _themeCubit = ThemeCubit(initialMode: ThemePreferences.read());
     WidgetsBinding.instance.addObserver(this);
+    RentalPropertyLinkNavigation.reset();
+    final initialLink = Uri.tryParse(
+      WidgetsBinding.instance.platformDispatcher.defaultRouteName,
+    );
+    if (initialLink != null) RentalPropertyLinkNavigation.receive(initialLink);
     if (!injector.isRegistered<WorkspaceCubit>()) {
       injector.registerSingleton<WorkspaceCubit>(WorkspaceCubit());
     }
@@ -69,6 +75,17 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
     _userSubscription?.cancel();
     _themeCubit.close();
     super.dispose();
+  }
+
+  @override
+  Future<bool> didPushRouteInformation(
+    RouteInformation routeInformation,
+  ) async => RentalPropertyLinkNavigation.receive(routeInformation.uri);
+
+  @override
+  Future<bool> didPushRoute(String route) async {
+    final uri = Uri.tryParse(route);
+    return uri != null && RentalPropertyLinkNavigation.receive(uri);
   }
 
   @override

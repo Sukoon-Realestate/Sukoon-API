@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:melos_core/config/language/locale_keys.g.dart';
-import 'package:sokoun_app/features/shared/finance/presentation/egyptian_pound_text.dart';
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/home_page_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
@@ -28,11 +27,18 @@ class HomePropertyItem extends StatelessWidget {
               : '—',
           area: [
             PropertyDetailsModel.propertyTypeLabelFor(property.propertyType),
-            '${property.area} ${LocaleKeys.tenantSearchResultsSquareMeters}',
+            property.location,
+            ...RentalOfferLabels.listingFacts(property.rentalSummary),
+            RentalOfferLabels.propertyArea(
+              property.area,
+              hasOffers: property.hasRentalOffers,
+            ),
           ].where((value) => value.isNotEmpty).join(' · '),
-          price: EgyptianPoundText.format(
-            property.price,
-            period: property.pricePeriod,
+          price: RentalOfferLabels.listingPrice(
+            property.rentalSummary,
+            hasInventory: property.hasRentalOffers,
+            legacyPrice: property.price,
+            legacyPeriod: property.pricePeriod,
           ),
           icon: property.propertyType == 'villa'
               ? Icons.villa_outlined

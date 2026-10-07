@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
 import '../enums/owner_visit_request_state.dart';
 import '../owner_visit_json.dart';
 import 'owner_visit_request_content.dart';
@@ -5,6 +6,7 @@ import 'package:equatable/equatable.dart';
 
 class OwnerVisitRequestDetailsContent extends Equatable {
   const OwnerVisitRequestDetailsContent({
+    this.rentalSelection,
     required this.id,
     required this.tenant,
     required this.property,
@@ -20,7 +22,8 @@ class OwnerVisitRequestDetailsContent extends Equatable {
   });
 
   const OwnerVisitRequestDetailsContent.initial()
-    : id = '',
+    : rentalSelection = null,
+      id = '',
       tenant = const OwnerVisitRequestTenantContent.initial(),
       property = const OwnerVisitRequestPropertyContent.initial(),
       visitDate = '',
@@ -35,6 +38,7 @@ class OwnerVisitRequestDetailsContent extends Equatable {
 
   factory OwnerVisitRequestDetailsContent.fromJson(Map<String, dynamic> json) {
     return OwnerVisitRequestDetailsContent(
+      rentalSelection: RentalSelection.fromRecord(json),
       id: ownerVisitString(json['id']),
       tenant: OwnerVisitRequestTenantContent.fromJson(
         ownerVisitJsonMap(json['tenant']),
@@ -58,6 +62,7 @@ class OwnerVisitRequestDetailsContent extends Equatable {
     );
   }
 
+  final RentalSelection? rentalSelection;
   final String id;
   final OwnerVisitRequestTenantContent tenant;
   final OwnerVisitRequestPropertyContent property;
@@ -89,6 +94,7 @@ class OwnerVisitRequestDetailsContent extends Equatable {
   OwnerVisitRequestContent toRequestContent() {
     final String tenantName = tenant.name.trim();
     return OwnerVisitRequestContent(
+      rentalSelection: rentalSelection,
       id: id,
       initial: tenantName.isEmpty ? '' : tenantName.substring(0, 1),
       name: tenantName,
@@ -114,6 +120,10 @@ class OwnerVisitRequestDetailsContent extends Equatable {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    if (rentalSelection != null) ...{
+      'offer_id': rentalSelection!.offerId,
+      'offer_snapshot': rentalSelection!.toJson(),
+    },
     'tenant': tenant.toJson(),
     'property': property.toJson(),
     'visit_date': visitDate,
@@ -128,6 +138,7 @@ class OwnerVisitRequestDetailsContent extends Equatable {
   };
 
   OwnerVisitRequestDetailsContent copyWith({
+    RentalSelection? rentalSelection,
     String? id,
     OwnerVisitRequestTenantContent? tenant,
     OwnerVisitRequestPropertyContent? property,
@@ -142,6 +153,7 @@ class OwnerVisitRequestDetailsContent extends Equatable {
     String? createdAt,
   }) {
     return OwnerVisitRequestDetailsContent(
+      rentalSelection: rentalSelection ?? this.rentalSelection,
       id: id ?? this.id,
       tenant: tenant ?? this.tenant,
       property: property ?? this.property,
@@ -159,6 +171,7 @@ class OwnerVisitRequestDetailsContent extends Equatable {
 
   @override
   List<Object?> get props => [
+    rentalSelection,
     id,
     tenant,
     property,

@@ -40,6 +40,8 @@ class ProfileContractCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       spacing: 12.h,
       children: [
+        if (contract.rentalSelection != null)
+          AppText(RentalOfferLabels.accommodation(contract.rentalSelection!)),
         AppText(
           contract.propertyTitle,
           style: AppTextStyles.bold16.copyWith(

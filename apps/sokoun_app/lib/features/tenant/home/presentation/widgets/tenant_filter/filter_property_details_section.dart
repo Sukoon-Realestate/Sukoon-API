@@ -1,3 +1,6 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/rental_offer_capabilities.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/enums/rental_scope.dart';
+import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -32,8 +35,26 @@ class FilterPropertyDetailsSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 12.h,
         children: [
+          if (RentalOfferCapabilities.configured.canSearch)
+            SingleSelectGroup(
+              title: LocaleKeys.rentalScopeFilter,
+              options: _withAll([
+                for (final scope in RentalScope.values)
+                  TenantFilterOption(value: scope.value, label: scope.label),
+              ]),
+              selectedValue: filters.rentalScope,
+              onSelected: (value) => onFiltersChanged(
+                filters.copyWith(rentalScope: value, page: 1),
+              ),
+            )
+          else
+            AppText(LocaleKeys.rentalScopeFilterUnavailable),
+          if (RentalOfferCapabilities.configured.canSearch)
+            AppText(LocaleKeys.rentalPricePeriodRequired),
           SingleSelectGroup(
-            title: LocaleKeys.tenantFilterBedrooms,
+            title: RentalOfferCapabilities.configured.canSearch
+                ? LocaleKeys.rentalPropertyRooms
+                : LocaleKeys.tenantFilterBedrooms,
             options: _withAll(filterOptions.bedrooms),
             selectedValue: filters.bedrooms,
             onSelected: (value) =>

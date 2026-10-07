@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/core/network/account_session.dart';
 import '../../data/owner_draft_data.dart';
@@ -33,10 +34,11 @@ class OwnerDraftCubit extends Cubit<OwnerPropertyDraft> {
     _debounce?.cancel();
     _pending = null;
     final write = _writes.then((_) async {
-      if (!_active) return;
+      if (!_active) throw StateError(LocaleKeys.freeLocalSaveFailed);
       try {
         final saved = await _store.write(draft);
-        if (_active) emit(saved.copyWith(localSaveFailed: false));
+        if (!_active) throw StateError(LocaleKeys.freeLocalSaveFailed);
+        emit(saved.copyWith(localSaveFailed: false));
       } catch (_) {
         if (_active) emit(state.copyWith(localSaveFailed: true));
         rethrow;

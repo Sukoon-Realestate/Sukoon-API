@@ -14,7 +14,12 @@ class VisitDetailsActions extends StatelessWidget {
 
   void _openChat() {
     if (visit.ownerId.isEmpty) return;
-    Go.to(StartConversationScreen(userId: visit.ownerId));
+    Go.to(
+      StartConversationScreen(
+        userId: visit.ownerId,
+        rentalContext: visit.rentalSelection,
+      ),
+    );
   }
 
   @override

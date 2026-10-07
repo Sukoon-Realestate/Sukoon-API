@@ -1,28 +1,38 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/rental_offer_capabilities.dart';
 import 'package:equatable/equatable.dart';
 import 'package:melos_core/core/helpers/validators.dart';
 
 class BookVisitBody extends Equatable {
   const BookVisitBody({
+    this.selection,
     required this.visitDate,
     required this.visitTime,
     required this.note,
   });
 
-  const BookVisitBody.initial() : visitDate = '', visitTime = '', note = '';
+  const BookVisitBody.initial()
+    : selection = null,
+      visitDate = '',
+      visitTime = '',
+      note = '';
 
   factory BookVisitBody.fromTime({
     required String visitDate,
+    RentalSelection? selection,
     required int hour,
     required int minute,
     required String note,
   }) {
     return BookVisitBody(
+      selection: selection,
       visitDate: visitDate,
       visitTime: formatApiTime(hour: hour, minute: minute),
       note: note,
     );
   }
 
+  final RentalSelection? selection;
   final String visitDate;
   final String visitTime;
   final String note;
@@ -40,14 +50,32 @@ class BookVisitBody extends Equatable {
     return '$apiHour:$apiMinute:00';
   }
 
-  Map<String, dynamic> toJson() => {
-    'visit_date': visitDate,
-    'visit_time': Validators.normalizeVisitTime(visitTime),
-    'note': note,
-  };
+  Map<String, dynamic> toJson({
+    RentalOfferCapabilities capabilities = RentalOfferCapabilities.configured,
+  }) {
+    if (selection != null &&
+        (!capabilities.canRequestViewing || !selection!.canIdentify)) {
+      throw StateError('Offer viewing requests are unavailable');
+    }
+    return {
+      if (selection != null) ...{
+        'offer_id': selection!.offerId,
+        'expected_offer_revision': selection!.offerRevision,
+      },
+      'visit_date': visitDate,
+      'visit_time': Validators.normalizeVisitTime(visitTime),
+      'note': note,
+    };
+  }
 
-  BookVisitBody copyWith({String? visitDate, String? visitTime, String? note}) {
+  BookVisitBody copyWith({
+    RentalSelection? selection,
+    String? visitDate,
+    String? visitTime,
+    String? note,
+  }) {
     return BookVisitBody(
+      selection: selection ?? this.selection,
       visitDate: visitDate ?? this.visitDate,
       visitTime: visitTime ?? this.visitTime,
       note: note ?? this.note,
@@ -55,5 +83,5 @@ class BookVisitBody extends Equatable {
   }
 
   @override
-  List<Object?> get props => [visitDate, visitTime, note];
+  List<Object?> get props => [selection, visitDate, visitTime, note];
 }

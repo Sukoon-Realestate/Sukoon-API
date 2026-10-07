@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 
@@ -13,7 +14,12 @@ import '../widgets/start_conversation/start_conversation_state_view.dart';
 import 'chat_screen.dart';
 
 class StartConversationScreen extends StatefulWidget {
-  const StartConversationScreen({super.key, required this.userId});
+  const StartConversationScreen({
+    super.key,
+    required this.userId,
+    this.rentalContext,
+  });
+  final RentalSelection? rentalContext;
 
   final String userId;
 
@@ -38,7 +44,12 @@ class _StartConversationScreenState extends State<StartConversationScreen> {
       userId: widget.userId,
       onSuccess: (conversation) {
         if (!mounted) return;
-        Go.off(ChatScreen(conversation: conversation));
+        Go.off(
+          ChatScreen(
+            conversation: conversation,
+            rentalContext: widget.rentalContext,
+          ),
+        );
       },
     );
   }

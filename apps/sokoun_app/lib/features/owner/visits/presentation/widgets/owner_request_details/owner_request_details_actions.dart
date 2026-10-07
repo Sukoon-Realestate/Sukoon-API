@@ -18,7 +18,12 @@ class OwnerRequestDetailsActions extends StatelessWidget {
 
   void _openChat() {
     if (request.tenant.id.isEmpty) return;
-    Go.to(StartConversationScreen(userId: request.tenant.id));
+    Go.to(
+      StartConversationScreen(
+        userId: request.tenant.id,
+        rentalContext: request.rentalSelection,
+      ),
+    );
   }
 
   @override

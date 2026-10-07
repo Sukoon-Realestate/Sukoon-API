@@ -16,6 +16,9 @@ import 'search_refresh_notice.dart';
 import 'search_results_header.dart';
 import 'search_result_card.dart';
 import '../../../data/models/property_search_model.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/enums/rental_listing_category.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/rental_collection_filter.dart';
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_collection_footer.dart';
 
 typedef PropertySearchPageLoader =
     Future<(List<PropertyDetailsModel>, PaginationData)> Function(
@@ -40,6 +43,7 @@ class TenantSearchResultsContent extends StatefulWidget {
     required this.onFilterRemoved,
     required this.onClearFiltersPressed,
     required this.onResetSearchPressed,
+    required this.onCategorySelected,
   });
 
   final TextEditingController queryController;
@@ -56,6 +60,7 @@ class TenantSearchResultsContent extends StatefulWidget {
   final ValueChanged<ActiveFilterContent> onFilterRemoved;
   final VoidCallback onClearFiltersPressed;
   final VoidCallback onResetSearchPressed;
+  final ValueChanged<RentalListingCategory> onCategorySelected;
 
   @override
   State<TenantSearchResultsContent> createState() =>
@@ -84,6 +89,10 @@ class _TenantSearchResultsContentState
         onFiltersPressed: widget.onFiltersPressed,
         onFilterRemoved: widget.onFilterRemoved,
         onClearFiltersPressed: widget.onClearFiltersPressed,
+        category: RentalListingCategory.fromScope(
+          widget.preferences?.rentalScope ?? '',
+        ),
+        onCategorySelected: widget.onCategorySelected,
       ),
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
       enablePullRefresh: true,
@@ -115,6 +124,18 @@ class _TenantSearchResultsContentState
       emptyListView: EmptyResultsState(
         onResetSearchPressed: widget.onResetSearchPressed,
       ),
+      filterItems: (items) => RentalCollectionFilter.properties(
+        items,
+        identity: (property) => property.id,
+        matches: (_) => true,
+      ),
+      filteredFooterBuilder: (context, hasMore, isLoading, error, loadMore) =>
+          RentalCollectionFooter(
+            hasMorePages: hasMore,
+            isLoading: isLoading,
+            errorMessage: error,
+            onLoadMore: loadMore,
+          ),
       itemBuilder: (context, data, index, item) => SearchResultCard(
         item: item,
         filterOptions: widget.filterOptions,

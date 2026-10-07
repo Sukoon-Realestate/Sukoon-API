@@ -5,10 +5,14 @@ class OwnerPropertiesEmptyState extends StatelessWidget {
     super.key,
     required this.filter,
     required this.onAddPressed,
+    this.category = RentalListingCategory.all,
+    this.onShowAllPressed,
   });
 
   final OwnerPropertyFilter filter;
   final VoidCallback onAddPressed;
+  final RentalListingCategory category;
+  final VoidCallback? onShowAllPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +34,9 @@ class OwnerPropertiesEmptyState extends StatelessWidget {
           ),
           10.szH,
           AppText(
-            filter.emptyTitle,
+            category == RentalListingCategory.all
+                ? filter.emptyTitle
+                : LocaleKeys.rentalCategoryEmptyTitle,
             style: AppTextStyles.bold.copyWith(
               color: context.appColor(AppColors.sokoonNavy),
               fontSize: 18.sp,
@@ -39,7 +45,9 @@ class OwnerPropertiesEmptyState extends StatelessWidget {
           ),
           7.szH,
           AppText(
-            filter.emptyDescription,
+            category == RentalListingCategory.all
+                ? filter.emptyDescription
+                : LocaleKeys.rentalCategoryEmptyHint,
             style: AppTextStyles.medium13.copyWith(
               color: context.appColor(AppColors.sokoonGray),
               fontSize: 13.sp,
@@ -49,8 +57,12 @@ class OwnerPropertiesEmptyState extends StatelessWidget {
           ),
           20.szH,
           DefaultButton(
-            onTap: onAddPressed,
-            title: LocaleKeys.ownerPropertiesAdd,
+            onTap: category == RentalListingCategory.all
+                ? onAddPressed
+                : onShowAllPressed,
+            title: category == RentalListingCategory.all
+                ? LocaleKeys.ownerPropertiesAdd
+                : LocaleKeys.rentalCategoryShowAll,
             color: context.appColor(AppColors.sokoonTeal, surface: true),
             textColor: AppColors.white,
             borderRadius: BorderRadius.circular(12.r),

@@ -18,6 +18,12 @@ class OwnerRequestDetailsContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           OwnerRequestInfoCard(request: request),
+          if (request.rentalSelection != null)
+            RentalSelectionPanel(
+              selection: request.rentalSelection!,
+              historical: true,
+            ),
+          AppText(LocaleKeys.rentalViewingOnly),
           if (request.note.isNotEmpty) ...[
             12.szH,
             _OwnerTenantNoteCard(note: request.note),

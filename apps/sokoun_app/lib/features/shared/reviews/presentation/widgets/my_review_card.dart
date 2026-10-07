@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,7 +28,12 @@ class MyReviewCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16.r),
         onTap: review.propertyId.isEmpty
             ? null
-            : () => Go.to(PropertyDetailsScreen(propertyId: review.propertyId)),
+            : () => Go.to(
+                PropertyDetailsScreen(
+                  propertyId: review.propertyId,
+                  offerId: review.rentalSelection?.offerId,
+                ),
+              ),
         child: Padding(
           padding: EdgeInsets.all(16.r),
           child: Column(
@@ -78,6 +84,10 @@ class MyReviewCard extends StatelessWidget {
                   ),
                 ],
               ),
+              if (review.rentalSelection != null)
+                AppText(
+                  RentalOfferLabels.accommodation(review.rentalSelection!),
+                ),
               if (review.comment.isNotEmpty) ...[
                 8.szH,
                 AppText(

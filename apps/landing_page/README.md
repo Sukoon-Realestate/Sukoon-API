@@ -18,6 +18,38 @@ flutter build web --release
 Deploy the output of `build/web`. For a subdirectory deployment, supply
 `--base-href /your-path/` at build time.
 
+## App demo video
+
+The app preview section includes a local 40 second Arabic demo with captions,
+a poster, play/pause and seeking controls, and an Arabic/English written
+walkthrough. Playback starts on request and pauses when the page is removed or
+the app goes into the background. The video is silent.
+Flutter controls RTL/LTR inside the app; the HTML shell leaves direction unset
+so native video views and accessible controls keep their correct positions.
+
+- Video: `assets/videos/sokoun_demo.mp4` (1280 × 720, H.264, 30 fps).
+- Poster: `assets/images/sokoun_demo_poster.jpg`.
+- Content: housing discovery, property details and favorites, visit date/time
+  selection, and the owner dashboard with requests, statistics and operations.
+- App screens are rendered from `apps/sokoun_app` widgets with sample data.
+  Listing media uses the landing page's existing local interior illustration.
+  This is a composed walkthrough of app UI states, not a live backend recording.
+
+To regenerate after app UI changes, install Node.js and Flutter, then run from
+this directory:
+
+```sh
+flutter pub get
+make demoSetup
+make demo
+```
+
+The capture harness lives at `../sokoun_app/tool/capture_landing_demo_test.dart`;
+the deterministic movie renderer lives at `tool/demo_video/render_demo.cjs`.
+Only the final MP4 and poster are bundled with the site. Captures, browser tools
+and the generated contact sheet are ignored by Git. Set `CHROME_PATH` to use an
+existing Chrome executable or `FLUTTER` to select a specific Flutter binary.
+
 ## Product alignment
 
 The content is based on these app implementations, rather than a separate

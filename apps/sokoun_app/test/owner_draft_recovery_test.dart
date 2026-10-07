@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:melos_core/core/network/account_session.dart';
 import 'package:sokoun_app/features/owner/home/data/owner_draft_data.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_property_draft.dart';
@@ -8,6 +9,36 @@ import 'package:sokoun_app/features/owner/home/presentation/cubits/owner_draft_c
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 
 void main() {
+  test('a missing account cannot report a successful device save', () async {
+    final store = OwnerDraftData(
+      accountId: '',
+      propertyId: '',
+      supportDirectory: () async => throw StateError('Must not touch storage'),
+    );
+    await expectLater(
+      store.write(
+        OwnerPropertyDraft(form: OwnerAddPropertyFormState.initial()),
+      ),
+      throwsStateError,
+    );
+  });
+  test(
+    'a save after the owning session ended cannot report persistence',
+    () async {
+      AccountSession.begin('owner');
+      final store = _MemoryOwnerDraftStore();
+      final cubit = OwnerDraftCubit(store: store);
+      AccountSession.end();
+      await expectLater(
+        cubit.save(
+          OwnerPropertyDraft(form: OwnerAddPropertyFormState.initial()),
+        ),
+        throwsStateError,
+      );
+      expect(store.state.form, isNull);
+      await cubit.close();
+    },
+  );
   test(
     'storage errors are visible and a successful retry clears the warning',
     () async {

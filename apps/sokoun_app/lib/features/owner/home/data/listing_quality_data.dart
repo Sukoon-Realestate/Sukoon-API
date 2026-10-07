@@ -9,9 +9,33 @@ abstract final class ListingQualityData {
     ListingQualityCheck.photos:
         form.photoCount >= OwnerAddPropertyContent.minimumPhotoCount,
     ListingQualityCheck.location: form.isLocationSelected,
-    ListingQualityCheck.description: form.description.trim().length >= 40,
-    ListingQualityCheck.deposit:
-        form.deposit.trim().isNotEmpty && form.isDepositReady,
+    ListingQualityCheck.description: form.isPartialOffering
+        ? form.rentalInventory!.offers
+              .where((offer) => !offer.archived)
+              .every(
+                (offer) =>
+                    form.rentalInventory!
+                        .resolved(offer)
+                        .terms
+                        .description
+                        .trim()
+                        .length >=
+                    40,
+              )
+        : form.description.trim().length >= 40,
+    ListingQualityCheck.deposit: form.isPartialOffering
+        ? form.rentalInventory!.offers
+              .where((offer) => !offer.archived)
+              .every(
+                (offer) =>
+                    form.rentalInventory!
+                        .resolved(offer)
+                        .terms
+                        .deposit
+                        .isNotEmpty &&
+                    form.rentalInventory!.resolved(offer).terms.hasValidDeposit,
+              )
+        : form.deposit.trim().isNotEmpty && form.isDepositReady,
     ListingQualityCheck.captions:
         form.photoDrafts.isNotEmpty &&
         form.photoDrafts.every(

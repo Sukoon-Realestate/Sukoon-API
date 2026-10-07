@@ -1,8 +1,12 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
+import 'package:sokoun_app/features/shared/finance/data/egyptian_pound.dart';
+import 'package:sokoun_app/features/owner/home/data/enums/property_price_period.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 
 import 'property_details_model.dart';
+import '../rental_property_gallery_data.dart';
 
 class TenantPropertyMetricContent {
   const TenantPropertyMetricContent({
@@ -18,6 +22,12 @@ class TenantPropertyMetricContent {
 
 class TenantPropertyDetailsContent {
   const TenantPropertyDetailsContent({
+    this.selection,
+    this.hasRentalOffers = false,
+    this.selectionConfirmed = false,
+    this.propertyTitle = '',
+    this.propertyDescription = '',
+    this.galleryHasGeneralPhotos = false,
     required this.id,
     required this.title,
     required this.propertyType,
@@ -64,53 +74,109 @@ class TenantPropertyDetailsContent {
     this.updatedAt = '',
   });
 
-  factory TenantPropertyDetailsContent.fromModel(PropertyDetailsModel model) {
+  factory TenantPropertyDetailsContent.fromModel(
+    PropertyDetailsModel model, {
+    RentalSelection? selection,
+    bool selectionConfirmed = false,
+  }) {
+    final inventory = model.rentalInventory;
+    final offer = inventory?.offerById(selection?.offerId ?? '');
+    final gallery = RentalPropertyGallery.fromProperty(
+      model,
+      selection: selection,
+    );
+    final hasOffers = model.hasRentalOffers || selection != null;
     return TenantPropertyDetailsContent(
+      selection: selection,
+      selectionConfirmed: selectionConfirmed,
+      hasRentalOffers: hasOffers,
+      propertyTitle: model.title,
+      propertyDescription: model.description,
+      galleryHasGeneralPhotos: gallery.hasGeneralPhotos,
       id: model.id,
-      title: model.title,
+      title: selection == null
+          ? model.title
+          : selection.name.isNotEmpty
+          ? selection.name
+          : selection.scope?.label ?? LocaleKeys.rentalUnknownScope,
       propertyType: model.propertyTypeLabel,
       location: model.locationLabel,
-      price: model.formattedPrice,
+      price: selection == null
+          ? (hasOffers ? '' : model.formattedPrice)
+          : EgyptianPound.formatAmount(selection.terms.price),
       rating: model.rating.toStringAsFixed(1),
       isVerified: model.isVerified,
       isOwnerVerified: model.isOwnerVerified,
       isOwnershipVerified: model.isOwnershipVerified,
       isFurnished: model.isFurnished,
       isFavorite: model.isFav,
-      isSaved: model.isSaved,
+      isSaved: offer?.isSaved ?? model.isSaved,
       metrics: [
-        TenantPropertyMetricContent(
-          icon: Icons.bed_outlined,
-          value: '${model.bedrooms}',
-          label: LocaleKeys.tenantSearchResultsBeds,
-        ),
-        TenantPropertyMetricContent(
-          icon: Icons.shower_outlined,
-          value: '${model.bathrooms}',
-          label: LocaleKeys.tenantSearchResultsBaths,
-        ),
-        TenantPropertyMetricContent(
-          icon: Icons.square_foot_outlined,
-          value: model.area > 0 ? '${model.area}' : model.space,
-          label: LocaleKeys.tenantSearchResultsSquareMeters,
-        ),
-        TenantPropertyMetricContent(
-          icon: Icons.calendar_month_outlined,
-          value: '${model.rentalPeriod}',
-          label: model.rentalPeriodUnitLabel,
-        ),
+        if (model.bedrooms > 0)
+          TenantPropertyMetricContent(
+            icon: Icons.bed_outlined,
+            value: '${model.bedrooms}',
+            label: !hasOffers
+                ? LocaleKeys.tenantSearchResultsBeds
+                : LocaleKeys.rentalPropertyRooms,
+          ),
+        if (model.bathrooms > 0)
+          TenantPropertyMetricContent(
+            icon: Icons.shower_outlined,
+            value: '${model.bathrooms}',
+            label: hasOffers
+                ? LocaleKeys.rentalParentPropertyBathrooms
+                : LocaleKeys.tenantSearchResultsBaths,
+          ),
+        if (model.area > 0 || (!hasOffers && model.space.isNotEmpty))
+          TenantPropertyMetricContent(
+            icon: Icons.square_foot_outlined,
+            value: model.area > 0 ? '${model.area}' : model.space,
+            label: hasOffers
+                ? LocaleKeys.rentalParentPropertyArea
+                : LocaleKeys.tenantSearchResultsSquareMeters,
+          ),
+        if (!hasOffers)
+          TenantPropertyMetricContent(
+            icon: Icons.calendar_month_outlined,
+            value: '${model.rentalPeriod}',
+            label: model.rentalPeriodUnitLabel,
+          ),
       ],
-      description: model.description,
+      description:
+          selection?.terms.description ?? (hasOffers ? '' : model.description),
       amenities: model.amenityLabels,
-      photoLabels: model.photoLabels,
-      photoDescriptions: model.galleryImages
+      photoLabels: gallery.images.indexed
+          .map(
+            (entry) => [
+              if (hasOffers)
+                switch (gallery.contexts[entry.$1]) {
+                  RentalPhotoContext.accommodation =>
+                    LocaleKeys.rentalOfferPhotos,
+                  RentalPhotoContext.parentRoom =>
+                    LocaleKeys.rentalParentRoomPhotos,
+                  RentalPhotoContext.shared => LocaleKeys.rentalSharedPhotos,
+                  RentalPhotoContext.property =>
+                    LocaleKeys.rentalPropertyPhotos,
+                },
+              if (entry.$2.name.isEmpty)
+                LocaleKeys.tenantPropertyDetailsPhotoCountUnit
+              else
+                entry.$2.name,
+            ].join(' · '),
+          )
+          .toList(),
+      photoDescriptions: gallery.images
           .map((image) => image.description)
           .toList(growable: false),
       floor: model.floor,
-      suitableFor: model.suitableFor,
-      smokingAllowed: model.smokingAllowed,
+      suitableFor:
+          selection?.terms.suitableFor ?? (hasOffers ? '' : model.suitableFor),
+      smokingAllowed:
+          selection?.terms.smokingAllowed ??
+          (hasOffers ? null : model.smokingAllowed),
       buildingYear: model.buildingYear,
-      deposit: model.deposit,
+      deposit: selection?.terms.deposit ?? (hasOffers ? '' : model.deposit),
       ownerName: model.owner,
       ownerAvatar: model.ownerAvatar,
       ownerId: model.ownerId,
@@ -118,11 +184,16 @@ class TenantPropertyDetailsContent {
           ? LocaleKeys.tenantPropertyDetailsVerifiedOwner
           : LocaleKeys.tenantPropertyDetailsOwner,
       imageColors: const [AppColors.tealDark, AppColors.sokoonTeal],
-      imageUrls: model.imageUrls,
+      imageUrls: gallery.images.map((image) => image.image).toList(),
       videoUrl: model.video,
       videoDuration: model.videoDuration,
       propertyLink: model.propertyLink,
-      pricePeriodLabel: model.pricePeriodLabel,
+      pricePeriodLabel: selection == null
+          ? (hasOffers ? '' : model.pricePeriodLabel)
+          : (PropertyPricePeriod.fromValue(
+                  selection.terms.pricePeriod,
+                )?.label ??
+                selection.terms.pricePeriod),
       bedrooms: model.bedrooms,
       latitude: model.latitude,
       longitude: model.longitude,
@@ -138,6 +209,10 @@ class TenantPropertyDetailsContent {
     );
   }
 
+  final RentalSelection? selection;
+  final bool hasRentalOffers;
+  final bool selectionConfirmed, galleryHasGeneralPhotos;
+  final String propertyTitle, propertyDescription;
   final String id;
   final String title;
   final String propertyType;
@@ -185,12 +260,28 @@ class TenantPropertyDetailsContent {
 
   String get shortTitle => title;
   String get shareUrl {
-    final Uri? uri = Uri.tryParse(propertyLink.trim());
+    final selected = selection;
+    final candidate = selected?.offerLink.isNotEmpty == true
+        ? selected!.offerLink
+        : propertyLink;
+    final Uri? uri = Uri.tryParse(candidate.trim());
     if (uri != null &&
         (uri.scheme == 'https' || uri.scheme == 'http') &&
         uri.host.isNotEmpty) {
-      return uri.toString();
+      return selected != null &&
+              selected.offerId.isNotEmpty &&
+              selected.offerLink.isEmpty
+          ? uri
+                .replace(
+                  queryParameters: {
+                    ...uri.queryParameters,
+                    'offer_id': selected.offerId,
+                  },
+                )
+                .toString()
+          : uri.toString();
     }
-    return 'https://sokoun.app/properties/${Uri.encodeComponent(id)}';
+    return 'https://sokoun.app/properties/${Uri.encodeComponent(id)}'
+        '${selected?.offerId.isNotEmpty == true ? '/offers/${Uri.encodeComponent(selected!.offerId)}' : ''}';
   }
 }

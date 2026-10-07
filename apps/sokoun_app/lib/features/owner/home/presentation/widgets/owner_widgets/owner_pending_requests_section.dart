@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import '../../screens/owner_visit_requests_screen.dart';
@@ -55,6 +56,8 @@ class OwnerPendingRequestsSection extends StatelessWidget {
                   pendingVisits[index];
               final String details = [
                 visit.propertyTitle,
+                if (visit.rentalSelection != null)
+                  RentalOfferLabels.accommodation(visit.rentalSelection!),
                 visit.propertyDistrict,
                 visit.scheduledAt,
               ].where((value) => value.isNotEmpty).join(' · ');

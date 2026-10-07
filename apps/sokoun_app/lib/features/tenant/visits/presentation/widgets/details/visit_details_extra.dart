@@ -8,12 +8,13 @@ class VisitDetailsExtra extends StatelessWidget {
     final List<({String label, String value})> rows = [
       if (details.location.trim().isNotEmpty)
         (label: LocaleKeys.visitPropertyLocation, value: details.location),
-      if (details.price.trim().isNotEmpty)
+      if (details.rentalSelection == null && details.price.trim().isNotEmpty)
         (
           label: LocaleKeys.visitPropertyPrice,
           value: EgyptianPoundText.format(details.price),
         ),
-      if (details.pricePeriod.trim().isNotEmpty)
+      if (details.rentalSelection == null &&
+          details.pricePeriod.trim().isNotEmpty)
         (label: LocaleKeys.visitPricePeriod, value: _period),
       if (details.bedrooms != null)
         (

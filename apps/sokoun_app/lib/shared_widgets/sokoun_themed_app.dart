@@ -34,6 +34,7 @@ class SokounThemedApp extends StatelessWidget {
       supportedLocales: context.supportedLocales,
       locale: context.locale,
       navigatorKey: Go.navigatorKey,
+      initialRoute: '/',
       home: home,
       builder: (context, child) {
         final ThemeData theme = Theme.of(context);

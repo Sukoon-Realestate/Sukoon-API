@@ -1,3 +1,5 @@
+import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -53,6 +55,10 @@ class OwnerVisitRequestCard extends StatelessWidget {
             spacing: 12.h,
             children: [
               OwnerVisitRequestIdentityRow(request: request),
+              if (request.rentalSelection != null)
+                AppText(
+                  RentalOfferLabels.accommodation(request.rentalSelection!),
+                ),
               if (!request.isVerified &&
                   request.verificationWarning.trim().isNotEmpty)
                 OwnerVisitVerificationWarning(

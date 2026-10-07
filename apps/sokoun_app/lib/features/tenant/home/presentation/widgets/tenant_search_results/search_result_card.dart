@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
 import 'package:sokoun_app/features/shared/premium/presentation/widgets/shared/sponsored_listing_badge.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
@@ -7,7 +8,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
-import 'package:sokoun_app/features/shared/finance/presentation/egyptian_pound_text.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_filter/property_filter_label_resolver.dart';
@@ -36,10 +36,15 @@ class SearchResultCard extends StatelessWidget {
         PropertyFilterLabelResolver(filterOptions);
     final List<String> tags = [
       labelResolver.propertyTypeLabel(item.propertyType),
-      if (item.suitableFor.isNotEmpty)
+      ...RentalOfferLabels.listingFacts(
+        item.rentalSummary,
+        contextScope: preferences?.rentalScope ?? '',
+      ),
+      if (!item.hasRentalOffers && item.suitableFor.isNotEmpty)
         labelResolver.suitableForLabel(item.suitableFor),
-      if (item.isFurnished) LocaleKeys.tenantFilterFurnished,
-      ...labelResolver.amenityLabels(item).take(2),
+      if (item.isFurnished && !item.hasRentalOffers)
+        LocaleKeys.tenantFilterFurnished,
+      if (!item.hasRentalOffers) ...labelResolver.amenityLabels(item).take(2),
     ].where((label) => label.isNotEmpty).toList(growable: false);
 
     return Material(
@@ -74,9 +79,13 @@ class SearchResultCard extends StatelessWidget {
               ].where((value) => value.isNotEmpty).join(', '),
               metadata: AmenityRow(item: item),
               tags: tags.isEmpty ? null : TagsRow(tags: tags),
-              price: EgyptianPoundText.format(
-                item.price,
-                period: item.pricePeriod,
+              price: RentalOfferLabels.listingPrice(
+                item.rentalSummary,
+                hasInventory: item.hasRentalOffers,
+                legacyPrice: item.price,
+                legacyPeriod: item.pricePeriod,
+                contextScope: preferences?.rentalScope ?? '',
+                contextPricePeriod: preferences?.pricePeriod ?? '',
               ),
               action: DetailsButton(
                 propertyId: item.id,

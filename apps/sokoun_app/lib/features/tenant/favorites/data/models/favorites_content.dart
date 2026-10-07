@@ -1,7 +1,12 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_listing_summary.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
 import 'package:equatable/equatable.dart';
 
 class FavoritePropertyContent extends Equatable {
   const FavoritePropertyContent({
+    this.rentalSummary,
+    this.rentalSchemaVersion,
+    this.savedOffers = const [],
     required this.id,
     required this.mainImage,
     required this.title,
@@ -24,7 +29,10 @@ class FavoritePropertyContent extends Equatable {
   });
 
   const FavoritePropertyContent.initial()
-    : id = '',
+    : rentalSummary = null,
+      rentalSchemaVersion = null,
+      savedOffers = const [],
+      id = '',
       mainImage = '',
       title = '',
       propertyType = '',
@@ -46,6 +54,14 @@ class FavoritePropertyContent extends Equatable {
 
   factory FavoritePropertyContent.fromJson(Map<String, dynamic> json) {
     return FavoritePropertyContent(
+      rentalSummary: RentalListingSummary.read(json),
+      rentalSchemaVersion: int.tryParse(
+        '${json['rental_schema_version'] ?? ''}',
+      ),
+      savedOffers: (json['saved_offers'] as List? ?? const [])
+          .whereType<Map>()
+          .map((v) => RentalSelection.fromJson(Map<String, dynamic>.from(v)))
+          .toList(),
       id: json['id']?.toString() ?? '',
       mainImage: json['main_image'] as String? ?? '',
       title: json['title'] as String? ?? '',
@@ -76,6 +92,13 @@ class FavoritePropertyContent extends Equatable {
     );
   }
 
+  final RentalListingSummary? rentalSummary;
+  final int? rentalSchemaVersion;
+  final List<RentalSelection> savedOffers;
+  bool get hasRentalOffers =>
+      rentalSchemaVersion != null ||
+      rentalSummary != null ||
+      savedOffers.isNotEmpty;
   final String id;
   final String mainImage;
   final String title;
@@ -106,6 +129,11 @@ class FavoritePropertyContent extends Equatable {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    if (rentalSummary != null) 'rental_summary': rentalSummary!.toJson(),
+    if (rentalSchemaVersion != null)
+      'rental_schema_version': rentalSchemaVersion,
+    if (savedOffers.isNotEmpty)
+      'saved_offers': savedOffers.map((offer) => offer.toJson()).toList(),
     'main_image': mainImage,
     'title': title,
     'property_type': propertyType,
@@ -128,6 +156,9 @@ class FavoritePropertyContent extends Equatable {
   };
 
   FavoritePropertyContent copyWith({
+    RentalListingSummary? rentalSummary,
+    int? rentalSchemaVersion,
+    List<RentalSelection>? savedOffers,
     String? id,
     String? mainImage,
     String? title,
@@ -149,6 +180,9 @@ class FavoritePropertyContent extends Equatable {
     Set<String>? amenities,
   }) {
     return FavoritePropertyContent(
+      rentalSummary: rentalSummary ?? this.rentalSummary,
+      rentalSchemaVersion: rentalSchemaVersion ?? this.rentalSchemaVersion,
+      savedOffers: savedOffers ?? this.savedOffers,
       id: id ?? this.id,
       mainImage: mainImage ?? this.mainImage,
       title: title ?? this.title,
@@ -173,6 +207,9 @@ class FavoritePropertyContent extends Equatable {
 
   @override
   List<Object?> get props => [
+    rentalSummary,
+    rentalSchemaVersion,
+    savedOffers,
     id,
     mainImage,
     title,

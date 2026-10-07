@@ -5,6 +5,7 @@ import 'package:sokoun_app/features/owner/home/data/models/property_location.dar
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +20,13 @@ import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
 import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:sokoun_app/features/owner/home/data/owner_add_property_mapper.dart';
+import 'package:sokoun_app/features/owner/home/data/owner_draft_data.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/enums/rental_scope.dart';
 import 'package:sokoun_app/features/owner/home/presentation/screens/owner_property_flow_screen.dart';
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/imports.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
@@ -32,10 +36,17 @@ import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_pr
 import 'package:video_player_platform_interface/video_player_platform_interface.dart';
 
 import 'helpers/fake_property_video_platform.dart';
+import 'helpers/rental_offer_fixtures.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/rental_scope_selector.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/rental_room_fields.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/rental_bed_fields.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_add_property/add_property_details_section.dart';
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late _OwnerPropertiesRepository repository;
+  late Directory draftDirectory;
 
   const MethodChannel sharedPreferencesChannel = MethodChannel(
     'plugins.flutter.io/shared_preferences',
@@ -45,6 +56,9 @@ void main() {
   );
   const MethodChannel connectivityStatusChannel = MethodChannel(
     'dev.fluttercommunity.plus/connectivity_status',
+  );
+  const MethodChannel pathProviderChannel = MethodChannel(
+    'plugins.flutter.io/path_provider',
   );
 
   setUpAll(() async {
@@ -61,18 +75,34 @@ void main() {
           return null;
         });
     await EasyLocalization.ensureInitialized();
+    await CacheStorage.init();
   });
 
   setUp(() async {
     toastification.managers.clear();
     await injector.reset();
+    draftDirectory = Directory.systemTemp.createTempSync('owner-drafts-');
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(pathProviderChannel, (call) async {
+          return draftDirectory.path;
+        });
+    await CacheStorage.write('user', const <String, dynamic>{
+      'id': 'owner-id',
+      'name': 'Owner Test User',
+    });
     repository = _OwnerPropertiesRepository();
     injector.registerSingleton<BaseCrudUseCase>(
       BaseCrudUseCase(repository: repository),
     );
   });
 
-  tearDown(() => injector.reset());
+  tearDown(() async {
+    await injector.reset();
+    await CacheStorage.delete('user');
+    if (draftDirectory.existsSync()) {
+      draftDirectory.deleteSync(recursive: true);
+    }
+  });
 
   tearDownAll(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -81,6 +111,8 @@ void main() {
         .setMockMethodCallHandler(connectivityChannel, null);
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(connectivityStatusChannel, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(pathProviderChannel, null);
   });
 
   Widget buildScreen(Widget screen) {
@@ -109,6 +141,30 @@ void main() {
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);
+  }
+
+  Future<void> pumpUntil(WidgetTester tester, bool Function() ready) async {
+    final deadline = DateTime.now().add(const Duration(seconds: 10));
+    do {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 10)),
+      );
+      await tester.pump(const Duration(milliseconds: 20));
+    } while (!ready() && DateTime.now().isBefore(deadline));
+    expect(ready(), isTrue, reason: 'Owner file operation did not finish');
+  }
+
+  Future<void> waitForOwnerForm(WidgetTester tester) => pumpUntil(
+    tester,
+    () => find.byType(AddPropertyBasicsPage).evaluate().isNotEmpty,
+  );
+
+  Future<void> waitForReview(WidgetTester tester) async {
+    await pumpUntil(
+      tester,
+      () => find.byType(PropertyReviewSheet).evaluate().isNotEmpty,
+    );
+    await tester.pumpAndSettle();
   }
 
   Future<void> selectPropertyTab(
@@ -176,13 +232,14 @@ void main() {
   }
 
   Future<void> openEditReview(WidgetTester tester) async {
+    await waitForOwnerForm(tester);
     await tester.tap(find.text('التالي — الصور'));
     await tester.pumpAndSettle();
     await tester.tap(find.text(LocaleKeys.ownerAddPropertyPricingTitle).last);
     await tester.pumpAndSettle();
     final requestsBeforeReview = repository.updateRequestCount;
     await tester.tap(find.text(LocaleKeys.ownerPropertyReviewAction));
-    await tester.pumpAndSettle();
+    await waitForReview(tester);
     expect(find.byType(PropertyReviewSheet), findsOneWidget);
     expect(repository.updateRequestCount, requestsBeforeReview);
   }
@@ -190,7 +247,10 @@ void main() {
   Future<void> submitEditFlow(WidgetTester tester) async {
     await openEditReview(tester);
     await tester.tap(find.text('حفظ التعديلات'));
-    await tester.pump();
+    await pumpUntil(
+      tester,
+      () => find.byType(PropertyEditReviewSheet).evaluate().isNotEmpty,
+    );
     await tester.pump(const Duration(seconds: 1));
     expect(find.byType(PropertyEditReviewSheet), findsOneWidget);
     expect(
@@ -212,19 +272,31 @@ void main() {
     bool addCaptions = true,
     bool addVideo = true,
     bool recordVideo = false,
+    RentalScope? rentalScope,
   }) async {
     configurePhoneViewport(tester);
     final Directory images = Directory.systemTemp.createTempSync(
       'owner-photos-',
     );
-    final List<int> bytes = base64Decode(
-      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=',
-    );
-    final List<String> paths = List.generate(10, (index) {
-      final File file = File('${images.path}/photo-$index.png');
-      file.writeAsBytesSync(bytes);
-      return file.path;
-    });
+    final paths = (await tester.runAsync(() async {
+      final paths = <String>[];
+      for (var index = 0; index < 10; index++) {
+        final recorder = ui.PictureRecorder();
+        ui.Canvas(recorder).drawColor(
+          Color.fromARGB(255, 20 * index, 120, 200),
+          ui.BlendMode.src,
+        );
+        final picture = recorder.endRecording();
+        final image = await picture.toImage(2, 2);
+        final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+        final file = File('${images.path}/photo-$index.png');
+        file.writeAsBytesSync(bytes!.buffer.asUint8List());
+        paths.add(file.path);
+        image.dispose();
+        picture.dispose();
+      }
+      return paths;
+    }))!;
     final video = File('${images.path}/tour.mp4')
       ..writeAsBytesSync(utf8.encode('video upload bytes'));
     final videoPlatform = FakePropertyVideoPlatform();
@@ -250,7 +322,14 @@ void main() {
     });
 
     await tester.pumpWidget(buildScreen(const OwnerPropertyFlowScreen()));
+    await waitForOwnerForm(tester);
     await tester.pumpAndSettle();
+    if (rentalScope != null) {
+      final scopeChoice = find.widgetWithText(ChoiceChip, rentalScope.label);
+      await tester.ensureVisible(scopeChoice);
+      await tester.tap(scopeChoice);
+      await tester.pumpAndSettle();
+    }
     final AddPropertyBasicsPage basics = tester.widget(
       find.byType(AddPropertyBasicsPage),
     );
@@ -289,6 +368,17 @@ void main() {
     basics.onLocationSelected(
       const PropertyLocation(latitude: 30.0444, longitude: 31.2357),
     );
+    if (rentalScope == RentalScope.entireProperty) {
+      await tester.pump();
+      final current = tester.widget<AddPropertyBasicsPage>(
+        find.byType(AddPropertyBasicsPage),
+      );
+      current.onFormChanged!(
+        current.form.copyWith(
+          description: 'A comfortable apartment near the metro.',
+        ),
+      );
+    }
     await tester.pump();
     await tester.tap(find.text(LocaleKeys.ownerAddPropertyNextPhotos));
     await tester.pumpAndSettle();
@@ -374,17 +464,154 @@ void main() {
 
   Future<void> submitCreateFlow(WidgetTester tester) async {
     await tester.tap(find.text(LocaleKeys.ownerPropertyReviewAction));
-    await tester.pumpAndSettle();
+    await waitForReview(tester);
     expect(find.byType(PropertyReviewSheet), findsOneWidget);
     await tester.tap(find.text(LocaleKeys.ownerAddPropertySubmitReview));
     await tester.pumpAndSettle();
   }
+
+  for (final offer in [
+    wholeOffer,
+    independentRooms.first,
+    groupOffer,
+    bedOffer,
+  ]) {
+    testWidgets('editing ${offer.scope} opens its actual accommodation form', (
+      tester,
+    ) async {
+      configurePhoneViewport(tester);
+      final inventory = rentalInventory(
+        offers: [offer],
+        mode: offer.scope == RentalScope.entireProperty ? 'whole' : 'partial',
+      );
+      final property = PropertyDetailsModel.fromJson(
+        repository._propertyDetailsJson('property-a'),
+      ).copyWith(rentalInventory: inventory);
+      await tester.pumpWidget(
+        buildScreen(
+          OwnerPropertyFlowScreen(property: property, offerId: offer.id),
+        ),
+      );
+      await waitForOwnerForm(tester);
+      await tester.pumpAndSettle();
+      final basics = tester.widget<AddPropertyBasicsPage>(
+        find.byType(AddPropertyBasicsPage),
+      );
+      expect(basics.form.rentalScope, offer.scope);
+      expect(basics.form.selectedOffer!.id, offer.id);
+      expect(
+        find.text(RentalOfferLabels.formTitle(offer.scope, editing: true)),
+        findsWidgets,
+      );
+      if (offer.scope == RentalScope.entireProperty) {
+        expect(find.byType(AddPropertyDetailsSection), findsOneWidget);
+        expect(find.byType(RentalRoomFields), findsNothing);
+        expect(find.byType(RentalBedFields), findsNothing);
+      } else {
+        expect(find.byType(AddPropertyDetailsSection), findsNothing);
+        expect(
+          find.byType(RentalRoomFields),
+          findsNWidgets(offer.roomRefs.length),
+        );
+        expect(
+          find.byType(RentalBedFields),
+          offer.scope == RentalScope.bed ? findsOneWidget : findsNothing,
+        );
+        expect(find.text(LocaleKeys.rentalPropertyContext), findsOneWidget);
+        expect(
+          find.byWidgetPredicate(
+            (widget) =>
+                widget is AddPropertyField &&
+                widget.field.label == LocaleKeys.ownerAddPropertyBedrooms,
+          ),
+          findsNothing,
+        );
+        expect(
+          find.byWidgetPredicate(
+            (widget) =>
+                widget is AddPropertyField &&
+                widget.field.label == LocaleKeys.ownerAddPropertySpace,
+          ),
+          findsNothing,
+        );
+        expect(
+          find.byWidgetPredicate(
+            (widget) =>
+                widget is AddPropertyField &&
+                widget.field.label == LocaleKeys.ownerAddPropertyFloor,
+          ),
+          findsOneWidget,
+        );
+      }
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  testWidgets(
+    'scope selection immediately replaces the visible form and keeps compatible context',
+    (tester) async {
+      configurePhoneViewport(tester);
+      await tester.pumpWidget(buildScreen(const OwnerPropertyFlowScreen()));
+      await waitForOwnerForm(tester);
+      await tester.pumpAndSettle();
+      final first = tester.widget<AddPropertyBasicsPage>(
+        find.byType(AddPropertyBasicsPage),
+      );
+      first.streetController.text = 'Shared location';
+      first.onStreetChanged('Shared location');
+      for (final scope in [
+        RentalScope.room,
+        RentalScope.roomGroup,
+        RentalScope.bed,
+        RentalScope.entireProperty,
+      ]) {
+        if (tester
+                .widget<RentalScopeSelector>(find.byType(RentalScopeSelector))
+                .inventory !=
+            null) {
+          final change = find.descendant(
+            of: find.byType(RentalScopeSelector),
+            matching: find.text(LocaleKeys.editData),
+          );
+          await tester.ensureVisible(change);
+          await tester.tap(change);
+          await tester.pumpAndSettle();
+        }
+        final chip = find.widgetWithText(ChoiceChip, scope.label).first;
+        await tester.ensureVisible(chip);
+        await tester.tap(chip);
+        await tester.pumpAndSettle();
+        final basics = tester.widget<AddPropertyBasicsPage>(
+          find.byType(AddPropertyBasicsPage),
+        );
+        expect(basics.form.rentalScope, scope);
+        expect(basics.form.street, 'Shared location');
+        expect(find.text(RentalOfferLabels.formTitle(scope)), findsWidgets);
+        expect(
+          find.byType(AddPropertyDetailsSection),
+          scope == RentalScope.entireProperty ? findsOneWidget : findsNothing,
+        );
+        expect(
+          find.byType(RentalBedFields),
+          scope == RentalScope.bed ? findsOneWidget : findsNothing,
+        );
+        if (scope == RentalScope.roomGroup) {
+          expect(find.byType(RentalRoomFields), findsNWidgets(2));
+        }
+        if (scope == RentalScope.room) {
+          expect(find.byType(RentalRoomFields), findsOneWidget);
+        }
+        expect(tester.takeException(), isNull);
+      }
+    },
+  );
 
   testWidgets('Next shows required field errors and keeps the property draft', (
     tester,
   ) async {
     configurePhoneViewport(tester);
     await tester.pumpWidget(buildScreen(const OwnerPropertyFlowScreen()));
+    await waitForOwnerForm(tester);
     await tester.pumpAndSettle();
     expect(find.text(LocaleKeys.fillField), findsNothing);
     await tester.tap(find.text(LocaleKeys.ownerAddPropertyNextPhotos));
@@ -427,6 +654,7 @@ void main() {
       );
 
       repository.createResponse!.complete(true);
+      await pumpUntil(tester, () => repository.imageRequests.length == 9);
       await tester.pumpAndSettle();
       expect(repository.imageRequests, hasLength(9));
       for (int index = 0; index < 9; index++) {
@@ -455,6 +683,12 @@ void main() {
       for (final response in repository.imageResponses.skip(1)) {
         response.complete(true);
       }
+      await pumpUntil(
+        tester,
+        () => !tester
+            .widget<AddPropertyPricingPage>(find.byType(AddPropertyPricingPage))
+            .isSubmitting,
+      );
       await tester.pumpAndSettle();
       expect(find.byType(AddPropertySubmittedPage), findsNothing);
       final AddPropertyPricingPage details = tester.widget(
@@ -476,6 +710,10 @@ void main() {
         'properties/created-property/images/',
       );
       repository.imageResponses.last.complete(true);
+      await pumpUntil(
+        tester,
+        () => find.byType(AddPropertySubmittedPage).evaluate().isNotEmpty,
+      );
       await tester.pumpAndSettle();
       expect(find.byType(AddPropertySubmittedPage), findsOneWidget);
       expect(tester.takeException(), isNull);
@@ -516,6 +754,82 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('copied photos cannot pass review and retain the entered form', (
+    tester,
+  ) async {
+    await prepareCreateFlow(tester);
+    final before = tester
+        .widget<AddPropertyPricingPage>(find.byType(AddPropertyPricingPage))
+        .form;
+    await tester.runAsync(
+      () =>
+          before.photoDrafts.first.file!.copy(before.photoDrafts[1].file!.path),
+    );
+    await tester.tap(find.text(LocaleKeys.ownerPropertyReviewAction));
+    await pumpUntil(
+      tester,
+      () => !tester
+          .widget<AddPropertyPricingPage>(find.byType(AddPropertyPricingPage))
+          .isSubmitting,
+    );
+    await tester.pumpAndSettle();
+    expect(find.byType(PropertyReviewSheet), findsNothing);
+    final retained = tester
+        .widget<AddPropertyPhotosPage>(find.byType(AddPropertyPhotosPage))
+        .form;
+    expect(retained.hasDuplicatePhotos, isTrue);
+    expect(retained.title, before.title);
+    expect(retained.monthlyPrice, before.monthlyPrice);
+    expect(retained.videoFile?.path, before.videoFile?.path);
+    expect(retained.photoDrafts, hasLength(10));
+    expect(repository.createRequests, isEmpty);
+    expect(repository.imageRequests, isEmpty);
+  });
+
+  testWidgets('saving an offer draft persists locally without publication', (
+    tester,
+  ) async {
+    await prepareCreateFlow(tester, rentalScope: RentalScope.entireProperty);
+    await tester.tap(find.text(LocaleKeys.ownerPropertyReviewAction));
+    await waitForReview(tester);
+    expect(find.text(LocaleKeys.rentalSaveLocalDraft), findsOneWidget);
+    expect(find.text(LocaleKeys.ownerAddPropertySubmitReview), findsNothing);
+    await tester.tap(find.text(LocaleKeys.rentalSaveLocalDraft));
+    await pumpUntil(
+      tester,
+      () => find.text(LocaleKeys.rentalDraftSaved).evaluate().isNotEmpty,
+    );
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.text(LocaleKeys.rentalDraftSaved), findsOneWidget);
+    final stored = await tester.runAsync(
+      () => OwnerDraftData(
+        accountId: 'owner-id',
+        propertyId: '',
+        supportDirectory: () async => draftDirectory,
+      ).read(),
+    );
+    expect(stored?.form?.title, 'A new apartment');
+    expect(
+      stored?.form?.rentalInventory?.offers.single.scope,
+      RentalScope.entireProperty,
+    );
+    expect(stored?.form?.photoCount, 10);
+    expect(stored?.form?.videoDuration, 45);
+    expect(stored?.form?.monthlyPrice, '6500');
+    expect(stored?.form?.rentalUnit, 'monthly');
+    expect(stored?.hasMissingFiles, isFalse);
+    expect(stored?.savedProperty, isNull);
+    expect(stored?.form?.submittedAt, isNull);
+    expect(repository.createRequests, isEmpty);
+    expect(repository.imageRequests, isEmpty);
+    expect(repository.updateRequestCount, 0);
+    expect(find.byType(AddPropertySubmittedPage), findsNothing);
+    expect(find.byType(PropertyEditReviewSheet), findsNothing);
+    toastification.dismissAll(delayForAnimation: false);
+    await tester.pump(const Duration(seconds: 1));
+    expect(tester.takeException(), isNull);
+  });
+
   for (final recordVideo in [false, true]) {
     testWidgets(
       'visible ${recordVideo ? 'record' : 'upload'} button creates a listing with video in the same request',
@@ -535,6 +849,7 @@ void main() {
         expect(request.body!['video'], isA<File>());
         expect(request.body!['video_duration'], 45);
         repository.createResponse!.complete(true);
+        await pumpUntil(tester, () => repository.imageRequests.length == 9);
         await tester.pumpAndSettle();
         expect(repository.imageRequests, hasLength(9));
         final savedForm = tester
@@ -549,6 +864,10 @@ void main() {
         for (final response in repository.imageResponses) {
           response.complete(true);
         }
+        await pumpUntil(
+          tester,
+          () => find.byType(AddPropertySubmittedPage).evaluate().isNotEmpty,
+        );
         await tester.pumpAndSettle();
         expect(find.byType(AddPropertySubmittedPage), findsOneWidget);
         expect(tester.takeException(), isNull);
@@ -819,6 +1138,7 @@ void main() {
     await tester.pumpWidget(
       buildScreen(OwnerPropertyFlowScreen(property: property)),
     );
+    await waitForOwnerForm(tester);
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
 
@@ -884,6 +1204,7 @@ void main() {
     await tester.pumpWidget(
       buildScreen(OwnerPropertyFlowScreen(property: property)),
     );
+    await waitForOwnerForm(tester);
     await tester.pumpAndSettle();
     await openEditReview(tester);
     final before = tester
@@ -926,7 +1247,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('عقاراتي'), findsWidgets);
+    expect(find.text(LocaleKeys.rentalManageListings), findsWidgets);
     expect(find.byType(OwnerPropertyCard), findsWidgets);
     await selectPropertyTab(tester, OwnerPropertyFilter.accepted);
     expect(find.text('شقة مفروشة — مدينة نصر'), findsOneWidget);
@@ -951,6 +1272,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 400));
     expect(repository.lastDetailsId, 'nasr-city-furnished');
     expect(find.byType(OwnerPropertyFlowScreen), findsOneWidget);
+    await waitForOwnerForm(tester);
     expect(find.text('تعديل العقار'), findsOneWidget);
 
     await submitEditFlow(tester);
@@ -1033,6 +1355,7 @@ void main() {
       await tester.pumpAndSettle();
       await selectPropertyTab(tester, OwnerPropertyFilter.accepted);
       await tester.tap(find.text(LocaleKeys.ownerPropertiesEdit));
+      await waitForOwnerForm(tester);
       await tester.pumpAndSettle();
       final basics = tester.widget<AddPropertyBasicsPage>(
         find.byType(AddPropertyBasicsPage),
@@ -1090,8 +1413,12 @@ void main() {
       );
       await tester.pump();
       await tester.tap(find.text(LocaleKeys.ownerPropertyReviewAction));
-      await tester.pumpAndSettle();
+      await waitForReview(tester);
       await tester.tap(find.text(LocaleKeys.ownerPropertiesSaveChanges));
+      await pumpUntil(
+        tester,
+        () => find.byType(PropertyEditReviewSheet).evaluate().isNotEmpty,
+      );
       await tester.pumpAndSettle();
       expect(find.byType(PropertyEditReviewSheet), findsOneWidget);
       final body = repository.lastUpdateBody!;
@@ -1142,6 +1469,7 @@ void main() {
       Future<void> openDeleteSheet() async {
         final delete = find.text(LocaleKeys.ownerPropertiesDeleteProperty);
         await tester.ensureVisible(delete);
+        await tester.pumpAndSettle();
         await tester.tap(delete);
         await tester.pumpAndSettle();
         expect(find.byType(OwnerPropertyDeleteSheet), findsOneWidget);
@@ -1211,6 +1539,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('إضافة عقار'));
+    await waitForOwnerForm(tester);
     await tester.pumpAndSettle();
 
     expect(find.byType(OwnerPropertyFlowScreen), findsOneWidget);

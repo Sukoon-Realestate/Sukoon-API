@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -38,6 +39,8 @@ class DigitalLeaseCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             AppText(lease.propertyTitle, fontWeight: FontWeight.bold),
+            if (lease.rentalSelection != null)
+              AppText(RentalOfferLabels.accommodation(lease.rentalSelection!)),
             8.szH,
             PremiumStatusBadge(status: lease.status),
             AppText(lease.rent.display),

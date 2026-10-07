@@ -14,6 +14,8 @@ import 'property_photo_metadata.dart';
 import 'property_photo_tips.dart';
 import 'property_video_picker.dart';
 import 'property_form_validation.dart';
+import 'rental_accommodation_media_section.dart';
+import 'package:melos_core/core/widgets/app_text.dart';
 
 class AddPropertyPhotosPage extends StatefulWidget {
   const AddPropertyPhotosPage({
@@ -28,6 +30,7 @@ class AddPropertyPhotosPage extends StatefulWidget {
     required this.onNext,
     required this.onMainPhotoSelected,
     this.onPhotoMoved,
+    this.onFormChanged,
     required this.form,
     required this.onVideoSelected,
     required this.onVideoRemoved,
@@ -45,6 +48,7 @@ class AddPropertyPhotosPage extends StatefulWidget {
   final ValueChanged<int> onMainPhotoSelected;
   final ValueChanged<({int from, int to})>? onPhotoMoved;
   final OwnerAddPropertyFormState form;
+  final ValueChanged<OwnerAddPropertyFormState>? onFormChanged;
   final void Function(File file, int durationSeconds) onVideoSelected;
   final VoidCallback onVideoRemoved;
   final ValueChanged<bool> onVideoPreparingChanged;
@@ -57,11 +61,7 @@ class _AddPropertyPhotosPageState extends State<AddPropertyPhotosPage> {
   final GlobalKey _photosFieldKey = GlobalKey();
   final GlobalKey _videoFieldKey = GlobalKey();
 
-  String get _photosError =>
-      LocaleKeys.ownerAddPropertyPhotosRemaining.replaceAll(
-        '{count}',
-        '${OwnerAddPropertyContent.minimumPhotoCount - widget.photos.length}',
-      );
+  String? get _photosError => PropertyFormValidation.photos(widget.form);
 
   List<FirstValidationErrorField> _validationFields() => [
     FirstValidationErrorField(
@@ -74,18 +74,13 @@ class _AddPropertyPhotosPageState extends State<AddPropertyPhotosPage> {
       fieldKey: _photosFieldKey,
       title: LocaleKeys.ownerPropertiesPhotos,
       value: '${widget.photos.length}',
-      validator: (_) =>
-          widget.photos.length >= OwnerAddPropertyContent.minimumPhotoCount
-          ? null
-          : _photosError,
+      validator: (_) => _photosError,
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
-    final int remaining =
-        OwnerAddPropertyContent.minimumPhotoCount - widget.photos.length;
-    final bool hasEnoughPhotos = remaining <= 0;
+    final bool hasEnoughPhotos = _photosError == null;
 
     return AddPropertyStepShell(
       validationFields: _validationFields,
@@ -95,6 +90,8 @@ class _AddPropertyPhotosPageState extends State<AddPropertyPhotosPage> {
       primaryLabel: LocaleKeys.ownerAddPropertyPricingTitle,
       onPrimaryTap: widget.form.isVideoPreparing ? null : widget.onNext,
       children: [
+        if (widget.form.rentalInventory != null)
+          AppText(LocaleKeys.rentalPropertyMediaOnce),
         AddPropertyInfoBanner(
           title: widget.isReady ? LocaleKeys.ownerAddPropertyPhotosReady : null,
           text: widget.isReady
@@ -102,10 +99,7 @@ class _AddPropertyPhotosPageState extends State<AddPropertyPhotosPage> {
               : hasEnoughPhotos
               ? PropertyFormValidation.video(widget.form) ??
                     LocaleKeys.ownerAddPropertyPhotoMetadataRecommended
-              : LocaleKeys.ownerAddPropertyPhotosRemaining.replaceAll(
-                  '{count}',
-                  '$remaining',
-                ),
+              : _photosError ?? '',
           backgroundColor: widget.isReady
               ? context.appColor(AppColors.greenPale, surface: true)
               : context.appColor(AppColors.orangePale, surface: true),
@@ -153,6 +147,11 @@ class _AddPropertyPhotosPageState extends State<AddPropertyPhotosPage> {
             photos: widget.photos,
             onPhotoNameChanged: widget.onPhotoNameChanged,
             onPhotoDescriptionChanged: widget.onPhotoDescriptionChanged,
+          ),
+        if (widget.form.isPartialOffering && widget.onFormChanged != null)
+          RentalAccommodationMediaSection(
+            form: widget.form,
+            onChanged: widget.onFormChanged!,
           ),
         const PhotoTipsSection(),
       ],

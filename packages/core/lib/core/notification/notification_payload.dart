@@ -15,6 +15,7 @@ class NotificationPayload {
     required this.actionLabel,
     required this.visitId,
     required this.propertyId,
+    required this.offerId,
     required this.chatId,
     required this.senderId,
     required this.senderName,
@@ -65,6 +66,7 @@ class NotificationPayload {
       actionLabel: _notificationString(data['action_label']),
       visitId: _notificationString(data['visit_id']),
       propertyId: _notificationString(data['property_id']),
+      offerId: _notificationString(data['offer_id']),
       chatId: _notificationString(data['conversation_id'] ?? data['chat_id']),
       senderId: _notificationString(data['sender_id']),
       senderName: _notificationString(data['sender_name']),
@@ -99,6 +101,7 @@ class NotificationPayload {
   final String actionLabel;
   final String visitId;
   final String propertyId;
+  final String offerId;
   final String chatId;
   final String senderId;
   final String senderName;
@@ -127,6 +130,7 @@ class NotificationPayload {
     if (actionLabel.isNotEmpty) 'action_label': actionLabel,
     if (visitId.isNotEmpty) 'visit_id': visitId,
     if (propertyId.isNotEmpty) 'property_id': propertyId,
+    if (offerId.isNotEmpty) 'offer_id': offerId,
     if (chatId.isNotEmpty) 'chat_id': chatId,
     if (senderId.isNotEmpty) 'sender_id': senderId,
     if (senderName.isNotEmpty) 'sender_name': senderName,

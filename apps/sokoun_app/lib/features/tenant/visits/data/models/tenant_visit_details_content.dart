@@ -47,6 +47,7 @@ class TenantVisitDetailsContent extends Equatable {
     );
   }
   final TenantVisitContent visit;
+  get rentalSelection => visit.rentalSelection;
   final String propertyId, location, price, pricePeriod, note, maskedPhone;
   final int? bedrooms;
   final bool ownerVerified;

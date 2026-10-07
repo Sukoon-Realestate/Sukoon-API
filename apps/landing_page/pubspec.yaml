@@ -8,6 +8,7 @@ dependencies:
   flutter:
     sdk: flutter
   easy_localization: ^3.0.8
+  video_player: ^2.10.1
   melos_core:
     path: ../../packages/core
 
@@ -15,6 +16,10 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  video_player_platform_interface: ^6.7.0
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/videos/sokoun_demo.mp4
+    - assets/images/sokoun_demo_poster.jpg

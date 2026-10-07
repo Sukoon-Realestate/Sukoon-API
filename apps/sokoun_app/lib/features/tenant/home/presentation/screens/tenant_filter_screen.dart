@@ -1,4 +1,5 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/rental_offer_capabilities.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
@@ -109,9 +110,13 @@ class _TenantFilterScreenState extends State<TenantFilterScreen> {
       fieldKey: _priceRangeFieldKey,
       title: LocaleKeys.tenantFilterPriceRange,
       value: _maxPriceController.text,
-      validator: (_) => _filters.value.hasValidPriceRange
-          ? null
-          : LocaleKeys.searchPriceRangeError,
+      validator: (_) => !_filters.value.hasValidPriceRange
+          ? LocaleKeys.searchPriceRangeError
+          : RentalOfferCapabilities.configured.canSearch &&
+                _filters.value.requiresPricePeriod &&
+                _filters.value.pricePeriod.isEmpty
+          ? LocaleKeys.rentalPricePeriodRequired
+          : null,
     ),
   ];
 

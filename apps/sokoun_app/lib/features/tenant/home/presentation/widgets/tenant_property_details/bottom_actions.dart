@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/rental_offer_capabilities.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_action_footer.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_selection_feedback.dart';
@@ -28,7 +29,7 @@ class TenantPropertyBottomActions extends StatelessWidget {
 
   final TenantPropertyDetailsContent property;
   final bool isSaved;
-  final VoidCallback onSavedPressed;
+  final VoidCallback? onSavedPressed;
   final VoidCallback? onChatPressed;
   final bool isOpeningChat;
 
@@ -70,9 +71,24 @@ class TenantPropertyBottomActions extends StatelessWidget {
         children: [
           Expanded(
             child: DefaultButton(
-              onTap: _openBookVisit,
+              onTap:
+                  _isOwnProperty ||
+                      !property.hasRentalOffers ||
+                      (property.selectionConfirmed &&
+                          property.selection?.isAvailable == true &&
+                          property.selection?.canIdentify == true &&
+                          RentalOfferCapabilities.configured.canRequestViewing)
+                  ? _openBookVisit
+                  : null,
               title: _isOwnProperty
                   ? LocaleKeys.workspaceManageProperty
+                  : property.hasRentalOffers && property.selection == null
+                  ? LocaleKeys.rentalSelectOffer
+                  : property.hasRentalOffers && !property.selectionConfirmed
+                  ? LocaleKeys.rentalConfirmAccommodation
+                  : property.hasRentalOffers &&
+                        !RentalOfferCapabilities.configured.canRequestViewing
+                  ? LocaleKeys.rentalUnavailableCapability
                   : LocaleKeys.tenantVisitBookTitle,
               isFitted: false,
               minHeight: 48.h,

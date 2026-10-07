@@ -34,7 +34,7 @@ class ResultsSearchHeader extends StatelessWidget {
         children: [
           Expanded(
             child: Container(
-              height: 44.h,
+              constraints: BoxConstraints(minHeight: 48.h),
               padding: EdgeInsets.symmetric(horizontal: 14.w),
               decoration: BoxDecoration(
                 color: context.appColor(

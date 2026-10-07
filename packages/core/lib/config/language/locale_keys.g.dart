@@ -4,15 +4,11 @@ abstract class LocaleKeys {
   static const String _journeyRentEntryBody = 'journey_rent_entry_body';
   static String get journeyRentEntryBody => _journeyRentEntryBody.tr();
 
-  static const String _journeyAnalyticsEntryBody =
-      'journey_analytics_entry_body';
-  static String get journeyAnalyticsEntryBody =>
-      _journeyAnalyticsEntryBody.tr();
+  static const String _journeyAnalyticsEntryBody = 'journey_analytics_entry_body';
+  static String get journeyAnalyticsEntryBody => _journeyAnalyticsEntryBody.tr();
 
-  static const String _journeyContractsEntryBody =
-      'journey_contracts_entry_body';
-  static String get journeyContractsEntryBody =>
-      _journeyContractsEntryBody.tr();
+  static const String _journeyContractsEntryBody = 'journey_contracts_entry_body';
+  static String get journeyContractsEntryBody => _journeyContractsEntryBody.tr();
 
   static const String _journeyDigitalLeasesBody = 'journey_digital_leases_body';
   static String get journeyDigitalLeasesBody => _journeyDigitalLeasesBody.tr();
@@ -77,10 +73,8 @@ abstract class LocaleKeys {
   static const String _freeQualityVideo = 'free_quality_video';
   static String get freeQualityVideo => _freeQualityVideo.tr();
 
-  static const String _freeAvailabilityConfirmed =
-      'free_availability_confirmed';
-  static String get freeAvailabilityConfirmed =>
-      _freeAvailabilityConfirmed.tr();
+  static const String _freeAvailabilityConfirmed = 'free_availability_confirmed';
+  static String get freeAvailabilityConfirmed => _freeAvailabilityConfirmed.tr();
 
   static const String _freeAvailabilityUnknown = 'free_availability_unknown';
   static String get freeAvailabilityUnknown => _freeAvailabilityUnknown.tr();
@@ -154,10 +148,8 @@ abstract class LocaleKeys {
   static const String _freeReviewVisit = 'free_review_visit';
   static String get freeReviewVisit => _freeReviewVisit.tr();
 
-  static const String _freeVisitPendingExplanation =
-      'free_visit_pending_explanation';
-  static String get freeVisitPendingExplanation =>
-      _freeVisitPendingExplanation.tr();
+  static const String _freeVisitPendingExplanation = 'free_visit_pending_explanation';
+  static String get freeVisitPendingExplanation => _freeVisitPendingExplanation.tr();
 
   static const String _freeVisitRequestSent = 'free_visit_request_sent';
   static String get freeVisitRequestSent => _freeVisitRequestSent.tr();
@@ -228,10 +220,8 @@ abstract class LocaleKeys {
   static const String _freeCompare = 'free_compare';
   static String get freeCompare => _freeCompare.tr();
 
-  static const String _freeComparisonExplanation =
-      'free_comparison_explanation';
-  static String get freeComparisonExplanation =>
-      _freeComparisonExplanation.tr();
+  static const String _freeComparisonExplanation = 'free_comparison_explanation';
+  static String get freeComparisonExplanation => _freeComparisonExplanation.tr();
 
   static const String _freeListingVerified = 'free_listing_verified';
   static String get freeListingVerified => _freeListingVerified.tr();
@@ -323,10 +313,8 @@ abstract class LocaleKeys {
   static const String _freeReportSubmitted = 'free_report_submitted';
   static String get freeReportSubmitted => _freeReportSubmitted.tr();
 
-  static const String _freeReportDetailsRequired =
-      'free_report_details_required';
-  static String get freeReportDetailsRequired =>
-      _freeReportDetailsRequired.tr();
+  static const String _freeReportDetailsRequired = 'free_report_details_required';
+  static String get freeReportDetailsRequired => _freeReportDetailsRequired.tr();
 
   static const String _freeRecoveredChat = 'free_recovered_chat';
   static String get freeRecoveredChat => _freeRecoveredChat.tr();
@@ -358,10 +346,8 @@ abstract class LocaleKeys {
   static const String _appearanceDark = 'appearance_dark';
   static String get appearanceDark => _appearanceDark.tr();
 
-  static const String _validationIdentityRequired =
-      'validation_identity_required';
-  static String get validationIdentityRequired =>
-      _validationIdentityRequired.tr();
+  static const String _validationIdentityRequired = 'validation_identity_required';
+  static String get validationIdentityRequired => _validationIdentityRequired.tr();
 
   static const String _validationFieldRequired = 'validation_field_required';
   static String get validationFieldRequired => _validationFieldRequired.tr();
@@ -402,18 +388,14 @@ abstract class LocaleKeys {
   static const String _accountEmailTooLong = 'account_email_too_long';
   static String get accountEmailTooLong => _accountEmailTooLong.tr();
 
-  static const String _accountEmailLocalPartTooLong =
-      'account_email_local_part_too_long';
-  static String get accountEmailLocalPartTooLong =>
-      _accountEmailLocalPartTooLong.tr();
+  static const String _accountEmailLocalPartTooLong = 'account_email_local_part_too_long';
+  static String get accountEmailLocalPartTooLong => _accountEmailLocalPartTooLong.tr();
 
   static const String _accountPasswordTooShort = 'account_password_too_short';
   static String get accountPasswordTooShort => _accountPasswordTooShort.tr();
 
-  static const String _accountPasswordConfirmationRequired =
-      'account_password_confirmation_required';
-  static String get accountPasswordConfirmationRequired =>
-      _accountPasswordConfirmationRequired.tr();
+  static const String _accountPasswordConfirmationRequired = 'account_password_confirmation_required';
+  static String get accountPasswordConfirmationRequired => _accountPasswordConfirmationRequired.tr();
 
   static const String _accountPhoneRequired = 'account_phone_required';
   static String get accountPhoneRequired => _accountPhoneRequired.tr();
@@ -421,10 +403,8 @@ abstract class LocaleKeys {
   static const String _accountOtpRequired = 'account_otp_required';
   static String get accountOtpRequired => _accountOtpRequired.tr();
 
-  static const String _accountNationalIdRequired =
-      'account_national_id_required';
-  static String get accountNationalIdRequired =>
-      _accountNationalIdRequired.tr();
+  static const String _accountNationalIdRequired = 'account_national_id_required';
+  static String get accountNationalIdRequired => _accountNationalIdRequired.tr();
 
   static const String _accountGenderValidation = 'account_gender_validation';
   static String get accountGenderValidation => _accountGenderValidation.tr();
@@ -432,23 +412,17 @@ abstract class LocaleKeys {
   static const String _accountBirthDateRequired = 'account_birth_date_required';
   static String get accountBirthDateRequired => _accountBirthDateRequired.tr();
 
-  static const String _accountBirthDateValidation =
-      'account_birth_date_validation';
-  static String get accountBirthDateValidation =>
-      _accountBirthDateValidation.tr();
+  static const String _accountBirthDateValidation = 'account_birth_date_validation';
+  static String get accountBirthDateValidation => _accountBirthDateValidation.tr();
 
   static const String _chatMessageRequired = 'chat_message_required';
   static String get chatMessageRequired => _chatMessageRequired.tr();
 
-  static const String _chatMessageLettersValidation =
-      'chat_message_letters_validation';
-  static String get chatMessageLettersValidation =>
-      _chatMessageLettersValidation.tr();
+  static const String _chatMessageLettersValidation = 'chat_message_letters_validation';
+  static String get chatMessageLettersValidation => _chatMessageLettersValidation.tr();
 
-  static const String _accountDocumentUploadHint =
-      'account_document_upload_hint';
-  static String get accountDocumentUploadHint =>
-      _accountDocumentUploadHint.tr();
+  static const String _accountDocumentUploadHint = 'account_document_upload_hint';
+  static String get accountDocumentUploadHint => _accountDocumentUploadHint.tr();
 
   static const String _pullRefreshHint = 'pull_refresh_hint';
   static String get pullRefreshHint => _pullRefreshHint.tr();
@@ -459,15 +433,11 @@ abstract class LocaleKeys {
   static const String _pullRefreshLoading = 'pull_refresh_loading';
   static String get pullRefreshLoading => _pullRefreshLoading.tr();
 
-  static const String _ownerPropertyVideoDurationInvalid =
-      'owner_property_video_duration_invalid';
-  static String get ownerPropertyVideoDurationInvalid =>
-      _ownerPropertyVideoDurationInvalid.tr();
+  static const String _ownerPropertyVideoDurationInvalid = 'owner_property_video_duration_invalid';
+  static String get ownerPropertyVideoDurationInvalid => _ownerPropertyVideoDurationInvalid.tr();
 
-  static const String _ownerPropertyVideoRequired =
-      'owner_property_video_required';
-  static String get ownerPropertyVideoRequired =>
-      _ownerPropertyVideoRequired.tr();
+  static const String _ownerPropertyVideoRequired = 'owner_property_video_required';
+  static String get ownerPropertyVideoRequired => _ownerPropertyVideoRequired.tr();
 
   static const String _kycExistingDocumentsHint = 'kyc_existing_documents_hint';
   static String get kycExistingDocumentsHint => _kycExistingDocumentsHint.tr();
@@ -484,10 +454,8 @@ abstract class LocaleKeys {
   static const String _myReviewsEmptyTitle = 'my_reviews_empty_title';
   static String get myReviewsEmptyTitle => _myReviewsEmptyTitle.tr();
 
-  static const String _myReviewsEmptyDescription =
-      'my_reviews_empty_description';
-  static String get myReviewsEmptyDescription =>
-      _myReviewsEmptyDescription.tr();
+  static const String _myReviewsEmptyDescription = 'my_reviews_empty_description';
+  static String get myReviewsEmptyDescription => _myReviewsEmptyDescription.tr();
 
   static const String _publicAboutUs = 'public_about_us';
   static String get publicAboutUs => _publicAboutUs.tr();
@@ -501,10 +469,8 @@ abstract class LocaleKeys {
   static const String _publicPageEmptyTitle = 'public_page_empty_title';
   static String get publicPageEmptyTitle => _publicPageEmptyTitle.tr();
 
-  static const String _publicPageEmptyDescription =
-      'public_page_empty_description';
-  static String get publicPageEmptyDescription =>
-      _publicPageEmptyDescription.tr();
+  static const String _publicPageEmptyDescription = 'public_page_empty_description';
+  static String get publicPageEmptyDescription => _publicPageEmptyDescription.tr();
 
   static const String _propertyVideoPlay = 'property_video_play';
   static String get propertyVideoPlay => _propertyVideoPlay.tr();
@@ -530,23 +496,17 @@ abstract class LocaleKeys {
   static const String _workspaceSwitchToTenant = 'workspace_switch_to_tenant';
   static String get workspaceSwitchToTenant => _workspaceSwitchToTenant.tr();
 
-  static const String _workspaceAccountDescription =
-      'workspace_account_description';
-  static String get workspaceAccountDescription =>
-      _workspaceAccountDescription.tr();
+  static const String _workspaceAccountDescription = 'workspace_account_description';
+  static String get workspaceAccountDescription => _workspaceAccountDescription.tr();
 
   static const String _workspaceManageProperty = 'workspace_manage_property';
   static String get workspaceManageProperty => _workspaceManageProperty.tr();
 
-  static const String _workspaceSelfActionBlocked =
-      'workspace_self_action_blocked';
-  static String get workspaceSelfActionBlocked =>
-      _workspaceSelfActionBlocked.tr();
+  static const String _workspaceSelfActionBlocked = 'workspace_self_action_blocked';
+  static String get workspaceSelfActionBlocked => _workspaceSelfActionBlocked.tr();
 
-  static const String _workspaceAllNotifications =
-      'workspace_all_notifications';
-  static String get workspaceAllNotifications =>
-      _workspaceAllNotifications.tr();
+  static const String _workspaceAllNotifications = 'workspace_all_notifications';
+  static String get workspaceAllNotifications => _workspaceAllNotifications.tr();
 
   static const String _workspaceDiscardTitle = 'workspace_discard_title';
   static String get workspaceDiscardTitle => _workspaceDiscardTitle.tr();
@@ -596,10 +556,8 @@ abstract class LocaleKeys {
   static const String _ownerRetryAction = 'owner_retry_action';
   static String get ownerRetryAction => _ownerRetryAction.tr();
 
-  static const String _errorExeptionNointernetDesc =
-      'error_exeption_nointernet_desc';
-  static String get errorExeptionNointernetDesc =>
-      _errorExeptionNointernetDesc.tr();
+  static const String _errorExeptionNointernetDesc = 'error_exeption_nointernet_desc';
+  static String get errorExeptionNointernetDesc => _errorExeptionNointernetDesc.tr();
 
   static const String _errorExceptionNotContain = 'error_exception_not_contain';
   static String get errorExceptionNotContain => _errorExceptionNotContain.tr();
@@ -649,10 +607,8 @@ abstract class LocaleKeys {
   static const String _searchEasily = 'search_easily';
   static String get searchEasily => _searchEasily.tr();
 
-  static const String _thousandsPropertiesAcrossEgypt =
-      'thousands_properties_across_egypt';
-  static String get thousandsPropertiesAcrossEgypt =>
-      _thousandsPropertiesAcrossEgypt.tr();
+  static const String _thousandsPropertiesAcrossEgypt = 'thousands_properties_across_egypt';
+  static String get thousandsPropertiesAcrossEgypt => _thousandsPropertiesAcrossEgypt.tr();
 
   static const String _startHousingSearch = 'start_housing_search';
   static String get startHousingSearch => _startHousingSearch.tr();
@@ -663,10 +619,8 @@ abstract class LocaleKeys {
   static const String _addPropertiesEasily = 'add_properties_easily';
   static String get addPropertiesEasily => _addPropertiesEasily.tr();
 
-  static const String _fourSimpleStepsPropertyLive =
-      'four_simple_steps_property_live';
-  static String get fourSimpleStepsPropertyLive =>
-      _fourSimpleStepsPropertyLive.tr();
+  static const String _fourSimpleStepsPropertyLive = 'four_simple_steps_property_live';
+  static String get fourSimpleStepsPropertyLive => _fourSimpleStepsPropertyLive.tr();
 
   static const String _identityVerification = 'identity_verification';
   static String get identityVerification => _identityVerification.tr();
@@ -740,10 +694,8 @@ abstract class LocaleKeys {
   static const String _idPhotoNeverVisible = 'id_photo_never_visible';
   static String get idPhotoNeverVisible => _idPhotoNeverVisible.tr();
 
-  static const String _enterNationalIdToContinue =
-      'enter_national_id_to_continue';
-  static String get enterNationalIdToContinue =>
-      _enterNationalIdToContinue.tr();
+  static const String _enterNationalIdToContinue = 'enter_national_id_to_continue';
+  static String get enterNationalIdToContinue => _enterNationalIdToContinue.tr();
 
   static const String _nextReviewData = 'next_review_data';
   static String get nextReviewData => _nextReviewData.tr();
@@ -787,10 +739,8 @@ abstract class LocaleKeys {
   static const String _recoverPasswordTitle = 'recover_password_title';
   static String get recoverPasswordTitle => _recoverPasswordTitle.tr();
 
-  static const String _forgotPasswordDescription =
-      'forgot_password_description';
-  static String get forgotPasswordDescription =>
-      _forgotPasswordDescription.tr();
+  static const String _forgotPasswordDescription = 'forgot_password_description';
+  static String get forgotPasswordDescription => _forgotPasswordDescription.tr();
 
   static const String _forgotPasswordEmailHint = 'forgot_password_email_hint';
   static String get forgotPasswordEmailHint => _forgotPasswordEmailHint.tr();
@@ -825,10 +775,8 @@ abstract class LocaleKeys {
   static const String _tapTheLink = 'tap_the_link';
   static String get tapTheLink => _tapTheLink.tr();
 
-  static const String _resetLinkValidFor15Minutes =
-      'reset_link_valid_for_1_5_minutes';
-  static String get resetLinkValidFor15Minutes =>
-      _resetLinkValidFor15Minutes.tr();
+  static const String _resetLinkValidFor15Minutes = 'reset_link_valid_for_1_5_minutes';
+  static String get resetLinkValidFor15Minutes => _resetLinkValidFor15Minutes.tr();
 
   static const String _createNewPassword = 'create_new_password';
   static String get createNewPassword => _createNewPassword.tr();
@@ -881,10 +829,8 @@ abstract class LocaleKeys {
   static const String _continueWithApple = 'continue_with_apple';
   static String get continueWithApple => _continueWithApple.tr();
 
-  static const String _googleSignInUnsupportedDevice =
-      'google_sign_in_unsupported_device';
-  static String get googleSignInUnsupportedDevice =>
-      _googleSignInUnsupportedDevice.tr();
+  static const String _googleSignInUnsupportedDevice = 'google_sign_in_unsupported_device';
+  static String get googleSignInUnsupportedDevice => _googleSignInUnsupportedDevice.tr();
 
   static const String _googleSignInCancelled = 'google_sign_in_cancelled';
   static String get googleSignInCancelled => _googleSignInCancelled.tr();
@@ -904,15 +850,11 @@ abstract class LocaleKeys {
   static const String _signInAsVisitor = 'sign_in_as_visitor';
   static String get signInAsVisitor => _signInAsVisitor.tr();
 
-  static const String _unauthenticatedSheetTitle =
-      'unauthenticated_sheet_title';
-  static String get unauthenticatedSheetTitle =>
-      _unauthenticatedSheetTitle.tr();
+  static const String _unauthenticatedSheetTitle = 'unauthenticated_sheet_title';
+  static String get unauthenticatedSheetTitle => _unauthenticatedSheetTitle.tr();
 
-  static const String _unauthenticatedSheetDescription =
-      'unauthenticated_sheet_description';
-  static String get unauthenticatedSheetDescription =>
-      _unauthenticatedSheetDescription.tr();
+  static const String _unauthenticatedSheetDescription = 'unauthenticated_sheet_description';
+  static String get unauthenticatedSheetDescription => _unauthenticatedSheetDescription.tr();
 
   static const String _doNotHaveAnAccount = 'do_not_have_an_account';
   static String get doNotHaveAnAccount => _doNotHaveAnAccount.tr();
@@ -953,10 +895,8 @@ abstract class LocaleKeys {
   static const String _phoneShouldBe9Digits = 'phone_should_be_9_digits';
   static String get phoneShouldBe9Digits => _phoneShouldBe9Digits.tr();
 
-  static const String _theMinDowryCanNotBeGreaterThanMax =
-      'the_min_dowry_can_not_be_greater_than_max';
-  static String get theMinDowryCanNotBeGreaterThanMax =>
-      _theMinDowryCanNotBeGreaterThanMax.tr();
+  static const String _theMinDowryCanNotBeGreaterThanMax = 'the_min_dowry_can_not_be_greater_than_max';
+  static String get theMinDowryCanNotBeGreaterThanMax => _theMinDowryCanNotBeGreaterThanMax.tr();
 
   static const String _yes = 'yes';
   static String get yes => _yes.tr();
@@ -976,15 +916,11 @@ abstract class LocaleKeys {
   static const String _arabic = 'arabic';
   static String get arabic => _arabic.tr();
 
-  static const String _unableToAccessPhotosPleaseOpenIt =
-      'unable_to_access_photos_please_open_it';
-  static String get unableToAccessPhotosPleaseOpenIt =>
-      _unableToAccessPhotosPleaseOpenIt.tr();
+  static const String _unableToAccessPhotosPleaseOpenIt = 'unable_to_access_photos_please_open_it';
+  static String get unableToAccessPhotosPleaseOpenIt => _unableToAccessPhotosPleaseOpenIt.tr();
 
-  static const String _unableToAccessCameraPleaseOpenIt =
-      'unable_to_access_camera_please_open_it';
-  static String get unableToAccessCameraPleaseOpenIt =>
-      _unableToAccessCameraPleaseOpenIt.tr();
+  static const String _unableToAccessCameraPleaseOpenIt = 'unable_to_access_camera_please_open_it';
+  static String get unableToAccessCameraPleaseOpenIt => _unableToAccessCameraPleaseOpenIt.tr();
 
   static const String _email = 'email';
   static String get email => _email.tr();
@@ -1004,15 +940,11 @@ abstract class LocaleKeys {
   static const String _verificationCode = 'verification_code';
   static String get verificationCode => _verificationCode.tr();
 
-  static const String _areYouSureYouWantToDeleteYourAccount =
-      'are_you_sure_you_want_to_delete_your_account';
-  static String get areYouSureYouWantToDeleteYourAccount =>
-      _areYouSureYouWantToDeleteYourAccount.tr();
+  static const String _areYouSureYouWantToDeleteYourAccount = 'are_you_sure_you_want_to_delete_your_account';
+  static String get areYouSureYouWantToDeleteYourAccount => _areYouSureYouWantToDeleteYourAccount.tr();
 
-  static const String _deletingWillRemoveAllYourData =
-      'deleting_will_remove_all_your_data';
-  static String get deletingWillRemoveAllYourData =>
-      _deletingWillRemoveAllYourData.tr();
+  static const String _deletingWillRemoveAllYourData = 'deleting_will_remove_all_your_data';
+  static String get deletingWillRemoveAllYourData => _deletingWillRemoveAllYourData.tr();
 
   static const String _successDone = 'success_done';
   static String get successDone => _successDone.tr();
@@ -1038,10 +970,8 @@ abstract class LocaleKeys {
   static const String _searchResult = 'search_result';
   static String get searchResult => _searchResult.tr();
 
-  static const String _theInternetConnectionIsRestored =
-      'the_internet_connection_is_restored';
-  static String get theInternetConnectionIsRestored =>
-      _theInternetConnectionIsRestored.tr();
+  static const String _theInternetConnectionIsRestored = 'the_internet_connection_is_restored';
+  static String get theInternetConnectionIsRestored => _theInternetConnectionIsRestored.tr();
 
   static const String _moveToNextStage = 'move_to_next_stage';
   static String get moveToNextStage => _moveToNextStage.tr();
@@ -1049,20 +979,14 @@ abstract class LocaleKeys {
   static const String _refuseMoveToNextStage = 'refuse_move_to_next_stage';
   static String get refuseMoveToNextStage => _refuseMoveToNextStage.tr();
 
-  static const String _requestForExtensionOfPeriod =
-      'request_for_extension_of_period';
-  static String get requestForExtensionOfPeriod =>
-      _requestForExtensionOfPeriod.tr();
+  static const String _requestForExtensionOfPeriod = 'request_for_extension_of_period';
+  static String get requestForExtensionOfPeriod => _requestForExtensionOfPeriod.tr();
 
-  static const String _theVerificationCodeMustConsistOf4Digits =
-      'the_verification_code_must_consist_of_4_digits';
-  static String get theVerificationCodeMustConsistOf4Digits =>
-      _theVerificationCodeMustConsistOf4Digits.tr();
+  static const String _theVerificationCodeMustConsistOf4Digits = 'the_verification_code_must_consist_of_4_digits';
+  static String get theVerificationCodeMustConsistOf4Digits => _theVerificationCodeMustConsistOf4Digits.tr();
 
-  static const String _theAgeMustBeAtLeast18YearsOld =
-      'the_age_must_be_at_least_18_years_old';
-  static String get theAgeMustBeAtLeast18YearsOld =>
-      _theAgeMustBeAtLeast18YearsOld.tr();
+  static const String _theAgeMustBeAtLeast18YearsOld = 'the_age_must_be_at_least_18_years_old';
+  static String get theAgeMustBeAtLeast18YearsOld => _theAgeMustBeAtLeast18YearsOld.tr();
 
   static const String _theAgeMustBeANumber = 'the_age_must_be_a_number';
   static String get theAgeMustBeANumber => _theAgeMustBeANumber.tr();
@@ -1073,10 +997,8 @@ abstract class LocaleKeys {
   static const String _youCanNotChooseNow = 'you_can_not_choose_now';
   static String get youCanNotChooseNow => _youCanNotChooseNow.tr();
 
-  static const String _profileUpdatedSuccessfully =
-      'profile_updated_successfully';
-  static String get profileUpdatedSuccessfully =>
-      _profileUpdatedSuccessfully.tr();
+  static const String _profileUpdatedSuccessfully = 'profile_updated_successfully';
+  static String get profileUpdatedSuccessfully => _profileUpdatedSuccessfully.tr();
 
   static const String _waitingForConnection = 'waiting_for_connection';
   static String get waitingForConnection => _waitingForConnection.tr();
@@ -1090,28 +1012,20 @@ abstract class LocaleKeys {
   static const String _languageSelectionTitle = 'language_selection_title';
   static String get languageSelectionTitle => _languageSelectionTitle.tr();
 
-  static const String _languageSelectionSubtitle =
-      'language_selection_subtitle';
-  static String get languageSelectionSubtitle =>
-      _languageSelectionSubtitle.tr();
+  static const String _languageSelectionSubtitle = 'language_selection_subtitle';
+  static String get languageSelectionSubtitle => _languageSelectionSubtitle.tr();
 
   static const String _languageArabicName = 'language_arabic_name';
   static String get languageArabicName => _languageArabicName.tr();
 
-  static const String _languageArabicTranslation =
-      'language_arabic_translation';
-  static String get languageArabicTranslation =>
-      _languageArabicTranslation.tr();
+  static const String _languageArabicTranslation = 'language_arabic_translation';
+  static String get languageArabicTranslation => _languageArabicTranslation.tr();
 
-  static const String _languageEnglishNativeName =
-      'language_english_native_name';
-  static String get languageEnglishNativeName =>
-      _languageEnglishNativeName.tr();
+  static const String _languageEnglishNativeName = 'language_english_native_name';
+  static String get languageEnglishNativeName => _languageEnglishNativeName.tr();
 
-  static const String _languageEnglishTranslation =
-      'language_english_translation';
-  static String get languageEnglishTranslation =>
-      _languageEnglishTranslation.tr();
+  static const String _languageEnglishTranslation = 'language_english_translation';
+  static String get languageEnglishTranslation => _languageEnglishTranslation.tr();
 
   static const String _thePhoneMustStartsWith5 = 'the_phone_must_starts_with_5';
   static String get thePhoneMustStartsWith5 => _thePhoneMustStartsWith5.tr();
@@ -1146,25 +1060,17 @@ abstract class LocaleKeys {
   static const String _whatsNewV107Item2 = 'whats_new_v_1_0_7_item_2';
   static String get whatsNewV107Item2 => _whatsNewV107Item2.tr();
 
-  static const String _updateDialogOptionalTitle =
-      'update_dialog_optional_title';
-  static String get updateDialogOptionalTitle =>
-      _updateDialogOptionalTitle.tr();
+  static const String _updateDialogOptionalTitle = 'update_dialog_optional_title';
+  static String get updateDialogOptionalTitle => _updateDialogOptionalTitle.tr();
 
-  static const String _updateDialogOptionalDescription =
-      'update_dialog_optional_description';
-  static String get updateDialogOptionalDescription =>
-      _updateDialogOptionalDescription.tr();
+  static const String _updateDialogOptionalDescription = 'update_dialog_optional_description';
+  static String get updateDialogOptionalDescription => _updateDialogOptionalDescription.tr();
 
-  static const String _updateDialogRequiredTitle =
-      'update_dialog_required_title';
-  static String get updateDialogRequiredTitle =>
-      _updateDialogRequiredTitle.tr();
+  static const String _updateDialogRequiredTitle = 'update_dialog_required_title';
+  static String get updateDialogRequiredTitle => _updateDialogRequiredTitle.tr();
 
-  static const String _updateDialogRequiredDescription =
-      'update_dialog_required_description';
-  static String get updateDialogRequiredDescription =>
-      _updateDialogRequiredDescription.tr();
+  static const String _updateDialogRequiredDescription = 'update_dialog_required_description';
+  static String get updateDialogRequiredDescription => _updateDialogRequiredDescription.tr();
 
   static const String _updateDialogNewVersion = 'update_dialog_new_version';
   static String get updateDialogNewVersion => _updateDialogNewVersion.tr();
@@ -1184,23 +1090,17 @@ abstract class LocaleKeys {
   static const String _favoritesTitle = 'favorites_title';
   static String get favoritesTitle => _favoritesTitle.tr();
 
-  static const String _favoritesSavedPropertiesCount =
-      'favorites_saved_properties_count';
-  static String get favoritesSavedPropertiesCount =>
-      _favoritesSavedPropertiesCount.tr();
+  static const String _favoritesSavedPropertiesCount = 'favorites_saved_properties_count';
+  static String get favoritesSavedPropertiesCount => _favoritesSavedPropertiesCount.tr();
 
   static const String _favoritesEmptyTitle = 'favorites_empty_title';
   static String get favoritesEmptyTitle => _favoritesEmptyTitle.tr();
 
-  static const String _favoritesEmptyDescription =
-      'favorites_empty_description';
-  static String get favoritesEmptyDescription =>
-      _favoritesEmptyDescription.tr();
+  static const String _favoritesEmptyDescription = 'favorites_empty_description';
+  static String get favoritesEmptyDescription => _favoritesEmptyDescription.tr();
 
-  static const String _favoritesBrowseProperties =
-      'favorites_browse_properties';
-  static String get favoritesBrowseProperties =>
-      _favoritesBrowseProperties.tr();
+  static const String _favoritesBrowseProperties = 'favorites_browse_properties';
+  static String get favoritesBrowseProperties => _favoritesBrowseProperties.tr();
 
   static const String _favoritesRemovedMessage = 'favorites_removed_message';
   static String get favoritesRemovedMessage => _favoritesRemovedMessage.tr();
@@ -1211,10 +1111,8 @@ abstract class LocaleKeys {
   static const String _favoritesNavigationSaved = 'favorites_navigation_saved';
   static String get favoritesNavigationSaved => _favoritesNavigationSaved.tr();
 
-  static const String _favoriteRemoveSemanticLabel =
-      'favorite_remove_semantic_label';
-  static String get favoriteRemoveSemanticLabel =>
-      _favoriteRemoveSemanticLabel.tr();
+  static const String _favoriteRemoveSemanticLabel = 'favorite_remove_semantic_label';
+  static String get favoriteRemoveSemanticLabel => _favoriteRemoveSemanticLabel.tr();
 
   static const String _egyptianPoundShort = 'egyptian_pound_short';
   static String get egyptianPoundShort => _egyptianPoundShort.tr();
@@ -1222,10 +1120,8 @@ abstract class LocaleKeys {
   static const String _favoritesCurrencyShort = 'favorites_currency_short';
   static String get favoritesCurrencyShort => _favoritesCurrencyShort.tr();
 
-  static const String _favoritesModernStudioTitle =
-      'favorites_modern_studio_title';
-  static String get favoritesModernStudioTitle =>
-      _favoritesModernStudioTitle.tr();
+  static const String _favoritesModernStudioTitle = 'favorites_modern_studio_title';
+  static String get favoritesModernStudioTitle => _favoritesModernStudioTitle.tr();
 
   static const String _chatConversationsTitle = 'chat_conversations_title';
   static String get chatConversationsTitle => _chatConversationsTitle.tr();
@@ -1251,10 +1147,8 @@ abstract class LocaleKeys {
   static const String _chatSearchEmptyTitle = 'chat_search_empty_title';
   static String get chatSearchEmptyTitle => _chatSearchEmptyTitle.tr();
 
-  static const String _chatSearchEmptyDescription =
-      'chat_search_empty_description';
-  static String get chatSearchEmptyDescription =>
-      _chatSearchEmptyDescription.tr();
+  static const String _chatSearchEmptyDescription = 'chat_search_empty_description';
+  static String get chatSearchEmptyDescription => _chatSearchEmptyDescription.tr();
 
   static const String _chatMentionedProperties = 'chat_mentioned_properties';
   static String get chatMentionedProperties => _chatMentionedProperties.tr();
@@ -1277,10 +1171,8 @@ abstract class LocaleKeys {
   static const String _chatMessagesEmptyTitle = 'chat_messages_empty_title';
   static String get chatMessagesEmptyTitle => _chatMessagesEmptyTitle.tr();
 
-  static const String _chatMessagesEmptyDescription =
-      'chat_messages_empty_description';
-  static String get chatMessagesEmptyDescription =>
-      _chatMessagesEmptyDescription.tr();
+  static const String _chatMessagesEmptyDescription = 'chat_messages_empty_description';
+  static String get chatMessagesEmptyDescription => _chatMessagesEmptyDescription.tr();
 
   static const String _chatNow = 'chat_now';
   static String get chatNow => _chatNow.tr();
@@ -1291,10 +1183,8 @@ abstract class LocaleKeys {
   static const String _chatRestrictedTitle = 'chat_restricted_title';
   static String get chatRestrictedTitle => _chatRestrictedTitle.tr();
 
-  static const String _chatRestrictedDescription =
-      'chat_restricted_description';
-  static String get chatRestrictedDescription =>
-      _chatRestrictedDescription.tr();
+  static const String _chatRestrictedDescription = 'chat_restricted_description';
+  static String get chatRestrictedDescription => _chatRestrictedDescription.tr();
 
   static const String _chatVerifiedOnlyBanner = 'chat_verified_only_banner';
   static String get chatVerifiedOnlyBanner => _chatVerifiedOnlyBanner.tr();
@@ -1305,10 +1195,8 @@ abstract class LocaleKeys {
   static const String _chatStartKyc = 'chat_start_kyc';
   static String get chatStartKyc => _chatStartKyc.tr();
 
-  static const String _chatLearnMoreVerification =
-      'chat_learn_more_verification';
-  static String get chatLearnMoreVerification =>
-      _chatLearnMoreVerification.tr();
+  static const String _chatLearnMoreVerification = 'chat_learn_more_verification';
+  static String get chatLearnMoreVerification => _chatLearnMoreVerification.tr();
 
   static const String _chatTypingDisabled = 'chat_typing_disabled';
   static String get chatTypingDisabled => _chatTypingDisabled.tr();
@@ -1319,15 +1207,11 @@ abstract class LocaleKeys {
   static const String _chatReportReasonPrompt = 'chat_report_reason_prompt';
   static String get chatReportReasonPrompt => _chatReportReasonPrompt.tr();
 
-  static const String _chatReportIncorrectProperty =
-      'chat_report_incorrect_property';
-  static String get chatReportIncorrectProperty =>
-      _chatReportIncorrectProperty.tr();
+  static const String _chatReportIncorrectProperty = 'chat_report_incorrect_property';
+  static String get chatReportIncorrectProperty => _chatReportIncorrectProperty.tr();
 
-  static const String _chatReportOffensiveContent =
-      'chat_report_offensive_content';
-  static String get chatReportOffensiveContent =>
-      _chatReportOffensiveContent.tr();
+  static const String _chatReportOffensiveContent = 'chat_report_offensive_content';
+  static String get chatReportOffensiveContent => _chatReportOffensiveContent.tr();
 
   static const String _chatReportPotentialFraud = 'chat_report_potential_fraud';
   static String get chatReportPotentialFraud => _chatReportPotentialFraud.tr();
@@ -1335,10 +1219,8 @@ abstract class LocaleKeys {
   static const String _chatReportPhoneInPhotos = 'chat_report_phone_in_photos';
   static String get chatReportPhoneInPhotos => _chatReportPhoneInPhotos.tr();
 
-  static const String _chatReportUnavailableProperty =
-      'chat_report_unavailable_property';
-  static String get chatReportUnavailableProperty =>
-      _chatReportUnavailableProperty.tr();
+  static const String _chatReportUnavailableProperty = 'chat_report_unavailable_property';
+  static String get chatReportUnavailableProperty => _chatReportUnavailableProperty.tr();
 
   static const String _chatReportOtherReason = 'chat_report_other_reason';
   static String get chatReportOtherReason => _chatReportOtherReason.tr();
@@ -1355,30 +1237,20 @@ abstract class LocaleKeys {
   static const String _landingPreviewAction = 'landing_preview_action';
   static String get landingPreviewAction => _landingPreviewAction.tr();
 
-  static const String _landingFeatureSavedPhotos =
-      'landing_feature_saved_photos';
-  static String get landingFeatureSavedPhotos =>
-      _landingFeatureSavedPhotos.tr();
+  static const String _landingFeatureSavedPhotos = 'landing_feature_saved_photos';
+  static String get landingFeatureSavedPhotos => _landingFeatureSavedPhotos.tr();
 
-  static const String _landingFeatureReviewsTitle =
-      'landing_feature_reviews_title';
-  static String get landingFeatureReviewsTitle =>
-      _landingFeatureReviewsTitle.tr();
+  static const String _landingFeatureReviewsTitle = 'landing_feature_reviews_title';
+  static String get landingFeatureReviewsTitle => _landingFeatureReviewsTitle.tr();
 
-  static const String _landingFeatureReviewsBody =
-      'landing_feature_reviews_body';
-  static String get landingFeatureReviewsBody =>
-      _landingFeatureReviewsBody.tr();
+  static const String _landingFeatureReviewsBody = 'landing_feature_reviews_body';
+  static String get landingFeatureReviewsBody => _landingFeatureReviewsBody.tr();
 
-  static const String _landingFeatureNotifications =
-      'landing_feature_notifications';
-  static String get landingFeatureNotifications =>
-      _landingFeatureNotifications.tr();
+  static const String _landingFeatureNotifications = 'landing_feature_notifications';
+  static String get landingFeatureNotifications => _landingFeatureNotifications.tr();
 
-  static const String _landingFeatureAvailability =
-      'landing_feature_availability';
-  static String get landingFeatureAvailability =>
-      _landingFeatureAvailability.tr();
+  static const String _landingFeatureAvailability = 'landing_feature_availability';
+  static String get landingFeatureAvailability => _landingFeatureAvailability.tr();
 
   static const String _landingPreviewDisclaimer = 'landing_preview_disclaimer';
   static String get landingPreviewDisclaimer => _landingPreviewDisclaimer.tr();
@@ -1458,45 +1330,29 @@ abstract class LocaleKeys {
   static const String _landingBrowseAsGuest = 'landing_browse_as_guest';
   static String get landingBrowseAsGuest => _landingBrowseAsGuest.tr();
 
-  static const String _landingTrustVerifiedAccountsTitle =
-      'landing_trust_verified_accounts_title';
-  static String get landingTrustVerifiedAccountsTitle =>
-      _landingTrustVerifiedAccountsTitle.tr();
+  static const String _landingTrustVerifiedAccountsTitle = 'landing_trust_verified_accounts_title';
+  static String get landingTrustVerifiedAccountsTitle => _landingTrustVerifiedAccountsTitle.tr();
 
-  static const String _landingTrustVerifiedAccountsBody =
-      'landing_trust_verified_accounts_body';
-  static String get landingTrustVerifiedAccountsBody =>
-      _landingTrustVerifiedAccountsBody.tr();
+  static const String _landingTrustVerifiedAccountsBody = 'landing_trust_verified_accounts_body';
+  static String get landingTrustVerifiedAccountsBody => _landingTrustVerifiedAccountsBody.tr();
 
-  static const String _landingTrustHiddenNumbersTitle =
-      'landing_trust_hidden_numbers_title';
-  static String get landingTrustHiddenNumbersTitle =>
-      _landingTrustHiddenNumbersTitle.tr();
+  static const String _landingTrustHiddenNumbersTitle = 'landing_trust_hidden_numbers_title';
+  static String get landingTrustHiddenNumbersTitle => _landingTrustHiddenNumbersTitle.tr();
 
-  static const String _landingTrustHiddenNumbersBody =
-      'landing_trust_hidden_numbers_body';
-  static String get landingTrustHiddenNumbersBody =>
-      _landingTrustHiddenNumbersBody.tr();
+  static const String _landingTrustHiddenNumbersBody = 'landing_trust_hidden_numbers_body';
+  static String get landingTrustHiddenNumbersBody => _landingTrustHiddenNumbersBody.tr();
 
-  static const String _landingTrustReviewedPropertiesTitle =
-      'landing_trust_reviewed_properties_title';
-  static String get landingTrustReviewedPropertiesTitle =>
-      _landingTrustReviewedPropertiesTitle.tr();
+  static const String _landingTrustReviewedPropertiesTitle = 'landing_trust_reviewed_properties_title';
+  static String get landingTrustReviewedPropertiesTitle => _landingTrustReviewedPropertiesTitle.tr();
 
-  static const String _landingTrustReviewedPropertiesBody =
-      'landing_trust_reviewed_properties_body';
-  static String get landingTrustReviewedPropertiesBody =>
-      _landingTrustReviewedPropertiesBody.tr();
+  static const String _landingTrustReviewedPropertiesBody = 'landing_trust_reviewed_properties_body';
+  static String get landingTrustReviewedPropertiesBody => _landingTrustReviewedPropertiesBody.tr();
 
-  static const String _landingTrustOrganizedVisitsTitle =
-      'landing_trust_organized_visits_title';
-  static String get landingTrustOrganizedVisitsTitle =>
-      _landingTrustOrganizedVisitsTitle.tr();
+  static const String _landingTrustOrganizedVisitsTitle = 'landing_trust_organized_visits_title';
+  static String get landingTrustOrganizedVisitsTitle => _landingTrustOrganizedVisitsTitle.tr();
 
-  static const String _landingTrustOrganizedVisitsBody =
-      'landing_trust_organized_visits_body';
-  static String get landingTrustOrganizedVisitsBody =>
-      _landingTrustOrganizedVisitsBody.tr();
+  static const String _landingTrustOrganizedVisitsBody = 'landing_trust_organized_visits_body';
+  static String get landingTrustOrganizedVisitsBody => _landingTrustOrganizedVisitsBody.tr();
 
   static const String _landingFeaturesTag = 'landing_features_tag';
   static String get landingFeaturesTag => _landingFeaturesTag.tr();
@@ -1504,20 +1360,14 @@ abstract class LocaleKeys {
   static const String _landingFeaturesTitle = 'landing_features_title';
   static String get landingFeaturesTitle => _landingFeaturesTitle.tr();
 
-  static const String _landingTenantFeaturesTitle =
-      'landing_tenant_features_title';
-  static String get landingTenantFeaturesTitle =>
-      _landingTenantFeaturesTitle.tr();
+  static const String _landingTenantFeaturesTitle = 'landing_tenant_features_title';
+  static String get landingTenantFeaturesTitle => _landingTenantFeaturesTitle.tr();
 
-  static const String _landingTenantFeaturesBody =
-      'landing_tenant_features_body';
-  static String get landingTenantFeaturesBody =>
-      _landingTenantFeaturesBody.tr();
+  static const String _landingTenantFeaturesBody = 'landing_tenant_features_body';
+  static String get landingTenantFeaturesBody => _landingTenantFeaturesBody.tr();
 
-  static const String _landingOwnerFeaturesTitle =
-      'landing_owner_features_title';
-  static String get landingOwnerFeaturesTitle =>
-      _landingOwnerFeaturesTitle.tr();
+  static const String _landingOwnerFeaturesTitle = 'landing_owner_features_title';
+  static String get landingOwnerFeaturesTitle => _landingOwnerFeaturesTitle.tr();
 
   static const String _landingOwnerFeaturesBody = 'landing_owner_features_body';
   static String get landingOwnerFeaturesBody => _landingOwnerFeaturesBody.tr();
@@ -1525,239 +1375,149 @@ abstract class LocaleKeys {
   static const String _landingStartTenantSearch = 'landing_start_tenant_search';
   static String get landingStartTenantSearch => _landingStartTenantSearch.tr();
 
-  static const String _landingStartListingProperty =
-      'landing_start_listing_property';
-  static String get landingStartListingProperty =>
-      _landingStartListingProperty.tr();
+  static const String _landingStartListingProperty = 'landing_start_listing_property';
+  static String get landingStartListingProperty => _landingStartListingProperty.tr();
 
-  static const String _landingFeatureSmartSearchTitle =
-      'landing_feature_smart_search_title';
-  static String get landingFeatureSmartSearchTitle =>
-      _landingFeatureSmartSearchTitle.tr();
+  static const String _landingFeatureSmartSearchTitle = 'landing_feature_smart_search_title';
+  static String get landingFeatureSmartSearchTitle => _landingFeatureSmartSearchTitle.tr();
 
-  static const String _landingFeaturePropertyTypeArea =
-      'landing_feature_property_type_area';
-  static String get landingFeaturePropertyTypeArea =>
-      _landingFeaturePropertyTypeArea.tr();
+  static const String _landingFeaturePropertyTypeArea = 'landing_feature_property_type_area';
+  static String get landingFeaturePropertyTypeArea => _landingFeaturePropertyTypeArea.tr();
 
-  static const String _landingFeaturePriceRentalPeriod =
-      'landing_feature_price_rental_period';
-  static String get landingFeaturePriceRentalPeriod =>
-      _landingFeaturePriceRentalPeriod.tr();
+  static const String _landingFeaturePriceRentalPeriod = 'landing_feature_price_rental_period';
+  static String get landingFeaturePriceRentalPeriod => _landingFeaturePriceRentalPeriod.tr();
 
-  static const String _landingFeatureFamiliesIndividuals =
-      'landing_feature_families_individuals';
-  static String get landingFeatureFamiliesIndividuals =>
-      _landingFeatureFamiliesIndividuals.tr();
+  static const String _landingFeatureFamiliesIndividuals = 'landing_feature_families_individuals';
+  static String get landingFeatureFamiliesIndividuals => _landingFeatureFamiliesIndividuals.tr();
 
-  static const String _landingFeatureAmenitiesSmoking =
-      'landing_feature_amenities_smoking';
-  static String get landingFeatureAmenitiesSmoking =>
-      _landingFeatureAmenitiesSmoking.tr();
+  static const String _landingFeatureAmenitiesSmoking = 'landing_feature_amenities_smoking';
+  static String get landingFeatureAmenitiesSmoking => _landingFeatureAmenitiesSmoking.tr();
 
-  static const String _landingFeatureFullDetailsTitle =
-      'landing_feature_full_details_title';
-  static String get landingFeatureFullDetailsTitle =>
-      _landingFeatureFullDetailsTitle.tr();
+  static const String _landingFeatureFullDetailsTitle = 'landing_feature_full_details_title';
+  static String get landingFeatureFullDetailsTitle => _landingFeatureFullDetailsTitle.tr();
 
-  static const String _landingFeatureMediaLocation =
-      'landing_feature_media_location';
-  static String get landingFeatureMediaLocation =>
-      _landingFeatureMediaLocation.tr();
+  static const String _landingFeatureMediaLocation = 'landing_feature_media_location';
+  static String get landingFeatureMediaLocation => _landingFeatureMediaLocation.tr();
 
   static const String _landingFeatureRoomsArea = 'landing_feature_rooms_area';
   static String get landingFeatureRoomsArea => _landingFeatureRoomsArea.tr();
 
-  static const String _landingFeatureHousingRules =
-      'landing_feature_housing_rules';
-  static String get landingFeatureHousingRules =>
-      _landingFeatureHousingRules.tr();
+  static const String _landingFeatureHousingRules = 'landing_feature_housing_rules';
+  static String get landingFeatureHousingRules => _landingFeatureHousingRules.tr();
 
-  static const String _landingFeatureVerificationStatus =
-      'landing_feature_verification_status';
-  static String get landingFeatureVerificationStatus =>
-      _landingFeatureVerificationStatus.tr();
+  static const String _landingFeatureVerificationStatus = 'landing_feature_verification_status';
+  static String get landingFeatureVerificationStatus => _landingFeatureVerificationStatus.tr();
 
-  static const String _landingFeatureSaveCompareTitle =
-      'landing_feature_save_compare_title';
-  static String get landingFeatureSaveCompareTitle =>
-      _landingFeatureSaveCompareTitle.tr();
+  static const String _landingFeatureSaveCompareTitle = 'landing_feature_save_compare_title';
+  static String get landingFeatureSaveCompareTitle => _landingFeatureSaveCompareTitle.tr();
 
-  static const String _landingFeatureSaveFavorites =
-      'landing_feature_save_favorites';
-  static String get landingFeatureSaveFavorites =>
-      _landingFeatureSaveFavorites.tr();
+  static const String _landingFeatureSaveFavorites = 'landing_feature_save_favorites';
+  static String get landingFeatureSaveFavorites => _landingFeatureSaveFavorites.tr();
 
-  static const String _landingFeatureReturnFavorites =
-      'landing_feature_return_favorites';
-  static String get landingFeatureReturnFavorites =>
-      _landingFeatureReturnFavorites.tr();
+  static const String _landingFeatureReturnFavorites = 'landing_feature_return_favorites';
+  static String get landingFeatureReturnFavorites => _landingFeatureReturnFavorites.tr();
 
-  static const String _landingFeatureCompareOptions =
-      'landing_feature_compare_options';
-  static String get landingFeatureCompareOptions =>
-      _landingFeatureCompareOptions.tr();
+  static const String _landingFeatureCompareOptions = 'landing_feature_compare_options';
+  static String get landingFeatureCompareOptions => _landingFeatureCompareOptions.tr();
 
-  static const String _landingFeatureSafeChatTitle =
-      'landing_feature_safe_chat_title';
-  static String get landingFeatureSafeChatTitle =>
-      _landingFeatureSafeChatTitle.tr();
+  static const String _landingFeatureSafeChatTitle = 'landing_feature_safe_chat_title';
+  static String get landingFeatureSafeChatTitle => _landingFeatureSafeChatTitle.tr();
 
-  static const String _landingFeaturePhoneNumbersHidden =
-      'landing_feature_phone_numbers_hidden';
-  static String get landingFeaturePhoneNumbersHidden =>
-      _landingFeaturePhoneNumbersHidden.tr();
+  static const String _landingFeaturePhoneNumbersHidden = 'landing_feature_phone_numbers_hidden';
+  static String get landingFeaturePhoneNumbersHidden => _landingFeaturePhoneNumbersHidden.tr();
 
-  static const String _landingFeaturePhotosVoiceMessages =
-      'landing_feature_photos_voice_messages';
-  static String get landingFeaturePhotosVoiceMessages =>
-      _landingFeaturePhotosVoiceMessages.tr();
+  static const String _landingFeaturePhotosVoiceMessages = 'landing_feature_photos_voice_messages';
+  static String get landingFeaturePhotosVoiceMessages => _landingFeaturePhotosVoiceMessages.tr();
 
-  static const String _landingFeatureUnverifiedLimits =
-      'landing_feature_unverified_limits';
-  static String get landingFeatureUnverifiedLimits =>
-      _landingFeatureUnverifiedLimits.tr();
+  static const String _landingFeatureUnverifiedLimits = 'landing_feature_unverified_limits';
+  static String get landingFeatureUnverifiedLimits => _landingFeatureUnverifiedLimits.tr();
 
-  static const String _landingFeatureBookVisitTitle =
-      'landing_feature_book_visit_title';
-  static String get landingFeatureBookVisitTitle =>
-      _landingFeatureBookVisitTitle.tr();
+  static const String _landingFeatureBookVisitTitle = 'landing_feature_book_visit_title';
+  static String get landingFeatureBookVisitTitle => _landingFeatureBookVisitTitle.tr();
 
-  static const String _landingFeatureChooseDateTime =
-      'landing_feature_choose_date_time';
-  static String get landingFeatureChooseDateTime =>
-      _landingFeatureChooseDateTime.tr();
+  static const String _landingFeatureChooseDateTime = 'landing_feature_choose_date_time';
+  static String get landingFeatureChooseDateTime => _landingFeatureChooseDateTime.tr();
 
-  static const String _landingFeatureTrackRequest =
-      'landing_feature_track_request';
-  static String get landingFeatureTrackRequest =>
-      _landingFeatureTrackRequest.tr();
+  static const String _landingFeatureTrackRequest = 'landing_feature_track_request';
+  static String get landingFeatureTrackRequest => _landingFeatureTrackRequest.tr();
 
-  static const String _landingFeatureChangeCancelVisit =
-      'landing_feature_change_cancel_visit';
-  static String get landingFeatureChangeCancelVisit =>
-      _landingFeatureChangeCancelVisit.tr();
+  static const String _landingFeatureChangeCancelVisit = 'landing_feature_change_cancel_visit';
+  static String get landingFeatureChangeCancelVisit => _landingFeatureChangeCancelVisit.tr();
 
-  static const String _landingFeatureOrganizedListingTitle =
-      'landing_feature_organized_listing_title';
-  static String get landingFeatureOrganizedListingTitle =>
-      _landingFeatureOrganizedListingTitle.tr();
+  static const String _landingFeatureOrganizedListingTitle = 'landing_feature_organized_listing_title';
+  static String get landingFeatureOrganizedListingTitle => _landingFeatureOrganizedListingTitle.tr();
 
-  static const String _landingFeatureCompleteDataMap =
-      'landing_feature_complete_data_map';
-  static String get landingFeatureCompleteDataMap =>
-      _landingFeatureCompleteDataMap.tr();
+  static const String _landingFeatureCompleteDataMap = 'landing_feature_complete_data_map';
+  static String get landingFeatureCompleteDataMap => _landingFeatureCompleteDataMap.tr();
 
-  static const String _landingFeatureRoomsAreaAmenities =
-      'landing_feature_rooms_area_amenities';
-  static String get landingFeatureRoomsAreaAmenities =>
-      _landingFeatureRoomsAreaAmenities.tr();
+  static const String _landingFeatureRoomsAreaAmenities = 'landing_feature_rooms_area_amenities';
+  static String get landingFeatureRoomsAreaAmenities => _landingFeatureRoomsAreaAmenities.tr();
 
-  static const String _landingFeatureRentalSuitableFor =
-      'landing_feature_rental_suitable_for';
-  static String get landingFeatureRentalSuitableFor =>
-      _landingFeatureRentalSuitableFor.tr();
+  static const String _landingFeatureRentalSuitableFor = 'landing_feature_rental_suitable_for';
+  static String get landingFeatureRentalSuitableFor => _landingFeatureRentalSuitableFor.tr();
 
-  static const String _landingFeatureSmokingRules =
-      'landing_feature_smoking_rules';
-  static String get landingFeatureSmokingRules =>
-      _landingFeatureSmokingRules.tr();
+  static const String _landingFeatureSmokingRules = 'landing_feature_smoking_rules';
+  static String get landingFeatureSmokingRules => _landingFeatureSmokingRules.tr();
 
-  static const String _landingFeatureClearMediaTitle =
-      'landing_feature_clear_media_title';
-  static String get landingFeatureClearMediaTitle =>
-      _landingFeatureClearMediaTitle.tr();
+  static const String _landingFeatureClearMediaTitle = 'landing_feature_clear_media_title';
+  static String get landingFeatureClearMediaTitle => _landingFeatureClearMediaTitle.tr();
 
-  static const String _landingFeatureImageNameDescription =
-      'landing_feature_image_name_description';
-  static String get landingFeatureImageNameDescription =>
-      _landingFeatureImageNameDescription.tr();
+  static const String _landingFeatureImageNameDescription = 'landing_feature_image_name_description';
+  static String get landingFeatureImageNameDescription => _landingFeatureImageNameDescription.tr();
 
-  static const String _landingFeatureOneMinuteVideo =
-      'landing_feature_one_minute_video';
-  static String get landingFeatureOneMinuteVideo =>
-      _landingFeatureOneMinuteVideo.tr();
+  static const String _landingFeatureOneMinuteVideo = 'landing_feature_one_minute_video';
+  static String get landingFeatureOneMinuteVideo => _landingFeatureOneMinuteVideo.tr();
 
-  static const String _landingFeaturePreviewBeforePublish =
-      'landing_feature_preview_before_publish';
-  static String get landingFeaturePreviewBeforePublish =>
-      _landingFeaturePreviewBeforePublish.tr();
+  static const String _landingFeaturePreviewBeforePublish = 'landing_feature_preview_before_publish';
+  static String get landingFeaturePreviewBeforePublish => _landingFeaturePreviewBeforePublish.tr();
 
-  static const String _landingFeatureOwnershipProofTitle =
-      'landing_feature_ownership_proof_title';
-  static String get landingFeatureOwnershipProofTitle =>
-      _landingFeatureOwnershipProofTitle.tr();
+  static const String _landingFeatureOwnershipProofTitle = 'landing_feature_ownership_proof_title';
+  static String get landingFeatureOwnershipProofTitle => _landingFeatureOwnershipProofTitle.tr();
 
-  static const String _landingFeatureUtilityBill =
-      'landing_feature_utility_bill';
-  static String get landingFeatureUtilityBill =>
-      _landingFeatureUtilityBill.tr();
+  static const String _landingFeatureUtilityBill = 'landing_feature_utility_bill';
+  static String get landingFeatureUtilityBill => _landingFeatureUtilityBill.tr();
 
-  static const String _landingFeatureOwnershipLeaseContract =
-      'landing_feature_ownership_lease_contract';
-  static String get landingFeatureOwnershipLeaseContract =>
-      _landingFeatureOwnershipLeaseContract.tr();
+  static const String _landingFeatureOwnershipLeaseContract = 'landing_feature_ownership_lease_contract';
+  static String get landingFeatureOwnershipLeaseContract => _landingFeatureOwnershipLeaseContract.tr();
 
-  static const String _landingFeatureInternalReviewOnly =
-      'landing_feature_internal_review_only';
-  static String get landingFeatureInternalReviewOnly =>
-      _landingFeatureInternalReviewOnly.tr();
+  static const String _landingFeatureInternalReviewOnly = 'landing_feature_internal_review_only';
+  static String get landingFeatureInternalReviewOnly => _landingFeatureInternalReviewOnly.tr();
 
-  static const String _landingFeatureManageVisitsTitle =
-      'landing_feature_manage_visits_title';
-  static String get landingFeatureManageVisitsTitle =>
-      _landingFeatureManageVisitsTitle.tr();
+  static const String _landingFeatureManageVisitsTitle = 'landing_feature_manage_visits_title';
+  static String get landingFeatureManageVisitsTitle => _landingFeatureManageVisitsTitle.tr();
 
-  static const String _landingFeatureAcceptRejectRequests =
-      'landing_feature_accept_reject_requests';
-  static String get landingFeatureAcceptRejectRequests =>
-      _landingFeatureAcceptRejectRequests.tr();
+  static const String _landingFeatureAcceptRejectRequests = 'landing_feature_accept_reject_requests';
+  static String get landingFeatureAcceptRejectRequests => _landingFeatureAcceptRejectRequests.tr();
 
   static const String _landingFeatureOpenChat = 'landing_feature_open_chat';
   static String get landingFeatureOpenChat => _landingFeatureOpenChat.tr();
 
-  static const String _landingFeatureManageAppointments =
-      'landing_feature_manage_appointments';
-  static String get landingFeatureManageAppointments =>
-      _landingFeatureManageAppointments.tr();
+  static const String _landingFeatureManageAppointments = 'landing_feature_manage_appointments';
+  static String get landingFeatureManageAppointments => _landingFeatureManageAppointments.tr();
 
-  static const String _landingFeatureTrackPerformanceTitle =
-      'landing_feature_track_performance_title';
-  static String get landingFeatureTrackPerformanceTitle =>
-      _landingFeatureTrackPerformanceTitle.tr();
+  static const String _landingFeatureTrackPerformanceTitle = 'landing_feature_track_performance_title';
+  static String get landingFeatureTrackPerformanceTitle => _landingFeatureTrackPerformanceTitle.tr();
 
   static const String _landingFeatureViewsSaves = 'landing_feature_views_saves';
   static String get landingFeatureViewsSaves => _landingFeatureViewsSaves.tr();
 
-  static const String _landingFeatureMessagesVisits =
-      'landing_feature_messages_visits';
-  static String get landingFeatureMessagesVisits =>
-      _landingFeatureMessagesVisits.tr();
+  static const String _landingFeatureMessagesVisits = 'landing_feature_messages_visits';
+  static String get landingFeatureMessagesVisits => _landingFeatureMessagesVisits.tr();
 
-  static const String _landingFeatureMonthlyAnalytics =
-      'landing_feature_monthly_analytics';
-  static String get landingFeatureMonthlyAnalytics =>
-      _landingFeatureMonthlyAnalytics.tr();
+  static const String _landingFeatureMonthlyAnalytics = 'landing_feature_monthly_analytics';
+  static String get landingFeatureMonthlyAnalytics => _landingFeatureMonthlyAnalytics.tr();
 
-  static const String _landingFeatureManageStatusTitle =
-      'landing_feature_manage_status_title';
-  static String get landingFeatureManageStatusTitle =>
-      _landingFeatureManageStatusTitle.tr();
+  static const String _landingFeatureManageStatusTitle = 'landing_feature_manage_status_title';
+  static String get landingFeatureManageStatusTitle => _landingFeatureManageStatusTitle.tr();
 
-  static const String _landingFeatureReviewStatuses =
-      'landing_feature_review_statuses';
-  static String get landingFeatureReviewStatuses =>
-      _landingFeatureReviewStatuses.tr();
+  static const String _landingFeatureReviewStatuses = 'landing_feature_review_statuses';
+  static String get landingFeatureReviewStatuses => _landingFeatureReviewStatuses.tr();
 
-  static const String _landingFeatureHideEditProperty =
-      'landing_feature_hide_edit_property';
-  static String get landingFeatureHideEditProperty =>
-      _landingFeatureHideEditProperty.tr();
+  static const String _landingFeatureHideEditProperty = 'landing_feature_hide_edit_property';
+  static String get landingFeatureHideEditProperty => _landingFeatureHideEditProperty.tr();
 
-  static const String _landingFeatureChangeHistory =
-      'landing_feature_change_history';
-  static String get landingFeatureChangeHistory =>
-      _landingFeatureChangeHistory.tr();
+  static const String _landingFeatureChangeHistory = 'landing_feature_change_history';
+  static String get landingFeatureChangeHistory => _landingFeatureChangeHistory.tr();
 
   static const String _landingHowTag = 'landing_how_tag';
   static String get landingHowTag => _landingHowTag.tr();
@@ -1765,75 +1525,52 @@ abstract class LocaleKeys {
   static const String _landingHowTitle = 'landing_how_title';
   static String get landingHowTitle => _landingHowTitle.tr();
 
-  static const String _landingTenantStepOneTitle =
-      'landing_tenant_step_one_title';
-  static String get landingTenantStepOneTitle =>
-      _landingTenantStepOneTitle.tr();
+  static const String _landingTenantStepOneTitle = 'landing_tenant_step_one_title';
+  static String get landingTenantStepOneTitle => _landingTenantStepOneTitle.tr();
 
-  static const String _landingTenantStepOneBody =
-      'landing_tenant_step_one_body';
+  static const String _landingTenantStepOneBody = 'landing_tenant_step_one_body';
   static String get landingTenantStepOneBody => _landingTenantStepOneBody.tr();
 
-  static const String _landingTenantStepTwoTitle =
-      'landing_tenant_step_two_title';
-  static String get landingTenantStepTwoTitle =>
-      _landingTenantStepTwoTitle.tr();
+  static const String _landingTenantStepTwoTitle = 'landing_tenant_step_two_title';
+  static String get landingTenantStepTwoTitle => _landingTenantStepTwoTitle.tr();
 
-  static const String _landingTenantStepTwoBody =
-      'landing_tenant_step_two_body';
+  static const String _landingTenantStepTwoBody = 'landing_tenant_step_two_body';
   static String get landingTenantStepTwoBody => _landingTenantStepTwoBody.tr();
 
-  static const String _landingTenantStepThreeTitle =
-      'landing_tenant_step_three_title';
-  static String get landingTenantStepThreeTitle =>
-      _landingTenantStepThreeTitle.tr();
+  static const String _landingTenantStepThreeTitle = 'landing_tenant_step_three_title';
+  static String get landingTenantStepThreeTitle => _landingTenantStepThreeTitle.tr();
 
-  static const String _landingTenantStepThreeBody =
-      'landing_tenant_step_three_body';
-  static String get landingTenantStepThreeBody =>
-      _landingTenantStepThreeBody.tr();
+  static const String _landingTenantStepThreeBody = 'landing_tenant_step_three_body';
+  static String get landingTenantStepThreeBody => _landingTenantStepThreeBody.tr();
 
-  static const String _landingTenantStepFourTitle =
-      'landing_tenant_step_four_title';
-  static String get landingTenantStepFourTitle =>
-      _landingTenantStepFourTitle.tr();
+  static const String _landingTenantStepFourTitle = 'landing_tenant_step_four_title';
+  static String get landingTenantStepFourTitle => _landingTenantStepFourTitle.tr();
 
-  static const String _landingTenantStepFourBody =
-      'landing_tenant_step_four_body';
-  static String get landingTenantStepFourBody =>
-      _landingTenantStepFourBody.tr();
+  static const String _landingTenantStepFourBody = 'landing_tenant_step_four_body';
+  static String get landingTenantStepFourBody => _landingTenantStepFourBody.tr();
 
-  static const String _landingOwnerStepOneTitle =
-      'landing_owner_step_one_title';
+  static const String _landingOwnerStepOneTitle = 'landing_owner_step_one_title';
   static String get landingOwnerStepOneTitle => _landingOwnerStepOneTitle.tr();
 
   static const String _landingOwnerStepOneBody = 'landing_owner_step_one_body';
   static String get landingOwnerStepOneBody => _landingOwnerStepOneBody.tr();
 
-  static const String _landingOwnerStepTwoTitle =
-      'landing_owner_step_two_title';
+  static const String _landingOwnerStepTwoTitle = 'landing_owner_step_two_title';
   static String get landingOwnerStepTwoTitle => _landingOwnerStepTwoTitle.tr();
 
   static const String _landingOwnerStepTwoBody = 'landing_owner_step_two_body';
   static String get landingOwnerStepTwoBody => _landingOwnerStepTwoBody.tr();
 
-  static const String _landingOwnerStepThreeTitle =
-      'landing_owner_step_three_title';
-  static String get landingOwnerStepThreeTitle =>
-      _landingOwnerStepThreeTitle.tr();
+  static const String _landingOwnerStepThreeTitle = 'landing_owner_step_three_title';
+  static String get landingOwnerStepThreeTitle => _landingOwnerStepThreeTitle.tr();
 
-  static const String _landingOwnerStepThreeBody =
-      'landing_owner_step_three_body';
-  static String get landingOwnerStepThreeBody =>
-      _landingOwnerStepThreeBody.tr();
+  static const String _landingOwnerStepThreeBody = 'landing_owner_step_three_body';
+  static String get landingOwnerStepThreeBody => _landingOwnerStepThreeBody.tr();
 
-  static const String _landingOwnerStepFourTitle =
-      'landing_owner_step_four_title';
-  static String get landingOwnerStepFourTitle =>
-      _landingOwnerStepFourTitle.tr();
+  static const String _landingOwnerStepFourTitle = 'landing_owner_step_four_title';
+  static String get landingOwnerStepFourTitle => _landingOwnerStepFourTitle.tr();
 
-  static const String _landingOwnerStepFourBody =
-      'landing_owner_step_four_body';
+  static const String _landingOwnerStepFourBody = 'landing_owner_step_four_body';
   static String get landingOwnerStepFourBody => _landingOwnerStepFourBody.tr();
 
   static const String _landingPropertiesTag = 'landing_properties_tag';
@@ -1857,10 +1594,8 @@ abstract class LocaleKeys {
   static const String _landingPropertyTwoArea = 'landing_property_two_area';
   static String get landingPropertyTwoArea => _landingPropertyTwoArea.tr();
 
-  static const String _landingPropertyThreeTitle =
-      'landing_property_three_title';
-  static String get landingPropertyThreeTitle =>
-      _landingPropertyThreeTitle.tr();
+  static const String _landingPropertyThreeTitle = 'landing_property_three_title';
+  static String get landingPropertyThreeTitle => _landingPropertyThreeTitle.tr();
 
   static const String _landingPropertyThreeArea = 'landing_property_three_area';
   static String get landingPropertyThreeArea => _landingPropertyThreeArea.tr();
@@ -1874,10 +1609,8 @@ abstract class LocaleKeys {
   static const String _landingPropertyFamilies = 'landing_property_families';
   static String get landingPropertyFamilies => _landingPropertyFamilies.tr();
 
-  static const String _landingPropertyIndividuals =
-      'landing_property_individuals';
-  static String get landingPropertyIndividuals =>
-      _landingPropertyIndividuals.tr();
+  static const String _landingPropertyIndividuals = 'landing_property_individuals';
+  static String get landingPropertyIndividuals => _landingPropertyIndividuals.tr();
 
   static const String _landingVerified = 'landing_verified';
   static String get landingVerified => _landingVerified.tr();
@@ -1909,35 +1642,23 @@ abstract class LocaleKeys {
   static const String _landingPrivacyTitle = 'landing_privacy_title';
   static String get landingPrivacyTitle => _landingPrivacyTitle.tr();
 
-  static const String _landingPrivacyHiddenNumberTitle =
-      'landing_privacy_hidden_number_title';
-  static String get landingPrivacyHiddenNumberTitle =>
-      _landingPrivacyHiddenNumberTitle.tr();
+  static const String _landingPrivacyHiddenNumberTitle = 'landing_privacy_hidden_number_title';
+  static String get landingPrivacyHiddenNumberTitle => _landingPrivacyHiddenNumberTitle.tr();
 
-  static const String _landingPrivacyHiddenNumberBody =
-      'landing_privacy_hidden_number_body';
-  static String get landingPrivacyHiddenNumberBody =>
-      _landingPrivacyHiddenNumberBody.tr();
+  static const String _landingPrivacyHiddenNumberBody = 'landing_privacy_hidden_number_body';
+  static String get landingPrivacyHiddenNumberBody => _landingPrivacyHiddenNumberBody.tr();
 
-  static const String _landingPrivacyIdentityTitle =
-      'landing_privacy_identity_title';
-  static String get landingPrivacyIdentityTitle =>
-      _landingPrivacyIdentityTitle.tr();
+  static const String _landingPrivacyIdentityTitle = 'landing_privacy_identity_title';
+  static String get landingPrivacyIdentityTitle => _landingPrivacyIdentityTitle.tr();
 
-  static const String _landingPrivacyIdentityBody =
-      'landing_privacy_identity_body';
-  static String get landingPrivacyIdentityBody =>
-      _landingPrivacyIdentityBody.tr();
+  static const String _landingPrivacyIdentityBody = 'landing_privacy_identity_body';
+  static String get landingPrivacyIdentityBody => _landingPrivacyIdentityBody.tr();
 
-  static const String _landingPrivacyOwnershipTitle =
-      'landing_privacy_ownership_title';
-  static String get landingPrivacyOwnershipTitle =>
-      _landingPrivacyOwnershipTitle.tr();
+  static const String _landingPrivacyOwnershipTitle = 'landing_privacy_ownership_title';
+  static String get landingPrivacyOwnershipTitle => _landingPrivacyOwnershipTitle.tr();
 
-  static const String _landingPrivacyOwnershipBody =
-      'landing_privacy_ownership_body';
-  static String get landingPrivacyOwnershipBody =>
-      _landingPrivacyOwnershipBody.tr();
+  static const String _landingPrivacyOwnershipBody = 'landing_privacy_ownership_body';
+  static String get landingPrivacyOwnershipBody => _landingPrivacyOwnershipBody.tr();
 
   static const String _landingPrivacyChatTitle = 'landing_privacy_chat_title';
   static String get landingPrivacyChatTitle => _landingPrivacyChatTitle.tr();
@@ -1951,15 +1672,47 @@ abstract class LocaleKeys {
   static const String _landingAppSectionTitle = 'landing_app_section_title';
   static String get landingAppSectionTitle => _landingAppSectionTitle.tr();
 
-  static const String _landingTenantHomePreviewLabel =
-      'landing_tenant_home_preview_label';
-  static String get landingTenantHomePreviewLabel =>
-      _landingTenantHomePreviewLabel.tr();
+  static const String _landingDemoTitle = 'landing_demo_title';
+  static String get landingDemoTitle => _landingDemoTitle.tr();
 
-  static const String _landingOwnerDashboardPreviewLabel =
-      'landing_owner_dashboard_preview_label';
-  static String get landingOwnerDashboardPreviewLabel =>
-      _landingOwnerDashboardPreviewLabel.tr();
+  static const String _landingDemoDescription = 'landing_demo_description';
+  static String get landingDemoDescription => _landingDemoDescription.tr();
+
+  static const String _landingDemoPlay = 'landing_demo_play';
+  static String get landingDemoPlay => _landingDemoPlay.tr();
+
+  static const String _landingDemoPause = 'landing_demo_pause';
+  static String get landingDemoPause => _landingDemoPause.tr();
+
+  static const String _landingDemoReplay = 'landing_demo_replay';
+  static String get landingDemoReplay => _landingDemoReplay.tr();
+
+  static const String _landingDemoRetry = 'landing_demo_retry';
+  static String get landingDemoRetry => _landingDemoRetry.tr();
+
+  static const String _landingDemoLoading = 'landing_demo_loading';
+  static String get landingDemoLoading => _landingDemoLoading.tr();
+
+  static const String _landingDemoError = 'landing_demo_error';
+  static String get landingDemoError => _landingDemoError.tr();
+
+  static const String _landingDemoVideoSemantic = 'landing_demo_video_semantic';
+  static String get landingDemoVideoSemantic => _landingDemoVideoSemantic.tr();
+
+  static const String _landingDemoSeek = 'landing_demo_seek';
+  static String get landingDemoSeek => _landingDemoSeek.tr();
+
+  static const String _landingDemoTranscriptTitle = 'landing_demo_transcript_title';
+  static String get landingDemoTranscriptTitle => _landingDemoTranscriptTitle.tr();
+
+  static const String _landingDemoTranscriptBody = 'landing_demo_transcript_body';
+  static String get landingDemoTranscriptBody => _landingDemoTranscriptBody.tr();
+
+  static const String _landingTenantHomePreviewLabel = 'landing_tenant_home_preview_label';
+  static String get landingTenantHomePreviewLabel => _landingTenantHomePreviewLabel.tr();
+
+  static const String _landingOwnerDashboardPreviewLabel = 'landing_owner_dashboard_preview_label';
+  static String get landingOwnerDashboardPreviewLabel => _landingOwnerDashboardPreviewLabel.tr();
 
   static const String _landingPreviousScreen = 'landing_previous_screen';
   static String get landingPreviousScreen => _landingPreviousScreen.tr();
@@ -2072,15 +1825,11 @@ abstract class LocaleKeys {
   static const String _landingFooterCountry = 'landing_footer_country';
   static String get landingFooterCountry => _landingFooterCountry.tr();
 
-  static const String _landingPhoneTenantSemantic =
-      'landing_phone_tenant_semantic';
-  static String get landingPhoneTenantSemantic =>
-      _landingPhoneTenantSemantic.tr();
+  static const String _landingPhoneTenantSemantic = 'landing_phone_tenant_semantic';
+  static String get landingPhoneTenantSemantic => _landingPhoneTenantSemantic.tr();
 
-  static const String _landingPhoneOwnerSemantic =
-      'landing_phone_owner_semantic';
-  static String get landingPhoneOwnerSemantic =>
-      _landingPhoneOwnerSemantic.tr();
+  static const String _landingPhoneOwnerSemantic = 'landing_phone_owner_semantic';
+  static String get landingPhoneOwnerSemantic => _landingPhoneOwnerSemantic.tr();
 
   static const String _landingPhoneWelcome = 'landing_phone_welcome';
   static String get landingPhoneWelcome => _landingPhoneWelcome.tr();
@@ -2091,30 +1840,20 @@ abstract class LocaleKeys {
   static const String _landingPhoneSearchHint = 'landing_phone_search_hint';
   static String get landingPhoneSearchHint => _landingPhoneSearchHint.tr();
 
-  static const String _landingPhoneNearbyProperties =
-      'landing_phone_nearby_properties';
-  static String get landingPhoneNearbyProperties =>
-      _landingPhoneNearbyProperties.tr();
+  static const String _landingPhoneNearbyProperties = 'landing_phone_nearby_properties';
+  static String get landingPhoneNearbyProperties => _landingPhoneNearbyProperties.tr();
 
-  static const String _landingPhonePropertyOneTitle =
-      'landing_phone_property_one_title';
-  static String get landingPhonePropertyOneTitle =>
-      _landingPhonePropertyOneTitle.tr();
+  static const String _landingPhonePropertyOneTitle = 'landing_phone_property_one_title';
+  static String get landingPhonePropertyOneTitle => _landingPhonePropertyOneTitle.tr();
 
-  static const String _landingPhonePropertyOneArea =
-      'landing_phone_property_one_area';
-  static String get landingPhonePropertyOneArea =>
-      _landingPhonePropertyOneArea.tr();
+  static const String _landingPhonePropertyOneArea = 'landing_phone_property_one_area';
+  static String get landingPhonePropertyOneArea => _landingPhonePropertyOneArea.tr();
 
-  static const String _landingPhonePropertyTwoTitle =
-      'landing_phone_property_two_title';
-  static String get landingPhonePropertyTwoTitle =>
-      _landingPhonePropertyTwoTitle.tr();
+  static const String _landingPhonePropertyTwoTitle = 'landing_phone_property_two_title';
+  static String get landingPhonePropertyTwoTitle => _landingPhonePropertyTwoTitle.tr();
 
-  static const String _landingPhonePropertyTwoArea =
-      'landing_phone_property_two_area';
-  static String get landingPhonePropertyTwoArea =>
-      _landingPhonePropertyTwoArea.tr();
+  static const String _landingPhonePropertyTwoArea = 'landing_phone_property_two_area';
+  static String get landingPhonePropertyTwoArea => _landingPhonePropertyTwoArea.tr();
 
   static const String _landingPhoneCurrency = 'landing_phone_currency';
   static String get landingPhoneCurrency => _landingPhoneCurrency.tr();
@@ -2122,31 +1861,23 @@ abstract class LocaleKeys {
   static const String _landingPhoneViews = 'landing_phone_views';
   static String get landingPhoneViews => _landingPhoneViews.tr();
 
-  static const String _landingPhoneVisitRequests =
-      'landing_phone_visit_requests';
-  static String get landingPhoneVisitRequests =>
-      _landingPhoneVisitRequests.tr();
+  static const String _landingPhoneVisitRequests = 'landing_phone_visit_requests';
+  static String get landingPhoneVisitRequests => _landingPhoneVisitRequests.tr();
 
   static const String _landingPhoneMessages = 'landing_phone_messages';
   static String get landingPhoneMessages => _landingPhoneMessages.tr();
 
-  static const String _landingPhoneActiveProperties =
-      'landing_phone_active_properties';
-  static String get landingPhoneActiveProperties =>
-      _landingPhoneActiveProperties.tr();
+  static const String _landingPhoneActiveProperties = 'landing_phone_active_properties';
+  static String get landingPhoneActiveProperties => _landingPhoneActiveProperties.tr();
 
-  static const String _landingPhoneOwnerDashboard =
-      'landing_phone_owner_dashboard';
-  static String get landingPhoneOwnerDashboard =>
-      _landingPhoneOwnerDashboard.tr();
+  static const String _landingPhoneOwnerDashboard = 'landing_phone_owner_dashboard';
+  static String get landingPhoneOwnerDashboard => _landingPhoneOwnerDashboard.tr();
 
   static const String _landingPhoneOwnerName = 'landing_phone_owner_name';
   static String get landingPhoneOwnerName => _landingPhoneOwnerName.tr();
 
-  static const String _landingPhoneRecentRequests =
-      'landing_phone_recent_requests';
-  static String get landingPhoneRecentRequests =>
-      _landingPhoneRecentRequests.tr();
+  static const String _landingPhoneRecentRequests = 'landing_phone_recent_requests';
+  static String get landingPhoneRecentRequests => _landingPhoneRecentRequests.tr();
 
   static const String _landingPhoneRequestOne = 'landing_phone_request_one';
   static String get landingPhoneRequestOne => _landingPhoneRequestOne.tr();
@@ -2181,20 +1912,14 @@ abstract class LocaleKeys {
   static const String _notificationsEmptyTitle = 'notifications_empty_title';
   static String get notificationsEmptyTitle => _notificationsEmptyTitle.tr();
 
-  static const String _notificationsEmptyDescription =
-      'notifications_empty_description';
-  static String get notificationsEmptyDescription =>
-      _notificationsEmptyDescription.tr();
+  static const String _notificationsEmptyDescription = 'notifications_empty_description';
+  static String get notificationsEmptyDescription => _notificationsEmptyDescription.tr();
 
-  static const String _notificationsExploreProperties =
-      'notifications_explore_properties';
-  static String get notificationsExploreProperties =>
-      _notificationsExploreProperties.tr();
+  static const String _notificationsExploreProperties = 'notifications_explore_properties';
+  static String get notificationsExploreProperties => _notificationsExploreProperties.tr();
 
-  static const String _notificationsOwnerAddProperty =
-      'notifications_owner_add_property';
-  static String get notificationsOwnerAddProperty =>
-      _notificationsOwnerAddProperty.tr();
+  static const String _notificationsOwnerAddProperty = 'notifications_owner_add_property';
+  static String get notificationsOwnerAddProperty => _notificationsOwnerAddProperty.tr();
 
   static const String _notificationViewVisit = 'notification_view_visit';
   static String get notificationViewVisit => _notificationViewVisit.tr();
@@ -2208,73 +1933,47 @@ abstract class LocaleKeys {
   static const String _notificationDismiss = 'notification_dismiss';
   static String get notificationDismiss => _notificationDismiss.tr();
 
-  static const String _notificationSettingsTitle =
-      'notification_settings_title';
-  static String get notificationSettingsTitle =>
-      _notificationSettingsTitle.tr();
+  static const String _notificationSettingsTitle = 'notification_settings_title';
+  static String get notificationSettingsTitle => _notificationSettingsTitle.tr();
 
-  static const String _notificationSettingVisitRequests =
-      'notification_setting_visit_requests';
-  static String get notificationSettingVisitRequests =>
-      _notificationSettingVisitRequests.tr();
+  static const String _notificationSettingVisitRequests = 'notification_setting_visit_requests';
+  static String get notificationSettingVisitRequests => _notificationSettingVisitRequests.tr();
 
-  static const String _notificationSettingVisitRequestsDescription =
-      'notification_setting_visit_requests_description';
-  static String get notificationSettingVisitRequestsDescription =>
-      _notificationSettingVisitRequestsDescription.tr();
+  static const String _notificationSettingVisitRequestsDescription = 'notification_setting_visit_requests_description';
+  static String get notificationSettingVisitRequestsDescription => _notificationSettingVisitRequestsDescription.tr();
 
-  static const String _notificationSettingNewMessages =
-      'notification_setting_new_messages';
-  static String get notificationSettingNewMessages =>
-      _notificationSettingNewMessages.tr();
+  static const String _notificationSettingNewMessages = 'notification_setting_new_messages';
+  static String get notificationSettingNewMessages => _notificationSettingNewMessages.tr();
 
-  static const String _notificationSettingNewMessagesDescription =
-      'notification_setting_new_messages_description';
-  static String get notificationSettingNewMessagesDescription =>
-      _notificationSettingNewMessagesDescription.tr();
+  static const String _notificationSettingNewMessagesDescription = 'notification_setting_new_messages_description';
+  static String get notificationSettingNewMessagesDescription => _notificationSettingNewMessagesDescription.tr();
 
-  static const String _notificationSettingPropertyUpdates =
-      'notification_setting_property_updates';
-  static String get notificationSettingPropertyUpdates =>
-      _notificationSettingPropertyUpdates.tr();
+  static const String _notificationSettingPropertyUpdates = 'notification_setting_property_updates';
+  static String get notificationSettingPropertyUpdates => _notificationSettingPropertyUpdates.tr();
 
-  static const String _notificationSettingPropertyUpdatesDescription =
-      'notification_setting_property_updates_description';
-  static String get notificationSettingPropertyUpdatesDescription =>
-      _notificationSettingPropertyUpdatesDescription.tr();
+  static const String _notificationSettingPropertyUpdatesDescription = 'notification_setting_property_updates_description';
+  static String get notificationSettingPropertyUpdatesDescription => _notificationSettingPropertyUpdatesDescription.tr();
 
-  static const String _notificationSettingSecurityAlerts =
-      'notification_setting_security_alerts';
-  static String get notificationSettingSecurityAlerts =>
-      _notificationSettingSecurityAlerts.tr();
+  static const String _notificationSettingSecurityAlerts = 'notification_setting_security_alerts';
+  static String get notificationSettingSecurityAlerts => _notificationSettingSecurityAlerts.tr();
 
-  static const String _notificationSettingSecurityAlertsDescription =
-      'notification_setting_security_alerts_description';
-  static String get notificationSettingSecurityAlertsDescription =>
-      _notificationSettingSecurityAlertsDescription.tr();
+  static const String _notificationSettingSecurityAlertsDescription = 'notification_setting_security_alerts_description';
+  static String get notificationSettingSecurityAlertsDescription => _notificationSettingSecurityAlertsDescription.tr();
 
-  static const String _notificationSettingPromotions =
-      'notification_setting_promotions';
-  static String get notificationSettingPromotions =>
-      _notificationSettingPromotions.tr();
+  static const String _notificationSettingPromotions = 'notification_setting_promotions';
+  static String get notificationSettingPromotions => _notificationSettingPromotions.tr();
 
-  static const String _notificationSettingPromotionsDescription =
-      'notification_setting_promotions_description';
-  static String get notificationSettingPromotionsDescription =>
-      _notificationSettingPromotionsDescription.tr();
+  static const String _notificationSettingPromotionsDescription = 'notification_setting_promotions_description';
+  static String get notificationSettingPromotionsDescription => _notificationSettingPromotionsDescription.tr();
 
   static const String _notificationSettingsInfo = 'notification_settings_info';
   static String get notificationSettingsInfo => _notificationSettingsInfo.tr();
 
-  static const String _notificationsOwnerPropertiesNavigation =
-      'notifications_owner_properties_navigation';
-  static String get notificationsOwnerPropertiesNavigation =>
-      _notificationsOwnerPropertiesNavigation.tr();
+  static const String _notificationsOwnerPropertiesNavigation = 'notifications_owner_properties_navigation';
+  static String get notificationsOwnerPropertiesNavigation => _notificationsOwnerPropertiesNavigation.tr();
 
-  static const String _notificationsOwnerRequestsNavigation =
-      'notifications_owner_requests_navigation';
-  static String get notificationsOwnerRequestsNavigation =>
-      _notificationsOwnerRequestsNavigation.tr();
+  static const String _notificationsOwnerRequestsNavigation = 'notifications_owner_requests_navigation';
+  static String get notificationsOwnerRequestsNavigation => _notificationsOwnerRequestsNavigation.tr();
 
   static const String _tenantVisitsTitle = 'tenant_visits_title';
   static String get tenantVisitsTitle => _tenantVisitsTitle.tr();
@@ -2282,20 +1981,14 @@ abstract class LocaleKeys {
   static const String _tenantVisitsFilterAll = 'tenant_visits_filter_all';
   static String get tenantVisitsFilterAll => _tenantVisitsFilterAll.tr();
 
-  static const String _tenantVisitsFilterAccepted =
-      'tenant_visits_filter_accepted';
-  static String get tenantVisitsFilterAccepted =>
-      _tenantVisitsFilterAccepted.tr();
+  static const String _tenantVisitsFilterAccepted = 'tenant_visits_filter_accepted';
+  static String get tenantVisitsFilterAccepted => _tenantVisitsFilterAccepted.tr();
 
-  static const String _tenantVisitsFilterPending =
-      'tenant_visits_filter_pending';
-  static String get tenantVisitsFilterPending =>
-      _tenantVisitsFilterPending.tr();
+  static const String _tenantVisitsFilterPending = 'tenant_visits_filter_pending';
+  static String get tenantVisitsFilterPending => _tenantVisitsFilterPending.tr();
 
-  static const String _tenantVisitsFilterRejected =
-      'tenant_visits_filter_rejected';
-  static String get tenantVisitsFilterRejected =>
-      _tenantVisitsFilterRejected.tr();
+  static const String _tenantVisitsFilterRejected = 'tenant_visits_filter_rejected';
+  static String get tenantVisitsFilterRejected => _tenantVisitsFilterRejected.tr();
 
   static const String _tenantVisitsNoResults = 'tenant_visits_no_results';
   static String get tenantVisitsNoResults => _tenantVisitsNoResults.tr();
@@ -2303,20 +1996,14 @@ abstract class LocaleKeys {
   static const String _tenantVisitsEmptyTitle = 'tenant_visits_empty_title';
   static String get tenantVisitsEmptyTitle => _tenantVisitsEmptyTitle.tr();
 
-  static const String _tenantVisitsEmptyDescription =
-      'tenant_visits_empty_description';
-  static String get tenantVisitsEmptyDescription =>
-      _tenantVisitsEmptyDescription.tr();
+  static const String _tenantVisitsEmptyDescription = 'tenant_visits_empty_description';
+  static String get tenantVisitsEmptyDescription => _tenantVisitsEmptyDescription.tr();
 
-  static const String _tenantVisitsFilterEmptyDescription =
-      'tenant_visits_filter_empty_description';
-  static String get tenantVisitsFilterEmptyDescription =>
-      _tenantVisitsFilterEmptyDescription.tr();
+  static const String _tenantVisitsFilterEmptyDescription = 'tenant_visits_filter_empty_description';
+  static String get tenantVisitsFilterEmptyDescription => _tenantVisitsFilterEmptyDescription.tr();
 
-  static const String _tenantVisitsBrowseProperties =
-      'tenant_visits_browse_properties';
-  static String get tenantVisitsBrowseProperties =>
-      _tenantVisitsBrowseProperties.tr();
+  static const String _tenantVisitsBrowseProperties = 'tenant_visits_browse_properties';
+  static String get tenantVisitsBrowseProperties => _tenantVisitsBrowseProperties.tr();
 
   static const String _tenantVisitsShowAll = 'tenant_visits_show_all';
   static String get tenantVisitsShowAll => _tenantVisitsShowAll.tr();
@@ -2324,18 +2011,14 @@ abstract class LocaleKeys {
   static const String _tenantVisitOwnerLabel = 'tenant_visit_owner_label';
   static String get tenantVisitOwnerLabel => _tenantVisitOwnerLabel.tr();
 
-  static const String _tenantVisitStatusAccepted =
-      'tenant_visit_status_accepted';
-  static String get tenantVisitStatusAccepted =>
-      _tenantVisitStatusAccepted.tr();
+  static const String _tenantVisitStatusAccepted = 'tenant_visit_status_accepted';
+  static String get tenantVisitStatusAccepted => _tenantVisitStatusAccepted.tr();
 
   static const String _tenantVisitStatusPending = 'tenant_visit_status_pending';
   static String get tenantVisitStatusPending => _tenantVisitStatusPending.tr();
 
-  static const String _tenantVisitStatusRejected =
-      'tenant_visit_status_rejected';
-  static String get tenantVisitStatusRejected =>
-      _tenantVisitStatusRejected.tr();
+  static const String _tenantVisitStatusRejected = 'tenant_visit_status_rejected';
+  static String get tenantVisitStatusRejected => _tenantVisitStatusRejected.tr();
 
   static const String _tenantVisitChatAction = 'tenant_visit_chat_action';
   static String get tenantVisitChatAction => _tenantVisitChatAction.tr();
@@ -2346,10 +2029,8 @@ abstract class LocaleKeys {
   static const String _tenantVisitCancelRequest = 'tenant_visit_cancel_request';
   static String get tenantVisitCancelRequest => _tenantVisitCancelRequest.tr();
 
-  static const String _tenantVisitFindAlternative =
-      'tenant_visit_find_alternative';
-  static String get tenantVisitFindAlternative =>
-      _tenantVisitFindAlternative.tr();
+  static const String _tenantVisitFindAlternative = 'tenant_visit_find_alternative';
+  static String get tenantVisitFindAlternative => _tenantVisitFindAlternative.tr();
 
   static const String _tenantVisitBookTitle = 'tenant_visit_book_title';
   static String get tenantVisitBookTitle => _tenantVisitBookTitle.tr();
@@ -2360,10 +2041,8 @@ abstract class LocaleKeys {
   static const String _tenantVisitChooseTime = 'tenant_visit_choose_time';
   static String get tenantVisitChooseTime => _tenantVisitChooseTime.tr();
 
-  static const String _tenantVisitNoAvailableDays =
-      'tenant_visit_no_available_days';
-  static String get tenantVisitNoAvailableDays =>
-      _tenantVisitNoAvailableDays.tr();
+  static const String _tenantVisitNoAvailableDays = 'tenant_visit_no_available_days';
+  static String get tenantVisitNoAvailableDays => _tenantVisitNoAvailableDays.tr();
 
   static const String _tenantVisitNoteLabel = 'tenant_visit_note_label';
   static String get tenantVisitNoteLabel => _tenantVisitNoteLabel.tr();
@@ -2371,30 +2050,20 @@ abstract class LocaleKeys {
   static const String _tenantVisitNoteHint = 'tenant_visit_note_hint';
   static String get tenantVisitNoteHint => _tenantVisitNoteHint.tr();
 
-  static const String _tenantVisitPrivacyMessage =
-      'tenant_visit_privacy_message';
-  static String get tenantVisitPrivacyMessage =>
-      _tenantVisitPrivacyMessage.tr();
+  static const String _tenantVisitPrivacyMessage = 'tenant_visit_privacy_message';
+  static String get tenantVisitPrivacyMessage => _tenantVisitPrivacyMessage.tr();
 
-  static const String _tenantVisitConfirmRequest =
-      'tenant_visit_confirm_request';
-  static String get tenantVisitConfirmRequest =>
-      _tenantVisitConfirmRequest.tr();
+  static const String _tenantVisitConfirmRequest = 'tenant_visit_confirm_request';
+  static String get tenantVisitConfirmRequest => _tenantVisitConfirmRequest.tr();
 
-  static const String _tenantVisitConfirmedTitle =
-      'tenant_visit_confirmed_title';
-  static String get tenantVisitConfirmedTitle =>
-      _tenantVisitConfirmedTitle.tr();
+  static const String _tenantVisitConfirmedTitle = 'tenant_visit_confirmed_title';
+  static String get tenantVisitConfirmedTitle => _tenantVisitConfirmedTitle.tr();
 
-  static const String _tenantVisitConfirmedDescription =
-      'tenant_visit_confirmed_description';
-  static String get tenantVisitConfirmedDescription =>
-      _tenantVisitConfirmedDescription.tr();
+  static const String _tenantVisitConfirmedDescription = 'tenant_visit_confirmed_description';
+  static String get tenantVisitConfirmedDescription => _tenantVisitConfirmedDescription.tr();
 
-  static const String _tenantVisitSummaryProperty =
-      'tenant_visit_summary_property';
-  static String get tenantVisitSummaryProperty =>
-      _tenantVisitSummaryProperty.tr();
+  static const String _tenantVisitSummaryProperty = 'tenant_visit_summary_property';
+  static String get tenantVisitSummaryProperty => _tenantVisitSummaryProperty.tr();
 
   static const String _tenantVisitSummaryDay = 'tenant_visit_summary_day';
   static String get tenantVisitSummaryDay => _tenantVisitSummaryDay.tr();
@@ -2405,15 +2074,11 @@ abstract class LocaleKeys {
   static const String _tenantVisitSummaryStatus = 'tenant_visit_summary_status';
   static String get tenantVisitSummaryStatus => _tenantVisitSummaryStatus.tr();
 
-  static const String _tenantVisitPendingOwnerResponse =
-      'tenant_visit_pending_owner_response';
-  static String get tenantVisitPendingOwnerResponse =>
-      _tenantVisitPendingOwnerResponse.tr();
+  static const String _tenantVisitPendingOwnerResponse = 'tenant_visit_pending_owner_response';
+  static String get tenantVisitPendingOwnerResponse => _tenantVisitPendingOwnerResponse.tr();
 
-  static const String _tenantVisitFollowRequests =
-      'tenant_visit_follow_requests';
-  static String get tenantVisitFollowRequests =>
-      _tenantVisitFollowRequests.tr();
+  static const String _tenantVisitFollowRequests = 'tenant_visit_follow_requests';
+  static String get tenantVisitFollowRequests => _tenantVisitFollowRequests.tr();
 
   static const String _tenantVisitBackToSearch = 'tenant_visit_back_to_search';
   static String get tenantVisitBackToSearch => _tenantVisitBackToSearch.tr();
@@ -2421,31 +2086,22 @@ abstract class LocaleKeys {
   static const String _tenantVisitDetailsTitle = 'tenant_visit_details_title';
   static String get tenantVisitDetailsTitle => _tenantVisitDetailsTitle.tr();
 
-  static const String _tenantVisitConfirmedHeading =
-      'tenant_visit_confirmed_heading';
-  static String get tenantVisitConfirmedHeading =>
-      _tenantVisitConfirmedHeading.tr();
+  static const String _tenantVisitConfirmedHeading = 'tenant_visit_confirmed_heading';
+  static String get tenantVisitConfirmedHeading => _tenantVisitConfirmedHeading.tr();
 
-  static const String _tenantVisitPendingHeading =
-      'tenant_visit_pending_heading';
-  static String get tenantVisitPendingHeading =>
-      _tenantVisitPendingHeading.tr();
+  static const String _tenantVisitPendingHeading = 'tenant_visit_pending_heading';
+  static String get tenantVisitPendingHeading => _tenantVisitPendingHeading.tr();
 
-  static const String _tenantVisitRejectedHeading =
-      'tenant_visit_rejected_heading';
-  static String get tenantVisitRejectedHeading =>
-      _tenantVisitRejectedHeading.tr();
+  static const String _tenantVisitRejectedHeading = 'tenant_visit_rejected_heading';
+  static String get tenantVisitRejectedHeading => _tenantVisitRejectedHeading.tr();
 
   static const String _tenantVisitContactInfo = 'tenant_visit_contact_info';
   static String get tenantVisitContactInfo => _tenantVisitContactInfo.tr();
 
-  static const String _tenantVisitOwnerPhoneConfirmed =
-      'tenant_visit_owner_phone_confirmed';
-  static String get tenantVisitOwnerPhoneConfirmed =>
-      _tenantVisitOwnerPhoneConfirmed.tr();
+  static const String _tenantVisitOwnerPhoneConfirmed = 'tenant_visit_owner_phone_confirmed';
+  static String get tenantVisitOwnerPhoneConfirmed => _tenantVisitOwnerPhoneConfirmed.tr();
 
-  static const String _tenantVisitOpenOwnerChat =
-      'tenant_visit_open_owner_chat';
+  static const String _tenantVisitOpenOwnerChat = 'tenant_visit_open_owner_chat';
   static String get tenantVisitOpenOwnerChat => _tenantVisitOpenOwnerChat.tr();
 
   static const String _tenantVisitCancelVisit = 'tenant_visit_cancel_visit';
@@ -2454,51 +2110,35 @@ abstract class LocaleKeys {
   static const String _tenantVisitRateTitle = 'tenant_visit_rate_title';
   static String get tenantVisitRateTitle => _tenantVisitRateTitle.tr();
 
-  static const String _tenantVisitRatingCleanliness =
-      'tenant_visit_rating_cleanliness';
-  static String get tenantVisitRatingCleanliness =>
-      _tenantVisitRatingCleanliness.tr();
+  static const String _tenantVisitRatingCleanliness = 'tenant_visit_rating_cleanliness';
+  static String get tenantVisitRatingCleanliness => _tenantVisitRatingCleanliness.tr();
 
-  static const String _tenantVisitRatingAccuracy =
-      'tenant_visit_rating_accuracy';
-  static String get tenantVisitRatingAccuracy =>
-      _tenantVisitRatingAccuracy.tr();
+  static const String _tenantVisitRatingAccuracy = 'tenant_visit_rating_accuracy';
+  static String get tenantVisitRatingAccuracy => _tenantVisitRatingAccuracy.tr();
 
-  static const String _tenantVisitRatingOwnerTreatment =
-      'tenant_visit_rating_owner_treatment';
-  static String get tenantVisitRatingOwnerTreatment =>
-      _tenantVisitRatingOwnerTreatment.tr();
+  static const String _tenantVisitRatingOwnerTreatment = 'tenant_visit_rating_owner_treatment';
+  static String get tenantVisitRatingOwnerTreatment => _tenantVisitRatingOwnerTreatment.tr();
 
-  static const String _tenantVisitRatingCommentHint =
-      'tenant_visit_rating_comment_hint';
-  static String get tenantVisitRatingCommentHint =>
-      _tenantVisitRatingCommentHint.tr();
+  static const String _tenantVisitRatingCommentHint = 'tenant_visit_rating_comment_hint';
+  static String get tenantVisitRatingCommentHint => _tenantVisitRatingCommentHint.tr();
 
   static const String _tenantVisitRatingSubmit = 'tenant_visit_rating_submit';
   static String get tenantVisitRatingSubmit => _tenantVisitRatingSubmit.tr();
 
-  static const String _tenantVisitRatingSubmitted =
-      'tenant_visit_rating_submitted';
-  static String get tenantVisitRatingSubmitted =>
-      _tenantVisitRatingSubmitted.tr();
+  static const String _tenantVisitRatingSubmitted = 'tenant_visit_rating_submitted';
+  static String get tenantVisitRatingSubmitted => _tenantVisitRatingSubmitted.tr();
 
-  static const String _tenantVisitRequestCanceled =
-      'tenant_visit_request_canceled';
-  static String get tenantVisitRequestCanceled =>
-      _tenantVisitRequestCanceled.tr();
+  static const String _tenantVisitRequestCanceled = 'tenant_visit_request_canceled';
+  static String get tenantVisitRequestCanceled => _tenantVisitRequestCanceled.tr();
 
-  static const String _tenantVisitPropertyNasrCity =
-      'tenant_visit_property_nasr_city';
-  static String get tenantVisitPropertyNasrCity =>
-      _tenantVisitPropertyNasrCity.tr();
+  static const String _tenantVisitPropertyNasrCity = 'tenant_visit_property_nasr_city';
+  static String get tenantVisitPropertyNasrCity => _tenantVisitPropertyNasrCity.tr();
 
   static const String _tenantVisitOwnerAhmed = 'tenant_visit_owner_ahmed';
   static String get tenantVisitOwnerAhmed => _tenantVisitOwnerAhmed.tr();
 
-  static const String _tenantVisitPropertyFifthSettlement =
-      'tenant_visit_property_fifth_settlement';
-  static String get tenantVisitPropertyFifthSettlement =>
-      _tenantVisitPropertyFifthSettlement.tr();
+  static const String _tenantVisitPropertyFifthSettlement = 'tenant_visit_property_fifth_settlement';
+  static String get tenantVisitPropertyFifthSettlement => _tenantVisitPropertyFifthSettlement.tr();
 
   static const String _tenantVisitOwnerMona = 'tenant_visit_owner_mona';
   static String get tenantVisitOwnerMona => _tenantVisitOwnerMona.tr();
@@ -2506,10 +2146,8 @@ abstract class LocaleKeys {
   static const String _tenantVisitDateTomorrow = 'tenant_visit_date_tomorrow';
   static String get tenantVisitDateTomorrow => _tenantVisitDateTomorrow.tr();
 
-  static const String _tenantVisitPropertyMohandessin =
-      'tenant_visit_property_mohandessin';
-  static String get tenantVisitPropertyMohandessin =>
-      _tenantVisitPropertyMohandessin.tr();
+  static const String _tenantVisitPropertyMohandessin = 'tenant_visit_property_mohandessin';
+  static String get tenantVisitPropertyMohandessin => _tenantVisitPropertyMohandessin.tr();
 
   static const String _tenantVisitOwnerKhaled = 'tenant_visit_owner_khaled';
   static String get tenantVisitOwnerKhaled => _tenantVisitOwnerKhaled.tr();
@@ -2520,20 +2158,14 @@ abstract class LocaleKeys {
   static const String _tenantVisitBannerTitle = 'tenant_visit_banner_title';
   static String get tenantVisitBannerTitle => _tenantVisitBannerTitle.tr();
 
-  static const String _tenantVisitBannerProperty =
-      'tenant_visit_banner_property';
-  static String get tenantVisitBannerProperty =>
-      _tenantVisitBannerProperty.tr();
+  static const String _tenantVisitBannerProperty = 'tenant_visit_banner_property';
+  static String get tenantVisitBannerProperty => _tenantVisitBannerProperty.tr();
 
-  static const String _tenantVisitBookingPropertyTitle =
-      'tenant_visit_booking_property_title';
-  static String get tenantVisitBookingPropertyTitle =>
-      _tenantVisitBookingPropertyTitle.tr();
+  static const String _tenantVisitBookingPropertyTitle = 'tenant_visit_booking_property_title';
+  static String get tenantVisitBookingPropertyTitle => _tenantVisitBookingPropertyTitle.tr();
 
-  static const String _tenantVisitBookingPropertyMeta =
-      'tenant_visit_booking_property_meta';
-  static String get tenantVisitBookingPropertyMeta =>
-      _tenantVisitBookingPropertyMeta.tr();
+  static const String _tenantVisitBookingPropertyMeta = 'tenant_visit_booking_property_meta';
+  static String get tenantVisitBookingPropertyMeta => _tenantVisitBookingPropertyMeta.tr();
 
   static const String _tenantVisitDetailDate = 'tenant_visit_detail_date';
   static String get tenantVisitDetailDate => _tenantVisitDetailDate.tr();
@@ -2580,40 +2212,26 @@ abstract class LocaleKeys {
   static const String _ownerHomeUnverified = 'owner_home_unverified';
   static String get ownerHomeUnverified => _ownerHomeUnverified.tr();
 
-  static const String _ownerDashboardVisitsThisWeek =
-      'owner_dashboard_visits_this_week';
-  static String get ownerDashboardVisitsThisWeek =>
-      _ownerDashboardVisitsThisWeek.tr();
+  static const String _ownerDashboardVisitsThisWeek = 'owner_dashboard_visits_this_week';
+  static String get ownerDashboardVisitsThisWeek => _ownerDashboardVisitsThisWeek.tr();
 
-  static const String _ownerDashboardActiveProperties =
-      'owner_dashboard_active_properties';
-  static String get ownerDashboardActiveProperties =>
-      _ownerDashboardActiveProperties.tr();
+  static const String _ownerDashboardActiveProperties = 'owner_dashboard_active_properties';
+  static String get ownerDashboardActiveProperties => _ownerDashboardActiveProperties.tr();
 
-  static const String _ownerDashboardOverallRating =
-      'owner_dashboard_overall_rating';
-  static String get ownerDashboardOverallRating =>
-      _ownerDashboardOverallRating.tr();
+  static const String _ownerDashboardOverallRating = 'owner_dashboard_overall_rating';
+  static String get ownerDashboardOverallRating => _ownerDashboardOverallRating.tr();
 
-  static const String _ownerDashboardPendingRequests =
-      'owner_dashboard_pending_requests';
-  static String get ownerDashboardPendingRequests =>
-      _ownerDashboardPendingRequests.tr();
+  static const String _ownerDashboardPendingRequests = 'owner_dashboard_pending_requests';
+  static String get ownerDashboardPendingRequests => _ownerDashboardPendingRequests.tr();
 
-  static const String _ownerDashboardPendingTitle =
-      'owner_dashboard_pending_title';
-  static String get ownerDashboardPendingTitle =>
-      _ownerDashboardPendingTitle.tr();
+  static const String _ownerDashboardPendingTitle = 'owner_dashboard_pending_title';
+  static String get ownerDashboardPendingTitle => _ownerDashboardPendingTitle.tr();
 
-  static const String _ownerDashboardNoPendingTitle =
-      'owner_dashboard_no_pending_title';
-  static String get ownerDashboardNoPendingTitle =>
-      _ownerDashboardNoPendingTitle.tr();
+  static const String _ownerDashboardNoPendingTitle = 'owner_dashboard_no_pending_title';
+  static String get ownerDashboardNoPendingTitle => _ownerDashboardNoPendingTitle.tr();
 
-  static const String _ownerDashboardNoPendingDescription =
-      'owner_dashboard_no_pending_description';
-  static String get ownerDashboardNoPendingDescription =>
-      _ownerDashboardNoPendingDescription.tr();
+  static const String _ownerDashboardNoPendingDescription = 'owner_dashboard_no_pending_description';
+  static String get ownerDashboardNoPendingDescription => _ownerDashboardNoPendingDescription.tr();
 
   static const String _ownerVisitsTitle = 'owner_visits_title';
   static String get ownerVisitsTitle => _ownerVisitsTitle.tr();
@@ -2621,10 +2239,8 @@ abstract class LocaleKeys {
   static const String _ownerVisitsTotalRequests = 'owner_visits_total_requests';
   static String get ownerVisitsTotalRequests => _ownerVisitsTotalRequests.tr();
 
-  static const String _ownerVisitsWaitingForReply =
-      'owner_visits_waiting_for_reply';
-  static String get ownerVisitsWaitingForReply =>
-      _ownerVisitsWaitingForReply.tr();
+  static const String _ownerVisitsWaitingForReply = 'owner_visits_waiting_for_reply';
+  static String get ownerVisitsWaitingForReply => _ownerVisitsWaitingForReply.tr();
 
   static const String _ownerVisitsFilterAll = 'owner_visits_filter_all';
   static String get ownerVisitsFilterAll => _ownerVisitsFilterAll.tr();
@@ -2632,28 +2248,20 @@ abstract class LocaleKeys {
   static const String _ownerVisitsFilterNew = 'owner_visits_filter_new';
   static String get ownerVisitsFilterNew => _ownerVisitsFilterNew.tr();
 
-  static const String _ownerVisitsFilterAccepted =
-      'owner_visits_filter_accepted';
-  static String get ownerVisitsFilterAccepted =>
-      _ownerVisitsFilterAccepted.tr();
+  static const String _ownerVisitsFilterAccepted = 'owner_visits_filter_accepted';
+  static String get ownerVisitsFilterAccepted => _ownerVisitsFilterAccepted.tr();
 
-  static const String _ownerVisitsFilterRejected =
-      'owner_visits_filter_rejected';
-  static String get ownerVisitsFilterRejected =>
-      _ownerVisitsFilterRejected.tr();
+  static const String _ownerVisitsFilterRejected = 'owner_visits_filter_rejected';
+  static String get ownerVisitsFilterRejected => _ownerVisitsFilterRejected.tr();
 
-  static const String _ownerVisitsFilterCompleted =
-      'owner_visits_filter_completed';
-  static String get ownerVisitsFilterCompleted =>
-      _ownerVisitsFilterCompleted.tr();
+  static const String _ownerVisitsFilterCompleted = 'owner_visits_filter_completed';
+  static String get ownerVisitsFilterCompleted => _ownerVisitsFilterCompleted.tr();
 
   static const String _ownerVisitsNoRequests = 'owner_visits_no_requests';
   static String get ownerVisitsNoRequests => _ownerVisitsNoRequests.tr();
 
-  static const String _ownerVisitsEmptyDescription =
-      'owner_visits_empty_description';
-  static String get ownerVisitsEmptyDescription =>
-      _ownerVisitsEmptyDescription.tr();
+  static const String _ownerVisitsEmptyDescription = 'owner_visits_empty_description';
+  static String get ownerVisitsEmptyDescription => _ownerVisitsEmptyDescription.tr();
 
   static const String _ownerVisitStatusNew = 'owner_visit_status_new';
   static String get ownerVisitStatusNew => _ownerVisitStatusNew.tr();
@@ -2667,10 +2275,8 @@ abstract class LocaleKeys {
   static const String _ownerVisitStatusRejected = 'owner_visit_status_rejected';
   static String get ownerVisitStatusRejected => _ownerVisitStatusRejected.tr();
 
-  static const String _ownerVisitStatusCompleted =
-      'owner_visit_status_completed';
-  static String get ownerVisitStatusCompleted =>
-      _ownerVisitStatusCompleted.tr();
+  static const String _ownerVisitStatusCompleted = 'owner_visit_status_completed';
+  static String get ownerVisitStatusCompleted => _ownerVisitStatusCompleted.tr();
 
   static const String _ownerVisitVerified = 'owner_visit_verified';
   static String get ownerVisitVerified => _ownerVisitVerified.tr();
@@ -2681,23 +2287,17 @@ abstract class LocaleKeys {
   static const String _ownerVisitReject = 'owner_visit_reject';
   static String get ownerVisitReject => _ownerVisitReject.tr();
 
-  static const String _ownerVisitAcceptedMessage =
-      'owner_visit_accepted_message';
-  static String get ownerVisitAcceptedMessage =>
-      _ownerVisitAcceptedMessage.tr();
+  static const String _ownerVisitAcceptedMessage = 'owner_visit_accepted_message';
+  static String get ownerVisitAcceptedMessage => _ownerVisitAcceptedMessage.tr();
 
-  static const String _ownerVisitRejectedMessage =
-      'owner_visit_rejected_message';
-  static String get ownerVisitRejectedMessage =>
-      _ownerVisitRejectedMessage.tr();
+  static const String _ownerVisitRejectedMessage = 'owner_visit_rejected_message';
+  static String get ownerVisitRejectedMessage => _ownerVisitRejectedMessage.tr();
 
   static const String _ownerRequestDetailsTitle = 'owner_request_details_title';
   static String get ownerRequestDetailsTitle => _ownerRequestDetailsTitle.tr();
 
-  static const String _ownerVisitRequestedProperty =
-      'owner_visit_requested_property';
-  static String get ownerVisitRequestedProperty =>
-      _ownerVisitRequestedProperty.tr();
+  static const String _ownerVisitRequestedProperty = 'owner_visit_requested_property';
+  static String get ownerVisitRequestedProperty => _ownerVisitRequestedProperty.tr();
 
   static const String _ownerVisitRequestDate = 'owner_visit_request_date';
   static String get ownerVisitRequestDate => _ownerVisitRequestDate.tr();
@@ -2705,20 +2305,14 @@ abstract class LocaleKeys {
   static const String _ownerVisitRequestTime = 'owner_visit_request_time';
   static String get ownerVisitRequestTime => _ownerVisitRequestTime.tr();
 
-  static const String _ownerVisitTenantNoteTitle =
-      'owner_visit_tenant_note_title';
-  static String get ownerVisitTenantNoteTitle =>
-      _ownerVisitTenantNoteTitle.tr();
+  static const String _ownerVisitTenantNoteTitle = 'owner_visit_tenant_note_title';
+  static String get ownerVisitTenantNoteTitle => _ownerVisitTenantNoteTitle.tr();
 
-  static const String _ownerVisitTenantPhoneHidden =
-      'owner_visit_tenant_phone_hidden';
-  static String get ownerVisitTenantPhoneHidden =>
-      _ownerVisitTenantPhoneHidden.tr();
+  static const String _ownerVisitTenantPhoneHidden = 'owner_visit_tenant_phone_hidden';
+  static String get ownerVisitTenantPhoneHidden => _ownerVisitTenantPhoneHidden.tr();
 
-  static const String _ownerVisitAcceptWithCheck =
-      'owner_visit_accept_with_check';
-  static String get ownerVisitAcceptWithCheck =>
-      _ownerVisitAcceptWithCheck.tr();
+  static const String _ownerVisitAcceptWithCheck = 'owner_visit_accept_with_check';
+  static String get ownerVisitAcceptWithCheck => _ownerVisitAcceptWithCheck.tr();
 
   static const String _ownerVisitRejectRequest = 'owner_visit_reject_request';
   static String get ownerVisitRejectRequest => _ownerVisitRejectRequest.tr();
@@ -2747,20 +2341,14 @@ abstract class LocaleKeys {
   static const String _ownerRejectConfirmation = 'owner_reject_confirmation';
   static String get ownerRejectConfirmation => _ownerRejectConfirmation.tr();
 
-  static const String _ownerRejectReasonInconvenientTime =
-      'owner_reject_reason_inconvenient_time';
-  static String get ownerRejectReasonInconvenientTime =>
-      _ownerRejectReasonInconvenientTime.tr();
+  static const String _ownerRejectReasonInconvenientTime = 'owner_reject_reason_inconvenient_time';
+  static String get ownerRejectReasonInconvenientTime => _ownerRejectReasonInconvenientTime.tr();
 
-  static const String _ownerRejectReasonPropertyRented =
-      'owner_reject_reason_property_rented';
-  static String get ownerRejectReasonPropertyRented =>
-      _ownerRejectReasonPropertyRented.tr();
+  static const String _ownerRejectReasonPropertyRented = 'owner_reject_reason_property_rented';
+  static String get ownerRejectReasonPropertyRented => _ownerRejectReasonPropertyRented.tr();
 
-  static const String _ownerRejectReasonRequirementsNotMet =
-      'owner_reject_reason_requirements_not_met';
-  static String get ownerRejectReasonRequirementsNotMet =>
-      _ownerRejectReasonRequirementsNotMet.tr();
+  static const String _ownerRejectReasonRequirementsNotMet = 'owner_reject_reason_requirements_not_met';
+  static String get ownerRejectReasonRequirementsNotMet => _ownerRejectReasonRequirementsNotMet.tr();
 
   static const String _ownerRejectReasonOther = 'owner_reject_reason_other';
   static String get ownerRejectReasonOther => _ownerRejectReasonOther.tr();
@@ -2768,100 +2356,67 @@ abstract class LocaleKeys {
   static const String _ownerRejectConfirm = 'owner_reject_confirm';
   static String get ownerRejectConfirm => _ownerRejectConfirm.tr();
 
-  static const String _ownerVisitTenantSaraInitial =
-      'owner_visit_tenant_sara_initial';
-  static String get ownerVisitTenantSaraInitial =>
-      _ownerVisitTenantSaraInitial.tr();
+  static const String _ownerVisitTenantSaraInitial = 'owner_visit_tenant_sara_initial';
+  static String get ownerVisitTenantSaraInitial => _ownerVisitTenantSaraInitial.tr();
 
   static const String _ownerVisitTenantSara = 'owner_visit_tenant_sara';
   static String get ownerVisitTenantSara => _ownerVisitTenantSara.tr();
 
-  static const String _ownerVisitTenantMohamedInitial =
-      'owner_visit_tenant_mohamed_initial';
-  static String get ownerVisitTenantMohamedInitial =>
-      _ownerVisitTenantMohamedInitial.tr();
+  static const String _ownerVisitTenantMohamedInitial = 'owner_visit_tenant_mohamed_initial';
+  static String get ownerVisitTenantMohamedInitial => _ownerVisitTenantMohamedInitial.tr();
 
   static const String _ownerVisitTenantMohamed = 'owner_visit_tenant_mohamed';
   static String get ownerVisitTenantMohamed => _ownerVisitTenantMohamed.tr();
 
-  static const String _ownerVisitTenantKhaledInitial =
-      'owner_visit_tenant_khaled_initial';
-  static String get ownerVisitTenantKhaledInitial =>
-      _ownerVisitTenantKhaledInitial.tr();
+  static const String _ownerVisitTenantKhaledInitial = 'owner_visit_tenant_khaled_initial';
+  static String get ownerVisitTenantKhaledInitial => _ownerVisitTenantKhaledInitial.tr();
 
   static const String _ownerVisitTenantKhaled = 'owner_visit_tenant_khaled';
   static String get ownerVisitTenantKhaled => _ownerVisitTenantKhaled.tr();
 
-  static const String _ownerVisitPropertyNasrCity =
-      'owner_visit_property_nasr_city';
-  static String get ownerVisitPropertyNasrCity =>
-      _ownerVisitPropertyNasrCity.tr();
+  static const String _ownerVisitPropertyNasrCity = 'owner_visit_property_nasr_city';
+  static String get ownerVisitPropertyNasrCity => _ownerVisitPropertyNasrCity.tr();
 
-  static const String _ownerVisitPropertyJeddahStudio =
-      'owner_visit_property_jeddah_studio';
-  static String get ownerVisitPropertyJeddahStudio =>
-      _ownerVisitPropertyJeddahStudio.tr();
+  static const String _ownerVisitPropertyJeddahStudio = 'owner_visit_property_jeddah_studio';
+  static String get ownerVisitPropertyJeddahStudio => _ownerVisitPropertyJeddahStudio.tr();
 
-  static const String _ownerVisitPropertyDammamRoom =
-      'owner_visit_property_dammam_room';
-  static String get ownerVisitPropertyDammamRoom =>
-      _ownerVisitPropertyDammamRoom.tr();
+  static const String _ownerVisitPropertyDammamRoom = 'owner_visit_property_dammam_room';
+  static String get ownerVisitPropertyDammamRoom => _ownerVisitPropertyDammamRoom.tr();
 
-  static const String _ownerVisitDateSaturdayAtThree =
-      'owner_visit_date_saturday_at_three';
-  static String get ownerVisitDateSaturdayAtThree =>
-      _ownerVisitDateSaturdayAtThree.tr();
+  static const String _ownerVisitDateSaturdayAtThree = 'owner_visit_date_saturday_at_three';
+  static String get ownerVisitDateSaturdayAtThree => _ownerVisitDateSaturdayAtThree.tr();
 
-  static const String _ownerVisitDateSundayAtTwo =
-      'owner_visit_date_sunday_at_two';
-  static String get ownerVisitDateSundayAtTwo =>
-      _ownerVisitDateSundayAtTwo.tr();
+  static const String _ownerVisitDateSundayAtTwo = 'owner_visit_date_sunday_at_two';
+  static String get ownerVisitDateSundayAtTwo => _ownerVisitDateSundayAtTwo.tr();
 
-  static const String _ownerVisitDateMondayAtEleven =
-      'owner_visit_date_monday_at_eleven';
-  static String get ownerVisitDateMondayAtEleven =>
-      _ownerVisitDateMondayAtEleven.tr();
+  static const String _ownerVisitDateMondayAtEleven = 'owner_visit_date_monday_at_eleven';
+  static String get ownerVisitDateMondayAtEleven => _ownerVisitDateMondayAtEleven.tr();
 
   static const String _ownerCalendarTitle = 'owner_calendar_title';
   static String get ownerCalendarTitle => _ownerCalendarTitle.tr();
 
-  static const String _ownerCalendarDaySundayShort =
-      'owner_calendar_day_sunday_short';
-  static String get ownerCalendarDaySundayShort =>
-      _ownerCalendarDaySundayShort.tr();
+  static const String _ownerCalendarDaySundayShort = 'owner_calendar_day_sunday_short';
+  static String get ownerCalendarDaySundayShort => _ownerCalendarDaySundayShort.tr();
 
-  static const String _ownerCalendarDayMondayShort =
-      'owner_calendar_day_monday_short';
-  static String get ownerCalendarDayMondayShort =>
-      _ownerCalendarDayMondayShort.tr();
+  static const String _ownerCalendarDayMondayShort = 'owner_calendar_day_monday_short';
+  static String get ownerCalendarDayMondayShort => _ownerCalendarDayMondayShort.tr();
 
-  static const String _ownerCalendarDayTuesdayShort =
-      'owner_calendar_day_tuesday_short';
-  static String get ownerCalendarDayTuesdayShort =>
-      _ownerCalendarDayTuesdayShort.tr();
+  static const String _ownerCalendarDayTuesdayShort = 'owner_calendar_day_tuesday_short';
+  static String get ownerCalendarDayTuesdayShort => _ownerCalendarDayTuesdayShort.tr();
 
-  static const String _ownerCalendarDayWednesdayShort =
-      'owner_calendar_day_wednesday_short';
-  static String get ownerCalendarDayWednesdayShort =>
-      _ownerCalendarDayWednesdayShort.tr();
+  static const String _ownerCalendarDayWednesdayShort = 'owner_calendar_day_wednesday_short';
+  static String get ownerCalendarDayWednesdayShort => _ownerCalendarDayWednesdayShort.tr();
 
-  static const String _ownerCalendarDayThursdayShort =
-      'owner_calendar_day_thursday_short';
-  static String get ownerCalendarDayThursdayShort =>
-      _ownerCalendarDayThursdayShort.tr();
+  static const String _ownerCalendarDayThursdayShort = 'owner_calendar_day_thursday_short';
+  static String get ownerCalendarDayThursdayShort => _ownerCalendarDayThursdayShort.tr();
 
-  static const String _ownerCalendarDayFridayShort =
-      'owner_calendar_day_friday_short';
-  static String get ownerCalendarDayFridayShort =>
-      _ownerCalendarDayFridayShort.tr();
+  static const String _ownerCalendarDayFridayShort = 'owner_calendar_day_friday_short';
+  static String get ownerCalendarDayFridayShort => _ownerCalendarDayFridayShort.tr();
 
-  static const String _ownerCalendarDaySaturdayShort =
-      'owner_calendar_day_saturday_short';
-  static String get ownerCalendarDaySaturdayShort =>
-      _ownerCalendarDaySaturdayShort.tr();
+  static const String _ownerCalendarDaySaturdayShort = 'owner_calendar_day_saturday_short';
+  static String get ownerCalendarDaySaturdayShort => _ownerCalendarDaySaturdayShort.tr();
 
-  static const String _ownerCalendarVisitsOnDay =
-      'owner_calendar_visits_on_day';
+  static const String _ownerCalendarVisitsOnDay = 'owner_calendar_visits_on_day';
   static String get ownerCalendarVisitsOnDay => _ownerCalendarVisitsOnDay.tr();
 
   static const String _ownerCalendarConfirmed = 'owner_calendar_confirmed';
@@ -2870,18 +2425,14 @@ abstract class LocaleKeys {
   static const String _ownerCalendarPending = 'owner_calendar_pending';
   static String get ownerCalendarPending => _ownerCalendarPending.tr();
 
-  static const String _ownerCalendarManageAvailability =
-      'owner_calendar_manage_availability';
-  static String get ownerCalendarManageAvailability =>
-      _ownerCalendarManageAvailability.tr();
+  static const String _ownerCalendarManageAvailability = 'owner_calendar_manage_availability';
+  static String get ownerCalendarManageAvailability => _ownerCalendarManageAvailability.tr();
 
   static const String _ownerAvailabilityTitle = 'owner_availability_title';
   static String get ownerAvailabilityTitle => _ownerAvailabilityTitle.tr();
 
-  static const String _ownerAvailabilityDescription =
-      'owner_availability_description';
-  static String get ownerAvailabilityDescription =>
-      _ownerAvailabilityDescription.tr();
+  static const String _ownerAvailabilityDescription = 'owner_availability_description';
+  static String get ownerAvailabilityDescription => _ownerAvailabilityDescription.tr();
 
   static const String _ownerAvailabilitySunday = 'owner_availability_sunday';
   static String get ownerAvailabilitySunday => _ownerAvailabilitySunday.tr();
@@ -2892,71 +2443,47 @@ abstract class LocaleKeys {
   static const String _ownerAvailabilityTuesday = 'owner_availability_tuesday';
   static String get ownerAvailabilityTuesday => _ownerAvailabilityTuesday.tr();
 
-  static const String _ownerAvailabilityWednesday =
-      'owner_availability_wednesday';
-  static String get ownerAvailabilityWednesday =>
-      _ownerAvailabilityWednesday.tr();
+  static const String _ownerAvailabilityWednesday = 'owner_availability_wednesday';
+  static String get ownerAvailabilityWednesday => _ownerAvailabilityWednesday.tr();
 
-  static const String _ownerAvailabilityThursday =
-      'owner_availability_thursday';
-  static String get ownerAvailabilityThursday =>
-      _ownerAvailabilityThursday.tr();
+  static const String _ownerAvailabilityThursday = 'owner_availability_thursday';
+  static String get ownerAvailabilityThursday => _ownerAvailabilityThursday.tr();
 
   static const String _ownerAvailabilityFriday = 'owner_availability_friday';
   static String get ownerAvailabilityFriday => _ownerAvailabilityFriday.tr();
 
-  static const String _ownerAvailabilitySaturday =
-      'owner_availability_saturday';
-  static String get ownerAvailabilitySaturday =>
-      _ownerAvailabilitySaturday.tr();
+  static const String _ownerAvailabilitySaturday = 'owner_availability_saturday';
+  static String get ownerAvailabilitySaturday => _ownerAvailabilitySaturday.tr();
 
-  static const String _ownerAvailabilitySundayShort =
-      'owner_availability_sunday_short';
-  static String get ownerAvailabilitySundayShort =>
-      _ownerAvailabilitySundayShort.tr();
+  static const String _ownerAvailabilitySundayShort = 'owner_availability_sunday_short';
+  static String get ownerAvailabilitySundayShort => _ownerAvailabilitySundayShort.tr();
 
-  static const String _ownerAvailabilityMondayShort =
-      'owner_availability_monday_short';
-  static String get ownerAvailabilityMondayShort =>
-      _ownerAvailabilityMondayShort.tr();
+  static const String _ownerAvailabilityMondayShort = 'owner_availability_monday_short';
+  static String get ownerAvailabilityMondayShort => _ownerAvailabilityMondayShort.tr();
 
-  static const String _ownerAvailabilityTuesdayShort =
-      'owner_availability_tuesday_short';
-  static String get ownerAvailabilityTuesdayShort =>
-      _ownerAvailabilityTuesdayShort.tr();
+  static const String _ownerAvailabilityTuesdayShort = 'owner_availability_tuesday_short';
+  static String get ownerAvailabilityTuesdayShort => _ownerAvailabilityTuesdayShort.tr();
 
-  static const String _ownerAvailabilityWednesdayShort =
-      'owner_availability_wednesday_short';
-  static String get ownerAvailabilityWednesdayShort =>
-      _ownerAvailabilityWednesdayShort.tr();
+  static const String _ownerAvailabilityWednesdayShort = 'owner_availability_wednesday_short';
+  static String get ownerAvailabilityWednesdayShort => _ownerAvailabilityWednesdayShort.tr();
 
-  static const String _ownerAvailabilityThursdayShort =
-      'owner_availability_thursday_short';
-  static String get ownerAvailabilityThursdayShort =>
-      _ownerAvailabilityThursdayShort.tr();
+  static const String _ownerAvailabilityThursdayShort = 'owner_availability_thursday_short';
+  static String get ownerAvailabilityThursdayShort => _ownerAvailabilityThursdayShort.tr();
 
-  static const String _ownerAvailabilityFridayShort =
-      'owner_availability_friday_short';
-  static String get ownerAvailabilityFridayShort =>
-      _ownerAvailabilityFridayShort.tr();
+  static const String _ownerAvailabilityFridayShort = 'owner_availability_friday_short';
+  static String get ownerAvailabilityFridayShort => _ownerAvailabilityFridayShort.tr();
 
-  static const String _ownerAvailabilitySaturdayShort =
-      'owner_availability_saturday_short';
-  static String get ownerAvailabilitySaturdayShort =>
-      _ownerAvailabilitySaturdayShort.tr();
+  static const String _ownerAvailabilitySaturdayShort = 'owner_availability_saturday_short';
+  static String get ownerAvailabilitySaturdayShort => _ownerAvailabilitySaturdayShort.tr();
 
-  static const String _ownerAvailabilityAvailable =
-      'owner_availability_available';
-  static String get ownerAvailabilityAvailable =>
-      _ownerAvailabilityAvailable.tr();
+  static const String _ownerAvailabilityAvailable = 'owner_availability_available';
+  static String get ownerAvailabilityAvailable => _ownerAvailabilityAvailable.tr();
 
   static const String _ownerAvailabilityBooked = 'owner_availability_booked';
   static String get ownerAvailabilityBooked => _ownerAvailabilityBooked.tr();
 
-  static const String _ownerAvailabilityUnspecified =
-      'owner_availability_unspecified';
-  static String get ownerAvailabilityUnspecified =>
-      _ownerAvailabilityUnspecified.tr();
+  static const String _ownerAvailabilityUnspecified = 'owner_availability_unspecified';
+  static String get ownerAvailabilityUnspecified => _ownerAvailabilityUnspecified.tr();
 
   static const String _ownerAvailabilitySave = 'owner_availability_save';
   static String get ownerAvailabilitySave => _ownerAvailabilitySave.tr();
@@ -2967,46 +2494,32 @@ abstract class LocaleKeys {
   static const String _ownerAddPropertyTitle = 'owner_add_property_title';
   static String get ownerAddPropertyTitle => _ownerAddPropertyTitle.tr();
 
-  static const String _ownerAddPropertyBasicsProgress =
-      'owner_add_property_basics_progress';
-  static String get ownerAddPropertyBasicsProgress =>
-      _ownerAddPropertyBasicsProgress.tr();
+  static const String _ownerAddPropertyBasicsProgress = 'owner_add_property_basics_progress';
+  static String get ownerAddPropertyBasicsProgress => _ownerAddPropertyBasicsProgress.tr();
 
-  static const String _ownerAddPropertyNextPhotos =
-      'owner_add_property_next_photos';
-  static String get ownerAddPropertyNextPhotos =>
-      _ownerAddPropertyNextPhotos.tr();
+  static const String _ownerAddPropertyNextPhotos = 'owner_add_property_next_photos';
+  static String get ownerAddPropertyNextPhotos => _ownerAddPropertyNextPhotos.tr();
 
   static const String _ownerAddPropertyType = 'owner_add_property_type';
   static String get ownerAddPropertyType => _ownerAddPropertyType.tr();
 
-  static const String _ownerAddPropertyNameSection =
-      'owner_add_property_name_section';
-  static String get ownerAddPropertyNameSection =>
-      _ownerAddPropertyNameSection.tr();
+  static const String _ownerAddPropertyNameSection = 'owner_add_property_name_section';
+  static String get ownerAddPropertyNameSection => _ownerAddPropertyNameSection.tr();
 
-  static const String _ownerAddPropertyTitleLabel =
-      'owner_add_property_title_label';
-  static String get ownerAddPropertyTitleLabel =>
-      _ownerAddPropertyTitleLabel.tr();
+  static const String _ownerAddPropertyTitleLabel = 'owner_add_property_title_label';
+  static String get ownerAddPropertyTitleLabel => _ownerAddPropertyTitleLabel.tr();
 
-  static const String _ownerAddPropertyTitleExample =
-      'owner_add_property_title_example';
-  static String get ownerAddPropertyTitleExample =>
-      _ownerAddPropertyTitleExample.tr();
+  static const String _ownerAddPropertyTitleExample = 'owner_add_property_title_example';
+  static String get ownerAddPropertyTitleExample => _ownerAddPropertyTitleExample.tr();
 
-  static const String _ownerAddPropertyTitleHint =
-      'owner_add_property_title_hint';
-  static String get ownerAddPropertyTitleHint =>
-      _ownerAddPropertyTitleHint.tr();
+  static const String _ownerAddPropertyTitleHint = 'owner_add_property_title_hint';
+  static String get ownerAddPropertyTitleHint => _ownerAddPropertyTitleHint.tr();
 
   static const String _ownerAddPropertyBedrooms = 'owner_add_property_bedrooms';
   static String get ownerAddPropertyBedrooms => _ownerAddPropertyBedrooms.tr();
 
-  static const String _ownerAddPropertyBathrooms =
-      'owner_add_property_bathrooms';
-  static String get ownerAddPropertyBathrooms =>
-      _ownerAddPropertyBathrooms.tr();
+  static const String _ownerAddPropertyBathrooms = 'owner_add_property_bathrooms';
+  static String get ownerAddPropertyBathrooms => _ownerAddPropertyBathrooms.tr();
 
   static const String _ownerAddPropertySpace = 'owner_add_property_space';
   static String get ownerAddPropertySpace => _ownerAddPropertySpace.tr();
@@ -3014,70 +2527,47 @@ abstract class LocaleKeys {
   static const String _ownerAddPropertyFloor = 'owner_add_property_floor';
   static String get ownerAddPropertyFloor => _ownerAddPropertyFloor.tr();
 
-  static const String _ownerAddPropertyFloorHint =
-      'owner_add_property_floor_hint';
-  static String get ownerAddPropertyFloorHint =>
-      _ownerAddPropertyFloorHint.tr();
+  static const String _ownerAddPropertyFloorHint = 'owner_add_property_floor_hint';
+  static String get ownerAddPropertyFloorHint => _ownerAddPropertyFloorHint.tr();
 
-  static const String _ownerAddPropertyAreaDescription =
-      'owner_add_property_area_description';
-  static String get ownerAddPropertyAreaDescription =>
-      _ownerAddPropertyAreaDescription.tr();
+  static const String _ownerAddPropertyAreaDescription = 'owner_add_property_area_description';
+  static String get ownerAddPropertyAreaDescription => _ownerAddPropertyAreaDescription.tr();
 
-  static const String _ownerAddPropertyBuildingYear =
-      'owner_add_property_building_year';
-  static String get ownerAddPropertyBuildingYear =>
-      _ownerAddPropertyBuildingYear.tr();
+  static const String _ownerAddPropertyBuildingYear = 'owner_add_property_building_year';
+  static String get ownerAddPropertyBuildingYear => _ownerAddPropertyBuildingYear.tr();
 
   static const String _ownerAddPropertyDetails = 'owner_add_property_details';
   static String get ownerAddPropertyDetails => _ownerAddPropertyDetails.tr();
 
-  static const String _ownerAddPropertyMapTitle =
-      'owner_add_property_map_title';
+  static const String _ownerAddPropertyMapTitle = 'owner_add_property_map_title';
   static String get ownerAddPropertyMapTitle => _ownerAddPropertyMapTitle.tr();
 
-  static const String _ownerAddPropertyMapSubtitle =
-      'owner_add_property_map_subtitle';
-  static String get ownerAddPropertyMapSubtitle =>
-      _ownerAddPropertyMapSubtitle.tr();
+  static const String _ownerAddPropertyMapSubtitle = 'owner_add_property_map_subtitle';
+  static String get ownerAddPropertyMapSubtitle => _ownerAddPropertyMapSubtitle.tr();
 
-  static const String _ownerAddPropertyMapSearch =
-      'owner_add_property_map_search';
-  static String get ownerAddPropertyMapSearch =>
-      _ownerAddPropertyMapSearch.tr();
+  static const String _ownerAddPropertyMapSearch = 'owner_add_property_map_search';
+  static String get ownerAddPropertyMapSearch => _ownerAddPropertyMapSearch.tr();
 
-  static const String _ownerAddPropertyLocationSelected =
-      'owner_add_property_location_selected';
-  static String get ownerAddPropertyLocationSelected =>
-      _ownerAddPropertyLocationSelected.tr();
+  static const String _ownerAddPropertyLocationSelected = 'owner_add_property_location_selected';
+  static String get ownerAddPropertyLocationSelected => _ownerAddPropertyLocationSelected.tr();
 
-  static const String _ownerAddPropertySelectLocation =
-      'owner_add_property_select_location';
-  static String get ownerAddPropertySelectLocation =>
-      _ownerAddPropertySelectLocation.tr();
+  static const String _ownerAddPropertySelectLocation = 'owner_add_property_select_location';
+  static String get ownerAddPropertySelectLocation => _ownerAddPropertySelectLocation.tr();
 
-  static const String _ownerAddPropertySelectedLocation =
-      'owner_add_property_selected_location';
-  static String get ownerAddPropertySelectedLocation =>
-      _ownerAddPropertySelectedLocation.tr();
+  static const String _ownerAddPropertySelectedLocation = 'owner_add_property_selected_location';
+  static String get ownerAddPropertySelectedLocation => _ownerAddPropertySelectedLocation.tr();
 
-  static const String _ownerAddPropertyLocationPrivacy =
-      'owner_add_property_location_privacy';
-  static String get ownerAddPropertyLocationPrivacy =>
-      _ownerAddPropertyLocationPrivacy.tr();
+  static const String _ownerAddPropertyLocationPrivacy = 'owner_add_property_location_privacy';
+  static String get ownerAddPropertyLocationPrivacy => _ownerAddPropertyLocationPrivacy.tr();
 
-  static const String _ownerAddPropertyAddressSection =
-      'owner_add_property_address_section';
-  static String get ownerAddPropertyAddressSection =>
-      _ownerAddPropertyAddressSection.tr();
+  static const String _ownerAddPropertyAddressSection = 'owner_add_property_address_section';
+  static String get ownerAddPropertyAddressSection => _ownerAddPropertyAddressSection.tr();
 
   static const String _ownerAddPropertyChoose = 'owner_add_property_choose';
   static String get ownerAddPropertyChoose => _ownerAddPropertyChoose.tr();
 
-  static const String _ownerAddPropertyGovernorate =
-      'owner_add_property_governorate';
-  static String get ownerAddPropertyGovernorate =>
-      _ownerAddPropertyGovernorate.tr();
+  static const String _ownerAddPropertyGovernorate = 'owner_add_property_governorate';
+  static String get ownerAddPropertyGovernorate => _ownerAddPropertyGovernorate.tr();
 
   static const String _ownerAddPropertyCity = 'owner_add_property_city';
   static String get ownerAddPropertyCity => _ownerAddPropertyCity.tr();
@@ -3085,210 +2575,128 @@ abstract class LocaleKeys {
   static const String _ownerAddPropertyStreet = 'owner_add_property_street';
   static String get ownerAddPropertyStreet => _ownerAddPropertyStreet.tr();
 
-  static const String _ownerAddPropertyStreetHint =
-      'owner_add_property_street_hint';
-  static String get ownerAddPropertyStreetHint =>
-      _ownerAddPropertyStreetHint.tr();
+  static const String _ownerAddPropertyStreetHint = 'owner_add_property_street_hint';
+  static String get ownerAddPropertyStreetHint => _ownerAddPropertyStreetHint.tr();
 
-  static const String _ownerAddPropertyExtraProgress =
-      'owner_add_property_extra_progress';
-  static String get ownerAddPropertyExtraProgress =>
-      _ownerAddPropertyExtraProgress.tr();
+  static const String _ownerAddPropertyExtraProgress = 'owner_add_property_extra_progress';
+  static String get ownerAddPropertyExtraProgress => _ownerAddPropertyExtraProgress.tr();
 
-  static const String _ownerAddPropertySubmitting =
-      'owner_add_property_submitting';
-  static String get ownerAddPropertySubmitting =>
-      _ownerAddPropertySubmitting.tr();
+  static const String _ownerAddPropertySubmitting = 'owner_add_property_submitting';
+  static String get ownerAddPropertySubmitting => _ownerAddPropertySubmitting.tr();
 
-  static const String _ownerAddPropertySubmitReview =
-      'owner_add_property_submit_review';
-  static String get ownerAddPropertySubmitReview =>
-      _ownerAddPropertySubmitReview.tr();
+  static const String _ownerAddPropertySubmitReview = 'owner_add_property_submit_review';
+  static String get ownerAddPropertySubmitReview => _ownerAddPropertySubmitReview.tr();
 
-  static const String _ownerAddPropertySmokingQuestion =
-      'owner_add_property_smoking_question';
-  static String get ownerAddPropertySmokingQuestion =>
-      _ownerAddPropertySmokingQuestion.tr();
+  static const String _ownerAddPropertySmokingQuestion = 'owner_add_property_smoking_question';
+  static String get ownerAddPropertySmokingQuestion => _ownerAddPropertySmokingQuestion.tr();
 
-  static const String _ownerAddPropertySuitableFor =
-      'owner_add_property_suitable_for';
-  static String get ownerAddPropertySuitableFor =>
-      _ownerAddPropertySuitableFor.tr();
+  static const String _ownerAddPropertySuitableFor = 'owner_add_property_suitable_for';
+  static String get ownerAddPropertySuitableFor => _ownerAddPropertySuitableFor.tr();
 
-  static const String _ownerAddPropertyProofTitle =
-      'owner_add_property_proof_title';
-  static String get ownerAddPropertyProofTitle =>
-      _ownerAddPropertyProofTitle.tr();
+  static const String _ownerAddPropertyProofTitle = 'owner_add_property_proof_title';
+  static String get ownerAddPropertyProofTitle => _ownerAddPropertyProofTitle.tr();
 
-  static const String _ownerAddPropertyProofSubtitle =
-      'owner_add_property_proof_subtitle';
-  static String get ownerAddPropertyProofSubtitle =>
-      _ownerAddPropertyProofSubtitle.tr();
+  static const String _ownerAddPropertyProofSubtitle = 'owner_add_property_proof_subtitle';
+  static String get ownerAddPropertyProofSubtitle => _ownerAddPropertyProofSubtitle.tr();
 
-  static const String _ownerAddPropertyProofUpload =
-      'owner_add_property_proof_upload';
-  static String get ownerAddPropertyProofUpload =>
-      _ownerAddPropertyProofUpload.tr();
+  static const String _ownerAddPropertyProofUpload = 'owner_add_property_proof_upload';
+  static String get ownerAddPropertyProofUpload => _ownerAddPropertyProofUpload.tr();
 
-  static const String _ownerAddPropertyProofChange =
-      'owner_add_property_proof_change';
-  static String get ownerAddPropertyProofChange =>
-      _ownerAddPropertyProofChange.tr();
+  static const String _ownerAddPropertyProofChange = 'owner_add_property_proof_change';
+  static String get ownerAddPropertyProofChange => _ownerAddPropertyProofChange.tr();
 
-  static const String _ownerAddPropertyProofFormats =
-      'owner_add_property_proof_formats';
-  static String get ownerAddPropertyProofFormats =>
-      _ownerAddPropertyProofFormats.tr();
+  static const String _ownerAddPropertyProofFormats = 'owner_add_property_proof_formats';
+  static String get ownerAddPropertyProofFormats => _ownerAddPropertyProofFormats.tr();
 
-  static const String _ownerAddPropertyProofAttached =
-      'owner_add_property_proof_attached';
-  static String get ownerAddPropertyProofAttached =>
-      _ownerAddPropertyProofAttached.tr();
+  static const String _ownerAddPropertyProofAttached = 'owner_add_property_proof_attached';
+  static String get ownerAddPropertyProofAttached => _ownerAddPropertyProofAttached.tr();
 
-  static const String _ownerAddPropertyProofInternal =
-      'owner_add_property_proof_internal';
-  static String get ownerAddPropertyProofInternal =>
-      _ownerAddPropertyProofInternal.tr();
+  static const String _ownerAddPropertyProofInternal = 'owner_add_property_proof_internal';
+  static String get ownerAddPropertyProofInternal => _ownerAddPropertyProofInternal.tr();
 
-  static const String _ownerAddPropertyProofPrivate =
-      'owner_add_property_proof_private';
-  static String get ownerAddPropertyProofPrivate =>
-      _ownerAddPropertyProofPrivate.tr();
+  static const String _ownerAddPropertyProofPrivate = 'owner_add_property_proof_private';
+  static String get ownerAddPropertyProofPrivate => _ownerAddPropertyProofPrivate.tr();
 
-  static const String _ownerAddPropertyProofPrivateContinuation =
-      'owner_add_property_proof_private_continuation';
-  static String get ownerAddPropertyProofPrivateContinuation =>
-      _ownerAddPropertyProofPrivateContinuation.tr();
+  static const String _ownerAddPropertyProofPrivateContinuation = 'owner_add_property_proof_private_continuation';
+  static String get ownerAddPropertyProofPrivateContinuation => _ownerAddPropertyProofPrivateContinuation.tr();
 
-  static const String _ownerAddPropertyPhotosProgress =
-      'owner_add_property_photos_progress';
-  static String get ownerAddPropertyPhotosProgress =>
-      _ownerAddPropertyPhotosProgress.tr();
+  static const String _ownerAddPropertyPhotosProgress = 'owner_add_property_photos_progress';
+  static String get ownerAddPropertyPhotosProgress => _ownerAddPropertyPhotosProgress.tr();
 
-  static const String _ownerAddPropertyNextVideo =
-      'owner_add_property_next_video';
-  static String get ownerAddPropertyNextVideo =>
-      _ownerAddPropertyNextVideo.tr();
+  static const String _ownerAddPropertyNextVideo = 'owner_add_property_next_video';
+  static String get ownerAddPropertyNextVideo => _ownerAddPropertyNextVideo.tr();
 
-  static const String _ownerAddPropertyPhotosReady =
-      'owner_add_property_photos_ready';
-  static String get ownerAddPropertyPhotosReady =>
-      _ownerAddPropertyPhotosReady.tr();
+  static const String _ownerAddPropertyPhotosReady = 'owner_add_property_photos_ready';
+  static String get ownerAddPropertyPhotosReady => _ownerAddPropertyPhotosReady.tr();
 
-  static const String _ownerAddPropertyPhotosReadyDescription =
-      'owner_add_property_photos_ready_description';
-  static String get ownerAddPropertyPhotosReadyDescription =>
-      _ownerAddPropertyPhotosReadyDescription.tr();
+  static const String _ownerAddPropertyPhotosReadyDescription = 'owner_add_property_photos_ready_description';
+  static String get ownerAddPropertyPhotosReadyDescription => _ownerAddPropertyPhotosReadyDescription.tr();
 
-  static const String _ownerAddPropertyPhotosRemaining =
-      'owner_add_property_photos_remaining';
-  static String get ownerAddPropertyPhotosRemaining =>
-      _ownerAddPropertyPhotosRemaining.tr();
+  static const String _ownerAddPropertyPhotosRemaining = 'owner_add_property_photos_remaining';
+  static String get ownerAddPropertyPhotosRemaining => _ownerAddPropertyPhotosRemaining.tr();
 
-  static const String _ownerAddPropertyPhotosCount =
-      'owner_add_property_photos_count';
-  static String get ownerAddPropertyPhotosCount =>
-      _ownerAddPropertyPhotosCount.tr();
+  static const String _ownerAddPropertyPhotosCount = 'owner_add_property_photos_count';
+  static String get ownerAddPropertyPhotosCount => _ownerAddPropertyPhotosCount.tr();
 
-  static const String _ownerAddPropertyPhotoMetadataRequired =
-      'owner_add_property_photo_metadata_required';
-  static String get ownerAddPropertyPhotoMetadataRequired =>
-      _ownerAddPropertyPhotoMetadataRequired.tr();
+  static const String _ownerAddPropertyPhotoMetadataRequired = 'owner_add_property_photo_metadata_required';
+  static String get ownerAddPropertyPhotoMetadataRequired => _ownerAddPropertyPhotoMetadataRequired.tr();
 
-  static const String _ownerAddPropertyPhotoNumber =
-      'owner_add_property_photo_number';
-  static String get ownerAddPropertyPhotoNumber =>
-      _ownerAddPropertyPhotoNumber.tr();
+  static const String _ownerAddPropertyPhotoNumber = 'owner_add_property_photo_number';
+  static String get ownerAddPropertyPhotoNumber => _ownerAddPropertyPhotoNumber.tr();
 
-  static const String _ownerAddPropertyPhotoName =
-      'owner_add_property_photo_name';
-  static String get ownerAddPropertyPhotoName =>
-      _ownerAddPropertyPhotoName.tr();
+  static const String _ownerAddPropertyPhotoName = 'owner_add_property_photo_name';
+  static String get ownerAddPropertyPhotoName => _ownerAddPropertyPhotoName.tr();
 
-  static const String _ownerAddPropertyPhotoNameHint =
-      'owner_add_property_photo_name_hint';
-  static String get ownerAddPropertyPhotoNameHint =>
-      _ownerAddPropertyPhotoNameHint.tr();
+  static const String _ownerAddPropertyPhotoNameHint = 'owner_add_property_photo_name_hint';
+  static String get ownerAddPropertyPhotoNameHint => _ownerAddPropertyPhotoNameHint.tr();
 
-  static const String _ownerAddPropertyPhotoNameRequired =
-      'owner_add_property_photo_name_required';
-  static String get ownerAddPropertyPhotoNameRequired =>
-      _ownerAddPropertyPhotoNameRequired.tr();
+  static const String _ownerAddPropertyPhotoNameRequired = 'owner_add_property_photo_name_required';
+  static String get ownerAddPropertyPhotoNameRequired => _ownerAddPropertyPhotoNameRequired.tr();
 
-  static const String _ownerAddPropertyPhotoDescription =
-      'owner_add_property_photo_description';
-  static String get ownerAddPropertyPhotoDescription =>
-      _ownerAddPropertyPhotoDescription.tr();
+  static const String _ownerAddPropertyPhotoDescription = 'owner_add_property_photo_description';
+  static String get ownerAddPropertyPhotoDescription => _ownerAddPropertyPhotoDescription.tr();
 
-  static const String _ownerAddPropertyPhotoDescriptionHint =
-      'owner_add_property_photo_description_hint';
-  static String get ownerAddPropertyPhotoDescriptionHint =>
-      _ownerAddPropertyPhotoDescriptionHint.tr();
+  static const String _ownerAddPropertyPhotoDescriptionHint = 'owner_add_property_photo_description_hint';
+  static String get ownerAddPropertyPhotoDescriptionHint => _ownerAddPropertyPhotoDescriptionHint.tr();
 
-  static const String _ownerAddPropertyPhotoDescriptionRequired =
-      'owner_add_property_photo_description_required';
-  static String get ownerAddPropertyPhotoDescriptionRequired =>
-      _ownerAddPropertyPhotoDescriptionRequired.tr();
+  static const String _ownerAddPropertyPhotoDescriptionRequired = 'owner_add_property_photo_description_required';
+  static String get ownerAddPropertyPhotoDescriptionRequired => _ownerAddPropertyPhotoDescriptionRequired.tr();
 
-  static const String _ownerAddPropertyExistingPhotoPreserved =
-      'owner_add_property_existing_photo_preserved';
-  static String get ownerAddPropertyExistingPhotoPreserved =>
-      _ownerAddPropertyExistingPhotoPreserved.tr();
+  static const String _ownerAddPropertyExistingPhotoPreserved = 'owner_add_property_existing_photo_preserved';
+  static String get ownerAddPropertyExistingPhotoPreserved => _ownerAddPropertyExistingPhotoPreserved.tr();
 
-  static const String _ownerAddPropertyPhotoTips =
-      'owner_add_property_photo_tips';
-  static String get ownerAddPropertyPhotoTips =>
-      _ownerAddPropertyPhotoTips.tr();
+  static const String _ownerAddPropertyPhotoTips = 'owner_add_property_photo_tips';
+  static String get ownerAddPropertyPhotoTips => _ownerAddPropertyPhotoTips.tr();
 
-  static const String _ownerAddPropertyPhotoTipRooms =
-      'owner_add_property_photo_tip_rooms';
-  static String get ownerAddPropertyPhotoTipRooms =>
-      _ownerAddPropertyPhotoTipRooms.tr();
+  static const String _ownerAddPropertyPhotoTipRooms = 'owner_add_property_photo_tip_rooms';
+  static String get ownerAddPropertyPhotoTipRooms => _ownerAddPropertyPhotoTipRooms.tr();
 
-  static const String _ownerAddPropertyPhotoTipLighting =
-      'owner_add_property_photo_tip_lighting';
-  static String get ownerAddPropertyPhotoTipLighting =>
-      _ownerAddPropertyPhotoTipLighting.tr();
+  static const String _ownerAddPropertyPhotoTipLighting = 'owner_add_property_photo_tip_lighting';
+  static String get ownerAddPropertyPhotoTipLighting => _ownerAddPropertyPhotoTipLighting.tr();
 
-  static const String _ownerAddPropertyPhotoTipPrivacy =
-      'owner_add_property_photo_tip_privacy';
-  static String get ownerAddPropertyPhotoTipPrivacy =>
-      _ownerAddPropertyPhotoTipPrivacy.tr();
+  static const String _ownerAddPropertyPhotoTipPrivacy = 'owner_add_property_photo_tip_privacy';
+  static String get ownerAddPropertyPhotoTipPrivacy => _ownerAddPropertyPhotoTipPrivacy.tr();
 
-  static const String _ownerAddPropertyPhotoTipLimits =
-      'owner_add_property_photo_tip_limits';
-  static String get ownerAddPropertyPhotoTipLimits =>
-      _ownerAddPropertyPhotoTipLimits.tr();
+  static const String _ownerAddPropertyPhotoTipLimits = 'owner_add_property_photo_tip_limits';
+  static String get ownerAddPropertyPhotoTipLimits => _ownerAddPropertyPhotoTipLimits.tr();
 
-  static const String _ownerAddPropertyPricingTitle =
-      'owner_add_property_pricing_title';
-  static String get ownerAddPropertyPricingTitle =>
-      _ownerAddPropertyPricingTitle.tr();
+  static const String _ownerAddPropertyPricingTitle = 'owner_add_property_pricing_title';
+  static String get ownerAddPropertyPricingTitle => _ownerAddPropertyPricingTitle.tr();
 
-  static const String _ownerAddPropertyPricingProgress =
-      'owner_add_property_pricing_progress';
-  static String get ownerAddPropertyPricingProgress =>
-      _ownerAddPropertyPricingProgress.tr();
+  static const String _ownerAddPropertyPricingProgress = 'owner_add_property_pricing_progress';
+  static String get ownerAddPropertyPricingProgress => _ownerAddPropertyPricingProgress.tr();
 
-  static const String _ownerAddPropertyNextExtra =
-      'owner_add_property_next_extra';
-  static String get ownerAddPropertyNextExtra =>
-      _ownerAddPropertyNextExtra.tr();
+  static const String _ownerAddPropertyNextExtra = 'owner_add_property_next_extra';
+  static String get ownerAddPropertyNextExtra => _ownerAddPropertyNextExtra.tr();
 
-  static const String _ownerAddPropertyAmenities =
-      'owner_add_property_amenities';
-  static String get ownerAddPropertyAmenities =>
-      _ownerAddPropertyAmenities.tr();
+  static const String _ownerAddPropertyAmenities = 'owner_add_property_amenities';
+  static String get ownerAddPropertyAmenities => _ownerAddPropertyAmenities.tr();
 
-  static const String _ownerAddPropertyPricingReady =
-      'owner_add_property_pricing_ready';
-  static String get ownerAddPropertyPricingReady =>
-      _ownerAddPropertyPricingReady.tr();
+  static const String _ownerAddPropertyPricingReady = 'owner_add_property_pricing_ready';
+  static String get ownerAddPropertyPricingReady => _ownerAddPropertyPricingReady.tr();
 
-  static const String _ownerAddPropertyPricingRequired =
-      'owner_add_property_pricing_required';
-  static String get ownerAddPropertyPricingRequired =>
-      _ownerAddPropertyPricingRequired.tr();
+  static const String _ownerAddPropertyPricingRequired = 'owner_add_property_pricing_required';
+  static String get ownerAddPropertyPricingRequired => _ownerAddPropertyPricingRequired.tr();
 
   static const String _ownerAddPropertyPrice = 'owner_add_property_price';
   static String get ownerAddPropertyPrice => _ownerAddPropertyPrice.tr();
@@ -3299,25 +2707,17 @@ abstract class LocaleKeys {
   static const String _ownerAddPropertyDeposit = 'owner_add_property_deposit';
   static String get ownerAddPropertyDeposit => _ownerAddPropertyDeposit.tr();
 
-  static const String _ownerAddPropertyRentalPeriod =
-      'owner_add_property_rental_period';
-  static String get ownerAddPropertyRentalPeriod =>
-      _ownerAddPropertyRentalPeriod.tr();
+  static const String _ownerAddPropertyRentalPeriod = 'owner_add_property_rental_period';
+  static String get ownerAddPropertyRentalPeriod => _ownerAddPropertyRentalPeriod.tr();
 
-  static const String _ownerAddPropertyMinimumRentalMonths =
-      'owner_add_property_minimum_rental_months';
-  static String get ownerAddPropertyMinimumRentalMonths =>
-      _ownerAddPropertyMinimumRentalMonths.tr();
+  static const String _ownerAddPropertyMinimumRentalMonths = 'owner_add_property_minimum_rental_months';
+  static String get ownerAddPropertyMinimumRentalMonths => _ownerAddPropertyMinimumRentalMonths.tr();
 
-  static const String _ownerAddPropertyPricePeriod =
-      'owner_add_property_price_period';
-  static String get ownerAddPropertyPricePeriod =>
-      _ownerAddPropertyPricePeriod.tr();
+  static const String _ownerAddPropertyPricePeriod = 'owner_add_property_price_period';
+  static String get ownerAddPropertyPricePeriod => _ownerAddPropertyPricePeriod.tr();
 
-  static const String _ownerAddPropertyPriceSummary =
-      'owner_add_property_price_summary';
-  static String get ownerAddPropertyPriceSummary =>
-      _ownerAddPropertyPriceSummary.tr();
+  static const String _ownerAddPropertyPriceSummary = 'owner_add_property_price_summary';
+  static String get ownerAddPropertyPriceSummary => _ownerAddPropertyPriceSummary.tr();
 
   static const String _ownerAddPropertyCount = 'owner_add_property_count';
   static String get ownerAddPropertyCount => _ownerAddPropertyCount.tr();
@@ -3325,30 +2725,20 @@ abstract class LocaleKeys {
   static const String _ownerAddPropertyUnit = 'owner_add_property_unit';
   static String get ownerAddPropertyUnit => _ownerAddPropertyUnit.tr();
 
-  static const String _ownerAddPropertyRentalSummary =
-      'owner_add_property_rental_summary';
-  static String get ownerAddPropertyRentalSummary =>
-      _ownerAddPropertyRentalSummary.tr();
+  static const String _ownerAddPropertyRentalSummary = 'owner_add_property_rental_summary';
+  static String get ownerAddPropertyRentalSummary => _ownerAddPropertyRentalSummary.tr();
 
-  static const String _ownerAddPropertyDescription =
-      'owner_add_property_description';
-  static String get ownerAddPropertyDescription =>
-      _ownerAddPropertyDescription.tr();
+  static const String _ownerAddPropertyDescription = 'owner_add_property_description';
+  static String get ownerAddPropertyDescription => _ownerAddPropertyDescription.tr();
 
-  static const String _ownerAddPropertyDescriptionLabel =
-      'owner_add_property_description_label';
-  static String get ownerAddPropertyDescriptionLabel =>
-      _ownerAddPropertyDescriptionLabel.tr();
+  static const String _ownerAddPropertyDescriptionLabel = 'owner_add_property_description_label';
+  static String get ownerAddPropertyDescriptionLabel => _ownerAddPropertyDescriptionLabel.tr();
 
-  static const String _ownerAddPropertyDescriptionHint =
-      'owner_add_property_description_hint';
-  static String get ownerAddPropertyDescriptionHint =>
-      _ownerAddPropertyDescriptionHint.tr();
+  static const String _ownerAddPropertyDescriptionHint = 'owner_add_property_description_hint';
+  static String get ownerAddPropertyDescriptionHint => _ownerAddPropertyDescriptionHint.tr();
 
-  static const String _ownerAddPropertyApartment =
-      'owner_add_property_apartment';
-  static String get ownerAddPropertyApartment =>
-      _ownerAddPropertyApartment.tr();
+  static const String _ownerAddPropertyApartment = 'owner_add_property_apartment';
+  static String get ownerAddPropertyApartment => _ownerAddPropertyApartment.tr();
 
   static const String _ownerAddPropertyRoom = 'owner_add_property_room';
   static String get ownerAddPropertyRoom => _ownerAddPropertyRoom.tr();
@@ -3359,32 +2749,23 @@ abstract class LocaleKeys {
   static const String _ownerAddPropertyVilla = 'owner_add_property_villa';
   static String get ownerAddPropertyVilla => _ownerAddPropertyVilla.tr();
 
-  static const String _ownerAddPropertyWholeFloor =
-      'owner_add_property_whole_floor';
-  static String get ownerAddPropertyWholeFloor =>
-      _ownerAddPropertyWholeFloor.tr();
+  static const String _ownerAddPropertyWholeFloor = 'owner_add_property_whole_floor';
+  static String get ownerAddPropertyWholeFloor => _ownerAddPropertyWholeFloor.tr();
 
   static const String _ownerAddPropertyRoof = 'owner_add_property_roof';
   static String get ownerAddPropertyRoof => _ownerAddPropertyRoof.tr();
 
-  static const String _ownerAddPropertyNoDeposit =
-      'owner_add_property_no_deposit';
-  static String get ownerAddPropertyNoDeposit =>
-      _ownerAddPropertyNoDeposit.tr();
+  static const String _ownerAddPropertyNoDeposit = 'owner_add_property_no_deposit';
+  static String get ownerAddPropertyNoDeposit => _ownerAddPropertyNoDeposit.tr();
 
-  static const String _ownerAddPropertyHalfMonth =
-      'owner_add_property_half_month';
-  static String get ownerAddPropertyHalfMonth =>
-      _ownerAddPropertyHalfMonth.tr();
+  static const String _ownerAddPropertyHalfMonth = 'owner_add_property_half_month';
+  static String get ownerAddPropertyHalfMonth => _ownerAddPropertyHalfMonth.tr();
 
-  static const String _ownerAddPropertyOneMonth =
-      'owner_add_property_one_month';
+  static const String _ownerAddPropertyOneMonth = 'owner_add_property_one_month';
   static String get ownerAddPropertyOneMonth => _ownerAddPropertyOneMonth.tr();
 
-  static const String _ownerAddPropertyTwoMonths =
-      'owner_add_property_two_months';
-  static String get ownerAddPropertyTwoMonths =>
-      _ownerAddPropertyTwoMonths.tr();
+  static const String _ownerAddPropertyTwoMonths = 'owner_add_property_two_months';
+  static String get ownerAddPropertyTwoMonths => _ownerAddPropertyTwoMonths.tr();
 
   static const String _ownerAddPropertyDay = 'owner_add_property_day';
   static String get ownerAddPropertyDay => _ownerAddPropertyDay.tr();
@@ -3401,10 +2782,8 @@ abstract class LocaleKeys {
   static const String _ownerAddPropertyWifi = 'owner_add_property_wifi';
   static String get ownerAddPropertyWifi => _ownerAddPropertyWifi.tr();
 
-  static const String _ownerAddPropertyFurnished =
-      'owner_add_property_furnished';
-  static String get ownerAddPropertyFurnished =>
-      _ownerAddPropertyFurnished.tr();
+  static const String _ownerAddPropertyFurnished = 'owner_add_property_furnished';
+  static String get ownerAddPropertyFurnished => _ownerAddPropertyFurnished.tr();
 
   static const String _ownerAddPropertyGarage = 'owner_add_property_garage';
   static String get ownerAddPropertyGarage => _ownerAddPropertyGarage.tr();
@@ -3418,64 +2797,44 @@ abstract class LocaleKeys {
   static const String _ownerAddPropertyBalcony = 'owner_add_property_balcony';
   static String get ownerAddPropertyBalcony => _ownerAddPropertyBalcony.tr();
 
-  static const String _ownerAddPropertyAirConditioning =
-      'owner_add_property_air_conditioning';
-  static String get ownerAddPropertyAirConditioning =>
-      _ownerAddPropertyAirConditioning.tr();
+  static const String _ownerAddPropertyAirConditioning = 'owner_add_property_air_conditioning';
+  static String get ownerAddPropertyAirConditioning => _ownerAddPropertyAirConditioning.tr();
 
-  static const String _ownerAddPropertyNaturalGas =
-      'owner_add_property_natural_gas';
-  static String get ownerAddPropertyNaturalGas =>
-      _ownerAddPropertyNaturalGas.tr();
+  static const String _ownerAddPropertyNaturalGas = 'owner_add_property_natural_gas';
+  static String get ownerAddPropertyNaturalGas => _ownerAddPropertyNaturalGas.tr();
 
-  static const String _ownerAddPropertyElectricityMeter =
-      'owner_add_property_electricity_meter';
-  static String get ownerAddPropertyElectricityMeter =>
-      _ownerAddPropertyElectricityMeter.tr();
+  static const String _ownerAddPropertyElectricityMeter = 'owner_add_property_electricity_meter';
+  static String get ownerAddPropertyElectricityMeter => _ownerAddPropertyElectricityMeter.tr();
 
-  static const String _ownerAddPropertyWaterMeter =
-      'owner_add_property_water_meter';
-  static String get ownerAddPropertyWaterMeter =>
-      _ownerAddPropertyWaterMeter.tr();
+  static const String _ownerAddPropertyWaterMeter = 'owner_add_property_water_meter';
+  static String get ownerAddPropertyWaterMeter => _ownerAddPropertyWaterMeter.tr();
 
-  static const String _ownerAddPropertyNearMetro =
-      'owner_add_property_near_metro';
-  static String get ownerAddPropertyNearMetro =>
-      _ownerAddPropertyNearMetro.tr();
+  static const String _ownerAddPropertyNearMetro = 'owner_add_property_near_metro';
+  static String get ownerAddPropertyNearMetro => _ownerAddPropertyNearMetro.tr();
 
   static const String _ownerAddPropertyAllowed = 'owner_add_property_allowed';
   static String get ownerAddPropertyAllowed => _ownerAddPropertyAllowed.tr();
 
-  static const String _ownerAddPropertyNotAllowed =
-      'owner_add_property_not_allowed';
-  static String get ownerAddPropertyNotAllowed =>
-      _ownerAddPropertyNotAllowed.tr();
+  static const String _ownerAddPropertyNotAllowed = 'owner_add_property_not_allowed';
+  static String get ownerAddPropertyNotAllowed => _ownerAddPropertyNotAllowed.tr();
 
-  static const String _ownerAddPropertyByAgreement =
-      'owner_add_property_by_agreement';
-  static String get ownerAddPropertyByAgreement =>
-      _ownerAddPropertyByAgreement.tr();
+  static const String _ownerAddPropertyByAgreement = 'owner_add_property_by_agreement';
+  static String get ownerAddPropertyByAgreement => _ownerAddPropertyByAgreement.tr();
 
   static const String _ownerAddPropertyEveryone = 'owner_add_property_everyone';
   static String get ownerAddPropertyEveryone => _ownerAddPropertyEveryone.tr();
 
-  static const String _ownerAddPropertyMalesOnly =
-      'owner_add_property_males_only';
-  static String get ownerAddPropertyMalesOnly =>
-      _ownerAddPropertyMalesOnly.tr();
+  static const String _ownerAddPropertyMalesOnly = 'owner_add_property_males_only';
+  static String get ownerAddPropertyMalesOnly => _ownerAddPropertyMalesOnly.tr();
 
-  static const String _ownerAddPropertyFemalesOnly =
-      'owner_add_property_females_only';
-  static String get ownerAddPropertyFemalesOnly =>
-      _ownerAddPropertyFemalesOnly.tr();
+  static const String _ownerAddPropertyFemalesOnly = 'owner_add_property_females_only';
+  static String get ownerAddPropertyFemalesOnly => _ownerAddPropertyFemalesOnly.tr();
 
   static const String _ownerAddPropertyFamilies = 'owner_add_property_families';
   static String get ownerAddPropertyFamilies => _ownerAddPropertyFamilies.tr();
 
-  static const String _ownerAddPropertyIndividuals =
-      'owner_add_property_individuals';
-  static String get ownerAddPropertyIndividuals =>
-      _ownerAddPropertyIndividuals.tr();
+  static const String _ownerAddPropertyIndividuals = 'owner_add_property_individuals';
+  static String get ownerAddPropertyIndividuals => _ownerAddPropertyIndividuals.tr();
 
   static const String _ownerAddPropertyShared = 'owner_add_property_shared';
   static String get ownerAddPropertyShared => _ownerAddPropertyShared.tr();
@@ -3483,55 +2842,35 @@ abstract class LocaleKeys {
   static const String _ownerAddPropertyStudents = 'owner_add_property_students';
   static String get ownerAddPropertyStudents => _ownerAddPropertyStudents.tr();
 
-  static const String _ownerAddPropertyFemaleStudents =
-      'owner_add_property_female_students';
-  static String get ownerAddPropertyFemaleStudents =>
-      _ownerAddPropertyFemaleStudents.tr();
+  static const String _ownerAddPropertyFemaleStudents = 'owner_add_property_female_students';
+  static String get ownerAddPropertyFemaleStudents => _ownerAddPropertyFemaleStudents.tr();
 
-  static const String _ownerAddPropertyAreaSummary =
-      'owner_add_property_area_summary';
-  static String get ownerAddPropertyAreaSummary =>
-      _ownerAddPropertyAreaSummary.tr();
+  static const String _ownerAddPropertyAreaSummary = 'owner_add_property_area_summary';
+  static String get ownerAddPropertyAreaSummary => _ownerAddPropertyAreaSummary.tr();
 
-  static const String _ownerAddPropertyPhotosSummary =
-      'owner_add_property_photos_summary';
-  static String get ownerAddPropertyPhotosSummary =>
-      _ownerAddPropertyPhotosSummary.tr();
+  static const String _ownerAddPropertyPhotosSummary = 'owner_add_property_photos_summary';
+  static String get ownerAddPropertyPhotosSummary => _ownerAddPropertyPhotosSummary.tr();
 
-  static const String _ownerAddPropertyVideoSummary =
-      'owner_add_property_video_summary';
-  static String get ownerAddPropertyVideoSummary =>
-      _ownerAddPropertyVideoSummary.tr();
+  static const String _ownerAddPropertyVideoSummary = 'owner_add_property_video_summary';
+  static String get ownerAddPropertyVideoSummary => _ownerAddPropertyVideoSummary.tr();
 
-  static const String _ownerAddPropertyProofSummary =
-      'owner_add_property_proof_summary';
-  static String get ownerAddPropertyProofSummary =>
-      _ownerAddPropertyProofSummary.tr();
+  static const String _ownerAddPropertyProofSummary = 'owner_add_property_proof_summary';
+  static String get ownerAddPropertyProofSummary => _ownerAddPropertyProofSummary.tr();
 
-  static const String _ownerAddPropertySubmittedAtSummary =
-      'owner_add_property_submitted_at_summary';
-  static String get ownerAddPropertySubmittedAtSummary =>
-      _ownerAddPropertySubmittedAtSummary.tr();
+  static const String _ownerAddPropertySubmittedAtSummary = 'owner_add_property_submitted_at_summary';
+  static String get ownerAddPropertySubmittedAtSummary => _ownerAddPropertySubmittedAtSummary.tr();
 
-  static const String _ownerAddPropertyMonthlyPrice =
-      'owner_add_property_monthly_price';
-  static String get ownerAddPropertyMonthlyPrice =>
-      _ownerAddPropertyMonthlyPrice.tr();
+  static const String _ownerAddPropertyMonthlyPrice = 'owner_add_property_monthly_price';
+  static String get ownerAddPropertyMonthlyPrice => _ownerAddPropertyMonthlyPrice.tr();
 
-  static const String _ownerAddPropertyPhotoCountSummary =
-      'owner_add_property_photo_count_summary';
-  static String get ownerAddPropertyPhotoCountSummary =>
-      _ownerAddPropertyPhotoCountSummary.tr();
+  static const String _ownerAddPropertyPhotoCountSummary = 'owner_add_property_photo_count_summary';
+  static String get ownerAddPropertyPhotoCountSummary => _ownerAddPropertyPhotoCountSummary.tr();
 
-  static const String _ownerAddPropertyVideoSkipped =
-      'owner_add_property_video_skipped';
-  static String get ownerAddPropertyVideoSkipped =>
-      _ownerAddPropertyVideoSkipped.tr();
+  static const String _ownerAddPropertyVideoSkipped = 'owner_add_property_video_skipped';
+  static String get ownerAddPropertyVideoSkipped => _ownerAddPropertyVideoSkipped.tr();
 
-  static const String _ownerAddPropertyVideoUploadedSummary =
-      'owner_add_property_video_uploaded_summary';
-  static String get ownerAddPropertyVideoUploadedSummary =>
-      _ownerAddPropertyVideoUploadedSummary.tr();
+  static const String _ownerAddPropertyVideoUploadedSummary = 'owner_add_property_video_uploaded_summary';
+  static String get ownerAddPropertyVideoUploadedSummary => _ownerAddPropertyVideoUploadedSummary.tr();
 
   static const String _ownerAddPropertyTodayAt = 'owner_add_property_today_at';
   static String get ownerAddPropertyTodayAt => _ownerAddPropertyTodayAt.tr();
@@ -3557,28 +2896,20 @@ abstract class LocaleKeys {
   static const String _ownerPropertiesOptions = 'owner_properties_options';
   static String get ownerPropertiesOptions => _ownerPropertiesOptions.tr();
 
-  static const String _ownerPropertiesEditProperty =
-      'owner_properties_edit_property';
-  static String get ownerPropertiesEditProperty =>
-      _ownerPropertiesEditProperty.tr();
+  static const String _ownerPropertiesEditProperty = 'owner_properties_edit_property';
+  static String get ownerPropertiesEditProperty => _ownerPropertiesEditProperty.tr();
 
   static const String _ownerPropertiesPause = 'owner_properties_pause';
   static String get ownerPropertiesPause => _ownerPropertiesPause.tr();
 
-  static const String _ownerPropertiesReactivate =
-      'owner_properties_reactivate';
-  static String get ownerPropertiesReactivate =>
-      _ownerPropertiesReactivate.tr();
+  static const String _ownerPropertiesReactivate = 'owner_properties_reactivate';
+  static String get ownerPropertiesReactivate => _ownerPropertiesReactivate.tr();
 
-  static const String _ownerPropertiesMarkRented =
-      'owner_properties_mark_rented';
-  static String get ownerPropertiesMarkRented =>
-      _ownerPropertiesMarkRented.tr();
+  static const String _ownerPropertiesMarkRented = 'owner_properties_mark_rented';
+  static String get ownerPropertiesMarkRented => _ownerPropertiesMarkRented.tr();
 
-  static const String _ownerPropertiesDeleteProperty =
-      'owner_properties_delete_property';
-  static String get ownerPropertiesDeleteProperty =>
-      _ownerPropertiesDeleteProperty.tr();
+  static const String _ownerPropertiesDeleteProperty = 'owner_properties_delete_property';
+  static String get ownerPropertiesDeleteProperty => _ownerPropertiesDeleteProperty.tr();
 
   static const String _ownerPropertiesPriceUnit = 'owner_properties_price_unit';
   static String get ownerPropertiesPriceUnit => _ownerPropertiesPriceUnit.tr();
@@ -3589,88 +2920,56 @@ abstract class LocaleKeys {
   static const String _ownerPropertiesVisitUnit = 'owner_properties_visit_unit';
   static String get ownerPropertiesVisitUnit => _ownerPropertiesVisitUnit.tr();
 
-  static const String _ownerPropertyStatusVerified =
-      'owner_property_status_verified';
-  static String get ownerPropertyStatusVerified =>
-      _ownerPropertyStatusVerified.tr();
+  static const String _ownerPropertyStatusVerified = 'owner_property_status_verified';
+  static String get ownerPropertyStatusVerified => _ownerPropertyStatusVerified.tr();
 
-  static const String _ownerPropertyStatusPending =
-      'owner_property_status_pending';
-  static String get ownerPropertyStatusPending =>
-      _ownerPropertyStatusPending.tr();
+  static const String _ownerPropertyStatusPending = 'owner_property_status_pending';
+  static String get ownerPropertyStatusPending => _ownerPropertyStatusPending.tr();
 
-  static const String _ownerPropertyStatusAccepted =
-      'owner_property_status_accepted';
-  static String get ownerPropertyStatusAccepted =>
-      _ownerPropertyStatusAccepted.tr();
+  static const String _ownerPropertyStatusAccepted = 'owner_property_status_accepted';
+  static String get ownerPropertyStatusAccepted => _ownerPropertyStatusAccepted.tr();
 
-  static const String _ownerPropertyStatusHidden =
-      'owner_property_status_hidden';
-  static String get ownerPropertyStatusHidden =>
-      _ownerPropertyStatusHidden.tr();
+  static const String _ownerPropertyStatusHidden = 'owner_property_status_hidden';
+  static String get ownerPropertyStatusHidden => _ownerPropertyStatusHidden.tr();
 
-  static const String _ownerPropertyStatusRejected =
-      'owner_property_status_rejected';
-  static String get ownerPropertyStatusRejected =>
-      _ownerPropertyStatusRejected.tr();
+  static const String _ownerPropertyStatusRejected = 'owner_property_status_rejected';
+  static String get ownerPropertyStatusRejected => _ownerPropertyStatusRejected.tr();
 
-  static const String _ownerPropertyStatusRented =
-      'owner_property_status_rented';
-  static String get ownerPropertyStatusRented =>
-      _ownerPropertyStatusRented.tr();
+  static const String _ownerPropertyStatusRented = 'owner_property_status_rented';
+  static String get ownerPropertyStatusRented => _ownerPropertyStatusRented.tr();
 
-  static const String _ownerPropertiesEmptyTitle =
-      'owner_properties_empty_title';
-  static String get ownerPropertiesEmptyTitle =>
-      _ownerPropertiesEmptyTitle.tr();
+  static const String _ownerPropertiesEmptyTitle = 'owner_properties_empty_title';
+  static String get ownerPropertiesEmptyTitle => _ownerPropertiesEmptyTitle.tr();
 
-  static const String _ownerPropertiesEmptyDescription =
-      'owner_properties_empty_description';
-  static String get ownerPropertiesEmptyDescription =>
-      _ownerPropertiesEmptyDescription.tr();
+  static const String _ownerPropertiesEmptyDescription = 'owner_properties_empty_description';
+  static String get ownerPropertiesEmptyDescription => _ownerPropertiesEmptyDescription.tr();
 
-  static const String _ownerPropertiesReviewEmptyTitle =
-      'owner_properties_review_empty_title';
-  static String get ownerPropertiesReviewEmptyTitle =>
-      _ownerPropertiesReviewEmptyTitle.tr();
+  static const String _ownerPropertiesReviewEmptyTitle = 'owner_properties_review_empty_title';
+  static String get ownerPropertiesReviewEmptyTitle => _ownerPropertiesReviewEmptyTitle.tr();
 
-  static const String _ownerPropertiesReviewEmptyDescription =
-      'owner_properties_review_empty_description';
-  static String get ownerPropertiesReviewEmptyDescription =>
-      _ownerPropertiesReviewEmptyDescription.tr();
+  static const String _ownerPropertiesReviewEmptyDescription = 'owner_properties_review_empty_description';
+  static String get ownerPropertiesReviewEmptyDescription => _ownerPropertiesReviewEmptyDescription.tr();
 
-  static const String _ownerPropertiesAcceptedEmptyTitle =
-      'owner_properties_accepted_empty_title';
-  static String get ownerPropertiesAcceptedEmptyTitle =>
-      _ownerPropertiesAcceptedEmptyTitle.tr();
+  static const String _ownerPropertiesAcceptedEmptyTitle = 'owner_properties_accepted_empty_title';
+  static String get ownerPropertiesAcceptedEmptyTitle => _ownerPropertiesAcceptedEmptyTitle.tr();
 
-  static const String _ownerPropertiesAcceptedEmptyDescription =
-      'owner_properties_accepted_empty_description';
-  static String get ownerPropertiesAcceptedEmptyDescription =>
-      _ownerPropertiesAcceptedEmptyDescription.tr();
+  static const String _ownerPropertiesAcceptedEmptyDescription = 'owner_properties_accepted_empty_description';
+  static String get ownerPropertiesAcceptedEmptyDescription => _ownerPropertiesAcceptedEmptyDescription.tr();
 
-  static const String _ownerPropertiesRejectedEmptyTitle =
-      'owner_properties_rejected_empty_title';
-  static String get ownerPropertiesRejectedEmptyTitle =>
-      _ownerPropertiesRejectedEmptyTitle.tr();
+  static const String _ownerPropertiesRejectedEmptyTitle = 'owner_properties_rejected_empty_title';
+  static String get ownerPropertiesRejectedEmptyTitle => _ownerPropertiesRejectedEmptyTitle.tr();
 
-  static const String _ownerPropertiesRejectedEmptyDescription =
-      'owner_properties_rejected_empty_description';
-  static String get ownerPropertiesRejectedEmptyDescription =>
-      _ownerPropertiesRejectedEmptyDescription.tr();
+  static const String _ownerPropertiesRejectedEmptyDescription = 'owner_properties_rejected_empty_description';
+  static String get ownerPropertiesRejectedEmptyDescription => _ownerPropertiesRejectedEmptyDescription.tr();
 
-  static const String _ownerPropertiesSubmittedMessage =
-      'owner_properties_submitted_message';
-  static String get ownerPropertiesSubmittedMessage =>
-      _ownerPropertiesSubmittedMessage.tr();
+  static const String _ownerPropertiesSubmittedMessage = 'owner_properties_submitted_message';
+  static String get ownerPropertiesSubmittedMessage => _ownerPropertiesSubmittedMessage.tr();
 
   static const String _ownerPropertiesSaved = 'owner_properties_saved';
   static String get ownerPropertiesSaved => _ownerPropertiesSaved.tr();
 
-  static const String _ownerPropertiesResubmitted =
-      'owner_properties_resubmitted';
-  static String get ownerPropertiesResubmitted =>
-      _ownerPropertiesResubmitted.tr();
+  static const String _ownerPropertiesResubmitted = 'owner_properties_resubmitted';
+  static String get ownerPropertiesResubmitted => _ownerPropertiesResubmitted.tr();
 
   static const String _ownerPropertiesEditTitle = 'owner_properties_edit_title';
   static String get ownerPropertiesEditTitle => _ownerPropertiesEditTitle.tr();
@@ -3687,58 +2986,38 @@ abstract class LocaleKeys {
   static const String _ownerPropertiesAddPhoto = 'owner_properties_add_photo';
   static String get ownerPropertiesAddPhoto => _ownerPropertiesAddPhoto.tr();
 
-  static const String _ownerPropertiesSaveChanges =
-      'owner_properties_save_changes';
-  static String get ownerPropertiesSaveChanges =>
-      _ownerPropertiesSaveChanges.tr();
+  static const String _ownerPropertiesSaveChanges = 'owner_properties_save_changes';
+  static String get ownerPropertiesSaveChanges => _ownerPropertiesSaveChanges.tr();
 
   static const String _ownerPropertyVideoTitle = 'owner_property_video_title';
   static String get ownerPropertyVideoTitle => _ownerPropertyVideoTitle.tr();
 
-  static const String _ownerPropertyVideoSubtitle =
-      'owner_property_video_subtitle';
-  static String get ownerPropertyVideoSubtitle =>
-      _ownerPropertyVideoSubtitle.tr();
+  static const String _ownerPropertyVideoSubtitle = 'owner_property_video_subtitle';
+  static String get ownerPropertyVideoSubtitle => _ownerPropertyVideoSubtitle.tr();
 
-  static const String _ownerPropertyVideoStepProgress =
-      'owner_property_video_step_progress';
-  static String get ownerPropertyVideoStepProgress =>
-      _ownerPropertyVideoStepProgress.tr();
+  static const String _ownerPropertyVideoStepProgress = 'owner_property_video_step_progress';
+  static String get ownerPropertyVideoStepProgress => _ownerPropertyVideoStepProgress.tr();
 
-  static const String _ownerPropertyVideoRequirements =
-      'owner_property_video_requirements';
-  static String get ownerPropertyVideoRequirements =>
-      _ownerPropertyVideoRequirements.tr();
+  static const String _ownerPropertyVideoRequirements = 'owner_property_video_requirements';
+  static String get ownerPropertyVideoRequirements => _ownerPropertyVideoRequirements.tr();
 
-  static const String _ownerPropertyVideoRequirementDuration =
-      'owner_property_video_requirement_duration';
-  static String get ownerPropertyVideoRequirementDuration =>
-      _ownerPropertyVideoRequirementDuration.tr();
+  static const String _ownerPropertyVideoRequirementDuration = 'owner_property_video_requirement_duration';
+  static String get ownerPropertyVideoRequirementDuration => _ownerPropertyVideoRequirementDuration.tr();
 
-  static const String _ownerPropertyVideoRequirementRooms =
-      'owner_property_video_requirement_rooms';
-  static String get ownerPropertyVideoRequirementRooms =>
-      _ownerPropertyVideoRequirementRooms.tr();
+  static const String _ownerPropertyVideoRequirementRooms = 'owner_property_video_requirement_rooms';
+  static String get ownerPropertyVideoRequirementRooms => _ownerPropertyVideoRequirementRooms.tr();
 
-  static const String _ownerPropertyVideoRequirementStable =
-      'owner_property_video_requirement_stable';
-  static String get ownerPropertyVideoRequirementStable =>
-      _ownerPropertyVideoRequirementStable.tr();
+  static const String _ownerPropertyVideoRequirementStable = 'owner_property_video_requirement_stable';
+  static String get ownerPropertyVideoRequirementStable => _ownerPropertyVideoRequirementStable.tr();
 
-  static const String _ownerPropertyVideoRequirementPrivacy =
-      'owner_property_video_requirement_privacy';
-  static String get ownerPropertyVideoRequirementPrivacy =>
-      _ownerPropertyVideoRequirementPrivacy.tr();
+  static const String _ownerPropertyVideoRequirementPrivacy = 'owner_property_video_requirement_privacy';
+  static String get ownerPropertyVideoRequirementPrivacy => _ownerPropertyVideoRequirementPrivacy.tr();
 
-  static const String _ownerPropertyVideoMaximumDuration =
-      'owner_property_video_maximum_duration';
-  static String get ownerPropertyVideoMaximumDuration =>
-      _ownerPropertyVideoMaximumDuration.tr();
+  static const String _ownerPropertyVideoMaximumDuration = 'owner_property_video_maximum_duration';
+  static String get ownerPropertyVideoMaximumDuration => _ownerPropertyVideoMaximumDuration.tr();
 
-  static const String _ownerPropertyVideoUploadOrRecord =
-      'owner_property_video_upload_or_record';
-  static String get ownerPropertyVideoUploadOrRecord =>
-      _ownerPropertyVideoUploadOrRecord.tr();
+  static const String _ownerPropertyVideoUploadOrRecord = 'owner_property_video_upload_or_record';
+  static String get ownerPropertyVideoUploadOrRecord => _ownerPropertyVideoUploadOrRecord.tr();
 
   static const String _ownerPropertyVideoRecord = 'owner_property_video_record';
   static String get ownerPropertyVideoRecord => _ownerPropertyVideoRecord.tr();
@@ -3746,15 +3025,11 @@ abstract class LocaleKeys {
   static const String _ownerPropertyVideoUpload = 'owner_property_video_upload';
   static String get ownerPropertyVideoUpload => _ownerPropertyVideoUpload.tr();
 
-  static const String _ownerPropertyVideoPreparing =
-      'owner_property_video_preparing';
-  static String get ownerPropertyVideoPreparing =>
-      _ownerPropertyVideoPreparing.tr();
+  static const String _ownerPropertyVideoPreparing = 'owner_property_video_preparing';
+  static String get ownerPropertyVideoPreparing => _ownerPropertyVideoPreparing.tr();
 
-  static const String _ownerPropertyVideoUploaded =
-      'owner_property_video_uploaded';
-  static String get ownerPropertyVideoUploaded =>
-      _ownerPropertyVideoUploaded.tr();
+  static const String _ownerPropertyVideoUploaded = 'owner_property_video_uploaded';
+  static String get ownerPropertyVideoUploaded => _ownerPropertyVideoUploaded.tr();
 
   static const String _ownerPropertyVideoChange = 'owner_property_video_change';
   static String get ownerPropertyVideoChange => _ownerPropertyVideoChange.tr();
@@ -3765,81 +3040,53 @@ abstract class LocaleKeys {
   static const String _ownerPropertyVideoFailed = 'owner_property_video_failed';
   static String get ownerPropertyVideoFailed => _ownerPropertyVideoFailed.tr();
 
-  static const String _ownerPropertyVideoPrivacyHint =
-      'owner_property_video_privacy_hint';
-  static String get ownerPropertyVideoPrivacyHint =>
-      _ownerPropertyVideoPrivacyHint.tr();
+  static const String _ownerPropertyVideoPrivacyHint = 'owner_property_video_privacy_hint';
+  static String get ownerPropertyVideoPrivacyHint => _ownerPropertyVideoPrivacyHint.tr();
 
-  static const String _ownerPropertyVideoNextPricing =
-      'owner_property_video_next_pricing';
-  static String get ownerPropertyVideoNextPricing =>
-      _ownerPropertyVideoNextPricing.tr();
+  static const String _ownerPropertyVideoNextPricing = 'owner_property_video_next_pricing';
+  static String get ownerPropertyVideoNextPricing => _ownerPropertyVideoNextPricing.tr();
 
   static const String _ownerPropertyVideoSkip = 'owner_property_video_skip';
   static String get ownerPropertyVideoSkip => _ownerPropertyVideoSkip.tr();
 
-  static const String _ownerPropertySubmittedStatus =
-      'owner_property_submitted_status';
-  static String get ownerPropertySubmittedStatus =>
-      _ownerPropertySubmittedStatus.tr();
+  static const String _ownerPropertySubmittedStatus = 'owner_property_submitted_status';
+  static String get ownerPropertySubmittedStatus => _ownerPropertySubmittedStatus.tr();
 
-  static const String _ownerPropertySubmittedTitle =
-      'owner_property_submitted_title';
-  static String get ownerPropertySubmittedTitle =>
-      _ownerPropertySubmittedTitle.tr();
+  static const String _ownerPropertySubmittedTitle = 'owner_property_submitted_title';
+  static String get ownerPropertySubmittedTitle => _ownerPropertySubmittedTitle.tr();
 
-  static const String _ownerPropertySubmittedDescription =
-      'owner_property_submitted_description';
-  static String get ownerPropertySubmittedDescription =>
-      _ownerPropertySubmittedDescription.tr();
+  static const String _ownerPropertySubmittedDescription = 'owner_property_submitted_description';
+  static String get ownerPropertySubmittedDescription => _ownerPropertySubmittedDescription.tr();
 
-  static const String _ownerPropertySubmittedViewProperties =
-      'owner_property_submitted_view_properties';
-  static String get ownerPropertySubmittedViewProperties =>
-      _ownerPropertySubmittedViewProperties.tr();
+  static const String _ownerPropertySubmittedViewProperties = 'owner_property_submitted_view_properties';
+  static String get ownerPropertySubmittedViewProperties => _ownerPropertySubmittedViewProperties.tr();
 
-  static const String _ownerPropertySubmittedAddAnother =
-      'owner_property_submitted_add_another';
-  static String get ownerPropertySubmittedAddAnother =>
-      _ownerPropertySubmittedAddAnother.tr();
+  static const String _ownerPropertySubmittedAddAnother = 'owner_property_submitted_add_another';
+  static String get ownerPropertySubmittedAddAnother => _ownerPropertySubmittedAddAnother.tr();
 
-  static const String _ownerPropertyNasrCityTitle =
-      'owner_property_nasr_city_title';
-  static String get ownerPropertyNasrCityTitle =>
-      _ownerPropertyNasrCityTitle.tr();
+  static const String _ownerPropertyNasrCityTitle = 'owner_property_nasr_city_title';
+  static String get ownerPropertyNasrCityTitle => _ownerPropertyNasrCityTitle.tr();
 
   static const String _ownerPropertyStudioTitle = 'owner_property_studio_title';
   static String get ownerPropertyStudioTitle => _ownerPropertyStudioTitle.tr();
 
-  static const String _ownerPropertyMohandessinTitle =
-      'owner_property_mohandessin_title';
-  static String get ownerPropertyMohandessinTitle =>
-      _ownerPropertyMohandessinTitle.tr();
+  static const String _ownerPropertyMohandessinTitle = 'owner_property_mohandessin_title';
+  static String get ownerPropertyMohandessinTitle => _ownerPropertyMohandessinTitle.tr();
 
-  static const String _ownerPropertyRejectionTitle =
-      'owner_property_rejection_title';
-  static String get ownerPropertyRejectionTitle =>
-      _ownerPropertyRejectionTitle.tr();
+  static const String _ownerPropertyRejectionTitle = 'owner_property_rejection_title';
+  static String get ownerPropertyRejectionTitle => _ownerPropertyRejectionTitle.tr();
 
-  static const String _ownerPropertyRejectedHeadline =
-      'owner_property_rejected_headline';
-  static String get ownerPropertyRejectedHeadline =>
-      _ownerPropertyRejectedHeadline.tr();
+  static const String _ownerPropertyRejectedHeadline = 'owner_property_rejected_headline';
+  static String get ownerPropertyRejectedHeadline => _ownerPropertyRejectedHeadline.tr();
 
-  static const String _ownerPropertyRejectionDetailsUnavailable =
-      'owner_property_rejection_details_unavailable';
-  static String get ownerPropertyRejectionDetailsUnavailable =>
-      _ownerPropertyRejectionDetailsUnavailable.tr();
+  static const String _ownerPropertyRejectionDetailsUnavailable = 'owner_property_rejection_details_unavailable';
+  static String get ownerPropertyRejectionDetailsUnavailable => _ownerPropertyRejectionDetailsUnavailable.tr();
 
-  static const String _ownerPropertyRejectionWarning =
-      'owner_property_rejection_warning';
-  static String get ownerPropertyRejectionWarning =>
-      _ownerPropertyRejectionWarning.tr();
+  static const String _ownerPropertyRejectionWarning = 'owner_property_rejection_warning';
+  static String get ownerPropertyRejectionWarning => _ownerPropertyRejectionWarning.tr();
 
-  static const String _ownerPropertyEditAndResubmit =
-      'owner_property_edit_and_resubmit';
-  static String get ownerPropertyEditAndResubmit =>
-      _ownerPropertyEditAndResubmit.tr();
+  static const String _ownerPropertyEditAndResubmit = 'owner_property_edit_and_resubmit';
+  static String get ownerPropertyEditAndResubmit => _ownerPropertyEditAndResubmit.tr();
 
   static const String _ownerAnalyticsTitle = 'owner_analytics_title';
   static String get ownerAnalyticsTitle => _ownerAnalyticsTitle.tr();
@@ -3850,56 +3097,38 @@ abstract class LocaleKeys {
   static const String _ownerAnalyticsViews = 'owner_analytics_views';
   static String get ownerAnalyticsViews => _ownerAnalyticsViews.tr();
 
-  static const String _ownerAnalyticsVisitRequests =
-      'owner_analytics_visit_requests';
-  static String get ownerAnalyticsVisitRequests =>
-      _ownerAnalyticsVisitRequests.tr();
+  static const String _ownerAnalyticsVisitRequests = 'owner_analytics_visit_requests';
+  static String get ownerAnalyticsVisitRequests => _ownerAnalyticsVisitRequests.tr();
 
   static const String _ownerAnalyticsSaved = 'owner_analytics_saved';
   static String get ownerAnalyticsSaved => _ownerAnalyticsSaved.tr();
 
-  static const String _ownerAnalyticsAcceptanceRate =
-      'owner_analytics_acceptance_rate';
-  static String get ownerAnalyticsAcceptanceRate =>
-      _ownerAnalyticsAcceptanceRate.tr();
+  static const String _ownerAnalyticsAcceptanceRate = 'owner_analytics_acceptance_rate';
+  static String get ownerAnalyticsAcceptanceRate => _ownerAnalyticsAcceptanceRate.tr();
 
-  static const String _ownerAnalyticsViewsLastFourteenDays =
-      'owner_analytics_views_last_fourteen_days';
-  static String get ownerAnalyticsViewsLastFourteenDays =>
-      _ownerAnalyticsViewsLastFourteenDays.tr();
+  static const String _ownerAnalyticsViewsLastFourteenDays = 'owner_analytics_views_last_fourteen_days';
+  static String get ownerAnalyticsViewsLastFourteenDays => _ownerAnalyticsViewsLastFourteenDays.tr();
 
-  static const String _ownerAnalyticsFourteenDaysAgo =
-      'owner_analytics_fourteen_days_ago';
-  static String get ownerAnalyticsFourteenDaysAgo =>
-      _ownerAnalyticsFourteenDaysAgo.tr();
+  static const String _ownerAnalyticsFourteenDaysAgo = 'owner_analytics_fourteen_days_ago';
+  static String get ownerAnalyticsFourteenDaysAgo => _ownerAnalyticsFourteenDaysAgo.tr();
 
   static const String _ownerAnalyticsToday = 'owner_analytics_today';
   static String get ownerAnalyticsToday => _ownerAnalyticsToday.tr();
 
-  static const String _ownerAnalyticsTopInterests =
-      'owner_analytics_top_interests';
-  static String get ownerAnalyticsTopInterests =>
-      _ownerAnalyticsTopInterests.tr();
+  static const String _ownerAnalyticsTopInterests = 'owner_analytics_top_interests';
+  static String get ownerAnalyticsTopInterests => _ownerAnalyticsTopInterests.tr();
 
-  static const String _ownerAnalyticsInterestArea =
-      'owner_analytics_interest_area';
-  static String get ownerAnalyticsInterestArea =>
-      _ownerAnalyticsInterestArea.tr();
+  static const String _ownerAnalyticsInterestArea = 'owner_analytics_interest_area';
+  static String get ownerAnalyticsInterestArea => _ownerAnalyticsInterestArea.tr();
 
-  static const String _ownerAnalyticsInterestPrice =
-      'owner_analytics_interest_price';
-  static String get ownerAnalyticsInterestPrice =>
-      _ownerAnalyticsInterestPrice.tr();
+  static const String _ownerAnalyticsInterestPrice = 'owner_analytics_interest_price';
+  static String get ownerAnalyticsInterestPrice => _ownerAnalyticsInterestPrice.tr();
 
-  static const String _ownerAnalyticsInterestLocation =
-      'owner_analytics_interest_location';
-  static String get ownerAnalyticsInterestLocation =>
-      _ownerAnalyticsInterestLocation.tr();
+  static const String _ownerAnalyticsInterestLocation = 'owner_analytics_interest_location';
+  static String get ownerAnalyticsInterestLocation => _ownerAnalyticsInterestLocation.tr();
 
-  static const String _ownerAnalyticsInterestAmenities =
-      'owner_analytics_interest_amenities';
-  static String get ownerAnalyticsInterestAmenities =>
-      _ownerAnalyticsInterestAmenities.tr();
+  static const String _ownerAnalyticsInterestAmenities = 'owner_analytics_interest_amenities';
+  static String get ownerAnalyticsInterestAmenities => _ownerAnalyticsInterestAmenities.tr();
 
   static const String _ownerRevenueTitle = 'owner_revenue_title';
   static String get ownerRevenueTitle => _ownerRevenueTitle.tr();
@@ -3913,10 +3142,8 @@ abstract class LocaleKeys {
   static const String _ownerRevenueProperties = 'owner_revenue_properties';
   static String get ownerRevenueProperties => _ownerRevenueProperties.tr();
 
-  static const String _ownerRevenueLatestTransactions =
-      'owner_revenue_latest_transactions';
-  static String get ownerRevenueLatestTransactions =>
-      _ownerRevenueLatestTransactions.tr();
+  static const String _ownerRevenueLatestTransactions = 'owner_revenue_latest_transactions';
+  static String get ownerRevenueLatestTransactions => _ownerRevenueLatestTransactions.tr();
 
   static const String _ownerRevenuePaid = 'owner_revenue_paid';
   static String get ownerRevenuePaid => _ownerRevenuePaid.tr();
@@ -3927,63 +3154,44 @@ abstract class LocaleKeys {
   static const String _ownerRevenueLate = 'owner_revenue_late';
   static String get ownerRevenueLate => _ownerRevenueLate.tr();
 
-  static const String _tenantHomeSuggestedForYou =
-      'tenant_home_suggested_for_you';
-  static String get tenantHomeSuggestedForYou =>
-      _tenantHomeSuggestedForYou.tr();
+  static const String _tenantHomeSuggestedForYou = 'tenant_home_suggested_for_you';
+  static String get tenantHomeSuggestedForYou => _tenantHomeSuggestedForYou.tr();
 
   static const String _tenantHomeViewAll = 'tenant_home_view_all';
   static String get tenantHomeViewAll => _tenantHomeViewAll.tr();
 
-  static const String _tenantHomeSearchAreaHint =
-      'tenant_home_search_area_hint';
+  static const String _tenantHomeSearchAreaHint = 'tenant_home_search_area_hint';
   static String get tenantHomeSearchAreaHint => _tenantHomeSearchAreaHint.tr();
 
   static const String _tenantHomeEmptyTitle = 'tenant_home_empty_title';
   static String get tenantHomeEmptyTitle => _tenantHomeEmptyTitle.tr();
 
-  static const String _tenantHomeEmptyDescription =
-      'tenant_home_empty_description';
-  static String get tenantHomeEmptyDescription =>
-      _tenantHomeEmptyDescription.tr();
+  static const String _tenantHomeEmptyDescription = 'tenant_home_empty_description';
+  static String get tenantHomeEmptyDescription => _tenantHomeEmptyDescription.tr();
 
   static const String _tenantSearchTitle = 'tenant_search_title';
   static String get tenantSearchTitle => _tenantSearchTitle.tr();
 
-  static const String _tenantSearchSuggestedAreas =
-      'tenant_search_suggested_areas';
-  static String get tenantSearchSuggestedAreas =>
-      _tenantSearchSuggestedAreas.tr();
+  static const String _tenantSearchSuggestedAreas = 'tenant_search_suggested_areas';
+  static String get tenantSearchSuggestedAreas => _tenantSearchSuggestedAreas.tr();
 
-  static const String _tenantSearchSelectPropertyType =
-      'tenant_search_select_property_type';
-  static String get tenantSearchSelectPropertyType =>
-      _tenantSearchSelectPropertyType.tr();
+  static const String _tenantSearchSelectPropertyType = 'tenant_search_select_property_type';
+  static String get tenantSearchSelectPropertyType => _tenantSearchSelectPropertyType.tr();
 
-  static const String _tenantSearchNoAvailablePlaces =
-      'tenant_search_no_available_places';
-  static String get tenantSearchNoAvailablePlaces =>
-      _tenantSearchNoAvailablePlaces.tr();
+  static const String _tenantSearchNoAvailablePlaces = 'tenant_search_no_available_places';
+  static String get tenantSearchNoAvailablePlaces => _tenantSearchNoAvailablePlaces.tr();
 
-  static const String _tenantSearchAvailablePlacesEmptyDescription =
-      'tenant_search_available_places_empty_description';
-  static String get tenantSearchAvailablePlacesEmptyDescription =>
-      _tenantSearchAvailablePlacesEmptyDescription.tr();
+  static const String _tenantSearchAvailablePlacesEmptyDescription = 'tenant_search_available_places_empty_description';
+  static String get tenantSearchAvailablePlacesEmptyDescription => _tenantSearchAvailablePlacesEmptyDescription.tr();
 
-  static const String _tenantSearchPropertyTypesEmptyTitle =
-      'tenant_search_property_types_empty_title';
-  static String get tenantSearchPropertyTypesEmptyTitle =>
-      _tenantSearchPropertyTypesEmptyTitle.tr();
+  static const String _tenantSearchPropertyTypesEmptyTitle = 'tenant_search_property_types_empty_title';
+  static String get tenantSearchPropertyTypesEmptyTitle => _tenantSearchPropertyTypesEmptyTitle.tr();
 
-  static const String _tenantSearchPropertyTypesEmptyDescription =
-      'tenant_search_property_types_empty_description';
-  static String get tenantSearchPropertyTypesEmptyDescription =>
-      _tenantSearchPropertyTypesEmptyDescription.tr();
+  static const String _tenantSearchPropertyTypesEmptyDescription = 'tenant_search_property_types_empty_description';
+  static String get tenantSearchPropertyTypesEmptyDescription => _tenantSearchPropertyTypesEmptyDescription.tr();
 
-  static const String _tenantSearchRecentSearches =
-      'tenant_search_recent_searches';
-  static String get tenantSearchRecentSearches =>
-      _tenantSearchRecentSearches.tr();
+  static const String _tenantSearchRecentSearches = 'tenant_search_recent_searches';
+  static String get tenantSearchRecentSearches => _tenantSearchRecentSearches.tr();
 
   static const String _tenantSearchFieldHint = 'tenant_search_field_hint';
   static String get tenantSearchFieldHint => _tenantSearchFieldHint.tr();
@@ -3997,25 +3205,17 @@ abstract class LocaleKeys {
   static const String _tenantSearchResultsCount = 'tenant_search_results_count';
   static String get tenantSearchResultsCount => _tenantSearchResultsCount.tr();
 
-  static const String _tenantSearchResultsEmptyTitle =
-      'tenant_search_results_empty_title';
-  static String get tenantSearchResultsEmptyTitle =>
-      _tenantSearchResultsEmptyTitle.tr();
+  static const String _tenantSearchResultsEmptyTitle = 'tenant_search_results_empty_title';
+  static String get tenantSearchResultsEmptyTitle => _tenantSearchResultsEmptyTitle.tr();
 
-  static const String _tenantSearchResultsEmptyDescription =
-      'tenant_search_results_empty_description';
-  static String get tenantSearchResultsEmptyDescription =>
-      _tenantSearchResultsEmptyDescription.tr();
+  static const String _tenantSearchResultsEmptyDescription = 'tenant_search_results_empty_description';
+  static String get tenantSearchResultsEmptyDescription => _tenantSearchResultsEmptyDescription.tr();
 
-  static const String _tenantSearchResultsResetSearch =
-      'tenant_search_results_reset_search';
-  static String get tenantSearchResultsResetSearch =>
-      _tenantSearchResultsResetSearch.tr();
+  static const String _tenantSearchResultsResetSearch = 'tenant_search_results_reset_search';
+  static String get tenantSearchResultsResetSearch => _tenantSearchResultsResetSearch.tr();
 
-  static const String _tenantSearchResultsClearAll =
-      'tenant_search_results_clear_all';
-  static String get tenantSearchResultsClearAll =>
-      _tenantSearchResultsClearAll.tr();
+  static const String _tenantSearchResultsClearAll = 'tenant_search_results_clear_all';
+  static String get tenantSearchResultsClearAll => _tenantSearchResultsClearAll.tr();
 
   static const String _tenantSearchResultsBeds = 'tenant_search_results_beds';
   static String get tenantSearchResultsBeds => _tenantSearchResultsBeds.tr();
@@ -4023,163 +3223,101 @@ abstract class LocaleKeys {
   static const String _tenantSearchResultsBaths = 'tenant_search_results_baths';
   static String get tenantSearchResultsBaths => _tenantSearchResultsBaths.tr();
 
-  static const String _tenantSearchResultsSquareMeters =
-      'tenant_search_results_square_meters';
-  static String get tenantSearchResultsSquareMeters =>
-      _tenantSearchResultsSquareMeters.tr();
+  static const String _tenantSearchResultsSquareMeters = 'tenant_search_results_square_meters';
+  static String get tenantSearchResultsSquareMeters => _tenantSearchResultsSquareMeters.tr();
 
-  static const String _tenantPropertyDetailsShareTitle =
-      'tenant_property_details_share_title';
-  static String get tenantPropertyDetailsShareTitle =>
-      _tenantPropertyDetailsShareTitle.tr();
+  static const String _tenantPropertyDetailsShareTitle = 'tenant_property_details_share_title';
+  static String get tenantPropertyDetailsShareTitle => _tenantPropertyDetailsShareTitle.tr();
 
-  static const String _tenantPropertyDetailsCopyLink =
-      'tenant_property_details_copy_link';
-  static String get tenantPropertyDetailsCopyLink =>
-      _tenantPropertyDetailsCopyLink.tr();
+  static const String _tenantPropertyDetailsCopyLink = 'tenant_property_details_copy_link';
+  static String get tenantPropertyDetailsCopyLink => _tenantPropertyDetailsCopyLink.tr();
 
-  static const String _tenantPropertyDetailsLinkCopied =
-      'tenant_property_details_link_copied';
-  static String get tenantPropertyDetailsLinkCopied =>
-      _tenantPropertyDetailsLinkCopied.tr();
+  static const String _tenantPropertyDetailsLinkCopied = 'tenant_property_details_link_copied';
+  static String get tenantPropertyDetailsLinkCopied => _tenantPropertyDetailsLinkCopied.tr();
 
-  static const String _tenantPropertyDetailsShare =
-      'tenant_property_details_share';
-  static String get tenantPropertyDetailsShare =>
-      _tenantPropertyDetailsShare.tr();
+  static const String _tenantPropertyDetailsShare = 'tenant_property_details_share';
+  static String get tenantPropertyDetailsShare => _tenantPropertyDetailsShare.tr();
 
-  static const String _tenantPropertyDetailsDescription =
-      'tenant_property_details_description';
-  static String get tenantPropertyDetailsDescription =>
-      _tenantPropertyDetailsDescription.tr();
+  static const String _tenantPropertyDetailsDescription = 'tenant_property_details_description';
+  static String get tenantPropertyDetailsDescription => _tenantPropertyDetailsDescription.tr();
 
-  static const String _tenantPropertyDetailsAmenities =
-      'tenant_property_details_amenities';
-  static String get tenantPropertyDetailsAmenities =>
-      _tenantPropertyDetailsAmenities.tr();
+  static const String _tenantPropertyDetailsAmenities = 'tenant_property_details_amenities';
+  static String get tenantPropertyDetailsAmenities => _tenantPropertyDetailsAmenities.tr();
 
-  static const String _tenantPropertyDetailsOwnershipVerified =
-      'tenant_property_details_ownership_verified';
-  static String get tenantPropertyDetailsOwnershipVerified =>
-      _tenantPropertyDetailsOwnershipVerified.tr();
+  static const String _tenantPropertyDetailsOwnershipVerified = 'tenant_property_details_ownership_verified';
+  static String get tenantPropertyDetailsOwnershipVerified => _tenantPropertyDetailsOwnershipVerified.tr();
 
-  static const String _tenantPropertyDetailsPhonePrivacy =
-      'tenant_property_details_phone_privacy';
-  static String get tenantPropertyDetailsPhonePrivacy =>
-      _tenantPropertyDetailsPhonePrivacy.tr();
+  static const String _tenantPropertyDetailsPhonePrivacy = 'tenant_property_details_phone_privacy';
+  static String get tenantPropertyDetailsPhonePrivacy => _tenantPropertyDetailsPhonePrivacy.tr();
 
-  static const String _tenantPropertyDetailsFurnished =
-      'tenant_property_details_furnished';
-  static String get tenantPropertyDetailsFurnished =>
-      _tenantPropertyDetailsFurnished.tr();
+  static const String _tenantPropertyDetailsFurnished = 'tenant_property_details_furnished';
+  static String get tenantPropertyDetailsFurnished => _tenantPropertyDetailsFurnished.tr();
 
-  static const String _tenantPropertyDetailsMonthlyPriceUnit =
-      'tenant_property_details_monthly_price_unit';
-  static String get tenantPropertyDetailsMonthlyPriceUnit =>
-      _tenantPropertyDetailsMonthlyPriceUnit.tr();
+  static const String _tenantPropertyDetailsMonthlyPriceUnit = 'tenant_property_details_monthly_price_unit';
+  static String get tenantPropertyDetailsMonthlyPriceUnit => _tenantPropertyDetailsMonthlyPriceUnit.tr();
 
-  static const String _tenantPropertyDetailsDailyPriceUnit =
-      'tenant_property_details_daily_price_unit';
-  static String get tenantPropertyDetailsDailyPriceUnit =>
-      _tenantPropertyDetailsDailyPriceUnit.tr();
+  static const String _tenantPropertyDetailsDailyPriceUnit = 'tenant_property_details_daily_price_unit';
+  static String get tenantPropertyDetailsDailyPriceUnit => _tenantPropertyDetailsDailyPriceUnit.tr();
 
-  static const String _tenantPropertyDetailsWeeklyPriceUnit =
-      'tenant_property_details_weekly_price_unit';
-  static String get tenantPropertyDetailsWeeklyPriceUnit =>
-      _tenantPropertyDetailsWeeklyPriceUnit.tr();
+  static const String _tenantPropertyDetailsWeeklyPriceUnit = 'tenant_property_details_weekly_price_unit';
+  static String get tenantPropertyDetailsWeeklyPriceUnit => _tenantPropertyDetailsWeeklyPriceUnit.tr();
 
-  static const String _tenantPropertyDetailsYearlyPriceUnit =
-      'tenant_property_details_yearly_price_unit';
-  static String get tenantPropertyDetailsYearlyPriceUnit =>
-      _tenantPropertyDetailsYearlyPriceUnit.tr();
+  static const String _tenantPropertyDetailsYearlyPriceUnit = 'tenant_property_details_yearly_price_unit';
+  static String get tenantPropertyDetailsYearlyPriceUnit => _tenantPropertyDetailsYearlyPriceUnit.tr();
 
-  static const String _tenantPropertyDetailsDuplex =
-      'tenant_property_details_duplex';
-  static String get tenantPropertyDetailsDuplex =>
-      _tenantPropertyDetailsDuplex.tr();
+  static const String _tenantPropertyDetailsDuplex = 'tenant_property_details_duplex';
+  static String get tenantPropertyDetailsDuplex => _tenantPropertyDetailsDuplex.tr();
 
-  static const String _tenantPropertyDetailsApproximateLocation =
-      'tenant_property_details_approximate_location';
-  static String get tenantPropertyDetailsApproximateLocation =>
-      _tenantPropertyDetailsApproximateLocation.tr();
+  static const String _tenantPropertyDetailsApproximateLocation = 'tenant_property_details_approximate_location';
+  static String get tenantPropertyDetailsApproximateLocation => _tenantPropertyDetailsApproximateLocation.tr();
 
-  static const String _tenantPropertyDetailsMainPhoto =
-      'tenant_property_details_main_photo';
-  static String get tenantPropertyDetailsMainPhoto =>
-      _tenantPropertyDetailsMainPhoto.tr();
+  static const String _tenantPropertyDetailsMainPhoto = 'tenant_property_details_main_photo';
+  static String get tenantPropertyDetailsMainPhoto => _tenantPropertyDetailsMainPhoto.tr();
 
-  static const String _tenantPropertyDetailsRentalMonths =
-      'tenant_property_details_rental_months';
-  static String get tenantPropertyDetailsRentalMonths =>
-      _tenantPropertyDetailsRentalMonths.tr();
+  static const String _tenantPropertyDetailsRentalMonths = 'tenant_property_details_rental_months';
+  static String get tenantPropertyDetailsRentalMonths => _tenantPropertyDetailsRentalMonths.tr();
 
-  static const String _tenantPropertyDetailsVerifiedOwner =
-      'tenant_property_details_verified_owner';
-  static String get tenantPropertyDetailsVerifiedOwner =>
-      _tenantPropertyDetailsVerifiedOwner.tr();
+  static const String _tenantPropertyDetailsVerifiedOwner = 'tenant_property_details_verified_owner';
+  static String get tenantPropertyDetailsVerifiedOwner => _tenantPropertyDetailsVerifiedOwner.tr();
 
-  static const String _tenantPropertyDetailsOwner =
-      'tenant_property_details_owner';
-  static String get tenantPropertyDetailsOwner =>
-      _tenantPropertyDetailsOwner.tr();
+  static const String _tenantPropertyDetailsOwner = 'tenant_property_details_owner';
+  static String get tenantPropertyDetailsOwner => _tenantPropertyDetailsOwner.tr();
 
-  static const String _tenantPropertyDetailsPhotoCountUnit =
-      'tenant_property_details_photo_count_unit';
-  static String get tenantPropertyDetailsPhotoCountUnit =>
-      _tenantPropertyDetailsPhotoCountUnit.tr();
+  static const String _tenantPropertyDetailsPhotoCountUnit = 'tenant_property_details_photo_count_unit';
+  static String get tenantPropertyDetailsPhotoCountUnit => _tenantPropertyDetailsPhotoCountUnit.tr();
 
-  static const String _tenantPropertyDetailsRentalDetails =
-      'tenant_property_details_rental_details';
-  static String get tenantPropertyDetailsRentalDetails =>
-      _tenantPropertyDetailsRentalDetails.tr();
+  static const String _tenantPropertyDetailsRentalDetails = 'tenant_property_details_rental_details';
+  static String get tenantPropertyDetailsRentalDetails => _tenantPropertyDetailsRentalDetails.tr();
 
-  static const String _tenantPropertyDetailsSmokingAllowed =
-      'tenant_property_details_smoking_allowed';
-  static String get tenantPropertyDetailsSmokingAllowed =>
-      _tenantPropertyDetailsSmokingAllowed.tr();
+  static const String _tenantPropertyDetailsSmokingAllowed = 'tenant_property_details_smoking_allowed';
+  static String get tenantPropertyDetailsSmokingAllowed => _tenantPropertyDetailsSmokingAllowed.tr();
 
-  static const String _tenantPropertyDetailsSmokingPolicy =
-      'tenant_property_details_smoking_policy';
-  static String get tenantPropertyDetailsSmokingPolicy =>
-      _tenantPropertyDetailsSmokingPolicy.tr();
+  static const String _tenantPropertyDetailsSmokingPolicy = 'tenant_property_details_smoking_policy';
+  static String get tenantPropertyDetailsSmokingPolicy => _tenantPropertyDetailsSmokingPolicy.tr();
 
-  static const String _tenantPropertyDetailsSmokingNotAllowed =
-      'tenant_property_details_smoking_not_allowed';
-  static String get tenantPropertyDetailsSmokingNotAllowed =>
-      _tenantPropertyDetailsSmokingNotAllowed.tr();
+  static const String _tenantPropertyDetailsSmokingNotAllowed = 'tenant_property_details_smoking_not_allowed';
+  static String get tenantPropertyDetailsSmokingNotAllowed => _tenantPropertyDetailsSmokingNotAllowed.tr();
 
-  static const String _tenantPropertyDetailsBuildingYear =
-      'tenant_property_details_building_year';
-  static String get tenantPropertyDetailsBuildingYear =>
-      _tenantPropertyDetailsBuildingYear.tr();
+  static const String _tenantPropertyDetailsBuildingYear = 'tenant_property_details_building_year';
+  static String get tenantPropertyDetailsBuildingYear => _tenantPropertyDetailsBuildingYear.tr();
 
-  static const String _tenantPropertyDetailsDeposit =
-      'tenant_property_details_deposit';
-  static String get tenantPropertyDetailsDeposit =>
-      _tenantPropertyDetailsDeposit.tr();
+  static const String _tenantPropertyDetailsDeposit = 'tenant_property_details_deposit';
+  static String get tenantPropertyDetailsDeposit => _tenantPropertyDetailsDeposit.tr();
 
-  static const String _tenantPropertyPhotosEmpty =
-      'tenant_property_photos_empty';
-  static String get tenantPropertyPhotosEmpty =>
-      _tenantPropertyPhotosEmpty.tr();
+  static const String _tenantPropertyPhotosEmpty = 'tenant_property_photos_empty';
+  static String get tenantPropertyPhotosEmpty => _tenantPropertyPhotosEmpty.tr();
 
-  static const String _tenantPropertyPhotosPrevious =
-      'tenant_property_photos_previous';
-  static String get tenantPropertyPhotosPrevious =>
-      _tenantPropertyPhotosPrevious.tr();
+  static const String _tenantPropertyPhotosPrevious = 'tenant_property_photos_previous';
+  static String get tenantPropertyPhotosPrevious => _tenantPropertyPhotosPrevious.tr();
 
   static const String _tenantPropertyPhotosNext = 'tenant_property_photos_next';
   static String get tenantPropertyPhotosNext => _tenantPropertyPhotosNext.tr();
 
-  static const String _tenantPropertyPhotosClose =
-      'tenant_property_photos_close';
-  static String get tenantPropertyPhotosClose =>
-      _tenantPropertyPhotosClose.tr();
+  static const String _tenantPropertyPhotosClose = 'tenant_property_photos_close';
+  static String get tenantPropertyPhotosClose => _tenantPropertyPhotosClose.tr();
 
-  static const String _ownerCalendarDayVisitCount =
-      'owner_calendar_day_visit_count';
-  static String get ownerCalendarDayVisitCount =>
-      _ownerCalendarDayVisitCount.tr();
+  static const String _ownerCalendarDayVisitCount = 'owner_calendar_day_visit_count';
+  static String get ownerCalendarDayVisitCount => _ownerCalendarDayVisitCount.tr();
 
   static const String _tenantFilterTitle = 'tenant_filter_title';
   static String get tenantFilterTitle => _tenantFilterTitle.tr();
@@ -4220,10 +3358,8 @@ abstract class LocaleKeys {
   static const String _tenantFilterTo = 'tenant_filter_to';
   static String get tenantFilterTo => _tenantFilterTo.tr();
 
-  static const String _tenantFilterPropertyDetails =
-      'tenant_filter_property_details';
-  static String get tenantFilterPropertyDetails =>
-      _tenantFilterPropertyDetails.tr();
+  static const String _tenantFilterPropertyDetails = 'tenant_filter_property_details';
+  static String get tenantFilterPropertyDetails => _tenantFilterPropertyDetails.tr();
 
   static const String _tenantFilterBedrooms = 'tenant_filter_bedrooms';
   static String get tenantFilterBedrooms => _tenantFilterBedrooms.tr();
@@ -4273,10 +3409,8 @@ abstract class LocaleKeys {
   static const String _tenantFilterBalcony = 'tenant_filter_balcony';
   static String get tenantFilterBalcony => _tenantFilterBalcony.tr();
 
-  static const String _tenantFilterAirConditioning =
-      'tenant_filter_air_conditioning';
-  static String get tenantFilterAirConditioning =>
-      _tenantFilterAirConditioning.tr();
+  static const String _tenantFilterAirConditioning = 'tenant_filter_air_conditioning';
+  static String get tenantFilterAirConditioning => _tenantFilterAirConditioning.tr();
 
   static const String _tenantFilterNearMetro = 'tenant_filter_near_metro';
   static String get tenantFilterNearMetro => _tenantFilterNearMetro.tr();
@@ -4284,10 +3418,8 @@ abstract class LocaleKeys {
   static const String _tenantFilterNaturalGas = 'tenant_filter_natural_gas';
   static String get tenantFilterNaturalGas => _tenantFilterNaturalGas.tr();
 
-  static const String _tenantFilterElectricityMeter =
-      'tenant_filter_electricity_meter';
-  static String get tenantFilterElectricityMeter =>
-      _tenantFilterElectricityMeter.tr();
+  static const String _tenantFilterElectricityMeter = 'tenant_filter_electricity_meter';
+  static String get tenantFilterElectricityMeter => _tenantFilterElectricityMeter.tr();
 
   static const String _tenantFilterWaterMeter = 'tenant_filter_water_meter';
   static String get tenantFilterWaterMeter => _tenantFilterWaterMeter.tr();
@@ -4313,10 +3445,8 @@ abstract class LocaleKeys {
   static const String _profileTenantMemberSince = 'profile_tenant_member_since';
   static String get profileTenantMemberSince => _profileTenantMemberSince.tr();
 
-  static const String _profileTenantSummaryMemberSince =
-      'profile_tenant_summary_member_since';
-  static String get profileTenantSummaryMemberSince =>
-      _profileTenantSummaryMemberSince.tr();
+  static const String _profileTenantSummaryMemberSince = 'profile_tenant_summary_member_since';
+  static String get profileTenantSummaryMemberSince => _profileTenantSummaryMemberSince.tr();
 
   static const String _profileOwnerMemberSince = 'profile_owner_member_since';
   static String get profileOwnerMemberSince => _profileOwnerMemberSince.tr();
@@ -4345,10 +3475,8 @@ abstract class LocaleKeys {
   static const String _profileContracts = 'profile_contracts';
   static String get profileContracts => _profileContracts.tr();
 
-  static const String _profileActiveContractCount =
-      'profile_active_contract_count';
-  static String get profileActiveContractCount =>
-      _profileActiveContractCount.tr();
+  static const String _profileActiveContractCount = 'profile_active_contract_count';
+  static String get profileActiveContractCount => _profileActiveContractCount.tr();
 
   static const String _profileMyReviews = 'profile_my_reviews';
   static String get profileMyReviews => _profileMyReviews.tr();
@@ -4380,15 +3508,11 @@ abstract class LocaleKeys {
   static const String _profileVisitHistory = 'profile_visit_history';
   static String get profileVisitHistory => _profileVisitHistory.tr();
 
-  static const String _profileIdentityVerification =
-      'profile_identity_verification';
-  static String get profileIdentityVerification =>
-      _profileIdentityVerification.tr();
+  static const String _profileIdentityVerification = 'profile_identity_verification';
+  static String get profileIdentityVerification => _profileIdentityVerification.tr();
 
-  static const String _profileOwnerRatingSummary =
-      'profile_owner_rating_summary';
-  static String get profileOwnerRatingSummary =>
-      _profileOwnerRatingSummary.tr();
+  static const String _profileOwnerRatingSummary = 'profile_owner_rating_summary';
+  static String get profileOwnerRatingSummary => _profileOwnerRatingSummary.tr();
 
   static const String _profileOwnerPhonePrivacy = 'profile_owner_phone_privacy';
   static String get profileOwnerPhonePrivacy => _profileOwnerPhonePrivacy.tr();
@@ -4399,15 +3523,11 @@ abstract class LocaleKeys {
   static const String _profileNoReviewsTitle = 'profile_no_reviews_title';
   static String get profileNoReviewsTitle => _profileNoReviewsTitle.tr();
 
-  static const String _profileNoReviewsDescription =
-      'profile_no_reviews_description';
-  static String get profileNoReviewsDescription =>
-      _profileNoReviewsDescription.tr();
+  static const String _profileNoReviewsDescription = 'profile_no_reviews_description';
+  static String get profileNoReviewsDescription => _profileNoReviewsDescription.tr();
 
-  static const String _profileViewPersonalProfile =
-      'profile_view_personal_profile';
-  static String get profileViewPersonalProfile =>
-      _profileViewPersonalProfile.tr();
+  static const String _profileViewPersonalProfile = 'profile_view_personal_profile';
+  static String get profileViewPersonalProfile => _profileViewPersonalProfile.tr();
 
   static const String _profileAccountAndProfile = 'profile_account_and_profile';
   static String get profileAccountAndProfile => _profileAccountAndProfile.tr();
@@ -4415,20 +3535,14 @@ abstract class LocaleKeys {
   static const String _profileMyProfile = 'profile_my_profile';
   static String get profileMyProfile => _profileMyProfile.tr();
 
-  static const String _profileVerificationDocuments =
-      'profile_verification_documents';
-  static String get profileVerificationDocuments =>
-      _profileVerificationDocuments.tr();
+  static const String _profileVerificationDocuments = 'profile_verification_documents';
+  static String get profileVerificationDocuments => _profileVerificationDocuments.tr();
 
-  static const String _profilePropertyManagement =
-      'profile_property_management';
-  static String get profilePropertyManagement =>
-      _profilePropertyManagement.tr();
+  static const String _profilePropertyManagement = 'profile_property_management';
+  static String get profilePropertyManagement => _profilePropertyManagement.tr();
 
-  static const String _profileAnalyticsStatistics =
-      'profile_analytics_statistics';
-  static String get profileAnalyticsStatistics =>
-      _profileAnalyticsStatistics.tr();
+  static const String _profileAnalyticsStatistics = 'profile_analytics_statistics';
+  static String get profileAnalyticsStatistics => _profileAnalyticsStatistics.tr();
 
   static const String _profileSupport = 'profile_support';
   static String get profileSupport => _profileSupport.tr();
@@ -4451,20 +3565,14 @@ abstract class LocaleKeys {
   static const String _profileChangePhoto = 'profile_change_photo';
   static String get profileChangePhoto => _profileChangePhoto.tr();
 
-  static const String _profileEditLoadingDetails =
-      'profile_edit_loading_details';
-  static String get profileEditLoadingDetails =>
-      _profileEditLoadingDetails.tr();
+  static const String _profileEditLoadingDetails = 'profile_edit_loading_details';
+  static String get profileEditLoadingDetails => _profileEditLoadingDetails.tr();
 
-  static const String _profileEditDetailsUnavailable =
-      'profile_edit_details_unavailable';
-  static String get profileEditDetailsUnavailable =>
-      _profileEditDetailsUnavailable.tr();
+  static const String _profileEditDetailsUnavailable = 'profile_edit_details_unavailable';
+  static String get profileEditDetailsUnavailable => _profileEditDetailsUnavailable.tr();
 
-  static const String _profileEditKnownDetailsHint =
-      'profile_edit_known_details_hint';
-  static String get profileEditKnownDetailsHint =>
-      _profileEditKnownDetailsHint.tr();
+  static const String _profileEditKnownDetailsHint = 'profile_edit_known_details_hint';
+  static String get profileEditKnownDetailsHint => _profileEditKnownDetailsHint.tr();
 
   static const String _profileBirthDate = 'profile_birth_date';
   static String get profileBirthDate => _profileBirthDate.tr();
@@ -4481,33 +3589,23 @@ abstract class LocaleKeys {
   static const String _tenantPropertyPhotoSave = 'tenant_property_photo_save';
   static String get tenantPropertyPhotoSave => _tenantPropertyPhotoSave.tr();
 
-  static const String _tenantPropertyPhotoSaving =
-      'tenant_property_photo_saving';
-  static String get tenantPropertyPhotoSaving =>
-      _tenantPropertyPhotoSaving.tr();
+  static const String _tenantPropertyPhotoSaving = 'tenant_property_photo_saving';
+  static String get tenantPropertyPhotoSaving => _tenantPropertyPhotoSaving.tr();
 
   static const String _tenantPropertyPhotoSaved = 'tenant_property_photo_saved';
   static String get tenantPropertyPhotoSaved => _tenantPropertyPhotoSaved.tr();
 
-  static const String _tenantPropertyPhotoPermissionDenied =
-      'tenant_property_photo_permission_denied';
-  static String get tenantPropertyPhotoPermissionDenied =>
-      _tenantPropertyPhotoPermissionDenied.tr();
+  static const String _tenantPropertyPhotoPermissionDenied = 'tenant_property_photo_permission_denied';
+  static String get tenantPropertyPhotoPermissionDenied => _tenantPropertyPhotoPermissionDenied.tr();
 
-  static const String _tenantPropertyPhotoStorageFull =
-      'tenant_property_photo_storage_full';
-  static String get tenantPropertyPhotoStorageFull =>
-      _tenantPropertyPhotoStorageFull.tr();
+  static const String _tenantPropertyPhotoStorageFull = 'tenant_property_photo_storage_full';
+  static String get tenantPropertyPhotoStorageFull => _tenantPropertyPhotoStorageFull.tr();
 
-  static const String _tenantPropertyPhotoUnsupportedFormat =
-      'tenant_property_photo_unsupported_format';
-  static String get tenantPropertyPhotoUnsupportedFormat =>
-      _tenantPropertyPhotoUnsupportedFormat.tr();
+  static const String _tenantPropertyPhotoUnsupportedFormat = 'tenant_property_photo_unsupported_format';
+  static String get tenantPropertyPhotoUnsupportedFormat => _tenantPropertyPhotoUnsupportedFormat.tr();
 
-  static const String _tenantPropertyPhotoSaveFailed =
-      'tenant_property_photo_save_failed';
-  static String get tenantPropertyPhotoSaveFailed =>
-      _tenantPropertyPhotoSaveFailed.tr();
+  static const String _tenantPropertyPhotoSaveFailed = 'tenant_property_photo_save_failed';
+  static String get tenantPropertyPhotoSaveFailed => _tenantPropertyPhotoSaveFailed.tr();
 
   static const String _permissionNotNow = 'permission_not_now';
   static String get permissionNotNow => _permissionNotNow.tr();
@@ -4515,73 +3613,47 @@ abstract class LocaleKeys {
   static const String _locationPermissionTitle = 'location_permission_title';
   static String get locationPermissionTitle => _locationPermissionTitle.tr();
 
-  static const String _locationPermissionDescription =
-      'location_permission_description';
-  static String get locationPermissionDescription =>
-      _locationPermissionDescription.tr();
+  static const String _locationPermissionDescription = 'location_permission_description';
+  static String get locationPermissionDescription => _locationPermissionDescription.tr();
 
-  static const String _locationPermissionNearbyTitle =
-      'location_permission_nearby_title';
-  static String get locationPermissionNearbyTitle =>
-      _locationPermissionNearbyTitle.tr();
+  static const String _locationPermissionNearbyTitle = 'location_permission_nearby_title';
+  static String get locationPermissionNearbyTitle => _locationPermissionNearbyTitle.tr();
 
-  static const String _locationPermissionNearbyDescription =
-      'location_permission_nearby_description';
-  static String get locationPermissionNearbyDescription =>
-      _locationPermissionNearbyDescription.tr();
+  static const String _locationPermissionNearbyDescription = 'location_permission_nearby_description';
+  static String get locationPermissionNearbyDescription => _locationPermissionNearbyDescription.tr();
 
-  static const String _locationPermissionMapTitle =
-      'location_permission_map_title';
-  static String get locationPermissionMapTitle =>
-      _locationPermissionMapTitle.tr();
+  static const String _locationPermissionMapTitle = 'location_permission_map_title';
+  static String get locationPermissionMapTitle => _locationPermissionMapTitle.tr();
 
-  static const String _locationPermissionMapDescription =
-      'location_permission_map_description';
-  static String get locationPermissionMapDescription =>
-      _locationPermissionMapDescription.tr();
+  static const String _locationPermissionMapDescription = 'location_permission_map_description';
+  static String get locationPermissionMapDescription => _locationPermissionMapDescription.tr();
 
   static const String _locationPermissionAllow = 'location_permission_allow';
   static String get locationPermissionAllow => _locationPermissionAllow.tr();
 
-  static const String _notificationPermissionTitle =
-      'notification_permission_title';
-  static String get notificationPermissionTitle =>
-      _notificationPermissionTitle.tr();
+  static const String _notificationPermissionTitle = 'notification_permission_title';
+  static String get notificationPermissionTitle => _notificationPermissionTitle.tr();
 
-  static const String _notificationPermissionDescription =
-      'notification_permission_description';
-  static String get notificationPermissionDescription =>
-      _notificationPermissionDescription.tr();
+  static const String _notificationPermissionDescription = 'notification_permission_description';
+  static String get notificationPermissionDescription => _notificationPermissionDescription.tr();
 
-  static const String _notificationPermissionVisitsTitle =
-      'notification_permission_visits_title';
-  static String get notificationPermissionVisitsTitle =>
-      _notificationPermissionVisitsTitle.tr();
+  static const String _notificationPermissionVisitsTitle = 'notification_permission_visits_title';
+  static String get notificationPermissionVisitsTitle => _notificationPermissionVisitsTitle.tr();
 
-  static const String _notificationPermissionVisitsDescription =
-      'notification_permission_visits_description';
-  static String get notificationPermissionVisitsDescription =>
-      _notificationPermissionVisitsDescription.tr();
+  static const String _notificationPermissionVisitsDescription = 'notification_permission_visits_description';
+  static String get notificationPermissionVisitsDescription => _notificationPermissionVisitsDescription.tr();
 
-  static const String _notificationPermissionMessagesTitle =
-      'notification_permission_messages_title';
-  static String get notificationPermissionMessagesTitle =>
-      _notificationPermissionMessagesTitle.tr();
+  static const String _notificationPermissionMessagesTitle = 'notification_permission_messages_title';
+  static String get notificationPermissionMessagesTitle => _notificationPermissionMessagesTitle.tr();
 
-  static const String _notificationPermissionMessagesDescription =
-      'notification_permission_messages_description';
-  static String get notificationPermissionMessagesDescription =>
-      _notificationPermissionMessagesDescription.tr();
+  static const String _notificationPermissionMessagesDescription = 'notification_permission_messages_description';
+  static String get notificationPermissionMessagesDescription => _notificationPermissionMessagesDescription.tr();
 
-  static const String _notificationPermissionPropertiesTitle =
-      'notification_permission_properties_title';
-  static String get notificationPermissionPropertiesTitle =>
-      _notificationPermissionPropertiesTitle.tr();
+  static const String _notificationPermissionPropertiesTitle = 'notification_permission_properties_title';
+  static String get notificationPermissionPropertiesTitle => _notificationPermissionPropertiesTitle.tr();
 
-  static const String _notificationPermissionPropertiesDescription =
-      'notification_permission_properties_description';
-  static String get notificationPermissionPropertiesDescription =>
-      _notificationPermissionPropertiesDescription.tr();
+  static const String _notificationPermissionPropertiesDescription = 'notification_permission_properties_description';
+  static String get notificationPermissionPropertiesDescription => _notificationPermissionPropertiesDescription.tr();
 
   static const String _permissionSettingsTitle = 'permission_settings_title';
   static String get permissionSettingsTitle => _permissionSettingsTitle.tr();
@@ -4589,15 +3661,11 @@ abstract class LocaleKeys {
   static const String _permissionOpenSettings = 'permission_open_settings';
   static String get permissionOpenSettings => _permissionOpenSettings.tr();
 
-  static const String _notificationPermissionBlocked =
-      'notification_permission_blocked';
-  static String get notificationPermissionBlocked =>
-      _notificationPermissionBlocked.tr();
+  static const String _notificationPermissionBlocked = 'notification_permission_blocked';
+  static String get notificationPermissionBlocked => _notificationPermissionBlocked.tr();
 
-  static const String _locationPermissionBlocked =
-      'location_permission_blocked';
-  static String get locationPermissionBlocked =>
-      _locationPermissionBlocked.tr();
+  static const String _locationPermissionBlocked = 'location_permission_blocked';
+  static String get locationPermissionBlocked => _locationPermissionBlocked.tr();
 
   static const String _permissionRestricted = 'permission_restricted';
   static String get permissionRestricted => _permissionRestricted.tr();
@@ -4608,23 +3676,17 @@ abstract class LocaleKeys {
   static const String _permissionUnavailable = 'permission_unavailable';
   static String get permissionUnavailable => _permissionUnavailable.tr();
 
-  static const String _permissionSettingsUnavailable =
-      'permission_settings_unavailable';
-  static String get permissionSettingsUnavailable =>
-      _permissionSettingsUnavailable.tr();
+  static const String _permissionSettingsUnavailable = 'permission_settings_unavailable';
+  static String get permissionSettingsUnavailable => _permissionSettingsUnavailable.tr();
 
   static const String _deviceNotificationsTitle = 'device_notifications_title';
   static String get deviceNotificationsTitle => _deviceNotificationsTitle.tr();
 
-  static const String _deviceNotificationsEnabled =
-      'device_notifications_enabled';
-  static String get deviceNotificationsEnabled =>
-      _deviceNotificationsEnabled.tr();
+  static const String _deviceNotificationsEnabled = 'device_notifications_enabled';
+  static String get deviceNotificationsEnabled => _deviceNotificationsEnabled.tr();
 
-  static const String _deviceNotificationsDisabled =
-      'device_notifications_disabled';
-  static String get deviceNotificationsDisabled =>
-      _deviceNotificationsDisabled.tr();
+  static const String _deviceNotificationsDisabled = 'device_notifications_disabled';
+  static String get deviceNotificationsDisabled => _deviceNotificationsDisabled.tr();
 
   static const String _useMyLocation = 'use_my_location';
   static String get useMyLocation => _useMyLocation.tr();
@@ -4635,10 +3697,8 @@ abstract class LocaleKeys {
   static const String _locationServicesDisabled = 'location_services_disabled';
   static String get locationServicesDisabled => _locationServicesDisabled.tr();
 
-  static const String _currentLocationUnavailable =
-      'current_location_unavailable';
-  static String get currentLocationUnavailable =>
-      _currentLocationUnavailable.tr();
+  static const String _currentLocationUnavailable = 'current_location_unavailable';
+  static String get currentLocationUnavailable => _currentLocationUnavailable.tr();
 
   static const String _clearSearchHistory = 'clear_search_history';
   static String get clearSearchHistory => _clearSearchHistory.tr();
@@ -4670,20 +3730,14 @@ abstract class LocaleKeys {
   static const String _ownerPropertyReviewHint = 'owner_property_review_hint';
   static String get ownerPropertyReviewHint => _ownerPropertyReviewHint.tr();
 
-  static const String _ownerPropertyReviewAction =
-      'owner_property_review_action';
-  static String get ownerPropertyReviewAction =>
-      _ownerPropertyReviewAction.tr();
+  static const String _ownerPropertyReviewAction = 'owner_property_review_action';
+  static String get ownerPropertyReviewAction => _ownerPropertyReviewAction.tr();
 
-  static const String _ownerPropertyReviewBasics =
-      'owner_property_review_basics';
-  static String get ownerPropertyReviewBasics =>
-      _ownerPropertyReviewBasics.tr();
+  static const String _ownerPropertyReviewBasics = 'owner_property_review_basics';
+  static String get ownerPropertyReviewBasics => _ownerPropertyReviewBasics.tr();
 
-  static const String _ownerPropertyReviewAdditional =
-      'owner_property_review_additional';
-  static String get ownerPropertyReviewAdditional =>
-      _ownerPropertyReviewAdditional.tr();
+  static const String _ownerPropertyReviewAdditional = 'owner_property_review_additional';
+  static String get ownerPropertyReviewAdditional => _ownerPropertyReviewAdditional.tr();
 
   static const String _visitPropertyLocation = 'visit_property_location';
   static String get visitPropertyLocation => _visitPropertyLocation.tr();
@@ -4706,41 +3760,29 @@ abstract class LocaleKeys {
   static const String _propertyReviewsTitle = 'property_reviews_title';
   static String get propertyReviewsTitle => _propertyReviewsTitle.tr();
 
-  static const String _propertyReviewsViewAction =
-      'property_reviews_view_action';
-  static String get propertyReviewsViewAction =>
-      _propertyReviewsViewAction.tr();
+  static const String _propertyReviewsViewAction = 'property_reviews_view_action';
+  static String get propertyReviewsViewAction => _propertyReviewsViewAction.tr();
 
   static const String _propertyReviewsVisitHint = 'property_reviews_visit_hint';
   static String get propertyReviewsVisitHint => _propertyReviewsVisitHint.tr();
 
-  static const String _propertyReviewsCountLabel =
-      'property_reviews_count_label';
-  static String get propertyReviewsCountLabel =>
-      _propertyReviewsCountLabel.tr();
+  static const String _propertyReviewsCountLabel = 'property_reviews_count_label';
+  static String get propertyReviewsCountLabel => _propertyReviewsCountLabel.tr();
 
-  static const String _propertyReviewsScoreLabel =
-      'property_reviews_score_label';
-  static String get propertyReviewsScoreLabel =>
-      _propertyReviewsScoreLabel.tr();
+  static const String _propertyReviewsScoreLabel = 'property_reviews_score_label';
+  static String get propertyReviewsScoreLabel => _propertyReviewsScoreLabel.tr();
 
-  static const String _propertyReviewsEmptyTitle =
-      'property_reviews_empty_title';
-  static String get propertyReviewsEmptyTitle =>
-      _propertyReviewsEmptyTitle.tr();
+  static const String _propertyReviewsEmptyTitle = 'property_reviews_empty_title';
+  static String get propertyReviewsEmptyTitle => _propertyReviewsEmptyTitle.tr();
 
-  static const String _propertyReviewsEmptyDescription =
-      'property_reviews_empty_description';
-  static String get propertyReviewsEmptyDescription =>
-      _propertyReviewsEmptyDescription.tr();
+  static const String _propertyReviewsEmptyDescription = 'property_reviews_empty_description';
+  static String get propertyReviewsEmptyDescription => _propertyReviewsEmptyDescription.tr();
 
   static const String _profileSettingsTitle = 'profile_settings_title';
   static String get profileSettingsTitle => _profileSettingsTitle.tr();
 
-  static const String _profileVisitNotifications =
-      'profile_visit_notifications';
-  static String get profileVisitNotifications =>
-      _profileVisitNotifications.tr();
+  static const String _profileVisitNotifications = 'profile_visit_notifications';
+  static String get profileVisitNotifications => _profileVisitNotifications.tr();
 
   static const String _profilePromotions = 'profile_promotions';
   static String get profilePromotions => _profilePromotions.tr();
@@ -4751,15 +3793,11 @@ abstract class LocaleKeys {
   static const String _profileShowInSearch = 'profile_show_in_search';
   static String get profileShowInSearch => _profileShowInSearch.tr();
 
-  static const String _profileSettingsEmptyTitle =
-      'profile_settings_empty_title';
-  static String get profileSettingsEmptyTitle =>
-      _profileSettingsEmptyTitle.tr();
+  static const String _profileSettingsEmptyTitle = 'profile_settings_empty_title';
+  static String get profileSettingsEmptyTitle => _profileSettingsEmptyTitle.tr();
 
-  static const String _profileSettingsEmptyDescription =
-      'profile_settings_empty_description';
-  static String get profileSettingsEmptyDescription =>
-      _profileSettingsEmptyDescription.tr();
+  static const String _profileSettingsEmptyDescription = 'profile_settings_empty_description';
+  static String get profileSettingsEmptyDescription => _profileSettingsEmptyDescription.tr();
 
   static const String _ownerRejectTimingReason = 'owner_reject_timing_reason';
   static String get ownerRejectTimingReason => _ownerRejectTimingReason.tr();
@@ -4779,15 +3817,11 @@ abstract class LocaleKeys {
   static const String _propertyMapSatellite = 'property_map_satellite';
   static String get propertyMapSatellite => _propertyMapSatellite.tr();
 
-  static const String _propertyMapPermissionDenied =
-      'property_map_permission_denied';
-  static String get propertyMapPermissionDenied =>
-      _propertyMapPermissionDenied.tr();
+  static const String _propertyMapPermissionDenied = 'property_map_permission_denied';
+  static String get propertyMapPermissionDenied => _propertyMapPermissionDenied.tr();
 
-  static const String _propertyMapPermissionSettings =
-      'property_map_permission_settings';
-  static String get propertyMapPermissionSettings =>
-      _propertyMapPermissionSettings.tr();
+  static const String _propertyMapPermissionSettings = 'property_map_permission_settings';
+  static String get propertyMapPermissionSettings => _propertyMapPermissionSettings.tr();
 
   static const String _propertyMapNoResults = 'property_map_no_results';
   static String get propertyMapNoResults => _propertyMapNoResults.tr();
@@ -4807,10 +3841,8 @@ abstract class LocaleKeys {
   static const String _accountNameValidation = 'account_name_validation';
   static String get accountNameValidation => _accountNameValidation.tr();
 
-  static const String _accountEgyptianMobileValidation =
-      'account_egyptian_mobile_validation';
-  static String get accountEgyptianMobileValidation =>
-      _accountEgyptianMobileValidation.tr();
+  static const String _accountEgyptianMobileValidation = 'account_egyptian_mobile_validation';
+  static String get accountEgyptianMobileValidation => _accountEgyptianMobileValidation.tr();
 
   static const String _accountImageTooLarge = 'account_image_too_large';
   static String get accountImageTooLarge => _accountImageTooLarge.tr();
@@ -4818,56 +3850,38 @@ abstract class LocaleKeys {
   static const String _accountImageInvalid = 'account_image_invalid';
   static String get accountImageInvalid => _accountImageInvalid.tr();
 
-  static const String _accountAvatarFormatValidation =
-      'account_avatar_format_validation';
-  static String get accountAvatarFormatValidation =>
-      _accountAvatarFormatValidation.tr();
+  static const String _accountAvatarFormatValidation = 'account_avatar_format_validation';
+  static String get accountAvatarFormatValidation => _accountAvatarFormatValidation.tr();
 
-  static const String _accountDocumentFormatValidation =
-      'account_document_format_validation';
-  static String get accountDocumentFormatValidation =>
-      _accountDocumentFormatValidation.tr();
+  static const String _accountDocumentFormatValidation = 'account_document_format_validation';
+  static String get accountDocumentFormatValidation => _accountDocumentFormatValidation.tr();
 
   static const String _accountOtpValidation = 'account_otp_validation';
   static String get accountOtpValidation => _accountOtpValidation.tr();
 
-  static const String _accountNationalIdValidation =
-      'account_national_id_validation';
-  static String get accountNationalIdValidation =>
-      _accountNationalIdValidation.tr();
+  static const String _accountNationalIdValidation = 'account_national_id_validation';
+  static String get accountNationalIdValidation => _accountNationalIdValidation.tr();
 
-  static const String _accountPasswordWhitespaceValidation =
-      'account_password_whitespace_validation';
-  static String get accountPasswordWhitespaceValidation =>
-      _accountPasswordWhitespaceValidation.tr();
+  static const String _accountPasswordWhitespaceValidation = 'account_password_whitespace_validation';
+  static String get accountPasswordWhitespaceValidation => _accountPasswordWhitespaceValidation.tr();
 
-  static const String _profileContractCountLabel =
-      'profile_contract_count_label';
-  static String get profileContractCountLabel =>
-      _profileContractCountLabel.tr();
+  static const String _profileContractCountLabel = 'profile_contract_count_label';
+  static String get profileContractCountLabel => _profileContractCountLabel.tr();
 
   static const String _profileReviewCountLabel = 'profile_review_count_label';
   static String get profileReviewCountLabel => _profileReviewCountLabel.tr();
 
-  static const String _profileRatingSummaryLabel =
-      'profile_rating_summary_label';
-  static String get profileRatingSummaryLabel =>
-      _profileRatingSummaryLabel.tr();
+  static const String _profileRatingSummaryLabel = 'profile_rating_summary_label';
+  static String get profileRatingSummaryLabel => _profileRatingSummaryLabel.tr();
 
-  static const String _ownerAvailabilityEmptyTitle =
-      'owner_availability_empty_title';
-  static String get ownerAvailabilityEmptyTitle =>
-      _ownerAvailabilityEmptyTitle.tr();
+  static const String _ownerAvailabilityEmptyTitle = 'owner_availability_empty_title';
+  static String get ownerAvailabilityEmptyTitle => _ownerAvailabilityEmptyTitle.tr();
 
-  static const String _ownerAvailabilityEmptyDescription =
-      'owner_availability_empty_description';
-  static String get ownerAvailabilityEmptyDescription =>
-      _ownerAvailabilityEmptyDescription.tr();
+  static const String _ownerAvailabilityEmptyDescription = 'owner_availability_empty_description';
+  static String get ownerAvailabilityEmptyDescription => _ownerAvailabilityEmptyDescription.tr();
 
-  static const String _ownerAnalyticsUnavailableDescription =
-      'owner_analytics_unavailable_description';
-  static String get ownerAnalyticsUnavailableDescription =>
-      _ownerAnalyticsUnavailableDescription.tr();
+  static const String _ownerAnalyticsUnavailableDescription = 'owner_analytics_unavailable_description';
+  static String get ownerAnalyticsUnavailableDescription => _ownerAnalyticsUnavailableDescription.tr();
 
   static const String _profileClearCity = 'profile_clear_city';
   static String get profileClearCity => _profileClearCity.tr();
@@ -4893,48 +3907,32 @@ abstract class LocaleKeys {
   static const String _ownerRevenueEmptyTitle = 'owner_revenue_empty_title';
   static String get ownerRevenueEmptyTitle => _ownerRevenueEmptyTitle.tr();
 
-  static const String _ownerRevenueEmptyDescription =
-      'owner_revenue_empty_description';
-  static String get ownerRevenueEmptyDescription =>
-      _ownerRevenueEmptyDescription.tr();
+  static const String _ownerRevenueEmptyDescription = 'owner_revenue_empty_description';
+  static String get ownerRevenueEmptyDescription => _ownerRevenueEmptyDescription.tr();
 
-  static const String _ownerAvailabilityPreviousWeek =
-      'owner_availability_previous_week';
-  static String get ownerAvailabilityPreviousWeek =>
-      _ownerAvailabilityPreviousWeek.tr();
+  static const String _ownerAvailabilityPreviousWeek = 'owner_availability_previous_week';
+  static String get ownerAvailabilityPreviousWeek => _ownerAvailabilityPreviousWeek.tr();
 
-  static const String _ownerAvailabilityNextWeek =
-      'owner_availability_next_week';
-  static String get ownerAvailabilityNextWeek =>
-      _ownerAvailabilityNextWeek.tr();
+  static const String _ownerAvailabilityNextWeek = 'owner_availability_next_week';
+  static String get ownerAvailabilityNextWeek => _ownerAvailabilityNextWeek.tr();
 
   static const String _ownerAvailabilityAddTime = 'owner_availability_add_time';
   static String get ownerAvailabilityAddTime => _ownerAvailabilityAddTime.tr();
 
-  static const String _ownerAvailabilityCairoTime =
-      'owner_availability_cairo_time';
-  static String get ownerAvailabilityCairoTime =>
-      _ownerAvailabilityCairoTime.tr();
+  static const String _ownerAvailabilityCairoTime = 'owner_availability_cairo_time';
+  static String get ownerAvailabilityCairoTime => _ownerAvailabilityCairoTime.tr();
 
-  static const String _ownerAvailabilityTimeAlreadyExists =
-      'owner_availability_time_already_exists';
-  static String get ownerAvailabilityTimeAlreadyExists =>
-      _ownerAvailabilityTimeAlreadyExists.tr();
+  static const String _ownerAvailabilityTimeAlreadyExists = 'owner_availability_time_already_exists';
+  static String get ownerAvailabilityTimeAlreadyExists => _ownerAvailabilityTimeAlreadyExists.tr();
 
-  static const String _recoveryLinkValidFor24Hours =
-      'recovery_link_valid_for_2_4_hours';
-  static String get recoveryLinkValidFor24Hours =>
-      _recoveryLinkValidFor24Hours.tr();
+  static const String _recoveryLinkValidFor24Hours = 'recovery_link_valid_for_2_4_hours';
+  static String get recoveryLinkValidFor24Hours => _recoveryLinkValidFor24Hours.tr();
 
-  static const String _otpCodeExpiresInTenMinutes =
-      'otp_code_expires_in_ten_minutes';
-  static String get otpCodeExpiresInTenMinutes =>
-      _otpCodeExpiresInTenMinutes.tr();
+  static const String _otpCodeExpiresInTenMinutes = 'otp_code_expires_in_ten_minutes';
+  static String get otpCodeExpiresInTenMinutes => _otpCodeExpiresInTenMinutes.tr();
 
-  static const String _ownerAddPropertyOptionsEmptyTitle =
-      'owner_add_property_options_empty_title';
-  static String get ownerAddPropertyOptionsEmptyTitle =>
-      _ownerAddPropertyOptionsEmptyTitle.tr();
+  static const String _ownerAddPropertyOptionsEmptyTitle = 'owner_add_property_options_empty_title';
+  static String get ownerAddPropertyOptionsEmptyTitle => _ownerAddPropertyOptionsEmptyTitle.tr();
 
   static const String _settingsOwnerIntro = 'settings_owner_intro';
   static String get settingsOwnerIntro => _settingsOwnerIntro.tr();
@@ -4957,25 +3955,17 @@ abstract class LocaleKeys {
   static const String _settingsLegal = 'settings_legal';
   static String get settingsLegal => _settingsLegal.tr();
 
-  static const String _settingsPhonePrivacyTitle =
-      'settings_phone_privacy_title';
-  static String get settingsPhonePrivacyTitle =>
-      _settingsPhonePrivacyTitle.tr();
+  static const String _settingsPhonePrivacyTitle = 'settings_phone_privacy_title';
+  static String get settingsPhonePrivacyTitle => _settingsPhonePrivacyTitle.tr();
 
-  static const String _settingsPhonePrivacyDescription =
-      'settings_phone_privacy_description';
-  static String get settingsPhonePrivacyDescription =>
-      _settingsPhonePrivacyDescription.tr();
+  static const String _settingsPhonePrivacyDescription = 'settings_phone_privacy_description';
+  static String get settingsPhonePrivacyDescription => _settingsPhonePrivacyDescription.tr();
 
-  static const String _settingsLocationDescription =
-      'settings_location_description';
-  static String get settingsLocationDescription =>
-      _settingsLocationDescription.tr();
+  static const String _settingsLocationDescription = 'settings_location_description';
+  static String get settingsLocationDescription => _settingsLocationDescription.tr();
 
-  static const String _settingsSearchProfileDescription =
-      'settings_search_profile_description';
-  static String get settingsSearchProfileDescription =>
-      _settingsSearchProfileDescription.tr();
+  static const String _settingsSearchProfileDescription = 'settings_search_profile_description';
+  static String get settingsSearchProfileDescription => _settingsSearchProfileDescription.tr();
 
   static const String _settingsPasswordIntro = 'settings_password_intro';
   static String get settingsPasswordIntro => _settingsPasswordIntro.tr();
@@ -4983,15 +3973,11 @@ abstract class LocaleKeys {
   static const String _settingsCurrentPassword = 'settings_current_password';
   static String get settingsCurrentPassword => _settingsCurrentPassword.tr();
 
-  static const String _settingsPasswordPolicyTitle =
-      'settings_password_policy_title';
-  static String get settingsPasswordPolicyTitle =>
-      _settingsPasswordPolicyTitle.tr();
+  static const String _settingsPasswordPolicyTitle = 'settings_password_policy_title';
+  static String get settingsPasswordPolicyTitle => _settingsPasswordPolicyTitle.tr();
 
-  static const String _settingsPasswordPolicyDescription =
-      'settings_password_policy_description';
-  static String get settingsPasswordPolicyDescription =>
-      _settingsPasswordPolicyDescription.tr();
+  static const String _settingsPasswordPolicyDescription = 'settings_password_policy_description';
+  static String get settingsPasswordPolicyDescription => _settingsPasswordPolicyDescription.tr();
 
   static const String _settingsSavePassword = 'settings_save_password';
   static String get settingsSavePassword => _settingsSavePassword.tr();
@@ -4999,23 +3985,17 @@ abstract class LocaleKeys {
   static const String _settingsPasswordSaved = 'settings_password_saved';
   static String get settingsPasswordSaved => _settingsPasswordSaved.tr();
 
-  static const String _settingsDeleteAcknowledgement =
-      'settings_delete_acknowledgement';
-  static String get settingsDeleteAcknowledgement =>
-      _settingsDeleteAcknowledgement.tr();
+  static const String _settingsDeleteAcknowledgement = 'settings_delete_acknowledgement';
+  static String get settingsDeleteAcknowledgement => _settingsDeleteAcknowledgement.tr();
 
-  static const String _settingsDeletePermanently =
-      'settings_delete_permanently';
-  static String get settingsDeletePermanently =>
-      _settingsDeletePermanently.tr();
+  static const String _settingsDeletePermanently = 'settings_delete_permanently';
+  static String get settingsDeletePermanently => _settingsDeletePermanently.tr();
 
   static const String _settingsDeleteWarning = 'settings_delete_warning';
   static String get settingsDeleteWarning => _settingsDeleteWarning.tr();
 
-  static const String _settingsDeleteConsequences =
-      'settings_delete_consequences';
-  static String get settingsDeleteConsequences =>
-      _settingsDeleteConsequences.tr();
+  static const String _settingsDeleteConsequences = 'settings_delete_consequences';
+  static String get settingsDeleteConsequences => _settingsDeleteConsequences.tr();
 
   static const String _settingsDeleteIdentity = 'settings_delete_identity';
   static String get settingsDeleteIdentity => _settingsDeleteIdentity.tr();
@@ -5029,33 +4009,23 @@ abstract class LocaleKeys {
   static const String _settingsLogoutTitle = 'settings_logout_title';
   static String get settingsLogoutTitle => _settingsLogoutTitle.tr();
 
-  static const String _settingsLogoutDescription =
-      'settings_logout_description';
-  static String get settingsLogoutDescription =>
-      _settingsLogoutDescription.tr();
+  static const String _settingsLogoutDescription = 'settings_logout_description';
+  static String get settingsLogoutDescription => _settingsLogoutDescription.tr();
 
   static const String _settingsAppVersion = 'settings_app_version';
   static String get settingsAppVersion => _settingsAppVersion.tr();
 
-  static const String _profileVerificationRejected =
-      'profile_verification_rejected';
-  static String get profileVerificationRejected =>
-      _profileVerificationRejected.tr();
+  static const String _profileVerificationRejected = 'profile_verification_rejected';
+  static String get profileVerificationRejected => _profileVerificationRejected.tr();
 
-  static const String _profileVerificationRejectedDescription =
-      'profile_verification_rejected_description';
-  static String get profileVerificationRejectedDescription =>
-      _profileVerificationRejectedDescription.tr();
+  static const String _profileVerificationRejectedDescription = 'profile_verification_rejected_description';
+  static String get profileVerificationRejectedDescription => _profileVerificationRejectedDescription.tr();
 
-  static const String _profileVerificationUnknown =
-      'profile_verification_unknown';
-  static String get profileVerificationUnknown =>
-      _profileVerificationUnknown.tr();
+  static const String _profileVerificationUnknown = 'profile_verification_unknown';
+  static String get profileVerificationUnknown => _profileVerificationUnknown.tr();
 
-  static const String _profileVerificationReason =
-      'profile_verification_reason';
-  static String get profileVerificationReason =>
-      _profileVerificationReason.tr();
+  static const String _profileVerificationReason = 'profile_verification_reason';
+  static String get profileVerificationReason => _profileVerificationReason.tr();
 
   static const String _profileContractActive = 'profile_contract_active';
   static String get profileContractActive => _profileContractActive.tr();
@@ -5078,15 +4048,11 @@ abstract class LocaleKeys {
   static const String _profileContractDocument = 'profile_contract_document';
   static String get profileContractDocument => _profileContractDocument.tr();
 
-  static const String _profileContractsEmptyTitle =
-      'profile_contracts_empty_title';
-  static String get profileContractsEmptyTitle =>
-      _profileContractsEmptyTitle.tr();
+  static const String _profileContractsEmptyTitle = 'profile_contracts_empty_title';
+  static String get profileContractsEmptyTitle => _profileContractsEmptyTitle.tr();
 
-  static const String _profileContractsEmptyDescription =
-      'profile_contracts_empty_description';
-  static String get profileContractsEmptyDescription =>
-      _profileContractsEmptyDescription.tr();
+  static const String _profileContractsEmptyDescription = 'profile_contracts_empty_description';
+  static String get profileContractsEmptyDescription => _profileContractsEmptyDescription.tr();
 
   static const String _supportOwnerTitle = 'support_owner_title';
   static String get supportOwnerTitle => _supportOwnerTitle.tr();
@@ -5115,26 +4081,20 @@ abstract class LocaleKeys {
   static const String _supportEmailUs = 'support_email_us';
   static String get supportEmailUs => _supportEmailUs.tr();
 
-  static const String _supportContactUnavailable =
-      'support_contact_unavailable';
-  static String get supportContactUnavailable =>
-      _supportContactUnavailable.tr();
+  static const String _supportContactUnavailable = 'support_contact_unavailable';
+  static String get supportContactUnavailable => _supportContactUnavailable.tr();
 
   static const String _supportSearchEmptyTitle = 'support_search_empty_title';
   static String get supportSearchEmptyTitle => _supportSearchEmptyTitle.tr();
 
-  static const String _supportSearchEmptyDescription =
-      'support_search_empty_description';
-  static String get supportSearchEmptyDescription =>
-      _supportSearchEmptyDescription.tr();
+  static const String _supportSearchEmptyDescription = 'support_search_empty_description';
+  static String get supportSearchEmptyDescription => _supportSearchEmptyDescription.tr();
 
   static const String _supportFaqEmptyTitle = 'support_faq_empty_title';
   static String get supportFaqEmptyTitle => _supportFaqEmptyTitle.tr();
 
-  static const String _supportFaqEmptyDescription =
-      'support_faq_empty_description';
-  static String get supportFaqEmptyDescription =>
-      _supportFaqEmptyDescription.tr();
+  static const String _supportFaqEmptyDescription = 'support_faq_empty_description';
+  static String get supportFaqEmptyDescription => _supportFaqEmptyDescription.tr();
 
   static const String _supportClearSearch = 'support_clear_search';
   static String get supportClearSearch => _supportClearSearch.tr();
@@ -5142,20 +4102,14 @@ abstract class LocaleKeys {
   static const String _supportTicketsEmptyTitle = 'support_tickets_empty_title';
   static String get supportTicketsEmptyTitle => _supportTicketsEmptyTitle.tr();
 
-  static const String _supportTicketsEmptyDescription =
-      'support_tickets_empty_description';
-  static String get supportTicketsEmptyDescription =>
-      _supportTicketsEmptyDescription.tr();
+  static const String _supportTicketsEmptyDescription = 'support_tickets_empty_description';
+  static String get supportTicketsEmptyDescription => _supportTicketsEmptyDescription.tr();
 
-  static const String _supportMessagesEmptyTitle =
-      'support_messages_empty_title';
-  static String get supportMessagesEmptyTitle =>
-      _supportMessagesEmptyTitle.tr();
+  static const String _supportMessagesEmptyTitle = 'support_messages_empty_title';
+  static String get supportMessagesEmptyTitle => _supportMessagesEmptyTitle.tr();
 
-  static const String _supportMessagesEmptyDescription =
-      'support_messages_empty_description';
-  static String get supportMessagesEmptyDescription =>
-      _supportMessagesEmptyDescription.tr();
+  static const String _supportMessagesEmptyDescription = 'support_messages_empty_description';
+  static String get supportMessagesEmptyDescription => _supportMessagesEmptyDescription.tr();
 
   static const String _supportTopicVisit = 'support_topic_visit';
   static String get supportTopicVisit => _supportTopicVisit.tr();
@@ -5211,10 +4165,8 @@ abstract class LocaleKeys {
   static const String _supportPickingImages = 'support_picking_images';
   static String get supportPickingImages => _supportPickingImages.tr();
 
-  static const String _supportAttachmentUnavailable =
-      'support_attachment_unavailable';
-  static String get supportAttachmentUnavailable =>
-      _supportAttachmentUnavailable.tr();
+  static const String _supportAttachmentUnavailable = 'support_attachment_unavailable';
+  static String get supportAttachmentUnavailable => _supportAttachmentUnavailable.tr();
 
   static const String _supportSendTicket = 'support_send_ticket';
   static String get supportSendTicket => _supportSendTicket.tr();
@@ -5258,10 +4210,8 @@ abstract class LocaleKeys {
   static const String _supportStatusUnknown = 'support_status_unknown';
   static String get supportStatusUnknown => _supportStatusUnknown.tr();
 
-  static const String _profileVerificationUnknownDescription =
-      'profile_verification_unknown_description';
-  static String get profileVerificationUnknownDescription =>
-      _profileVerificationUnknownDescription.tr();
+  static const String _profileVerificationUnknownDescription = 'profile_verification_unknown_description';
+  static String get profileVerificationUnknownDescription => _profileVerificationUnknownDescription.tr();
 
   static const String _supportLinkUnavailable = 'support_link_unavailable';
   static String get supportLinkUnavailable => _supportLinkUnavailable.tr();
@@ -5269,15 +4219,11 @@ abstract class LocaleKeys {
   static const String _propertyPositiveNumber = 'property_positive_number';
   static String get propertyPositiveNumber => _propertyPositiveNumber.tr();
 
-  static const String _propertyDescriptionMinimum =
-      'property_description_minimum';
-  static String get propertyDescriptionMinimum =>
-      _propertyDescriptionMinimum.tr();
+  static const String _propertyDescriptionMinimum = 'property_description_minimum';
+  static String get propertyDescriptionMinimum => _propertyDescriptionMinimum.tr();
 
-  static const String _searchUpdatingPreviousResults =
-      'search_updating_previous_results';
-  static String get searchUpdatingPreviousResults =>
-      _searchUpdatingPreviousResults.tr();
+  static const String _searchUpdatingPreviousResults = 'search_updating_previous_results';
+  static String get searchUpdatingPreviousResults => _searchUpdatingPreviousResults.tr();
 
   static const String _searchRefreshFailed = 'search_refresh_failed';
   static String get searchRefreshFailed => _searchRefreshFailed.tr();
@@ -5288,10 +4234,8 @@ abstract class LocaleKeys {
   static const String _visitCancellationTitle = 'visit_cancellation_title';
   static String get visitCancellationTitle => _visitCancellationTitle.tr();
 
-  static const String _visitCancellationDescription =
-      'visit_cancellation_description';
-  static String get visitCancellationDescription =>
-      _visitCancellationDescription.tr();
+  static const String _visitCancellationDescription = 'visit_cancellation_description';
+  static String get visitCancellationDescription => _visitCancellationDescription.tr();
 
   static const String _visitKeepBooking = 'visit_keep_booking';
   static String get visitKeepBooking => _visitKeepBooking.tr();
@@ -5299,104 +4243,68 @@ abstract class LocaleKeys {
   static const String _visitConfirmCancellation = 'visit_confirm_cancellation';
   static String get visitConfirmCancellation => _visitConfirmCancellation.tr();
 
-  static const String _propertyRequiredFieldsHint =
-      'property_required_fields_hint';
-  static String get propertyRequiredFieldsHint =>
-      _propertyRequiredFieldsHint.tr();
+  static const String _propertyRequiredFieldsHint = 'property_required_fields_hint';
+  static String get propertyRequiredFieldsHint => _propertyRequiredFieldsHint.tr();
 
   static const String _optional = 'optional';
   static String get optional => _optional.tr();
 
-  static const String _ownerAddPropertyOptionalRecommended =
-      'owner_add_property_optional_recommended';
-  static String get ownerAddPropertyOptionalRecommended =>
-      _ownerAddPropertyOptionalRecommended.tr();
+  static const String _ownerAddPropertyOptionalRecommended = 'owner_add_property_optional_recommended';
+  static String get ownerAddPropertyOptionalRecommended => _ownerAddPropertyOptionalRecommended.tr();
 
-  static const String _ownerAddPropertyPhotoMetadataRecommended =
-      'owner_add_property_photo_metadata_recommended';
-  static String get ownerAddPropertyPhotoMetadataRecommended =>
-      _ownerAddPropertyPhotoMetadataRecommended.tr();
+  static const String _ownerAddPropertyPhotoMetadataRecommended = 'owner_add_property_photo_metadata_recommended';
+  static String get ownerAddPropertyPhotoMetadataRecommended => _ownerAddPropertyPhotoMetadataRecommended.tr();
 
-  static const String _ownerAddPropertyReplacePhoto =
-      'owner_add_property_replace_photo';
-  static String get ownerAddPropertyReplacePhoto =>
-      _ownerAddPropertyReplacePhoto.tr();
+  static const String _ownerAddPropertyReplacePhoto = 'owner_add_property_replace_photo';
+  static String get ownerAddPropertyReplacePhoto => _ownerAddPropertyReplacePhoto.tr();
 
-  static const String _ownerAddPropertySetMainPhoto =
-      'owner_add_property_set_main_photo';
-  static String get ownerAddPropertySetMainPhoto =>
-      _ownerAddPropertySetMainPhoto.tr();
+  static const String _ownerAddPropertySetMainPhoto = 'owner_add_property_set_main_photo';
+  static String get ownerAddPropertySetMainPhoto => _ownerAddPropertySetMainPhoto.tr();
 
-  static const String _ownerPropertyVideoSelected =
-      'owner_property_video_selected';
-  static String get ownerPropertyVideoSelected =>
-      _ownerPropertyVideoSelected.tr();
+  static const String _ownerPropertyVideoSelected = 'owner_property_video_selected';
+  static String get ownerPropertyVideoSelected => _ownerPropertyVideoSelected.tr();
 
-  static const String _ownerAddPropertyAdditionalDetails =
-      'owner_add_property_additional_details';
-  static String get ownerAddPropertyAdditionalDetails =>
-      _ownerAddPropertyAdditionalDetails.tr();
+  static const String _ownerAddPropertyAdditionalDetails = 'owner_add_property_additional_details';
+  static String get ownerAddPropertyAdditionalDetails => _ownerAddPropertyAdditionalDetails.tr();
 
   static const String _ownerAddPropertyCountry = 'owner_add_property_country';
   static String get ownerAddPropertyCountry => _ownerAddPropertyCountry.tr();
 
-  static const String _ownerAddPropertyNeighborhood =
-      'owner_add_property_neighborhood';
-  static String get ownerAddPropertyNeighborhood =>
-      _ownerAddPropertyNeighborhood.tr();
+  static const String _ownerAddPropertyNeighborhood = 'owner_add_property_neighborhood';
+  static String get ownerAddPropertyNeighborhood => _ownerAddPropertyNeighborhood.tr();
 
-  static const String _ownerAddPropertyBuildingYearInvalid =
-      'owner_add_property_building_year_invalid';
-  static String get ownerAddPropertyBuildingYearInvalid =>
-      _ownerAddPropertyBuildingYearInvalid.tr();
+  static const String _ownerAddPropertyBuildingYearInvalid = 'owner_add_property_building_year_invalid';
+  static String get ownerAddPropertyBuildingYearInvalid => _ownerAddPropertyBuildingYearInvalid.tr();
 
-  static const String _ownerAddPropertyDepositHint =
-      'owner_add_property_deposit_hint';
-  static String get ownerAddPropertyDepositHint =>
-      _ownerAddPropertyDepositHint.tr();
+  static const String _ownerAddPropertyDepositHint = 'owner_add_property_deposit_hint';
+  static String get ownerAddPropertyDepositHint => _ownerAddPropertyDepositHint.tr();
 
-  static const String _ownerAddPropertyDepositInvalid =
-      'owner_add_property_deposit_invalid';
-  static String get ownerAddPropertyDepositInvalid =>
-      _ownerAddPropertyDepositInvalid.tr();
+  static const String _ownerAddPropertyDepositInvalid = 'owner_add_property_deposit_invalid';
+  static String get ownerAddPropertyDepositInvalid => _ownerAddPropertyDepositInvalid.tr();
 
-  static const String _ownerAddPropertyNotSpecified =
-      'owner_add_property_not_specified';
-  static String get ownerAddPropertyNotSpecified =>
-      _ownerAddPropertyNotSpecified.tr();
+  static const String _ownerAddPropertyNotSpecified = 'owner_add_property_not_specified';
+  static String get ownerAddPropertyNotSpecified => _ownerAddPropertyNotSpecified.tr();
 
-  static const String _ownerPropertyEditReviewTitle =
-      'owner_property_edit_review_title';
-  static String get ownerPropertyEditReviewTitle =>
-      _ownerPropertyEditReviewTitle.tr();
+  static const String _ownerPropertyEditReviewTitle = 'owner_property_edit_review_title';
+  static String get ownerPropertyEditReviewTitle => _ownerPropertyEditReviewTitle.tr();
 
-  static const String _ownerPropertyEditReviewDescription =
-      'owner_property_edit_review_description';
-  static String get ownerPropertyEditReviewDescription =>
-      _ownerPropertyEditReviewDescription.tr();
+  static const String _ownerPropertyEditReviewDescription = 'owner_property_edit_review_description';
+  static String get ownerPropertyEditReviewDescription => _ownerPropertyEditReviewDescription.tr();
 
-  static const String _ownerPropertyEditReviewDone =
-      'owner_property_edit_review_done';
-  static String get ownerPropertyEditReviewDone =>
-      _ownerPropertyEditReviewDone.tr();
+  static const String _ownerPropertyEditReviewDone = 'owner_property_edit_review_done';
+  static String get ownerPropertyEditReviewDone => _ownerPropertyEditReviewDone.tr();
 
-  static const String _ownerPropertiesDeleteConfirmation =
-      'owner_properties_delete_confirmation';
-  static String get ownerPropertiesDeleteConfirmation =>
-      _ownerPropertiesDeleteConfirmation.tr();
+  static const String _ownerPropertiesDeleteConfirmation = 'owner_properties_delete_confirmation';
+  static String get ownerPropertiesDeleteConfirmation => _ownerPropertiesDeleteConfirmation.tr();
 
   static const String _ownerPropertiesDeleted = 'owner_properties_deleted';
   static String get ownerPropertiesDeleted => _ownerPropertiesDeleted.tr();
 
-  static const String _ownerPropertiesDeleteFailed =
-      'owner_properties_delete_failed';
-  static String get ownerPropertiesDeleteFailed =>
-      _ownerPropertiesDeleteFailed.tr();
+  static const String _ownerPropertiesDeleteFailed = 'owner_properties_delete_failed';
+  static String get ownerPropertiesDeleteFailed => _ownerPropertiesDeleteFailed.tr();
 
-  static const String _ownerPropertyUnsupportedAmenities =
-      'owner_property_unsupported_amenities';
-  static String get ownerPropertyUnsupportedAmenities =>
-      _ownerPropertyUnsupportedAmenities.tr();
+  static const String _ownerPropertyUnsupportedAmenities = 'owner_property_unsupported_amenities';
+  static String get ownerPropertyUnsupportedAmenities => _ownerPropertyUnsupportedAmenities.tr();
 
   static const String _ownerPropertyReviewVideo = 'owner_property_review_video';
   static String get ownerPropertyReviewVideo => _ownerPropertyReviewVideo.tr();
@@ -5404,35 +4312,23 @@ abstract class LocaleKeys {
   static const String _ownerPropertyReviewProof = 'owner_property_review_proof';
   static String get ownerPropertyReviewProof => _ownerPropertyReviewProof.tr();
 
-  static const String _ownerPropertyReviewNoProof =
-      'owner_property_review_no_proof';
-  static String get ownerPropertyReviewNoProof =>
-      _ownerPropertyReviewNoProof.tr();
+  static const String _ownerPropertyReviewNoProof = 'owner_property_review_no_proof';
+  static String get ownerPropertyReviewNoProof => _ownerPropertyReviewNoProof.tr();
 
-  static const String _ownerAddPropertyCustomDeposit =
-      'owner_add_property_custom_deposit';
-  static String get ownerAddPropertyCustomDeposit =>
-      _ownerAddPropertyCustomDeposit.tr();
+  static const String _ownerAddPropertyCustomDeposit = 'owner_add_property_custom_deposit';
+  static String get ownerAddPropertyCustomDeposit => _ownerAddPropertyCustomDeposit.tr();
 
-  static const String _tenantPropertyDetailsListingInformation =
-      'tenant_property_details_listing_information';
-  static String get tenantPropertyDetailsListingInformation =>
-      _tenantPropertyDetailsListingInformation.tr();
+  static const String _tenantPropertyDetailsListingInformation = 'tenant_property_details_listing_information';
+  static String get tenantPropertyDetailsListingInformation => _tenantPropertyDetailsListingInformation.tr();
 
-  static const String _tenantPropertyDetailsListingStatus =
-      'tenant_property_details_listing_status';
-  static String get tenantPropertyDetailsListingStatus =>
-      _tenantPropertyDetailsListingStatus.tr();
+  static const String _tenantPropertyDetailsListingStatus = 'tenant_property_details_listing_status';
+  static String get tenantPropertyDetailsListingStatus => _tenantPropertyDetailsListingStatus.tr();
 
-  static const String _tenantPropertyDetailsListedAt =
-      'tenant_property_details_listed_at';
-  static String get tenantPropertyDetailsListedAt =>
-      _tenantPropertyDetailsListedAt.tr();
+  static const String _tenantPropertyDetailsListedAt = 'tenant_property_details_listed_at';
+  static String get tenantPropertyDetailsListedAt => _tenantPropertyDetailsListedAt.tr();
 
-  static const String _tenantPropertyDetailsUpdatedAt =
-      'tenant_property_details_updated_at';
-  static String get tenantPropertyDetailsUpdatedAt =>
-      _tenantPropertyDetailsUpdatedAt.tr();
+  static const String _tenantPropertyDetailsUpdatedAt = 'tenant_property_details_updated_at';
+  static String get tenantPropertyDetailsUpdatedAt => _tenantPropertyDetailsUpdatedAt.tr();
 
   static const String _toolsTitle = 'tools_title';
   static String get toolsTitle => _toolsTitle.tr();
@@ -5707,10 +4603,571 @@ abstract class LocaleKeys {
   static const String _paidLeaseTenantEmpty = 'paid_lease_tenant_empty';
   static String get paidLeaseTenantEmpty => _paidLeaseTenantEmpty.tr();
 
-  static const String _paidLeaseTenantEmptyBody =
-      'paid_lease_tenant_empty_body';
+  static const String _paidLeaseTenantEmptyBody = 'paid_lease_tenant_empty_body';
   static String get paidLeaseTenantEmptyBody => _paidLeaseTenantEmptyBody.tr();
 
   static const String _paidRemoveAlert = 'paid_remove_alert';
   static String get paidRemoveAlert => _paidRemoveAlert.tr();
+
+  static const String _rentalOfferQuestion = 'rental_offer_question';
+  static String get rentalOfferQuestion => _rentalOfferQuestion.tr();
+
+  static const String _rentalEntireProperty = 'rental_entire_property';
+  static String get rentalEntireProperty => _rentalEntireProperty.tr();
+
+  static const String _rentalRoom = 'rental_room';
+  static String get rentalRoom => _rentalRoom.tr();
+
+  static const String _rentalRoomGroup = 'rental_room_group';
+  static String get rentalRoomGroup => _rentalRoomGroup.tr();
+
+  static const String _rentalBed = 'rental_bed';
+  static String get rentalBed => _rentalBed.tr();
+
+  static const String _rentalEntirePriceBasis = 'rental_entire_price_basis';
+  static String get rentalEntirePriceBasis => _rentalEntirePriceBasis.tr();
+
+  static const String _rentalRoomPriceBasis = 'rental_room_price_basis';
+  static String get rentalRoomPriceBasis => _rentalRoomPriceBasis.tr();
+
+  static const String _rentalGroupPriceBasis = 'rental_group_price_basis';
+  static String get rentalGroupPriceBasis => _rentalGroupPriceBasis.tr();
+
+  static const String _rentalBedPriceBasis = 'rental_bed_price_basis';
+  static String get rentalBedPriceBasis => _rentalBedPriceBasis.tr();
+
+  static const String _rentalUnknownScope = 'rental_unknown_scope';
+  static String get rentalUnknownScope => _rentalUnknownScope.tr();
+
+  static const String _rentalLegacyScope = 'rental_legacy_scope';
+  static String get rentalLegacyScope => _rentalLegacyScope.tr();
+
+  static const String _rentalLocalOnly = 'rental_local_only';
+  static String get rentalLocalOnly => _rentalLocalOnly.tr();
+
+  static const String _rentalUnavailableCapability = 'rental_unavailable_capability';
+  static String get rentalUnavailableCapability => _rentalUnavailableCapability.tr();
+
+  static const String _rentalInvalidInventory = 'rental_invalid_inventory';
+  static String get rentalInvalidInventory => _rentalInvalidInventory.tr();
+
+  static const String _rentalOverlap = 'rental_overlap';
+  static String get rentalOverlap => _rentalOverlap.tr();
+
+  static const String _rentalGroupMinimum = 'rental_group_minimum';
+  static String get rentalGroupMinimum => _rentalGroupMinimum.tr();
+
+  static const String _rentalSharedRoomHelp = 'rental_shared_room_help';
+  static String get rentalSharedRoomHelp => _rentalSharedRoomHelp.tr();
+
+  static const String _rentalModeChange = 'rental_mode_change';
+  static String get rentalModeChange => _rentalModeChange.tr();
+
+  static const String _rentalModeChangeHelp = 'rental_mode_change_help';
+  static String get rentalModeChangeHelp => _rentalModeChangeHelp.tr();
+
+  static const String _rentalScopeChangeHelp = 'rental_scope_change_help';
+  static String get rentalScopeChangeHelp => _rentalScopeChangeHelp.tr();
+
+  static const String _rentalRoomsInventory = 'rental_rooms_inventory';
+  static String get rentalRoomsInventory => _rentalRoomsInventory.tr();
+
+  static const String _rentalRoomName = 'rental_room_name';
+  static String get rentalRoomName => _rentalRoomName.tr();
+
+  static const String _rentalRoomCapacity = 'rental_room_capacity';
+  static String get rentalRoomCapacity => _rentalRoomCapacity.tr();
+
+  static const String _rentalRoomDetails = 'rental_room_details';
+  static String get rentalRoomDetails => _rentalRoomDetails.tr();
+
+  static const String _rentalBedName = 'rental_bed_name';
+  static String get rentalBedName => _rentalBedName.tr();
+
+  static const String _rentalAddOffer = 'rental_add_offer';
+  static String get rentalAddOffer => _rentalAddOffer.tr();
+
+  static const String _rentalRemoveDraft = 'rental_remove_draft';
+  static String get rentalRemoveDraft => _rentalRemoveDraft.tr();
+
+  static const String _rentalOfferName = 'rental_offer_name';
+  static String get rentalOfferName => _rentalOfferName.tr();
+
+  static const String _rentalOffers = 'rental_offers';
+  static String get rentalOffers => _rentalOffers.tr();
+
+  static const String _rentalOfferingMode = 'rental_offering_mode';
+  static String get rentalOfferingMode => _rentalOfferingMode.tr();
+
+  static const String _rentalPartialMode = 'rental_partial_mode';
+  static String get rentalPartialMode => _rentalPartialMode.tr();
+
+  static const String _rentalDefaults = 'rental_defaults';
+  static String get rentalDefaults => _rentalDefaults.tr();
+
+  static const String _rentalInherited = 'rental_inherited';
+  static String get rentalInherited => _rentalInherited.tr();
+
+  static const String _rentalOverride = 'rental_override';
+  static String get rentalOverride => _rentalOverride.tr();
+
+  static const String _rentalBathroomAccess = 'rental_bathroom_access';
+  static String get rentalBathroomAccess => _rentalBathroomAccess.tr();
+
+  static const String _rentalPrivateBathroom = 'rental_private_bathroom';
+  static String get rentalPrivateBathroom => _rentalPrivateBathroom.tr();
+
+  static const String _rentalSharedBathroom = 'rental_shared_bathroom';
+  static String get rentalSharedBathroom => _rentalSharedBathroom.tr();
+
+  static const String _rentalUnspecified = 'rental_unspecified';
+  static String get rentalUnspecified => _rentalUnspecified.tr();
+
+  static const String _rentalAvailability = 'rental_availability';
+  static String get rentalAvailability => _rentalAvailability.tr();
+
+  static const String _rentalAvailable = 'rental_available';
+  static String get rentalAvailable => _rentalAvailable.tr();
+
+  static const String _rentalRented = 'rental_rented';
+  static String get rentalRented => _rentalRented.tr();
+
+  static const String _rentalUnavailable = 'rental_unavailable';
+  static String get rentalUnavailable => _rentalUnavailable.tr();
+
+  static const String _rentalUnknownAvailability = 'rental_unknown_availability';
+  static String get rentalUnknownAvailability => _rentalUnknownAvailability.tr();
+
+  static const String _rentalArchived = 'rental_archived';
+  static String get rentalArchived => _rentalArchived.tr();
+
+  static const String _rentalOfferedAccommodation = 'rental_offered_accommodation';
+  static String get rentalOfferedAccommodation => _rentalOfferedAccommodation.tr();
+
+  static const String _rentalSharedSpaces = 'rental_shared_spaces';
+  static String get rentalSharedSpaces => _rentalSharedSpaces.tr();
+
+  static const String _rentalTotalRooms = 'rental_total_rooms';
+  static String get rentalTotalRooms => _rentalTotalRooms.tr();
+
+  static const String _rentalIncludedRooms = 'rental_included_rooms';
+  static String get rentalIncludedRooms => _rentalIncludedRooms.tr();
+
+  static const String _rentalSelectedRooms = 'rental_selected_rooms';
+  static String get rentalSelectedRooms => _rentalSelectedRooms.tr();
+
+  static const String _rentalChooseOffer = 'rental_choose_offer';
+  static String get rentalChooseOffer => _rentalChooseOffer.tr();
+
+  static const String _rentalSelectOffer = 'rental_select_offer';
+  static String get rentalSelectOffer => _rentalSelectOffer.tr();
+
+  static const String _rentalNoAvailableOffers = 'rental_no_available_offers';
+  static String get rentalNoAvailableOffers => _rentalNoAvailableOffers.tr();
+
+  static const String _rentalScopeFilter = 'rental_scope_filter';
+  static String get rentalScopeFilter => _rentalScopeFilter.tr();
+
+  static const String _rentalScopeFilterUnavailable = 'rental_scope_filter_unavailable';
+  static String get rentalScopeFilterUnavailable => _rentalScopeFilterUnavailable.tr();
+
+  static const String _rentalStartingFrom = 'rental_starting_from';
+  static String get rentalStartingFrom => _rentalStartingFrom.tr();
+
+  static const String _rentalSelectForPrice = 'rental_select_for_price';
+  static String get rentalSelectForPrice => _rentalSelectForPrice.tr();
+
+  static const String _rentalPricePeriodRequired = 'rental_price_period_required';
+  static String get rentalPricePeriodRequired => _rentalPricePeriodRequired.tr();
+
+  static const String _rentalTermsChanged = 'rental_terms_changed';
+  static String get rentalTermsChanged => _rentalTermsChanged.tr();
+
+  static const String _rentalNotAvailable = 'rental_not_available';
+  static String get rentalNotAvailable => _rentalNotAvailable.tr();
+
+  static const String _rentalSnapshotMissing = 'rental_snapshot_missing';
+  static String get rentalSnapshotMissing => _rentalSnapshotMissing.tr();
+
+  static const String _rentalHistoricalTerms = 'rental_historical_terms';
+  static String get rentalHistoricalTerms => _rentalHistoricalTerms.tr();
+
+  static const String _rentalViewingOnly = 'rental_viewing_only';
+  static String get rentalViewingOnly => _rentalViewingOnly.tr();
+
+  static const String _rentalSaveSelection = 'rental_save_selection';
+  static String get rentalSaveSelection => _rentalSaveSelection.tr();
+
+  static const String _rentalSavedOffers = 'rental_saved_offers';
+  static String get rentalSavedOffers => _rentalSavedOffers.tr();
+
+  static const String _rentalOfferPhotos = 'rental_offer_photos';
+  static String get rentalOfferPhotos => _rentalOfferPhotos.tr();
+
+  static const String _rentalPropertyPhotos = 'rental_property_photos';
+  static String get rentalPropertyPhotos => _rentalPropertyPhotos.tr();
+
+  static const String _rentalMediaAssociations = 'rental_media_associations';
+  static String get rentalMediaAssociations => _rentalMediaAssociations.tr();
+
+  static const String _rentalSharedPhotos = 'rental_shared_photos';
+  static String get rentalSharedPhotos => _rentalSharedPhotos.tr();
+
+  static const String _rentalMediaUploadFirst = 'rental_media_upload_first';
+  static String get rentalMediaUploadFirst => _rentalMediaUploadFirst.tr();
+
+  static const String _rentalRules = 'rental_rules';
+  static String get rentalRules => _rentalRules.tr();
+
+  static const String _rentalChatContext = 'rental_chat_context';
+  static String get rentalChatContext => _rentalChatContext.tr();
+
+  static const String _rentalChatContextHelp = 'rental_chat_context_help';
+  static String get rentalChatContextHelp => _rentalChatContextHelp.tr();
+
+  static const String _rentalIncompatibleResponse = 'rental_incompatible_response';
+  static String get rentalIncompatibleResponse => _rentalIncompatibleResponse.tr();
+
+  static const String _rentalMarkRented = 'rental_mark_rented';
+  static String get rentalMarkRented => _rentalMarkRented.tr();
+
+  static const String _rentalMakeAvailable = 'rental_make_available';
+  static String get rentalMakeAvailable => _rentalMakeAvailable.tr();
+
+  static const String _rentalArchive = 'rental_archive';
+  static String get rentalArchive => _rentalArchive.tr();
+
+  static const String _rentalArchiveHelp = 'rental_archive_help';
+  static String get rentalArchiveHelp => _rentalArchiveHelp.tr();
+
+  static const String _rentalPublicationReview = 'rental_publication_review';
+  static String get rentalPublicationReview => _rentalPublicationReview.tr();
+
+  static const String _rentalOfferCount = 'rental_offer_count';
+  static String get rentalOfferCount => _rentalOfferCount.tr();
+
+  static const String _rentalActiveOffers = 'rental_active_offers';
+  static String get rentalActiveOffers => _rentalActiveOffers.tr();
+
+  static const String _rentalLegacyFlow = 'rental_legacy_flow';
+  static String get rentalLegacyFlow => _rentalLegacyFlow.tr();
+
+  static const String _rentalSaveLocalDraft = 'rental_save_local_draft';
+  static String get rentalSaveLocalDraft => _rentalSaveLocalDraft.tr();
+
+  static const String _rentalPropertyRooms = 'rental_property_rooms';
+  static String get rentalPropertyRooms => _rentalPropertyRooms.tr();
+
+  static const String _rentalGalleryAccommodation = 'rental_gallery_accommodation';
+  static String get rentalGalleryAccommodation => _rentalGalleryAccommodation.tr();
+
+  static const String _rentalPropertyVideo = 'rental_property_video';
+  static String get rentalPropertyVideo => _rentalPropertyVideo.tr();
+
+  static const String _rentalOfferDeposit = 'rental_offer_deposit';
+  static String get rentalOfferDeposit => _rentalOfferDeposit.tr();
+
+  static const String _rentalOfferSuitability = 'rental_offer_suitability';
+  static String get rentalOfferSuitability => _rentalOfferSuitability.tr();
+
+  static const String _rentalOfferDescription = 'rental_offer_description';
+  static String get rentalOfferDescription => _rentalOfferDescription.tr();
+
+  static const String _rentalPersistedScopeLocked = 'rental_persisted_scope_locked';
+  static String get rentalPersistedScopeLocked => _rentalPersistedScopeLocked.tr();
+
+  static const String _rentalDraftSaved = 'rental_draft_saved';
+  static String get rentalDraftSaved => _rentalDraftSaved.tr();
+
+  static const String _rentalParentRoomPhotos = 'rental_parent_room_photos';
+  static String get rentalParentRoomPhotos => _rentalParentRoomPhotos.tr();
+
+  static const String _rentalPropertyDescription = 'rental_property_description';
+  static String get rentalPropertyDescription => _rentalPropertyDescription.tr();
+
+  static const String _rentalConfirmAccommodation = 'rental_confirm_accommodation';
+  static String get rentalConfirmAccommodation => _rentalConfirmAccommodation.tr();
+
+  static const String _rentalAccommodationConfirmed = 'rental_accommodation_confirmed';
+  static String get rentalAccommodationConfirmed => _rentalAccommodationConfirmed.tr();
+
+  static const String _rentalMatchesDiscovery = 'rental_matches_discovery';
+  static String get rentalMatchesDiscovery => _rentalMatchesDiscovery.tr();
+
+  static const String _rentalHomeDiscovery = 'rental_home_discovery';
+  static String get rentalHomeDiscovery => _rentalHomeDiscovery.tr();
+
+  static const String _rentalHomeEntireProperties = 'rental_home_entire_properties';
+  static String get rentalHomeEntireProperties => _rentalHomeEntireProperties.tr();
+
+  static const String _rentalHomeRooms = 'rental_home_rooms';
+  static String get rentalHomeRooms => _rentalHomeRooms.tr();
+
+  static const String _rentalHomeRoomGroups = 'rental_home_room_groups';
+  static String get rentalHomeRoomGroups => _rentalHomeRoomGroups.tr();
+
+  static const String _rentalHomeBeds = 'rental_home_beds';
+  static String get rentalHomeBeds => _rentalHomeBeds.tr();
+
+  static const String _rentalHomePricePeriod = 'rental_home_price_period';
+  static String get rentalHomePricePeriod => _rentalHomePricePeriod.tr();
+
+  static const String _rentalHomePreview = 'rental_home_preview';
+  static String get rentalHomePreview => _rentalHomePreview.tr();
+
+  static const String _rentalHomeEmpty = 'rental_home_empty';
+  static String get rentalHomeEmpty => _rentalHomeEmpty.tr();
+
+  static const String _rentalHomeEmptyHelp = 'rental_home_empty_help';
+  static String get rentalHomeEmptyHelp => _rentalHomeEmptyHelp.tr();
+
+  static const String _rentalDuplicatePhotos = 'rental_duplicate_photos';
+  static String get rentalDuplicatePhotos => _rentalDuplicatePhotos.tr();
+
+  static const String _rentalPhotosCheckFailed = 'rental_photos_check_failed';
+  static String get rentalPhotosCheckFailed => _rentalPhotosCheckFailed.tr();
+
+  static const String _rentalDiscoveryIncompatible = 'rental_discovery_incompatible';
+  static String get rentalDiscoveryIncompatible => _rentalDiscoveryIncompatible.tr();
+
+  static const String _rentalParentRoom = 'rental_parent_room';
+  static String get rentalParentRoom => _rentalParentRoom.tr();
+
+  static const String _rentalParentRoomCapacity = 'rental_parent_room_capacity';
+  static String get rentalParentRoomCapacity => _rentalParentRoomCapacity.tr();
+
+  static const String _rentalGroupCapacity = 'rental_group_capacity';
+  static String get rentalGroupCapacity => _rentalGroupCapacity.tr();
+
+  static const String _rentalAddRoom = 'rental_add_room';
+  static String get rentalAddRoom => _rentalAddRoom.tr();
+
+  static const String _rentalAddRoomGroup = 'rental_add_room_group';
+  static String get rentalAddRoomGroup => _rentalAddRoomGroup.tr();
+
+  static const String _rentalAddBed = 'rental_add_bed';
+  static String get rentalAddBed => _rentalAddBed.tr();
+
+  static const String _rentalEditRoom = 'rental_edit_room';
+  static String get rentalEditRoom => _rentalEditRoom.tr();
+
+  static const String _rentalEditRoomGroup = 'rental_edit_room_group';
+  static String get rentalEditRoomGroup => _rentalEditRoomGroup.tr();
+
+  static const String _rentalEditBed = 'rental_edit_bed';
+  static String get rentalEditBed => _rentalEditBed.tr();
+
+  static const String _rentalPropertyDetails = 'rental_property_details';
+  static String get rentalPropertyDetails => _rentalPropertyDetails.tr();
+
+  static const String _rentalRoomGroupDetails = 'rental_room_group_details';
+  static String get rentalRoomGroupDetails => _rentalRoomGroupDetails.tr();
+
+  static const String _rentalBedDetails = 'rental_bed_details';
+  static String get rentalBedDetails => _rentalBedDetails.tr();
+
+  static const String _rentalSharedRoomDetails = 'rental_shared_room_details';
+  static String get rentalSharedRoomDetails => _rentalSharedRoomDetails.tr();
+
+  static const String _rentalPropertyContext = 'rental_property_context';
+  static String get rentalPropertyContext => _rentalPropertyContext.tr();
+
+  static const String _rentalParentPropertyName = 'rental_parent_property_name';
+  static String get rentalParentPropertyName => _rentalParentPropertyName.tr();
+
+  static const String _rentalSupportingPropertyHelp = 'rental_supporting_property_help';
+  static String get rentalSupportingPropertyHelp => _rentalSupportingPropertyHelp.tr();
+
+  static const String _rentalSharedEditHelp = 'rental_shared_edit_help';
+  static String get rentalSharedEditHelp => _rentalSharedEditHelp.tr();
+
+  static const String _rentalRoomDescription = 'rental_room_description';
+  static String get rentalRoomDescription => _rentalRoomDescription.tr();
+
+  static const String _rentalRoomFurnishing = 'rental_room_furnishing';
+  static String get rentalRoomFurnishing => _rentalRoomFurnishing.tr();
+
+  static const String _rentalUnfurnished = 'rental_unfurnished';
+  static String get rentalUnfurnished => _rentalUnfurnished.tr();
+
+  static const String _rentalSharedFacilitiesInput = 'rental_shared_facilities_input';
+  static String get rentalSharedFacilitiesInput => _rentalSharedFacilitiesInput.tr();
+
+  static const String _rentalSharedRulesInput = 'rental_shared_rules_input';
+  static String get rentalSharedRulesInput => _rentalSharedRulesInput.tr();
+
+  static const String _rentalDraftDetailsHelp = 'rental_draft_details_help';
+  static String get rentalDraftDetailsHelp => _rentalDraftDetailsHelp.tr();
+
+  static const String _rentalSelectRoom = 'rental_select_room';
+  static String get rentalSelectRoom => _rentalSelectRoom.tr();
+
+  static const String _rentalSelectGroupRooms = 'rental_select_group_rooms';
+  static String get rentalSelectGroupRooms => _rentalSelectGroupRooms.tr();
+
+  static const String _rentalSelectSharedRoom = 'rental_select_shared_room';
+  static String get rentalSelectSharedRoom => _rentalSelectSharedRoom.tr();
+
+  static const String _rentalDefineNewRoom = 'rental_define_new_room';
+  static String get rentalDefineNewRoom => _rentalDefineNewRoom.tr();
+
+  static const String _rentalGroupSelectionHelp = 'rental_group_selection_help';
+  static String get rentalGroupSelectionHelp => _rentalGroupSelectionHelp.tr();
+
+  static const String _rentalAddIndependentOffer = 'rental_add_independent_offer';
+  static String get rentalAddIndependentOffer => _rentalAddIndependentOffer.tr();
+
+  static const String _rentalIndependentOfferHelp = 'rental_independent_offer_help';
+  static String get rentalIndependentOfferHelp => _rentalIndependentOfferHelp.tr();
+
+  static const String _rentalEditAccommodation = 'rental_edit_accommodation';
+  static String get rentalEditAccommodation => _rentalEditAccommodation.tr();
+
+  static const String _rentalAccommodationRequired = 'rental_accommodation_required';
+  static String get rentalAccommodationRequired => _rentalAccommodationRequired.tr();
+
+  static const String _rentalRoomAreaInvalid = 'rental_room_area_invalid';
+  static String get rentalRoomAreaInvalid => _rentalRoomAreaInvalid.tr();
+
+  static const String _rentalUnitPhotos = 'rental_unit_photos';
+  static String get rentalUnitPhotos => _rentalUnitPhotos.tr();
+
+  static const String _rentalUnitPhotoHelp = 'rental_unit_photo_help';
+  static String get rentalUnitPhotoHelp => _rentalUnitPhotoHelp.tr();
+
+  static const String _rentalGroupCombinedArea = 'rental_group_combined_area';
+  static String get rentalGroupCombinedArea => _rentalGroupCombinedArea.tr();
+
+  static const String _rentalGroupAreaUnknown = 'rental_group_area_unknown';
+  static String get rentalGroupAreaUnknown => _rentalGroupAreaUnknown.tr();
+
+  static const String _rentalPhysicalBedCount = 'rental_physical_bed_count';
+  static String get rentalPhysicalBedCount => _rentalPhysicalBedCount.tr();
+
+  static const String _rentalRoomIdentityRequired = 'rental_room_identity_required';
+  static String get rentalRoomIdentityRequired => _rentalRoomIdentityRequired.tr();
+
+  static const String _rentalRoomCapacityInvalid = 'rental_room_capacity_invalid';
+  static String get rentalRoomCapacityInvalid => _rentalRoomCapacityInvalid.tr();
+
+  static const String _rentalSharedRoomCapacityInvalid = 'rental_shared_room_capacity_invalid';
+  static String get rentalSharedRoomCapacityInvalid => _rentalSharedRoomCapacityInvalid.tr();
+
+  static const String _rentalCapacityHelp = 'rental_capacity_help';
+  static String get rentalCapacityHelp => _rentalCapacityHelp.tr();
+
+  static const String _rentalOfferTerms = 'rental_offer_terms';
+  static String get rentalOfferTerms => _rentalOfferTerms.tr();
+
+  static const String _rentalAccommodationTitle = 'rental_accommodation_title';
+  static String get rentalAccommodationTitle => _rentalAccommodationTitle.tr();
+
+  static const String _rentalGroupDescription = 'rental_group_description';
+  static String get rentalGroupDescription => _rentalGroupDescription.tr();
+
+  static const String _rentalGroupFacilities = 'rental_group_facilities';
+  static String get rentalGroupFacilities => _rentalGroupFacilities.tr();
+
+  static const String _rentalNoAccommodationDetails = 'rental_no_accommodation_details';
+  static String get rentalNoAccommodationDetails => _rentalNoAccommodationDetails.tr();
+
+  static const String _rentalParentPropertyArea = 'rental_parent_property_area';
+  static String get rentalParentPropertyArea => _rentalParentPropertyArea.tr();
+
+  static const String _rentalParentPropertyBathrooms = 'rental_parent_property_bathrooms';
+  static String get rentalParentPropertyBathrooms => _rentalParentPropertyBathrooms.tr();
+
+  static const String _rentalManageListings = 'rental_manage_listings';
+  static String get rentalManageListings => _rentalManageListings.tr();
+
+  static const String _rentalEditSharedProperty = 'rental_edit_shared_property';
+  static String get rentalEditSharedProperty => _rentalEditSharedProperty.tr();
+
+  static const String _rentalRoomNameRequired = 'rental_room_name_required';
+  static String get rentalRoomNameRequired => _rentalRoomNameRequired.tr();
+
+  static const String _rentalBedNameRequired = 'rental_bed_name_required';
+  static String get rentalBedNameRequired => _rentalBedNameRequired.tr();
+
+  static const String _rentalFormDetailsProgress = 'rental_form_details_progress';
+  static String get rentalFormDetailsProgress => _rentalFormDetailsProgress.tr();
+
+  static const String _rentalChooseAccommodationToEdit = 'rental_choose_accommodation_to_edit';
+  static String get rentalChooseAccommodationToEdit => _rentalChooseAccommodationToEdit.tr();
+
+  static const String _rentalPropertyFacilities = 'rental_property_facilities';
+  static String get rentalPropertyFacilities => _rentalPropertyFacilities.tr();
+
+  static const String _rentalPropertyMediaOnce = 'rental_property_media_once';
+  static String get rentalPropertyMediaOnce => _rentalPropertyMediaOnce.tr();
+
+  static const String _rentalGroupIncludedNames = 'rental_group_included_names';
+  static String get rentalGroupIncludedNames => _rentalGroupIncludedNames.tr();
+
+  static const String _rentalChooseBed = 'rental_choose_bed';
+  static String get rentalChooseBed => _rentalChooseBed.tr();
+
+  static const String _rentalRoomArea = 'rental_room_area';
+  static String get rentalRoomArea => _rentalRoomArea.tr();
+
+  static const String _rentalRoomContents = 'rental_room_contents';
+  static String get rentalRoomContents => _rentalRoomContents.tr();
+
+  static const String _rentalRoomFeatures = 'rental_room_features';
+  static String get rentalRoomFeatures => _rentalRoomFeatures.tr();
+
+  static const String _rentalBedType = 'rental_bed_type';
+  static String get rentalBedType => _rentalBedType.tr();
+
+  static const String _rentalBedStorage = 'rental_bed_storage';
+  static String get rentalBedStorage => _rentalBedStorage.tr();
+
+  static const String _rentalBedDescription = 'rental_bed_description';
+  static String get rentalBedDescription => _rentalBedDescription.tr();
+
+  static const String _rentalParentPropertyType = 'rental_parent_property_type';
+  static String get rentalParentPropertyType => _rentalParentPropertyType.tr();
+
+  static const String _rentalOneItemPerLine = 'rental_one_item_per_line';
+  static String get rentalOneItemPerLine => _rentalOneItemPerLine.tr();
+
+  static const String _rentalRoomAreaUnknown = 'rental_room_area_unknown';
+  static String get rentalRoomAreaUnknown => _rentalRoomAreaUnknown.tr();
+
+  static const String _rentalAccommodationCategories = 'rental_accommodation_categories';
+  static String get rentalAccommodationCategories => _rentalAccommodationCategories.tr();
+
+  static const String _rentalCategoryAll = 'rental_category_all';
+  static String get rentalCategoryAll => _rentalCategoryAll.tr();
+
+  static const String _rentalCategoryUnspecified = 'rental_category_unspecified';
+  static String get rentalCategoryUnspecified => _rentalCategoryUnspecified.tr();
+
+  static const String _rentalCategoryUnspecifiedHint = 'rental_category_unspecified_hint';
+  static String get rentalCategoryUnspecifiedHint => _rentalCategoryUnspecifiedHint.tr();
+
+  static const String _rentalCategoryLoadedHint = 'rental_category_loaded_hint';
+  static String get rentalCategoryLoadedHint => _rentalCategoryLoadedHint.tr();
+
+  static const String _rentalCategoryLoadMore = 'rental_category_load_more';
+  static String get rentalCategoryLoadMore => _rentalCategoryLoadMore.tr();
+
+  static const String _rentalCategoryRetryPage = 'rental_category_retry_page';
+  static String get rentalCategoryRetryPage => _rentalCategoryRetryPage.tr();
+
+  static const String _rentalCategoryLoadedCount = 'rental_category_loaded_count';
+  static String get rentalCategoryLoadedCount => _rentalCategoryLoadedCount.tr();
+
+  static const String _rentalCategoryEmptyTitle = 'rental_category_empty_title';
+  static String get rentalCategoryEmptyTitle => _rentalCategoryEmptyTitle.tr();
+
+  static const String _rentalCategoryEmptyHint = 'rental_category_empty_hint';
+  static String get rentalCategoryEmptyHint => _rentalCategoryEmptyHint.tr();
+
+  static const String _rentalCategoryShowAll = 'rental_category_show_all';
+  static String get rentalCategoryShowAll => _rentalCategoryShowAll.tr();
+
+  static const String _rentalCategorySearchUnavailable = 'rental_category_search_unavailable';
+  static String get rentalCategorySearchUnavailable => _rentalCategorySearchUnavailable.tr();
+
 }

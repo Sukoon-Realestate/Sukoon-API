@@ -1,3 +1,5 @@
+import 'rental_offer_terms_editor.dart';
+import 'property_selection_field.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:sokoun_app/shared_widgets/localized_digits_formatter.dart';
@@ -12,7 +14,6 @@ import 'package:sokoun_app/features/owner/home/data/enums/property_tenant_type.d
 import 'package:sokoun_app/features/owner/home/data/enums/property_price_period.dart';
 
 import 'add_property_chip_wrap.dart';
-import 'property_selection_field.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/core/helpers/status_builder.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
@@ -80,62 +81,77 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
       .ownerPropertyUnsupportedAmenities
       .replaceAll('{items}', widget.form.unsupportedAmenities.join(', '));
 
-  List<FirstValidationErrorField> _validationFields() => [
-    FirstValidationErrorField(
-      fieldKey: _priceFieldKey,
-      title: LocaleKeys.ownerAddPropertyPrice,
-      value: widget.monthlyPriceController.text,
-      validator: PropertyFormValidation.price,
-    ),
-    FirstValidationErrorField(
-      fieldKey: _durationFieldKey,
-      title: LocaleKeys.ownerAddPropertyMinimumRentalMonths,
-      value: widget.rentalDurationController.text,
-      validator: PropertyFormValidation.rentalDuration,
-    ),
-    FirstValidationErrorField(
-      fieldKey: _unitFieldKey,
-      title: LocaleKeys.ownerAddPropertyPricePeriod,
-      value: widget.form.rentalUnitApiValue,
-      validator: PropertyFormValidation.rentalUnit,
-    ),
-    FirstValidationErrorField(
-      fieldKey: _amenitiesFieldKey,
-      title: LocaleKeys.ownerAddPropertyAmenities,
-      value: widget.form.amenityApiValues.join(', '),
-      validator: (_) => widget.form.unsupportedAmenities.isEmpty
-          ? null
-          : _unsupportedAmenitiesError,
-    ),
-    FirstValidationErrorField(
-      fieldKey: _suitableForFieldKey,
-      title: LocaleKeys.ownerAddPropertySuitableFor,
-      value: widget.form.suitableForApiValue,
-      validator: (value) => PropertyTenantType.fromValue(value ?? '') != null
-          ? null
-          : LocaleKeys.fillField,
-    ),
-    FirstValidationErrorField(
-      fieldKey: _descriptionFieldKey,
-      title: LocaleKeys.ownerAddPropertyDescriptionLabel,
-      value: widget.descriptionController.text,
-      validator: PropertyFormValidation.description,
-    ),
-    FirstValidationErrorField(
-      fieldKey: _buildingYearFieldKey,
-      title: LocaleKeys.tenantPropertyDetailsBuildingYear,
-      value: widget.form.buildingYear,
-      validator: PropertyFormValidation.buildingYear,
-    ),
-    FirstValidationErrorField(
-      fieldKey: _depositFieldKey,
-      title: LocaleKeys.ownerAddPropertyDeposit,
-      value: widget.form.deposit,
-      validator: (_) => widget.form.isDepositReady
-          ? null
-          : LocaleKeys.ownerAddPropertyDepositInvalid,
-    ),
-  ];
+  List<FirstValidationErrorField> _validationFields() =>
+      widget.form.isPartialOffering
+      ? [
+          FirstValidationErrorField(
+            fieldKey: _priceFieldKey,
+            title: LocaleKeys.rentalOffers,
+            value: null,
+            validator: (_) => widget.form.isPricingReady
+                ? null
+                : LocaleKeys.rentalInvalidInventory,
+          ),
+        ]
+      : [
+          FirstValidationErrorField(
+            fieldKey: _priceFieldKey,
+            title: LocaleKeys.ownerAddPropertyPrice,
+            value: widget.monthlyPriceController.text,
+            validator: PropertyFormValidation.price,
+          ),
+          FirstValidationErrorField(
+            fieldKey: _durationFieldKey,
+            title: LocaleKeys.ownerAddPropertyMinimumRentalMonths,
+            value: widget.rentalDurationController.text,
+            validator: PropertyFormValidation.rentalDuration,
+          ),
+          FirstValidationErrorField(
+            fieldKey: _unitFieldKey,
+            title: LocaleKeys.ownerAddPropertyPricePeriod,
+            value: widget.form.rentalUnitApiValue,
+            validator: PropertyFormValidation.rentalUnit,
+          ),
+          if (widget.form.rentalInventory == null)
+            FirstValidationErrorField(
+              fieldKey: _amenitiesFieldKey,
+              title: LocaleKeys.ownerAddPropertyAmenities,
+              value: widget.form.amenityApiValues.join(', '),
+              validator: (_) => widget.form.unsupportedAmenities.isEmpty
+                  ? null
+                  : _unsupportedAmenitiesError,
+            ),
+          FirstValidationErrorField(
+            fieldKey: _suitableForFieldKey,
+            title: LocaleKeys.ownerAddPropertySuitableFor,
+            value: widget.form.suitableForApiValue,
+            validator: (value) =>
+                PropertyTenantType.fromValue(value ?? '') != null
+                ? null
+                : LocaleKeys.fillField,
+          ),
+          if (widget.form.rentalInventory == null)
+            FirstValidationErrorField(
+              fieldKey: _descriptionFieldKey,
+              title: LocaleKeys.ownerAddPropertyDescriptionLabel,
+              value: widget.descriptionController.text,
+              validator: PropertyFormValidation.description,
+            ),
+          FirstValidationErrorField(
+            fieldKey: _buildingYearFieldKey,
+            title: LocaleKeys.tenantPropertyDetailsBuildingYear,
+            value: widget.form.buildingYear,
+            validator: PropertyFormValidation.buildingYear,
+          ),
+          FirstValidationErrorField(
+            fieldKey: _depositFieldKey,
+            title: LocaleKeys.ownerAddPropertyDeposit,
+            value: widget.form.deposit,
+            validator: (_) => widget.form.isDepositReady
+                ? null
+                : LocaleKeys.ownerAddPropertyDepositInvalid,
+          ),
+        ];
   @override
   void initState() {
     super.initState();
@@ -180,6 +196,39 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.form.isPartialOffering) {
+      return AddPropertyStepShell(
+        validationFields: _validationFields,
+        activeSegments: 3,
+        segmentCount: 3,
+        progressSubtitle: LocaleKeys.rentalOfferTerms,
+        primaryLabel: widget.isSubmitting
+            ? LocaleKeys.ownerAddPropertySubmitting
+            : LocaleKeys.ownerPropertyReviewAction,
+        onPrimaryTap: widget.isSubmitting ? null : widget.onNext,
+        children: [
+          PropertySelectionField(
+            key: _priceFieldKey,
+            isValid: widget.form.isPricingReady,
+            message: LocaleKeys.rentalInvalidInventory,
+            child: RentalOfferTermsEditor(
+              inventory: widget.form.rentalInventory!,
+              onChanged: (inventory) => widget.onAdditionalDetailsChanged(
+                widget.form.copyWith(rentalInventory: inventory),
+              ),
+            ),
+          ),
+          if (!widget.form.canSaveToServer())
+            AddPropertyInfoBanner(
+              text: LocaleKeys.rentalLocalOnly,
+              backgroundColor: context.appColor(
+                AppColors.amberPale,
+                surface: true,
+              ),
+            ),
+        ],
+      );
+    }
     return AddPropertyStepShell(
       validationFields: _validationFields,
       activeSegments: 3,
@@ -190,12 +239,13 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
           : LocaleKeys.ownerPropertyReviewAction,
       onPrimaryTap: !widget.isSubmitting ? widget.onNext : null,
       children: [
-        _PriceSection(
-          priceFieldKey: _priceFieldKey,
-          form: widget.form,
-          monthlyPriceController: widget.monthlyPriceController,
-          onMonthlyPriceChanged: widget.onMonthlyPriceChanged,
-        ),
+        if (!widget.form.isPartialOffering)
+          _PriceSection(
+            priceFieldKey: _priceFieldKey,
+            form: widget.form,
+            monthlyPriceController: widget.monthlyPriceController,
+            onMonthlyPriceChanged: widget.onMonthlyPriceChanged,
+          ),
         BlocProvider<PropertyFilterOptionsCubit>.value(
           value: _optionsCubit,
           child:
@@ -211,115 +261,121 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
                   return Column(
                     spacing: 16,
                     children: [
-                      AddPropertyRentalPeriodSection(
-                        durationFieldKey: _durationFieldKey,
-                        unitFieldKey: _unitFieldKey,
-                        form: widget.form,
-                        rentalDurationController:
-                            widget.rentalDurationController,
-                        onRentalDurationChanged: widget.onRentalDurationChanged,
-                        onRentalUnitChanged: widget.onRentalUnitChanged,
-                        options: [
-                          for (final period in PropertyPricePeriod.values)
-                            options.pricePeriods
-                                    .where(
-                                      (option) => option.value == period.value,
-                                    )
-                                    .firstOrNull ??
-                                TenantFilterOption(
-                                  value: period.value,
-                                  label: period.label,
-                                ),
-                        ],
-                      ),
-                      AddPropertySectionCard(
-                        key: _amenitiesFieldKey,
-                        title: LocaleKeys.ownerAddPropertyAmenities,
-                        child: AddPropertyChipWrap(
-                          chips: [
-                            AddPropertyChipContent(
-                              label: LocaleKeys.ownerAddPropertyFurnished,
-                              value: 'furnished',
-                              isSelected: widget.form.amenityApiValues.contains(
-                                'furnished',
-                              ),
-                            ),
-                            for (final option in options.amenities)
-                              if (OwnerAddPropertyContent.supportedAmenityValues
-                                  .contains(option.value))
-                                AddPropertyChipContent(
-                                  label: option.label,
-                                  value: option.value,
-                                  isSelected: widget.form.amenityApiValues
-                                      .contains(option.value),
-                                ),
-                            for (final value in widget.form.amenityApiValues)
-                              if (value != 'furnished' &&
-                                  (!OwnerAddPropertyContent
-                                          .supportedAmenityValues
-                                          .contains(value) ||
-                                      !options.amenities.any(
-                                        (option) => option.value == value,
-                                      )))
-                                AddPropertyChipContent(
-                                  label:
-                                      widget
-                                          .form
-                                          .optionLabels['amenity:$value'] ??
-                                      value,
-                                  value: value,
-                                  isSelected: true,
-                                ),
+                      if (!widget.form.isPartialOffering)
+                        AddPropertyRentalPeriodSection(
+                          durationFieldKey: _durationFieldKey,
+                          unitFieldKey: _unitFieldKey,
+                          form: widget.form,
+                          rentalDurationController:
+                              widget.rentalDurationController,
+                          onRentalDurationChanged:
+                              widget.onRentalDurationChanged,
+                          onRentalUnitChanged: widget.onRentalUnitChanged,
+                          options: [
+                            for (final period in PropertyPricePeriod.values)
+                              options.pricePeriods
+                                      .where(
+                                        (option) =>
+                                            option.value == period.value,
+                                      )
+                                      .firstOrNull ??
+                                  TenantFilterOption(
+                                    value: period.value,
+                                    label: period.label,
+                                  ),
                           ],
-                          onChipTap: (chip) =>
-                              widget.onAmenityToggled(chip.selectionValue),
                         ),
-                      ),
-                      AddPropertySectionCard(
-                        title: '${LocaleKeys.ownerAddPropertySuitableFor} *',
-                        child: PropertySelectionField(
-                          key: _suitableForFieldKey,
-                          isValid:
-                              PropertyTenantType.fromValue(
-                                widget.form.suitableForApiValue,
-                              ) !=
-                              null,
+                      if (widget.form.rentalInventory == null)
+                        AddPropertySectionCard(
+                          key: _amenitiesFieldKey,
+                          title: LocaleKeys.ownerAddPropertyAmenities,
                           child: AddPropertyChipWrap(
                             chips: [
-                              for (final type in PropertyTenantType.values)
-                                AddPropertyChipContent(
-                                  label:
-                                      options.suitableFor
-                                          .where(
-                                            (option) =>
-                                                option.value == type.value,
-                                          )
-                                          .firstOrNull
-                                          ?.label ??
-                                      type.label,
-                                  value: type.value,
-                                  isSelected:
-                                      widget.form.suitableForApiValue ==
-                                      type.value,
-                                ),
+                              AddPropertyChipContent(
+                                label: LocaleKeys.ownerAddPropertyFurnished,
+                                value: 'furnished',
+                                isSelected: widget.form.amenityApiValues
+                                    .contains('furnished'),
+                              ),
+                              for (final option in options.amenities)
+                                if (OwnerAddPropertyContent
+                                    .supportedAmenityValues
+                                    .contains(option.value))
+                                  AddPropertyChipContent(
+                                    label: option.label,
+                                    value: option.value,
+                                    isSelected: widget.form.amenityApiValues
+                                        .contains(option.value),
+                                  ),
+                              for (final value in widget.form.amenityApiValues)
+                                if (value != 'furnished' &&
+                                    (!OwnerAddPropertyContent
+                                            .supportedAmenityValues
+                                            .contains(value) ||
+                                        !options.amenities.any(
+                                          (option) => option.value == value,
+                                        )))
+                                  AddPropertyChipContent(
+                                    label:
+                                        widget
+                                            .form
+                                            .optionLabels['amenity:$value'] ??
+                                        value,
+                                    value: value,
+                                    isSelected: true,
+                                  ),
                             ],
-                            onChipTap: (chip) => widget.onSuitableForSelected(
-                              chip.selectionValue,
+                            onChipTap: (chip) =>
+                                widget.onAmenityToggled(chip.selectionValue),
+                          ),
+                        ),
+                      if (!widget.form.isPartialOffering)
+                        AddPropertySectionCard(
+                          title: '${LocaleKeys.ownerAddPropertySuitableFor} *',
+                          child: PropertySelectionField(
+                            key: _suitableForFieldKey,
+                            isValid:
+                                PropertyTenantType.fromValue(
+                                  widget.form.suitableForApiValue,
+                                ) !=
+                                null,
+                            child: AddPropertyChipWrap(
+                              chips: [
+                                for (final type in PropertyTenantType.values)
+                                  AddPropertyChipContent(
+                                    label:
+                                        options.suitableFor
+                                            .where(
+                                              (option) =>
+                                                  option.value == type.value,
+                                            )
+                                            .firstOrNull
+                                            ?.label ??
+                                        type.label,
+                                    value: type.value,
+                                    isSelected:
+                                        widget.form.suitableForApiValue ==
+                                        type.value,
+                                  ),
+                              ],
+                              onChipTap: (chip) => widget.onSuitableForSelected(
+                                chip.selectionValue,
+                              ),
                             ),
                           ),
                         ),
-                      ),
                     ],
                   );
                 },
               ),
         ),
         if (widget.listingAssistant != null) widget.listingAssistant!,
-        _DescriptionSection(
-          descriptionFieldKey: _descriptionFieldKey,
-          descriptionController: widget.descriptionController,
-          onDescriptionChanged: widget.onDescriptionChanged,
-        ),
+        if (widget.form.rentalInventory == null)
+          _DescriptionSection(
+            descriptionFieldKey: _descriptionFieldKey,
+            descriptionController: widget.descriptionController,
+            onDescriptionChanged: widget.onDescriptionChanged,
+          ),
         AddPropertyAdditionalDetails(
           buildingYearFieldKey: _buildingYearFieldKey,
           depositFieldKey: _depositFieldKey,
@@ -376,7 +432,9 @@ class _PriceSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AddPropertySectionCard(
-      title: LocaleKeys.ownerAddPropertyPrice,
+      title: form.rentalInventory != null
+          ? LocaleKeys.rentalEntirePriceBasis
+          : LocaleKeys.ownerAddPropertyPrice,
       child: Column(
         spacing: 10.h,
         children: [

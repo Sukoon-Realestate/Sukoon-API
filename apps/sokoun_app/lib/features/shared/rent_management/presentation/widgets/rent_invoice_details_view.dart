@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
@@ -62,6 +63,10 @@ class _RentInvoiceDetailsViewState extends State<RentInvoiceDetailsView>
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             AppText(invoice.propertyTitle, fontWeight: FontWeight.bold),
+            if (invoice.rentalSelection != null)
+              AppText(
+                RentalOfferLabels.accommodation(invoice.rentalSelection!),
+              ),
             16.szH,
             AppText('${LocaleKeys.paidRentReference} ${invoice.reference}'),
             PremiumStatusBadge(status: invoice.status),

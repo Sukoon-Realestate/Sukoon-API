@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_listing_summary.dart';
 import 'package:equatable/equatable.dart';
 
 class HomePageModel extends Equatable {
@@ -71,8 +72,16 @@ class HomePropertyModel extends Equatable {
   final int area;
   final double rate;
   final bool isSponsored;
+  final RentalListingSummary? rentalSummary;
+  final int? rentalSchemaVersion;
+  final String location;
+  bool get hasRentalOffers =>
+      rentalSchemaVersion != null || rentalSummary != null;
 
   const HomePropertyModel({
+    this.rentalSummary,
+    this.rentalSchemaVersion,
+    this.location = '',
     required this.id,
     required this.mainImage,
     required this.imagesCount,
@@ -86,7 +95,10 @@ class HomePropertyModel extends Equatable {
   });
 
   const HomePropertyModel.initial()
-    : id = '',
+    : rentalSummary = null,
+      rentalSchemaVersion = null,
+      location = '',
+      id = '',
       mainImage = '',
       imagesCount = 0,
       title = '',
@@ -99,6 +111,11 @@ class HomePropertyModel extends Equatable {
 
   factory HomePropertyModel.fromJson(Map<String, dynamic> json) =>
       HomePropertyModel(
+        rentalSummary: RentalListingSummary.read(json),
+        rentalSchemaVersion: int.tryParse(
+          '${json['rental_schema_version'] ?? ''}',
+        ),
+        location: json['location_label']?.toString() ?? '',
         id: json['id'] ?? '',
         mainImage: json['main_image'] ?? '',
         imagesCount: (json['images_count'] as num?)?.toInt() ?? 0,
@@ -113,6 +130,10 @@ class HomePropertyModel extends Equatable {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    if (rentalSummary != null) 'rental_summary': rentalSummary!.toJson(),
+    if (rentalSchemaVersion != null)
+      'rental_schema_version': rentalSchemaVersion,
+    'location_label': location,
     'main_image': mainImage,
     'images_count': imagesCount,
     'title': title,
@@ -125,6 +146,9 @@ class HomePropertyModel extends Equatable {
   };
 
   HomePropertyModel copyWith({
+    RentalListingSummary? rentalSummary,
+    int? rentalSchemaVersion,
+    String? location,
     String? id,
     String? mainImage,
     int? imagesCount,
@@ -136,6 +160,9 @@ class HomePropertyModel extends Equatable {
     double? rate,
     bool? isSponsored,
   }) => HomePropertyModel(
+    rentalSummary: rentalSummary ?? this.rentalSummary,
+    rentalSchemaVersion: rentalSchemaVersion ?? this.rentalSchemaVersion,
+    location: location ?? this.location,
     id: id ?? this.id,
     mainImage: mainImage ?? this.mainImage,
     imagesCount: imagesCount ?? this.imagesCount,
@@ -150,6 +177,9 @@ class HomePropertyModel extends Equatable {
 
   @override
   List<Object?> get props => [
+    rentalSummary,
+    rentalSchemaVersion,
+    location,
     id,
     mainImage,
     imagesCount,

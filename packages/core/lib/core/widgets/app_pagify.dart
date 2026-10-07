@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
@@ -60,6 +61,18 @@ class AppPagify<T> extends StatefulWidget {
   /// Scrolls above list/adaptive-grid content, including loading and errors.
   final Widget? header;
 
+  /// Optional display projection for locally filtered collections. Source
+  /// items, cache contents and server page boundaries remain untouched.
+  final List<T> Function(List<T> items)? filterItems;
+  final Widget Function(
+    BuildContext context,
+    bool hasMorePages,
+    bool isLoading,
+    String? errorMessage,
+    VoidCallback loadMore,
+  )?
+  filteredFooterBuilder;
+
   /// Insets collection rows and states without narrowing the scrolling header.
   final EdgeInsetsGeometry contentPadding;
   final bool isReverse;
@@ -100,6 +113,8 @@ class AppPagify<T> extends StatefulWidget {
     this.shrinkWrap = true,
     this.emptyListView,
     this.header,
+    this.filterItems,
+    this.filteredFooterBuilder,
     this.contentPadding = EdgeInsets.zero,
     this.isReverse = false,
     this.cacheExtent,
@@ -118,7 +133,10 @@ class AppPagify<T> extends StatefulWidget {
   }) : assert(header == null || rankingType != Ranking.gridView),
        assert(header == null || itemExtent == null),
        assert(!retainItemsOnRefresh || retainedItemsNotice != null),
-       assert(!retainItemsOnRefresh || rankingType != Ranking.gridView);
+       assert(!retainItemsOnRefresh || rankingType != Ranking.gridView),
+       assert(filterItems == null || rankingType != Ranking.gridView),
+       assert(filterItems == null || itemExtent == null),
+       assert(filterItems == null || !isReverse);
 
   @override
   State<AppPagify<T>> createState() => _AppPagifyState<T>();
@@ -130,11 +148,16 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
   PagifyException? _requestError;
   Completer<void>? _refreshCompleter;
   List<T> _lastSuccessfulItems = const [];
+  bool _hasMorePages = false;
+  List<T>? _visibleItems;
+  VoidCallback? _retryPendingPage;
 
   Future<void> _refresh() {
     final Completer<void>? pending = _refreshCompleter;
     if (pending != null) return pending.future;
-    if (widget.pagifyController.isLoading) return Future.value();
+    if (widget.pagifyController.isLoading && _retryPendingPage == null) {
+      return Future.value();
+    }
     final completer = Completer<void>();
     _refreshCompleter = completer;
     // Pagify starts its request without awaiting it. Complete on terminal status.
@@ -148,6 +171,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
   }
 
   Future<void> _onUpdateStatus(PagifyAsyncCallStatus status) async {
+    _visibleItems = null;
     try {
       await widget.onUpdateStatus?.call(status);
     } finally {
@@ -158,7 +182,11 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
   }
 
   Future<(List<T>, PaginationData)> _loadPage(BuildContext context, int page) {
-    if (page == 1) _requestGeneration++;
+    if (page == 1) {
+      _requestGeneration++;
+      _hasMorePages = false;
+      _retryPendingPage = null;
+    }
     final int generation = _requestGeneration;
     _requestError = null;
     final completer = Completer<(List<T>, PaginationData)>();
@@ -173,7 +201,10 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
       if (!active()) return;
       try {
         final result = await widget.asyncCall(context, page);
-        if (active()) completer.complete(result);
+        if (active()) {
+          _hasMorePages = page < result.$2.totalPages;
+          completer.complete(result);
+        }
       } on RequestCancelledException {
         // Replaced/disposed reads must not trigger Pagify cache fallback.
       } catch (error, stack) {
@@ -187,6 +218,24 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
               error.message,
               pagifyFailure: RequestFailureData.initial(),
             );
+          }
+          if (page > 1 &&
+              widget.filterItems != null &&
+              widget.pagifyController.items.isNotEmpty) {
+            // Pagify 0.3 does not await/catch failures from its scroll request.
+            // Keep that same page future pending and retry it explicitly; a
+            // failure must never advance the page or discard the source items.
+            _requestError ??= PagifyApiRequestException(
+              error is DioException && error.response?.data is Map
+                  ? (error.response!.data as Map)['message']?.toString() ??
+                        LocaleKeys.exceptionError
+                  : LocaleKeys.exceptionError,
+              pagifyFailure: RequestFailureData.initial(),
+            );
+            _retryPendingPage = () => unawaited(request());
+            setState(() {});
+            if (context.mounted) await _onError(context, page, _requestError!);
+            return;
           }
           completer.completeError(
             error is Exception ? error : Exception(error.toString()),
@@ -204,6 +253,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
       error is PagifyNetworkException ? error : _requestError ?? error;
 
   Future<void> _onSuccess(BuildContext context, List<T> items) async {
+    _visibleItems = null;
     if (widget.retainItemsOnRefresh) _lastSuccessfulItems = List<T>.of(items);
     await widget.onSuccess?.call(context, items);
   }
@@ -241,6 +291,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
             _lastSuccessfulItems[index],
             columns,
             includeHeader: false,
+            includeFilterFooter: false,
           );
         },
       );
@@ -297,6 +348,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
     builder: (context) {
       final Widget loading =
           widget.loadingBuilder ?? CustomLoading.showLoadingView();
+      if (_retryPendingPage != null) return const SizedBox.shrink();
       // Pagify uses this same widget for its first load and pagination footer.
       return widget.pagifyController.items.isEmpty
           ? (_canRetainItems
@@ -318,9 +370,21 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
     T item,
     int columns, {
     bool includeHeader = true,
+    bool includeFilterFooter = true,
   }) {
+    final filter = widget.filterItems;
+    final List<T> visible = filter == null
+        ? data
+        : includeFilterFooter
+        ? (_visibleItems ??= filter(List<T>.unmodifiable(data)))
+        : filter(List<T>.unmodifiable(data));
+    if (widget.filterItems != null && index > 0 && index >= visible.length) {
+      return const SizedBox.shrink();
+    }
     late final Widget row;
-    if (widget.rankingType == Ranking.adaptiveGrid) {
+    if (widget.filterItems != null && visible.isEmpty) {
+      row = widget.emptyListView ?? AppText(LocaleKeys.notFound);
+    } else if (widget.rankingType == Ranking.adaptiveGrid) {
       if (index % columns != 0) return const SizedBox.shrink();
       row = Padding(
         padding: EdgeInsets.only(bottom: widget.gridSpacing),
@@ -330,12 +394,12 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
             for (int column = 0; column < columns; column++) ...[
               if (column > 0) SizedBox(width: widget.gridSpacing),
               Expanded(
-                child: index + column < data.length
+                child: index + column < visible.length
                     ? widget.itemBuilder(
                         context,
-                        data,
+                        visible,
                         index + column,
-                        data[index + column],
+                        visible[index + column],
                       )
                     : const SizedBox.shrink(),
               ),
@@ -344,15 +408,60 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
         ),
       );
     } else {
-      row = widget.itemBuilder(context, data, index, item);
+      row = widget.itemBuilder(context, visible, index, visible[index]);
     }
     final Widget? header = widget.header;
-    final Widget content = _padContent(row);
+    final bool lastVisibleRow =
+        visible.isEmpty || index + columns >= visible.length;
+    final Widget? footer =
+        widget.filterItems != null && includeFilterFooter && lastVisibleRow
+        ? Builder(
+            builder: (footerContext) =>
+                widget.filteredFooterBuilder?.call(
+                  footerContext,
+                  _hasMorePages,
+                  widget.pagifyController.isLoading &&
+                      _retryPendingPage == null,
+                  _requestError?.msg,
+                  () => _loadMoreFiltered(footerContext),
+                ) ??
+                const SizedBox.shrink(),
+          )
+        : null;
+    final Widget content = _padContent(
+      footer == null
+          ? row
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [row, footer],
+            ),
+    );
     if (!includeHeader || index != 0 || header == null) return content;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [header, content],
     );
+  }
+
+  void _loadMoreFiltered(BuildContext itemContext) {
+    final retry = _retryPendingPage;
+    if (mounted && retry != null) {
+      _retryPendingPage = null;
+      _requestError = null;
+      setState(() {});
+      retry();
+      return;
+    }
+    if (!mounted || !_hasMorePages || widget.pagifyController.isLoading) return;
+    final ScrollPosition? position = Scrollable.maybeOf(itemContext)?.position;
+    if (position == null) return;
+    // Use Pagify's existing scroll/retry path. Its public loadMore method in
+    // 0.3 resets to page one, which would repeatedly hide later-page matches.
+    if (position.pixels == position.maxScrollExtent) {
+      widget.pagifyController.retry();
+    } else {
+      position.jumpTo(position.maxScrollExtent);
+    }
   }
 
   Future<void> _onError(
@@ -407,6 +516,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
   }
 
   Widget _buildCollection(BuildContext context, BoxConstraints constraints) {
+    _visibleItems = null;
     final int columns = _columnCount(context, constraints);
     final hasCacheConfig =
         widget.cacheKey != null &&

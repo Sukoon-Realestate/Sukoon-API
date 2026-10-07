@@ -53,6 +53,10 @@ class OwnerTransactionRow extends StatelessWidget {
                   height: 1.45,
                 ),
               ),
+              if (transaction.rentalSelection != null)
+                AppText(
+                  RentalOfferLabels.accommodation(transaction.rentalSelection!),
+                ),
             ],
           ),
         ),

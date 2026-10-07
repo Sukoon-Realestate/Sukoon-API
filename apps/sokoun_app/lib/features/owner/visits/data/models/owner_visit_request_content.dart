@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
 import '../enums/owner_visit_request_state.dart';
 import '../owner_visit_json.dart';
 import 'owner_visit_request_details_content.dart';
@@ -5,6 +6,7 @@ import 'package:equatable/equatable.dart';
 
 class OwnerVisitRequestContent extends Equatable {
   const OwnerVisitRequestContent({
+    this.rentalSelection,
     required this.id,
     required this.initial,
     required this.name,
@@ -64,6 +66,7 @@ class OwnerVisitRequestContent extends Equatable {
         json['time'] ?? json['visit_time'] ?? property['time'] ?? '';
 
     return OwnerVisitRequestContent(
+      rentalSelection: RentalSelection.fromRecord(json),
       id: json['id'] ?? '',
       initial:
           json['initial'] ??
@@ -120,6 +123,7 @@ class OwnerVisitRequestContent extends Equatable {
         .toList(growable: false);
   }
 
+  final RentalSelection? rentalSelection;
   final String id;
   final String initial;
   final String name;
@@ -146,6 +150,10 @@ class OwnerVisitRequestContent extends Equatable {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      if (rentalSelection != null) ...{
+        'offer_id': rentalSelection!.offerId,
+        'offer_snapshot': rentalSelection!.toJson(),
+      },
       'initial': initial,
       'name': name,
       'property': property,
@@ -168,6 +176,7 @@ class OwnerVisitRequestContent extends Equatable {
   }
 
   OwnerVisitRequestContent copyWith({
+    RentalSelection? rentalSelection,
     String? id,
     String? initial,
     String? name,
@@ -189,6 +198,7 @@ class OwnerVisitRequestContent extends Equatable {
     String? verificationWarning,
   }) {
     return OwnerVisitRequestContent(
+      rentalSelection: rentalSelection ?? this.rentalSelection,
       id: id ?? this.id,
       initial: initial ?? this.initial,
       name: name ?? this.name,
@@ -213,6 +223,7 @@ class OwnerVisitRequestContent extends Equatable {
 
   @override
   List<Object?> get props => [
+    rentalSelection,
     id,
     initial,
     name,

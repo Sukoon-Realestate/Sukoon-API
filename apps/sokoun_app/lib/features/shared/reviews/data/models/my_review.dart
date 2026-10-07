@@ -1,7 +1,9 @@
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
 import 'package:equatable/equatable.dart';
 
 class MyReview extends Equatable {
   const MyReview({
+    this.rentalSelection,
     required this.id,
     required this.propertyId,
     required this.propertyTitle,
@@ -12,7 +14,8 @@ class MyReview extends Equatable {
     required this.createdAt,
   });
   const MyReview.initial()
-    : id = '',
+    : rentalSelection = null,
+      id = '',
       propertyId = '',
       propertyTitle = '',
       propertyImage = '',
@@ -22,6 +25,7 @@ class MyReview extends Equatable {
       createdAt = '';
 
   factory MyReview.fromJson(Map<String, dynamic> json) => MyReview(
+    rentalSelection: RentalSelection.fromRecord(json),
     id: json['id']?.toString() ?? '',
     propertyId: json['property_id']?.toString() ?? '',
     propertyTitle: json['property_title']?.toString() ?? '',
@@ -31,6 +35,7 @@ class MyReview extends Equatable {
     comment: json['comment']?.toString() ?? '',
     createdAt: json['created_at']?.toString() ?? '',
   );
+  final RentalSelection? rentalSelection;
   final String id;
   final String propertyId;
   final String propertyTitle;
@@ -42,6 +47,10 @@ class MyReview extends Equatable {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    if (rentalSelection != null) ...{
+      'offer_id': rentalSelection!.offerId,
+      'offer_snapshot': rentalSelection!.toJson(),
+    },
     'property_id': propertyId,
     'property_title': propertyTitle,
     'property_image': propertyImage,
@@ -51,6 +60,7 @@ class MyReview extends Equatable {
     'created_at': createdAt,
   };
   MyReview copyWith({
+    RentalSelection? rentalSelection,
     String? id,
     String? propertyId,
     String? propertyTitle,
@@ -60,6 +70,7 @@ class MyReview extends Equatable {
     String? comment,
     String? createdAt,
   }) => MyReview(
+    rentalSelection: rentalSelection ?? this.rentalSelection,
     id: id ?? this.id,
     propertyId: propertyId ?? this.propertyId,
     propertyTitle: propertyTitle ?? this.propertyTitle,
@@ -71,6 +82,7 @@ class MyReview extends Equatable {
   );
   @override
   List<Object?> get props => [
+    rentalSelection,
     id,
     propertyId,
     propertyTitle,
