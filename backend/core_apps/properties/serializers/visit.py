@@ -72,6 +72,8 @@ class PropertyVisitSerializer(serializers.ModelSerializer):
             "note",
             "created_at",
             "updated_at",
+            "offer_id",
+            "offer_snapshot",
         ]
         read_only_fields = ["id", "status", "created_at", "updated_at"]
 
@@ -171,10 +173,24 @@ class PropertyVisitDetailSerializer(serializers.ModelSerializer):
 
 
 class PropertyVisitCreateSerializer(serializers.ModelSerializer):
+    expected_offer_revision = serializers.IntegerField(
+        required=False, write_only=True, min_value=1
+    )
+
     class Meta:
         model = PropertyVisit
-        fields = ["id", "visit_date", "visit_time", "note", "created_at", "updated_at"]
-        read_only_fields = ["id", "created_at", "updated_at"]
+        fields = [
+            "id",
+            "visit_date",
+            "visit_time",
+            "note",
+            "offer_id",
+            "expected_offer_revision",
+            "offer_snapshot",
+            "created_at",
+            "updated_at",
+        ]
+        read_only_fields = ["id", "offer_snapshot", "created_at", "updated_at"]
 
     def validate_visit_date(self, value):
         from django.utils import timezone
@@ -276,11 +292,19 @@ class OwnerVisitCalendarQuerySerializer(serializers.Serializer):
                     parsed_date = datetime.strptime(date_str, "%Y-%m-%d").date()
                 except ValueError:
                     raise serializers.ValidationError(
-                        {"date": _("Date must be a day number (1-31) or in YYYY-MM-DD format.")}
+                        {
+                            "date": _(
+                                "Date must be a day number (1-31) or in YYYY-MM-DD format."
+                            )
+                        }
                     )
                 if parsed_date.year != year or parsed_date.month != month:
                     raise serializers.ValidationError(
-                        {"date": _("The selected date must belong to the requested month.")}
+                        {
+                            "date": _(
+                                "The selected date must belong to the requested month."
+                            )
+                        }
                     )
                 selected_date = parsed_date
 
@@ -475,6 +499,7 @@ class TenantVisitRequestDetailSerializer(TenantVisitRequestSerializer):
 
 # ? Helper functions for formatting dates and times for the owner screens
 
+
 def _format_time_ar_compact(time_val):
     hour = time_val.hour
     minute = time_val.minute
@@ -650,9 +675,7 @@ class OwnerVisitRequestDetailSerializer(serializers.ModelSerializer):
         tenant = obj.tenant
         profile = getattr(tenant, "profile", None)
         avatar_url = (
-            profile.avatar.url
-            if profile and getattr(profile, "avatar", None)
-            else None
+            profile.avatar.url if profile and getattr(profile, "avatar", None) else None
         )
         raw_phone = (
             str(profile.phone_number)
@@ -669,9 +692,11 @@ class OwnerVisitRequestDetailSerializer(serializers.ModelSerializer):
         phone_notice = (
             ""
             if is_confirmed
-            else f"رقم المستأجر {masked_phone} – يظهر بعد القبول فقط"
-            if masked_phone
-            else "رقم المستأجر – يظهر بعد القبول فقط"
+            else (
+                f"رقم المستأجر {masked_phone} – يظهر بعد القبول فقط"
+                if masked_phone
+                else "رقم المستأجر – يظهر بعد القبول فقط"
+            )
         )
 
         return {
@@ -729,7 +754,4 @@ class OwnerVisitRejectSerializer(serializers.Serializer):
     reason = serializers.ChoiceField(
         choices=REJECTION_REASONS, default="timing_not_suitable"
     )
-    custom_reason = serializers.CharField(
-        required=False, allow_blank=True, default=""
-    )
-
+    custom_reason = serializers.CharField(required=False, allow_blank=True, default="")

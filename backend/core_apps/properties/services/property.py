@@ -1,4 +1,5 @@
 from typing import Optional
+from decimal import Decimal
 
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
@@ -49,34 +50,69 @@ class PropertyService:
                 {"value": "-created_at", "label": "Newest" if is_en else "الأحدث"},
                 {"value": "created_at", "label": "Oldest" if is_en else "الأقدم"},
                 {"value": "price", "label": "Lowest Price" if is_en else "السعر الأقل"},
-                {"value": "-price", "label": "Highest Price" if is_en else "السعر الأعلى"},
+                {
+                    "value": "-price",
+                    "label": "Highest Price" if is_en else "السعر الأعلى",
+                },
             ],
             "bedrooms": "number",
             "bathrooms": "number",
             "price_periods": [
-                {"value": Property.PricePeriod.DAILY, "label": "Daily" if is_en else "يومي"},
-                {"value": Property.PricePeriod.WEEKLY, "label": "Weekly" if is_en else "أسبوعي"},
-                {"value": Property.PricePeriod.MONTHLY, "label": "Monthly" if is_en else "شهري"},
-                {"value": Property.PricePeriod.YEARLY, "label": "Yearly" if is_en else "سنوي"},
+                {
+                    "value": Property.PricePeriod.DAILY,
+                    "label": "Daily" if is_en else "يومي",
+                },
+                {
+                    "value": Property.PricePeriod.WEEKLY,
+                    "label": "Weekly" if is_en else "أسبوعي",
+                },
+                {
+                    "value": Property.PricePeriod.MONTHLY,
+                    "label": "Monthly" if is_en else "شهري",
+                },
+                {
+                    "value": Property.PricePeriod.YEARLY,
+                    "label": "Yearly" if is_en else "سنوي",
+                },
             ],
             "suitable_for": [
-                {"value": Property.SuitableFor.FAMILIES, "label": "Families" if is_en else "عائلات"},
-                {"value": Property.SuitableFor.SINGLES, "label": "Singles" if is_en else "أفراد"},
-                {"value": Property.SuitableFor.STUDENTS, "label": "Students" if is_en else "طلاب"},
+                {
+                    "value": Property.SuitableFor.FAMILIES,
+                    "label": "Families" if is_en else "عائلات",
+                },
+                {
+                    "value": Property.SuitableFor.SINGLES,
+                    "label": "Singles" if is_en else "أفراد",
+                },
+                {
+                    "value": Property.SuitableFor.STUDENTS,
+                    "label": "Students" if is_en else "طلاب",
+                },
                 {
                     "value": Property.SuitableFor.FEMALE_STUDENTS,
                     "label": "Female Students Only" if is_en else "طالبات فقط",
                 },
-                {"value": Property.SuitableFor.ALL, "label": "All" if is_en else "الكل"},
+                {
+                    "value": Property.SuitableFor.ALL,
+                    "label": "All" if is_en else "الكل",
+                },
             ],
             "amenities": [
-                {"value": "wifi", "query_parameter": "has_wifi", "label": "WiFi" if is_en else "واي فاي"},
+                {
+                    "value": "wifi",
+                    "query_parameter": "has_wifi",
+                    "label": "WiFi" if is_en else "واي فاي",
+                },
                 {
                     "value": "elevator",
                     "query_parameter": "has_elevator",
                     "label": "Elevator" if is_en else "أسانسير",
                 },
-                {"value": "garage", "query_parameter": "has_garage", "label": "Garage" if is_en else "جراج"},
+                {
+                    "value": "garage",
+                    "query_parameter": "has_garage",
+                    "label": "Garage" if is_en else "جراج",
+                },
                 {
                     "value": "security",
                     "query_parameter": "has_security",
@@ -151,6 +187,34 @@ class PropertyService:
     }
 
     @staticmethod
+    def _apply_rental_projection(data):
+        inventory = data.get("rental_inventory")
+        if inventory is None:
+            return
+        eligible = [
+            offer
+            for offer in inventory.get("offers", [])
+            if not offer.get("archived") and offer.get("availability") == "available"
+        ]
+        scopes = sorted(
+            {
+                offer.get("rental_scope")
+                for offer in eligible
+                if offer.get("rental_scope")
+            }
+        )
+        data["rental_scopes"] = "," + ",".join(scopes) + "," if scopes else ""
+        periods = {offer.get("terms", {}).get("price_period") for offer in eligible}
+        if len(periods) == 1:
+            period = periods.pop()
+            prices = [Decimal(str(offer["terms"]["price"])) for offer in eligible]
+            data["rental_price_period"] = period
+            data["rental_min_price"] = min(prices) if prices else None
+        else:
+            data["rental_price_period"] = ""
+            data["rental_min_price"] = None
+
+    @staticmethod
     @transaction.atomic
     def create_property(owner, validated_data):
         """
@@ -159,11 +223,10 @@ class PropertyService:
         from rest_framework.exceptions import ValidationError
 
         data = validated_data.copy()
+        PropertyService._apply_rental_projection(data)
         main_image_file = data.pop("main_image", None)
         main_image_name = (data.pop("main_image_name", "") or "").strip()
-        main_image_description = (
-            data.pop("main_image_description", "") or ""
-        ).strip()
+        main_image_description = (data.pop("main_image_description", "") or "").strip()
         amenities = data.pop("amenities", None)
 
         # Distinguish street and district; fallback district to street on POST if district is empty
@@ -174,14 +237,19 @@ class PropertyService:
 
         # Map amenities array to model booleans if provided
         if amenities is not None:
-            for amenity_val, field_name in PropertyService.SUPPORTED_AMENITIES_MAP.items():
+            for (
+                amenity_val,
+                field_name,
+            ) in PropertyService.SUPPORTED_AMENITIES_MAP.items():
                 data[field_name] = amenity_val in amenities
 
         # Check conflicting video / ownership proof clear flags
         remove_video = data.pop("remove_video", False)
         if remove_video and data.get("video"):
             raise ValidationError(
-                {"video": "Cannot upload video and specify remove_video simultaneously."}
+                {
+                    "video": "Cannot upload video and specify remove_video simultaneously."
+                }
             )
 
         remove_ownership_proof = data.pop("remove_ownership_proof", False)
@@ -222,13 +290,16 @@ class PropertyService:
         from rest_framework.exceptions import ValidationError
 
         data = validated_data.copy()
+        PropertyService._apply_rental_projection(data)
 
         # Handle video removal and replacement conflict
         remove_video = data.pop("remove_video", False)
         new_video = data.get("video")
         if remove_video and new_video:
             raise ValidationError(
-                {"video": "Cannot upload video and specify remove_video simultaneously."}
+                {
+                    "video": "Cannot upload video and specify remove_video simultaneously."
+                }
             )
         if remove_video:
             property_obj.video = None
@@ -294,7 +365,9 @@ class PropertyService:
 
         # 3. Handle cover photo replacement / selection
         if main_image_file:
-            new_name = (main_image_name or "").strip() if main_image_name is not None else ""
+            new_name = (
+                (main_image_name or "").strip() if main_image_name is not None else ""
+            )
             new_desc = (
                 (main_image_description or "").strip()
                 if main_image_description is not None
@@ -312,7 +385,9 @@ class PropertyService:
                 selected_cover = property_obj.images.get(id=main_image_id)
             except PropertyImage.DoesNotExist:
                 raise ValidationError(
-                    {"main_image_id": "Selected cover image does not belong to this property."}
+                    {
+                        "main_image_id": "Selected cover image does not belong to this property."
+                    }
                 )
             property_obj.main_image = selected_cover.image
             if main_image_name is not None:
@@ -334,7 +409,10 @@ class PropertyService:
         # Map amenities array if provided
         amenities = data.pop("amenities", None)
         if amenities is not None:
-            for amenity_val, field_name in PropertyService.SUPPORTED_AMENITIES_MAP.items():
+            for (
+                amenity_val,
+                field_name,
+            ) in PropertyService.SUPPORTED_AMENITIES_MAP.items():
                 data[field_name] = amenity_val in amenities
 
         # Apply scalar updates
@@ -383,7 +461,9 @@ class PropertyService:
         """
         from rest_framework.exceptions import ValidationError
 
-        locked_property = Property.objects.select_for_update().get(pkid=property_obj.pkid)
+        locked_property = Property.objects.select_for_update().get(
+            pkid=property_obj.pkid
+        )
         if locked_property.images.count() >= 25:
             raise ValidationError(
                 {"detail": "A property cannot have more than 25 images."}
@@ -615,7 +695,6 @@ class PropertyService:
             "visits_summary": visits_summary,
         }
 
-
     @staticmethod
     @transaction.atomic
     def toggle_property_visibility(property_obj, is_hidden=None):
@@ -637,4 +716,3 @@ class PropertyService:
 
         property_obj.save(update_fields=["status", "updated_at"])
         return property_obj
-

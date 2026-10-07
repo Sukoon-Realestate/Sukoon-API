@@ -9,4 +9,4 @@ exclude =
     static,
     manage.py
 plugins = flake8_django 
-ignore = F401
+ignore = F401,W503

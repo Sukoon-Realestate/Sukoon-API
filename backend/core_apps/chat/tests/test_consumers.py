@@ -1,13 +1,13 @@
 import pytest
 from channels.db import database_sync_to_async
 from channels.layers import get_channel_layer
-from channels.testing import WebsocketCommunicator
 from django.contrib.auth.models import AnonymousUser
 from rest_framework_simplejwt.tokens import AccessToken
 
 from core_apps.chat.consumers import ChatConsumer
 from core_apps.chat.services.message_service import get_or_create_direct_conversation
 from core_apps.common.ws_auth import JWTCookieAuthMiddleware
+from core_apps.common.testing import WebsocketCommunicator
 
 _async_get_or_create_conv = database_sync_to_async(get_or_create_direct_conversation)
 
@@ -19,6 +19,7 @@ def _build_communicator(scope_user):
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_unauthenticated_chat_connection_rejected():
     communicator = _build_communicator(AnonymousUser())
     connected, code = await communicator.connect()

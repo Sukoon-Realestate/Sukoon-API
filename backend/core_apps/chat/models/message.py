@@ -19,6 +19,7 @@ class Message(TimeStampedModel):
         db_index=True,
     )
     content = models.TextField()
+    client_message_id = models.UUIDField(null=True, blank=True)
 
     class Meta:
         verbose_name = _("Message")
@@ -26,6 +27,12 @@ class Message(TimeStampedModel):
         ordering = ["created_at"]
         indexes = [
             models.Index(fields=["conversation", "created_at"]),
+        ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["conversation", "sender", "client_message_id"],
+                name="unique_chat_client_message_id",
+            )
         ]
 
     def __str__(self) -> str:

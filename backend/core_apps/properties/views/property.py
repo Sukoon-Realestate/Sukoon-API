@@ -1,7 +1,10 @@
 import logging
+import hashlib
+import json
 
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
+from django.db import transaction
 from django.db.models import (
     Avg,
     BooleanField,
@@ -17,11 +20,13 @@ from django.db.models.functions import Coalesce
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, generics, permissions, status
+from rest_framework.decorators import api_view, permission_classes, renderer_classes
 from rest_framework.response import Response
 
 from core_apps.common.models import ContentView
 from core_apps.common.pagination import StandardResultsSetPagination
 from core_apps.common.renderers import GenericJsonRenderer
+from core_apps.features.models import BoostCampaign
 
 from ..filters import PropertyFilter
 from ..models import (
@@ -50,6 +55,22 @@ from ..serializers import (
 from ..services import PropertyService
 
 logger = logging.getLogger(__name__)
+
+
+@api_view(["POST"])
+@permission_classes([permissions.IsAuthenticated])
+@renderer_classes([GenericJsonRenderer])
+def confirm_property_availability(request, property_id):
+    property_obj = get_object_or_404(Property, id=property_id, owner=request.user)
+    property_obj.availability_confirmed_at = timezone.now()
+    property_obj.save(update_fields=["availability_confirmed_at", "updated_at"])
+    return Response(
+        {
+            "id": str(property_obj.id),
+            "availability_confirmed_at": property_obj.availability_confirmed_at.isoformat(),
+            "status": "confirmed",
+        }
+    )
 
 
 def get_client_ip(request):
@@ -94,7 +115,14 @@ class PropertyFilterOptionsAPIView(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
         accept_lang = request.headers.get("Accept-Language", "").lower()
         lang_param = (request.GET.get("lang") or "").lower()
-        lang = "en" if (lang_param.startswith("en") or (accept_lang.startswith("en") and "ar" not in accept_lang)) else "ar"
+        lang = (
+            "en"
+            if (
+                lang_param.startswith("en")
+                or (accept_lang.startswith("en") and "ar" not in accept_lang)
+            )
+            else "ar"
+        )
         return Response(PropertyService.get_filter_options(lang))
 
 
@@ -125,6 +153,16 @@ class PropertyListAPIView(generics.ListAPIView):
     queryset = (
         Property.objects.select_related("property_type", "governorate", "city")
         .annotate(images_count=Count("images"))
+        .annotate(
+            is_sponsored=Exists(
+                BoostCampaign.objects.filter(
+                    property=OuterRef("pkid"),
+                    status=BoostCampaign.Status.ACTIVE,
+                    starts_at__lte=timezone.now(),
+                    ends_at__gt=timezone.now(),
+                )
+            )
+        )
         .order_by("-created_at")
     )
     serializer_class = PropertyListSerializer
@@ -224,6 +262,16 @@ class PropertyNewListAPIView(generics.ListAPIView):
     queryset = (
         Property.objects.select_related("property_type", "governorate", "city")
         .annotate(images_count=Count("images"))
+        .annotate(
+            is_sponsored=Exists(
+                BoostCampaign.objects.filter(
+                    property=OuterRef("pkid"),
+                    status=BoostCampaign.Status.ACTIVE,
+                    starts_at__lte=timezone.now(),
+                    ends_at__gt=timezone.now(),
+                )
+            )
+        )
         .order_by("-created_at")
     )
     serializer_class = PropertyNewListSerializer
@@ -289,6 +337,57 @@ class PropertyCreateAPIView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
+    def create(self, request, *args, **kwargs):
+        rental_version = request.headers.get("X-Rental-Offers-Version")
+        request_key = request.headers.get("Idempotency-Key")
+        if rental_version and rental_version != "1":
+            return Response(
+                {"message": "Unsupported rental offers version."},
+                status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            )
+        if rental_version == "1" and not request_key:
+            return Response(
+                {
+                    "message": "Idempotency-Key is required for rental inventory creation."
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        fingerprint = None
+        if request_key:
+            from core_apps.features.models import IdempotencyRecord
+
+            serializable = {key: str(value) for key, value in request.data.items()}
+            fingerprint = hashlib.sha256(
+                json.dumps(serializable, sort_keys=True).encode()
+            ).hexdigest()
+            record = IdempotencyRecord.objects.filter(
+                user=request.user, operation="property.create", request_key=request_key
+            ).first()
+            if record:
+                if record.fingerprint != fingerprint:
+                    return Response(
+                        {
+                            "message": "Idempotency-Key was reused with a different request."
+                        },
+                        status=status.HTTP_409_CONFLICT,
+                    )
+                return Response(record.response_data, status=record.response_status)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        with transaction.atomic():
+            self.perform_create(serializer)
+            data = serializer.data
+            if request_key:
+                IdempotencyRecord.objects.create(
+                    user=request.user,
+                    operation="property.create",
+                    request_key=request_key,
+                    fingerprint=fingerprint,
+                    response_data=data,
+                    response_status=201,
+                )
+        return Response(data, status=status.HTTP_201_CREATED)
+
 
 class PropertyDetailAPIView(generics.RetrieveUpdateAPIView):
     """
@@ -350,7 +449,8 @@ class PropertyDetailAPIView(generics.RetrieveUpdateAPIView):
     def patch(self, request, *args, **kwargs):
         instance = self.get_object()
         if not request.user.is_authenticated or (
-            instance.owner != request.user and not getattr(request.user, "is_staff", False)
+            instance.owner != request.user
+            and not getattr(request.user, "is_staff", False)
         ):
             raise permissions.exceptions.PermissionDenied(
                 "You are not the owner of this property listing."
@@ -360,7 +460,9 @@ class PropertyDetailAPIView(generics.RetrieveUpdateAPIView):
         )
         serializer.is_valid(raise_exception=True)
         updated_instance = serializer.save()
-        data = PropertyDetailSerializer(updated_instance, context={"request": request}).data
+        data = PropertyDetailSerializer(
+            updated_instance, context={"request": request}
+        ).data
         return Response(
             {"message": "Property changes submitted for review.", **data},
             status=status.HTTP_200_OK,
@@ -391,7 +493,7 @@ class MyPropertyListAPIView(generics.ListAPIView):
             .annotate(count=Count("pkid"))
             .values("count")
         )
-        return (
+        queryset = (
             Property.objects.filter(owner=self.request.user)
             .select_related("property_type", "governorate", "city")
             .annotate(
@@ -404,6 +506,12 @@ class MyPropertyListAPIView(generics.ListAPIView):
             # ! explicitly so pagination stays stable
             .order_by("-created_at")
         )
+        rental_scope = self.request.query_params.get("rental_scope")
+        if rental_scope:
+            if rental_scope not in {"entire_property", "room", "room_group", "bed"}:
+                return queryset.none()
+            queryset = queryset.filter(rental_scopes__contains=f",{rental_scope},")
+        return queryset
 
 
 class PropertyUpdateAPIView(generics.UpdateAPIView):
@@ -440,7 +548,9 @@ class PropertyUpdateAPIView(generics.UpdateAPIView):
         )
         serializer.is_valid(raise_exception=True)
         updated_instance = serializer.save()
-        data = PropertyDetailSerializer(updated_instance, context={"request": request}).data
+        data = PropertyDetailSerializer(
+            updated_instance, context={"request": request}
+        ).data
         return Response(
             {"message": "Property changes submitted for review.", **data},
             status=status.HTTP_200_OK,
@@ -494,7 +604,9 @@ class PropertyImageUploadAPIView(generics.CreateAPIView):
         property_obj = get_object_or_404(
             Property.objects.all(), id=self.kwargs["property_id"]
         )
-        if property_obj.owner != request.user and not getattr(request.user, "is_staff", False):
+        if property_obj.owner != request.user and not getattr(
+            request.user, "is_staff", False
+        ):
             raise permissions.exceptions.PermissionDenied(
                 "You are not the owner of this property listing."
             )
@@ -571,7 +683,6 @@ class PropertyStatisticsAPIView(generics.RetrieveAPIView):
         return Response(serializer.data)
 
 
-
 class PropertyToggleVisibilityAPIView(generics.GenericAPIView):
     """
     API view for an owner to toggle or update the visibility (hide/unhide) of
@@ -604,9 +715,7 @@ class PropertyToggleVisibilityAPIView(generics.GenericAPIView):
         )
         is_now_hidden = updated_obj.status == Property.Status.HIDDEN
         message = (
-            "Property is now hidden."
-            if is_now_hidden
-            else "Property is now visible."
+            "Property is now hidden." if is_now_hidden else "Property is now visible."
         )
         serializer = self.get_serializer(
             {
@@ -621,4 +730,3 @@ class PropertyToggleVisibilityAPIView(generics.GenericAPIView):
 
     def patch(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
-

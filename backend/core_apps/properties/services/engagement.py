@@ -8,11 +8,13 @@ class SavedPropertyService:
 
     @staticmethod
     @transaction.atomic
-    def save_property(user, property_obj):
+    def save_property(user, property_obj, offer_id="", offer_snapshot=None):
         """Save a property once and report whether a new record was created."""
         return SavedProperty.objects.get_or_create(
             user=user,
             property=property_obj,
+            offer_id=offer_id,
+            defaults={"offer_snapshot": offer_snapshot},
         )
 
     @staticmethod

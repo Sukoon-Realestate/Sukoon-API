@@ -70,7 +70,9 @@ def get_or_create_direct_conversation(*, user, other_user) -> Conversation:
 
 
 @transaction.atomic
-def send_message(*, conversation: Conversation, sender, content: str) -> Message:
+def send_message(
+    *, conversation: Conversation, sender, content: str, client_message_id=None
+) -> Message:
     """
     Create a message, update conversation preview, increment recipients' unread counts,
     and broadcast to all participants via the channel layer.
@@ -83,10 +85,25 @@ def send_message(*, conversation: Conversation, sender, content: str) -> Message
             {"content": "You are not a participant in this conversation."}
         )
 
+    if client_message_id:
+        existing = Message.objects.filter(
+            conversation=conversation,
+            sender=sender,
+            client_message_id=client_message_id,
+        ).first()
+        if existing:
+            if existing.content != content:
+                raise ValidationError(
+                    {
+                        "client_message_id": "This ID was already used for different content."
+                    }
+                )
+            return existing
     message = Message.objects.create(
         conversation=conversation,
         sender=sender,
         content=content,
+        client_message_id=client_message_id,
     )
 
     preview = content[:200] if len(content) > 200 else content

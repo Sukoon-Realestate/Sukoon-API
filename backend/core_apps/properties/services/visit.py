@@ -8,6 +8,7 @@ from rest_framework.exceptions import PermissionDenied, ValidationError
 
 from ..models import (
     OwnerAvailabilitySlot,
+    OwnerAvailabilitySlot,
     PropertyRating,
     PropertyVisit,
     PropertyVisitReview,
@@ -94,22 +95,55 @@ class PropertyVisitService:
         if property_obj.owner == tenant:
             raise ValidationError(_("You cannot book a visit for your own property."))
 
+        expected_offer_revision = validated_data.pop("expected_offer_revision", None)
+        offer_id = str(validated_data.get("offer_id") or "")
+        if offer_id:
+            offer = next(
+                (
+                    item
+                    for item in property_obj.rental_inventory.get("offers", [])
+                    if str(item.get("id")) == offer_id
+                ),
+                None,
+            )
+            if (
+                not offer
+                or offer.get("archived")
+                or offer.get("availability") != "available"
+            ):
+                raise ValidationError(_("The selected rental offer is unavailable."))
+            if expected_offer_revision != offer.get("revision"):
+                raise ValidationError(
+                    _("The selected rental offer changed. Refresh and review it again.")
+                )
+            validated_data["offer_snapshot"] = {
+                "property_id": str(property_obj.id),
+                "offer_id": offer_id,
+                "offer_revision": offer.get("revision"),
+                **offer,
+            }
+        elif property_obj.rental_inventory:
+            raise ValidationError(_("Select a rental offer before requesting a visit."))
+
         visit_date = validated_data.get("visit_date")
         visit_time = validated_data.get("visit_time")
-        # TODO: Re-add check to verify slot exists in owner availability slots
-        # slot = (
-        #     OwnerAvailabilitySlot.objects.select_for_update()
-        #     .filter(
-        #         owner=property_obj.owner,
-        #         property=property_obj,
-        #         date=visit_date,
-        #         time=visit_time,
-        #         is_enabled=True,
-        #     )
-        #     .first()
-        # )
-        # if slot is None:
-        #     raise ValidationError(_("The selected visit slot is not available."))
+        has_managed_schedule = OwnerAvailabilitySlot.objects.filter(
+            property=property_obj
+        ).exists()
+        if has_managed_schedule:
+            slot = (
+                OwnerAvailabilitySlot.objects.select_for_update()
+                .filter(
+                    owner=property_obj.owner,
+                    property=property_obj,
+                    date=visit_date,
+                    time=visit_time,
+                    is_enabled=True,
+                )
+                .first()
+            )
+            if slot is None:
+                raise ValidationError(_("The selected visit slot is not available."))
 
         now = timezone.localtime()
         parsed_date = (
@@ -126,14 +160,17 @@ class PropertyVisitService:
         if slot_datetime <= now:
             raise ValidationError(_("The selected visit slot is in the past."))
 
-        # TODO: Re-add check to reject booking when another visit is already booked at the same slot
-        # if PropertyVisit.objects.filter(
-        #     property=property_obj,
-        #     visit_date=visit_date,
-        #     visit_time=visit_time,
-        #     status__in=PropertyVisitService.BOOKED_STATUSES,
-        # ).exists():
-        #     raise ValidationError(_("The selected visit slot is already booked."))
+        if (
+            PropertyVisit.objects.select_for_update()
+            .filter(
+                property=property_obj,
+                visit_date=visit_date,
+                visit_time=visit_time,
+                status__in=PropertyVisitService.BOOKED_STATUSES,
+            )
+            .exists()
+        ):
+            raise ValidationError(_("The selected visit slot is already booked."))
 
         visit = PropertyVisit.objects.create(
             tenant=tenant, property=property_obj, **validated_data
@@ -284,7 +321,9 @@ class PropertyVisitService:
         interaction = validated_data.get("owner_interaction_rating")
         sub_ratings = [r for r in (cleanliness, accuracy, interaction) if r is not None]
         if sub_ratings:
-            validated_data["overall_rating"] = round(sum(sub_ratings) / len(sub_ratings))
+            validated_data["overall_rating"] = round(
+                sum(sub_ratings) / len(sub_ratings)
+            )
 
         review = PropertyVisitReview.objects.create(visit=visit_obj, **validated_data)
         # ? Keep the existing property aggregate API in sync with visit reviews.
@@ -474,7 +513,9 @@ class PropertyVisitService:
         visits_payload = []
         for visit in selected_visits:
             tenant_name = visit.tenant.get_full_name
-            first_letter = tenant_name.strip()[0] if tenant_name and tenant_name.strip() else ""
+            first_letter = (
+                tenant_name.strip()[0] if tenant_name and tenant_name.strip() else ""
+            )
             profile = getattr(visit.tenant, "profile", None)
             avatar_url = (
                 profile.avatar.url
@@ -482,9 +523,7 @@ class PropertyVisitService:
                 else None
             )
             status_label = (
-                "مؤكدة"
-                if visit.status == PropertyVisit.Status.CONFIRMED
-                else "معلقة"
+                "مؤكدة" if visit.status == PropertyVisit.Status.CONFIRMED else "معلقة"
             )
             visits_payload.append(
                 {

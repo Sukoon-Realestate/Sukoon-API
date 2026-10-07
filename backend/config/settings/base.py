@@ -37,6 +37,7 @@ LOCAL_APPS = [
     "core_apps.chat",
     "core_apps.admin_api",
     "core_apps.support",
+    "core_apps.features",
 ]
 
 THIRD_PARTY_APPS = [

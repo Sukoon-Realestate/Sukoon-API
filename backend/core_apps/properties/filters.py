@@ -35,6 +35,12 @@ class PropertyFilter(django_filters.FilterSet):
     price_min = django_filters.NumberFilter(field_name="price", lookup_expr="gte")
     price_max = django_filters.NumberFilter(field_name="price", lookup_expr="lte")
     bedrooms_min = django_filters.NumberFilter(field_name="bedrooms", lookup_expr="gte")
+    rental_scope = django_filters.CharFilter(method="filter_rental_scope")
+
+    def filter_rental_scope(self, queryset, name, value):
+        if value not in {"entire_property", "room", "room_group", "bed"}:
+            return queryset.none()
+        return queryset.filter(rental_scopes__contains=f",{value},")
 
     class Meta:
         model = Property

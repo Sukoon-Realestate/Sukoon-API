@@ -1,9 +1,9 @@
 import pytest
 from channels.layers import get_channel_layer
-from channels.testing import WebsocketCommunicator
 from django.contrib.auth.models import AnonymousUser
 
 from core_apps.common.consumers import WS_UNAUTHENTICATED, EchoConsumer
+from core_apps.common.testing import WebsocketCommunicator
 
 
 def _build_communicator(scope_user):
@@ -14,6 +14,7 @@ def _build_communicator(scope_user):
 
 
 @pytest.mark.asyncio
+@pytest.mark.django_db
 async def test_unauthenticated_connection_is_rejected():
     communicator = _build_communicator(AnonymousUser())
 

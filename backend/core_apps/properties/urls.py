@@ -40,6 +40,7 @@ from .views import (
     SavedPropertyCreateAPIView,
     SavedPropertyDeleteAPIView,
     SavedPropertyListAPIView,
+    confirm_property_availability,
 )
 
 urlpatterns = [
@@ -109,6 +110,11 @@ urlpatterns = [
         "<uuid:property_id>/available_dates/",
         PropertyAvailableDatesAPIView.as_view(),
         name="property-available-dates",
+    ),
+    path(
+        "<uuid:property_id>/confirm-availability/",
+        confirm_property_availability,
+        name="property-confirm-availability",
     ),
     path(
         "<uuid:property_id>/reviews/",

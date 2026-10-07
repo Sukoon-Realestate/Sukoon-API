@@ -47,6 +47,8 @@ class SavedProperty(TimeStampedModel):
         related_name="saves",
         verbose_name=_("Property"),
     )
+    offer_id = models.CharField(max_length=64, blank=True, default="")
+    offer_snapshot = models.JSONField(null=True, blank=True)
 
     class Meta:
         verbose_name = _("Saved Property")
@@ -54,7 +56,8 @@ class SavedProperty(TimeStampedModel):
         ordering = ["-created_at"]
         constraints = [
             models.UniqueConstraint(
-                fields=["user", "property"], name="unique_saved_property"
+                fields=["user", "property", "offer_id"],
+                name="unique_saved_property_offer",
             )
         ]
 

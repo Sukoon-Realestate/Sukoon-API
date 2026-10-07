@@ -70,6 +70,7 @@ class MessageCreateAPIView(APIView):
             conversation=conversation,
             sender=request.user,
             content=serializer.validated_data["content"],
+            client_message_id=serializer.validated_data.get("client_message_id"),
         )
         return Response(
             MessageSerializer(message, context={"request": request}).data,

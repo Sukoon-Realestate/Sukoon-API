@@ -6,11 +6,23 @@ from core_apps.chat.serializers.participant import ParticipantSerializer
 
 class MessageSerializer(serializers.ModelSerializer):
     sender = ParticipantSerializer(read_only=True)
+    status = serializers.SerializerMethodField()
 
     class Meta:
         model = Message
-        fields = ("id", "conversation", "sender", "content", "created_at")
+        fields = (
+            "id",
+            "conversation",
+            "sender",
+            "content",
+            "client_message_id",
+            "status",
+            "created_at",
+        )
         read_only_fields = ("id", "conversation", "created_at")
+
+    def get_status(self, obj):
+        return "sent"
 
 
 class MessageCreateSerializer(serializers.Serializer):
@@ -22,3 +34,4 @@ class MessageCreateSerializer(serializers.Serializer):
     """
 
     content = serializers.CharField(max_length=5000)
+    client_message_id = serializers.UUIDField(required=False)

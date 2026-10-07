@@ -35,6 +35,8 @@ class PropertyVisit(TimeStampedModel):
         default=Status.PENDING,
     )
     note = models.TextField(_("Note"), blank=True, default="")
+    offer_id = models.CharField(max_length=64, blank=True, default="")
+    offer_snapshot = models.JSONField(null=True, blank=True)
 
     class Meta:
         verbose_name = _("Property Visit")

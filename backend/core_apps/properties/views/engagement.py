@@ -1,6 +1,6 @@
 import logging
 
-from django.db.models import Avg, FloatField, Max, Value
+from django.db.models import Avg, FloatField, Max, Prefetch, Value
 from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -74,6 +74,13 @@ class SavedPropertyListAPIView(generics.ListAPIView):
                     output_field=FloatField(),
                 ),
             )
+            .prefetch_related(
+                Prefetch(
+                    "saves",
+                    queryset=SavedProperty.objects.filter(user=self.request.user),
+                    to_attr="current_user_saves",
+                )
+            )
             .order_by("-saved_at")
         )
 
@@ -87,9 +94,32 @@ class SavedPropertyCreateAPIView(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         property_obj = get_object_or_404(Property, id=self.kwargs["property_id"])
+        offer_id = str(request.data.get("offer_id") or "")
+        snapshot = None
+        if offer_id:
+            offer = next(
+                (
+                    item
+                    for item in property_obj.rental_inventory.get("offers", [])
+                    if str(item.get("id")) == offer_id
+                ),
+                None,
+            )
+            if not offer or offer.get("archived"):
+                return Response(
+                    {"message": "The selected rental offer is unavailable."},
+                    status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                )
+            snapshot = {
+                "property_id": str(property_obj.id),
+                "offer_id": offer_id,
+                **offer,
+            }
         saved_property, created = SavedPropertyService.save_property(
             user=request.user,
             property_obj=property_obj,
+            offer_id=offer_id,
+            offer_snapshot=snapshot,
         )
         serializer = self.get_serializer(saved_property)
         response_status = status.HTTP_201_CREATED if created else status.HTTP_200_OK
@@ -108,13 +138,32 @@ class SavedPropertyDeleteAPIView(generics.DestroyAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
+        offer_id = str(self.request.data.get("offer_id") or "")
         saved_property = get_object_or_404(
             SavedProperty.objects.select_related("property"),
             user=self.request.user,
             property__id=self.kwargs["property_id"],
+            offer_id=offer_id,
         )
         self.check_object_permissions(self.request, saved_property)
         return saved_property
 
     def perform_destroy(self, instance):
         SavedPropertyService.remove_saved_property(instance)
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        offer_id = instance.offer_id
+        property_id = str(instance.property.id)
+        self.perform_destroy(instance)
+        if "offer_id" not in request.data:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(
+            {
+                "message": "Property selection removed.",
+                "property_id": property_id,
+                "offer_id": offer_id,
+                "is_saved": False,
+            },
+            status=status.HTTP_200_OK,
+        )

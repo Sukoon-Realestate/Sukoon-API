@@ -42,6 +42,7 @@ urlpatterns = [
     path("api/v1/chat/", include("core_apps.chat.urls")),
     path("api/v1/pages/", include("core_apps.common.pages_urls")),
     path("api/v1/support/", include("core_apps.support.urls")),
+    path("api/v1/features/v1/", include("core_apps.features.urls")),
     path("api/v1/admin/", include("core_apps.admin_api.urls")),
     path(settings.ADMIN_URL, admin.site.urls),
 ]

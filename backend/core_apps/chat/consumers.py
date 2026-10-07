@@ -64,6 +64,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
         conversation_id = content.get("conversation_id")
         text = content.get("content", "").strip()
+        client_message_id = content.get("client_message_id")
 
         if not conversation_id or not text:
             await self.send_json({"error": "conversation_id and content are required."})
@@ -88,11 +89,19 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             return
 
         try:
-            await sync_to_async(send_message)(
+            message = await sync_to_async(send_message)(
                 conversation=conversation,
                 sender=self.user,
                 content=text,
+                client_message_id=client_message_id,
             )
+            if client_message_id:
+                from core_apps.chat.serializers.message import MessageSerializer
+
+                payload = await sync_to_async(
+                    lambda: dict(MessageSerializer(message).data)
+                )()
+                await self.send_json({"type": "message.ack", "payload": payload})
         except ValidationError:
             await self.send_json({"error": "You cannot message this user."})
 

@@ -51,7 +51,7 @@ class Property(TimeStampedModel):
     )
     title = models.CharField(_("Title"), max_length=255)
     description = models.TextField(_("Description"), blank=True, default="")
-    price = models.DecimalField(_("Price"), max_digits=12, decimal_places=2)
+    price = models.DecimalField(_("Price"), max_digits=12, decimal_places=2, default=0)
     price_period = models.CharField(
         _("Price Period"),
         max_length=20,
@@ -104,7 +104,9 @@ class Property(TimeStampedModel):
     )
     district = models.CharField(_("District"), max_length=100)
     street = models.CharField(_("Street"), max_length=255, blank=True, default="")
-    country = models.CharField(_("Country"), max_length=100, blank=True, default="Egypt")
+    country = models.CharField(
+        _("Country"), max_length=100, blank=True, default="Egypt"
+    )
     building_year = models.PositiveIntegerField(
         _("Building Year"), null=True, blank=True
     )
@@ -124,6 +126,13 @@ class Property(TimeStampedModel):
     longitude = models.DecimalField(
         _("Longitude"), max_digits=9, decimal_places=6, null=True, blank=True
     )
+    availability_confirmed_at = models.DateTimeField(null=True, blank=True)
+    rental_inventory = models.JSONField(default=dict, blank=True)
+    rental_scopes = models.CharField(max_length=100, blank=True, default="")
+    rental_min_price = models.DecimalField(
+        max_digits=12, decimal_places=2, null=True, blank=True
+    )
+    rental_price_period = models.CharField(max_length=20, blank=True, default="")
 
     # Amenities
     has_wifi = models.BooleanField(_("Has Wi-Fi"), default=False)
