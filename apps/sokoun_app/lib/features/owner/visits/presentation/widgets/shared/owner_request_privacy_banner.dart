@@ -29,7 +29,6 @@ class OwnerRequestPrivacyBanner extends StatelessWidget {
                 color: context.appColor(AppColors.blue),
                 fontSize: 12.sp,
               ),
-              maxLines: 2,
             ),
           ),
         ],

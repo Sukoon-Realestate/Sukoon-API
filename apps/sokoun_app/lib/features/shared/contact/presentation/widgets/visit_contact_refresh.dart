@@ -9,7 +9,8 @@ import '../../../notifications/data/foreground_notification_bus.dart';
 import '../../../notifications/data/models/app_notification_content.dart';
 
 /// Refreshes contact permissions when another device accepts a visit, or when
-/// returning from a visit flow. The screen's existing Cubit owns the request.
+/// returning from a visit flow. Collections omit IDs to refresh on any grant.
+/// The screen's existing Cubit or pagination controller owns the request.
 class VisitContactRefresh extends StatefulWidget {
   const VisitContactRefresh({
     super.key,
@@ -43,7 +44,8 @@ class _VisitContactRefreshState extends State<VisitContactRefresh>
     _subscription = ForegroundNotificationBus.stream.listen((notification) {
       if (notification.kind != AppNotificationKind.visitAccepted) return;
       final payload = notification.payload;
-      if ((widget.visitId.isNotEmpty && payload.visitId == widget.visitId) ||
+      if ((widget.visitId.isEmpty && widget.propertyId.isEmpty) ||
+          (widget.visitId.isNotEmpty && payload.visitId == widget.visitId) ||
           (widget.propertyId.isNotEmpty &&
               payload.propertyId == widget.propertyId)) {
         _refresh();

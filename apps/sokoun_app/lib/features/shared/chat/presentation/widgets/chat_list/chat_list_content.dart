@@ -9,6 +9,7 @@ import 'package:melos_core/core/network/account_session.dart';
 import 'package:melos_core/core/shared/route_observer.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:pagify/pagify.dart';
+import 'package:sokoun_app/features/shared/contact/presentation/widgets/visit_contact_refresh.dart';
 
 import '../../../data/chat_data.dart';
 import '../../../data/chat_unread_refresh_bus.dart';
@@ -86,39 +87,42 @@ class _ChatListContentState extends State<ChatListContent> with RouteAware {
   @override
   Widget build(BuildContext context) {
     final String? cacheKey = _dataSource.conversationsCacheKey;
-    return AppPagify<ConversationContent>(
-      enablePullRefresh: true,
-      pagifyController: _pagifyController,
-      asyncCall: (_, page) => _dataSource.getConversationsPage(page: page),
-      shrinkWrap: false,
-      cacheKey: cacheKey,
-      cacheToJson: cacheKey == null
-          ? null
-          : (conversation) => conversation.toJson(),
-      cacheFromJson: cacheKey == null ? null : ConversationContent.fromJson,
-      emptyListView: const ChatEmptyState(),
-      header: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          ChatSearchField(
-            readOnly: true,
-            onTap: _openSearch,
-          ).paddingSymmetric(horizontal: 20.w),
-        ],
-      ),
-      itemBuilder: (context, data, index, conversation) => Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ChatListTile(
-            key: ValueKey<String>(conversation.id),
-            conversation: conversation,
-          ),
-          Divider(
-            height: 1.h,
-            thickness: 1.h,
-            color: context.appColor(AppColors.sokoonBorder),
-          ),
-        ],
+    return VisitContactRefresh(
+      onRefresh: _pagifyController.refresh,
+      child: AppPagify<ConversationContent>(
+        enablePullRefresh: true,
+        pagifyController: _pagifyController,
+        asyncCall: (_, page) => _dataSource.getConversationsPage(page: page),
+        shrinkWrap: false,
+        cacheKey: cacheKey,
+        cacheToJson: cacheKey == null
+            ? null
+            : (conversation) => conversation.toJson(),
+        cacheFromJson: cacheKey == null ? null : ConversationContent.fromJson,
+        emptyListView: const ChatEmptyState(),
+        header: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ChatSearchField(
+              readOnly: true,
+              onTap: _openSearch,
+            ).paddingSymmetric(horizontal: 20.w),
+          ],
+        ),
+        itemBuilder: (context, data, index, conversation) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ChatListTile(
+              key: ValueKey<String>(conversation.id),
+              conversation: conversation,
+            ),
+            Divider(
+              height: 1.h,
+              thickness: 1.h,
+              color: context.appColor(AppColors.sokoonBorder),
+            ),
+          ],
+        ),
       ),
     );
   }

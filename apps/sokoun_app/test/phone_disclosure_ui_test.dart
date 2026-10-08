@@ -9,9 +9,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
+import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_visit_requests/owner_visit_request_card.dart';
 import 'package:sokoun_app/features/shared/contact/presentation/widgets/revealed_phone_card.dart';
 import 'package:sokoun_app/features/tenant/visits/imports.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_property_details/owner_card.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_theme.dart';
 
@@ -134,6 +139,149 @@ void main() {
     expect(find.text('010****432'), findsNothing);
     await _capture(tester, 'tenant-accepted');
   });
+
+  testWidgets('confirmed status with a denied grant still shows privacy', (
+    tester,
+  ) async {
+    await _pump(
+      tester,
+      OwnerRequestDetailsContent(
+        request: request.copyWith(
+          tenant: request.tenant.copyWith(isPhoneRevealed: false),
+        ),
+        actions: const SizedBox.shrink(),
+      ),
+    );
+    expect(find.text(_phone), findsNothing);
+    expect(find.text('Phone number hidden'), findsOneWidget);
+    expect(find.text(LocaleKeys.contactPhoneUnavailable.tr()), findsNothing);
+  });
+
+  testWidgets('owner list card reports an authorized unavailable number', (
+    tester,
+  ) async {
+    await _pump(
+      tester,
+      OwnerVisitRequestCard(
+        request: request.toRequestContent().copyWith(
+          phone: '',
+          status: OwnerVisitRequestStatus.canceled,
+          statusLabel: '',
+        ),
+        onPressed: null,
+        onAcceptPressed: null,
+        onRejectPressed: null,
+      ),
+    );
+    expect(find.text(LocaleKeys.contactPhoneUnavailable.tr()), findsOneWidget);
+    expect(find.text('Phone number hidden'), findsNothing);
+    expect(find.text('010****432'), findsNothing);
+    expect(find.byIcon(Icons.phone_outlined), findsNothing);
+  });
+
+  for (final language in ['ar', 'en']) {
+    testWidgets('owner retained grant without a phone in $language', (
+      tester,
+    ) async {
+      await _pump(
+        tester,
+        OwnerRequestDetailsContent(
+          request: request.copyWith(
+            status: OwnerVisitRequestStatus.canceled,
+            statusLabel: '',
+            tenant: request.tenant.copyWith(phoneNumber: ''),
+          ),
+          actions: const SizedBox.shrink(),
+        ),
+        width: 320,
+        scale: 2,
+        language: language,
+      );
+      expect(
+        find.text(LocaleKeys.contactPhoneUnavailable.tr()),
+        findsOneWidget,
+      );
+      expect(find.text('Phone number hidden'), findsNothing);
+      expect(find.text('010****432'), findsNothing);
+      expect(find.byIcon(Icons.lock_outline_rounded), findsNothing);
+      expect(find.byIcon(Icons.phone_outlined), findsNothing);
+      await _capture(tester, 'owner-unavailable-$language');
+    });
+
+    testWidgets(
+      'tenant retained grant without a phone keeps chat in $language',
+      (tester) async {
+        final details = TenantVisitDetailsContent.fromJson({
+          'id': 'visit',
+          'status': 'canceled',
+          'property': {'title': 'Apartment'},
+          'owner': {
+            'id': 'owner',
+            'name': 'Owner',
+            'phone_number': null,
+            'masked_phone_number': '010****432',
+            'is_phone_revealed': true,
+          },
+          'actions': {'can_chat': true},
+        });
+        await _pump(
+          tester,
+          VisitDetailsContent(visit: details.visit, details: details),
+          width: 320,
+          scale: 2,
+          language: language,
+        );
+        expect(
+          find.text(LocaleKeys.contactPhoneUnavailable.tr()),
+          findsOneWidget,
+        );
+        expect(
+          find.text(LocaleKeys.tenantVisitOpenOwnerChat.tr()),
+          findsOneWidget,
+        );
+        expect(find.text('010****432'), findsNothing);
+        expect(find.byIcon(Icons.phone_outlined), findsNothing);
+        await _capture(tester, 'tenant-unavailable-$language');
+      },
+    );
+
+    testWidgets(
+      'authorized property without a phone omits privacy in $language',
+      (tester) async {
+        final property = TenantPropertyDetailsContent.fromModel(
+          PropertyDetailsModel.fromJson({
+            'id': 'property',
+            'owner': {
+              'id': 'owner',
+              'name': 'Owner',
+              'phone_number': null,
+              'is_phone_revealed': true,
+            },
+          }),
+        );
+        await _pump(
+          tester,
+          SingleChildScrollView(
+            child: TenantPropertyOwnerCard(property: property),
+          ),
+          width: 320,
+          scale: 2,
+          language: language,
+        );
+        expect(
+          find.text(LocaleKeys.contactPhoneUnavailable.tr()),
+          findsOneWidget,
+        );
+        expect(
+          find.text(LocaleKeys.tenantPropertyDetailsPhonePrivacy.tr()),
+          findsNothing,
+        );
+        expect(find.byIcon(Icons.lock_outline_rounded), findsNothing);
+        expect(find.byIcon(Icons.phone_outlined), findsNothing);
+        await _capture(tester, 'property-unavailable-$language');
+      },
+    );
+  }
 
   for (final String language in ['ar', 'en']) {
     for (final double width in [320, 390, 600, 768, 1024, 1366]) {

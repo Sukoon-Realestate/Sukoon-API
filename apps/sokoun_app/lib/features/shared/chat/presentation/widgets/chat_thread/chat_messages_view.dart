@@ -177,6 +177,9 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
                         widget.conversation.otherParticipant.revealedPhone,
                   )
                 : ChatPrivacyBanner(
+                    icon: widget.conversation.otherParticipant.isPhoneRevealed
+                        ? Icons.info_outline_rounded
+                        : Icons.lock_outline_rounded,
                     text: widget.conversation.otherParticipant.isPhoneRevealed
                         ? LocaleKeys.contactPhoneUnavailable
                         : LocaleKeys.chatPhonePrivacyThread,

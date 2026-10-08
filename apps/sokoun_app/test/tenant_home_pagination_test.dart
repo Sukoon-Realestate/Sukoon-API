@@ -74,12 +74,12 @@ void main() {
       final params = repository.requests.single.params;
       expect(params.queryParameters, {'page': 1});
       final model = HomePageModel.fromJson(
-        _page(['first'], nextPage: 2, banner: 'visit'),
+        _page(['first'], nextPage: 2, banner: homeVisitBannerFixture),
       );
       expect(params.fromCacheJson!(params.toJson!(model)), model);
       repository.requests.single.complete(model.toJson());
       final (loaded, pagination) = await first;
-      expect(loaded.banner, 'visit');
+      expect(loaded.banner?.toJson(), homeVisitBannerFixture);
       expect(pagination.totalPages, 2);
       final next = data.getPage(page: 2);
       expect(repository.requests.last.params.cacheKey, isNot(params.cacheKey));
@@ -87,6 +87,13 @@ void main() {
       expect((await next).$2.totalPages, 2);
     },
   );
+
+  test('absent and legacy string banners do not break home parsing', () {
+    expect(HomePageModel.fromJson({'banner': null}).banner, isNull);
+    expect(HomePageModel.fromJson({'banner': 'visit'}).banner, isNull);
+    expect(HomePageModel.fromJson({}).banner, isNull);
+    expect(HomePageModel.fromJson({'banner': {}}).banner?.isEmpty, isTrue);
+  });
 
   test('uses server next links and resets them on refresh', () async {
     final first = data.getPage(page: 1);
@@ -137,7 +144,10 @@ void main() {
     (tester) async {
       await _pumpHome(tester);
       repository.requests.last.complete(
-        _page(List.generate(20, (i) => 'item-$i'), banner: 'visit'),
+        _page(
+          List.generate(20, (i) => 'item-$i'),
+          banner: homeVisitBannerFixture,
+        ),
       );
       await tester.pumpAndSettle();
 
@@ -169,6 +179,27 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets('a fresh null banner removes the previous visit reminder', (
+    tester,
+  ) async {
+    await _pumpHome(tester);
+    repository.requests.last.complete(
+      _page([], banner: homeVisitBannerFixture),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('saudi arabia · any'), findsOneWidget);
+    expect(find.text('Oct 9, 2026 · 12:00 PM'), findsOneWidget);
+    final refresh = tester
+        .widget<RefreshIndicator>(find.byType(RefreshIndicator))
+        .onRefresh();
+    await tester.pump();
+    repository.requests.last.complete(_page([]));
+    await tester.pumpAndSettle();
+    await refresh;
+    expect(find.byType(TenantVisitBanner), findsNothing);
+    expect(tester.takeException(), isNull);
+  });
 
   testWidgets('pulling down on the header refreshes an empty result', (
     tester,
@@ -270,7 +301,7 @@ void main() {
 Map<String, dynamic> _page(
   List<String> ids, {
   int? nextPage,
-  String? banner,
+  Map<String, dynamic>? banner,
 }) => {
   'count': 4,
   'next': nextPage == null

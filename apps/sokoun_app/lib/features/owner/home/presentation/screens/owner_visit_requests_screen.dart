@@ -5,6 +5,7 @@ import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
 import 'package:pagify/pagify.dart';
+import 'package:sokoun_app/features/shared/contact/presentation/widgets/visit_contact_refresh.dart';
 
 import '../widgets/owner_visit_requests/imports.dart';
 
@@ -83,6 +84,11 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
     } else if (mounted && _view.value.requests == null) {
       await _pagifyController.refresh();
     }
+  }
+
+  Future<void> _refreshContacts() async {
+    if (_view.value.requests != null || _visitStatusCubit.isLoading) return;
+    await _pagifyController.refresh();
   }
 
   Future<void> _acceptRequest(OwnerVisitRequestContent request) async {
@@ -194,27 +200,30 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
         AppColors.scaffoldBackground,
         surface: true,
       ),
-      body: SafeArea(
-        child:
-            ValueListenableBuilder<
-              ({
-                OwnerVisitRequestFilter filter,
-                List<OwnerVisitRequestContent>? requests,
-              })
-            >(
-              valueListenable: _view,
-              builder: (context, view, _) => OwnerVisitRequestsContent(
-                initialRequests: view.requests,
-                pagifyController: _pagifyController,
-                useRequestEndpoint: widget.useRequestEndpoint,
-                selectedFilter: view.filter,
-                onFilterSelected: _selectFilter,
-                onRequestPressed: _openDetails,
-                onAcceptPressed: _acceptRequest,
-                onRejectPressed: _rejectRequest,
-                progress: _progress,
+      body: VisitContactRefresh(
+        onRefresh: _refreshContacts,
+        child: SafeArea(
+          child:
+              ValueListenableBuilder<
+                ({
+                  OwnerVisitRequestFilter filter,
+                  List<OwnerVisitRequestContent>? requests,
+                })
+              >(
+                valueListenable: _view,
+                builder: (context, view, _) => OwnerVisitRequestsContent(
+                  initialRequests: view.requests,
+                  pagifyController: _pagifyController,
+                  useRequestEndpoint: widget.useRequestEndpoint,
+                  selectedFilter: view.filter,
+                  onFilterSelected: _selectFilter,
+                  onRequestPressed: _openDetails,
+                  onAcceptPressed: _acceptRequest,
+                  onRejectPressed: _rejectRequest,
+                  progress: _progress,
+                ),
               ),
-            ),
+        ),
       ),
     );
   }

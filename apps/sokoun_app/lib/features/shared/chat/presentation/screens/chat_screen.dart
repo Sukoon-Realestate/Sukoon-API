@@ -106,12 +106,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                     BlocSelector<
                       ChatThreadCubit,
                       ChatThreadState,
-                      ChatParticipantContent
+                      ({ChatParticipantContent contact, bool canSend})
                     >(
-                      selector: (state) => state.contact,
-                      builder: (context, contact) => ChatThreadContent(
+                      selector: (state) =>
+                          (contact: state.contact, canSend: state.canSend),
+                      builder: (context, metadata) => ChatThreadContent(
                         conversation: widget.conversation.copyWith(
-                          otherParticipant: contact,
+                          otherParticipant: metadata.contact,
+                          canSend: metadata.canSend,
                         ),
                         initialMessagesRequest: _initialMessagesRequest,
                         messagesCacheKey: _chatThreadData.messagesCacheKey,

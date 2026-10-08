@@ -314,9 +314,15 @@ class PropertyDetailsModel extends Equatable {
       id: json['id']?.toString() ?? '',
       owner: ownerName,
       ownerPhone:
-          (ownerJson['phone_number'] ?? json['owner_phone'])?.toString() ?? '',
+          (ownerJson.containsKey('phone_number')
+                  ? ownerJson['phone_number']
+                  : json['owner_phone'])
+              ?.toString() ??
+          '',
       isOwnerPhoneRevealed:
-          (ownerJson['is_phone_revealed'] ?? json['is_owner_phone_revealed']) ==
+          (ownerJson.containsKey('is_phone_revealed')
+              ? ownerJson['is_phone_revealed']
+              : json['is_owner_phone_revealed']) ==
           true,
       ownerAvatar: _propertyFileUrl(
         ownerJson['avatar'] ?? json['owner_avatar'],

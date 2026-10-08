@@ -1,6 +1,7 @@
 import 'package:melos_core/config/res/config_imports.dart' show injector;
 
-/// Proposed API: enable only after the backend handoff and staging verification.
+/// Agreed API: keep disabled until staging deployment and verification.
+/// See TENANCY_INVITATIONS_BACKEND_RETURN_HANDOFF.md for rollout status.
 class TenancyInvitationCapabilities {
   const TenancyInvitationCapabilities({this.enabled = false});
 

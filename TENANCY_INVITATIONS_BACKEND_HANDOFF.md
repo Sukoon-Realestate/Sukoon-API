@@ -1,9 +1,12 @@
 # Tenancy invitations and lease eligibility — backend handoff
 
 Date: 2026-10-08  
-Status: **Proposed contract; backend implementation and returned handoff required.**  
+Status: **Mobile integration aligned with the returned contract. Backend is verified locally; staging deployment and fixture verification remain pending.**
+
 API base: `/api/v1/`  
 Mobile capability: `SOKOUN_TENANCY_INVITATIONS`, disabled by default.
+
+The returned [backend handoff](TENANCY_INVITATIONS_BACKEND_RETURN_HANDOFF.md) is the current contract and rollout source. It confirms the paths below and requires the mobile capability to remain disabled until staging is deployed and verified.
 
 ## Purpose and required flow
 
@@ -18,13 +21,13 @@ An accepted viewing, chat message, favorite, or property visit must not create t
 
 ## Mobile entry points and rollout
 
-- Owner: Requests → request details → **Invite to rent**. The app supplies the actual tenant/property IDs. For rental inventory, the owner chooses a currently available offer from a fresh full-property read; historical viewing snapshots do not authorize an invitation.
+- Owner: Requests → pending/confirmed request details → **Invite to rent**, for a verified tenant. The app supplies the actual tenant/property IDs. Rejected, cancelled, completed, unknown and missing visit states do not expose this action. The existing owner UI alias `accepted` represents `confirmed`. For rental inventory, the owner chooses a currently available offer from a fresh full-property read; historical viewing snapshots do not authorize an invitation.
 - Both workspaces: Contracts → **Rental invitations** → invitation detail.
 - Tenant detail: review the owner, property and accommodation, then **Accept invitation** or **Reject invitation**.
 - Owner detail: pending/accepted/rejected/expired/revoked status and current lease eligibility. Accepted invitations do not create a lease automatically; continue through the existing Create lease flow.
 - Notification: `action_type=open_tenancy_invitation`, a real invitation `target_id`, and explicit `workspace=tenant|owner`.
 
-The app includes a proposed API adapter and fixture coverage. Default builds show an unavailable notice and make no invitation API calls. Enable the capability only after the returned backend handoff and staging verification match this contract. Existing visit acceptance, chat and lease history continue independently.
+The app includes the agreed API adapter and fixture coverage. Default builds show an unavailable notice and make no invitation API calls. Enable the capability only after staging deployment and verification match the returned contract. Existing visit acceptance, chat and lease history continue independently.
 
 ## Invitation persistence and lifecycle
 
@@ -45,11 +48,11 @@ Persist an auditable record containing:
 
 Store the initiating/responding actor and idempotency records. Owner identity and expiry are server-derived; never trust owner identity or eligibility flags supplied by the client. Maintain an authoritative current participant/ownership relationship when ownership or account access changes.
 
-Transitions: `pending → accepted|rejected|revoked|expired`; an accepted invitation may become revoked/expired before use according to the documented policy. Linked lease history retains its snapshot. Define the precise expiry and revocation rules in the returned handoff, including whether a cancelled draft permits a fresh invitation. Do not silently reactivate a rejected/revoked/expired record.
+Transitions: `pending → accepted|rejected|revoked|expired`. The server sets expiry to seven days after creation; pending and accepted-but-unconsumed invitations expire at that instant. An accepted invitation may be revoked only before it is linked to a lease. Linked history retains its snapshot and accepted status after its invitation deadline. A cancelled draft keeps the original invitation linked and consumed; a fresh invitation is allowed if the accommodation is currently available. Never reactivate a rejected/revoked/expired record or authorize a new draft with a consumed invitation.
 
 Prevent duplicate live invitations for the same owner/property/tenant/accommodation. A stable identical retry returns its original result. A different request creating an already live invitation returns a readable conflict instead of generating duplicates. Multiple non-overlapping offers under one property remain separate subjects.
 
-## Proposed endpoints
+## Agreed endpoints
 
 | Method | Path | Authorization |
 | --- | --- | --- |
@@ -58,7 +61,7 @@ Prevent duplicate live invitations for the same owner/property/tenant/accommodat
 | GET | `features/v1/tenancy-invitations/{id}/` | Actual owner or addressed tenant |
 | POST | `features/v1/tenancy-invitations/{id}/respond/` | Addressed tenant only |
 
-These names are a proposal, not a claim that deployed routes exist. Return any agreed naming changes before mobile enablement. Owner revocation/admin operations may be added by the backend, but the prepared mobile flow has no revocation mutation.
+The returned handoff confirms these names and local implementation. Staging deployment is still pending. The prepared mobile flow has no owner revocation mutation.
 
 ### Create an invitation
 
@@ -78,7 +81,7 @@ POST /api/v1/features/v1/tenancy-invitations/
 
 For a legacy property without rental inventory, omit `offer_id` and `expected_offer_revision`. Require both for version-1 rental inventory. Reject unknown/unsupported inventory versions, stale revisions, unavailable/archived accommodation, invalid tenant accounts and owner-as-tenant. Confirm that the selected offer belongs to the authorized property and has no conflicting allocation.
 
-Owner invitations may originate from a viewing relationship or an existing authorized conversation. Validate the eligible source relationship under the agreed product policy; receiving an arbitrary UUID does not authorize access to another account's private information. The prepared first mobile entry uses owner visit request details.
+For the first release, both accounts must be active and verified, and the exact owner/property/tenant pair must have a `PropertyVisit` with status `pending` or `confirmed`. Rejected/cancelled visits cannot source an invitation. Chat-only sourcing is deferred because current conversations do not identify a property. The mobile entry uses owner visit request details; the server remains responsible for current ownership, account access and source authorization.
 
 Return HTTP 201 with the full invitation, `status=pending`, `eligible_for_lease=false`, and `actions.can_respond=false` for the owner. Notify the tenant only after the transaction commits, once per logical invitation.
 
@@ -130,6 +133,8 @@ Successful responses use the existing envelope:
     "created_at": "2026-10-08T12:00:00+03:00",
     "expires_at": "2026-10-15T12:00:00+03:00",
     "accepted_at": null,
+    "rejected_at": null,
+    "revoked_at": null,
     "lease_id": null,
     "eligible_for_lease": false,
     "actions": {"can_respond": true}
@@ -220,9 +225,11 @@ Owner response notifications use `notification_type=tenancy_invitation_response`
 
 Return the existing localized error envelope and meaningful message. Enforce participant checks for every list/detail/mutation, including owner attempting a tenant response and tenant A responding to tenant B's invitation. Use database transactions/constraints, stable idempotency keys, and post-commit notifications. Expiry must be enforced at read/mutation time even if a worker has not updated the persisted status yet.
 
-## Required backend return handoff and verification
+The confirmed error envelope is `{"message":"Localized error message"}`; success uses `key/msg/data`. The shared response decoder accepts both `message` and `msg`, preserving the existing priority for `message` when both are present. Server text is displayed directly.
 
-Return a Markdown handoff with repository/commit, migration and deployment status, exact routes and request/response examples, actor/verification/source-relationship policies, expiry/revocation rules, duplicate handling, accommodation/lease allocation rules, localization behavior and notification payloads. Identify every deviation from this proposal so the adapter can be updated before enabling the mobile capability.
+## Backend return and staging verification
+
+The returned handoff documents repository/baseline, local migration and implementation status, exact routes and examples, actor/source policies, expiry/revocation, duplicate and cancellation rules, allocation, localization and notifications. Mobile adaptations for those differences are complete. The backend still needs to supply the deployed staging revision, migration evidence and real authorized fixture IDs before enabling the capability.
 
 Supply authorized owner/tenant fixture IDs and evidence for:
 
@@ -233,13 +240,13 @@ Supply authorized owner/tenant fixture IDs and evidence for:
 5. Concurrent responses/drafts and identical retries produce one logical result and one notification; changed retry payloads conflict.
 6. Arabic/English, real empty/error pages, pagination totals, participant privacy and notification navigation work.
 
-After receiving this evidence: update the mobile adapter for any differences, verify staging round trips on both roles, then build with `--dart-define=SOKOUN_TENANCY_INVITATIONS=true`. Fixture tests and UI preparation alone do not establish server implementation or production readiness.
+The return handoff supplies local implementation and test evidence, but no staging deployment or real fixture IDs. Once staging evidence is supplied, verify round trips on both roles, then build with `--dart-define=SOKOUN_TENANCY_INVITATIONS=true`. Fixture tests and UI preparation alone do not establish deployed server behavior or production readiness. Lease activation/provider webhook rollout is also a separate backend gap; invitation acceptance and draft creation do not allocate inventory or create invoices.
 
 ## Prepared mobile implementation
 
 The app-side code is under `apps/sokoun_app/lib/features/shared/tenancy_invitations/`:
 
-- `data/`: typed invitation/request models, proposed route constants, account/role validation, scoped GET caches and the default-off capability.
+- `data/`: typed invitation/request models, agreed route constants, account/role validation, scoped GET caches and the default-off capability.
 - `presentation/cubits/`: explicit loading, fresh accommodation checks before creation, and stable idempotency keys for creation and responses.
 - `presentation/screens/` and `widgets/`: owner invitation form, paginated history, participant detail, tenant confirmation actions and the existing lease draft entry point.
 
@@ -248,9 +255,19 @@ Owner request details and both Contracts workspaces expose the new entry points.
 Focused checks use test-only repository fixtures, never fabricated production invitation data. Reproduce them from `apps/sokoun_app`:
 
 ```sh
-flutter test --no-pub test/tenancy_invitations_contract_test.dart test/tenancy_invitations_flow_test.dart test/feature_architecture_test.dart
+flutter test --no-pub test/tenancy_invitations_contract_test.dart test/tenancy_invitations_flow_test.dart test/tenancy_invitations_backend_handoff_test.dart test/feature_architecture_test.dart
 ```
 
 Coverage includes default-off behavior, both owner/tenant entry points, all four rental scopes, acceptance/rejection, changed/expired/unavailable accommodation, identity and revision validation, retry keys, account changes, scoped caches, notification targets, empty history and Arabic/English layouts. Responsive checks cover 320, 390, 600, 768, 1024 and 1366 logical pixels with text scales 1, 1.3 and 2. These are Flutter widget checks; real-device and deployed-backend verification remain part of the returned handoff and staging enablement.
 
-Local verification on 2026-10-08 using Flutter 3.35.1: **75 focused invitation/architecture checks passed**. The app analyzer reported no errors and two existing unused-import warnings. The full app suite reported 3,311 passes, three skips and 23 failures in existing visit/property test fixtures (`collection_endpoint_integration_test`, `collection_request_body_contract_test`, `property_media_handoff_test`, `api_feedback_messages_test`, and `static_data_integration_test`); it is not a clean full-suite result.
+Before the return handoff, local verification on 2026-10-08 using Flutter 3.35.1 passed 75 focused invitation/architecture checks. The app analyzer reported no errors and two existing unused-import warnings. The full app suite reported 3,311 passes, three skips and 23 failures in existing visit/property test fixtures (`collection_endpoint_integration_test`, `collection_request_body_contract_test`, `property_media_handoff_test`, `api_feedback_messages_test`, and `static_data_integration_test`); it was not a clean full-suite result.
+
+Return-handoff alignment also preserves `accepted_at`, `rejected_at` and `revoked_at` in cached invitation models, retains flat notification `data.target_id` as well as projected detail actions, and sends invitation detail reads without an undocumented workspace query. Backend-envelope tests exercise the real Dio/CRUD/cache pipeline with Arabic/English HTTP fixtures; they are not staging tests.
+
+Return-handoff verification on 2026-10-08 using the current Flutter 3.44.7 SDK:
+
+- 90 focused invitation/architecture checks passed, including 15 returned-contract checks.
+- Four shared response-decoder checks passed; focused analysis of that decoder/test reported no issues.
+- The app analyzer reported no errors, two existing unused-import warnings and four existing deprecation notices.
+- The full app suite reported 3,407 passes, three skips and the same 23 failures in the older visit/property fixtures listed above. No invitation tests failed; the full suite remains unsuccessful.
+- Arabic/English rendered screens and the six-width/three-text-scale layout matrix passed widget checks. No deployed staging or physical-device round trip was available.

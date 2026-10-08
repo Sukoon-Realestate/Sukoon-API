@@ -46,6 +46,7 @@ import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_list_t
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_message_bubble.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_queued_messages_banner.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_thread_content.dart';
+import 'package:sokoun_app/features/shared/chat/presentation/widgets/chat_thread/chat_composer.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/widgets/report/chat_report_sheet.dart';
 import 'package:sokoun_app/features/shared/notifications/data/foreground_notification_bus.dart';
 
@@ -517,6 +518,129 @@ void main() {
     expect(_messagesRequestCount, 1);
     expect(tester.takeException(), isNull);
   });
+
+  testWidgets('conversation list refreshes after acceptance and resume', (
+    tester,
+  ) async {
+    configurePhoneViewport(tester);
+    await tester.pumpWidget(buildScreen(const ChatsScreen()));
+    await tester.pumpAndSettle();
+    expect(_conversationsRequestCount, 1);
+    ForegroundNotificationBus.receive({
+      'notification_type': 'visit_accepted',
+      'notification_id': 'inbox-contact-accepted',
+      'visit_id': 'visit',
+    });
+    await tester.pumpAndSettle();
+    expect(_conversationsRequestCount, 2);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pumpAndSettle();
+    expect(_conversationsRequestCount, 3);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('read-only history refreshes contact without opening a socket', (
+    tester,
+  ) async {
+    configurePhoneViewport(tester);
+    final sockets = RecordingChatSocketSource();
+    injector.registerSingleton<ChatSocketDataSource>(sockets);
+    final conversation = _conversations.first.copyWith(
+      otherParticipant: const ChatParticipantContent(id: 'owner'),
+    );
+    _contactConversation = conversation;
+    await tester.pumpWidget(
+      buildScreen(PreviousChatScreen(conversation: conversation)),
+    );
+    await tester.pumpAndSettle();
+    expect(_contactRequestCount, 1);
+    _contactConversation = conversation.copyWith(
+      canSend: true,
+      otherParticipant: conversation.otherParticipant.copyWith(
+        phoneNumber: '+201001234567',
+        isPhoneRevealed: true,
+      ),
+    );
+    ForegroundNotificationBus.receive({
+      'notification_type': 'visit_accepted',
+      'notification_id': 'history-contact-accepted',
+      'visit_id': 'visit',
+    });
+    await tester.pumpAndSettle();
+    expect(find.text('+201001234567'), findsOneWidget);
+    expect(find.text('رقم الموبايل مخفي في المحادثة'), findsNothing);
+    _contactConversation = conversation;
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pumpAndSettle();
+    expect(find.text('+201001234567'), findsNothing);
+    expect(find.byType(ChatComposer), findsNothing);
+    expect(_messagesRequestCount, 1);
+    expect(sockets.connections, 0);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets(
+    'authorized null phone keeps chat available without hidden copy',
+    (tester) async {
+      configurePhoneViewport(tester);
+      final conversation = _conversations.first.copyWith(
+        canSend: true,
+        otherParticipant: const ChatParticipantContent(id: 'owner'),
+      );
+      _contactConversation = ConversationContent.fromJson({
+        'id': conversation.id,
+        'other_participant': {
+          'id': 'owner',
+          'is_phone_revealed': true,
+          'phone_number': null,
+          'phone_notice': 'Phone number hidden',
+          'masked_phone_number': '010****432',
+          'can_send': true,
+        },
+      });
+      await tester.pumpWidget(
+        buildScreen(ChatScreen(conversation: conversation)),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        find.text('رقم الهاتف غير متاح حالياً. يمكنك استخدام محادثة التطبيق.'),
+        findsOneWidget,
+      );
+      expect(find.text('رقم الموبايل مخفي في المحادثة'), findsNothing);
+      expect(find.text('Phone number hidden'), findsNothing);
+      expect(find.text('010****432'), findsNothing);
+      expect(find.byType(ChatComposer), findsOneWidget);
+      expect(_messagesRequestCount, 1);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'contact refresh updates chat permission without resetting drafts',
+    (tester) async {
+      configurePhoneViewport(tester);
+      final conversation = _conversations.first.copyWith(
+        otherParticipant: const ChatParticipantContent(id: 'owner'),
+      );
+      _contactConversation = conversation;
+      await tester.pumpWidget(
+        buildScreen(ChatScreen(conversation: conversation)),
+      );
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), 'Keep my draft');
+      _contactConversation = conversation.copyWith(canSend: false);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpAndSettle();
+      expect(find.byType(ChatComposer), findsNothing);
+      _contactConversation = conversation.copyWith(canSend: true);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpAndSettle();
+      expect(find.byType(ChatComposer), findsOneWidget);
+      expect(find.text('Keep my draft'), findsOneWidget);
+      expect(_messagesRequestCount, 1);
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets('loads message history once for each ChatScreen entry', (
     tester,
@@ -1073,6 +1197,8 @@ class _ChatTestAssetLoader extends AssetLoader {
       'chat_active_now': 'نشط الآن',
       'chat_today': 'النهارده',
       'chat_phone_privacy_thread': 'رقم الموبايل مخفي في المحادثة',
+      'contact_phone_unavailable':
+          'رقم الهاتف غير متاح حالياً. يمكنك استخدام محادثة التطبيق.',
       'chat_message_hint': 'اكتب رسالة…',
       'chat_send_message': 'إرسال الرسالة',
       'chat_messages_empty_title': 'لا توجد رسائل حتى الآن',

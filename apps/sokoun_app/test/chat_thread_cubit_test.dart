@@ -123,6 +123,121 @@ void main() {
   });
 
   test(
+    'fresh metadata replaces a grant and updates sending independently',
+    () async {
+      final realtime = _FakeChatRealtimeGateway();
+      final source = _ReadTrackingDataSource()
+        ..contactSnapshot = ConversationContent.fromJson({
+          'id': 'thread',
+          'other_participant': {
+            'id': 'other',
+            'is_phone_revealed': false,
+            'phone_number': '',
+            'can_send': false,
+          },
+        });
+      final cubit = ChatThreadCubit(
+        conversationId: 'thread',
+        otherParticipantId: 'other',
+        realtimeService: realtime,
+        dataSource: source,
+        localStore: _MemoryChatLocalStore(),
+        initialContact: const ChatParticipantContent(
+          id: 'other',
+          isPhoneRevealed: true,
+          phoneNumber: '+201001234567',
+        ),
+      );
+      cubit.updateDraft('Keep this draft');
+      await cubit.connect();
+      await cubit.refreshContact();
+      expect(cubit.state.contact.isPhoneRevealed, isFalse);
+      expect(cubit.state.contact.revealedPhone, isEmpty);
+      expect(cubit.canSend, isFalse);
+      expect(
+        (await cubit.sendTextMessage('Denied')).status,
+        ChatSendStatus.failed,
+      );
+      expect(realtime.sentContents, isEmpty);
+
+      source.contactSnapshot = ConversationContent.fromJson({
+        'id': 'thread',
+        'other_participant': {
+          'id': 'other',
+          'is_phone_revealed': true,
+          'phone_number': null,
+          'can_send': true,
+        },
+      });
+      await cubit.refreshContact();
+      expect(cubit.state.contact.isPhoneRevealed, isTrue);
+      expect(cubit.state.contact.revealedPhone, isEmpty);
+      expect(cubit.canSend, isTrue);
+      expect(cubit.state.draft, 'Keep this draft');
+      await cubit.close();
+      await realtime.close();
+    },
+  );
+
+  test('a refreshed sending denial pauses queued delivery', () async {
+    final realtime = _FakeChatRealtimeGateway()..canConnect = false;
+    final source = _ReadTrackingDataSource()
+      ..contactSnapshot = const ConversationContent.initial().copyWith(
+        id: 'thread',
+        canSend: false,
+      );
+    final cubit = ChatThreadCubit(
+      conversationId: 'thread',
+      realtimeService: realtime,
+      dataSource: source,
+      localStore: _MemoryChatLocalStore(),
+    );
+    await cubit.connect();
+    expect((await cubit.sendTextMessage('Wait for access')).isQueued, isTrue);
+    await cubit.refreshContact();
+    realtime.setConnected(true);
+    await Future<void>.delayed(Duration.zero);
+    expect(cubit.canSend, isFalse);
+    expect(cubit.queuedMessageCount, 1);
+    expect(realtime.sentContents, isEmpty);
+    expect(source.sentClientIds, isEmpty);
+    await cubit.close();
+    await realtime.close();
+  });
+
+  test('read-only contact reads preserve the existing socket owner', () async {
+    final realtime = _FakeChatRealtimeGateway()
+      ..activeConversationId = 'thread'
+      ..isConnected = true;
+    final source = _ReadTrackingDataSource()
+      ..contactSnapshot = ConversationContent.fromJson({
+        'id': 'thread',
+        'other_participant': {
+          'id': 'other',
+          'phone_number': '+201001234567',
+          'is_phone_revealed': true,
+          'can_send': true,
+        },
+      });
+    final cubit = ChatThreadCubit(
+      conversationId: 'thread',
+      otherParticipantId: 'other',
+      readOnly: true,
+      realtimeService: realtime,
+      dataSource: source,
+    );
+    await cubit.refreshContact();
+    await cubit.connect();
+    expect(cubit.state.contact.revealedPhone, '+201001234567');
+    expect(cubit.canSend, isFalse);
+    expect(realtime.connectCount, 0);
+    await cubit.close();
+    expect(realtime.activeConversationId, 'thread');
+    expect(realtime.disconnectCount, 0);
+    await realtime.close();
+  });
+
+  test(
     'recovered messages require explicit review and sending after restart',
     () async {
       final store = _MemoryChatLocalStore()

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/home_page_model.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 
 import 'home_search_box.dart';
@@ -18,7 +19,7 @@ class TenantHomeHeader extends StatelessWidget {
     this.rentalSections,
   });
 
-  final String? banner;
+  final HomeVisitBannerModel? banner;
   final Widget? rentOverview;
   final Widget? rentalSections;
 
@@ -37,9 +38,9 @@ class TenantHomeHeader extends StatelessWidget {
           rentOverview!,
           const ContractsEntry(workspace: AppWorkspace.tenant),
         ],
-        if (banner?.trim().isNotEmpty == true) ...[
+        if (banner != null && !banner!.isEmpty) ...[
           16.szH,
-          TenantVisitBanner(text: banner!.trim()),
+          TenantVisitBanner(banner: banner!),
         ],
         12.szH,
         if (rentalSections != null) rentalSections!,

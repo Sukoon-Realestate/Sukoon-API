@@ -66,6 +66,7 @@ class TenantVisitDetailsContent extends Equatable {
       'id': visit.ownerId,
       'name': visit.ownerName,
       'phone_number': visit.ownerPhone,
+      'is_phone_revealed': visit.isPhoneRevealed,
       'masked_phone_number': maskedPhone,
       'is_verified': ownerVerified,
     },

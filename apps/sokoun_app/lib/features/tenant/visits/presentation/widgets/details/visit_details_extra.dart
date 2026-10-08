@@ -21,9 +21,7 @@ class VisitDetailsExtra extends StatelessWidget {
           label: LocaleKeys.ownerAddPropertyBedrooms,
           value: details.bedrooms.toString(),
         ),
-      if (details.visit.revealedPhone.isEmpty &&
-          !details.visit.status.isAccepted &&
-          !details.visit.status.isCompleted &&
+      if (details.visit.isPhoneRevealed != true &&
           details.maskedPhone.isNotEmpty)
         (label: LocaleKeys.phoneNumber, value: details.maskedPhone),
       if (details.ownerVerified)

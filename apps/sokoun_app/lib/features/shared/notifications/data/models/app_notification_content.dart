@@ -162,6 +162,7 @@ class AppNotificationContent extends Equatable {
     if (actions.primary?.targetId.isNotEmpty == true) {
       return actions.primary!.targetId;
     }
+    if (payload.targetId.isNotEmpty) return payload.targetId;
     if (payload.visitId.isNotEmpty) return payload.visitId;
     if (payload.chatId.isNotEmpty) return payload.chatId;
     return payload.propertyId;

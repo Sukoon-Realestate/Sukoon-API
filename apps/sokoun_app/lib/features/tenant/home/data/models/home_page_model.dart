@@ -6,7 +6,7 @@ class HomePageModel extends Equatable {
   final String? next;
   final String? previous;
   final List<HomePropertyModel> results;
-  final String? banner;
+  final HomeVisitBannerModel? banner;
 
   const HomePageModel({
     required this.count,
@@ -32,7 +32,11 @@ class HomePageModel extends Equatable {
             ?.map((e) => HomePropertyModel.fromJson(e))
             .toList() ??
         [],
-    banner: json['banner'],
+    banner: json['banner'] is Map
+        ? HomeVisitBannerModel.fromJson(
+            Map<String, dynamic>.from(json['banner'] as Map),
+          )
+        : null,
   );
 
   Map<String, dynamic> toJson() => {
@@ -40,7 +44,7 @@ class HomePageModel extends Equatable {
     'next': next,
     'previous': previous,
     'results': results.map((e) => e.toJson()).toList(),
-    'banner': banner,
+    'banner': banner?.toJson(),
   };
 
   HomePageModel copyWith({
@@ -48,7 +52,7 @@ class HomePageModel extends Equatable {
     String? next,
     String? previous,
     List<HomePropertyModel>? results,
-    String? banner,
+    HomeVisitBannerModel? banner,
   }) => HomePageModel(
     count: count ?? this.count,
     next: next ?? this.next,
@@ -59,6 +63,91 @@ class HomePageModel extends Equatable {
 
   @override
   List<Object?> get props => [count, next, previous, results, banner];
+}
+
+class HomeVisitBannerModel extends Equatable {
+  const HomeVisitBannerModel({
+    required this.visitId,
+    required this.propertyId,
+    required this.propertyTitle,
+    required this.propertyDistrict,
+    required this.visitDate,
+    required this.visitTime,
+    required this.isToday,
+  });
+
+  const HomeVisitBannerModel.initial()
+    : visitId = '',
+      propertyId = '',
+      propertyTitle = '',
+      propertyDistrict = '',
+      visitDate = '',
+      visitTime = '',
+      isToday = false;
+
+  factory HomeVisitBannerModel.fromJson(Map<String, dynamic> json) =>
+      HomeVisitBannerModel(
+        visitId: json['visit_id']?.toString() ?? '',
+        propertyId: json['property_id']?.toString() ?? '',
+        propertyTitle: json['property_title']?.toString() ?? '',
+        propertyDistrict: json['property_district']?.toString() ?? '',
+        visitDate: json['visit_date']?.toString() ?? '',
+        visitTime: json['visit_time']?.toString() ?? '',
+        isToday: json['is_today'] == true,
+      );
+
+  final String visitId;
+  final String propertyId;
+  final String propertyTitle;
+  final String propertyDistrict;
+  final String visitDate;
+  final String visitTime;
+  final bool isToday;
+
+  bool get isEmpty =>
+      propertyTitle.trim().isEmpty &&
+      propertyDistrict.trim().isEmpty &&
+      visitDate.trim().isEmpty &&
+      visitTime.trim().isEmpty;
+
+  Map<String, dynamic> toJson() => {
+    'visit_id': visitId,
+    'property_id': propertyId,
+    'property_title': propertyTitle,
+    'property_district': propertyDistrict,
+    'visit_date': visitDate,
+    'visit_time': visitTime,
+    'is_today': isToday,
+  };
+
+  HomeVisitBannerModel copyWith({
+    String? visitId,
+    String? propertyId,
+    String? propertyTitle,
+    String? propertyDistrict,
+    String? visitDate,
+    String? visitTime,
+    bool? isToday,
+  }) => HomeVisitBannerModel(
+    visitId: visitId ?? this.visitId,
+    propertyId: propertyId ?? this.propertyId,
+    propertyTitle: propertyTitle ?? this.propertyTitle,
+    propertyDistrict: propertyDistrict ?? this.propertyDistrict,
+    visitDate: visitDate ?? this.visitDate,
+    visitTime: visitTime ?? this.visitTime,
+    isToday: isToday ?? this.isToday,
+  );
+
+  @override
+  List<Object?> get props => [
+    visitId,
+    propertyId,
+    propertyTitle,
+    propertyDistrict,
+    visitDate,
+    visitTime,
+    isToday,
+  ];
 }
 
 class HomePropertyModel extends Equatable {

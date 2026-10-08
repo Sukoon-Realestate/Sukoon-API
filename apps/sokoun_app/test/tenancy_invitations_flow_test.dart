@@ -72,7 +72,7 @@ void main() {
               'is_verified': true,
             },
             'property': {'id': 'property-a', 'title': 'شقة المعادي'},
-            'status': 'accepted',
+            'status': 'confirmed',
             'visit_date': '2026-10-08',
             'visit_time': '10:00:00',
             'actions': {
@@ -114,6 +114,7 @@ void main() {
           'status': request.body['decision'],
           'revision': 2,
           'accepted_at': accepted ? '2026-10-08T10:00:00Z' : null,
+          'rejected_at': accepted ? null : '2026-10-08T10:00:00Z',
           'eligible_for_lease': accepted,
           'actions': {'can_respond': false},
         };

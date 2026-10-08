@@ -383,9 +383,11 @@ void main() {
     await tester.pumpWidget(buildScreen(const TenantHomeScreen()));
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
-    expect(find.text('visit'), findsOneWidget);
+    expect(find.text('saudi arabia · any'), findsOneWidget);
     expect(find.text('عندك زيارة النهارده 3:00 م'), findsNothing);
-    await tester.tap(find.text('visit'));
+    await tester.ensureVisible(find.text('saudi arabia · any'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('saudi arabia · any'));
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));
 
@@ -425,6 +427,8 @@ class _CoreTranslationsAssetLoader extends AssetLoader {
       'tenant_visits_browse_properties': 'تصفح العقارات',
       'tenant_visits_show_all': 'عرض كل الزيارات',
       'tenant_home_suggested_for_you': 'مقترح لك',
+      'tenant_visit_banner_title': 'عندك زيارة النهارده',
+      'tenant_visit_banner_upcoming': 'عندك زيارة قريباً',
       'tenant_home_view_all': 'عرض الكل',
       'tenant_home_greeting': 'أهلاً بك',
       'tenant_home_current_area': 'منطقتك الحالية',
@@ -611,7 +615,7 @@ class _VisitsRepository implements BaseRepository {
               const <String, dynamic>{
                 'count': 0,
                 'results': [],
-                'banner': 'visit',
+                'banner': homeVisitBannerFixture,
               };
     final String message = params.api.endsWith('/review/')
         ? 'Server accepted the visit rating'

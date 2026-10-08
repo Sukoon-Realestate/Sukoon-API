@@ -79,12 +79,16 @@ class TenantVisitContent extends Equatable {
           owner['name']?.toString() ??
           '',
       ownerPhone:
-          owner['phone_number']?.toString() ??
-          json['owner_phone']?.toString() ??
-          owner['phone']?.toString() ??
+          (owner.containsKey('phone_number')
+                  ? owner['phone_number']
+                  : json['owner_phone'] ?? owner['phone'])
+              ?.toString() ??
           '',
       isPhoneRevealed:
-          (owner['is_phone_revealed'] ?? json['is_phone_revealed']) as bool?,
+          (owner.containsKey('is_phone_revealed')
+                  ? owner['is_phone_revealed']
+                  : json['is_phone_revealed'])
+              as bool?,
       ownerId: json['owner_id']?.toString() ?? owner['id']?.toString() ?? '',
       actions: json['actions'] is Map
           ? VisitActions.fromJson(visitJsonMap(json['actions']))
@@ -107,7 +111,6 @@ class TenantVisitContent extends Equatable {
   String get revealedPhone => PhoneDisclosure.revealedPhone(
     phoneNumber: ownerPhone,
     isPhoneRevealed: isPhoneRevealed,
-    hasAcceptedVisit: status.isAccepted || status.isCompleted,
   );
   final String ownerId;
   final VisitActions? actions;

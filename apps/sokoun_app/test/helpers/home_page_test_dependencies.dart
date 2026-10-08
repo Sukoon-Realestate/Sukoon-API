@@ -7,6 +7,16 @@ import 'package:melos_core/core/network/network_service.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:multiple_result/multiple_result.dart';
 
+const Map<String, dynamic> homeVisitBannerFixture = {
+  'visit_id': '694602e9-1e4a-42cc-8d65-1bd73a685856',
+  'property_id': '13954644-cc37-49d9-a772-f1a88be81401',
+  'property_title': 'saudi arabia',
+  'property_district': 'any',
+  'visit_date': '2026-10-09',
+  'visit_time': '12:00',
+  'is_today': false,
+};
+
 /// Registers a fake [BaseCrudUseCase] so widget tests can pump screens
 /// that use Cubits or AppPagify without a network.
 void registerHomePageTestDependencies({
@@ -71,7 +81,7 @@ class _FakeBaseRepository implements BaseRepository {
                 : const <String, dynamic>{
                     'count': 0,
                     'results': [],
-                    'banner': 'visit',
+                    'banner': homeVisitBannerFixture,
                   },
           )
         : throw UnimplementedError();

@@ -94,10 +94,15 @@ class OwnerVisitRequestContent extends Equatable {
       memberSince: json['member_since'] ?? tenant['member_since'] ?? '',
       tenantNote: json['tenant_note'] ?? json['note'] ?? '',
       phone: ownerVisitString(
-        tenant['phone_number'] ?? json['phone'] ?? tenant['phone'],
+        tenant.containsKey('phone_number')
+            ? tenant['phone_number']
+            : json['phone'] ?? tenant['phone'],
       ),
       isPhoneRevealed:
-          (tenant['is_phone_revealed'] ?? json['is_phone_revealed']) as bool?,
+          (tenant.containsKey('is_phone_revealed')
+                  ? tenant['is_phone_revealed']
+                  : json['is_phone_revealed'])
+              as bool?,
       status: OwnerVisitRequestStatusExtension.fromName(json['status']),
       isVerified:
           json['is_verified_tenant'] ??
@@ -144,7 +149,6 @@ class OwnerVisitRequestContent extends Equatable {
   String get revealedPhone => PhoneDisclosure.revealedPhone(
     phoneNumber: phone,
     isPhoneRevealed: isPhoneRevealed,
-    hasAcceptedVisit: status.isAccepted || status.isCompleted,
   );
   final OwnerVisitRequestStatus status;
   final bool isVerified;

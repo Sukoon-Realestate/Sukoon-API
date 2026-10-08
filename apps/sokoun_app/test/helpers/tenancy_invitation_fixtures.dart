@@ -20,6 +20,10 @@ Map<String, dynamic> invitationJson({
   'revision': 1,
   'created_at': '2026-10-08T09:00:00Z',
   'expires_at': '2099-10-15T09:00:00Z',
+  'accepted_at': null,
+  'rejected_at': null,
+  'revoked_at': null,
+  'lease_id': null,
   'eligible_for_lease': false,
   'actions': {'can_respond': tenant == 'fixture-account'},
 };

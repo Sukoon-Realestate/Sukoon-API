@@ -10,7 +10,14 @@ import 'package:sokoun_app/features/tenant/visits/data/models/tenant_visit_detai
 void main() {
   const String phone = '+20 100 123 4567';
 
-  for (final String status in ['pending', 'rejected', 'canceled']) {
+  for (final String status in [
+    'pending',
+    'rejected',
+    'canceled',
+    'accepted',
+    'confirmed',
+    'completed',
+  ]) {
     test('$status visits do not disclose an ungranted number', () {
       final json = {
         'id': 'visit',
@@ -30,7 +37,14 @@ void main() {
     });
   }
 
-  for (final String status in ['accepted', 'confirmed', 'completed']) {
+  for (final String status in [
+    'pending',
+    'rejected',
+    'canceled',
+    'accepted',
+    'confirmed',
+    'completed',
+  ]) {
     test('$status visits disclose both phones and survive cache mapping', () {
       final json = {
         'id': 'visit',
@@ -58,24 +72,27 @@ void main() {
     });
   }
 
-  test('accepted legacy visit payloads work without a disclosure flag', () {
+  test('an explicit denial overrides accepted status in every visit read', () {
     final json = {
       'id': 'visit',
       'status': 'confirmed',
-      'tenant': {'phone_number': phone},
-      'owner': {'phone_number': phone},
+      'tenant': {'phone_number': phone, 'is_phone_revealed': false},
+      'owner': {'phone_number': phone, 'is_phone_revealed': false},
     };
-    expect(OwnerVisitRequestDetailsContent.fromJson(json).revealedPhone, phone);
-    expect(TenantVisitDetailsContent.fromJson(json).visit.revealedPhone, phone);
+    expect(OwnerVisitRequestContent.fromJson(json).revealedPhone, isEmpty);
+    expect(
+      OwnerVisitRequestDetailsContent.fromJson(json).revealedPhone,
+      isEmpty,
+    );
+    expect(
+      TenantVisitDetailsContent.fromJson(json).visit.revealedPhone,
+      isEmpty,
+    );
   });
 
   test('explicit denial and masked numbers never become contact numbers', () {
     expect(
-      PhoneDisclosure.revealedPhone(
-        phoneNumber: phone,
-        isPhoneRevealed: false,
-        hasAcceptedVisit: true,
-      ),
+      PhoneDisclosure.revealedPhone(phoneNumber: phone, isPhoneRevealed: false),
       isEmpty,
     );
     for (final String value in ['', '010****432', '010••••432', 'hidden']) {
@@ -88,6 +105,97 @@ void main() {
       );
     }
   });
+
+  test(
+    'an authorized null phone clears stale flattened numbers and notices',
+    () {
+      final json = {
+        'id': 'visit',
+        'status': 'canceled',
+        'phone': phone,
+        'owner_phone': phone,
+        'tenant': {
+          'phone_number': null,
+          'is_phone_revealed': true,
+          'masked_phone_number': '010****432',
+          'phone_notice': 'Phone number hidden',
+        },
+        'owner': {
+          'id': 'owner',
+          'phone_number': null,
+          'is_phone_revealed': true,
+        },
+        'actions': {'can_chat': true},
+      };
+      final ownerList = OwnerVisitRequestContent.fromJson(json);
+      final owner = OwnerVisitRequestDetailsContent.fromJson(json);
+      final tenant = TenantVisitDetailsContent.fromJson(json);
+      expect(ownerList.phone, isEmpty);
+      expect(ownerList.isPhoneRevealed, isTrue);
+      expect(owner.tenant.displayPhone, isEmpty);
+      expect(owner.tenant.displayPhoneNotice, isEmpty);
+      expect(tenant.visit.ownerPhone, isEmpty);
+      expect(tenant.visit.isPhoneRevealed, isTrue);
+      expect(tenant.visit.canChat, isTrue);
+      expect(TenantVisitDetailsContent.fromJson(tenant.toJson()), tenant);
+    },
+  );
+
+  test('a nested unknown permission cannot reuse a stale flattened grant', () {
+    final json = {
+      'status': 'confirmed',
+      'is_phone_revealed': true,
+      'tenant': {'phone_number': phone, 'is_phone_revealed': null},
+      'owner': {'phone_number': phone, 'is_phone_revealed': null},
+    };
+    expect(OwnerVisitRequestContent.fromJson(json).revealedPhone, isEmpty);
+    expect(
+      TenantVisitDetailsContent.fromJson(json).visit.revealedPhone,
+      isEmpty,
+    );
+  });
+
+  test(
+    'authorized empty contact remains granted in conversation snapshots',
+    () {
+      final conversation = ConversationContent.fromJson({
+        'id': 'conversation',
+        'other_participant': {
+          'id': 'owner',
+          'phone_number': null,
+          'is_phone_revealed': true,
+          'masked_phone_number': '010****432',
+          'phone_notice': 'Phone number hidden',
+          'can_send': true,
+        },
+      });
+      expect(conversation.otherParticipant.isPhoneRevealed, isTrue);
+      expect(conversation.otherParticipant.revealedPhone, isEmpty);
+      expect(conversation.canSend, isTrue);
+      expect(ConversationContent.fromJson(conversation.toJson()), conversation);
+    },
+  );
+
+  test(
+    'property presentation preserves authorized but unavailable contacts',
+    () {
+      final model = PropertyDetailsModel.fromJson({
+        'id': 'property',
+        'owner_phone': phone,
+        'owner': {
+          'id': 'owner',
+          'phone_number': null,
+          'is_phone_revealed': true,
+        },
+      });
+      expect(model.ownerPhone, isEmpty);
+      expect(model.isOwnerPhoneRevealed, isTrue);
+      final content = TenantPropertyDetailsContent.fromModel(model);
+      expect(content.ownerPhone, isEmpty);
+      expect(content.isOwnerPhoneRevealed, isTrue);
+      expect(PropertyDetailsModel.fromJson(model.toJson()), model);
+    },
+  );
 
   test('chat requires an explicit participant grant and serializes it', () {
     final hidden = ConversationContent.fromJson({

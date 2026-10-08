@@ -2173,6 +2173,9 @@ abstract class LocaleKeys {
   static const String _tenantVisitBannerTitle = 'tenant_visit_banner_title';
   static String get tenantVisitBannerTitle => _tenantVisitBannerTitle.tr();
 
+  static const String _tenantVisitBannerUpcoming = 'tenant_visit_banner_upcoming';
+  static String get tenantVisitBannerUpcoming => _tenantVisitBannerUpcoming.tr();
+
   static const String _tenantVisitBannerProperty = 'tenant_visit_banner_property';
   static String get tenantVisitBannerProperty => _tenantVisitBannerProperty.tr();
 

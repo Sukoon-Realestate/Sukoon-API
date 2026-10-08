@@ -59,7 +59,13 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
     final TenantVisitContent? updated = await Go.to<TenantVisitContent>(
       VisitDetailsScreen(visit: visit),
     );
-    if (updated != null && mounted) _updateVisit(updated);
+    if (!mounted) return;
+    if (updated != null) _updateVisit(updated);
+    await _refreshContacts();
+  }
+
+  Future<void> _refreshContacts() async {
+    await _pagifyController?.refresh();
   }
 
   Future<void> _cancelVisit(TenantVisitContent visit) async {
@@ -76,6 +82,7 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
       _cancelingVisitId.value = visit.id;
       if (await _cancelCubit.cancel(visit.id) && mounted) {
         _updateVisit(visit.canceled);
+        await _refreshContacts();
       }
     } finally {
       _isConfirmingCancellation = false;
@@ -132,19 +139,23 @@ class _TenantVisitsScreenState extends State<TenantVisitsScreen> {
         AppColors.scaffoldBackground,
         surface: true,
       ),
-      body: SafeArea(
-        child: ValueListenableBuilder<String?>(
-          valueListenable: _cancelingVisitId,
-          builder: (context, cancelingVisitId, _) => TenantVisitsScreenContent(
-            cancelingVisitId: cancelingVisitId,
-            useRequestEndpoint: widget.useRequestEndpoint,
-            selectedFilter: _selectedFilter,
-            initialVisits: _fixtureVisits,
-            pagifyController: _pagifyController,
-            onFilterSelected: _selectFilter,
-            onVisitPressed: _openDetails,
-            onRatePressed: _showRating,
-            onCancelPressed: _cancelVisit,
+      body: VisitContactRefresh(
+        onRefresh: _refreshContacts,
+        child: SafeArea(
+          child: ValueListenableBuilder<String?>(
+            valueListenable: _cancelingVisitId,
+            builder: (context, cancelingVisitId, _) =>
+                TenantVisitsScreenContent(
+                  cancelingVisitId: cancelingVisitId,
+                  useRequestEndpoint: widget.useRequestEndpoint,
+                  selectedFilter: _selectedFilter,
+                  initialVisits: _fixtureVisits,
+                  pagifyController: _pagifyController,
+                  onFilterSelected: _selectFilter,
+                  onVisitPressed: _openDetails,
+                  onRatePressed: _showRating,
+                  onCancelPressed: _cancelVisit,
+                ),
           ),
         ),
       ),

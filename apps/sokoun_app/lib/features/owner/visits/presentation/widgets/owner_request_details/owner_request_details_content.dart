@@ -33,7 +33,10 @@ class OwnerRequestDetailsContent extends StatelessWidget {
             RevealedPhoneCard(phoneNumber: request.revealedPhone)
           else
             OwnerRequestPrivacyBanner(
-              message: request.status.isAccepted || request.status.isCompleted
+              icon: request.tenant.isPhoneRevealed == true
+                  ? Icons.info_outline_rounded
+                  : Icons.lock_outline_rounded,
+              message: request.tenant.isPhoneRevealed == true
                   ? LocaleKeys.contactPhoneUnavailable
                   : request.tenant.displayPhoneNotice.isNotEmpty
                   ? request.tenant.displayPhoneNotice

@@ -3,6 +3,7 @@ import 'package:sokoun_app/features/shared/contact/presentation/widgets/revealed
 import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
 
@@ -57,7 +58,12 @@ class OwnerVisitRequestCard extends StatelessWidget {
             children: [
               OwnerVisitRequestIdentityRow(request: request),
               if (request.revealedPhone.isNotEmpty)
-                RevealedPhoneCard(phoneNumber: request.revealedPhone),
+                RevealedPhoneCard(phoneNumber: request.revealedPhone)
+              else if (request.isPhoneRevealed == true)
+                OwnerRequestPrivacyBanner(
+                  message: LocaleKeys.contactPhoneUnavailable,
+                  icon: Icons.info_outline_rounded,
+                ),
               if (request.rentalSelection != null)
                 AppText(
                   RentalOfferLabels.accommodation(request.rentalSelection!),

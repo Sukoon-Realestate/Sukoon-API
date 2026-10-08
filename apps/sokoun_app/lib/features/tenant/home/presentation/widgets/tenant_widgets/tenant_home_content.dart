@@ -26,7 +26,7 @@ class TenantHomeContent extends StatefulWidget {
 class _TenantHomeContentState extends State<TenantHomeContent> {
   final TenantHomeData _data = TenantHomeData();
   final PagifyController<HomePropertyModel> _controller = PagifyController();
-  late final ValueNotifier<String?> _banner = ValueNotifier(
+  late final ValueNotifier<HomeVisitBannerModel?> _banner = ValueNotifier(
     _data.readCachedPage()?.banner,
   );
   int _requestGeneration = 0;
@@ -84,7 +84,7 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
       shrinkWrap: false,
       physics: const AlwaysScrollableScrollPhysics(),
       rankingType: Ranking.adaptiveGrid,
-      header: ValueListenableBuilder<String?>(
+      header: ValueListenableBuilder<HomeVisitBannerModel?>(
         valueListenable: _banner,
         builder: (context, banner, _) => TenantHomeHeader(
           banner: banner,

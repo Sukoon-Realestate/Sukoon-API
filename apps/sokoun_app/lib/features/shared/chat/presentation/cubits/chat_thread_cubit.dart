@@ -48,14 +48,14 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   ChatThreadCubit({
     required this.conversationId,
     this.otherParticipantId = '',
+    this.readOnly = false,
     ChatRealtimeGateway? realtimeService,
     ChatDataSource? dataSource,
     ChatLocalStore? localStore,
     bool canSend = true,
     ChatParticipantContent initialContact =
         const ChatParticipantContent.initial(),
-  }) : _conversationCanSend = canSend,
-       _realtime = realtimeService ?? ChatRealtimeService.instance,
+  }) : _realtime = realtimeService ?? ChatRealtimeService.instance,
        _dataSource = dataSource ?? ChatData.source,
        _localStore =
            localStore ??
@@ -63,7 +63,12 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
              accountId: UserModel.currentUser?.id ?? '',
              conversationId: conversationId,
            ),
-       super(const ChatThreadState.initial().copyWith(contact: initialContact));
+       super(
+         const ChatThreadState.initial().copyWith(
+           contact: initialContact,
+           canSend: canSend,
+         ),
+       );
 
   static const Duration _confirmationTimeout = Duration(seconds: 5);
   static const Duration _queueRetryDelay = Duration(seconds: 5);
@@ -71,11 +76,11 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
 
   final String conversationId;
   final String otherParticipantId;
+  final bool readOnly;
   final ChatRealtimeGateway _realtime;
   final ChatDataSource _dataSource;
   final ChatLocalStore _localStore;
-  final bool _conversationCanSend;
-  bool get canSend => _conversationCanSend && AccountAccess.isVerified;
+  bool get canSend => !readOnly && state.canSend && AccountAccess.isVerified;
   Future<void>? _localLoad;
   Future<void>? _contactRefresh;
   bool _contactRefreshAgain = false;
@@ -106,7 +111,18 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
           conversation.otherParticipant.id != otherParticipantId) {
         return;
       }
-      emit(state.copyWith(contact: conversation.otherParticipant));
+      final bool wasAllowedToSend = canSend;
+      emit(
+        state.copyWith(
+          contact: conversation.otherParticipant,
+          canSend: conversation.canSend,
+        ),
+      );
+      if (!canSend) {
+        _queueRetryTimer?.cancel();
+      } else if (!wasAllowedToSend && _shouldBeConnected) {
+        await connect();
+      }
     } catch (_) {
       // A failed refresh cannot grant contact access. Keep the supplied snapshot.
     }
@@ -216,7 +232,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   int get queuedMessageCount => _outbox.length;
 
   Future<void> connect() async {
-    if (!_hasCurrentSession || !_shouldBeConnected) return;
+    if (readOnly || !_hasCurrentSession || !_shouldBeConnected) return;
     _contactNotificationSubscription ??= ForegroundNotificationBus.stream
         .listen((notification) {
           if (notification.kind == AppNotificationKind.visitAccepted) {
@@ -245,7 +261,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   }) async {
     if (!_hasCurrentSession || !canSend) return const ChatSendResult.failed();
     await _loadLocal();
-    if (!_hasCurrentSession) return const ChatSendResult.failed();
+    if (!_hasCurrentSession || !canSend) return const ChatSendResult.failed();
     final String content = rawContent.trim();
     if (!Validators.isValidChatContent(content)) {
       return const ChatSendResult.failed();
@@ -299,7 +315,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   }
 
   Future<void> markConversationAsRead() async {
-    if (!_hasCurrentSession) return;
+    if (readOnly || !_hasCurrentSession) return;
     if (_realtime.isConnected) {
       try {
         await _realtime.markConversationAsRead(conversationId);
@@ -320,13 +336,17 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   }
 
   Future<void> onAppLifecycleStateChanged(AppLifecycleState lifecycle) async {
-    if (!_hasCurrentSession ||
-        _realtime.activeConversationId != conversationId) {
-      return;
-    }
+    if (readOnly || !_hasCurrentSession) return;
     _shouldBeConnected =
         lifecycle == AppLifecycleState.resumed ||
         lifecycle == AppLifecycleState.inactive;
+    if (_realtime.activeConversationId != conversationId) {
+      if (lifecycle == AppLifecycleState.resumed &&
+          _realtime.activeConversationId == null) {
+        await connect();
+      }
+      return;
+    }
     if (lifecycle != AppLifecycleState.resumed) {
       _draftTimer?.cancel();
       // Storage cannot delay socket ownership during rapid pause/resume events.
@@ -453,7 +473,10 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   }
 
   Future<void> _drainOutbox() async {
-    while (_outbox.isNotEmpty && _realtime.isConnected && _hasCurrentSession) {
+    while (_outbox.isNotEmpty &&
+        _realtime.isConnected &&
+        _hasCurrentSession &&
+        canSend) {
       final _QueuedChatMessage queuedMessage = _outbox.first;
       final ChatSendResult result = await _deliverQueuedMessage(queuedMessage);
       if (!result.isSent) {
@@ -492,7 +515,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
       return ChatSendResult.sent(restMessage: confirmedMessage);
     } catch (socketError, socketStackTrace) {
       _removeConfirmation(confirmation);
-      if (!_hasCurrentSession || !_realtime.isConnected) {
+      if (!_hasCurrentSession || !canSend || !_realtime.isConnected) {
         log(
           'Chat message remains queued until the socket reconnects: '
           '$socketError',
@@ -553,10 +576,20 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   }
 
   void _scheduleQueueRetry() {
-    if (!_shouldBeConnected || _outbox.isEmpty || !_hasCurrentSession) return;
+    if (!_shouldBeConnected ||
+        _outbox.isEmpty ||
+        !_hasCurrentSession ||
+        !canSend) {
+      return;
+    }
     _queueRetryTimer?.cancel();
     _queueRetryTimer = Timer(_queueRetryDelay, () async {
-      if (!_shouldBeConnected || _outbox.isEmpty || !_hasCurrentSession) return;
+      if (!_shouldBeConnected ||
+          _outbox.isEmpty ||
+          !_hasCurrentSession ||
+          !canSend) {
+        return;
+      }
       if (!_realtime.isConnected) await _realtime.connect();
       if (_realtime.isConnected) await _flushOutbox();
     });
@@ -619,7 +652,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
     if (flushDraft && _sessionGeneration == AccountSession.generation) {
       cleanup.add(_persistLocal().catchError((Object _) {}));
     }
-    if (_realtime.activeConversationId == conversationId) {
+    if (!readOnly && _realtime.activeConversationId == conversationId) {
       _realtime.setActiveConversation(null);
       cleanup.add(_realtime.disconnect());
     }

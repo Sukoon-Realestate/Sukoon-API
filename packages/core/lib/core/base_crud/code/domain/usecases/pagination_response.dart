@@ -13,9 +13,8 @@ class BaseModel<T> {
   }) {
     return BaseModel<T>(
       key: json['key'] ?? '',
-      msg: json['message'] ?? '',
-      data: jsonToModel.isNotNull?
-      jsonToModel!(json['data']) : json['data'],
+      msg: json['message'] ?? json['msg'] ?? '',
+      data: jsonToModel.isNotNull ? jsonToModel!(json['data']) : json['data'],
     );
   }
 }
@@ -26,8 +25,11 @@ class PaginationResponse<T> extends CrudResponse {
   final List<T>? data;
   PaginationResponse({required this.pagination, this.data});
 
-  factory PaginationResponse.fromJson(Map<String, dynamic> map,
-      {List<T> Function(dynamic)? mapper, String? dataKey}) {
+  factory PaginationResponse.fromJson(
+    Map<String, dynamic> map, {
+    List<T> Function(dynamic)? mapper,
+    String? dataKey,
+  }) {
     return PaginationResponse<T>(
       pagination: map['pagination'] != null
           ? Pagination.fromJson(map['pagination'])
@@ -38,10 +40,7 @@ class PaginationResponse<T> extends CrudResponse {
     );
   }
 
-  PaginationResponse<T> copyWith({
-    Pagination? pagination,
-    List<T>? data,
-  }) {
+  PaginationResponse<T> copyWith({Pagination? pagination, List<T>? data}) {
     return PaginationResponse<T>(
       pagination: pagination ?? this.pagination,
       data: data ?? this.data,
@@ -76,36 +75,35 @@ class Pagination {
     int? currentPage,
     String? nextPageUrl,
     String? pervPageUrl,
-  }) =>
-      Pagination(
-        totalItems: totalItems ?? this.totalItems,
-        countItems: countItems ?? this.countItems,
-        perPage: perPage ?? this.perPage,
-        totalPages: totalPages ?? this.totalPages,
-        currentPage: currentPage ?? this.currentPage,
-        nextPageUrl: nextPageUrl ?? this.nextPageUrl,
-        pervPageUrl: pervPageUrl ?? this.pervPageUrl,
-      );
+  }) => Pagination(
+    totalItems: totalItems ?? this.totalItems,
+    countItems: countItems ?? this.countItems,
+    perPage: perPage ?? this.perPage,
+    totalPages: totalPages ?? this.totalPages,
+    currentPage: currentPage ?? this.currentPage,
+    nextPageUrl: nextPageUrl ?? this.nextPageUrl,
+    pervPageUrl: pervPageUrl ?? this.pervPageUrl,
+  );
 
   factory Pagination.fromJson(Map<String, dynamic> json) => Pagination(
-        totalItems: json['total_items'],
-        countItems: json['count_items'],
-        perPage: json['per_page'],
-        totalPages: json['total_pages'],
-        currentPage: json['current_page'],
-        nextPageUrl: json['next_page_url'],
-        pervPageUrl: json['perv_page_url'],
-      );
+    totalItems: json['total_items'],
+    countItems: json['count_items'],
+    perPage: json['per_page'],
+    totalPages: json['total_pages'],
+    currentPage: json['current_page'],
+    nextPageUrl: json['next_page_url'],
+    pervPageUrl: json['perv_page_url'],
+  );
 
   Map<String, dynamic> toJson() => {
-        'total_items': totalItems,
-        'count_items': countItems,
-        'per_page': perPage,
-        'total_pages': totalPages,
-        'current_page': currentPage,
-        'next_page_url': nextPageUrl,
-        'perv_page_url': pervPageUrl,
-      };
+    'total_items': totalItems,
+    'count_items': countItems,
+    'per_page': perPage,
+    'total_pages': totalPages,
+    'current_page': currentPage,
+    'next_page_url': nextPageUrl,
+    'perv_page_url': pervPageUrl,
+  };
 }
 
 class BaseKeyMessageModel<T> {
@@ -113,8 +111,10 @@ class BaseKeyMessageModel<T> {
   final String msg;
   BaseKeyMessageModel({required this.key, required this.msg});
 
-  factory BaseKeyMessageModel.fromMap(Map<String, dynamic> map,
-      {T Function(dynamic)? mapper}) {
+  factory BaseKeyMessageModel.fromMap(
+    Map<String, dynamic> map, {
+    T Function(dynamic)? mapper,
+  }) {
     return BaseKeyMessageModel<T>(
       key: map['key'] as String,
       msg: map['msg'] as String,

@@ -42,7 +42,11 @@ class ConversationContent extends Equatable {
 
     return ConversationContent(
       id: json['id']?.toString() ?? '',
-      canSend: json['can_send'] as bool?,
+      canSend:
+          json['can_send'] as bool? ??
+          (participantJson is Map
+              ? participantJson['can_send'] as bool?
+              : null),
       name: participant.fullName.isNotEmpty
           ? participant.fullName
           : json['name']?.toString() ?? '',

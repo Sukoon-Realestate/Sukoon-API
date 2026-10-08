@@ -21,6 +21,8 @@ class TenancyInvitation extends Equatable {
     this.createdAt,
     this.expiresAt,
     this.acceptedAt,
+    this.rejectedAt,
+    this.revokedAt,
     this.leaseId = '',
     this.eligibleForLease = false,
     this.canRespond = false,
@@ -47,6 +49,8 @@ class TenancyInvitation extends Equatable {
         createdAt: premiumDate(json['created_at']),
         expiresAt: premiumDate(json['expires_at']),
         acceptedAt: premiumDate(json['accepted_at']),
+        rejectedAt: premiumDate(json['rejected_at']),
+        revokedAt: premiumDate(json['revoked_at']),
         leaseId: premiumString(json['lease_id']),
         eligibleForLease: json['eligible_for_lease'] == true,
         canRespond: premiumMap(json['actions'])['can_respond'] == true,
@@ -58,6 +62,7 @@ class TenancyInvitation extends Equatable {
   final TenancyInvitationStatus status;
   final int revision;
   final DateTime? createdAt, expiresAt, acceptedAt;
+  final DateTime? rejectedAt, revokedAt;
   final bool eligibleForLease, canRespond;
 
   bool get hasValidIdentity =>
@@ -117,6 +122,8 @@ class TenancyInvitation extends Equatable {
     'created_at': createdAt?.toIso8601String(),
     'expires_at': expiresAt?.toIso8601String(),
     'accepted_at': acceptedAt?.toIso8601String(),
+    'rejected_at': rejectedAt?.toIso8601String(),
+    'revoked_at': revokedAt?.toIso8601String(),
     'lease_id': leaseId,
     'eligible_for_lease': eligibleForLease,
     'actions': {'can_respond': canRespond},
@@ -128,6 +135,9 @@ class TenancyInvitation extends Equatable {
     bool? eligibleForLease,
     bool? canRespond,
     DateTime? expiresAt,
+    DateTime? acceptedAt,
+    DateTime? rejectedAt,
+    DateTime? revokedAt,
     String? leaseId,
   }) => TenancyInvitation(
     id: id,
@@ -143,7 +153,9 @@ class TenancyInvitation extends Equatable {
     revision: revision ?? this.revision,
     createdAt: createdAt,
     expiresAt: expiresAt ?? this.expiresAt,
-    acceptedAt: acceptedAt,
+    acceptedAt: acceptedAt ?? this.acceptedAt,
+    rejectedAt: rejectedAt ?? this.rejectedAt,
+    revokedAt: revokedAt ?? this.revokedAt,
     leaseId: leaseId ?? this.leaseId,
     eligibleForLease: eligibleForLease ?? this.eligibleForLease,
     canRespond: canRespond ?? this.canRespond,
@@ -165,6 +177,8 @@ class TenancyInvitation extends Equatable {
     createdAt,
     expiresAt,
     acceptedAt,
+    rejectedAt,
+    revokedAt,
     leaseId,
     eligibleForLease,
     canRespond,

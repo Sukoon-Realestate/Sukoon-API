@@ -17,10 +17,11 @@ class OwnerVisitRequestDetailsContent extends Equatable {
     required this.timeLabel,
     required this.note,
     required this.status,
+    String? statusValue,
     required this.statusLabel,
     required this.actions,
     required this.createdAt,
-  });
+  }) : _statusValue = statusValue;
 
   const OwnerVisitRequestDetailsContent.initial()
     : rentalSelection = null,
@@ -33,6 +34,7 @@ class OwnerVisitRequestDetailsContent extends Equatable {
       timeLabel = '',
       note = '',
       status = OwnerVisitRequestStatus.pending,
+      _statusValue = '',
       statusLabel = '',
       actions = const OwnerVisitRequestActionsContent.initial(),
       createdAt = '';
@@ -55,6 +57,7 @@ class OwnerVisitRequestDetailsContent extends Equatable {
       status: OwnerVisitRequestStatusExtension.fromName(
         ownerVisitString(json['status']),
       ),
+      statusValue: ownerVisitString(json['status']),
       statusLabel: ownerVisitString(json['status_label']),
       actions: OwnerVisitRequestActionsContent.fromJson(
         ownerVisitJsonMap(json['actions']),
@@ -73,14 +76,23 @@ class OwnerVisitRequestDetailsContent extends Equatable {
   final String timeLabel;
   final String note;
   final OwnerVisitRequestStatus status;
+  final String? _statusValue;
+  String get statusValue => _statusValue ?? status.name;
   final String statusLabel;
   final OwnerVisitRequestActionsContent actions;
   final String createdAt;
 
+  /// The backend allows invitation sourcing from pending/confirmed visits.
+  /// `accepted` is the existing owner UI alias for a confirmed visit.
+  bool get canInviteToLease =>
+      property.id.isNotEmpty &&
+      tenant.id.isNotEmpty &&
+      tenant.isVerified &&
+      const ['pending', 'confirmed', 'accepted'].contains(statusValue);
+
   String get revealedPhone => PhoneDisclosure.revealedPhone(
     phoneNumber: tenant.phoneNumber,
     isPhoneRevealed: tenant.isPhoneRevealed,
-    hasAcceptedVisit: status.isAccepted || status.isCompleted,
   );
 
   String get displayProperty {
@@ -139,7 +151,7 @@ class OwnerVisitRequestDetailsContent extends Equatable {
     'day_label': dayLabel,
     'time_label': timeLabel,
     'note': note,
-    'status': status.name,
+    'status': statusValue,
     'status_label': statusLabel,
     'actions': actions.toJson(),
     'created_at': createdAt,
@@ -156,6 +168,7 @@ class OwnerVisitRequestDetailsContent extends Equatable {
     String? timeLabel,
     String? note,
     OwnerVisitRequestStatus? status,
+    String? statusValue,
     String? statusLabel,
     OwnerVisitRequestActionsContent? actions,
     String? createdAt,
@@ -170,7 +183,12 @@ class OwnerVisitRequestDetailsContent extends Equatable {
       dayLabel: dayLabel ?? this.dayLabel,
       timeLabel: timeLabel ?? this.timeLabel,
       note: note ?? this.note,
-      status: status ?? this.status,
+      status:
+          status ??
+          (statusValue == null
+              ? this.status
+              : OwnerVisitRequestStatusExtension.fromName(statusValue)),
+      statusValue: statusValue ?? status?.name ?? this.statusValue,
       statusLabel: statusLabel ?? this.statusLabel,
       actions: actions ?? this.actions,
       createdAt: createdAt ?? this.createdAt,
@@ -189,6 +207,7 @@ class OwnerVisitRequestDetailsContent extends Equatable {
     timeLabel,
     note,
     status,
+    statusValue,
     statusLabel,
     actions,
     createdAt,
@@ -252,17 +271,12 @@ class OwnerVisitRequestTenantContent extends Equatable {
       phoneNumber: phoneNumber,
       isPhoneRevealed: isPhoneRevealed,
     );
-    if (revealed.isNotEmpty) return revealed;
+    if (isPhoneRevealed == true) return revealed;
     return maskedPhoneNumber;
   }
 
   String get displayPhoneNotice {
-    if (PhoneDisclosure.revealedPhone(
-      phoneNumber: phoneNumber,
-      isPhoneRevealed: isPhoneRevealed,
-    ).isNotEmpty) {
-      return '';
-    }
+    if (isPhoneRevealed == true) return '';
     if (phoneNotice.isNotEmpty) return phoneNotice;
     return displayPhone;
   }

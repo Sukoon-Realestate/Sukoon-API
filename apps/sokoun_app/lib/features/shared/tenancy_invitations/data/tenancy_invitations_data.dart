@@ -19,7 +19,7 @@ import 'models/tenancy_invitation.dart';
 import 'models/respond_tenancy_invitation_body.dart';
 import 'tenancy_invitation_capabilities.dart';
 
-/// Proposed routes documented in TENANCY_INVITATIONS_BACKEND_HANDOFF.md.
+/// Agreed routes in TENANCY_INVITATIONS_BACKEND_RETURN_HANDOFF.md.
 abstract final class TenancyInvitationApi {
   static const collection = '${PremiumApiConstants.prefix}tenancy-invitations/';
   static String detail(String id) => '$collection${Uri.encodeComponent(id)}/';
@@ -98,7 +98,6 @@ abstract final class TenancyInvitationsData {
     return PremiumApiData.get(
       endpoint: TenancyInvitationApi.detail(id),
       key: detailCacheKey(id, workspace),
-      query: {'workspace': workspace.name},
       fromJson: TenancyInvitation.fromJson,
       toJson: (item) => item.toJson(),
       valid: (item) =>

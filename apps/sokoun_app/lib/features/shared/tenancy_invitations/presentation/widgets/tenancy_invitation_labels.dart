@@ -6,6 +6,7 @@ abstract final class TenancyInvitationLabels {
   static String status(TenancyInvitation invitation) {
     final status =
         invitation.isExpired &&
+            invitation.leaseId.isEmpty &&
             (invitation.status == TenancyInvitationStatus.pending ||
                 invitation.status == TenancyInvitationStatus.accepted)
         ? TenancyInvitationStatus.expired

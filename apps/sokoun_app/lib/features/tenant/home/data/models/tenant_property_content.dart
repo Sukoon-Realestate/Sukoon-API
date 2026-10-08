@@ -47,6 +47,7 @@ class TenantPropertyDetailsContent {
     required this.ownerName,
     this.ownerAvatar = '',
     this.ownerPhone = '',
+    this.isOwnerPhoneRevealed = false,
     required this.ownerId,
     required this.ownerMeta,
     required this.imageColors,
@@ -181,6 +182,7 @@ class TenantPropertyDetailsContent {
       ownerName: model.owner,
       ownerAvatar: model.ownerAvatar,
       ownerPhone: model.revealedOwnerPhone,
+      isOwnerPhoneRevealed: model.isOwnerPhoneRevealed,
       ownerId: model.ownerId,
       ownerMeta: model.isOwnerVerified
           ? LocaleKeys.tenantPropertyDetailsVerifiedOwner
@@ -234,6 +236,7 @@ class TenantPropertyDetailsContent {
   final String ownerName;
   final String ownerAvatar;
   final String ownerPhone;
+  final bool isOwnerPhoneRevealed;
   final String ownerId;
   final String ownerMeta;
   final List<Color> imageColors;

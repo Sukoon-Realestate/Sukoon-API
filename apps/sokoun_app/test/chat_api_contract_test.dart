@@ -102,6 +102,23 @@ void main() {
     expect(ConversationContent.fromJson(cached.toJson()).isOnline, isTrue);
   });
 
+  test('conversation permissions read the returned counterpart contract', () {
+    for (final allowed in [false, true]) {
+      final conversation = ConversationContent.fromJson({
+        'id': 'conversation',
+        'other_participant': {'id': 'owner', 'can_send': allowed},
+      });
+      expect(conversation.canSend, allowed);
+      expect(ConversationContent.fromJson(conversation.toJson()), conversation);
+    }
+    // Older payloads still supply the current-account permission at the root.
+    final denied = ConversationContent.fromJson({
+      'can_send': false,
+      'other_participant': {'can_send': true},
+    });
+    expect(denied.canSend, isFalse);
+  });
+
   test('REST and socket messages share sparse participant parsing', () {
     final sender = {'id': 'other-user', 'name': 'Chat account'};
     final rest = ChatMessageContent.fromJson({'sender': sender});

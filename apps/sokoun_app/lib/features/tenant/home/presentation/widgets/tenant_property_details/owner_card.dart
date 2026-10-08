@@ -110,7 +110,7 @@ class TenantPropertyOwnerCard extends StatelessWidget {
               ),
             ],
           ),
-          if (property.ownerPhone.isNotEmpty)
+          if (property.isOwnerPhoneRevealed && property.ownerPhone.isNotEmpty)
             RevealedPhoneCard(phoneNumber: property.ownerPhone)
           else
             Container(
@@ -123,13 +123,17 @@ class TenantPropertyOwnerCard extends StatelessWidget {
                 spacing: 8.w,
                 children: [
                   Icon(
-                    Icons.lock_outline_rounded,
+                    property.isOwnerPhoneRevealed
+                        ? Icons.info_outline_rounded
+                        : Icons.lock_outline_rounded,
                     color: context.appColor(AppColors.sokoonGray),
                     size: 16.r,
                   ),
                   Expanded(
                     child: AppText(
-                      LocaleKeys.tenantPropertyDetailsPhonePrivacy,
+                      property.isOwnerPhoneRevealed
+                          ? LocaleKeys.contactPhoneUnavailable
+                          : LocaleKeys.tenantPropertyDetailsPhonePrivacy,
                       style: AppTextStyles.medium11.copyWith(
                         color: context.appColor(AppColors.sokoonGray),
                         fontSize: 11.sp,

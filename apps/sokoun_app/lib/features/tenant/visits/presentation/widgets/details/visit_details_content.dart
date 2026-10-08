@@ -48,7 +48,7 @@ class VisitDetailsContent extends StatelessWidget {
           if (visit.revealedPhone.isNotEmpty) ...[
             12.szH,
             VisitContactCard(ownerPhone: visit.revealedPhone),
-          ] else if (visit.status.isAccepted || visit.status.isCompleted) ...[
+          ] else if (visit.isPhoneRevealed == true) ...[
             12.szH,
             AppText(LocaleKeys.contactPhoneUnavailable),
           ],

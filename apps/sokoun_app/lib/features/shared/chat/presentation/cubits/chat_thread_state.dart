@@ -19,6 +19,7 @@ class ChatThreadState extends Equatable {
     this.recoveredMessages = const [],
     this.confirmedLocalMessageId,
     this.contact = const ChatParticipantContent.initial(),
+    this.canSend = true,
   });
 
   const ChatThreadState.initial()
@@ -30,12 +31,14 @@ class ChatThreadState extends Equatable {
       confirmedLocalMessageId = null,
       receivedMessage = null,
       contact = const ChatParticipantContent.initial(),
+      canSend = true,
       draft = '',
       localSaveFailed = false,
       recoveredMessages = const [];
 
   final ChatSocketStatus status;
   final ChatParticipantContent contact;
+  final bool canSend;
   final String draft;
   final bool localSaveFailed;
   final List<SavedChatMessage> recoveredMessages;
@@ -58,10 +61,12 @@ class ChatThreadState extends Equatable {
     int? queuedMessageCount,
     bool? showQueuedMessages,
     ChatParticipantContent? contact,
+    bool? canSend,
   }) {
     return ChatThreadState(
       status: status ?? this.status,
       contact: contact ?? this.contact,
+      canSend: canSend ?? this.canSend,
       draft: draft ?? this.draft,
       localSaveFailed: localSaveFailed ?? this.localSaveFailed,
       recoveredMessages: recoveredMessages ?? this.recoveredMessages,
@@ -81,6 +86,7 @@ class ChatThreadState extends Equatable {
   List<Object?> get props => [
     status,
     contact,
+    canSend,
     draft,
     localSaveFailed,
     recoveredMessages,

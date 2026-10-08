@@ -5,9 +5,14 @@ import 'package:melos_core/core/helpers/text_style_manager.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 
 class ChatPrivacyBanner extends StatelessWidget {
-  const ChatPrivacyBanner({super.key, required this.text});
+  const ChatPrivacyBanner({
+    super.key,
+    required this.text,
+    this.icon = Icons.lock_outline_rounded,
+  });
 
   final String text;
+  final IconData icon;
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +25,7 @@ class ChatPrivacyBanner extends StatelessWidget {
       child: Row(
         spacing: 8.w,
         children: [
-          Icon(
-            Icons.lock_outline_rounded,
-            color: context.appColor(AppColors.blue),
-            size: 14.r,
-          ),
+          Icon(icon, color: context.appColor(AppColors.blue), size: 14.r),
           Expanded(
             child: AppText(
               text,
@@ -33,8 +34,6 @@ class ChatPrivacyBanner extends StatelessWidget {
                 fontSize: 12.sp,
                 height: 1.45,
               ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],

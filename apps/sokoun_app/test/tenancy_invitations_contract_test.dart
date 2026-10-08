@@ -39,7 +39,7 @@ void main() {
     AccountSession.end();
   });
 
-  test('the proposed API is disabled in default builds', () {
+  test('the agreed API stays disabled until staging is verified', () {
     expect(
       TenancyInvitationCapabilities.configured.enabled,
       const bool.fromEnvironment('SOKOUN_TENANCY_INVITATIONS'),
@@ -461,6 +461,7 @@ void main() {
       expect(cubit.isCached, isTrue);
       expect(cubit.data.id, 'invitation-a');
       expect(repository.requests.last.hasSerializers, isTrue);
+      expect(repository.requests.last.query, isNull);
       expect(
         repository.requests.last.cacheKey,
         contains(AccountSession.cacheKey('')),
