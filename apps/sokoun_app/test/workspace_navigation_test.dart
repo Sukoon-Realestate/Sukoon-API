@@ -1095,7 +1095,7 @@ class _AccountStatsRepository implements BaseRepository {
       profileRequests++;
       await profileGate?.future;
       response = {
-        'user': {'id': '1', 'full_name': 'Test account'},
+        'user': {'id': '1', 'full_name': 'Test account', 'is_verified': true},
         'account_details': {'email': 'refreshed@example.com'},
         'stats': stats,
       };

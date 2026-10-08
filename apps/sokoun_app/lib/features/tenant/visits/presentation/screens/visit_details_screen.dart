@@ -59,21 +59,26 @@ class _VisitDetailsScreenState extends State<VisitDetailsScreen> {
     child: AppScaffold(
       title: LocaleKeys.tenantVisitDetailsTitle,
       showBackButton: true,
-      body: SafeArea(
-        child:
-            StatusBuilder<
-              VisitDetailsCubit,
-              TenantVisitDetailsContent
-            >.withShimmer(
-              initialDataForShimmer: const TenantVisitDetailsContent.initial(),
-              onRetry: () => _detailsCubit.load(widget.visit.id),
-              builder: (details) => VisitDetailsContent(
-                visit: details.visit,
-                details: details,
-                onCancel: _cancel,
-                onReview: _review,
+      body: VisitContactRefresh(
+        visitId: widget.visit.id,
+        onRefresh: () => _detailsCubit.refresh(widget.visit.id),
+        child: SafeArea(
+          child:
+              StatusBuilder<
+                VisitDetailsCubit,
+                TenantVisitDetailsContent
+              >.withShimmer(
+                initialDataForShimmer:
+                    const TenantVisitDetailsContent.initial(),
+                onRetry: () => _detailsCubit.load(widget.visit.id),
+                builder: (details) => VisitDetailsContent(
+                  visit: details.visit,
+                  details: details,
+                  onCancel: _cancel,
+                  onReview: _review,
+                ),
               ),
-            ),
+        ),
       ),
     ),
   );

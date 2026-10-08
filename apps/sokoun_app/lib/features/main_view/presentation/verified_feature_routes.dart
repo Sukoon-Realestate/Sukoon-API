@@ -15,6 +15,9 @@ import 'package:sokoun_app/features/shared/digital_leases/presentation/screens/d
 import 'package:sokoun_app/features/shared/digital_leases/presentation/screens/digital_leases_screen.dart';
 import 'package:sokoun_app/features/shared/digital_leases/presentation/screens/lease_draft_screen.dart';
 import 'package:sokoun_app/features/shared/digital_leases/presentation/screens/lease_tenant_picker_screen.dart';
+import 'package:sokoun_app/features/shared/tenancy_invitations/presentation/screens/tenancy_invite_screen.dart';
+import 'package:sokoun_app/features/shared/tenancy_invitations/presentation/screens/tenancy_invitation_detail_screen.dart';
+import 'package:sokoun_app/features/shared/tenancy_invitations/presentation/screens/tenancy_invitations_screen.dart';
 import 'package:sokoun_app/features/shared/premium/presentation/screens/premium_property_picker_screen.dart';
 import 'package:sokoun_app/features/shared/premium/presentation/screens/premium_screen.dart';
 import 'package:sokoun_app/features/shared/profile/imports.dart';
@@ -61,6 +64,9 @@ abstract final class VerifiedFeatureRoutes {
     DigitalLeaseDetailsScreen() ||
     LeaseDraftScreen() ||
     LeaseTenantPickerScreen() ||
+    TenancyInviteScreen() ||
+    TenancyInvitationDetailScreen() ||
+    TenancyInvitationsScreen() ||
     RentManagementScreen() ||
     RentInvoiceScreen() ||
     DecisionToolsScreen() ||

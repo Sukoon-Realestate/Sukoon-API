@@ -113,6 +113,9 @@ const List<ChatMessageContent> _messages = [
 
 int _messagesRequestCount = 0;
 int _conversationsRequestCount = 0;
+int _contactRequestCount = 0;
+ConversationContent? _contactConversation;
+bool _contactFailure = false;
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -159,6 +162,9 @@ void main() {
     _reportReceiptMissing = false;
     _messagesRequestCount = 0;
     _conversationsRequestCount = 0;
+    _contactRequestCount = 0;
+    _contactConversation = null;
+    _contactFailure = false;
     if (injector.isRegistered<ChatDataSource>()) {
       await injector.unregister<ChatDataSource>();
     }
@@ -448,6 +454,68 @@ void main() {
     expect(sockets.disconnections, 2);
     expect(ChatRealtimeService.instance.isConnected, isFalse);
     expect(ChatRealtimeService.instance.activeConversationId, isNull);
+  });
+
+  testWidgets(
+    'accepted contact refresh removes hidden copy without reloading messages',
+    (tester) async {
+      configurePhoneViewport(tester);
+      final sockets = RecordingChatSocketSource();
+      injector.registerSingleton<ChatSocketDataSource>(sockets);
+      final hidden = _conversations.first.copyWith(
+        otherParticipant: const ChatParticipantContent(id: 'owner'),
+      );
+      _contactConversation = hidden;
+      await tester.pumpWidget(buildScreen(ChatScreen(conversation: hidden)));
+      await tester.pumpAndSettle();
+      expect(find.text('رقم الموبايل مخفي في المحادثة'), findsOneWidget);
+      expect(find.text('+201001234567'), findsNothing);
+      expect(_contactRequestCount, 1);
+
+      _contactConversation = hidden.copyWith(
+        otherParticipant: hidden.otherParticipant.copyWith(
+          phoneNumber: '+201001234567',
+          isPhoneRevealed: true,
+        ),
+      );
+      ForegroundNotificationBus.receive({
+        'notification_type': 'visit_accepted',
+        'notification_id': 'contact-accepted',
+        'visit_id': 'visit',
+        'conversation_id': hidden.id,
+      });
+      await tester.pumpAndSettle();
+      expect(find.text('+201001234567'), findsOneWidget);
+      expect(find.text('رقم الموبايل مخفي في المحادثة'), findsNothing);
+      expect(_messagesRequestCount, 1);
+
+      _contactConversation = hidden;
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpAndSettle();
+      expect(find.text('+201001234567'), findsNothing);
+      expect(find.text('رقم الموبايل مخفي في المحادثة'), findsOneWidget);
+      expect(_messagesRequestCount, 1);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets('failed contact refresh cannot reveal a raw phone', (
+    tester,
+  ) async {
+    configurePhoneViewport(tester);
+    _contactFailure = true;
+    final hidden = _conversations.first.copyWith(
+      otherParticipant: const ChatParticipantContent(
+        id: 'owner',
+        phoneNumber: '+201001234567',
+      ),
+    );
+    await tester.pumpWidget(buildScreen(ChatScreen(conversation: hidden)));
+    await tester.pumpAndSettle();
+    expect(find.text('+201001234567'), findsNothing);
+    expect(find.text('رقم الموبايل مخفي في المحادثة'), findsOneWidget);
+    expect(_messagesRequestCount, 1);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('loads message history once for each ChatScreen entry', (
@@ -944,6 +1012,14 @@ class _MemoryChatDataSource implements ChatDataSource {
       page == 1 ? _messages : const <ChatMessageContent>[],
       PaginationData(perPage: _messages.length, totalPages: 1),
     );
+  }
+
+  @override
+  Future<ConversationContent> getConversation(String conversationId) async {
+    _contactRequestCount++;
+    if (_contactFailure) throw StateError('Contact unavailable');
+    return _contactConversation ??
+        conversations.firstWhere((item) => item.id == conversationId);
   }
 
   @override

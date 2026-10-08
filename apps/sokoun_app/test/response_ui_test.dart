@@ -114,7 +114,7 @@ void main() {
         calendar: calendar,
         selectedDate: calendar.selectedDateValue,
         onDaySelected: (_) {},
-        onAvailabilityPressed: null,
+        onAvailabilityPressed: () {},
       ),
     ),
     'profile_actions' => scroll(

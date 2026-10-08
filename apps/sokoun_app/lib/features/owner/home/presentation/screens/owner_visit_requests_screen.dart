@@ -80,6 +80,8 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
         );
     if (resolution != null && mounted) {
       _resolveRequest(request: request, resolution: resolution);
+    } else if (mounted && _view.value.requests == null) {
+      await _pagifyController.refresh();
     }
   }
 
@@ -145,6 +147,7 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
     _progress.value = (requestId: null, status: null);
     if (succeeded) {
       _resolveRequest(request: request, resolution: resolution);
+      if (resolution.isAccepted) await _openDetails(request);
     }
   }
 
@@ -153,6 +156,7 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
     required OwnerRequestResolution resolution,
   }) {
     final OwnerVisitRequestContent updatedRequest = request.copyWith(
+      statusLabel: '',
       status: resolution.isAccepted
           ? OwnerVisitRequestStatus.accepted
           : OwnerVisitRequestStatus.rejected,

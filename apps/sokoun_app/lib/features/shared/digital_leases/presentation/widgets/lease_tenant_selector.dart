@@ -12,8 +12,10 @@ class LeaseTenantSelector extends StatelessWidget {
     required this.tenant,
     required this.enabled,
     required this.onSelected,
+    this.offerId = '',
   });
   final String propertyId;
+  final String offerId;
   final LeaseTenant? tenant;
   final bool enabled;
   final ValueChanged<LeaseTenant> onSelected;
@@ -23,7 +25,7 @@ class LeaseTenantSelector extends StatelessWidget {
         ? null
         : () async {
             final selected = await Go.to<LeaseTenant>(
-              LeaseTenantPickerScreen(propertyId: propertyId),
+              LeaseTenantPickerScreen(propertyId: propertyId, offerId: offerId),
             );
             if (selected != null && context.mounted) onSelected(selected);
           },

@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 
 class NotificationPayloadContent extends Equatable {
   const NotificationPayloadContent({
+    this.workspace = '',
     this.offerId = '',
     this.rentalSelection,
     required this.visitId,
@@ -24,7 +25,8 @@ class NotificationPayloadContent extends Equatable {
   });
 
   const NotificationPayloadContent.initial()
-    : offerId = '',
+    : workspace = '',
+      offerId = '',
       rentalSelection = null,
       visitId = '',
       propertyId = '',
@@ -45,6 +47,7 @@ class NotificationPayloadContent extends Equatable {
 
   factory NotificationPayloadContent.fromJson(Map<String, dynamic> json) {
     return NotificationPayloadContent(
+      workspace: json['workspace']?.toString() ?? '',
       offerId: json['offer_id']?.toString() ?? '',
       rentalSelection: RentalSelection.fromRecord(json),
       visitId: json['visit_id']?.toString() ?? '',
@@ -73,6 +76,7 @@ class NotificationPayloadContent extends Equatable {
   }
 
   final String offerId;
+  final String workspace;
   final RentalSelection? rentalSelection;
   final String visitId;
   final String propertyId;
@@ -97,6 +101,7 @@ class NotificationPayloadContent extends Equatable {
   ].where((value) => value.trim().isNotEmpty).join(' · ');
 
   Map<String, dynamic> toJson() => {
+    if (workspace.isNotEmpty) 'workspace': workspace,
     if (offerId.isNotEmpty) 'offer_id': offerId,
     if (rentalSelection != null) 'offer_snapshot': rentalSelection!.toJson(),
     if (visitId.isNotEmpty) 'visit_id': visitId,
@@ -118,6 +123,7 @@ class NotificationPayloadContent extends Equatable {
   };
 
   NotificationPayloadContent copyWith({
+    String? workspace,
     String? offerId,
     RentalSelection? rentalSelection,
     String? visitId,
@@ -138,6 +144,7 @@ class NotificationPayloadContent extends Equatable {
     String? address,
   }) {
     return NotificationPayloadContent(
+      workspace: workspace ?? this.workspace,
       offerId: offerId ?? this.offerId,
       rentalSelection: rentalSelection ?? this.rentalSelection,
       visitId: visitId ?? this.visitId,
@@ -161,6 +168,7 @@ class NotificationPayloadContent extends Equatable {
 
   @override
   List<Object?> get props => [
+    workspace,
     offerId,
     rentalSelection,
     visitId,

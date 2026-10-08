@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sokoun_app/features/shared/contact/presentation/widgets/revealed_phone_card.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
@@ -170,9 +171,17 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
                 : _messageFromJson,
           ).paddingSymmetric(horizontal: 16.w, vertical: 8.h),
         ),
-        ChatPrivacyBanner(
-          text: LocaleKeys.chatPhonePrivacyThread,
-        ).padding(EdgeInsets.fromLTRB(16.w, 0, 16.w, 10.h)),
+        (widget.conversation.otherParticipant.revealedPhone.isNotEmpty
+                ? RevealedPhoneCard(
+                    phoneNumber:
+                        widget.conversation.otherParticipant.revealedPhone,
+                  )
+                : ChatPrivacyBanner(
+                    text: widget.conversation.otherParticipant.isPhoneRevealed
+                        ? LocaleKeys.contactPhoneUnavailable
+                        : LocaleKeys.chatPhonePrivacyThread,
+                  ))
+            .padding(EdgeInsets.fromLTRB(16.w, 0, 16.w, 10.h)),
       ],
     );
   }

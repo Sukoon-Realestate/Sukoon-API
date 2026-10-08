@@ -12,6 +12,8 @@ enum AppNotificationKind {
   accountVerification('account_verification'),
   securityAlert('security_alert'),
   promotion('promotion'),
+  tenancyInvitation('tenancy_invitation'),
+  tenancyInvitationResponse('tenancy_invitation_response'),
   unknown('unknown');
 
   const AppNotificationKind(this.apiValue);
@@ -36,6 +38,9 @@ enum AppNotificationKind {
       'account_verification' => AppNotificationKind.accountVerification,
       'security_alert' => AppNotificationKind.securityAlert,
       'promotion' => AppNotificationKind.promotion,
+      'tenancy_invitation' => AppNotificationKind.tenancyInvitation,
+      'tenancy_invitation_response' =>
+        AppNotificationKind.tenancyInvitationResponse,
       _ => AppNotificationKind.unknown,
     };
   }

@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/contact/data/phone_disclosure.dart';
 import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
 import '../enums/owner_visit_request_state.dart';
 import '../owner_visit_json.dart';
@@ -19,6 +20,7 @@ class OwnerVisitRequestContent extends Equatable {
     required this.phone,
     required this.status,
     required this.isVerified,
+    this.isPhoneRevealed,
     this.propertyId = '',
     this.tenantId = '',
     this.actions,
@@ -91,7 +93,11 @@ class OwnerVisitRequestContent extends Equatable {
       time: visitTime,
       memberSince: json['member_since'] ?? tenant['member_since'] ?? '',
       tenantNote: json['tenant_note'] ?? json['note'] ?? '',
-      phone: json['phone'] ?? tenant['phone_number'] ?? tenant['phone'] ?? '',
+      phone: ownerVisitString(
+        tenant['phone_number'] ?? json['phone'] ?? tenant['phone'],
+      ),
+      isPhoneRevealed:
+          (tenant['is_phone_revealed'] ?? json['is_phone_revealed']) as bool?,
       status: OwnerVisitRequestStatusExtension.fromName(json['status']),
       isVerified:
           json['is_verified_tenant'] ??
@@ -134,6 +140,12 @@ class OwnerVisitRequestContent extends Equatable {
   final String memberSince;
   final String tenantNote;
   final String phone;
+  final bool? isPhoneRevealed;
+  String get revealedPhone => PhoneDisclosure.revealedPhone(
+    phoneNumber: phone,
+    isPhoneRevealed: isPhoneRevealed,
+    hasAcceptedVisit: status.isAccepted || status.isCompleted,
+  );
   final OwnerVisitRequestStatus status;
   final bool isVerified;
   final String propertyId;
@@ -163,6 +175,7 @@ class OwnerVisitRequestContent extends Equatable {
       'member_since': memberSince,
       'tenant_note': tenantNote,
       'phone': phone,
+      if (isPhoneRevealed != null) 'is_phone_revealed': isPhoneRevealed,
       'status': status.name,
       'is_verified': isVerified,
       'property_id': propertyId,
@@ -187,6 +200,7 @@ class OwnerVisitRequestContent extends Equatable {
     String? memberSince,
     String? tenantNote,
     String? phone,
+    bool? isPhoneRevealed,
     OwnerVisitRequestStatus? status,
     bool? isVerified,
     String? propertyId,
@@ -209,6 +223,7 @@ class OwnerVisitRequestContent extends Equatable {
       memberSince: memberSince ?? this.memberSince,
       tenantNote: tenantNote ?? this.tenantNote,
       phone: phone ?? this.phone,
+      isPhoneRevealed: isPhoneRevealed ?? this.isPhoneRevealed,
       status: status ?? this.status,
       isVerified: isVerified ?? this.isVerified,
       propertyId: propertyId ?? this.propertyId,
@@ -234,6 +249,7 @@ class OwnerVisitRequestContent extends Equatable {
     memberSince,
     tenantNote,
     phone,
+    isPhoneRevealed,
     status,
     isVerified,
     propertyId,

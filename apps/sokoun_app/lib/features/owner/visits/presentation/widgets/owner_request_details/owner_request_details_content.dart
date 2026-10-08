@@ -29,11 +29,16 @@ class OwnerRequestDetailsContent extends StatelessWidget {
             _OwnerTenantNoteCard(note: request.note),
           ],
           12.szH,
-          OwnerRequestPrivacyBanner(
-            message: request.tenant.displayPhoneNotice.isNotEmpty
-                ? request.tenant.displayPhoneNotice
-                : LocaleKeys.ownerVisitTenantPhoneHidden,
-          ),
+          if (request.revealedPhone.isNotEmpty)
+            RevealedPhoneCard(phoneNumber: request.revealedPhone)
+          else
+            OwnerRequestPrivacyBanner(
+              message: request.status.isAccepted || request.status.isCompleted
+                  ? LocaleKeys.contactPhoneUnavailable
+                  : request.tenant.displayPhoneNotice.isNotEmpty
+                  ? request.tenant.displayPhoneNotice
+                  : LocaleKeys.ownerVisitTenantPhoneHidden,
+            ),
           16.szH,
           actions,
         ],

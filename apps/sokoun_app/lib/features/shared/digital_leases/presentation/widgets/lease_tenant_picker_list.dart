@@ -7,10 +7,16 @@ import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/shared/premium/presentation/widgets/shared/premium_empty_state.dart';
 import '../../data/models/lease_tenant.dart';
 import '../../data/lease_tenants_data.dart';
+import '../../../tenancy_invitations/data/tenancy_invitation_capabilities.dart';
 
 class LeaseTenantPickerList extends StatefulWidget {
-  const LeaseTenantPickerList({super.key, required this.propertyId});
+  const LeaseTenantPickerList({
+    super.key,
+    required this.propertyId,
+    this.offerId = '',
+  });
   final String propertyId;
+  final String offerId;
   @override
   State<LeaseTenantPickerList> createState() => _LeaseTenantPickerListState();
 }
@@ -20,11 +26,17 @@ class _LeaseTenantPickerListState extends State<LeaseTenantPickerList> {
   @override
   Widget build(BuildContext context) => AppPagify<LeaseTenant>(
     pagifyController: _controller,
-    cacheKey: LeaseTenantsData.cacheKey(widget.propertyId),
+    cacheKey: LeaseTenantsData.cacheKey(
+      widget.propertyId,
+      offerId: widget.offerId,
+    ),
     cacheToJson: (item) => item.toJson(),
     cacheFromJson: LeaseTenant.fromJson,
-    asyncCall: (_, page) =>
-        LeaseTenantsData.getPage(propertyId: widget.propertyId, page: page),
+    asyncCall: (_, page) => LeaseTenantsData.getPage(
+      propertyId: widget.propertyId,
+      page: page,
+      offerId: widget.offerId,
+    ),
     emptyListView: const LeaseTenantsEmptyState(),
     itemBuilder: (_, __, ___, tenant) => ListTile(
       key: ValueKey(tenant.id),
@@ -39,6 +51,8 @@ class LeaseTenantsEmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) => PremiumEmptyState(
     title: LocaleKeys.paidLeaseTenantEmpty,
-    description: LocaleKeys.paidLeaseTenantEmptyBody,
+    description: TenancyInvitationCapabilities.current.enabled
+        ? LocaleKeys.tenancyInviteFromRequests
+        : LocaleKeys.paidLeaseTenantEmptyBody,
   );
 }

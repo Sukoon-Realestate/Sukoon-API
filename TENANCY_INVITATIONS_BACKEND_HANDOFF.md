@@ -99,7 +99,32 @@ Successful responses use the existing envelope:
     "tenant_id": "tenant-account-uuid",
     "tenant_name": "Tenant display name",
     "offer_id": "offer-uuid",
-    "offer_snapshot": {},
+    "offer_snapshot": {
+      "property_id": "property-uuid",
+      "offer_id": "offer-uuid",
+      "offer_revision": 7,
+      "rental_scope": "bed",
+      "name": "Bed in the first room",
+      "room_ids": ["room-uuid"],
+      "room_names": ["First room"],
+      "bed_id": "bed-uuid",
+      "bed_name": "First bed",
+      "capacity": 2,
+      "bathroom_access": ["shared"],
+      "availability": "available",
+      "archived": false,
+      "offer_link": "",
+      "terms": {
+        "price": "1500",
+        "price_period": "monthly",
+        "rental_period": 3,
+        "deposit": "one_month",
+        "suitable_for": "students",
+        "description": "Accommodation description",
+        "smoking_allowed": false,
+        "rules": ["Keep shared spaces clean"]
+      }
+    },
     "status": "pending",
     "revision": 1,
     "created_at": "2026-10-08T12:00:00+03:00",
@@ -112,7 +137,7 @@ Successful responses use the existing envelope:
 }
 ```
 
-`offer_snapshot: {}` above marks the insertion point for the **complete existing rental snapshot**, not an acceptable production offer snapshot. Offer-specific responses must contain the real property/offer identities, revisions, scope, accommodation names and saved terms. Legacy records omit the snapshot. Names/titles are server-localized/display content, not IDs. `actions` are computed for the authenticated account; only an addressed tenant with a live pending invitation can respond.
+The example is a bed invitation. Return the equivalent complete snapshot for the selected entire property, room, room group or bed, with real property/offer identities, revisions, accommodation names and saved terms. Legacy records omit the snapshot or return null. Names/titles are server-localized/display content, not IDs. `actions` are computed for the authenticated account; only an addressed tenant with a live pending invitation can respond.
 
 ### Invitation collection
 
@@ -209,3 +234,23 @@ Supply authorized owner/tenant fixture IDs and evidence for:
 6. Arabic/English, real empty/error pages, pagination totals, participant privacy and notification navigation work.
 
 After receiving this evidence: update the mobile adapter for any differences, verify staging round trips on both roles, then build with `--dart-define=SOKOUN_TENANCY_INVITATIONS=true`. Fixture tests and UI preparation alone do not establish server implementation or production readiness.
+
+## Prepared mobile implementation
+
+The app-side code is under `apps/sokoun_app/lib/features/shared/tenancy_invitations/`:
+
+- `data/`: typed invitation/request models, proposed route constants, account/role validation, scoped GET caches and the default-off capability.
+- `presentation/cubits/`: explicit loading, fresh accommodation checks before creation, and stable idempotency keys for creation and responses.
+- `presentation/screens/` and `widgets/`: owner invitation form, paginated history, participant detail, tenant confirmation actions and the existing lease draft entry point.
+
+Owner request details and both Contracts workspaces expose the new entry points. The existing lease tenant picker accepts the selected offer ID when the capability is enabled; changing the draft accommodation clears the previously selected tenant. Cached invitation details remain readable, but response and draft actions require a fresh authorized result. The owner must review and select a refreshed offer if its terms change before sending.
+
+Focused checks use test-only repository fixtures, never fabricated production invitation data. Reproduce them from `apps/sokoun_app`:
+
+```sh
+flutter test --no-pub test/tenancy_invitations_contract_test.dart test/tenancy_invitations_flow_test.dart test/feature_architecture_test.dart
+```
+
+Coverage includes default-off behavior, both owner/tenant entry points, all four rental scopes, acceptance/rejection, changed/expired/unavailable accommodation, identity and revision validation, retry keys, account changes, scoped caches, notification targets, empty history and Arabic/English layouts. Responsive checks cover 320, 390, 600, 768, 1024 and 1366 logical pixels with text scales 1, 1.3 and 2. These are Flutter widget checks; real-device and deployed-backend verification remain part of the returned handoff and staging enablement.
+
+Local verification on 2026-10-08 using Flutter 3.35.1: **75 focused invitation/architecture checks passed**. The app analyzer reported no errors and two existing unused-import warnings. The full app suite reported 3,311 passes, three skips and 23 failures in existing visit/property test fixtures (`collection_endpoint_integration_test`, `collection_request_body_contract_test`, `property_media_handoff_test`, `api_feedback_messages_test`, and `static_data_integration_test`); it is not a clean full-suite result.

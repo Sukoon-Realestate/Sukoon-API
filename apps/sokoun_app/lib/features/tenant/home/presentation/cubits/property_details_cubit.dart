@@ -5,8 +5,17 @@ import 'package:sokoun_app/features/tenant/home/data/models/property_details_mod
 
 class PropertyDetailsCubit extends AsyncCubit<PropertyDetailsModel> {
   PropertyDetailsCubit() : super(const PropertyDetailsModel.initial());
+  Future<void>? _loadRequest;
 
-  Future<void> getPropertyDetails(String id) async {
+  Future<void> getPropertyDetails(String id) =>
+      _loadRequest ??= _load(id).whenComplete(() => _loadRequest = null);
+
+  Future<void> refresh(String id) async {
+    await _loadRequest;
+    if (!isClosed) await getPropertyDetails(id);
+  }
+
+  Future<void> _load(String id) async {
     if (isClosed || isLoading) return;
     await executeAsyncWithBaseModel(
       operation: () => baseCrudUseCase.call(

@@ -158,7 +158,7 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
                                 _changed();
                                 _selection.value = (
                                   property: selection.property,
-                                  tenant: selection.tenant,
+                                  tenant: null,
                                   offer: offer,
                                   templateId: selection.templateId,
                                   error: null,
@@ -170,6 +170,7 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
                     ],
                     LeaseTenantSelector(
                       propertyId: selection.property?.id ?? '',
+                      offerId: selection.offer?.offerId ?? '',
                       tenant: selection.tenant,
                       enabled: canChange,
                       onSelected: (tenant) {

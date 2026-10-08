@@ -723,12 +723,26 @@ void main() {
     await tester.tap(find.text('تأكيد القبول'));
     await tester.pumpAndSettle();
 
+    final acceptRequest = repository.requests.singleWhere(
+      (request) =>
+          request.api ==
+          'properties/owner/visits/requests/sara-nasr-city/accept/',
+    );
+    expect(acceptRequest.httpRequestType, HttpRequestType.post);
+    expect(acceptRequest.body, isNull);
     expect(
       repository.lastApi,
-      'properties/owner/visits/requests/sara-nasr-city/accept/',
+      'properties/owner/visits/requests/sara-nasr-city/',
     );
-    expect(repository.lastMethod, HttpRequestType.post);
-    expect(repository.lastBody, isNull);
+    expect(repository.lastMethod, HttpRequestType.get);
+    expect(find.text('+201001234567'), findsOneWidget);
+    expect(
+      find.text('رقم المستأجر 010****432 – يظهر بعد القبول فقط'),
+      findsNothing,
+    );
+    expect(find.byType(OwnerRequestDetailsScreen), findsOneWidget);
+    await tester.tap(find.byIcon(Icons.arrow_back_ios_new_rounded));
+    await tester.pumpAndSettle();
     expect(
       find.descendant(of: requestCard, matching: find.text('تم القبول')),
       findsOneWidget,
@@ -819,15 +833,26 @@ void main() {
     await tester.tap(find.text('تأكيد القبول'));
     await tester.pumpAndSettle();
 
-    expect(find.byType(OwnerVisitRequestsScreen), findsOneWidget);
+    expect(find.byType(OwnerRequestDetailsScreen), findsOneWidget);
     expect(find.byType(OwnerAcceptRequestSheet), findsNothing);
-    expect(find.text('تم القبول'), findsNWidgets(2));
+    expect(find.text('تم القبول'), findsOneWidget);
+    final acceptRequest = repository.requests.singleWhere(
+      (request) =>
+          request.api ==
+          'properties/owner/visits/requests/sara-nasr-city/accept/',
+    );
+    expect(acceptRequest.httpRequestType, HttpRequestType.post);
+    expect(acceptRequest.body, isNull);
     expect(
       repository.lastApi,
-      'properties/owner/visits/requests/sara-nasr-city/accept/',
+      'properties/owner/visits/requests/sara-nasr-city/',
     );
-    expect(repository.lastMethod, HttpRequestType.post);
-    expect(repository.lastBody, isNull);
+    expect(repository.lastMethod, HttpRequestType.get);
+    expect(find.text('+201001234567'), findsOneWidget);
+    expect(
+      find.text('رقم المستأجر 010****432 – يظهر بعد القبول فقط'),
+      findsNothing,
+    );
     expect(tester.takeException(), isNull);
   });
 
@@ -1143,6 +1168,7 @@ class _AvailabilityPropertiesDataSource implements OwnerPropertiesDataSource {
 class _RecordingBaseRepository implements BaseRepository {
   final Map<int, Map<String, dynamic>> visitPages = {};
   bool visitsUnavailable = false;
+  final Set<String> acceptedVisitIds = {};
   final List<CrudBaseParmas> requests = [];
   String lastApi = '';
   HttpRequestType? lastMethod;
@@ -1191,6 +1217,9 @@ class _RecordingBaseRepository implements BaseRepository {
       );
     }
     final List<String> pathParts = params.api.split('/');
+    if (params.api.endsWith('/accept/') && pathParts.length > 5) {
+      acceptedVisitIds.add(pathParts[4]);
+    }
     final dynamic response = params.api == 'chat/conversations/create/'
         ? {
             'id': 'owner-conversation',
@@ -1213,6 +1242,20 @@ class _RecordingBaseRepository implements BaseRepository {
               pathParts[3] == 'requests'
         ? _ownerRequestDetailsResponse(pathParts[4])
         : null;
+    if (response is Map &&
+        params.httpRequestType == HttpRequestType.get &&
+        pathParts.length > 5 &&
+        acceptedVisitIds.contains(pathParts[4])) {
+      response['status'] = 'accepted';
+      response['status_label'] = 'تم القبول';
+      response['tenant']['phone_number'] = '+201001234567';
+      response['tenant']['is_phone_revealed'] = true;
+      response['actions'] = {
+        'can_accept': false,
+        'can_reject': false,
+        'can_chat': true,
+      };
+    }
     final T data = params.mapper!(response);
     return Success(BaseModel<T>(key: '', msg: '', data: data));
   }
@@ -1263,6 +1306,10 @@ class _OwnerChatDataSource implements ChatDataSource {
     const <ChatMessageContent>[],
     PaginationData(perPage: 50, totalPages: 1),
   );
+
+  @override
+  Future<ConversationContent> getConversation(String conversationId) async =>
+      const ConversationContent.initial().copyWith(id: conversationId);
 
   @override
   Future<ConversationContent> createConversation(String userId) async =>

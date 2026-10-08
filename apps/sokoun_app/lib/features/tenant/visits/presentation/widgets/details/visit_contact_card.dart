@@ -26,48 +26,7 @@ class VisitContactCard extends StatelessWidget {
               height: 1.45,
             ),
           ),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 13.w, vertical: 11.h),
-            decoration: BoxDecoration(
-              color: context.appColor(AppColors.greenPale, surface: true),
-              borderRadius: BorderRadius.circular(14.r),
-            ),
-            child: Row(
-              spacing: 9.w,
-              children: [
-                Icon(
-                  Icons.phone_outlined,
-                  color: context.appColor(AppColors.greenStrong),
-                  size: 16.r,
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 3.h,
-                    children: [
-                      AppText(
-                        LocaleKeys.tenantVisitOwnerPhoneConfirmed,
-                        style: AppTextStyles.extraBold.copyWith(
-                          color: context.appColor(AppColors.greenStrong),
-                          fontSize: 12.sp,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      AppText(
-                        ownerPhone,
-                        style: AppTextStyles.bold15.copyWith(
-                          color: context.appColor(AppColors.greenStrong),
-                          fontSize: 15.sp,
-                          height: 1.45,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+          RevealedPhoneCard(phoneNumber: ownerPhone),
         ],
       ),
     );

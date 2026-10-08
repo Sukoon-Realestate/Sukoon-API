@@ -18,6 +18,8 @@ import '../../data/chat_unread_refresh_bus.dart';
 import '../../data/models/chat_content.dart';
 import '../../data/models/chat_socket_message.dart';
 import '../../data/models/chat_message_acknowledgement.dart';
+import '../../../notifications/data/foreground_notification_bus.dart';
+import '../../../notifications/data/enums/app_notification_kind.dart';
 
 part 'chat_thread_state.dart';
 
@@ -50,6 +52,8 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
     ChatDataSource? dataSource,
     ChatLocalStore? localStore,
     bool canSend = true,
+    ChatParticipantContent initialContact =
+        const ChatParticipantContent.initial(),
   }) : _conversationCanSend = canSend,
        _realtime = realtimeService ?? ChatRealtimeService.instance,
        _dataSource = dataSource ?? ChatData.source,
@@ -59,7 +63,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
              accountId: UserModel.currentUser?.id ?? '',
              conversationId: conversationId,
            ),
-       super(const ChatThreadState.initial());
+       super(const ChatThreadState.initial().copyWith(contact: initialContact));
 
   static const Duration _confirmationTimeout = Duration(seconds: 5);
   static const Duration _queueRetryDelay = Duration(seconds: 5);
@@ -73,6 +77,41 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   final bool _conversationCanSend;
   bool get canSend => _conversationCanSend && AccountAccess.isVerified;
   Future<void>? _localLoad;
+  Future<void>? _contactRefresh;
+  bool _contactRefreshAgain = false;
+  StreamSubscription<Object?>? _contactNotificationSubscription;
+
+  Future<void> refreshContact({bool afterVisitAcceptance = false}) {
+    if (!_hasCurrentSession) return Future<void>.value();
+    if (_contactRefresh != null) {
+      // A read started before acceptance may still contain the hidden snapshot.
+      _contactRefreshAgain |= afterVisitAcceptance;
+      return _contactRefresh!;
+    }
+    return _contactRefresh ??= _loadContact().whenComplete(() {
+      _contactRefresh = null;
+      if (_contactRefreshAgain) {
+        _contactRefreshAgain = false;
+        unawaited(refreshContact());
+      }
+    });
+  }
+
+  Future<void> _loadContact() async {
+    try {
+      final ConversationContent conversation = await _dataSource
+          .getConversation(conversationId);
+      if (!_hasCurrentSession || conversation.id != conversationId) return;
+      if (otherParticipantId.isNotEmpty &&
+          conversation.otherParticipant.id != otherParticipantId) {
+        return;
+      }
+      emit(state.copyWith(contact: conversation.otherParticipant));
+    } catch (_) {
+      // A failed refresh cannot grant contact access. Keep the supplied snapshot.
+    }
+  }
+
   bool _draftEdited = false;
   Future<void>? _localWrites;
   Timer? _draftTimer;
@@ -178,6 +217,12 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
 
   Future<void> connect() async {
     if (!_hasCurrentSession || !_shouldBeConnected) return;
+    _contactNotificationSubscription ??= ForegroundNotificationBus.stream
+        .listen((notification) {
+          if (notification.kind == AppNotificationKind.visitAccepted) {
+            unawaited(refreshContact(afterVisitAcceptance: true));
+          }
+        });
     await _loadLocal();
     if (!_hasCurrentSession || !canSend) return;
     _realtime.setActiveConversation(conversationId);
@@ -568,6 +613,9 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
     }
     // Start storage and connection cleanup together. Disk IO must not retain a socket.
     final cleanup = <Future<void>>[];
+    if (_contactNotificationSubscription != null) {
+      cleanup.add(_contactNotificationSubscription!.cancel());
+    }
     if (flushDraft && _sessionGeneration == AccountSession.generation) {
       cleanup.add(_persistLocal().catchError((Object _) {}));
     }

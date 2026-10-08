@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/contact/data/phone_disclosure.dart';
 import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
 import '../enums/owner_visit_request_state.dart';
 import '../owner_visit_json.dart';
@@ -76,6 +77,12 @@ class OwnerVisitRequestDetailsContent extends Equatable {
   final OwnerVisitRequestActionsContent actions;
   final String createdAt;
 
+  String get revealedPhone => PhoneDisclosure.revealedPhone(
+    phoneNumber: tenant.phoneNumber,
+    isPhoneRevealed: tenant.isPhoneRevealed,
+    hasAcceptedVisit: status.isAccepted || status.isCompleted,
+  );
+
   String get displayProperty {
     if (property.displayName.isNotEmpty) return property.displayName;
     return [
@@ -107,7 +114,8 @@ class OwnerVisitRequestDetailsContent extends Equatable {
       time: displayTime,
       memberSince: tenant.membershipLabel,
       tenantNote: note,
-      phone: tenant.displayPhone,
+      phone: tenant.phoneNumber,
+      isPhoneRevealed: tenant.isPhoneRevealed,
       status: status,
       isVerified: tenant.isVerified,
       propertyId: property.id,
@@ -223,7 +231,7 @@ class OwnerVisitRequestTenantContent extends Equatable {
       membershipLabel: ownerVisitString(json['membership_label']),
       phoneNumber: ownerVisitString(json['phone_number']),
       maskedPhoneNumber: ownerVisitString(json['masked_phone_number']),
-      isPhoneRevealed: json['is_phone_revealed'] ?? false,
+      isPhoneRevealed: json['is_phone_revealed'] as bool?,
       phoneNotice: ownerVisitString(json['phone_notice']),
     );
   }
@@ -236,15 +244,25 @@ class OwnerVisitRequestTenantContent extends Equatable {
   final String membershipLabel;
   final String phoneNumber;
   final String maskedPhoneNumber;
-  final bool isPhoneRevealed;
+  final bool? isPhoneRevealed;
   final String phoneNotice;
 
   String get displayPhone {
-    if (isPhoneRevealed && phoneNumber.isNotEmpty) return phoneNumber;
+    final String revealed = PhoneDisclosure.revealedPhone(
+      phoneNumber: phoneNumber,
+      isPhoneRevealed: isPhoneRevealed,
+    );
+    if (revealed.isNotEmpty) return revealed;
     return maskedPhoneNumber;
   }
 
   String get displayPhoneNotice {
+    if (PhoneDisclosure.revealedPhone(
+      phoneNumber: phoneNumber,
+      isPhoneRevealed: isPhoneRevealed,
+    ).isNotEmpty) {
+      return '';
+    }
     if (phoneNotice.isNotEmpty) return phoneNotice;
     return displayPhone;
   }

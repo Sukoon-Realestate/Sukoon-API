@@ -128,7 +128,10 @@ class AppNotificationContent extends Equatable {
       AppNotificationKind.dailyBump ||
       AppNotificationKind.accountVerification =>
         AppNotificationIconKind.warning,
-      AppNotificationKind.newProperty => AppNotificationIconKind.bell,
+      AppNotificationKind.newProperty ||
+      AppNotificationKind.tenancyInvitation ||
+      AppNotificationKind.tenancyInvitationResponse =>
+        AppNotificationIconKind.bell,
       AppNotificationKind.propertyUpdate => AppNotificationIconKind.refresh,
       AppNotificationKind.securityAlert => AppNotificationIconKind.shield,
       AppNotificationKind.unknown => AppNotificationIconKind.unknown,

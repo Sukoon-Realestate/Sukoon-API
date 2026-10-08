@@ -18,6 +18,8 @@ class OwnerRequestDetailsScreen extends StatefulWidget {
 class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
   late final OwnerRequestDetailsCubit _requestDetailsCubit;
   late final OwnerVisitStatusCubit _visitStatusCubit;
+  late Future<void> _detailsLoad;
+  OwnerRequestResolution? _resolution;
   final ValueNotifier<OwnerVisitUpdateStatus?> _pendingStatus =
       ValueNotifier<OwnerVisitUpdateStatus?>(null);
 
@@ -28,7 +30,7 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
       useVisitEndpoint: widget.useVisitEndpoint,
     );
     _visitStatusCubit = OwnerVisitStatusCubit();
-    _requestDetailsCubit.getRequestDetails(widget.requestId);
+    _detailsLoad = _requestDetailsCubit.getRequestDetails(widget.requestId);
   }
 
   @override
@@ -40,9 +42,12 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
   }
 
   Future<void> _retryRequestDetails() async {
+    await _detailsLoad;
+    if (!mounted) return;
     final Future<void> request = _requestDetailsCubit.getRequestDetails(
       widget.requestId,
     );
+    _detailsLoad = request;
     await request;
   }
 
@@ -98,7 +103,9 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
     bool succeeded = false;
     void onSuccess() {
       succeeded = true;
-      if (mounted) Go.back(resolution);
+      if (!mounted) return;
+      _resolution = resolution;
+      if (resolution.isRejected) Go.back(resolution);
     }
 
     if (status == OwnerVisitUpdateStatus.confirmed) {
@@ -112,7 +119,10 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
         onSuccess: onSuccess,
       );
     }
-    if (!succeeded && mounted) _pendingStatus.value = null;
+    if (succeeded && resolution.isAccepted && mounted) {
+      await _retryRequestDetails();
+    }
+    if (mounted) _pendingStatus.value = null;
   }
 
   @override
@@ -179,11 +189,18 @@ class _OwnerRequestDetailsScreenState extends State<OwnerRequestDetailsScreen> {
             title: LocaleKeys.ownerRequestDetailsTitle,
             showBackButton: true,
             isBackEnabled: !isUpdating,
+            onBack: () => Go.back(_resolution),
             backgroundColor: context.appColor(
               AppColors.scaffoldBackground,
               surface: true,
             ),
-            body: body,
+            body: VisitContactRefresh(
+              visitId: widget.requestId,
+              onRefresh: () async {
+                if (!_visitStatusCubit.isLoading) await _retryRequestDetails();
+              },
+              child: body,
+            ),
           ),
         ),
       ),

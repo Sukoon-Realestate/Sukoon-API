@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/contact/data/phone_disclosure.dart';
 import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
 import '../enums/visit_status.dart';
 import '../visit_json.dart';
@@ -18,6 +19,7 @@ class TenantVisitContent extends Equatable {
     this.visitDate = '',
     this.visitTime = '',
     this.ownerPhone = '',
+    this.isPhoneRevealed,
     this.ownerId = '',
     this.actions,
   });
@@ -34,6 +36,7 @@ class TenantVisitContent extends Equatable {
       visitDate = '',
       visitTime = '',
       ownerPhone = '',
+      isPhoneRevealed = null,
       ownerId = '',
       actions = null;
 
@@ -76,10 +79,12 @@ class TenantVisitContent extends Equatable {
           owner['name']?.toString() ??
           '',
       ownerPhone:
-          json['owner_phone']?.toString() ??
           owner['phone_number']?.toString() ??
+          json['owner_phone']?.toString() ??
           owner['phone']?.toString() ??
           '',
+      isPhoneRevealed:
+          (owner['is_phone_revealed'] ?? json['is_phone_revealed']) as bool?,
       ownerId: json['owner_id']?.toString() ?? owner['id']?.toString() ?? '',
       actions: json['actions'] is Map
           ? VisitActions.fromJson(visitJsonMap(json['actions']))
@@ -98,6 +103,12 @@ class TenantVisitContent extends Equatable {
   final String statusText;
   final String ownerName;
   final String ownerPhone;
+  final bool? isPhoneRevealed;
+  String get revealedPhone => PhoneDisclosure.revealedPhone(
+    phoneNumber: ownerPhone,
+    isPhoneRevealed: isPhoneRevealed,
+    hasAcceptedVisit: status.isAccepted || status.isCompleted,
+  );
   final String ownerId;
   final VisitActions? actions;
 
@@ -148,6 +159,7 @@ class TenantVisitContent extends Equatable {
     if (actions != null) 'actions': actions!.toJson(),
     'owner_name': ownerName,
     'owner_phone': ownerPhone,
+    if (isPhoneRevealed != null) 'is_phone_revealed': isPhoneRevealed,
     'owner_id': ownerId,
   };
 
@@ -163,6 +175,7 @@ class TenantVisitContent extends Equatable {
     String? statusText,
     String? ownerName,
     String? ownerPhone,
+    bool? isPhoneRevealed,
     String? ownerId,
     VisitActions? actions,
   }) {
@@ -178,6 +191,7 @@ class TenantVisitContent extends Equatable {
       statusText: statusText ?? this.statusText,
       ownerName: ownerName ?? this.ownerName,
       ownerPhone: ownerPhone ?? this.ownerPhone,
+      isPhoneRevealed: isPhoneRevealed ?? this.isPhoneRevealed,
       ownerId: ownerId ?? this.ownerId,
       actions: actions ?? this.actions,
     );
@@ -196,6 +210,7 @@ class TenantVisitContent extends Equatable {
     statusText,
     ownerName,
     ownerPhone,
+    isPhoneRevealed,
     ownerId,
     actions,
   ];

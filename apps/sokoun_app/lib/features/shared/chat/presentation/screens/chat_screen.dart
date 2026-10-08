@@ -39,9 +39,11 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       conversationId: widget.conversation.id,
       canSend: widget.conversation.canSend != false,
       otherParticipantId: widget.conversation.otherParticipant.id,
+      initialContact: widget.conversation.otherParticipant,
     );
     _chatThreadData = ChatThreadData(conversationId: widget.conversation.id);
     _initialMessagesRequest = _initializeChat();
+    _chatThreadCubit.refreshContact();
     ChatUnreadRefreshBus.requestRefresh(
       removedUnreadCount: widget.conversation.unreadCount,
     );
@@ -61,6 +63,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     _chatThreadCubit.onAppLifecycleStateChanged(state);
+    if (state == AppLifecycleState.resumed) _chatThreadCubit.refreshContact();
   }
 
   @override
@@ -99,11 +102,21 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                   children: [AppText(LocaleKeys.rentalChatContextHelp)],
                 ),
               Expanded(
-                child: ChatThreadContent(
-                  conversation: widget.conversation,
-                  initialMessagesRequest: _initialMessagesRequest,
-                  messagesCacheKey: _chatThreadData.messagesCacheKey,
-                ),
+                child:
+                    BlocSelector<
+                      ChatThreadCubit,
+                      ChatThreadState,
+                      ChatParticipantContent
+                    >(
+                      selector: (state) => state.contact,
+                      builder: (context, contact) => ChatThreadContent(
+                        conversation: widget.conversation.copyWith(
+                          otherParticipant: contact,
+                        ),
+                        initialMessagesRequest: _initialMessagesRequest,
+                        messagesCacheKey: _chatThreadData.messagesCacheKey,
+                      ),
+                    ),
               ),
             ],
           ),

@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/contact/presentation/widgets/visit_contact_refresh.dart';
 import 'package:sokoun_app/features/tenant/decision_tools/data/models/property_cost_breakdown.dart';
 import 'package:sokoun_app/features/tenant/decision_tools/presentation/widgets/property_cost_card.dart';
 import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
@@ -324,32 +325,37 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
         surface: true,
       ),
       contentWidth: SokounContentWidth.wide,
-      body: SafeArea(
-        bottom: false,
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider<PropertyDetailsCubit>.value(value: _detailsCubit),
-            BlocProvider<CreateConversationCubit>.value(
-              value: _conversationCubit,
+      body: VisitContactRefresh(
+        propertyId: widget.propertyId,
+        refreshOnReturn: true,
+        onRefresh: () => _detailsCubit.refresh(widget.propertyId),
+        child: SafeArea(
+          bottom: false,
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<PropertyDetailsCubit>.value(value: _detailsCubit),
+              BlocProvider<CreateConversationCubit>.value(
+                value: _conversationCubit,
+              ),
+            ],
+            child: FutureBuilder<void>(
+              future: _detailsRequest,
+              builder: (context, snapshot) =>
+                  StatusBuilder<
+                        PropertyDetailsCubit,
+                        PropertyDetailsModel
+                      >.withShimmer(
+                        initialDataForShimmer:
+                            const PropertyDetailsModel.initial(),
+                        onRetry: () =>
+                            _detailsCubit.getPropertyDetails(widget.propertyId),
+                        builder: _buildDetails,
+                      )
+                      .withPullRefresher(
+                        onRefresh: () =>
+                            _detailsCubit.getPropertyDetails(widget.propertyId),
+                      ),
             ),
-          ],
-          child: FutureBuilder<void>(
-            future: _detailsRequest,
-            builder: (context, snapshot) =>
-                StatusBuilder<
-                      PropertyDetailsCubit,
-                      PropertyDetailsModel
-                    >.withShimmer(
-                      initialDataForShimmer:
-                          const PropertyDetailsModel.initial(),
-                      onRetry: () =>
-                          _detailsCubit.getPropertyDetails(widget.propertyId),
-                      builder: _buildDetails,
-                    )
-                    .withPullRefresher(
-                      onRefresh: () =>
-                          _detailsCubit.getPropertyDetails(widget.propertyId),
-                    ),
           ),
         ),
       ),

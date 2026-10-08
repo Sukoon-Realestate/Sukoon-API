@@ -11,6 +11,19 @@ class NotificationDestination {
   final WorkspaceTab? tab;
 
   factory NotificationDestination.resolve(AppNotificationContent notification) {
+    if (notification.primaryActionType == 'open_tenancy_invitation') {
+      final value = notification.payload.workspace;
+      return NotificationDestination(
+        workspace: value == 'owner'
+            ? AppWorkspace.owner
+            : value == 'tenant'
+            ? AppWorkspace.tenant
+            : notification.kind == AppNotificationKind.tenancyInvitationResponse
+            ? AppWorkspace.owner
+            : AppWorkspace.tenant,
+        tab: WorkspaceTab.profile,
+      );
+    }
     if (notification.primaryActionType == 'open_search_alert') {
       return const NotificationDestination(
         workspace: AppWorkspace.tenant,

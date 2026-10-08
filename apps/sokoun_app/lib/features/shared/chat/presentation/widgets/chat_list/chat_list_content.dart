@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
@@ -15,7 +14,6 @@ import '../../../data/chat_data.dart';
 import '../../../data/chat_unread_refresh_bus.dart';
 import '../../../data/models/chat_content.dart';
 import '../../screens/chat_search_screen.dart';
-import '../shared/chat_privacy_banner.dart';
 import 'chat_empty_state.dart';
 import '../chat_list_tile.dart';
 import 'chat_search_field.dart';
@@ -106,9 +104,6 @@ class _ChatListContentState extends State<ChatListContent> with RouteAware {
             readOnly: true,
             onTap: _openSearch,
           ).paddingSymmetric(horizontal: 20.w),
-          ChatPrivacyBanner(
-            text: LocaleKeys.chatPhonePrivacyInbox,
-          ).padding(EdgeInsets.fromLTRB(8.w, 12.h, 8.w, 0)),
         ],
       ),
       itemBuilder: (context, data, index, conversation) => Column(

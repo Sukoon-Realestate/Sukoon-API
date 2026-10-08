@@ -85,6 +85,16 @@ class OwnerRequestDetailsActions extends StatelessWidget {
             height: 1.45,
           ),
         ),
+        if (request.property.id.isNotEmpty && request.tenant.id.isNotEmpty) ...[
+          12.szH,
+          TenancyInviteEntry(
+            propertyId: request.property.id,
+            propertyTitle: request.displayProperty,
+            tenantId: request.tenant.id,
+            tenantName: request.tenant.name,
+            enabled: !isUpdating,
+          ),
+        ],
       ],
     );
   }

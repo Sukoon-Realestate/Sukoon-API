@@ -77,6 +77,15 @@ void main() {
     expect(conversation.id, 'conversation-uuid');
   });
 
+  test('refreshes participant contact through conversation details', () async {
+    final conversation = await const ChatApiDataSource().getConversation(
+      'conversation-uuid',
+    );
+    expect(network.lastRequest?.path, 'chat/conversations/conversation-uuid/');
+    expect(network.lastRequest?.method, RequestMethod.get);
+    expect(conversation.otherParticipant.id, 'owner-uuid');
+  });
+
   test('online presence survives cached conversation snapshots', () {
     final ConversationContent conversation = ConversationContent.fromJson({
       'id': 'online-conversation',
@@ -215,6 +224,7 @@ class _RecordingNetworkService implements NetworkService {
     final Map<String, dynamic> data = switch (networkRequest.path) {
       ApiConstants.chatConversations => _conversationPage,
       ApiConstants.createChatConversation => _conversation,
+      'chat/conversations/conversation-uuid/' => _conversation,
       final String path when path.endsWith('/messages/') => _messagePage,
       final String path when path.endsWith('/messages/create/') => _message,
       final String path when path.endsWith('/read/') => const {

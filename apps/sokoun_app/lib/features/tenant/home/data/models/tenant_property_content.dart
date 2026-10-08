@@ -46,6 +46,7 @@ class TenantPropertyDetailsContent {
     required this.photoLabels,
     required this.ownerName,
     this.ownerAvatar = '',
+    this.ownerPhone = '',
     required this.ownerId,
     required this.ownerMeta,
     required this.imageColors,
@@ -179,6 +180,7 @@ class TenantPropertyDetailsContent {
       deposit: selection?.terms.deposit ?? (hasOffers ? '' : model.deposit),
       ownerName: model.owner,
       ownerAvatar: model.ownerAvatar,
+      ownerPhone: model.revealedOwnerPhone,
       ownerId: model.ownerId,
       ownerMeta: model.isOwnerVerified
           ? LocaleKeys.tenantPropertyDetailsVerifiedOwner
@@ -231,6 +233,7 @@ class TenantPropertyDetailsContent {
   final List<String> photoLabels;
   final String ownerName;
   final String ownerAvatar;
+  final String ownerPhone;
   final String ownerId;
   final String ownerMeta;
   final List<Color> imageColors;

@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/contact/data/phone_disclosure.dart';
 import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_inventory.dart';
 import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_listing_summary.dart';
 import 'package:equatable/equatable.dart';
@@ -167,6 +168,8 @@ class PropertyDetailsModel extends Equatable {
     this.rentalInventory,
     this.rentalSummary,
     this.ownerAvatar = '',
+    this.ownerPhone = '',
+    this.isOwnerPhoneRevealed = false,
     this.availabilityConfirmedAt,
     this.rejectionReason = '',
     this.video,
@@ -233,6 +236,8 @@ class PropertyDetailsModel extends Equatable {
       id = '',
       owner = '',
       ownerAvatar = '',
+      ownerPhone = '',
+      isOwnerPhoneRevealed = false,
       ownerId = '',
       mainImage = '',
       title = '',
@@ -308,6 +313,11 @@ class PropertyDetailsModel extends Equatable {
       propertyLink: json['property_link'] as String? ?? '',
       id: json['id']?.toString() ?? '',
       owner: ownerName,
+      ownerPhone:
+          (ownerJson['phone_number'] ?? json['owner_phone'])?.toString() ?? '',
+      isOwnerPhoneRevealed:
+          (ownerJson['is_phone_revealed'] ?? json['is_owner_phone_revealed']) ==
+          true,
       ownerAvatar: _propertyFileUrl(
         ownerJson['avatar'] ?? json['owner_avatar'],
       ),
@@ -379,6 +389,12 @@ class PropertyDetailsModel extends Equatable {
   final String rejectionReason;
   final String owner;
   final String ownerAvatar;
+  final String ownerPhone;
+  final bool isOwnerPhoneRevealed;
+  String get revealedOwnerPhone => PhoneDisclosure.revealedPhone(
+    phoneNumber: ownerPhone,
+    isPhoneRevealed: isOwnerPhoneRevealed,
+  );
   final String ownerId;
   final String? video;
   final int? videoDuration;
@@ -440,6 +456,8 @@ class PropertyDetailsModel extends Equatable {
     if (rejectionReason.isNotEmpty) 'rejection_reason': rejectionReason,
     'owner': owner,
     'owner_avatar': ownerAvatar,
+    'owner_phone': ownerPhone,
+    'is_owner_phone_revealed': isOwnerPhoneRevealed,
     'owner_id': ownerId,
     'video': video,
     'video_duration': videoDuration,
@@ -497,6 +515,8 @@ class PropertyDetailsModel extends Equatable {
     String? rejectionReason,
     String? owner,
     String? ownerAvatar,
+    String? ownerPhone,
+    bool? isOwnerPhoneRevealed,
     String? ownerId,
     String? mainImage,
     String? mainImageId,
@@ -553,6 +573,8 @@ class PropertyDetailsModel extends Equatable {
       rejectionReason: rejectionReason ?? this.rejectionReason,
       owner: owner ?? this.owner,
       ownerAvatar: ownerAvatar ?? this.ownerAvatar,
+      ownerPhone: ownerPhone ?? this.ownerPhone,
+      isOwnerPhoneRevealed: isOwnerPhoneRevealed ?? this.isOwnerPhoneRevealed,
       ownerId: ownerId ?? this.ownerId,
       mainImage: mainImage ?? this.mainImage,
       mainImageId: mainImageId ?? this.mainImageId,
@@ -741,6 +763,8 @@ class PropertyDetailsModel extends Equatable {
     rejectionReason,
     owner,
     ownerAvatar,
+    ownerPhone,
+    isOwnerPhoneRevealed,
     ownerId,
     video,
     videoDuration,

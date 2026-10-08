@@ -32,6 +32,8 @@ abstract interface class ChatDataSource {
 
   Future<ConversationContent> createConversation(String userId);
 
+  Future<ConversationContent> getConversation(String conversationId);
+
   Future<ChatMessageContent> sendMessage({
     required String conversationId,
     required String content,
@@ -43,6 +45,21 @@ abstract interface class ChatDataSource {
 
 final class ChatApiDataSource implements ChatDataSource {
   const ChatApiDataSource();
+
+  @override
+  Future<ConversationContent> getConversation(String conversationId) async {
+    AccountAccess.requireVerification();
+    final response = await injector<NetworkService>().callApi(
+      NetworkRequest(
+        method: RequestMethod.get,
+        path: ApiConstants.chatConversationDetails(conversationId),
+      ),
+      mapper: (json) => ConversationContent.fromJson(
+        json is Map<String, dynamic> ? json : const {},
+      ),
+    );
+    return response.data;
+  }
 
   @override
   String get conversationsCacheKey => ChatData.conversationsCacheKey;

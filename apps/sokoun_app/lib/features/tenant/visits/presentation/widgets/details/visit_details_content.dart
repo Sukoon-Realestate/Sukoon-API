@@ -45,9 +45,12 @@ class VisitDetailsContent extends StatelessWidget {
               selection: visit.rentalSelection!,
               historical: true,
             ),
-          if (visit.status.isAccepted && visit.ownerPhone.isNotEmpty) ...[
+          if (visit.revealedPhone.isNotEmpty) ...[
             12.szH,
-            VisitContactCard(ownerPhone: visit.ownerPhone),
+            VisitContactCard(ownerPhone: visit.revealedPhone),
+          ] else if (visit.status.isAccepted || visit.status.isCompleted) ...[
+            12.szH,
+            AppText(LocaleKeys.contactPhoneUnavailable),
           ],
           if (details != null) VisitDetailsExtra(details: details!),
           if (details?.propertyId.isNotEmpty == true)

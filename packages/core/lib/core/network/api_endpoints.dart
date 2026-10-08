@@ -75,6 +75,9 @@ class ApiConstants {
   static const String chatConversations = 'chat/conversations/';
   static const String createChatConversation = 'chat/conversations/create/';
 
+  static String chatConversationDetails(String conversationId) =>
+      '$chatConversations$conversationId/';
+
   static String chatMessages(String conversationId) =>
       '$chatConversations$conversationId/messages/';
 

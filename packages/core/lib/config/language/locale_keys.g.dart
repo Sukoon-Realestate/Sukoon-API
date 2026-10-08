@@ -1165,6 +1165,12 @@ abstract class LocaleKeys {
   static const String _chatToday = 'chat_today';
   static String get chatToday => _chatToday.tr();
 
+  static const String _contactCall = 'contact_call';
+  static String get contactCall => _contactCall.tr();
+
+  static const String _contactPhoneUnavailable = 'contact_phone_unavailable';
+  static String get contactPhoneUnavailable => _contactPhoneUnavailable.tr();
+
   static const String _chatPhonePrivacyThread = 'chat_phone_privacy_thread';
   static String get chatPhonePrivacyThread => _chatPhonePrivacyThread.tr();
 
@@ -5223,5 +5229,92 @@ abstract class LocaleKeys {
 
   static const String _featureLeaseTemplateDetails = 'feature_lease_template_details';
   static String get featureLeaseTemplateDetails => _featureLeaseTemplateDetails.tr();
+
+  static const String _tenancyInvitations = 'tenancy_invitations';
+  static String get tenancyInvitations => _tenancyInvitations.tr();
+
+  static const String _tenancyInvitationsEntryBody = 'tenancy_invitations_entry_body';
+  static String get tenancyInvitationsEntryBody => _tenancyInvitationsEntryBody.tr();
+
+  static const String _tenancyInvitationsUnavailable = 'tenancy_invitations_unavailable';
+  static String get tenancyInvitationsUnavailable => _tenancyInvitationsUnavailable.tr();
+
+  static const String _tenancyInvitationsUnavailableBody = 'tenancy_invitations_unavailable_body';
+  static String get tenancyInvitationsUnavailableBody => _tenancyInvitationsUnavailableBody.tr();
+
+  static const String _tenancyInviteToRent = 'tenancy_invite_to_rent';
+  static String get tenancyInviteToRent => _tenancyInviteToRent.tr();
+
+  static const String _tenancyInviteExplanation = 'tenancy_invite_explanation';
+  static String get tenancyInviteExplanation => _tenancyInviteExplanation.tr();
+
+  static const String _tenancySendInvitation = 'tenancy_send_invitation';
+  static String get tenancySendInvitation => _tenancySendInvitation.tr();
+
+  static const String _tenancyInvitationDetails = 'tenancy_invitation_details';
+  static String get tenancyInvitationDetails => _tenancyInvitationDetails.tr();
+
+  static const String _tenancyInvitationPending = 'tenancy_invitation_pending';
+  static String get tenancyInvitationPending => _tenancyInvitationPending.tr();
+
+  static const String _tenancyInvitationAccepted = 'tenancy_invitation_accepted';
+  static String get tenancyInvitationAccepted => _tenancyInvitationAccepted.tr();
+
+  static const String _tenancyInvitationRejected = 'tenancy_invitation_rejected';
+  static String get tenancyInvitationRejected => _tenancyInvitationRejected.tr();
+
+  static const String _tenancyInvitationRevoked = 'tenancy_invitation_revoked';
+  static String get tenancyInvitationRevoked => _tenancyInvitationRevoked.tr();
+
+  static const String _tenancyInvitationExpired = 'tenancy_invitation_expired';
+  static String get tenancyInvitationExpired => _tenancyInvitationExpired.tr();
+
+  static const String _tenancyInvitationUnknown = 'tenancy_invitation_unknown';
+  static String get tenancyInvitationUnknown => _tenancyInvitationUnknown.tr();
+
+  static const String _tenancyInvitationExpires = 'tenancy_invitation_expires';
+  static String get tenancyInvitationExpires => _tenancyInvitationExpires.tr();
+
+  static const String _tenancyInvitationEligible = 'tenancy_invitation_eligible';
+  static String get tenancyInvitationEligible => _tenancyInvitationEligible.tr();
+
+  static const String _tenancyAcceptInvitation = 'tenancy_accept_invitation';
+  static String get tenancyAcceptInvitation => _tenancyAcceptInvitation.tr();
+
+  static const String _tenancyRejectInvitation = 'tenancy_reject_invitation';
+  static String get tenancyRejectInvitation => _tenancyRejectInvitation.tr();
+
+  static const String _tenancyAcceptConfirmation = 'tenancy_accept_confirmation';
+  static String get tenancyAcceptConfirmation => _tenancyAcceptConfirmation.tr();
+
+  static const String _tenancyRejectConfirmation = 'tenancy_reject_confirmation';
+  static String get tenancyRejectConfirmation => _tenancyRejectConfirmation.tr();
+
+  static const String _tenancyCancel = 'tenancy_cancel';
+  static String get tenancyCancel => _tenancyCancel.tr();
+
+  static const String _tenancyRefreshInvitation = 'tenancy_refresh_invitation';
+  static String get tenancyRefreshInvitation => _tenancyRefreshInvitation.tr();
+
+  static const String _tenancyInvitationsEmpty = 'tenancy_invitations_empty';
+  static String get tenancyInvitationsEmpty => _tenancyInvitationsEmpty.tr();
+
+  static const String _tenancyInvitationsEmptyBody = 'tenancy_invitations_empty_body';
+  static String get tenancyInvitationsEmptyBody => _tenancyInvitationsEmptyBody.tr();
+
+  static const String _tenancyInvitationCannotRespond = 'tenancy_invitation_cannot_respond';
+  static String get tenancyInvitationCannotRespond => _tenancyInvitationCannotRespond.tr();
+
+  static const String _tenancyInvitationAccommodationChanged = 'tenancy_invitation_accommodation_changed';
+  static String get tenancyInvitationAccommodationChanged => _tenancyInvitationAccommodationChanged.tr();
+
+  static const String _tenancyFreshRequired = 'tenancy_fresh_required';
+  static String get tenancyFreshRequired => _tenancyFreshRequired.tr();
+
+  static const String _tenancyProperty = 'tenancy_property';
+  static String get tenancyProperty => _tenancyProperty.tr();
+
+  static const String _tenancyInviteFromRequests = 'tenancy_invite_from_requests';
+  static String get tenancyInviteFromRequests => _tenancyInviteFromRequests.tr();
 
 }

@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/chat/data/models/conversation_content.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_message_acknowledgement.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_local_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_local_state.dart';
@@ -52,6 +53,73 @@ void main() {
   tearDown(() async {
     AccountSession.end();
     await CacheStorage.delete('user');
+  });
+
+  test(
+    'acceptance during an old contact read schedules a fresh read',
+    () async {
+      final realtime = _FakeChatRealtimeGateway();
+      final source = _ReadTrackingDataSource();
+      source.contactResponse = Completer<ConversationContent>();
+      final cubit = ChatThreadCubit(
+        conversationId: 'thread',
+        otherParticipantId: 'other',
+        realtimeService: realtime,
+        dataSource: source,
+      );
+      final first = cubit.refreshContact();
+      final queued = cubit.refreshContact(afterVisitAcceptance: true);
+      expect(source.contactRequests, 1);
+      source.contactResponse!.complete(
+        const ConversationContent.initial().copyWith(
+          id: 'thread',
+          otherParticipant: const ChatParticipantContent(id: 'other'),
+        ),
+      );
+      source.contactResponse = null;
+      source.contactSnapshot = const ConversationContent.initial().copyWith(
+        id: 'thread',
+        otherParticipant: const ChatParticipantContent(
+          id: 'other',
+          phoneNumber: '+201001234567',
+          isPhoneRevealed: true,
+        ),
+      );
+      await Future.wait([first, queued]);
+      await Future<void>.delayed(Duration.zero);
+      expect(source.contactRequests, 2);
+      expect(cubit.state.contact.revealedPhone, '+201001234567');
+      await cubit.close();
+      await realtime.close();
+    },
+  );
+
+  test('a contact response from the previous account is ignored', () async {
+    final realtime = _FakeChatRealtimeGateway();
+    final source = _ReadTrackingDataSource();
+    source.contactResponse = Completer<ConversationContent>();
+    final cubit = ChatThreadCubit(
+      conversationId: 'thread',
+      otherParticipantId: 'other',
+      realtimeService: realtime,
+      dataSource: source,
+    );
+    final request = cubit.refreshContact();
+    AccountSession.begin('another-account');
+    source.contactResponse!.complete(
+      const ConversationContent.initial().copyWith(
+        id: 'thread',
+        otherParticipant: const ChatParticipantContent(
+          id: 'other',
+          phoneNumber: '+201001234567',
+          isPhoneRevealed: true,
+        ),
+      ),
+    );
+    await request;
+    expect(cubit.state.contact.revealedPhone, isEmpty);
+    await cubit.close();
+    await realtime.close();
   });
 
   test(
@@ -879,6 +947,16 @@ class _FakeChatRealtimeGateway implements ChatRealtimeGateway {
 
 class _ReadTrackingDataSource implements ChatDataSource {
   int readCount = 0;
+  int contactRequests = 0;
+  Completer<ConversationContent>? contactResponse;
+  ConversationContent contactSnapshot = const ConversationContent.initial();
+
+  @override
+  Future<ConversationContent> getConversation(String conversationId) {
+    contactRequests++;
+    return contactResponse?.future ?? Future.value(contactSnapshot);
+  }
+
   final List<String> sentClientIds = [];
   bool wrongIdentity = false;
 

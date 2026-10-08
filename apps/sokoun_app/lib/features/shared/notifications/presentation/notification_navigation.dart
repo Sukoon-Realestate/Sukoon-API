@@ -1,4 +1,6 @@
 import 'package:sokoun_app/features/tenant/premium_alerts/presentation/screens/premium_alert_detail_screen.dart';
+import 'package:sokoun_app/features/shared/tenancy_invitations/presentation/screens/tenancy_invitation_detail_screen.dart';
+import 'package:sokoun_app/features/shared/tenancy_invitations/presentation/screens/tenancy_invitations_screen.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:sokoun_app/features/owner/home/presentation/screens/owner_listings_screen.dart';
 import 'package:sokoun_app/features/owner/properties/imports.dart';
@@ -58,6 +60,21 @@ abstract final class NotificationNavigation {
 
     if (actionType == 'open_search_alert' && targetId.isNotEmpty) {
       await Go.to<void>(PremiumAlertDetailScreen(alertId: targetId));
+      return;
+    }
+
+    if (actionType == 'open_tenancy_invitation') {
+      final workspace = role.isOwner ? AppWorkspace.owner : AppWorkspace.tenant;
+      if (targetId.isEmpty) {
+        await Go.to<void>(TenancyInvitationsScreen(workspace: workspace));
+      } else {
+        await Go.to<void>(
+          TenancyInvitationDetailScreen(
+            invitationId: targetId,
+            workspace: workspace,
+          ),
+        );
+      }
       return;
     }
 

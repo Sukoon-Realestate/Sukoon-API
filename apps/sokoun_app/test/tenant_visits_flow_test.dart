@@ -122,7 +122,8 @@ void main() {
 
     expect(find.byType(VisitDetailsScreen), findsOneWidget);
     expect(find.text('زيارتك مؤكدة'), findsOneWidget);
-    expect(find.text('010****432'), findsOneWidget);
+    expect(find.text('+201001234567'), findsOneWidget);
+    expect(find.text('010****432'), findsNothing);
     expect(tester.takeException(), isNull);
 
     await tester.tap(find.byIcon(Icons.arrow_back_ios_new_rounded));
@@ -522,7 +523,8 @@ List<TenantVisitContent> _tenantVisitFixtures() {
       status: TenantVisitStatus.accepted,
       statusText: 'مقبول',
       ownerName: 'أحمد محمد',
-      ownerPhone: '010****432',
+      ownerPhone: '+201001234567',
+      isPhoneRevealed: true,
     ),
     TenantVisitContent(
       id: 'pending-fifth-settlement',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sokoun_app/features/shared/contact/presentation/widgets/revealed_phone_card.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -109,33 +110,36 @@ class TenantPropertyOwnerCard extends StatelessWidget {
               ),
             ],
           ),
-          Container(
-            padding: EdgeInsets.all(10.w),
-            decoration: BoxDecoration(
-              color: context.appColor(AppColors.grayOffWhite, surface: true),
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            child: Row(
-              spacing: 8.w,
-              children: [
-                Icon(
-                  Icons.lock_outline_rounded,
-                  color: context.appColor(AppColors.sokoonGray),
-                  size: 16.r,
-                ),
-                Expanded(
-                  child: AppText(
-                    LocaleKeys.tenantPropertyDetailsPhonePrivacy,
-                    style: AppTextStyles.medium11.copyWith(
-                      color: context.appColor(AppColors.sokoonGray),
-                      fontSize: 11.sp,
-                      height: 1.45,
+          if (property.ownerPhone.isNotEmpty)
+            RevealedPhoneCard(phoneNumber: property.ownerPhone)
+          else
+            Container(
+              padding: EdgeInsets.all(10.w),
+              decoration: BoxDecoration(
+                color: context.appColor(AppColors.grayOffWhite, surface: true),
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Row(
+                spacing: 8.w,
+                children: [
+                  Icon(
+                    Icons.lock_outline_rounded,
+                    color: context.appColor(AppColors.sokoonGray),
+                    size: 16.r,
+                  ),
+                  Expanded(
+                    child: AppText(
+                      LocaleKeys.tenantPropertyDetailsPhonePrivacy,
+                      style: AppTextStyles.medium11.copyWith(
+                        color: context.appColor(AppColors.sokoonGray),
+                        fontSize: 11.sp,
+                        height: 1.45,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
         ],
       ),
     );
