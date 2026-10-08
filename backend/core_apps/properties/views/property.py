@@ -401,7 +401,12 @@ class PropertyDetailAPIView(generics.RetrieveUpdateAPIView):
 
     def get_queryset(self):
         queryset = Property.objects.select_related(
-            "owner", "property_type", "governorate", "city", "city__governorate"
+            "owner",
+            "owner__profile",
+            "property_type",
+            "governorate",
+            "city",
+            "city__governorate",
         ).prefetch_related("images")
         request_user = self.request.user
         if request_user.is_authenticated:

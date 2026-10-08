@@ -75,6 +75,24 @@ class ConversationCreateAPIView(APIView):
         )
 
 
+class ConversationDetailAPIView(APIView):
+    """Return fresh participant/contact metadata to conversation members only."""
+
+    permission_classes = [IsAuthenticated, IsParticipant]
+
+    def get(self, request, id):
+        conversation = get_object_or_404(
+            Conversation.objects.prefetch_related(
+                "participants__profile", "participant_set"
+            ),
+            id=id,
+        )
+        self.check_object_permissions(request, conversation)
+        return Response(
+            ConversationSerializer(conversation, context={"request": request}).data
+        )
+
+
 class ConversationReadAPIView(APIView):
     """
     Mark a conversation as read for the requesting user.

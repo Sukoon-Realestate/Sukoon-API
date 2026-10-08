@@ -249,7 +249,7 @@ class TestOwnerVisitRequestDetailScreen:
         assert data["tenant"]["phone_number"] == ""
         assert data["tenant"]["masked_phone_number"] == "010****432"
         assert data["tenant"]["is_phone_revealed"] is False
-        assert "يظهر بعد القبول فقط" in data["tenant"]["phone_notice"]
+        assert "after the owner accepts" in data["tenant"]["phone_notice"]
         assert data["property"]["title"] == "شقة مفروشة"
         assert data["property"]["display_name"] == "شقة مفروشة – مدينة نصر"
         assert "يونيو 2025" in data["day_label"]

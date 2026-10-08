@@ -7,6 +7,7 @@ from rest_framework import serializers
 
 from core_apps.profiles.serializers import CloudinarySerializerField
 from core_apps.properties.serializers.property import PropertyListSerializer
+from ..phone_disclosure import counterpart_phone_payload
 from ..models import Property, PropertyVisit, PropertyVisitReview
 from ..services import PropertyVisitService
 
@@ -135,15 +136,48 @@ class VisitTenantSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source="get_full_name", read_only=True)
     # ? DRF returns None here if the tenant has no profile/avatar
     avatar = CloudinarySerializerField(source="profile.avatar", read_only=True)
+    phone_number = serializers.SerializerMethodField()
+    masked_phone_number = serializers.SerializerMethodField()
+    is_phone_revealed = serializers.SerializerMethodField()
+    phone_notice = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ["name", "avatar", "is_verified"]
+        fields = [
+            "id",
+            "name",
+            "avatar",
+            "is_verified",
+            "phone_number",
+            "masked_phone_number",
+            "is_phone_revealed",
+            "phone_notice",
+        ]
         read_only_fields = fields
+
+    def _contact(self, obj):
+        return counterpart_phone_payload(
+            viewer=getattr(self.context.get("request"), "user", None),
+            counterpart=obj,
+            request=self.context.get("request"),
+            visit=self.context.get("visit"),
+        )
+
+    def get_phone_number(self, obj):
+        return self._contact(obj)["phone_number"]
+
+    def get_masked_phone_number(self, obj):
+        return self._contact(obj)["masked_phone_number"]
+
+    def get_is_phone_revealed(self, obj):
+        return self._contact(obj)["is_phone_revealed"]
+
+    def get_phone_notice(self, obj):
+        return self._contact(obj)["phone_notice"]
 
 
 class PropertyVisitDetailSerializer(serializers.ModelSerializer):
-    tenant = VisitTenantSerializer(read_only=True)
+    tenant = serializers.SerializerMethodField()
     property_id = serializers.UUIDField(source="property.id", read_only=True)
     time = serializers.SerializerMethodField()
 
@@ -170,6 +204,12 @@ class PropertyVisitDetailSerializer(serializers.ModelSerializer):
         if hour_12 == 0:
             hour_12 = 12
         return f"{hour_12}:{minute:02d} {period}"
+
+    def get_tenant(self, obj):
+        return VisitTenantSerializer(
+            obj.tenant,
+            context={"request": self.context.get("request"), "visit": obj},
+        ).data
 
 
 class PropertyVisitCreateSerializer(serializers.ModelSerializer):
@@ -353,27 +393,45 @@ class VisitOwnerSerializer(serializers.ModelSerializer):
     name = serializers.CharField(source="get_full_name", read_only=True)
     phone_number = serializers.SerializerMethodField()
     masked_phone_number = serializers.SerializerMethodField()
+    is_phone_revealed = serializers.SerializerMethodField()
+    phone_notice = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ["id", "name", "is_verified", "phone_number", "masked_phone_number"]
+        fields = [
+            "id",
+            "name",
+            "is_verified",
+            "phone_number",
+            "masked_phone_number",
+            "is_phone_revealed",
+            "phone_notice",
+        ]
         read_only_fields = fields
 
-    def _phone_number(self, obj):
-        profile = getattr(obj, "profile", None)
-        return str(profile.phone_number) if profile and profile.phone_number else ""
+    def _contact(self, obj):
+        visit = self.context.get("visit")
+        viewer = getattr(self.context.get("request"), "user", None)
+        if viewer is None and visit is not None:
+            viewer = visit.tenant
+        return counterpart_phone_payload(
+            viewer=viewer,
+            counterpart=obj,
+            request=self.context.get("request"),
+            visit=visit,
+        )
 
     def get_phone_number(self, obj):
-        visit = self.context.get("visit")
-        if visit and visit.status == PropertyVisit.Status.CONFIRMED:
-            return self._phone_number(obj)
-        return ""
+        return self._contact(obj)["phone_number"]
 
     def get_masked_phone_number(self, obj):
-        number = self.get_phone_number(obj)
-        if len(number) <= 6:
-            return number
-        return f"{number[:3]}{'*' * (len(number) - 6)}{number[-3:]}"
+        return self._contact(obj)["masked_phone_number"]
+
+    def get_is_phone_revealed(self, obj):
+        return self._contact(obj)["is_phone_revealed"]
+
+    def get_phone_notice(self, obj):
+        return self._contact(obj)["phone_notice"]
 
 
 class PropertyVisitReviewSerializer(serializers.ModelSerializer):
@@ -435,9 +493,16 @@ class TenantVisitRequestSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
     def get_owner(self, obj):
+        contact = counterpart_phone_payload(
+            viewer=getattr(self.context.get("request"), "user", None),
+            counterpart=obj.property.owner,
+            request=self.context.get("request"),
+            visit=obj,
+        )
         return {
             "id": str(obj.property.owner.id),
             "name": obj.property.owner.get_full_name,
+            **contact,
         }
 
     def get_day_label(self, obj):
@@ -493,7 +558,7 @@ class TenantVisitRequestDetailSerializer(TenantVisitRequestSerializer):
     def get_owner(self, obj):
         return VisitOwnerSerializer(
             obj.property.owner,
-            context={"visit": obj},
+            context={"visit": obj, "request": self.context.get("request")},
         ).data
 
 
@@ -539,16 +604,6 @@ def _format_full_date_ar(visit_date):
     return f"{weekday} {visit_date.day} {month} {visit_date.year}"
 
 
-def _mask_phone_number(raw_number):
-    if not raw_number:
-        return ""
-    digits = str(raw_number).strip()
-    clean = digits.replace("+2", "").strip() if digits.startswith("+2") else digits
-    if len(clean) >= 7:
-        return f"{clean[:3]}****{clean[-3:]}"
-    return clean
-
-
 _OWNER_CARD_STATUS_LABEL = {
     PropertyVisit.Status.PENDING: "جديد",
     PropertyVisit.Status.CONFIRMED: "مقبول",
@@ -564,22 +619,12 @@ _OWNER_DETAIL_STATUS_LABEL = {
 }
 
 
-class OwnerVisitTenantCardSerializer(serializers.ModelSerializer):
-    name = serializers.CharField(source="get_full_name", read_only=True)
-    avatar = CloudinarySerializerField(source="profile.avatar", read_only=True)
-
-    class Meta:
-        model = User
-        fields = ["id", "name", "avatar", "is_verified"]
-        read_only_fields = fields
-
-
 class OwnerVisitRequestCardSerializer(serializers.ModelSerializer):
     """
     Card serializer for the Owner Visit Requests list screen (Screen 1).
     """
 
-    tenant = OwnerVisitTenantCardSerializer(read_only=True)
+    tenant = serializers.SerializerMethodField()
     property = serializers.SerializerMethodField()
     schedule_label = serializers.SerializerMethodField()
     subtitle = serializers.SerializerMethodField()
@@ -612,6 +657,27 @@ class OwnerVisitRequestCardSerializer(serializers.ModelSerializer):
             "id": str(obj.property.id),
             "title": obj.property.title,
             "district": obj.property.district,
+        }
+
+    def get_tenant(self, obj):
+        tenant = obj.tenant
+        profile = getattr(tenant, "profile", None)
+        avatar = profile.avatar if profile else None
+        avatar_url = (
+            avatar.url if avatar and hasattr(avatar, "url") else str(avatar or "")
+        )
+        contact = counterpart_phone_payload(
+            viewer=getattr(self.context.get("request"), "user", None),
+            counterpart=tenant,
+            request=self.context.get("request"),
+            visit=obj,
+        )
+        return {
+            "id": str(tenant.id),
+            "name": tenant.get_full_name,
+            "avatar": avatar_url or None,
+            "is_verified": tenant.is_verified,
+            **contact,
         }
 
     def get_schedule_label(self, obj: PropertyVisit) -> str:
@@ -677,26 +743,16 @@ class OwnerVisitRequestDetailSerializer(serializers.ModelSerializer):
         avatar_url = (
             profile.avatar.url if profile and getattr(profile, "avatar", None) else None
         )
-        raw_phone = (
-            str(profile.phone_number)
-            if profile and getattr(profile, "phone_number", None)
-            else ""
-        )
-        masked_phone = _mask_phone_number(raw_phone)
-        is_confirmed = obj.status == PropertyVisit.Status.CONFIRMED
         member_year = tenant.date_joined.year if tenant.date_joined else 2024
 
         verification_prefix = "مستأجر موثّق · " if tenant.is_verified else ""
         membership_label = f"{verification_prefix}عضو منذ {member_year}"
 
-        phone_notice = (
-            ""
-            if is_confirmed
-            else (
-                f"رقم المستأجر {masked_phone} – يظهر بعد القبول فقط"
-                if masked_phone
-                else "رقم المستأجر – يظهر بعد القبول فقط"
-            )
+        contact = counterpart_phone_payload(
+            viewer=getattr(self.context.get("request"), "user", None),
+            counterpart=tenant,
+            request=self.context.get("request"),
+            visit=obj,
         )
 
         return {
@@ -706,10 +762,7 @@ class OwnerVisitRequestDetailSerializer(serializers.ModelSerializer):
             "is_verified": tenant.is_verified,
             "member_since_year": member_year,
             "membership_label": membership_label,
-            "phone_number": raw_phone if is_confirmed else "",
-            "masked_phone_number": masked_phone,
-            "is_phone_revealed": is_confirmed,
-            "phone_notice": phone_notice,
+            **contact,
         }
 
     def get_property(self, obj: PropertyVisit):

@@ -34,6 +34,7 @@ class PropertyVisit(TimeStampedModel):
         choices=Status.choices,
         default=Status.PENDING,
     )
+    accepted_at = models.DateTimeField(null=True, blank=True, db_index=True)
     note = models.TextField(_("Note"), blank=True, default="")
     offer_id = models.CharField(max_length=64, blank=True, default="")
     offer_snapshot = models.JSONField(null=True, blank=True)

@@ -219,7 +219,9 @@ class OwnerPropertyVisitListAPIView(generics.ListAPIView):
     def get_queryset(self):
         return (
             PropertyVisit.objects.filter(property__owner=self.request.user)
-            .select_related("tenant", "tenant__profile")
+            .select_related(
+                "tenant", "tenant__profile", "property", "property__owner"
+            )
             .all()
         )
 
@@ -287,6 +289,7 @@ class TenantVisitRequestListAPIView(generics.ListAPIView):
         return PropertyVisit.objects.filter(tenant=self.request.user).select_related(
             "property",
             "property__owner",
+            "property__owner__profile",
             "property__property_type",
             "property__governorate",
             "property__city",
@@ -570,7 +573,9 @@ class OwnerVisitRequestRejectAPIView(generics.GenericAPIView):
             reason=reason,
             custom_reason=custom_reason,
         )
-        data = OwnerVisitRequestDetailSerializer(visit).data
+        data = OwnerVisitRequestDetailSerializer(
+            visit, context={"request": request}
+        ).data
         return Response(
             {"message": "تم رفض طلب الزيارة بنجاح.", **data},
             status=status.HTTP_200_OK,
@@ -600,9 +605,10 @@ class OwnerVisitRequestAcceptAPIView(generics.GenericAPIView):
             user=request.user,
             visit_obj=visit,
         )
-        data = OwnerVisitRequestDetailSerializer(visit).data
+        data = OwnerVisitRequestDetailSerializer(
+            visit, context={"request": request}
+        ).data
         return Response(
             {"message": "تم قبول طلب الزيارة بنجاح.", **data},
             status=status.HTTP_200_OK,
         )
-

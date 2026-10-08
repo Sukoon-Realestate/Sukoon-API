@@ -109,7 +109,9 @@ class TestTenantVisitRequestScreens:
         visit.save(update_fields=["status"])
         confirmed = auth_client.get(url).json()["data"]
         assert confirmed["owner"]["phone_number"] == "+201012345432"
-        assert "*" in confirmed["owner"]["masked_phone_number"]
+        assert confirmed["owner"]["masked_phone_number"] == ""
+        assert confirmed["owner"]["is_phone_revealed"] is True
+        assert confirmed["owner"]["phone_notice"] == ""
 
     def test_other_tenant_cannot_read_or_cancel_visit(
         self,
@@ -628,4 +630,3 @@ class TestPropertyReviewListAPI:
         assert response.status_code == status.HTTP_200_OK
         # Queries: 1 get property, 1 aggregates, 1 count for pagination, 1 select reviews with tenant/profile
         assert len(ctx.captured_queries) <= 5
-

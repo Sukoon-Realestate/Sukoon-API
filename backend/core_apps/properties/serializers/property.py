@@ -7,6 +7,7 @@ from rest_framework import serializers
 from core_apps.profiles.serializers import CloudinarySerializerField
 
 from ..models import City, Governorate, Property, PropertyImage, PropertyType
+from ..phone_disclosure import counterpart_phone_payload
 from .location import CitySerializer, GovernorateSerializer, PublicUUIDRelatedField
 from ..services import PropertyService
 from ..rental_inventory import normalize_inventory
@@ -300,7 +301,7 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
     video = CloudinaryMediaField(read_only=True)
     video_duration = serializers.IntegerField(read_only=True)
     property_link = serializers.SerializerMethodField(read_only=True)
-    owner = PropertyDetailOwnerSerializer(read_only=True)
+    owner = serializers.SerializerMethodField()
     owner_is_verified = serializers.BooleanField(
         source="owner.is_verified", read_only=True
     )
@@ -383,6 +384,20 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
 
     def get_price(self, obj: Property) -> str:
         return f"{obj.price:.2f}"
+
+    def get_owner(self, obj: Property) -> dict:
+        owner = PropertyDetailOwnerSerializer(obj.owner).data
+        request = self.context.get("request")
+        viewer = getattr(request, "user", None)
+        owner.update(
+            counterpart_phone_payload(
+                viewer=viewer,
+                counterpart=obj.owner,
+                request=request,
+                property_obj=obj,
+            )
+        )
+        return owner
 
     def get_property_link(self, obj: Property) -> str:
         return f"https://sokoun.app/properties/{obj.id}"

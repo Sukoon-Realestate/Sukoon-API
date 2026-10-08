@@ -5,7 +5,7 @@ Repository: `Sukoon-API`
 Branch inspected: `main`  
 Baseline commit inspected: `8e371ef`  
 Delivery form: uncommitted working-tree implementation based on that commit  
-Status: **Implemented and verified locally. Migrations have not been deployed to staging and real staging fixture IDs are not yet available. Keep `SOKOUN_TENANCY_INVITATIONS` disabled until staging verification is complete.**
+Status: **Implemented and verified locally. Migrations are applied to local `backend/dev.sqlite3`, but have not been deployed to staging and real staging fixture IDs are not yet available. Keep `SOKOUN_TENANCY_INVITATIONS` disabled until staging verification is complete.**
 
 ## Backend understanding
 
@@ -241,7 +241,7 @@ Messages, display content, and notification text will support `Accept-Language: 
 | --- | --- |
 | Contract review | Complete |
 | Implementation plan | Complete: `docs/TENANCY_INVITATIONS_BACKEND_IMPLEMENTATION_PLAN.md` |
-| Models/migration | Implemented; migration generated and exercised by test database |
+| Models/migration | Implemented; applied to local `backend/dev.sqlite3` and exercised by test databases |
 | Endpoints | Implemented locally at the agreed paths |
 | Picker/lease integration | Implemented locally with invitation linking and database conflict protection |
 | Automated verification | Passing locally; see commands/results below |

@@ -743,7 +743,16 @@ class TestPropertyVisitViews:
             "time",
             "status",
         }
-        assert set(result["tenant"].keys()) == {"name", "avatar", "is_verified"}
+        assert set(result["tenant"].keys()) == {
+            "id",
+            "name",
+            "avatar",
+            "is_verified",
+            "phone_number",
+            "masked_phone_number",
+            "is_phone_revealed",
+            "phone_notice",
+        }
         assert result["tenant"]["name"] == another_user.get_full_name
 
     def test_list_tenant_visits_filter_by_status(self, auth_client, user, another_user):
@@ -868,7 +877,16 @@ class TestPropertyVisitViews:
             "status",
         }
         tenant_data = visit_data["tenant"]
-        assert set(tenant_data.keys()) == {"name", "avatar", "is_verified"}
+        assert set(tenant_data.keys()) == {
+            "id",
+            "name",
+            "avatar",
+            "is_verified",
+            "phone_number",
+            "masked_phone_number",
+            "is_phone_revealed",
+            "phone_notice",
+        }
         assert tenant_data["name"] == another_user.get_full_name
         assert tenant_data["avatar"] is None
         assert tenant_data["is_verified"] is True

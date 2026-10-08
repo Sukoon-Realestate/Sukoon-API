@@ -1,6 +1,8 @@
 # ── Sukoon Backend Makefile ──────────────────────────────
 PYTHON ?= python
 PIPENV ?= pipenv
+ROOT_ENV_FILE ?= ../.env
+REMOTE_SETTINGS ?= config.settings.production
 
 .DEFAULT_GOAL := help
 
@@ -31,7 +33,7 @@ run-manage:
 	$(PIPENV) run python manage.py runserver
 
 migrate:
-	$(PIPENV) run python manage.py migrate
+	$(PIPENV) run dotenv -f $(ROOT_ENV_FILE) run -- $(PYTHON) manage.py migrate --settings=$(REMOTE_SETTINGS)
 
 makemigrations:
 	$(PIPENV) run python manage.py makemigrations
