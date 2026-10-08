@@ -10,8 +10,12 @@ Future<TestAccountCubit> registerAuthenticatedTestAccount({
     name: 'Test account',
     phone: '',
     email: 'test@example.com',
+    isVerified: true,
   ),
 }) async {
+  if (injector.isRegistered<UserCubit>()) {
+    await injector.unregister<UserCubit>();
+  }
   final TestAccountCubit cubit = TestAccountCubit(user);
   injector.registerSingleton<UserCubit>(
     cubit,
@@ -31,4 +35,7 @@ class TestAccountCubit extends UserCubit {
     AccountSession.end();
     emit(UserState.initial());
   }
+
+  void setVerified(bool value) =>
+      emit(state.copyWith(userModel: user.copyWith(isVerified: value)));
 }

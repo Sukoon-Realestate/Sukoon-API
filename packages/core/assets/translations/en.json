@@ -1,4 +1,6 @@
 {
+  "account_verification_required_title": "Verify your account to continue",
+  "account_verification_required": "Verify your identity to use chats, visits, property publishing and account tools.",
   "journey_rent_entry_body": "Track invoices, payment status and receipts",
   "journey_analytics_entry_body": "Review performance for a selected listing",
   "journey_contracts_entry_body": "Review your contracts and digital leases",

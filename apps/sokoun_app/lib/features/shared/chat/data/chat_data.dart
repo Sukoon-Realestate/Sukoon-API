@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/main_view/data/account_access.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/network/network_request.dart';
@@ -70,6 +71,7 @@ final class ChatApiDataSource implements ChatDataSource {
     required int page,
     int pageSize = ChatData.conversationsPageSize,
   }) async {
+    AccountAccess.requireVerification();
     final response = await injector<NetworkService>().callApi(
       NetworkRequest(
         method: RequestMethod.get,
@@ -91,6 +93,7 @@ final class ChatApiDataSource implements ChatDataSource {
     required String conversationId,
     required int page,
   }) async {
+    AccountAccess.requireVerification();
     final response = await injector<NetworkService>().callApi(
       NetworkRequest(
         method: RequestMethod.get,
@@ -116,6 +119,7 @@ final class ChatApiDataSource implements ChatDataSource {
 
   @override
   Future<ConversationContent> createConversation(String userId) async {
+    AccountAccess.requireVerification();
     final response = await injector<NetworkService>().callApi(
       NetworkRequest(
         method: RequestMethod.post,
@@ -135,6 +139,7 @@ final class ChatApiDataSource implements ChatDataSource {
     required String content,
     String clientMessageId = '',
   }) async {
+    AccountAccess.requireVerification();
     final response = await injector<NetworkService>().callApi(
       NetworkRequest(
         method: RequestMethod.post,
@@ -154,6 +159,7 @@ final class ChatApiDataSource implements ChatDataSource {
 
   @override
   Future<ChatReadContent> markConversationAsRead(String conversationId) async {
+    AccountAccess.requireVerification();
     final response = await injector<NetworkService>().callApi(
       NetworkRequest(
         method: RequestMethod.post,

@@ -8,9 +8,10 @@ class PageRouterBuilder {
 
   PageRouterCreator _creator = CustomPageRouterCreator();
 
-  void initAppRouter({
-    PlatformConfig? config,
-  }) {
+  /// Optional app-owned access/layout wrapper, applied before a page is mounted.
+  Widget Function(Widget page)? pageDecorator;
+
+  void initAppRouter({PlatformConfig? config}) {
     final platform = Platform.operatingSystem;
     switch (platform) {
       case 'android':
@@ -20,7 +21,8 @@ class PageRouterBuilder {
         _creator = config?.ios ?? CupertinoPageRouterCreator();
         break;
       case 'windows':
-        _creator = config?.web ??
+        _creator =
+            config?.web ??
             CustomPageRouterCreator(parentTransition: TransitionType.fade);
         break;
       default:
@@ -35,7 +37,7 @@ class PageRouterBuilder {
     AnimationOption? options,
   }) {
     return _creator.create<T>(
-      page,
+      pageDecorator?.call(page) ?? page,
       settings: settings,
       transition: transition,
       animationOptions: options,
@@ -47,9 +49,5 @@ class PlatformConfig {
   final PageRouterCreator? android;
   final PageRouterCreator? ios;
   final PageRouterCreator? web;
-  PlatformConfig({
-    this.android,
-    this.ios,
-    this.web,
-  });
+  PlatformConfig({this.android, this.ios, this.web});
 }

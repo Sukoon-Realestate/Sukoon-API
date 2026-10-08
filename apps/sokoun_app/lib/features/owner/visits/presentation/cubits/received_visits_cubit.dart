@@ -1,9 +1,9 @@
+import 'package:sokoun_app/features/main_view/presentation/cubits/verified_action_cubit.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
-import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
 
-class ReceivedVisitsCubit extends AsyncCubit<List<OwnerVisitRequestContent>> {
+class ReceivedVisitsCubit extends VerifiedActionCubit<List<OwnerVisitRequestContent>> {
   ReceivedVisitsCubit({this.requests = false}) : super(const []);
   final bool requests;
 

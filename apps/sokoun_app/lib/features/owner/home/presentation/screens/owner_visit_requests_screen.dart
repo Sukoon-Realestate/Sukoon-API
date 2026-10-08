@@ -182,22 +182,7 @@ class _OwnerVisitRequestsScreenState extends State<OwnerVisitRequestsScreen> {
       actions: [
         IconButton(
           tooltip: LocaleKeys.ownerCalendarTitle,
-          onPressed: () {
-            final List<OwnerVisitRequestContent> requests =
-                _view.value.requests ?? _pagifyController.items;
-            Go.to(
-              OwnerRequestsCalendarScreen(
-                ownerPropertyId:
-                    requests
-                        .where(
-                          (request) => request.propertyId.trim().isNotEmpty,
-                        )
-                        .firstOrNull
-                        ?.propertyId ??
-                    '',
-              ),
-            );
-          },
+          onPressed: () => Go.to(const OwnerRequestsCalendarScreen()),
           icon: const Icon(Icons.calendar_month_outlined),
         ),
       ],

@@ -12,7 +12,7 @@ class OwnerCalendarContent extends StatelessWidget {
   final OwnerVisitCalendarContent calendar;
   final DateTime selectedDate;
   final ValueChanged<DateTime> onDaySelected;
-  final VoidCallback? onAvailabilityPressed;
+  final VoidCallback onAvailabilityPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +22,19 @@ class OwnerCalendarContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          DefaultButton(
+            onTap: onAvailabilityPressed,
+            title: LocaleKeys.ownerCalendarManageAvailability,
+            color: AppColors.gold,
+            textColor: AppColors.sokoonNavy,
+            borderRadius: BorderRadius.circular(14.r),
+            height: 50.h,
+            textStyle: AppTextStyles.bold14.copyWith(
+              fontSize: 14.sp,
+              height: 1.45,
+            ),
+          ),
+          16.szH,
           SokounContent(
             width: SokounContentWidth.form,
             child: Container(
@@ -98,20 +111,6 @@ class OwnerCalendarContent extends StatelessWidget {
             OwnerCalendarVisitCard(visit: visit),
             10.szH,
           ],
-          10.szH,
-          if (onAvailabilityPressed != null)
-            DefaultButton(
-              onTap: onAvailabilityPressed,
-              title: LocaleKeys.ownerCalendarManageAvailability,
-              color: AppColors.gold,
-              textColor: AppColors.white,
-              borderRadius: BorderRadius.circular(14.r),
-              height: 50.h,
-              textStyle: AppTextStyles.bold14.copyWith(
-                fontSize: 14.sp,
-                height: 1.45,
-              ),
-            ),
         ],
       ),
     );

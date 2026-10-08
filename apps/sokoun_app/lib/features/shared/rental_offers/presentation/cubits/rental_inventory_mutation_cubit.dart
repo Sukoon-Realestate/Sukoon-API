@@ -1,7 +1,7 @@
+import 'package:sokoun_app/features/main_view/presentation/cubits/verified_action_cubit.dart';
 import 'dart:convert';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
-import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/network/account_session.dart';
 import 'package:melos_core/core/local_db/objectbox_cache_service.dart';
@@ -12,7 +12,8 @@ import '../../data/rental_inventory_confirmation.dart';
 import '../../data/rental_offer_capabilities.dart';
 
 /// Proposed v1 extension of the existing property PATCH, never a visit update.
-class RentalInventoryMutationCubit extends AsyncCubit<PropertyDetailsModel> {
+class RentalInventoryMutationCubit
+    extends VerifiedActionCubit<PropertyDetailsModel> {
   RentalInventoryMutationCubit({
     this.capabilities = RentalOfferCapabilities.configured,
   }) : super(const PropertyDetailsModel.initial());
@@ -24,7 +25,7 @@ class RentalInventoryMutationCubit extends AsyncCubit<PropertyDetailsModel> {
     bool archive = false,
     required void Function(PropertyDetailsModel) onSuccess,
   }) async {
-    if (isLoading || isClosed) return;
+    if (isLoading || isClosed || !checkVerification()) return;
     if (!capabilities.canWrite ||
         !capabilities.canManageInventory ||
         !selection.canIdentify) {

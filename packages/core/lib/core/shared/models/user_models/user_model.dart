@@ -1,10 +1,18 @@
 import 'package:melos_core/core/helpers/cache_service.dart';
 
 class UserModel {
+  /// Temporary rollout bypass. Set SOKOUN_BYPASS_VERIFICATION=false to enforce
+  /// the account flag without changing the feature guards.
+  static const bool bypassVerification = bool.fromEnvironment(
+    'SOKOUN_BYPASS_VERIFICATION',
+    defaultValue: true,
+  );
+
   final String id;
   final String name;
   final String phone;
   final String email;
+  final bool isVerified;
 
   /// Legacy server metadata, never an authorization or workspace selection.
   final String type;
@@ -14,6 +22,7 @@ class UserModel {
     required this.name,
     required this.phone,
     required this.email,
+    this.isVerified = bypassVerification,
     this.type = '',
   });
 
@@ -41,15 +50,27 @@ class UserModel {
           details['phone']?.toString() ??
           '',
       email: user['email']?.toString() ?? details['email']?.toString() ?? '',
+      isVerified:
+          bypassVerification ||
+          (json.containsKey('is_verified')
+                  ? json['is_verified']
+                  : user['is_verified']) ==
+              true,
       type: user['type']?.toString() ?? '',
     );
   }
 
-  UserModel copyWith({String? name, String? phone, String? email}) => UserModel(
+  UserModel copyWith({
+    String? name,
+    String? phone,
+    String? email,
+    bool? isVerified,
+  }) => UserModel(
     id: id,
     name: name ?? this.name,
     phone: phone ?? this.phone,
     email: email ?? this.email,
+    isVerified: isVerified ?? this.isVerified,
     type: type,
   );
 
@@ -58,6 +79,7 @@ class UserModel {
     'name': name,
     'phone': phone,
     'email': email,
+    'is_verified': isVerified,
     'type': type,
   };
 

@@ -1,6 +1,6 @@
 part of '../../imports.dart';
 
-class VisitReviewCubit extends AsyncCubit<bool> {
+class VisitReviewCubit extends VerifiedActionCubit<bool> {
   VisitReviewCubit() : super(false);
   Future<bool> submit({
     required String visitId,

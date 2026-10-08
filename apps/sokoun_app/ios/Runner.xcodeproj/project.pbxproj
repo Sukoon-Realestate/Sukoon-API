@@ -538,6 +538,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
+				GOOGLE_SIGN_IN_CLIENT_ID = "661591953888-1uq6l54hhfpo1jdhs1lq19m7rmf8lv8f.apps.googleusercontent.com";
+				GOOGLE_SIGN_IN_REVERSED_CLIENT_ID = "com.googleusercontent.apps.661591953888-1uq6l54hhfpo1jdhs1lq19m7rmf8lv8f";
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -721,6 +723,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
+				GOOGLE_SIGN_IN_CLIENT_ID = "661591953888-1uq6l54hhfpo1jdhs1lq19m7rmf8lv8f.apps.googleusercontent.com";
+				GOOGLE_SIGN_IN_REVERSED_CLIENT_ID = "com.googleusercontent.apps.661591953888-1uq6l54hhfpo1jdhs1lq19m7rmf8lv8f";
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -744,6 +748,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
+				GOOGLE_SIGN_IN_CLIENT_ID = "661591953888-1uq6l54hhfpo1jdhs1lq19m7rmf8lv8f.apps.googleusercontent.com";
+				GOOGLE_SIGN_IN_REVERSED_CLIENT_ID = "com.googleusercontent.apps.661591953888-1uq6l54hhfpo1jdhs1lq19m7rmf8lv8f";
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -823,6 +829,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
+				GOOGLE_SIGN_IN_CLIENT_ID = "661591953888-uqaqp4vksq8bn7vpc8abv3nng2iemmp2.apps.googleusercontent.com";
+				GOOGLE_SIGN_IN_REVERSED_CLIENT_ID = "com.googleusercontent.apps.661591953888-uqaqp4vksq8bn7vpc8abv3nng2iemmp2";
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -921,6 +929,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
+				GOOGLE_SIGN_IN_CLIENT_ID = "661591953888-1uq6l54hhfpo1jdhs1lq19m7rmf8lv8f.apps.googleusercontent.com";
+				GOOGLE_SIGN_IN_REVERSED_CLIENT_ID = "com.googleusercontent.apps.661591953888-1uq6l54hhfpo1jdhs1lq19m7rmf8lv8f";
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1016,6 +1026,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
+				GOOGLE_SIGN_IN_CLIENT_ID = "661591953888-uqaqp4vksq8bn7vpc8abv3nng2iemmp2.apps.googleusercontent.com";
+				GOOGLE_SIGN_IN_REVERSED_CLIENT_ID = "com.googleusercontent.apps.661591953888-uqaqp4vksq8bn7vpc8abv3nng2iemmp2";
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1108,6 +1120,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
+				GOOGLE_SIGN_IN_CLIENT_ID = "661591953888-1uq6l54hhfpo1jdhs1lq19m7rmf8lv8f.apps.googleusercontent.com";
+				GOOGLE_SIGN_IN_REVERSED_CLIENT_ID = "com.googleusercontent.apps.661591953888-1uq6l54hhfpo1jdhs1lq19m7rmf8lv8f";
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1198,6 +1212,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
+				GOOGLE_SIGN_IN_CLIENT_ID = "661591953888-uqaqp4vksq8bn7vpc8abv3nng2iemmp2.apps.googleusercontent.com";
+				GOOGLE_SIGN_IN_REVERSED_CLIENT_ID = "com.googleusercontent.apps.661591953888-uqaqp4vksq8bn7vpc8abv3nng2iemmp2";
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1288,6 +1304,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
 				ENABLE_BITCODE = NO;
+				GOOGLE_SIGN_IN_CLIENT_ID = "661591953888-1uq6l54hhfpo1jdhs1lq19m7rmf8lv8f.apps.googleusercontent.com";
+				GOOGLE_SIGN_IN_REVERSED_CLIENT_ID = "com.googleusercontent.apps.661591953888-1uq6l54hhfpo1jdhs1lq19m7rmf8lv8f";
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -1,6 +1,6 @@
 part of '../../imports.dart';
 
-class OwnerVisitStatusCubit extends AsyncCubit<bool> {
+class OwnerVisitStatusCubit extends VerifiedActionCubit<bool> {
   OwnerVisitStatusCubit() : super(false);
 
   Future<void> acceptVisitRequest({

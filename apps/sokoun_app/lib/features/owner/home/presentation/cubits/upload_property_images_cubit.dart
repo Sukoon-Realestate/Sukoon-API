@@ -1,8 +1,10 @@
+import 'package:sokoun_app/features/main_view/data/account_access.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:sokoun_app/features/main_view/presentation/cubits/verified_action_cubit.dart';
 import 'dart:async';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
-import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/network/account_session.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
@@ -12,7 +14,8 @@ import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_co
 import 'package:sokoun_app/features/owner/home/data/models/upload_property_image_body.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 
-class UploadPropertyImagesCubit extends AsyncCubit<List<PropertyImageModel>> {
+class UploadPropertyImagesCubit
+    extends VerifiedActionCubit<List<PropertyImageModel>> {
   UploadPropertyImagesCubit() : super(const []);
 
   Future<void> uploadImages({
@@ -31,6 +34,11 @@ class UploadPropertyImagesCubit extends AsyncCubit<List<PropertyImageModel>> {
       operation: () async {
         final results = await Future.wait(
           photos.where((photo) => !photo.isExisting).map((photo) async {
+            if (!AccountAccess.isVerified) {
+              return Error<BaseModel<PropertyImageModel>, Failure>(
+                ServerFailure(LocaleKeys.accountVerificationRequired),
+              );
+            }
             final result = await baseCrudUseCase.call(
               CrudBaseParmas<PropertyImageModel>(
                 api: ApiConstants.propertyImages(propertyId),

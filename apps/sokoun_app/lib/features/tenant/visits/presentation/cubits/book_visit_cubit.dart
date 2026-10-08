@@ -1,6 +1,6 @@
 part of '../../imports.dart';
 
-class BookVisitCubit extends AsyncCubit<Map<String, dynamic>> {
+class BookVisitCubit extends VerifiedActionCubit<Map<String, dynamic>> {
   BookVisitCubit({this.capabilities = RentalOfferCapabilities.configured})
     : super(const {});
   final RentalOfferCapabilities capabilities;
@@ -19,6 +19,7 @@ class BookVisitCubit extends AsyncCubit<Map<String, dynamic>> {
     void Function(String message)? onError,
   }) async {
     if (isLoading || isClosed || _validating) return;
+    if (!checkVerification(onError: onError)) return;
     if ((hasRentalOffers || selection != null) &&
         (!capabilities.canRequestViewing ||
             selection?.canIdentify != true ||
@@ -48,7 +49,7 @@ class BookVisitCubit extends AsyncCubit<Map<String, dynamic>> {
       } finally {
         _validating = false;
       }
-      if (isClosed) return;
+      if (isClosed || !checkVerification(onError: onError)) return;
     }
     if (ownerId.isNotEmpty && ownerId == UserModel.currentUser?.id) {
       setError(errorMessage: LocaleKeys.workspaceSelfActionBlocked);

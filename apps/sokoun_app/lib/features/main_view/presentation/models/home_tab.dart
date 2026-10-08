@@ -13,6 +13,7 @@ import 'package:sokoun_app/features/tenant/visits/imports.dart';
 import '../../data/enums/app_workspace.dart';
 import '../../data/enums/workspace_tab.dart';
 import 'home_navigation_destination.dart';
+import '../widgets/verified_account_gate.dart';
 
 class HomeTab {
   const HomeTab({required this.tab, required this.screen});
@@ -53,14 +54,20 @@ class HomeTab {
   static Map<AppWorkspace, List<HomeTab>> createWorkspaces() {
     const HomeTab messages = HomeTab(
       tab: WorkspaceTab.messages,
-      screen: ChatsScreen(),
+      screen: VerifiedAccountGate(showBackButton: false, child: ChatsScreen()),
     );
     return const {
       AppWorkspace.tenant: [
         HomeTab(tab: WorkspaceTab.home, screen: TenantHomeScreen()),
         HomeTab(tab: WorkspaceTab.saved, screen: FavoritesScreen()),
         messages,
-        HomeTab(tab: WorkspaceTab.visits, screen: TenantVisitsScreen()),
+        HomeTab(
+          tab: WorkspaceTab.visits,
+          screen: VerifiedAccountGate(
+            showBackButton: false,
+            child: TenantVisitsScreen(),
+          ),
+        ),
         HomeTab(
           tab: WorkspaceTab.profile,
           screen: ProfileScreen(workspace: AppWorkspace.tenant),
@@ -72,7 +79,10 @@ class HomeTab {
         messages,
         HomeTab(
           tab: WorkspaceTab.requests,
-          screen: OwnerVisitRequestsScreen(showBackButton: false),
+          screen: VerifiedAccountGate(
+            showBackButton: false,
+            child: OwnerVisitRequestsScreen(showBackButton: false),
+          ),
         ),
         HomeTab(
           tab: WorkspaceTab.profile,

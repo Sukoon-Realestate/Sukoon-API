@@ -1,3 +1,6 @@
+import 'helpers/account_test_dependencies.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
+import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 import 'package:sokoun_app/features/shared/unread_counts/data/models/unread_counts.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -17,6 +20,21 @@ void main() {
   late _RecordingNetworkService network;
 
   setUp(() async {
+    if (injector.isRegistered<UserCubit>()) {
+      await injector.unregister<UserCubit>();
+    }
+    injector.registerSingleton<UserCubit>(
+      TestAccountCubit(
+        const UserModel(
+          id: 'verified-test-account',
+          name: '',
+          phone: '',
+          email: '',
+          isVerified: true,
+        ),
+      ),
+      dispose: (cubit) => cubit.close(),
+    );
     if (injector.isRegistered<NetworkService>()) {
       await injector.unregister<NetworkService>();
     }
@@ -25,6 +43,7 @@ void main() {
   });
 
   tearDown(() async {
+    await injector.unregister<UserCubit>();
     if (injector.isRegistered<NetworkService>()) {
       await injector.unregister<NetworkService>();
     }

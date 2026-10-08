@@ -87,6 +87,7 @@ void main() {
           return draftDirectory.path;
         });
     await CacheStorage.write('user', const <String, dynamic>{
+      'is_verified': true,
       'id': 'owner-id',
       'name': 'Owner Test User',
     });

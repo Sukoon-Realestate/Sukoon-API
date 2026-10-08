@@ -19,6 +19,8 @@ import 'package:toastification/toastification.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_themed_app.dart';
 import 'features/shared/appearance/data/theme_preferences.dart';
 import 'features/shared/appearance/presentation/cubits/theme_cubit.dart';
+import 'package:melos_core/core/navigation/page_router/imports_page_router_builder.dart';
+import 'features/main_view/presentation/verified_feature_routes.dart';
 
 class Sokoon extends StatefulWidget {
   const Sokoon({super.key});
@@ -35,6 +37,7 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    PageRouterBuilder().pageDecorator = VerifiedFeatureRoutes.wrap;
     _themeCubit = ThemeCubit(initialMode: ThemePreferences.read());
     WidgetsBinding.instance.addObserver(this);
     RentalPropertyLinkNavigation.reset();
@@ -55,6 +58,10 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
     _userSubscription = UserCubit.instance.stream.listen((state) {
       final bool wasLoggedIn = _hadSession;
       _hadSession = state.userStatus == UserStatus.loggedIn;
+      if (_hadSession && !state.userModel.isVerified) {
+        ChatRealtimeService.instance.setActiveConversation(null);
+        unawaited(ChatRealtimeService.instance.disconnect());
+      }
       if (wasLoggedIn && !_hadSession) {
         ChatRealtimeService.instance.setActiveConversation(null);
         ChatRealtimeService.instance.disconnect();
@@ -70,6 +77,7 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    PageRouterBuilder().pageDecorator = null;
     WidgetsBinding.instance.removeObserver(this);
     _expiredSubscription?.cancel();
     _userSubscription?.cancel();

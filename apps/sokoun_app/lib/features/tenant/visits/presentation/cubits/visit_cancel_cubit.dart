@@ -1,6 +1,6 @@
 part of '../../imports.dart';
 
-class VisitCancelCubit extends AsyncCubit<bool> {
+class VisitCancelCubit extends VerifiedActionCubit<bool> {
   VisitCancelCubit() : super(false);
   Future<bool> cancel(String visitId) async {
     if (isClosed || isLoading || visitId.isEmpty) return false;

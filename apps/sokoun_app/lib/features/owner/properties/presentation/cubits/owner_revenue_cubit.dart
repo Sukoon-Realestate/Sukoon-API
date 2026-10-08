@@ -1,6 +1,6 @@
 part of '../../imports.dart';
 
-class OwnerRevenueCubit extends AsyncCubit<OwnerRevenueContent> {
+class OwnerRevenueCubit extends VerifiedActionCubit<OwnerRevenueContent> {
   OwnerRevenueCubit() : super(const OwnerRevenueContent.initial());
   Future<void> load() async {
     if (isClosed || isLoading) return;

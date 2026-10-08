@@ -1,7 +1,7 @@
 part of '../../imports.dart';
 
 class OwnerRequestDetailsCubit
-    extends AsyncCubit<OwnerVisitRequestDetailsContent> {
+    extends VerifiedActionCubit<OwnerVisitRequestDetailsContent> {
   OwnerRequestDetailsCubit({this.useVisitEndpoint = false})
     : super(const OwnerVisitRequestDetailsContent.initial());
 

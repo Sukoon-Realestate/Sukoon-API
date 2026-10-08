@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/main_view/data/account_access.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/core/network/account_session.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_search_model.dart';
@@ -14,9 +15,12 @@ class DecisionToolsCubit extends Cubit<DecisionNotebook> {
   Future<void> _writes = Future.value();
   bool _loaded = false;
   bool get _active =>
-      !isClosed && _sessionGeneration == AccountSession.generation;
+      !isClosed &&
+      AccountAccess.isVerified &&
+      _sessionGeneration == AccountSession.generation;
   Future<void> load() async {
     await _writes;
+    if (!_active) return;
     final notebook = await _store.read(accountId);
     if (!_active) return;
     _loaded = true;
@@ -28,6 +32,7 @@ class DecisionToolsCubit extends Cubit<DecisionNotebook> {
       if (!_active || !_loaded) {
         throw StateError('The account session changed.');
       }
+      AccountAccess.requireVerification();
       final notebook = change(state);
       await _store.write(accountId, notebook);
       if (_active) emit(notebook);

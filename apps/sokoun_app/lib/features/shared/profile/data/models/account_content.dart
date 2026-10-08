@@ -20,7 +20,10 @@ class AccountContent extends Equatable {
   factory AccountContent.fromJson(Map<String, dynamic> json) {
     final UserModel identity = UserModel.fromJson(json);
     return AccountContent(
-      user: AccountUserContent.fromJson(profileJsonMap(json['user'] ?? json)),
+      user: AccountUserContent.fromJson({
+        ...profileJsonMap(json['user'] ?? json),
+        'is_verified': identity.isVerified,
+      }),
       stats: AccountStatsContent.fromJson(profileJsonMap(json['stats'])),
       menuItems: AccountMenuItemsContent.fromJson(
         profileJsonMap(json['menu_items']),

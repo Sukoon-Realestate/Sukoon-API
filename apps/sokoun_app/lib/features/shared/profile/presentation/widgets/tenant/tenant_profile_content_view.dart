@@ -19,8 +19,7 @@ class TenantProfileContentView extends StatelessWidget {
         onEditPressed: onEditPressed,
       ),
       accountDetails: profile.accountDetails,
-      isVerified:
-          profile.user.isVerified || profile.menuItems.verification.isVerified,
+      isVerified: profile.user.isVerified,
       verificationSubtitle: profile.menuItems.verification.subtitle,
       activity: TenantProfileActions(menuItems: profile.menuItems),
     );

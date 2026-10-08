@@ -1,4 +1,6 @@
 {
+  "accountVerificationRequiredTitle #$ Verify your account to continue": "وثّق حسابك للمتابعة",
+  "accountVerificationRequired #$ Verify your identity to use chats, visits, property publishing and account tools.": "وثّق هويتك لاستخدام المحادثات والزيارات ونشر العقارات وأدوات الحساب.",
   "journeyRentEntryBody #$ Track invoices, payment status and receipts": "تابع الفواتير وحالة السداد والإيصالات",
   "journeyAnalyticsEntryBody #$ Review performance for a selected listing": "راجع أداء العقار الذي تختاره",
   "journeyContractsEntryBody #$ Review your contracts and digital leases": "راجع عقودك وعقود الإيجار الرقمية",

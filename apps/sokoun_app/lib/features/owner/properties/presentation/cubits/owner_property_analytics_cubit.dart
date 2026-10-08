@@ -1,7 +1,7 @@
 part of '../../imports.dart';
 
 class OwnerPropertyAnalyticsCubit
-    extends AsyncCubit<OwnerPropertyAnalyticsContent> {
+    extends VerifiedActionCubit<OwnerPropertyAnalyticsContent> {
   OwnerPropertyAnalyticsCubit()
     : super(const OwnerPropertyAnalyticsContent.initial());
   int _version = 0;

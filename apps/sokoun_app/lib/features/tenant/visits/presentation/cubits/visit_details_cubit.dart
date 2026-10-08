@@ -1,6 +1,6 @@
 part of '../../imports.dart';
 
-class VisitDetailsCubit extends AsyncCubit<TenantVisitDetailsContent> {
+class VisitDetailsCubit extends VerifiedActionCubit<TenantVisitDetailsContent> {
   VisitDetailsCubit() : super(const TenantVisitDetailsContent.initial());
   Future<void> load(String visitId) async {
     if (isClosed || isLoading || visitId.isEmpty) return;

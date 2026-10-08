@@ -1,12 +1,13 @@
+import 'package:sokoun_app/features/main_view/presentation/cubits/verified_action_cubit.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
-import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/error/failure.dart';
 import 'package:multiple_result/multiple_result.dart';
 import '../../data/models/owner_add_property_content.dart';
 import '../../data/owner_property_photos_data.dart';
 
-class OwnerPropertyPhotosCubit extends AsyncCubit<OwnerPropertyPhotoCheck> {
+class OwnerPropertyPhotosCubit
+    extends VerifiedActionCubit<OwnerPropertyPhotoCheck> {
   OwnerPropertyPhotosCubit() : super(const OwnerPropertyPhotoCheck.initial());
 
   Future<OwnerPropertyPhotoCheck?> check(

@@ -1,3 +1,6 @@
+import 'helpers/account_test_dependencies.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
+import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,6 +29,21 @@ void main() {
   late RentalSelection selection;
   setUp(() async {
     await injector.reset();
+    if (injector.isRegistered<UserCubit>()) {
+      await injector.unregister<UserCubit>();
+    }
+    injector.registerSingleton<UserCubit>(
+      TestAccountCubit(
+        const UserModel(
+          id: 'verified-test-account',
+          name: '',
+          phone: '',
+          email: '',
+          isVerified: true,
+        ),
+      ),
+      dispose: (cubit) => cubit.close(),
+    );
     repository = _RentalRepository();
     injector.registerSingleton<BaseCrudUseCase>(
       BaseCrudUseCase(repository: repository),

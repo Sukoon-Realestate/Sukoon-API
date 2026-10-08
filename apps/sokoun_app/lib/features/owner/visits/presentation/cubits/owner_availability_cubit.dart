@@ -1,7 +1,7 @@
 part of '../../imports.dart';
 
 class OwnerAvailabilityCubit
-    extends AsyncCubit<OwnerAvailabilityScheduleContent> {
+    extends VerifiedActionCubit<OwnerAvailabilityScheduleContent> {
   OwnerAvailabilityCubit()
     : super(const OwnerAvailabilityScheduleContent.initial());
 

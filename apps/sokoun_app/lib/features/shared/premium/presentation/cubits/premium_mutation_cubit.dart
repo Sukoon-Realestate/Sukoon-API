@@ -1,9 +1,9 @@
-import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
+import 'package:sokoun_app/features/main_view/presentation/cubits/verified_action_cubit.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
 import 'package:melos_core/core/error/failure.dart';
 import 'package:multiple_result/multiple_result.dart';
 
-abstract class PremiumMutationCubit<T> extends AsyncCubit<T> {
+abstract class PremiumMutationCubit<T> extends VerifiedActionCubit<T> {
   PremiumMutationCubit(super.initialData);
   Future<T?> perform(
     Future<Result<BaseModel<T>, Failure>> Function() operation,

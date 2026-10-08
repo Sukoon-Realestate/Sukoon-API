@@ -1,3 +1,6 @@
+import 'helpers/account_test_dependencies.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
+import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
@@ -13,6 +16,7 @@ import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
 import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:melos_core/core/widgets/exeption_view.dart';
 import 'package:multiple_result/multiple_result.dart';
@@ -21,6 +25,10 @@ import 'package:sokoun_app/features/owner/home/presentation/screens/owner_visit_
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_visit_requests/imports.dart';
 import 'package:sokoun_app/features/owner/home/presentation/widgets/owner_widgets/owner_request_card.dart';
 import 'package:sokoun_app/features/owner/visits/imports.dart';
+import 'package:sokoun_app/features/owner/properties/imports.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/enums/rental_listing_category.dart';
+import 'package:sokoun_app/features/shared/premium/presentation/screens/premium_property_picker_screen.dart';
+import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'package:sokoun_app/features/owner/visits/data/models/owner_visit_requests_response.dart';
 import 'package:sokoun_app/features/owner/visits/data/owner_visit_requests_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_data.dart';
@@ -118,6 +126,21 @@ void main() {
 
   setUp(() async {
     await injector.reset();
+    if (injector.isRegistered<UserCubit>()) {
+      await injector.unregister<UserCubit>();
+    }
+    injector.registerSingleton<UserCubit>(
+      TestAccountCubit(
+        const UserModel(
+          id: 'verified-test-account',
+          name: '',
+          phone: '',
+          email: '',
+          isVerified: true,
+        ),
+      ),
+      dispose: (cubit) => cubit.close(),
+    );
     repository = _RecordingBaseRepository();
     injector.registerSingleton<BaseCrudUseCase>(
       BaseCrudUseCase(repository: repository),
@@ -846,37 +869,275 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('opens calendar with availability management for its property', (
-    tester,
-  ) async {
-    configurePhoneViewport(tester);
+  testWidgets(
+    'opens calendar with availability management from visit requests',
+    (tester) async {
+      configurePhoneViewport(tester);
 
-    await tester.pumpWidget(
-      buildScreen(
-        OwnerVisitRequestsScreen(initialRequests: ownerVisitRequestsFixture()),
-      ),
+      await tester.pumpWidget(
+        buildScreen(
+          OwnerVisitRequestsScreen(
+            initialRequests: ownerVisitRequestsFixture(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('تقويم الزيارات'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(OwnerRequestsCalendarScreen), findsOneWidget);
+      expect(find.text('تقويم الزيارات'), findsOneWidget);
+      expect(repository.lastApi, 'properties/owner/calendar/');
+      expect(repository.lastMethod, HttpRequestType.get);
+      expect(repository.lastQuery, containsPair('year', DateTime.now().year));
+      expect(repository.lastQuery, containsPair('month', DateTime.now().month));
+
+      await tester.tap(find.text('19'));
+      await tester.pumpAndSettle();
+      expect(find.text('زيارات يوم 19'), findsOneWidget);
+      expect(find.text('إدارة مواعيد الإتاحة'), findsOneWidget);
+      expect(
+        repository.requests.where((p) => p.api.contains('/availability/')),
+        isEmpty,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'owner without requests chooses a property and saves a visit time',
+    (tester) async {
+      configurePhoneViewport(tester);
+      final properties = _AvailabilityPropertiesDataSource();
+      injector.registerSingleton<OwnerPropertiesDataSource>(properties);
+      await tester.pumpWidget(
+        buildScreen(const OwnerVisitRequestsScreen(initialRequests: [])),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('تقويم الزيارات'));
+      await tester.pumpAndSettle();
+
+      final manage = find.text(LocaleKeys.ownerCalendarManageAvailability);
+      expect(manage, findsOneWidget);
+      expect(manage.hitTestable(), findsOneWidget);
+      await tester.tap(find.text('19'));
+      await tester.pumpAndSettle();
+      await tester.tap(manage);
+      await tester.pumpAndSettle();
+      expect(find.byType(PremiumPropertyPickerScreen), findsOneWidget);
+      expect(properties.filters, [OwnerPropertyFilter.accepted]);
+      await tester.tap(find.text('Second owned property'));
+      await tester.pumpAndSettle();
+
+      final availability = tester.widget<OwnerAvailabilityScreen>(
+        find.byType(OwnerAvailabilityScreen),
+      );
+      expect(availability.ownerPropertyId, 'second-owned-property');
+      expect(availability.availabilityStartDate.day, 19);
+      expect(
+        repository.lastApi,
+        'properties/owner/properties/second-owned-property/availability/',
+      );
+      await tester.ensureVisible(
+        find.text(LocaleKeys.ownerAvailabilityAddTime),
+      );
+      await tester.tap(find.text(LocaleKeys.ownerAvailabilityAddTime));
+      await tester.pumpAndSettle();
+      final dialog = find.byType(TimePickerDialog);
+      expect(dialog, findsOneWidget);
+      final confirm = MaterialLocalizations.of(
+        tester.element(dialog),
+      ).okButtonLabel;
+      await tester.tap(find.text(confirm));
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text(LocaleKeys.ownerAvailabilitySave));
+      await tester.tap(find.text(LocaleKeys.ownerAvailabilitySave));
+      await tester.pumpAndSettle();
+
+      final saved = repository.requests.singleWhere(
+        (request) => request.httpRequestType == HttpRequestType.put,
+      );
+      expect(
+        saved.api,
+        'properties/owner/properties/second-owned-property/availability/',
+      );
+      expect(saved.body, {
+        'availability_date': OwnerVisitCalendarContent.formatDate(
+          availability.availabilityStartDate,
+        ),
+        'slots': [
+          {'time': '12:00:00', 'is_enabled': true},
+        ],
+      });
+      expect(find.byType(OwnerRequestsCalendarScreen), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'cancelling property selection keeps the empty calendar available',
+    (tester) async {
+      configurePhoneViewport(tester);
+      injector.registerSingleton<OwnerPropertiesDataSource>(
+        _AvailabilityPropertiesDataSource(),
+      );
+      await tester.pumpWidget(buildScreen(const OwnerRequestsCalendarScreen()));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(LocaleKeys.ownerCalendarManageAvailability));
+      await tester.pumpAndSettle();
+      Go.back();
+      await tester.pumpAndSettle();
+      expect(find.byType(OwnerRequestsCalendarScreen), findsOneWidget);
+      expect(
+        find.text(LocaleKeys.ownerCalendarManageAvailability).hitTestable(),
+        findsOneWidget,
+      );
+      expect(
+        repository.requests.where(
+          (request) => request.api.contains('/availability/'),
+        ),
+        isEmpty,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'property card opens availability for its own property without requests',
+    (tester) async {
+      configurePhoneViewport(tester);
+      final property = OwnerPropertyContent.initial().copyWith(
+        id: 'no-visits-property',
+        title: 'My property without visits',
+        status: OwnerPropertyStatus.accepted,
+      );
+      await tester.pumpWidget(
+        buildScreen(
+          AppScaffold(
+            body: SingleChildScrollView(
+              child: OwnerPropertyCard(
+                property: property,
+                onEditPressed: () {},
+                onRejectedPressed: () {},
+                onDeletePressed: () {},
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text(LocaleKeys.ownerCalendarManageAvailability));
+      await tester.pumpAndSettle();
+      expect(find.byType(OwnerAvailabilityScreen), findsOneWidget);
+      expect(
+        tester
+            .widget<OwnerAvailabilityScreen>(
+              find.byType(OwnerAvailabilityScreen),
+            )
+            .ownerPropertyId,
+        property.id,
+      );
+      expect(
+        repository.lastApi,
+        'properties/owner/properties/no-visits-property/availability/',
+      );
+      expect(find.byType(PremiumPropertyPickerScreen), findsNothing);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  for (final language in ['ar', 'en']) {
+    for (final width in [320.0, 390.0, 844.0]) {
+      testWidgets(
+        'empty calendar availability is visible in $language at $width',
+        (tester) async {
+          tester.view.physicalSize = Size(width, width == 844 ? 390 : 844);
+          tester.view.devicePixelRatio = 1;
+          addTearDown(tester.view.reset);
+          await tester.pumpWidget(
+            buildScreen(
+              const OwnerRequestsCalendarScreen(),
+              language: language,
+              textScale: 1.5,
+            ),
+          );
+          await tester.pumpAndSettle();
+          expect(
+            find.text(LocaleKeys.ownerCalendarManageAvailability).hitTestable(),
+            findsOneWidget,
+          );
+          expect(tester.takeException(), isNull);
+          if (width == 390 && language == 'ar') {
+            final boundary = tester.renderObject<RenderRepaintBoundary>(
+              find
+                  .ancestor(
+                    of: find.byType(OwnerRequestsCalendarScreen),
+                    matching: find.byType(RepaintBoundary),
+                  )
+                  .first,
+            );
+            await tester.runAsync(() async {
+              final image = await boundary.toImage(pixelRatio: 1);
+              final bytes = await image.toByteData(
+                format: ui.ImageByteFormat.png,
+              );
+              await File(
+                '/private/tmp/darak-owner-availability-calendar.png',
+              ).writeAsBytes(bytes!.buffer.asUint8List());
+              image.dispose();
+            });
+          }
+        },
+      );
+    }
+  }
+}
+
+class _AvailabilityPropertiesDataSource implements OwnerPropertiesDataSource {
+  final List<OwnerPropertyFilter> filters = [];
+
+  @override
+  String get cacheKey => 'test_owner_availability_properties';
+
+  @override
+  String get governoratesCacheKey => 'unused';
+
+  @override
+  String citiesCacheKey(String governorateId) => 'unused';
+
+  @override
+  Future<OwnerPropertyLocationsResponse> getGovernorates() =>
+      throw UnimplementedError();
+
+  @override
+  Future<OwnerPropertyLocationsResponse> getCities({
+    required String governorateId,
+    required String search,
+  }) => throw UnimplementedError();
+
+  @override
+  Future<(List<OwnerPropertyContent>, PaginationData)> getOwnedPropertiesPage({
+    required int page,
+    required OwnerPropertyFilter filter,
+    RentalListingCategory category = RentalListingCategory.all,
+  }) async {
+    filters.add(filter);
+    return (
+      [
+        OwnerPropertyContent.initial().copyWith(
+          id: 'first-owned-property',
+          title: 'First owned property',
+          status: OwnerPropertyStatus.accepted,
+        ),
+        OwnerPropertyContent.initial().copyWith(
+          id: 'second-owned-property',
+          title: 'Second owned property',
+          status: OwnerPropertyStatus.accepted,
+        ),
+      ],
+      PaginationData(perPage: 10, totalPages: 1),
     );
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('تقويم الزيارات'));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(OwnerRequestsCalendarScreen), findsOneWidget);
-    expect(find.text('تقويم الزيارات'), findsOneWidget);
-    expect(repository.lastApi, 'properties/owner/calendar/');
-    expect(repository.lastMethod, HttpRequestType.get);
-    expect(repository.lastQuery, containsPair('year', DateTime.now().year));
-    expect(repository.lastQuery, containsPair('month', DateTime.now().month));
-
-    await tester.tap(find.text('19'));
-    await tester.pumpAndSettle();
-    expect(find.text('زيارات يوم 19'), findsOneWidget);
-    expect(find.text('إدارة مواعيد الإتاحة'), findsOneWidget);
-    expect(
-      repository.requests.where((p) => p.api.contains('/availability/')),
-      isEmpty,
-    );
-    expect(tester.takeException(), isNull);
-  });
+  }
 }
 
 class _RecordingBaseRepository implements BaseRepository {
@@ -899,6 +1160,26 @@ class _RecordingBaseRepository implements BaseRepository {
     lastBody = params.body;
     lastQuery = params.queryParameters;
     lastCacheKey = params.cacheKey;
+    if (params.api.endsWith('/availability/')) {
+      final date = DateTime.parse(
+        params.queryParameters?['week_start'] ??
+            params.body?['availability_date'],
+      );
+      final start = OwnerAvailabilityScheduleContent.startOfWeek(date);
+      return Success(
+        BaseModel<T>(
+          key: '',
+          msg: '',
+          data: params.mapper!({
+            'week_start': OwnerVisitCalendarContent.formatDate(start),
+            'week_end': OwnerVisitCalendarContent.formatDate(
+              start.add(const Duration(days: 6)),
+            ),
+            'days': [],
+          }),
+        ),
+      );
+    }
     if (params.api == 'properties/owner/visits/requests/' ||
         params.api == 'properties/visits/received/') {
       if (visitsUnavailable) return Error(ServerFailure('Unavailable'));
@@ -1008,6 +1289,12 @@ class _OwnerTranslationsAssetLoader extends AssetLoader {
       return _ownerEnglishTranslations;
     }
     return {
+      'paid_select_property': 'اختر عقارًا',
+      'owner_availability_add_time': 'إضافة موعد زيارة',
+      'owner_availability_cairo_time': 'مواعيد الزيارة بتوقيت القاهرة',
+      'owner_availability_empty_title': 'لا توجد مواعيد إتاحة',
+      'owner_availability_empty_description':
+          'لا توجد مواعيد زيارة متاحة لهذا العقار حتى الآن.',
       'owner_visits_title': 'طلبات الزيارة',
       'owner_visits_total_requests': 'إجمالي الطلبات',
       'owner_visits_waiting_for_reply': 'بانتظار الرد',

@@ -1,3 +1,6 @@
+import 'package:sokoun_app/features/main_view/presentation/cubits/verified_action_cubit.dart';
+import 'package:sokoun_app/features/owner/visits/imports.dart'
+    show OwnerAvailabilityScreen;
 import 'presentation/widgets/list/owner_rental_offers_panel.dart';
 import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
 import 'package:sokoun_app/features/shared/rental_offers/data/enums/rental_listing_category.dart';
@@ -82,6 +85,7 @@ part 'presentation/widgets/list/owner_properties_list.dart';
 part 'presentation/widgets/list/owner_properties_status_tabs.dart';
 part 'presentation/widgets/list/owner_property_action_sheet.dart';
 part 'presentation/widgets/list/owner_property_card.dart';
+part 'presentation/widgets/list/owner_property_availability_action.dart';
 part 'presentation/widgets/list/owner_property_delete_sheet.dart';
 part 'presentation/widgets/list/owner_property_status_badge.dart';
 part 'presentation/widgets/revenue/owner_revenue_property_card.dart';

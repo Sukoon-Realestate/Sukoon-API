@@ -81,6 +81,8 @@ void main() {
       expect(user.name, 'Updated account');
       expect(user.phone, '0500000000');
       expect(user.email, 'updated@example.com');
+      expect(user.isVerified, isTrue);
+      expect(user.copyWith(name: 'Edited').isVerified, isTrue);
       expect(UserModel.fromJson(user.toJson()).toJson(), user.toJson());
       expect(user.copyWith(name: 'Edited').id, '17');
     },
@@ -99,12 +101,14 @@ void main() {
       expect(userCubit.isUserLoggedIn, isTrue);
       expect(userCubit.user.toJson(), UserModel.currentUser?.toJson());
       expect(UserModel.currentUser?.email, 'updated@example.com');
+      expect(UserModel.currentUser?.isVerified, isTrue);
       expect(profile.stats.savedCount, 3);
 
       final UserCubit restored = UserCubit();
       addTearDown(restored.close);
       expect(await restored.init(), isTrue);
       expect(restored.user.toJson(), userCubit.user.toJson());
+      expect(restored.user.isVerified, isTrue);
     },
   );
 
@@ -128,6 +132,35 @@ void main() {
     expect(UserModel.currentUser, isNull);
     expect(userCubit.isUserLoggedIn, isFalse);
   });
+
+  test(
+    'my-account false overrides earlier verification and menu badges',
+    () async {
+      await userCubit.setUserLoggedIn(
+        user: const UserModel(
+          id: '17',
+          name: '',
+          phone: '',
+          email: '',
+          isVerified: true,
+        ),
+      );
+      repository.response = {
+        ..._accountResponse,
+        'is_verified': false,
+        'menu_items': {
+          'verification': {'is_verified': true},
+        },
+      };
+      await accountCubit.getAccount();
+      expect(accountCubit.data.user.isVerified, isFalse);
+      expect(userCubit.user.isVerified, isFalse);
+      expect(UserModel.currentUser?.isVerified, isFalse);
+      await userCubit.updateUser(userCubit.user.copyWith(name: 'Edited'));
+      expect(userCubit.user.isVerified, isFalse);
+    },
+    skip: UserModel.bypassVerification,
+  );
 
   test('profile edits update the shared account without refetching', () async {
     await accountCubit.getAccount();
@@ -205,7 +238,7 @@ void main() {
 }
 
 const Map<String, dynamic> _accountResponse = {
-  'user': {'id': 17, 'full_name': 'Updated account'},
+  'user': {'id': 17, 'full_name': 'Updated account', 'is_verified': true},
   'account_details': {
     'email': 'updated@example.com',
     'phone_number': '0500000000',

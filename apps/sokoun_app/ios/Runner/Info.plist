@@ -11,6 +11,14 @@
     <key>CFBundleURLTypes</key>
     <array>
       <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>$(GOOGLE_SIGN_IN_REVERSED_CLIENT_ID)</string>
+        </array>
+      </dict>
+      <dict>
         <key>CFBundleURLSchemes</key>
         <array>
           <string>fb000000000000000</string>
@@ -31,6 +39,8 @@
     <string>????</string>
     <key>CFBundleVersion</key>
     <string>$(FLUTTER_BUILD_NUMBER)</string>
+    <key>GIDClientID</key>
+    <string>$(GOOGLE_SIGN_IN_CLIENT_ID)</string>
     <key>LSRequiresIPhoneOS</key>
     <true/>
     <key>NSCameraUsageDescription</key>

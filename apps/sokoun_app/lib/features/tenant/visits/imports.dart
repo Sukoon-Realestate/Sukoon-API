@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/main_view/presentation/cubits/verified_action_cubit.dart';
 import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
 import 'package:sokoun_app/features/shared/rental_offers/data/rental_offer_capabilities.dart';
 import 'package:sokoun_app/features/shared/rental_offers/data/rental_offer_read_data.dart';

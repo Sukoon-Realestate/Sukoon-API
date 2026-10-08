@@ -1,4 +1,6 @@
 {
+  "account_verification_required_title": "وثّق حسابك للمتابعة",
+  "account_verification_required": "وثّق هويتك لاستخدام المحادثات والزيارات ونشر العقارات وأدوات الحساب.",
   "journey_rent_entry_body": "تابع الفواتير وحالة السداد والإيصالات",
   "journey_analytics_entry_body": "راجع أداء العقار الذي تختاره",
   "journey_contracts_entry_body": "راجع عقودك وعقود الإيجار الرقمية",

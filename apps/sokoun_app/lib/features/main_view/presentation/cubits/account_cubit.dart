@@ -106,7 +106,10 @@ class AccountCubit extends AsyncCubit<AccountContent> {
   void updateFromUser(UserModel user) {
     if (isClosed) return;
     final AccountContent updated = data.copyWith(
-      user: data.user.copyWith(fullName: user.name),
+      user: data.user.copyWith(
+        fullName: user.name,
+        isVerified: user.isVerified,
+      ),
       accountDetails: data.accountDetails.updateFromUser(user),
     );
     updateData(updated);

@@ -1,3 +1,7 @@
+import 'helpers/account_test_dependencies.dart';
+import 'package:melos_core/config/res/config_imports.dart' show injector;
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
+import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sokoun_app/features/tenant/decision_tools/data/decision_tools_data.dart';
 import 'package:sokoun_app/features/tenant/decision_tools/data/models/decision_notebook.dart';
@@ -8,6 +12,22 @@ import 'package:sokoun_app/features/tenant/home/data/models/property_search_mode
 import 'package:sokoun_app/features/tenant/visits/data/visit_schedule_rules.dart';
 
 void main() {
+  setUp(() async {
+    await injector.reset();
+    injector.registerSingleton<UserCubit>(
+      TestAccountCubit(
+        const UserModel(
+          id: 'alice',
+          name: '',
+          phone: '',
+          email: '',
+          isVerified: true,
+        ),
+      ),
+      dispose: (cubit) => cubit.close(),
+    );
+  });
+  tearDown(() => injector.reset());
   test('costs distinguish absent terms from a stated zero deposit', () {
     const property = PropertyDetailsModel.initial();
     expect(PropertyCostBreakdown.fromProperty(property).knownSubtotal, isNull);

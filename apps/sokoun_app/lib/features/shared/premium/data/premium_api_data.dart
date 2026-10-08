@@ -9,6 +9,8 @@ import 'package:melos_core/core/network/network_request.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'premium_json.dart';
+import 'premium_api_constants.dart';
+import 'package:sokoun_app/features/main_view/data/account_access.dart';
 
 abstract final class PremiumApiData {
   static Future<Result<BaseModel<T>, Failure>> get<T>({
@@ -19,6 +21,10 @@ abstract final class PremiumApiData {
     Map<String, dynamic>? query,
     bool Function(T)? valid,
   }) async {
+    if (endpoint != PremiumApiConstants.configuration &&
+        !AccountAccess.isVerified) {
+      return Error(ServerFailure(LocaleKeys.accountVerificationRequired));
+    }
     final generation = AccountSession.generation;
     final result = await injector<BaseCrudUseCase>().call(
       CrudBaseParmas<T>(
@@ -31,6 +37,10 @@ abstract final class PremiumApiData {
         toJson: toJson,
       ),
     );
+    if (endpoint != PremiumApiConstants.configuration &&
+        !AccountAccess.isVerified) {
+      return Error(ServerFailure(LocaleKeys.accountVerificationRequired));
+    }
     return result.when(
       (response) =>
           generation == AccountSession.generation &&
@@ -48,6 +58,9 @@ abstract final class PremiumApiData {
     required bool Function(T) valid,
     HttpRequestType method = HttpRequestType.post,
   }) async {
+    if (!AccountAccess.isVerified) {
+      return Error(ServerFailure(LocaleKeys.accountVerificationRequired));
+    }
     final generation = AccountSession.generation;
     final result = await injector<BaseCrudUseCase>().call(
       CrudBaseParmas<T>(
@@ -57,6 +70,9 @@ abstract final class PremiumApiData {
         mapper: (json) => fromJson(premiumMap(json)),
       ),
     );
+    if (!AccountAccess.isVerified) {
+      return Error(ServerFailure(LocaleKeys.accountVerificationRequired));
+    }
     return result.when(
       (response) =>
           generation == AccountSession.generation && valid(response.data)
@@ -72,6 +88,7 @@ abstract final class PremiumApiData {
     required T Function(Map<String, dynamic>) fromJson,
     Map<String, dynamic> query = const {},
   }) async {
+    AccountAccess.requireVerification();
     final response = await injector<NetworkService>().callApi(
       NetworkRequest(
         path: endpoint,
@@ -81,6 +98,7 @@ abstract final class PremiumApiData {
       mapper: (json) =>
           parsePage(premiumMap(json), page: page, fromJson: fromJson),
     );
+    AccountAccess.requireVerification();
     return response.data;
   }
 

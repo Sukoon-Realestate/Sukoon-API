@@ -1,7 +1,10 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:melos_core/config/res/config_imports.dart' show injector;
+import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart'
     show HttpRequestType;
 import 'package:melos_core/core/error/failure.dart';
@@ -556,6 +559,7 @@ void main() {
   testWidgets('guest discovery never requests private rent data', (
     tester,
   ) async {
+    (injector<UserCubit>() as TestAccountCubit).signOut();
     await mountFeatureTest(tester, const Scaffold(body: TenantHomeContent()));
     expect(
       repository.requests.where(

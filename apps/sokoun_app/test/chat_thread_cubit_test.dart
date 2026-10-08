@@ -9,6 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/network/account_session.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_realtime_service.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_socket_message.dart';
@@ -39,6 +40,7 @@ void main() {
   setUp(() async {
     AccountSession.begin('current-user-id');
     await CacheStorage.write('user', const <String, dynamic>{
+      'is_verified': true,
       'id': 'current-user-id',
       'name': 'Current User',
       'phone': '',
@@ -119,6 +121,34 @@ void main() {
       await cubit.close();
       await realtime.close();
     },
+  );
+
+  test(
+    'an unverified account cannot connect or send despite conversation permission',
+    () async {
+      await CacheStorage.write('user', {
+        'id': 'current-user-id',
+        'is_verified': false,
+      });
+      final realtime = _FakeChatRealtimeGateway();
+      final cubit = ChatThreadCubit(
+        conversationId: 'thread',
+        canSend: true,
+        realtimeService: realtime,
+        localStore: _MemoryChatLocalStore(),
+      );
+      expect(cubit.canSend, isFalse);
+      await cubit.connect();
+      expect(realtime.connectCount, 0);
+      expect(
+        (await cubit.sendTextMessage('Blocked')).status,
+        ChatSendStatus.failed,
+      );
+      expect(realtime.sentContents, isEmpty);
+      await cubit.close();
+      await realtime.close();
+    },
+    skip: UserModel.bypassVerification,
   );
 
   test(
@@ -462,7 +492,7 @@ void main() {
 
       realtime.addMessage(
         _message(
-          conversationId: '1',
+          conversationId: 'another-conversation-uuid',
           senderId: 'other-user-id',
           content: 'Incoming',
         ),
@@ -492,6 +522,34 @@ void main() {
         _message(
           conversationId: '2',
           senderId: 'unrelated-user-id',
+          content: 'Wrong thread',
+        ),
+      );
+
+      expect(cubit.state.receivedMessage, isNull);
+    },
+  );
+
+  test(
+    'rejects a different numeric conversation from the active participant',
+    () async {
+      final realtime = _FakeChatRealtimeGateway();
+      final cubit = ChatThreadCubit(
+        localStore: _MemoryChatLocalStore(),
+        conversationId: '5',
+        otherParticipantId: 'other-user-id',
+        realtimeService: realtime,
+      );
+      addTearDown(() async {
+        await cubit.close();
+        await realtime.close();
+      });
+      await cubit.connect();
+
+      realtime.addMessage(
+        _message(
+          conversationId: '6',
+          senderId: 'other-user-id',
           content: 'Wrong thread',
         ),
       );

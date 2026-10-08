@@ -1,6 +1,6 @@
 part of '../../imports.dart';
 
-class OwnerCalendarCubit extends AsyncCubit<OwnerVisitCalendarContent> {
+class OwnerCalendarCubit extends VerifiedActionCubit<OwnerVisitCalendarContent> {
   OwnerCalendarCubit({required DateTime initialDate})
     : _selectedDate = DateUtils.dateOnly(initialDate),
       super(OwnerVisitCalendarContent.initial(initialDate));

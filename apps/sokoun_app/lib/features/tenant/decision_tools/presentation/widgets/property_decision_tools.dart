@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/main_view/presentation/widgets/verification_required_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -83,6 +84,9 @@ class _PropertyDecisionToolsState extends State<PropertyDecisionTools> {
                             widget.property.id.isEmpty
                         ? null
                         : (_) async {
+                            if (!VerificationRequiredContent.allowAction()) {
+                              return;
+                            }
                             try {
                               if (!await _cubit.toggleComparison(
                                 notebook.decisionFor(
@@ -107,19 +111,24 @@ class _PropertyDecisionToolsState extends State<PropertyDecisionTools> {
                             snapshot.hasError ||
                             widget.property.id.isEmpty
                         ? null
-                        : () => showModalBottomSheet<bool>(
-                            context: context,
-                            useSafeArea: true,
-                            isScrollControlled: true,
-                            showDragHandle: true,
-                            builder: (_) => DecisionEditor(
-                              cubit: _cubit,
-                              decision: notebook.decisionFor(
-                                widget.property.id,
-                                widget.property.title,
+                        : () {
+                            if (!VerificationRequiredContent.allowAction()) {
+                              return;
+                            }
+                            showModalBottomSheet<bool>(
+                              context: context,
+                              useSafeArea: true,
+                              isScrollControlled: true,
+                              showDragHandle: true,
+                              builder: (_) => DecisionEditor(
+                                cubit: _cubit,
+                                decision: notebook.decisionFor(
+                                  widget.property.id,
+                                  widget.property.title,
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                          },
                     icon: const Icon(Icons.checklist, size: 18),
                     label: AppText(LocaleKeys.freePrivateNotes),
                   ),

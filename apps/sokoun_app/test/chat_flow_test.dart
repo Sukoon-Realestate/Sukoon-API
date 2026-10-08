@@ -167,6 +167,7 @@ void main() {
     );
     await UserTypeHelper.instance.setUserType(UserType.tenant);
     await CacheStorage.write('user', const <String, dynamic>{
+      'is_verified': true,
       'id': 'f9cf1cdf-50bc-4136-a042-2302ec1513b2',
       'name': 'Current User',
       'phone': '',
@@ -550,6 +551,79 @@ void main() {
     );
     expect(_messagesRequestCount, 1);
   });
+
+  testWidgets(
+    'numeric socket conversation references inject replies into Pagify once',
+    (tester) async {
+      configurePhoneViewport(tester);
+      final sockets = RecordingChatSocketSource();
+      injector.registerSingleton<ChatSocketDataSource>(sockets);
+      final conversation = _conversations.first.copyWith(
+        id: 'da0be73d-2274-44ed-b419-2d3fc6c16f58',
+        otherParticipant: const ChatParticipantContent.initial().copyWith(
+          id: '4f5bd135-df44-409f-a2cf-712d8fc1fce8',
+        ),
+      );
+      await tester.pumpWidget(
+        buildScreen(ChatScreen(conversation: conversation)),
+      );
+      await tester.pumpAndSettle();
+      final chat = tester.widget<EasyChat<List<ChatMessageContent>>>(
+        find.byType(EasyChat<List<ChatMessageContent>>),
+      );
+      final initialCount = chat.controller.items.length;
+      final initialReadRequests = sockets.readRequests;
+      final message = ChatSocketMessage.fromJson(const {
+        'id': '7392fcae-aac6-460d-8e8c-d9c2b332ade4',
+        'conversation': 5,
+        'sender': {
+          'id': '4f5bd135-df44-409f-a2cf-712d8fc1fce8',
+          'first_name': 'Other',
+          'last_name': 'User',
+          'full_name': 'Other User',
+          'avatar_url': '',
+          'is_online': true,
+        },
+        'content': 'jjjjjj',
+        'client_message_id': '6de5f26e-2261-4d05-8358-4a58884d4ec6',
+        'status': 'sent',
+        'created_at': '2026-10-08T04:31:49.225361+03:00',
+      });
+
+      await sockets.receive(message);
+      await tester.pumpAndSettle();
+
+      expect(chat.controller.items, hasLength(initialCount + 1));
+      expect(chat.controller.items.last.message.id, message.id);
+      expect(chat.controller.items.last.sender.isFromMe, isFalse);
+      expect(find.text('jjjjjj'), findsOneWidget);
+      expect(sockets.readRequests, initialReadRequests + 1);
+
+      await sockets.receive(message);
+      await sockets.receive(
+        message.copyWith(
+          id: 'another-participant-message',
+          sender: const ChatParticipantContent.initial().copyWith(
+            id: 'unrelated-user-id',
+          ),
+        ),
+      );
+      await sockets.receive(
+        message.copyWith(
+          id: 'another-conversation-message',
+          conversationId: 'e2a3b7ef-cfcc-4be0-bfc7-22ea7253c55e',
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(chat.controller.items, hasLength(initialCount + 1));
+      expect(find.text('jjjjjj'), findsOneWidget);
+      expect(_messagesRequestCount, 1);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+    },
+  );
 
   testWidgets(
     'incoming messages preserve older reading position and use real days',

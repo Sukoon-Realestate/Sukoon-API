@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/main_view/presentation/widgets/verification_required_content.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
@@ -15,6 +16,7 @@ class PrivateViewingNotesButton extends StatelessWidget {
   final String propertyId;
   final String title;
   Future<void> _open(BuildContext context) async {
+    if (!VerificationRequiredContent.allowAction()) return;
     final cubit = DecisionToolsCubit(
       accountId: UserModel.currentUser?.id ?? '',
     );

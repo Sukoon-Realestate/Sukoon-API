@@ -1,5 +1,5 @@
+import 'package:sokoun_app/features/main_view/presentation/cubits/verified_action_cubit.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
-import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -7,7 +7,7 @@ import 'package:melos_core/core/helpers/validators.dart';
 
 import '../../data/models/chat_content.dart';
 
-class CreateConversationCubit extends AsyncCubit<ConversationContent> {
+class CreateConversationCubit extends VerifiedActionCubit<ConversationContent> {
   CreateConversationCubit() : super(const ConversationContent.initial());
 
   Future<void> createOrGet({

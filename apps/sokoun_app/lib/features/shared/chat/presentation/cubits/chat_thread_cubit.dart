@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/main_view/data/account_access.dart';
 import 'dart:async';
 import 'package:melos_core/core/helpers/validators.dart';
 import 'dart:developer';
@@ -48,8 +49,9 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
     ChatRealtimeGateway? realtimeService,
     ChatDataSource? dataSource,
     ChatLocalStore? localStore,
-    this.canSend = true,
-  }) : _realtime = realtimeService ?? ChatRealtimeService.instance,
+    bool canSend = true,
+  }) : _conversationCanSend = canSend,
+       _realtime = realtimeService ?? ChatRealtimeService.instance,
        _dataSource = dataSource ?? ChatData.source,
        _localStore =
            localStore ??
@@ -68,7 +70,8 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   final ChatRealtimeGateway _realtime;
   final ChatDataSource _dataSource;
   final ChatLocalStore _localStore;
-  final bool canSend;
+  final bool _conversationCanSend;
+  bool get canSend => _conversationCanSend && AccountAccess.isVerified;
   Future<void>? _localLoad;
   bool _draftEdited = false;
   Future<void>? _localWrites;
@@ -166,7 +169,10 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   bool _closing = false;
 
   bool get _hasCurrentSession =>
-      !isClosed && !_closing && _sessionGeneration == AccountSession.generation;
+      !isClosed &&
+      !_closing &&
+      AccountAccess.isVerified &&
+      _sessionGeneration == AccountSession.generation;
 
   int get queuedMessageCount => _outbox.length;
 
@@ -531,7 +537,13 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
 
   bool _isMessageFromActiveConversation(ChatSocketMessage message) {
     if (message.conversationId.isNotEmpty) {
-      return message.conversationId == conversationId;
+      if (message.conversationId == conversationId) return true;
+      // Socket payloads can use the numeric database ID while REST uses the
+      // public conversation ID. Match these direct-chat replies by participant.
+      if (int.tryParse(message.conversationId) == null ||
+          int.tryParse(conversationId) != null) {
+        return false;
+      }
     }
     return otherParticipantId.isNotEmpty &&
         message.sender.id == otherParticipantId;

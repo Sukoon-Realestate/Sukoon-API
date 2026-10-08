@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/main_view/presentation/widgets/verification_required_content.dart';
 import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -13,6 +14,7 @@ class SaveSearchButton extends StatelessWidget {
   const SaveSearchButton({super.key, required this.filters});
   final PropertySearchFilters filters;
   Future<void> _save(BuildContext context) async {
+    if (!VerificationRequiredContent.allowAction()) return;
     final name = TextEditingController(text: filters.combinedSearch);
     final cubit = DecisionToolsCubit(
       accountId: UserModel.currentUser?.id ?? '',

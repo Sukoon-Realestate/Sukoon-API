@@ -1,13 +1,14 @@
+import 'package:sokoun_app/features/main_view/presentation/cubits/verified_action_cubit.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
-import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import '../../data/models/comparison_property.dart';
 
-class PropertyComparisonCubit extends AsyncCubit<List<ComparisonProperty>> {
+class PropertyComparisonCubit
+    extends VerifiedActionCubit<List<ComparisonProperty>> {
   PropertyComparisonCubit() : super(const []);
   Future<void> load(List<String> propertyIds) async {
     if (isClosed || isLoading) return;

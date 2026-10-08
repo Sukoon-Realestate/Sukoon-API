@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/main_view/data/account_access.dart';
 import 'dart:async';
 import 'dart:developer';
 
@@ -102,6 +103,7 @@ final class ChatRealtimeService implements ChatRealtimeGateway {
 
   @override
   Future<void> connect() {
+    if (!AccountAccess.isVerified) return Future<void>.value();
     if (isConnected) return Future<void>.value();
     final Future<void>? pending = _connectionRequest;
     if (pending != null) return pending;
@@ -117,6 +119,7 @@ final class ChatRealtimeService implements ChatRealtimeGateway {
     final int generation = AccountSession.generation;
     final int connectionVersion = _connectionVersion;
     bool isCurrentConnection() =>
+        AccountAccess.isVerified &&
         generation == AccountSession.generation &&
         connectionVersion == _connectionVersion;
     void updateStatus(ChatRealtimeStatus status) {
@@ -171,6 +174,7 @@ final class ChatRealtimeService implements ChatRealtimeGateway {
     required String content,
     String clientMessageId = '',
   }) async {
+    AccountAccess.requireVerification();
     final WebSocketHelper<ChatSocketMessage>? socket = _socket;
     if (socket == null || !socket.isConnected) {
       throw const SocketNotConnectedException();
@@ -186,6 +190,7 @@ final class ChatRealtimeService implements ChatRealtimeGateway {
 
   @override
   Future<void> markConversationAsRead(String conversationId) async {
+    AccountAccess.requireVerification();
     final WebSocketHelper<ChatSocketMessage>? socket = _socket;
     if (socket == null || !socket.isConnected) {
       throw const SocketNotConnectedException();

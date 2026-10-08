@@ -196,6 +196,8 @@ class OwnerPropertyCard extends StatelessWidget {
                 spacing: 8.w,
                 runSpacing: 8.h,
                 children: [
+                  if (property.id.trim().isNotEmpty)
+                    OwnerPropertyAvailabilityAction(propertyId: property.id),
                   _OwnerPropertyCardAction(
                     label: property.rentalInventory == null
                         ? LocaleKeys.ownerPropertiesEdit

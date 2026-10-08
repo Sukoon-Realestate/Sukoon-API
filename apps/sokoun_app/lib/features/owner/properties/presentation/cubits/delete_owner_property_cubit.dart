@@ -1,12 +1,12 @@
+import 'package:sokoun_app/features/main_view/presentation/cubits/verified_action_cubit.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
-import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/local_db/objectbox_cache_service.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/shared/base_state.dart';
 import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 import '../../data/models/owner_property_deletion_model.dart';
 
-class DeleteOwnerPropertyCubit extends AsyncCubit<OwnerPropertyDeletionModel> {
+class DeleteOwnerPropertyCubit extends VerifiedActionCubit<OwnerPropertyDeletionModel> {
   DeleteOwnerPropertyCubit()
     : super(const OwnerPropertyDeletionModel.initial());
 

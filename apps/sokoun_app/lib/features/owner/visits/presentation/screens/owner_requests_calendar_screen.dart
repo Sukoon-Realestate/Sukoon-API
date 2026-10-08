@@ -47,9 +47,17 @@ class _OwnerRequestsCalendarScreenState
   }
 
   Future<void> _openAvailability() async {
+    String propertyId = widget.ownerPropertyId.trim();
+    if (propertyId.isEmpty) {
+      final OwnerPropertyContent? property = await Go.to<OwnerPropertyContent>(
+        const PremiumPropertyPickerScreen(),
+      );
+      if (!mounted || property == null || property.id.trim().isEmpty) return;
+      propertyId = property.id;
+    }
     final updated = await Go.to<bool>(
       OwnerAvailabilityScreen(
-        ownerPropertyId: widget.ownerPropertyId,
+        ownerPropertyId: propertyId,
         availabilityStartDate: _selectedDate,
       ),
     );
@@ -105,9 +113,7 @@ class _OwnerRequestsCalendarScreenState
                         calendar: calendar,
                         selectedDate: calendar.selectedDateValue,
                         onDaySelected: _selectDay,
-                        onAvailabilityPressed: widget.ownerPropertyId.isEmpty
-                            ? null
-                            : _openAvailability,
+                        onAvailabilityPressed: _openAvailability,
                       ),
                     )
                     .withPullRefresher(

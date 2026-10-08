@@ -19,6 +19,9 @@ import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/shared/premium/data/premium_api_constants.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_theme.dart';
 import 'package:toastification/toastification.dart';
+import 'account_test_dependencies.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
+import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 
 class FeatureTestRequest {
   const FeatureTestRequest({
@@ -145,6 +148,18 @@ Future<void> registerFeatureTestDependencies(
     BaseCrudUseCase(repository: repository),
   );
   injector.registerSingleton<NetworkService>(network ?? FeatureTestNetwork());
+  injector.registerSingleton<UserCubit>(
+    TestAccountCubit(
+      const UserModel(
+        id: 'fixture-account',
+        name: 'Test account',
+        phone: '',
+        email: '',
+        isVerified: true,
+      ),
+    ),
+    dispose: (cubit) => cubit.close(),
+  );
   AccountSession.begin('fixture-account');
 }
 

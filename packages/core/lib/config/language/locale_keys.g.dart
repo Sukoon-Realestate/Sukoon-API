@@ -1,6 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 
 abstract class LocaleKeys {
+  static const String _accountVerificationRequiredTitle = 'account_verification_required_title';
+  static String get accountVerificationRequiredTitle => _accountVerificationRequiredTitle.tr();
+
+  static const String _accountVerificationRequired = 'account_verification_required';
+  static String get accountVerificationRequired => _accountVerificationRequired.tr();
+
   static const String _journeyRentEntryBody = 'journey_rent_entry_body';
   static String get journeyRentEntryBody => _journeyRentEntryBody.tr();
 
