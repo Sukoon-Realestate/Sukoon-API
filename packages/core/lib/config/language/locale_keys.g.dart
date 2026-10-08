@@ -1681,6 +1681,9 @@ abstract class LocaleKeys {
   static const String _landingDemoPlay = 'landing_demo_play';
   static String get landingDemoPlay => _landingDemoPlay.tr();
 
+  static const String _landingDemoOpen = 'landing_demo_open';
+  static String get landingDemoOpen => _landingDemoOpen.tr();
+
   static const String _landingDemoPause = 'landing_demo_pause';
   static String get landingDemoPause => _landingDemoPause.tr();
 
@@ -5169,5 +5172,50 @@ abstract class LocaleKeys {
 
   static const String _rentalCategorySearchUnavailable = 'rental_category_search_unavailable';
   static String get rentalCategorySearchUnavailable => _rentalCategorySearchUnavailable.tr();
+
+  static const String _featureStoredAccountingAmount = 'feature_stored_accounting_amount';
+  static String get featureStoredAccountingAmount => _featureStoredAccountingAmount.tr();
+
+  static const String _featureInvoiceAmount = 'feature_invoice_amount';
+  static String get featureInvoiceAmount => _featureInvoiceAmount.tr();
+
+  static const String _featureLeaseOwner = 'feature_lease_owner';
+  static String get featureLeaseOwner => _featureLeaseOwner.tr();
+
+  static const String _featureSigningUnavailable = 'feature_signing_unavailable';
+  static String get featureSigningUnavailable => _featureSigningUnavailable.tr();
+
+  static const String _featureCheckoutUnavailable = 'feature_checkout_unavailable';
+  static String get featureCheckoutUnavailable => _featureCheckoutUnavailable.tr();
+
+  static const String _featureAlertFilters = 'feature_alert_filters';
+  static String get featureAlertFilters => _featureAlertFilters.tr();
+
+  static const String _featureAlertAllProperties = 'feature_alert_all_properties';
+  static String get featureAlertAllProperties => _featureAlertAllProperties.tr();
+
+  static const String _featureAlertLastMatch = 'feature_alert_last_match';
+  static String get featureAlertLastMatch => _featureAlertLastMatch.tr();
+
+  static const String _featureAlertDeliveryUnavailable = 'feature_alert_delivery_unavailable';
+  static String get featureAlertDeliveryUnavailable => _featureAlertDeliveryUnavailable.tr();
+
+  static const String _featurePromotionWorkerUnavailable = 'feature_promotion_worker_unavailable';
+  static String get featurePromotionWorkerUnavailable => _featurePromotionWorkerUnavailable.tr();
+
+  static const String _rentalManageableOfferCount = 'rental_manageable_offer_count';
+  static String get rentalManageableOfferCount => _rentalManageableOfferCount.tr();
+
+  static const String _featureFilterYes = 'feature_filter_yes';
+  static String get featureFilterYes => _featureFilterYes.tr();
+
+  static const String _featureFilterNo = 'feature_filter_no';
+  static String get featureFilterNo => _featureFilterNo.tr();
+
+  static const String _featureAlertDetails = 'feature_alert_details';
+  static String get featureAlertDetails => _featureAlertDetails.tr();
+
+  static const String _featureLeaseTemplateDetails = 'feature_lease_template_details';
+  static String get featureLeaseTemplateDetails => _featureLeaseTemplateDetails.tr();
 
 }

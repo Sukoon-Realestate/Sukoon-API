@@ -2,6 +2,8 @@
 
 Updated 7 October 2026. This handoff describes the accommodation-first mobile implementation and the service work needed to publish it. It is an implementation proposal, **not a claim that these services or new fields exist in production**.
 
+**Integrated into the [all-features backend handoff](../SOKOUN_ALL_FEATURES_BACKEND_HANDOFF.md).** Send that single master file to the backend developer. Sections [4.8.13](../SOKOUN_ALL_FEATURES_BACKEND_HANDOFF.md#4813-accommodation-first-forms-and-required-contract-extensions) and [4.8.14](../SOKOUN_ALL_FEATURES_BACKEND_HANDOFF.md#4814-owner-favorite-search-and-map-collection-categories) consolidate these form, validation, media and collection requirements; section [7](../SOKOUN_ALL_FEATURES_BACKEND_HANDOFF.md#7-backend-return-file--required-response-format) defines the required backend delivery response, including per-field mappings and evidence. This document remains a focused reference; keep it consistent with the master guide.
+
 Read this with [the rental-offers contract handoff](rental_offers_backend_handoff.md) and [the existing property creation cycle](../SOKOUN_PROPERTY_CREATION_CYCLE.md). Keep existing property-only clients and ambiguous historical listings working.
 
 ## 1. The model the service must preserve

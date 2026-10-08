@@ -12,11 +12,39 @@ flutter pub get
 flutter run -d chrome
 flutter analyze
 flutter test
-flutter build web --release
+make buildWeb
 ```
 
 Deploy the output of `build/web`. For a subdirectory deployment, supply
-`--base-href /your-path/` at build time.
+`WEB_BUILD_ARGS='--base-href /your-path/'` to `make buildWeb`.
+
+`buildWeb` cleans stale generated plugin registrations before compilation,
+uses the bundled renderer and fallback font instead of Google downloads,
+versions renderer URLs for safe long-term caching, and removes unused mobile
+font families from eager startup loading. The brand appears immediately while
+Flutter loads; the loading shell disappears after the first rendered frame.
+The HTML shell retires old Flutter service workers before requesting bootstrap,
+so a cached older bootstrap cannot keep existing visitors on the previous player.
+The MP4 is still loaded only when the visitor presses play.
+
+To verify the actual release with compression and MP4 byte-range responses,
+use Node.js and the local browser tools:
+
+```sh
+make demoSetup       # once: install Playwright and Chromium/WebKit
+make previewWeb     # keep running in one terminal
+make checkWeb       # in another terminal
+```
+
+The browser check blocks Google resources and tests play, pause, media seeking,
+resume and replay on desktop and mobile widths in Chromium and WebKit. It
+also checks ordinary mouse navigation, slow downloads, retry after failed or
+stalled requests, and migration from a legacy Flutter service worker.
+Use `URL=http://127.0.0.1:4177/your-path/` for a different preview address.
+Use a server with HTTP byte-range support for video seeking; Flutter's debug
+server, Python's basic `http.server` and the Firebase Hosting emulator do not
+provide it. Deployed Firebase Hosting does. `make deploy` runs `buildWeb` before publishing
+to the existing Firebase Hosting project.
 
 ## App demo video
 
@@ -24,6 +52,12 @@ The app preview section includes a local 40 second Arabic demo with captions,
 a poster, play/pause and seeking controls, and an Arabic/English written
 walkthrough. Playback starts on request and pauses when the page is removed or
 the app goes into the background. The video is silent.
+On the web, an attached native HTML video element with `preload="none"` calls
+`play()` directly from the visitor's click. This avoids waiting for plugin
+initialization before playing and keeps the browser's playback permission
+through slow downloads. Native controls provide pause, seeking and fullscreen.
+Loading that stalls for 20 seconds offers retry with a fresh request; a link
+also opens the MP4 in its own tab. The non-web player uses `video_player`.
 Flutter controls RTL/LTR inside the app; the HTML shell leaves direction unset
 so native video views and accessible controls keep their correct positions.
 

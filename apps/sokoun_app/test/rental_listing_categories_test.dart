@@ -488,7 +488,7 @@ void main() {
   );
 
   testWidgets(
-    'owner category pagination retains source pages and property grouping',
+    'owner categories filter on the server before paging and retain property grouping',
     (tester) async {
       final source = _OwnerPages([
         [_owner('room', rentalInventory(offers: independentRooms))],
@@ -507,7 +507,11 @@ void main() {
           await tester.pumpAndSettle();
         }
       }
-      expect(source.requests, [1, 2]);
+      expect(source.requests, [1, 1]);
+      expect(source.categories, [
+        RentalListingCategory.all,
+        RentalListingCategory.bed,
+      ]);
       expect(
         tester
             .widget<OwnerPropertyCard>(find.byType(OwnerPropertyCard))
@@ -523,7 +527,8 @@ void main() {
             .id,
         'bed',
       );
-      expect(source.requests, [1, 2]);
+      expect(source.requests, [1, 1, 1]);
+      expect(source.categories.last, RentalListingCategory.roomGroup);
       expect(tester.takeException(), isNull);
     },
   );
@@ -809,6 +814,7 @@ class _OwnerPages implements OwnerPropertiesDataSource {
   _OwnerPages(this.pages);
   final List<List<OwnerPropertyContent>> pages;
   final List<int> requests = [];
+  final List<RentalListingCategory> categories = [];
   @override
   String get cacheKey => 'category-owner-test';
   @override
@@ -827,11 +833,24 @@ class _OwnerPages implements OwnerPropertiesDataSource {
   Future<(List<OwnerPropertyContent>, PaginationData)> getOwnedPropertiesPage({
     required int page,
     required OwnerPropertyFilter filter,
+    RentalListingCategory category = RentalListingCategory.all,
   }) async {
     requests.add(page);
+    categories.add(category);
+    final filtered = pages
+        .expand((items) => items)
+        .where(
+          (property) => RentalCollectionFilter.matchesProperty(
+            category: category,
+            inventory: property.rentalInventory,
+            summary: property.rentalSummary,
+            scopes: property.rentalScopes,
+          ),
+        )
+        .toList();
     return (
-      pages[page - 1],
-      PaginationData(perPage: 1, totalPages: pages.length),
+      filtered.skip(page - 1).take(1).toList(),
+      PaginationData(perPage: 1, totalPages: filtered.length),
     );
   }
 }

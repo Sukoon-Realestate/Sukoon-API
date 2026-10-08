@@ -59,12 +59,15 @@ enum Languages {
   static bool get currentIsEnglish => currentLanguage == Languages.english;
 
   static Languages get currentLanguage {
-    final currentLocale = EasyLocalization.of(
-      Go.navigatorKey.currentContext!,
-    )!.locale;
-    return Languages.values.firstWhere(
-      (element) => element.locale == currentLocale,
-    );
+    final context = Go.navigatorKey.currentContext;
+    final currentLocale = context == null
+        ? null
+        : EasyLocalization.of(context)?.locale;
+    return currentLocale?.languageCode == 'ar'
+        ? Languages.arabic
+        : currentLocale?.languageCode == 'en'
+        ? Languages.english
+        : getDeviceLocaleFromPlatform();
   }
 }
 

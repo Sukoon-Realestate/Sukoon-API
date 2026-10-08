@@ -17,17 +17,30 @@ abstract final class PremiumApiData {
     required T Function(Map<String, dynamic>) fromJson,
     required Map<String, dynamic> Function(T) toJson,
     Map<String, dynamic>? query,
-  }) => injector<BaseCrudUseCase>().call(
-    CrudBaseParmas<T>(
-      api: endpoint,
-      httpRequestType: HttpRequestType.get,
-      queryParameters: query,
-      cacheKey: AccountSession.cacheKey(key),
-      mapper: (json) => fromJson(premiumMap(json)),
-      fromCacheJson: fromJson,
-      toJson: toJson,
-    ),
-  );
+    bool Function(T)? valid,
+  }) async {
+    final generation = AccountSession.generation;
+    final result = await injector<BaseCrudUseCase>().call(
+      CrudBaseParmas<T>(
+        api: endpoint,
+        httpRequestType: HttpRequestType.get,
+        queryParameters: query,
+        cacheKey: AccountSession.cacheKey(key),
+        mapper: (json) => fromJson(premiumMap(json)),
+        fromCacheJson: fromJson,
+        toJson: toJson,
+      ),
+    );
+    return result.when(
+      (response) =>
+          generation == AccountSession.generation &&
+              (valid?.call(response.data) ?? true)
+          ? Success(response)
+          : Error(ServerFailure(LocaleKeys.paidInvalidResponse)),
+      Error.new,
+    );
+  }
+
   static Future<Result<BaseModel<T>, Failure>> mutate<T>({
     required String endpoint,
     required Map<String, dynamic> body,
@@ -35,6 +48,7 @@ abstract final class PremiumApiData {
     required bool Function(T) valid,
     HttpRequestType method = HttpRequestType.post,
   }) async {
+    final generation = AccountSession.generation;
     final result = await injector<BaseCrudUseCase>().call(
       CrudBaseParmas<T>(
         api: endpoint,
@@ -44,7 +58,8 @@ abstract final class PremiumApiData {
       ),
     );
     return result.when(
-      (response) => valid(response.data)
+      (response) =>
+          generation == AccountSession.generation && valid(response.data)
           ? Success(response)
           : Error(ServerFailure(LocaleKeys.paidInvalidResponse)),
       Error.new,

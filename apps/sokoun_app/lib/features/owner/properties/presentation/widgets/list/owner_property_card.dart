@@ -132,6 +132,14 @@ class OwnerPropertyCard extends StatelessWidget {
                                     )
                                     .toSet()
                                     .join(' · ')
+                              : property.rentalScopes.isNotEmpty
+                              ? property.rentalScopes
+                                    .map(
+                                      (scope) =>
+                                          RentalScope.fromValue(scope)?.label ??
+                                          LocaleKeys.rentalCategoryUnspecified,
+                                    )
+                                    .join(' · ')
                               : RentalOfferLabels.listingFacts(
                                   property.rentalSummary,
                                 ).join(' · '),
@@ -140,7 +148,7 @@ class OwnerPropertyCard extends StatelessWidget {
                         AppText(
                           RentalOfferLabels.listingPrice(
                             property.rentalSummary,
-                            hasInventory: property.rentalInventory != null,
+                            hasInventory: property.hasRentalOffers,
                             legacyPrice: property.monthlyPrice.toString(),
                             legacyPeriod: property.pricePeriod,
                             contextScope: category.scope?.value ?? '',
@@ -152,6 +160,14 @@ class OwnerPropertyCard extends StatelessWidget {
                           ),
                           textAlign: TextAlign.start,
                         ),
+                        if (property.manageableOfferCount != null &&
+                            property.hasRentalOffers)
+                          AppText(
+                            LocaleKeys.rentalManageableOfferCount.replaceAll(
+                              '{count}',
+                              '${property.manageableOfferCount}',
+                            ),
+                          ),
                         6.szH,
                         AppText(
                           '${property.views} ${LocaleKeys.ownerPropertiesViewUnit}'

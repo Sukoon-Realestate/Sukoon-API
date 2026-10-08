@@ -46,8 +46,13 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
     _selectedFilter.value = filter;
   }
 
-  void _selectCategory(RentalListingCategory category) =>
-      _category.value = category;
+  void _selectCategory(RentalListingCategory category) {
+    if (_category.value == category) return;
+    if (_fixtureProperties == null) {
+      _pagifyController = PagifyController<OwnerPropertyContent>();
+    }
+    _category.value = category;
+  }
 
   Future<void> _openAddProperty() async {
     final bool? shouldReturnToProperties = await Go.to<bool>(
@@ -205,7 +210,11 @@ class _OwnerPropertiesScreenState extends State<OwnerPropertiesScreen> {
                       child: ValueListenableBuilder<RentalListingCategory>(
                         valueListenable: _category,
                         builder: (context, category, _) => OwnerPropertiesList(
-                          key: ValueKey(statusId),
+                          key: ValueKey(
+                            _fixtureProperties == null
+                                ? (statusId, category)
+                                : (statusId, RentalListingCategory.all),
+                          ),
                           category: category,
                           onCategorySelected: _selectCategory,
                           filter: filter,

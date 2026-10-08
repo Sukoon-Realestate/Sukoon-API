@@ -3,7 +3,8 @@
   "private": true,
   "description": "Deterministic local renderer for the Sokoun landing page demo",
   "scripts": {
-    "render": "node render_demo.cjs"
+    "render": "node render_demo.cjs",
+    "check-web": "node check_web.cjs"
   },
   "devDependencies": {
     "ffmpeg-static": "5.3.0",

@@ -6,6 +6,7 @@ import 'package:melos_core/core/network/account_session.dart';
 
 import 'chat_socket_data.dart';
 import 'models/chat_socket_message.dart';
+import 'models/chat_message_acknowledgement.dart';
 import 'models/message_params_model.dart';
 import 'socket_events.dart';
 
@@ -13,6 +14,7 @@ enum ChatRealtimeStatus { disconnected, connecting, connected, error }
 
 abstract interface class ChatRealtimeGateway {
   Stream<ChatSocketMessage> get messages;
+  Stream<ChatMessageAcknowledgement> get acknowledgements;
 
   Stream<ChatReadReceipt> get readReceipts;
 
@@ -33,6 +35,7 @@ abstract interface class ChatRealtimeGateway {
   Future<void> sendMessage({
     required String conversationId,
     required String content,
+    String clientMessageId = '',
   });
 
   Future<void> markConversationAsRead(String conversationId);
@@ -60,6 +63,8 @@ final class ChatRealtimeService implements ChatRealtimeGateway {
 
   final StreamController<ChatSocketMessage> _messages =
       StreamController<ChatSocketMessage>.broadcast(sync: true);
+  final StreamController<ChatMessageAcknowledgement> _acknowledgements =
+      StreamController<ChatMessageAcknowledgement>.broadcast(sync: true);
   final StreamController<ChatReadReceipt> _readReceipts =
       StreamController<ChatReadReceipt>.broadcast(sync: true);
   final StreamController<ChatRealtimeStatus> _statuses =
@@ -74,6 +79,9 @@ final class ChatRealtimeService implements ChatRealtimeGateway {
 
   @override
   Stream<ChatSocketMessage> get messages => _messages.stream;
+  @override
+  Stream<ChatMessageAcknowledgement> get acknowledgements =>
+      _acknowledgements.stream;
 
   @override
   Stream<ChatReadReceipt> get readReceipts => _readReceipts.stream;
@@ -161,6 +169,7 @@ final class ChatRealtimeService implements ChatRealtimeGateway {
   Future<void> sendMessage({
     required String conversationId,
     required String content,
+    String clientMessageId = '',
   }) async {
     final WebSocketHelper<ChatSocketMessage>? socket = _socket;
     if (socket == null || !socket.isConnected) {
@@ -170,6 +179,7 @@ final class ChatRealtimeService implements ChatRealtimeGateway {
       MessageParamsModel(
         conversationId: conversationId,
         content: content,
+        clientMessageId: clientMessageId,
       ).toSocketJson(),
     );
   }
@@ -187,10 +197,16 @@ final class ChatRealtimeService implements ChatRealtimeGateway {
     String event,
     Map<String, dynamic> eventData,
   ) async {
-    log('the data is $eventData');
-    if (event != SocketEvents.readMessage) return;
     final Object? payload = eventData['payload'];
     if (payload is! Map) return;
+    if (event == SocketEvents.messageAcknowledgement) {
+      final acknowledgement = ChatMessageAcknowledgement.fromJson(
+        Map<String, dynamic>.from(payload),
+      );
+      if (acknowledgement.isSent) _acknowledgements.add(acknowledgement);
+      return;
+    }
+    if (event != SocketEvents.readMessage) return;
     _readReceipts.add(
       ChatReadReceipt.fromJson(Map<String, dynamic>.from(payload)),
     );

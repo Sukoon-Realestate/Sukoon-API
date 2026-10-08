@@ -7,7 +7,8 @@ import 'package:sokoun_app/features/shared/premium/data/models/premium_revision_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pagify/pagify.dart';
-import 'package:uuid/uuid.dart';
+import 'package:sokoun_app/features/shared/premium/data/premium_request_keys.dart';
+import 'package:sokoun_app/features/shared/premium/data/feature_service_capabilities.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -41,6 +42,7 @@ class _PremiumAlertsContentState extends State<PremiumAlertsContent> {
   );
   final PagifyController<PremiumSearchAlert> _controller = PagifyController();
   late final PremiumAlertSubmitCubit _submit;
+  final PremiumRequestKeys _requestKeys = PremiumRequestKeys();
   @override
   void initState() {
     super.initState();
@@ -71,6 +73,13 @@ class _PremiumAlertsContentState extends State<PremiumAlertsContent> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 AppText(LocaleKeys.paidAlertsExplanation),
+                if (!FeatureServiceCapabilities.configured.alertDelivery)
+                  AppText(LocaleKeys.featureAlertDeliveryUnavailable),
+                if (state.isError && state.msg?.isNotEmpty == true)
+                  AppText(
+                    state.msg!,
+                    color: Theme.of(context).colorScheme.error,
+                  ),
                 if (widget.filters != null) ...[
                   16.szH,
                   FeatureConfigurationView(
@@ -117,13 +126,15 @@ class _PremiumAlertsContentState extends State<PremiumAlertsContent> {
                 alert.id,
                 PremiumRevisionBody(
                   revision: alert.revision,
-                  requestKey: const Uuid().v4(),
+                  requestKey: _requestKeys.forAction('remove_alert', [
+                    alert.id,
+                    alert.revision,
+                  ]),
                 ),
               );
-              if (receipt != null && mounted) {
-                PremiumFeedback.saved(receipt);
-                _controller.refresh();
-              }
+              if (!mounted) return;
+              if (receipt != null) PremiumFeedback.saved(receipt);
+              _controller.refresh();
             },
             onToggle: () async {
               final receipt = await _submit.toggle(
@@ -131,13 +142,16 @@ class _PremiumAlertsContentState extends State<PremiumAlertsContent> {
                 PremiumAlertToggleBody(
                   enabled: !alert.enabled,
                   revision: alert.revision,
-                  requestKey: const Uuid().v4(),
+                  requestKey: _requestKeys.forAction('toggle_alert', [
+                    alert.id,
+                    alert.revision,
+                    !alert.enabled,
+                  ]),
                 ),
               );
-              if (receipt != null && mounted) {
-                PremiumFeedback.saved(receipt);
-                _controller.refresh();
-              }
+              if (!mounted) return;
+              if (receipt != null) PremiumFeedback.saved(receipt);
+              _controller.refresh();
             },
           ),
         ),

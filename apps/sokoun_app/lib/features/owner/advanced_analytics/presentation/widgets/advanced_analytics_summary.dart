@@ -1,7 +1,9 @@
+import 'package:sokoun_app/features/shared/premium/data/feature_service_capabilities.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:melos_core/config/language/languages.dart';
 import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:sokoun_app/features/shared/premium/data/premium_hosted_data.dart';
 import 'package:sokoun_app/features/shared/premium/presentation/widgets/shared/premium_feedback.dart';
@@ -19,7 +21,9 @@ class AdvancedAnalyticsSummary extends StatelessWidget {
         AppText(
           LocaleKeys.paidMeasuredAt.replaceAll(
             '{date}',
-            DateFormat.yMMMd().add_Hm().format(content.measuredAt!.toLocal()),
+            DateFormat.yMMMd(
+              Languages.currentLanguage.languageCode,
+            ).add_Hm().format(content.measuredAt!.toLocal()),
           ),
         ),
       if (content.methodology.isNotEmpty) AppText(content.methodology),
@@ -44,7 +48,8 @@ class AdvancedAnalyticsSummary extends StatelessWidget {
             ),
           ),
         ),
-      if (PremiumHostedData.httpsUri(content.exportUrl) != null)
+      if (FeatureServiceCapabilities.configured.analyticsExports &&
+          PremiumHostedData.httpsUri(content.exportUrl) != null)
         OutlinedButton.icon(
           onPressed: () async {
             if (!await PremiumHostedData.open(content.exportUrl)) {

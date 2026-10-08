@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/chat/data/models/chat_message_acknowledgement.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_participant_content.dart';
 import 'dart:async';
 
@@ -527,6 +528,9 @@ class _Realtime implements ChatRealtimeGateway {
   @override
   Stream<ChatSocketMessage> get messages => messagesController.stream;
   @override
+  Stream<ChatMessageAcknowledgement> get acknowledgements =>
+      const Stream.empty();
+  @override
   Stream<ChatReadReceipt> get readReceipts => const Stream.empty();
   @override
   Stream<ChatRealtimeStatus> get statuses => const Stream.empty();
@@ -551,6 +555,7 @@ class _Realtime implements ChatRealtimeGateway {
   Future<void> sendMessage({
     required String conversationId,
     required String content,
+    String clientMessageId = '',
   }) async {}
   @override
   Future<void> markConversationAsRead(String conversationId) async {}

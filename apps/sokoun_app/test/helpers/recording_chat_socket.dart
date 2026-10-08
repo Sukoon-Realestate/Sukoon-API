@@ -12,9 +12,15 @@ class RecordingChatSocketSource implements ChatSocketDataSource {
   int sentMessages = 0;
   bool echoSentMessages = false;
   Future<void> Function(ChatSocketMessage)? _onReceiveMessage;
+  Future<void> Function(String, Map<String, dynamic>)? _onReceiveAnyEvent;
+  Map<String, dynamic>? lastSentData;
 
   Future<void> receive(ChatSocketMessage message) async {
     await _onReceiveMessage?.call(message);
+  }
+
+  Future<void> receiveEvent(String event, Map<String, dynamic> data) async {
+    await _onReceiveAnyEvent?.call(event, data);
   }
 
   @override
@@ -29,6 +35,7 @@ class RecordingChatSocketSource implements ChatSocketDataSource {
   }) async {
     creations++;
     _onReceiveMessage = onReceiveMessage;
+    _onReceiveAnyEvent = onReceiveAnyEvent;
     return _RecordingChatSocket(this, onConnect, onDisconnect);
   }
 }
@@ -71,12 +78,14 @@ class _RecordingChatSocket implements WebSocketHelper<ChatSocketMessage> {
   @override
   Future<void> sendMessage(Map<String, dynamic> data) async {
     source.sentMessages++;
+    source.lastSentData = Map.of(data);
     if (!source.echoSentMessages) return;
     await source.receive(
       const ChatSocketMessage.initial().copyWith(
         id: 'socket-message-${source.sentMessages}',
         conversationId: data['conversation_id'].toString(),
         content: data['content'].toString(),
+        clientMessageId: data['client_message_id']?.toString() ?? '',
         sender: const ChatParticipantContent.initial().copyWith(
           id: UserModel.currentUser?.id ?? '',
         ),

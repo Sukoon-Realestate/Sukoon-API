@@ -8,6 +8,8 @@ class OwnerPropertyContent extends Equatable {
   const OwnerPropertyContent({
     this.rentalInventory,
     this.rentalSummary,
+    this.rentalScopes = const [],
+    this.manageableOfferCount,
     required this.id,
     required this.title,
     required this.mainImage,
@@ -47,6 +49,10 @@ class OwnerPropertyContent extends Equatable {
     return OwnerPropertyContent(
       rentalInventory: RentalInventory.read(json),
       rentalSummary: RentalListingSummary.read(json),
+      rentalScopes: (json['rental_scopes'] as List? ?? const [])
+          .map((value) => value.toString())
+          .toList(growable: false),
+      manageableOfferCount: (json['manageable_offer_count'] as num?)?.toInt(),
       id: json['id'] ?? '',
       rejectionReason: json['rejection_reason']?.toString() ?? '',
       title: json['title'] ?? '',
@@ -75,6 +81,12 @@ class OwnerPropertyContent extends Equatable {
 
   final RentalInventory? rentalInventory;
   final RentalListingSummary? rentalSummary;
+  final List<String> rentalScopes;
+  final int? manageableOfferCount;
+  bool get hasRentalOffers =>
+      rentalInventory != null ||
+      rentalScopes.isNotEmpty ||
+      (manageableOfferCount ?? 0) > 0;
   final String id;
   final String rejectionReason;
   final String title;
@@ -97,6 +109,9 @@ class OwnerPropertyContent extends Equatable {
       if (rentalInventory != null)
         'rental_inventory': rentalInventory!.toJson(),
       if (rentalSummary != null) 'rental_summary': rentalSummary!.toJson(),
+      'rental_scopes': rentalScopes,
+      if (manageableOfferCount != null)
+        'manageable_offer_count': manageableOfferCount,
       if (rejectionReason.isNotEmpty) 'rejection_reason': rejectionReason,
       'title': title,
       'main_image': mainImage,
@@ -117,6 +132,8 @@ class OwnerPropertyContent extends Equatable {
   OwnerPropertyContent copyWith({
     RentalInventory? rentalInventory,
     RentalListingSummary? rentalSummary,
+    List<String>? rentalScopes,
+    int? manageableOfferCount,
     String? id,
     String? rejectionReason,
     String? title,
@@ -136,6 +153,8 @@ class OwnerPropertyContent extends Equatable {
     return OwnerPropertyContent(
       rentalInventory: rentalInventory ?? this.rentalInventory,
       rentalSummary: rentalSummary ?? this.rentalSummary,
+      rentalScopes: rentalScopes ?? this.rentalScopes,
+      manageableOfferCount: manageableOfferCount ?? this.manageableOfferCount,
       id: id ?? this.id,
       rejectionReason: rejectionReason ?? this.rejectionReason,
       title: title ?? this.title,
@@ -158,6 +177,8 @@ class OwnerPropertyContent extends Equatable {
   List<Object?> get props => [
     rentalInventory,
     rentalSummary,
+    rentalScopes,
+    manageableOfferCount,
     id,
     rejectionReason,
     title,

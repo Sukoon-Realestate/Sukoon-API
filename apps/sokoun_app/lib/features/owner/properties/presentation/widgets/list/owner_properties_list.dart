@@ -44,6 +44,7 @@ class OwnerPropertiesList extends StatelessWidget {
     return OwnerPropertiesData.getOwnedPropertiesPage(
       page: page,
       filter: filter,
+      category: category,
     );
   }
 
@@ -54,14 +55,17 @@ class OwnerPropertiesList extends StatelessWidget {
       header: RentalListingCategories(
         selected: category,
         onSelected: onCategorySelected,
-        loadedPropertiesOnly: usesApi && category != RentalListingCategory.all,
+        loadedPropertiesOnly:
+            usesApi && category == RentalListingCategory.unspecified,
       ).paddingBottom(16),
       enablePullRefresh: true,
       pagifyController: pagifyController,
       rankingType: Ranking.adaptiveGrid,
       asyncCall: (_, page) => _loadPage(page),
       shrinkWrap: false,
-      cacheKey: usesApi ? OwnerPropertiesData.cacheKeyFor(filter) : null,
+      cacheKey: usesApi
+          ? OwnerPropertiesData.cacheKeyFor(filter, category: category)
+          : null,
       cacheToJson: usesApi ? (property) => property.toJson() : null,
       cacheFromJson: usesApi ? OwnerPropertyContent.fromJson : null,
       emptyListView: OwnerPropertiesEmptyState(
@@ -77,6 +81,7 @@ class OwnerPropertiesList extends StatelessWidget {
           category: category,
           inventory: property.rentalInventory,
           summary: property.rentalSummary,
+          scopes: property.rentalScopes,
         ),
       ),
       filteredFooterBuilder: (context, hasMore, isLoading, error, loadMore) =>

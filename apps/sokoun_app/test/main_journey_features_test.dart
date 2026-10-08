@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
+import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart'
+    show HttpRequestType;
 import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/network/account_session.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
@@ -428,8 +430,10 @@ void main() {
     },
   );
   testWidgets(
-    'property-specific draft fixes property and loads only its eligible tenants',
+    'property-specific draft loads its full inventory and only its eligible tenants',
     (tester) async {
+      repository.replies[ApiConstants.propertyDetails(_listing.id)] =
+          FeatureTestReply(data: _listing.toJson());
       await mountFeatureTest(
         tester,
         Scaffold(
@@ -460,9 +464,10 @@ void main() {
         'property-1',
       );
       expect(
-        repository.requests,
-        isEmpty,
-      ); // No lease/invoice mutation from entering the flow.
+        repository.requests.single.endpoint,
+        ApiConstants.propertyDetails(_listing.id),
+      );
+      expect(repository.requests.single.method, HttpRequestType.get);
     },
   );
   testWidgets(

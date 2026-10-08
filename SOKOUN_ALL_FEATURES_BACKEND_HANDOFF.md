@@ -2,7 +2,7 @@
 
 Date: **2026-10-07**. Mobile project: `apps/sokoun_app`.
 
-**Send this single file to the backend developer.** It consolidates the implementation details, backend handoff and backend response template previously split across the three paid-feature documents, together with every improvement in `SOKOUN_FREE_IMPROVEMENTS_IMPLEMENTATION.md` and the latest property/room/room-group/bed rental-offer changes. This guide supersedes the previous paid-feature requirements. New contracts are proposals for backend implementation and confirmation, not evidence of deployment; section 4.8 includes the complete rental-offer handoff, also maintained in [docs/rental_offers_backend_handoff.md](docs/rental_offers_backend_handoff.md).
+**Send this single file to the backend developer.** It consolidates the implementation details, backend handoff and backend response template previously split across the three paid-feature documents, together with every improvement in `SOKOUN_FREE_IMPROVEMENTS_IMPLEMENTATION.md` and the latest property/room/room-group/bed rental-offer changes. It also incorporates the accommodation-first forms and collection categories from [docs/rental_accommodation_forms_backend_changes.md](docs/rental_accommodation_forms_backend_changes.md). This is the authoritative backend delivery guide and supersedes the previous paid-feature requirements. New contracts are proposals for backend implementation and confirmation, not evidence of deployment. Section 4.8 includes rental-offer contracts, detailed form extensions, partial-property validation and collection requirements; [docs/rental_offers_backend_handoff.md](docs/rental_offers_backend_handoff.md) and the accommodation guide remain focused supporting references.
 
 Backend must implement/confirm the contracts, deploy them to staging, then return **`SOKOUN_ALL_FEATURES_BACKEND_DELIVERY.md`** using the response format in section 7. The mobile developer will use that returned file to make final changes against the actual backend implementation.
 
@@ -33,7 +33,8 @@ The implementation follows `.agents/skills/sokoun-feature-architecture/SKILL.md`
 |---|---|
 | `features/tenant/decision_tools/data/` and `presentation/` | Account-scoped comparison, costs, notebook, private lists/notes, manual saved searches and explained matches |
 | Existing tenant home/search and visits features | Real map results, property availability, booking review, calendar export, visit/review permissions |
-| Existing owner home/properties features | Durable editor drafts, image order/cover, quality checks and rejection reasons |
+| Existing owner home/properties features | Accommodation-first create/edit forms, durable scoped drafts, supporting property context, image order/cover, quality checks, rejection reasons and owner listing categories |
+| Existing tenant favorites and shared rental collection widgets | Categories based on exact saved offers, one card per physical property, accurate saved prices and preserved raw pagination/cache |
 | Existing shared chat/support features | Encrypted local recovery, conversation eligibility, socket lifecycle and durable support receipts |
 | `features/shared/rental_offers/data/` and `presentation/` | Physical room/bed inventory, independent offers/terms, overlap validation, exact selected/historical snapshots, capability gates, server-confirmed mutations and property/offer link routing |
 | `features/shared/premium/data/` | Shared feature API constants, typed free configuration, exact rent money, JSON/cache helpers and hosted-session validation |
@@ -49,7 +50,7 @@ Ordinary remote operations use `AsyncCubit`, typed data helpers and `BaseCrudUse
 
 Promotion/alert configuration is owned by a stable content Cubit. Paginated history remains accessible independently of configuration loading/failure. AI, analytics, lease reads and invoice reads have no configuration/subscription prerequisite.
 
-Translations originate in `packages/core/assets/translations/lang.json`. Arabic, English and `LocaleKeys` are generated. Navigation uses `Go` and existing workspace routing. Native billing packages are absent. The earlier free-feature verification used **Flutter 3.35.1 / Dart 3.9.0**; the latest rental-offer and navigation checks used the workspace SDK **Flutter 3.44.7 / Dart 3.12.2** (section 8).
+Translations originate in `packages/core/assets/translations/lang.json`. Arabic, English and `LocaleKeys` are generated. Navigation uses `Go` and existing workspace routing. Native billing packages are absent. The recorded free-feature verification used **Flutter 3.35.1 / Dart 3.9.0**; the recorded rental-offer and navigation checks used the workspace SDK **Flutter 3.44.7 / Dart 3.12.2** (section 8).
 
 ### 2.1 Main app journeys and resource context
 
@@ -58,8 +59,9 @@ The tools now use the main app journeys as their entry points. The duplicate Pro
 | Journey | Mobile wiring | Backend responsibility |
 |---|---|---|
 | Owner writes a listing | Add/edit → description section → AI → review/edit → explicitly apply to the local form | Return a suggestion for the supplied facts/property; normal submission and moderation still publish the listing |
-| Owner defines rental accommodation | Add/edit → “إيه الجزء اللي حابب تأجّره؟” → whole property or named rooms/groups/beds → terms/media associations → review; local-only save until supported | Atomically persist the proposed inventory on existing property create/PATCH, assign permanent IDs, enforce ownership/overlap/dependencies/revisions and retain property-level moderation |
+| Owner defines rental accommodation | Add/edit → “إيه الجزء اللي حابب تأجّره؟” → scope-specific accommodation details → separate property/shared-facility context → media → terms → review; local-only save until supported | Persist the supported inventory and agreed detailed-field extensions, assign permanent IDs, validate partial forms without hidden whole-property requirements, enforce ownership/overlap/dependencies/revisions and retain moderation; sections 4.8.3 and 4.8.13 |
 | Tenant chooses accommodation | Grouped property card → details → explicit offer choice → exact accommodation/price/terms → favorite or viewing | Return authoritative eligible-offer summaries and exact IDs/snapshots; proposed save/viewing extensions must confirm the selected offer; unavailable selections never substitute another offer |
+| Owner/tenant browses listing categories | Owner listings and Favorites → All/Entire property/Room/Room group/Bed/Type not specified; search/map use supported scope queries | Apply verified scope filters before property counts/pagination; favorites match saved offers, owner categories compose with review status; section 4.8.14 |
 | Owner promotes a published listing | Properties → accepted/verified listing card → Promote listing; listing action sheet also retains access | Authorize the actual `property_id`; enforce publication, availability and campaign eligibility |
 | Owner reviews performance | Home → Manage your rentals → Advanced analytics → select listing; listing card opens its own analytics | Authorize property and return real period-specific measurements |
 | Tenant resumes a search | Home → Saved searches and decisions; Home → Search alerts; results/saved search → alert with its full filters | Persist authorized alerts and match the complete filter set; opening saved searches alone does not create an alert |
@@ -70,7 +72,7 @@ The tools now use the main app journeys as their entry points. The duplicate Pro
 
 Existing `profiles/contracts/` document items may include an optional **`lease_id`** pointing to the actual `features/v1/leases/{id}/` resource. The app then offers “View digital lease”. Existing document IDs are never treated as lease IDs. Items without this field keep their existing document viewer, and the Contracts header still opens the digital lease collection.
 
-**Accepting a viewing is not agreement to rent.** The app never changes rental inventory or creates a lease/invoice automatically from visit acceptance. Backend must define an explicit agreed-tenancy/participant-eligibility process, restrict tenant selection accordingly, and create rent obligations from approved lease/ledger rules. The legacy lease draft supplies a property ID only; it does not select a tenant or confirm eligibility. New lease creation is blocked for offer-based properties until the lease contract identifies the selected accommodation; section 5.5 describes this boundary.
+**Accepting a viewing is not agreement to rent.** The app never changes rental inventory or creates a lease/invoice automatically from visit acceptance. Backend must define an explicit agreed-tenancy/participant-eligibility process, restrict tenant selection accordingly, and create rent obligations from approved lease/ledger rules. The legacy lease draft identifies the property and an explicitly selected eligible tenant; it does not identify a rental offer or establish agreement from a viewing. New lease creation is blocked for offer-based properties until the lease contract identifies the selected accommodation and the mobile form/serializer is integrated with that contract; section 5.5 describes this boundary.
 
 The Home rent preview owns one lifecycle-managed Cubit outside the paginated discovery header, so feed rebuilds do not restart invoice loading. It loads independently of discovery, refreshes on Home pull-to-refresh and after returning from invoice details, and is not requested for guest users. Property-scoped lease and lease-scoped invoice caches include account, workspace and resource IDs. Invalid mixed-resource responses are rejected rather than shown as the selected resource's data.
 
@@ -339,15 +341,15 @@ Return actual API/schema proposals for requested extensions rather than marking 
 
 **Latest implemented client change; every added server field, header, query parameter and operation in this section is proposed and disabled by default until supported.** Backend source is absent from this checkout. Extend the existing property services; do not treat the proposal as a deployed offer API or silently ignore new fields. These rules cover create/edit/read, owner management, public search, favorites, viewings, historical records and rollout without adding a scheduling, payment or lease-creation engine.
 
-The business baseline is the checked-in [PROJECT_BUSINESS_DETAILS.md](PROJECT_BUSINESS_DETAILS.md); the separately named `PROJECT_BUSINESS_DETAILS(2).md` attachment was unavailable, and use of the checked-in baseline was agreed. Existing contracts were checked against [collection.json](collection.json), [MOBILE_PROPERTY_MEDIA_EDITING_DELETION_HANDOFF.md](MOBILE_PROPERTY_MEDIA_EDITING_DELETION_HANDOFF.md), [owner property status tabs](docs/owner_property_status_tabs_backend.md), repository instructions and `design.md`. The dedicated [rental-offer handoff](docs/rental_offers_backend_handoff.md) is a supporting reference; the requirements and examples needed for delivery are included here.
+The business baseline is the checked-in [PROJECT_BUSINESS_DETAILS.md](PROJECT_BUSINESS_DETAILS.md); the separately named `PROJECT_BUSINESS_DETAILS(2).md` attachment was unavailable, and use of the checked-in baseline was agreed. Existing contracts were checked against [collection.json](collection.json), [MOBILE_PROPERTY_MEDIA_EDITING_DELETION_HANDOFF.md](MOBILE_PROPERTY_MEDIA_EDITING_DELETION_HANDOFF.md), [owner property status tabs](docs/owner_property_status_tabs_backend.md), repository instructions and `design.md`. The dedicated [rental-offer handoff](docs/rental_offers_backend_handoff.md) and [accommodation forms guide](docs/rental_accommodation_forms_backend_changes.md) are supporting references. Their delivery requirements are consolidated here, including the detailed-field extensions and category behavior in sections 4.8.13–4.8.14.
 
 #### 4.8.1 Implemented journeys and operational boundary
 
-Owners see “إيه الجزء اللي حابب تأجّره؟” early, retain their physical address/room count/media, define named rooms and beds, and create independent offers with separate prices and terms. A group selects two or more actual rooms for one combined price. Changing whole/partial mode parks the other mode in the local draft; parked offers never enter a request. Scope changes retain typed terms, exclude irrelevant references from submission, and revalidate. Shared defaults and individual overrides are explicit. Existing unsaved-change and upload-recovery protection applies.
+Owners see “إيه الجزء اللي حابب تأجّره؟” early. The selected scope determines the primary form, fields, validation, review and edit experience; partial offers lead with accommodation details and keep parent-property information in a separate supporting section. Named rooms/beds and independent offers retain their own terms. A group selects two or more actual rooms for one combined price. Changing whole/partial mode parks the other mode in the local draft; parked offers never enter a request. Scope changes retain compatible shared data, exclude irrelevant references from submission, and revalidate. Shared defaults and individual overrides are explicit. Existing unsaved-change and upload-recovery protection applies; section 4.8.13 defines the new detailed fields and their contract status.
 
-With default configuration, these are complete durable **local drafts**, labeled as local at every step and in review. The final action says “Save local draft”; it does not create a property, publish, or imply server persistence. The original property-only creation/editing path remains available. Offer reads can render server-supplied v1 data without enabling writes. Unknown/malformed schemas and scopes are displayed safely and cannot authorize a booking.
+With default configuration, these are complete durable **local drafts**, labeled as local at every step and in review. The final action says **“Save draft on this device”**; it does not create a property, publish, or imply server persistence. The original property-only creation/editing path remains available. Even when the proposed v1 write flag is enabled, entered local-only detailed fields block server submission until a compatible schema, reader, serializer and persistence confirmation exist. Do not remove that guard to make publication appear available. Offer reads can render server-supplied v1 data without enabling writes. Unknown/malformed schemas and scopes are displayed safely and cannot authorize a booking.
 
-Tenant discovery is grouped by physical property. Cards use server-provided offer labels, count, scope, minimum eligible price and rent period. Details require an explicit offer choice, including when there is only one offer. Favorites retain exact selections. Viewing summaries/review/confirmation carry the choice. Historical visits, owner requests/calendar, notifications, chat context, reviews, contracts, invoices and revenue models preserve supplied snapshots. A missing historical snapshot is identified as missing instead of filled from a current property price.
+Tenant discovery is grouped by physical property. Cards use server-provided offer labels, count, scope, minimum eligible price and rent period. Details require choosing an offer and then explicitly confirming the accommodation, including when there is only one offer. Deep links highlight an offer without confirming it; sign-in retains the exact confirmed snapshot, and changed terms require another confirmation. Favorites retain exact saved selections and use their own price context rather than an unsaved discovery minimum. Viewing summaries/review/confirmation carry the choice. Historical visits, owner requests/calendar, notifications, chat context, reviews, contracts, invoices and revenue models preserve supplied snapshots. A missing historical snapshot is identified as missing instead of filled from a current property price.
 
 Offer availability/archive actions use the proposed extension of the existing property PATCH only when both configuration and fresh server action permissions permit them. The app verifies the response before applying success. Selecting “Mark rented” does not create a lease. Existing property-only digital lease creation is blocked for offer-based properties until a lease contract identifies the offer. Actual server payment/revenue amounts remain unchanged.
 
@@ -364,7 +366,7 @@ Offer availability/archive actions use the proposed extension of the existing pr
 
 `property_type` is unchanged. `rental_scope` accepts exactly `entire_property`, `room`, `room_group`, `bed`. `mode` accepts `whole` or `partial`. A property's `bedrooms: 3` and an offer's `room_ids: [room_a, room_b]` retain both physical and offered counts.
 
-Creation uses `client_key` only for draft references. The client generates local UUIDs for draft identities and uses them in intra-request references; they are **not** backend offer IDs. The server allocates permanent IDs, resolves references atomically, and echoes each creation `client_key` with its assigned ID in the full response. Existing IDs must remain stable across rename, edit, rent, archive and review. Never recycle them. Scope changes that would replace an existing accommodation identity require explicit server rules; the editor does not allow changing a persisted offer's scope.
+Creation uses `client_key` only for draft references. The client generates local UUIDs for draft identities and uses them in intra-request references; they are **not** backend offer IDs. The server allocates permanent IDs, resolves references atomically, and echoes each creation `client_key` with its assigned ID in the full response. Existing IDs must remain stable across rename, edit, rent, archive and review. Never recycle them. Scope changes that would replace an existing accommodation identity require explicit server rules; the editor locks persisted whole/partial mode, scope, room and bed allocations until a verified transition checks existing requests and leases.
 
 A mode switch must be validated as an inventory transition. Omitted previously persisted offers are not instructions to hard-delete their requests/leases. Reject transitions with unresolved dependencies, or implement an explicitly documented archival policy with snapshots and audit records. Do not automatically cancel requests, end leases, or release occupancy.
 
@@ -380,7 +382,7 @@ Existing routes:
 
 **Proposed extensions, disabled by default:** owner POST/PATCH accept a multipart string field `rental_inventory` containing the following JSON. `X-Rental-Offers-Version: 1` selects the proposed write contract. New property creation additionally sends `Idempotency-Key` with a stable draft submission key. Property PATCH uses inventory `expected_revision` rather than reusing the creation idempotency key for different edits.
 
-Illustrative proposed room-group creation JSON (physical fields/media remain on the parent multipart request):
+Illustrative proposed room-group creation JSON (physical fields/media remain on the parent multipart request). This example covers the fields represented by the current proposed v1 adapter; detailed room/bed/shared-facility extensions in section 4.8.13 are not emitted by that adapter today:
 
 ```json
 {
@@ -469,6 +471,7 @@ Authoritative validation belongs in a backend transaction with appropriate row l
 - `expected_revision` must match the current inventory revision. Increment inventory revision and affected offer revision on relevant changes. Two concurrent owners/sessions cannot both allocate overlapping inventory or overwrite newer prices.
 - Proposed `409` conflicts include `inventory_revision_conflict`, `inventory_overlap`, `offer_unavailable`, `active_lease_dependency`, `active_request_dependency`, and `mode_transition_blocked`. Proposed `422` validation errors identify invalid fields/room/bed references. Use the existing readable `message` failure envelope so current error UI handles these; a future structured detail may add `code`, `offer_id`, `room_ids`, `bed_id`, `current_revision`.
 - On conflict, apply no partial inventory writes. Keep the local draft/selection and require a refresh/review; never remap a request to the property or another offer. Return `403` for ownership/permissions and `404` for invisible resources without disclosing private records.
+- Treat shared address/floor/building/facility edits as parent-property changes that may affect multiple offers. Authorize and validate that shared change explicitly rather than disguising it as an edit to one room or bed.
 
 Availability is `available`, `unavailable`, or `rented`; archive is a separate boolean. Unknown future values render as unconfirmed and cannot authorize a viewing. `rented` is a server-confirmed owner action with dependency/lease checks; this change does not build an occupancy or lease-creation engine. Do not compute current occupancy from capacity or expose residents' identities.
 
@@ -508,7 +511,7 @@ The proposed `rental_summary` below is authoritative for the **current query**. 
 }
 ```
 
-Both the outer schema marker and summary fields above are **proposed**. Full search results may instead include full `rental_inventory` plus the summary; short home/favorites models accept the projection. `starting_from` is server-supplied, not inferred from property price. Missing/invalid minimum prices render an explicit choose-offer message. Preserve current pagination envelope `results`, `count`, `per_page`, `total_pages`; `count` and page size refer to eligible **properties**, with stable ordering and a property-ID tie-breaker. Eligible-offer counts are labeled separately and never added to property totals. Public views/analytics need a documented property-versus-offer dimension if tracked.
+Both the outer schema marker and summary fields above are **proposed**. Full search results may instead include full `rental_inventory` plus the summary; short home models accept the projection, and favorites may retain it as supporting property data. A discovery summary cannot replace the exact `saved_offers` snapshots or determine favorite category/price membership (section 4.8.14). `starting_from` is server-supplied, not inferred from property price. Missing/invalid minimum prices render an explicit choose-offer message. Preserve current pagination envelope `results`, `count`, `per_page`, `total_pages`; `count` and page size refer to eligible **properties**, with stable ordering and a property-ID tie-breaker. Eligible-offer counts are labeled separately and never added to property totals. Public views/analytics need a documented property-versus-offer dimension if tracked.
 
 #### 4.8.8 Offer-specific favorites (proposed extensions)
 
@@ -589,7 +592,7 @@ Existing conversation creation remains recipient `user_id` only. The mobile app 
 1. Keep existing property/visit/favorite IDs and relationships. Absence of inventory is legacy; a present unsupported schema/scope is a future/invalid record and must not fall back to an entire-property assumption.
 2. Audit legacy semantics, especially `property_type=room`. The app does not manufacture offer IDs or classify all existing rows as `entire_property`. Verified full-property listings may receive a server-generated entire-property offer; ambiguous room/shared listings require owner/operations clarification with an explicit migration rule. Do not infer an offered-room count or per-bed price from total bedrooms or asking price.
 3. Preserve historical legacy representation and snapshots that actually exist. Any backfill must state its evidence and distinguish verified history from unknown terms. Old property-only clients must remain readable; do not expose new partial inventory to old clients as a whole-property price/booking. Agree a versioned exclusion/compatibility projection before rollout.
-4. Implement schema, overlap/permission/dependency transactions, revisions, idempotency, property-level review/publication, media relations, grouped search and snapshots before enabling a client operation. Update the collection with confirmed examples only after deployment; this change deliberately leaves the legacy collection intact.
+4. Implement schema, overlap/permission/dependency transactions, revisions, idempotency, property-level review/publication, media relations, grouped search and snapshots before enabling a client operation. Agree the detailed fields and partial-property validation in section 4.8.13 and the owner/favorite collection semantics in section 4.8.14. Update the collection with confirmed examples only after deployment; this change deliberately leaves the legacy collection intact.
 5. Verify each operation against staging, including ignored-field detection, 409 recovery, failed uploads, concurrent edits, guest/auth recovery, private evidence omission, multiple periods, unavailable favorites and historical retention. No live backend end-to-end verification is claimed by this implementation.
 
 Release configuration in `rental_offer_capabilities.dart` (all disabled by default):
@@ -605,6 +608,83 @@ Release configuration in `rental_offer_capabilities.dart` (all disabled by defau
 | `RENTAL_OFFERS_ACTIONS=true` | Server-backed rented/available/archive actions; also requires writes and server permissions. |
 
 These are compile-time release configuration, **not** automatic capability negotiation or proof of deployment. Keep them false until verified. Enabling some operations cannot compensate for an unsupported dependency, such as favorite filter semantics or lease references. If the backend settles on a different contract, update the typed serializers and tests before enabling it; the proposal is intentionally explicit rather than silently speculative.
+
+The current adapter recognizes contract version 1 only. Do not set a new version or enable all flags to bypass local-only fields. Agree any schema/capability extension, update mobile readers, serializers and confirmation together, and verify complete persistence before recommending rollout. Public search support does not establish an owner collection scope-filter contract or selected-offer lease support.
+
+#### 4.8.13 Accommodation-first forms and required contract extensions
+
+The selected rental scope changes what the owner fills in and what the tenant sees. The physical property remains the shared parent; its internal model must not force every scope through a full-property form.
+
+| Form | Primary accommodation fields/sections | Supporting property context | Price covers |
+| --- | --- | --- | --- |
+| Entire property | Physical type, title, total area/bedrooms/bathrooms, furnishing/contents, facilities and property description | Address/map, floor and relevant building/ownership details | Entire property |
+| Room | One identified room; name, area, capacity, furnishing, contents, private facilities, bathroom access, room description and relevant photos | Parent type/name, address/map, floor, elevator/building access, shared kitchen/living/bathroom spaces and property-wide rules; physical totals optional when unknown | Selected room as a whole |
+| Room group | At least two distinct rooms in the same property; editable details/photos for every included room, names/count, group description and shared/exclusive group facilities | The same parent context, collected once | All included rooms together, one combined price |
+| Bed | Identified bed, type/size, personal storage/provisions and description/photos; separate shared-room identity, area when known, capacity/physical beds, bathroom access and room facilities | Separate parent-property location, floor, building access, shared facilities and rules | Selected individual bed |
+
+Room capacity is a physical specification, not current occupancy or available-bed count. An actual physical bed count comes from identified beds, not a capacity-derived availability estimate. Do not expose residents' identities. Room area never falls back to total property area; a bed has no invented area. Show combined room-group area only when every included room has a valid known area, and label it as the included rooms' combined area. Two rooms together remain one offer; independent rooms remain separate offers with independent terms and availability.
+
+**Contract status must be reported separately for each field:**
+
+| Status | Current mobile behavior | Backend delivery requirement |
+| --- | --- | --- |
+| Existing property-only fields | Uses the existing physical property/location/floor/media/amenity flow | Confirm deployed mappings and preserve legacy required fields |
+| Fields represented by the proposed rental v1 adapter | Rooms: identity/name/capacity/bathroom/description; beds: identity/name; offers: allocation/effective terms/defaults/overrides; optional stable media IDs | Verify the full contract in sections 4.8.3–4.8.4 against staging; representation in mobile is not deployment evidence |
+| New detailed accommodation fields | Typed durable local drafts; excluded from current API serialization; entered unsupported details prevent server submission | Agree public request/read fields, validation, version/capability support and mobile persistence confirmation before publication |
+
+The following names are **proposed extensions to agree**, not keys currently sent or read by the mobile v1 adapter:
+
+| Entity | Proposed extension | Required behavior |
+| --- | --- | --- |
+| Room | `area` | Nullable positive numeric square metres with decimals; unknown is null/omitted, never zero or property area |
+| Room | `is_furnished` | Nullable room-specific boolean; no silent inheritance from property furnishing |
+| Room | `contents` | Bed, wardrobe, desk, AC and similar contents; agree free text versus stable catalog IDs and localized labels |
+| Room | `features` | Private room facilities, distinct from shared property amenities |
+| Bed | `type` | Optional type/size with an agreed text or option contract |
+| Bed | `storage` | Optional personal storage/provisions, without resident data |
+| Bed | `description` | Bed-specific description, separate from parent-room and offer descriptions |
+| Offer | `group_facilities` | Explicit facilities available to the group, including exclusive access only when verified |
+| Property/inventory | `shared_facilities` | Explicit shared kitchen/living/bathroom and other spaces, preserving existing physical amenity/access values independently |
+| Property/inventory | `property_rules` | Property-wide rules and an agreed relationship to inherited/overridden offer terms |
+| Room/bed/offer/inventory | Stable media associations | Map relevant public property-image IDs to units and shared spaces under section 4.8.10; no private proof or local file references |
+
+Elevator/building access and physical amenities use their verified existing property mappings where supported. If a needed access/facility field is absent, report the exact extension and client adaptation in the delivery file rather than inventing a request key or treating it as supported.
+
+On device, detailed fields live in `RentalRoomDraftDetails`, `RentalBedDraftDetails`, `RentalOfferDraftDetails` and `RentalSharedDraftDetails`. Their `local_details` objects and `photo_refs` are **private draft format**, not API keys to accept accidentally. Agree the public entity placement, JSON types, nullability, omission/clear behavior, catalog/text choices, units, permissions and versioning. Return complete persisted details so the client can detect ignored fields or substituted accommodation, including fixtures with unknown optional values for every scope.
+
+Partial-property validation must differ from legacy whole-property validation:
+
+1. Keep the existing property-only flow's required title/type, address/location, physical totals and rent fields. For partial offers, require shared identity/location context and valid selected accommodation instead of hidden full-property requirements.
+2. Allow physical property area, bedroom totals and bathroom totals to be omitted when unknown. Preserve existing values on PATCH; omission is not zero or deletion. If a known total conflicts with an allocation, identify the parent-property total and affected rooms in a readable validation error.
+3. Do not apply mandatory legacy root price, period, deposit, minimum term, suitability, smoking or offer-description validation to partial offers. Price and `price_period` belong to each offer; `rental_period` remains the separate minimum term in months.
+4. Validate required unit fields only for the selected scope. Require one identified room, at least two distinct group rooms, or an identified bed inside its selected shared room as appropriate. Hidden/incompatible room/bed selections must not block a valid different scope or enter its request.
+5. Validate agreed detailed fields at their entity level. Nullable room area/furnishing remain unknown when omitted; do not populate them from the property. Keep private room facilities, shared property facilities and group-specific access distinct.
+6. Use the established readable error envelope. Any new structured field/entity error schema must be agreed; permission, conflict and validation failures must allow entered data to remain recoverable, without partial mutation or apparent success for ignored fields.
+
+Creation/editing share the same accommodation-first composition. Editing restores the exact offer, room/bed IDs, detailed values and media associations. Compatible shared data survives scope switches; incompatible selections are explained, retained locally where useful and excluded from submission. Shared address/floor/building/facility edits are explicit parent-property edits that may affect other offers. Existing requests/leases restrict published mode/scope/allocation transitions; the current mobile editor keeps persisted selections locked until that transition contract is verified.
+
+Before save, the review identifies the parent property, exact accommodation, included room names/count or bed and parent room, price/basis/period, minimum term/deposit/rules and shared facilities. Details lead with the selected unit's facts and description, then show property and shared-space context. Changing the offer changes the primary details, terms, availability and relevant gallery; missing unit data stays unknown instead of borrowing unrelated property values. Extend immutable historical snapshots with agreed unit facts when needed, retaining event-time meaning.
+
+Media requirements remain **10–25 unique public property photos and one required 1–60 second video**, collected once. Associate relevant room/bed/offer/shared photos after stable server IDs exist; durable local photo keys are not server IDs. Confirm associations in the saved response, label general property/shared-space media and exclude unrelated rooms from the selected offer's gallery. Section 4.8.10 owns the upload/retry/privacy rules; no extra ten-photo/video requirement applies to a unit.
+
+Mobile coordination points: `rental_offer_capabilities.dart`, `rental_room.dart`, `rental_offer.dart`, `rental_inventory.dart`, `rental_inventory_validation.dart`, `rental_inventory_confirmation.dart`, `rental_accommodation_draft_details.dart`, `owner_add_property_content.dart`, `owner_accommodation_draft_data.dart`, `owner_property_draft.dart`, `property_submission_cubit.dart`, and the existing discovery/gallery data helpers. Backend delivery must identify exact reader/serializer/confirmation changes, not only a flag to enable.
+
+#### 4.8.14 Owner, favorite, search and map collection categories
+
+Owner listings and Favorites provide **All types, Entire property, Room, Room group, Bed and Type not specified**. Category controls use shared presentation logic, while one result remains one physical property. A property with several matching offers appears once in a category and may appear in another category for other eligible accommodation. Offer counts and property counts remain separate.
+
+| Collection | Implemented mobile behavior | Required backend contract/delivery |
+| --- | --- | --- |
+| Owner listings | Review-status tabs compose with categories. Matches loaded `rental_inventory.offers[].rental_scope`, or confirmed `rental_summary.scopes` when full inventory is absent. Rented/unavailable/archived offers remain manageable. The inspected request sends `status`, `page`, `page_size`; no verified owner scope query exists | Agree a scope filter on the existing `GET properties/owned/` contract, composing with status and ownership. Filter properties before count/pagination; include manageable offers rather than applying public available-only discovery rules. Return the actual query/version/capability mapping for mobile integration |
+| Favorites | Membership uses **saved** offer snapshots, never unsaved offers or discovery summary scopes. Matching saved offers are projected under one property without changing the raw cache. Unavailable/archived saved offers retain identity. Missing snapshots stay Type not specified | Supply complete `saved_offers` with exact property/offer IDs, scope, terms and availability. Verify the proposed favorite `rental_scope` and term filters against saved offers before grouping/counting/paging and before enabling `RENTAL_OFFERS_FAVORITES` |
+| Public Home/search/map | Existing `RENTAL_OFFERS_SEARCH` gates real property-grouped scope queries. Section/“View all” context preserves scope and price period; detail still requires explicit final accommodation confirmation. Search/map scope controls are disabled with an explanation when unsupported | Use the existing versioned discovery contract in section 4.8.7. Apply scope, price-period and eligible availability filters before property grouping/pagination; counts and map markers stay property-based. Do not present a locally categorized first page as a complete catalog |
+| Legacy/unknown type | All types and Type not specified keep ambiguous legacy records and missing/unknown saved snapshots accessible | Migrate only with reliable evidence. Do not infer rental scope from physical `property_type`; Type not specified is a UI fallback, **not** a new API `rental_scope` value |
+
+Until compatible collection filters are verified, owner/favorite category filtering explicitly describes **matching loaded properties** and retains the original pages/cache and Load more/retry behavior. It cannot supply a fabricated category-wide count or new pagination service. An empty filtered first page is not evidence that the entire category is empty. Public search capability does not automatically authorize a new owner query parameter.
+
+Favorites also use their saved price context: one matching saved offer with valid terms shows that offer's price, price period and scope basis; several saved offers keep separate prices and require selection rather than a client-derived minimum. Missing terms are unknown. Do not reuse a property's discovery minimum for unsaved accommodation or compare weekly/monthly prices as one minimum. Define any distinction between saved-time and current terms explicitly, and revalidate current terms/availability before actions. Exact saved offer IDs survive opening details/authentication; unavailable saved offers never substitute another offer.
+
+Return fixtures and observed collection results for: two saved beds under one property yielding one Bed card; an unavailable saved bed remaining in Bed; a non-overlapping bed and room-group property appearing once in each matching owner category; status and scope composing; a first page with no loaded match followed by a matching property on page two; one saved group alongside a cheaper unsaved bed; same-scope saved offers with different price periods; missing saved snapshots remaining unspecified; and category switching retaining exact offer actions and raw cached data. Section 7 requires these collection capabilities to be reported separately from public search and basic inventory persistence.
 
 ## 5. Formerly paid features — free service contracts
 
@@ -725,6 +805,8 @@ Validate ownership, participant eligibility/consent requirements, approved templ
 
 Before enabling this additional lease capability, deliver a **proposed** stable `offer_id` plus an immutable agreed-accommodation/terms snapshot, explicit participant eligibility for that offer, inventory/lease dependency and concurrent-change rules, and exact create/read/collection response mappings. This extension is not currently sent by the client. Retain property IDs and historical lease IDs; do not reinterpret legacy documents as whole-property offers. Return the supplied `offer_id`/`offer_snapshot` on related lease, contract, invoice and revenue records where applicable; current read models preserve them. Rent obligations must come from explicit agreement and the actual lease/ledger, never the latest asking price or a viewing acceptance.
 
+Completing the offer-based rental cycle also requires mobile integration after this contract is agreed: exact-offer selection in the lease form/body, eligible participants for that accommodation, review of agreed terms, and confirmation of the returned offer identity/snapshot. Backend must define which explicit agreement/lease transition changes availability and creates rental obligations, with transactional allocation checks. Existing rental flags cannot enable this missing lease integration, and no separate rental-application endpoint is assumed.
+
 Lease response/page item fields: `id`, `property_id`, `property_title`, `owner_name`, `tenant_name`, `start_date`, `end_date`, `rent`, `status`, positive `revision`, `document_url`, `can_sign`, `can_cancel`. Creation must return `status=draft` and the requested property ID. Define the full lifecycle using supported states such as `draft`, `pending`, `signed`, `active`, `cancelled`, `expired`; document amendments, rejected signatures and provider failures if additional states are needed.
 
 Signing session and cancellation bodies are `{"revision":2,"request_key":"client-generated-uuid"}`. Reject stale revisions. A signing-session receipt has `status=pending`, `subject_id=lease-id`, an HTTPS `hosted_url` and a future `expires_at`. Authorize the current signer and use the provider to present/review the exact document and capture an auditable signature. Webhooks must be authenticated, deduplicated and reconciled; update signing state only from authoritative provider evidence.
@@ -791,8 +873,8 @@ Suggested delivery order:
 
 1. Confirm existing authentication, account/workspaces and free property/visit/media/chat/support contracts. Remove legacy feature-payment checks and implement free configuration.
 2. Resolve atomic slot booking, media identity/order, truthful availability/permissions/rejections/statistics and chat acknowledgement/idempotency gaps.
-3. Implement rental inventory identities, migration/old-client compatibility, transactional overlap/dependency/revision validation, create/upload idempotency and explicit publication policy. Keep client rental-operation flags off until each supported contract is verified.
-4. Deliver grouped offer-aware reads/search/favorites, viewing references/historical snapshots and notification/link/media behavior. Verify per-operation staging fixtures before enabling the corresponding rental capability.
+3. Confirm rental v1/property-only compatibility and fixtures for all four scopes. Implement stable inventory IDs/client-key mapping, migration, transactional overlap/dependency/revision checks, create/upload idempotency and publication policy. Agree and implement the detailed unit fields and partial-property validation in section 4.8.13; retain the mobile local-only-data guard until readers, serializers and persistence confirmation support them.
+4. Deliver complete accommodation/media reads, grouped discovery, owner status-plus-scope filtering, exact saved-offer categories/prices, viewing references/historical snapshots and notification/link behavior. Verify the distinct collection contracts in section 4.8.14, filters before property counts/pagination, and per-operation staging round trips before enabling the corresponding rental capability.
 5. Deploy free campaigns, offer-aware alert persistence/matching/push, measured analytics/export and AI generation with their precise supported context and operational monitoring.
 6. Configure approved lease templates and explicit eligible participants, then deploy document access/signing and reconciled provider events. Extend lease creation to selected offers before enabling it for offer-based properties.
 7. Deploy invoice generation, real rent quote/checkout, settlement reconciliation and durable receipts; preserve supplied historical accommodation without changing ledger semantics.
@@ -802,6 +884,10 @@ Suggested delivery order:
 Required backend checks: unauthenticated/wrong-account reads/writes, workspace/ownership/participant checks, empty/missing resources, fresh versus stale/cached authorization, simultaneous slot bookings, invalid and reordered media IDs, ambiguous create/upload retries, duplicate review prevention, REST/socket duplicate sends, durable report receipts, nullable metrics, unsupported configuration, repeated keys/payload conflicts, ineligible promotion, campaign expiry, alert pause/delete/deduplication, AI failure/retry without user charges, signing revision/participant/expiry checks, expired/declined/delayed checkout, webhook replay and paid-invoice replay. Confirm each free feature works without any subscription, entitlement or credit record.
 
 Also verify all four rental scopes; grouped rooms versus independent room offers; bed parent/identity/capacity; simultaneous overlapping allocations; whole/partial transitions with active requests/leases; rented/unavailable allocation retention; one rented offer leaving other non-overlapping availability unchanged; PATCH moderation/status-tab counts; eligible same-period summary/filter/sort/pagination; exact favorites/removal echoes; ignored-field/failed-write handling; viewing acceptance leaving inventory untouched; historical identity after edits/archive; private proof omission; media deletion/association conflicts; missing versus unknown legacy fields; account switches; and old/offer-specific links. Capability enablement requires actual staging evidence for that operation and its dependencies.
+
+For detailed forms, include known/unknown decimal room areas, optional unknown property totals, room-specific furnishing/contents/private facilities, bed details/shared-room context, group/shared facilities and rules, omitted-versus-cleared PATCH values, shared-property edits, full returned persistence and stable media association round trips. Include readable errors that preserve entered data; a successful response that ignores a requested field is a failed contract check.
+
+For collections, verify every case in section 4.8.14, including non-overlapping categories, composed owner status/scope, saved-only membership and price basis, unavailable exact selections, missing snapshots, mixed price periods and a matching property reached after an initially empty filtered page. Report these separately from public search and inventory writes.
 
 ## 7. Backend return file — required response format
 
@@ -819,6 +905,8 @@ Backend: create **`SOKOUN_ALL_FEATURES_BACKEND_DELIVERY.md`** and return it to t
 - Free feature policy: `<evidence that no subscription, feature charge, entitlement or credit is required>`
 - Real rent checkout retained: `<provider/environment/status>`
 - Rental-offer contract version and supported operations: `<deployed create/edit/read/search/favorites/viewing/media/action support; exact mappings and gaps>`
+- Detailed accommodation fields and partial-property validation: `<per-field public mappings/version/status, persisted read-back evidence and missing fields from section 4.8.13>`
+- Collection category support: `<owner status-plus-scope, saved-offer favorite filters and public search reported separately; actual query/capability mappings and property-based counts/pages>`
 - Rental migration/publication decision: `<legacy semantics audit, old-client compatibility and actual eligibility predicate>`
 - Client rollout recommendation: `<per-flag enable/keep disabled with staging evidence; not automatic capability negotiation>`
 
@@ -830,9 +918,13 @@ Use `deployed and verified`, `implemented but not deployed`, `blocked`, `not imp
 |---|---|---|---|---|
 | `<each feature>` | `<status>` | `<workspace/ownership>` | `<reference>` | `<exact gaps>` |
 | Rental inventory create/edit/read and stable room/bed/offer IDs | `<status>` | `<ownership, revisions, all four scopes>` | `<reference>` | `<exact gaps>` |
+| Detailed room/bed/group/shared fields and media associations | `<status>` | `<entity permissions, optional unknowns, complete persistence>` | `<per-field mapping and round-trip fixtures>` | `<serializer/reader/confirmation gaps>` |
+| Partial-property versus legacy whole-property validation | `<status>` | `<shared identity/location, scope fields, omitted PATCH totals>` | `<success/error fixtures for every scope>` | `<exact gaps>` |
 | Rental availability/archive and mode/dependency transitions | `<status>` | `<action permissions, overlap, requests/leases>` | `<reference>` | `<exact gaps>` |
 | Grouped discovery/filtering/sorting/counts | `<status>` | `<publication, eligible offers, exact price period>` | `<reference>` | `<exact gaps>` |
+| Owner status-plus-scope collection categories | `<status>` | `<owned manageable offers, property-based filtering/counts/pages>` | `<query and multi-page fixtures>` | `<agreed owner filter/client wiring>` |
 | Exact-offer favorites and unavailable saved selections | `<status>` | `<account, property, offer>` | `<reference>` | `<exact gaps>` |
+| Saved-offer favorite categories and price context | `<status>` | `<saved-only scope/terms, unavailable selections, unknown snapshots>` | `<category/price/pagination fixtures>` | `<exact gaps>` |
 | Offer viewing references and immutable historical snapshots | `<status>` | `<participants, revisions, appointment-only transitions>` | `<reference>` | `<exact gaps>` |
 | Offer media associations and create/upload recovery | `<status>` | `<stable public IDs, private proof, idempotency>` | `<reference>` | `<exact gaps>` |
 | Offer notifications/deep links/transient versus persistent chat context | `<status>` | `<visibility, participants, native link deployment>` | `<reference>` | `<exact gaps>` |
@@ -841,7 +933,7 @@ Use `deployed and verified`, `implemented but not deployed`, `blocked`, `not imp
 
 ### 7.3 Final method/path and schema mapping
 
-Fill one row for **all 20 new method/path contracts**, every existing endpoint affected in section 3.2 and each extension delivered. Include unchanged and unavailable endpoints. For rental offers, report the proposed extension of each existing method/path separately: owner POST/PATCH/full GET/owned reads, home/search, favorites GET/POST/DELETE, viewing create and both parties' request/history/calendar reads. Document notification/snapshot response mappings and any proposed lease extension. No new offer endpoint is assumed by this request.
+Fill one row for **all 20 new method/path contracts**, every existing endpoint affected in section 3.2 and each extension delivered. Include unchanged and unavailable endpoints. For rental offers, report the proposed extension of each existing method/path separately: owner POST/PATCH/full GET/owned reads, home/search, favorites GET/POST/DELETE, viewing create and both parties' request/history/calendar reads. Include detailed field placement and scope-aware validation, the agreed owner status/scope query, and favorite saved-offer filtering/grouping/pagination. Document notification/snapshot response mappings and any proposed lease extension. No new offer endpoint is assumed by this request.
 
 | Requested method/path | Actual method/path | Query/body differences | Response/envelope/status differences | Deployed | Exact mobile adaptation |
 |---|---|---|---|---|---|
@@ -849,13 +941,25 @@ Fill one row for **all 20 new method/path contracts**, every existing endpoint a
 
 Provide sanitized actual success, empty, validation, permission, conflict and provider failure payloads for each applicable route. Include JSON types, dates/time zone, revisions, currencies, paging, translation behavior and all supported status values. Confirm DELETE JSON-body handling for alerts and offer favorites, multipart `rental_inventory` encoding, `X-Rental-Offers-Version`/create `Idempotency-Key`, ID/client-key resolution and media array encoding/order. Confirm full saved-inventory responses and exact offer/flag echoes; ignored fields must never produce apparent successful persistence.
 
+#### 7.3.1 Detailed accommodation field delivery matrix
+
+Provide one row for **every extension in section 4.8.13**, plus the actual existing or extended elevator/building-access and media mappings. List unsupported fields explicitly. Proposed names are requirements to resolve, not an instruction to expose private `local_details` or `photo_refs` as API fields.
+
+| Proposed requirement | Actual public entity/key/type | Required, null, omitted/clear and inheritance semantics | Contract version/capability/status | Persisted read-back/error evidence | Exact mobile adaptation |
+| --- | --- | --- | --- | --- | --- |
+| `<each room/bed/group/shared field or media mapping>` | `<actual mapping, units or catalog/text choice>` | `<create/PATCH/read rules>` | `<verified support or exact gap>` | `<sanitized fixtures/run reference>` | `<typed models, reader, serializer, confirmation>` |
+
+Include unknown optional values, decimal area units, catalog IDs/localized labels where used, preserved known property totals on omitted PATCH fields, and errors for invalid/foreign allocations. Agree any version extension with mobile: the current adapter accepts version 1 only. A deployed field without compatible mobile serialization/read-back confirmation does not authorize removal of the local-only-data submission guard.
+
 ### 7.4 Feature-specific delivered details
 
 | Area | Required actual details |
 |---|---|
 | Configuration/promotion | Free option IDs/durations/titles, no credit debit/feature charge, eligibility/conflicts, placements, `is_sponsored`, campaign expiry and real impression definition |
 | Rental inventory/owner writes | Permanent room/bed/offer IDs, client-key mapping, four scopes, whole/partial exclusivity, defaults/overrides, exact scope payloads, capacities/parent refs, overlap/lease/request dependencies, revision/conflict behavior, full response confirmation and availability/archive permissions |
-| Rental discovery/favorites | Publication predicate, grouped property result unit/counts, eligible same-period minimum, scope versus property-type filters, actual offer price sorting, saved exact references/tombstones, removal echoes and unsupported query behavior |
+| Detailed accommodation forms | All field mappings in section 4.8.13, supported versus local-only data, partial/whole required-field differences, unknown physical totals, create/PATCH omission/clear rules, explicit shared-property edits, persisted detailed responses and field errors |
+| Collection categories | Owner status-plus-scope contract and manageable-offer predicate; saved-only favorite membership/terms/availability; property filters before counts/pages; unknown legacy/snapshot fallback; distinct public/owner/favorite capability recommendations and section 4.8.14 fixtures |
+| Rental discovery/favorites | Publication predicate, grouped property result unit/counts, eligible same-period discovery minimum, scope versus property-type filters, actual offer price sorting, saved exact references/tombstones and their separate price context, removal echoes and unsupported query behavior |
 | Rental history/migration/rollout | Immutable accommodation/price snapshots, missing/future-field handling, ambiguous legacy room decisions, old IDs/clients, mode-change dependencies and operation-specific capability recommendations with staging evidence |
 | Alerts/saved search | Full canonical filters including proposed rental scope/offer-aware price semantics and any alert versioning, supported cadences, workers/meaningful changes, preferences/quiet hours, pause/delete, delivery/deduplication and exact notification/FCM payload |
 | Comparison/costs/map/freshness | Property/verification and selected-offer rent/deposit mapping, explicit selection, location privacy, map scope/query support, owner confirmation operation and lifecycle policy |
@@ -888,7 +992,7 @@ Distinguish backend tests from mobile/native-device checks still required.
 
 List unsupported statuses, schema/pagination changes, remaining notification routes, provider callbacks, new extension screens/actions and blockers. This table is the implementation input for the final mobile integration; a reply containing only “done” is insufficient.
 
-For rental offers, list the exact supported schema and serializers, required changes for every compile-time define in section 4.8.12, remaining lease/AI/alert context extensions and Android/iOS hosted/native link work. Recommend enabling a flag only with evidence for its operation and dependencies; unsupported capabilities keep honest local/disabled behavior. No backend-side deployment changes these compile-time flags automatically.
+For rental offers, list exact typed-model, detailed-draft-to-public-schema, reader, serializer and persistence-confirmation changes; agreed owner collection query wiring; saved-offer category/price mappings; and changes for every compile-time define in section 4.8.12. Include the selected-offer lease form/body/confirmation work in section 5.5, remaining AI/alert context extensions and Android/iOS hosted/native link work. Recommend enabling a flag only with evidence for its operation and dependencies; unsupported capabilities keep honest local/disabled behavior. No backend-side deployment changes these compile-time flags automatically.
 
 ## 8. Mobile verification and remaining integration checks
 
@@ -909,7 +1013,7 @@ Initial free-feature verification on **2026-10-07** used **Flutter 3.35.1 / Dart
 
 Follow-up Profile/Home verification on **2026-10-07** used the workspace's current **Flutter 3.44.7 / Dart 3.12.2**. **502 focused tests passed** across `main_journey_features_test.dart`, `tenant_home_pagination_test.dart`, `profile_flow_test.dart`, `profile_settings_support_test.dart` and `feature_architecture_test.dart`, including **19 main-journey tests**. Both profiles omit the tools shortcut, and the actual tenant Home screen's greeting, search, tools, rent preview and listings move together in one scroll area without a fixed AppBar. Focused analysis found no issues; formatting and whitespace checks passed. This follow-up changes no backend contracts.
 
-Latest rental-offer verification on **2026-10-07** used **Flutter 3.44.7 / Dart 3.12.2**:
+Earlier rental-offer verification on **2026-10-07** used **Flutter 3.44.7 / Dart 3.12.2**; the recorded counts below precede the accommodation-form and collection-category follow-up:
 
 | Rental-offer check | Observed result |
 |---|---|
@@ -923,6 +1027,8 @@ Latest rental-offer verification on **2026-10-07** used **Flutter 3.44.7 / Dart 
 
 Meaningful rental coverage is in `test/rental_offers_domain_test.dart`, `test/rental_offers_requests_test.dart`, `test/rental_offers_ui_test.dart` and the final review-navigation test in `test/tenant_property_details_screen_test.dart`. It covers entire/room/group/bed offers, groups versus independent offers, room/bed overlap, scope-dependent payloads/defaults, exact price/period/media meaning, failed and unsupported persistence, creation recovery, current-session/revision validation, exact favorites/viewings, independent rented availability, appointment-only acceptance, missing/unknown legacy fields, historical snapshots and retained unavailable selections. These tests use fixtures/injected repositories and do not establish backend enforcement or deployment.
 
+For the detailed forms and collection categories in sections 4.8.13–4.8.14, also run `test/rental_accommodation_forms_test.dart` and `test/rental_listing_categories_test.dart` after adapting the agreed backend contract. Keep fixture-based client checks separate from staging persistence, filtering and concurrency evidence requested in section 7.
+
 Relevant commands are:
 
 ```sh
@@ -935,6 +1041,8 @@ make freeFeaturesCheck
 
 # Rental-offer/domain/request/UI and final routing/architecture checks:
 flutter test --no-pub test/rental_offers_domain_test.dart test/rental_offers_requests_test.dart test/rental_offers_ui_test.dart test/tenant_property_details_screen_test.dart test/feature_architecture_test.dart
+# Detailed accommodation forms and collection categories:
+flutter test --no-pub test/rental_accommodation_forms_test.dart test/rental_listing_categories_test.dart
 # Optional rental UI render captures:
 SOKOUN_CAPTURE_RENTAL_UI=1 flutter test --no-pub test/rental_offers_ui_test.dart
 ```

@@ -24,6 +24,9 @@ class AdvancedAnalyticsCubit extends AsyncCubit<AdvancedAnalyticsContent> {
         key: premiumCacheKey('analytics', [propertyId, periodDays, language]),
         query: {'period_days': periodDays, 'lang': language},
         fromJson: AdvancedAnalyticsContent.fromJson,
+        valid: (content) =>
+            content.propertyId == propertyId &&
+            content.periodDays == periodDays,
         toJson: (content) => content.toJson(),
       ),
       withInternetInterceptor: true,

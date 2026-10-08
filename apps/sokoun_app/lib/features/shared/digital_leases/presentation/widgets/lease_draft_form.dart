@@ -1,4 +1,6 @@
-import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
+import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_selection_panel.dart';
+import 'lease_rental_offer_selector.dart';
 import 'package:melos_core/core/widgets/text_fields/default_text_field.dart';
 import '../../data/models/lease_tenant.dart';
 import 'lease_tenant_selector.dart';
@@ -44,6 +46,7 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
     ({
       OwnerPropertyContent? property,
       LeaseTenant? tenant,
+      RentalSelection? offer,
       String templateId,
       String? error,
     })
@@ -51,10 +54,12 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
   _selection = ValueNotifier((
     property: null,
     tenant: null,
+    offer: null,
     templateId: '',
     error: null,
   ));
   String? _requestKey;
+  final ValueNotifier<int> _offerRefresh = ValueNotifier(0);
   @override
   void initState() {
     super.initState();
@@ -62,6 +67,7 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
     _selection.value = (
       property: widget.property,
       tenant: null,
+      offer: null,
       templateId: '',
       error: null,
     );
@@ -73,6 +79,7 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
     _end.dispose();
     _rent.dispose();
     _selection.dispose();
+    _offerRefresh.dispose();
     _cubit.close();
     super.dispose();
   }
@@ -104,6 +111,7 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
             ({
               OwnerPropertyContent? property,
               LeaseTenant? tenant,
+              RentalSelection? offer,
               String templateId,
               String? error,
             })
@@ -129,12 +137,37 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
                         _selection.value = (
                           property: property,
                           tenant: null,
+                          offer: null,
                           templateId: selection.templateId,
                           error: null,
                         );
                       },
                     ),
                     16.szH,
+                    if (selection.property != null) ...[
+                      ValueListenableBuilder<int>(
+                        valueListenable: _offerRefresh,
+                        builder: (context, refreshGeneration, _) =>
+                            LeaseRentalOfferSelector(
+                              key: ValueKey(selection.property!.id),
+                              propertyId: selection.property!.id,
+                              selection: selection.offer,
+                              enabled: canChange,
+                              refreshGeneration: refreshGeneration,
+                              onSelected: (offer) {
+                                _changed();
+                                _selection.value = (
+                                  property: selection.property,
+                                  tenant: selection.tenant,
+                                  offer: offer,
+                                  templateId: selection.templateId,
+                                  error: null,
+                                );
+                              },
+                            ),
+                      ),
+                      16.szH,
+                    ],
                     LeaseTenantSelector(
                       propertyId: selection.property?.id ?? '',
                       tenant: selection.tenant,
@@ -144,6 +177,7 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
                         _selection.value = (
                           property: selection.property,
                           tenant: tenant,
+                          offer: selection.offer,
                           templateId: selection.templateId,
                           error: null,
                         );
@@ -179,6 +213,7 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
                               _selection.value = (
                                 property: selection.property,
                                 tenant: selection.tenant,
+                                offer: selection.offer,
                                 templateId: id ?? '',
                                 error: null,
                               );
@@ -186,7 +221,15 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
                     ),
                     16.szH,
                     if (template != null)
-                      AppText('${template.title} ${template.version}'),
+                      AppText(
+                        LocaleKeys.featureLeaseTemplateDetails
+                            .replaceAll('{version}', template.version)
+                            .replaceAll('{language}', template.language)
+                            .replaceAll(
+                              '{jurisdiction}',
+                              template.jurisdiction,
+                            ),
+                      ),
                     8.szH,
                     DefaultTextField(
                       controller: _start,
@@ -225,6 +268,11 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
                       onChanged: (_) => _changed(),
                     ),
                     16.szH,
+                    if (state.isError && state.msg?.isNotEmpty == true)
+                      AppText(
+                        state.msg!,
+                        color: Theme.of(context).colorScheme.error,
+                      ),
                     if (selection.error != null)
                       AppText(
                         selection.error!,
@@ -236,15 +284,13 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
                           : () async {
                               if (!_form.currentState!.validate()) return;
                               _requestKey ??= const Uuid().v4();
-                              if (selection.property?.rentalInventory != null) {
-                                Messages.showToast(
-                                  msg: LocaleKeys.rentalUnavailableCapability,
-                                );
-                                return;
-                              }
                               final body = LeaseDraftBody(
                                 hasRentalOffers:
-                                    selection.property?.rentalInventory != null,
+                                    selection.property?.hasRentalOffers ==
+                                        true ||
+                                    selection.offer != null,
+                                offerId: selection.offer?.offerId ?? '',
+                                rentalSelection: selection.offer,
                                 propertyId: selection.property?.id ?? '',
                                 tenantId: selection.tenant?.id ?? '',
                                 templateId: template?.id ?? '',
@@ -258,6 +304,7 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
                                 _selection.value = (
                                   property: selection.property,
                                   tenant: selection.tenant,
+                                  offer: selection.offer,
                                   templateId: selection.templateId,
                                   error: LocaleKeys.paidLeaseInvalid,
                                 );
@@ -271,6 +318,10 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
                                       CrossAxisAlignment.stretch,
                                   children: [
                                     AppText(selection.property!.title),
+                                    if (selection.offer != null)
+                                      RentalSelectionPanel(
+                                        selection: selection.offer!,
+                                      ),
                                     AppText(selection.tenant!.displayName),
                                     AppText(template!.title),
                                     AppText(
@@ -284,7 +335,12 @@ class _LeaseDraftFormState extends State<LeaseDraftForm> {
                               );
                               if (!confirmed || !mounted) return;
                               final lease = await _cubit.create(body);
-                              if (lease != null && mounted) Go.back(lease);
+                              if (!mounted) return;
+                              if (lease != null) {
+                                Go.back(lease);
+                              } else {
+                                _offerRefresh.value++;
+                              }
                             },
                       child: state.isLoading
                           ? const SizedBox(

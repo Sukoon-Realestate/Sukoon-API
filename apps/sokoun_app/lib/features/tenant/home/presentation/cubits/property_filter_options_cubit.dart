@@ -1,6 +1,7 @@
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
+import 'package:melos_core/config/language/languages.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
 
 class PropertyFilterOptionsCubit
@@ -19,7 +20,8 @@ class PropertyFilterOptionsCubit
         CrudBaseParmas<PropertyFilterOptionsModel>(
           api: ApiConstants.propertyFilterOptions,
           httpRequestType: HttpRequestType.get,
-          cacheKey: 'property_filter_options',
+          cacheKey:
+              'property_filter_options_${Languages.currentLanguage.languageCode}',
           mapper: (json) => PropertyFilterOptionsModel.fromJson(
             json is Map<String, dynamic> ? json : const {},
           ),

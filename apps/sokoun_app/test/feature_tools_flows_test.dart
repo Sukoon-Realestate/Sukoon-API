@@ -1,3 +1,6 @@
+import 'package:sokoun_app/features/shared/premium/data/feature_service_capabilities.dart';
+import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart'
+    show HttpRequestType;
 import 'package:sokoun_app/features/owner/properties/data/models/owner_property_content.dart';
 import 'package:sokoun_app/features/owner/promotions/presentation/screens/promotions_screen.dart';
 import 'package:sokoun_app/features/shared/digital_leases/presentation/screens/digital_lease_details_screen.dart';
@@ -35,6 +38,12 @@ import 'package:sokoun_app/features/tenant/premium_alerts/presentation/cubits/pr
 import 'package:sokoun_app/features/tenant/premium_alerts/presentation/widgets/premium_alert_composer.dart';
 import 'package:sokoun_app/features/tenant/premium_alerts/presentation/screens/premium_alerts_screen.dart';
 import 'helpers/feature_tools_test_dependencies.dart';
+
+const _providers = FeatureServiceCapabilities(
+  rentCheckout: true,
+  leaseSigning: true,
+  signedDocuments: true,
+);
 
 const _invoice = RentInvoice(
   id: 'invoice',
@@ -287,7 +296,7 @@ void main() {
     },
   );
   testWidgets(
-    'rent checkout remains reachable without a feature access request',
+    'rent records remain reachable while the payment provider is disabled',
     (tester) async {
       repository.replies[PremiumApiConstants.invoice('invoice')] =
           FeatureTestReply(data: _invoice.toJson());
@@ -302,18 +311,18 @@ void main() {
         repository.requests.single.endpoint,
         PremiumApiConstants.invoice('invoice'),
       );
-      expect(find.text(LocaleKeys.paidPayRent), findsOneWidget);
-      final pay = tester.widget<FilledButton>(
-        find.ancestor(
-          of: find.text(LocaleKeys.paidPayRent),
-          matching: find.byType(FilledButton),
+      expect(find.text(LocaleKeys.paidPayRent), findsNothing);
+      expect(find.text(LocaleKeys.featureCheckoutUnavailable), findsOneWidget);
+      expect(
+        repository.requests.every(
+          (request) => request.method == HttpRequestType.get,
         ),
+        isTrue,
       );
-      expect(pay.onPressed, isNotNull);
     },
   );
   testWidgets(
-    'lease participants can read and sign without a subscription request',
+    'lease participants can read while the signing provider is disabled',
     (tester) async {
       const lease = DigitalLease(
         id: 'lease',
@@ -337,14 +346,14 @@ void main() {
         repository.requests.single.endpoint,
         PremiumApiConstants.lease('lease'),
       );
-      expect(find.text(LocaleKeys.paidLeaseSign), findsOneWidget);
-      final sign = tester.widget<FilledButton>(
-        find.ancestor(
-          of: find.text(LocaleKeys.paidLeaseSign),
-          matching: find.byType(FilledButton),
+      expect(find.text(LocaleKeys.paidLeaseSign), findsNothing);
+      expect(find.text(LocaleKeys.featureSigningUnavailable), findsOneWidget);
+      expect(
+        repository.requests.every(
+          (request) => request.method == HttpRequestType.get,
         ),
+        isTrue,
       );
-      expect(sign.onPressed, isNotNull);
     },
   );
   testWidgets(
@@ -403,6 +412,7 @@ void main() {
         tester,
         Scaffold(
           body: RentInvoiceDetailsView(
+            capabilities: _providers,
             invoice: _invoice.copyWith(
               amount: PremiumMoney(amountMinor: amount, currency: 'EGP'),
             ),
@@ -427,6 +437,7 @@ void main() {
         tester,
         Scaffold(
           body: RentInvoiceDetailsView(
+            capabilities: _providers,
             invoice: _invoice,
             isFresh: true,
             onRefresh: () async {},
@@ -448,6 +459,7 @@ void main() {
         tester,
         Scaffold(
           body: RentInvoiceDetailsView(
+            capabilities: _providers,
             invoice: _invoice.copyWith(status: PremiumStatus.unknown),
             isFresh: true,
             onRefresh: () async {},
@@ -459,6 +471,7 @@ void main() {
         tester,
         Scaffold(
           body: RentInvoiceDetailsView(
+            capabilities: _providers,
             invoice: _invoice,
             isFresh: false,
             onRefresh: () async {},
@@ -489,6 +502,7 @@ void main() {
         tester,
         Scaffold(
           body: RentInvoiceDetailsView(
+            capabilities: _providers,
             invoice: _invoice,
             isFresh: true,
             onRefresh: () async {},
@@ -521,6 +535,7 @@ void main() {
         tester,
         Scaffold(
           body: DigitalLeaseDetailsView(
+            capabilities: _providers,
             workspace: AppWorkspace.tenant,
             lease: lease,
             isFresh: true,
@@ -549,6 +564,7 @@ void main() {
         tester,
         Scaffold(
           body: DigitalLeaseDetailsView(
+            capabilities: _providers,
             workspace: AppWorkspace.tenant,
             lease: lease,
             isFresh: true,

@@ -37,9 +37,49 @@
 
   <title>سكون | Sokoon</title>
   <link rel="manifest" href="manifest.json">
+  <style>
+    #sokoun-loading {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      background: #FAFBF8;
+    }
+    .loading-bar {
+      width: 140px;
+      height: 4px;
+      overflow: hidden;
+      border-radius: 4px;
+      background: #E3EBE5;
+    }
+    .loading-bar::after {
+      content: '';
+      display: block;
+      width: 50%;
+      height: 100%;
+      border-radius: inherit;
+      background: #0C6254;
+      animation: loading-progress 1s ease-in-out infinite alternate;
+    }
+    @keyframes loading-progress {
+      to { transform: translateX(100%); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .loading-bar::after { animation: none; width: 100%; }
+    }
+  </style>
 </head>
 <body style="margin:0;background:#FAFBF8">
+  <div id="sokoun-loading" role="status" aria-busy="true">
+    <img src="logo.svg" alt="سكون" width="96" height="96" fetchpriority="high">
+    <div class="loading-bar" aria-hidden="true"></div>
+  </div>
   <noscript>
+    <style>#sokoun-loading { display: none; }</style>
     <main dir="rtl" style="max-width:640px;margin:80px auto;padding:24px;font-family:system-ui;text-align:center">
       <img src="logo.svg" alt="سكون" width="80" height="80">
       <h1>سكون — سكن ترتاح فيه</h1>
@@ -47,6 +87,39 @@
       <p>يرجى تفعيل JavaScript لتصفح الموقع. التطبيق قريبًا على iOS وAndroid.</p>
     </main>
   </noscript>
-  <script src="flutter_bootstrap.js" async></script>
+  <script>
+    window.addEventListener('flutter-first-frame', () => {
+      document.getElementById('sokoun-loading')?.remove();
+    }, { once: true });
+
+    async function loadLandingPage() {
+      // Retire the old worker before requesting bootstrap: it may cache that
+      // script too, so migration inside bootstrap cannot reach existing users.
+      if ('serviceWorker' in navigator) {
+        try {
+          const registration = await navigator.serviceWorker.getRegistration(document.baseURI);
+          const worker = registration?.active;
+          if (worker && registration.scope === new URL('./', document.baseURI).href &&
+              new URL(worker.scriptURL).pathname.endsWith('/flutter_service_worker.js')) {
+            await registration.unregister();
+            const controller = navigator.serviceWorker.controller;
+            if (controller && new URL(controller.scriptURL).pathname === new URL(worker.scriptURL).pathname) {
+              window.location.reload();
+              return;
+            }
+          }
+        } catch (error) {
+          console.warn('Could not retire the legacy Flutter worker.', error);
+        }
+      }
+
+      const bootstrap = document.createElement('script');
+      bootstrap.src = new URL('flutter_bootstrap.js', document.baseURI).href;
+      bootstrap.async = true;
+      document.body.appendChild(bootstrap);
+    }
+
+    loadLandingPage().catch(error => console.error('Could not load Sokoun.', error));
+  </script>
 </body>
 </html>

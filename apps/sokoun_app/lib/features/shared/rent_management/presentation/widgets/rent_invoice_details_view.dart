@@ -1,4 +1,7 @@
-import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
+import 'rent_invoice_summary.dart';
+import 'rent_invoice_lease_entry.dart';
+import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
+import 'package:sokoun_app/features/shared/premium/data/feature_service_capabilities.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
@@ -8,7 +11,6 @@ import 'package:melos_core/core/extensions/sized_box_helper.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
 import 'package:sokoun_app/features/shared/premium/data/models/premium_action_receipt.dart';
 import 'package:sokoun_app/features/shared/premium/data/premium_hosted_data.dart';
-import 'package:sokoun_app/features/shared/premium/presentation/widgets/shared/premium_status_badge.dart';
 import 'package:sokoun_app/features/shared/premium/presentation/widgets/shared/premium_confirm_sheet.dart';
 import 'package:sokoun_app/features/shared/premium/presentation/widgets/shared/premium_feedback.dart';
 import '../../data/models/rent_invoice.dart';
@@ -21,8 +23,12 @@ class RentInvoiceDetailsView extends StatefulWidget {
     required this.invoice,
     required this.isFresh,
     required this.onRefresh,
+    this.workspace = AppWorkspace.tenant,
+    this.capabilities = FeatureServiceCapabilities.configured,
   });
   final RentInvoice invoice;
+  final AppWorkspace workspace;
+  final FeatureServiceCapabilities capabilities;
   final bool isFresh;
   final Future<void> Function() onRefresh;
   @override
@@ -36,7 +42,7 @@ class _RentInvoiceDetailsViewState extends State<RentInvoiceDetailsView>
   @override
   void initState() {
     super.initState();
-    _cubit = RentCheckoutCubit();
+    _cubit = RentCheckoutCubit(capabilities: widget.capabilities);
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -45,6 +51,12 @@ class _RentInvoiceDetailsViewState extends State<RentInvoiceDetailsView>
     WidgetsBinding.instance.removeObserver(this);
     _cubit.close();
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant RentInvoiceDetailsView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.invoice.id != widget.invoice.id) _requestKey = null;
   }
 
   @override
@@ -62,26 +74,17 @@ class _RentInvoiceDetailsViewState extends State<RentInvoiceDetailsView>
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            AppText(invoice.propertyTitle, fontWeight: FontWeight.bold),
-            if (invoice.rentalSelection != null)
-              AppText(
-                RentalOfferLabels.accommodation(invoice.rentalSelection!),
-              ),
-            16.szH,
-            AppText('${LocaleKeys.paidRentReference} ${invoice.reference}'),
-            PremiumStatusBadge(status: invoice.status),
-            AppText(
-              invoice.amount.display,
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
-            ),
-            if (invoice.dueDate != null)
-              AppText(
-                '${LocaleKeys.paidDueDate} ${invoice.dueDate!.toIso8601String().substring(0, 10)}',
-              ),
+            RentInvoiceSummary(invoice: invoice),
             16.szH,
             AppText(LocaleKeys.paidInvoicesExplanation),
-            if (invoice.canPay &&
+            if (invoice.leaseId.isNotEmpty)
+              RentInvoiceLeaseEntry(
+                leaseId: invoice.leaseId,
+                workspace: widget.workspace,
+              ),
+            if (widget.capabilities.rentCheckout &&
+                !widget.workspace.isOwner &&
+                invoice.canPay &&
                 invoice.status.isPayable &&
                 invoice.amount.isKnown &&
                 invoice.amount.amountMinor! > 0)
@@ -130,7 +133,8 @@ class _RentInvoiceDetailsViewState extends State<RentInvoiceDetailsView>
                       )
                     : AppText(LocaleKeys.paidPayRent),
               ),
-            if (invoice.status.isPaid &&
+            if (widget.capabilities.signedDocuments &&
+                invoice.status.isPaid &&
                 PremiumHostedData.httpsUri(invoice.receiptUrl) != null)
               OutlinedButton(
                 onPressed: () async {
@@ -140,6 +144,12 @@ class _RentInvoiceDetailsViewState extends State<RentInvoiceDetailsView>
                 },
                 child: AppText(LocaleKeys.paidViewReceipt),
               ),
+            if (!widget.capabilities.rentCheckout &&
+                !widget.workspace.isOwner &&
+                invoice.status.isPayable)
+              AppText(LocaleKeys.featureCheckoutUnavailable),
+            if (state.isError && state.msg?.isNotEmpty == true)
+              AppText(state.msg!, color: Theme.of(context).colorScheme.error),
             16.szH,
             OutlinedButton.icon(
               onPressed: widget.onRefresh,

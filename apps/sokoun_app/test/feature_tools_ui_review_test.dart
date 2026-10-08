@@ -28,10 +28,15 @@ import 'package:sokoun_app/features/shared/premium/presentation/widgets/shared/p
 import 'package:sokoun_app/features/shared/rent_management/data/models/rent_invoice.dart';
 import 'package:sokoun_app/features/shared/rent_management/presentation/widgets/rent_invoice_details_view.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_search_model.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
+import 'package:sokoun_app/features/tenant/premium_alerts/data/models/premium_search_alert.dart';
+import 'package:sokoun_app/features/tenant/premium_alerts/presentation/widgets/premium_alert_details_view.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
 import 'package:sokoun_app/features/tenant/premium_alerts/presentation/cubits/premium_alert_submit_cubit.dart';
 import 'package:sokoun_app/features/tenant/premium_alerts/presentation/widgets/premium_alert_composer.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 import 'helpers/feature_tools_test_dependencies.dart';
+import 'helpers/rental_offer_fixtures.dart';
 
 /// Export rendered fixtures with --dart-define=FEATURE_TOOLS_UI_REVIEW_DIR=/tmp/sokoun-tools-after.
 void main() {
@@ -90,6 +95,26 @@ void main() {
                 monthlyPrice: 12000,
                 pricePeriod: 'monthly',
               );
+              final accommodation =
+                  RentalSelection.fromOffer(
+                    propertyId: property.id,
+                    inventory: rentalInventory(),
+                    offer: bedOffer,
+                  ).copyWith(
+                    name: locale == 'ar' ? 'سرير للطلاب' : 'Student bed',
+                    roomNames: [locale == 'ar' ? 'الغرفة أ' : 'Room A'],
+                    bedName: locale == 'ar' ? 'السرير أ١' : 'Bed A1',
+                    terms: offerTerms.copyWith(
+                      description: locale == 'ar'
+                          ? 'سكن هادئ بالقرب من وسائل المواصلات'
+                          : offerTerms.description,
+                      rules: [
+                        locale == 'ar'
+                            ? 'الحفاظ على نظافة المساحات المشتركة'
+                            : offerTerms.rules.single,
+                      ],
+                    ),
+                  );
               final panels = <String, Widget>{
                 'entries': Column(
                   children: const [
@@ -155,6 +180,61 @@ void main() {
                     ),
                   ),
                 ),
+                'alert_details': PremiumAlertDetailsView(
+                  alert: PremiumSearchAlert(
+                    id: 'alert',
+                    name: locale == 'ar'
+                        ? 'سرير للطلاب بالقرب من الجامعة'
+                        : 'A student bed near campus',
+                    cadence: 'daily',
+                    enabled: true,
+                    revision: 2,
+                    lastMatchedAt: DateTime.utc(2026, 10, 8, 7, 30),
+                    filters: const PropertySearchFilters.initial(
+                      search: 'Near campus',
+                      city: 'Cairo',
+                      district: 'Maadi',
+                      rentalScope: 'bed',
+                      priceMin: '1000',
+                      priceMax: '3000',
+                      pricePeriod: 'monthly',
+                      suitableFor: 'students',
+                      isFurnished: 'true',
+                      isVerified: 'true',
+                      smokingAllowed: 'false',
+                      bedrooms: '2',
+                      bathrooms: '1',
+                      amenities: {'has_wifi'},
+                    ),
+                  ),
+                  options: PropertyFilterOptionsModel.fromJson({
+                    'ordering': [
+                      {
+                        'value': '-created_at',
+                        'label': locale == 'ar' ? 'الأحدث' : 'Newest',
+                      },
+                    ],
+                    'price_periods': [
+                      {
+                        'value': 'monthly',
+                        'label': locale == 'ar' ? 'شهري' : 'Monthly',
+                      },
+                    ],
+                    'suitable_for': [
+                      {
+                        'value': 'students',
+                        'label': locale == 'ar' ? 'طلاب' : 'Students',
+                      },
+                    ],
+                    'amenities': [
+                      {
+                        'value': 'wifi',
+                        'query_parameter': 'has_wifi',
+                        'label': locale == 'ar' ? 'إنترنت لاسلكي' : 'WiFi',
+                      },
+                    ],
+                  }),
+                ),
                 'ai': SingleChildScrollView(
                   padding: const EdgeInsets.all(20),
                   child: ListingAiReview(
@@ -191,6 +271,7 @@ void main() {
                     id: 'lease',
                     propertyId: property.id,
                     propertyTitle: property.title,
+                    rentalSelection: accommodation,
                     ownerName: 'أحمد محمد',
                     tenantName: 'سارة محمود',
                     startDate: DateTime(2026, 10, 10),
@@ -211,6 +292,7 @@ void main() {
                   invoice: RentInvoice(
                     id: 'invoice',
                     propertyTitle: property.title,
+                    rentalSelection: accommodation,
                     reference: 'INV-2026-001',
                     dueDate: DateTime(2026, 11, 1),
                     amount: const PremiumMoney(
@@ -270,9 +352,12 @@ void main() {
                   isNull,
                   reason: '${entry.key} at $locale $width scale $scale',
                 );
-                if (output.isNotEmpty &&
+                final export =
+                    output.isNotEmpty &&
                     (scale == 1 ||
-                        (scale == 2 && (width == 320 || width == 1366)))) {
+                        (scale == 2 && (width == 320 || width == 1366)));
+                Future<void> capture(String suffix) async {
+                  if (!export) return;
                   final boundary =
                       boundaryKey.currentContext!.findRenderObject()!
                           as RenderRepaintBoundary;
@@ -285,9 +370,27 @@ void main() {
                     final directory = Directory(output);
                     await directory.create(recursive: true);
                     await File(
-                      '$output/${entry.key}_${locale}_${dark ? 'dark' : 'light'}_${width.toInt()}_scale${scale.toStringAsFixed(1)}.png',
+                      '$output/${entry.key}_${locale}_${dark ? 'dark' : 'light'}_${width.toInt()}_scale${scale.toStringAsFixed(1)}$suffix.png',
                     ).writeAsBytes(bytes!.buffer.asUint8List());
                   });
+                }
+
+                await capture('');
+                final action = switch (entry.key) {
+                  'lease' => LocaleKeys.paidRefresh,
+                  'rent' => LocaleKeys.paidVerifyRent,
+                  'alert_details' => LocaleKeys.paidAlertOpenResults,
+                  _ => null,
+                };
+                if (action != null) {
+                  await tester.ensureVisible(find.text(action));
+                  await tester.pumpAndSettle();
+                  expect(
+                    tester.getCenter(find.text(action)).dy,
+                    lessThan(tester.view.physicalSize.height),
+                  );
+                  expect(tester.takeException(), isNull);
+                  await capture('_details');
                 }
                 await tester.pumpWidget(const SizedBox());
                 await tester.pump();

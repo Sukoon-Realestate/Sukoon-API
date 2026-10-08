@@ -27,7 +27,14 @@ abstract final class LeaseRules {
 
   static bool valid(LeaseDraftBody body) {
     final start = date(body.startDate), end = date(body.endDate);
-    return !body.hasRentalOffers &&
+    final selection = body.rentalSelection;
+    return (!body.hasRentalOffers ||
+            (selection != null &&
+                selection.canIdentify &&
+                selection.offerRevision > 0 &&
+                selection.isAvailable &&
+                selection.propertyId == body.propertyId &&
+                selection.offerId == body.offerId)) &&
         body.propertyId.isNotEmpty &&
         body.tenantId.trim().isNotEmpty &&
         body.templateId.isNotEmpty &&

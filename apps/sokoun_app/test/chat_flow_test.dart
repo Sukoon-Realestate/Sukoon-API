@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/chat/data/models/chat_message_acknowledgement.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_local_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_local_state.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
@@ -751,6 +752,7 @@ void main() {
           realtime.addMessage(
             const ChatSocketMessage.initial().copyWith(
               id: 'confirmed-delayed-message',
+              clientMessageId: realtime.lastClientMessageId,
               conversationId: 'conversation-1',
               content: 'رسالة بدون اتصال',
               sender: const ChatParticipantContent.initial().copyWith(
@@ -878,6 +880,7 @@ class _MemoryChatDataSource implements ChatDataSource {
   Future<ChatMessageContent> sendMessage({
     required String conversationId,
     required String content,
+    String clientMessageId = '',
   }) async {
     return ChatMessageContent(
       id: 'sent-message',
@@ -954,6 +957,7 @@ class _MemoryChatRealtimeGateway implements ChatRealtimeGateway {
   _MemoryChatRealtimeGateway({this.canConnect = true});
 
   final bool canConnect;
+  String lastClientMessageId = '';
   final StreamController<ChatSocketMessage> _messages =
       StreamController<ChatSocketMessage>.broadcast(sync: true);
   final StreamController<ChatReadReceipt> _readReceipts =
@@ -969,6 +973,9 @@ class _MemoryChatRealtimeGateway implements ChatRealtimeGateway {
 
   @override
   Stream<ChatSocketMessage> get messages => _messages.stream;
+  @override
+  Stream<ChatMessageAcknowledgement> get acknowledgements =>
+      const Stream.empty();
 
   @override
   Stream<ChatReadReceipt> get readReceipts => _readReceipts.stream;
@@ -1007,7 +1014,10 @@ class _MemoryChatRealtimeGateway implements ChatRealtimeGateway {
   Future<void> sendMessage({
     required String conversationId,
     required String content,
-  }) async {}
+    String clientMessageId = '',
+  }) async {
+    lastClientMessageId = clientMessageId;
+  }
 
   @override
   void setActiveConversation(String? conversationId) {

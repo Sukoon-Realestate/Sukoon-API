@@ -7,7 +7,7 @@ SHELL := /bin/bash
 
 .PHONY: help clean run apk ipa appbundle ios upgrade \
 	handlePods openXcode flutterfireSetup translations \
-	architectureCheck accountCheck accountUiReview freeFeaturesCheck freeFeaturesUiReview featureToolsCheck featureToolsUiReview mainJourneyCheck mainJourneyUiReview gradleFix clearGradleCache buildIos distribute \
+	architectureCheck accountCheck accountUiReview freeFeaturesCheck freeFeaturesUiReview featureToolsCheck featureToolsUiReview mobileBackendCheck mainJourneyCheck mainJourneyUiReview gradleFix clearGradleCache buildIos distribute \
 	distributeAndroid fingerPrint kill sha
 
 # Show available commands
@@ -30,6 +30,7 @@ help:
 	@echo "  make freeFeaturesCheck"
 	@echo "  make freeFeaturesUiReview FREE_REVIEW_DIR=/tmp/sokoun-free-after"
 	@echo "  make featureToolsCheck"
+	@echo "  make mobileBackendCheck"
 	@echo "  make mainJourneyCheck"
 	@echo "  make mainJourneyUiReview JOURNEY_REVIEW_DIR=/tmp/sokoun-main-flow-after"
 	@echo "  make featureToolsUiReview TOOLS_REVIEW_DIR=/tmp/sokoun-tools-after"
@@ -123,6 +124,10 @@ TOOLS_REVIEW_DIR ?= /tmp/sokoun-tools-after
 ## Render free tool workflows in both languages and themes across six widths and three text scales.
 featureToolsUiReview:
 	flutter test --no-pub test/feature_tools_ui_review_test.dart --dart-define=FEATURE_TOOLS_UI_REVIEW_DIR=$(TOOLS_REVIEW_DIR)
+
+## Verify the implemented mobile handoff, identities, retries and feature architecture.
+mobileBackendCheck:
+	flutter test --no-pub test/mobile_all_features_backend_handoff_test.dart test/feature_tools_contracts_test.dart test/feature_tools_flows_test.dart test/chat_api_contract_test.dart test/chat_thread_cubit_test.dart test/chat_flow_test.dart test/rental_offers_requests_test.dart test/rental_listing_categories_test.dart test/feature_architecture_test.dart
 
 ## Verify contextual main journeys, resource/cache boundaries and responsive layouts.
 mainJourneyCheck:

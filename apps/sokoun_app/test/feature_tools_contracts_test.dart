@@ -18,6 +18,7 @@ import 'package:sokoun_app/features/shared/premium/data/models/premium_action_re
 import 'package:sokoun_app/features/shared/premium/data/models/feature_configuration.dart';
 import 'package:sokoun_app/features/shared/premium/data/models/premium_money.dart';
 import 'package:sokoun_app/features/shared/premium/data/premium_api_data.dart';
+import 'package:sokoun_app/features/shared/premium/data/premium_api_constants.dart';
 import 'package:sokoun_app/features/shared/premium/data/feature_configuration_data.dart';
 import 'package:sokoun_app/features/shared/premium/data/premium_hosted_data.dart';
 import 'package:sokoun_app/features/shared/rent_management/data/models/rent_invoice.dart';
@@ -333,6 +334,20 @@ void main() {
   test(
     'GET cache identities separate accounts workspaces languages properties and periods',
     () async {
+      repository.handler = (request) async =>
+          request.endpoint.startsWith(
+            '${PremiumApiConstants.prefix}owner-analytics/',
+          )
+          ? FeatureTestReply(
+              data: {
+                'property_id': request.endpoint
+                    .split('/')
+                    .where((part) => part.isNotEmpty)
+                    .last,
+                'period_days': request.query!['period_days'],
+              },
+            )
+          : repository.defaultReply(request);
       await FeatureConfigurationData.get(AppWorkspace.owner, language: 'ar');
       await FeatureConfigurationData.get(AppWorkspace.owner, language: 'en');
       await FeatureConfigurationData.get(AppWorkspace.tenant, language: 'ar');

@@ -1,4 +1,5 @@
 import 'rent_invoices_empty_state.dart';
+import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
 import 'package:flutter/material.dart';
 import 'package:sokoun_app/features/shared/premium/presentation/widgets/shared/premium_remote_view.dart';
 import '../../data/models/rent_invoice.dart';
@@ -6,8 +7,13 @@ import '../cubits/rent_invoice_cubit.dart';
 import 'rent_invoice_details_view.dart';
 
 class RentInvoiceContent extends StatefulWidget {
-  const RentInvoiceContent({super.key, required this.invoiceId});
+  const RentInvoiceContent({
+    super.key,
+    required this.invoiceId,
+    required this.workspace,
+  });
   final String invoiceId;
+  final AppWorkspace workspace;
   @override
   State<RentInvoiceContent> createState() => _RentInvoiceContentState();
 }
@@ -40,6 +46,7 @@ class _RentInvoiceContentState extends State<RentInvoiceContent> {
             ? const RentInvoicesEmptyState()
             : RentInvoiceDetailsView(
                 invoice: invoice,
+                workspace: widget.workspace,
                 isFresh: !_cubit.isCached,
                 onRefresh: _load,
               ),

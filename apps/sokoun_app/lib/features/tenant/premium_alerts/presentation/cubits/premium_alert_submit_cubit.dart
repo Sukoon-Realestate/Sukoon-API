@@ -19,6 +19,7 @@ class PremiumAlertSubmitCubit
             fromJson: PremiumActionReceipt.fromJson,
             valid: (receipt) =>
                 receipt.isValid &&
+                receipt.subjectId.isNotEmpty &&
                 (receipt.status.isActive || receipt.status.isPaused),
           ),
         );

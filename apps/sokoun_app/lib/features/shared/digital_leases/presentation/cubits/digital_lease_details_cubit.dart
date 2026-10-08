@@ -15,6 +15,7 @@ class DigitalLeaseDetailsCubit extends AsyncCubit<DigitalLease> {
         endpoint: PremiumApiConstants.lease(id),
         key: premiumCacheKey('digital_lease', [id]),
         fromJson: DigitalLease.fromJson,
+        valid: (lease) => lease.id == id,
         toJson: (model) => model.toJson(),
       ),
       withInternetInterceptor: true,

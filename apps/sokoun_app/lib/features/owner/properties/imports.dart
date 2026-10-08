@@ -1,6 +1,7 @@
 import 'presentation/widgets/list/owner_rental_offers_panel.dart';
 import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
 import 'package:sokoun_app/features/shared/rental_offers/data/enums/rental_listing_category.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/enums/rental_scope.dart';
 import 'package:sokoun_app/features/shared/rental_offers/data/rental_collection_filter.dart';
 import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_listing_categories.dart';
 import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_collection_footer.dart';

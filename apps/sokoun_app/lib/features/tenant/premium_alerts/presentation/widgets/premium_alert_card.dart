@@ -6,6 +6,7 @@ import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_sear
 import 'package:sokoun_app/features/shared/premium/data/enums/premium_status.dart';
 import 'package:sokoun_app/features/shared/premium/presentation/widgets/shared/premium_status_badge.dart';
 import '../../data/models/premium_search_alert.dart';
+import '../screens/premium_alert_detail_screen.dart';
 
 class PremiumAlertCard extends StatelessWidget {
   const PremiumAlertCard({
@@ -35,6 +36,11 @@ class PremiumAlertCard extends StatelessWidget {
           Wrap(
             spacing: 8,
             children: [
+              TextButton(
+                onPressed: () =>
+                    Go.to(PremiumAlertDetailScreen(alertId: alert.id)),
+                child: AppText(LocaleKeys.featureAlertDetails),
+              ),
               TextButton(
                 onPressed: () => Go.to(
                   TenantSearchResultsScreen(initialFilters: alert.filters),

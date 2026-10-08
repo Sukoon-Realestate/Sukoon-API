@@ -147,43 +147,46 @@ class _PhotoAssociation extends StatelessWidget {
     child: Column(
       children: [
         for (final (index, photo) in photos.indexed)
-          CheckboxListTile(
+          Material(
             key: ValueKey(photo.reference),
-            contentPadding: EdgeInsets.zero,
-            controlAffinity: ListTileControlAffinity.leading,
-            title: AppText(
-              photo.name.isEmpty
-                  ? LocaleKeys.ownerAddPropertyPhotoNumber.replaceAll(
-                      '{number}',
-                      '${index + 1}',
-                    )
-                  : photo.name,
-            ),
-            subtitle: photo.description.isEmpty
-                ? null
-                : AppText(photo.description),
-            secondary: SizedBox(
-              width: 48,
-              height: 48,
-              child: PhotoTile(photo: photo),
-            ),
-            value:
-                (photo.existingId.isNotEmpty &&
-                    serverIds.contains(photo.existingId)) ||
-                draftRefs.contains(photo.reference),
-            onChanged: (selected) {
-              final server = [...serverIds]..remove(photo.existingId);
-              final local = [...draftRefs]..remove(photo.reference);
-              if (selected == true) {
-                if (RentalOfferCapabilities.configured.canAssociateMedia &&
-                    photo.existingId.isNotEmpty) {
-                  server.add(photo.existingId);
-                } else {
-                  local.add(photo.reference);
+            type: MaterialType.transparency,
+            child: CheckboxListTile(
+              contentPadding: EdgeInsets.zero,
+              controlAffinity: ListTileControlAffinity.leading,
+              title: AppText(
+                photo.name.isEmpty
+                    ? LocaleKeys.ownerAddPropertyPhotoNumber.replaceAll(
+                        '{number}',
+                        '${index + 1}',
+                      )
+                    : photo.name,
+              ),
+              subtitle: photo.description.isEmpty
+                  ? null
+                  : AppText(photo.description),
+              secondary: SizedBox(
+                width: 48,
+                height: 48,
+                child: PhotoTile(photo: photo),
+              ),
+              value:
+                  (photo.existingId.isNotEmpty &&
+                      serverIds.contains(photo.existingId)) ||
+                  draftRefs.contains(photo.reference),
+              onChanged: (selected) {
+                final server = [...serverIds]..remove(photo.existingId);
+                final local = [...draftRefs]..remove(photo.reference);
+                if (selected == true) {
+                  if (RentalOfferCapabilities.configured.canAssociateMedia &&
+                      photo.existingId.isNotEmpty) {
+                    server.add(photo.existingId);
+                  } else {
+                    local.add(photo.reference);
+                  }
                 }
-              }
-              onChanged(server, local);
-            },
+                onChanged(server, local);
+              },
+            ),
           ),
       ],
     ),

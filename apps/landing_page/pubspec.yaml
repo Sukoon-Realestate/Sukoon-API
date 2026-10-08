@@ -9,6 +9,7 @@ dependencies:
     sdk: flutter
   easy_localization: ^3.0.8
   video_player: ^2.10.1
+  web: ^1.1.1
   melos_core:
     path: ../../packages/core
 
@@ -23,3 +24,10 @@ flutter:
   assets:
     - assets/videos/sokoun_demo.mp4
     - assets/images/sokoun_demo_poster.jpg
+    - assets/fonts/Roboto-LICENSE.txt
+  fonts:
+    # CanvasKit otherwise downloads its required fallback font from Google
+    # before it can draw the first frame.
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.woff2

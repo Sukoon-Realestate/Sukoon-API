@@ -8,10 +8,12 @@ abstract final class RentalCollectionFilter {
     required RentalListingCategory category,
     RentalInventory? inventory,
     RentalListingSummary? summary,
+    List<String> scopes = const [],
   }) => category.acceptsScopes(
     inventory != null
         ? inventory.offers.map((offer) => offer.scope)
-        : summary?.scopes.map(RentalScope.fromValue) ?? const [],
+        : (scopes.isNotEmpty ? scopes : summary?.scopes ?? const <String>[])
+              .map(RentalScope.fromValue),
   );
 
   /// The discovery and management unit remains a physical property.

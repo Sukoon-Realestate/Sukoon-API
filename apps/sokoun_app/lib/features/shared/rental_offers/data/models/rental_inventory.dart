@@ -70,7 +70,7 @@ class RentalInventory extends Equatable {
   /// A present but malformed/future inventory must not fall back to legacy.
   static RentalInventory? read(Map<String, dynamic> json) {
     if (!json.containsKey('rental_inventory')) {
-      return json.containsKey('rental_schema_version')
+      return json['rental_schema_version'] != null
           ? RentalInventory(
               schemaVersion:
                   int.tryParse('${json['rental_schema_version']}') ?? 0,
@@ -78,6 +78,14 @@ class RentalInventory extends Equatable {
           : null;
     }
     final value = json['rental_inventory'];
+    // The deployed API explicitly uses this empty projection for legacy listings.
+    if (value is Map &&
+        value.length == 1 &&
+        value['offers'] is List &&
+        (value['offers'] as List).isEmpty &&
+        json['rental_schema_version'] == null) {
+      return null;
+    }
     return value is Map
         ? RentalInventory.fromJson(Map<String, dynamic>.from(value))
         : const RentalInventory(schemaVersion: 0);

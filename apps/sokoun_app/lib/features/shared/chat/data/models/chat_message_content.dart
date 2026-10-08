@@ -12,6 +12,7 @@ class ChatMessageContent extends Equatable {
     this.conversationId = '',
     this.sender = const ChatParticipantContent.initial(),
     this.createdAt,
+    this.clientMessageId = '',
   });
 
   const ChatMessageContent.initial()
@@ -22,6 +23,7 @@ class ChatMessageContent extends Equatable {
       type = 'text',
       conversationId = '',
       sender = const ChatParticipantContent.initial(),
+      clientMessageId = '',
       createdAt = null;
 
   factory ChatMessageContent.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class ChatMessageContent extends Equatable {
     return ChatMessageContent(
       id: json['id']?.toString() ?? '',
       body: json['content']?.toString() ?? json['body']?.toString() ?? '',
+      clientMessageId: json['client_message_id']?.toString() ?? '',
       time: json['time']?.toString() ?? '',
       isFromMe: json['is_from_me'] ?? false,
       type: json['type']?.toString() ?? 'text',
@@ -47,6 +50,7 @@ class ChatMessageContent extends Equatable {
 
   final String id;
   final String body;
+  final String clientMessageId;
   final String time;
   final bool isFromMe;
   final String type;
@@ -59,6 +63,7 @@ class ChatMessageContent extends Equatable {
     'conversation': conversationId,
     'sender': sender.toJson(),
     'content': body,
+    'client_message_id': clientMessageId,
     'created_at': createdAt?.toIso8601String(),
     'time': time,
     'is_from_me': isFromMe,
@@ -68,6 +73,7 @@ class ChatMessageContent extends Equatable {
   ChatMessageContent copyWith({
     String? id,
     String? body,
+    String? clientMessageId,
     String? time,
     bool? isFromMe,
     String? type,
@@ -78,6 +84,7 @@ class ChatMessageContent extends Equatable {
     return ChatMessageContent(
       id: id ?? this.id,
       body: body ?? this.body,
+      clientMessageId: clientMessageId ?? this.clientMessageId,
       time: time ?? this.time,
       isFromMe: isFromMe ?? this.isFromMe,
       type: type ?? this.type,
@@ -91,6 +98,7 @@ class ChatMessageContent extends Equatable {
   List<Object?> get props => [
     id,
     body,
+    clientMessageId,
     time,
     isFromMe,
     type,

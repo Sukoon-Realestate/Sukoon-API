@@ -6,6 +6,9 @@ import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/network/network_request.dart';
 import 'package:melos_core/core/network/network_service.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_data.dart';
+import 'package:sokoun_app/features/shared/chat/data/chat_realtime_service.dart';
+import 'package:sokoun_app/features/shared/chat/data/chat_socket_data.dart';
+import 'helpers/recording_chat_socket.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_content.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_socket_message.dart';
 import 'package:sokoun_app/features/shared/notifications/data/models/notification_payload_content.dart';
@@ -134,6 +137,51 @@ void main() {
     expect(payload.senderId, 'owner-uuid');
     expect(unread.chatCount, 5);
   });
+  test(
+    'client UUID is carried through REST and the personal socket ACK stream',
+    () async {
+      const clientId = 'a8b9d21a-137b-40c0-af9d-b70f520b7373';
+      await ChatData.sendMessage(
+        conversationId: 'conversation-uuid',
+        content: 'Hello',
+        clientMessageId: clientId,
+      );
+      expect(network.lastRequest?.body, {
+        'content': 'Hello',
+        'client_message_id': clientId,
+      });
+      final source = RecordingChatSocketSource();
+      final service = ChatRealtimeService.instance;
+      await service.disconnect();
+      injector.registerSingleton<ChatSocketDataSource>(source);
+      addTearDown(() async {
+        await service.disconnect();
+        await injector.unregister<ChatSocketDataSource>();
+      });
+      await service.connect();
+      await service.sendMessage(
+        conversationId: 'conversation-uuid',
+        content: 'Hello',
+        clientMessageId: clientId,
+      );
+      expect(source.lastSentData, {
+        'conversation_id': 'conversation-uuid',
+        'content': 'Hello',
+        'client_message_id': clientId,
+      });
+      final received = service.acknowledgements.first;
+      await source.receiveEvent('message.ack', {
+        'payload': {
+          'id': 'server-message',
+          'client_message_id': clientId,
+          'status': 'sent',
+        },
+      });
+      final acknowledgement = await received;
+      expect(acknowledgement.isSent, isTrue);
+      expect(acknowledgement.clientMessageId, clientId);
+    },
+  );
 }
 
 class _RecordingNetworkService implements NetworkService {

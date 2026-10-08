@@ -10,6 +10,7 @@ class ChatSocketMessage extends Equatable {
     required this.sender,
     required this.content,
     required this.createdAt,
+    this.clientMessageId = '',
   });
 
   const ChatSocketMessage.initial()
@@ -17,6 +18,7 @@ class ChatSocketMessage extends Equatable {
       conversationId = '',
       sender = const ChatParticipantContent.initial(),
       content = '',
+      clientMessageId = '',
       createdAt = null;
 
   factory ChatSocketMessage.fromJson(Map<String, dynamic> json) {
@@ -33,6 +35,7 @@ class ChatSocketMessage extends Equatable {
             : const <String, dynamic>{},
       ),
       content: json['content']?.toString() ?? '',
+      clientMessageId: json['client_message_id']?.toString() ?? '',
       createdAt: DateTime.tryParse(json['created_at']?.toString() ?? ''),
     );
   }
@@ -41,6 +44,7 @@ class ChatSocketMessage extends Equatable {
   final String conversationId;
   final ChatParticipantContent sender;
   final String content;
+  final String clientMessageId;
   final DateTime? createdAt;
 
   bool get isFromMe {
@@ -53,6 +57,7 @@ class ChatSocketMessage extends Equatable {
     'conversation_id': conversationId,
     'sender': sender.toJson(),
     'content': content,
+    'client_message_id': clientMessageId,
     'created_at': createdAt?.toIso8601String(),
   };
 
@@ -61,6 +66,7 @@ class ChatSocketMessage extends Equatable {
     String? conversationId,
     ChatParticipantContent? sender,
     String? content,
+    String? clientMessageId,
     DateTime? createdAt,
   }) {
     return ChatSocketMessage(
@@ -68,10 +74,18 @@ class ChatSocketMessage extends Equatable {
       conversationId: conversationId ?? this.conversationId,
       sender: sender ?? this.sender,
       content: content ?? this.content,
+      clientMessageId: clientMessageId ?? this.clientMessageId,
       createdAt: createdAt ?? this.createdAt,
     );
   }
 
   @override
-  List<Object?> get props => [id, conversationId, sender, content, createdAt];
+  List<Object?> get props => [
+    id,
+    conversationId,
+    sender,
+    content,
+    clientMessageId,
+    createdAt,
+  ];
 }

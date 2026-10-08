@@ -21,7 +21,7 @@ class RentInvoiceScreen extends StatelessWidget {
     body: FeatureWorkspaceGuard(
       feature: PremiumFeature.rentManagement,
       workspace: workspace,
-      child: RentInvoiceContent(invoiceId: invoiceId),
+      child: RentInvoiceContent(invoiceId: invoiceId, workspace: workspace),
     ),
   );
 }

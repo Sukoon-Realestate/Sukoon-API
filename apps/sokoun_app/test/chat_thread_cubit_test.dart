@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/shared/chat/data/models/chat_message_acknowledgement.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_local_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_local_state.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_participant_content.dart';
@@ -12,6 +13,7 @@ import 'package:sokoun_app/features/shared/chat/data/chat_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_realtime_service.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_socket_message.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_read_content.dart';
+import 'package:sokoun_app/features/shared/chat/data/models/chat_message_content.dart';
 import 'package:sokoun_app/features/shared/chat/presentation/cubits/chat_thread_cubit.dart';
 
 void main() {
@@ -238,35 +240,32 @@ void main() {
     );
   }
 
-  test(
-    'accepts a numeric-conversation socket echo as send confirmation',
-    () async {
-      final _FakeChatRealtimeGateway realtime = _FakeChatRealtimeGateway();
-      final ChatThreadCubit cubit = ChatThreadCubit(
-        localStore: _MemoryChatLocalStore(),
-        conversationId: 'conversation-uuid',
-        otherParticipantId: 'other-user-id',
-        realtimeService: realtime,
-      );
-      addTearDown(() async {
-        await cubit.close();
-        await realtime.close();
-      });
-      await cubit.connect();
+  test('confirms an outgoing echo by client ID and conversation', () async {
+    final _FakeChatRealtimeGateway realtime = _FakeChatRealtimeGateway();
+    final ChatThreadCubit cubit = ChatThreadCubit(
+      localStore: _MemoryChatLocalStore(),
+      conversationId: 'conversation-uuid',
+      otherParticipantId: 'other-user-id',
+      realtimeService: realtime,
+    );
+    addTearDown(() async {
+      await cubit.close();
+      await realtime.close();
+    });
+    await cubit.connect();
 
-      realtime.messageToEcho = _message(
-        conversationId: '1',
-        senderId: 'current-user-id',
-        content: 'Hello',
-      );
+    realtime.messageToEcho = _message(
+      conversationId: 'conversation-uuid',
+      senderId: 'current-user-id',
+      content: 'Hello',
+    );
 
-      final ChatSendResult result = await cubit.sendTextMessage('Hello');
+    final ChatSendResult result = await cubit.sendTextMessage('Hello');
 
-      expect(result.isSent, isTrue);
-      expect(result.restMessage?.id, 'message-id');
-      expect(cubit.state.receivedMessage?.id, 'message-id');
-    },
-  );
+    expect(result.isSent, isTrue);
+    expect(result.restMessage?.id, 'message-id');
+    expect(cubit.state.receivedMessage?.id, 'message-id');
+  });
 
   test('connects the socket before sending when it is disconnected', () async {
     final _FakeChatRealtimeGateway realtime = _FakeChatRealtimeGateway();
@@ -282,7 +281,7 @@ void main() {
     });
 
     realtime.messageToEcho = _message(
-      conversationId: '1',
+      conversationId: 'conversation-uuid',
       senderId: 'current-user-id',
       content: 'Connect then send',
     );
@@ -346,6 +345,7 @@ void main() {
           conversationId: 'conversation-uuid',
           senderId: 'current-user-id',
           content: 'Slow message',
+          clientMessageId: realtime.sentClientIds[0],
         ),
       );
       await _flushWrites(tester);
@@ -381,6 +381,7 @@ void main() {
         conversationId: 'conversation-uuid',
         senderId: 'current-user-id',
         content: 'First',
+        clientMessageId: realtime.sentClientIds[0],
       ),
     );
     await _flushWrites(tester);
@@ -395,6 +396,7 @@ void main() {
         conversationId: 'conversation-uuid',
         senderId: 'current-user-id',
         content: 'Second',
+        clientMessageId: realtime.sentClientIds[1],
       ),
     );
     await _flushWrites(tester);
@@ -443,7 +445,7 @@ void main() {
   });
 
   test(
-    'accepts numeric conversation messages from the active participant',
+    'rejects another conversation even from the active participant',
     () async {
       final _FakeChatRealtimeGateway realtime = _FakeChatRealtimeGateway();
       final ChatThreadCubit cubit = ChatThreadCubit(
@@ -466,7 +468,7 @@ void main() {
         ),
       );
 
-      expect(cubit.state.receivedMessage?.content, 'Incoming');
+      expect(cubit.state.receivedMessage, isNull);
     },
   );
 
@@ -497,15 +499,187 @@ void main() {
       expect(cubit.state.receivedMessage, isNull);
     },
   );
+
+  test(
+    'message ACK replaces only the pending client ID with the server ID',
+    () async {
+      final realtime = _FakeChatRealtimeGateway();
+      final cubit = ChatThreadCubit(
+        conversationId: 'conversation-1',
+        realtimeService: realtime,
+        localStore: _MemoryChatLocalStore(),
+      );
+      await cubit.connect();
+      final sending = cubit.sendTextMessage(
+        'Same message',
+        localMessageId: 'local-pending',
+      );
+      await pumpEventQueue();
+      realtime.acknowledge('unknown-client-id');
+      expect(cubit.state.receivedMessage, isNull);
+      final id = realtime.sentClientIds.single;
+      expect(
+        id,
+        matches(
+          RegExp(
+            r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
+          ),
+        ),
+      );
+      realtime.acknowledge(id, id: 'authoritative-message');
+      expect(cubit.state.receivedMessage?.id, 'authoritative-message');
+      await pumpEventQueue();
+      expect((await sending).isSent, isTrue);
+      expect(cubit.state.confirmedLocalMessageId, 'local-pending');
+      expect(cubit.state.receivedMessage?.id, 'authoritative-message');
+      expect(cubit.state.receivedMessage?.clientMessageId, id);
+      await cubit.close();
+      await realtime.close();
+    },
+  );
+
+  testWidgets('a lost socket ACK reuses the same UUID in the REST fallback', (
+    tester,
+  ) async {
+    final realtime = _FakeChatRealtimeGateway();
+    final source = _ReadTrackingDataSource();
+    final store = _MemoryChatLocalStore();
+    final cubit = ChatThreadCubit(
+      conversationId: 'conversation-1',
+      realtimeService: realtime,
+      dataSource: source,
+      localStore: store,
+    );
+    addTearDown(() async {
+      final closing = cubit.close();
+      await _flushWrites(tester);
+      await closing;
+      await realtime.close();
+    });
+    await cubit.connect();
+    final sending = cubit.sendTextMessage(
+      'Do not duplicate',
+      localMessageId: 'local-fallback',
+    );
+    await _flushWrites(tester);
+    final id = realtime.sentClientIds.single;
+    expect(store.state.messages.single.clientMessageId, id);
+    await tester.pump(const Duration(seconds: 5));
+    await _flushWrites(tester);
+    expect((await sending).isSent, isTrue);
+    expect(source.sentClientIds, [id]);
+    expect(cubit.state.receivedMessage?.clientMessageId, id);
+    expect(cubit.state.confirmedLocalMessageId, 'local-fallback');
+    expect(store.state.messages, isEmpty);
+  });
+
+  testWidgets(
+    'a mismatched REST identity stays queued and retries its original UUID',
+    (tester) async {
+      final realtime = _FakeChatRealtimeGateway();
+      final source = _ReadTrackingDataSource()..wrongIdentity = true;
+      final cubit = ChatThreadCubit(
+        conversationId: 'conversation-1',
+        realtimeService: realtime,
+        dataSource: source,
+        localStore: _MemoryChatLocalStore(),
+      );
+      addTearDown(() async {
+        final closing = cubit.close();
+        await _flushWrites(tester);
+        await closing;
+        await realtime.close();
+      });
+      await cubit.connect();
+      final sending = cubit.sendTextMessage('Keep pending');
+      await _flushWrites(tester);
+      final id = realtime.sentClientIds.single;
+      await tester.pump(const Duration(seconds: 5));
+      await _flushWrites(tester);
+      expect((await sending).isQueued, isTrue);
+      expect(cubit.state.receivedMessage, isNull);
+      expect(cubit.queuedMessageCount, 1);
+      await tester.pump(const Duration(seconds: 5));
+      await _flushWrites(tester);
+      expect(realtime.sentClientIds, [id, id]);
+      realtime.acknowledge(id);
+      await _flushWrites(tester);
+      expect(cubit.queuedMessageCount, 0);
+    },
+  );
+
+  for (final edit in [false, true]) {
+    test(
+      'recovery ${edit ? 'changes' : 'preserves'} the UUID when ${edit ? 'the content changes' : 'the content is unchanged'}',
+      () async {
+        const originalId = 'a8b9d21a-137b-40c0-af9d-b70f520b7373';
+        final store = _MemoryChatLocalStore()
+          ..state = const ChatLocalState(
+            messages: [
+              SavedChatMessage(
+                id: 'local-recovered',
+                content: 'Recover this',
+                clientMessageId: originalId,
+              ),
+            ],
+          );
+        final firstRealtime = _FakeChatRealtimeGateway();
+        final first = ChatThreadCubit(
+          conversationId: 'conversation-1',
+          realtimeService: firstRealtime,
+          localStore: store,
+        );
+        await first.connect();
+        await first.restoreMessageDraft(first.state.recoveredMessages.single);
+        if (edit) first.updateDraft('Edited content');
+        await first.close();
+        await firstRealtime.close();
+        final realtime = _FakeChatRealtimeGateway()..echoSentMessages = true;
+        final recovered = ChatThreadCubit(
+          conversationId: 'conversation-1',
+          realtimeService: realtime,
+          localStore: store,
+        );
+        await recovered.connect();
+        expect(
+          (await recovered.sendTextMessage(recovered.state.draft)).isSent,
+          isTrue,
+        );
+        expect(
+          realtime.sentClientIds.single,
+          edit ? isNot(originalId) : originalId,
+        );
+        await recovered.close();
+        await realtime.close();
+      },
+    );
+  }
+
+  test('identical text sent twice has two independent send UUIDs', () async {
+    final realtime = _FakeChatRealtimeGateway()..echoSentMessages = true;
+    final cubit = ChatThreadCubit(
+      conversationId: 'conversation-1',
+      realtimeService: realtime,
+      localStore: _MemoryChatLocalStore(),
+    );
+    await cubit.sendTextMessage('Hello', localMessageId: 'first');
+    await cubit.sendTextMessage('Hello', localMessageId: 'second');
+    expect(realtime.sentClientIds.toSet(), hasLength(2));
+    expect(cubit.state.confirmedLocalMessageId, 'second');
+    await cubit.close();
+    await realtime.close();
+  });
 }
 
 ChatSocketMessage _message({
   required String conversationId,
   required String senderId,
   required String content,
+  String clientMessageId = '',
 }) {
   return ChatSocketMessage(
     id: 'message-id',
+    clientMessageId: clientMessageId,
     conversationId: conversationId,
     sender: ChatParticipantContent(
       id: senderId,
@@ -519,6 +693,8 @@ ChatSocketMessage _message({
 }
 
 class _FakeChatRealtimeGateway implements ChatRealtimeGateway {
+  final StreamController<ChatMessageAcknowledgement> _acknowledgements =
+      StreamController<ChatMessageAcknowledgement>.broadcast(sync: true);
   final StreamController<ChatSocketMessage> _messages =
       StreamController<ChatSocketMessage>.broadcast(sync: true);
   final StreamController<ChatReadReceipt> _readReceipts =
@@ -536,6 +712,7 @@ class _FakeChatRealtimeGateway implements ChatRealtimeGateway {
   bool canConnect = true;
   bool echoSentMessages = false;
   final List<String> sentContents = [];
+  final List<String> sentClientIds = [];
 
   @override
   String? activeConversationId;
@@ -545,6 +722,9 @@ class _FakeChatRealtimeGateway implements ChatRealtimeGateway {
 
   @override
   Stream<ChatSocketMessage> get messages => _messages.stream;
+  @override
+  Stream<ChatMessageAcknowledgement> get acknowledgements =>
+      _acknowledgements.stream;
 
   @override
   Stream<ChatReadReceipt> get readReceipts => _readReceipts.stream;
@@ -558,6 +738,14 @@ class _FakeChatRealtimeGateway implements ChatRealtimeGateway {
   Stream<ChatRealtimeStatus> get statuses => _statuses.stream;
 
   void addMessage(ChatSocketMessage message) => _messages.add(message);
+  void acknowledge(String clientId, {String id = 'server-message'}) =>
+      _acknowledgements.add(
+        ChatMessageAcknowledgement(
+          id: id,
+          clientMessageId: clientId,
+          status: 'sent',
+        ),
+      );
 
   @override
   Future<void> connect() async {
@@ -585,11 +773,14 @@ class _FakeChatRealtimeGateway implements ChatRealtimeGateway {
   Future<void> sendMessage({
     required String conversationId,
     required String content,
+    String clientMessageId = '',
   }) async {
     sentContents.add(content);
+    sentClientIds.add(clientMessageId);
     final ChatSocketMessage? echoedMessage = echoSentMessages
         ? ChatSocketMessage(
             id: 'message-${++_sentMessageCount}',
+            clientMessageId: clientMessageId,
             conversationId: conversationId,
             sender: const ChatParticipantContent(
               id: 'current-user-id',
@@ -600,7 +791,7 @@ class _FakeChatRealtimeGateway implements ChatRealtimeGateway {
             content: content,
             createdAt: DateTime(2026),
           )
-        : messageToEcho;
+        : messageToEcho?.copyWith(clientMessageId: clientMessageId);
     if (echoedMessage != null) _messages.add(echoedMessage);
   }
 
@@ -621,6 +812,7 @@ class _FakeChatRealtimeGateway implements ChatRealtimeGateway {
   Future<void> close() async {
     await Future.wait([
       _messages.close(),
+      _acknowledgements.close(),
       _readReceipts.close(),
       _statuses.close(),
     ]);
@@ -629,6 +821,28 @@ class _FakeChatRealtimeGateway implements ChatRealtimeGateway {
 
 class _ReadTrackingDataSource implements ChatDataSource {
   int readCount = 0;
+  final List<String> sentClientIds = [];
+  bool wrongIdentity = false;
+
+  @override
+  Future<ChatMessageContent> sendMessage({
+    required String conversationId,
+    required String content,
+    String clientMessageId = '',
+  }) async {
+    sentClientIds.add(clientMessageId);
+    return ChatMessageContent(
+      id: 'rest-message',
+      body: content,
+      time: '',
+      isFromMe: true,
+      conversationId: conversationId,
+      clientMessageId: wrongIdentity ? 'another-id' : clientMessageId,
+      sender: const ChatParticipantContent.initial().copyWith(
+        id: 'current-user-id',
+      ),
+    );
+  }
 
   @override
   Future<ChatReadContent> markConversationAsRead(String conversationId) async {

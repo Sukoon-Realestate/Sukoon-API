@@ -1,4 +1,4 @@
-/// Versioned proposed contracts. Backend delivery is tracked in SOKOUN_ALL_FEATURES_BACKEND_HANDOFF.md.
+/// Implemented contracts in MOBILE_ALL_FEATURES_BACKEND_HANDOFF.md.
 abstract final class PremiumApiConstants {
   static const prefix = 'features/v1/';
   static const configuration = '${prefix}configuration/';

@@ -1,10 +1,13 @@
 import 'package:equatable/equatable.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
 import 'package:sokoun_app/features/shared/premium/data/premium_json.dart';
 import 'package:sokoun_app/features/shared/premium/data/models/premium_money.dart';
 
 class LeaseDraftBody extends Equatable {
   const LeaseDraftBody({
     this.hasRentalOffers = false,
+    this.offerId = '',
+    this.rentalSelection,
     this.propertyId = '',
     this.tenantId = '',
     this.templateId = '',
@@ -17,6 +20,7 @@ class LeaseDraftBody extends Equatable {
   const LeaseDraftBody.initial() : this();
   factory LeaseDraftBody.fromJson(Map<String, dynamic> json) => LeaseDraftBody(
     propertyId: premiumString(json['property_id']),
+    offerId: premiumString(json['offer_id']),
     tenantId: premiumString(json['tenant_id']),
     templateId: premiumString(json['template_id']),
     templateVersion: premiumString(json['template_version']),
@@ -26,6 +30,8 @@ class LeaseDraftBody extends Equatable {
     requestKey: premiumString(json['request_key']),
   );
   final bool hasRentalOffers;
+  final String offerId;
+  final RentalSelection? rentalSelection;
   final String propertyId;
   final String tenantId;
   final String templateId;
@@ -37,6 +43,7 @@ class LeaseDraftBody extends Equatable {
 
   Map<String, dynamic> toJson() => {
     'property_id': propertyId,
+    if (offerId.isNotEmpty) 'offer_id': offerId,
     'tenant_id': tenantId,
     'template_id': templateId,
     'template_version': templateVersion,
@@ -47,6 +54,8 @@ class LeaseDraftBody extends Equatable {
   };
   LeaseDraftBody copyWith({
     bool? hasRentalOffers,
+    String? offerId,
+    RentalSelection? rentalSelection,
     String? propertyId,
     String? tenantId,
     String? templateId,
@@ -57,6 +66,8 @@ class LeaseDraftBody extends Equatable {
     String? requestKey,
   }) => LeaseDraftBody(
     hasRentalOffers: hasRentalOffers ?? this.hasRentalOffers,
+    offerId: offerId ?? this.offerId,
+    rentalSelection: rentalSelection ?? this.rentalSelection,
     propertyId: propertyId ?? this.propertyId,
     tenantId: tenantId ?? this.tenantId,
     templateId: templateId ?? this.templateId,
@@ -69,6 +80,8 @@ class LeaseDraftBody extends Equatable {
   @override
   List<Object?> get props => [
     hasRentalOffers,
+    offerId,
+    rentalSelection,
     propertyId,
     tenantId,
     templateId,

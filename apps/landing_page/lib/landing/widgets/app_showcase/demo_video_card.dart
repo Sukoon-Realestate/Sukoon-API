@@ -1,8 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../theme/landing_theme.dart';
+import 'browser_demo_video_stub.dart'
+    if (dart.library.js_interop) 'browser_demo_video.dart';
 
 class DemoVideoCard extends StatefulWidget {
   const DemoVideoCard({super.key});
@@ -127,62 +130,74 @@ class _DemoVideoCardState extends State<DemoVideoCard>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(24),
-              ),
-              child: AspectRatio(
-                aspectRatio: 16 / 9,
-                child: Semantics(
-                  label: LocaleKeys.landingDemoVideoSemantic,
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.asset(DemoVideoCard.posterAsset, fit: BoxFit.cover),
-                      if (initialized) VideoPlayer(controller!),
-                      if (!playing)
-                        ColoredBox(
-                          color: Colors.black.withValues(alpha: .18),
-                          child: Center(
-                            child: _loading
-                                ? Semantics(
-                                    label: LocaleKeys.landingDemoLoading,
-                                    child: const CircularProgressIndicator(
-                                      color: Colors.white,
-                                    ),
-                                  )
-                                : FilledButton.icon(
-                                    onPressed: _play,
-                                    style: FilledButton.styleFrom(
-                                      backgroundColor: LandingColors.teal,
-                                      foregroundColor: Colors.white,
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 20,
-                                        vertical: 16,
+            if (kIsWeb)
+              BrowserDemoVideo(
+                onFailureChanged: (failed) {
+                  if (mounted && _active && _failed != failed) {
+                    setState(() => _failed = failed);
+                  }
+                },
+              )
+            else
+              ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(24),
+                ),
+                child: AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: Semantics(
+                    label: LocaleKeys.landingDemoVideoSemantic,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        Image.asset(
+                          DemoVideoCard.posterAsset,
+                          fit: BoxFit.cover,
+                        ),
+                        if (initialized) VideoPlayer(controller!),
+                        if (!playing)
+                          ColoredBox(
+                            color: Colors.black.withValues(alpha: .18),
+                            child: Center(
+                              child: _loading
+                                  ? Semantics(
+                                      label: LocaleKeys.landingDemoLoading,
+                                      child: const CircularProgressIndicator(
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : FilledButton.icon(
+                                      onPressed: _play,
+                                      style: FilledButton.styleFrom(
+                                        backgroundColor: LandingColors.teal,
+                                        foregroundColor: Colors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 20,
+                                          vertical: 16,
+                                        ),
+                                      ),
+                                      icon: Icon(
+                                        _failed
+                                            ? Icons.refresh_rounded
+                                            : finished
+                                            ? Icons.replay_rounded
+                                            : Icons.play_arrow_rounded,
+                                      ),
+                                      label: Text(
+                                        _failed
+                                            ? LocaleKeys.landingDemoRetry
+                                            : finished
+                                            ? LocaleKeys.landingDemoReplay
+                                            : LocaleKeys.landingDemoPlay,
                                       ),
                                     ),
-                                    icon: Icon(
-                                      _failed
-                                          ? Icons.refresh_rounded
-                                          : finished
-                                          ? Icons.replay_rounded
-                                          : Icons.play_arrow_rounded,
-                                    ),
-                                    label: Text(
-                                      _failed
-                                          ? LocaleKeys.landingDemoRetry
-                                          : finished
-                                          ? LocaleKeys.landingDemoReplay
-                                          : LocaleKeys.landingDemoPlay,
-                                    ),
-                                  ),
+                            ),
                           ),
-                        ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
             if (initialized)
               Padding(
                 padding: const EdgeInsets.symmetric(

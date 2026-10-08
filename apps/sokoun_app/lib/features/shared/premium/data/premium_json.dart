@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:melos_core/config/language/languages.dart';
 
 Map<String, dynamic> premiumMap(Object? value) =>
     value is Map ? Map<String, dynamic>.from(value) : const {};
@@ -27,4 +28,4 @@ List<Map<String, dynamic>> premiumMaps(Object? value) => value is List
     ? value.whereType<Map>().map(premiumMap).toList(growable: false)
     : const [];
 String premiumCacheKey(String name, Iterable<Object?> dimensions) =>
-    'features_v1_${name}_${base64Url.encode(utf8.encode(jsonEncode(dimensions.toList())))}';
+    'features_v1_${name}_${base64Url.encode(utf8.encode(jsonEncode([Languages.currentLanguage.locale.languageCode, ...dimensions])))}';

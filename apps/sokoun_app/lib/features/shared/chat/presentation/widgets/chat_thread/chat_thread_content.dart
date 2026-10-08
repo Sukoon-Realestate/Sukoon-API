@@ -105,15 +105,6 @@ class _ChatThreadContentState extends State<ChatThreadContent>
         : currentMessages.indexWhere(
             (item) => item.message.id.toString() == localMessageId,
           );
-    if (pendingMessageIndex < 0) {
-      pendingMessageIndex = currentMessages.indexWhere(
-        (item) =>
-            chatMessage.sender.isFromMe &&
-            item.sender.isFromMe &&
-            item.messageState == MessageState.pending &&
-            item.message.body == message.content,
-      );
-    }
     if (pendingMessageIndex >= 0) {
       _chatController.replaceWith(pendingMessageIndex, chatMessage);
     } else {

@@ -15,6 +15,7 @@ class RentInvoiceCubit extends AsyncCubit<RentInvoice> {
         endpoint: PremiumApiConstants.invoice(id),
         key: premiumCacheKey('rent_invoice', [id]),
         fromJson: RentInvoice.fromJson,
+        valid: (invoice) => invoice.id == id,
         toJson: (model) => model.toJson(),
       ),
       withInternetInterceptor: true,

@@ -991,6 +991,7 @@ class _OwnerChatDataSource implements ChatDataSource {
   Future<ChatMessageContent> sendMessage({
     required String conversationId,
     required String content,
+    String clientMessageId = '',
   }) async => const ChatMessageContent.initial();
 
   @override

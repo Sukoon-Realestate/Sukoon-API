@@ -29,11 +29,11 @@ class PropertyFilterLabelResolver {
       case 'suitable_for':
         return suitableForLabel(filter.value);
       case 'is_furnished':
-        return '${LocaleKeys.tenantFilterFurnished}: ${_label(options.booleanOptions, filter.value)}';
+        return '${LocaleKeys.tenantFilterFurnished}: ${_booleanLabel(filter.value)}';
       case 'is_verified':
-        return '${LocaleKeys.tenantFilterVerified}: ${_label(options.booleanOptions, filter.value)}';
+        return '${LocaleKeys.tenantFilterVerified}: ${_booleanLabel(filter.value)}';
       case 'smoking_allowed':
-        return '${LocaleKeys.tenantFilterSmoking}: ${_label(options.booleanOptions, filter.value)}';
+        return '${LocaleKeys.tenantFilterSmoking}: ${_booleanLabel(filter.value)}';
       case 'bedrooms':
         return '${LocaleKeys.tenantFilterBedrooms}: ${filter.value}';
       case 'bathrooms':
@@ -58,6 +58,16 @@ class PropertyFilterLabelResolver {
 
   String amenityLabel(String value) =>
       _label(options.amenities, value, matchQueryParameter: true);
+
+  String _booleanLabel(String value) {
+    final label = _label(options.booleanOptions, value);
+    if (label != value) return label;
+    return switch (value) {
+      'true' => LocaleKeys.featureFilterYes,
+      'false' => LocaleKeys.featureFilterNo,
+      _ => value,
+    };
+  }
 
   List<String> amenityLabels(PropertyDetailsModel property) =>
       property.amenities.map(amenityLabel).toList(growable: false);

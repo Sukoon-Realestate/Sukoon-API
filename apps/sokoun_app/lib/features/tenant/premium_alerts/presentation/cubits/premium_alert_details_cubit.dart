@@ -13,6 +13,7 @@ class PremiumAlertDetailsCubit extends AsyncCubit<PremiumSearchAlert> {
         endpoint: PremiumApiConstants.alert(id),
         key: premiumCacheKey('premium_search_alert', [id]),
         fromJson: PremiumSearchAlert.fromJson,
+        valid: (alert) => alert.id == id,
         toJson: (model) => model.toJson(),
       ),
       withInternetInterceptor: true,

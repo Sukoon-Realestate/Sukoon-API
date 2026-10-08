@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/network/fire_store.dart';
@@ -41,13 +43,7 @@ class GoogleSignService {
           );
           return '';
         }
-        FireStoreService.instance.storeError(e.toString());
-        Messages.showToast(
-          msg: LocaleKeys.googleSignInFailed,
-          status: BaseStatus.error,
-        );
-        return '';
-      } catch (e) {
+        log('the google sign in error is ${e.toString()}');
         FireStoreService.instance.storeError(e.toString());
         Messages.showToast(
           msg: LocaleKeys.googleSignInFailed,

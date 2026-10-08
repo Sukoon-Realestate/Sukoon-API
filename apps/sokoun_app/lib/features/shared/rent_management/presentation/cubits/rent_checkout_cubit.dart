@@ -4,11 +4,16 @@ import 'package:sokoun_app/features/shared/premium/data/models/premium_action_re
 import 'package:sokoun_app/features/shared/premium/presentation/cubits/premium_mutation_cubit.dart';
 import '../../data/models/rent_checkout_body.dart';
 import 'package:sokoun_app/features/shared/premium/data/premium_hosted_data.dart';
+import 'package:sokoun_app/features/shared/premium/data/feature_service_capabilities.dart';
 
 class RentCheckoutCubit extends PremiumMutationCubit<PremiumActionReceipt> {
-  RentCheckoutCubit() : super(const PremiumActionReceipt.initial());
+  RentCheckoutCubit({this.capabilities = FeatureServiceCapabilities.configured})
+    : super(const PremiumActionReceipt.initial());
+  final FeatureServiceCapabilities capabilities;
   Future<PremiumActionReceipt?> checkout(RentCheckoutBody body) =>
-      body.invoiceId.isEmpty || body.requestKey.isEmpty
+      !capabilities.rentCheckout ||
+          body.invoiceId.isEmpty ||
+          body.requestKey.isEmpty
       ? Future.value()
       : perform(
           () => PremiumApiData.mutate(

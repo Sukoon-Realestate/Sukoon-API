@@ -27,7 +27,7 @@ class NotificationService {
     importance: Importance.high,
   );
 
-  static String deviceToken = '';
+  static String deviceToken = '1234';
   bool _isConfigured = false;
 
   Stream<String> get onTokenRefresh =>
@@ -108,9 +108,12 @@ class NotificationService {
   }
 
   Future<String?> getFcmToken() async {
-    final String? token = await FirebaseMessaging.instance.getToken();
-    deviceToken = token ?? "";
-    return token;
+    try {
+      final String? deviceToken = await FirebaseMessaging.instance.getToken();
+      return deviceToken;
+    } on Exception catch (e) {
+      deviceToken = '1234';
+    }
   }
 
   Future<void> saveFcmToken() async {

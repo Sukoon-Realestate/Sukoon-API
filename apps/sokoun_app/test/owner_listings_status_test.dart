@@ -166,8 +166,8 @@ void main() {
       find.byType(AppPagify<OwnerPropertyContent>),
     );
     expect(second.pagifyController, isNot(same(first.pagifyController)));
-    expect(second.cacheKey, 'owner_properties_rejected');
-    expect(first.cacheKey, 'owner_properties_accepted');
+    expect(second.cacheKey, 'owner_properties_rejected_all_en');
+    expect(first.cacheKey, 'owner_properties_accepted_all_en');
     expect(network.requests.last.queryParameters?['page'], 1);
     expect(tester.takeException(), isNull);
     await tester.pumpWidget(const SizedBox.shrink());
@@ -230,7 +230,10 @@ void main() {
             final pagify = tester.widget<AppPagify<OwnerPropertyContent>>(
               find.byType(AppPagify<OwnerPropertyContent>),
             );
-            expect(pagify.cacheKey, 'owner_properties_${filter.apiValue}');
+            expect(
+              pagify.cacheKey,
+              'owner_properties_${filter.apiValue}_all_$locale',
+            );
             expect(find.text('Property ${filter.apiValue}'), findsOneWidget);
             expect(network.requests.last.queryParameters, {
               'page': 1,

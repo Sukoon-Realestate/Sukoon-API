@@ -1,3 +1,5 @@
+import 'package:melos_core/config/language/languages.dart';
+import 'package:sokoun_app/features/shared/rental_offers/data/enums/rental_listing_category.dart';
 import 'models/owner_properties_response.dart';
 import 'enums/owner_property_filter.dart';
 import 'models/owner_property_content.dart';
@@ -25,6 +27,7 @@ abstract interface class OwnerPropertiesDataSource {
   Future<(List<OwnerPropertyContent>, PaginationData)> getOwnedPropertiesPage({
     required int page,
     required OwnerPropertyFilter filter,
+    RentalListingCategory category = RentalListingCategory.all,
   });
 }
 
@@ -82,6 +85,7 @@ final class OwnerPropertiesApiDataSource implements OwnerPropertiesDataSource {
   Future<(List<OwnerPropertyContent>, PaginationData)> getOwnedPropertiesPage({
     required int page,
     required OwnerPropertyFilter filter,
+    RentalListingCategory category = RentalListingCategory.all,
   }) async {
     final response = await injector<NetworkService>().callApi(
       NetworkRequest(
@@ -89,6 +93,7 @@ final class OwnerPropertiesApiDataSource implements OwnerPropertiesDataSource {
         path: ApiConstants.ownedProperties,
         queryParameters: {
           'status': filter.apiValue,
+          if (category.scope != null) 'rental_scope': category.scope!.value,
           'page': page,
           'page_size': OwnerPropertiesData.pageSize,
         },
@@ -117,8 +122,11 @@ abstract final class OwnerPropertiesData {
   static String citiesCacheKey(String governorateId) =>
       source.citiesCacheKey(governorateId);
 
-  static String cacheKeyFor(OwnerPropertyFilter filter) =>
-      '${source.cacheKey}_${filter.apiValue}';
+  static String cacheKeyFor(
+    OwnerPropertyFilter filter, {
+    RentalListingCategory category = RentalListingCategory.all,
+  }) =>
+      '${source.cacheKey}_${filter.apiValue}_${category.name}_${Languages.currentLanguage.languageCode}';
 
   static Future<OwnerPropertyLocationsResponse> getGovernorates() =>
       source.getGovernorates();
@@ -132,5 +140,10 @@ abstract final class OwnerPropertiesData {
   getOwnedPropertiesPage({
     required int page,
     required OwnerPropertyFilter filter,
-  }) => source.getOwnedPropertiesPage(page: page, filter: filter);
+    RentalListingCategory category = RentalListingCategory.all,
+  }) => source.getOwnedPropertiesPage(
+    page: page,
+    filter: filter,
+    category: category,
+  );
 }

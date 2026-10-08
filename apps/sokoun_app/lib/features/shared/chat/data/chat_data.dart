@@ -34,6 +34,7 @@ abstract interface class ChatDataSource {
   Future<ChatMessageContent> sendMessage({
     required String conversationId,
     required String content,
+    String clientMessageId = '',
   });
 
   Future<ChatReadContent> markConversationAsRead(String conversationId);
@@ -132,6 +133,7 @@ final class ChatApiDataSource implements ChatDataSource {
   Future<ChatMessageContent> sendMessage({
     required String conversationId,
     required String content,
+    String clientMessageId = '',
   }) async {
     final response = await injector<NetworkService>().callApi(
       NetworkRequest(
@@ -140,6 +142,7 @@ final class ChatApiDataSource implements ChatDataSource {
         body: MessageParamsModel(
           conversationId: conversationId,
           content: content,
+          clientMessageId: clientMessageId,
         ).toRestJson(),
       ),
       mapper: (json) => ChatMessageContent.fromJson(
@@ -199,7 +202,12 @@ abstract final class ChatData {
   static Future<ChatMessageContent> sendMessage({
     required String conversationId,
     required String content,
-  }) => source.sendMessage(conversationId: conversationId, content: content);
+    String clientMessageId = '',
+  }) => source.sendMessage(
+    conversationId: conversationId,
+    content: content,
+    clientMessageId: clientMessageId,
+  );
 
   static Future<ChatReadContent> markConversationAsRead(
     String conversationId,
