@@ -21,6 +21,11 @@ class Notification(TimeStampedModel):
         VISIT_REVIEW = "visit_review", _("Visit Review")
         PROMOTION = "promotion", _("Promotion")
         GENERAL = "general", _("General Notification")
+        TENANCY_INVITATION = "tenancy_invitation", _("Tenancy Invitation")
+        TENANCY_INVITATION_RESPONSE = (
+            "tenancy_invitation_response",
+            _("Tenancy Invitation Response"),
+        )
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

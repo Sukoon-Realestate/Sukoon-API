@@ -1,3 +1,4 @@
+import copy
 import hashlib
 import json
 from datetime import timedelta
@@ -5,7 +6,7 @@ from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.db.models import Count, Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -28,11 +29,11 @@ from .models import (
     CheckoutSession,
     IdempotencyRecord,
     Lease,
-    LeaseEligibleTenant,
     ListingSuggestion,
     RentInvoice,
     SearchAlert,
     SigningSession,
+    TenancyInvitation,
 )
 from .pagination import FeaturePagination
 from .renderers import FeatureJsonRenderer
@@ -44,6 +45,21 @@ from .serializers import (
     RentInvoiceSerializer,
     RevisionRequestSerializer,
     SearchAlertSerializer,
+    TenancyInvitationCreateSerializer,
+    TenancyInvitationResponseSerializer,
+    TenancyInvitationSerializer,
+)
+from .services.tenancy_invitations import (
+    InvitationConflict,
+    LIVE_LEASE_STATUSES,
+    create_notification_for_invitation,
+    create_notification_for_response,
+    invitation_is_eligible,
+    localized,
+    refresh_effective_status,
+    resolve_offer_snapshot,
+    validate_accounts,
+    validate_source_relationship,
 )
 
 User = get_user_model()
@@ -430,18 +446,297 @@ def lease_configuration(request):
 @renderer_classes([FeatureJsonRenderer])
 def lease_tenants(request):
     property_id = request.query_params.get("property_id")
+    if not property_id:
+        raise ValidationError({"property_id": "This query parameter is required."})
     property_obj = get_object_or_404(Property, id=property_id, owner=request.user)
-    queryset = LeaseEligibleTenant.objects.filter(
-        property=property_obj, is_active=True
-    ).select_related("tenant")
+    if not request.user.is_active or not request.user.is_verified:
+        raise PermissionDenied("A verified active owner account is required.")
+    queryset = TenancyInvitation.objects.filter(
+        property=property_obj,
+        owner=request.user,
+        status=TenancyInvitation.Status.ACCEPTED,
+        lease__isnull=True,
+    ).select_related("property", "property__owner", "owner", "tenant", "lease")
+    offer_id = request.query_params.get("offer_id")
+    if offer_id:
+        queryset = queryset.filter(offer_id=offer_id)
+    eligible = []
+    seen = set()
+    for invitation in queryset.order_by("-created_at", "-id"):
+        refresh_effective_status(invitation)
+        if invitation_is_eligible(invitation) and invitation.tenant_id not in seen:
+            seen.add(invitation.tenant_id)
+            eligible.append(invitation)
     paginator = FeaturePagination()
-    page = paginator.paginate_queryset(queryset, request)
+    page = paginator.paginate_queryset(eligible, request)
     return paginator.get_paginated_response(
         [
-            {"id": str(item.tenant.id), "display_name": item.tenant.get_full_name}
-            for item in page
+            {
+                "id": str(invitation.tenant.id),
+                "display_name": invitation.tenant.get_full_name,
+            }
+            for invitation in page
         ]
     )
+
+
+@api_view(["GET", "POST"])
+@permission_classes([IsAuthenticated])
+@renderer_classes([FeatureJsonRenderer])
+def tenancy_invitations(request):
+    if request.method == "GET":
+        workspace = request.query_params.get("workspace")
+        if workspace == "owner":
+            queryset = TenancyInvitation.objects.filter(owner=request.user)
+        elif workspace == "tenant":
+            queryset = TenancyInvitation.objects.filter(tenant=request.user)
+        else:
+            raise ValidationError({"workspace": "Must be owner or tenant."})
+        property_id = request.query_params.get("property_id")
+        if property_id:
+            if workspace == "owner":
+                get_object_or_404(Property, id=property_id, owner=request.user)
+            queryset = queryset.filter(property__id=property_id)
+        queryset = queryset.select_related(
+            "property", "property__owner", "owner", "tenant", "lease"
+        ).order_by("-created_at", "-id")
+        for invitation in list(queryset):
+            refresh_effective_status(invitation)
+        return _paginate(request, queryset.all(), TenancyInvitationSerializer)
+
+    serializer = TenancyInvitationCreateSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    data_in = serializer.validated_data
+    property_obj = get_object_or_404(
+        Property.objects.select_related("owner"),
+        id=data_in["property_id"],
+        owner=request.user,
+    )
+    tenant = get_object_or_404(User, id=data_in["tenant_id"])
+    validate_accounts(request.user, tenant, request)
+    validate_source_relationship(property_obj, tenant, request)
+    replay = _replay(
+        request.user,
+        "tenancy_invitation.create",
+        data_in["request_key"],
+        request.data,
+    )
+    if replay:
+        return replay
+    if property_obj.status != Property.Status.VERIFIED or not property_obj.is_verified:
+        raise InvitationConflict(
+            localized(
+                request,
+                "The property is not currently available for leasing.",
+                "العقار غير متاح حاليًا للإيجار.",
+            )
+        )
+    try:
+        with transaction.atomic():
+            property_obj = get_object_or_404(
+                Property.objects.select_for_update().select_related("owner"),
+                pk=property_obj.pk,
+                owner=request.user,
+            )
+            tenant = get_object_or_404(User.objects.select_for_update(), pk=tenant.pk)
+            validate_accounts(request.user, tenant, request)
+            validate_source_relationship(property_obj, tenant, request)
+            replay = _replay(
+                request.user,
+                "tenancy_invitation.create",
+                data_in["request_key"],
+                request.data,
+            )
+            if replay:
+                return replay
+            if (
+                property_obj.status != Property.Status.VERIFIED
+                or not property_obj.is_verified
+            ):
+                raise InvitationConflict(
+                    localized(
+                        request,
+                        "The property is not currently available for leasing.",
+                        "العقار غير متاح حاليًا للإيجار.",
+                    )
+                )
+            offer_id, snapshot = resolve_offer_snapshot(
+                property_obj,
+                data_in.get("offer_id", ""),
+                data_in.get("expected_offer_revision"),
+                request,
+            )
+            if Lease.objects.filter(
+                property=property_obj,
+                offer_id=offer_id,
+                status__in=LIVE_LEASE_STATUSES,
+            ).exists():
+                raise InvitationConflict(
+                    localized(
+                        request,
+                        "The accommodation already has a conflicting lease.",
+                        "يوجد عقد متعارض لمكان الإقامة.",
+                    )
+                )
+            live = list(
+                TenancyInvitation.objects.select_for_update()
+                .filter(
+                    owner=request.user,
+                    property=property_obj,
+                    tenant=tenant,
+                    offer_id=offer_id,
+                    status__in=[
+                        TenancyInvitation.Status.PENDING,
+                        TenancyInvitation.Status.ACCEPTED,
+                    ],
+                    lease__isnull=True,
+                )
+                .select_related(
+                    "property", "property__owner", "owner", "tenant", "lease"
+                )
+            )
+            for existing in live:
+                refresh_effective_status(existing)
+            if any(
+                item.status
+                in [
+                    TenancyInvitation.Status.PENDING,
+                    TenancyInvitation.Status.ACCEPTED,
+                ]
+                for item in live
+            ):
+                raise InvitationConflict(
+                    localized(
+                        request,
+                        "A live invitation already exists for this accommodation.",
+                        "توجد دعوة سارية بالفعل لمكان الإقامة هذا.",
+                    )
+                )
+            invitation = TenancyInvitation.objects.create(
+                property=property_obj,
+                owner=request.user,
+                tenant=tenant,
+                offer_id=offer_id,
+                offer_snapshot=snapshot,
+                expires_at=timezone.now() + timedelta(days=7),
+                initiated_by=request.user,
+            )
+            output = TenancyInvitationSerializer(
+                invitation, context={"request": request}
+            ).data
+            _remember(
+                request.user,
+                "tenancy_invitation.create",
+                data_in["request_key"],
+                request.data,
+                output,
+                201,
+            )
+            create_notification_for_invitation(request, invitation)
+    except IntegrityError:
+        replay = _replay(
+            request.user,
+            "tenancy_invitation.create",
+            data_in["request_key"],
+            request.data,
+        )
+        if replay:
+            return replay
+        raise InvitationConflict(
+            localized(
+                request,
+                "A live invitation already exists for this accommodation.",
+                "توجد دعوة سارية بالفعل لمكان الإقامة هذا.",
+            )
+        )
+    return Response(output, status=status.HTTP_201_CREATED)
+
+
+def _participant_invitation(request, invitation_id):
+    invitation = get_object_or_404(
+        TenancyInvitation.objects.select_related(
+            "property", "property__owner", "owner", "tenant", "lease"
+        ),
+        id=invitation_id,
+    )
+    if request.user not in (invitation.owner, invitation.tenant):
+        raise NotFound()
+    return invitation
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@renderer_classes([FeatureJsonRenderer])
+def tenancy_invitation_detail(request, invitation_id):
+    invitation = _participant_invitation(request, invitation_id)
+    refresh_effective_status(invitation)
+    return Response(
+        TenancyInvitationSerializer(invitation, context={"request": request}).data
+    )
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@renderer_classes([FeatureJsonRenderer])
+def tenancy_invitation_respond(request, invitation_id):
+    visible = _participant_invitation(request, invitation_id)
+    if request.user != visible.tenant:
+        raise PermissionDenied("Only the addressed tenant can respond.")
+    if not request.user.is_active or not request.user.is_verified:
+        raise PermissionDenied("A verified active tenant account is required.")
+    serializer = TenancyInvitationResponseSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    data_in = serializer.validated_data
+    operation = f"tenancy_invitation.respond.{invitation_id}"
+    replay = _replay(request.user, operation, data_in["request_key"], request.data)
+    if replay:
+        return replay
+    with transaction.atomic():
+        invitation = get_object_or_404(
+            TenancyInvitation.objects.select_for_update().select_related(
+                "property", "property__owner", "owner", "tenant", "lease"
+            ),
+            id=invitation_id,
+            tenant=request.user,
+        )
+        replay = _replay(
+            request.user, operation, data_in["request_key"], request.data
+        )
+        if replay:
+            return replay
+        refresh_effective_status(invitation)
+        if invitation.status != TenancyInvitation.Status.PENDING:
+            return Response(
+                {"message": "This invitation can no longer be answered."},
+                status=status.HTTP_409_CONFLICT,
+            )
+        if data_in["revision"] != invitation.revision:
+            raise InvitationConflict("Invitation revision conflict.")
+        now = timezone.now()
+        invitation.status = data_in["decision"]
+        invitation.revision += 1
+        invitation.responded_by = request.user
+        fields = ["status", "revision", "responded_by", "updated_at"]
+        if invitation.status == TenancyInvitation.Status.ACCEPTED:
+            invitation.accepted_at = now
+            fields.append("accepted_at")
+        else:
+            invitation.rejected_at = now
+            fields.append("rejected_at")
+        invitation.save(update_fields=fields)
+        output = TenancyInvitationSerializer(
+            invitation, context={"request": request}
+        ).data
+        _remember(
+            request.user,
+            operation,
+            data_in["request_key"],
+            request.data,
+            output,
+            200,
+        )
+        create_notification_for_response(request, invitation)
+    return Response(output)
 
 
 def _lease_queryset(user, workspace):
@@ -466,19 +761,16 @@ def leases(request):
     serializer = LeaseCreateSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     data_in = serializer.validated_data
+    property_obj = get_object_or_404(
+        Property.objects.select_related("owner"),
+        id=data_in["property_id"],
+        owner=request.user,
+    )
+    tenant = get_object_or_404(User, id=data_in["tenant_id"])
+    validate_accounts(request.user, tenant, request)
     replay = _replay(request.user, "lease.create", data_in["request_key"], request.data)
     if replay:
         return replay
-    property_obj = get_object_or_404(
-        Property, id=data_in["property_id"], owner=request.user
-    )
-    tenant = get_object_or_404(User, id=data_in["tenant_id"])
-    if not LeaseEligibleTenant.objects.filter(
-        property=property_obj, tenant=tenant, is_active=True
-    ).exists():
-        raise PermissionDenied(
-            "The selected tenant is not eligible for this property lease."
-        )
     template = next(
         (
             item
@@ -490,50 +782,81 @@ def leases(request):
     )
     if not template:
         raise ValidationError({"template_id": "Unsupported template or version."})
-    offer_snapshot = None
-    if property_obj.rental_inventory:
-        offer_id = data_in.get("offer_id")
-        offer = next(
-            (
-                item
-                for item in property_obj.rental_inventory.get("offers", [])
-                if str(item.get("id")) == str(offer_id)
-            ),
-            None,
-        )
-        if (
-            not offer
-            or offer.get("archived")
-            or offer.get("availability") != "available"
-        ):
-            raise ValidationError(
-                {"offer_id": "A current available offer is required for this property."}
+    try:
+        with transaction.atomic():
+            property_obj = get_object_or_404(
+                Property.objects.select_for_update().select_related("owner"),
+                pk=property_obj.pk,
+                owner=request.user,
             )
-        offer_snapshot = {
-            "property_id": str(property_obj.id),
-            "offer_id": str(offer_id),
-            "offer_revision": offer.get("revision"),
-            **offer,
-        }
-    with transaction.atomic():
-        lease = Lease.objects.create(
-            property=property_obj,
-            owner=request.user,
-            tenant=tenant,
-            template_id=data_in["template_id"],
-            template_version=data_in["template_version"],
-            start_date=data_in["start_date"],
-            end_date=data_in["end_date"],
-            rent_amount_minor=data_in["rent"]["amount_minor"],
-            rent_currency="EGP",
-            rent_exponent=2,
-            offer_id=data_in.get("offer_id", ""),
-            offer_snapshot=offer_snapshot,
+            tenant = get_object_or_404(User.objects.select_for_update(), pk=tenant.pk)
+            validate_accounts(request.user, tenant, request)
+            replay = _replay(
+                request.user, "lease.create", data_in["request_key"], request.data
+            )
+            if replay:
+                return replay
+            offer_id = str(data_in.get("offer_id") or "")
+            invitations = list(
+                TenancyInvitation.objects.select_for_update()
+                .filter(
+                    property=property_obj,
+                    owner=request.user,
+                    tenant=tenant,
+                    offer_id=offer_id,
+                    status=TenancyInvitation.Status.ACCEPTED,
+                    lease__isnull=True,
+                )
+                .select_related(
+                    "property", "property__owner", "owner", "tenant", "lease"
+                )
+                .order_by("-created_at", "-id")
+            )
+            for item in invitations:
+                refresh_effective_status(item)
+            invitation = next(
+                (item for item in invitations if invitation_is_eligible(item)), None
+            )
+            if not invitation:
+                raise InvitationConflict(
+                    localized(
+                        request,
+                        "The selected tenant is no longer eligible for this accommodation.",
+                        "لم يعد المستأجر المحدد مؤهلاً لمكان الإقامة هذا.",
+                    )
+                )
+            lease = Lease.objects.create(
+                property=property_obj,
+                owner=request.user,
+                tenant=tenant,
+                template_id=data_in["template_id"],
+                template_version=data_in["template_version"],
+                start_date=data_in["start_date"],
+                end_date=data_in["end_date"],
+                rent_amount_minor=data_in["rent"]["amount_minor"],
+                rent_currency="EGP",
+                rent_exponent=2,
+                offer_id=offer_id,
+                offer_snapshot=copy.deepcopy(invitation.offer_snapshot),
+            )
+            invitation.lease = lease
+            invitation.save(update_fields=["lease", "updated_at"])
+            out = LeaseSerializer(lease, context={"request": request}).data
+            _remember(
+                request.user,
+                "lease.create",
+                data_in["request_key"],
+                request.data,
+                out,
+                201,
+            )
+    except IntegrityError:
+        replay = _replay(
+            request.user, "lease.create", data_in["request_key"], request.data
         )
-        out = LeaseSerializer(lease, context={"request": request}).data
-        _remember(
-            request.user, "lease.create", data_in["request_key"], request.data, out, 201
-        )
+        if replay:
+            return replay
+        raise InvitationConflict("The accommodation already has a conflicting lease.")
     return Response(out, status=status.HTTP_201_CREATED)
 
 

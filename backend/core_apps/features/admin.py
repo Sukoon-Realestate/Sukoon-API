@@ -9,6 +9,7 @@ from .models import (
     RentInvoice,
     SearchAlert,
     SigningSession,
+    TenancyInvitation,
 )
 
 admin.site.register(
@@ -21,5 +22,6 @@ admin.site.register(
         SigningSession,
         RentInvoice,
         CheckoutSession,
+        TenancyInvitation,
     ]
 )

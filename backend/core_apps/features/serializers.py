@@ -1,7 +1,13 @@
 from django.utils import timezone
 from rest_framework import serializers
 
-from .models import BoostCampaign, Lease, RentInvoice, SearchAlert
+from .models import (
+    BoostCampaign,
+    Lease,
+    RentInvoice,
+    SearchAlert,
+    TenancyInvitation,
+)
 
 
 class BoostCampaignSerializer(serializers.ModelSerializer):
@@ -211,3 +217,71 @@ class RentInvoiceSerializer(serializers.ModelSerializer):
 class RevisionRequestSerializer(serializers.Serializer):
     revision = serializers.IntegerField(min_value=1)
     request_key = serializers.CharField(max_length=100)
+
+
+class TenancyInvitationCreateSerializer(serializers.Serializer):
+    property_id = serializers.UUIDField()
+    tenant_id = serializers.UUIDField()
+    offer_id = serializers.CharField(max_length=64, required=False, allow_blank=True)
+    expected_offer_revision = serializers.IntegerField(min_value=1, required=False)
+    request_key = serializers.CharField(max_length=100)
+
+
+class TenancyInvitationResponseSerializer(serializers.Serializer):
+    decision = serializers.ChoiceField(choices=["accepted", "rejected"])
+    revision = serializers.IntegerField(min_value=1)
+    request_key = serializers.CharField(max_length=100)
+
+
+class TenancyInvitationSerializer(serializers.ModelSerializer):
+    property_id = serializers.UUIDField(source="property.id", read_only=True)
+    property_title = serializers.CharField(source="property.title", read_only=True)
+    owner_id = serializers.UUIDField(source="owner.id", read_only=True)
+    owner_name = serializers.CharField(source="owner.get_full_name", read_only=True)
+    tenant_id = serializers.UUIDField(source="tenant.id", read_only=True)
+    tenant_name = serializers.CharField(source="tenant.get_full_name", read_only=True)
+    lease_id = serializers.UUIDField(source="lease.id", read_only=True, allow_null=True)
+    eligible_for_lease = serializers.SerializerMethodField()
+    actions = serializers.SerializerMethodField()
+
+    class Meta:
+        model = TenancyInvitation
+        fields = [
+            "id",
+            "property_id",
+            "property_title",
+            "owner_id",
+            "owner_name",
+            "tenant_id",
+            "tenant_name",
+            "offer_id",
+            "offer_snapshot",
+            "status",
+            "revision",
+            "created_at",
+            "expires_at",
+            "accepted_at",
+            "rejected_at",
+            "revoked_at",
+            "lease_id",
+            "eligible_for_lease",
+            "actions",
+        ]
+
+    def get_eligible_for_lease(self, obj):
+        from .services.tenancy_invitations import invitation_is_eligible
+
+        return invitation_is_eligible(obj)
+
+    def get_actions(self, obj):
+        request = self.context.get("request")
+        return {
+            "can_respond": bool(
+                request
+                and request.user == obj.tenant
+                and obj.status == TenancyInvitation.Status.PENDING
+                and obj.expires_at > timezone.now()
+                and request.user.is_active
+                and request.user.is_verified
+            )
+        }
