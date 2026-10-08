@@ -1,0 +1,10 @@
+{
+  "maxReviewHours": true,
+  "tenantDocsRequired": false,
+  "landlordDocsRequired": true,
+  "autoVerification": true,
+  "maxPhotosLimit": true,
+  "reviewPeriodDays": false,
+  "approxLocation": true,
+  "hidePhoneDefault": true
+}

@@ -1,8 +1,8 @@
 # Sokoun mobile backend handoff — implemented features
 
-Date: 2026-10-08  
-API prefix: `/api/v1/`  
-Feature prefix: `/api/v1/features/v1/`  
+Date: 2026-10-08
+API prefix: `/api/v1/`
+Feature prefix: `/api/v1/features/v1/`
 Rental inventory version: `1`
 
 ## 1. Integration status

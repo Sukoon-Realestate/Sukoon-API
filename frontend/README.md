@@ -2,7 +2,22 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+### 1. Environment Variables Configuration
+
+Copy `.env.example` to `.env.local` to configure whether to connect to a live backend or use local static dummy data:
+
+```bash
+cp .env.example .env.local
+```
+
+| Variable | Default | Description |
+|---|---|---|
+| `NEXT_PUBLIC_ENABLE_BACKEND` | `false` | Set to `true` to connect to the live Django backend API, or `false` to use static dummy JSON data files in `src/data/mock/`. |
+| `NEXT_PUBLIC_API_URL` | `http://localhost:8000` | The live Django backend API URL (active when `NEXT_PUBLIC_ENABLE_BACKEND=true`). |
+
+> **Note:** If backend is not deployed yet or you are running locally without Django running, keep `NEXT_PUBLIC_ENABLE_BACKEND=false`. All pages, authentication, search, metrics, and actions will run offline using the static dummy JSON files.
+
+### 2. Run the Development Server
 
 ```bash
 npm run dev

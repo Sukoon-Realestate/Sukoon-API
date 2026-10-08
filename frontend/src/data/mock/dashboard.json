@@ -1,0 +1,75 @@
+{
+  "metrics": [
+    {
+      "title": "إجمالي المستخدمين",
+      "value": "2,847",
+      "change": "+12%",
+      "isPositive": true,
+      "icon": "users"
+    },
+    {
+      "title": "عقارات نشطة",
+      "value": "1,203",
+      "change": "+8%",
+      "isPositive": true,
+      "icon": "building"
+    },
+    {
+      "title": "توثيق معلق",
+      "value": "487",
+      "change": "-5%",
+      "isPositive": false,
+      "icon": "clock"
+    },
+    {
+      "title": "إيرادات المنصة",
+      "value": "89,400 ج",
+      "change": "+21%",
+      "isPositive": true,
+      "icon": "revenue"
+    }
+  ],
+  "user_distribution": {
+    "total": 2847,
+    "tenants": 1924,
+    "landlords": 923,
+    "verified": 1920,
+    "pending": 487,
+    "suspended": 43
+  },
+  "chart_data": [
+    { "label": "السبت", "value": 45 },
+    { "label": "الأحد", "value": 72 },
+    { "label": "الإثنين", "value": 58 },
+    { "label": "الثلاثاء", "value": 91 },
+    { "label": "الأربعاء", "value": 84 },
+    { "label": "الخميس", "value": 110 },
+    { "label": "الجمعة", "value": 65 }
+  ],
+  "recent_activities": [
+    {
+      "id": "act-1",
+      "title": "سارة أحمد أرسلت طلب توثيق",
+      "time": "منذ 5 دقائق",
+      "iconType": "check"
+    },
+    {
+      "id": "act-2",
+      "title": "عقار جديد في مدينة نصر بانتظار المراجعة",
+      "time": "منذ 12 دقيقة",
+      "iconType": "building"
+    },
+    {
+      "id": "act-3",
+      "title": "محمد علي أنشأ حساباً جديداً كمستأجر",
+      "time": "منذ 20 دقيقة",
+      "iconType": "user"
+    },
+    {
+      "id": "act-4",
+      "title": "تم اعتماد توثيق محمود حسن",
+      "time": "منذ 35 دقيقة",
+      "iconType": "check"
+    }
+  ]
+}

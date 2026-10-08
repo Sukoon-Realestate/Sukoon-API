@@ -1,0 +1,37 @@
+{
+  "visitRequests": "1,847",
+  "visitRequestsChange": "+23%",
+  "completedVisits": "1,204",
+  "completedVisitsChange": "+15%",
+  "avgRating": "4.7 ★",
+  "avgRatingChange": "+0.2",
+  "retentionRate": "78%",
+  "retentionRateChange": "-2%",
+  "topRegions": [
+    { "name": "مدينة نصر", "count": 380 },
+    { "name": "التجمع الخامس", "count": 265 },
+    { "name": "المهندسين", "count": 198 },
+    { "name": "المعادي", "count": 154 }
+  ],
+  "kycBreakdown": [
+    { "label": "موثّق", "count": 1920, "pct": "67%", "color": "bg-emerald-500" },
+    { "label": "معلّق", "count": 487, "pct": "17%", "color": "bg-amber-500" },
+    { "label": "مرفوض", "count": 143, "pct": "5%", "color": "bg-rose-500" },
+    { "label": "جديد (بدون توثيق)", "count": 297, "pct": "11%", "color": "bg-slate-400" }
+  ],
+  "propertyActivity": [
+    { "label": "عرض متاح", "count": 890, "color": "bg-emerald-500" },
+    { "label": "قيد المراجعة", "count": 234, "color": "bg-amber-500" },
+    { "label": "مؤجر", "count": 512, "color": "bg-blue-600" },
+    { "label": "مخفي", "count": 67, "color": "bg-slate-400" }
+  ],
+  "dailyChart": [
+    { "label": "1", "value": 45 },
+    { "label": "5", "value": 62 },
+    { "label": "10", "value": 78 },
+    { "label": "15", "value": 55 },
+    { "label": "20", "value": 90 },
+    { "label": "25", "value": 84 },
+    { "label": "30", "value": 110 }
+  ]
+}

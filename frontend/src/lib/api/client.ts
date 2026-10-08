@@ -1,4 +1,5 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+import { isBackendEnabled, API_BASE_URL } from './config';
+import { handleMockRequest } from './mockHandler';
 
 export interface RequestOptions extends Omit<RequestInit, 'body'> {
   params?: Record<string, string | number | boolean | undefined | null>;
@@ -6,6 +7,10 @@ export interface RequestOptions extends Omit<RequestInit, 'body'> {
 }
 
 export async function apiClient<T = any>(endpoint: string, options: RequestOptions = {}): Promise<T> {
+  // Route to dummy static data JSON files when backend is disabled in env var
+  if (!isBackendEnabled()) {
+    return handleMockRequest<T>(endpoint, options);
+  }
   const { params, headers, body, ...restOptions } = options;
 
   let url = `${API_BASE_URL}${endpoint}`;

@@ -1,0 +1,49 @@
+{
+  "metrics": {
+    "avgResolutionTime": "4.2h",
+    "solvedToday": 45,
+    "inProgress": 18,
+    "openTickets": 31
+  },
+  "tickets": [
+    {
+      "id": "SUP-201",
+      "rawId": "sup-201",
+      "subject": "مشكلة في تأكيد الزيارة",
+      "user": "سارة أحمد",
+      "userType": "مستأجر",
+      "priority": "عالي",
+      "status": "مفتوح",
+      "statusRaw": "open",
+      "timeAgo": "منذ 1 ساعة",
+      "assignedTo": "دينا حسام",
+      "notes": "المستأجر أبلغ عن عدم استلام رد من المالك بعد تحويل الرسوم."
+    },
+    {
+      "id": "SUP-202",
+      "rawId": "sup-202",
+      "subject": "استفسار عن طريقة الدفع والعمولة",
+      "user": "محمود حسن",
+      "userType": "مالك",
+      "priority": "متوسط",
+      "status": "قيد المعالجة",
+      "statusRaw": "in_progress",
+      "timeAgo": "منذ 3 ساعات",
+      "assignedTo": "سلمى رشدي",
+      "notes": "يرغب في معرفة موعد تسوية مبالغ الإيجار الشهرية."
+    },
+    {
+      "id": "SUP-203",
+      "rawId": "sup-203",
+      "subject": "تأخير في توثيق الهوية الوطنية",
+      "user": "نورا كمال",
+      "userType": "مستأجر",
+      "priority": "منخفض",
+      "status": "محلول",
+      "statusRaw": "resolved",
+      "timeAgo": "منذ يوم",
+      "assignedTo": "أحمد العدل",
+      "notes": "تمت مراجعة الوثيقة واعتمادها بنجاح."
+    }
+  ]
+}

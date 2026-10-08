@@ -1,0 +1,37 @@
+{
+  "metrics": {
+    "suspiciousImages": 14,
+    "misleadingDesc": 8,
+    "phoneNumInPhotos": 6,
+    "inappropriateContent": 3
+  },
+  "items": [
+    {
+      "id": "mod-1",
+      "rawId": "prop-1",
+      "property_id": "prop-1",
+      "title": "شقة مدينة نصر",
+      "reason": "رقم هاتف ظاهر في صورة • أحمد محمد",
+      "riskLevel": "عالي",
+      "type": "صور"
+    },
+    {
+      "id": "mod-2",
+      "rawId": "prop-2",
+      "property_id": "prop-2",
+      "title": "ستوديو التجمع",
+      "reason": "وصف غير دقيق – مساحة مبالغ فيها • نادر طارق",
+      "riskLevel": "متوسط",
+      "type": "نصوص"
+    },
+    {
+      "id": "mod-3",
+      "rawId": "prop-3",
+      "property_id": "prop-3",
+      "title": "غرفة المعادي",
+      "reason": "صورة غير واضحة • كريم سالم",
+      "riskLevel": "منخفض",
+      "type": "صور"
+    }
+  ]
+}
