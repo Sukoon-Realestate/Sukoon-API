@@ -4,10 +4,11 @@ from typing import List
 
 from asgiref.sync import async_to_sync
 from django.core.cache import cache
-from django.db import transaction
+from django.db import IntegrityError, transaction
 from django.db.models import F
 from django.utils import timezone
-from rest_framework.exceptions import ValidationError
+from rest_framework import status
+from rest_framework.exceptions import APIException, ValidationError
 
 from core_apps.chat.models import Conversation, ConversationParticipant, Message
 
@@ -15,6 +16,12 @@ logger = logging.getLogger(__name__)
 
 ONLINE_KEY_PREFIX = "chat:user:online:"
 ONLINE_TTL_SECONDS = 300  # 5 minutes
+
+
+class ChatMessageConflict(APIException):
+    status_code = status.HTTP_409_CONFLICT
+    default_detail = "client_message_id was already used for different content."
+    default_code = "client_message_conflict"
 
 
 def set_user_online_status(user_id: str, is_online: bool) -> None:
@@ -93,18 +100,29 @@ def send_message(
         ).first()
         if existing:
             if existing.content != content:
-                raise ValidationError(
-                    {
-                        "client_message_id": "This ID was already used for different content."
-                    }
-                )
+                raise ChatMessageConflict()
             return existing
-    message = Message.objects.create(
-        conversation=conversation,
-        sender=sender,
-        content=content,
-        client_message_id=client_message_id,
-    )
+    try:
+        # The savepoint keeps the surrounding transaction usable when REST and
+        # WebSocket race on the same database uniqueness constraint.
+        with transaction.atomic():
+            message = Message.objects.create(
+                conversation=conversation,
+                sender=sender,
+                content=content,
+                client_message_id=client_message_id,
+            )
+    except IntegrityError:
+        if not client_message_id:
+            raise
+        message = Message.objects.get(
+            conversation=conversation,
+            sender=sender,
+            client_message_id=client_message_id,
+        )
+        if message.content != content:
+            raise ChatMessageConflict()
+        return message
 
     preview = content[:200] if len(content) > 200 else content
     Conversation.objects.filter(pk=conversation.pk).update(

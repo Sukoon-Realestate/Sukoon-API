@@ -209,6 +209,31 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Confirmed mutation responses are replayable for this many days. Deployments may
+# increase the window, but shortening it can make very late mobile retries unsafe.
+IDEMPOTENCY_RETENTION_DAYS = int(getenv("IDEMPOTENCY_RETENTION_DAYS", "30"))
+
+
+def _comma_separated_environment(name):
+    return [value.strip() for value in getenv(name, "").split(",") if value.strip()]
+
+
+# Well-known app-link responses remain unavailable until release signing values are
+# configured. Never substitute debug fingerprints or a placeholder Apple Team ID.
+SOKOUN_ANDROID_APP_LINKS = {
+    "com.app.sokoon.real.estate": _comma_separated_environment(
+        "SOKOUN_ANDROID_PROD_SHA256_FINGERPRINTS"
+    ),
+    "com.app.sokoon.real.estate.dev": _comma_separated_environment(
+        "SOKOUN_ANDROID_DEV_SHA256_FINGERPRINTS"
+    ),
+}
+SOKOUN_APPLE_TEAM_ID = getenv("SOKOUN_APPLE_TEAM_ID", "").strip()
+SOKOUN_APPLE_BUNDLE_IDS = [
+    "com.app.sokoon.real.estate",
+    "com.app.sokoon.real.estate.dev",
+]
+
 LANGUAGES = [
     ("en", "English"),
     ("ar", "Arabic"),

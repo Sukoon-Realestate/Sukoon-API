@@ -1,8 +1,10 @@
 import pytest
+import uuid
 from rest_framework.exceptions import ValidationError
 
-from core_apps.chat.models import Conversation, ConversationParticipant
+from core_apps.chat.models import Conversation, ConversationParticipant, Message
 from core_apps.chat.services.message_service import (
+    ChatMessageConflict,
     get_or_create_direct_conversation,
     is_user_online,
     mark_conversation_read,
@@ -82,6 +84,35 @@ class TestChatServices:
                 content="I'm intruding!",
             )
         assert "content" in exc.value.detail
+
+    def test_client_message_id_replays_one_message_and_conflicts_on_changed_text(
+        self, user, another_user
+    ):
+        conv = get_or_create_direct_conversation(user=user, other_user=another_user)
+        client_message_id = uuid.uuid4()
+
+        first = send_message(
+            conversation=conv,
+            sender=user,
+            content="Retry-safe text",
+            client_message_id=client_message_id,
+        )
+        replay = send_message(
+            conversation=conv,
+            sender=user,
+            content="Retry-safe text",
+            client_message_id=client_message_id,
+        )
+
+        assert replay.id == first.id
+        assert Message.objects.filter(conversation=conv).count() == 1
+        with pytest.raises(ChatMessageConflict):
+            send_message(
+                conversation=conv,
+                sender=user,
+                content="Changed text",
+                client_message_id=client_message_id,
+            )
 
     def test_mark_conversation_read_resets_unread_count(self, user, another_user):
         conv = get_or_create_direct_conversation(user=user, other_user=another_user)

@@ -1,10 +1,16 @@
 import logging
 from django.http import Http404
 from rest_framework import generics, permissions, status
+from rest_framework.exceptions import APIException
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from core_apps.common.idempotency import (
+    execute_idempotent,
+    request_key as get_idempotency_key,
+    response_headers,
+)
 from core_apps.common.renderers import GenericJsonRenderer
 from core_apps.support.models import Ticket
 from core_apps.support.pagination import SupportPagination
@@ -23,6 +29,11 @@ from core_apps.support.services import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+class TicketStateConflict(APIException):
+    status_code = status.HTTP_409_CONFLICT
+    default_code = "ticket_state_conflict"
 
 
 class TicketListCreateAPIView(generics.ListCreateAPIView):
@@ -54,19 +65,34 @@ class TicketListCreateAPIView(generics.ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
 
         attachments = request.FILES.getlist("attachments")
+        request_key = get_idempotency_key(request)
 
-        ticket = create_ticket(
+        def create_support_ticket():
+            ticket = create_ticket(
+                user=request.user,
+                workspace=serializer.validated_data["workspace"],
+                category=serializer.validated_data["category"],
+                subject=serializer.validated_data["subject"],
+                description=serializer.validated_data["description"],
+                attachments=attachments,
+                rental_context=serializer.validated_data.get("rental_context", {}),
+            )
+            detail = TicketDetailSerializer(ticket, context={"request": request}).data
+            return detail, status.HTTP_201_CREATED, ticket.id
+
+        payload = {**serializer.validated_data, "attachments": attachments}
+        data, response_status, replayed = execute_idempotent(
             user=request.user,
-            workspace=serializer.validated_data["workspace"],
-            category=serializer.validated_data["category"],
-            subject=serializer.validated_data["subject"],
-            description=serializer.validated_data["description"],
-            attachments=attachments,
-            rental_context=serializer.validated_data.get("rental_context", {}),
+            operation=f"support.ticket.create:{serializer.validated_data['workspace']}",
+            key=request_key,
+            payload=payload,
+            action=create_support_ticket,
         )
-
-        detail_serializer = TicketDetailSerializer(ticket, context={"request": request})
-        return Response(detail_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(
+            data,
+            status=response_status,
+            headers=response_headers(replayed),
+        )
 
 
 class TicketDetailAPIView(generics.RetrieveAPIView):
@@ -110,21 +136,46 @@ class TicketReplyAPIView(APIView):
 
         workspace = request.query_params.get("workspace")
         try:
-            updated_ticket = add_ticket_reply(
-                user=request.user,
-                ticket_id=id,
-                body=serializer.validated_data["body"],
-                workspace=workspace,
-            )
-        except TicketClosedConflict as exc:
-            return Response(
-                {"message": str(exc)},
-                status=status.HTTP_409_CONFLICT,
+            ticket = get_ticket_detail(
+                user=request.user, ticket_id=id, workspace=workspace
             )
         except Ticket.DoesNotExist:
             raise Http404("Ticket not found or access denied.")
+        if ticket.status in [Ticket.Status.RESOLVED, Ticket.Status.CLOSED]:
+            return Response(
+                {"message": "لا يمكن الرد على تذكرة دعم تم حلها أو إغلاقها."},
+                status=status.HTTP_409_CONFLICT,
+            )
+        request_key = get_idempotency_key(request)
 
-        detail_serializer = TicketDetailSerializer(
-            updated_ticket, context={"request": request}
+        def create_reply():
+            try:
+                updated_ticket = add_ticket_reply(
+                    user=request.user,
+                    ticket_id=id,
+                    body=serializer.validated_data["body"],
+                    workspace=workspace,
+                )
+            except TicketClosedConflict as exc:
+                # The row may have changed after the pre-check.
+                raise TicketStateConflict(str(exc))
+            detail = TicketDetailSerializer(
+                updated_ticket, context={"request": request}
+            ).data
+            reply = updated_ticket.messages.order_by("-created_at").first()
+            return detail, status.HTTP_200_OK, reply.id
+
+        payload = {**serializer.validated_data, "workspace": workspace or ""}
+        data, response_status, replayed = execute_idempotent(
+            user=request.user,
+            operation=f"support.ticket.reply:{ticket.id}",
+            key=request_key,
+            payload=payload,
+            action=create_reply,
+            request_subject_id=ticket.id,
         )
-        return Response(detail_serializer.data, status=status.HTTP_200_OK)
+        return Response(
+            data,
+            status=response_status,
+            headers=response_headers(replayed),
+        )

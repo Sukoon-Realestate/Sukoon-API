@@ -7,6 +7,11 @@ from django.utils import timezone
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 
+from core_apps.common.idempotency import (
+    execute_idempotent,
+    request_key as get_idempotency_key,
+    response_headers,
+)
 from core_apps.common.pagination import StandardResultsSetPagination
 from core_apps.common.renderers import GenericJsonRenderer
 
@@ -73,13 +78,31 @@ class PropertyVisitCreateAPIView(generics.CreateAPIView):
             ),
             id=self.kwargs["property_id"],
         )
-        visit = serializer.save(tenant=request.user, property_obj=property_obj)
-        response_data = TenantVisitRequestDetailSerializer(
-            visit, context={"request": request}
-        ).data
+        request_key = get_idempotency_key(request)
+
+        def create_visit():
+            visit = serializer.save(tenant=request.user, property_obj=property_obj)
+            response_data = TenantVisitRequestDetailSerializer(
+                visit, context={"request": request}
+            ).data
+            return (
+                {"message": "Visit request submitted successfully.", **response_data},
+                status.HTTP_201_CREATED,
+                visit.id,
+            )
+
+        data, response_status, replayed = execute_idempotent(
+            user=request.user,
+            operation=f"property.visit.create:{property_obj.id}",
+            key=request_key,
+            payload=serializer.validated_data,
+            action=create_visit,
+            request_subject_id=property_obj.id,
+        )
         return Response(
-            {"message": "Visit request submitted successfully.", **response_data},
-            status=status.HTTP_201_CREATED,
+            data,
+            status=response_status,
+            headers=response_headers(replayed),
         )
 
 
@@ -377,17 +400,35 @@ class PropertyVisitReviewCreateAPIView(generics.GenericAPIView):
         )
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        review = PropertyVisitService.create_review(
-            tenant=request.user,
-            visit_obj=visit,
-            validated_data=serializer.validated_data,
+        request_key = get_idempotency_key(request)
+
+        def create_review():
+            review = PropertyVisitService.create_review(
+                tenant=request.user,
+                visit_obj=visit,
+                validated_data=serializer.validated_data,
+            )
+            return (
+                {
+                    "message": "Visit review submitted successfully.",
+                    **self.get_serializer(review).data,
+                },
+                status.HTTP_201_CREATED,
+                review.id,
+            )
+
+        data, response_status, replayed = execute_idempotent(
+            user=request.user,
+            operation=f"property.visit.review:{visit.id}",
+            key=request_key,
+            payload=serializer.validated_data,
+            action=create_review,
+            request_subject_id=visit.id,
         )
         return Response(
-            {
-                "message": "Visit review submitted successfully.",
-                **self.get_serializer(review).data,
-            },
-            status=status.HTTP_201_CREATED,
+            data,
+            status=response_status,
+            headers=response_headers(replayed),
         )
 
 

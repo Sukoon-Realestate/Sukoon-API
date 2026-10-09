@@ -63,6 +63,31 @@ class TestTicketListCreateAPIView:
             data["messages"][0]["body"] == "وصف المشكلة بالتفصيل مع المستأجر في العقار"
         )
 
+    def test_create_ticket_idempotency_replays_original_ticket(self, auth_client):
+        payload = {
+            "workspace": "tenant",
+            "category": "visit",
+            "subject": "تعذر حجز الزيارة",
+            "description": "تعذر حجز الزيارة وأحتاج إلى مساعدة من الدعم",
+        }
+        headers = {"HTTP_IDEMPOTENCY_KEY": "support-create-1"}
+
+        first = auth_client.post(TICKETS_URL, payload, format="json", **headers)
+        replay = auth_client.post(TICKETS_URL, payload, format="json", **headers)
+        conflict = auth_client.post(
+            TICKETS_URL,
+            {**payload, "description": "وصف مختلف ولكنه طويل بما يكفي"},
+            format="json",
+            **headers,
+        )
+
+        assert first.status_code == status.HTTP_201_CREATED
+        assert replay.status_code == status.HTTP_201_CREATED
+        assert replay.headers["Idempotency-Replayed"] == "true"
+        assert replay.json()["data"]["id"] == first.json()["data"]["id"]
+        assert conflict.status_code == status.HTTP_409_CONFLICT
+        assert Ticket.objects.count() == 1
+
     def test_create_ticket_with_multipart_attachment(self, auth_client, user):
         image = SimpleUploadedFile(
             "screenshot.png", b"fake_image_bytes", content_type="image/png"
@@ -144,6 +169,32 @@ class TestTicketDetailAndRepliesAPIView:
         data = res.json()["data"]
         assert len(data["messages"]) == 2
         assert data["messages"][-1]["body"] == "قمت برفع صورة أوضح الآن"
+
+    def test_reply_idempotency_replays_one_message(self, auth_client, user):
+        ticket = create_ticket(
+            user=user,
+            workspace="tenant",
+            category="verification",
+            subject="توثيق الحساب",
+            description="أواجه مشكلة في قبول صورة الهوية",
+        )
+        url = reverse("support-ticket-reply", kwargs={"id": str(ticket.id)})
+        payload = {"body": "قمت برفع صورة أوضح الآن"}
+        headers = {"HTTP_IDEMPOTENCY_KEY": "support-reply-1"}
+
+        first = auth_client.post(url, payload, format="json", **headers)
+        replay = auth_client.post(url, payload, format="json", **headers)
+        conflict = auth_client.post(
+            url, {"body": "رد مختلف"}, format="json", **headers
+        )
+
+        assert first.status_code == status.HTTP_200_OK
+        assert replay.status_code == status.HTTP_200_OK
+        assert replay.headers["Idempotency-Replayed"] == "true"
+        assert len(replay.json()["data"]["messages"]) == 2
+        assert conflict.status_code == status.HTTP_409_CONFLICT
+        ticket.refresh_from_db()
+        assert ticket.messages.count() == 2
 
     def test_reply_to_resolved_ticket_returns_409(self, auth_client, user):
         ticket = create_ticket(

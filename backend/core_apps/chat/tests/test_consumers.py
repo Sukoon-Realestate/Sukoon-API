@@ -1,4 +1,5 @@
 import pytest
+import uuid
 from channels.db import database_sync_to_async
 from channels.layers import get_channel_layer
 from django.contrib.auth.models import AnonymousUser
@@ -70,6 +71,51 @@ async def test_chat_consumer_send_message(user, another_user):
     assert event["type"] == "message.new"
     assert event["payload"]["content"] == "Hello over websocket!"
 
+    await communicator.disconnect()
+
+
+@pytest.mark.asyncio
+@pytest.mark.django_db(transaction=True)
+async def test_chat_consumer_ack_replay_and_content_conflict(user, another_user):
+    from core_apps.chat.models import Message
+
+    conv = await _async_get_or_create_conv(user=user, other_user=another_user)
+    client_message_id = uuid.uuid4()
+    communicator = _build_communicator(user)
+    connected, _ = await communicator.connect()
+    assert connected is True
+
+    payload = {
+        "type": "message.send",
+        "conversation_id": str(conv.id),
+        "client_message_id": str(client_message_id),
+        "content": "Durable message",
+    }
+    await communicator.send_json_to(payload)
+    first_events = [
+        await communicator.receive_json_from(),
+        await communicator.receive_json_from(),
+    ]
+    new_event = next(event for event in first_events if event["type"] == "message.new")
+    ack = next(event for event in first_events if event["type"] == "message.ack")
+
+    assert ack["payload"]["id"] == new_event["payload"]["id"]
+    assert ack["payload"]["client_message_id"] == str(client_message_id)
+
+    await communicator.send_json_to(payload)
+    replay_ack = await communicator.receive_json_from()
+    assert replay_ack["type"] == "message.ack"
+    assert replay_ack["payload"]["id"] == ack["payload"]["id"]
+
+    await communicator.send_json_to({**payload, "content": "Changed"})
+    conflict = await communicator.receive_json_from()
+    assert conflict["code"] == "client_message_conflict"
+    assert conflict["client_message_id"] == str(client_message_id)
+
+    count = await database_sync_to_async(
+        lambda: Message.objects.filter(conversation=conv).count()
+    )()
+    assert count == 1
     await communicator.disconnect()
 
 

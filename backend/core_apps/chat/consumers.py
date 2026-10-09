@@ -1,4 +1,5 @@
 import logging
+from uuid import UUID
 
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
@@ -60,7 +61,10 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         from rest_framework.exceptions import ValidationError
 
         from core_apps.chat.models import Conversation, ConversationParticipant
-        from core_apps.chat.services.message_service import send_message
+        from core_apps.chat.services.message_service import (
+            ChatMessageConflict,
+            send_message,
+        )
 
         conversation_id = content.get("conversation_id")
         text = content.get("content", "").strip()
@@ -69,6 +73,17 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         if not conversation_id or not text:
             await self.send_json({"error": "conversation_id and content are required."})
             return
+        if client_message_id:
+            try:
+                client_message_id = UUID(str(client_message_id))
+            except (TypeError, ValueError):
+                await self.send_json(
+                    {
+                        "error": "client_message_id must be a valid UUID.",
+                        "code": "invalid_client_message_id",
+                    }
+                )
+                return
 
         try:
             conversation = await sync_to_async(
@@ -104,6 +119,14 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                 await self.send_json({"type": "message.ack", "payload": payload})
         except ValidationError:
             await self.send_json({"error": "You cannot message this user."})
+        except ChatMessageConflict as exc:
+            await self.send_json(
+                {
+                    "error": str(exc.detail),
+                    "code": "client_message_conflict",
+                    "client_message_id": str(client_message_id),
+                }
+            )
 
     async def _handle_read(self, content):
         from core_apps.chat.models import Conversation

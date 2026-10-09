@@ -1,6 +1,4 @@
 import logging
-import hashlib
-import json
 
 from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import get_object_or_404
@@ -24,6 +22,11 @@ from rest_framework.decorators import api_view, permission_classes, renderer_cla
 from rest_framework.response import Response
 
 from core_apps.common.models import ContentView
+from core_apps.common.idempotency import (
+    execute_idempotent,
+    request_key as get_idempotency_key,
+    response_headers,
+)
 from core_apps.common.pagination import StandardResultsSetPagination
 from core_apps.common.renderers import GenericJsonRenderer
 from core_apps.features.models import BoostCampaign
@@ -339,7 +342,7 @@ class PropertyCreateAPIView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         rental_version = request.headers.get("X-Rental-Offers-Version")
-        request_key = request.headers.get("Idempotency-Key")
+        request_key = get_idempotency_key(request)
         if rental_version and rental_version != "1":
             return Response(
                 {"message": "Unsupported rental offers version."},
@@ -352,41 +355,30 @@ class PropertyCreateAPIView(generics.CreateAPIView):
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        fingerprint = None
-        if request_key:
-            from core_apps.features.models import IdempotencyRecord
-
-            serializable = {key: str(value) for key, value in request.data.items()}
-            fingerprint = hashlib.sha256(
-                json.dumps(serializable, sort_keys=True).encode()
-            ).hexdigest()
-            record = IdempotencyRecord.objects.filter(
-                user=request.user, operation="property.create", request_key=request_key
-            ).first()
-            if record:
-                if record.fingerprint != fingerprint:
-                    return Response(
-                        {
-                            "message": "Idempotency-Key was reused with a different request."
-                        },
-                        status=status.HTTP_409_CONFLICT,
-                    )
-                return Response(record.response_data, status=record.response_status)
+        if request_key and not request.user.is_verified:
+            raise permissions.exceptions.PermissionDenied(
+                "Identity verification is required for recoverable listing writes."
+            )
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        with transaction.atomic():
+
+        def create_property():
             self.perform_create(serializer)
             data = serializer.data
-            if request_key:
-                IdempotencyRecord.objects.create(
-                    user=request.user,
-                    operation="property.create",
-                    request_key=request_key,
-                    fingerprint=fingerprint,
-                    response_data=data,
-                    response_status=201,
-                )
-        return Response(data, status=status.HTTP_201_CREATED)
+            return data, status.HTTP_201_CREATED, serializer.instance.id
+
+        data, response_status, replayed = execute_idempotent(
+            user=request.user,
+            operation="property.create",
+            key=request_key,
+            payload=serializer.validated_data,
+            action=create_property,
+        )
+        return Response(
+            data,
+            status=response_status,
+            headers=response_headers(replayed),
+        )
 
 
 class PropertyDetailAPIView(generics.RetrieveUpdateAPIView):
@@ -615,18 +607,42 @@ class PropertyImageUploadAPIView(generics.CreateAPIView):
             raise permissions.exceptions.PermissionDenied(
                 "You are not the owner of this property listing."
             )
+        request_key = get_idempotency_key(request)
+        if request_key and not request.user.is_verified:
+            raise permissions.exceptions.PermissionDenied(
+                "Identity verification is required for recoverable image uploads."
+            )
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        img_obj = PropertyService.upload_property_image(
-            property_obj=property_obj,
-            image=serializer.validated_data["image"],
-            name=serializer.validated_data.get("name", ""),
-            description=serializer.validated_data.get("description", ""),
+
+        def upload_image():
+            img_obj = PropertyService.upload_property_image(
+                property_obj=property_obj,
+                image=serializer.validated_data["image"],
+                name=serializer.validated_data.get("name", ""),
+                description=serializer.validated_data.get("description", ""),
+            )
+            data = PropertyImageSerializer(
+                img_obj, context={"request": request}
+            ).data
+            return (
+                {"message": "Image uploaded successfully.", **data},
+                status.HTTP_201_CREATED,
+                img_obj.id,
+            )
+
+        data, response_status, replayed = execute_idempotent(
+            user=request.user,
+            operation=f"property.image.upload:{property_obj.id}",
+            key=request_key,
+            payload=serializer.validated_data,
+            action=upload_image,
+            request_subject_id=property_obj.id,
         )
-        data = PropertyImageSerializer(img_obj, context={"request": request}).data
         return Response(
-            {"message": "Image uploaded successfully.", **data},
-            status=status.HTTP_201_CREATED,
+            data,
+            status=response_status,
+            headers=response_headers(replayed),
         )
 
 

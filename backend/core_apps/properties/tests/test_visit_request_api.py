@@ -194,6 +194,47 @@ class TestPropertyVisitReviewAPI:
         )
         assert duplicate.status_code == status.HTTP_400_BAD_REQUEST
 
+    def test_review_idempotency_replays_confirmed_review(
+        self,
+        auth_client,
+        user,
+        another_user,
+        apartment_type,
+        cairo_city,
+        cairo_governorate,
+    ):
+        property_obj = create_property(
+            another_user, apartment_type, cairo_city, cairo_governorate
+        )
+        visit = PropertyVisit.objects.create(
+            property=property_obj,
+            tenant=user,
+            visit_date=timezone.localdate() - timedelta(days=1),
+            visit_time=time(14),
+            status=PropertyVisit.Status.CONFIRMED,
+        )
+        url = reverse("property-visit-review-create", kwargs={"id": visit.id})
+        payload = {
+            "cleanliness_rating": 5,
+            "listing_accuracy_rating": 4,
+            "owner_interaction_rating": 5,
+            "comment": "Safe retry",
+        }
+        headers = {"HTTP_IDEMPOTENCY_KEY": "review-1"}
+
+        first = auth_client.post(url, payload, format="json", **headers)
+        replay = auth_client.post(url, payload, format="json", **headers)
+        changed = auth_client.post(
+            url, {**payload, "comment": "Changed"}, format="json", **headers
+        )
+
+        assert first.status_code == status.HTTP_201_CREATED
+        assert replay.status_code == status.HTTP_201_CREATED
+        assert replay.headers["Idempotency-Replayed"] == "true"
+        assert replay.json()["data"]["id"] == first.json()["data"]["id"]
+        assert changed.status_code == status.HTTP_409_CONFLICT
+        assert PropertyVisitReview.objects.filter(visit=visit).count() == 1
+
     def test_overall_rating_calculation_rounds_properly(
         self,
         auth_client,

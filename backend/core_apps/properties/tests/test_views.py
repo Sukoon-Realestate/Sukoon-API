@@ -343,6 +343,35 @@ class TestPropertyViews:
         )
         assert json_data["message"] == "Created successfully."
 
+    def test_create_property_idempotency_replays_and_rejects_changed_payload(
+        self, auth_client, user, cairo_city, cairo_governorate
+    ):
+        user.is_verified = True
+        user.save(update_fields=["is_verified"])
+        url = reverse("property-create")
+        payload = {
+            "title": "Recoverable listing",
+            "price": "12000.00",
+            "city": str(cairo_city.id),
+            "governorate": str(cairo_governorate.id),
+            "district": "Maadi",
+            "property_type": "apartment",
+        }
+        headers = {"HTTP_IDEMPOTENCY_KEY": "listing-create-1"}
+
+        first = auth_client.post(url, payload, format="json", **headers)
+        replay = auth_client.post(url, payload, format="json", **headers)
+        changed = auth_client.post(
+            url, {**payload, "title": "Changed listing"}, format="json", **headers
+        )
+
+        assert first.status_code == status.HTTP_201_CREATED
+        assert replay.status_code == status.HTTP_201_CREATED
+        assert replay.headers["Idempotency-Replayed"] == "true"
+        assert replay.json()["data"]["id"] == first.json()["data"]["id"]
+        assert changed.status_code == status.HTTP_409_CONFLICT
+        assert Property.objects.filter(title="Recoverable listing").count() == 1
+
     def test_create_property_invalid_payload_returns_400(self, auth_client):
         url = reverse("property-create")
         data = {
@@ -492,6 +521,39 @@ class TestPropertyViews:
         json_data = response.json()
         assert json_data["data"]["name"] == "Living Room View"
         assert json_data["data"]["description"] == "Lovely room view"
+        assert PropertyImage.objects.filter(property=property_obj).count() == 1
+
+    def test_image_upload_idempotency_hashes_file_and_metadata(self, auth_client, user):
+        user.is_verified = True
+        user.save(update_fields=["is_verified"])
+        property_obj = _create_property(owner=user, title="Recoverable images")
+        url = reverse("property-image-upload", kwargs={"property_id": property_obj.id})
+        headers = {"HTTP_IDEMPOTENCY_KEY": "image-upload-1"}
+
+        first = auth_client.post(
+            url,
+            {"image": generate_test_image(), "name": "Kitchen"},
+            format="multipart",
+            **headers,
+        )
+        replay = auth_client.post(
+            url,
+            {"image": generate_test_image(), "name": "Kitchen"},
+            format="multipart",
+            **headers,
+        )
+        changed = auth_client.post(
+            url,
+            {"image": generate_test_image(), "name": "Bedroom"},
+            format="multipart",
+            **headers,
+        )
+
+        assert first.status_code == status.HTTP_201_CREATED
+        assert replay.status_code == status.HTTP_201_CREATED
+        assert replay.headers["Idempotency-Replayed"] == "true"
+        assert replay.json()["data"]["id"] == first.json()["data"]["id"]
+        assert changed.status_code == status.HTTP_409_CONFLICT
         assert PropertyImage.objects.filter(property=property_obj).count() == 1
 
     def test_upload_property_images_not_owner(self, auth_client, another_user):
@@ -678,6 +740,39 @@ class TestPropertyVisitViews:
         response = auth_client.post(url, data, format="json")
         assert response.status_code == status.HTTP_201_CREATED
         assert PropertyVisit.objects.filter(property=property_obj, tenant=user).exists()
+
+    def test_create_visit_idempotency_replays_one_booking(
+        self, auth_client, user, another_user
+    ):
+        property_obj = _create_property(
+            owner=another_user, title="Recoverable visit", price=20000.00
+        )
+        OwnerAvailabilitySlot.objects.create(
+            owner=another_user,
+            property=property_obj,
+            date="2099-07-20",
+            time="14:00:00",
+        )
+        url = reverse("property-visit-create", kwargs={"property_id": property_obj.id})
+        payload = {
+            "visit_date": "2099-07-20",
+            "visit_time": "14:00:00",
+            "note": "Please keep this note",
+        }
+        headers = {"HTTP_IDEMPOTENCY_KEY": "visit-create-1"}
+
+        first = auth_client.post(url, payload, format="json", **headers)
+        replay = auth_client.post(url, payload, format="json", **headers)
+        conflict = auth_client.post(
+            url, {**payload, "note": "Changed note"}, format="json", **headers
+        )
+
+        assert first.status_code == status.HTTP_201_CREATED
+        assert replay.status_code == status.HTTP_201_CREATED
+        assert replay.headers["Idempotency-Replayed"] == "true"
+        assert replay.json()["data"]["id"] == first.json()["data"]["id"]
+        assert conflict.status_code == status.HTTP_409_CONFLICT
+        assert PropertyVisit.objects.filter(property=property_obj, tenant=user).count() == 1
 
     def test_create_visit_owner_cannot_book_own_property(self, auth_client, user):
         property_obj = _create_property(

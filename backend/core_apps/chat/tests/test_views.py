@@ -3,7 +3,7 @@ import pytest
 from django.urls import reverse
 from rest_framework import status
 
-from core_apps.chat.models import ConversationParticipant
+from core_apps.chat.models import ConversationParticipant, Message
 from core_apps.chat.services.message_service import (
     get_or_create_direct_conversation,
     send_message,
@@ -146,6 +146,39 @@ class TestMessageCreateAPIView:
         payload = response.data.get("data", response.data)
         assert payload["content"] == "I want to visit the villa."
         assert payload["sender"]["id"] == str(user.id)
+
+    def test_rest_fallback_replays_client_message_id(self, api_client, user, another_user):
+        conv = get_or_create_direct_conversation(user=user, other_user=another_user)
+        client_message_id = uuid.uuid4()
+        original = send_message(
+            conversation=conv,
+            sender=user,
+            content="Sent over WebSocket first",
+            client_message_id=client_message_id,
+        )
+        api_client.force_authenticate(user=user)
+        url = reverse("message-create", kwargs={"id": conv.id})
+
+        replay = api_client.post(
+            url,
+            {
+                "content": "Sent over WebSocket first",
+                "client_message_id": str(client_message_id),
+            },
+            format="json",
+        )
+        conflict = api_client.post(
+            url,
+            {"content": "Changed", "client_message_id": str(client_message_id)},
+            format="json",
+        )
+
+        assert replay.status_code == status.HTTP_201_CREATED
+        replay_data = replay.data.get("data", replay.data)
+        assert replay_data["id"] == str(original.id)
+        assert replay_data["client_message_id"] == str(client_message_id)
+        assert conflict.status_code == status.HTTP_409_CONFLICT
+        assert Message.objects.filter(conversation=conv).count() == 1
 
 
 @pytest.mark.django_db
