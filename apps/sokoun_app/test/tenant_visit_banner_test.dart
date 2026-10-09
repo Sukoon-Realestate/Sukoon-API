@@ -6,8 +6,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/res/config_imports.dart';
+import 'package:melos_core/core/network/account_session.dart';
+import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/home_page_model.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_widgets/tenant_visit_banner.dart';
+import 'package:sokoun_app/features/tenant/visits/imports.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
 
 import 'helpers/feature_tools_test_dependencies.dart';
@@ -85,6 +88,28 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  testWidgets('visit reminder opens the confirmed visits collection', (
+    tester,
+  ) async {
+    final network = FeatureTestNetwork();
+    await registerFeatureTestDependencies(
+      FeatureTestRepository(),
+      network: network,
+    );
+    addTearDown(() async {
+      await injector.reset();
+      AccountSession.end();
+    });
+
+    await _pump(tester, banner);
+    await tester.tap(find.byType(TenantVisitBanner));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(TenantVisitsScreen), findsOneWidget);
+    expect(network.requests.single.path, ApiConstants.tenantVisits);
+    expect(tester.takeException(), isNull);
+  });
 }
 
 Future<void> _pump(

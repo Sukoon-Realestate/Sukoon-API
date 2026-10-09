@@ -76,7 +76,7 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
     if (!mounted) return;
     final String time = draft['time'];
     final parts = time.split(':');
-    final int? hour = parts.isEmpty ? null : int.tryParse(parts[0]);
+    final int? hour = int.tryParse(parts.first);
     final int? minute = parts.length < 2 ? null : int.tryParse(parts[1]);
     if (hour == null ||
         minute == null ||
@@ -130,14 +130,6 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
 
   Future<void> _confirmVisit(BuildContext context) async {
     if (_confirming || _bookVisitCubit.isLoading) return;
-    if (!WorkspaceNavigation.isAuthenticated) {
-      await WorkspaceNavigation.open(
-        workspace: AppWorkspace.tenant,
-        showLoginSheet: true,
-        detail: () => Go.to(BookVisitScreen(property: _currentProperty.value)),
-      );
-      return;
-    }
     final selection = _selection.value;
     final time = selection.time;
     if (time == null ||

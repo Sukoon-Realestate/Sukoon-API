@@ -173,13 +173,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       NotificationCoordinator.start(),
     ]);
     if (!mounted ||
-        !_hasCurrentSession ||
+        _sessionGeneration != AccountSession.generation ||
         ModalRoute.of(context)?.isCurrent != true) {
       return;
     }
     await WhatsNewService.showIfNeeded(upgrader: upgrader);
     if (!mounted ||
-        !_hasCurrentSession ||
+        _sessionGeneration != AccountSession.generation ||
         !WorkspaceNavigation.isAuthenticated) {
       return;
     }

@@ -447,9 +447,15 @@ void main() {
         await connecting;
         await cubit.onAppLifecycleStateChanged(AppLifecycleState.resumed);
         await cubit.markConversationAsRead();
+        expect(cubit.canSend, isFalse);
+        expect(
+          (await cubit.sendTextMessage('After the session ended')).status,
+          ChatSendStatus.failed,
+        );
         expect(realtime.connectCount, 1);
         expect(realtime.readCount, 0);
         expect(data.readCount, 0);
+        expect(realtime.sentContents, isEmpty);
       },
     );
   }

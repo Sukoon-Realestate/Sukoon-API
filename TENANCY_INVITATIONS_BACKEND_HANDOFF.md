@@ -1,12 +1,13 @@
 # Tenancy invitations and lease eligibility — backend handoff
 
-Date: 2026-10-08  
-Status: **Mobile integration aligned with the returned contract. Backend is verified locally; staging deployment and fixture verification remain pending.**
+Updated: 2026-10-09
+
+Status: **Mobile integration aligned with the returned contract. Live routes and verified test accounts work, but invitation creation and lease draft creation return HTTP 500. End-to-end verification remains blocked.**
 
 API base: `/api/v1/`  
 Mobile capability: `SOKOUN_TENANCY_INVITATIONS`, disabled by default.
 
-The returned [backend handoff](TENANCY_INVITATIONS_BACKEND_RETURN_HANDOFF.md) is the current contract and rollout source. It confirms the paths below and requires the mobile capability to remain disabled until staging is deployed and verified.
+The returned [backend handoff](TENANCY_INVITATIONS_BACKEND_RETURN_HANDOFF.md) defines the current contract and requires the mobile capability to remain disabled until deployed verification is complete. Its original deployment status has been superseded by live checks. See [the live verification follow-up](TENANCY_INVITATIONS_LIVE_VERIFICATION_FOLLOWUP.md) for the current server results, actual fixture IDs, and reproducible failures.
 
 ## Purpose and required flow
 
@@ -61,7 +62,7 @@ Prevent duplicate live invitations for the same owner/property/tenant/accommodat
 | GET | `features/v1/tenancy-invitations/{id}/` | Actual owner or addressed tenant |
 | POST | `features/v1/tenancy-invitations/{id}/respond/` | Addressed tenant only |
 
-The returned handoff confirms these names and local implementation. Staging deployment is still pending. The prepared mobile flow has no owner revocation mutation.
+The returned handoff confirms these names and local implementation. Live invitation routes are reachable on the configured API, but successful invitation creation has not been verified. The prepared mobile flow has no owner revocation mutation.
 
 ### Create an invitation
 
@@ -229,7 +230,7 @@ The confirmed error envelope is `{"message":"Localized error message"}`; success
 
 ## Backend return and staging verification
 
-The returned handoff documents repository/baseline, local migration and implementation status, exact routes and examples, actor/source policies, expiry/revocation, duplicate and cancellation rules, allocation, localization and notifications. Mobile adaptations for those differences are complete. The backend still needs to supply the deployed staging revision, migration evidence and real authorized fixture IDs before enabling the capability.
+The returned handoff documents repository/baseline, local migration and implementation status, exact routes and examples, actor/source policies, expiry/revocation, duplicate and cancellation rules, allocation, localization and notifications. Mobile adaptations for those differences are complete. Real authorized legacy fixture IDs are now recorded in the live follow-up. The backend must resolve the live HTTP 500 responses and supply the deployed revision, migration evidence, and successful round trips before enabling the capability.
 
 Supply authorized owner/tenant fixture IDs and evidence for:
 
@@ -240,7 +241,7 @@ Supply authorized owner/tenant fixture IDs and evidence for:
 5. Concurrent responses/drafts and identical retries produce one logical result and one notification; changed retry payloads conflict.
 6. Arabic/English, real empty/error pages, pagination totals, participant privacy and notification navigation work.
 
-The return handoff supplies local implementation and test evidence, but no staging deployment or real fixture IDs. Once staging evidence is supplied, verify round trips on both roles, then build with `--dart-define=SOKOUN_TENANCY_INVITATIONS=true`. Fixture tests and UI preparation alone do not establish deployed server behavior or production readiness. Lease activation/provider webhook rollout is also a separate backend gap; invitation acceptance and draft creation do not allocate inventory or create invoices.
+The return handoff supplies local implementation and test evidence. Subsequent live checks confirm deployed routes and real legacy fixtures, but invitation creation returns HTTP 500 even after property verification. Resolve the failures and verify round trips on both roles, then build with `--dart-define=SOKOUN_TENANCY_INVITATIONS=true`. Fixture tests and UI preparation alone do not establish successful deployed behavior or production readiness. Lease activation/provider webhook rollout is also a separate backend gap; invitation acceptance and draft creation do not allocate inventory or create invoices.
 
 ## Prepared mobile implementation
 
@@ -271,3 +272,11 @@ Return-handoff verification on 2026-10-08 using the current Flutter 3.44.7 SDK:
 - The app analyzer reported no errors, two existing unused-import warnings and four existing deprecation notices.
 - The full app suite reported 3,407 passes, three skips and the same 23 failures in the older visit/property fixtures listed above. No invitation tests failed; the full suite remains unsuccessful.
 - Arabic/English rendered screens and the six-width/three-text-scale layout matrix passed widget checks. No deployed staging or physical-device round trip was available.
+
+Live recheck on 2026-10-09:
+
+- Both test participants return `is_verified=true`. The test property now returns `status=verified` and `is_verified=true`.
+- Invitation histories, the empty eligible tenant picker, and lease configuration return HTTP 200.
+- Legacy invitation creation returns HTTP 500 in both Arabic and English. Lease draft creation without accepted eligibility also returns HTTP 500 rather than a localized validation response. Histories remain empty.
+- All 90 focused invitation/architecture checks passed on the SDK referenced by the current package configuration, Flutter 3.35.1. These remain local fixture/widget checks.
+- The mobile capability remains disabled by default because the live flow is failing. Reproduction details and the remaining verification steps are in [the backend follow-up](TENANCY_INVITATIONS_LIVE_VERIFICATION_FOLLOWUP.md).

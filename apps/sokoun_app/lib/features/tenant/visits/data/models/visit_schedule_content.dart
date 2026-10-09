@@ -20,7 +20,7 @@ class VisitDayContent extends Equatable {
     final List<String> dateParts = date.split('/');
     return VisitDayContent(
       weekday: json['day'] as String? ?? json['weekday'] as String? ?? '',
-      day: dateParts.isNotEmpty ? dateParts.first : '',
+      day: dateParts.first,
       month: dateParts.length > 1 ? dateParts[1] : '',
       visitDate: json['visit_date'] as String? ?? '',
     );

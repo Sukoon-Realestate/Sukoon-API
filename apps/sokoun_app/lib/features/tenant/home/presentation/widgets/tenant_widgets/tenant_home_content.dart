@@ -66,9 +66,7 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
     final (model, pagination) = await _data.getPage(page: page);
     if (mounted && generation == _requestGeneration) {
       _savedData.value = _data.fromCache;
-    }
-    if (mounted && generation == _requestGeneration && page == 1) {
-      _banner.value = model.banner;
+      if (page == 1) _banner.value = model.banner;
     }
     return (model.results, pagination);
   }

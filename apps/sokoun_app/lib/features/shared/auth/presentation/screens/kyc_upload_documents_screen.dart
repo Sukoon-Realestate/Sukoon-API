@@ -112,10 +112,6 @@ class _KycUploadDocumentsScreenState extends State<KycUploadDocumentsScreen> {
       }
       return;
     }
-    if (!formData.canSubmit) {
-      return;
-    }
-
     final KycDocumentUploadData data = formData.toUploadData();
 
     final RegisterCubit registerCubit = context.read<RegisterCubit>();

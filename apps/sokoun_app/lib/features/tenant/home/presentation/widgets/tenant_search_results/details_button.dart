@@ -14,7 +14,6 @@ class DetailsButton extends StatelessWidget {
   final PropertySearchFilters? preferences;
 
   void _openDetails() {
-    if (propertyId.isEmpty) return;
     Go.to(
       PropertyDetailsScreen(
         propertyId: propertyId,

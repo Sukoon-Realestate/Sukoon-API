@@ -36,9 +36,7 @@ class PropertySubmissionCubit
       );
       return;
     }
-    if (isClosed ||
-        isLoading ||
-        (propertyId == null && form.videoFile == null) ||
+    if ((propertyId == null && form.videoFile == null) ||
         !form.isBasicsReady ||
         !form.isPhotosReady ||
         !form.isPricingReady) {

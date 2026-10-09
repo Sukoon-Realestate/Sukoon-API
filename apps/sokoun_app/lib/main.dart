@@ -54,7 +54,7 @@ void main() async {
   );
   if (kDebugMode) {
     ErrorWidget.builder = (FlutterErrorDetails details) {
-      if (FireStoreService.isInitialized && kDebugMode) {
+      if (FireStoreService.isInitialized) {
         FireStoreService.instance.storeError(details.exceptionAsString());
       }
 

@@ -239,13 +239,12 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
           : LocaleKeys.ownerPropertyReviewAction,
       onPrimaryTap: !widget.isSubmitting ? widget.onNext : null,
       children: [
-        if (!widget.form.isPartialOffering)
-          _PriceSection(
-            priceFieldKey: _priceFieldKey,
-            form: widget.form,
-            monthlyPriceController: widget.monthlyPriceController,
-            onMonthlyPriceChanged: widget.onMonthlyPriceChanged,
-          ),
+        _PriceSection(
+          priceFieldKey: _priceFieldKey,
+          form: widget.form,
+          monthlyPriceController: widget.monthlyPriceController,
+          onMonthlyPriceChanged: widget.onMonthlyPriceChanged,
+        ),
         BlocProvider<PropertyFilterOptionsCubit>.value(
           value: _optionsCubit,
           child:
@@ -261,30 +260,27 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
                   return Column(
                     spacing: 16,
                     children: [
-                      if (!widget.form.isPartialOffering)
-                        AddPropertyRentalPeriodSection(
-                          durationFieldKey: _durationFieldKey,
-                          unitFieldKey: _unitFieldKey,
-                          form: widget.form,
-                          rentalDurationController:
-                              widget.rentalDurationController,
-                          onRentalDurationChanged:
-                              widget.onRentalDurationChanged,
-                          onRentalUnitChanged: widget.onRentalUnitChanged,
-                          options: [
-                            for (final period in PropertyPricePeriod.values)
-                              options.pricePeriods
-                                      .where(
-                                        (option) =>
-                                            option.value == period.value,
-                                      )
-                                      .firstOrNull ??
-                                  TenantFilterOption(
-                                    value: period.value,
-                                    label: period.label,
-                                  ),
-                          ],
-                        ),
+                      AddPropertyRentalPeriodSection(
+                        durationFieldKey: _durationFieldKey,
+                        unitFieldKey: _unitFieldKey,
+                        form: widget.form,
+                        rentalDurationController:
+                            widget.rentalDurationController,
+                        onRentalDurationChanged: widget.onRentalDurationChanged,
+                        onRentalUnitChanged: widget.onRentalUnitChanged,
+                        options: [
+                          for (final period in PropertyPricePeriod.values)
+                            options.pricePeriods
+                                    .where(
+                                      (option) => option.value == period.value,
+                                    )
+                                    .firstOrNull ??
+                                TenantFilterOption(
+                                  value: period.value,
+                                  label: period.label,
+                                ),
+                        ],
+                      ),
                       if (widget.form.rentalInventory == null)
                         AddPropertySectionCard(
                           key: _amenitiesFieldKey,
@@ -329,41 +325,40 @@ class _AddPropertyPricingPageState extends State<AddPropertyPricingPage> {
                                 widget.onAmenityToggled(chip.selectionValue),
                           ),
                         ),
-                      if (!widget.form.isPartialOffering)
-                        AddPropertySectionCard(
-                          title: '${LocaleKeys.ownerAddPropertySuitableFor} *',
-                          child: PropertySelectionField(
-                            key: _suitableForFieldKey,
-                            isValid:
-                                PropertyTenantType.fromValue(
-                                  widget.form.suitableForApiValue,
-                                ) !=
-                                null,
-                            child: AddPropertyChipWrap(
-                              chips: [
-                                for (final type in PropertyTenantType.values)
-                                  AddPropertyChipContent(
-                                    label:
-                                        options.suitableFor
-                                            .where(
-                                              (option) =>
-                                                  option.value == type.value,
-                                            )
-                                            .firstOrNull
-                                            ?.label ??
-                                        type.label,
-                                    value: type.value,
-                                    isSelected:
-                                        widget.form.suitableForApiValue ==
-                                        type.value,
-                                  ),
-                              ],
-                              onChipTap: (chip) => widget.onSuitableForSelected(
-                                chip.selectionValue,
-                              ),
+                      AddPropertySectionCard(
+                        title: '${LocaleKeys.ownerAddPropertySuitableFor} *',
+                        child: PropertySelectionField(
+                          key: _suitableForFieldKey,
+                          isValid:
+                              PropertyTenantType.fromValue(
+                                widget.form.suitableForApiValue,
+                              ) !=
+                              null,
+                          child: AddPropertyChipWrap(
+                            chips: [
+                              for (final type in PropertyTenantType.values)
+                                AddPropertyChipContent(
+                                  label:
+                                      options.suitableFor
+                                          .where(
+                                            (option) =>
+                                                option.value == type.value,
+                                          )
+                                          .firstOrNull
+                                          ?.label ??
+                                      type.label,
+                                  value: type.value,
+                                  isSelected:
+                                      widget.form.suitableForApiValue ==
+                                      type.value,
+                                ),
+                            ],
+                            onChipTap: (chip) => widget.onSuitableForSelected(
+                              chip.selectionValue,
                             ),
                           ),
                         ),
+                      ),
                     ],
                   );
                 },

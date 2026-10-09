@@ -33,7 +33,6 @@ class FavoritePropertyCard extends StatelessWidget {
   final RentalListingCategory category;
 
   void _openProperty() {
-    if (item.id.isEmpty) return;
     Go.to(
       PropertyDetailsScreen(
         propertyId: item.id,

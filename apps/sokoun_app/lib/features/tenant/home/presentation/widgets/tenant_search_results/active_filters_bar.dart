@@ -43,7 +43,7 @@ class ActiveFiltersBar extends StatelessWidget {
                           ? null
                           : () => onFilterRemoved!(filter),
                     ),
-                  if (filters.isNotEmpty) ClearFiltersChip(onTap: onClearAll),
+                  ClearFiltersChip(onTap: onClearAll),
                 ],
               ),
             ),

@@ -13,7 +13,6 @@ class VisitDetailsActions extends StatelessWidget {
   final Future<void> Function()? onReview;
 
   void _openChat() {
-    if (visit.ownerId.isEmpty) return;
     Go.to(
       StartConversationScreen(
         userId: visit.ownerId,

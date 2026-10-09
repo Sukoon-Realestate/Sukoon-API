@@ -10,9 +10,6 @@ import 'package:melos_core/core/widgets/app_text.dart';
 import 'package:sokoun_app/features/tenant/visits/imports.dart';
 import 'package:sokoun_app/features/tenant/visits/data/visit_schedule_rules.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/home_page_model.dart';
-import 'package:sokoun_app/features/main_view/data/enums/app_workspace.dart';
-import 'package:sokoun_app/features/main_view/data/enums/workspace_tab.dart';
-import 'package:sokoun_app/features/main_view/presentation/workspace_navigation.dart';
 
 class TenantVisitBanner extends StatelessWidget {
   const TenantVisitBanner({super.key, required this.banner});
@@ -49,17 +46,7 @@ class TenantVisitBanner extends StatelessWidget {
     return Semantics(
       button: true,
       child: GestureDetector(
-        onTap: () {
-          if (WorkspaceNavigation.isAuthenticated) {
-            Go.to(const TenantVisitsScreen(useRequestEndpoint: false));
-          } else {
-            WorkspaceNavigation.open(
-              workspace: AppWorkspace.tenant,
-              tab: WorkspaceTab.visits,
-              showLoginSheet: true,
-            );
-          }
-        },
+        onTap: () => Go.to(const TenantVisitsScreen(useRequestEndpoint: false)),
         behavior: HitTestBehavior.opaque,
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 13.h),

@@ -16,8 +16,8 @@ import 'widgets/permission_settings_dialog.dart';
 abstract final class DevicePermissionFlow {
   static bool _isRequesting = false;
 
-  static bool _isActive(BuildContext context) =>
-      context.mounted && ModalRoute.of(context)?.isCurrent == true;
+  static bool _isCurrent(BuildContext context) =>
+      ModalRoute.of(context)?.isCurrent == true;
 
   /// Requests native access only after the matching explanation is accepted.
   /// Automatic notification prompts are remembered across launches and logins.
@@ -26,7 +26,7 @@ abstract final class DevicePermissionFlow {
     DevicePermission permission, {
     bool promptOnce = false,
   }) async {
-    if (_isRequesting || !_isActive(context)) return false;
+    if (_isRequesting || !context.mounted || !_isCurrent(context)) return false;
     _isRequesting = true;
     final source = DevicePermissionData.source;
     final bool automatic =
@@ -34,7 +34,7 @@ abstract final class DevicePermissionFlow {
     try {
       if (automatic && source.hasSeenNotificationPrompt) return false;
       final status = await source.status(permission);
-      if (!context.mounted || !_isActive(context)) return false;
+      if (!context.mounted || !_isCurrent(context)) return false;
       if (status == DevicePermissionStatus.granted) return true;
       if (status == DevicePermissionStatus.restricted) {
         if (!automatic) {
@@ -53,12 +53,12 @@ abstract final class DevicePermissionFlow {
               ? LocaleKeys.notificationPermissionBlocked
               : LocaleKeys.locationPermissionBlocked,
         );
-        if (!context.mounted || !_isActive(context) || open != true) {
+        if (!context.mounted || !_isCurrent(context) || open != true) {
           return false;
         }
         if (!await source.openSettings() &&
             context.mounted &&
-            _isActive(context)) {
+            _isCurrent(context)) {
           Messages.showToast(
             status: BaseStatus.error,
             msg: LocaleKeys.permissionSettingsUnavailable,
@@ -84,12 +84,12 @@ abstract final class DevicePermissionFlow {
         }
       }
       final accepted = await decision;
-      if (!context.mounted || !_isActive(context) || accepted != true) {
+      if (!context.mounted || !_isCurrent(context) || accepted != true) {
         return false;
       }
 
       final result = await source.request(permission);
-      if (!context.mounted || !_isActive(context)) return false;
+      if (!context.mounted || !_isCurrent(context)) return false;
       if (result != DevicePermissionStatus.granted) {
         Messages.showToast(
           status: BaseStatus.error,
@@ -103,10 +103,10 @@ abstract final class DevicePermissionFlow {
       if (permission == DevicePermission.notifications) {
         unawaited(NotificationDeviceData.registerCurrentDevice());
       }
-      return context.mounted && _isActive(context);
+      return context.mounted && _isCurrent(context);
     } catch (error, stackTrace) {
       log('Permission flow failed.', error: error, stackTrace: stackTrace);
-      if (!automatic && context.mounted && _isActive(context)) {
+      if (!automatic && context.mounted && _isCurrent(context)) {
         Messages.showToast(
           status: BaseStatus.error,
           msg: LocaleKeys.permissionUnavailable,

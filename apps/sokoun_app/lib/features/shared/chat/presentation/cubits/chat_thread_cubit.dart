@@ -92,7 +92,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   final ChatRealtimeGateway _realtime;
   final ChatDataSource _dataSource;
   final ChatLocalStore _localStore;
-  bool get canSend => !readOnly && state.canSend && AccountAccess.isVerified;
+  bool get canSend => _hasCurrentSession && !readOnly && state.canSend;
   Future<void>? _localLoad;
   Future<void>? _contactRefresh;
   bool _contactRefreshAgain = false;
@@ -324,7 +324,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   }
 
   void updateDraft(String value) {
-    if (!_hasCurrentSession || !canSend) return;
+    if (!canSend) return;
     _draftEdited = true;
     if (value.trim() != state.draft.trim()) _draftClientMessageId = '';
     emit(
@@ -342,7 +342,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   }
 
   Future<bool> restoreMessageDraft(SavedChatMessage message) async {
-    if (!_hasCurrentSession || !canSend || state.draft.trim().isNotEmpty) {
+    if (!canSend || state.draft.trim().isNotEmpty) {
       return false;
     }
     _draftEdited = true;
@@ -390,7 +390,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
           }
         });
     await _loadLocal();
-    if (!_hasCurrentSession || !canSend) return;
+    if (!canSend) return;
     if (durableReplay && _outbox.isNotEmpty && _messageSubscription == null) {
       try {
         final (messages, _) = await _dataSource.getMessagesPage(
@@ -421,9 +421,9 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
     String rawContent, {
     String? localMessageId,
   }) async {
-    if (!_hasCurrentSession || !canSend) return const ChatSendResult.failed();
+    if (!canSend) return const ChatSendResult.failed();
     await _loadLocal();
-    if (!_hasCurrentSession || !canSend) return const ChatSendResult.failed();
+    if (!canSend) return const ChatSendResult.failed();
     final String content = rawContent.trim();
     if (!Validators.isValidChatContent(content)) {
       return const ChatSendResult.failed();
@@ -652,10 +652,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   }
 
   Future<void> _drainOutbox() async {
-    while (_outbox.isNotEmpty &&
-        _realtime.isConnected &&
-        _hasCurrentSession &&
-        canSend) {
+    while (_outbox.isNotEmpty && _realtime.isConnected && canSend) {
       final _QueuedChatMessage queuedMessage = _outbox.first;
       if (queuedMessage.delivery == ChatDeliveryState.unknown &&
           !durableReplay) {
@@ -724,7 +721,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
         return const ChatSendResult.unknown();
       }
       _removeConfirmation(confirmation);
-      if (!_hasCurrentSession || !canSend || !_realtime.isConnected) {
+      if (!canSend || !_realtime.isConnected) {
         log(
           'Chat message remains queued until the socket reconnects',
           stackTrace: socketStackTrace,
@@ -789,7 +786,6 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
   void _scheduleQueueRetry() {
     if (!_shouldBeConnected ||
         _outbox.isEmpty ||
-        !_hasCurrentSession ||
         !canSend ||
         state.localSaveFailed) {
       return;
@@ -803,10 +799,7 @@ class ChatThreadCubit extends Cubit<ChatThreadState> {
       seconds: _queueRetryDelay.inSeconds * (1 << _retryAttempt++),
     );
     _queueRetryTimer = Timer(delay, () async {
-      if (!_shouldBeConnected ||
-          _outbox.isEmpty ||
-          !_hasCurrentSession ||
-          !canSend) {
+      if (!_shouldBeConnected || _outbox.isEmpty || !canSend) {
         return;
       }
       if (!_realtime.isConnected) await _realtime.connect();

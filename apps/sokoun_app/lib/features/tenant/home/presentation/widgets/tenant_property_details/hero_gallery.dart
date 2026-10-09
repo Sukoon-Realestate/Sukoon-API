@@ -137,14 +137,12 @@ class TenantPropertyHeroGallery extends StatelessWidget {
                                 ),
                                 textAlign: TextAlign.center,
                               ).centerWidget
-                            : hasImages
-                            ? CachedImage(
+                            : CachedImage(
                                 url: imageUrls[index],
                                 fit: BoxFit.cover,
                                 width: index == 0 ? 64.w : 58.w,
                                 height: 48.h,
-                              )
-                            : null,
+                              ),
                       ),
                     );
                   },
