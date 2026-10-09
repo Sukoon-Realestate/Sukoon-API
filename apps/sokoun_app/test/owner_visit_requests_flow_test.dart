@@ -1,6 +1,6 @@
 import 'helpers/account_test_dependencies.dart';
+import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
-import 'package:melos_core/core/shared/user_cubit/user_cubit.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
@@ -92,6 +92,7 @@ void main() {
           return call.method == 'getAll' ? <String, Object>{} : true;
         });
     await EasyLocalization.ensureInitialized();
+    await CacheStorage.init();
     _ownerEnglishTranslations = Map<String, dynamic>.from(
       jsonDecode(
             await rootBundle.loadString(
@@ -126,20 +127,14 @@ void main() {
 
   setUp(() async {
     await injector.reset();
-    if (injector.isRegistered<UserCubit>()) {
-      await injector.unregister<UserCubit>();
-    }
-    injector.registerSingleton<UserCubit>(
-      TestAccountCubit(
-        const UserModel(
-          id: 'verified-test-account',
-          name: '',
-          phone: '',
-          email: '',
-          isVerified: true,
-        ),
+    await registerAuthenticatedTestAccount(
+      user: const UserModel(
+        id: 'verified-test-account',
+        name: '',
+        phone: '',
+        email: '',
+        isVerified: true,
       ),
-      dispose: (cubit) => cubit.close(),
     );
     repository = _RecordingBaseRepository();
     injector.registerSingleton<BaseCrudUseCase>(

@@ -20,6 +20,7 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
       ValueNotifier((dayIndex: 0, time: null));
   late final ValueNotifier<VisitPropertyContent> _currentProperty =
       ValueNotifier(widget.property);
+  late final TextDraftBinding _draft;
   bool _submitted = false;
   bool _confirming = false;
 
@@ -34,6 +35,63 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
     _daysCubit = VisitAvailabilityCubit();
     _timesCubit = VisitAvailabilityCubit();
     _daysRequest = _loadDays();
+    _draft = TextDraftBinding(
+      flow: 'viewing',
+      entityId: widget.property.id,
+      workspace: 'tenant',
+      fields: [_noteController, _selection],
+      context: () => context,
+      mounted: () => mounted,
+      capture: () => TextFormDraft({
+        'note': _noteController.text,
+        'date': _days.isNotEmpty && _selection.value.dayIndex < _days.length
+            ? _days[_selection.value.dayIndex].visitDate
+            : '',
+        'time': _selection.value.time == null
+            ? ''
+            : BookVisitBody.formatApiTime(
+                hour: _selection.value.time!.hour,
+                minute: _selection.value.time!.minute,
+              ),
+        'offer_id': widget.property.selection?.offerId ?? '',
+      }),
+      restore: (draft) {
+        unawaited(_restoreViewing(draft));
+      },
+    );
+    unawaited(_draft.start());
+  }
+
+  Future<void> _restoreViewing(TextFormDraft draft) async {
+    _noteController.text = draft['note'];
+    await _daysRequest;
+    if (!mounted) return;
+    final int index = _days.indexWhere((day) => day.visitDate == draft['date']);
+    if (index < 0 ||
+        draft['offer_id'] != (widget.property.selection?.offerId ?? '')) {
+      return;
+    }
+    _selectDay(index);
+    await _timesRequest.value;
+    if (!mounted) return;
+    final String time = draft['time'];
+    final parts = time.split(':');
+    final int? hour = parts.isEmpty ? null : int.tryParse(parts[0]);
+    final int? minute = parts.length < 2 ? null : int.tryParse(parts[1]);
+    if (hour == null ||
+        minute == null ||
+        !VisitScheduleRules.isFuture(draft['date'], time) ||
+        !_timesCubit.data.times.any(
+          (slot) =>
+              slot.isAvailable &&
+              Validators.normalizeVisitTime(slot.visitTime) == time,
+        )) {
+      return;
+    }
+    _selection.value = (
+      dayIndex: index,
+      time: TimeOfDay(hour: hour, minute: minute),
+    );
   }
 
   Future<void> _loadDays() async {
@@ -59,6 +117,7 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
 
   @override
   void dispose() {
+    unawaited(_draft.close());
     _noteController.dispose();
     _currentProperty.dispose();
     _selection.dispose();
@@ -165,6 +224,7 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
           !VisitScheduleRules.isFuture(day.visitDate, apiTime)) {
         return;
       }
+      if (!await _draft.beginSubmission()) return;
       await _bookVisitCubit.bookVisit(
         propertyId: widget.property.id,
         ownerId: widget.property.ownerId,
@@ -177,6 +237,7 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
         onSuccess: () {
           if (!mounted) return;
           _submitted = true;
+          unawaited(_draft.clear());
           Go.off(
             VisitConfirmedScreen(
               message: _bookVisitCubit.state.msg ?? '',
@@ -197,6 +258,10 @@ class _BookVisitScreenState extends State<BookVisitScreen> {
             date: day.visitDate,
           );
         },
+      );
+      await _draft.finishSubmission(
+        confirmed: _submitted,
+        unknown: _bookVisitCubit.lastFailure?.outcomeUnknown ?? false,
       );
     } finally {
       _confirming = false;

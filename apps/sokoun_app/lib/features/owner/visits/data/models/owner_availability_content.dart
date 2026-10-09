@@ -206,6 +206,7 @@ class OwnerAvailabilitySlotContent extends Equatable {
     required this.isEnabled,
     required this.state,
     required this.visit,
+    this.isLocked = false,
   });
 
   const OwnerAvailabilitySlotContent.initial()
@@ -213,7 +214,8 @@ class OwnerAvailabilitySlotContent extends Equatable {
       time = '',
       isEnabled = false,
       state = '',
-      visit = null;
+      visit = null,
+      isLocked = false;
 
   factory OwnerAvailabilitySlotContent.fromJson(Map<String, dynamic> json) {
     return OwnerAvailabilitySlotContent(
@@ -221,6 +223,7 @@ class OwnerAvailabilitySlotContent extends Equatable {
       time: json['time'] as String? ?? '',
       isEnabled: json['is_enabled'] as bool? ?? false,
       state: json['state'] as String? ?? '',
+      isLocked: json['is_locked'] == true || json['locked'] == true,
       visit: json['visit'] is Map
           ? (json['visit'] as Map).cast<String, dynamic>()
           : null,
@@ -232,9 +235,10 @@ class OwnerAvailabilitySlotContent extends Equatable {
   final bool isEnabled;
   final String state;
   final Map<String, dynamic>? visit;
+  final bool isLocked;
 
   OwnerAvailabilitySlotState get slotState {
-    if (state == 'booked' || visit != null) {
+    if (state == 'booked' || state == 'locked' || visit != null || isLocked) {
       return OwnerAvailabilitySlotState.booked;
     }
     return isEnabled
@@ -248,6 +252,7 @@ class OwnerAvailabilitySlotContent extends Equatable {
     'is_enabled': isEnabled,
     'state': state,
     'visit': visit,
+    'is_locked': isLocked,
   };
 
   OwnerAvailabilitySlotContent copyWith({
@@ -257,6 +262,7 @@ class OwnerAvailabilitySlotContent extends Equatable {
     String? state,
     Map<String, dynamic>? visit,
     bool clearVisit = false,
+    bool? isLocked,
   }) {
     return OwnerAvailabilitySlotContent(
       id: id ?? this.id,
@@ -264,11 +270,12 @@ class OwnerAvailabilitySlotContent extends Equatable {
       isEnabled: isEnabled ?? this.isEnabled,
       state: state ?? this.state,
       visit: clearVisit ? null : visit ?? this.visit,
+      isLocked: isLocked ?? this.isLocked,
     );
   }
 
   @override
-  List<Object?> get props => [id, time, isEnabled, state, visit];
+  List<Object?> get props => [id, time, isEnabled, state, visit, isLocked];
 }
 
 String _ownerAvailabilityDayName(int weekday) {

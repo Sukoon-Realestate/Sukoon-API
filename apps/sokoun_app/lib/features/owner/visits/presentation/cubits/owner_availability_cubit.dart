@@ -16,6 +16,7 @@ class OwnerAvailabilityCubit
         CrudBaseParmas<OwnerAvailabilityScheduleContent>(
           api: ApiConstants.ownerPropertyAvailability(ownerPropertyId),
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.privateMemory,
           queryParameters: {
             'week_start': OwnerVisitCalendarContent.formatDate(weekStart),
           },

@@ -28,7 +28,10 @@ class Go {
     return _navigatorKey.currentState!.push<T>(
       _pageRouter.build(
         page,
-        settings: RouteSettings(name: page.runtimeType.toString()),
+        settings: AppPageRouteSettings(
+          name: page.runtimeType.toString(),
+          page: page,
+        ),
         transition: transition,
         options: options,
       ),
@@ -79,7 +82,10 @@ class Go {
     return _navigatorKey.currentState!.pushReplacement<T, TO>(
       _pageRouter.build(
         page,
-        settings: RouteSettings(name: page.runtimeType.toString()),
+        settings: AppPageRouteSettings(
+          name: page.runtimeType.toString(),
+          page: page,
+        ),
         transition: transition,
         options: options,
       ),
@@ -121,7 +127,10 @@ class Go {
     return _navigatorKey.currentState!.pushAndRemoveUntil<T>(
       _pageRouter.build(
         page,
-        settings: RouteSettings(name: page.runtimeType.toString()),
+        settings: AppPageRouteSettings(
+          name: page.runtimeType.toString(),
+          page: page,
+        ),
         transition: transition,
         options: options,
       ),

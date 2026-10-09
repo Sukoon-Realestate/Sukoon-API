@@ -1,3 +1,4 @@
+import 'package:sokoun_app/features/tenant/home/data/public_property_cache.dart';
 import 'package:sokoun_app/features/shared/rental_offers/data/rental_offer_capabilities.dart';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
@@ -17,17 +18,22 @@ class TenantHomeData {
       : 'tenant_home_page';
 
   HomePageModel? readCachedPage() {
-    final json = ObjectBoxCacheService.read(_pageKey);
+    final json = ObjectBoxCacheService.read(
+      _pageKey,
+      policy: ReadCachePolicy.publicListing,
+    );
     if (json == null) return null;
     return HomePageModel.fromJson(json);
   }
 
+  bool fromCache = false;
   final Map<int, int> _serverPages = {1: 1};
   int _generation = 0;
 
   Future<(HomePageModel, PaginationData)> getPage({required int page}) async {
     if (page == 1) {
       _generation++;
+      fromCache = false;
       _serverPages
         ..clear()
         ..[1] = 1;
@@ -38,6 +44,7 @@ class TenantHomeData {
       CrudBaseParmas<HomePageModel>(
         api: ApiConstants.homePage,
         httpRequestType: HttpRequestType.get,
+        cachePolicy: ReadCachePolicy.publicListing,
         queryParameters: {
           'page': serverPage,
           if (RentalOfferCapabilities.configured.canSearch)
@@ -46,15 +53,18 @@ class TenantHomeData {
         cacheKey: serverPage == 1 ? _pageKey : '${_pageKey}_$serverPage',
         mapper: (json) => HomePageModel.fromJson(json),
         fromCacheJson: HomePageModel.fromJson,
-        toJson: (model) => model.toJson(),
+        toJson: (model) => PublicPropertyCache.sanitize(model.toJson()),
       ),
     );
+    if (generation == _generation) {
+      fromCache = fromCache || result.tryGetSuccess()?.key == 'fromCache';
+    }
     final HomePageModel model = result.when(
       (response) => response.data,
       (failure) => throw PagifyApiRequestException(
         failure.message,
         pagifyFailure: RequestFailureData(
-          statusCode: null,
+          statusCode: failure.statusCode,
           statusMsg: failure.message,
         ),
       ),

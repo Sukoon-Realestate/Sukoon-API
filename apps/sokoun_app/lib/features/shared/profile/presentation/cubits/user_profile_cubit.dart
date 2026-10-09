@@ -11,6 +11,7 @@ class UserProfileCubit extends AsyncCubit<UserProfileContent> {
         CrudBaseParmas<UserProfileContent>(
           api: ApiConstants.userProfile,
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.privateMemory,
           cacheKey: 'editable_user_profile',
           mapper: (json) => UserProfileContent.fromJson(profileJsonMap(json)),
           fromCacheJson: UserProfileContent.fromJson,

@@ -15,6 +15,7 @@ class _SupportTicketFormState extends State<SupportTicketForm> {
   late final SupportTicketSubmitCubit _cubit;
   late final ValueNotifier<SupportTicketBody> _body;
   bool _submitted = false;
+  late final TextDraftBinding _draft;
   @override
   void initState() {
     super.initState();
@@ -22,10 +23,37 @@ class _SupportTicketFormState extends State<SupportTicketForm> {
     _body = ValueNotifier(
       SupportTicketBody.initial(workspace: widget.workspace),
     );
+    _draft = TextDraftBinding(
+      flow: 'support_create',
+      workspace: widget.workspace.name,
+      fields: [_subject, _description, _body],
+      context: () => context,
+      mounted: () => mounted,
+      capture: () => TextFormDraft({
+        'subject': _subject.text,
+        'description': _description.text,
+        'topic': _body.value.topic.apiValue,
+      }),
+      restore: (draft) {
+        _subject.text = draft['subject'];
+        _description.text = draft['description'];
+        final topic = SupportTopic.forWorkspace(widget.workspace).firstWhere(
+          (value) => value.apiValue == draft['topic'],
+          orElse: () => SupportTopic.other,
+        );
+        _body.value = _body.value.copyWith(
+          subject: _subject.text,
+          description: _description.text,
+          topic: topic,
+        );
+      },
+    );
+    unawaited(_draft.start());
   }
 
   @override
   void dispose() {
+    unawaited(_draft.close());
     _cubit.close();
     _body.dispose();
     _subject.dispose();
@@ -37,15 +65,21 @@ class _SupportTicketFormState extends State<SupportTicketForm> {
     if (_cubit.isLoading) {
       return;
     }
+    if (!await _draft.beginSubmission()) return;
     final SupportTicketContent? ticket = await _cubit.submit(_body.value);
     if (!context.mounted) return;
     if (ticket == null) {
+      await _draft.finishSubmission(
+        confirmed: false,
+        unknown: _cubit.lastFailure?.outcomeUnknown ?? false,
+      );
       if (_cubit.state.isSuccess && _cubit.state.msg?.isNotEmpty == true) {
         Messages.showToast(msg: _cubit.state.msg!, status: BaseStatus.error);
       }
       return;
     }
     _submitted = true;
+    await _draft.clear();
     Go.off(
       SupportTicketDetailScreen(id: ticket.id, workspace: widget.workspace),
     );
@@ -95,6 +129,7 @@ class _SupportTicketFormState extends State<SupportTicketForm> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           spacing: 18.h,
                           children: [
+                            _draft.feedback,
                             AppText(
                               LocaleKeys.supportTicketIntro,
                               style: AppTextStyles.regular14.copyWith(

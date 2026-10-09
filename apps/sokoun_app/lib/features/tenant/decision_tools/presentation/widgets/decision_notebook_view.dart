@@ -11,6 +11,7 @@ import '../cubits/decision_tools_cubit.dart';
 import '../screens/property_comparison_screen.dart';
 import 'decision_editor.dart';
 import 'decision_tools_empty.dart';
+import 'rename_saved_search_dialog.dart';
 
 class DecisionNotebookView extends StatelessWidget {
   const DecisionNotebookView({
@@ -150,13 +151,37 @@ class DecisionNotebookView extends StatelessWidget {
                   title: AppText(search.name),
                   subtitle: AppText(search.filters.combinedSearch),
                   onTap: () => Go.to(
-                    TenantSearchResultsScreen(initialFilters: search.filters),
+                    TenantSearchResultsScreen(
+                      initialFilters: search.filters,
+                      validateSavedFilters: true,
+                    ),
                   ),
-                  trailing: IconButton(
-                    tooltip: LocaleKeys.freeRemove,
-                    onPressed: () =>
-                        _mutate(() => cubit.removeSearch(search.id)),
-                    icon: const Icon(Icons.delete_outline),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        tooltip: LocaleKeys.professionalRenameSearch,
+                        icon: const Icon(Icons.edit_outlined),
+                        onPressed: () async {
+                          final String? name = await showDialog<String>(
+                            context: context,
+                            builder: (_) =>
+                                RenameSavedSearchDialog(name: search.name),
+                          );
+                          if (name != null) {
+                            await _mutate(
+                              () => cubit.renameSearch(search.id, name),
+                            );
+                          }
+                        },
+                      ),
+                      IconButton(
+                        tooltip: LocaleKeys.freeRemove,
+                        onPressed: () =>
+                            _mutate(() => cubit.removeSearch(search.id)),
+                        icon: const Icon(Icons.delete_outline),
+                      ),
+                    ],
                   ),
                 ),
                 PremiumAlertEntry(filters: search.filters, name: search.name),

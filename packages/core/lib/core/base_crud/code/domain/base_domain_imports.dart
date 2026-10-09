@@ -4,6 +4,8 @@ import 'package:injectable/injectable.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 import '../../../error/failure.dart';
+import '../../../local_db/read_cache_policy.dart';
+export '../../../local_db/read_cache_policy.dart';
 import '../../../network/network_request.dart';
 import 'entities/country_entity.dart';
 import 'entities/faqs.dart';

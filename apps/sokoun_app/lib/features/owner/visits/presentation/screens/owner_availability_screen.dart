@@ -22,6 +22,7 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
   final ValueNotifier<bool> _isSaving = ValueNotifier(false);
   int _selectedDayIndex = 0;
   bool _saved = false;
+  late final TextDraftBinding _draft;
 
   List<OwnerAvailabilityDayContent> get _days => _availabilityCubit.data.days;
   String get _selectedDate => _days[_selectedDayIndex].date;
@@ -36,6 +37,28 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
     _availabilityCubit = OwnerAvailabilityCubit();
     _saveCubit = OwnerAvailabilityCubit();
     _loadAvailability();
+    _draft = TextDraftBinding(
+      flow: 'availability',
+      entityId: widget.ownerPropertyId,
+      workspace: 'owner',
+      fields: const [],
+      context: () => context,
+      mounted: () => mounted,
+      capture: () =>
+          OwnerAvailabilityDraftData.capture(_drafts, _requestedDate),
+      restore: (draft) {
+        setState(() {
+          _drafts.addAll(OwnerAvailabilityDraftData.restore(draft));
+        });
+        final date = DateTime.tryParse(draft['selected_date']);
+        if (date != null) {
+          _requestedDate = date;
+          _weekStart = OwnerAvailabilityScheduleContent.startOfWeek(date);
+          _loadAvailability();
+        }
+      },
+    );
+    unawaited(_draft.start());
   }
 
   Future<void> _loadAvailability() => _availabilityCubit.loadAvailability(
@@ -50,6 +73,7 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
   );
   @override
   void dispose() {
+    unawaited(_draft.close());
     _availabilityCubit.close();
     _saveCubit.close();
     _isSaving.dispose();
@@ -80,6 +104,7 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
       state: slots[index].isEnabled ? 'unspecified' : 'available',
     );
     setState(() => _drafts[_selectedDate] = slots);
+    _draft.changed();
   }
 
   Future<void> _addTime() async {
@@ -118,6 +143,7 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
       ),
     ]..sort((a, b) => a.time.compareTo(b.time));
     setState(() => _drafts[date] = slots);
+    _draft.changed();
   }
 
   Future<void> _saveAvailability() async {
@@ -129,11 +155,36 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
         entries.add(MapEntry(_selectedDate, _slots));
       }
       for (final entry in entries) {
+        final date = DateTime.tryParse(entry.key);
+        if (date == null) return;
+        await _saveCubit.loadAvailability(
+          ownerPropertyId: widget.ownerPropertyId,
+          weekStart: OwnerAvailabilityScheduleContent.startOfWeek(date),
+          onLoaded: (_) {},
+        );
+        if (!mounted || !_saveCubit.state.isSuccess) return;
+        final freshDay = _saveCubit.data.days
+            .where((day) => day.date == entry.key)
+            .firstOrNull;
+        if (freshDay == null) return;
+        final checked = OwnerAvailabilityDraftData.reconcile(
+          entry.value,
+          freshDay.slots,
+        );
+        if (checked.conflict) {
+          setState(() => _drafts[entry.key] = checked.slots);
+          _draft.changed();
+          Messages.showToast(
+            msg: LocaleKeys.professionalLockedSlot,
+            status: BaseStatus.error,
+          );
+          return;
+        }
         final saved = await _saveCubit.saveAvailability(
           ownerPropertyId: widget.ownerPropertyId,
           body: OwnerAvailabilitySaveBody(
             availabilityDate: entry.key,
-            slots: entry.value
+            slots: checked.slots
                 .map(
                   (slot) => OwnerAvailabilitySlotBody(
                     time: Validators.normalizeVisitTime(slot.time),
@@ -146,6 +197,8 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
         if (!mounted) return;
         if (!saved) return;
         _drafts.remove(entry.key);
+        _draft.changed();
+        await _draft.cubit.flush();
         _availabilityCubit.updateData(
           _availabilityCubit.data.copyWith(
             days: _days
@@ -160,6 +213,7 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
       }
       if (entries.isNotEmpty && mounted) {
         _saved = true;
+        await _draft.clear();
         Go.back(true);
       }
     } finally {
@@ -190,52 +244,61 @@ class _OwnerAvailabilityScreenState extends State<OwnerAvailabilityScreen> {
           surface: true,
         ),
         body: SafeArea(
-          child:
-              StatusBuilder<
-                OwnerAvailabilityCubit,
-                OwnerAvailabilityScheduleContent
-              >.withShimmer(
-                initialDataForShimmer:
-                    const OwnerAvailabilityScheduleContent.initial(),
-                onRetry: _loadAvailability,
-                shimmerBuilder: (_) => const SizedBox.expand(),
-                builder: (schedule) => schedule.days.isEmpty
-                    ? const OwnerAvailabilityEmptyState()
-                    : FirstValidationErrorForm(
-                        validationFields: _validationFields,
-                        onValid: _saveAvailability,
-                        builder: (context, submit) =>
-                            ValueListenableBuilder<bool>(
-                              valueListenable: _isSaving,
-                              builder: (context, saving, _) =>
-                                  OwnerAvailabilityContent(
-                                    dayFieldKey: _dayFieldKey,
-                                    days: _days,
-                                    slots: _slots
-                                        .map(
-                                          (slot) => OwnerAvailabilitySlotBody(
-                                            time: slot.time,
-                                            isEnabled: slot.isEnabled,
-                                          ),
-                                        )
-                                        .toList(growable: false),
-                                    slotStates: _slots
-                                        .map((slot) => slot.slotState)
-                                        .toList(growable: false),
-                                    selectedDayIndex: _selectedDayIndex,
-                                    onDaySelected: _selectDay,
-                                    onTimePressed: _toggleSlot,
-                                    onSavePressed: submit,
-                                    onAddTimePressed: _addTime,
-                                    onPreviousWeek: () => _changeWeek(-1),
-                                    onNextWeek: () => _changeWeek(1),
-                                    isSaving: saving,
-                                    canSave:
-                                        _drafts.isNotEmpty || _slots.isNotEmpty,
+          child: Column(
+            children: [
+              _draft.feedback,
+              Expanded(
+                child:
+                    StatusBuilder<
+                      OwnerAvailabilityCubit,
+                      OwnerAvailabilityScheduleContent
+                    >.withShimmer(
+                      initialDataForShimmer:
+                          const OwnerAvailabilityScheduleContent.initial(),
+                      onRetry: _loadAvailability,
+                      shimmerBuilder: (_) => const SizedBox.expand(),
+                      builder: (schedule) => schedule.days.isEmpty
+                          ? const OwnerAvailabilityEmptyState()
+                          : FirstValidationErrorForm(
+                              validationFields: _validationFields,
+                              onValid: _saveAvailability,
+                              builder: (context, submit) =>
+                                  ValueListenableBuilder<bool>(
+                                    valueListenable: _isSaving,
+                                    builder: (context, saving, _) =>
+                                        OwnerAvailabilityContent(
+                                          dayFieldKey: _dayFieldKey,
+                                          days: _days,
+                                          slots: _slots
+                                              .map(
+                                                (slot) =>
+                                                    OwnerAvailabilitySlotBody(
+                                                      time: slot.time,
+                                                      isEnabled: slot.isEnabled,
+                                                    ),
+                                              )
+                                              .toList(growable: false),
+                                          slotStates: _slots
+                                              .map((slot) => slot.slotState)
+                                              .toList(growable: false),
+                                          selectedDayIndex: _selectedDayIndex,
+                                          onDaySelected: _selectDay,
+                                          onTimePressed: _toggleSlot,
+                                          onSavePressed: submit,
+                                          onAddTimePressed: _addTime,
+                                          onPreviousWeek: () => _changeWeek(-1),
+                                          onNextWeek: () => _changeWeek(1),
+                                          isSaving: saving,
+                                          canSave:
+                                              _drafts.isNotEmpty ||
+                                              _slots.isNotEmpty,
+                                        ),
                                   ),
                             ),
-                      ),
+                    ),
               ),
+            ],
+          ),
         ),
       ),
     ),

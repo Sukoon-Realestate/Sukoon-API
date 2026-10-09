@@ -19,7 +19,12 @@ typedef WorkspaceSelection =
 /// Coordinates authentication, workspace selection and a single pending target.
 abstract final class WorkspaceNavigation {
   static WorkspaceSelection? _select;
-  static ({AppWorkspace? workspace, WorkspaceTab? tab, VoidCallback? detail})?
+  static ({
+    AppWorkspace? workspace,
+    WorkspaceTab? tab,
+    VoidCallback? detail,
+    String? account,
+  })?
   _pending;
   static bool _loginVisible = false;
   static final List<Future<bool> Function()> _leaveGuards = [];
@@ -50,7 +55,8 @@ abstract final class WorkspaceNavigation {
     if (!isAuthenticated || _select == null) return;
     final target = _pending;
     _pending = null;
-    if (target != null) {
+    if (target != null &&
+        (target.account == null || target.account == AccountSession.userId)) {
       await open(
         workspace: target.workspace,
         tab: target.tab,
@@ -66,11 +72,21 @@ abstract final class WorkspaceNavigation {
     bool showLoginSheet = false,
   }) async {
     if (isAuthenticated && _select == null) {
-      _pending = (workspace: workspace, tab: tab, detail: detail);
+      _pending = (
+        workspace: workspace,
+        tab: tab,
+        detail: detail,
+        account: AccountSession.userId,
+      );
       return;
     }
     if (!isAuthenticated || _select == null) {
-      _pending = (workspace: workspace, tab: tab, detail: detail);
+      _pending = (
+        workspace: workspace,
+        tab: tab,
+        detail: detail,
+        account: AccountSession.userId,
+      );
       if (_loginVisible) return;
       _loginVisible = true;
       final UnauthenticatedSheetAction? action = showLoginSheet

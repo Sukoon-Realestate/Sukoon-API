@@ -8,6 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/error/exceptions.dart';
 import 'package:melos_core/core/network/account_session.dart';
+import 'package:melos_core/core/local_db/read_cache_policy.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:melos_core/core/widgets/exeption_view.dart';
 import 'package:melos_core/core/widgets/retry_view.dart';
@@ -45,6 +46,89 @@ void main() {
     messenger.setMockMethodCallHandler(preferencesChannel, null);
     messenger.setMockMethodCallHandler(connectivityChannel, null);
   });
+
+  testWidgets('the supplied scroll controller tracks the visible collection', (
+    tester,
+  ) async {
+    final controller = PagifyController<String>();
+    final scroll = ScrollController();
+    await tester.pumpWidget(
+      _screen(
+        AppPagify<String>(
+          pagifyController: controller,
+          scrollController: scroll,
+          shrinkWrap: false,
+          loadingBuilder: const SizedBox.shrink(),
+          asyncCall: (_, _) async => (
+            List.generate(30, (index) => 'Result $index'),
+            PaginationData(perPage: 30, totalPages: 1),
+          ),
+          itemBuilder: (_, _, _, item) =>
+              SizedBox(height: 90, child: Text(item)),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(scroll.hasClients, isTrue);
+    scroll.jumpTo(500);
+    await tester.pumpAndSettle();
+    expect(scroll.offset, 500);
+    expect(find.text('Result 0'), findsNothing);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    expect(scroll.hasClients, isFalse);
+    scroll.dispose();
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets(
+    'public refresh retains results, offers retry and revokes forbidden data',
+    (tester) async {
+      final controller = PagifyController<String>();
+      final requests = <Completer<(List<String>, PaginationData)>>[];
+      await tester.pumpWidget(
+        _screen(
+          AppPagify<String>(
+            pagifyController: controller,
+            cachePolicy: ReadCachePolicy.publicListing,
+            shrinkWrap: false,
+            loadingBuilder: const SizedBox.shrink(),
+            asyncCall: (_, _) {
+              final request = Completer<(List<String>, PaginationData)>();
+              requests.add(request);
+              return request.future;
+            },
+            itemBuilder: (_, _, _, item) => Text(item),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      requests.last.complete((
+        ['Public listing'],
+        PaginationData(perPage: 10, totalPages: 1),
+      ));
+      await tester.pumpAndSettle();
+      controller.refresh();
+      await tester.pumpAndSettle();
+      expect(find.text('Public listing'), findsOneWidget);
+      requests.last.completeError(
+        ServerException('Temporary failure', statusCode: 503),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Public listing'), findsOneWidget);
+      await tester.tap(find.text(LocaleKeys.ownerRetryAction));
+      await tester.pumpAndSettle();
+      requests.last.completeError(
+        ServerException('Access revoked', statusCode: 403),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Public listing'), findsNothing);
+      expect(controller.items, isEmpty);
+      expect(find.byType(ExceptionView), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+    },
+  );
 
   testWidgets(
     'refreshing an outgoing page after logout does not dispatch a request',

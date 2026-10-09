@@ -1,3 +1,5 @@
+import 'package:melos_core/core/helpers/cache_service.dart';
+import 'helpers/account_test_dependencies.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
@@ -60,7 +62,12 @@ void main() {
     if (!partial) expect(body.keys.toSet(), expected.keys.toSet());
   }
 
-  setUp(() async => injector.reset());
+  setUpAll(CacheStorage.init);
+
+  setUp(() async {
+    await injector.reset();
+    await registerAuthenticatedTestAccount();
+  });
   tearDown(() => injector.reset());
 
   test(

@@ -4,8 +4,10 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/core/error/exceptions.dart';
+import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/network/account_session.dart';
 import 'package:melos_core/core/network/dio_service.dart';
 import 'package:melos_core/core/network/network_request.dart';
@@ -13,6 +15,39 @@ import 'package:melos_core/core/network/network_request.dart';
 void main() {
   setUp(AccountSession.end);
   tearDown(AccountSession.end);
+
+  test(
+    'a lost connection after a POST remains unknown and is not replayed',
+    () async {
+      int mutations = 0;
+      final service = await _service((request) async {
+        mutations++;
+        expect(request.method, 'POST');
+        expect(jsonDecode(await utf8.decoder.bind(request).join()), {
+          'value': 1,
+        });
+        await _respond(request);
+      }, httpClientAdapter: _LostAcknowledgmentAdapter());
+      await _signIn(service);
+      await expectLater(
+        service.callApi(
+          NetworkRequest(
+            path: 'mutation/',
+            method: RequestMethod.post,
+            body: const {'value': 1},
+          ),
+        ),
+        throwsA(
+          isA<ServerException>().having(
+            (error) => Failure.fromException(error).outcomeUnknown,
+            'outcome unknown',
+            isTrue,
+          ),
+        ),
+      );
+      expect(mutations, 1);
+    },
+  );
 
   for (final bool socketFirst in [false, true]) {
     test('HTTP and socket share refresh, socket first: $socketFirst', () async {
@@ -361,7 +396,10 @@ void main() {
   );
 }
 
-Future<DioService> _service(Future<void> Function(HttpRequest) handler) async {
+Future<DioService> _service(
+  Future<void> Function(HttpRequest) handler, {
+  HttpClientAdapter? httpClientAdapter,
+}) async {
   final directory = await Directory.systemTemp.createTemp('request_controls_');
   final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
   addTearDown(() async {
@@ -382,6 +420,7 @@ Future<DioService> _service(Future<void> Function(HttpRequest) handler) async {
     initialBaseUrl: 'http://${server.address.host}:${server.port}/',
     initialLanguageCode: 'en',
     cookieDirectoryProvider: () async => directory,
+    httpClientAdapter: httpClientAdapter,
   );
 }
 
@@ -404,6 +443,25 @@ Future<void> _respond(
   }
   request.response.write(jsonEncode({'data': true}));
   await request.response.close();
+}
+
+class _LostAcknowledgmentAdapter extends IOHttpClientAdapter {
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    final response = await super.fetch(options, requestStream, cancelFuture);
+    if (options.path == 'mutation/') {
+      await response.stream.drain<void>();
+      throw DioException.connectionError(
+        requestOptions: options,
+        reason: 'Connection lost before acknowledgment',
+      );
+    }
+    return response;
+  }
 }
 
 class _RecordingAdapter implements HttpClientAdapter {

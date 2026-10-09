@@ -21,6 +21,7 @@ class PropertyComparisonCubit
               CrudBaseParmas<PropertyDetailsModel>(
                 api: ApiConstants.propertyDetails(id),
                 httpRequestType: HttpRequestType.get,
+                cachePolicy: ReadCachePolicy.privateMemory,
                 cacheKey:
                     'property_comparison_${UserModel.currentUser?.id ?? 'guest'}_$id',
                 mapper: (json) => PropertyDetailsModel.fromJson(

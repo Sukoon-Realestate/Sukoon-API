@@ -32,6 +32,7 @@ abstract final class RentalHomeSectionData {
     return CrudBaseParmas<PropertySearchResponseModel>(
       api: ApiConstants.properties,
       httpRequestType: HttpRequestType.get,
+      cachePolicy: ReadCachePolicy.privateMemory,
       queryParameters: query.toQueryParameters(capabilities: capabilities),
       cacheKey: 'rental_home_v1_${scope.value}_${period.value}',
       mapper: (json) => read(Map<String, dynamic>.from(json as Map)),

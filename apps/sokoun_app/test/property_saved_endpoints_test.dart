@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:melos_core/core/helpers/cache_service.dart';
+import 'helpers/account_test_dependencies.dart';
 import 'package:melos_core/config/res/config_imports.dart' show injector;
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
@@ -11,11 +13,14 @@ import 'package:sokoun_app/features/tenant/favorites/data/favorites_data.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_save_cubit.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   late _FakeNetworkService networkService;
   late _RecordingBaseRepository repository;
 
+  setUpAll(CacheStorage.init);
   setUp(() async {
     await injector.reset();
+    await registerAuthenticatedTestAccount();
     networkService = _FakeNetworkService();
     repository = _RecordingBaseRepository();
     injector

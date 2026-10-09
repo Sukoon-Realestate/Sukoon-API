@@ -22,6 +22,9 @@ import 'package:sokoun_app/app.dart';
 import 'firebase_options.dart' as prod;
 import 'firebase_options_dev.dart' as dev;
 import 'features/main_view/data/workspace_preferences.dart';
+import 'features/owner/home/data/owner_draft_data.dart';
+import 'package:melos_core/core/local_db/read_cache_policy.dart';
+import 'features/shared/recovery/data/recovery_scope.dart';
 
 void main() async {
   Bloc.observer = AppBlocObserver();
@@ -33,8 +36,11 @@ void main() async {
     ScreenUtil.ensureScreenSize(),
   ]);
   await WorkspacePreferences.migrateLegacy();
+  OwnerDraftData.initialize();
+  ObjectBoxCacheService.removeLegacyAccountEntries();
   await _initializeFirebaseApp();
   await fetchBaseUrl();
+  ReadCacheContext.environment = await RecoveryScope.currentEnvironment();
   await NsfwDetectorHelper.init();
   setUpServiceLocator();
   final display =

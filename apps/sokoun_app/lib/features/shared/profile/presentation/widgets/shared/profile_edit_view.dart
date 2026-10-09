@@ -23,6 +23,8 @@ class _ProfileEditViewState extends State<ProfileEditView> {
   late final TextEditingController _phoneController;
   late final TextEditingController _emailController;
   late final ProfileEditCubit _editCubit;
+  late final TextDraftBinding _draft;
+  bool _saved = false;
   late final UserProfileCubit _profileCubit;
   late Future<void> _profileRequest;
   late UserModel _initialUser;
@@ -52,12 +54,47 @@ class _ProfileEditViewState extends State<ProfileEditView> {
     _initialUser = widget.initialValue;
     _editCubit = ProfileEditCubit();
     _profileCubit = UserProfileCubit();
-    _profileRequest = _profileCubit.load(onLoaded: _applyProfile);
+    _draft = TextDraftBinding(
+      flow: 'profile',
+      fields: [_nameController, _phoneController, _gender, _city],
+      context: () => context,
+      mounted: () => mounted,
+      capture: () => TextFormDraft({
+        'name': _nameController.text,
+        'phone': _phoneController.text,
+        'gender': _gender.value.apiValue,
+        'city_id': _city.value?.id ?? '',
+        'city_name': _city.value?.name ?? '',
+        'city_slug': _city.value?.slug ?? '',
+      }),
+      restore: (draft) {
+        _nameController.text = draft['name'];
+        _phoneController.text = draft['phone'];
+        _gender.value = ProfileGender.values.firstWhere(
+          (value) => value.apiValue == draft['gender'],
+          orElse: () => ProfileGender.unspecified,
+        );
+        _genderFieldKey.currentState?.didChange(_gender.value);
+        _city.value = draft['city_id'].isEmpty
+            ? null
+            : ProfileCity(
+                id: draft['city_id'],
+                name: draft['city_name'],
+                slug: draft['city_slug'],
+              );
+      },
+    );
+    unawaited(_draft.start());
+    _profileRequest = _profileCubit.load(
+      onLoaded: (profile) => _draft.programmatic(() => _applyProfile(profile)),
+    );
   }
 
   Future<void> _loadProfile() {
     if (_profileCubit.isLoading) return _profileRequest;
-    return _profileRequest = _profileCubit.load(onLoaded: _applyProfile);
+    return _profileRequest = _profileCubit.load(
+      onLoaded: (profile) => _draft.programmatic(() => _applyProfile(profile)),
+    );
   }
 
   void _applyProfile(UserProfileContent profile) {
@@ -86,6 +123,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
 
   @override
   void dispose() {
+    unawaited(_draft.close());
     _nameController.dispose();
     _phoneController.dispose();
     _emailController.dispose();
@@ -198,6 +236,8 @@ class _ProfileEditViewState extends State<ProfileEditView> {
       onSuccess: () => wasUpdated = true,
     );
     if (!wasUpdated || !mounted) return;
+    _saved = true;
+    await _draft.clear();
 
     final UserModel updatedUser = _initialUser.copyWith(
       name: body.fullName,
@@ -238,11 +278,12 @@ class _ProfileEditViewState extends State<ProfileEditView> {
       value: _editCubit,
       child: UnsavedChangesGuard(
         hasChanges: () =>
-            _nameController.text.trim() != _initialUser.name ||
-            _phoneController.text.trim() != _initialUser.phone ||
-            _avatar.value != null ||
-            _city.value?.id != _initialCity?.id ||
-            _gender.value != _initialGender,
+            !_saved &&
+            (_nameController.text.trim() != _initialUser.name ||
+                _phoneController.text.trim() != _initialUser.phone ||
+                _avatar.value != null ||
+                _city.value?.id != _initialCity?.id ||
+                _gender.value != _initialGender),
         isSaving: () => _editCubit.isLoading,
         child: BlocProvider<UserProfileCubit>.value(
           value: _profileCubit,
@@ -316,6 +357,7 @@ class _ProfileEditViewState extends State<ProfileEditView> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        _draft.feedback,
                         ValueListenableBuilder<File?>(
                           valueListenable: _avatar,
                           builder: (context, avatar, _) => Column(

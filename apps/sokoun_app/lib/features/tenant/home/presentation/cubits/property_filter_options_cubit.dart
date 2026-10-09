@@ -20,6 +20,7 @@ class PropertyFilterOptionsCubit
         CrudBaseParmas<PropertyFilterOptionsModel>(
           api: ApiConstants.propertyFilterOptions,
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.catalog,
           cacheKey:
               'property_filter_options_${Languages.currentLanguage.languageCode}',
           mapper: (json) => PropertyFilterOptionsModel.fromJson(

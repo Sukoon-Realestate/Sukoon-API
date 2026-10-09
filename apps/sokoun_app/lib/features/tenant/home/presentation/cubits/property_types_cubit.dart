@@ -13,6 +13,7 @@ class PropertyTypesCubit extends AsyncCubit<PropertyTypesModel> {
         CrudBaseParmas<PropertyTypesModel>(
           api: ApiConstants.propertyTypes,
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.catalog,
           cacheKey: 'property_types',
           mapper: (json) => PropertyTypesModel.fromJson(json),
           fromCacheJson: PropertyTypesModel.fromJson,

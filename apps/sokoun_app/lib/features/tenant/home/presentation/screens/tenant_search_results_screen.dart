@@ -1,3 +1,10 @@
+import '../cubits/search_restoration_cubit.dart';
+import '../../data/models/search_restoration_snapshot.dart';
+import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
+import 'dart:async';
+import 'package:melos_core/config/language/languages.dart';
+import 'package:melos_core/core/network/account_session.dart';
+import '../../data/saved_search_validation.dart';
 import 'package:sokoun_app/features/tenant/premium_alerts/presentation/widgets/premium_alert_entry.dart';
 import 'package:melos_core/core/network/network_request.dart';
 import 'package:melos_core/core/error/exceptions.dart';
@@ -32,10 +39,12 @@ class TenantSearchResultsScreen extends StatefulWidget {
     super.key,
     required this.initialFilters,
     this.initialFilterOptions,
+    this.validateSavedFilters = false,
   });
 
   final PropertySearchFilters initialFilters;
   final PropertyFilterOptionsModel? initialFilterOptions;
+  final bool validateSavedFilters;
 
   @override
   State<TenantSearchResultsScreen> createState() =>
@@ -50,6 +59,12 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
   late final PropertyFilterOptionsCubit _propertyFilterOptionsCubit;
   final ValueNotifier<int?> _resultCount = ValueNotifier<int?>(null);
   int _searchVersion = 0;
+  Timer? _queryDebounce;
+  late final SearchRestorationCubit _restoration;
+  final ScrollController _scroll = ScrollController();
+  int _loadedPages = 1;
+  double? _restoreOffset;
+  int _restorePages = 1;
   CancelToken _searchCancellation = CancelToken();
 
   @override
@@ -59,17 +74,91 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
     _paginatedFilters = _filters;
     _queryController = TextEditingController(text: _filters.search);
     _pagifyController = PagifyController<PropertyDetailsModel>();
+    _restoration = SearchRestorationCubit();
+    _scroll.addListener(_saveSnapshot);
+    unawaited(_restoreSearch());
     _propertyFilterOptionsCubit = PropertyFilterOptionsCubit(
       initialOptions: widget.initialFilterOptions,
     );
     if (widget.initialFilterOptions == null) {
-      _propertyFilterOptionsCubit.getFilterOptions();
+      unawaited(_prepareFilterOptions());
+    }
+  }
+
+  Future<void> _restoreSearch() async {
+    await _restoration.load();
+    if (!mounted) return;
+    final snapshot = _restoration.state.record?.value;
+    if (snapshot == null ||
+        snapshot.filters.cacheKey !=
+            _paginatedFilters.copyWith(page: 1).cacheKey) {
+      return;
+    }
+    _restorePages = snapshot.loadedPages;
+    _restoreOffset = snapshot.offset;
+    if (_pagifyController.items.isNotEmpty) _applyRestoreOffset();
+  }
+
+  void _saveSnapshot() {
+    if (!mounted) return;
+    _restoration.schedule(
+      SearchRestorationSnapshot(
+        filters: _paginatedFilters,
+        loadedPages: _loadedPages,
+        anchorId: _pagifyController.items.firstOrNull?.id ?? '',
+        offset: _restoreOffset ?? (_scroll.hasClients ? _scroll.offset : 0),
+      ),
+    );
+  }
+
+  void _applyRestoreOffset({bool hasMore = true}) {
+    final offset = _restoreOffset;
+    if (!mounted || offset == null) return;
+    if (!_scroll.hasClients) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _scroll.hasClients) {
+          _applyRestoreOffset(hasMore: hasMore);
+        }
+      });
+      return;
+    }
+    final position = _scroll.position;
+    final target = offset.clamp(0, position.maxScrollExtent);
+    _scroll.jumpTo(target.toDouble());
+    if (!hasMore || _loadedPages >= _restorePages || target == offset) {
+      _restoreOffset = null;
+      _saveSnapshot();
+    }
+  }
+
+  Future<void> _prepareFilterOptions() async {
+    await _propertyFilterOptionsCubit.getFilterOptions();
+    if (!mounted ||
+        !widget.validateSavedFilters ||
+        !_propertyFilterOptionsCubit.state.isSuccess ||
+        _propertyFilterOptionsCubit.state.fromCache) {
+      return;
+    }
+    final checked = SavedSearchValidation.against(
+      _filters,
+      _propertyFilterOptionsCubit.data,
+    );
+    if (checked.changed) {
+      Messages.showToast(
+        msg: LocaleKeys.professionalRemovedFilters,
+        status: BaseStatus.error,
+      );
+      await _search(checked.filters);
     }
   }
 
   @override
   void dispose() {
+    _queryDebounce?.cancel();
     _searchCancellation.cancel();
+    _scroll.removeListener(_saveSnapshot);
+    _scroll.dispose();
+    unawaited(_restoration.close());
     _queryController.dispose();
     _pagifyController.dispose();
     _resultCount.dispose();
@@ -79,6 +168,10 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
 
   void _updateQuery(String value) {
     _filters = _filters.copyWith(search: value, page: 1);
+    _queryDebounce?.cancel();
+    _queryDebounce = Timer(const Duration(milliseconds: 300), () {
+      if (mounted) unawaited(_submitQuery(value));
+    });
   }
 
   Future<void> _submitQuery(String value) async {
@@ -127,13 +220,17 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
   }
 
   Future<void> _search(PropertySearchFilters filters) async {
+    _queryDebounce?.cancel();
     _searchCancellation.cancel();
     // A submitted search replaces filters, cache identity, and list together.
     setState(() {
       _filters = filters;
       _paginatedFilters = filters.copyWith(page: 1);
       _searchVersion++;
+      _loadedPages = 1;
+      _restoreOffset = null;
     });
+    _saveSnapshot();
     final int version = _searchVersion;
     _resultCount.value = null;
     // Let the collection receive the submitted filters before refreshing it.
@@ -150,6 +247,8 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
       _searchCancellation = CancelToken();
     }
     final int requestVersion = _searchVersion;
+    final int session = AccountSession.generation;
+    final String language = Languages.currentLanguage.languageCode;
     final PropertySearchFilters requestFilters = _paginatedFilters.copyWith(
       page: page,
     );
@@ -161,7 +260,10 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
       cancelToken: _searchCancellation,
     );
 
-    if (requestVersion != _searchVersion) {
+    if (!mounted ||
+        requestVersion != _searchVersion ||
+        session != AccountSession.generation ||
+        language != Languages.currentLanguage.languageCode) {
       throw const RequestCancelledException();
     }
 
@@ -169,6 +271,13 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
       _resultCount.value = response.count;
     }
 
+    _loadedPages = page > _loadedPages ? page : _loadedPages;
+    if (_restoreOffset != null) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _applyRestoreOffset(hasMore: page < pagination.totalPages),
+      );
+    }
+    _saveSnapshot();
     return (response.results, pagination);
   }
 
@@ -243,6 +352,7 @@ class _TenantSearchResultsScreenState extends State<TenantSearchResultsScreen> {
                   resultCount: _resultCount,
                   cacheKey: PropertySearchData.cacheKeyFor(_paginatedFilters),
                   loadPage: _getPropertiesPage,
+                  scrollController: _scroll,
                   onQueryChanged: _updateQuery,
                   onQuerySubmitted: _submitQuery,
                   onFiltersPressed: _openFilters,

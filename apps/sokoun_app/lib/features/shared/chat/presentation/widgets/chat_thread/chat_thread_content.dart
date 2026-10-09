@@ -1,3 +1,4 @@
+import '../../../../recovery/presentation/widgets/draft_feedback.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import 'chat_recovered_messages.dart';
 import '../chat_unavailable_indicator.dart';
@@ -43,6 +44,7 @@ class _ChatThreadContentState extends State<ChatThreadContent>
   final ValueNotifier<bool> _isSending = ValueNotifier(false);
   bool _wasKeyboardOpen = false;
   bool _isNearLatestMessage = true;
+  bool _draftPromptShown = false;
 
   @override
   void initState() {
@@ -50,9 +52,14 @@ class _ChatThreadContentState extends State<ChatThreadContent>
     WidgetsBinding.instance.addObserver(this);
     _chatController = PagifyController<ChatMessages>();
     _messageController = TextEditingController(
-      text: context.read<ChatThreadCubit>().state.draft,
+      text: context.read<ChatThreadCubit>().state.needsDraftDecision
+          ? ''
+          : context.read<ChatThreadCubit>().state.draft,
     );
     _messageController.addListener(_draftChanged);
+    if (context.read<ChatThreadCubit>().state.needsDraftDecision) {
+      unawaited(_offerDraft());
+    }
   }
 
   @override
@@ -150,6 +157,22 @@ class _ChatThreadContentState extends State<ChatThreadContent>
     );
   }
 
+  Future<void> _offerDraft() async {
+    if (_draftPromptShown || !mounted) return;
+    _draftPromptShown = true;
+    final cubit = context.read<ChatThreadCubit>();
+    await WidgetsBinding.instance.endOfFrame;
+    if (!mounted || !cubit.state.needsDraftDecision) return;
+    final keep = await askToRestoreDraft(context);
+    if (!mounted || !cubit.state.needsDraftDecision) return;
+    try {
+      await cubit.resolveComposerDraft(keep == true);
+    } catch (_) {
+      /* Cubit shows failed storage. */
+    }
+    if (keep == true && mounted) _messageController.text = cubit.state.draft;
+  }
+
   void _draftChanged() =>
       context.read<ChatThreadCubit>().updateDraft(_messageController.text);
 
@@ -216,8 +239,14 @@ class _ChatThreadContentState extends State<ChatThreadContent>
     return MultiBlocListener(
       listeners: [
         BlocListener<ChatThreadCubit, ChatThreadState>(
-          listenWhen: (previous, current) => previous.draft != current.draft,
+          listenWhen: (previous, current) =>
+              previous.draft != current.draft ||
+              previous.needsDraftDecision != current.needsDraftDecision,
           listener: (context, state) {
+            if (state.needsDraftDecision) {
+              unawaited(_offerDraft());
+              return;
+            }
             if (_messageController.text != state.draft) {
               _messageController.value = TextEditingValue(
                 text: state.draft,
@@ -246,52 +275,84 @@ class _ChatThreadContentState extends State<ChatThreadContent>
           listener: (context, state) => _receiveReadReceipt(),
         ),
       ],
-      child: Column(
-        children: [
-          const ChatQueuedMessagesBanner(),
-          const ChatRecoveredMessages(),
-          BlocSelector<ChatThreadCubit, ChatThreadState, bool>(
-            selector: (state) => state.localSaveFailed,
-            builder: (context, failed) => failed
-                ? Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: AppText(LocaleKeys.freeChatDraftSaveFailed),
-                  )
-                : const SizedBox.shrink(),
-          ),
-          Expanded(
-            child: NotificationListener<ScrollNotification>(
-              onNotification: (notification) {
-                if (notification.depth == 0) {
-                  _isNearLatestMessage = notification.metrics.extentAfter <= 80;
-                }
-                return false;
-              },
-              child: ChatMessagesView(
-                conversation: widget.conversation,
-                controller: _chatController,
-                initialMessagesRequest: widget.initialMessagesRequest,
-                messagesCacheKey: widget.messagesCacheKey,
+      child: LayoutBuilder(
+        builder: (context, constraints) => Column(
+          children: [
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: constraints.maxHeight * .35,
               ),
-            ),
-          ),
-          if (widget.conversation.canSend == false)
-            ChatUnavailableIndicator(
-              message: LocaleKeys.freeChatUnavailable,
-              icon: Icons.lock_outline,
-            )
-          else
-            ValueListenableBuilder<bool>(
-              valueListenable: _isSending,
-              builder: (context, sending, _) => AbsorbPointer(
-                absorbing: sending,
-                child: ChatComposer(
-                  controller: _messageController,
-                  onSendPressed: _sendTextMessage,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const ChatQueuedMessagesBanner(),
+                    const ChatRecoveredMessages(),
+                    BlocSelector<
+                      ChatThreadCubit,
+                      ChatThreadState,
+                      ({bool failed, bool saving, bool saved})
+                    >(
+                      selector: (state) => (
+                        failed: state.localSaveFailed,
+                        saving: state.isSavingDraft,
+                        saved: state.draftSaved,
+                      ),
+                      builder: (context, local) =>
+                          local.failed || local.saving || local.saved
+                          ? Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Semantics(
+                                liveRegion: true,
+                                child: AppText(
+                                  local.failed
+                                      ? LocaleKeys.freeChatDraftSaveFailed
+                                      : local.saving
+                                      ? LocaleKeys.professionalSaving
+                                      : LocaleKeys.freeDraftSaved,
+                                ),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
+                    ),
+                  ],
                 ),
               ),
             ),
-        ],
+            Expanded(
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (notification) {
+                  if (notification.depth == 0) {
+                    _isNearLatestMessage =
+                        notification.metrics.extentAfter <= 80;
+                  }
+                  return false;
+                },
+                child: ChatMessagesView(
+                  conversation: widget.conversation,
+                  controller: _chatController,
+                  initialMessagesRequest: widget.initialMessagesRequest,
+                  messagesCacheKey: widget.messagesCacheKey,
+                ),
+              ),
+            ),
+            if (widget.conversation.canSend == false)
+              ChatUnavailableIndicator(
+                message: LocaleKeys.freeChatUnavailable,
+                icon: Icons.lock_outline,
+              )
+            else
+              ValueListenableBuilder<bool>(
+                valueListenable: _isSending,
+                builder: (context, sending, _) => AbsorbPointer(
+                  absorbing: sending,
+                  child: ChatComposer(
+                    controller: _messageController,
+                    onSendPressed: _sendTextMessage,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

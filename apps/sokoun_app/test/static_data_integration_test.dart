@@ -1,3 +1,5 @@
+import 'package:melos_core/core/helpers/cache_service.dart';
+import 'helpers/account_test_dependencies.dart';
 import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -49,6 +51,7 @@ void main() {
       (_) async => null,
     );
     await EasyLocalization.ensureInitialized();
+    await CacheStorage.init();
     for (final language in ['en', 'ar']) {
       _translations[language] =
           jsonDecode(
@@ -61,6 +64,7 @@ void main() {
   });
   setUp(() async {
     await injector.reset();
+    await registerAuthenticatedTestAccount();
     repository = _Repository();
     injector.registerSingleton<BaseCrudUseCase>(
       BaseCrudUseCase(repository: repository),
@@ -249,22 +253,22 @@ void main() {
         tester,
         OwnerAvailabilityScreen(
           ownerPropertyId: 'property-id',
-          availabilityStartDate: DateTime(2026, 10, 2),
+          availabilityStartDate: DateTime(2040, 9, 28),
         ),
       );
       final params = repository.requests.single;
       expect(params.httpRequestType, HttpRequestType.get);
       expect(params.api, ApiConstants.ownerPropertyAvailability('property-id'));
-      expect(params.queryParameters, {'week_start': '2026-09-28'});
+      expect(params.queryParameters, {'week_start': '2040-09-24'});
       expect(
         params.cacheKey,
-        'owner_property_availability_property-id_2026-09-28',
+        'owner_property_availability_property-id_2040-09-24',
       );
       final content = tester.widget<OwnerAvailabilityContent>(
         find.byType(OwnerAvailabilityContent),
       );
       expect(content.days, hasLength(7));
-      expect(content.days[content.selectedDayIndex].date, '2026-10-02');
+      expect(content.days[content.selectedDayIndex].date, '2040-09-28');
       expect(content.slots.map((slot) => slot.time), [
         '09:30:00',
         '12:15:00',
@@ -286,7 +290,7 @@ void main() {
       await updated.onSavePressed();
       final body = repository.requests.last.body!;
       expect(repository.requests.last.httpRequestType, HttpRequestType.put);
-      expect(body['availability_date'], '2026-10-02');
+      expect(body['availability_date'], '2040-09-28');
       expect(body['slots'], [
         {'time': '09:30:00', 'is_enabled': true},
         {'time': '12:15:00', 'is_enabled': true},
@@ -369,7 +373,7 @@ void main() {
       tester,
       OwnerAvailabilityScreen(
         ownerPropertyId: 'empty',
-        availabilityStartDate: DateTime(2026, 10, 2),
+        availabilityStartDate: DateTime(2040, 9, 28),
       ),
     );
     expect(find.byType(OwnerAvailabilityEmptyState), findsOneWidget);
@@ -380,7 +384,7 @@ void main() {
       tester,
       OwnerAvailabilityScreen(
         ownerPropertyId: 'failed',
-        availabilityStartDate: DateTime(2026, 10, 2),
+        availabilityStartDate: DateTime(2040, 9, 28),
         key: const ValueKey('failed'),
       ),
     );
@@ -403,11 +407,11 @@ class _Repository implements BaseRepository {
   bool fail = false;
   Map<String, dynamic> summary = {'total_reviews': 19, 'average_rating': 4.6};
   Map<String, dynamic> schedule = {
-    'week_start': '2026-09-28',
-    'week_end': '2026-10-04',
+    'week_start': '2040-09-24',
+    'week_end': '2040-09-30',
     'days': [
       {
-        'date': '2026-10-02',
+        'date': '2040-09-28',
         'day': 'friday',
         'slots': [
           {

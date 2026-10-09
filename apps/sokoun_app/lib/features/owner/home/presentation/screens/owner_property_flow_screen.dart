@@ -1,3 +1,8 @@
+import '../widgets/owner_add_property/owner_draft_status.dart';
+import '../../data/owner_draft_reconcile_data.dart';
+import '../../data/models/property_upload_progress.dart';
+import '../cubits/owner_draft_review_cubit.dart';
+import '../widgets/owner_add_property/owner_draft_conflict_dialog.dart';
 import 'package:melos_core/core/widgets/app_text.dart';
 import '../../data/owner_accommodation_draft_data.dart';
 import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_offer_labels.dart';
@@ -6,7 +11,6 @@ import 'package:sokoun_app/features/shared/rental_offers/data/rental_draft_editi
 import '../widgets/owner_add_property/rental_scope_selector.dart';
 import 'package:sokoun_app/features/owner/ai_assistant/presentation/widgets/listing_ai_entry.dart';
 import 'dart:async';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/widgets/exeption_view.dart';
 import '../../data/owner_draft_data.dart';
@@ -15,7 +19,6 @@ import '../../data/enums/owner_draft_action.dart';
 import '../cubits/owner_draft_cubit.dart';
 import '../cubits/owner_property_photos_cubit.dart';
 import '../widgets/owner_add_property/owner_draft_dialog.dart';
-import '../widgets/owner_add_property/owner_draft_save_warning.dart';
 import '../../data/models/property_location.dart';
 import 'package:sokoun_app/shared_widgets/sokoun_motion.dart';
 import 'package:sokoun_app/shared_widgets/app_scaffold.dart';
@@ -57,6 +60,14 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
   late final OwnerDraftCubit _draftCubit;
   late Future<void> _draftRequest;
   bool _restoringDraft = false;
+  bool _needsRevalidation = false;
+  bool _unknownMutation = false;
+  bool _resumeUploadsOnly = false;
+  String _baseRevision = '';
+  OwnerAddPropertyFormState? _baseForm;
+  Map<String, PropertyUploadProgress> _uploads = {};
+  Set<String>? _restoredDirtyFields;
+  OwnerDraftReviewCubit? _reviewCubit;
   final ValueNotifier<int> _currentStep = ValueNotifier(0);
   PropertySubmissionCubit? _submissionCubit;
   OwnerPropertyPhotosCubit? _photosCubit;
@@ -98,6 +109,8 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
         submissionKey: RentalDraftEditing.key(),
       ),
     );
+    _baseForm = seed?.form;
+    _baseRevision = property?.updatedAt ?? '';
     _selectedGovernorate = seed?.governorate;
     _selectedCity = seed?.city;
     _titleController = TextEditingController(text: _form.title);
@@ -133,6 +146,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
     _isSubmitting.dispose();
     _submissionCubit?.close();
     _photosCubit?.close();
+    _reviewCubit?.close();
     _uploadPropertyImagesCubit?.close();
     _titleController.dispose();
     _streetController.dispose();
@@ -150,11 +164,26 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
     form: _form,
     savedProperty: _savedProperty,
     isServerSnapshotCurrent: identical(_savedForm, _form),
+    serverFormConfirmed: identical(_savedForm, _form) || _resumeUploadsOnly,
     step: _currentStep.value.clamp(0, 2),
+    baseRevision: _baseRevision,
+    dirtyFields:
+        _restoredDirtyFields ??
+        OwnerDraftReconcileData.dirtyFields(_form, _baseForm),
+    unknownMutation: _unknownMutation,
+    needsPrivateDocument: _draftCubit.state.needsPrivateDocument,
+    uploads: _uploads,
   );
 
   void _scheduleDraft() {
     if (!_restoringDraft && _hasChanges && _form.submittedAt == null) {
+      _resumeUploadsOnly = false;
+      if (_restoredDirtyFields != null) {
+        _restoredDirtyFields = {
+          ..._restoredDirtyFields!,
+          ...OwnerDraftReconcileData.dirtyFields(_form, _baseForm),
+        };
+      }
       _draftCubit.schedule(_draft);
     }
   }
@@ -188,7 +217,14 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
     if (form == null) return;
     _restoringDraft = true;
     _savedProperty = draft.savedProperty;
-    _savedForm = draft.isServerSnapshotCurrent ? form : null;
+    _savedForm = null;
+    _needsRevalidation = (draft.savedProperty ?? widget.property) != null;
+    _baseRevision = draft.baseRevision;
+    _restoredDirtyFields = draft.dirtyFields;
+    _unknownMutation = draft.unknownMutation;
+    _uploads = draft.uploads;
+    _resumeUploadsOnly = draft.serverFormConfirmed;
+    _baseForm = form;
     _selectedGovernorate = form.governorateId.isEmpty
         ? null
         : const OwnerPropertyLocationModel.initial().copyWith(
@@ -340,6 +376,13 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
     _savedProperty = null;
     _submissionMessage = '';
     _savedForm = null;
+    _baseForm = null;
+    _baseRevision = '';
+    _restoredDirtyFields = null;
+    _resumeUploadsOnly = false;
+    _unknownMutation = false;
+    _uploads = {};
+    _needsRevalidation = false;
     _selectedGovernorate = null;
     _selectedCity = null;
     _locationDropdownGeneration++;
@@ -418,7 +461,14 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
     }
     if (!_form.photoDrafts[index].canRemove) return;
     final removed = _form.photoDrafts[index];
+    final status = _uploads[removed.reference]?.status;
+    if (status == PropertyUploadStatus.sending ||
+        status == PropertyUploadStatus.unknown) {
+      Messages.showToast(msg: LocaleKeys.professionalUnknownOutcome);
+      return;
+    }
     final removedId = removed.existingId;
+    final previousInventory = _form.rentalInventory;
     final List<OwnerPropertyPhotoDraft> photoDrafts =
         List<OwnerPropertyPhotoDraft>.of(_form.photoDrafts)..removeAt(index);
     _updateForm(
@@ -433,6 +483,36 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
         ),
       ),
     );
+    final remainingInventory = _form.rentalInventory;
+    if (!removed.isExisting &&
+        (_uploads[removed.reference]?.status ?? PropertyUploadStatus.queued) !=
+            PropertyUploadStatus.unknown) {
+      Messages.showToast(
+        msg: LocaleKeys.professionalPhotoRemoved,
+        actionLabel: LocaleKeys.favoritesUndoAction,
+        onAction: () {
+          if (!mounted ||
+              _isSubmitting.value ||
+              _form.photoDrafts.length >= 25 ||
+              _form.photoDrafts.any(
+                (photo) => photo.reference == removed.reference,
+              )) {
+            return;
+          }
+          final photos = List<OwnerPropertyPhotoDraft>.of(_form.photoDrafts)
+            ..insert(index.clamp(0, _form.photoCount), removed);
+          _updateForm(
+            () => _form.copyWith(
+              photoDrafts: photos,
+              rentalInventory:
+                  identical(_form.rentalInventory, remainingInventory)
+                  ? previousInventory
+                  : _form.rentalInventory,
+            ),
+          );
+        },
+      );
+    }
   }
 
   Future<void> _replacePhoto(int index) async {
@@ -453,6 +533,8 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
       existingId: '',
       existingUrl: '',
       contentFingerprint: '',
+      draftKey: RentalDraftEditing.key(),
+      needsReselection: false,
     );
     _updateForm(
       () => _form.copyWith(
@@ -545,6 +627,11 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
       await cubit.uploadImages(
         propertyId: property.id,
         photos: _form.photoDrafts,
+        restoredUploads: _uploads,
+        onProgressChanged: (uploads) async {
+          _uploads = uploads;
+          await _persistDraft();
+        },
         onPhotoUploaded: _recordUploadedPhoto,
         onSuccess: () {
           wasSubmitted = true;
@@ -591,19 +678,71 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
         submissionKey: RentalDraftEditing.key(),
       );
     }
-    if (_form.needsOfferCapability) await _persistDraft();
+    if (_unknownMutation) {
+      Messages.showToast(
+        msg: LocaleKeys.professionalUnknownOutcome,
+        status: BaseStatus.error,
+      );
+      return false;
+    }
+    final PropertyDetailsModel? previous = _savedProperty ?? widget.property;
+    if (_needsRevalidation && previous != null) {
+      final fresh = await (_reviewCubit ??= OwnerDraftReviewCubit()).fresh(
+        previous.id,
+      );
+      if (!mounted || fresh == null) return false;
+      final bool changed = _resumeUploadsOnly
+          ? !OwnerDraftReconcileData.matchesAcknowledged(previous, fresh)
+          : _baseRevision.isEmpty ||
+                fresh.updatedAt.isEmpty ||
+                fresh.updatedAt != _baseRevision;
+      if (changed) {
+        final reviewed = await showDialog<bool>(
+          context: context,
+          builder: (_) => OwnerDraftConflictDialog(
+            currentTitle: fresh.title,
+            draftTitle: _form.title,
+          ),
+        );
+        if (!mounted || reviewed != true) return false;
+        _formNotifier.value = OwnerDraftReconcileData.merge(
+          draft: _form,
+          fresh: fresh,
+          dirtyFields:
+              _restoredDirtyFields ??
+              OwnerDraftReconcileData.dirtyFields(_form, _baseForm),
+        );
+        _syncControllers();
+        _goToPage(0);
+      }
+      _savedProperty = fresh;
+      _baseRevision = fresh.updatedAt;
+      _baseForm = OwnerAddPropertyMapper.fromProperty(fresh).form;
+      _needsRevalidation = false;
+      if (!changed && _resumeUploadsOnly) _savedForm = _form;
+      await _persistDraft();
+      if (changed) {
+        return false; // Review the form again before explicit submission.
+      }
+    }
+    await _persistDraft();
     final OwnerAddPropertyFormState form = _form;
     if (identical(_savedForm, form)) return true;
     final PropertyDetailsModel? property = _savedProperty ?? widget.property;
     bool wasSaved = false;
+    Future<void>? coverSave;
     final PropertySubmissionCubit cubit = _submissionCubit ??=
         PropertySubmissionCubit();
+    _unknownMutation = true;
+    await _persistDraft();
     await cubit.save(
       propertyId: property?.id,
       form: form,
       onSuccess: (response) {
         if (!mounted) return;
+        _unknownMutation = false;
         _savedProperty = response;
+        _baseRevision = response.updatedAt;
         if (response.rentalInventory != null) {
           _formNotifier.value = _form.copyWith(
             rentalInventory: response.rentalInventory,
@@ -621,7 +760,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
               description: response.mainImageDescription,
             ),
           );
-          _recordUploadedPhoto(photo: mainPhoto!, image: main);
+          coverSave = _recordUploadedPhoto(photo: mainPhoto!, image: main);
         }
         if (form.videoFile != null && response.video?.isNotEmpty == true) {
           _formNotifier.value = _form
@@ -640,6 +779,20 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
         wasSaved = true;
       },
     );
+    if (!wasSaved && !cubit.outcomeUnknown) {
+      _unknownMutation = false;
+      await _persistDraft();
+    }
+    if (!wasSaved && cubit.outcomeUnknown && cubit.recoveryProperty == null) {
+      _unknownMutation = true;
+      await _persistDraft();
+      if (mounted) {
+        Messages.showToast(
+          msg: LocaleKeys.professionalUnknownOutcome,
+          status: BaseStatus.error,
+        );
+      }
+    }
     if (!wasSaved && cubit.recoveryProperty != null) {
       _savedProperty = cubit.recoveryProperty;
       await _persistDraft();
@@ -651,7 +804,10 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
       }
     }
     if (wasSaved) {
+      await coverSave;
       _savedForm = _form;
+      _baseForm = _form;
+      _restoredDirtyFields = {};
       await _persistDraft();
     }
     return wasSaved;
@@ -663,7 +819,9 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
   }) async {
     if (!mounted) return;
     final List<OwnerPropertyPhotoDraft> photos = List.of(_form.photoDrafts);
-    final int index = photos.indexOf(photo);
+    final int index = photos.indexWhere(
+      (candidate) => candidate.reference == photo.reference,
+    );
     if (index < 0) return;
     photos[index] = OwnerPropertyPhotoDraft(
       existingId: image.id,
@@ -688,11 +846,7 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
         ],
       );
     }
-    try {
-      await _persistDraft();
-    } catch (_) {
-      Messages.showToast(msg: LocaleKeys.freeLocalSaveFailed);
-    }
+    await _persistDraft();
   }
 
   @override
@@ -977,31 +1131,24 @@ class _OwnerPropertyFlowScreenState extends State<OwnerPropertyFlowScreen>
   }
 
   Widget _draftAwareBody({required Widget child}) => SafeArea(
-    child: BlocBuilder<OwnerDraftCubit, OwnerPropertyDraft>(
-      bloc: _draftCubit,
-      builder: (context, draft) => Column(
-        children: [
-          if (draft.localSaveFailed)
-            OwnerDraftSaveWarning(
-              onRetry: () async {
-                try {
-                  await _persistDraft();
-                } catch (_) {
-                  Messages.showToast(msg: LocaleKeys.freeLocalSaveFailed);
-                }
-              },
-            ),
-          _listenToForm(
-            (form) => !form.canSaveToServer()
-                ? Padding(
-                    padding: const EdgeInsets.all(12),
-                    child: AppText(LocaleKeys.rentalLocalOnly),
-                  )
-                : const SizedBox.shrink(),
-          ),
-          Expanded(child: child),
-        ],
-      ),
+    child: Column(
+      children: [
+        OwnerDraftStatus(
+          cubit: _draftCubit,
+          form: _formNotifier,
+          uploadProgress: _uploadPropertyImagesCubit?.progress,
+          retry: () async {
+            try {
+              await _persistDraft();
+            } catch (_) {
+              if (mounted) {
+                Messages.showToast(msg: LocaleKeys.freeLocalSaveFailed);
+              }
+            }
+          },
+        ),
+        Expanded(child: child),
+      ],
     ),
   );
 

@@ -66,6 +66,7 @@ class OwnerPropertiesList extends StatelessWidget {
       cacheKey: usesApi
           ? OwnerPropertiesData.cacheKeyFor(filter, category: category)
           : null,
+      cachePolicy: ReadCachePolicy.privateMemory,
       cacheToJson: usesApi ? (property) => property.toJson() : null,
       cacheFromJson: usesApi ? OwnerPropertyContent.fromJson : null,
       emptyListView: OwnerPropertiesEmptyState(

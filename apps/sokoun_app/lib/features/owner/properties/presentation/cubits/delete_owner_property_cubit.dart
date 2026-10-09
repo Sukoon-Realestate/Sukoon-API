@@ -6,7 +6,8 @@ import 'package:melos_core/core/shared/base_state.dart';
 import 'package:melos_core/core/widgets/toast_messages/toast_message.dart';
 import '../../data/models/owner_property_deletion_model.dart';
 
-class DeleteOwnerPropertyCubit extends VerifiedActionCubit<OwnerPropertyDeletionModel> {
+class DeleteOwnerPropertyCubit
+    extends VerifiedActionCubit<OwnerPropertyDeletionModel> {
   DeleteOwnerPropertyCubit()
     : super(const OwnerPropertyDeletionModel.initial());
 
@@ -30,6 +31,7 @@ class DeleteOwnerPropertyCubit extends VerifiedActionCubit<OwnerPropertyDeletion
           setError(errorMessage: model.msg);
           return;
         }
+        ObjectBoxCacheService.removePublicCollections();
         ObjectBoxCacheService.remove('property_details_$propertyId');
         ObjectBoxCacheService.remove('owner_properties');
         ObjectBoxCacheService.remove('owner_dashboard');

@@ -1,3 +1,5 @@
+import '../favorite_projection.dart';
+import 'package:melos_core/core/local_db/read_cache_policy.dart';
 import 'package:sokoun_app/features/shared/rental_offers/data/rental_offer_capabilities.dart';
 import 'package:sokoun_app/features/shared/rental_offers/data/enums/rental_listing_category.dart';
 import 'package:sokoun_app/features/shared/rental_offers/presentation/widgets/rental_listing_categories.dart';
@@ -110,6 +112,7 @@ class FavoritesContentView extends StatelessWidget {
             cacheKey: RentalOfferCapabilities.configured.canFavorite
                 ? FavoritesData.filteredCacheKey(filters)
                 : FavoritesData.cacheKey,
+            cachePolicy: ReadCachePolicy.privateMemory,
             cacheToJson: (item) => item.toJson(),
             cacheFromJson: FavoritePropertyContent.fromJson,
             onUpdateStatus: onPagifyStatusChanged,
@@ -119,7 +122,7 @@ class FavoritesContentView extends StatelessWidget {
               onClearFiltersTap: onClearFiltersPressed,
             ),
             filterItems: (items) => FavoritePropertyFilter.apply(
-              items,
+              FavoriteProjection.apply(items),
               RentalOfferCapabilities.configured.canFavorite
                   ? const PropertySearchFilters.initial()
                   : filters,

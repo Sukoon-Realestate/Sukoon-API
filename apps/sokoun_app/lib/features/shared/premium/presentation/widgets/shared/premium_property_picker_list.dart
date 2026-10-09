@@ -1,3 +1,4 @@
+import 'package:melos_core/core/local_db/read_cache_policy.dart';
 import 'package:flutter/material.dart';
 import 'package:pagify/pagify.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -26,6 +27,7 @@ class _PremiumPropertyPickerListState extends State<PremiumPropertyPickerList> {
       filter: OwnerPropertyFilter.accepted,
     ),
     cacheKey: OwnerPropertiesData.cacheKeyFor(OwnerPropertyFilter.accepted),
+    cachePolicy: ReadCachePolicy.privateMemory,
     cacheToJson: (item) => item.toJson(),
     cacheFromJson: OwnerPropertyContent.fromJson,
     emptyListView: PremiumEmptyState(

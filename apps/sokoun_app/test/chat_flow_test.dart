@@ -24,6 +24,7 @@ import 'package:melos_core/core/helpers/user_type/user_enum.dart';
 import 'package:melos_core/core/helpers/user_type/user_type_helper.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:melos_core/core/shared/route_observer.dart';
+import 'package:melos_core/core/shared/models/user_models/user_model.dart';
 import 'package:melos_core/core/widgets/chat_builder/easy_chat.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_data.dart';
@@ -51,6 +52,7 @@ import 'package:sokoun_app/features/shared/chat/presentation/widgets/report/chat
 import 'package:sokoun_app/features/shared/notifications/data/foreground_notification_bus.dart';
 
 import 'helpers/recording_chat_socket.dart';
+import 'helpers/account_test_dependencies.dart';
 
 const List<ConversationContent> _conversations = [
   ConversationContent(
@@ -134,11 +136,6 @@ void main() {
     );
     injector.registerSingleton<WorkspaceCubit>(WorkspaceCubit());
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
-          const MethodChannel('plugins.it_nomads.com/flutter_secure_storage'),
-          (call) async => null,
-        );
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(sharedPreferencesChannel, (call) async {
           return call.method == 'getAll' ? <String, Object>{} : true;
         });
@@ -173,14 +170,15 @@ void main() {
       const _MemoryChatDataSource(conversations: _conversations),
     );
     await UserTypeHelper.instance.setUserType(UserType.tenant);
-    await CacheStorage.write('user', const <String, dynamic>{
-      'is_verified': true,
-      'id': 'f9cf1cdf-50bc-4136-a042-2302ec1513b2',
-      'name': 'Current User',
-      'phone': '',
-      'email': '',
-      'type': 'tenant',
-    });
+    await registerAuthenticatedTestAccount(
+      user: const UserModel(
+        isVerified: true,
+        id: 'f9cf1cdf-50bc-4136-a042-2302ec1513b2',
+        name: 'Current User',
+        phone: '',
+        email: '',
+      ),
+    );
   });
 
   tearDown(() async {
@@ -386,7 +384,7 @@ void main() {
     await tester.enterText(find.byType(TextField).first, 'رسالة جديدة');
     await tester.pump();
     await tester.tap(find.byIcon(Icons.send_rounded));
-    await tester.pump();
+    await tester.pumpAndSettle();
 
     expect(find.text('رسالة جديدة'), findsOneWidget);
     expect(_messagesRequestCount, 1);
@@ -818,7 +816,7 @@ void main() {
   );
 
   testWidgets(
-    'incoming messages preserve older reading position and use real days',
+    'incoming messages preserve older reading position after footer scrolling and use real days',
     (tester) async {
       configurePhoneViewport(tester);
       final realtime = _MemoryChatRealtimeGateway();
@@ -875,6 +873,19 @@ void main() {
       await tester.pumpAndSettle();
       final offset = position.pixels;
       expect(position.extentAfter, greaterThan(80));
+      final footer = tester.state<ScrollableState>(
+        find
+            .ancestor(
+              of: find.text('رقم الموبايل مخفي في المحادثة'),
+              matching: find.byType(Scrollable),
+            )
+            .first,
+      );
+      ScrollUpdateNotification(
+        metrics: footer.position,
+        context: footer.context,
+        scrollDelta: 0,
+      ).dispatch(footer.context);
       realtime.addMessage(
         const ChatSocketMessage.initial().copyWith(
           id: 'new-while-reading',

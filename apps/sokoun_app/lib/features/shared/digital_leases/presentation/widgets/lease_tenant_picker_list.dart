@@ -1,3 +1,4 @@
+import 'package:melos_core/core/local_db/read_cache_policy.dart';
 import 'package:flutter/material.dart';
 import 'package:pagify/pagify.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -30,6 +31,7 @@ class _LeaseTenantPickerListState extends State<LeaseTenantPickerList> {
       widget.propertyId,
       offerId: widget.offerId,
     ),
+    cachePolicy: ReadCachePolicy.privateMemory,
     cacheToJson: (item) => item.toJson(),
     cacheFromJson: LeaseTenant.fromJson,
     asyncCall: (_, page) => LeaseTenantsData.getPage(

@@ -20,8 +20,12 @@ class NotificationSettingContent extends Equatable {
       id: json['key']?.toString() ?? json['id']?.toString() ?? '',
       title: json['title']?.toString() ?? '',
       description: json['subtitle']?.toString() ?? '',
-      isEnabled: _boolFromJson(json['value']),
-      canChange: !json.containsKey('enabled') || _boolFromJson(json['enabled']),
+      isEnabled: json['required'] == true || _boolFromJson(json['value']),
+      canChange:
+          json['locked'] != true &&
+          json['is_locked'] != true &&
+          json['required'] != true &&
+          (!json.containsKey('enabled') || _boolFromJson(json['enabled'])),
     );
   }
 

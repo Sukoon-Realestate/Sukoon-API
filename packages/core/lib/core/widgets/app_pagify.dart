@@ -10,6 +10,7 @@ import '../../config/language/locale_keys.g.dart';
 import '../error/exceptions.dart';
 import '../extensions/widget_extension.dart';
 import '../local_db/objectbox_cache_service.dart';
+import '../local_db/read_cache_policy.dart';
 import '../network/account_session.dart';
 import '../shared/base_state.dart';
 import 'app_text.dart';
@@ -89,6 +90,8 @@ class AppPagify<T> extends StatefulWidget {
 
   /// Optional — provide all three together to enable offline cache support.
   final String? cacheKey;
+  final ReadCachePolicy? cachePolicy;
+  final bool Function()? canPersistItems;
   final Map<String, dynamic> Function(T item)? cacheToJson;
   final T Function(Map<String, dynamic> json)? cacheFromJson;
 
@@ -128,6 +131,8 @@ class AppPagify<T> extends StatefulWidget {
     this.onSuccess,
     this.onConnectivityChanged,
     this.cacheKey,
+    this.cachePolicy,
+    this.canPersistItems,
     this.cacheToJson,
     this.cacheFromJson,
   }) : assert(header == null || rankingType != Ranking.gridView),
@@ -151,6 +156,52 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
   bool _hasMorePages = false;
   List<T>? _visibleItems;
   VoidCallback? _retryPendingPage;
+  bool _revoked = false;
+  bool _showingSavedData = false;
+  String _visibleScope = ReadCacheContext.scope;
+  ScrollPosition? _externalPosition;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.cachePolicy?.publicContent == true &&
+        widget.cacheKey != null &&
+        widget.cacheFromJson != null) {
+      try {
+        final saved = ObjectBoxCacheService.read(
+          widget.cacheKey!,
+          policy: widget.cachePolicy,
+        );
+        _lastSuccessfulItems = (saved?['items'] as List? ?? const [])
+            .whereType<Map>()
+            .map(
+              (item) => widget.cacheFromJson!(Map<String, dynamic>.from(item)),
+            )
+            .toList();
+        _showingSavedData = _lastSuccessfulItems.isNotEmpty;
+      } catch (_) {
+        /* A malformed cache is never a replacement for a request. */
+      }
+    }
+  }
+
+  void _bindExternalPosition(BuildContext? notificationContext) {
+    final external = widget.scrollController;
+    final position = notificationContext == null
+        ? null
+        : Scrollable.maybeOf(notificationContext)?.position;
+    if (external == null ||
+        position == null ||
+        identical(position, _externalPosition)) {
+      return;
+    }
+    if (_externalPosition != null &&
+        external.positions.contains(_externalPosition)) {
+      external.detach(_externalPosition!);
+    }
+    _externalPosition = position;
+    external.attach(position);
+  }
 
   Future<void> _refresh() {
     final Completer<void>? pending = _refreshCompleter;
@@ -186,14 +237,17 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
       _requestGeneration++;
       _hasMorePages = false;
       _retryPendingPage = null;
+      _revoked = false;
     }
     final int generation = _requestGeneration;
+    final String requestScope = ReadCacheContext.scope;
     _requestError = null;
     final completer = Completer<(List<T>, PaginationData)>();
     bool active() =>
         mounted &&
         generation == _requestGeneration &&
-        _sessionGeneration == AccountSession.generation;
+        _sessionGeneration == AccountSession.generation &&
+        requestScope == ReadCacheContext.scope;
     // Pagify 0.3 does not cancel requests on disposal or refresh. Abandoned
     // futures intentionally stop delivering results (as a cancelled operation
     // does), so its disposed state can never receive a late success or error.
@@ -203,6 +257,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
         final result = await widget.asyncCall(context, page);
         if (active()) {
           _hasMorePages = page < result.$2.totalPages;
+          _showingSavedData = false;
           completer.complete(result);
         }
       } on RequestCancelledException {
@@ -216,11 +271,30 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
           } else if (error is ServerException) {
             _requestError = PagifyApiRequestException(
               error.message,
-              pagifyFailure: RequestFailureData.initial(),
+              pagifyFailure: RequestFailureData(
+                statusCode: error.statusCode,
+                statusMsg: error.message,
+              ),
             );
           }
-          if (page > 1 &&
-              widget.filterItems != null &&
+          final int? statusCode = error is ServerException
+              ? error.statusCode
+              : error is DioException
+              ? error.response?.statusCode
+              : error is PagifyApiRequestException
+              ? error.pagifyFailure.statusCode
+              : null;
+          if (const {401, 403, 404, 410, 423}.contains(statusCode)) {
+            _revoked = true;
+            _lastSuccessfulItems = const [];
+            _showingSavedData = false;
+            if (widget.cacheKey != null) {
+              ObjectBoxCacheService.remove(widget.cacheKey!);
+            }
+            widget.pagifyController.removeWhere((_) => true);
+          }
+          if (!_revoked &&
+              page > 1 &&
               widget.pagifyController.items.isNotEmpty) {
             // Pagify 0.3 does not await/catch failures from its scroll request.
             // Keep that same page future pending and retry it explicitly; a
@@ -254,12 +328,19 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
 
   Future<void> _onSuccess(BuildContext context, List<T> items) async {
     _visibleItems = null;
-    if (widget.retainItemsOnRefresh) _lastSuccessfulItems = List<T>.of(items);
+    _visibleScope = ReadCacheContext.scope;
+    if (widget.retainItemsOnRefresh ||
+        widget.cachePolicy?.publicContent == true) {
+      _lastSuccessfulItems = List<T>.of(items);
+    }
     await widget.onSuccess?.call(context, items);
   }
 
   bool get _canRetainItems =>
-      widget.retainItemsOnRefresh &&
+      (widget.retainItemsOnRefresh ||
+          widget.cachePolicy?.publicContent == true) &&
+      !_revoked &&
+      _visibleScope == ReadCacheContext.scope &&
       _lastSuccessfulItems.isNotEmpty &&
       _sessionGeneration == AccountSession.generation;
 
@@ -276,10 +357,27 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 if (widget.header != null) widget.header!,
-                widget.retainedItemsNotice!(
-                  isLoading,
-                  () => widget.pagifyController.refresh(),
-                ),
+                widget.retainedItemsNotice?.call(
+                      isLoading,
+                      () => widget.pagifyController.refresh(),
+                    ) ??
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Semantics(
+                            liveRegion: true,
+                            child: AppText(LocaleKeys.professionalSavedData),
+                          ),
+                          if (!isLoading)
+                            TextButton(
+                              onPressed: widget.pagifyController.refresh,
+                              child: AppText(LocaleKeys.ownerRetryAction),
+                            ),
+                        ],
+                      ),
+                    ),
               ],
             );
           }
@@ -336,7 +434,18 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
       padding: EdgeInsets.zero,
       physics: widget.physics,
       shrinkWrap: widget.shrinkWrap,
-      children: [header, content],
+      children: [
+        header,
+        if (_showingSavedData)
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Semantics(
+              liveRegion: true,
+              child: AppText(LocaleKeys.professionalSavedData),
+            ),
+          ),
+        content,
+      ],
     );
   }
 
@@ -348,7 +457,21 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
     builder: (context) {
       final Widget loading =
           widget.loadingBuilder ?? CustomLoading.showLoadingView();
-      if (_retryPendingPage != null) return const SizedBox.shrink();
+      if (_retryPendingPage != null) {
+        if (widget.filteredFooterBuilder != null) {
+          return const SizedBox.shrink();
+        }
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AppText(_requestError?.msg ?? LocaleKeys.exceptionError),
+            TextButton(
+              onPressed: _retryPendingPage,
+              child: AppText(LocaleKeys.ownerRetryAction),
+            ),
+          ],
+        );
+      }
       // Pagify uses this same widget for its first load and pagination footer.
       return widget.pagifyController.items.isEmpty
           ? (_canRetainItems
@@ -436,10 +559,25 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
               children: [row, footer],
             ),
     );
-    if (!includeHeader || index != 0 || header == null) return content;
+    if (!includeHeader ||
+        index != 0 ||
+        (header == null && !_showingSavedData)) {
+      return content;
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [header, content],
+      children: [
+        if (header != null) header,
+        if (_showingSavedData)
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Semantics(
+              liveRegion: true,
+              child: AppText(LocaleKeys.professionalSavedData),
+            ),
+          ),
+        content,
+      ],
     );
   }
 
@@ -472,7 +610,7 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
     final PagifyException requestError = _resolveError(error);
     if (widget.onError != null) {
       await widget.onError!(context, page, requestError);
-    } else {
+    } else if (widget.cachePolicy?.publicContent != true) {
       Messages.showToast(
         status: BaseStatus.error,
         title: LocaleKeys.operationFaild,
@@ -485,14 +623,36 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
   void dispose() {
     _completeRefresh();
     _requestGeneration++;
+    if (_externalPosition != null &&
+        widget.scrollController?.positions.contains(_externalPosition) ==
+            true) {
+      widget.scrollController!.detach(_externalPosition!);
+    }
     if (widget.disposeController) widget.pagifyController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final Widget collection = LayoutBuilder(
-      builder: (context, constraints) => _buildCollection(context, constraints),
+    final Widget collection = NotificationListener<ScrollMetricsNotification>(
+      onNotification: (notification) {
+        if (notification.depth == 0) {
+          _bindExternalPosition(notification.context);
+        }
+        return false;
+      },
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          if (notification.depth == 0) {
+            _bindExternalPosition(notification.context);
+          }
+          return false;
+        },
+        child: LayoutBuilder(
+          builder: (context, constraints) =>
+              _buildCollection(context, constraints),
+        ),
+      ),
     );
     return widget.enablePullRefresh
         ? collection.withPullRefresher(onRefresh: _refresh)
@@ -519,22 +679,37 @@ class _AppPagifyState<T> extends State<AppPagify<T>> {
     _visibleItems = null;
     final int columns = _columnCount(context, constraints);
     final hasCacheConfig =
+        widget.cachePolicy?.persist != false &&
         widget.cacheKey != null &&
         widget.cacheToJson != null &&
         widget.cacheFromJson != null;
 
+    final String cacheScope = ReadCacheContext.scope;
     void onSaveCache(String key, List<Map<String, dynamic>> items) {
-      if (mounted && _sessionGeneration == AccountSession.generation) {
-        ObjectBoxCacheService.save(key, {'items': items});
+      if (mounted &&
+          !_showingSavedData &&
+          (widget.canPersistItems?.call() ?? true) &&
+          _sessionGeneration == AccountSession.generation &&
+          cacheScope == ReadCacheContext.scope) {
+        ObjectBoxCacheService.save(key, {
+          'items': items,
+        }, policy: widget.cachePolicy);
       }
     }
 
     List<Map<String, dynamic>>? onReadCache(String key) {
-      if (!mounted || _sessionGeneration != AccountSession.generation) {
+      if (!mounted ||
+          _revoked ||
+          _sessionGeneration != AccountSession.generation ||
+          cacheScope != ReadCacheContext.scope) {
         return null;
       }
-      final cached = ObjectBoxCacheService.read(key);
+      final cached = ObjectBoxCacheService.read(
+        key,
+        policy: widget.cachePolicy,
+      );
       if (cached == null) return null;
+      _showingSavedData = true;
       return (cached['items'] as List?)?.cast<Map<String, dynamic>>();
     }
 

@@ -19,6 +19,7 @@ class VisitDetailsCubit extends VerifiedActionCubit<TenantVisitDetailsContent> {
         CrudBaseParmas<TenantVisitDetailsContent>(
           api: ApiConstants.tenantVisitRequestDetails(visitId),
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.privateMemory,
           cacheKey: 'tenant_visit_details_$visitId',
           mapper: (json) =>
               TenantVisitDetailsContent.fromJson(visitJsonMap(json)),

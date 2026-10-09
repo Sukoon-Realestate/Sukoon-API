@@ -19,18 +19,16 @@ class VisitRatingStars extends StatelessWidget {
       children: [
         for (int star = 1; star <= 5; star++)
           IconButton(
+            tooltip: '${LocaleKeys.tenantVisitRateTitle}: $star/5',
             onPressed: () => onRatingSelected(star),
             visualDensity: VisualDensity.compact,
-            constraints: BoxConstraints.tightFor(
-              width: (size + 8).r,
-              height: (size + 8).r,
-            ),
+            constraints: BoxConstraints(minWidth: 44, minHeight: 44),
             padding: EdgeInsets.zero,
             icon: Icon(
               star <= rating ? Icons.star_rounded : Icons.star_border_rounded,
               color: star <= rating
                   ? AppColors.gold
-                  : context.appColor(AppColors.grayPale),
+                  : context.appColor(AppColors.sokoonGray),
               size: size.r,
             ),
           ),

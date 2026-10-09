@@ -1,3 +1,4 @@
+import 'package:melos_core/core/local_db/read_cache_policy.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
 import 'package:melos_core/core/widgets/exeption_view.dart';
@@ -23,6 +24,7 @@ class _MyReviewsListState extends State<MyReviewsList> {
     shrinkWrap: false,
     asyncCall: (_, page) => MyReviewsData.getPage(page),
     cacheKey: MyReviewsData.cacheKey,
+    cachePolicy: ReadCachePolicy.privateMemory,
     cacheToJson: (review) => review.toJson(),
     cacheFromJson: MyReview.fromJson,
     emptyListView: const MyReviewsEmptyState(),

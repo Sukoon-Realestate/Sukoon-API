@@ -17,6 +17,7 @@ class PropertySubmissionCubit
   }) : super(const PropertyDetailsModel.initial());
   final RentalOfferCapabilities capabilities;
   PropertyDetailsModel? recoveryProperty;
+  bool outcomeUnknown = false;
 
   Future<void> save({
     required OwnerAddPropertyFormState form,
@@ -24,6 +25,8 @@ class PropertySubmissionCubit
     required void Function(PropertyDetailsModel property) onSuccess,
   }) async {
     if (isClosed || isLoading || !checkVerification()) return;
+    recoveryProperty = null;
+    outcomeUnknown = false;
     if (!form.canSaveToServer(capabilities)) {
       setError();
       updateErrorMessage(
@@ -43,44 +46,59 @@ class PropertySubmissionCubit
     }
     final bool isCreating = propertyId == null;
     await executeAsyncWithBaseModel(
-      operation: () => baseCrudUseCase.call(
-        CrudBaseParmas<PropertyDetailsModel>(
-          api: isCreating
-              ? ApiConstants.createProperty
-              : ApiConstants.propertyDetails(propertyId),
-          httpRequestType: isCreating
-              ? HttpRequestType.post
-              : HttpRequestType.patch,
-          body: form.toJson(isEditing: !isCreating, capabilities: capabilities),
-          headers: form.needsOfferCapability
-              ? {
-                  if (isCreating) 'Idempotency-Key': form.submissionKey,
-                  'X-Rental-Offers-Version': '1',
-                }
-              : null,
-          isFromData: true,
-          sendTimeout: ConstantManager.uploadSendTimeout,
-          mapper: (json) {
-            final PropertyDetailsModel property = PropertyDetailsModel.fromJson(
-              Map<String, dynamic>.from(json as Map),
-            );
-            if (property.id.trim().isEmpty) {
-              throw const FormatException('Missing saved property ID');
-            }
-            recoveryProperty = property;
-            if (form.needsOfferCapability &&
-                !RentalInventoryConfirmation.matches(
-                  form.submissionInventory!,
-                  property.rentalInventory,
-                  includeMedia: capabilities.canAssociateMedia,
-                )) {
-              throw FormatException(LocaleKeys.rentalIncompatibleResponse);
-            }
-            return property;
-          },
-        ),
-      ),
+      operation: () async {
+        final result = await baseCrudUseCase.call(
+          CrudBaseParmas<PropertyDetailsModel>(
+            api: isCreating
+                ? ApiConstants.createProperty
+                : ApiConstants.propertyDetails(propertyId),
+            httpRequestType: isCreating
+                ? HttpRequestType.post
+                : HttpRequestType.patch,
+            body: form.toJson(
+              isEditing: !isCreating,
+              capabilities: capabilities,
+            ),
+            headers: form.needsOfferCapability
+                ? {
+                    if (isCreating) 'Idempotency-Key': form.submissionKey,
+                    'X-Rental-Offers-Version': '1',
+                  }
+                : null,
+            isFromData: true,
+            sendTimeout: ConstantManager.uploadSendTimeout,
+            mapper: (json) {
+              final PropertyDetailsModel property =
+                  PropertyDetailsModel.fromJson(
+                    Map<String, dynamic>.from(json as Map),
+                  );
+              if (property.id.trim().isEmpty ||
+                  (!isCreating && property.id != propertyId)) {
+                throw const FormatException('Missing saved property ID');
+              }
+              recoveryProperty = property;
+              if (form.needsOfferCapability &&
+                  !RentalInventoryConfirmation.matches(
+                    form.submissionInventory!,
+                    property.rentalInventory,
+                    includeMedia: capabilities.canAssociateMedia,
+                  )) {
+                throw FormatException(LocaleKeys.rentalIncompatibleResponse);
+              }
+              return property;
+            },
+          ),
+        );
+        final failure = result.tryGetError();
+        outcomeUnknown =
+            failure != null &&
+            (failure.outcomeUnknown ||
+                (failure.statusCode == null && failure.transport == null) ||
+                (failure.statusCode ?? 0) >= 500);
+        return result;
+      },
       onSuccess: (model) {
+        ObjectBoxCacheService.removePublicCollections();
         ObjectBoxCacheService.remove('property_details_${model.data.id}');
         ObjectBoxCacheService.remove('owner_properties');
         for (final status in ['under_review', 'accepted', 'rejected']) {

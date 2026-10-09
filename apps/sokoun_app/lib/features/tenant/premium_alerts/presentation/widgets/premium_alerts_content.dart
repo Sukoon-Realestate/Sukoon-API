@@ -1,3 +1,4 @@
+import 'package:melos_core/core/local_db/read_cache_policy.dart';
 import 'package:melos_core/config/language/languages.dart';
 import 'package:sokoun_app/features/shared/premium/presentation/cubits/feature_configuration_cubit.dart';
 import 'package:sokoun_app/features/shared/premium/presentation/widgets/shared/feature_configuration_view.dart';
@@ -106,6 +107,7 @@ class _PremiumAlertsContentState extends State<PremiumAlertsContent> {
             ),
           ),
           cacheKey: PremiumAlertsData.cacheKey,
+          cachePolicy: ReadCachePolicy.privateMemory,
           cacheToJson: (item) => item.toJson(),
           cacheFromJson: PremiumSearchAlert.fromJson,
           asyncCall: (_, page) => PremiumAlertsData.getPage(page: page),

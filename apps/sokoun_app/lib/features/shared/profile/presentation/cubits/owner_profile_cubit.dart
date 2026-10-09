@@ -10,6 +10,7 @@ class OwnerProfileCubit extends AsyncCubit<OwnerProfileContent> {
         CrudBaseParmas<OwnerProfileContent>(
           api: ApiConstants.ownerProfile,
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.privateMemory,
           cacheKey: OwnerProfileContent.cacheKey,
           mapper: (json) => OwnerProfileContent.fromJson(profileJsonMap(json)),
           fromCacheJson: OwnerProfileContent.fromJson,

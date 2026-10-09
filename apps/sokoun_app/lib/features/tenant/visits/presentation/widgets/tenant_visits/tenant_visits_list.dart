@@ -53,6 +53,7 @@ class TenantVisitsList extends StatelessWidget {
         selectedFilter,
         requests: useRequestEndpoint,
       ),
+      cachePolicy: ReadCachePolicy.privateMemory,
       cacheToJson: (item) => item.toJson(),
       cacheFromJson: TenantVisitContent.fromJson,
       emptyListView: _buildEmptyState(),

@@ -9,6 +9,7 @@ class ProfileSettingsCubit extends AsyncCubit<ProfileSettingsContent> {
         CrudBaseParmas<ProfileSettingsContent>(
           api: ApiConstants.profileSettings,
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.privateMemory,
           cacheKey: 'profile_settings',
           mapper: (json) =>
               ProfileSettingsContent.fromJson(profileJsonMap(json)),
@@ -22,14 +23,26 @@ class ProfileSettingsCubit extends AsyncCubit<ProfileSettingsContent> {
 
   void apply(ProfileSetting setting, bool value) {
     updateData(data.copyWith(values: {...data.values, setting: value}));
-    ObjectBoxCacheService.save('profile_settings', data.toJson());
   }
 }
 
 class ProfileSettingUpdateCubit extends AsyncCubit<ProfileSetting?> {
   ProfileSettingUpdateCubit() : super(null);
-  Future<bool> save(ProfileSetting setting, bool value) async {
-    if (isClosed || isLoading) return false;
+  final PreferenceWriteQueue _queue = PreferenceWriteQueue();
+  bool desiredValue(ProfileSetting setting, bool fallback) =>
+      _queue.valueFor(setting.apiKey, fallback);
+  Future<bool> save(ProfileSetting setting, bool value, {bool? baseline}) =>
+      _queue.update(
+        key: setting.apiKey,
+        baseline: baseline ?? !value,
+        value: value,
+        send: (key, value) => _send(
+          ProfileSetting.values.firstWhere((entry) => entry.apiKey == key),
+          value,
+        ),
+      );
+  Future<bool> _send(ProfileSetting setting, bool value) async {
+    if (isClosed) return false;
     updateData(setting);
     bool succeeded = false;
     await executeAsyncWithBaseModel(

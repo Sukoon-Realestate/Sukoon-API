@@ -30,6 +30,7 @@ abstract final class PremiumApiData {
       CrudBaseParmas<T>(
         api: endpoint,
         httpRequestType: HttpRequestType.get,
+        cachePolicy: ReadCachePolicy.privateMemory,
         queryParameters: query,
         cacheKey: AccountSession.cacheKey(key),
         mapper: (json) => fromJson(premiumMap(json)),

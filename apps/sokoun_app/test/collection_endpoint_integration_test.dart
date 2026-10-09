@@ -1,3 +1,4 @@
+import 'helpers/account_test_dependencies.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -15,6 +16,7 @@ import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_response.dart';
 import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/navigation/navigator.dart';
+import 'package:melos_core/core/helpers/cache_service.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/network/network_request.dart';
 import 'package:melos_core/core/network/network_service.dart';
@@ -42,6 +44,7 @@ void main() {
           (call) async => call.method == 'getAll' ? <String, Object>{} : true,
         );
     await EasyLocalization.ensureInitialized();
+    await CacheStorage.init();
     final font = FontLoader(ConstantManager.fontFamily);
     for (final weight in ['Regular', 'Medium', 'Bold', 'ExtraBold']) {
       font.addFont(
@@ -66,6 +69,7 @@ void main() {
   });
   setUp(() async {
     await injector.reset();
+    await registerAuthenticatedTestAccount();
     repository = _Repository();
     network = _Network();
     injector.registerSingleton<BaseCrudUseCase>(
@@ -149,7 +153,7 @@ void main() {
     final cubit = VisitDetailsCubit();
     addTearDown(cubit.close);
     final request = cubit.load('visit-id');
-    await cubit.load('visit-id');
+    final duplicate = cubit.load('visit-id');
     expect(repository.requests, hasLength(1));
     expect(
       repository.requests.single.api,
@@ -158,6 +162,7 @@ void main() {
     expect(repository.requests.single.httpRequestType, HttpRequestType.get);
     repository.gate!.complete();
     await request;
+    await duplicate;
     expect(cubit.data.note, isNotEmpty);
   });
 
@@ -185,6 +190,11 @@ void main() {
   test(
     'review uses collection criteria and leaves overall rating to the server',
     () async {
+      repository.response = {
+        'id': 'v',
+        'status': 'completed',
+        'can_review': true,
+      };
       final cubit = VisitReviewCubit();
       addTearDown(cubit.close);
       expect(
@@ -204,7 +214,8 @@ void main() {
         ),
         isTrue,
       );
-      final request = repository.requests.single;
+      expect(repository.requests.first.api, 'properties/visits/requests/v/');
+      final request = repository.requests.last;
       expect(request.api, 'properties/visits/v/review/');
       expect(request.httpRequestType, HttpRequestType.post);
       expect(request.body, {

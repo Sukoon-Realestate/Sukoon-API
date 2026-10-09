@@ -1,3 +1,4 @@
+import 'package:melos_core/core/local_db/read_cache_policy.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -129,6 +130,7 @@ class _OwnerVisitRequestsContentState extends State<OwnerVisitRequestsContent> {
       ),
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w),
       cacheKey: _data.cacheKeyFor(widget.selectedFilter),
+      cachePolicy: ReadCachePolicy.privateMemory,
       cacheToJson: (request) => request.toJson(),
       cacheFromJson: OwnerVisitRequestContent.fromJson,
       onSuccess: (_, requests) {

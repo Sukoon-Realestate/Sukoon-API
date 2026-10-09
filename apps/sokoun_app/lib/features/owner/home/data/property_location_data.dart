@@ -28,7 +28,7 @@ class NativePropertyLocationData implements PropertyLocationDataSource {
     final locations = await geocoding
         .locationFromAddress(query)
         .timeout(const Duration(seconds: 12));
-    for(geocoding.Location location in locations){
+    for (geocoding.Location location in locations) {
       log('the valid location is ${location.latitude}');
     }
     return locations

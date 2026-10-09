@@ -13,6 +13,7 @@ class OwnerDashboardCubit extends AsyncCubit<OwnerDashboardModel> {
         CrudBaseParmas<OwnerDashboardModel>(
           api: ApiConstants.ownerDashboard,
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.privateMemory,
           cacheKey: 'owner_dashboard',
           mapper: (json) => OwnerDashboardModel.fromJson(json),
           fromCacheJson: OwnerDashboardModel.fromJson,

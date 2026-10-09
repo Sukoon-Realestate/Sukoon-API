@@ -7,7 +7,7 @@ SHELL := /bin/bash
 
 .PHONY: help clean run apk ipa appbundle ios upgrade \
 	handlePods openXcode flutterfireSetup translations \
-	architectureCheck accountCheck accountUiReview freeFeaturesCheck freeFeaturesUiReview featureToolsCheck featureToolsUiReview mobileBackendCheck mainJourneyCheck mainJourneyUiReview gradleFix clearGradleCache buildIos distribute \
+	architectureCheck professionalCheck professionalUiReview accountCheck accountUiReview freeFeaturesCheck freeFeaturesUiReview featureToolsCheck featureToolsUiReview mobileBackendCheck mainJourneyCheck mainJourneyUiReview gradleFix clearGradleCache buildIos distribute \
 	distributeAndroid fingerPrint kill sha
 
 # Show available commands
@@ -25,6 +25,8 @@ help:
 	@echo "  make flutterfireSetup"
 	@echo "  make translations"
 	@echo "  make architectureCheck"
+	@echo "  make professionalCheck"
+	@echo "  make professionalUiReview PROFESSIONAL_REVIEW_DIR=/tmp/sokoun-professional-ui"
 	@echo "  make accountCheck"
 	@echo "  make accountUiReview REVIEW_DIR=/tmp/sokoun-account-ui"
 	@echo "  make freeFeaturesCheck"
@@ -134,10 +136,20 @@ mainJourneyCheck:
 	flutter analyze --no-pub --no-fatal-infos --no-fatal-warnings
 	flutter test --no-pub test/main_journey_features_test.dart test/main_journey_ui_review_test.dart test/feature_tools_contracts_test.dart test/feature_tools_flows_test.dart test/feature_architecture_test.dart
 
+PROFESSIONAL_REVIEW_DIR ?= /tmp/sokoun-professional-ui
 JOURNEY_REVIEW_DIR ?= /tmp/sokoun-main-flow-after
 ## Render main app placements in both languages/themes, six widths and three text sizes.
 mainJourneyUiReview:
 	flutter test --no-pub test/main_journey_ui_review_test.dart --dart-define=MAIN_JOURNEY_UI_REVIEW_DIR=$(JOURNEY_REVIEW_DIR)
+
+## Verify protected recovery, concurrent intentions, delivery and destinations.
+professionalCheck:
+	flutter analyze --no-pub --no-fatal-infos --no-fatal-warnings
+	flutter test --no-pub --concurrency=1 test/professional_recovery_test.dart test/professional_consistency_test.dart test/professional_cache_destinations_test.dart test/owner_draft_recovery_test.dart test/property_media_handoff_test.dart test/chat_thread_cubit_test.dart test/chat_flow_test.dart test/workspace_navigation_test.dart test/feature_architecture_test.dart test/professional_ui_review_test.dart
+
+## Export the recovery UI matrix for Arabic/English and accessible layouts.
+professionalUiReview:
+	flutter test --no-pub test/professional_ui_review_test.dart --dart-define=PROFESSIONAL_UI_REVIEW_DIR=$(PROFESSIONAL_REVIEW_DIR)
 
 # Stop Gradle and remove lock files
 gradleFix:

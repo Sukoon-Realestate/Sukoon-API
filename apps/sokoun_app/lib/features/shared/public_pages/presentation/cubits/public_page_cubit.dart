@@ -16,6 +16,7 @@ class PublicPageCubit extends AsyncCubit<PublicPageContent> {
         CrudBaseParmas<PublicPageContent>(
           api: page.endpoint,
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.privateMemory,
           queryParameters: {'lang': language},
           cacheKey: 'public_page_${page.name}_$language',
           mapper: (json) => PublicPageContent.fromJson(

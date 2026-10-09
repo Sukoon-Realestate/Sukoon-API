@@ -56,11 +56,6 @@ void main() {
       const MethodChannel('dev.fluttercommunity.plus/connectivity_status'),
       (_) async => null,
     );
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
-          const MethodChannel('plugins.it_nomads.com/flutter_secure_storage'),
-          (_) async => null,
-        );
     await EasyLocalization.ensureInitialized();
     await CacheStorage.init();
   });
@@ -196,10 +191,12 @@ void main() {
   );
 
   test('saves for distinct property IDs remain independent', () async {
+    await registerAuthenticatedTestAccount();
     final cubit = PropertySaveCubit();
     addTearDown(cubit.close);
     final first = cubit.saveProperty(propertyId: 'one', onError: (_) {});
     final second = cubit.saveProperty(propertyId: 'two', onError: (_) {});
+    await pumpEventQueue();
     expect(repository.requests, hasLength(2));
     for (final request in repository.requests) {
       request.complete({});

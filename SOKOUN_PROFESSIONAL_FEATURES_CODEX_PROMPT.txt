@@ -1,0 +1,249 @@
+You are a senior Flutter engineer working inside the existing Sokoun / سكون repository, also referred to as Sokoon, Sukoon, or darak-app.
+
+Implement the professional product-experience improvements below, tailored to the actual features and business rules of this application. This is an implementation task: inspect the code, make the changes, verify the affected behavior, and report the result. Do not stop after producing a plan.
+
+The attached PROJECT_BUSINESS_DETAILS(3).md describes a repository snapshot reviewed on 6 October 2026. Use it as business context, and verify every existing implementation against the current checkout. This prompt deliberately includes the essential context so you can proceed if the business file is not present locally. Do not mistake a documented endpoint for a deployed service, or a prototype for implemented functionality.
+
+1. SCOPE AND BUSINESS RULES
+
+Primary target: apps/sokoun_app. Modify packages/core only where needed for shared behavior and preserve compatibility with other consumers. Follow applicable AGENTS.md instructions. Reuse the existing state management, dependency injection, routing, networking, storage, theme, localization, and error-handling conventions. Inspect pubspec.yaml and existing implementations before choosing dependencies. Avoid a broad architecture rewrite or a general-purpose offline framework.
+
+Leave apps/landing_page and the React design prototype outside this implementation scope. Backend source is not included according to the supplied document; verify the checkout before assuming otherwise. Do not invent remote capabilities.
+
+Preserve these business invariants:
+
+- Sokoun is an Egyptian rental discovery and viewing marketplace. A viewing request is an appointment request, not a lease, an occupancy reservation, or a payment.
+- One authenticated account can use tenant and owner workspaces. Switching workspace changes UI context, not authorization. Identity, conversations, and common settings belong to the account.
+- Guests may browse public discovery and details. Protected actions require authentication. Preserve existing resume-after-login behavior and clear the pending intent if authentication is canceled.
+- Arabic RTL is the initial/fallback experience; English LTR, the existing light/dark/system themes, and EGP formatting must remain supported.
+- Account KYC, email verification, property moderation status, property verification, and ownership-proof verification are distinct states. Do not collapse them or decide unresolved policy yourself.
+- Owner property edits return the listing to under_review under the returned handoff. Consequently, autosave must save LOCAL drafts, never silently PATCH the property on every keystroke.
+- The documented form requires 10–25 usable photos and a 1–60-second selected video at submission. Incomplete local drafts are allowed. Verify current form rules and newer authoritative handoffs; preserve any explicit newer property-type-specific rules instead of restoring outdated snapshot validation.
+- The first/cover photo is counted once. Retained image IDs, captions, explicit removals, and omitted-file semantics matter when editing.
+- Ownership proof, identity documents, private contracts, support attachments, and authorization-controlled contact data must not enter a public property cache or gallery.
+- The server controls ownership, publication, availability, conflicts, review eligibility, and allowed actions. Cached permission flags are not current authorization.
+- Successful property deletion requires acknowledgment of the requested property ID and deleted=true. Preserve confirmation and conflict handling. Do not add fake undo to property/account deletion.
+- No new payment gateway, rent collection, commissions, lease creation, paid promotion, admin console, chat attachments/calls, or new moderation policy is part of this task.
+
+2. AUDIT FIRST, THEN IMPLEMENT
+
+Inspect reachable code rather than relying on filenames alone. Useful starting points, if still present:
+
+- design.md, root/mobile pubspec.yaml, and existing test setup.
+- apps/sokoun_app/lib/features/main_view/presentation/workspace_navigation.dart and data/workspace_preferences.dart.
+- apps/sokoun_app/lib/features/shared/auth/data/auth_session_data.dart.
+- apps/sokoun_app/lib/features/tenant/home, tenant/favorites, and tenant/visits.
+- apps/sokoun_app/lib/features/owner/home, owner/properties, and owner/visits.
+- apps/sokoun_app/lib/features/shared/chat, notifications, profile, and support.
+- MOBILE_PROPERTY_MEDIA_EDITING_DELETION_HANDOFF.md; it supersedes older property-media proposals where they conflict.
+- docs/owner_property_status_tabs_backend.md.
+- apps/sokoun_app/MOBILE_NOTIFICATIONS_README.md.
+- docs/profile_settings_support_backend.md and its proposed collection.
+- collection.json and packages/core/lib/core/network/api_endpoints.dart, excluding unrelated legacy endpoints.
+
+The snapshot already describes optimistic favorites with rollback, favorite Undo through a re-save request, five recent searches, search filters, tab/workspace preferences, authentication destination recovery, partial property-upload recovery while running, chat reconnect/pending states, notification preferences/routing, themes, and responsive layouts. Verify and extend these implementations instead of duplicating them.
+
+Create a concise feature audit recording: current implementation and files, gap, change required, dependencies, and acceptance scenario. Classify each item as existing/verified, implementing, backend-blocked, or deliberately deferred. Then execute the feasible work without waiting for approval of routine implementation decisions. Resolve a blocker narrowly and continue unrelated work.
+
+3. DURABLE LOCAL DRAFTS AND RESTORATION
+
+Implement recoverable local drafts where losing input is costly:
+
+- Owner create/edit property: every form step, entered values, selected IDs, media order/captions/cover, new public media references, and pending removals.
+- Tenant viewing request: property ID, selected date/time, and note. Restore as an unsubmitted draft and revalidate before submission.
+- Visit review: visit ID, three scores, and optional comment; recheck eligibility before submitting.
+- Chat: composer text per conversation, separate from any submitted outgoing message.
+- Profile editing: preserve supported editable fields; do not persist passwords, OTPs, or identity-document inputs as ordinary drafts.
+- Support ticket creation/reply: preserve text when the existing screen/service is supported. Draft recovery must not imply that a proposed support service is operational.
+- Owner availability editor: preserve unsaved changes separately from the latest server schedule and recheck booked/locked slots before saving.
+
+Use the existing persistence mechanism if suitable; otherwise introduce the smallest maintainable local store. Version the draft schema. Namespace private records by authenticated account and environment, and by workspace only where the business entity is workspace-specific. Chat/profile must not become two conflicting copies across tenant and owner.
+
+Use debounced saves, atomic writes, and ordered writes so an older save cannot overwrite a newer one. Handle storage failure honestly: show an unsaved state and retain the existing leave guard. Autosave must not depend only on an app-pause callback.
+
+On entering a flow with a valid draft, offer Continue draft / Discard draft with localized copy. Show a subtle Saved locally / Saving / Couldn't save status where useful. Do not show “published” or “submitted” for a local save. Remove a draft after confirmed server success, explicit discard, successful logout/account removal, or the existing session cleanup path as appropriate. Stop private pending work before clearing account data.
+
+For edit drafts, record the base server revision or updated_at when available. If the listing changed remotely, do not silently apply old removals or overwrite newer fields. Refresh and ask the user to review conflicts. Preserve intentional draft edits when a delayed initial fetch completes.
+
+For public listing media, copy newly selected files to app-managed persistent draft storage when needed; picker temporary paths are not durable. Avoid duplicate copies, clean up only owned temporary files, and use an explicit bounded disk budget. If a restored file is missing, mark it for reselection without discarding other fields. Do not persist KYC or ownership-proof files in this general draft store; retain a “reselect private document” marker unless an existing protected document-storage implementation is suitable and reviewed.
+
+Restore tab state, relevant search filters, scroll position, and loaded-list identity when returning from details or switching tabs. Persist a minimal restoration snapshot for relaunch, not serialized widget/controller instances or an unbounded list history. Respect auth state and current workspace, and never reopen a private route from a previous account.
+
+4. USEFUL OFFLINE READS AND PARTIAL-FAILURE RECOVERY
+
+Prioritize public Home/discovery, public property details, and type/filter/geography catalogs. Render valid cached content promptly, then refresh. Preserve visible content and scroll position during refresh. Distinguish initial loading, refreshing, empty success, stale cached data, request failure, and pagination failure.
+
+Cache only the public property representation; overlay account-specific favorite state separately. Never cache an owner's full property response as public details. Cache keys must account for environment, language, normalized filters, sort, page/cursor, and account/workspace where applicable. Bound entry count, size, and age using explicit maintainable policies. Do not indiscriminately cache every GET in the network client.
+
+For private favorites, visits, owner lists, or conversation history, reuse suitable existing account-scoped protected persistence if available. If introducing storage for these reads, limit fields and protect private content with supported at-rest protection; do not put messages or private records into an unprotected convenience cache. Otherwise retain in-session data and defer private disk caching while completing public caching.
+
+Show meaningful “Showing saved data” / “Last updated…” feedback when stale data matters. Connectivity signals are hints; real requests decide whether a service is reachable. A socket failure is not proof that all HTTP services are offline. Retry reads with bounded backoff and a user retry option. Avoid reconnect storms, polling loops, and repeated global snackbars.
+
+After a successful write, invalidate or reconcile affected caches. Confirmed deletion, 404/410, or an authorization response must remove/invalidate inaccessible content rather than continuing to serve it from stale fallback. A transient refresh failure should preserve usable non-revoked content.
+
+Keep these writes online and server-confirmed: create/submit property, viewing submission/cancellation, owner accept/reject, availability update, review submission, verification submission, support submission, profile save, and deletions. Preserve input when they cannot complete. Do not queue time-sensitive or destructive actions for surprise execution later.
+
+If a mutation times out after transmission, treat its result as unknown. Reconcile through an authoritative read or a documented idempotency mechanism before offering a retry that could duplicate it. Disabling a button alone does not solve this failure mode.
+
+Owner dashboard sections, reviews on property details, analytics, and other independent reads should fail independently where the architecture permits. Preserve successful sections. Paginated-list failure must keep already loaded items and allow retrying that page without duplicates or skips. Do not invent missing revenue or analytics values.
+
+5. CONSISTENT OPTIMISTIC FAVORITES AND HONEST UNDO
+
+Harden the existing favorites flow across Home, search, details, and Saved using the existing shared state/repository pattern.
+
+- Saving/unsaving updates visible UI immediately, then reconciles with the separate documented save/unsave operations.
+- Serialize or coalesce rapid actions per property. An older failure or delayed fetch must not roll back the user's newest intent.
+- Maintain a confirmed server baseline and a latest desired state rather than toggling whichever stale boolean happens to be visible.
+- Roll back a failed operation coherently across screens, preserve unrelated properties, and provide a retry action.
+- Preserve Saved-list order, filters, and counts as supported by authoritative data.
+- Undo unsave performs the real re-save operation. Serialize it behind an in-flight unsave where necessary; handle Undo failure honestly.
+- Keep favorite mutations online for this task unless the existing backend contract explicitly supports safe offline reconciliation. Offline reading remains useful.
+- Recheck the account/session generation before applying late responses.
+
+Apply reversible local undo to appropriate draft actions, such as removing a not-yet-uploaded photo. Never make server moderation, booking decisions, identity approval, property deletion, or account deletion look successful before confirmation. Sending a message may show Pending immediately; that is distinct from Sent.
+
+6. RELIABLE PROPERTY MEDIA UPLOADS
+
+Extend the existing create-then-upload-remaining-images workflow. Do not replace it with a second incompatible upload architecture.
+
+Show truthful per-file queued/uploading/uploaded/failed state, byte progress when the transport provides it, and retry for failed files. Aggregate progress must reflect actual work. Reuse validation and preserve cover ordering, captions, stable image IDs, retained IDs, and explicit removals. Avoid image processing on the UI thread; do not apply destructive compression that breaks readability or supported formats.
+
+Persist the created property ID, known uploaded image IDs, local pending public-media references, and upload session metadata in the draft as soon as available. After interruption/relaunch, load the owner's authoritative property detail to reconcile completed work before uploading missing files. Never recreate a known property merely because some images failed.
+
+If creation or an upload may have succeeded but its acknowledgment was lost, avoid blind replay. Use supported idempotency or authoritative matching/reconciliation. If the contract cannot identify the outcome safely, preserve the draft and show a recoverable state; document the exact backend gap instead of claiming duplicate prevention.
+
+Use bounded concurrency and bounded safe retries. Canceling an in-flight request does not prove the server canceled its write; reconcile before retry/removal. Remove/cancel controls must not bypass the 10–25-photo submission rule or delete existing server media accidentally.
+
+Do not call full-file retry “resumable upload.” Byte-level pause/resume requires a real chunked/resumable backend contract. If absent, support retrying the failed file and recovering the upload session only. Do not promise ongoing uploads while the OS has terminated the app.
+
+Only show the confirmed listing/submission state after the required operations succeed. Keep partial completion visible with a real route back to finish the same property. Every automatic background network PATCH risks restarting moderation; do not introduce one.
+
+7. SEARCH THAT FITS THE EXISTING API
+
+Preserve the actual free-text/area search contract, backend catalogs, existing supported filters, default ordering, and pagination. Nearby search currently derives area text from location; do not describe it as radius/distance-ranked search.
+
+Add or harden:
+
+- Debounced text search, cancellation or stale-response suppression, and correct handling when filters change during a request.
+- Clear active-filter chips, a reset action, and separate no-results and request-error states.
+- Existing recent-search behavior, retaining the five-entry limit and remove/clear actions.
+- Restoring the search results/filter/scroll context after property details.
+- A small local Saved Searches feature: name, save, rename/delete, and reapply a complete supported filter set. Validate saved catalog IDs against current options and explain options that are no longer available.
+
+Keep Saved Searches account-scoped, or guest-local with explicit isolation; never silently merge one account's data into another. Suggestion UI may use real recent searches and loaded catalog values. Do not pretend there is an autocomplete service, AI ranking, or typo-tolerant remote search.
+
+“Notify me when a matching property appears” requires a backend saved-search/subscription service. Do not ship a nonfunctional alert switch, local polling substitute, or misleading confirmation. Document the missing contract separately.
+
+8. VIEWING REQUESTS, OWNER AVAILABILITY, AND REVIEWS
+
+Fix the documented access gap by providing a direct Manage viewing availability entry from the relevant owned property management destination, with its actual property ID. The owner must not need an existing incoming request to reach that property's schedule. Reuse the existing availability editor and server ownership checks.
+
+Inspect whether the current tenant available_dates/slots service has a sufficiently defined contract. If it does, integrate authoritative selectable slots, loading/empty/error states, and conflict refresh. Never call an owner-private schedule endpoint as a tenant workaround. If tenant slot support is still unconfirmed, preserve the existing request-time flow, clearly treat it as a requested time, and record the backend dependency.
+
+Reject a past selected time using the established business-timezone and serialization rules. Do not silently invent timezone semantics or hardcode a fixed Cairo UTC offset. If the API does not define the timezone, document the ambiguity and avoid changing payload interpretation; validate consistently with existing behavior until resolved. Restore drafts with stale times marked for correction.
+
+Debounce/lock duplicate submissions, preserve user input on error, use documented idempotency if supported, and re-fetch state after conflicts or an ambiguous outcome. Do not automatically rebook a different slot. Owner accept/reject, tenant cancellation, and availability saves stay server-confirmed. Re-fetch affected request lists, calendar state, detail, and dashboard counts without reloading the whole app.
+
+Honor server can_cancel/can_chat/can_review and owner decision flags. Preserve existing fallback rules when flags are absent until an authoritative newer contract changes them; report the accepted-versus-completed review-policy ambiguity rather than deciding it through this task.
+
+Fix the notification-to-review integration: resolve a real visit ID, load the authorized current visit, check current eligibility, and then open the existing rating form with that ID. The visit-details path must continue to work. When a notification lacks enough information, navigate to a meaningful safe destination or explain the unavailable action. Never open a submission form with a fabricated/missing ID.
+
+Do not add rescheduling, automatic completion, or new rejection-reason policy without an existing contract.
+
+9. CHAT RECOVERY WITHOUT DUPLICATE DELIVERY
+
+Reuse the current REST history plus authenticated raw WebSocket /ws/chat/ stack. Keep existing reconnect, message/read events, stable-ID deduplication, and REST fallback behavior, but inspect the fallback race carefully.
+
+- Persist composer drafts per account/conversation with appropriate private-data protection.
+- Preserve loaded history and scroll position on temporary connection loss; show Connecting / Reconnecting / Offline / Failed to send appropriately.
+- Reconcile REST history and socket events by stable server message ID. Preserve unread/read behavior and do not double-count a message delivered over two paths.
+- Preserve the text-only 5,000-character and nonblank rules. Conversation creation uses recipient user_id, not a fabricated property-specific contract.
+- Previous-history screens remain read-only and must not start a sending connection.
+- Cancel socket/retry work and ignore late callbacks on logout, session reset, and account switch. Workspace changes must not create duplicate connections for the same account.
+
+Inspect real server support for client-generated message IDs, acknowledgments, and idempotency across BOTH WebSocket and REST. A client UUID by itself does not provide server deduplication.
+
+If the contract supports reliable deduplication, implement a small durable outgoing queue with stable client IDs and queued/sending/awaiting-confirmation/sent/failed states. Persist before transmission, preserve per-conversation order, reconcile acknowledgments/history, and replay safely on the next authorized active connection. Remove an item only after authoritative confirmation.
+
+If that support is absent, still implement durable unsent composer drafts and improve in-session delivery/recovery. Do not replay ambiguous messages automatically after restart or socket timeout. A lost WebSocket acknowledgment must not blindly trigger a duplicate REST send. Preserve the text, explain an unknown delivery state when necessary, and specify the backend contract needed to finish durable replay. Do not promise exactly-once delivery or background delivery after app termination.
+
+The report sheet is documented as closing without submitting a report. Check its current implementation. Wire a real existing report contract if present; otherwise remove the false success outcome and explain that reporting could not be submitted, offering real support only if that service is available. Do not fake delivery of a complaint or add a block-user success state without server support.
+
+10. UNIFIED LINKS, NOTIFICATIONS, AND AUTHENTICATION RECOVERY
+
+Extend the existing navigation mechanism into one typed, validated destination resolver used by property shares, supported app links, notification taps, and notification-center actions. Preserve business workspace selection for owner requests/properties versus tenant visits, with chat/profile shared appropriately.
+
+Support cold start, warm start, already-open target, signed-out then signed-in, canceled login, a different currently selected workspace, inaccessible/deleted resources, and repeated delivery of the same tap. Wait for navigation/session initialization before dispatch. Deduplicate taps and clear or consume pending intents at the correct point.
+
+After login, resume the original authorized destination or eligible action. Do not turn destination recovery into automatic execution of a destructive action. Authentication canceled or account identity changed must not leak a previous user's private destination/content.
+
+Use an existing canonical property share URL and the repository's actual domain/flavor settings. Validate allowed schemes/hosts, route shape, IDs, resource type, and authorization. Never invent a production domain, return arbitrary URLs through the router, or confuse a property ID with a visit/request ID.
+
+Where official app-link association files, entitlements, or Android intent filters need changes, use known app/domain identifiers and verified current platform guidance. If hosting/association configuration is outside the repo, provide the exact handoff and describe that integration as pending verification. Basic app links do not automatically provide deferred deep links after a store installation.
+
+Preserve the existing server-backed notification preferences:
+visit_notifications, owner_messages, property_updates, security_alerts, promotions_and_updates.
+
+Honor server locked/required settings. Handle failed preference saves and rapid toggles without falsely marking them saved. Keep OS push permission separate from server subscriptions. Preserve device token registration/refresh/unregister behavior, account cleanup, and separate message/notification/workspace unread counts. Do not add per-conversation mute unless an actual mute contract exists.
+
+11. POLISH THE FLOWS YOU TOUCH
+
+Use existing components, theme tokens, localization, and typography. Add consistent local feedback, contextual retry, accessible tap targets/semantics, keyboard-safe forms, and text-scaling behavior. Verify Arabic RTL and English LTR, light/dark themes, and relevant wider layouts.
+
+Use skeletons only for initial loading where they fit the design. Keep existing content during refresh. Avoid multiple success dialogs, full-screen loading for small actions, or placeholder controls with no working behavior. Respect reduced motion and use animation/haptics only for meaningful feedback.
+
+Preserve current authentication/session semantics. Inspect existing refresh coordination if needed to prevent simultaneous expired requests from causing multiple refreshes or applying an old account response. Do not introduce a new authentication provider or rewrite login as part of this task.
+
+Reuse existing diagnostic tooling for storage/upload/chat recovery errors without exposing tokens, national IDs, document URLs, message bodies, or private contact data. Do not add an external monitoring account/SDK or transmit new telemetry without an existing approved integration.
+
+12. EXPLICITLY DEFER FEATURES THAT DO NOT FIT YET
+
+Record these decisions in the report, then continue with the applicable implementation:
+
+- Live Activities: pending property review and multi-day viewing requests are not a justified continuous live activity for this scope. Do not add native extensions for them.
+- Home-screen widgets: a future upcoming-viewing widget may be useful, but privacy, authoritative refresh, and platform integration require separate scope. Do not expose private appointments from a new widget here.
+- Biometrics: optional local app lock is distinct from authentication and is not essential to this marketplace upgrade. Do not replace login/session validation or add a cosmetic biometric-login button. Defer unless a complete existing feature simply needs repair.
+- Device/session management: a list of logged-in devices and remote revocation needs a real backend session service. FCM device registration is not that service.
+- Per-conversation mute, saved-search alerts, cross-device draft sync, resumable chunk uploads, and any unknown message replay need their respective documented services. Complete the locally useful parts and specify the exact missing capabilities.
+
+13. DELIVERY ORDER AND REQUIRED VERIFICATION
+
+Work in coherent stages, keeping the app runnable:
+
+1) Audit, shared account/session isolation, and restoration/draft storage foundations.
+2) Property drafts and media-session recovery; public caching and partial errors.
+3) Favorites/Undo consistency, search restoration and local Saved Searches.
+4) Viewing drafts, availability access, supported slot integration, and correct review notification routing.
+5) Chat composer/delivery recovery and supported durable outgoing behavior.
+6) Unified destination handling, preferences consistency, and final interaction/accessibility polish.
+
+Update a short checklist as stages complete. A backend blocker in one stage must not stop other applicable work. Do not ask me to approve each stage. If a business decision genuinely blocks a mutation, preserve current behavior, record it, and continue elsewhere.
+
+Use existing tests, adding focused behavior tests for changed persistence, concurrency, routing, and delivery logic. Avoid implementation-mirroring tests. At minimum, cover the relevant cases below with automated tests where practical and explicit manual verification otherwise:
+
+- Create/edit draft survives process restart and missing-media recovery; restore does not PATCH or reset moderation before explicit submission.
+- Rapid autosaves preserve the newest values; delayed fetches do not erase edits; a storage error does not claim the draft is saved.
+- A server-created property with failed remaining uploads resumes using the same property ID without duplicating known images.
+- Home/detail content survives transient refresh failure; private fields cannot enter public cache; confirmed removal/forbidden content does not remain available through fallback.
+- Search response arriving out of order cannot overwrite newer filters; restored Saved Searches handle removed catalog choices.
+- Rapid favorite toggles, API failure, late list refresh, and Undo all converge across Home/details/Saved.
+- A stale viewing draft is revalidated; conflict keeps the note and prompts correction; cancellation/acceptance do not show success on failure.
+- Availability can open for an owned property without any existing requests; booked slots remain protected after refresh.
+- Review notification supplies the actual visit ID and respects current action flags; malformed/missing IDs never open a broken rating form.
+- Chat pending state/history remain coherent during socket reconnect and delayed REST/socket acknowledgments; any durable replay uses the supported idempotency contract.
+- Cold/warm notification or property-link navigation, login completion/cancel, workspace change, repeat taps, and deleted/inaccessible targets.
+- Account A logout/session expiry followed by account B cannot expose drafts/history/private caches, dispatch A's pending writes, or apply A's late responses. Device-level appearance preferences may remain.
+- Proposed/unavailable support/report services never show fabricated success or ticket references.
+- Representative touched screens remain usable in Arabic/English, dark/light mode, large text, and a narrow screen.
+
+Run the relevant formatter, analyzer, and focused tests using the repository's Flutter tooling/version. Inspect existing scripts and commands rather than assuming a globally installed setup. Use simulator/device checks if available. Explicitly state any unavailable tooling or unverified native/backend behavior. Do not claim tests, device behavior, or live APIs were verified when they were not. Never use production mutations to test this task.
+
+14. FINAL DELIVERABLES
+
+Deliver the actual implementation plus:
+
+- A concise completion report mapping each requested improvement to changed files, observable behavior, and verification evidence. Clearly distinguish implemented and tested, existing and verified, client-ready but integration-unverified, backend-blocked, and deliberately deferred.
+- A small manual QA checklist for the key tenant/owner journeys.
+- One backend handoff only if needed. For each missing capability, describe current evidence, business purpose, proposed request/response semantics, ownership checks, idempotency/conflicts, errors, and acceptance examples. Explicitly label new endpoint names or payload fields as PROPOSED rather than existing. Avoid secrets and real personal records.
+
+Preserve unrelated work in the checkout. Do not reset user changes, mass-upgrade dependencies, publish, deploy, or run live destructive operations. Choose reasonable local implementation details autonomously and finish all supported parts. I want a functioning, carefully integrated improvement to Sokoun, not a set of disconnected demos or a plan that stops before implementation.

@@ -12,6 +12,7 @@ class VisitAvailabilityCubit extends AsyncCubit<VisitAvailabilityContent> {
         CrudBaseParmas<VisitAvailabilityContent>(
           api: ApiConstants.propertyAvailableDates(propertyId),
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.privateMemory,
           queryParameters: {if (date.isNotEmpty) 'date': date},
           cacheKey:
               'visit_availability_${UserModel.currentUser?.id ?? 'guest'}_${propertyId}_$date',

@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'package:sokoun_app/features/shared/recovery/data/models/text_form_draft.dart';
+import 'package:sokoun_app/features/shared/recovery/presentation/cubits/draft_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,6 +48,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     AppWorkspace.owner: 0,
   };
   final Set<int> _visited = {};
+  DraftCubit<TextFormDraft>? _tabRestoration;
+  bool _tabsRestored = false;
   AppWorkspace get _workspace => _workspaceCubit.state;
   int get _currentIndex => _selectedTabs[_workspace]!;
   List<HomeTab> get _tabs => _workspaceTabs[_workspace]!;
@@ -106,6 +111,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void dispose() {
     WorkspaceNavigation.detach(_applyWorkspace);
     WidgetsBinding.instance.removeObserver(this);
+    unawaited(_tabRestoration?.close());
     _accountCubit.close();
     _countsCubit.close();
     super.dispose();
@@ -128,6 +134,23 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     _sessionGeneration = AccountSession.generation;
     _workspaceCubit.initialize(userId);
     if (accountChanged) setState(() {});
+    if (!_tabsRestored && userId != null) {
+      _tabsRestored = true;
+      _tabRestoration = DraftCubit(TextFormDraft.store(flow: 'root_tabs'));
+      await _tabRestoration!.load();
+      if (!_hasCurrentSession) return;
+      final saved = _tabRestoration!.state.record?.value;
+      if (saved != null) {
+        setState(() {
+          for (final workspace in _workspaceTabs.keys) {
+            final int index = _workspaceTabs[workspace]!.indexWhere(
+              (tab) => tab.tab.name == saved[workspace.name],
+            );
+            if (index >= 0) _selectedTabs[workspace] = index;
+          }
+        });
+      }
+    }
     await Future.wait<void>([_refreshCounts(), _showLaunchDialogs()]);
   }
 
@@ -182,7 +205,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       return;
     }
     setState(() => _selectedTabs[_workspace] = index);
+    _saveTabs();
   }
+
+  void _saveTabs() => _tabRestoration?.schedule(
+    TextFormDraft({
+      for (final workspace in _selectedTabs.keys)
+        workspace.name:
+            _workspaceTabs[workspace]![_selectedTabs[workspace]!].tab.name,
+    }),
+  );
 
   Future<void> _applyWorkspace(
     AppWorkspace? workspace,
@@ -197,6 +229,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       if (index >= 0) _selectedTabs[target] = index;
     }
     await _workspaceCubit.switchTo(target);
+    _saveTabs();
     if (_hasCurrentSession) {
       setState(() {});
     }

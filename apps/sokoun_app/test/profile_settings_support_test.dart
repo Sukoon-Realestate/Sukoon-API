@@ -92,11 +92,6 @@ void main() {
     await CacheStorage.init();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
-          const MethodChannel('plugins.it_nomads.com/flutter_secure_storage'),
-          (_) async => null,
-        );
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
           const MethodChannel('dev.fluttercommunity.plus/connectivity'),
           (call) async => call.method == 'check' ? <String>['wifi'] : null,
         );

@@ -1,3 +1,5 @@
+import 'package:sokoun_app/features/tenant/home/data/public_property_cache.dart';
+import 'package:melos_core/core/local_db/read_cache_policy.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
@@ -208,7 +210,8 @@ class _PropertyMapResultsState extends State<PropertyMapResults> {
     header: _header(),
     enablePullRefresh: true,
     cacheKey: '${PropertySearchData.cacheKeyFor(widget.filters)}_map',
-    cacheToJson: (property) => property.toJson(),
+    cachePolicy: ReadCachePolicy.publicListing,
+    cacheToJson: (property) => PublicPropertyCache.sanitize(property.toJson()),
     cacheFromJson: PropertyDetailsModel.fromJson,
     asyncCall: (context, page) async {
       final (response, pagination) = await PropertySearchData.getPropertiesPage(

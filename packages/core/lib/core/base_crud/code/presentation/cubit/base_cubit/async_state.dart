@@ -4,17 +4,16 @@ class AsyncState<T> extends Equatable {
   final BaseStatus status;
   final T data;
   final String? msg;
+  final bool fromCache;
 
   const AsyncState({
     this.status = BaseStatus.initial,
     required this.data,
     this.msg,
+    this.fromCache = false,
   });
 
-  factory AsyncState.initial({
-    required T data,
-    String? errorMessage,
-  }) {
+  factory AsyncState.initial({required T data, String? errorMessage}) {
     return AsyncState<T>(
       status: BaseStatus.initial,
       data: data,
@@ -22,16 +21,14 @@ class AsyncState<T> extends Equatable {
     );
   }
 
-  AsyncState<T> loading({
-    T? data,
-    String? msg,
-  }) {
+  AsyncState<T> loading({T? data, String? msg}) {
     return AsyncState<T>(
       status: BaseStatus.loading,
       data: data ?? this.data,
       msg: msg ?? this.msg,
     );
   }
+
   AsyncState<T> loadingMore({T? data, String? errorMessage}) {
     return AsyncState<T>(
       status: BaseStatus.loadingMore,
@@ -43,18 +40,17 @@ class AsyncState<T> extends Equatable {
   AsyncState<T> success({
     required T data,
     String? msg,
+    bool fromCache = false,
   }) {
     return AsyncState<T>(
       status: BaseStatus.success,
       data: data,
       msg: msg ?? this.msg,
+      fromCache: fromCache,
     );
   }
 
-  AsyncState<T> error({
-    String? errorMessage,
-    T? data,
-  }) {
+  AsyncState<T> error({String? errorMessage, T? data}) {
     return AsyncState<T>(
       status: BaseStatus.error,
       data: data ?? this.data,
@@ -63,7 +59,7 @@ class AsyncState<T> extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, data, msg];
+  List<Object?> get props => [status, data, msg, fromCache];
 
   bool get isInitial => status.isInitial;
 
@@ -79,11 +75,13 @@ class AsyncState<T> extends Equatable {
     BaseStatus? status,
     T? data,
     String? msg,
+    bool? fromCache,
   }) {
     return AsyncState<T>(
       status: status ?? this.status,
       data: data ?? this.data,
       msg: msg ?? this.msg,
+      fromCache: fromCache ?? this.fromCache,
     );
   }
 }

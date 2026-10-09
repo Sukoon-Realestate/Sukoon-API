@@ -15,6 +15,7 @@ class RentalOfferReadData {
       CrudBaseParmas<PropertyDetailsModel>(
         api: ApiConstants.propertyDetails(selected.propertyId),
         httpRequestType: HttpRequestType.get,
+        cachePolicy: ReadCachePolicy.privateMemory,
         cacheKey: 'property_details_${selected.propertyId}',
         mapper: (json) => PropertyDetailsModel.fromJson(
           Map<String, dynamic>.from(json as Map),

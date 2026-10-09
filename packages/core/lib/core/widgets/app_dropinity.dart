@@ -9,6 +9,7 @@ import '../../config/language/locale_keys.g.dart';
 import '../../config/res/config_imports.dart';
 import '../extensions/padding_extension.dart';
 import '../local_db/objectbox_cache_service.dart';
+import '../local_db/read_cache_policy.dart';
 import '../network/account_session.dart';
 import 'app_text.dart';
 import 'custom_loading.dart';
@@ -52,10 +53,12 @@ class AppDropinity<FullResponse, Model> extends StatefulWidget {
        asyncSearchCall = null,
        type = DropinityType.local,
        cacheKey = null,
+       cachePolicy = null,
        cacheToJson = null,
        cacheFromJson = null;
 
   final String? cacheKey;
+  final ReadCachePolicy? cachePolicy;
   final Map<String, dynamic> Function(Model item)? cacheToJson;
   final Model Function(Map<String, dynamic> json)? cacheFromJson;
 
@@ -71,6 +74,7 @@ class AppDropinity<FullResponse, Model> extends StatefulWidget {
     required this.getLabel,
     required this.onChanged,
     this.cacheKey,
+    this.cachePolicy,
     this.cacheToJson,
     this.cacheFromJson,
   }) : values = null,
@@ -92,6 +96,7 @@ class AppDropinity<FullResponse, Model> extends StatefulWidget {
        asyncCall = null,
        type = DropinityType.api,
        cacheKey = null,
+       cachePolicy = null,
        cacheToJson = null,
        cacheFromJson = null;
 
@@ -193,20 +198,33 @@ class _AppDropinityState<FullResponse, Model>
 
       default:
         final hasCacheConfig =
+            widget.cachePolicy?.persist != false &&
             widget.cacheKey != null &&
             widget.cacheToJson != null &&
             widget.cacheFromJson != null;
 
         final int generation = AccountSession.generation;
+        final String cacheScope = ReadCacheContext.scope;
         void onSaveCache(String key, List<Map<String, dynamic>> items) {
-          if (mounted && generation == AccountSession.generation) {
-            ObjectBoxCacheService.save(key, {'items': items});
+          if (mounted &&
+              generation == AccountSession.generation &&
+              cacheScope == ReadCacheContext.scope) {
+            ObjectBoxCacheService.save(key, {
+              'items': items,
+            }, policy: widget.cachePolicy);
           }
         }
 
         List<Map<String, dynamic>>? onReadCache(String key) {
-          if (!mounted || generation != AccountSession.generation) return null;
-          final cached = ObjectBoxCacheService.read(key);
+          if (!mounted ||
+              generation != AccountSession.generation ||
+              cacheScope != ReadCacheContext.scope) {
+            return null;
+          }
+          final cached = ObjectBoxCacheService.read(
+            key,
+            policy: widget.cachePolicy,
+          );
           if (cached == null) return null;
           return (cached['items'] as List?)?.cast<Map<String, dynamic>>();
         }

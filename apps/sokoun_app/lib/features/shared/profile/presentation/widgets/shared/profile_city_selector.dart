@@ -80,6 +80,7 @@ class _ProfileCityPickerState extends State<ProfileCityPicker> {
             shrinkWrap: false,
             asyncCall: (_, page) => ProfileCitiesData.getPage(page),
             cacheKey: ProfileCitiesData.cacheKey,
+            cachePolicy: ReadCachePolicy.privateMemory,
             cacheToJson: (city) => city.toJson(),
             cacheFromJson: ProfileCity.fromJson,
             emptyListView: const ProfileCitiesEmptyState(),

@@ -48,15 +48,19 @@ class _NotificationSettingsScreenState
     NotificationSettingContent setting,
     bool value,
   ) async {
-    if (_updateCubit.isLoading || !setting.canChange) return;
+    if (!setting.canChange) return;
 
     _settingsCubit.updateSetting(setting.id, value);
-    final bool succeeded = await _updateCubit.updateSetting(
+    await _updateCubit.updateSetting(
       key: setting.id,
       value: value,
+      baseline: setting.isEnabled,
     );
-    if (!succeeded) {
-      _settingsCubit.updateSetting(setting.id, setting.isEnabled);
+    if (mounted) {
+      _settingsCubit.updateSetting(
+        setting.id,
+        _updateCubit.desiredValue(setting.id, setting.isEnabled),
+      );
     }
   }
 

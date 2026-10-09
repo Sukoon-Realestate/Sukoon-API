@@ -16,6 +16,7 @@ class OwnerRequestDetailsCubit
               ? ApiConstants.propertyVisitDetails(requestId)
               : ApiConstants.ownerVisitRequestDetails(requestId),
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.privateMemory,
           cacheKey:
               '${useVisitEndpoint ? 'received_visit_details' : 'owner_visit_request_details'}_$requestId',
           mapper: (json) =>

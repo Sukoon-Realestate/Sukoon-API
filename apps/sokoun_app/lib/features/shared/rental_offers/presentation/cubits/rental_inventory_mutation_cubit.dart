@@ -39,6 +39,7 @@ class RentalInventoryMutationCubit
       CrudBaseParmas<PropertyDetailsModel>(
         api: ApiConstants.propertyDetails(selection.propertyId),
         httpRequestType: HttpRequestType.get,
+        cachePolicy: ReadCachePolicy.privateMemory,
         cacheKey: 'property_details_${selection.propertyId}',
         mapper: (json) => PropertyDetailsModel.fromJson(
           Map<String, dynamic>.from(json as Map),

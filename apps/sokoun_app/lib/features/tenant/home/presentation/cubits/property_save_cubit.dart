@@ -1,3 +1,5 @@
+import 'favorite_coordinator.dart';
+import '../../data/models/favorite_target.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_selection.dart';
 import 'package:sokoun_app/features/shared/rental_offers/data/rental_offer_capabilities.dart';
@@ -48,7 +50,7 @@ class PropertySaveCubit extends AsyncCubit<bool> {
     required bool isSaved,
     required void Function(String msg) onError,
   }) async {
-    if (isClosed || ((hasRentalOffers || selection != null) && isLoading)) {
+    if (isClosed) {
       return;
     }
     if ((hasRentalOffers || selection != null) &&
@@ -61,25 +63,30 @@ class PropertySaveCubit extends AsyncCubit<bool> {
       onError(message);
       return;
     }
+    final target = FavoriteTarget(propertyId, selection?.offerId);
     await executeAsyncWithBaseModel(
-      operation: () => baseCrudUseCase.call(
-        CrudBaseParmas<bool>(
-          api: isSaved
-              ? ApiConstants.saveProperty(propertyId)
-              : ApiConstants.unsaveProperty(propertyId),
-          httpRequestType: isSaved
-              ? HttpRequestType.post
-              : HttpRequestType.delete,
-          body: selection == null ? null : {'offer_id': selection.offerId},
-          mapper: (json) {
-            if (selection != null &&
-                (json is! Map ||
-                    json['offer_id']?.toString() != selection.offerId ||
-                    json['is_saved'] != isSaved)) {
-              throw FormatException(LocaleKeys.rentalIncompatibleResponse);
-            }
-            return isSaved;
-          },
+      operation: () => FavoriteCoordinator.instance.request(
+        target: target,
+        desired: isSaved,
+        send: (desired) => baseCrudUseCase.call(
+          CrudBaseParmas<bool>(
+            api: desired
+                ? ApiConstants.saveProperty(propertyId)
+                : ApiConstants.unsaveProperty(propertyId),
+            httpRequestType: desired
+                ? HttpRequestType.post
+                : HttpRequestType.delete,
+            body: selection == null ? null : {'offer_id': selection.offerId},
+            mapper: (json) {
+              if (selection != null &&
+                  (json is! Map ||
+                      json['offer_id']?.toString() != selection.offerId ||
+                      json['is_saved'] != desired)) {
+                throw FormatException(LocaleKeys.rentalIncompatibleResponse);
+              }
+              return desired;
+            },
+          ),
         ),
       ),
       onSuccess: (_) => WorkspaceCountsRefreshBus.refresh(),

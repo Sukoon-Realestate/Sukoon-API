@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'package:sokoun_app/features/tenant/home/presentation/cubits/favorite_coordinator.dart';
+import 'package:sokoun_app/features/tenant/home/data/models/favorite_target.dart';
 import 'package:sokoun_app/features/shared/rental_offers/data/rental_offer_capabilities.dart';
 import 'package:sokoun_app/features/shared/rental_offers/data/enums/rental_listing_category.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
@@ -21,6 +24,7 @@ import 'package:sokoun_app/features/tenant/home/presentation/cubits/property_sav
 import 'package:sokoun_app/features/tenant/home/presentation/screens/tenant_filter_screen.dart';
 
 import '../widgets/imports.dart';
+import '../favorite_projection.dart';
 import 'package:sokoun_app/features/tenant/decision_tools/presentation/screens/decision_tools_screen.dart';
 
 class FavoritesScreen extends StatefulWidget {
@@ -45,6 +49,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     RentalListingCategory.all,
   );
   final Set<String> _pendingPropertyIds = {};
+  StreamSubscription<Map<FavoriteTarget, FavoriteState>>?
+  _favoritesSubscription;
 
   @override
   void initState() {
@@ -57,10 +63,21 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     _itemCount = _initialFavorites?.length ?? 0;
     _filters = const PropertySearchFilters.initial();
     _visibleCount.value = _visibleItemCount;
+    if (widget.initialItems == null) {
+      _favoritesSubscription = FavoriteCoordinator.instance.stream.listen((_) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            _pagifyController.reload();
+            _visibleCount.value = _visibleItemCount;
+          }
+        });
+      });
+    }
   }
 
   @override
   void dispose() {
+    _favoritesSubscription?.cancel();
     _saveCubit?.close();
     _visibleCount.dispose();
     _category.dispose();
@@ -72,6 +89,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     BuildContext context,
     int page,
   ) async {
+    final revisions = {
+      for (final entry in FavoriteCoordinator.instance.state.entries)
+        entry.key: entry.value.revision,
+    };
     final (
       SavedPropertiesResponse response,
       PaginationData pagination,
@@ -79,6 +100,24 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       page: page,
       filters: _filters,
     );
+    for (final item in response.results) {
+      final target = FavoriteTarget(item.id);
+      if (!item.hasRentalOffers) {
+        FavoriteCoordinator.instance.reconcile(
+          target,
+          true,
+          revisions[target] ?? 0,
+        );
+      }
+      for (final offer in item.savedOffers) {
+        final offerTarget = FavoriteTarget(item.id, offer.offerId);
+        FavoriteCoordinator.instance.reconcile(
+          offerTarget,
+          true,
+          revisions[offerTarget] ?? 0,
+        );
+      }
+    }
     if (page == 1 && mounted && _itemCount != response.count) {
       _itemCount = response.count;
       _visibleCount.value = _visibleItemCount;
@@ -126,6 +165,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     if (saveCubit != null) {
       bool requestFailed = false;
       _pendingPropertyIds.add(item.id);
+      FavoriteCoordinator.instance.seed(FavoriteTarget(item.id), true);
       await saveCubit.unsaveProperty(
         propertyId: item.id,
         onError: (_) {
@@ -184,8 +224,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       return;
     }
 
-    if (_pendingPropertyIds.contains(item.id) ||
-        _pagifyController.items.any((favorite) => favorite.id == item.id)) {
+    if (_pagifyController.items.any((favorite) => favorite.id == item.id)) {
       return;
     }
 
@@ -239,11 +278,14 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     if (initialFavorites != null) return initialFavorites.length;
     return _usesLocalFiltering && _hasLocalFilters
         ? FavoritePropertyFilter.apply(
-            _pagifyController.items,
+            FavoriteProjection.apply(_pagifyController.items),
             _filters,
             category: _category.value,
           ).length
-        : _itemCount;
+        : (_itemCount -
+                  _pagifyController.items.length +
+                  FavoriteProjection.apply(_pagifyController.items).length)
+              .clamp(0, _itemCount);
   }
 
   Future<void> _openFilters() async {

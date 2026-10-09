@@ -12,6 +12,7 @@ class SupportHelpCubit extends AsyncCubit<SupportHelpContent> {
         CrudBaseParmas<SupportHelpContent>(
           api: ApiConstants.supportHelpCenter,
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.privateMemory,
           queryParameters: {'workspace': workspace.name, 'lang': language},
           cacheKey: 'support_help_${workspace.name}_$language',
           mapper: (json) => SupportHelpContent.fromJson(supportMap(json)),

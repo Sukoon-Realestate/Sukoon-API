@@ -105,6 +105,20 @@ class DecisionToolsCubit extends Cubit<DecisionNotebook> {
     );
   }
 
+  Future<void> renameSearch(String searchId, String name) {
+    if (name.trim().isEmpty || name.trim().length > 80) {
+      throw ArgumentError('A search name must have 1–80 characters.');
+    }
+    return _mutate(
+      (notebook) => notebook.copyWith(
+        searches: [
+          for (final search in notebook.searches)
+            search.id == searchId ? search.copyWith(name: name.trim()) : search,
+        ],
+      ),
+    );
+  }
+
   Future<void> removeSearch(String searchId) => _mutate(
     (notebook) => notebook.copyWith(
       searches: notebook.searches

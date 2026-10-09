@@ -16,6 +16,7 @@ import 'package:sokoun_app/features/shared/notifications/presentation/cubits/not
 import 'package:sokoun_app/features/shared/notifications/presentation/cubits/notifications_cubit.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   late _FakeNetworkService networkService;
   late _RecordingBaseRepository repository;
 
@@ -108,7 +109,7 @@ void main() {
   });
 
   test(
-    'loads cached details and notification settings then patches a key',
+    'loads private details and notification settings then patches a key',
     () async {
       final NotificationDetailCubit detailCubit = NotificationDetailCubit();
       final NotificationSettingsCubit settingsCubit =
@@ -126,11 +127,13 @@ void main() {
         'notification_details_notification-id',
       );
       expect(detailCubit.data.id, 'notification-id');
+      expect(repository.lastParams.cachePolicy?.persist, isFalse);
 
       await settingsCubit.loadSettings();
       expect(repository.lastParams.api, ApiConstants.notificationSettings);
       expect(repository.lastParams.cacheKey, 'notification_settings');
       expect(settingsCubit.data.items, hasLength(5));
+      expect(repository.lastParams.cachePolicy?.persist, isFalse);
 
       expect(
         await updateCubit.updateSetting(key: 'property_updates', value: true),

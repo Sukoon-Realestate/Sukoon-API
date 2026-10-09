@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/core/network/account_session.dart';
 import 'package:sokoun_app/features/owner/home/data/owner_draft_data.dart';
+import 'package:sokoun_app/features/owner/home/data/owner_draft_reconcile_data.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_property_draft.dart';
 import 'package:sokoun_app/features/owner/home/data/models/property_location.dart';
@@ -9,6 +10,40 @@ import 'package:sokoun_app/features/owner/home/presentation/cubits/owner_draft_c
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setUp(() => AccountSession.begin('alice'));
+  test(
+    'acknowledged form can resume uploads when only its revision advances',
+    () {
+      final saved = const PropertyDetailsModel.initial().copyWith(
+        id: 'same-created-property',
+        title: 'Submitted title',
+        updatedAt: '2026-10-08T10:00:00Z',
+        mainImageId: 'confirmed-cover',
+      );
+      expect(
+        OwnerDraftReconcileData.matchesAcknowledged(
+          saved,
+          saved.copyWith(updatedAt: '2026-10-08T10:01:00Z'),
+        ),
+        isTrue,
+      );
+      expect(
+        OwnerDraftReconcileData.matchesAcknowledged(
+          saved,
+          saved.copyWith(title: 'Changed on another device'),
+        ),
+        isFalse,
+      );
+      expect(
+        OwnerDraftReconcileData.matchesAcknowledged(
+          saved,
+          saved.copyWith(mainImageId: 'another-cover'),
+        ),
+        isFalse,
+      );
+    },
+  );
   test('a missing account cannot report a successful device save', () async {
     final store = OwnerDraftData(
       accountId: '',
@@ -132,7 +167,7 @@ void main() {
       final recovered = await store('alice').read();
       expect(recovered.step, 2);
       expect(recovered.savedProperty?.id, 'created-property');
-      expect(recovered.isServerSnapshotCurrent, isTrue);
+      expect(recovered.isServerSnapshotCurrent, isFalse);
       expect(recovered.form?.photoDrafts.first.existingId, 'uploaded-cover');
       expect(recovered.form?.photoDrafts.last.description, 'Bright room');
       expect(await recovered.form!.photoDrafts.last.file!.readAsBytes(), [
@@ -141,7 +176,8 @@ void main() {
         3,
       ]);
       expect(await recovered.form!.videoFile!.readAsBytes(), [4, 5]);
-      expect(await recovered.form!.ownershipProofFile!.readAsBytes(), [6, 7]);
+      expect(recovered.form!.ownershipProofFile, isNull);
+      expect(recovered.needsPrivateDocument, isTrue);
       expect(
         OwnerDraftFormCodec.encode(recovered.form!),
         OwnerDraftFormCodec.encode(saved.form!),
@@ -179,7 +215,8 @@ void main() {
       final recovered = await store.read();
       expect(recovered.hasMissingFiles, isTrue);
       expect(recovered.isServerSnapshotCurrent, isFalse);
-      expect(recovered.form!.photoDrafts, isEmpty);
+      expect(recovered.form!.photoDrafts.single.needsReselection, isTrue);
+      expect(recovered.form!.photoDrafts.single.file, isNotNull);
     },
   );
 

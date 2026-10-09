@@ -21,6 +21,7 @@ class OwnerPropertyAnalyticsCubit
         CrudBaseParmas<OwnerPropertyAnalyticsContent>(
           api: ApiConstants.propertyStatistics(propertyId),
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.privateMemory,
           cancelToken: token,
           queryParameters: {'period': period},
           cacheKey: 'owner_statistics_${propertyId}_$period',

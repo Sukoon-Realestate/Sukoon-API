@@ -113,6 +113,7 @@ class UnreadCountsCubit extends AsyncCubit<UnreadCounts> {
                   ? ApiConstants.ownerUnreadCounts
                   : ApiConstants.tenantUnreadCounts,
               httpRequestType: HttpRequestType.get,
+              cachePolicy: ReadCachePolicy.privateMemory,
               cacheKey: workspace.isOwner
                   ? 'workspace_counts_owner'
                   : 'tenant_unread_counts',

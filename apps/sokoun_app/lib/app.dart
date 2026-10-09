@@ -1,4 +1,5 @@
 import 'features/shared/rental_offers/presentation/rental_property_link_navigation.dart';
+import 'features/shared/recovery/data/private_recovery_data.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -34,9 +35,19 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
   StreamSubscription<void>? _expiredSubscription;
   StreamSubscription<UserState>? _userSubscription;
   bool _hadSession = false;
+  void Function()? _removeSessionCleanup;
   @override
   void initState() {
     super.initState();
+    PrivateRecoveryData.initialize();
+    _removeSessionCleanup = AccountSession.registerCleanup((_) async {
+      WorkspaceNavigation.clearPending();
+      ChatRealtimeService.instance.setActiveConversation(null);
+      await Future.wait([
+        ChatRealtimeService.instance.disconnect(),
+        NotificationDeviceData.stop(),
+      ]);
+    });
     PageRouterBuilder().pageDecorator = VerifiedFeatureRoutes.wrap;
     _themeCubit = ThemeCubit(initialMode: ThemePreferences.read());
     WidgetsBinding.instance.addObserver(this);
@@ -77,6 +88,7 @@ class _SokoonState extends State<Sokoon> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    _removeSessionCleanup?.call();
     PageRouterBuilder().pageDecorator = null;
     WidgetsBinding.instance.removeObserver(this);
     _expiredSubscription?.cancel();

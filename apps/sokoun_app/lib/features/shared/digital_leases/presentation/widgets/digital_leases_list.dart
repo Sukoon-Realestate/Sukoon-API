@@ -1,3 +1,4 @@
+import 'package:melos_core/core/local_db/read_cache_policy.dart';
 import 'package:flutter/material.dart';
 import 'package:pagify/pagify.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
@@ -52,6 +53,7 @@ class _DigitalLeasesListState extends State<DigitalLeasesList> {
       widget.workspace,
       propertyId: widget.property?.id ?? '',
     ),
+    cachePolicy: ReadCachePolicy.privateMemory,
     cacheToJson: (lease) => lease.toJson(),
     cacheFromJson: DigitalLease.fromJson,
     asyncCall: (_, page) => DigitalLeasesData.getPage(

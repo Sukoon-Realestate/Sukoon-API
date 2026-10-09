@@ -1,3 +1,6 @@
+import 'package:sokoun_app/features/shared/destinations/presentation/destination_navigation.dart';
+import 'package:sokoun_app/features/shared/destinations/data/destination_resolver.dart';
+import 'package:sokoun_app/features/tenant/home/presentation/screens/property_details_screen.dart';
 import 'package:sokoun_app/features/tenant/visits/data/visit_schedule_rules.dart';
 import 'package:sokoun_app/features/main_view/presentation/cubits/account_cubit.dart';
 import 'package:sokoun_app/features/tenant/home/presentation/widgets/tenant_widgets/tenant_home_content.dart';
@@ -72,9 +75,6 @@ void main() {
   const MethodChannel connectivityStatus = MethodChannel(
     'dev.fluttercommunity.plus/connectivity_status',
   );
-  const MethodChannel secureStorage = MethodChannel(
-    'plugins.it_nomads.com/flutter_secure_storage',
-  );
 
   setUpAll(() async {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -83,8 +83,7 @@ void main() {
           (call) async => call.method == 'getAll' ? <String, Object>{} : true,
         );
     await CacheStorage.init();
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(secureStorage, (_) async => null);
+
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(
           connectivity,
@@ -114,7 +113,10 @@ void main() {
     await injector.reset();
     await CacheStorage.deleteAll();
     AccountSession.end();
+    await AccountSession.finishCleanup();
     WorkspaceNavigation.clearPending();
+    DestinationNavigation.reset();
+    DestinationNavigation.ready();
     registerHomePageTestDependencies();
     accountRepository = _AccountStatsRepository(
       injector<BaseCrudUseCase>().repository,
@@ -130,9 +132,69 @@ void main() {
     await ChatRealtimeService.instance.disconnect();
     await injector.reset();
   });
-  tearDownAll(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(secureStorage, null);
+
+  testWidgets('a property link reuses an internally opened matching detail', (
+    tester,
+  ) async {
+    _phone(tester);
+    await tester.pumpWidget(_app(const Scaffold(), 'en'));
+    await tester.pumpAndSettle();
+    unawaited(
+      Go.to<void>(const PropertyDetailsScreen(propertyId: 'property-1')),
+    );
+    await tester.pumpAndSettle();
+    final route = AppNavigationObserver.currentRoute;
+    final screen = tester.state(find.byType(PropertyDetailsScreen));
+    final requests = accountRepository.endpoints.length;
+    final sameTarget = DestinationResolver.propertyLink(
+      Uri.parse('https://sokoun.app/properties/property-1'),
+    )!;
+    await DestinationNavigation.open(sameTarget);
+    await tester.pumpAndSettle();
+    expect(AppNavigationObserver.currentRoute, same(route));
+    expect(tester.state(find.byType(PropertyDetailsScreen)), same(screen));
+    expect(accountRepository.endpoints.length, requests);
+
+    unawaited(
+      showDialog<void>(
+        context: Go.context,
+        builder: (_) =>
+            const AlertDialog(content: Text('Open property dialog')),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final dialog = AppNavigationObserver.currentRoute;
+    await tester.pump(const Duration(seconds: 3));
+    await DestinationNavigation.open(sameTarget);
+    await tester.pumpAndSettle();
+    expect(AppNavigationObserver.currentRoute, same(dialog));
+    expect(AppNavigationObserver.currentPageRoute, same(route));
+    expect(accountRepository.endpoints.length, requests);
+    Go.back();
+    await tester.pumpAndSettle();
+
+    await DestinationNavigation.open(
+      DestinationResolver.propertyLink(
+        Uri.parse('https://sokoun.app/properties/property-2'),
+      )!,
+    );
+    await tester.pumpAndSettle();
+    expect(
+      tester
+          .widget<PropertyDetailsScreen>(find.byType(PropertyDetailsScreen))
+          .propertyId,
+      'property-2',
+    );
+    Go.back();
+    await tester.pumpAndSettle();
+    await tester.pump(const Duration(seconds: 3));
+    await DestinationNavigation.open(sameTarget);
+    await tester.pumpAndSettle();
+    expect(AppNavigationObserver.currentRoute, same(route));
+    expect(tester.state(find.byType(PropertyDetailsScreen)), same(screen));
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pumpAndSettle();
   });
 
   testWidgets('authenticated home explains notifications once after launch', (
@@ -557,7 +619,15 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(VisitRequestReviewSheet), findsOneWidget);
       await tester.tap(find.text(LocaleKeys.tenantVisitConfirmRequest).last);
-      await tester.pump();
+      // The draft is persisted before transmission; wait for the fake POST.
+      for (
+        int frame = 0;
+        frame < 20 && accountRepository.bookings == 0;
+        frame++
+      ) {
+        await tester.pump(const Duration(milliseconds: 10));
+      }
+      expect(accountRepository.bookings, 1);
       await WorkspaceNavigation.open(workspace: AppWorkspace.owner);
       await tester.pump();
       expect(find.byType(BookVisitScreen), findsOneWidget);
@@ -569,6 +639,7 @@ void main() {
       expect(accountRepository.bookings, 1);
       expect(tester.takeException(), isNull);
     },
+    timeout: const Timeout(Duration(seconds: 30)),
   );
 
   testWidgets('cross-workspace navigation asks before discarding an edit', (

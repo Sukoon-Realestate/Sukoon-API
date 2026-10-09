@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:melos_core/config/res/config_imports.dart';
 import 'package:melos_core/core/base_crud/code/domain/base_domain_imports.dart';
 import 'package:melos_core/core/base_crud/code/presentation/cubit/base_cubit/async_cubit.dart';
-import 'package:melos_core/core/local_db/objectbox_cache_service.dart';
 import 'package:melos_core/core/network/account_session.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/network/network_service.dart';
@@ -22,15 +21,8 @@ class AccountCubit extends AsyncCubit<AccountContent> {
   StreamSubscription<UserState>? _userSubscription;
 
   void restoreCachedProfile() {
-    if (isClosed || !UserModel.isAuthenticated) return;
-    final Map<String, dynamic>? cached = ObjectBoxCacheService.read(
-      AccountContent.cacheKey,
-    );
-    if (cached == null) return;
-    final AccountContent profile = AccountContent.fromJson(cached);
-    if (profile.user.id == UserModel.currentUser?.id) {
-      emit(state.success(data: profile));
-    }
+    // Private profile responses stay in this account's live Cubit. The previous
+    // convenience cache is deliberately not restored from unprotected storage.
   }
 
   Future<void> getAccount() {
@@ -73,6 +65,7 @@ class AccountCubit extends AsyncCubit<AccountContent> {
         CrudBaseParmas<AccountContent>(
           api: ApiConstants.getAccData,
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.privateMemory,
           // Only an established identity may read its account cache.
           cacheKey: userCubit.isUserLoggedIn ? AccountContent.cacheKey : null,
           mapper: (json) {
@@ -98,9 +91,6 @@ class AccountCubit extends AsyncCubit<AccountContent> {
       return;
     }
     await userCubit.setUserLoggedIn(user: account.identity);
-    if (!isClosed && AccountSession.userId == account.user.id) {
-      ObjectBoxCacheService.save(AccountContent.cacheKey, account.toJson());
-    }
   }
 
   void updateFromUser(UserModel user) {
@@ -113,7 +103,6 @@ class AccountCubit extends AsyncCubit<AccountContent> {
       accountDetails: data.accountDetails.updateFromUser(user),
     );
     updateData(updated);
-    ObjectBoxCacheService.save(AccountContent.cacheKey, updated.toJson());
   }
 
   @override

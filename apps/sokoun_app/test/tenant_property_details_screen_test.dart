@@ -172,9 +172,9 @@ void main() {
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       final inventory = rentalInventory();
-      repository.propertyJson = rentalProperty(
-        inventory: inventory,
-      ).copyWith(mainImage: '', images: [], video: '').toJson();
+      repository.propertyJson = rentalProperty(inventory: inventory)
+          .copyWith(mainImage: '', images: [], video: '', status: 'published')
+          .toJson();
       await tester.pumpWidget(
         buildScreen(
           home: PropertyDetailsScreen(
@@ -202,9 +202,15 @@ void main() {
       final changed = bedOffer.copyWith(
         terms: offerTerms.copyWith(price: '1800'),
       );
-      repository.propertyJson = rentalProperty(
-        inventory: inventory.copyWith(offers: [changed]),
-      ).copyWith(mainImage: '', images: [], video: '').toJson();
+      repository.propertyJson =
+          rentalProperty(inventory: inventory.copyWith(offers: [changed]))
+              .copyWith(
+                mainImage: '',
+                images: [],
+                video: '',
+                status: 'published',
+              )
+              .toJson();
       await tester.pumpWidget(const SizedBox());
       await tester.pumpWidget(
         buildScreen(
@@ -233,9 +239,9 @@ void main() {
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       account.signOut();
-      repository.propertyJson = rentalProperty(
-        inventory: rentalInventory(),
-      ).copyWith(mainImage: '', images: [], video: '').toJson();
+      repository.propertyJson = rentalProperty(inventory: rentalInventory())
+          .copyWith(mainImage: '', images: [], video: '', status: 'published')
+          .toJson();
       const filters = PropertySearchFilters.initial(
         rentalScope: 'bed',
         pricePeriod: 'monthly',

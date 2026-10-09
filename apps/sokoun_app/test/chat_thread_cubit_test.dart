@@ -1,3 +1,4 @@
+import 'package:pagify/helpers/data_and_pagination_data.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/conversation_content.dart';
 import 'package:sokoun_app/features/shared/chat/data/models/chat_message_acknowledgement.dart';
 import 'package:sokoun_app/features/shared/chat/data/chat_local_data.dart';
@@ -786,6 +787,7 @@ void main() {
     final source = _ReadTrackingDataSource();
     final store = _MemoryChatLocalStore();
     final cubit = ChatThreadCubit(
+      durableReplay: true,
       conversationId: 'conversation-1',
       realtimeService: realtime,
       dataSource: source,
@@ -820,6 +822,7 @@ void main() {
       final realtime = _FakeChatRealtimeGateway();
       final source = _ReadTrackingDataSource()..wrongIdentity = true;
       final cubit = ChatThreadCubit(
+        durableReplay: true,
         conversationId: 'conversation-1',
         realtimeService: realtime,
         dataSource: source,
@@ -895,6 +898,167 @@ void main() {
       },
     );
   }
+
+  testWidgets(
+    'default replay keeps a lost ACK unknown until its matching late ACK',
+    (tester) async {
+      final realtime = _FakeChatRealtimeGateway();
+      final source = _ReadTrackingDataSource();
+      final store = _MemoryChatLocalStore();
+      final cubit = ChatThreadCubit(
+        conversationId: 'conversation-1',
+        realtimeService: realtime,
+        dataSource: source,
+        localStore: store,
+      );
+      addTearDown(() async {
+        final closing = cubit.close();
+        await _flushWrites(tester);
+        await closing;
+        await realtime.close();
+      });
+      await cubit.connect();
+      final sending = cubit.sendTextMessage('Preserve uncertain delivery');
+      await _flushWrites(tester);
+      final id = realtime.sentClientIds.single;
+      await tester.pump(const Duration(seconds: 5));
+      await _flushWrites(tester);
+      expect((await sending).status, ChatSendStatus.unknown);
+      expect(cubit.state.unknownDelivery, isTrue);
+      expect(store.state.messages.single.delivery, ChatDeliveryState.unknown);
+      await tester.pump(const Duration(seconds: 30));
+      await _flushWrites(tester);
+      expect(source.sentClientIds, isEmpty);
+      expect(realtime.sentClientIds, [id]);
+      realtime.acknowledge(id);
+      await _flushWrites(tester);
+      expect(cubit.queuedMessageCount, 0);
+      expect(store.state.messages, isEmpty);
+    },
+  );
+
+  test(
+    'unknown delivery is recovered without restart transmission and settles from exact history',
+    () async {
+      const id = 'a8b9d21a-137b-40c0-af9d-b70f520b7373';
+      final store = _MemoryChatLocalStore()
+        ..state = ChatLocalState.fromJson(
+          const ChatLocalState(
+            messages: [
+              SavedChatMessage(
+                id: 'local-1',
+                clientMessageId: id,
+                content: 'Already delivered',
+                delivery: ChatDeliveryState.awaitingConfirmation,
+              ),
+            ],
+          ).toJson(),
+        );
+      final realtime = _FakeChatRealtimeGateway();
+      final cubit = ChatThreadCubit(
+        conversationId: 'conversation-1',
+        realtimeService: realtime,
+        dataSource: _ReadTrackingDataSource(),
+        localStore: store,
+      );
+      await cubit.connect();
+      expect(realtime.sentContents, isEmpty);
+      expect(
+        cubit.state.recoveredMessages.single.delivery,
+        ChatDeliveryState.unknown,
+      );
+      final confirmed = ChatMessageContent.fromJson({
+        'id': 'server-1',
+        'conversation_id': 'conversation-1',
+        'client_message_id': id,
+        'content': 'Already delivered',
+        'sender': {'id': 'current-user-id'},
+      });
+      await cubit.reconcileHistory([
+        confirmed.copyWith(conversationId: 'another-conversation'),
+      ]);
+      expect(cubit.state.recoveredMessages, hasLength(1));
+      await cubit.reconcileHistory([confirmed]);
+      expect(cubit.state.recoveredMessages, isEmpty);
+      expect(store.state.messages, isEmpty);
+      await cubit.close();
+      await realtime.close();
+    },
+  );
+
+  test(
+    'gated restart reads matching history before replaying an outgoing UUID',
+    () async {
+      const id = 'a8b9d21a-137b-40c0-af9d-b70f520b7373';
+      final store = _MemoryChatLocalStore()
+        ..state = const ChatLocalState(
+          messages: [
+            SavedChatMessage(
+              id: 'local-1',
+              clientMessageId: id,
+              content: 'Already delivered',
+              delivery: ChatDeliveryState.unknown,
+            ),
+          ],
+        );
+      final source = _ReadTrackingDataSource()
+        ..history = [
+          ChatMessageContent.fromJson({
+            'id': 'server-1',
+            'conversation_id': 'conversation-1',
+            'client_message_id': id,
+            'content': 'Already delivered',
+            'sender': {'id': 'current-user-id'},
+          }),
+        ];
+      final realtime = _FakeChatRealtimeGateway();
+      final cubit = ChatThreadCubit(
+        durableReplay: true,
+        conversationId: 'conversation-1',
+        realtimeService: realtime,
+        dataSource: source,
+        localStore: store,
+      );
+      await cubit.connect();
+      expect(realtime.sentContents, isEmpty);
+      expect(cubit.queuedMessageCount, 0);
+      expect(store.state.messages, isEmpty);
+      await cubit.close();
+      await realtime.close();
+    },
+  );
+
+  test(
+    'restored composer asks for a choice and discard preserves separate outgoing recovery',
+    () async {
+      final store = _MemoryChatLocalStore()
+        ..state = const ChatLocalState(
+          draft: 'Unsubmitted text',
+          messages: [
+            SavedChatMessage(
+              id: 'pending',
+              content: 'Different outgoing text',
+              delivery: ChatDeliveryState.unknown,
+            ),
+          ],
+        );
+      final realtime = _FakeChatRealtimeGateway();
+      final cubit = ChatThreadCubit(
+        conversationId: 'conversation-1',
+        realtimeService: realtime,
+        dataSource: _ReadTrackingDataSource(),
+        localStore: store,
+      );
+      await cubit.connect();
+      expect(cubit.state.needsDraftDecision, isTrue);
+      await cubit.resolveComposerDraft(false);
+      expect(cubit.state.draft, isEmpty);
+      expect(store.state.draft, isEmpty);
+      expect(store.state.messages.single.content, 'Different outgoing text');
+      await cubit.close();
+      await realtime.close();
+    },
+  );
 
   test('identical text sent twice has two independent send UUIDs', () async {
     final realtime = _FakeChatRealtimeGateway()..echoSentMessages = true;
@@ -1061,6 +1225,12 @@ class _FakeChatRealtimeGateway implements ChatRealtimeGateway {
 }
 
 class _ReadTrackingDataSource implements ChatDataSource {
+  List<ChatMessageContent> history = const [];
+  @override
+  Future<(List<ChatMessageContent>, PaginationData)> getMessagesPage({
+    required String conversationId,
+    int page = 1,
+  }) async => (history, PaginationData(perPage: 20, totalPages: 1));
   int readCount = 0;
   int contactRequests = 0;
   Completer<ConversationContent>? contactResponse;

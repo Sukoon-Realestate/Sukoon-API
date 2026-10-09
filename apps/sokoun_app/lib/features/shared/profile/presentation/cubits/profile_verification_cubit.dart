@@ -10,6 +10,7 @@ class ProfileVerificationCubit extends AsyncCubit<ProfileVerificationContent> {
         CrudBaseParmas<ProfileVerificationContent>(
           api: ApiConstants.verificationStatus,
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.privateMemory,
           cacheKey: 'profile_verification_status_v1',
           mapper: (json) =>
               ProfileVerificationContent.fromJson(profileJsonMap(json)),

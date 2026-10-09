@@ -67,7 +67,7 @@ void main() {
   });
 
   test(
-    'loads only when requested and preserves complete per-page cache contracts',
+    'loads only when requested and preserves public per-page cache contracts',
     () async {
       expect(repository.requests, isEmpty);
       final first = data.getPage(page: 1);
@@ -76,7 +76,10 @@ void main() {
       final model = HomePageModel.fromJson(
         _page(['first'], nextPage: 2, banner: homeVisitBannerFixture),
       );
-      expect(params.fromCacheJson!(params.toJson!(model)), model);
+      final cached = params.fromCacheJson!(params.toJson!(model));
+      expect(cached.results, model.results);
+      expect(cached.banner, isNull);
+      expect(cached.next, model.next);
       repository.requests.single.complete(model.toJson());
       final (loaded, pagination) = await first;
       expect(loaded.banner?.toJson(), homeVisitBannerFixture);

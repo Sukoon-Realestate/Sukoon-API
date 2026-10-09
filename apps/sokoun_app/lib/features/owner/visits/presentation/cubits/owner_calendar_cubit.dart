@@ -1,6 +1,7 @@
 part of '../../imports.dart';
 
-class OwnerCalendarCubit extends VerifiedActionCubit<OwnerVisitCalendarContent> {
+class OwnerCalendarCubit
+    extends VerifiedActionCubit<OwnerVisitCalendarContent> {
   OwnerCalendarCubit({required DateTime initialDate})
     : _selectedDate = DateUtils.dateOnly(initialDate),
       super(OwnerVisitCalendarContent.initial(initialDate));
@@ -40,6 +41,7 @@ class OwnerCalendarCubit extends VerifiedActionCubit<OwnerVisitCalendarContent> 
           CrudBaseParmas<OwnerVisitCalendarContent>(
             api: ApiConstants.ownerCalendar,
             httpRequestType: HttpRequestType.get,
+            cachePolicy: ReadCachePolicy.privateMemory,
             cancelToken: cancelToken,
             queryParameters: {
               'year': selectedDate.year,

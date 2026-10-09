@@ -32,8 +32,11 @@ class _ProfilePrivacyScreenState extends State<ProfilePrivacyScreen> {
   }
 
   Future<void> _change(ProfileSetting setting, bool value) async {
-    if (await _update.save(setting, value) && mounted) {
-      _settings.apply(setting, value);
+    final bool baseline = _settings.data.values[setting] ?? false;
+    _settings.apply(setting, value);
+    await _update.save(setting, value, baseline: baseline);
+    if (mounted) {
+      _settings.apply(setting, _update.desiredValue(setting, baseline));
     }
   }
 

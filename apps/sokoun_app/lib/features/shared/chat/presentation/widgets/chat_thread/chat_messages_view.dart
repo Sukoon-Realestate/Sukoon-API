@@ -1,3 +1,5 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../cubits/chat_thread_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:sokoun_app/features/shared/contact/presentation/widgets/revealed_phone_card.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -45,6 +47,9 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
   Future<List<ChatMessageContent>> _loadMessages(BuildContext _, int _) async {
     final List<ChatMessageContent> messages =
         await widget.initialMessagesRequest;
+    if (mounted) {
+      await context.read<ChatThreadCubit>().reconcileHistory(messages);
+    }
     _pagination = PaginationData(
       perPage: ChatData.messagesPageSize,
       totalPages: 1,
@@ -93,99 +98,82 @@ class _ChatMessagesViewState extends State<ChatMessagesView> {
     );
   }
 
-  Map<String, dynamic> _messageToJson(ChatMessages item) => {
-    'id': item.message.id,
-    'body': item.message.body,
-    'type': item.message.type,
-    'sender_id': item.sender.id,
-    'sender_name': item.sender.name,
-    'sender_image': item.sender.image,
-    'is_from_me': item.sender.isFromMe,
-    'time': item.time,
-    'created_at': item.createdAt?.toIso8601String(),
-    'message_state': item.messageState?.name,
-  };
-
-  ChatMessages _messageFromJson(Map<String, dynamic> json) {
-    final String stateName = json['message_state']?.toString() ?? '';
-    return ChatMessages(
-      message: Message(
-        id: json['id']?.toString() ?? '',
-        type: json['type']?.toString() ?? 'text',
-        body: json['body']?.toString() ?? '',
-      ),
-      sender: Sender(
-        id: json['sender_id']?.toString() ?? '',
-        name: json['sender_name']?.toString() ?? '',
-        image: json['sender_image']?.toString() ?? '',
-        isFromMe: json['is_from_me'] ?? false,
-      ),
-      time: json['time']?.toString(),
-      createdAt: DateTime.tryParse(
-        json['created_at']?.toString() ?? '',
-      )?.toLocal(),
-      messageState: MessageState.values
-          .where((state) => state.name == stateName)
-          .firstOrNull,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: EasyChat<List<ChatMessageContent>>(
-            controller: widget.controller,
-            itemHeaderBuilder: _dayHeader,
-            asyncCall: _loadMessages,
-            mapper: _mapMessages,
-            errorMapper: PagifyErrorMapper(
-              errorWhenDio: (error) => PagifyApiRequestException(
-                error.message ?? '',
-                pagifyFailure: RequestFailureData(
-                  statusCode: error.response?.statusCode,
-                  statusMsg: error.response?.statusMessage,
+    return LayoutBuilder(
+      builder: (context, constraints) => Column(
+        children: [
+          Expanded(
+            child: EasyChat<List<ChatMessageContent>>(
+              controller: widget.controller,
+              itemHeaderBuilder: _dayHeader,
+              asyncCall: _loadMessages,
+              mapper: _mapMessages,
+              errorMapper: PagifyErrorMapper(
+                errorWhenDio: (error) => PagifyApiRequestException(
+                  error.message ?? '',
+                  pagifyFailure: RequestFailureData(
+                    statusCode: error.response?.statusCode,
+                    statusMsg: error.response?.statusMessage,
+                  ),
                 ),
               ),
+              messageAlignment: (isFromMe) => _messageAlignment(isFromMe),
+              rightMessageBuilder: (message) => ChatMessageBubble(
+                key: ValueKey<String>(message.message.id.toString()),
+                message: message,
+                isFromMe: true,
+              ),
+              leftMessageBuilder: (message) => ChatMessageBubble(
+                key: ValueKey<String>(message.message.id.toString()),
+                message: message,
+                isFromMe: false,
+              ),
+              loadingBuilder: CustomLoading.showLoadingView(),
+              emptyView: const ChatMessagesEmptyState(),
+            ).paddingSymmetric(horizontal: 16.w, vertical: 8.h),
+          ),
+          ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: constraints.maxHeight * .3),
+            child: NotificationListener<ScrollNotification>(
+              // Footer scrolling must not change the conversation's reading
+              // position or make incoming messages jump to the latest item.
+              onNotification: (_) => true,
+              child: SingleChildScrollView(
+                child:
+                    (widget
+                                .conversation
+                                .otherParticipant
+                                .revealedPhone
+                                .isNotEmpty
+                            ? RevealedPhoneCard(
+                                phoneNumber: widget
+                                    .conversation
+                                    .otherParticipant
+                                    .revealedPhone,
+                              )
+                            : ChatPrivacyBanner(
+                                icon:
+                                    widget
+                                        .conversation
+                                        .otherParticipant
+                                        .isPhoneRevealed
+                                    ? Icons.info_outline_rounded
+                                    : Icons.lock_outline_rounded,
+                                text:
+                                    widget
+                                        .conversation
+                                        .otherParticipant
+                                        .isPhoneRevealed
+                                    ? LocaleKeys.contactPhoneUnavailable
+                                    : LocaleKeys.chatPhonePrivacyThread,
+                              ))
+                        .padding(EdgeInsets.fromLTRB(16.w, 0, 16.w, 10.h)),
+              ),
             ),
-            messageAlignment: (isFromMe) => _messageAlignment(isFromMe),
-            rightMessageBuilder: (message) => ChatMessageBubble(
-              key: ValueKey<String>(message.message.id.toString()),
-              message: message,
-              isFromMe: true,
-            ),
-            leftMessageBuilder: (message) => ChatMessageBubble(
-              key: ValueKey<String>(message.message.id.toString()),
-              message: message,
-              isFromMe: false,
-            ),
-            loadingBuilder: CustomLoading.showLoadingView(),
-            emptyView: const ChatMessagesEmptyState(),
-            cacheKey: widget.messagesCacheKey,
-            cacheToJson: widget.messagesCacheKey == null
-                ? null
-                : _messageToJson,
-            cacheFromJson: widget.messagesCacheKey == null
-                ? null
-                : _messageFromJson,
-          ).paddingSymmetric(horizontal: 16.w, vertical: 8.h),
-        ),
-        (widget.conversation.otherParticipant.revealedPhone.isNotEmpty
-                ? RevealedPhoneCard(
-                    phoneNumber:
-                        widget.conversation.otherParticipant.revealedPhone,
-                  )
-                : ChatPrivacyBanner(
-                    icon: widget.conversation.otherParticipant.isPhoneRevealed
-                        ? Icons.info_outline_rounded
-                        : Icons.lock_outline_rounded,
-                    text: widget.conversation.otherParticipant.isPhoneRevealed
-                        ? LocaleKeys.contactPhoneUnavailable
-                        : LocaleKeys.chatPhonePrivacyThread,
-                  ))
-            .padding(EdgeInsets.fromLTRB(16.w, 0, 16.w, 10.h)),
-      ],
+          ),
+        ],
+      ),
     );
   }
 

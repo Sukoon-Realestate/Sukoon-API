@@ -1,7 +1,11 @@
+import 'package:sokoun_app/features/tenant/home/data/public_property_cache.dart';
+import 'package:melos_core/core/local_db/read_cache_policy.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
+import 'package:melos_core/core/widgets/app_text.dart';
+import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/widgets/custom_shimmer.dart';
 import 'package:melos_core/core/widgets/exeption_view.dart';
 import 'package:pagify/helpers/data_and_pagination_data.dart';
@@ -30,6 +34,7 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
     _data.readCachedPage()?.banner,
   );
   int _requestGeneration = 0;
+  final ValueNotifier<bool> _savedData = ValueNotifier(false);
   final ValueNotifier<int> _sectionRefresh = ValueNotifier(0);
   RentOverviewCubit? _rentCubit;
   Future<void>? _rentRequest;
@@ -50,6 +55,7 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
     int page,
   ) async {
     if (page == 1) {
+      _savedData.value = false;
       _requestGeneration++;
       if (_requestGeneration > 1) {
         unawaited(_refreshRent());
@@ -58,6 +64,9 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
     }
     final int generation = _requestGeneration;
     final (model, pagination) = await _data.getPage(page: page);
+    if (mounted && generation == _requestGeneration) {
+      _savedData.value = _data.fromCache;
+    }
     if (mounted && generation == _requestGeneration && page == 1) {
       _banner.value = model.banner;
     }
@@ -67,6 +76,7 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
   @override
   void dispose() {
     _banner.dispose();
+    _savedData.dispose();
     _sectionRefresh.dispose();
     _controller.dispose();
     _rentCubit?.close();
@@ -86,26 +96,44 @@ class _TenantHomeContentState extends State<TenantHomeContent> {
       rankingType: Ranking.adaptiveGrid,
       header: ValueListenableBuilder<HomeVisitBannerModel?>(
         valueListenable: _banner,
-        builder: (context, banner, _) => TenantHomeHeader(
-          banner: banner,
-          rentalSections: RentalOfferCapabilities.configured.canSearch
-              ? ValueListenableBuilder<int>(
-                  valueListenable: _sectionRefresh,
-                  builder: (context, generation, _) =>
-                      RentalHomeSections(refreshGeneration: generation),
-                )
-              : null,
-          rentOverview: _rentCubit == null
-              ? null
-              : RentOverviewSection(
-                  cubit: _rentCubit!,
-                  request: _rentRequest!,
-                  onRefresh: _refreshRent,
-                ),
+        builder: (context, banner, _) => Column(
+          children: [
+            ValueListenableBuilder<bool>(
+              valueListenable: _savedData,
+              builder: (context, saved, _) => saved
+                  ? Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Semantics(
+                        liveRegion: true,
+                        child: AppText(LocaleKeys.professionalSavedData),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+            TenantHomeHeader(
+              banner: banner,
+              rentalSections: RentalOfferCapabilities.configured.canSearch
+                  ? ValueListenableBuilder<int>(
+                      valueListenable: _sectionRefresh,
+                      builder: (context, generation, _) =>
+                          RentalHomeSections(refreshGeneration: generation),
+                    )
+                  : null,
+              rentOverview: _rentCubit == null
+                  ? null
+                  : RentOverviewSection(
+                      cubit: _rentCubit!,
+                      request: _rentRequest!,
+                      onRefresh: _refreshRent,
+                    ),
+            ),
+          ],
         ),
       ),
       cacheKey: TenantHomeData.cacheKey,
-      cacheToJson: (item) => item.toJson(),
+      cachePolicy: ReadCachePolicy.publicListing,
+      canPersistItems: () => !_data.fromCache,
+      cacheToJson: (item) => PublicPropertyCache.sanitize(item.toJson()),
       cacheFromJson: HomePropertyModel.fromJson,
       emptyListView: const TenantSuggestedPropertiesEmptyState(),
       errorBuilder: (error) => ExceptionView(

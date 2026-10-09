@@ -1,3 +1,4 @@
+import 'package:melos_core/core/local_db/read_cache_policy.dart';
 import 'package:flutter/material.dart';
 import 'package:pagify/pagify.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
@@ -44,6 +45,7 @@ class _RentInvoicesListState extends State<RentInvoicesList> {
       widget.workspace,
       leaseId: widget.leaseId,
     ),
+    cachePolicy: ReadCachePolicy.privateMemory,
     cacheToJson: (invoice) => invoice.toJson(),
     cacheFromJson: RentInvoice.fromJson,
     asyncCall: (_, page) => RentManagementData.getPage(

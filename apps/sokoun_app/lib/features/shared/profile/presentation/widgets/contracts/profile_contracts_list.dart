@@ -19,6 +19,7 @@ class _ProfileContractsListState extends State<ProfileContractsList> {
     header: ContractsJourneyActions(workspace: widget.workspace),
     asyncCall: (_, page) => ProfileContractsData.getPage(page),
     cacheKey: ProfileContractsData.cacheKey,
+    cachePolicy: ReadCachePolicy.privateMemory,
     cacheToJson: (contract) => contract.toJson(),
     cacheFromJson: ProfileContractContent.fromJson,
     emptyListView: const ProfileContractsEmptyState(),

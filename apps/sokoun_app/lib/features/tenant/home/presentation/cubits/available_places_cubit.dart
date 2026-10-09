@@ -43,6 +43,7 @@ class AvailablePlacesCubit extends AsyncCubit<AvailablePlacesModel> {
         CrudBaseParmas<AvailablePlacesModel>(
           api: ApiConstants.availablePlaces,
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.privateMemory,
           cancelToken: cancelToken,
           cacheKey: 'available_places_$propertyTypeId',
           queryParameters: {'property_type_id': propertyTypeId},

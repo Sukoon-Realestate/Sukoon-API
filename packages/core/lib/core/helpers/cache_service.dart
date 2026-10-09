@@ -13,20 +13,24 @@ class CacheStorage {
   }
 
   static Future<void> write(String key, dynamic value) async {
+    bool written = true;
     if (value is String) {
-      await _sharedPrefrences.setString(key, value);
+      written = await _sharedPrefrences.setString(key, value);
     } else if (value is int) {
-      await _sharedPrefrences.setInt(key, value);
+      written = await _sharedPrefrences.setInt(key, value);
     } else if (value is double) {
-      await _sharedPrefrences.setDouble(key, value);
+      written = await _sharedPrefrences.setDouble(key, value);
     } else if (value is bool) {
-      await _sharedPrefrences.setBool(key, value);
+      written = await _sharedPrefrences.setBool(key, value);
     } else if (value is List<String>) {
-      await _sharedPrefrences.setStringList(key, value);
+      written = await _sharedPrefrences.setStringList(key, value);
     } else if (value is Map<String, dynamic>) {
-      await _sharedPrefrences.setString(key, jsonEncode(value));
+      written = await _sharedPrefrences.setString(key, jsonEncode(value));
     }
+    if (!written) throw StateError('Local preference write failed');
   }
+
+  static Set<String> get keys => _sharedPrefrences.getKeys();
 
   static List<String> readList(String key) {
     return _sharedPrefrences.getStringList(key) ?? [];
@@ -61,10 +65,11 @@ class CacheStorage {
 class SecureStorage {
   SecureStorage._();
   static const _storage = FlutterSecureStorage(
-      aOptions: AndroidOptions(
-    encryptedSharedPreferences: true,
-    resetOnError: true,
-  ));
+    aOptions: AndroidOptions(
+      encryptedSharedPreferences: true,
+      resetOnError: true,
+    ),
+  );
 
   static Future<void> write(String key, String value) async {
     await _storage.write(key: key, value: value);
@@ -81,4 +86,6 @@ class SecureStorage {
   static Future<void> deleteAll() async {
     await _storage.deleteAll();
   }
+
+  static Future<Map<String, String>> readAll() => _storage.readAll();
 }

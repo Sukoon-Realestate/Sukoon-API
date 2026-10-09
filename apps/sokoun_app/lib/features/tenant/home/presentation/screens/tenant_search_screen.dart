@@ -1,3 +1,7 @@
+import 'dart:async';
+import '../cubits/search_restoration_cubit.dart';
+import '../../data/models/search_restoration_snapshot.dart';
+import 'package:sokoun_app/features/shared/recovery/presentation/cubits/draft_cubit.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_filter_options_model.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/extensions/widget_extension.dart';
@@ -43,6 +47,7 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
   late final Future<void> _propertyTypesRequest;
   late final AvailablePlacesCubit _availablePlacesCubit;
   late final TenantRecentSearchesCubit _recentSearchesCubit;
+  late final SearchRestorationCubit _restoration;
 
   @override
   void initState() {
@@ -59,6 +64,8 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
     _availablePlacesCubit = AvailablePlacesCubit();
     _recentSearchesCubit = TenantRecentSearchesCubit();
     _recentSearchesCubit.loadRecentSearches();
+    _restoration = SearchRestorationCubit();
+    unawaited(_restoration.load());
   }
 
   @override
@@ -68,6 +75,7 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
     _propertyTypesCubit.close();
     _availablePlacesCubit.close();
     _recentSearchesCubit.close();
+    unawaited(_restoration.close());
     super.dispose();
   }
 
@@ -228,6 +236,26 @@ class _TenantSearchScreenState extends State<TenantSearchScreen> {
       ],
       child: AppScaffold(
         title: LocaleKeys.tenantSearchTitle,
+        actions: [
+          BlocBuilder<
+            SearchRestorationCubit,
+            DraftState<SearchRestorationSnapshot>
+          >(
+            bloc: _restoration,
+            builder: (context, state) => state.record == null
+                ? const SizedBox.shrink()
+                : IconButton(
+                    tooltip: LocaleKeys.professionalRestoreSearch,
+                    icon: const Icon(Icons.restore),
+                    onPressed: () => Go.to(
+                      TenantSearchResultsScreen(
+                        initialFilters: state.record!.value.filters,
+                        validateSavedFilters: true,
+                      ),
+                    ),
+                  ),
+          ),
+        ],
         showBackButton: true,
         backgroundColor: context.appColor(
           AppColors.scaffoldBackground,

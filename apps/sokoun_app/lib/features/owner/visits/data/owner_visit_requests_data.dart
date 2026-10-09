@@ -48,6 +48,7 @@ class OwnerVisitRequestsData {
               ? ApiConstants.ownerVisitRequests
               : ApiConstants.receivedPropertyVisits,
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.privateMemory,
           queryParameters: {'page': serverPage},
           cacheKey: '${_cachePrefix}_page_$serverPage',
           mapper: OwnerVisitRequestsResponse.fromJson,

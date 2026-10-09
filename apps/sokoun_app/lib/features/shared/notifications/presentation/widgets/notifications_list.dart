@@ -1,3 +1,4 @@
+import 'package:melos_core/core/local_db/read_cache_policy.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:melos_core/core/extensions/padding_extension.dart';
@@ -58,6 +59,7 @@ class NotificationsList extends StatelessWidget {
       header: header,
       contentPadding: EdgeInsets.symmetric(horizontal: 20.w),
       cacheKey: NotificationsData.cacheKey,
+      cachePolicy: ReadCachePolicy.privateMemory,
       cacheToJson: (notification) => notification.toJson(),
       cacheFromJson: AppNotificationContent.fromJson,
       emptyListView: NotificationsEmptyState(role: role),

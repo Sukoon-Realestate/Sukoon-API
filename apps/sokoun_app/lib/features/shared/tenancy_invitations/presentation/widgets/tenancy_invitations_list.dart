@@ -1,3 +1,4 @@
+import 'package:melos_core/core/local_db/read_cache_policy.dart';
 import 'package:flutter/material.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/core/widgets/app_pagify.dart';
@@ -43,6 +44,7 @@ class _TenancyInvitationsListState extends State<TenancyInvitationsList> {
             widget.workspace,
             propertyId: widget.propertyId,
           ),
+          cachePolicy: ReadCachePolicy.privateMemory,
           cacheToJson: (item) => item.toJson(),
           cacheFromJson: TenancyInvitation.fromJson,
           asyncCall: (_, page) => TenancyInvitationsData.getPage(

@@ -27,6 +27,7 @@ abstract class VerifiedActionCubit<T> extends AsyncCubit<T> {
     bool withInternetInterceptor = false,
     bool showMsgOnSuccess = false,
     bool Function()? shouldApplyResult,
+    bool retainDataOnRefresh = false,
   }) async {
     if (!checkVerification(onError: onError)) return;
     await super.executeAsyncWithBaseModel(
@@ -44,6 +45,7 @@ abstract class VerifiedActionCubit<T> extends AsyncCubit<T> {
       withInternetInterceptor: withInternetInterceptor,
       showMsgOnSuccess: showMsgOnSuccess,
       shouldApplyResult: shouldApplyResult,
+      retainDataOnRefresh: retainDataOnRefresh,
     );
   }
 }

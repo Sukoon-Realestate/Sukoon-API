@@ -1,9 +1,13 @@
+import 'package:melos_core/core/helpers/cache_service.dart';
+import 'helpers/account_test_dependencies.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:melos_core/config/language/locale_keys.g.dart';
 import 'package:melos_core/config/res/config_imports.dart';
@@ -13,13 +17,16 @@ import 'package:melos_core/core/base_crud/code/domain/usecases/pagination_respon
 import 'package:melos_core/core/error/failure.dart';
 import 'package:melos_core/core/network/api_endpoints.dart';
 import 'package:melos_core/core/network/dio_service.dart';
+import 'package:melos_core/core/navigation/navigator.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/owner/home/data/enums/property_tenant_type.dart';
 import 'package:sokoun_app/features/owner/home/data/enums/property_price_period.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:sokoun_app/features/owner/home/data/models/property_location.dart';
+import 'package:sokoun_app/features/owner/home/data/models/property_upload_progress.dart';
 import 'package:sokoun_app/features/owner/home/data/owner_add_property_mapper.dart';
 import 'package:sokoun_app/features/owner/home/presentation/cubits/property_submission_cubit.dart';
+import 'package:sokoun_app/features/owner/home/presentation/cubits/upload_property_images_cubit.dart';
 import 'package:sokoun_app/features/owner/properties/presentation/cubits/delete_owner_property_cubit.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_property_content.dart';
@@ -29,14 +36,59 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late _HandoffRepository repository;
 
+  setUpAll(CacheStorage.init);
+
   setUp(() async {
     await injector.reset();
+    await registerAuthenticatedTestAccount();
     repository = _HandoffRepository();
     injector.registerSingleton<BaseCrudUseCase>(
       BaseCrudUseCase(repository: repository),
     );
   });
   tearDown(() => injector.reset());
+
+  for (final status in [
+    PropertyUploadStatus.sending,
+    PropertyUploadStatus.unknown,
+  ]) {
+    testWidgets(
+      'removing a $status photo cannot silently complete an upload session',
+      (tester) async {
+        await tester.pumpWidget(
+          ScreenUtilInit(
+            designSize: const Size(360, 690),
+            builder: (_, __) => MaterialApp(
+              navigatorKey: Go.navigatorKey,
+              home: const Scaffold(),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final cubit = UploadPropertyImagesCubit();
+        addTearDown(cubit.close);
+        bool completed = false;
+        await cubit.uploadImages(
+          propertyId: 'property-id',
+          photos: _readyForm().photoDrafts,
+          restoredUploads: {
+            'removed-photo': PropertyUploadProgress(
+              reference: 'removed-photo',
+              status: status,
+            ),
+          },
+          onPhotoUploaded: ({required photo, required image}) {},
+          onSuccess: () => completed = true,
+        );
+        expect(repository.requests, isEmpty);
+        expect(completed, isFalse);
+        expect(cubit.state.isError, isTrue);
+        expect(cubit.uploads['removed-photo']?.status, status);
+        await tester.pump(const Duration(seconds: 5));
+        await tester.pumpAndSettle();
+      },
+    );
+  }
 
   test('the backend handoff response survives caching and reaches details', () {
     final json = _handoffProperty();

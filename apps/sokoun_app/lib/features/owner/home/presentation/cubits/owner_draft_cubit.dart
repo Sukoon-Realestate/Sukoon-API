@@ -24,6 +24,7 @@ class OwnerDraftCubit extends Cubit<OwnerPropertyDraft> {
   void schedule(OwnerPropertyDraft draft) {
     if (!_active) return;
     _pending = draft;
+    emit(state.copyWith(isSaving: true));
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 400), () {
       unawaited(flush().catchError((Object _) {}));
@@ -38,9 +39,13 @@ class OwnerDraftCubit extends Cubit<OwnerPropertyDraft> {
       try {
         final saved = await _store.write(draft);
         if (!_active) throw StateError(LocaleKeys.freeLocalSaveFailed);
-        emit(saved.copyWith(localSaveFailed: false));
+        emit(
+          saved.copyWith(localSaveFailed: false, isSaving: _pending != null),
+        );
       } catch (_) {
-        if (_active) emit(state.copyWith(localSaveFailed: true));
+        if (_active) {
+          emit(state.copyWith(localSaveFailed: true, isSaving: false));
+        }
         rethrow;
       }
     });

@@ -19,6 +19,7 @@ class _SupportTicketsListState extends State<SupportTicketsList> {
     asyncCall: (_, page) =>
         SupportTicketsData.getPage(page: page, workspace: widget.workspace),
     cacheKey: SupportTicketsData.cacheKey(widget.workspace),
+    cachePolicy: ReadCachePolicy.privateMemory,
     cacheToJson: (ticket) => ticket.toJson(),
     cacheFromJson: SupportTicketContent.fromJson,
     emptyListView: SupportTicketsEmptyState(workspace: widget.workspace),

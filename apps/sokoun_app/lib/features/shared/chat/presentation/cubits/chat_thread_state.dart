@@ -13,9 +13,13 @@ class ChatThreadState extends Equatable {
     required this.readReceiptRevision,
     required this.queuedMessageCount,
     this.showQueuedMessages = false,
+    this.unknownDelivery = false,
     this.receivedMessage,
     this.draft = '',
     this.localSaveFailed = false,
+    this.needsDraftDecision = false,
+    this.isSavingDraft = false,
+    this.draftSaved = false,
     this.recoveredMessages = const [],
     this.confirmedLocalMessageId,
     this.contact = const ChatParticipantContent.initial(),
@@ -28,12 +32,16 @@ class ChatThreadState extends Equatable {
       readReceiptRevision = 0,
       queuedMessageCount = 0,
       showQueuedMessages = false,
+      unknownDelivery = false,
       confirmedLocalMessageId = null,
       receivedMessage = null,
       contact = const ChatParticipantContent.initial(),
       canSend = true,
       draft = '',
       localSaveFailed = false,
+      needsDraftDecision = false,
+      isSavingDraft = false,
+      draftSaved = false,
       recoveredMessages = const [];
 
   final ChatSocketStatus status;
@@ -41,6 +49,9 @@ class ChatThreadState extends Equatable {
   final bool canSend;
   final String draft;
   final bool localSaveFailed;
+  final bool needsDraftDecision;
+  final bool isSavingDraft;
+  final bool draftSaved;
   final List<SavedChatMessage> recoveredMessages;
   final ChatSocketMessage? receivedMessage;
   final String? confirmedLocalMessageId;
@@ -48,11 +59,15 @@ class ChatThreadState extends Equatable {
   final int readReceiptRevision;
   final int queuedMessageCount;
   final bool showQueuedMessages;
+  final bool unknownDelivery;
 
   ChatThreadState copyWith({
     ChatSocketStatus? status,
     String? draft,
     bool? localSaveFailed,
+    bool? needsDraftDecision,
+    bool? isSavingDraft,
+    bool? draftSaved,
     List<SavedChatMessage>? recoveredMessages,
     ChatSocketMessage? receivedMessage,
     Object? confirmedLocalMessageId = _notProvided,
@@ -60,6 +75,7 @@ class ChatThreadState extends Equatable {
     int? readReceiptRevision,
     int? queuedMessageCount,
     bool? showQueuedMessages,
+    bool? unknownDelivery,
     ChatParticipantContent? contact,
     bool? canSend,
   }) {
@@ -69,6 +85,9 @@ class ChatThreadState extends Equatable {
       canSend: canSend ?? this.canSend,
       draft: draft ?? this.draft,
       localSaveFailed: localSaveFailed ?? this.localSaveFailed,
+      needsDraftDecision: needsDraftDecision ?? this.needsDraftDecision,
+      isSavingDraft: isSavingDraft ?? this.isSavingDraft,
+      draftSaved: draftSaved ?? this.draftSaved,
       recoveredMessages: recoveredMessages ?? this.recoveredMessages,
       receivedMessage: receivedMessage ?? this.receivedMessage,
       confirmedLocalMessageId: identical(confirmedLocalMessageId, _notProvided)
@@ -79,6 +98,7 @@ class ChatThreadState extends Equatable {
       readReceiptRevision: readReceiptRevision ?? this.readReceiptRevision,
       queuedMessageCount: queuedMessageCount ?? this.queuedMessageCount,
       showQueuedMessages: showQueuedMessages ?? this.showQueuedMessages,
+      unknownDelivery: unknownDelivery ?? this.unknownDelivery,
     );
   }
 
@@ -89,6 +109,9 @@ class ChatThreadState extends Equatable {
     canSend,
     draft,
     localSaveFailed,
+    needsDraftDecision,
+    isSavingDraft,
+    draftSaved,
     recoveredMessages,
     receivedMessage,
     confirmedLocalMessageId,
@@ -96,6 +119,7 @@ class ChatThreadState extends Equatable {
     readReceiptRevision,
     queuedMessageCount,
     showQueuedMessages,
+    unknownDelivery,
   ];
 }
 

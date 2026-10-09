@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:melos_core/core/network/account_session.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_property_draft.dart';
 import 'package:sokoun_app/features/owner/home/data/models/owner_add_property_content.dart';
 import 'package:sokoun_app/features/owner/home/data/owner_accommodation_draft_data.dart';
@@ -12,6 +13,7 @@ import 'package:sokoun_app/features/shared/rental_offers/data/models/rental_inve
 import 'helpers/rental_offer_fixtures.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   for (final scope in RentalScope.values) {
     test(
       '$scope prepares the advertised accommodation and retains shared location',
@@ -295,6 +297,11 @@ void main() {
   test(
     'durable draft copying preserves selected offer, unit values and photo associations',
     () async {
+      AccountSession.begin('unit-owner');
+      addTearDown(() async {
+        AccountSession.end();
+        await AccountSession.finishCleanup();
+      });
       final root = await Directory.systemTemp.createTemp('sokoun-unit-draft');
       addTearDown(() => root.delete(recursive: true));
       final image = await File(

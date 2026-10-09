@@ -1,3 +1,8 @@
+import 'dart:async';
+import 'package:sokoun_app/features/shared/destinations/data/models/app_destination.dart';
+import 'package:sokoun_app/features/shared/destinations/presentation/visible_destination_registry.dart';
+import '../cubits/favorite_coordinator.dart';
+import '../../data/models/favorite_target.dart';
 import 'package:sokoun_app/features/shared/contact/presentation/widgets/visit_contact_refresh.dart';
 import 'package:sokoun_app/features/tenant/decision_tools/data/models/property_cost_breakdown.dart';
 import 'package:sokoun_app/features/tenant/decision_tools/presentation/widgets/property_cost_card.dart';
@@ -52,6 +57,9 @@ class PropertyDetailsScreen extends StatefulWidget {
 }
 
 class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
+  ModalRoute<dynamic>? _route;
+  VoidCallback? _unbindDestination;
+  StreamSubscription<Map<FavoriteTarget, FavoriteState>>? _favorites;
   late final PropertyDetailsCubit _detailsCubit;
   late final PropertySaveCubit _saveCubit;
   late final CreateConversationCubit _conversationCubit;
@@ -73,11 +81,40 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
     _detailsCubit = PropertyDetailsCubit();
     _saveCubit = PropertySaveCubit();
     _conversationCubit = CreateConversationCubit();
+    _favorites = FavoriteCoordinator.instance.stream.listen((_) {
+      if (!mounted) return;
+      final state = FavoriteCoordinator.instance.value(
+        FavoriteTarget(widget.propertyId, _selectedOffer.value.id),
+      );
+      _savedState.value = (savedOverride: state?.desired, isUpdating: false);
+    });
     _detailsRequest = _detailsCubit.getPropertyDetails(widget.propertyId);
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route == _route) return;
+    _unbindDestination?.call();
+    _route = route;
+    if (route != null) {
+      _unbindDestination = VisibleDestinationRegistry.bind(
+        route,
+        () => AppDestination(
+          kind: DestinationKind.property,
+          id: widget.propertyId,
+          offerId: _selectedOffer.value.id,
+          workspace: AppWorkspace.tenant,
+        ),
+      );
+    }
+  }
+
+  @override
   void dispose() {
+    _unbindDestination?.call();
+    _favorites?.cancel();
     _detailsCubit.close();
     _saveCubit.close();
     _conversationCubit.close();
@@ -114,22 +151,26 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
       );
       return;
     }
-    final ({bool? savedOverride, bool isUpdating}) savedState =
-        _savedState.value;
-    if (savedState.isUpdating) return;
 
-    final bool currentValue = savedState.savedOverride ?? property.isSaved;
+    final target = FavoriteTarget(
+      property.id.isEmpty ? widget.propertyId : property.id,
+      property.selection?.offerId,
+    );
+    FavoriteCoordinator.instance.seed(target, property.isSaved);
+    final bool currentValue =
+        FavoriteCoordinator.instance.value(target)?.desired ?? property.isSaved;
     final bool nextValue = !currentValue;
     final String propertyId = property.id.isEmpty
         ? widget.propertyId
         : property.id;
 
-    _savedState.value = (savedOverride: nextValue, isUpdating: true);
+    _savedState.value = (savedOverride: nextValue, isUpdating: false);
 
     void rollbackSavedState(String _) {
       if (!mounted) return;
       _savedState.value = (
-        savedOverride: currentValue,
+        savedOverride:
+            FavoriteCoordinator.instance.value(target)?.desired ?? currentValue,
         isUpdating: _savedState.value.isUpdating,
       );
     }
@@ -160,7 +201,13 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
               offers: [
                 for (final offer in inventory.offers)
                   offer.id == property.selection!.offerId
-                      ? offer.copyWith(isSaved: nextValue)
+                      ? offer.copyWith(
+                          isSaved:
+                              FavoriteCoordinator.instance
+                                  .value(target)
+                                  ?.desired ??
+                              nextValue,
+                        )
                       : offer,
               ],
             ),
@@ -177,7 +224,19 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
   Widget _buildDetails(PropertyDetailsModel data) =>
       ValueListenableBuilder<({String? id, RentalSelection? confirmed})>(
         valueListenable: _selectedOffer,
-        builder: (_, choice, _) => _buildSelectedDetails(data, choice),
+        builder: (_, choice, _) => Column(
+          children: [
+            if (_detailsCubit.state.fromCache)
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Semantics(
+                  liveRegion: true,
+                  child: AppText(LocaleKeys.professionalSavedData),
+                ),
+              ),
+            Expanded(child: _buildSelectedDetails(data, choice)),
+          ],
+        ),
       );
 
   Widget _buildSelectedDetails(
@@ -261,7 +320,16 @@ class _PropertyDetailsScreenState extends State<PropertyDetailsScreen> {
                   builder: (context, savedState, _) =>
                       TenantPropertyBottomActions(
                         property: property,
-                        isSaved: savedState.savedOverride ?? property.isSaved,
+                        isSaved:
+                            FavoriteCoordinator.instance
+                                .value(
+                                  FavoriteTarget(
+                                    property.id,
+                                    property.selection?.offerId,
+                                  ),
+                                )
+                                ?.desired ??
+                            property.isSaved,
                         onSavedPressed:
                             property.hasRentalOffers &&
                                 (!property.selectionConfirmed ||

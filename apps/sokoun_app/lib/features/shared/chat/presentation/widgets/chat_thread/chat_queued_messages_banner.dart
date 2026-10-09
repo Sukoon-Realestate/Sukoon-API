@@ -13,16 +13,23 @@ class ChatQueuedMessagesBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocSelector<ChatThreadCubit, ChatThreadState, bool>(
-      selector: (state) => state.showQueuedMessages,
-      builder: (context, showQueuedMessages) {
-        if (!showQueuedMessages) {
+    return BlocSelector<
+      ChatThreadCubit,
+      ChatThreadState,
+      ({bool show, bool unknown})
+    >(
+      selector: (state) =>
+          (show: state.showQueuedMessages, unknown: state.unknownDelivery),
+      builder: (context, delivery) {
+        if (!delivery.show) {
           return const SizedBox.shrink();
         }
 
         return Semantics(
           liveRegion: true,
-          label: LocaleKeys.chatQueuedMessages,
+          label: delivery.unknown
+              ? LocaleKeys.professionalUnknownDelivery
+              : LocaleKeys.chatQueuedMessages,
           child: Container(
             width: double.infinity,
             margin: EdgeInsetsDirectional.fromSTEB(16.w, 0, 16.w, 8.h),
@@ -32,23 +39,42 @@ class ChatQueuedMessagesBanner extends StatelessWidget {
               borderRadius: BorderRadius.circular(12.r),
               border: Border.all(color: context.appColor(AppColors.amber)),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 8.w,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Icons.schedule_send_rounded,
-                  color: context.appColor(AppColors.brown),
-                  size: 17.r,
-                ),
-                Flexible(
-                  child: AppText(
-                    LocaleKeys.chatQueuedMessages,
-                    style: AppTextStyles.semiBold.copyWith(
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 8.w,
+                  children: [
+                    Icon(
+                      Icons.schedule_send_rounded,
                       color: context.appColor(AppColors.brown),
-                      fontSize: 12.sp,
+                      size: 17.r,
                     ),
-                    textAlign: TextAlign.center,
+                    Expanded(
+                      child: AppText(
+                        delivery.unknown
+                            ? LocaleKeys.professionalUnknownDelivery
+                            : LocaleKeys.chatQueuedMessages,
+                        style: AppTextStyles.semiBold.copyWith(
+                          color: context.appColor(AppColors.brown),
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Align(
+                  alignment: AlignmentDirectional.centerEnd,
+                  child: TextButton(
+                    onPressed: () => delivery.unknown
+                        ? context.read<ChatThreadCubit>().checkDelivery()
+                        : context.read<ChatThreadCubit>().retryPending(),
+                    child: AppText(
+                      delivery.unknown
+                          ? LocaleKeys.professionalCheckDelivery
+                          : LocaleKeys.ownerRetryAction,
+                    ),
                   ),
                 ),
               ],

@@ -9,6 +9,7 @@ class OwnerRevenueCubit extends VerifiedActionCubit<OwnerRevenueContent> {
         CrudBaseParmas<OwnerRevenueContent>(
           api: ApiConstants.ownerRevenues,
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.privateMemory,
           cacheKey: 'owner_revenue',
           mapper: (json) => OwnerRevenueContent.fromJson(
             json is Map ? Map<String, dynamic>.from(json) : const {},

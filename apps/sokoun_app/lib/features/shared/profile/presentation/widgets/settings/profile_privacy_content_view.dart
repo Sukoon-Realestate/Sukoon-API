@@ -50,9 +50,7 @@ class ProfilePrivacyContentView extends StatelessWidget {
                       ),
                     ),
                     value: entry.value,
-                    onChanged: state.isLoading
-                        ? null
-                        : (value) => onChanged(entry.key, value),
+                    onChanged: (value) => onChanged(entry.key, value),
                     secondary: state.isLoading && state.data == entry.key
                         ? SizedBox.square(
                             dimension: 20.r,

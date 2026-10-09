@@ -15,6 +15,7 @@ extension ErrorHandlerWithCache<M> on Future<BaseModel<M>> {
     required Map<String, dynamic> Function(M) toJson,
     required void Function(String key, Map<String, dynamic> json) onSave,
     required Map<String, dynamic>? Function(String key) onRead,
+    void Function(String key)? onInvalidate,
   }) async {
     try {
       final result = await this;
@@ -26,15 +27,19 @@ extension ErrorHandlerWithCache<M> on Future<BaseModel<M>> {
       return Success(result);
     } on RequestCancelledException {
       return const Error(RequestCancelledFailure());
-    } on BlockedException catch (e) {
-      return _resolveFromCache(cacheKey, fromCacheJson, e.message, onRead);
-    } on UnauthorizedException catch (e) {
-      return _resolveFromCache(cacheKey, fromCacheJson, e.message, onRead);
-      // UserCubit.instance.logout();
-      // Go.offAll(const LoginScreen());
-      // return Result.error(Failure(e.message));
     } on ServerException catch (e) {
-      return _resolveFromCache(cacheKey, fromCacheJson, e.message, onRead);
+      final Failure failure = Failure.fromException(e);
+      if (failure.revokesCachedContent) {
+        onInvalidate?.call(cacheKey);
+        return Error(failure);
+      }
+      return _resolveFromCache(
+        cacheKey,
+        fromCacheJson,
+        e.message,
+        onRead,
+        failure: failure,
+      );
     } catch (e, s) {
       if (kDebugMode) log('Unexpected error: ${e.toString()}', stackTrace: s);
       return _resolveFromCache(cacheKey, fromCacheJson, e.toString(), onRead);
@@ -46,8 +51,9 @@ Result<BaseModel<M>, Failure> _resolveFromCache<M>(
   String cacheKey,
   M Function(Map<String, dynamic> json) fromCacheJson,
   String errorMessage,
-  Map<String, dynamic>? Function(String key) onRead,
-) {
+  Map<String, dynamic>? Function(String key) onRead, {
+  Failure? failure,
+}) {
   try {
     final cached = onRead(cacheKey);
     if (cached.isNotNull) {
@@ -60,7 +66,7 @@ Result<BaseModel<M>, Failure> _resolveFromCache<M>(
       );
     }
   } catch (_) {}
-  return Error(Failure(errorMessage));
+  return Error(failure ?? Failure(errorMessage));
 }
 
 extension ErrorHandler<T> on Future<T> {
@@ -79,12 +85,8 @@ extension ErrorHandler<T> on Future<T> {
       return Success(result);
     } on RequestCancelledException {
       return const Error(RequestCancelledFailure());
-    } on BlockedException catch (e) {
-      return Error(Failure(e.message));
-    } on UnauthorizedException catch (e) {
-      return Error(Failure(e.message));
     } on ServerException catch (e) {
-      return Error(Failure(e.message));
+      return Error(Failure.fromException(e));
     }
   }
 

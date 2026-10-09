@@ -13,6 +13,10 @@ Future<TestAccountCubit> registerAuthenticatedTestAccount({
     isVerified: true,
   ),
 }) async {
+  if (AccountSession.userId != null && AccountSession.userId != user.id) {
+    AccountSession.end();
+  }
+  if (AccountSession.hasPendingCleanup) await AccountSession.finishCleanup();
   if (injector.isRegistered<UserCubit>()) {
     await injector.unregister<UserCubit>();
   }

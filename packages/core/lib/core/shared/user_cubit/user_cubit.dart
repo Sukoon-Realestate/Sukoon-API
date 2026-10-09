@@ -21,6 +21,10 @@ class UserCubit extends Cubit<UserState> with UserUtils {
 
   Future<void> setUserLoggedIn({required UserModel user}) async {
     if (AccountSession.userId != user.id) {
+      if (AccountSession.userId != null) AccountSession.end();
+      if (AccountSession.hasPendingCleanup) {
+        await AccountSession.finishCleanup();
+      }
       AccountSession.begin(user.id);
     }
     final int generation = AccountSession.generation;
@@ -33,7 +37,11 @@ class UserCubit extends Cubit<UserState> with UserUtils {
   Future<void> logout() async {
     AccountSession.end();
     try {
-      await injector<NetworkService>().clearSessionCookies();
+      try {
+        await AccountSession.finishCleanup();
+      } finally {
+        await injector<NetworkService>().clearSessionCookies();
+      }
     } finally {
       await Future.wait([
         CacheStorage.delete(_userKey),
@@ -86,7 +94,8 @@ class UserCubit extends Cubit<UserState> with UserUtils {
     if (userMap != null) {
       await CacheStorage.delete(_userKey);
     }
-    AccountSession.end();
+    AccountSession.end(persistedAccountId: cachedUser?.id);
+    await AccountSession.finishCleanup();
     emit(UserState.initial());
     return false;
   }

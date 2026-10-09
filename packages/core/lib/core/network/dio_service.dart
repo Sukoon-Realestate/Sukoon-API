@@ -8,6 +8,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../config/language/languages.dart' show Languages;
 import '../../config/language/locale_keys.g.dart';
+import '../local_db/read_cache_policy.dart';
 import '../../config/res/config_imports.dart';
 import '../error/exceptions.dart';
 import '../base_crud/code/domain/usecases/pagination_response.dart';
@@ -224,6 +225,8 @@ class DioService implements NetworkService, SessionAuthService {
   Future<void> updateBaseUrl() async {
     final baseUrl = await getBaseUrl();
     _dio.options.baseUrl = baseUrl;
+    ReadCacheContext.environment =
+        '${Helpers.currentFlavor.name}|${baseUrl.replaceFirst(RegExp(r'/+$'), '')}';
   }
 
   @override
@@ -355,55 +358,67 @@ class DioService implements NetworkService, SessionAuthService {
   }
 
   dynamic _handleError(DioException error) {
+    final Object? body = error.response?.data;
+    final String? serverMessage = body is Map
+        ? body['message']?.toString()
+        : null;
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
+        throw NoInternetConnectionException(
+          LocaleKeys.checkInternet,
+          TransportFailureKind.connection,
+        );
       case DioExceptionType.sendTimeout:
+        throw NoInternetConnectionException(
+          LocaleKeys.checkInternet,
+          TransportFailureKind.sendTimeout,
+        );
       case DioExceptionType.receiveTimeout:
+        throw NoInternetConnectionException(
+          LocaleKeys.checkInternet,
+          TransportFailureKind.receiveTimeout,
+        );
       case DioExceptionType.connectionError:
-        throw NoInternetConnectionException(LocaleKeys.checkInternet);
+        // An adapter's connection error does not prove a write was never sent.
+        throw NoInternetConnectionException(
+          LocaleKeys.checkInternet,
+          TransportFailureKind.unknown,
+        );
       case DioExceptionType.badResponse:
         switch (error.response!.statusCode) {
           case HttpStatus.badRequest:
-            throw BadRequestException(
-              error.response?.data['message'] ?? LocaleKeys.badRequest,
-            );
+            throw BadRequestException(serverMessage ?? LocaleKeys.badRequest);
           case HttpStatus.unauthorized:
             throw UnauthorizedException(
-              error.response?.data['message'] ?? LocaleKeys.unauthorized,
+              serverMessage ?? LocaleKeys.unauthorized,
             );
           case HttpStatus.locked:
-            throw BlockedException(
-              error.response?.data['message'] ?? LocaleKeys.unauthorized,
-            );
+            throw BlockedException(serverMessage ?? LocaleKeys.unauthorized);
           case HttpStatus.forbidden:
-            throw ForbiddenException(
-              error.response?.data['message'] ?? LocaleKeys.unauthorized,
-            );
+            throw ForbiddenException(serverMessage ?? LocaleKeys.unauthorized);
           case HttpStatus.notFound:
-            throw NotFoundException(
-              error.response?.data['message'] ?? LocaleKeys.notFound,
-            );
+            throw NotFoundException(serverMessage ?? LocaleKeys.notFound);
           case HttpStatus.conflict:
-            throw ConflictException(
-              error.response?.data['message'] ?? LocaleKeys.serverError,
-            );
+            throw ConflictException(serverMessage ?? LocaleKeys.serverError);
           case HttpStatus.internalServerError:
             throw InternalServerErrorException(
-              error.response?.data['message'] ?? LocaleKeys.serverError,
+              serverMessage ?? LocaleKeys.serverError,
             );
           default:
-            throw ServerException(error.response?.data['message'] ?? LocaleKeys.serverError);
+            throw ServerException(
+              serverMessage ?? LocaleKeys.serverError,
+              statusCode: error.response?.statusCode,
+            );
         }
       case DioExceptionType.cancel:
         throw const RequestCancelledException();
       case DioExceptionType.unknown:
         throw ServerException(
-          error.response?.data['message'] ?? LocaleKeys.exceptionError,
+          serverMessage ?? LocaleKeys.exceptionError,
+          transport: TransportFailureKind.unknown,
         );
       default:
-        throw ServerException(
-          error.response?.data['message'] ?? LocaleKeys.exceptionError,
-        );
+        throw ServerException(serverMessage ?? LocaleKeys.exceptionError);
     }
   }
 }

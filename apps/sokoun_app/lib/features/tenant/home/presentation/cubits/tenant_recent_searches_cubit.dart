@@ -1,3 +1,4 @@
+import 'package:melos_core/core/network/account_session.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/tenant_search_content.dart';
 import 'package:sokoun_app/features/tenant/home/data/tenant_search_data.dart';
@@ -5,11 +6,13 @@ import 'package:sokoun_app/features/tenant/home/data/tenant_search_data.dart';
 class TenantRecentSearchesCubit extends Cubit<List<RecentSearchContent>> {
   TenantRecentSearchesCubit() : super(const []);
 
+  final int _generation = AccountSession.generation;
   Future<void> _pendingWrite = Future.value();
   List<RecentSearchContent> _persisted = const [];
   int _revision = 0;
 
   void loadRecentSearches() {
+    if (isClosed || _generation != AccountSession.generation) return;
     _persisted = _unique(TenantSearchData.getRecentSearches());
     emit(_persisted);
   }
@@ -37,14 +40,18 @@ class TenantRecentSearchesCubit extends Cubit<List<RecentSearchContent>> {
       );
 
   Future<bool> _update(List<RecentSearchContent> next) {
-    if (isClosed) return Future.value(false);
+    if (isClosed || _generation != AccountSession.generation) {
+      return Future.value(false);
+    }
     final revision = ++_revision;
     final snapshot = List<RecentSearchContent>.unmodifiable(next);
     emit(snapshot);
     // Serialize writes so rapid deletion/undo cannot persist an older snapshot.
     final operation = _pendingWrite.then((_) async {
+      if (_generation != AccountSession.generation) return false;
       try {
         await TenantSearchData.saveRecentSearches(snapshot);
+        if (_generation != AccountSession.generation) return false;
         _persisted = snapshot;
         return true;
       } catch (_) {

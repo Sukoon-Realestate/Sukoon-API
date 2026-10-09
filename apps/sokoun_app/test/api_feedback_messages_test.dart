@@ -1,3 +1,5 @@
+import 'package:melos_core/core/helpers/cache_service.dart';
+import 'helpers/account_test_dependencies.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -17,8 +19,11 @@ import 'package:toastification/toastification.dart';
 void main() {
   late _FeedbackRepository repository;
 
+  setUpAll(CacheStorage.init);
+
   setUp(() async {
     await injector.reset();
+    await registerAuthenticatedTestAccount();
     toastification.managers.clear();
     repository = _FeedbackRepository();
     injector.registerSingleton<BaseCrudUseCase>(
@@ -199,7 +204,16 @@ class _FeedbackRepository implements BaseRepository {
   ) async {
     if (failure case final message?) return Error(ServerFailure(message));
     return Success(
-      BaseModel<T>(key: 'success', msg: message, data: params.mapper!(payload)),
+      BaseModel<T>(
+        key: 'success',
+        msg: message,
+        data: params.mapper!(
+          params.httpRequestType == HttpRequestType.get &&
+                  params.api == 'properties/visits/requests/visit-id/'
+              ? {'id': 'visit-id', 'status': 'completed', 'can_review': true}
+              : payload,
+        ),
+      ),
     );
   }
 

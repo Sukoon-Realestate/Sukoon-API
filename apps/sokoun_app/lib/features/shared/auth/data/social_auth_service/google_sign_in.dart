@@ -34,6 +34,7 @@ class GoogleSignService {
       try {
         user = await _signIn.authenticate();
         await user.authorizationClient.authorizationForScopes(scopes);
+        log('the token is ${user.authentication.idToken}');
         return user.authentication.idToken ?? '';
       } on GoogleSignInException catch (e) {
         if (e.code == GoogleSignInExceptionCode.canceled) {

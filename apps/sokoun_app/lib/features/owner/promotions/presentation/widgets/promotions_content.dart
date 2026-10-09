@@ -1,3 +1,4 @@
+import 'package:melos_core/core/local_db/read_cache_policy.dart';
 import 'package:melos_core/config/language/languages.dart';
 import 'package:sokoun_app/features/shared/premium/presentation/cubits/feature_configuration_cubit.dart';
 import 'package:flutter/material.dart';
@@ -59,6 +60,7 @@ class _PromotionsContentState extends State<PromotionsContent> {
     ),
     enablePullRefresh: true,
     cacheKey: PromotionsData.cacheKey,
+    cachePolicy: ReadCachePolicy.privateMemory,
     cacheToJson: (item) => item.toJson(),
     cacheFromJson: PromotionCampaign.fromJson,
     asyncCall: (_, page) => PromotionsData.getPage(page: page),

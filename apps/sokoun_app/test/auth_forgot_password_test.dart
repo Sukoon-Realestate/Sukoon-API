@@ -8,6 +8,7 @@ import 'package:multiple_result/multiple_result.dart';
 import 'package:sokoun_app/features/shared/auth/presentation/cubits/forgot_password.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   late _ForgotPasswordRepository repository;
 
   setUp(() async {

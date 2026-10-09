@@ -133,6 +133,7 @@ class OwnerPropertyPhotoDraft {
     this.description = '',
     this.contentFingerprint = '',
     this.draftKey = '',
+    this.needsReselection = false,
   });
 
   final File? file;
@@ -144,6 +145,7 @@ class OwnerPropertyPhotoDraft {
   /// Local-only checksum; never part of the property API body.
   final String contentFingerprint;
   final String draftKey;
+  final bool needsReselection;
   String get reference => draftKey.isNotEmpty ? draftKey : id;
 
   bool get isExisting => existingUrl.trim().isNotEmpty;
@@ -165,6 +167,7 @@ class OwnerPropertyPhotoDraft {
     String? description,
     String? contentFingerprint,
     String? draftKey,
+    bool? needsReselection,
   }) {
     return OwnerPropertyPhotoDraft(
       file: file ?? this.file,
@@ -174,6 +177,7 @@ class OwnerPropertyPhotoDraft {
       description: description ?? this.description,
       contentFingerprint: contentFingerprint ?? this.contentFingerprint,
       draftKey: draftKey ?? this.draftKey,
+      needsReselection: needsReselection ?? this.needsReselection,
     );
   }
 }
@@ -492,7 +496,10 @@ class OwnerAddPropertyFormState {
   bool get isPhotosReady =>
       Validators.isValidPropertyPhotos(count: photoCount) &&
       !hasDuplicatePhotos &&
-      photoDrafts.every((photo) => photo.file != null || photo.isExisting) &&
+      photoDrafts.every(
+        (photo) =>
+            !photo.needsReselection && (photo.file != null || photo.isExisting),
+      ) &&
       isVideoReady;
 
   bool get isPricingReady =>

@@ -14,6 +14,7 @@ class PropertyReviewSummaryCubit extends AsyncCubit<PropertyReviewSummary> {
         CrudBaseParmas<PropertyReviewSummary>(
           api: ApiConstants.propertyReviews(propertyId),
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.privateMemory,
           queryParameters: const {'page': 1, 'page_size': 10},
           cacheKey: 'property_review_summary_$propertyId',
           mapper: (json) => PropertyReviewSummary.fromJson(

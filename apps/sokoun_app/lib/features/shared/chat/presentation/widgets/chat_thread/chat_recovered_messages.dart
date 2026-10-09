@@ -31,6 +31,10 @@ class ChatRecoveredMessages extends StatelessWidget {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
+                          subtitle:
+                              message.delivery == ChatDeliveryState.unknown
+                              ? AppText(LocaleKeys.professionalUnknownDelivery)
+                              : null,
                           trailing: TextButton(
                             onPressed: () async {
                               try {

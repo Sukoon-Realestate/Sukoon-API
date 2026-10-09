@@ -16,10 +16,13 @@ import '../../../domain/usecases/pagination_response.dart';
 part 'async_state.dart';
 
 abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
-  AsyncCubit(T initialData) : super(AsyncState.initial(data: initialData)) {
+  AsyncCubit(T initialData, {this.showCacheFallbackMessage = true})
+    : super(AsyncState.initial(data: initialData)) {
     baseCrudUseCase = injector();
   }
   late final BaseCrudUseCase baseCrudUseCase;
+  final bool showCacheFallbackMessage;
+  Failure? lastFailure;
 
   T get data => state.data;
   void setLoading() {
@@ -31,8 +34,14 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
   }
 
   void setSuccess(BaseModel<T> data) {
-    emit(state.success(data: data.data, msg: data.msg));
-    if (data.key == 'fromCache') {
+    emit(
+      state.success(
+        data: data.data,
+        msg: data.msg,
+        fromCache: data.key == 'fromCache',
+      ),
+    );
+    if (showCacheFallbackMessage && data.key == 'fromCache') {
       Messages.showToast(
         status: BaseStatus.error,
         title: LocaleKeys.operationFaild,
@@ -67,6 +76,7 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
     bool withInternetInterceptor = false,
     bool showMsgOnSuccess = false,
     bool Function()? shouldApplyResult,
+    bool retainDataOnRefresh = false,
   }) async {
     await _basicOperation(
       operation: operation,
@@ -74,6 +84,7 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
       onError: onError,
       showMsgOnSuccess: showMsgOnSuccess,
       shouldApplyResult: shouldApplyResult,
+      retainDataOnRefresh: retainDataOnRefresh,
     );
     // if (withInternetInterceptor) {
     //   await _basicOperationWithInternetInterceptor(
@@ -184,13 +195,17 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
     required Function(String msg)? onError,
     bool showMsgOnSuccess = false,
     bool Function()? shouldApplyResult,
+    bool retainDataOnRefresh = false,
   }) async {
     if (isClosed) return;
-    setLoading();
+    if (!retainDataOnRefresh || !state.isSuccess) setLoading();
+    lastFailure = null;
     final int generation = AccountSession.generation;
+    final String requestScope = ReadCacheContext.scope;
     final result = await operation();
     if (isClosed ||
         generation != AccountSession.generation ||
+        requestScope != ReadCacheContext.scope ||
         !(shouldApplyResult?.call() ?? true)) {
       return;
     }
@@ -204,6 +219,7 @@ abstract class AsyncCubit<T> extends Cubit<AsyncState<T>> {
       },
       (failure) {
         if (failure is RequestCancelledFailure) return;
+        lastFailure = failure;
         Messages.showToast(msg: failure.message, status: BaseStatus.error);
         setError(errorMessage: failure.message);
         onError?.call(failure.message);

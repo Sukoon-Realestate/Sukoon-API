@@ -1,3 +1,4 @@
+import 'package:melos_core/core/local_db/read_cache_policy.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -95,6 +96,7 @@ class _ChatListContentState extends State<ChatListContent> with RouteAware {
         asyncCall: (_, page) => _dataSource.getConversationsPage(page: page),
         shrinkWrap: false,
         cacheKey: cacheKey,
+        cachePolicy: ReadCachePolicy.privateMemory,
         cacheToJson: cacheKey == null
             ? null
             : (conversation) => conversation.toJson(),

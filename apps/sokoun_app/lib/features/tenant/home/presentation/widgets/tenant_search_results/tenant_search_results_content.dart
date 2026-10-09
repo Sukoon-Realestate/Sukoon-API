@@ -1,3 +1,5 @@
+import 'package:sokoun_app/features/tenant/home/data/public_property_cache.dart';
+import 'package:melos_core/core/local_db/read_cache_policy.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -36,6 +38,7 @@ class TenantSearchResultsContent extends StatefulWidget {
     required this.resultCount,
     required this.cacheKey,
     required this.loadPage,
+    this.scrollController,
     this.preferences,
     required this.onQueryChanged,
     required this.onQuerySubmitted,
@@ -53,6 +56,7 @@ class TenantSearchResultsContent extends StatefulWidget {
   final ValueListenable<int?> resultCount;
   final String cacheKey;
   final PropertySearchPageLoader loadPage;
+  final ScrollController? scrollController;
   final PropertySearchFilters? preferences;
   final ValueChanged<String> onQueryChanged;
   final ValueChanged<String> onQuerySubmitted;
@@ -80,6 +84,7 @@ class _TenantSearchResultsContentState
   @override
   Widget build(BuildContext context) {
     return AppPagify<PropertyDetailsModel>(
+      scrollController: widget.scrollController,
       header: TenantSearchResultsHeader(
         queryController: widget.queryController,
         activeFilters: widget.activeFilters,
@@ -119,7 +124,8 @@ class _TenantSearchResultsContentState
       asyncCall: widget.loadPage,
       shrinkWrap: false,
       cacheKey: widget.cacheKey,
-      cacheToJson: (item) => item.toJson(),
+      cachePolicy: ReadCachePolicy.publicListing,
+      cacheToJson: (item) => PublicPropertyCache.sanitize(item.toJson()),
       cacheFromJson: PropertyDetailsModel.fromJson,
       emptyListView: EmptyResultsState(
         onResetSearchPressed: widget.onResetSearchPressed,

@@ -25,6 +25,7 @@ class NotificationDetailCubit extends AsyncCubit<AppNotificationContent> {
         CrudBaseParmas<AppNotificationContent>(
           api: ApiConstants.notificationDetails(notificationId),
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.privateMemory,
           cacheKey: 'notification_details_$notificationId',
           mapper: (json) => AppNotificationContent.fromJson(
             json is Map<String, dynamic> ? json : const {},

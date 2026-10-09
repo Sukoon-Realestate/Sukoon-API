@@ -4,25 +4,40 @@ import 'package:equatable/equatable.dart';
 import 'package:sokoun_app/features/tenant/home/data/models/property_details_model.dart';
 import 'owner_add_property_content.dart';
 import 'property_location.dart';
+import 'property_upload_progress.dart';
 
 class OwnerPropertyDraft extends Equatable {
   const OwnerPropertyDraft({
     this.form,
     this.savedProperty,
     this.isServerSnapshotCurrent = false,
+    this.serverFormConfirmed = false,
     this.step = 0,
     this.savedAt,
     this.hasMissingFiles = false,
     this.localSaveFailed = false,
+    this.isSaving = false,
+    this.baseRevision = '',
+    this.needsPrivateDocument = false,
+    this.unknownMutation = false,
+    this.dirtyFields = const {},
+    this.uploads = const {},
   });
   const OwnerPropertyDraft.initial()
     : form = null,
       savedProperty = null,
       isServerSnapshotCurrent = false,
+      serverFormConfirmed = false,
       step = 0,
       savedAt = null,
       hasMissingFiles = false,
-      localSaveFailed = false;
+      localSaveFailed = false,
+      isSaving = false,
+      baseRevision = '',
+      needsPrivateDocument = false,
+      unknownMutation = false,
+      dirtyFields = const {},
+      uploads = const {};
   factory OwnerPropertyDraft.fromJson(Map<String, dynamic> json) =>
       OwnerPropertyDraft(
         form: json['form'] is Map
@@ -36,52 +51,101 @@ class OwnerPropertyDraft extends Equatable {
               )
             : null,
         isServerSnapshotCurrent: json['server_snapshot_current'] == true,
+        serverFormConfirmed: json['server_form_confirmed'] == true,
         step: ((json['step'] as num?)?.toInt() ?? 0).clamp(0, 2),
         savedAt: DateTime.tryParse(json['saved_at']?.toString() ?? ''),
         hasMissingFiles: json['has_missing_files'] == true,
+        baseRevision: json['base_revision'] as String? ?? '',
+        needsPrivateDocument: json['needs_private_document'] == true,
+        unknownMutation: json['unknown_mutation'] == true,
+        dirtyFields: (json['dirty_fields'] as List? ?? [])
+            .whereType<String>()
+            .toSet(),
+        uploads: {
+          for (final MapEntry entry in (json['uploads'] as Map? ?? {}).entries)
+            entry.key.toString(): PropertyUploadProgress.fromJson(
+              Map<String, dynamic>.from(entry.value as Map),
+            ),
+        },
       );
   final OwnerAddPropertyFormState? form;
   final PropertyDetailsModel? savedProperty;
   final bool isServerSnapshotCurrent;
+  final bool serverFormConfirmed;
   final int step;
   final DateTime? savedAt;
   final bool hasMissingFiles;
   final bool localSaveFailed;
+  final bool isSaving;
+  final String baseRevision;
+  final bool needsPrivateDocument;
+  final bool unknownMutation;
+  final Set<String> dirtyFields;
+  final Map<String, PropertyUploadProgress> uploads;
   Map<String, dynamic> toJson() => {
     'form': form == null ? null : OwnerDraftFormCodec.encode(form!),
     'saved_property': savedProperty?.toJson(),
     'server_snapshot_current': isServerSnapshotCurrent,
+    'server_form_confirmed': serverFormConfirmed,
     'step': step,
     'saved_at': savedAt?.toIso8601String(),
     'has_missing_files': hasMissingFiles,
+    'base_revision': baseRevision,
+    'needs_private_document': needsPrivateDocument,
+    'unknown_mutation': unknownMutation,
+    'dirty_fields': dirtyFields.toList(),
+    'uploads': {
+      for (final entry in uploads.entries) entry.key: entry.value.toJson(),
+    },
   };
   OwnerPropertyDraft copyWith({
     OwnerAddPropertyFormState? form,
     PropertyDetailsModel? savedProperty,
     bool? isServerSnapshotCurrent,
+    bool? serverFormConfirmed,
     int? step,
     DateTime? savedAt,
     bool? hasMissingFiles,
     bool? localSaveFailed,
+    bool? isSaving,
+    String? baseRevision,
+    bool? needsPrivateDocument,
+    bool? unknownMutation,
+    Set<String>? dirtyFields,
+    Map<String, PropertyUploadProgress>? uploads,
   }) => OwnerPropertyDraft(
     form: form ?? this.form,
     savedProperty: savedProperty ?? this.savedProperty,
     isServerSnapshotCurrent:
         isServerSnapshotCurrent ?? this.isServerSnapshotCurrent,
+    serverFormConfirmed: serverFormConfirmed ?? this.serverFormConfirmed,
     step: step ?? this.step,
     savedAt: savedAt ?? this.savedAt,
     hasMissingFiles: hasMissingFiles ?? this.hasMissingFiles,
     localSaveFailed: localSaveFailed ?? this.localSaveFailed,
+    isSaving: isSaving ?? this.isSaving,
+    baseRevision: baseRevision ?? this.baseRevision,
+    needsPrivateDocument: needsPrivateDocument ?? this.needsPrivateDocument,
+    unknownMutation: unknownMutation ?? this.unknownMutation,
+    dirtyFields: dirtyFields ?? this.dirtyFields,
+    uploads: uploads ?? this.uploads,
   );
   @override
   List<Object?> get props => [
     form,
     savedProperty,
     isServerSnapshotCurrent,
+    serverFormConfirmed,
     step,
     savedAt,
     hasMissingFiles,
     localSaveFailed,
+    isSaving,
+    baseRevision,
+    needsPrivateDocument,
+    unknownMutation,
+    dirtyFields,
+    uploads,
   ];
 }
 
@@ -117,6 +181,7 @@ abstract final class OwnerDraftFormCodec {
           'description': photo.description,
           'local_sha256': photo.contentFingerprint,
           'local_key': photo.draftKey,
+          'needs_reselection': photo.needsReselection,
         },
     ],
     'price': form.monthlyPrice,
@@ -136,7 +201,6 @@ abstract final class OwnerDraftFormCodec {
     'building_year': form.buildingYear,
     'deposit': form.deposit,
     'smoking_allowed': form.smokingAllowed,
-    'proof_path': form.ownershipProofFile?.path,
     'proof_url': form.ownershipProofUrl,
     'remove_proof': form.removeOwnershipProof,
   };
@@ -177,6 +241,7 @@ abstract final class OwnerDraftFormCodec {
                 description: photo['description'] as String? ?? '',
                 contentFingerprint: photo['local_sha256'] as String? ?? '',
                 draftKey: photo['local_key'] as String? ?? '',
+                needsReselection: photo['needs_reselection'] == true,
               ),
             )
             .toList(growable: false),
@@ -201,7 +266,6 @@ abstract final class OwnerDraftFormCodec {
         buildingYear: json['building_year'] as String? ?? '',
         deposit: json['deposit'] as String? ?? '',
         smokingAllowed: json['smoking_allowed'] as bool?,
-        ownershipProofFile: _file(json['proof_path']),
         ownershipProofUrl: json['proof_url'] as String? ?? '',
         removeOwnershipProof: json['remove_proof'] == true,
       );

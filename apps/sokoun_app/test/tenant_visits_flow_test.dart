@@ -427,7 +427,6 @@ class _CoreTranslationsAssetLoader extends AssetLoader {
       'tenant_visits_browse_properties': 'تصفح العقارات',
       'tenant_visits_show_all': 'عرض كل الزيارات',
       'tenant_home_suggested_for_you': 'مقترح لك',
-      'tenant_visit_banner_title': 'عندك زيارة النهارده',
       'tenant_visit_banner_upcoming': 'عندك زيارة قريباً',
       'tenant_home_view_all': 'عرض الكل',
       'tenant_home_greeting': 'أهلاً بك',

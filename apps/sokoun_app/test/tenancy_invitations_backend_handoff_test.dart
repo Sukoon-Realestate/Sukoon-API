@@ -298,7 +298,11 @@ void main() {
         expect(detail.tryGetSuccess()?.data.hasValidIdentity, isTrue);
         expect(detail.tryGetSuccess()?.data.rejectedAt, isNull);
         expect(adapter.requests.last.uri.query, isEmpty);
-        expect(cache.records.values.single, containsPair('revoked_at', null));
+        expect(
+          cache.records,
+          isEmpty,
+          reason: 'Private invitation reads stay in memory',
+        );
         final page = await TenancyInvitationsData.getPage(
           page: 2,
           workspace: AppWorkspace.owner,

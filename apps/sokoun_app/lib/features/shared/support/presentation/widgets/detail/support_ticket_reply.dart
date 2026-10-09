@@ -20,14 +20,26 @@ class _SupportTicketReplyState extends State<SupportTicketReply> {
   final GlobalKey _replyFieldKey = GlobalKey();
   final TextEditingController _controller = TextEditingController();
   late final SupportReplyCubit _cubit;
+  late final TextDraftBinding _draft;
   @override
   void initState() {
     super.initState();
     _cubit = context.read<SupportReplyCubit>();
+    _draft = TextDraftBinding(
+      flow: 'support_reply',
+      entityId: widget.id,
+      fields: [_controller],
+      context: () => context,
+      mounted: () => mounted,
+      capture: () => TextFormDraft({'body': _controller.text}),
+      restore: (draft) => _controller.text = draft['body'],
+    );
+    unawaited(_draft.start());
   }
 
   @override
   void dispose() {
+    unawaited(_draft.close());
     _controller.dispose();
     super.dispose();
   }
@@ -36,6 +48,7 @@ class _SupportTicketReplyState extends State<SupportTicketReply> {
     if (!widget.enabled || _cubit.isLoading) {
       return;
     }
+    if (!await _draft.beginSubmission()) return;
     final String submittedBody = _controller.text;
     final SupportTicketContent? ticket = await _cubit.reply(
       id: widget.id,
@@ -44,12 +57,22 @@ class _SupportTicketReplyState extends State<SupportTicketReply> {
     );
     if (!context.mounted) return;
     if (ticket == null) {
+      await _draft.finishSubmission(
+        confirmed: false,
+        unknown: _cubit.lastFailure?.outcomeUnknown ?? false,
+      );
       if (_cubit.state.isSuccess && _cubit.state.msg?.isNotEmpty == true) {
         Messages.showToast(msg: _cubit.state.msg!, status: BaseStatus.error);
       }
       return;
     }
-    if (_controller.text == submittedBody) _controller.clear();
+    final bool hasNewText = _controller.text != submittedBody;
+    if (!hasNewText) _draft.programmatic(_controller.clear);
+    await _draft.finishSubmission(confirmed: true, keepListening: true);
+    if (hasNewText) {
+      _draft.changed();
+      await _draft.cubit.flush();
+    }
     widget.onTicketUpdated(ticket);
   }
 
@@ -74,6 +97,7 @@ class _SupportTicketReplyState extends State<SupportTicketReply> {
           mainAxisSize: MainAxisSize.min,
           spacing: 10.h,
           children: [
+            _draft.feedback,
             BlocBuilder<SupportReplyCubit, AsyncState<SupportTicketContent>>(
               bloc: _cubit,
               builder: (context, state) => DefaultTextField(

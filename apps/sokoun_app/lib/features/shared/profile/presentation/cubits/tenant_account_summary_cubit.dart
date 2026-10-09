@@ -12,6 +12,7 @@ class TenantAccountSummaryCubit
         CrudBaseParmas<TenantAccountSummaryContent>(
           api: ApiConstants.tenantAccountSummary,
           httpRequestType: HttpRequestType.get,
+          cachePolicy: ReadCachePolicy.privateMemory,
           cacheKey: TenantAccountSummaryContent.cacheKey,
           mapper: (json) =>
               TenantAccountSummaryContent.fromJson(profileJsonMap(json)),
