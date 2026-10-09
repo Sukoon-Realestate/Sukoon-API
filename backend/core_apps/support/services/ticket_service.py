@@ -44,6 +44,7 @@ def create_ticket(
     subject: str,
     description: str,
     attachments: Optional[List[Any]] = None,
+    rental_context: Optional[dict] = None,
 ) -> Ticket:
     """
     Creates a new support ticket with initial user message and attachments.
@@ -51,6 +52,40 @@ def create_ticket(
     normalized_workspace = "owner" if workspace.lower() == "owner" else "tenant"
     subject = subject.strip()
     description = description.strip()
+    rental_context = rental_context or {}
+    if not isinstance(rental_context, dict):
+        raise ValidationError({"rental_context": "Must be an object."})
+    allowed_context = {
+        "lease_id",
+        "invoice_id",
+        "payment_attempt_id",
+        "subject_kind",
+        "subject_id",
+    }
+    if set(rental_context) - allowed_context:
+        raise ValidationError({"rental_context": "Contains unsupported fields."})
+    if rental_context:
+        from core_apps.features.models import Lease, PaymentAttempt, RentInvoice
+        from core_apps.features.services.rental_foundation import (
+            get_authorized_rental_subject,
+        )
+
+        resolved = {}
+        for key in ("lease_id", "invoice_id", "payment_attempt_id", "subject_id"):
+            if rental_context.get(key):
+                resolved[key] = get_authorized_rental_subject(user, rental_context[key])
+        lease_ids = set()
+        for value in resolved.values():
+            if isinstance(value, Lease):
+                lease_ids.add(value.pk)
+            elif isinstance(value, RentInvoice):
+                lease_ids.add(value.lease_id)
+            elif isinstance(value, PaymentAttempt):
+                lease_ids.add(value.invoice.lease_id)
+        if len(lease_ids) > 1:
+            raise ValidationError(
+                {"rental_context": "All rental IDs must belong to one lease."}
+            )
 
     if len(subject) < 3 or len(subject) > 160:
         raise ValidationError(
@@ -106,6 +141,7 @@ def create_ticket(
         subject=subject,
         reference=reference,
         status=Ticket.Status.OPEN,
+        rental_context=rental_context,
     )
 
     initial_message = TicketMessage.objects.create(

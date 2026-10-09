@@ -61,6 +61,11 @@ from .services.tenancy_invitations import (
     validate_accounts,
     validate_source_relationship,
 )
+from .services.rental_foundation import (
+    capabilities_for,
+    get_authorized_rental_subject,
+    private_no_store,
+)
 
 User = get_user_model()
 FEATURE_DECORATORS = [api_view]
@@ -107,20 +112,93 @@ def _replay(user, operation, request_key, payload):
     if record.fingerprint != _fingerprint(payload):
         raise Conflict(
             "This request_key was already used with a different payload.",
-            code="request_key_conflict",
+            code="idempotency_conflict",
         )
     return Response(record.response_data, status=record.response_status)
 
 
-def _remember(user, operation, request_key, payload, data, response_status):
-    IdempotencyRecord.objects.create(
+def _remember(
+    user,
+    operation,
+    request_key,
+    payload,
+    data,
+    response_status,
+    *,
+    request_subject_id=None,
+    result_subject_id=None,
+    result_revision=None,
+    is_rental_operation=False,
+):
+    return IdempotencyRecord.objects.create(
         user=user,
         operation=operation,
         request_key=request_key,
         fingerprint=_fingerprint(payload),
         response_data=data,
         response_status=response_status,
+        request_subject_id=request_subject_id,
+        result_subject_id=result_subject_id,
+        result_revision=result_revision,
+        is_rental_operation=is_rental_operation,
     )
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@renderer_classes([FeatureJsonRenderer])
+def rental_capabilities(request):
+    subject_id = request.query_params.get("subject_id")
+    if not subject_id:
+        raise ValidationError({"subject_id": "This query parameter is required."})
+    subject = get_authorized_rental_subject(request.user, subject_id)
+    response = Response(
+        capabilities_for(
+            request.user,
+            subject,
+            request.query_params.get("action", ""),
+        )
+    )
+    return private_no_store(response)
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@renderer_classes([FeatureJsonRenderer])
+def rental_operation_lookup(request, request_key):
+    subject_id = request.query_params.get("subject_id")
+    if not subject_id:
+        raise ValidationError({"subject_id": "This query parameter is required."})
+    get_authorized_rental_subject(request.user, subject_id)
+    operation = IdempotencyRecord.objects.filter(
+        user=request.user,
+        request_key=str(request_key),
+        request_subject_id=subject_id,
+        is_rental_operation=True,
+    ).first()
+    if operation:
+        get_authorized_rental_subject(request.user, operation.result_subject_id)
+        receipt = {
+            "id": str(operation.id),
+            "subject_id": str(operation.result_subject_id),
+            "request_key": operation.request_key,
+            "revision": operation.result_revision,
+            "status": operation.recovery_status,
+        }
+        lookup_status = operation.recovery_status
+    else:
+        # Database absence alone is not a permanent tombstone.
+        receipt = None
+        lookup_status = IdempotencyRecord.RecoveryStatus.UNKNOWN
+    response = Response(
+        {
+            "request_key": str(request_key),
+            "request_subject_id": str(subject_id),
+            "status": lookup_status,
+            "operation_receipt": receipt,
+        }
+    )
+    return private_no_store(response)
 
 
 def _paginate(request, queryset, serializer_class):
@@ -438,7 +516,44 @@ def listing_suggestions(request):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def lease_configuration(request):
-    return Response({"can_create": True, "templates": LEASE_TEMPLATES})
+    from .services.rental_phase2 import ensure_policy, get_or_create_owner_profile
+
+    policy = ensure_policy()
+    profile = get_or_create_owner_profile(request.user)
+    provider_ready = (
+        getattr(settings, "RENTAL_PROVIDER_BACKEND", "disabled") == "fake"
+        and getattr(settings, "RENTAL_FAKE_PROVIDER_ALLOWED", False)
+    )
+    can_create = (
+        provider_ready
+        and request.user.is_active
+        and request.user.is_verified
+        and profile.status == profile.Status.READY
+        and profile.payout_ready
+        and policy.version in profile.accepted_policy_versions
+    )
+    return Response(
+        {
+            "can_create": can_create,
+            "templates": LEASE_TEMPLATES,
+            "policy": {
+                "version": policy.version,
+                "commission_rate_bps": policy.commission_rate_bps,
+                "commission_payer": policy.commission_payer,
+                "commission_basis": policy.commission_basis,
+                "processing_fee_payer": policy.processing_fee_payer,
+                "renewal_commission_rate_bps": policy.renewal_commission_rate_bps,
+                "timezone": policy.timezone,
+                "billing_cycle": policy.billing_cycle,
+                "currency": policy.currency,
+                "exponent": policy.exponent,
+            },
+            "allowed_actions": ["create"] if can_create else [],
+            "blocking_reasons": []
+            if can_create
+            else ["Owner onboarding or agreement providers are not ready."],
+        }
+    )
 
 
 @api_view(["GET"])
@@ -504,6 +619,10 @@ def tenancy_invitations(request):
             refresh_effective_status(invitation)
         return _paginate(request, queryset.all(), TenancyInvitationSerializer)
 
+    if "interest_id" in request.data:
+        from .rental_phase2_views import create_interest_invitation
+
+        return create_interest_invitation(request)
     serializer = TenancyInvitationCreateSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     data_in = serializer.validated_data
@@ -631,6 +750,10 @@ def tenancy_invitations(request):
                 request.data,
                 output,
                 201,
+                request_subject_id=property_obj.id,
+                result_subject_id=invitation.id,
+                result_revision=invitation.revision,
+                is_rental_operation=True,
             )
             create_notification_for_invitation(request, invitation)
     except IntegrityError:
@@ -734,6 +857,10 @@ def tenancy_invitation_respond(request, invitation_id):
             request.data,
             output,
             200,
+            request_subject_id=invitation.id,
+            result_subject_id=invitation.id,
+            result_revision=invitation.revision,
+            is_rental_operation=True,
         )
         create_notification_for_response(request, invitation)
     return Response(output)
@@ -758,6 +885,10 @@ def leases(request):
         if request.query_params.get("property_id"):
             queryset = queryset.filter(property__id=request.query_params["property_id"])
         return _paginate(request, queryset, LeaseSerializer)
+    if "invitation_id" in request.data and "terms" in request.data:
+        from .rental_phase2_views import create_structured_lease
+
+        return create_structured_lease(request)
     serializer = LeaseCreateSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     data_in = serializer.validated_data
@@ -849,6 +980,10 @@ def leases(request):
                 request.data,
                 out,
                 201,
+                request_subject_id=invitation.id,
+                result_subject_id=lease.id,
+                result_revision=lease.revision,
+                is_rental_operation=True,
             )
     except IntegrityError:
         replay = _replay(
@@ -869,10 +1004,14 @@ def _get_authorized_lease(request, lease_id):
     return lease
 
 
-@api_view(["GET"])
+@api_view(["GET", "PATCH"])
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def lease_detail(request, lease_id):
+    if request.method == "PATCH":
+        from .rental_phase2_views import update_structured_lease
+
+        return update_structured_lease(request, lease_id)
     return Response(
         LeaseSerializer(
             _get_authorized_lease(request, lease_id), context={"request": request}
@@ -884,6 +1023,10 @@ def lease_detail(request, lease_id):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def lease_signing_session(request, lease_id):
+    if "document_id" in request.data:
+        from .rental_phase2_views import create_structured_signing_session
+
+        return create_structured_signing_session(request, lease_id)
     lease = _get_authorized_lease(request, lease_id)
     serializer = RevisionRequestSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
@@ -926,6 +1069,10 @@ def lease_signing_session(request, lease_id):
             request.data,
             data,
             201,
+            request_subject_id=lease.id,
+            result_subject_id=lease.id,
+            result_revision=lease.revision,
+            is_rental_operation=True,
         )
     return Response(data, status=status.HTTP_201_CREATED)
 
@@ -968,6 +1115,10 @@ def lease_cancel(request, lease_id):
             request.data,
             data,
             200,
+            request_subject_id=lease.id,
+            result_subject_id=lease.id,
+            result_revision=lease.revision,
+            is_rental_operation=True,
         )
     return Response(data)
 
@@ -1033,6 +1184,15 @@ def rent_invoice_checkout(request, invoice_id):
     invoice = _get_authorized_invoice(request, invoice_id)
     if request.user != invoice.lease.tenant:
         raise PermissionDenied("Only the tenant can pay this invoice.")
+    if not getattr(settings, "RENTAL_CHECKOUT_ENABLED", False):
+        return Response(
+            {
+                "message": "Secure rent checkout is not available yet.",
+                "code": "capability_unavailable",
+                "subject_id": str(invoice.id),
+            },
+            status=status.HTTP_403_FORBIDDEN,
+        )
     if str(request.data.get("invoice_id")) != str(invoice.id) or not request.data.get(
         "request_key"
     ):
@@ -1077,5 +1237,9 @@ def rent_invoice_checkout(request, invoice_id):
             request.data,
             data,
             201,
+            request_subject_id=invoice.id,
+            result_subject_id=invoice.id,
+            result_revision=invoice.revision,
+            is_rental_operation=True,
         )
     return Response(data, status=status.HTTP_201_CREATED)

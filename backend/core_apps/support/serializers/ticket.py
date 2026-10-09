@@ -41,6 +41,7 @@ class TicketListSerializer(serializers.ModelSerializer):
             "status",
             "created_at",
             "updated_at",
+            "rental_context",
         ]
         read_only_fields = fields
 
@@ -58,11 +59,13 @@ class TicketDetailSerializer(serializers.ModelSerializer):
             "status",
             "created_at",
             "messages",
+            "rental_context",
         ]
         read_only_fields = fields
 
 
 class TicketCreateSerializer(serializers.Serializer):
+    rental_context = serializers.JSONField(required=False, default=dict)
     workspace = serializers.ChoiceField(
         choices=["tenant", "owner"],
         default="tenant",

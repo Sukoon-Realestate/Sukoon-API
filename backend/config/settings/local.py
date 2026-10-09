@@ -11,6 +11,16 @@ if path.isfile(local_env_file):
     load_dotenv(local_env_file)
 
 DEBUG = True
+RENTAL_PROVIDER_BACKEND = "fake"
+RENTAL_RUNTIME_ENVIRONMENT = "development"
+RENTAL_FAKE_PROVIDER_ALLOWED = True
+RENTAL_PROVIDER_WEBHOOK_SECRET = getenv(
+    "RENTAL_PROVIDER_WEBHOOK_SECRET", "local-rental-provider-secret"
+)
+RENTAL_CHECKOUT_ENABLED = True
+RENTAL_CHECKOUT_ALLOWED_ORIGINS = ["https://fake-rental-provider.test"]
+RENTAL_CHECKOUT_RETURN_URL = "https://fake-rental-provider.test/payments/return"
+RENTAL_CHECKOUT_EXTERNAL_SCHEMES = []
 
 SECRET_KEY = getenv("SECRET_KEY", "zymJqYSgQrxHLGS1MbVPB043BbXZPlBDHAkcIVPuskhiFMj4TY8")
 

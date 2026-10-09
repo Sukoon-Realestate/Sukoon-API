@@ -92,6 +92,59 @@ ASGI_APPLICATION = "config.asgi.application"
 
 # ? Redis backs the channel layer so WebSocket groups work across processes/workers
 REDIS_URL = getenv("REDIS_URL", "redis://localhost:6379/0")
+CELERY_BROKER_URL = getenv("CELERY_BROKER_URL", REDIS_URL)
+CELERY_RESULT_BACKEND = getenv("CELERY_RESULT_BACKEND", REDIS_URL)
+CELERY_TASK_ACKS_LATE = True
+CELERY_TASK_REJECT_ON_WORKER_LOST = True
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TIMEZONE = "Africa/Cairo"
+CELERY_BEAT_SCHEDULE = {
+    "expire-rental-sources-and-holds": {
+        "task": "core_apps.features.tasks.expire_rental_sources_and_holds",
+        "schedule": 300.0,
+    },
+    "reconcile-rental-provider-sessions": {
+        "task": "core_apps.features.tasks.reconcile_rental_provider_sessions",
+        "schedule": 300.0,
+    },
+    "run-rental-billing-cycle": {
+        "task": "core_apps.features.tasks.run_rental_billing_cycle",
+        "schedule": 300.0,
+    },
+    "reconcile-ambiguous-rental-payments": {
+        "task": "core_apps.features.tasks.reconcile_ambiguous_rental_payments",
+        "schedule": 300.0,
+    },
+    "scan-rental-evidence": {
+        "task": "core_apps.features.tasks.scan_rental_evidence",
+        "schedule": 60.0,
+    },
+    "reconcile-approved-payouts": {
+        "task": "core_apps.features.tasks.reconcile_approved_payouts",
+        "schedule": 300.0,
+    },
+    "process-rental-changes": {
+        "task": "core_apps.features.tasks.process_rental_changes",
+        "schedule": 300.0,
+    },
+    "process-rental-closure": {
+        "task": "core_apps.features.tasks.process_rental_closure",
+        "schedule": 300.0,
+    },
+}
+
+RENTAL_PROVIDER_BACKEND = getenv("RENTAL_PROVIDER_BACKEND", "disabled")
+RENTAL_RUNTIME_ENVIRONMENT = "production"
+RENTAL_FAKE_PROVIDER_ALLOWED = False
+RENTAL_ONBOARDING_TTL_MINUTES = int(getenv("RENTAL_ONBOARDING_TTL_MINUTES", "30"))
+RENTAL_SIGNING_TTL_MINUTES = int(getenv("RENTAL_SIGNING_TTL_MINUTES", "30"))
+RENTAL_HOLD_TTL_MINUTES = int(getenv("RENTAL_HOLD_TTL_MINUTES", "30"))
+RENTAL_PROVIDER_WEBHOOK_SECRET = getenv("RENTAL_PROVIDER_WEBHOOK_SECRET", "")
+RENTAL_QUOTE_TTL_MINUTES = int(getenv("RENTAL_QUOTE_TTL_MINUTES", "5"))
+RENTAL_CHECKOUT_TTL_MINUTES = int(getenv("RENTAL_CHECKOUT_TTL_MINUTES", "15"))
+RENTAL_CHECKOUT_ALLOWED_ORIGINS = []
+RENTAL_CHECKOUT_RETURN_URL = ""
+RENTAL_CHECKOUT_EXTERNAL_SCHEMES = []
 USE_IN_MEMORY_CHANNEL_LAYER = getenv(
     "USE_IN_MEMORY_CHANNEL_LAYER", "False"
 ).lower() in ("true", "1", "yes")

@@ -11,6 +11,11 @@ class StaffProfile(TimeStampedModel):
         KYC_REVIEWER = "kyc_reviewer", _("KYC Reviewer")
         PROPERTY_REVIEWER = "property_reviewer", _("Property Reviewer")
         SUPPORT = "support", _("Customer Support")
+        FINANCIAL_APPROVER = "financial_approver", _("Financial Approver")
+        PSP_RECONCILIATION = "psp_reconciliation", _("PSP Reconciliation")
+        PAYOUT_OPERATOR = "payout_operator", _("Payout Operator")
+        REFUND_OPERATOR = "refund_operator", _("Refund Operator")
+        DISPUTE_RESOLVER = "dispute_resolver", _("Dispute Resolver")
 
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,

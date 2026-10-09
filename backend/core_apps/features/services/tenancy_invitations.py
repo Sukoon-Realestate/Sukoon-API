@@ -19,9 +19,11 @@ class InvitationConflict(APIException):
 
 LIVE_LEASE_STATUSES = {
     Lease.Status.DRAFT,
+    Lease.Status.PENDING_SIGNATURES,
     Lease.Status.PENDING,
     Lease.Status.SIGNED,
     Lease.Status.ACTIVE,
+    Lease.Status.TERMINATION_PENDING,
 }
 
 

@@ -62,6 +62,7 @@ class TicketListCreateAPIView(generics.ListCreateAPIView):
             subject=serializer.validated_data["subject"],
             description=serializer.validated_data["description"],
             attachments=attachments,
+            rental_context=serializer.validated_data.get("rental_context", {}),
         )
 
         detail_serializer = TicketDetailSerializer(ticket, context={"request": request})

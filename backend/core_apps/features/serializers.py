@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.utils import timezone
 from rest_framework import serializers
 
@@ -95,6 +96,10 @@ class LeaseSerializer(serializers.ModelSerializer):
     rent = serializers.SerializerMethodField()
     can_sign = serializers.SerializerMethodField()
     can_cancel = serializers.SerializerMethodField()
+    lease_status = serializers.CharField(source="status", read_only=True)
+    allowed_actions = serializers.SerializerMethodField()
+    blocking_reasons = serializers.SerializerMethodField()
+    invitation_id = serializers.SerializerMethodField()
 
     class Meta:
         model = Lease
@@ -114,7 +119,24 @@ class LeaseSerializer(serializers.ModelSerializer):
             "can_cancel",
             "offer_id",
             "offer_snapshot",
+            "tenancy_root_id",
+            "lease_status",
+            "occupancy_status",
+            "financial_closure_status",
+            "legacy_read_only",
+            "allowed_actions",
+            "blocking_reasons",
+            "invitation_id",
+            "terms",
+            "reviewed_by",
+            "document_id",
+            "document_hash",
+            "hold_expires_at",
         ]
+
+    def get_invitation_id(self, obj):
+        invitation = getattr(obj, "tenancy_invitation", None)
+        return str(invitation.id) if invitation else None
 
     def get_rent(self, obj):
         return {
@@ -136,6 +158,21 @@ class LeaseSerializer(serializers.ModelSerializer):
         return bool(
             request and request.user == obj.owner and obj.status == Lease.Status.DRAFT
         )
+
+    def get_allowed_actions(self, obj):
+        if obj.legacy_read_only:
+            return []
+        actions = []
+        if self.get_can_sign(obj):
+            actions.append("sign")
+        if self.get_can_cancel(obj):
+            actions.append("cancel_draft")
+        return actions
+
+    def get_blocking_reasons(self, obj):
+        if obj.legacy_read_only:
+            return ["This legacy agreement is not eligible for new rental mutations."]
+        return []
 
 
 class LeaseCreateSerializer(serializers.Serializer):
@@ -181,6 +218,12 @@ class RentInvoiceSerializer(serializers.ModelSerializer):
     offer_snapshot = serializers.JSONField(
         source="lease.offer_snapshot", read_only=True
     )
+    invoice_status = serializers.CharField(source="status", read_only=True)
+    balance = serializers.SerializerMethodField()
+    allowed_actions = serializers.SerializerMethodField()
+    blocking_reasons = serializers.SerializerMethodField()
+    lines = serializers.SerializerMethodField()
+    payment_attempt_id = serializers.SerializerMethodField()
 
     class Meta:
         model = RentInvoice
@@ -196,6 +239,19 @@ class RentInvoiceSerializer(serializers.ModelSerializer):
             "can_pay",
             "offer_id",
             "offer_snapshot",
+            "revision",
+            "invoice_status",
+            "balance",
+            "allowed_actions",
+            "blocking_reasons",
+            "invoice_type",
+            "period_start",
+            "period_end_exclusive",
+            "due_at",
+            "deferred_until",
+            "lines",
+            "payment_attempt_id",
+            "receipt_id",
         ]
 
     def get_amount(self, obj):
@@ -211,7 +267,48 @@ class RentInvoiceSerializer(serializers.ModelSerializer):
             request
             and request.user == obj.lease.tenant
             and obj.status in {RentInvoice.Status.DUE, RentInvoice.Status.OVERDUE}
+            and getattr(settings, "RENTAL_CHECKOUT_ENABLED", False)
         )
+
+    def get_balance(self, obj):
+        charges = obj.charges_minor or obj.amount_minor
+        amount = max(charges - obj.credits_minor - obj.applied_minor, 0)
+        return {
+            "amount_minor": amount,
+            "currency": obj.currency,
+            "exponent": obj.exponent,
+        }
+
+    def get_allowed_actions(self, obj):
+        return ["quote", "checkout"] if self.get_can_pay(obj) else []
+
+    def get_lines(self, obj):
+        return [
+            {
+                "id": str(line.id),
+                "type": line.line_type,
+                "description": line.description,
+                "amount": {
+                    "amount_minor": line.amount_minor,
+                    "currency": line.currency,
+                    "exponent": line.exponent,
+                },
+            }
+            for line in obj.lines.all()
+        ]
+
+    def get_payment_attempt_id(self, obj):
+        attempt = obj.payment_attempts.filter(
+            payment_status__in=["created", "pending", "authorized"]
+        ).first()
+        return str(attempt.id) if attempt else None
+
+    def get_blocking_reasons(self, obj):
+        if self.get_can_pay(obj):
+            return []
+        if not getattr(settings, "RENTAL_CHECKOUT_ENABLED", False):
+            return ["Secure rent checkout is not available yet."]
+        return ["This invoice is not currently payable."]
 
 
 class RevisionRequestSerializer(serializers.Serializer):
@@ -243,6 +340,12 @@ class TenancyInvitationSerializer(serializers.ModelSerializer):
     lease_id = serializers.UUIDField(source="lease.id", read_only=True, allow_null=True)
     eligible_for_lease = serializers.SerializerMethodField()
     actions = serializers.SerializerMethodField()
+    interest_id = serializers.UUIDField(source="interest.id", read_only=True, allow_null=True)
+    terms_proposal_id = serializers.UUIDField(
+        source="terms_proposal.id", read_only=True, allow_null=True
+    )
+    allowed_actions = serializers.SerializerMethodField()
+    blocking_reasons = serializers.SerializerMethodField()
 
     class Meta:
         model = TenancyInvitation
@@ -266,6 +369,11 @@ class TenancyInvitationSerializer(serializers.ModelSerializer):
             "lease_id",
             "eligible_for_lease",
             "actions",
+            "interest_id",
+            "terms_proposal_id",
+            "consumed_at",
+            "allowed_actions",
+            "blocking_reasons",
         ]
 
     def get_eligible_for_lease(self, obj):
@@ -285,3 +393,25 @@ class TenancyInvitationSerializer(serializers.ModelSerializer):
                 and request.user.is_verified
             )
         }
+
+    def get_allowed_actions(self, obj):
+        request = self.context.get("request")
+        actions = []
+        if self.get_actions(obj)["can_respond"]:
+            actions.append("respond")
+        if (
+            request
+            and request.user == obj.owner
+            and obj.lease_id is None
+            and obj.consumed_at is None
+            and obj.status in {TenancyInvitation.Status.PENDING, TenancyInvitation.Status.ACCEPTED}
+        ):
+            actions.append("revoke_invitation")
+        return actions
+
+    def get_blocking_reasons(self, obj):
+        if obj.consumed_at or obj.lease_id:
+            return ["This invitation has already been consumed."]
+        if obj.expires_at <= timezone.now():
+            return ["This invitation has expired."]
+        return []

@@ -26,6 +26,19 @@ class Notification(TimeStampedModel):
             "tenancy_invitation_response",
             _("Tenancy Invitation Response"),
         )
+        RENTAL_INTEREST = "rental_interest", _("Rental Interest")
+        RENTAL_TERMS = "rental_terms", _("Rental Terms")
+        RENTAL_AGREEMENT = "rental_agreement", _("Rental Agreement")
+        RENTAL_HANDOVER = "rental_handover", _("Rental Handover")
+        RENTAL_EVIDENCE = "rental_evidence", _("Rental Evidence")
+        RENTAL_DEPOSIT = "rental_deposit", _("Rental Deposit")
+        RENTAL_PAYOUT = "rental_payout", _("Rental Payout")
+        RENTAL_MAINTENANCE = "rental_maintenance", _("Rental Maintenance")
+        RENTAL_CHANGE = "rental_change", _("Rental Change")
+        RENTAL_SETTLEMENT = "rental_settlement", _("Rental Settlement")
+        RENTAL_REFUND = "rental_refund", _("Rental Refund")
+        RENTAL_DISPUTE = "rental_dispute", _("Rental Dispute")
+        RENTAL_DOCUMENT = "rental_document", _("Rental Document")
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,

@@ -34,6 +34,17 @@ SIMPLE_JWT = {
 # ? In-memory layer keeps consumer tests hermetic (no Redis dependency in CI)
 CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
 
+CELERY_TASK_ALWAYS_EAGER = True
+CELERY_TASK_EAGER_PROPAGATES = True
+RENTAL_PROVIDER_BACKEND = "fake"
+RENTAL_RUNTIME_ENVIRONMENT = "test"
+RENTAL_FAKE_PROVIDER_ALLOWED = True
+RENTAL_PROVIDER_WEBHOOK_SECRET = "test-rental-provider-secret"
+RENTAL_CHECKOUT_ENABLED = True
+RENTAL_CHECKOUT_ALLOWED_ORIGINS = ["https://fake-rental-provider.test"]
+RENTAL_CHECKOUT_RETURN_URL = "https://fake-rental-provider.test/payments/return"
+RENTAL_CHECKOUT_EXTERNAL_SCHEMES = []
+
 # Dummy Cloudinary config for tests to allow URL generation locally
 import cloudinary
 
