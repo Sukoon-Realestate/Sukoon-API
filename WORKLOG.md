@@ -104,6 +104,12 @@
 
 ## 2026-10-10
 
+### Owner banner advertising backend
+- **What:** Implemented the owner-purchased tenant-home banner advertising API, created its implementation plan, and delivered a mobile integration handoff.
+- **Why:** Fulfill the Flutter `features/shared/banner_ads` contract with server-authoritative pricing, safe unknown-write recovery, simulated activation, and a cross-account public feed.
+- **Details:** Added mutable localized plans with immutable purchase snapshots; owner-scoped operation journaling and payload/image-byte idempotency; decoded JPEG/PNG/WebP validation with a 10 MiB limit; optional verified-property/exact-offer validation; protected pending media and eligible public active media; paginated owner reads; atomic one-payment mock activation; Cairo week/calendar-month/calendar-year expiry including DST gap/overlap policy; effective expiry filtering independent of worker timing; localized envelopes, cache rules, admin, expiry task/command, seeded weekly/monthly/yearly plans, and two migrations. Applied both migrations to local SQLite. Django checks and migration drift passed; the focused suite passed 9 tests and the full backend suite passed 568 tests with 6 skips. Deployment, durable shared production media, and two-account staging/device verification remain rollout requirements.
+- **Files:** `backend/core_apps/advertising/`, `backend/config/settings/base.py`, `backend/config/urls.py`, `backend/dev.sqlite3`, `docs/OWNER_BANNER_ADS_BACKEND_IMPLEMENTATION_PLAN.md`, `docs/MOBILE_OWNER_BANNER_ADS_API_HANDOFF.md`, `WORKLOG.md`
+
 ### Tenancy invitation live-verification follow-up
 - **What:** Created and implemented the follow-up plan and delivered a mobile handoff for the invitation/draft failures.
 - **Why:** The deployed verification report recorded HTTP 500 for legacy invitation creation and missing-invitation draft validation.

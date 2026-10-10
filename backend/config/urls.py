@@ -28,7 +28,9 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
-    path(".well-known/assetlinks.json", android_asset_links, name="android-asset-links"),
+    path(
+        ".well-known/assetlinks.json", android_asset_links, name="android-asset-links"
+    ),
     path(
         ".well-known/apple-app-site-association",
         apple_app_site_association,
@@ -53,6 +55,7 @@ urlpatterns = [
     path("api/v1/pages/", include("core_apps.common.pages_urls")),
     path("api/v1/support/", include("core_apps.support.urls")),
     path("api/v1/features/v1/", include("core_apps.features.urls")),
+    path("api/v1/advertising/v1/", include("core_apps.advertising.urls")),
     path("api/v1/admin/", include("core_apps.admin_api.urls")),
     path(settings.ADMIN_URL, admin.site.urls),
 ]

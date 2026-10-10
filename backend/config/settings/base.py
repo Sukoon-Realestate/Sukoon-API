@@ -38,6 +38,7 @@ LOCAL_APPS = [
     "core_apps.admin_api",
     "core_apps.support",
     "core_apps.features",
+    "core_apps.advertising",
 ]
 
 THIRD_PARTY_APPS = [
@@ -99,6 +100,10 @@ CELERY_TASK_REJECT_ON_WORKER_LOST = True
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TIMEZONE = "Africa/Cairo"
 CELERY_BEAT_SCHEDULE = {
+    "expire-advertisements": {
+        "task": "core_apps.advertising.tasks.expire_advertisements",
+        "schedule": 300.0,
+    },
     "expire-rental-sources-and-holds": {
         "task": "core_apps.features.tasks.expire_rental_sources_and_holds",
         "schedule": 300.0,
