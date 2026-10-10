@@ -697,6 +697,8 @@ def tenancy_invitations(request):
                         "يوجد عقد متعارض لمكان الإقامة.",
                     )
                 )
+            # Only join non-null relations under FOR UPDATE. Joining the optional
+            # lease makes PostgreSQL reject the lock, even for an empty result.
             live = list(
                 TenancyInvitation.objects.select_for_update()
                 .filter(
@@ -711,7 +713,7 @@ def tenancy_invitations(request):
                     lease__isnull=True,
                 )
                 .select_related(
-                    "property", "property__owner", "owner", "tenant", "lease"
+                    "property", "property__owner", "owner", "tenant"
                 )
             )
             for existing in live:
@@ -817,7 +819,7 @@ def tenancy_invitation_respond(request, invitation_id):
     with transaction.atomic():
         invitation = get_object_or_404(
             TenancyInvitation.objects.select_for_update().select_related(
-                "property", "property__owner", "owner", "tenant", "lease"
+                "property", "property__owner", "owner", "tenant"
             ),
             id=invitation_id,
             tenant=request.user,
@@ -939,7 +941,7 @@ def leases(request):
                     lease__isnull=True,
                 )
                 .select_related(
-                    "property", "property__owner", "owner", "tenant", "lease"
+                    "property", "property__owner", "owner", "tenant"
                 )
                 .order_by("-created_at", "-id")
             )

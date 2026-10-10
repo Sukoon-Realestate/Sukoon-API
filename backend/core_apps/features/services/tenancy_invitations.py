@@ -119,7 +119,9 @@ def _room_details(inventory, offer):
 
 def resolve_offer_snapshot(property_obj, offer_id, expected_revision=None, request=None):
     inventory = property_obj.rental_inventory or {}
-    if not inventory:
+    # The property API represents empty legacy inventory as {"offers": []}.
+    # Accept that exact shape too, without treating unknown versions as legacy.
+    if not inventory or inventory == {"offers": []}:
         if offer_id or expected_revision is not None:
             raise ValidationError(
                 {
