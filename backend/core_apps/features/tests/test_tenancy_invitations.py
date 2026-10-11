@@ -12,6 +12,7 @@ from core_apps.features.models import (
     IdempotencyRecord,
     Lease,
     RentInvoice,
+    SigningSession,
     TenancyInvitation,
 )
 from core_apps.notifications.models import Notification
@@ -568,6 +569,177 @@ def followup_lease_payload(property_obj, tenant):
         "rent": {"amount_minor": 6000000000, "currency": "EGP", "exponent": 2},
         "request_key": str(uuid.uuid4()),
     }
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("language", ["en", "ar"])
+@pytest.mark.parametrize("provider", ["disabled", "fake"])
+def test_provider_disabled_draft_capabilities_match_mutations(
+    participants, owned_property, settings, language, provider
+):
+    settings.RENTAL_PROVIDER_BACKEND = provider
+    settings.RENTAL_FAKE_PROVIDER_ALLOWED = provider == "fake"
+    owner, tenant, stranger = participants
+    owner_client = authenticated(owner)
+    owner_client.defaults["HTTP_ACCEPT_LANGUAGE"] = language
+    config = owner_client.get("/api/v1/features/v1/lease-configuration/")
+    assert config.status_code == 200
+    assert config.data["can_create"] is True
+    assert config.data["allowed_actions"] == ["create"]
+    assert config.data["blocking_reasons"] == []
+    assert config.data["templates"][0]["id"] == "eg-residential-v1"
+    # Configuration grants entry to the form, not tenant eligibility.
+    payload = followup_lease_payload(owned_property, tenant)
+    assert (
+        owner_client.post(
+            "/api/v1/features/v1/leases/", payload, format="json"
+        ).status_code
+        == 409
+    )
+    created, _ = create_invitation(owner, tenant, owned_property)
+    assert (
+        authenticated(tenant)
+        .post(
+            f"/api/v1/features/v1/tenancy-invitations/{created.data['id']}/respond/",
+            {"decision": "accepted", "revision": 1, "request_key": str(uuid.uuid4())},
+            format="json",
+        )
+        .status_code
+        == 200
+    )
+    draft = owner_client.post("/api/v1/features/v1/leases/", payload, format="json")
+    assert draft.status_code == 201
+    url = f"/api/v1/features/v1/leases/{draft.data['id']}/"
+    for actor, workspace, can_cancel in (
+        (owner, "owner", True),
+        (tenant, "tenant", False),
+    ):
+        client = authenticated(actor)
+        projections = [
+            client.get(url).data,
+            client.get(f"/api/v1/features/v1/leases/?workspace={workspace}").data[
+                "results"
+            ][0],
+        ]
+        if actor == owner:
+            projections.append(draft.data)
+        for item in projections:
+            assert item["legacy_read_only"] is False
+            assert item["can_sign"] is False
+            assert item["can_cancel"] is can_cancel
+            assert item["allowed_actions"] == (["cancel_draft"] if can_cancel else [])
+            assert item["blocking_reasons"] == []
+        assert (
+            client.post(
+                url + "signing-session/",
+                {"revision": 1, "request_key": str(uuid.uuid4())},
+                format="json",
+            ).status_code
+            == 409
+        )
+    assert not SigningSession.objects.exists()
+    assert (
+        owner_client.post(
+            url + "signing-session/",
+            {
+                "document_id": str(uuid.uuid4()),
+                "document_hash": "a" * 64,
+                "expected_revision": 1,
+                "request_key": str(uuid.uuid4()),
+            },
+            format="json",
+        ).status_code
+        == 409
+    )
+    assert not RentInvoice.objects.exists()
+    lease = Lease.objects.get(id=draft.data["id"])
+    assert lease.status == Lease.Status.DRAFT
+    # Preserve structured workflow exclusion and the database conflict constraint.
+    assert lease.legacy_read_only is True
+    cancel = {"revision": 1, "request_key": str(uuid.uuid4())}
+    for actor in (tenant, stranger):
+        assert (
+            authenticated(actor)
+            .post(url + "cancel/", cancel, format="json")
+            .status_code
+            == 404
+        )
+    cancelled = owner_client.post(url + "cancel/", cancel, format="json")
+    assert cancelled.status_code == 200
+    assert (
+        owner_client.post(url + "cancel/", cancel, format="json").data == cancelled.data
+    )
+    for actor in (owner, tenant):
+        item = authenticated(actor).get(url).data
+        assert item["legacy_read_only"] is True
+        assert item["can_sign"] is item["can_cancel"] is False
+        assert item["allowed_actions"] == []
+    invitation = TenancyInvitation.objects.get(id=created.data["id"])
+    assert invitation.lease_id == lease.pk
+
+
+@pytest.mark.django_db
+def test_historical_legacy_drafts_remain_read_only(participants, owned_property):
+    owner, tenant, _ = participants
+    lease = Lease.objects.create(
+        property=owned_property,
+        owner=owner,
+        tenant=tenant,
+        start_date=timezone.localdate(),
+        end_date=timezone.localdate() + timedelta(days=30),
+        rent_amount_minor=500000,
+    )
+    url = f"/api/v1/features/v1/leases/{lease.id}/"
+    for actor in (owner, tenant):
+        client = authenticated(actor)
+        item = client.get(url).data
+        assert item["legacy_read_only"] is True
+        assert item["can_sign"] is item["can_cancel"] is False
+        assert item["allowed_actions"] == []
+        assert (
+            client.post(
+                url + "signing-session/",
+                {"revision": 1, "request_key": str(uuid.uuid4())},
+                format="json",
+            ).status_code
+            == 409
+        )
+    assert (
+        authenticated(owner)
+        .post(
+            url + "cancel/",
+            {"revision": 1, "request_key": str(uuid.uuid4())},
+            format="json",
+        )
+        .status_code
+        == 409
+    )
+    lease.refresh_from_db()
+    assert lease.status == Lease.Status.DRAFT
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("language", ["en", "ar"])
+def test_unverified_owner_configuration_and_post_agree(
+    participants, owned_property, language
+):
+    owner, tenant, _ = participants
+    owner.is_verified = False
+    owner.save(update_fields=["is_verified"])
+    client = authenticated(owner)
+    client.defaults["HTTP_ACCEPT_LANGUAGE"] = language
+    config = client.get("/api/v1/features/v1/lease-configuration/")
+    assert config.data["can_create"] is False
+    assert config.data["allowed_actions"] == []
+    assert config.data["blocking_reasons"]
+    assert (
+        client.post(
+            "/api/v1/features/v1/leases/",
+            followup_lease_payload(owned_property, tenant),
+            format="json",
+        ).status_code
+        == 403
+    )
 
 
 @pytest.mark.django_db

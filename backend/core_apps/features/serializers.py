@@ -2,6 +2,8 @@ from django.conf import settings
 from django.utils import timezone
 from rest_framework import serializers
 
+from .services.lease_permissions import can_cancel_draft, is_read_only
+
 from .models import (
     BoostCampaign,
     Lease,
@@ -89,6 +91,7 @@ class AlertCreateSerializer(serializers.Serializer):
 
 
 class LeaseSerializer(serializers.ModelSerializer):
+    legacy_read_only = serializers.SerializerMethodField()
     property_id = serializers.UUIDField(source="property.id", read_only=True)
     property_title = serializers.CharField(source="property.title", read_only=True)
     owner_name = serializers.CharField(source="owner.get_full_name", read_only=True)
@@ -146,21 +149,29 @@ class LeaseSerializer(serializers.ModelSerializer):
         }
 
     def get_can_sign(self, obj):
+        from .services.rental_foundation import fake_provider_available
+
         request = self.context.get("request")
         return bool(
             request
+            and request.user.is_active
+            and request.user.is_verified
             and request.user in (obj.owner, obj.tenant)
-            and obj.status in {Lease.Status.DRAFT, Lease.Status.PENDING}
+            and not obj.legacy_read_only
+            and fake_provider_available()
+            and obj.status == Lease.Status.PENDING_SIGNATURES
+            and obj.document_id
         )
+
+    def get_legacy_read_only(self, obj):
+        return is_read_only(obj)
 
     def get_can_cancel(self, obj):
         request = self.context.get("request")
-        return bool(
-            request and request.user == obj.owner and obj.status == Lease.Status.DRAFT
-        )
+        return bool(request and can_cancel_draft(request.user, obj))
 
     def get_allowed_actions(self, obj):
-        if obj.legacy_read_only:
+        if self.get_legacy_read_only(obj):
             return []
         actions = []
         if self.get_can_sign(obj):
@@ -170,7 +181,7 @@ class LeaseSerializer(serializers.ModelSerializer):
         return actions
 
     def get_blocking_reasons(self, obj):
-        if obj.legacy_read_only:
+        if self.get_legacy_read_only(obj):
             return ["This legacy agreement is not eligible for new rental mutations."]
         return []
 
@@ -340,7 +351,9 @@ class TenancyInvitationSerializer(serializers.ModelSerializer):
     lease_id = serializers.UUIDField(source="lease.id", read_only=True, allow_null=True)
     eligible_for_lease = serializers.SerializerMethodField()
     actions = serializers.SerializerMethodField()
-    interest_id = serializers.UUIDField(source="interest.id", read_only=True, allow_null=True)
+    interest_id = serializers.UUIDField(
+        source="interest.id", read_only=True, allow_null=True
+    )
     terms_proposal_id = serializers.UUIDField(
         source="terms_proposal.id", read_only=True, allow_null=True
     )
@@ -404,7 +417,8 @@ class TenancyInvitationSerializer(serializers.ModelSerializer):
             and request.user == obj.owner
             and obj.lease_id is None
             and obj.consumed_at is None
-            and obj.status in {TenancyInvitation.Status.PENDING, TenancyInvitation.Status.ACCEPTED}
+            and obj.status
+            in {TenancyInvitation.Status.PENDING, TenancyInvitation.Status.ACCEPTED}
         ):
             actions.append("revoke_invitation")
         return actions

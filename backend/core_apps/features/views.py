@@ -32,7 +32,6 @@ from .models import (
     ListingSuggestion,
     RentInvoice,
     SearchAlert,
-    SigningSession,
     TenancyInvitation,
 )
 from .pagination import FeaturePagination
@@ -66,6 +65,7 @@ from .services.rental_foundation import (
     get_authorized_rental_subject,
     private_no_store,
 )
+from .services.lease_permissions import can_cancel_draft
 
 User = get_user_model()
 FEATURE_DECORATORS = [api_view]
@@ -516,22 +516,12 @@ def listing_suggestions(request):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def lease_configuration(request):
-    from .services.rental_phase2 import ensure_policy, get_or_create_owner_profile
+    from .services.rental_phase2 import ensure_policy
 
     policy = ensure_policy()
-    profile = get_or_create_owner_profile(request.user)
-    provider_ready = (
-        getattr(settings, "RENTAL_PROVIDER_BACKEND", "disabled") == "fake"
-        and getattr(settings, "RENTAL_FAKE_PROVIDER_ALLOWED", False)
-    )
-    can_create = (
-        provider_ready
-        and request.user.is_active
-        and request.user.is_verified
-        and profile.status == profile.Status.READY
-        and profile.payout_ready
-        and policy.version in profile.accepted_policy_versions
-    )
+    # This contract configures template/invitation drafts. Structured agreement
+    # creation continues to enforce its own onboarding and provider policy.
+    can_create = bool(request.user.is_active and request.user.is_verified)
     return Response(
         {
             "can_create": can_create,
@@ -549,9 +539,17 @@ def lease_configuration(request):
                 "exponent": policy.exponent,
             },
             "allowed_actions": ["create"] if can_create else [],
-            "blocking_reasons": []
-            if can_create
-            else ["Owner onboarding or agreement providers are not ready."],
+            "blocking_reasons": (
+                []
+                if can_create
+                else [
+                    localized(
+                        request,
+                        "A verified active owner account is required.",
+                        "يلزم حساب مالك نشط وموثّق.",
+                    )
+                ]
+            ),
         }
     )
 
@@ -712,9 +710,7 @@ def tenancy_invitations(request):
                     ],
                     lease__isnull=True,
                 )
-                .select_related(
-                    "property", "property__owner", "owner", "tenant"
-                )
+                .select_related("property", "property__owner", "owner", "tenant")
             )
             for existing in live:
                 refresh_effective_status(existing)
@@ -824,9 +820,7 @@ def tenancy_invitation_respond(request, invitation_id):
             id=invitation_id,
             tenant=request.user,
         )
-        replay = _replay(
-            request.user, operation, data_in["request_key"], request.data
-        )
+        replay = _replay(request.user, operation, data_in["request_key"], request.data)
         if replay:
             return replay
         refresh_effective_status(invitation)
@@ -940,9 +934,7 @@ def leases(request):
                     status=TenancyInvitation.Status.ACCEPTED,
                     lease__isnull=True,
                 )
-                .select_related(
-                    "property", "property__owner", "owner", "tenant"
-                )
+                .select_related("property", "property__owner", "owner", "tenant")
                 .order_by("-created_at", "-id")
             )
             for item in invitations:
@@ -1025,82 +1017,50 @@ def lease_detail(request, lease_id):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def lease_signing_session(request, lease_id):
-    if "document_id" in request.data:
+    lease = _get_authorized_lease(request, lease_id)
+    if not lease.legacy_read_only and "document_id" in request.data:
         from .rental_phase2_views import create_structured_signing_session
 
         return create_structured_signing_session(request, lease_id)
-    lease = _get_authorized_lease(request, lease_id)
-    serializer = RevisionRequestSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    if serializer.validated_data["revision"] != lease.revision:
-        return Response(
-            {"message": "Lease revision conflict."}, status=status.HTTP_409_CONFLICT
+    # The old hosted URL was a placeholder, not a provider signing session.
+    # Structured signing uses document_id and its existing readiness checks.
+    raise InvitationConflict(
+        localized(
+            request,
+            "Signing is not available for template invitation drafts.",
+            "التوقيع غير متاح لمسودات دعوات الإيجار بالقالب.",
         )
-    replay = _replay(
-        request.user,
-        "lease.sign",
-        serializer.validated_data["request_key"],
-        request.data,
     )
-    if replay:
-        return replay
-    expires = timezone.now() + timedelta(minutes=30)
-    base = getattr(settings, "FEATURE_HOSTED_BASE_URL", "https://sokoun.app")
-    with transaction.atomic():
-        session = SigningSession.objects.create(
-            lease=lease,
-            signer=request.user,
-            hosted_url=f"{base.rstrip('/')}/signing/{lease.id}",
-            expires_at=expires,
-        )
-        if lease.status == Lease.Status.DRAFT:
-            lease.status = Lease.Status.PENDING
-            lease.revision += 1
-            lease.save(update_fields=["status", "revision", "updated_at"])
-        data = {
-            "id": str(session.id),
-            "subject_id": str(lease.id),
-            "status": "pending",
-            "hosted_url": session.hosted_url,
-            "expires_at": expires.isoformat(),
-        }
-        _remember(
-            request.user,
-            "lease.sign",
-            serializer.validated_data["request_key"],
-            request.data,
-            data,
-            201,
-            request_subject_id=lease.id,
-            result_subject_id=lease.id,
-            result_revision=lease.revision,
-            is_rental_operation=True,
-        )
-    return Response(data, status=status.HTTP_201_CREATED)
 
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def lease_cancel(request, lease_id):
-    lease = get_object_or_404(Lease, id=lease_id, owner=request.user)
     serializer = RevisionRequestSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    if serializer.validated_data["revision"] != lease.revision:
-        return Response(
-            {"message": "Lease revision conflict."}, status=status.HTTP_409_CONFLICT
-        )
-    if lease.status != Lease.Status.DRAFT:
-        raise ValidationError("Only a draft lease can be cancelled.")
-    replay = _replay(
-        request.user,
-        "lease.cancel",
-        serializer.validated_data["request_key"],
-        request.data,
-    )
-    if replay:
-        return replay
     with transaction.atomic():
+        lease = get_object_or_404(
+            Lease.objects.select_for_update(), id=lease_id, owner=request.user
+        )
+        replay = _replay(
+            request.user,
+            "lease.cancel",
+            serializer.validated_data["request_key"],
+            request.data,
+        )
+        if replay:
+            return replay
+        if serializer.validated_data["revision"] != lease.revision:
+            raise InvitationConflict("Lease revision conflict.")
+        if not can_cancel_draft(request.user, lease):
+            raise InvitationConflict(
+                localized(
+                    request,
+                    "This agreement cannot be cancelled by this account.",
+                    "لا يمكن لهذا الحساب إلغاء هذا العقد.",
+                )
+            )
         lease.status = Lease.Status.CANCELLED
         lease.revision += 1
         lease.save(update_fields=["status", "revision", "updated_at"])
