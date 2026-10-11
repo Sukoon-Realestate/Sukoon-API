@@ -23,7 +23,8 @@ from .services import (
     AdvertisingServiceError,
     activate_with_mock_payment,
     create_advertisement,
-    destination_is_eligible,
+    is_publicly_eligible,
+    media_is_available,
     effective_status,
     plan_payload,
     record_rejected_operation,
@@ -159,7 +160,7 @@ def payment_payload(payment):
         return None
     return {
         "id": str(payment.id),
-        "advertisement_id": str(payment.advertisement_id),
+        "advertisement_id": str(payment.advertisement.id),
         "operation_id": payment.operation_id,
         "payment_mode": payment.payment_mode,
         "status": payment.status,
@@ -173,7 +174,7 @@ def advertisement_payload(request, advertisement, *, public=False, now=None):
         "description": advertisement.description,
         "banner_url": banner_url(request, advertisement),
         "property_id": (
-            str(advertisement.property_id) if advertisement.property_id else None
+            str(advertisement.property.id) if advertisement.property_id else None
         ),
         "offer_id": advertisement.offer_id or None,
         "status": effective_status(advertisement, now),
@@ -368,13 +369,13 @@ def tenant_home_placement(request):
             payment__status="mock_succeeded",
             media__isnull=False,
         )
-        .select_related("property__owner", "operation", "payment")
+        .select_related("owner", "property__owner", "operation", "payment", "media")
         .order_by("-starts_at", "-id")
     )
     results = []
     nearest_end = None
     for advertisement in candidates.iterator():
-        if not destination_is_eligible(advertisement):
+        if not is_publicly_eligible(advertisement, now):
             continue
         results.append(
             advertisement_payload(request, advertisement, public=True, now=now)
@@ -400,19 +401,17 @@ def tenant_home_placement(request):
 @renderer_classes([AdvertisingJsonRenderer])
 def advertisement_media(request, advertisement_id):
     advertisement = get_object_or_404(
-        Advertisement.objects.select_related("media", "property__owner"),
+        Advertisement.objects.select_related(
+            "media", "owner", "payment", "property__owner"
+        ),
         id=advertisement_id,
         media__isnull=False,
     )
-    is_public = (
-        effective_status(advertisement) == Advertisement.Status.ACTIVE
-        and destination_is_eligible(advertisement)
-        and advertisement.owner.is_active
-        and getattr(getattr(advertisement, "payment", None), "status", None)
-        == "mock_succeeded"
-    )
-    if not is_public and (
-        not request.user.is_authenticated or request.user != advertisement.owner
+    now = timezone.now()
+    is_public = is_publicly_eligible(advertisement, now)
+    if not media_is_available(advertisement) or (
+        not is_public
+        and (not request.user.is_authenticated or request.user != advertisement.owner)
     ):
         return finalize(
             error_response(
@@ -429,6 +428,8 @@ def advertisement_media(request, advertisement_id):
     response["Content-Disposition"] = "inline"
     response["X-Content-Type-Options"] = "nosniff"
     response["Cache-Control"] = (
-        "public, max-age=60, must-revalidate" if is_public else "no-store"
+        f"public, max-age={min(60, max(0, int((advertisement.ends_at - now).total_seconds())))}, must-revalidate"
+        if is_public
+        else "no-store"
     )
     return response

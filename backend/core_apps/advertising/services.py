@@ -359,27 +359,18 @@ def activate_with_mock_payment(owner, advertisement_id, operation_id, payment_mo
     with transaction.atomic():
         advertisement = (
             Advertisement.objects.select_for_update()
-            .select_related("owner", "property__owner", "operation")
+            # Optional joins cannot be locked by PostgreSQL. Fetch the
+            # destination separately; retain advertisement/owner/operation locks.
+            .select_related("owner", "operation")
             .filter(id=advertisement_id, owner=owner)
             .first()
         )
         if not advertisement:
             raise AdvertisingServiceError("Advertisement not found.", status_code=404)
-        existing = MockAdvertisementPayment.objects.filter(
-            advertisement=advertisement
-        ).first()
-        if existing:
-            return advertisement, existing, False
-        if not owner.is_active:
+        if not advertisement.owner.is_active:
             raise AdvertisingServiceError(
                 "This account is not eligible to publish advertisements.",
                 status_code=403,
-            )
-        if advertisement.status != Advertisement.Status.PENDING_PAYMENT:
-            raise AdvertisingServiceError(
-                "This advertisement cannot be activated from its current state.",
-                status_code=409,
-                errors={"status": ["invalid_transition"]},
             )
         expected_operation_id = f"{advertisement.operation.operation_id}-payment"
         if operation_id != expected_operation_id:
@@ -392,15 +383,33 @@ def activate_with_mock_payment(owner, advertisement_id, operation_id, payment_mo
                 "Only simulated payment is available.",
                 errors={"payment_mode": ["unsupported"]},
             )
-        if advertisement.property and (
-            not property_is_publishable(advertisement.property)
-            or not eligible_offer(advertisement.property, advertisement.offer_id)
-        ):
+        existing = MockAdvertisementPayment.objects.filter(
+            advertisement=advertisement
+        ).first()
+        if existing:
+            if (
+                existing.operation_id != operation_id
+                or existing.payment_mode != payment_mode
+                or existing.status != MockAdvertisementPayment.STATUS_SUCCEEDED
+            ):
+                raise AdvertisingServiceError(
+                    "This advertisement cannot be activated from its current state.",
+                    status_code=409,
+                    errors={"status": ["invalid_transition"]},
+                )
+            return advertisement, existing, False
+        if advertisement.status != Advertisement.Status.PENDING_PAYMENT:
+            raise AdvertisingServiceError(
+                "This advertisement cannot be activated from its current state.",
+                status_code=409,
+                errors={"status": ["invalid_transition"]},
+            )
+        if not destination_is_eligible(advertisement):
             raise AdvertisingServiceError(
                 "The advertisement destination is no longer eligible.",
                 errors={"property_id": ["not_eligible"]},
             )
-        if not hasattr(advertisement, "media") or not advertisement.media.banner:
+        if not media_is_available(advertisement):
             raise AdvertisingServiceError(
                 "The advertisement media is unavailable.",
                 errors={"banner": ["unavailable"]},
@@ -444,7 +453,34 @@ def effective_status(advertisement, now=None):
 
 def destination_is_eligible(advertisement):
     if not advertisement.property_id:
-        return True
-    return property_is_publishable(advertisement.property) and eligible_offer(
-        advertisement.property, advertisement.offer_id
+        return not advertisement.offer_id
+    return (
+        advertisement.property.owner_id == advertisement.owner_id
+        and property_is_publishable(advertisement.property)
+        and eligible_offer(advertisement.property, advertisement.offer_id)
+    )
+
+
+def media_is_available(advertisement):
+    media = getattr(advertisement, "media", None)
+    if not media or not media.banner or media.size_bytes <= 0:
+        return False
+    return media.banner.storage.exists(media.banner.name)
+
+
+def is_publicly_eligible(advertisement, now=None):
+    now = now or timezone.now()
+    payment = getattr(advertisement, "payment", None)
+    return bool(
+        advertisement.status == Advertisement.Status.ACTIVE
+        and advertisement.placement == Advertisement.PLACEMENT_TENANT_HOME
+        and advertisement.starts_at
+        and advertisement.ends_at
+        and advertisement.starts_at <= now < advertisement.ends_at
+        and advertisement.owner.is_active
+        and payment
+        and payment.status == MockAdvertisementPayment.STATUS_SUCCEEDED
+        and payment.payment_mode == MockAdvertisementPayment.MODE_MOCK
+        and destination_is_eligible(advertisement)
+        and media_is_available(advertisement)
     )

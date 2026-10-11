@@ -1,10 +1,13 @@
 import io
 import uuid
+from concurrent.futures import ThreadPoolExecutor
+from threading import Barrier
 from datetime import datetime, timedelta, timezone as datetime_timezone
 from urllib.parse import urlsplit
 
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db import connection, connections
 from django.test import override_settings
 from django.urls import reverse
 from django.utils import timezone
@@ -14,6 +17,7 @@ from rest_framework.test import APIClient
 from core_apps.advertising.models import (
     Advertisement,
     AdvertisementOperation,
+    AdvertisingPlan,
     MockAdvertisementPayment,
 )
 from core_apps.advertising.services import calendar_expiry, resolve_cairo_local
@@ -41,7 +45,17 @@ def create_payload(operation_id=None, **overrides):
 
 @pytest.fixture(autouse=True)
 def isolated_media(tmp_path):
-    with override_settings(MEDIA_ROOT=tmp_path):
+    # Database IDs are reused between tests; throttle history must not leak
+    # from these round trips into unrelated API tests using the same IDs.
+    with override_settings(
+        MEDIA_ROOT=tmp_path,
+        CACHES={
+            "default": {
+                "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+                "LOCATION": str(tmp_path),
+            }
+        },
+    ):
         yield
 
 
@@ -195,6 +209,8 @@ class TestAdvertisingAPI:
 
         assert first.status_code == 200
         assert first.json()["data"]["status"] == "active"
+        assert first.json()["data"]["property_id"] == str(eligible_property.id)
+        assert first.json()["data"]["payment"]["advertisement_id"] == advertisement_id
         assert first.json()["data"]["starts_at"] == replay.json()["data"]["starts_at"]
         assert first.json()["data"]["ends_at"] == replay.json()["data"]["ends_at"]
         assert MockAdvertisementPayment.objects.count() == 1
@@ -291,3 +307,210 @@ class TestAdvertisingCalendarExpiry:
         )
         assert overlap.fold == 1
         assert overlap.utcoffset() == timedelta(hours=2)
+
+
+def pending_ad(client, **overrides):
+    response = client.post(
+        reverse("advertising:owner-advertisement-list"),
+        create_payload(**overrides),
+        format="multipart",
+    )
+    assert response.status_code == 201
+    data = response.json()["data"]
+    return (
+        Advertisement.objects.get(id=data["id"]),
+        reverse("advertising:mock-payment", args=[data["id"]]),
+        {"operation_id": data["operation_id"] + "-payment", "payment_mode": "mock"},
+    )
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize("language", ["en", "ar"])
+def test_informational_payment_snapshot_recovery_and_expired_retry(
+    auth_client, another_user, monkeypatch, language
+):
+    auth_client.defaults["HTTP_ACCEPT_LANGUAGE"] = language
+    ad, url, body = pending_ad(auth_client)
+    snapshot = ad.plan_snapshot
+    AdvertisingPlan.objects.filter(id="weekly").update(
+        amount_minor=123,
+        duration_count=3,
+        revision="2",
+        active=False,
+    )
+    start = timezone.now()
+    monkeypatch.setattr("core_apps.advertising.services.timezone.now", lambda: start)
+    response = auth_client.post(url, body, format="json")
+    assert response.status_code == 200
+    paid = response.json()["data"]
+    assert response.json()["key"] == "success"
+    assert paid["property_id"] is paid["offer_id"] is None
+    assert paid["plan_snapshot"] == snapshot
+    assert paid["payment"]["advertisement_id"] == str(ad.id)
+    assert paid["payment"]["operation_id"] == body["operation_id"]
+    assert paid["payment"]["status"] == "mock_succeeded"
+    assert paid["payment"]["payment_mode"] == "mock"
+    ad.refresh_from_db()
+    assert ad.starts_at == start
+    assert (ad.ends_at - start).total_seconds() == 604800
+    assert auth_client.post(url, body, format="json").json()["data"] == paid
+    detail = reverse("advertising:owner-advertisement-detail", args=[ad.id])
+    assert auth_client.get(detail).json()["data"] == paid
+    assert auth_client.get(reverse("advertising:owner-advertisement-list")).json()[
+        "data"
+    ]["results"] == [paid]
+    assert (
+        auth_client.get(
+            reverse("advertising:operation-detail", args=[ad.operation.operation_id])
+        ).json()["data"]["advertisement"]
+        == paid
+    )
+    other = APIClient()
+    other.force_authenticate(another_user)
+    assert other.get(detail).status_code == 404
+    assert other.post(url, body, format="json").status_code == 404
+    assert APIClient().post(url, body, format="json").status_code == 401
+    for viewer in (APIClient(), other):
+        feed = viewer.get(
+            reverse("advertising:tenant-home"), HTTP_ACCEPT_LANGUAGE=language
+        )
+        public = feed.json()["data"]["results"][0]
+        assert public["id"] == str(ad.id)
+        assert (
+            not {"owner_id", "operation_id", "plan_snapshot", "payment", "price"}
+            & public.keys()
+        )
+        media = viewer.get(urlsplit(paid["banner_url"]).path)
+        assert media.status_code == 200
+        assert b"".join(media.streaming_content)
+    invalid = auth_client.post(url, {**body, "operation_id": "wrong"}, format="json")
+    assert invalid.status_code == 400
+    assert invalid.json()["key"] == "error"
+    assert invalid.json()["errors"] == {"operation_id": ["invalid_payment_operation"]}
+    assert ("معرف" if language == "ar" else "operation ID") in invalid.json()["message"]
+    monkeypatch.setattr(
+        "core_apps.advertising.services.timezone.now", lambda: ad.ends_at
+    )
+    expired = auth_client.post(url, body, format="json").json()["data"]
+    assert expired == {**paid, "status": "expired"}
+    assert MockAdvertisementPayment.objects.count() == 1
+    assert (
+        APIClient().get(reverse("advertising:tenant-home")).json()["data"]["results"]
+        == []
+    )
+    assert APIClient().get(urlsplit(paid["banner_url"]).path).status_code == 404
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "failure", ["missing_media", "transferred", "hidden", "archived"]
+)
+def test_payment_revalidates_media_and_destination(
+    auth_client, eligible_property, another_user, failure
+):
+    ad, url, body = pending_ad(
+        auth_client, property_id=eligible_property.id, offer_id="offer-room-2"
+    )
+    if failure == "missing_media":
+        ad.media.banner.storage.delete(ad.media.banner.name)
+    elif failure == "transferred":
+        eligible_property.owner = another_user
+    elif failure == "hidden":
+        eligible_property.status = Property.Status.HIDDEN
+    else:
+        eligible_property.rental_inventory["offers"][0]["archived"] = True
+    eligible_property.save()
+    response = auth_client.post(url, body, format="json")
+    assert response.status_code == 400
+    assert response.json()["key"] == "error"
+    ad.refresh_from_db()
+    assert ad.status == "pending_payment"
+    assert ad.starts_at is ad.ends_at is None
+    assert not MockAdvertisementPayment.objects.exists()
+
+
+@pytest.mark.django_db
+def test_payment_failure_rolls_back_activation_and_same_operation_can_retry(
+    auth_client, monkeypatch
+):
+    ad, url, body = pending_ad(auth_client)
+    with monkeypatch.context() as patch:
+
+        def fail(**kwargs):
+            raise RuntimeError("Injected payment storage failure")
+
+        patch.setattr(MockAdvertisementPayment.objects, "create", fail)
+        with pytest.raises(RuntimeError, match="Injected"):
+            auth_client.post(url, body, format="json")
+    ad.refresh_from_db()
+    assert ad.status == "pending_payment"
+    assert ad.starts_at is ad.ends_at is ad.activated_at is None
+    assert not MockAdvertisementPayment.objects.exists()
+    assert auth_client.post(url, body, format="json").status_code == 200
+    assert MockAdvertisementPayment.objects.count() == 1
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+    "ineligible", ["future", "placement", "media", "owner", "payment"]
+)
+def test_public_media_and_feed_share_live_eligibility(auth_client, user, ineligible):
+    ad, url, body = pending_ad(auth_client)
+    assert auth_client.post(url, body, format="json").status_code == 200
+    ad.refresh_from_db()
+    if ineligible == "future":
+        ad.starts_at = timezone.now() + timedelta(hours=1)
+    elif ineligible == "placement":
+        ad.placement = "other"
+    elif ineligible == "media":
+        ad.media.banner.storage.delete(ad.media.banner.name)
+    elif ineligible == "owner":
+        user.is_active = False
+        user.save()
+    else:
+        ad.payment.delete()
+    ad.save()
+    guest = APIClient()
+    assert guest.get(reverse("advertising:tenant-home")).json()["data"]["results"] == []
+    assert (
+        guest.get(reverse("advertising:advertisement-media", args=[ad.id])).status_code
+        == 404
+    )
+
+
+@pytest.mark.django_db(transaction=True)
+def test_concurrent_payment_retries_share_one_receipt(auth_client, user):
+    if connection.vendor != "postgresql":
+        pytest.skip("Row-lock concurrency requires PostgreSQL")
+    AdvertisingPlan.objects.get_or_create(
+        id="weekly",
+        defaults={
+            "title_en": "Weekly",
+            "title_ar": "أسبوعية",
+            "duration_unit": "week",
+            "duration_count": 1,
+            "amount_minor": 100000,
+            "revision": "1",
+        },
+    )
+    ad, url, body = pending_ad(auth_client)
+    barrier = Barrier(2)
+
+    def submit():
+        try:
+            with connections["default"].cursor() as cursor:
+                cursor.execute("SET lock_timeout = '5s'")
+            client = APIClient()
+            client.force_authenticate(user)
+            barrier.wait(timeout=10)
+            response = client.post(url, body, format="json")
+            return response.status_code, response.json()
+        finally:
+            connections.close_all()
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        futures = [pool.submit(submit) for _ in range(2)]
+        results = [future.result(timeout=20) for future in futures]
+    assert results[0][0] == results[1][0] == 200
+    assert results[0][1] == results[1][1]
+    assert MockAdvertisementPayment.objects.filter(advertisement=ad).count() == 1
