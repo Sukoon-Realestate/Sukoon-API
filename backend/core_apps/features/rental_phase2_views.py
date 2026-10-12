@@ -219,7 +219,9 @@ def _notify(user, notification_type, title, action_type, target_id, **context):
 @renderer_classes([FeatureJsonRenderer])
 def owner_payment_profile(request):
     profile = get_or_create_owner_profile(request.user)
-    return Response(OwnerPaymentProfileSerializer(profile, context={"request": request}).data)
+    return Response(
+        OwnerPaymentProfileSerializer(profile, context={"request": request}).data
+    )
 
 
 @api_view(["POST"])
@@ -1068,6 +1070,11 @@ def create_structured_signing_session(request, lease_id):
         return replay
     with transaction.atomic():
         lease = _participant_lease(request, lease_id, lock=True)
+        replay = _replay_response(
+            request.user, operation, data["request_key"], request.data
+        )
+        if replay:
+            return replay
         if lease.status != Lease.Status.PENDING_SIGNATURES:
             raise RentalConflict("The agreement is not awaiting signatures.")
         if data["expected_revision"] != lease.revision:
@@ -1079,6 +1086,13 @@ def create_structured_signing_session(request, lease_id):
             raise RentalConflict(
                 "The agreement document changed.", code="document_changed"
             )
+        if lease.signing_sessions.filter(
+            signer=request.user,
+            status="completed",
+            document_id=lease.document_id,
+            document_hash=lease.document_hash,
+        ).exists():
+            raise RentalConflict("You already signed this agreement document.")
         provider = get_rental_provider().create_signing_session(
             lease.id, request.user.id, data["request_key"]
         )

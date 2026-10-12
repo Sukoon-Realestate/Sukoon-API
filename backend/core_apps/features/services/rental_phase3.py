@@ -22,6 +22,7 @@ from ..models import (
     ProviderWebhookEvent,
     RentInvoice,
     RefundRequest,
+    RentalChange,
     RentalTimelineEvent,
 )
 from .rental_phase2 import (
@@ -388,10 +389,20 @@ def _capture_attempt(attempt):
     rent_minor = attempt.amount_minor - deposit_minor
     if rent_minor < 0 or deposit_minor < 0:
         raise RentalConflict("Invoice allocations do not match the deposit obligation.")
+    first_period = invoice.billing_period and invoice.billing_period.sequence == 1
+    # A renewal has its own sequence 1. Use its persisted originating change,
+    # not client-controlled terms, to avoid charging acquisition a second time.
+    continuous_renewal = (
+        first_period
+        and RentalChange.objects.filter(
+            kind=RentalChange.Kind.RENEWAL,
+            status=RentalChange.Status.APPLIED,
+            result_lease_id=invoice.lease_id,
+            lease__tenancy_root_id=invoice.lease.tenancy_root_id,
+        ).exists()
+    )
     commission = (
-        rent_minor * 1000 // 10000
-        if invoice.billing_period and invoice.billing_period.sequence == 1
-        else 0
+        rent_minor * 1000 // 10000 if first_period and not continuous_renewal else 0
     )
     net = rent_minor - commission
     allocation.components = {"rent": rent_minor, "deposit": deposit_minor}

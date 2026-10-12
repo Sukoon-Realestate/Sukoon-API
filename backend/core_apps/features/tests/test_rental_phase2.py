@@ -99,7 +99,7 @@ def rental_participants(db):
     return owner, tenant, stranger, property_obj, offer_id
 
 
-def complete_owner_onboarding(owner):
+def complete_owner_onboarding(owner, completion_envelopes=None):
     client = authenticated(owner)
     profile_response = client.get("/api/v1/features/v1/owner-payment-profile/")
     profile = profile_response.data
@@ -133,9 +133,17 @@ def complete_owner_onboarding(owner):
         "expected_revision": descriptor["expected_revision"],
         "request_key": str(uuid.uuid4()),
     }
+    completion_grant = client.get(
+        f"/api/v1/features/v1/rental-capabilities/?subject_id={profile['id']}&action=onboard_beneficiary"
+    )
+    assert completion_grant.status_code == 200
+    assert "onboard_beneficiary" in completion_grant.data["allowed_actions"]
     completed = client.post(descriptor["path"], body, format="json")
     assert completed.status_code == 200, completed.data
     assert client.post(descriptor["path"], body, format="json").data == completed.data
+    if completion_envelopes is not None:
+        completion_envelopes["onboarding"] = completed.json()
+        completion_envelopes["grants"]["onboarding"] = completion_grant.json()["data"]
     return OwnerPaymentProfile.objects.get(owner=owner)
 
 
@@ -171,6 +179,15 @@ def agreement_terms(starts_on, ends_on):
 
 @pytest.mark.django_db
 def test_phase2_complete_interest_to_activation_flow(rental_participants):
+    run_interest_to_activation(rental_participants)
+
+
+def run_interest_to_activation(
+    rental_participants,
+    existing_interest=None,
+    artifact_name="django-cycle-contract.json",
+):
+    """Reuse the real workflow when a planning cycle has created the interest."""
     owner, tenant, _, property_obj, offer_id = rental_participants
     initial_owner_profile = (
         authenticated(owner)
@@ -184,7 +201,8 @@ def test_phase2_complete_interest_to_activation_flow(rental_participants):
         )
         .json()["data"]
     )
-    profile = complete_owner_onboarding(owner)
+    completion_envelopes = {"signing": [], "grants": {"signing": []}}
+    profile = complete_owner_onboarding(owner, completion_envelopes)
     assert profile.status == OwnerPaymentProfile.Status.READY
     assert profile.masked_beneficiary == {"account_last4": "4242"}
 
@@ -208,23 +226,34 @@ def test_phase2_complete_interest_to_activation_flow(rental_participants):
 
     grant(tenant_client, property_obj.id, "create_rental_interest")
 
-    interest_response = tenant_client.post(
-        "/api/v1/features/v1/rental-interests/",
-        {
-            "property_id": str(property_obj.id),
-            "offer_id": offer_id,
-            "offer_revision": 2,
-            "desired_start": str(starts_on),
-            "months": 1,
-            "occupants": 1,
-            "message": "Interested",
-            "request_key": str(uuid.uuid4()),
-            "expected_revision": 0,
-        },
-        format="json",
+    interest_response = (
+        tenant_client.post(
+            "/api/v1/features/v1/rental-interests/",
+            {
+                "property_id": str(property_obj.id),
+                "offer_id": offer_id,
+                "offer_revision": 2,
+                "desired_start": str(starts_on),
+                "months": 1,
+                "occupants": 1,
+                "message": "Interested",
+                "request_key": str(uuid.uuid4()),
+                "expected_revision": 0,
+            },
+            format="json",
+        )
+        if existing_interest is None
+        else None
     )
-    assert interest_response.status_code == 201
-    interest = interest_response.data["resource"]
+    if interest_response is not None:
+        assert interest_response.status_code == 201
+    interest = (
+        interest_response.data["resource"]
+        if interest_response is not None
+        else existing_interest
+    )
+    terms = agreement_terms(starts_on, ends_on)
+    terms["occupants"] = interest["occupants"]
     grant(owner_client, interest["id"], "create_terms_proposal")
 
     proposal_response = owner_client.post(
@@ -232,7 +261,7 @@ def test_phase2_complete_interest_to_activation_flow(rental_participants):
         {
             "interest_id": interest["id"],
             "offer_id": offer_id,
-            "terms": agreement_terms(starts_on, ends_on),
+            "terms": terms,
             "interest_revision": interest["revision"],
             "offer_revision": 2,
             "request_key": str(uuid.uuid4()),
@@ -256,13 +285,16 @@ def test_phase2_complete_interest_to_activation_flow(rental_participants):
     assert accepted.status_code == 200
     proposal = accepted.data["resource"]
     assert proposal["status"] == "accepted"
+    interest = owner_client.get(
+        f"/api/v1/features/v1/rental-interests/{interest['id']}/"
+    ).data
     grant(owner_client, interest["id"], "create_invitation")
 
     invitation_response = owner_client.post(
         "/api/v1/features/v1/tenancy-invitations/",
         {
             "interest_id": interest["id"],
-            "interest_revision": 2,
+            "interest_revision": interest["revision"],
             "property_id": str(property_obj.id),
             "offer_id": offer_id,
             "offer_revision": 2,
@@ -298,7 +330,7 @@ def test_phase2_complete_interest_to_activation_flow(rental_participants):
             "offer_id": offer_id,
             "offer_revision": 2,
             "tenant_id": str(tenant.id),
-            "terms": agreement_terms(starts_on, ends_on),
+            "terms": terms,
             "request_key": str(uuid.uuid4()),
             "expected_revision": 0,
         },
@@ -374,6 +406,13 @@ def test_phase2_complete_interest_to_activation_flow(rental_participants):
         sessions.append(SigningSession.objects.get(id=response.data["session_id"]))
 
     for session, client in zip(sessions, (owner_client, tenant_client)):
+        completion_grant = client.get(
+            f"/api/v1/features/v1/rental-capabilities/?subject_id={lease['id']}&action=sign"
+        )
+        assert "sign" in completion_grant.data["allowed_actions"]
+        completion_envelopes["grants"]["signing"].append(
+            completion_grant.json()["data"]
+        )
         payload = {
             "expected_revision": lease["revision"],
             "request_key": str(uuid.uuid4()),
@@ -383,6 +422,7 @@ def test_phase2_complete_interest_to_activation_flow(rental_participants):
         )
         response = client.post(completion_path, payload, format="json")
         assert response.status_code == 200, response.data
+        completion_envelopes["signing"].append(response.json())
         assert (
             client.post(completion_path, payload, format="json").data == response.data
         )
@@ -488,12 +528,19 @@ def test_phase2_complete_interest_to_activation_flow(rental_participants):
     completion_path = (
         f"/api/v1/features/v1/mock-provider/payment-attempts/{attempt.id}/events/"
     )
+    payment_grant_path = f"/api/v1/features/v1/rental-capabilities/?subject_id={attempt.id}&action=reconcile"
+    completion_grant = tenant_client.get(payment_grant_path)
+    assert "reconcile" in completion_grant.data["allowed_actions"]
+    completion_envelopes["grants"]["captured"] = completion_grant.json()["data"]
     captured = tenant_client.post(completion_path, capture, format="json")
     assert captured.status_code == 200, captured.data
     assert (
         tenant_client.post(completion_path, capture, format="json").data
         == captured.data
     )
+    completion_grant = tenant_client.get(payment_grant_path)
+    assert "reconcile" in completion_grant.data["allowed_actions"]
+    completion_envelopes["grants"]["settled"] = completion_grant.json()["data"]
     settled = tenant_client.post(
         completion_path,
         {
@@ -504,6 +551,8 @@ def test_phase2_complete_interest_to_activation_flow(rental_participants):
         format="json",
     )
     assert settled.status_code == 200, settled.data
+    completion_envelopes["captured"] = captured.json()
+    completion_envelopes["settled"] = settled.json()
     assert settled.data["resource"]["settlement_status"] == "settled"
     signed.refresh_from_db()
     invoice.refresh_from_db()
@@ -622,10 +671,11 @@ def test_phase2_complete_interest_to_activation_flow(rental_participants):
     if output := os.environ.get("SOKOUN_CONTRACT_ARTIFACT_DIR"):
         folder = Path(output)
         folder.mkdir(parents=True, exist_ok=True)
-        (folder / "django-cycle-contract.json").write_text(
+        (folder / artifact_name).write_text(
             json.dumps(
                 {
                     "environment": "local-test-fake-provider",
+                    "mock_completions": completion_envelopes,
                     "initial_invoice": initial_invoice,
                     "quote": quote.json()["data"],
                     "pending_lookup": pending_lookup.json()["data"],

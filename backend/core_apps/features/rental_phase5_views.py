@@ -626,16 +626,18 @@ def submit_change_for_signature(request, change_id, kind):
         raise ValidationError({"request_key": "Required."})
     if request.user != item.lease.owner:
         raise PermissionDenied("Only the owner can submit the change.")
-    if item.status != RentalChange.Status.ACCEPTED:
-        raise RentalConflict("Both participants must accept the exact change.")
-    if int(request.data.get("expected_revision", 0)) != item.revision:
-        raise RentalConflict("Change revision conflict.", code="stale_revision")
     operation = f"rental_change.submit.{item.id}"
-    replay = replay_operation(request.user, operation, request_key, request.data)
-    if replay:
-        return Response(replay[0], status=replay[1])
     with transaction.atomic():
         item = _change(request, change_id, kind, lock=True)
+        if request.user != item.lease.owner:
+            raise PermissionDenied("Only the owner can submit the change.")
+        replay = replay_operation(request.user, operation, request_key, request.data)
+        if replay:
+            return Response(replay[0], status=replay[1])
+        if item.status != RentalChange.Status.ACCEPTED:
+            raise RentalConflict("Both participants must accept the exact change.")
+        if int(request.data.get("expected_revision", 0)) != item.revision:
+            raise RentalConflict("Change revision conflict.", code="stale_revision")
         generated = get_rental_provider().generate_agreement(
             item.id, item.revision, item.terms
         )
@@ -663,25 +665,30 @@ def submit_change_for_signature(request, change_id, kind):
 @renderer_classes([FeatureJsonRenderer])
 def change_signing_session(request, change_id, kind):
     item = _change(request, change_id, kind)
-    if item.status != RentalChange.Status.PENDING_SIGNATURES:
-        raise RentalConflict("Change is not awaiting signatures.")
-    if (
-        int(request.data.get("expected_revision", 0)) != item.revision
-        or str(request.data.get("document_id")) != str(item.document_id)
-        or request.data.get("document_hash") != item.document_hash
-    ):
-        raise RentalConflict("The change document is stale.", code="document_changed")
     request_key = request.data.get("request_key")
     if not request_key:
         raise ValidationError({"request_key": "Required."})
     operation = f"rental_change.signing_session.{item.id}.{request.user.id}"
-    replay = replay_operation(request.user, operation, request_key, request.data)
-    if replay:
-        return Response(replay[0], status=replay[1])
-    hosted = get_rental_provider().create_signing_session(
-        item.id, request.user.id, request_key
-    )
     with transaction.atomic():
+        item = _change(request, change_id, kind, lock=True)
+        replay = replay_operation(request.user, operation, request_key, request.data)
+        if replay:
+            return Response(replay[0], status=replay[1])
+        if item.status != RentalChange.Status.PENDING_SIGNATURES:
+            raise RentalConflict("Change is not awaiting signatures.")
+        if str(request.user.id) in item.signed_by:
+            raise RentalConflict("You already signed this change document.")
+        if (
+            int(request.data.get("expected_revision", 0)) != item.revision
+            or str(request.data.get("document_id")) != str(item.document_id)
+            or request.data.get("document_hash") != item.document_hash
+        ):
+            raise RentalConflict(
+                "The change document is stale.", code="document_changed"
+            )
+        hosted = get_rental_provider().create_signing_session(
+            item.id, request.user.id, request_key
+        )
         session = ChangeSigningSession.objects.create(
             change=item,
             signer=request.user,

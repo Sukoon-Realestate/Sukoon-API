@@ -1,0 +1,42 @@
+{
+  "recorded_at": "2026-10-12T21:50:18.009472+00:00",
+  "layer": "fresh local HTTP readback after successful Android native flow",
+  "provider_mode": "mock",
+  "states": {
+    "owner_a_profile": {
+      "status": "ready",
+      "revision": 3,
+      "policy_accepted": true
+    },
+    "owner_b_profile": {
+      "status": "ready",
+      "revision": 3,
+      "policy_accepted": true
+    },
+    "lease": {
+      "owner_status": "active",
+      "tenant_status": "active",
+      "same_document": true,
+      "same_document_hash": true
+    },
+    "invoice": {
+      "owner_status": "paid",
+      "tenant_status": "paid",
+      "balance_minor": 0,
+      "same_receipt": true,
+      "active_attempt_absent": true
+    },
+    "payment_attempt": {
+      "owner_status": "captured",
+      "tenant_status": "captured",
+      "same_invoice": true,
+      "same_receipt_as_invoice": true,
+      "settlement_status": "pending"
+    }
+  },
+  "limitations": [
+    "Known invoice/attempt IDs located from the isolated fixture database, then both actor API readbacks verified",
+    "Capture is complete; provider settlement was not requested by the native flow",
+    "No credentials or resource IDs retained in this public metadata"
+  ]
+}

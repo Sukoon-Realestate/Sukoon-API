@@ -129,6 +129,8 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             )
 
     async def _handle_read(self, content):
+        from rest_framework.exceptions import PermissionDenied
+
         from core_apps.chat.models import Conversation
         from core_apps.chat.services.message_service import mark_conversation_read
 
@@ -143,10 +145,13 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         except Exception:
             return
 
-        await sync_to_async(mark_conversation_read)(
-            conversation=conversation,
-            user=self.user,
-        )
+        try:
+            await sync_to_async(mark_conversation_read)(
+                conversation=conversation,
+                user=self.user,
+            )
+        except PermissionDenied:
+            await self.send_json({"error": "Not a participant."})
 
     # Group message handlers (called by channel layer from send_message / mark_conversation_read)
 

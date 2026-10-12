@@ -2,6 +2,7 @@ from pathlib import Path
 from os import getenv, path
 from dotenv import load_dotenv
 from datetime import timedelta
+import ssl
 
 # todo refactor the code, write explaining comments
 
@@ -95,10 +96,18 @@ ASGI_APPLICATION = "config.asgi.application"
 REDIS_URL = getenv("REDIS_URL", "redis://localhost:6379/0")
 CELERY_BROKER_URL = getenv("CELERY_BROKER_URL", REDIS_URL)
 CELERY_RESULT_BACKEND = getenv("CELERY_RESULT_BACKEND", REDIS_URL)
+if CELERY_BROKER_URL.startswith("rediss://"):
+    CELERY_BROKER_USE_SSL = {"ssl_cert_reqs": ssl.CERT_REQUIRED}
+if CELERY_RESULT_BACKEND.startswith("rediss://"):
+    CELERY_REDIS_BACKEND_USE_SSL = {"ssl_cert_reqs": ssl.CERT_REQUIRED}
 CELERY_TASK_ACKS_LATE = True
 CELERY_TASK_REJECT_ON_WORKER_LOST = True
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TIMEZONE = "Africa/Cairo"
+CELERY_TASK_ALWAYS_EAGER = False
+SOKOUN_RELEASE_SHA = getenv("SOKOUN_RELEASE_SHA", "")
+RUNTIME_EVIDENCE_ENABLED = getenv("RUNTIME_EVIDENCE_ENABLED", "False").lower() == "true"
+RUNTIME_EVIDENCE_NAMESPACE = getenv("RUNTIME_EVIDENCE_NAMESPACE", "sukoon")
 CELERY_BEAT_SCHEDULE = {
     "expire-advertisements": {
         "task": "core_apps.advertising.tasks.expire_advertisements",
@@ -182,6 +191,9 @@ DATABASES = {
         "PORT": getenv("POSTGRES_PORT"),
     }
 }
+
+if getenv("POSTGRES_SSLMODE"):
+    DATABASES["default"]["OPTIONS"] = {"sslmode": getenv("POSTGRES_SSLMODE")}
 
 
 ## Password validation

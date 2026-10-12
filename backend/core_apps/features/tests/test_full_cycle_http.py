@@ -22,6 +22,7 @@ from core_apps.users.models import User
 from . import test_rental_phase2 as initial_cycle
 from .test_funded_settlement import command
 from .test_rental_phase2 import rental_participants
+from .cycle_http_sources import group_entry, housing_request_entry, marketplace_entry
 
 API = "/api/v1/features/v1/"
 
@@ -65,9 +66,17 @@ class HttpActor:
     def post(self, path, data=None, **kwargs):
         return self.call("POST", path, data, **kwargs)
 
+    def put(self, path, data=None, **kwargs):
+        return self.call("PUT", path, data, **kwargs)
+
 
 @pytest.mark.django_db(transaction=True)
-def test_complete_funded_cycle_over_http(rental_participants, live_server, monkeypatch):
+@pytest.mark.parametrize(
+    "source", ["direct", "marketplace", "group", "housing_request"]
+)
+def test_complete_funded_cycle_over_http(
+    rental_participants, live_server, monkeypatch, source
+):
     if connection.vendor != "postgresql":
         pytest.skip(
             "Full HTTP cycle uses isolated PostgreSQL and real transaction locks"
@@ -77,9 +86,27 @@ def test_complete_funded_cycle_over_http(rental_participants, live_server, monke
         user.pk: HttpActor(live_server.url, user) for user in (owner, tenant, stranger)
     }
     monkeypatch.setattr(initial_cycle, "authenticated", lambda user: actors[user.pk])
+    prop = rental_participants[3]
+    prop.rental_inventory["offers"][0]["terms"].update(
+        rental_period=1,
+        suitable_for="all",
+        description="Configured shared accommodation",
+        smoking_allowed=False,
+        rules=[],
+    )
+    prop.save(update_fields=["rental_inventory"])
+    interest = None
+    if source == "marketplace":
+        marketplace_entry(actors, rental_participants)
+    elif source == "group":
+        interest = group_entry(actors, rental_participants)
+    elif source == "housing_request":
+        interest = housing_request_entry(actors, rental_participants)
     # Runs actual onboarding, interest, proposal, invitation, lease review, mock
     # signatures, combined payment, settlement, move-in and maintenance over HTTP.
-    initial_cycle.test_phase2_complete_interest_to_activation_flow(rental_participants)
+    initial_cycle.run_interest_to_activation(
+        rental_participants, existing_interest=interest
+    )
     lease = Lease.objects.get()
     owner_api, tenant_api = actors[owner.pk], actors[tenant.pk]
     ending_day = lease.start_date + timedelta(days=20)
@@ -205,12 +232,20 @@ def test_complete_funded_cycle_over_http(rental_participants, live_server, monke
     if directory := os.environ.get("SOKOUN_PLANNING_ARTIFACT_DIR"):
         target = Path(directory)
         target.mkdir(parents=True, exist_ok=True)
-        (target / "full-http-cycle.json").write_text(
+        (
+            target
+            / (
+                "full-http-cycle.json"
+                if source == "direct"
+                else f"full-http-cycle-{source}.json"
+            )
+        ).write_text(
             json.dumps(
                 {
                     "transport": "HTTP over loopback with JWT login",
                     "database": "isolated PostgreSQL",
                     "providers": "API mocks",
+                    "entry_cycle": source,
                     "clock_advanced_for_termination": True,
                     "final_status": lease.status,
                     "occupancy_status": lease.occupancy_status,

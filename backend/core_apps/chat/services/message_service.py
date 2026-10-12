@@ -243,10 +243,12 @@ def mark_conversation_read(*, conversation: Conversation, user) -> None:
     Mark all messages in a conversation as read for a user.
     Resets unread_count and sets last_read_at. Broadcasts a read receipt.
     """
-    ConversationParticipant.objects.filter(
+    updated = ConversationParticipant.objects.filter(
         conversation=conversation,
         user=user,
     ).update(last_read_at=timezone.now(), unread_count=0)
+    if not updated:
+        raise PermissionDenied("Not a participant.")
 
     transaction.on_commit(
         lambda: _broadcast_read_receipt(conversation=conversation, reader=user)

@@ -1,0 +1,362 @@
+{
+  "api_health": {
+    "ready": true
+  },
+  "broker": "temporary Redis 7.4.2 bound to 127.0.0.1",
+  "evidence_scope": "local_disposable_runtime_not_DigitalOcean",
+  "generated_at_utc": "2026-10-12T21:30:08.811294+00:00",
+  "limitations": [
+    "Zero-count task completions do not prove business transitions.",
+    "DigitalOcean configuration, deployed scheduling and device acceptance are separate."
+  ],
+  "providers": "API mock; disposable PostgreSQL with due/future advertisement and onboarding fixtures",
+  "release_identity": "synthetic f*40 for local protocol verification; not a Git release",
+  "runtime": {
+    "checks": {
+      "debug_disabled": true,
+      "fake_provider_explicit": true,
+      "migrations_applied": true,
+      "postgresql": true,
+      "redis": true,
+      "redis_channels": true,
+      "runtime_evidence_enabled": true,
+      "staging_mock": true,
+      "worker_execution_not_eager": true
+    },
+    "configuration": {
+      "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+      "eager_tasks": false,
+      "environment": "staging",
+      "provider_mode": "fake",
+      "settings_module": "config.settings.staging_mock"
+    },
+    "failures": [],
+    "ready": true,
+    "release_sha": "ffffffffffffffffffffffffffffffffffffffff",
+    "scheduler": {
+      "at": 1791840603.633209,
+      "configuration": {
+        "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+        "eager_tasks": false,
+        "environment": "staging",
+        "provider_mode": "fake",
+        "settings_module": "config.settings.staging_mock"
+      },
+      "release_sha": "ffffffffffffffffffffffffffffffffffffffff",
+      "scheduler_id": "27acf8d7-04b2-47b8-9921-9ebe2b2d9be9"
+    },
+    "tasks": [
+      {
+        "evidence": {
+          "completed_at": 1791840593.6815722,
+          "counts": {
+            "affected": 1
+          },
+          "dispatched_at": 1791840593.533588,
+          "schedule": "expire-advertisements",
+          "scheduler_configuration": {
+            "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+            "eager_tasks": false,
+            "environment": "staging",
+            "provider_mode": "fake",
+            "settings_module": "config.settings.staging_mock"
+          },
+          "scheduler_id": "27acf8d7-04b2-47b8-9921-9ebe2b2d9be9",
+          "scheduler_release_sha": "ffffffffffffffffffffffffffffffffffffffff",
+          "state": "SUCCESS",
+          "task": "core_apps.advertising.tasks.expire_advertisements",
+          "task_id": "97ffc5ff-8ce0-4c2a-88a6-dd74d08c1e86",
+          "worker": "runtime-local@Emara.local",
+          "worker_configuration": {
+            "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+            "eager_tasks": false,
+            "environment": "staging",
+            "provider_mode": "fake",
+            "settings_module": "config.settings.staging_mock"
+          },
+          "worker_release_sha": "ffffffffffffffffffffffffffffffffffffffff"
+        },
+        "schedule": "expire-advertisements",
+        "verified": true
+      },
+      {
+        "evidence": {
+          "completed_at": 1791840594.0425391,
+          "counts": {
+            "expired_agreements": 0,
+            "expired_holds": 0,
+            "expired_invitations": 0
+          },
+          "dispatched_at": 1791840593.606804,
+          "schedule": "expire-rental-sources-and-holds",
+          "scheduler_configuration": {
+            "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+            "eager_tasks": false,
+            "environment": "staging",
+            "provider_mode": "fake",
+            "settings_module": "config.settings.staging_mock"
+          },
+          "scheduler_id": "27acf8d7-04b2-47b8-9921-9ebe2b2d9be9",
+          "scheduler_release_sha": "ffffffffffffffffffffffffffffffffffffffff",
+          "state": "SUCCESS",
+          "task": "core_apps.features.tasks.expire_rental_sources_and_holds",
+          "task_id": "393d8f30-e45f-41f9-82e4-e0d0781593d1",
+          "worker": "runtime-local@Emara.local",
+          "worker_configuration": {
+            "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+            "eager_tasks": false,
+            "environment": "staging",
+            "provider_mode": "fake",
+            "settings_module": "config.settings.staging_mock"
+          },
+          "worker_release_sha": "ffffffffffffffffffffffffffffffffffffffff"
+        },
+        "schedule": "expire-rental-sources-and-holds",
+        "verified": true
+      },
+      {
+        "evidence": {
+          "completed_at": 1791840593.9505112,
+          "counts": {
+            "expired_onboarding": 1,
+            "expired_signing": 0
+          },
+          "dispatched_at": 1791840593.5906591,
+          "schedule": "reconcile-rental-provider-sessions",
+          "scheduler_configuration": {
+            "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+            "eager_tasks": false,
+            "environment": "staging",
+            "provider_mode": "fake",
+            "settings_module": "config.settings.staging_mock"
+          },
+          "scheduler_id": "27acf8d7-04b2-47b8-9921-9ebe2b2d9be9",
+          "scheduler_release_sha": "ffffffffffffffffffffffffffffffffffffffff",
+          "state": "SUCCESS",
+          "task": "core_apps.features.tasks.reconcile_rental_provider_sessions",
+          "task_id": "0b005d8f-6828-4679-a9c7-e44bce634a38",
+          "worker": "runtime-local@Emara.local",
+          "worker_configuration": {
+            "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+            "eager_tasks": false,
+            "environment": "staging",
+            "provider_mode": "fake",
+            "settings_module": "config.settings.staging_mock"
+          },
+          "worker_release_sha": "ffffffffffffffffffffffffffffffffffffffff"
+        },
+        "schedule": "reconcile-rental-provider-sessions",
+        "verified": true
+      },
+      {
+        "evidence": {
+          "completed_at": 1791840594.052265,
+          "counts": {
+            "issued": 0,
+            "overdue": 0
+          },
+          "dispatched_at": 1791840593.614419,
+          "schedule": "run-rental-billing-cycle",
+          "scheduler_configuration": {
+            "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+            "eager_tasks": false,
+            "environment": "staging",
+            "provider_mode": "fake",
+            "settings_module": "config.settings.staging_mock"
+          },
+          "scheduler_id": "27acf8d7-04b2-47b8-9921-9ebe2b2d9be9",
+          "scheduler_release_sha": "ffffffffffffffffffffffffffffffffffffffff",
+          "state": "SUCCESS",
+          "task": "core_apps.features.tasks.run_rental_billing_cycle",
+          "task_id": "9164e79b-33bd-4f8a-a7ff-507e6baee637",
+          "worker": "runtime-local@Emara.local",
+          "worker_configuration": {
+            "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+            "eager_tasks": false,
+            "environment": "staging",
+            "provider_mode": "fake",
+            "settings_module": "config.settings.staging_mock"
+          },
+          "worker_release_sha": "ffffffffffffffffffffffffffffffffffffffff"
+        },
+        "schedule": "run-rental-billing-cycle",
+        "verified": true
+      },
+      {
+        "evidence": {
+          "completed_at": 1791840593.805386,
+          "counts": {
+            "attempts_expired": 0,
+            "events_processed": 0
+          },
+          "dispatched_at": 1791840593.559508,
+          "schedule": "reconcile-ambiguous-rental-payments",
+          "scheduler_configuration": {
+            "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+            "eager_tasks": false,
+            "environment": "staging",
+            "provider_mode": "fake",
+            "settings_module": "config.settings.staging_mock"
+          },
+          "scheduler_id": "27acf8d7-04b2-47b8-9921-9ebe2b2d9be9",
+          "scheduler_release_sha": "ffffffffffffffffffffffffffffffffffffffff",
+          "state": "SUCCESS",
+          "task": "core_apps.features.tasks.reconcile_ambiguous_rental_payments",
+          "task_id": "7f6cf05b-4e4c-49c7-a7c5-e228686685dd",
+          "worker": "runtime-local@Emara.local",
+          "worker_configuration": {
+            "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+            "eager_tasks": false,
+            "environment": "staging",
+            "provider_mode": "fake",
+            "settings_module": "config.settings.staging_mock"
+          },
+          "worker_release_sha": "ffffffffffffffffffffffffffffffffffffffff"
+        },
+        "schedule": "reconcile-ambiguous-rental-payments",
+        "verified": true
+      },
+      {
+        "evidence": {
+          "completed_at": 1791840594.060422,
+          "counts": {
+            "safe": 0,
+            "unsafe": 0
+          },
+          "dispatched_at": 1791840593.61962,
+          "schedule": "scan-rental-evidence",
+          "scheduler_configuration": {
+            "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+            "eager_tasks": false,
+            "environment": "staging",
+            "provider_mode": "fake",
+            "settings_module": "config.settings.staging_mock"
+          },
+          "scheduler_id": "27acf8d7-04b2-47b8-9921-9ebe2b2d9be9",
+          "scheduler_release_sha": "ffffffffffffffffffffffffffffffffffffffff",
+          "state": "SUCCESS",
+          "task": "core_apps.features.tasks.scan_rental_evidence",
+          "task_id": "0095e3da-db54-4b26-96bf-f56598c81c6e",
+          "worker": "runtime-local@Emara.local",
+          "worker_configuration": {
+            "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+            "eager_tasks": false,
+            "environment": "staging",
+            "provider_mode": "fake",
+            "settings_module": "config.settings.staging_mock"
+          },
+          "worker_release_sha": "ffffffffffffffffffffffffffffffffffffffff"
+        },
+        "schedule": "scan-rental-evidence",
+        "verified": true
+      },
+      {
+        "evidence": {
+          "completed_at": 1791840594.0068932,
+          "counts": {
+            "paid": 0
+          },
+          "dispatched_at": 1791840593.601401,
+          "schedule": "reconcile-approved-payouts",
+          "scheduler_configuration": {
+            "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+            "eager_tasks": false,
+            "environment": "staging",
+            "provider_mode": "fake",
+            "settings_module": "config.settings.staging_mock"
+          },
+          "scheduler_id": "27acf8d7-04b2-47b8-9921-9ebe2b2d9be9",
+          "scheduler_release_sha": "ffffffffffffffffffffffffffffffffffffffff",
+          "state": "SUCCESS",
+          "task": "core_apps.features.tasks.reconcile_approved_payouts",
+          "task_id": "9a98a95d-cade-4cb7-a5fd-9a6260d581d2",
+          "worker": "runtime-local@Emara.local",
+          "worker_configuration": {
+            "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+            "eager_tasks": false,
+            "environment": "staging",
+            "provider_mode": "fake",
+            "settings_module": "config.settings.staging_mock"
+          },
+          "worker_release_sha": "ffffffffffffffffffffffffffffffffffffffff"
+        },
+        "schedule": "reconcile-approved-payouts",
+        "verified": true
+      },
+      {
+        "evidence": {
+          "completed_at": 1791840593.937286,
+          "counts": {
+            "applied": 0,
+            "expired_signing_sessions": 0
+          },
+          "dispatched_at": 1791840593.5830069,
+          "schedule": "process-rental-changes",
+          "scheduler_configuration": {
+            "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+            "eager_tasks": false,
+            "environment": "staging",
+            "provider_mode": "fake",
+            "settings_module": "config.settings.staging_mock"
+          },
+          "scheduler_id": "27acf8d7-04b2-47b8-9921-9ebe2b2d9be9",
+          "scheduler_release_sha": "ffffffffffffffffffffffffffffffffffffffff",
+          "state": "SUCCESS",
+          "task": "core_apps.features.tasks.process_rental_changes",
+          "task_id": "fb57e5ed-d651-41d3-bb69-58762f4f0a1c",
+          "worker": "runtime-local@Emara.local",
+          "worker_configuration": {
+            "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+            "eager_tasks": false,
+            "environment": "staging",
+            "provider_mode": "fake",
+            "settings_module": "config.settings.staging_mock"
+          },
+          "worker_release_sha": "ffffffffffffffffffffffffffffffffffffffff"
+        },
+        "schedule": "process-rental-changes",
+        "verified": true
+      },
+      {
+        "evidence": {
+          "completed_at": 1791840593.9154298,
+          "counts": {
+            "access_revocations": 0,
+            "documents": 0,
+            "leases": 0,
+            "legally_ended": 0,
+            "refunds": 0,
+            "transitions": 0
+          },
+          "dispatched_at": 1791840593.578125,
+          "schedule": "process-rental-closure",
+          "scheduler_configuration": {
+            "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+            "eager_tasks": false,
+            "environment": "staging",
+            "provider_mode": "fake",
+            "settings_module": "config.settings.staging_mock"
+          },
+          "scheduler_id": "27acf8d7-04b2-47b8-9921-9ebe2b2d9be9",
+          "scheduler_release_sha": "ffffffffffffffffffffffffffffffffffffffff",
+          "state": "SUCCESS",
+          "task": "core_apps.features.tasks.process_rental_closure",
+          "task_id": "6a15b0d6-9af1-46f5-9abd-af84524a4f2f",
+          "worker": "runtime-local@Emara.local",
+          "worker_configuration": {
+            "database_fingerprint": "17362e37c39bd03473784bea75334a1aa07e753b98a4e13519a67677581d41d9",
+            "eager_tasks": false,
+            "environment": "staging",
+            "provider_mode": "fake",
+            "settings_module": "config.settings.staging_mock"
+          },
+          "worker_release_sha": "ffffffffffffffffffffffffffffffffffffffff"
+        },
+        "schedule": "process-rental-closure",
+        "verified": true
+      }
+    ]
+  },
+  "scheduler": "actual Celery LeaseScheduler subprocess at normal schedule intervals",
+  "worker": "actual Celery solo subprocess"
+}

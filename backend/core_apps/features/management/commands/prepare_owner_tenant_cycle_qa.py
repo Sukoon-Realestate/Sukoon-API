@@ -16,6 +16,7 @@ from django.utils import timezone
 from core_apps.advertising.audit_asset import AUDIT_AD_ID, AUDIT_AD_SHA256
 from core_apps.advertising.models import Advertisement
 from core_apps.features.models import Lease
+from core_apps.features.management.cycle_qa import prepare_cycle_run, write_private_json
 from core_apps.features.providers import checkout_available, fake_provider_available
 from core_apps.features.services.rental_phase2 import get_or_create_owner_profile
 from core_apps.features.services.planning import enabled_services
@@ -108,6 +109,16 @@ class Command(BaseCommand):
             help="Write a fresh manifest; refuses to overwrite an existing file.",
         )
         parser.add_argument("--print-extended", action="store_true")
+        parser.add_argument(
+            "--run-id",
+            default="",
+            help="Create independent actors and accommodation branches for this QA run.",
+        )
+        parser.add_argument(
+            "--credentials-output",
+            default="",
+            help="Exclusive mode-0600 file for newly generated run account credentials; never stdout.",
+        )
 
     def _actor(self, actor_id, label):
         user, created = get_user_model().objects.get_or_create(
@@ -204,10 +215,28 @@ class Command(BaseCommand):
                 "QA setup requires an explicitly enabled nonproduction settings module."
             )
         output = Path(options["output"]) if options["output"] else None
-        if output and output.exists():
+        if output and (output.exists() or output.is_symlink()):
             raise CommandError(
                 "Use a new output file; preserve existing manifests and operation journals."
             )
+        if options["run_id"]:
+            if (
+                output
+                and options["credentials_output"]
+                and output.absolute() == Path(options["credentials_output"]).absolute()
+            ):
+                raise CommandError(
+                    "Manifest and credentials require separate output files."
+                )
+            manifest = prepare_cycle_run(
+                options["run_id"], options["credentials_output"]
+            )
+            if output:
+                write_private_json(output, manifest)
+            self.stdout.write(json.dumps(manifest, indent=2, default=str))
+            return
+        if options["credentials_output"]:
+            raise CommandError("--credentials-output requires an isolated --run-id.")
         today = timezone.localdate()
         with transaction.atomic():
             owner, tenant = self._actor(OWNER_ID, "owner"), self._actor(

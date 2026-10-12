@@ -18,6 +18,8 @@ from core_apps.features.models import Lease, OwnerPaymentProfile, RentInvoice
 from core_apps.properties.models import Property, PropertyVisit
 from core_apps.users.models import User
 from .test_rental_phase2 import authenticated
+from core_apps.admin_api.models import StaffProfile
+from core_apps.features.management.cycle_qa import ACTORS, BRANCHES, resource_id
 
 
 def prepare(**options):
@@ -172,3 +174,138 @@ def test_missing_offer_terms_are_repaired_once_with_revision_increment():
     assert result["structured"]["rent"]["amount_minor"] == 170000
     again = prepare()
     assert again["structured"] == result["structured"]
+
+
+@pytest.mark.django_db
+def test_isolated_run_has_private_accounts_and_independent_scenario_inventory(tmp_path):
+    secret_file = tmp_path / "private.json"
+    manifest = prepare(run_id="joined-20261013", credentials_output=str(secret_file))
+    secrets = json.loads(secret_file.read_text())
+    assert secret_file.stat().st_mode & 0o777 == 0o600
+    assert set(secrets["actors"]) == set(ACTORS)
+    assert len({manifest[name]["property_id"] for name in BRANCHES}) == len(BRANCHES)
+    assert not Lease.objects.exists() and not RentInvoice.objects.exists()
+    assert len({account["password"] for account in secrets["actors"].values()}) == len(
+        ACTORS
+    )
+    for alias, account in secrets["actors"].items():
+        actor = User.objects.get(id=account["id"])
+        assert actor.check_password(account["password"])
+        assert account["password"] not in json.dumps(manifest)
+        assert (
+            actor.is_verified
+            and actor.is_active
+            and not actor.is_staff
+            and not actor.is_superuser
+        )
+        if ACTORS[alias]:
+            assert StaffProfile.objects.get(user=actor).role_name == ACTORS[alias]
+        else:
+            assert not StaffProfile.objects.filter(user=actor).exists()
+    for branch, scope in (
+        ("structured", "entire_property"),
+        ("room", "room"),
+        ("room_group", "room_group"),
+        ("bed", "bed"),
+    ):
+        item = manifest[branch]
+        assert item["selection"]["rental_scope"] == scope
+        assert item["selection"]["property_id"] == item["property_id"]
+        assert item["selection"]["offer_id"] == item["offer_id"]
+        assert item["terms"]["monthly_rent"] == item["rent"]
+    assert manifest["legacy"]["property_id"] != manifest["structured"]["property_id"]
+    assert manifest["group"]["selection"]["capacity"] == 2
+
+
+@pytest.mark.django_db
+def test_isolated_rerun_preserves_account_access_inventory_visits_and_secrets(tmp_path):
+    secret_file = tmp_path / "private.json"
+    first = prepare(run_id="preserved", credentials_output=str(secret_file))
+    owner = User.objects.get(id=first["actors"]["owner_a"]["id"])
+    before_password = owner.password
+    owner.is_verified = False
+    owner.save(update_fields=["is_verified"])
+    prop = Property.objects.get(id=first["structured"]["property_id"])
+    prop.status = Property.Status.UNDER_REVIEW
+    prop.rental_inventory["offers"][0]["terms"]["price"] = "12000.00"
+    prop.rental_inventory["offers"][0]["revision"] = 4
+    prop.save()
+    PropertyVisit.objects.filter(id=first["structured"]["source_visit_id"]).update(
+        status="rejected"
+    )
+    before_credentials = secret_file.read_bytes()
+    second = prepare(run_id="preserved")
+    owner.refresh_from_db()
+    prop.refresh_from_db()
+    assert owner.password == before_password and owner.is_verified is False
+    assert prop.status == Property.Status.UNDER_REVIEW
+    assert second["structured"]["expected_offer_revision"] == 4
+    assert second["structured"]["rent"]["amount_minor"] == 1200000
+    assert (
+        PropertyVisit.objects.get(id=first["structured"]["source_visit_id"]).status
+        == "rejected"
+    )
+    assert second["structured"]["start_date"] == first["structured"]["start_date"]
+    assert secret_file.read_bytes() == before_credentials
+    assert second["test_enablement"]["actors"]["owner_a"]["verified"] is False
+    with pytest.raises(CommandError, match="new credentials"):
+        prepare(run_id="preserved", credentials_output=str(secret_file))
+
+
+@pytest.mark.django_db
+def test_run_preflight_failures_do_not_create_or_mutate_accounts(tmp_path):
+    with pytest.raises(CommandError, match="credentials-output"):
+        prepare(run_id="missing-private-file")
+    assert not User.objects.exists()
+    path = tmp_path / "same.json"
+    with pytest.raises(CommandError, match="separate"):
+        prepare(run_id="same-path", output=str(path), credentials_output=str(path))
+    assert not User.objects.exists()
+    with pytest.raises(CommandError, match="1-40"):
+        prepare(run_id="bad/slash", credentials_output=str(path))
+    assert not User.objects.exists()
+
+
+@pytest.mark.django_db
+def test_run_cannot_promote_an_existing_account_or_replace_an_operator_role(tmp_path):
+    owner = User.objects.create_user(
+        id=resource_id("collision", "actor:owner_a"),
+        email="existing@example.test",
+        password="preserved",
+    )
+    with pytest.raises(CommandError, match="does not match"):
+        prepare(run_id="collision", credentials_output=str(tmp_path / "collision.json"))
+    owner.refresh_from_db()
+    assert owner.email == "existing@example.test" and owner.check_password("preserved")
+    assert User.objects.count() == 1 and not (tmp_path / "collision.json").exists()
+    prepare(run_id="role-change", credentials_output=str(tmp_path / "first.json"))
+    profile = StaffProfile.objects.get(
+        user__id=resource_id("role-change", "actor:payout_operator")
+    )
+    profile.role_name = StaffProfile.RoleName.SUPPORT
+    profile.save(update_fields=["role_name"])
+    with pytest.raises(CommandError, match="changed roles"):
+        prepare(run_id="role-change")
+    profile.refresh_from_db()
+    assert profile.role_name == StaffProfile.RoleName.SUPPORT
+
+
+@pytest.mark.django_db
+def test_rerun_keeps_exact_offer_after_reordering_and_reports_unavailable(tmp_path):
+    import copy
+
+    first = prepare(
+        run_id="offer-identity", credentials_output=str(tmp_path / "accounts.json")
+    )
+    prop = Property.objects.get(id=first["structured"]["property_id"])
+    duplicate = copy.deepcopy(prop.rental_inventory["offers"][0])
+    duplicate["id"] = str(uuid.uuid4())
+    prop.rental_inventory["offers"][0]["archived"] = True
+    prop.rental_inventory["offers"].insert(0, duplicate)
+    prop.save(update_fields=["rental_inventory"])
+    second = prepare(run_id="offer-identity")
+    assert second["structured"]["offer_id"] == first["structured"]["offer_id"]
+    assert second["structured"]["selection"] is None
+    assert "not available" in second["structured"]["blocked_reason"]
+    prop.refresh_from_db()
+    assert prop.rental_inventory["offers"][1]["archived"] is True

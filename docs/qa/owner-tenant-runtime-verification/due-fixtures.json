@@ -1,0 +1,13 @@
+{
+  "evidence_scope": "local_disposable_due_fixtures_not_DigitalOcean",
+  "generated_at_utc": "2026-10-12T21:29:54.721225+00:00",
+  "fixture_source": "direct local ORM setup to make resources due; worker tasks were not invoked manually",
+  "expired_advertisement": "expired",
+  "future_advertisement": "active",
+  "expired_onboarding_session": "expired",
+  "future_onboarding_session": "created",
+  "tasks": [
+    "core_apps.advertising.tasks.expire_advertisements",
+    "core_apps.features.tasks.reconcile_rental_provider_sessions"
+  ]
+}

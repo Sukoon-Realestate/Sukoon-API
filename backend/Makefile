@@ -98,3 +98,14 @@ test-remaining-cycles: ## Exercise remaining cycles and export real planning/ref
 
 test-flutter-request-bodies: ## Feed the actual Flutter-serialized request bodies back into Django
 	SOKOUN_FLUTTER_REQUEST_BODIES=$(abspath $(CYCLE_EVIDENCE))/flutter-request-bodies.json $(CYCLE_PYTHON) -m pytest core_apps/features/tests/test_flutter_request_roundtrip.py --ds=$(CYCLE_SETTINGS) --junitxml=$(CYCLE_EVIDENCE)/flutter-request-roundtrip.xml
+
+.PHONY: test-connected-cycles
+test-connected-cycles: ## Exercise joined marketplace/planning/funded/ongoing cycles and signing recovery
+	SOKOUN_PLANNING_ARTIFACT_DIR=$(abspath $(CYCLE_EVIDENCE)) SOKOUN_CONTRACT_ARTIFACT_DIR=$(abspath $(CYCLE_EVIDENCE)) $(CYCLE_PYTHON) -m pytest core_apps/features/tests/test_full_cycle_http.py core_apps/features/tests/test_ongoing_cycle_http.py core_apps/features/tests/test_change_recovery.py core_apps/features/tests/test_cycle_qa_setup.py --ds=$(CYCLE_SETTINGS) --junitxml=$(CYCLE_EVIDENCE)/connected-cycles.xml
+
+.PHONY: test-runtime runtime-readiness
+test-runtime: ## Verify App Platform spec preservation and scheduled execution evidence
+	$(CYCLE_PYTHON) -m pytest core_apps/common/test_runtime.py core_apps/common/test_digitalocean_runtime.py --ds=$(CYCLE_SETTINGS)
+
+runtime-readiness: ## Read deployed runtime evidence; pass RUNTIME_SHA and optional RUNTIME_SINCE
+	$(CYCLE_PYTHON) manage.py runtime_readiness --expected-sha "$(RUNTIME_SHA)" $(if $(RUNTIME_SINCE),--since "$(RUNTIME_SINCE)")
