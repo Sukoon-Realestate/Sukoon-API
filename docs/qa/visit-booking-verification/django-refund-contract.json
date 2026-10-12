@@ -1,0 +1,156 @@
+{
+  "actor_id": "7e4479f1-6e9e-4df2-8820-4416546e5f67",
+  "payment": {
+    "provider_mode": "mock",
+    "mock_completion": {
+      "method": "POST",
+      "path": "/api/v1/features/v1/mock-provider/payment-attempts/a556f12b-fca7-4c84-af39-3acaa2f66e79/events/",
+      "expected_revision": 3
+    },
+    "refundable_balance": {
+      "amount_minor": 2000000,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "refundable_allocations": {
+      "rent": 1000000,
+      "deposit": 1000000
+    },
+    "allowed_actions": [
+      "request_refund"
+    ],
+    "blocking_reasons": [],
+    "revision": 3,
+    "lease_id": "ea694373-e15c-4ada-9c05-542ab745fd1f",
+    "payment_attempt_id": "a556f12b-fca7-4c84-af39-3acaa2f66e79",
+    "invoice_id": "705ed58e-788a-46d4-abcb-40f3ab562d8c",
+    "request_key": "f2a8c524-5003-41f9-ab47-3c11e05b92bb",
+    "quote_id": "b8365d6b-d92e-4b9b-b9ae-fc8cc930d613",
+    "invoice_revision": 1,
+    "policy_version": "rental-policy-v1",
+    "quote_fingerprint": "a0667030596ab413e66420aa40733146f011398ba2a8b7afb37102b89fa9d2b1",
+    "payment_status": "captured",
+    "failure_code": "",
+    "invoice_status": "paid",
+    "amount": {
+      "amount_minor": 2000000,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "confirmed_at": "2026-10-12T19:35:19.131017+00:00",
+    "receipt_id": "683e65d8-8d52-45cb-87bb-5c34ee6bf942",
+    "payout_status": "held",
+    "settlement_status": "settled",
+    "updated_at": "2026-10-12T19:35:19.150557+00:00"
+  },
+  "create_body": {
+    "request_key": "6f231934-60c0-4329-8980-f7a0d96c66e6",
+    "expected_revision": 0,
+    "lease_id": "ea694373-e15c-4ada-9c05-542ab745fd1f",
+    "payment_attempt_id": "a556f12b-fca7-4c84-af39-3acaa2f66e79",
+    "payment_revision": 3,
+    "amount": {
+      "amount_minor": 500000,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "allocations": {
+      "rent": 200000,
+      "deposit": 300000
+    },
+    "reason": "Agreed partial refund"
+  },
+  "created": {
+    "resource": {
+      "id": "194b7702-581d-43ae-8697-67ca65c80f76",
+      "lease_id": "ea694373-e15c-4ada-9c05-542ab745fd1f",
+      "payment_attempt_id": "a556f12b-fca7-4c84-af39-3acaa2f66e79",
+      "revision": 1,
+      "status": "requested",
+      "amount": {
+        "amount_minor": 500000,
+        "currency": "EGP",
+        "exponent": 2
+      },
+      "refundable_balance": {
+        "amount_minor": 1500000,
+        "currency": "EGP",
+        "exponent": 2
+      },
+      "reason": "Agreed partial refund",
+      "provider_refund_id": "",
+      "failure_code": "",
+      "allocations": {
+        "rent": 200000,
+        "deposit": 300000
+      },
+      "purpose": "payment_reversal",
+      "owner_recovery": {
+        "amount_minor": 0,
+        "currency": "EGP",
+        "exponent": 2
+      }
+    },
+    "operation_receipt": {
+      "id": "ee610f72-6368-4851-ab9e-73d0f8765a4e",
+      "subject_id": "194b7702-581d-43ae-8697-67ca65c80f76",
+      "request_key": "6f231934-60c0-4329-8980-f7a0d96c66e6",
+      "revision": 1,
+      "status": "confirmed"
+    }
+  },
+  "executed": {
+    "resource": {
+      "id": "194b7702-581d-43ae-8697-67ca65c80f76",
+      "lease_id": "ea694373-e15c-4ada-9c05-542ab745fd1f",
+      "payment_attempt_id": "a556f12b-fca7-4c84-af39-3acaa2f66e79",
+      "revision": 3,
+      "status": "succeeded",
+      "amount": {
+        "amount_minor": 500000,
+        "currency": "EGP",
+        "exponent": 2
+      },
+      "refundable_balance": {
+        "amount_minor": 1500000,
+        "currency": "EGP",
+        "exponent": 2
+      },
+      "reason": "Agreed partial refund",
+      "provider_refund_id": "6a94fb0b-783b-51fc-8588-2fc354320f83",
+      "failure_code": "",
+      "allocations": {
+        "rent": 200000,
+        "deposit": 300000
+      },
+      "purpose": "payment_reversal",
+      "owner_recovery": {
+        "amount_minor": 0,
+        "currency": "EGP",
+        "exponent": 2
+      }
+    },
+    "operation_receipt": {
+      "id": "24467fa0-8700-4676-bba3-0d8d9ed86c7c",
+      "subject_id": "194b7702-581d-43ae-8697-67ca65c80f76",
+      "request_key": "b626615e-2943-46a4-8bc1-2a7b8c53bf9d",
+      "revision": 3,
+      "status": "confirmed"
+    }
+  },
+  "grant": {
+    "account_id": "7e4479f1-6e9e-4df2-8820-4416546e5f67",
+    "account_verified": true,
+    "enabled_capabilities": [
+      "rental_center",
+      "rent_checkout",
+      "rental_settlement"
+    ],
+    "policy_version": "rental-policy-v1",
+    "allowed_actions": [
+      "reconcile",
+      "create_rental_refund"
+    ],
+    "blocking_reasons": []
+  }
+}

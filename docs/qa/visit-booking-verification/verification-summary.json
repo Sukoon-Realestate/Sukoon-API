@@ -1,0 +1,122 @@
+{
+  "verified_at_utc": "2026-10-12T19:37:29.022381+00:00",
+  "base_commit": "bafd8c9a51523f6dc1c737a33ec7e1ce58ac3111",
+  "environment": "Local isolated databases; API mock providers; no shared-server deployment",
+  "before_fix": {
+    "passed": 2,
+    "failed": 1,
+    "skipped": 0,
+    "skip_details": [],
+    "original_visit_tests": {
+      "test_booking_revalidates_slot_and_prevents_owner_double_booking": "passed",
+      "test_booking_rejects_unconfigured_slot": "failed",
+      "test_create_visit_service_duplicate_fails": "passed"
+    }
+  },
+  "backend_postgres": {
+    "passed": 677,
+    "failed": 0,
+    "skipped": 0,
+    "skip_details": [],
+    "original_visit_tests": {
+      "test_booking_revalidates_slot_and_prevents_owner_double_booking": "passed",
+      "test_booking_rejects_unconfigured_slot": "passed",
+      "test_create_visit_service_duplicate_fails": "passed"
+    }
+  },
+  "backend_sqlite": {
+    "passed": 663,
+    "failed": 0,
+    "skipped": 14,
+    "skip_details": [
+      {
+        "test": "test_concurrent_payment_retries_share_one_receipt",
+        "reason": "Row-lock concurrency requires PostgreSQL"
+      },
+      {
+        "test": "test_duplicate_mock_capture_posts_one_allocation_and_receipt",
+        "reason": "Row locking requires PostgreSQL"
+      },
+      {
+        "test": "test_room_and_bed_overlapping_inventory_cannot_both_be_reserved",
+        "reason": "Row locking requires PostgreSQL"
+      },
+      {
+        "test": "test_complete_funded_cycle_over_http",
+        "reason": "Full HTTP cycle uses isolated PostgreSQL and real transaction locks"
+      },
+      {
+        "test": "test_duplicate_partial_refund_reserves_capture_once",
+        "reason": "These races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_competing_partial_refunds_cannot_oversubscribe_component",
+        "reason": "These races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_duplicate_funded_settlement_acceptance_posts_once",
+        "reason": "These races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_competing_group_joins_cannot_overfill",
+        "reason": "These races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_concurrent_invitation_mutations_have_one_winner[create]",
+        "reason": "Row-lock concurrency requires PostgreSQL"
+      },
+      {
+        "test": "test_concurrent_invitation_mutations_have_one_winner[respond]",
+        "reason": "Row-lock concurrency requires PostgreSQL"
+      },
+      {
+        "test": "test_concurrent_invitation_mutations_have_one_winner[draft]",
+        "reason": "Row-lock concurrency requires PostgreSQL"
+      },
+      {
+        "test": "test_simultaneous_tenants_cannot_book_the_same_slot",
+        "reason": "Visit booking races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_schedule_edit_cannot_invalidate_concurrent_booking[disable]",
+        "reason": "Visit booking races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_schedule_edit_cannot_invalidate_concurrent_booking[remove]",
+        "reason": "Visit booking races require PostgreSQL row locks"
+      }
+    ],
+    "original_visit_tests": {
+      "test_booking_revalidates_slot_and_prevents_owner_double_booking": "passed",
+      "test_booking_rejects_unconfigured_slot": "passed",
+      "test_create_visit_service_duplicate_fails": "passed"
+    }
+  },
+  "property_group_postgres": {
+    "passed": 199,
+    "failed": 0,
+    "skipped": 0,
+    "skip_details": [],
+    "original_visit_tests": {
+      "test_booking_revalidates_slot_and_prevents_owner_double_booking": "passed",
+      "test_booking_rejects_unconfigured_slot": "passed",
+      "test_create_visit_service_duplicate_fails": "passed"
+    }
+  },
+  "full_http_cycle": {
+    "request_count": 84,
+    "lease_status": "ended",
+    "occupancy_status": "returned",
+    "financial_closure_status": "closed"
+  },
+  "checks": {
+    "django_system_check": "passed",
+    "migration_consistency": "passed; no migration needed",
+    "python_lint": "passed",
+    "new_test_format": "passed",
+    "whitespace": "passed",
+    "guide_json_and_sync": "passed"
+  },
+  "flutter": "No Flutter source change or rerun; prior evidence remains in owner-tenant-remaining-verification",
+  "deployment": "Backend team to deploy and perform shared-server/device acceptance"
+}

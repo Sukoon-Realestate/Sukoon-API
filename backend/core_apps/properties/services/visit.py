@@ -126,23 +126,21 @@ class PropertyVisitService:
 
         visit_date = validated_data.get("visit_date")
         visit_time = validated_data.get("visit_time")
-        has_managed_schedule = OwnerAvailabilitySlot.objects.filter(
-            property=property_obj
-        ).exists()
-        if has_managed_schedule:
-            slot = (
-                OwnerAvailabilitySlot.objects.select_for_update()
-                .filter(
-                    owner=property_obj.owner,
-                    property=property_obj,
-                    date=visit_date,
-                    time=visit_time,
-                    is_enabled=True,
-                )
-                .first()
+        # Every booking must use an enabled owner-configured slot. Hold its
+        # lock through creation to serialize bookings and schedule edits.
+        slot = (
+            OwnerAvailabilitySlot.objects.select_for_update()
+            .filter(
+                owner=property_obj.owner,
+                property=property_obj,
+                date=visit_date,
+                time=visit_time,
+                is_enabled=True,
             )
-            if slot is None:
-                raise ValidationError(_("The selected visit slot is not available."))
+            .first()
+        )
+        if slot is None:
+            raise ValidationError(_("The selected visit slot is not available."))
 
         now = timezone.localtime()
         parsed_date = (

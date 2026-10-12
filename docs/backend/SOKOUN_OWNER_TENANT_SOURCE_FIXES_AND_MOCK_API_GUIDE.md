@@ -4,7 +4,7 @@ Date: 2026-10-12. Backend: `Sukoon-API/backend`. Mobile contract checked against
 
 **These are local source changes with automated verification. They have not been deployed to the shared server. Provider interactions are intentionally mocked, as requested. No external onboarding, signing or payment provider is required for this API test mode.**
 
-This document supersedes earlier claims that seeded C04/C05/C06 rows or enabled capability flags prove completed cycles. It does not reopen previously resolved visit, banner-media, locale or refresh-route issues. Their regression tests remain included.
+This document supersedes earlier claims that seeded C04/C05/C06 rows or enabled capability flags prove completed cycles. Regression tests for previously resolved banner-media, locale and refresh-route issues remain included. The visit-booking follow-up also closes the missing-slot validation bug and re-enables all three previously skipped visit tests.
 
 ## 1. Implemented behavior
 
@@ -16,6 +16,7 @@ This document supersedes earlier claims that seeded C04/C05/C06 rows or enabled 
 | Activation | A matching full capture activates the lease and occupies the reserved inventory. Signing alone does not activate it. |
 | Late capture | A capture after hold expiry remains recorded with its receipt/ledger and `activation_review_required`; it cannot reclaim released inventory or falsely activate a lease. |
 | Inventory | Room/bed/whole-property overlaps are checked while holding a shared property lock. PostgreSQL concurrency tests cover competing room and bed reservations. |
+| Visit booking | Every new visit requires an enabled slot matching the property's current owner, property, date and time. Empty schedules reject booking. The slot lock protects competing bookings and owner schedule edits. All three old visit tests are enabled and passing. |
 | Payment recovery | An identical checkout key replays the original session. Lookup returns a complete, receipt-bound active session; completed attempts cannot return a payable session. |
 | Rent versus deposit | The owner payable and 10% first-period commission use rent only. The deposit remains a separate liability within the combined payment. |
 | Move-in/payout eligibility | Approval is persisted before eligibility is evaluated. Provider settlement and accepted move-in are independently required. Submitted/paid payables are not made eligible again. |
@@ -518,12 +519,13 @@ Uncollected deposit debt is released at exit, not credited as owner income. Paid
 
 ## 10. Local verification and repeatable commands
 
-Final results and filenames are listed below. Evidence is in `Sukoon-API/docs/qa/owner-tenant-remaining-verification/`. Older evidence directories are historical runs.
+Final results and filenames are listed below. The latest backend results, visit regression evidence and refreshed HTTP-cycle artifact are in `Sukoon-API/docs/qa/visit-booking-verification/`. Unchanged Flutter and earlier contract/migration evidence remains in `Sukoon-API/docs/qa/owner-tenant-remaining-verification/`; Flutter was not rerun for this backend-only visit fix. The earlier backend counts and visit skips in that directory are historical.
 
 | Check | Result | Evidence |
 |---|---|---|
-| Full backend, SQLite | **652 passed, 14 skipped, 0 failed** | `backend-sqlite.log`, `.xml` |
-| Full backend, PostgreSQL | **663 passed, 3 skipped, 0 failed** | `backend-postgres.log`, `.xml` |
+| Full backend, SQLite | **663 passed, 14 PostgreSQL-only skips, 0 failed** | `visit-booking-verification/backend-sqlite.log`, `.xml` |
+| Full backend, PostgreSQL | **677 passed, 0 skipped, 0 failed** | `visit-booking-verification/backend-postgres.log`, `.xml` |
+| Property/visit and group integration, PostgreSQL | **199 passed, 0 skipped, 0 failed** | `visit-booking-verification/focused-postgres.log`, `visit-booking.xml` |
 | Remaining-cycle PostgreSQL cases including HTTP and races | **30 passed** (included in full suite) | `remaining-cycles.log`, `.xml`, `full-http-cycle.json` |
 | Actual Flutter JSON request bodies accepted by Django | **8 passed** (included in full suite) | `flutter-request-roundtrip.log`, `.xml`, `flutter-request-bodies.json` |
 | New finance tests and Django responses through actual Flutter helpers | **13 passed** | `flutter-remaining-contract.log` |
@@ -533,9 +535,31 @@ Final results and filenames are listed below. Evidence is in `Sukoon-API/docs/qa
 | Original Django onboarding/signing/payment contract through Flutter | **4 passed** | `flutter-initial-contract.log` |
 | Scoped Flutter analysis | **No issues** | `flutter-analysis.log` |
 | Fresh PostgreSQL migrate through 0012, consistency and system checks | **Passed, no model changes missing migrations** | `migration-checks.log` |
-| Critical Python lint and whitespace | **Passed** | `source-checks.log` |
+| Current Django checks and migration consistency | **Passed; no migration needed for the visit fix** | `visit-booking-verification/checks.log` |
+| Critical Python lint and whitespace | **Passed** | `visit-booking-verification/source-checks.log` |
 
-Eleven SQLite skips require PostgreSQL row locks or the real HTTP PostgreSQL journey; those cases passed on PostgreSQL. Three pre-existing visit-policy tests remain explicitly skipped in both databases: duplicate slot booking, unconfigured-slot rejection, and duplicate visit service rejection. This release does not silently change that separate visit policy. Normal dependency/test warnings include Django deprecations, the test static-files directory and an existing naive-datetime fixture. Do not report skipped tests as passed.
+The three previously skipped visit tests now run and pass on both databases. Re-enabling them first reproduced one real bug: an unconfigured appointment returned HTTP 201 when a property had no schedule. The two duplicate-booking checks already worked. New tests also cover disabled/mismatched slots, removal or disablement after an availability read, confirmed bookings, concurrent tenants and concurrent schedule edits. Fourteen SQLite skips now consist solely of PostgreSQL-dependent races and the real HTTP journey; all fourteen passed on PostgreSQL. Normal dependency/test warnings include Django deprecations, the test static-files directory and an existing naive-datetime fixture. Do not report skipped tests as passed.
+
+For visit test enablement, the ordinary property owner must configure future slots through `PUT /api/v1/properties/owner/properties/<property_uuid>/availability/`. This replaces the editable slots for that day, so include every slot that should remain available. Booked slots are preserved. Use a future date in the configured `Africa/Cairo` timezone:
+
+```json
+{
+  "availability_date": "2026-10-20",
+  "slots": [{"time": "14:00:00", "is_enabled": true}]
+}
+```
+
+An independent tenant reads `GET /api/v1/properties/<property_uuid>/available_dates/?date=2026-10-20`, selects a time with `is_available:true`, then sends `POST /api/v1/properties/<property_uuid>/visits/`:
+
+```json
+{
+  "visit_date": "2026-10-20",
+  "visit_time": "14:00:00",
+  "note": "QA viewing request"
+}
+```
+
+For a structured property, also supply its current `offer_id` and `expected_offer_revision`; use the existing `Idempotency-Key` recovery contract. The first valid booking returns HTTP 201 with the visit in `data`. A missing, disabled or removed slot returns HTTP 400 with a not-available message. A pending or confirmed booking at that property/date/time makes a new booking return HTTP 400 with an already-booked message. An identical completed request replay with the same key returns its original response. Group viewing submission follows the same slot checks when all participant consents are collected. No new administrator privilege or migration is required. Existing visits are retained.
 
 The default Flutter run intentionally skips opt-in live tests, fresh-artifact contract tests and enabled-feature branches. Dedicated targets above exercise the relevant contract/enabled branches. Shared-server/device tests are still a deployment acceptance step.
 
@@ -552,6 +576,12 @@ export TEST_POSTGRES_PORT=<test PostgreSQL port>
 export CYCLE_EVIDENCE=../docs/qa/owner-tenant-remaining-verification
 make check-owner-tenant
 make test-remaining-cycles
+```
+
+The visit follow-up can be repeated with the same isolated PostgreSQL environment:
+
+```bash
+make test-visit-booking CYCLE_EVIDENCE=../docs/qa/visit-booking-verification
 ```
 
 Immediately validate the freshly generated responses in the actual Flutter checkout (capability grants/quotes expire):
@@ -589,7 +619,7 @@ The Flutter suite also covers default-disabled behavior. For enabled planning UI
 3. Run `python manage.py check`, `makemigrations --check --dry-run`, `migrate --plan`, `migrate --noinput`, `migrate --check`, and `showmigrations features` with those settings. Confirm migrations 0010, 0011 and 0012 are applied before serving new code. Run the deployment's `check --deploy` and resolve environment-specific findings, then `collectstatic --noinput`. Do not reverse migration 0011 after several payables exist for an invoice or shrink migration 0010 while long operation names exist.
 4. Restart API and Celery workers and run one beat scheduler using the existing process manager. Verify the scheduled tasks below are registered and actually executing. A successful API response alone cannot validate workers.
 5. Run `prepare_owner_tenant_cycle_qa` as shown in section 7, preserving the established ordinary owner/tenant accounts and passwords. Privately provision login credentials for newly created QA actors; test normal login/current-user for every account that will act. The fixture manifest explicitly does not certify full cycle success.
-6. Ensure ordinary actors are active and verified, the owner really owns the selected published/verified property, `is_ownership_verified` is true, and its current structured offer/terms/capacity/dates support the requested scope. Complete the owner's mock beneficiary onboarding through the API. Create a fresh eligible visit/interest where needed rather than resetting a consumed financial or legal record.
+6. Ensure ordinary actors are active and verified, the owner really owns the selected published/verified property, `is_ownership_verified` is true, and its current structured offer/terms/capacity/dates support the requested scope. Complete the owner's mock beneficiary onboarding through the API. Configure enabled future visit slots as that property's owner before individual or group viewing tests; an empty schedule is intentionally unbookable. Create a fresh eligible visit/interest where needed rather than resetting a consumed financial or legal record.
 7. **Provision separate operations users directly** for the test: an active `StaffProfile` with `PAYOUT_OPERATOR`, and another with `REFUND_OPERATOR` (or `FINANCIAL_APPROVER`). Add `DISPUTE_RESOLVER` only for dispute-resolution checks. Do not promote the ordinary owner/tenant. Set credentials privately and verify each role through its normal authenticated endpoint; a role label in a manifest is insufficient.
 8. Run the authenticated API sequences in sections 4–9 through the staging public URL, with the real intended owner, tenant, incoming replacement tenant and separate operator identities. For negative tests use the second ordinary owner/tenant. Capture current revisions and reuse the exact same key/body on uncertain responses.
 9. Check fresh reads from both parties after each transition. Prove one capture allocation per attempt, balanced ledgers, deposit conservation, exact refund splits, commission reversal, immutable completed payout and one command receipt per repeated request. Verify the final three independent states (`ended`, `returned`, `closed`). Run permissions, stale revision, changed-body replay, expired invitation/report/search and competing-request checks.

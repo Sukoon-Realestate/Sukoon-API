@@ -16,7 +16,7 @@ from core_apps.features.planning_models import (
     RoommateConnection,
 )
 from core_apps.features.services.tenancy_invitations import resolve_offer_snapshot
-from core_apps.properties.models import PropertyVisit
+from core_apps.properties.models import OwnerAvailabilitySlot, PropertyVisit
 from .test_funded_settlement import command
 from .test_rental_phase2 import authenticated, rental_participants
 
@@ -257,7 +257,15 @@ def test_group_invitation_cost_consent_visit_application_and_roster_change(
             ),
         ).data["resource"]
     assert set(group["proposals"][0]["approved_by"]) == {str(tenant.id), str(member.id)}
-    appointment = timezone.now() + timedelta(days=1)
+    appointment = (timezone.localtime() + timedelta(days=1)).replace(
+        hour=14, minute=0, second=0, microsecond=0
+    )
+    OwnerAvailabilitySlot.objects.create(
+        owner=owner,
+        property=prop,
+        date=appointment.date(),
+        time=appointment.time().replace(tzinfo=None),
+    )
     body = command(
         group["revision"],
         action="request_visit",

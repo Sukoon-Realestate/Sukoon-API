@@ -1,0 +1,986 @@
+{
+  "environment": "local-test-fake-provider",
+  "initial_invoice": {
+    "id": "1edbd9fa-8687-4e39-8b5f-baf6acaf06b3",
+    "lease_id": "96952b05-0177-4aee-bfb8-2b9e339696e9",
+    "property_title": "Phase two home",
+    "reference": "RENT-96952B05-001",
+    "due_date": "2026-10-14",
+    "amount": {
+      "amount_minor": 2000000,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "status": "due",
+    "receipt_url": "",
+    "can_pay": true,
+    "offer_id": "ca555f26-b9d3-42a6-8682-3d52e86967a3",
+    "offer_snapshot": {
+      "name": "Whole home",
+      "terms": {
+        "price": "10000",
+        "price_period": "monthly"
+      },
+      "bed_id": null,
+      "archived": false,
+      "bed_name": null,
+      "capacity": 2,
+      "offer_id": "ca555f26-b9d3-42a6-8682-3d52e86967a3",
+      "room_ids": [],
+      "offer_link": "",
+      "room_names": [],
+      "property_id": "ba10707f-cf6d-47ed-af92-771efe15eed5",
+      "availability": "available",
+      "rental_scope": "entire_property",
+      "offer_revision": 2,
+      "bathroom_access": []
+    },
+    "revision": 1,
+    "invoice_status": "due",
+    "balance": {
+      "amount_minor": 2000000,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "allowed_actions": [
+      "quote",
+      "checkout"
+    ],
+    "blocking_reasons": [],
+    "invoice_type": "rent",
+    "billing_period_id": "e820596f-bad2-4e59-8dee-70a1506551a7",
+    "charges": {
+      "amount_minor": 2000000,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "credits": {
+      "amount_minor": 0,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "applied": {
+      "amount_minor": 0,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "period_start": "2026-10-22",
+    "period_end_exclusive": "2026-11-22",
+    "due_at": "2026-10-14T22:35:33.516444+03:00",
+    "deferred_until": null,
+    "lines": [
+      {
+        "id": "90e36e78-eac0-4e9d-aec5-51a684c3c070",
+        "type": "security_deposit",
+        "description": "Security deposit",
+        "amount": {
+          "amount_minor": 1000000,
+          "currency": "EGP",
+          "exponent": 2
+        }
+      },
+      {
+        "id": "86215f2a-02f8-46c4-b7af-df9d9d3b4c3a",
+        "type": "base_rent",
+        "description": "Base rent",
+        "amount": {
+          "amount_minor": 1000000,
+          "currency": "EGP",
+          "exponent": 2
+        }
+      }
+    ],
+    "payment_attempt_id": null,
+    "receipt_id": null
+  },
+  "quote": {
+    "resource": {
+      "quote_id": "08bb1adc-2018-4b5f-93d9-154327033a82",
+      "invoice_id": "1edbd9fa-8687-4e39-8b5f-baf6acaf06b3",
+      "invoice_revision": 1,
+      "payer_amount": {
+        "amount_minor": 2000000,
+        "currency": "EGP",
+        "exponent": 2
+      },
+      "tenant_service_fee": {
+        "amount_minor": 0,
+        "currency": "EGP",
+        "exponent": 2
+      },
+      "policy_version": "rental-policy-v1",
+      "fingerprint": "508d0b1927534992d8d874afd82b4aa65061556045e0db1c1c0ce94f3d8dbe57",
+      "expires_at": "2026-10-12T19:40:33.614038+00:00"
+    },
+    "operation_receipt": {
+      "id": "97860a60-f0dd-4ab1-b2d7-387b011d20bc",
+      "subject_id": "08bb1adc-2018-4b5f-93d9-154327033a82",
+      "request_key": "e27bcd0e-9d66-4d2f-beee-96a4612726a0",
+      "revision": 1,
+      "status": "confirmed"
+    }
+  },
+  "pending_lookup": {
+    "invoice_id": "1edbd9fa-8687-4e39-8b5f-baf6acaf06b3",
+    "request_key": "835c1686-235c-4ff0-814e-4d1e2e44d6c1",
+    "results": [
+      {
+        "provider_mode": "mock",
+        "mock_completion": {
+          "method": "POST",
+          "path": "/api/v1/features/v1/mock-provider/payment-attempts/c337c8fc-2c5f-4a4d-ac93-34c452b75ac8/events/",
+          "expected_revision": 1
+        },
+        "refundable_balance": {
+          "amount_minor": 0,
+          "currency": "EGP",
+          "exponent": 2
+        },
+        "refundable_allocations": {
+          "rent": 0,
+          "deposit": 0
+        },
+        "allowed_actions": [],
+        "blocking_reasons": [],
+        "revision": 1,
+        "lease_id": "96952b05-0177-4aee-bfb8-2b9e339696e9",
+        "payment_attempt_id": "c337c8fc-2c5f-4a4d-ac93-34c452b75ac8",
+        "invoice_id": "1edbd9fa-8687-4e39-8b5f-baf6acaf06b3",
+        "request_key": "835c1686-235c-4ff0-814e-4d1e2e44d6c1",
+        "quote_id": "08bb1adc-2018-4b5f-93d9-154327033a82",
+        "invoice_revision": 1,
+        "policy_version": "rental-policy-v1",
+        "quote_fingerprint": "508d0b1927534992d8d874afd82b4aa65061556045e0db1c1c0ce94f3d8dbe57",
+        "payment_status": "pending",
+        "failure_code": "",
+        "invoice_status": "due",
+        "amount": {
+          "amount_minor": 2000000,
+          "currency": "EGP",
+          "exponent": 2
+        },
+        "confirmed_at": null,
+        "receipt_id": "",
+        "payout_status": "held",
+        "settlement_status": "pending",
+        "updated_at": "2026-10-12T19:35:33.653924+00:00"
+      }
+    ],
+    "absence_confirmed": false,
+    "active_session": {
+      "amount": {
+        "currency": "EGP",
+        "exponent": 2,
+        "amount_minor": 2000000
+      },
+      "status": "created",
+      "quote_id": "08bb1adc-2018-4b5f-93d9-154327033a82",
+      "expires_at": "2026-10-12T19:50:33.656624+00:00",
+      "invoice_id": "1edbd9fa-8687-4e39-8b5f-baf6acaf06b3",
+      "navigation": {
+        "return_url": "https://fake-rental-provider.test/payments/return",
+        "return_state": "IPsNW-l29e52XmCE31dEhKblX-pkepo4pl_v4_KC2YY",
+        "allowed_origins": [
+          "https://fake-rental-provider.test"
+        ],
+        "external_schemes": [],
+        "payment_attempt_id": "c337c8fc-2c5f-4a4d-ac93-34c452b75ac8"
+      },
+      "session_id": "195bc6d5-13f8-49ea-aacb-60dd927e2a5d",
+      "request_key": "835c1686-235c-4ff0-814e-4d1e2e44d6c1",
+      "checkout_url": "https://fake-rental-provider.test/checkout/5ee0c27a-95b7-5644-9fd2-356e149adf74",
+      "provider_mode": "mock",
+      "mock_completion": {
+        "path": "/api/v1/features/v1/mock-provider/payment-attempts/c337c8fc-2c5f-4a4d-ac93-34c452b75ac8/events/",
+        "method": "POST",
+        "expected_revision": 1
+      },
+      "invoice_revision": 1,
+      "payment_attempt_id": "c337c8fc-2c5f-4a4d-ac93-34c452b75ac8",
+      "operation_receipt_id": "955c257f-4b5f-41c0-ade3-7b84b687b3fe"
+    }
+  },
+  "payment_attempt": {
+    "provider_mode": "mock",
+    "mock_completion": {
+      "method": "POST",
+      "path": "/api/v1/features/v1/mock-provider/payment-attempts/c337c8fc-2c5f-4a4d-ac93-34c452b75ac8/events/",
+      "expected_revision": 2
+    },
+    "refundable_balance": {
+      "amount_minor": 2000000,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "refundable_allocations": {
+      "rent": 1000000,
+      "deposit": 1000000
+    },
+    "allowed_actions": [
+      "request_refund"
+    ],
+    "blocking_reasons": [],
+    "revision": 2,
+    "lease_id": "96952b05-0177-4aee-bfb8-2b9e339696e9",
+    "payment_attempt_id": "c337c8fc-2c5f-4a4d-ac93-34c452b75ac8",
+    "invoice_id": "1edbd9fa-8687-4e39-8b5f-baf6acaf06b3",
+    "request_key": "835c1686-235c-4ff0-814e-4d1e2e44d6c1",
+    "quote_id": "08bb1adc-2018-4b5f-93d9-154327033a82",
+    "invoice_revision": 1,
+    "policy_version": "rental-policy-v1",
+    "quote_fingerprint": "508d0b1927534992d8d874afd82b4aa65061556045e0db1c1c0ce94f3d8dbe57",
+    "payment_status": "captured",
+    "failure_code": "",
+    "invoice_status": "paid",
+    "amount": {
+      "amount_minor": 2000000,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "confirmed_at": "2026-10-12T19:35:33.928581+00:00",
+    "receipt_id": "57e7b586-7314-4b2b-b46d-be2c080f9aaa",
+    "payout_status": "held",
+    "settlement_status": "pending",
+    "updated_at": "2026-10-12T19:35:33.928700+00:00"
+  },
+  "grants": {
+    "ba10707f-cf6d-47ed-af92-771efe15eed5:create_rental_interest:258acdbc-87f5-4d28-b0f2-0625d1ef1a43": {
+      "account_id": "258acdbc-87f5-4d28-b0f2-0625d1ef1a43",
+      "account_verified": true,
+      "enabled_capabilities": [
+        "rental_interests",
+        "rental_agreements"
+      ],
+      "policy_version": "rental-policy-v1",
+      "allowed_actions": [
+        "create_rental_interest"
+      ],
+      "blocking_reasons": []
+    },
+    "00ff9152-7e8e-4110-8918-4eba4a44188e:create_terms_proposal:05068bcb-8951-4e15-a463-60d04d4220d6": {
+      "account_id": "05068bcb-8951-4e15-a463-60d04d4220d6",
+      "account_verified": true,
+      "enabled_capabilities": [
+        "rental_interests",
+        "rental_agreements"
+      ],
+      "policy_version": "rental-policy-v1",
+      "allowed_actions": [
+        "create_terms_proposal",
+        "reject"
+      ],
+      "blocking_reasons": []
+    },
+    "148c8438-ed80-494d-b78b-6f605240007d:accept:258acdbc-87f5-4d28-b0f2-0625d1ef1a43": {
+      "account_id": "258acdbc-87f5-4d28-b0f2-0625d1ef1a43",
+      "account_verified": true,
+      "enabled_capabilities": [
+        "rental_interests",
+        "rental_agreements"
+      ],
+      "policy_version": "rental-policy-v1",
+      "allowed_actions": [
+        "reject",
+        "request_changes",
+        "accept"
+      ],
+      "blocking_reasons": []
+    },
+    "00ff9152-7e8e-4110-8918-4eba4a44188e:create_invitation:05068bcb-8951-4e15-a463-60d04d4220d6": {
+      "account_id": "05068bcb-8951-4e15-a463-60d04d4220d6",
+      "account_verified": true,
+      "enabled_capabilities": [
+        "rental_interests",
+        "rental_agreements"
+      ],
+      "policy_version": "rental-policy-v1",
+      "allowed_actions": [
+        "create_terms_proposal",
+        "reject",
+        "create_invitation"
+      ],
+      "blocking_reasons": []
+    },
+    "4777cf7c-6cf5-437c-92eb-b44cafeea423:create_lease:05068bcb-8951-4e15-a463-60d04d4220d6": {
+      "account_id": "05068bcb-8951-4e15-a463-60d04d4220d6",
+      "account_verified": true,
+      "enabled_capabilities": [
+        "rental_agreements"
+      ],
+      "policy_version": "rental-policy-v1",
+      "allowed_actions": [
+        "create_lease"
+      ],
+      "blocking_reasons": []
+    },
+    "96952b05-0177-4aee-bfb8-2b9e339696e9:accept_review:05068bcb-8951-4e15-a463-60d04d4220d6": {
+      "account_id": "05068bcb-8951-4e15-a463-60d04d4220d6",
+      "account_verified": true,
+      "enabled_capabilities": [
+        "rental_center",
+        "rental_agreements",
+        "rent_checkout",
+        "rental_handovers",
+        "rental_deposits",
+        "rental_maintenance",
+        "rental_changes",
+        "rental_settlement",
+        "rental_disputes",
+        "signed_documents",
+        "rental_reviews",
+        "owner_payouts"
+      ],
+      "policy_version": "rental-policy-v1",
+      "allowed_actions": [
+        "cancel_draft",
+        "accept_review",
+        "edit_lease",
+        "request_statement",
+        "create_rental_dispute"
+      ],
+      "blocking_reasons": []
+    },
+    "96952b05-0177-4aee-bfb8-2b9e339696e9:submit_for_signature:05068bcb-8951-4e15-a463-60d04d4220d6": {
+      "account_id": "05068bcb-8951-4e15-a463-60d04d4220d6",
+      "account_verified": true,
+      "enabled_capabilities": [
+        "rental_center",
+        "rental_agreements",
+        "rent_checkout",
+        "rental_handovers",
+        "rental_deposits",
+        "rental_maintenance",
+        "rental_changes",
+        "rental_settlement",
+        "rental_disputes",
+        "signed_documents",
+        "rental_reviews",
+        "owner_payouts"
+      ],
+      "policy_version": "rental-policy-v1",
+      "allowed_actions": [
+        "cancel_draft",
+        "edit_lease",
+        "submit_for_signature",
+        "request_statement",
+        "create_rental_dispute"
+      ],
+      "blocking_reasons": []
+    },
+    "96952b05-0177-4aee-bfb8-2b9e339696e9:sign:05068bcb-8951-4e15-a463-60d04d4220d6": {
+      "account_id": "05068bcb-8951-4e15-a463-60d04d4220d6",
+      "account_verified": true,
+      "enabled_capabilities": [
+        "rental_center",
+        "rental_agreements",
+        "rent_checkout",
+        "rental_handovers",
+        "rental_deposits",
+        "rental_maintenance",
+        "rental_changes",
+        "rental_settlement",
+        "rental_disputes",
+        "signed_documents",
+        "rental_reviews",
+        "owner_payouts"
+      ],
+      "policy_version": "rental-policy-v1",
+      "allowed_actions": [
+        "sign",
+        "request_statement",
+        "create_rental_dispute"
+      ],
+      "blocking_reasons": []
+    },
+    "96952b05-0177-4aee-bfb8-2b9e339696e9:sign:258acdbc-87f5-4d28-b0f2-0625d1ef1a43": {
+      "account_id": "258acdbc-87f5-4d28-b0f2-0625d1ef1a43",
+      "account_verified": true,
+      "enabled_capabilities": [
+        "rental_center",
+        "rental_agreements",
+        "rent_checkout",
+        "rental_handovers",
+        "rental_deposits",
+        "rental_maintenance",
+        "rental_changes",
+        "rental_settlement",
+        "rental_disputes",
+        "signed_documents",
+        "rental_reviews"
+      ],
+      "policy_version": "rental-policy-v1",
+      "allowed_actions": [
+        "sign",
+        "request_statement",
+        "create_rental_dispute"
+      ],
+      "blocking_reasons": []
+    },
+    "1edbd9fa-8687-4e39-8b5f-baf6acaf06b3:quote:258acdbc-87f5-4d28-b0f2-0625d1ef1a43": {
+      "account_id": "258acdbc-87f5-4d28-b0f2-0625d1ef1a43",
+      "account_verified": true,
+      "enabled_capabilities": [
+        "rental_center",
+        "rent_checkout"
+      ],
+      "policy_version": "rental-policy-v1",
+      "allowed_actions": [
+        "quote",
+        "checkout"
+      ],
+      "blocking_reasons": []
+    },
+    "1edbd9fa-8687-4e39-8b5f-baf6acaf06b3:checkout:258acdbc-87f5-4d28-b0f2-0625d1ef1a43": {
+      "account_id": "258acdbc-87f5-4d28-b0f2-0625d1ef1a43",
+      "account_verified": true,
+      "enabled_capabilities": [
+        "rental_center",
+        "rent_checkout"
+      ],
+      "policy_version": "rental-policy-v1",
+      "allowed_actions": [
+        "quote",
+        "checkout"
+      ],
+      "blocking_reasons": []
+    },
+    "96952b05-0177-4aee-bfb8-2b9e339696e9:create_rental_handover:05068bcb-8951-4e15-a463-60d04d4220d6": {
+      "account_id": "05068bcb-8951-4e15-a463-60d04d4220d6",
+      "account_verified": true,
+      "enabled_capabilities": [
+        "rental_center",
+        "rental_agreements",
+        "rent_checkout",
+        "rental_handovers",
+        "rental_deposits",
+        "rental_maintenance",
+        "rental_changes",
+        "rental_settlement",
+        "rental_disputes",
+        "signed_documents",
+        "rental_reviews",
+        "owner_payouts"
+      ],
+      "policy_version": "rental-policy-v1",
+      "allowed_actions": [
+        "request_statement",
+        "create_rental_dispute",
+        "create_rental_handover",
+        "upload_evidence",
+        "create_maintenance_request",
+        "create_payment_extension",
+        "create_amendment",
+        "create_renewal",
+        "create_termination",
+        "create_external_payment"
+      ],
+      "blocking_reasons": []
+    },
+    "cf03a6ba-52c4-4fc3-9606-e93aad73ff2f:accept:05068bcb-8951-4e15-a463-60d04d4220d6": {
+      "account_id": "05068bcb-8951-4e15-a463-60d04d4220d6",
+      "account_verified": true,
+      "enabled_capabilities": [
+        "rental_handovers"
+      ],
+      "policy_version": "rental-policy-v1",
+      "allowed_actions": [
+        "edit_handover",
+        "dispute",
+        "accept"
+      ],
+      "blocking_reasons": []
+    },
+    "cf03a6ba-52c4-4fc3-9606-e93aad73ff2f:accept:258acdbc-87f5-4d28-b0f2-0625d1ef1a43": {
+      "account_id": "258acdbc-87f5-4d28-b0f2-0625d1ef1a43",
+      "account_verified": true,
+      "enabled_capabilities": [
+        "rental_handovers"
+      ],
+      "policy_version": "rental-policy-v1",
+      "allowed_actions": [
+        "edit_handover",
+        "dispute",
+        "accept"
+      ],
+      "blocking_reasons": []
+    },
+    "96952b05-0177-4aee-bfb8-2b9e339696e9:create_maintenance_request:258acdbc-87f5-4d28-b0f2-0625d1ef1a43": {
+      "account_id": "258acdbc-87f5-4d28-b0f2-0625d1ef1a43",
+      "account_verified": true,
+      "enabled_capabilities": [
+        "rental_center",
+        "rental_agreements",
+        "rent_checkout",
+        "rental_handovers",
+        "rental_deposits",
+        "rental_maintenance",
+        "rental_changes",
+        "rental_settlement",
+        "rental_disputes",
+        "signed_documents",
+        "rental_reviews"
+      ],
+      "policy_version": "rental-policy-v1",
+      "allowed_actions": [
+        "request_statement",
+        "create_rental_dispute",
+        "create_rental_handover",
+        "upload_evidence",
+        "create_maintenance_request",
+        "create_payment_extension",
+        "create_amendment",
+        "create_renewal",
+        "create_termination",
+        "create_external_payment",
+        "review_rental",
+        "create_rental_refund"
+      ],
+      "blocking_reasons": []
+    },
+    "972f6bba-5639-4972-beb5-201b06e36143:acknowledge:05068bcb-8951-4e15-a463-60d04d4220d6": {
+      "account_id": "05068bcb-8951-4e15-a463-60d04d4220d6",
+      "account_verified": true,
+      "enabled_capabilities": [
+        "rental_maintenance",
+        "rental_disputes"
+      ],
+      "policy_version": "rental-policy-v1",
+      "allowed_actions": [
+        "acknowledge",
+        "propose_appointment",
+        "cancel",
+        "reply",
+        "propose_cost",
+        "create_rental_dispute"
+      ],
+      "blocking_reasons": []
+    },
+    "972f6bba-5639-4972-beb5-201b06e36143:start_work:05068bcb-8951-4e15-a463-60d04d4220d6": {
+      "account_id": "05068bcb-8951-4e15-a463-60d04d4220d6",
+      "account_verified": true,
+      "enabled_capabilities": [
+        "rental_maintenance",
+        "rental_disputes"
+      ],
+      "policy_version": "rental-policy-v1",
+      "allowed_actions": [
+        "propose_appointment",
+        "start_work",
+        "cancel",
+        "reply",
+        "propose_cost",
+        "create_rental_dispute"
+      ],
+      "blocking_reasons": []
+    },
+    "972f6bba-5639-4972-beb5-201b06e36143:report_resolved:05068bcb-8951-4e15-a463-60d04d4220d6": {
+      "account_id": "05068bcb-8951-4e15-a463-60d04d4220d6",
+      "account_verified": true,
+      "enabled_capabilities": [
+        "rental_maintenance",
+        "rental_disputes"
+      ],
+      "policy_version": "rental-policy-v1",
+      "allowed_actions": [
+        "report_resolved",
+        "reply",
+        "propose_cost",
+        "create_rental_dispute"
+      ],
+      "blocking_reasons": []
+    },
+    "972f6bba-5639-4972-beb5-201b06e36143:confirm_resolved:258acdbc-87f5-4d28-b0f2-0625d1ef1a43": {
+      "account_id": "258acdbc-87f5-4d28-b0f2-0625d1ef1a43",
+      "account_verified": true,
+      "enabled_capabilities": [
+        "rental_maintenance",
+        "rental_disputes"
+      ],
+      "policy_version": "rental-policy-v1",
+      "allowed_actions": [
+        "confirm_resolved",
+        "reopen",
+        "reply",
+        "propose_cost",
+        "create_rental_dispute"
+      ],
+      "blocking_reasons": []
+    }
+  },
+  "signing_sessions": [
+    {
+      "session_id": "21f5f300-7d6b-4cf5-bec6-4a4a587a6c60",
+      "subject_id": "96952b05-0177-4aee-bfb8-2b9e339696e9",
+      "request_key": "3a52878b-789c-4c00-8c66-1ae37014cea9",
+      "revision": 4,
+      "document_id": "0e1b7827-92a0-5dd9-8be3-0077251629f1",
+      "document_hash": "99377592a30fba3e347d804e76adc6c50ad9516a92b4d3176d86b8fa23c9a392",
+      "provider_mode": "mock",
+      "mock_completion": {
+        "method": "POST",
+        "path": "/api/v1/features/v1/mock-provider/signing-sessions/21f5f300-7d6b-4cf5-bec6-4a4a587a6c60/complete/",
+        "expected_revision": 4
+      },
+      "hosted_url": "https://fake-rental-provider.test/signing/5d41b927-b884-5396-83cb-11492b3ebe57",
+      "expires_at": "2026-10-12T20:05:33.346992+00:00",
+      "operation_receipt_id": "f25816cf-a6ad-4b39-9b3c-f48dcdee1769",
+      "resource": {
+        "session_id": "21f5f300-7d6b-4cf5-bec6-4a4a587a6c60",
+        "subject_id": "96952b05-0177-4aee-bfb8-2b9e339696e9",
+        "request_key": "3a52878b-789c-4c00-8c66-1ae37014cea9",
+        "revision": 4,
+        "document_id": "0e1b7827-92a0-5dd9-8be3-0077251629f1",
+        "document_hash": "99377592a30fba3e347d804e76adc6c50ad9516a92b4d3176d86b8fa23c9a392",
+        "provider_mode": "mock",
+        "mock_completion": {
+          "method": "POST",
+          "path": "/api/v1/features/v1/mock-provider/signing-sessions/21f5f300-7d6b-4cf5-bec6-4a4a587a6c60/complete/",
+          "expected_revision": 4
+        },
+        "hosted_url": "https://fake-rental-provider.test/signing/5d41b927-b884-5396-83cb-11492b3ebe57",
+        "expires_at": "2026-10-12T20:05:33.346992+00:00",
+        "operation_receipt_id": "f25816cf-a6ad-4b39-9b3c-f48dcdee1769"
+      },
+      "operation_receipt": {
+        "id": "f25816cf-a6ad-4b39-9b3c-f48dcdee1769",
+        "subject_id": "21f5f300-7d6b-4cf5-bec6-4a4a587a6c60",
+        "request_key": "3a52878b-789c-4c00-8c66-1ae37014cea9",
+        "revision": 4,
+        "status": "confirmed"
+      }
+    },
+    {
+      "session_id": "0b77142e-699e-4e35-9539-4ed390b2053b",
+      "subject_id": "96952b05-0177-4aee-bfb8-2b9e339696e9",
+      "request_key": "07ac81f2-4e39-4aa4-b6f3-5b5b89fc6bd6",
+      "revision": 4,
+      "document_id": "0e1b7827-92a0-5dd9-8be3-0077251629f1",
+      "document_hash": "99377592a30fba3e347d804e76adc6c50ad9516a92b4d3176d86b8fa23c9a392",
+      "provider_mode": "mock",
+      "mock_completion": {
+        "method": "POST",
+        "path": "/api/v1/features/v1/mock-provider/signing-sessions/0b77142e-699e-4e35-9539-4ed390b2053b/complete/",
+        "expected_revision": 4
+      },
+      "hosted_url": "https://fake-rental-provider.test/signing/e4756595-ef92-5ea3-b1d7-b9b2c1a1e9bc",
+      "expires_at": "2026-10-12T20:05:33.432536+00:00",
+      "operation_receipt_id": "1ed0acc8-b635-4254-8be0-5caaefe13002",
+      "resource": {
+        "session_id": "0b77142e-699e-4e35-9539-4ed390b2053b",
+        "subject_id": "96952b05-0177-4aee-bfb8-2b9e339696e9",
+        "request_key": "07ac81f2-4e39-4aa4-b6f3-5b5b89fc6bd6",
+        "revision": 4,
+        "document_id": "0e1b7827-92a0-5dd9-8be3-0077251629f1",
+        "document_hash": "99377592a30fba3e347d804e76adc6c50ad9516a92b4d3176d86b8fa23c9a392",
+        "provider_mode": "mock",
+        "mock_completion": {
+          "method": "POST",
+          "path": "/api/v1/features/v1/mock-provider/signing-sessions/0b77142e-699e-4e35-9539-4ed390b2053b/complete/",
+          "expected_revision": 4
+        },
+        "hosted_url": "https://fake-rental-provider.test/signing/e4756595-ef92-5ea3-b1d7-b9b2c1a1e9bc",
+        "expires_at": "2026-10-12T20:05:33.432536+00:00",
+        "operation_receipt_id": "1ed0acc8-b635-4254-8be0-5caaefe13002"
+      },
+      "operation_receipt": {
+        "id": "1ed0acc8-b635-4254-8be0-5caaefe13002",
+        "subject_id": "0b77142e-699e-4e35-9539-4ed390b2053b",
+        "request_key": "07ac81f2-4e39-4aa4-b6f3-5b5b89fc6bd6",
+        "revision": 4,
+        "status": "confirmed"
+      }
+    }
+  ],
+  "initial_owner_profile": {
+    "id": "b9916596-5baf-41f1-a050-dea42bd1465e",
+    "revision": 1,
+    "status": "not_started",
+    "masked_beneficiary": "",
+    "provider": "fake",
+    "requirements": [
+      "beneficiary",
+      "identity_verification"
+    ],
+    "accepted_policy_versions": [],
+    "policy_summary": "10% commission on first-period base rent, paid by owner. 0% renewal commission. 0 EGP tenant service fee.",
+    "structured_summary": {
+      "commission": "10% of first-period base rent, paid by owner",
+      "renewal_commission": "0%",
+      "tenant_service_fee": "0 EGP",
+      "processing_fee_payer": "platform"
+    },
+    "required_policy_versions": [
+      "rental-policy-v1"
+    ],
+    "allowed_actions": [
+      "onboard_beneficiary"
+    ],
+    "blocking_reasons": [
+      "Beneficiary onboarding is incomplete.",
+      "The required rental policy has not been accepted."
+    ]
+  },
+  "onboarding_grant": {
+    "account_id": "05068bcb-8951-4e15-a463-60d04d4220d6",
+    "account_verified": true,
+    "enabled_capabilities": [
+      "rental_interests",
+      "rental_agreements",
+      "owner_payouts"
+    ],
+    "policy_version": "rental-policy-v1",
+    "allowed_actions": [
+      "onboard_beneficiary"
+    ],
+    "blocking_reasons": []
+  },
+  "onboarding": {
+    "resource": {
+      "revision": 1,
+      "expires_at": "2026-10-12T20:05:32.770585+00:00",
+      "hosted_url": "https://fake-rental-provider.test/onboarding/b9916596-5baf-41f1-a050-dea42bd1465e/082a2fd8-895d-52d8-90c4-abfb34805ee0",
+      "session_id": "522dc193-fb8d-44dc-9a19-9bb0fe92d8a1",
+      "subject_id": "b9916596-5baf-41f1-a050-dea42bd1465e",
+      "request_key": "2b805502-c9c1-4b1f-9416-bdeb2ccf6411",
+      "provider_mode": "mock",
+      "mock_completion": {
+        "path": "/api/v1/features/v1/mock-provider/onboarding-sessions/522dc193-fb8d-44dc-9a19-9bb0fe92d8a1/complete/",
+        "method": "POST",
+        "expected_revision": 2
+      },
+      "profile_revision": 2,
+      "operation_receipt_id": "881e27d5-7ed3-403f-ba51-2dd1bb042dc0"
+    },
+    "revision": 1,
+    "expires_at": "2026-10-12T20:05:32.770585+00:00",
+    "hosted_url": "https://fake-rental-provider.test/onboarding/b9916596-5baf-41f1-a050-dea42bd1465e/082a2fd8-895d-52d8-90c4-abfb34805ee0",
+    "session_id": "522dc193-fb8d-44dc-9a19-9bb0fe92d8a1",
+    "subject_id": "b9916596-5baf-41f1-a050-dea42bd1465e",
+    "request_key": "2b805502-c9c1-4b1f-9416-bdeb2ccf6411",
+    "provider_mode": "mock",
+    "mock_completion": {
+      "path": "/api/v1/features/v1/mock-provider/onboarding-sessions/522dc193-fb8d-44dc-9a19-9bb0fe92d8a1/complete/",
+      "method": "POST",
+      "expected_revision": 2
+    },
+    "profile_revision": 2,
+    "operation_receipt": {
+      "id": "881e27d5-7ed3-403f-ba51-2dd1bb042dc0",
+      "status": "confirmed",
+      "revision": 1,
+      "subject_id": "522dc193-fb8d-44dc-9a19-9bb0fe92d8a1",
+      "request_key": "2b805502-c9c1-4b1f-9416-bdeb2ccf6411"
+    },
+    "operation_receipt_id": "881e27d5-7ed3-403f-ba51-2dd1bb042dc0"
+  },
+  "active_lease": {
+    "id": "96952b05-0177-4aee-bfb8-2b9e339696e9",
+    "owner_id": "05068bcb-8951-4e15-a463-60d04d4220d6",
+    "tenant_id": "258acdbc-87f5-4d28-b0f2-0625d1ef1a43",
+    "property_id": "ba10707f-cf6d-47ed-af92-771efe15eed5",
+    "property_title": "Phase two home",
+    "owner_name": "Phase Owner",
+    "tenant_name": "Phase Tenant",
+    "start_date": "2026-10-22",
+    "end_date": "2026-11-22",
+    "rent": {
+      "amount_minor": 1000000,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "status": "active",
+    "revision": 6,
+    "document_url": "",
+    "can_sign": false,
+    "can_cancel": false,
+    "offer_id": "ca555f26-b9d3-42a6-8682-3d52e86967a3",
+    "offer_snapshot": {
+      "name": "Whole home",
+      "terms": {
+        "price": "10000",
+        "price_period": "monthly"
+      },
+      "bed_id": null,
+      "archived": false,
+      "bed_name": null,
+      "capacity": 2,
+      "offer_id": "ca555f26-b9d3-42a6-8682-3d52e86967a3",
+      "room_ids": [],
+      "offer_link": "",
+      "room_names": [],
+      "property_id": "ba10707f-cf6d-47ed-af92-771efe15eed5",
+      "availability": "available",
+      "rental_scope": "entire_property",
+      "offer_revision": 2,
+      "bathroom_access": []
+    },
+    "tenancy_root_id": "3a3c6b20-63f2-4095-b5bc-c937bd180f25",
+    "lease_status": "active",
+    "occupancy_status": "not_started",
+    "financial_closure_status": "open",
+    "legacy_read_only": false,
+    "allowed_actions": [
+      "request_statement",
+      "create_rental_dispute",
+      "create_rental_handover",
+      "upload_evidence",
+      "create_maintenance_request",
+      "create_payment_extension",
+      "create_amendment",
+      "create_renewal",
+      "create_termination",
+      "create_external_payment",
+      "create_rental_refund"
+    ],
+    "blocking_reasons": [],
+    "invitation_id": "4777cf7c-6cf5-437c-92eb-b44cafeea423",
+    "terms": {
+      "deposit": {
+        "currency": "EGP",
+        "exponent": 2,
+        "amount_minor": 1000000
+      },
+      "timezone": "Africa/Cairo",
+      "occupants": 1,
+      "starts_on": "2026-10-22",
+      "handover_on": "2026-10-22",
+      "template_id": "eg-residential-v1",
+      "monthly_rent": {
+        "currency": "EGP",
+        "exponent": 2,
+        "amount_minor": 1000000
+      },
+      "deposit_holder": "platform",
+      "policy_version": "rental-policy-v1",
+      "renewal_policy": {
+        "automatic": false
+      },
+      "commission_basis": "first_period_base_rent",
+      "commission_payer": "owner",
+      "template_version": "1",
+      "ends_on_exclusive": "2026-11-22",
+      "excluded_services": [],
+      "included_services": [],
+      "billing_anchor_day": 22,
+      "termination_policy": {
+        "notice_days": 30
+      },
+      "commission_rate_bps": 1000,
+      "processing_fee_payer": "platform",
+      "renewal_commission_rate_bps": 0
+    },
+    "reviewed_by": [
+      "05068bcb-8951-4e15-a463-60d04d4220d6",
+      "258acdbc-87f5-4d28-b0f2-0625d1ef1a43"
+    ],
+    "document_id": "0e1b7827-92a0-5dd9-8be3-0077251629f1",
+    "document_hash": "99377592a30fba3e347d804e76adc6c50ad9516a92b4d3176d86b8fa23c9a392",
+    "hold_expires_at": "2026-10-14T22:35:33.516444+03:00"
+  },
+  "deposit": {
+    "id": "908986eb-c000-4db5-94ce-80946d81eb57",
+    "lease_id": "96952b05-0177-4aee-bfb8-2b9e339696e9",
+    "revision": 2,
+    "holder": "platform",
+    "invoice_id": "1edbd9fa-8687-4e39-8b5f-baf6acaf06b3",
+    "status": "collected",
+    "agreed": {
+      "amount_minor": 1000000,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "due": {
+      "amount_minor": 0,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "collected": {
+      "amount_minor": 1000000,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "returned": {
+      "amount_minor": 0,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "applied": {
+      "amount_minor": 0,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "disputed": {
+      "amount_minor": 0,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "remaining": {
+      "amount_minor": 1000000,
+      "currency": "EGP",
+      "exponent": 2
+    }
+  },
+  "checkout": {
+    "resource": {
+      "session_id": "195bc6d5-13f8-49ea-aacb-60dd927e2a5d",
+      "provider_mode": "mock",
+      "mock_completion": {
+        "method": "POST",
+        "path": "/api/v1/features/v1/mock-provider/payment-attempts/c337c8fc-2c5f-4a4d-ac93-34c452b75ac8/events/",
+        "expected_revision": 1
+      },
+      "payment_attempt_id": "c337c8fc-2c5f-4a4d-ac93-34c452b75ac8",
+      "invoice_id": "1edbd9fa-8687-4e39-8b5f-baf6acaf06b3",
+      "quote_id": "08bb1adc-2018-4b5f-93d9-154327033a82",
+      "invoice_revision": 1,
+      "request_key": "835c1686-235c-4ff0-814e-4d1e2e44d6c1",
+      "status": "created",
+      "amount": {
+        "amount_minor": 2000000,
+        "currency": "EGP",
+        "exponent": 2
+      },
+      "checkout_url": "https://fake-rental-provider.test/checkout/5ee0c27a-95b7-5644-9fd2-356e149adf74",
+      "expires_at": "2026-10-12T19:50:33.656624+00:00",
+      "navigation": {
+        "allowed_origins": [
+          "https://fake-rental-provider.test"
+        ],
+        "return_url": "https://fake-rental-provider.test/payments/return",
+        "return_state": "IPsNW-l29e52XmCE31dEhKblX-pkepo4pl_v4_KC2YY",
+        "payment_attempt_id": "c337c8fc-2c5f-4a4d-ac93-34c452b75ac8",
+        "external_schemes": []
+      }
+    },
+    "operation_receipt": {
+      "id": "955c257f-4b5f-41c0-ade3-7b84b687b3fe",
+      "subject_id": "195bc6d5-13f8-49ea-aacb-60dd927e2a5d",
+      "request_key": "835c1686-235c-4ff0-814e-4d1e2e44d6c1",
+      "revision": 1,
+      "status": "confirmed"
+    }
+  },
+  "owner_profile": {
+    "id": "b9916596-5baf-41f1-a050-dea42bd1465e",
+    "revision": 3,
+    "status": "ready",
+    "masked_beneficiary": "4242",
+    "provider": "fake",
+    "requirements": [],
+    "accepted_policy_versions": [
+      "rental-policy-v1"
+    ],
+    "policy_summary": "10% commission on first-period base rent, paid by owner. 0% renewal commission. 0 EGP tenant service fee.",
+    "structured_summary": {
+      "commission": "10% of first-period base rent, paid by owner",
+      "renewal_commission": "0%",
+      "tenant_service_fee": "0 EGP",
+      "processing_fee_payer": "platform"
+    },
+    "required_policy_versions": [
+      "rental-policy-v1"
+    ],
+    "allowed_actions": [],
+    "blocking_reasons": []
+  }
+}

@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.utils import timezone
 from rest_framework import status
 
-from core_apps.properties.models import Property
+from core_apps.properties.models import OwnerAvailabilitySlot, Property
 from core_apps.notifications.models import Notification
 
 
@@ -141,6 +141,9 @@ class TestWorkspaceAccountContract:
         # Tenant (another_user) requests a visit
         auth_client.force_authenticate(user=another_user)
         future_date = timezone.localdate() + timezone.timedelta(days=5)
+        OwnerAvailabilitySlot.objects.create(
+            owner=user, property=prop, date=future_date, time="15:00:00"
+        )
         url = reverse("property-visit-create", kwargs={"property_id": prop.id})
         res = auth_client.post(
             url,
