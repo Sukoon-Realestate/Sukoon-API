@@ -198,27 +198,34 @@ def test_placeholder_checkout_is_disabled_by_default():
 
 @pytest.mark.django_db
 def test_planning_capabilities_endpoint_returns_disabled_capabilities_and_version():
-    """Verifies DEP001: planning-capabilities endpoint returns 200 with policy version."""
+    """Verifies planning-capabilities endpoint returns 200 with policy version and enabled grants."""
     user = User.objects.create_user(
         email="planning-caps@example.com",
         password="pass",
         is_verified=True,
     )
-    # 1. Authenticated call
+    # 1. Authenticated call (full capabilities granted for verified user)
     res_auth = authenticated(user).get("/api/v1/features/v1/planning-capabilities/")
     assert res_auth.status_code == 200
     data_auth = res_auth.data
     assert data_auth["account_id"] == str(user.id)
     assert data_auth["account_verified"] is True
     assert data_auth["policy_version"] == "planning-policy-v1"
-    assert data_auth["enabled_capabilities"] == []
-    assert data_auth["verified_services"] == []
-    assert data_auth["allowed_actions"] == []
-    assert data_auth["expires_at"] is None
-    assert "pending live verification" in data_auth["blocking_reasons"][0]
+    assert "lifestyle" in data_auth["enabled_capabilities"]
+    assert "roommates" in data_auth["verified_services"]
+    assert len(data_auth["allowed_actions"]) > 0
+    assert data_auth["expires_at"] is not None
     assert res_auth["Cache-Control"] == "private, no-store"
 
-    # 2. Unauthenticated / guest call
+    # Targeted capability & action query
+    res_cap = authenticated(user).get(
+        "/api/v1/features/v1/planning-capabilities/?capability=housing_groups&action=create_group"
+    )
+    assert res_cap.status_code == 200
+    assert res_cap.data["enabled_capabilities"] == ["housing_groups"]
+    assert res_cap.data["allowed_actions"] == ["create_group"]
+
+    # 2. Unauthenticated / guest call (blocked from account planning)
     res_guest = APIClient().get("/api/v1/features/v1/planning-capabilities/")
     assert res_guest.status_code == 200
     data_guest = res_guest.data
@@ -227,10 +234,12 @@ def test_planning_capabilities_endpoint_returns_disabled_capabilities_and_versio
     assert data_guest["enabled_capabilities"] == []
     assert data_guest["verified_services"] == []
     assert data_guest["expires_at"] is None
+    assert "Authentication is required" in data_guest["blocking_reasons"][0]
 
     # 3. Arabic guest call returns localized blocking reasons
     res_ar = APIClient().get("/api/v1/features/v1/planning-capabilities/", HTTP_ACCEPT_LANGUAGE="ar")
     assert res_ar.status_code == 200
     assert res_ar["Content-Language"] == "ar"
-    assert "إمكانيات التخطيط" in res_ar.data["blocking_reasons"][0]
+    assert "تسجيل الدخول مطلوب" in res_ar.data["blocking_reasons"][0]
+
 

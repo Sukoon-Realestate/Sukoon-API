@@ -85,23 +85,50 @@ ERROR_MESSAGES_AR = {
 
 
 def language(request):
-    lang_param = request.query_params.get("lang", "") if hasattr(request, "query_params") else ""
+    if not request:
+        return "en"
+    if hasattr(request, "query_params"):
+        lang_param = request.query_params.get("lang") or request.query_params.get("language")
+    else:
+        lang_param = request.GET.get("lang") if hasattr(request, "GET") else None
     if lang_param:
-        return "ar" if str(lang_param).lower().startswith("ar") else "en"
-    accept_lang = (
-        getattr(request, "headers", {}).get("Accept-Language")
-        or getattr(request, "META", {}).get("HTTP_ACCEPT_LANGUAGE", "")
-    )
+        clean = str(lang_param).strip().lower()
+        if clean.startswith("ar"):
+            return "ar"
+        if clean.startswith("en"):
+            return "en"
+
+    accept_lang = None
+    headers = getattr(request, "headers", None)
+    if headers and hasattr(headers, "get"):
+        accept_lang = headers.get("Accept-Language") or headers.get("accept-language")
+    if not accept_lang and hasattr(request, "META"):
+        accept_lang = request.META.get("HTTP_ACCEPT_LANGUAGE")
+    raw_req = getattr(request, "_request", None)
+    if not accept_lang and raw_req:
+        raw_headers = getattr(raw_req, "headers", None)
+        if raw_headers and hasattr(raw_headers, "get"):
+            accept_lang = raw_headers.get("Accept-Language") or raw_headers.get("accept-language")
+        if not accept_lang and hasattr(raw_req, "META"):
+            accept_lang = raw_req.META.get("HTTP_ACCEPT_LANGUAGE")
+
     if accept_lang:
-        for part in accept_lang.split(","):
+        for part in str(accept_lang).split(","):
             token = part.split(";")[0].strip().lower()
             if token.startswith("ar"):
                 return "ar"
             if token.startswith("en"):
                 return "en"
-    return (
-        "ar" if str(getattr(request, "LANGUAGE_CODE", "en")).startswith("ar") else "en"
-    )
+
+    current = getattr(request, "LANGUAGE_CODE", None)
+    if not current and raw_req:
+        current = getattr(raw_req, "LANGUAGE_CODE", None)
+    if not current:
+        from django.utils import translation
+        current = translation.get_language()
+    if current and str(current).lower().startswith("ar"):
+        return "ar"
+    return "en"
 
 
 def message(request, key):
@@ -146,13 +173,16 @@ def validation_error_response(serializer, request):
 
 
 def finalize(response, request, *, private=False, public_ttl=None):
-    response["Content-Language"] = language(request)
+    eff_lang = language(request)
+    response["Content-Language"] = eff_lang
     response["Vary"] = "Accept-Language"
     if private:
         response["Cache-Control"] = "no-store"
     elif public_ttl is not None:
+        # Crucial for edge proxies / CDNs: use private, max-age so edge caches
+        # never serve English-cached responses to Arabic-accepting users.
         response["Cache-Control"] = (
-            f"public, max-age={max(0, int(public_ttl))}, must-revalidate"
+            f"private, max-age={max(0, int(public_ttl))}, must-revalidate"
         )
     return response
 

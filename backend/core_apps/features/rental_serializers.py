@@ -60,9 +60,11 @@ class RentalTermsSerializer(serializers.Serializer):
 
 class OwnerPaymentProfileSerializer(serializers.ModelSerializer):
     policy_summary = serializers.SerializerMethodField()
+    structured_summary = serializers.SerializerMethodField()
     required_policy_versions = serializers.SerializerMethodField()
     allowed_actions = serializers.SerializerMethodField()
     blocking_reasons = serializers.SerializerMethodField()
+    masked_beneficiary = serializers.SerializerMethodField()
 
     class Meta:
         model = OwnerPaymentProfile
@@ -75,29 +77,62 @@ class OwnerPaymentProfileSerializer(serializers.ModelSerializer):
             "requirements",
             "accepted_policy_versions",
             "policy_summary",
+            "structured_summary",
             "required_policy_versions",
             "allowed_actions",
             "blocking_reasons",
         ]
 
+    def _is_arabic(self):
+        request = self.context.get("request")
+        if not request:
+            return False
+        lang = getattr(request, "LANGUAGE_CODE", "")
+        if not lang:
+            headers = getattr(request, "headers", {})
+            accept_lang = headers.get("Accept-Language") if hasattr(headers, "get") else ""
+            if not accept_lang and hasattr(request, "META"):
+                accept_lang = request.META.get("HTTP_ACCEPT_LANGUAGE", "")
+            return "ar" in str(accept_lang).lower()
+        return str(lang).lower().startswith("ar")
+
     def get_policy_summary(self, obj):
+        if self._is_arabic():
+            return "عمولة 10% على إيجار الفترة الأولى يدفعها المالك. عمولة تجديد 0%. رسوم خدمة المستأجر 0 ج.م."
+        return "10% commission on first-period base rent, paid by owner. 0% renewal commission. 0 EGP tenant service fee."
+
+    def get_structured_summary(self, obj):
         policy = RentalCommercialPolicy.objects.filter(
             version="rental-policy-v1", is_active=True
         ).first()
         return policy.summary if policy else {}
 
+    def get_masked_beneficiary(self, obj):
+        if not obj.masked_beneficiary:
+            return ""
+        if isinstance(obj.masked_beneficiary, str):
+            return obj.masked_beneficiary
+        if isinstance(obj.masked_beneficiary, dict):
+            bank = obj.masked_beneficiary.get("bank_name") or ""
+            account = obj.masked_beneficiary.get("account_number") or obj.masked_beneficiary.get("last4") or ""
+            if bank and account:
+                return f"{bank} •••• {account}"
+            return str(account or bank or "")
+        return ""
+
     def get_required_policy_versions(self, obj):
         return ["rental-policy-v1"]
 
     def get_allowed_actions(self, obj):
-        return [] if obj.status == OwnerPaymentProfile.Status.READY else ["onboard"]
+        return [] if obj.status == OwnerPaymentProfile.Status.READY else ["onboard_beneficiary"]
 
     def get_blocking_reasons(self, obj):
+        is_ar = self._is_arabic()
         reasons = []
         if obj.status != OwnerPaymentProfile.Status.READY:
-            reasons.append("Beneficiary onboarding is incomplete.")
+            reasons.append("يلزم استكمال إعداد حساب المستفيد." if is_ar else "Beneficiary onboarding is incomplete.")
         if "rental-policy-v1" not in obj.accepted_policy_versions:
-            reasons.append("The required rental policy has not been accepted.")
+            reasons.append("لم يتم قبول سياسة التأجير المطلوبة." if is_ar else "The required rental policy has not been accepted.")
         return reasons
 
 

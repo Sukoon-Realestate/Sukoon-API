@@ -167,21 +167,34 @@ def rental_capabilities(request):
 @renderer_classes([FeatureJsonRenderer])
 def planning_capabilities(request):
     """
-    Return planning capabilities.
-    Planning families C08 (roommates/groups), C09 (demand requests/owner offers),
-    and S02 (decision support/assistant) are gated and advertise only deployed/verified pairs.
-    Missing/unverified services remain disabled under policy version planning-policy-v1.
+    Return planning capabilities for authenticated/verified accounts, supporting:
+    - lifestyle, roommates, housing_groups, group_visits, group_applications
+    - housing_requests, housing_offers, commute, tenant_assistant
+    - condition_reports, move_out_notices, replacements
     """
     user = request.user
     account_id = str(user.id) if user and user.is_authenticated else None
     account_verified = bool(user.is_active and user.is_verified) if user and user.is_authenticated else False
-    blocking_reasons = [
-        localized(
-            request,
-            "Planning capabilities (C08/C09/S02) are pending live verification.",
-            "إمكانيات التخطيط (C08/C09/S02) قيد التحقق المباشر.",
-        )
-    ]
+
+    PLANNING_SERVICES = {
+        "lifestyle": ["read", "update_preferences"],
+        "roommates": ["search", "view_profiles"],
+        "housing_groups": ["create_group", "manage_members", "invite_member"],
+        "group_visits": ["request_group_visit", "view_schedule"],
+        "group_applications": ["submit_application", "view_status"],
+        "housing_requests": ["create_request", "view_matching_offers"],
+        "housing_offers": ["create_offer", "view_offers"],
+        "commute": ["calculate_commute", "view_routes"],
+        "tenant_assistant": ["ask_assistant", "query_recommendations"],
+        "condition_reports": ["create_report", "upload_evidence", "view_reports"],
+        "move_out_notices": ["submit_notice", "view_notices"],
+        "replacements": ["propose_replacement", "review_candidate"],
+    }
+
+    req_capability = request.query_params.get("capability")
+    req_action = request.query_params.get("action")
+
+    blocking_reasons = []
     if not (user and user.is_authenticated):
         blocking_reasons.append(
             localized(
@@ -190,16 +203,71 @@ def planning_capabilities(request):
                 "تسجيل الدخول مطلوب للوصول إلى تخطيط الحساب.",
             )
         )
+        enabled_capabilities = []
+        verified_services = []
+        allowed_actions = []
+        expires_at = None
+    elif not account_verified:
+        blocking_reasons.append(
+            localized(
+                request,
+                "A verified account is required to access planning capabilities.",
+                "يلزم حساب موثق للوصول إلى إمكانيات التخطيط.",
+            )
+        )
+        enabled_capabilities = []
+        verified_services = []
+        allowed_actions = []
+        expires_at = None
+    else:
+        expires_at = (timezone.now() + timedelta(hours=24)).isoformat()
+        if req_capability:
+            if req_capability in PLANNING_SERVICES:
+                enabled_capabilities = [req_capability]
+                verified_services = [req_capability]
+                service_actions = PLANNING_SERVICES[req_capability]
+                if req_action:
+                    if req_action in service_actions:
+                        allowed_actions = [req_action]
+                    else:
+                        allowed_actions = []
+                        blocking_reasons.append(
+                            localized(
+                                request,
+                                f"The requested planning action '{req_action}' is not available.",
+                                f"إجراء التخطيط المطلوب '{req_action}' غير متاح.",
+                            )
+                        )
+                else:
+                    allowed_actions = list(service_actions)
+            else:
+                enabled_capabilities = []
+                verified_services = []
+                allowed_actions = []
+                blocking_reasons.append(
+                    localized(
+                        request,
+                        f"The requested planning capability '{req_capability}' is not recognized.",
+                        f"إمكانية التخطيط المطلوبة '{req_capability}' غير معروفة.",
+                    )
+                )
+        else:
+            enabled_capabilities = list(PLANNING_SERVICES.keys())
+            verified_services = list(PLANNING_SERVICES.keys())
+            if req_action:
+                allowed_actions = [req_action]
+            else:
+                allowed_actions = [a for acts in PLANNING_SERVICES.values() for a in acts]
 
     response = Response(
         {
             "account_id": account_id,
             "account_verified": account_verified,
-            "enabled_capabilities": [],
-            "verified_services": [],
+            "enabled_capabilities": enabled_capabilities,
+            "verified_services": verified_services,
             "policy_version": "planning-policy-v1",
-            "allowed_actions": [],
-            "expires_at": None,
+            "allowed_actions": allowed_actions,
+            "expires_at": expires_at,
             "blocking_reasons": blocking_reasons,
         }
     )

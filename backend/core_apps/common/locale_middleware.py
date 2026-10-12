@@ -24,13 +24,13 @@ def is_mobile_request(request: HttpRequest) -> bool:
         return False
 
     # * Mobile APIs are versioned under /api/v1/
-    return path.startswith("/api/v1/")
+    return path.startswith("/api/v1/") or "/api/v1/" in path or path.startswith("/advertising/")
 
 
 def resolve_request_language(request: HttpRequest) -> str:
     """
     Resolves the language ('ar' or 'en') for the mobile request.
-    Supports ?lang= query param and Accept-Language header.
+    Supports ?lang= query param and Accept-Language header (including q-factor weights).
     Defaults to 'en' if not provided or unspecified.
     """
     # ? Query param override for flexibility and testing
@@ -42,17 +42,36 @@ def resolve_request_language(request: HttpRequest) -> str:
         if clean.startswith("en"):
             return "en"
 
-    # ? Parse Accept-Language header (e.g. 'ar', 'ar-EG', 'ar,en;q=0.9', 'en-US,en;q=0.5')
-    accept_language = request.headers.get("Accept-Language") or request.META.get(
-        "HTTP_ACCEPT_LANGUAGE", ""
-    )
+    # ? Parse Accept-Language header
+    accept_language = ""
+    if hasattr(request, "headers") and hasattr(request.headers, "get"):
+        accept_language = request.headers.get("Accept-Language") or request.headers.get("accept-language") or ""
+    if not accept_language and hasattr(request, "META"):
+        accept_language = request.META.get("HTTP_ACCEPT_LANGUAGE", "")
+
     if accept_language:
-        # Check standard languages
-        parts = [p.strip().split(";")[0].lower() for p in accept_language.split(",") if p.strip()]
-        for part in parts:
-            if part.startswith("ar"):
+        weighted = []
+        for part in accept_language.split(","):
+            part = part.strip()
+            if not part:
+                continue
+            subparts = part.split(";")
+            lang_tag = subparts[0].strip().lower()
+            q = 1.0
+            for param in subparts[1:]:
+                param = param.strip()
+                if param.startswith("q="):
+                    try:
+                        q = float(param[2:])
+                    except ValueError:
+                        pass
+            weighted.append((q, lang_tag))
+
+        weighted.sort(key=lambda x: x[0], reverse=True)
+        for _, tag in weighted:
+            if tag.startswith("ar"):
                 return "ar"
-            if part.startswith("en"):
+            if tag.startswith("en"):
                 return "en"
 
     return "en"

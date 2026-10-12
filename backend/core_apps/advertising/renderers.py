@@ -11,11 +11,13 @@ class AdvertisingJsonRenderer(JSONRenderer):
     def render(self, data, accepted_media_type=None, renderer_context=None):
         response = (renderer_context or {}).get("response")
         request = (renderer_context or {}).get("request")
-        request_language = getattr(request, "LANGUAGE_CODE", "en")
+        
+        # Resolve effective language from view/middleware/headers
+        from .views import language as get_effective_lang
+        request_language = get_effective_lang(request) if request else "en"
+        
         if response is not None:
-            response["Content-Language"] = (
-                "ar" if str(request_language).startswith("ar") else "en"
-            )
+            response["Content-Language"] = request_language
             response["Vary"] = "Accept-Language"
             if response.status_code >= 400:
                 response["Cache-Control"] = "no-store"

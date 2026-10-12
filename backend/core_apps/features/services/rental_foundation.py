@@ -194,9 +194,13 @@ def capabilities_for(user, subject, requested_action=""):
         enabled.extend(["rental_interests", "rental_agreements"])
     elif phase2_ready and isinstance(subject, (User, Property, OwnerPaymentProfile)):
         enabled.extend(["rental_interests", "rental_agreements"])
+        if isinstance(subject, OwnerPaymentProfile):
+            enabled.append("owner_payouts")
 
     if phase2_ready:
-        if isinstance(subject, (User, OwnerPaymentProfile)):
+        if isinstance(subject, OwnerPaymentProfile):
+            allowed.extend(["onboard", "onboard_beneficiary"])
+        elif isinstance(subject, User):
             allowed.append("onboard")
         elif isinstance(subject, Property):
             allowed.append(

@@ -195,7 +195,7 @@ def _notify(user, notification_type, title, action_type, target_id, **context):
 @renderer_classes([FeatureJsonRenderer])
 def owner_payment_profile(request):
     profile = get_or_create_owner_profile(request.user)
-    return Response(OwnerPaymentProfileSerializer(profile).data)
+    return Response(OwnerPaymentProfileSerializer(profile, context={"request": request}).data)
 
 
 @api_view(["POST"])

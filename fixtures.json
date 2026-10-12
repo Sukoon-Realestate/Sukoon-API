@@ -8,7 +8,7 @@
       "start_date": "2026-10-14",
       "end_date": "2027-10-14",
       "rent": {
-        "amount_minor": 150000,
+        "amount_minor": 1500000,
         "currency": "EGP",
         "exponent": 2
       }

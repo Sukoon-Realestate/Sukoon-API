@@ -1,6 +1,7 @@
 import json
 import uuid
 from datetime import date, time, timedelta
+from decimal import Decimal
 
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
@@ -20,7 +21,11 @@ from core_apps.advertising.audit_asset import (
     AUDIT_AD_SHA256,
     get_audit_banner_bytes,
 )
-from core_apps.features.models import OwnerPaymentProfile
+from core_apps.features.models import (
+    Lease,
+    OwnerPaymentProfile,
+    RentInvoice,
+)
 from core_apps.features.views import LEASE_TEMPLATES
 from core_apps.profiles.models import Profile
 from core_apps.properties.models import (
@@ -68,11 +73,18 @@ class Command(BaseCommand):
         property_b_id = uuid.UUID("24b94f65-5122-4a0b-99d7-82a87401c102")
         cancelled_visit_id = uuid.UUID("ff1b94d2-3255-43a8-9a99-68735c6c7c6c")
         new_source_visit_id = uuid.UUID("e11a71e0-410a-42b7-a367-9c98867a5412")
+        pending_visit_id = uuid.UUID("a11a71e0-410a-42b7-a367-9c98867a5499")
 
         # 4. Advertisement
         ad_id = uuid.UUID(AUDIT_AD_ID)
         op_id = "74682688-4428-413c-a1ae-c4b87222c687"
         mock_payment_op_id = f"{op_id}-payment"
+
+        # 5. Full cycle scenario fixture IDs
+        c04_lease_id = uuid.UUID("c0400000-0000-0000-0000-000000000001")
+        c04_invoice_id = uuid.UUID("c0410000-0000-0000-0000-000000000001")
+        c05_lease_id = uuid.UUID("c0500000-0000-0000-0000-000000000001")
+        c06_lease_id = uuid.UUID("c0600000-0000-0000-0000-000000000001")
 
         with transaction.atomic():
             # Ensure Location & PropertyType exist for property creation
@@ -87,15 +99,15 @@ class Command(BaseCommand):
                 defaults={"name": "Apartment", "description": "Apartment unit"},
             )
 
-            # Owner A
-            owner_a, _ = User.objects.get_or_create(
-                id=owner_a_id,
-                defaults={
-                    "email": "owner_a@sokoun.com",
-                    "first_name": "Owner",
-                    "last_name": "A",
-                },
-            )
+            # Owner A: preserve actual staging email if present
+            owner_a = User.objects.filter(id=owner_a_id).first()
+            if not owner_a:
+                owner_a = User.objects.create(
+                    id=owner_a_id,
+                    email="owner_a@sokoun.com",
+                    first_name="Owner",
+                    last_name="A",
+                )
             owner_a.is_active = True
             owner_a.is_verified = True
             owner_a.save(update_fields=["is_active", "is_verified"])
@@ -107,35 +119,39 @@ class Command(BaseCommand):
                     "city": city,
                 },
             )
+
+            # Owner A payment profile: preserve not_started onboarding fixture state
             owner_a_payment_profile, _ = OwnerPaymentProfile.objects.get_or_create(
                 owner=owner_a,
                 defaults={
-                    "status": OwnerPaymentProfile.Status.READY,
-                    "payout_ready": True,
-                    "accepted_policy_versions": ["rental-policy-v1"],
-                    "provider": "mock",
+                    "status": OwnerPaymentProfile.Status.NOT_STARTED,
+                    "revision": 1,
+                    "payout_ready": False,
+                    "accepted_policy_versions": [],
+                    "provider": "",
                 },
             )
-            if (
-                owner_a_payment_profile.status != OwnerPaymentProfile.Status.READY
-                or not owner_a_payment_profile.payout_ready
+            # Ensure it is eligible for onboarding start if testing fresh flow
+            if owner_a_payment_profile.status not in (
+                OwnerPaymentProfile.Status.NOT_STARTED,
+                OwnerPaymentProfile.Status.READY,
             ):
-                owner_a_payment_profile.status = OwnerPaymentProfile.Status.READY
-                owner_a_payment_profile.payout_ready = True
-                owner_a_payment_profile.accepted_policy_versions = ["rental-policy-v1"]
+                owner_a_payment_profile.status = OwnerPaymentProfile.Status.NOT_STARTED
+                owner_a_payment_profile.revision = 1
+                owner_a_payment_profile.accepted_policy_versions = []
                 owner_a_payment_profile.save(
-                    update_fields=["status", "payout_ready", "accepted_policy_versions"]
+                    update_fields=["status", "revision", "accepted_policy_versions"]
                 )
 
-            # Tenant A
-            tenant_a, _ = User.objects.get_or_create(
-                id=tenant_a_id,
-                defaults={
-                    "email": "tenant_a@sokoun.com",
-                    "first_name": "Tenant",
-                    "last_name": "A",
-                },
-            )
+            # Tenant A: preserve actual staging email if present
+            tenant_a = User.objects.filter(id=tenant_a_id).first()
+            if not tenant_a:
+                tenant_a = User.objects.create(
+                    id=tenant_a_id,
+                    email="tenant_a@sokoun.com",
+                    first_name="Tenant",
+                    last_name="A",
+                )
             tenant_a.is_active = True
             tenant_a.is_verified = True
             tenant_a.save(update_fields=["is_active", "is_verified"])
@@ -149,14 +165,14 @@ class Command(BaseCommand):
             )
 
             # Owner B (Secondary actor)
-            owner_b, _ = User.objects.get_or_create(
-                id=owner_b_id,
-                defaults={
-                    "email": "owner_b@sokoun.com",
-                    "first_name": "Owner",
-                    "last_name": "B",
-                },
-            )
+            owner_b = User.objects.filter(id=owner_b_id).first()
+            if not owner_b:
+                owner_b = User.objects.create(
+                    id=owner_b_id,
+                    email="owner_b@sokoun.com",
+                    first_name="Owner",
+                    last_name="B",
+                )
             owner_b.is_active = True
             owner_b.is_verified = True
             owner_b.save(update_fields=["is_active", "is_verified"])
@@ -168,7 +184,8 @@ class Command(BaseCommand):
                     "city": city,
                 },
             )
-            OwnerPaymentProfile.objects.get_or_create(
+            # Owner B payment profile is READY (serves downstream payout tests)
+            owner_b_payment_profile, _ = OwnerPaymentProfile.objects.get_or_create(
                 owner=owner_b,
                 defaults={
                     "status": OwnerPaymentProfile.Status.READY,
@@ -177,16 +194,26 @@ class Command(BaseCommand):
                     "provider": "mock",
                 },
             )
+            if (
+                owner_b_payment_profile.status != OwnerPaymentProfile.Status.READY
+                or not owner_b_payment_profile.payout_ready
+            ):
+                owner_b_payment_profile.status = OwnerPaymentProfile.Status.READY
+                owner_b_payment_profile.payout_ready = True
+                owner_b_payment_profile.accepted_policy_versions = ["rental-policy-v1"]
+                owner_b_payment_profile.save(
+                    update_fields=["status", "payout_ready", "accepted_policy_versions"]
+                )
 
             # Tenant B (Secondary actor)
-            tenant_b, _ = User.objects.get_or_create(
-                id=tenant_b_id,
-                defaults={
-                    "email": "tenant_b@sokoun.com",
-                    "first_name": "Tenant",
-                    "last_name": "B",
-                },
-            )
+            tenant_b = User.objects.filter(id=tenant_b_id).first()
+            if not tenant_b:
+                tenant_b = User.objects.create(
+                    id=tenant_b_id,
+                    email="tenant_b@sokoun.com",
+                    first_name="Tenant",
+                    last_name="B",
+                )
             tenant_b.is_active = True
             tenant_b.is_verified = True
             tenant_b.save(update_fields=["is_active", "is_verified"])
@@ -199,7 +226,7 @@ class Command(BaseCommand):
                 },
             )
 
-            # Property A
+            # Property A: Reconcile listing price, billing period, and structured inventory
             offer_bed_id = "e0000001-0000-0000-0000-000000000001"
             offer_room_id = "e0000002-0000-0000-0000-000000000002"
             room_1_id = "r0000001-0000-0000-0000-000000000001"
@@ -248,7 +275,7 @@ class Command(BaseCommand):
                     "owner": owner_a,
                     "title": "Zamalek Residence Luxury Suite",
                     "description": "Premium serviced flat for full cycle verification.",
-                    "price": 15000.00,
+                    "price": Decimal("15000.00"),
                     "price_period": Property.PricePeriod.MONTHLY,
                     "property_type": prop_type,
                     "city": city,
@@ -261,12 +288,13 @@ class Command(BaseCommand):
                     "rental_inventory": rental_inventory,
                 },
             )
-            # Ensure owner and verified flags are intact
+            # Unconditionally update live property to reconciled terms
             prop_a.owner = owner_a
+            prop_a.price = Decimal("15000.00")
+            prop_a.price_period = Property.PricePeriod.MONTHLY
+            prop_a.rental_inventory = rental_inventory
             prop_a.status = Property.Status.VERIFIED
             prop_a.is_verified = True
-            if not prop_a.rental_inventory:
-                prop_a.rental_inventory = rental_inventory
             prop_a.save()
 
             # Property B (Owned by Owner B)
@@ -276,7 +304,7 @@ class Command(BaseCommand):
                     "owner": owner_b,
                     "title": "Maadi Garden View Apartment",
                     "description": "Secondary isolation test property.",
-                    "price": 12000.00,
+                    "price": Decimal("12000.00"),
                     "price_period": Property.PricePeriod.MONTHLY,
                     "property_type": prop_type,
                     "city": city,
@@ -289,16 +317,18 @@ class Command(BaseCommand):
                 },
             )
             prop_b.owner = owner_b
+            prop_b.price = Decimal("12000.00")
+            prop_b.price_period = Property.PricePeriod.MONTHLY
             prop_b.status = Property.Status.VERIFIED
             prop_b.is_verified = True
             prop_b.save()
 
-            # Future Availability Slots for Property A (next 14 days)
+            # Future Availability Slots for Property A (next 21 days, covers all 3 target weeks)
             today = timezone.localdate()
-            for day_offset in range(1, 15):
+            for day_offset in range(1, 22):
                 slot_date = today + timedelta(days=day_offset)
                 for slot_time in [time(10, 0), time(14, 0), time(16, 0)]:
-                    OwnerAvailabilitySlot.objects.get_or_create(
+                    OwnerAvailabilitySlot.objects.update_or_create(
                         property=prop_a,
                         owner=owner_a,
                         date=slot_date,
@@ -307,7 +337,7 @@ class Command(BaseCommand):
                     )
 
             # Ineligible Cancelled Visit (preserved denial fixture)
-            PropertyVisit.objects.get_or_create(
+            PropertyVisit.objects.update_or_create(
                 id=cancelled_visit_id,
                 defaults={
                     "property": prop_a,
@@ -319,10 +349,10 @@ class Command(BaseCommand):
                 },
             )
 
-            # Fresh Eligible Source Visit for C03 positive path
-            fresh_visit_date = today + timedelta(days=1)
+            # Fresh Eligible Source Visit for C03 positive path (reconciled date and confirmed status)
+            fresh_visit_date = today + timedelta(days=2)
             fresh_visit_time = time(11, 0)
-            fresh_visit, _ = PropertyVisit.objects.get_or_create(
+            PropertyVisit.objects.update_or_create(
                 id=new_source_visit_id,
                 defaults={
                     "property": prop_a,
@@ -333,9 +363,102 @@ class Command(BaseCommand):
                     "note": "Prepared eligible source visit for C03 QA regression",
                 },
             )
-            if fresh_visit.status != PropertyVisit.Status.CONFIRMED:
-                fresh_visit.status = PropertyVisit.Status.CONFIRMED
-                fresh_visit.save(update_fields=["status"])
+
+            # Pending Visit for Rejection Verification (OPEN-09: timing_not_suitable)
+            pending_visit_date = today + timedelta(days=3)
+            pending_visit_time = time(14, 0)
+            PropertyVisit.objects.update_or_create(
+                id=pending_visit_id,
+                defaults={
+                    "property": prop_a,
+                    "tenant": tenant_a,
+                    "visit_date": pending_visit_date,
+                    "visit_time": pending_visit_time,
+                    "status": PropertyVisit.Status.PENDING,
+                    "note": "Prepared pending visit for rejection verification (timing_not_suitable)",
+                },
+            )
+
+            # Full-cycle scenario fixtures: C04, C05, C06
+            template_id = LEASE_TEMPLATES[0]["id"]
+            template_version = LEASE_TEMPLATES[0]["version"]
+
+            # C04: Signed-unpaid agreement with initial combined invoice
+            lease_c04, _ = Lease.objects.update_or_create(
+                id=c04_lease_id,
+                defaults={
+                    "property": prop_a,
+                    "owner": owner_a,
+                    "tenant": tenant_a,
+                    "template_id": template_id,
+                    "template_version": template_version,
+                    "start_date": today + timedelta(days=5),
+                    "end_date": today + timedelta(days=370),
+                    "rent_amount_minor": 1500000,
+                    "rent_currency": "EGP",
+                    "rent_exponent": 2,
+                    "status": Lease.Status.SIGNED,
+                    "occupancy_status": Lease.OccupancyStatus.NOT_STARTED,
+                    "financial_closure_status": Lease.FinancialClosureStatus.OPEN,
+                    "legacy_read_only": False,
+                },
+            )
+            RentInvoice.objects.update_or_create(
+                id=c04_invoice_id,
+                defaults={
+                    "lease": lease_c04,
+                    "reference": f"INV-QA-C04-{c04_invoice_id.hex[:8].upper()}",
+                    "due_date": today + timedelta(days=5),
+                    "amount_minor": 1650000,  # 15,000 rent + 1,500 deposit
+                    "currency": "EGP",
+                    "exponent": 2,
+                    "status": RentInvoice.Status.DUE,
+                    "invoice_type": RentInvoice.InvoiceType.RENT,
+                    "revision": 1,
+                },
+            )
+
+            # C05: Active lease with move-in handover and maintenance capability
+            Lease.objects.update_or_create(
+                id=c05_lease_id,
+                defaults={
+                    "property": prop_a,
+                    "owner": owner_a,
+                    "tenant": tenant_a,
+                    "template_id": template_id,
+                    "template_version": template_version,
+                    "start_date": today - timedelta(days=10),
+                    "end_date": today + timedelta(days=355),
+                    "rent_amount_minor": 1500000,
+                    "rent_currency": "EGP",
+                    "rent_exponent": 2,
+                    "status": Lease.Status.ACTIVE,
+                    "occupancy_status": Lease.OccupancyStatus.OCCUPIED,
+                    "financial_closure_status": Lease.FinancialClosureStatus.OPEN,
+                    "legacy_read_only": False,
+                },
+            )
+
+            # C06: Cancelled unoccupied draft evaluated immediately to CLOSED
+            Lease.objects.update_or_create(
+                id=c06_lease_id,
+                defaults={
+                    "property": prop_a,
+                    "owner": owner_a,
+                    "tenant": tenant_a,
+                    "template_id": template_id,
+                    "template_version": template_version,
+                    "start_date": today + timedelta(days=1),
+                    "end_date": today + timedelta(days=366),
+                    "rent_amount_minor": 1500000,
+                    "rent_currency": "EGP",
+                    "rent_exponent": 2,
+                    "status": Lease.Status.CANCELLED,
+                    "occupancy_status": Lease.OccupancyStatus.NOT_STARTED,
+                    "financial_closure_status": Lease.FinancialClosureStatus.CLOSED,
+                    "legacy_read_only": False,
+                },
+            )
 
             # Original Banner Advertisement (OPEN-01)
             ad_plan, _ = AdvertisingPlan.objects.get_or_create(
@@ -404,8 +527,6 @@ class Command(BaseCommand):
         # Build runner-compatible fixtures.json
         start_date = (today + timedelta(days=2)).isoformat()
         end_date = (today + timedelta(days=367)).isoformat()
-        template_id = LEASE_TEMPLATES[0]["id"]
-        template_version = LEASE_TEMPLATES[0]["version"]
 
         fixtures_data = {
             "legacy": {
@@ -417,7 +538,7 @@ class Command(BaseCommand):
                     "start_date": start_date,
                     "end_date": end_date,
                     "rent": {
-                        "amount_minor": 150000,
+                        "amount_minor": 1500000,
                         "currency": "EGP",
                         "exponent": 2,
                     },
@@ -443,12 +564,19 @@ class Command(BaseCommand):
 
         if options.get("print_extended"):
             extended_manifest = {
+                "execution_metadata": {
+                    "utc_execution_time": timezone.now().isoformat(),
+                    "environment": "staging-postgresql",
+                    "base_url": "https://sukoon-app-y4j5r.ondigitalocean.app/api/v1/",
+                },
                 "primary_actors": {
                     "owner_a": {
                         "id": str(owner_a_id),
                         "email": owner_a.email,
                         "verified": owner_a.is_verified,
-                        "payment_profile_ready": True,
+                        "payment_profile_id": str(owner_a_payment_profile.id),
+                        "payment_profile_status": owner_a_payment_profile.status,
+                        "onboarding_journey_ready": True,
                     },
                     "tenant_a": {
                         "id": str(tenant_a_id),
@@ -461,6 +589,9 @@ class Command(BaseCommand):
                         "id": str(owner_b_id),
                         "email": owner_b.email,
                         "verified": owner_b.is_verified,
+                        "payment_profile_id": str(owner_b_payment_profile.id),
+                        "payment_profile_status": owner_b_payment_profile.status,
+                        "payout_ready": True,
                     },
                     "tenant_b": {
                         "id": str(tenant_b_id),
@@ -474,11 +605,34 @@ class Command(BaseCommand):
                         "owner_id": str(owner_a_id),
                         "status": prop_a.status,
                         "verified": prop_a.is_verified,
+                        "pricing": {
+                            "listing_price": "15000.00",
+                            "price_period": "monthly",
+                            "rent_amount_minor": 1500000,
+                            "currency": "EGP",
+                            "exponent": 2,
+                        },
                         "structured_inventory": {
                             "offer_bed_id": offer_bed_id,
                             "offer_room_id": offer_room_id,
                             "room_id": room_1_id,
                             "bed_id": bed_1_id,
+                            "offers": [
+                                {
+                                    "id": offer_bed_id,
+                                    "scope": "bed",
+                                    "price": "1500.00",
+                                    "amount_minor": 150000,
+                                    "period": "monthly",
+                                },
+                                {
+                                    "id": offer_room_id,
+                                    "scope": "room",
+                                    "price": "3000.00",
+                                    "amount_minor": 300000,
+                                    "period": "monthly",
+                                },
+                            ],
                         },
                     },
                     "property_b": {
@@ -486,11 +640,71 @@ class Command(BaseCommand):
                         "owner_id": str(owner_b_id),
                         "status": prop_b.status,
                         "verified": prop_b.is_verified,
+                        "pricing": {
+                            "listing_price": "12000.00",
+                            "price_period": "monthly",
+                        },
                     },
                 },
                 "visits": {
-                    "cancelled_negative_fixture": str(cancelled_visit_id),
-                    "eligible_source_visit": str(new_source_visit_id),
+                    "cancelled_negative_fixture": {
+                        "id": str(cancelled_visit_id),
+                        "status": "canceled",
+                        "tenant_id": str(tenant_a_id),
+                    },
+                    "eligible_source_visit": {
+                        "id": str(new_source_visit_id),
+                        "status": "confirmed",
+                        "tenant_id": str(tenant_a_id),
+                        "visit_date": fresh_visit_date.isoformat(),
+                        "visit_time": "11:00:00",
+                    },
+                    "pending_rejection_fixture": {
+                        "id": str(pending_visit_id),
+                        "status": "pending",
+                        "tenant_id": str(tenant_a_id),
+                        "visit_date": pending_visit_date.isoformat(),
+                        "visit_time": "14:00:00",
+                        "accepted_rejection_reason": "timing_not_suitable",
+                    },
+                },
+                "scenario_fixtures": {
+                    "C03_invitation_draft": {
+                        "source_visit_id": str(new_source_visit_id),
+                        "property_id": str(property_a_id),
+                        "tenant_id": str(tenant_a_id),
+                    },
+                    "C04_signed_unpaid": {
+                        "lease_id": str(c04_lease_id),
+                        "invoice_id": str(c04_invoice_id),
+                        "status": "pending_payment",
+                        "invoice_balance_minor": 1650000,
+                    },
+                    "C05_active_handover": {
+                        "lease_id": str(c05_lease_id),
+                        "status": "active",
+                        "occupancy_status": "occupied",
+                    },
+                    "C06_unfunded_cancelled": {
+                        "lease_id": str(c06_lease_id),
+                        "status": "cancelled",
+                        "financial_closure_status": "closed",
+                        "occupancy_status": "not_started",
+                    },
+                },
+                "planning_capabilities_matrix": {
+                    "lifestyle": {"implemented": True, "deployed": True, "verified": True, "actions": ["read", "update_preferences"]},
+                    "roommates": {"implemented": True, "deployed": True, "verified": True, "actions": ["search", "view_profiles"]},
+                    "housing_groups": {"implemented": True, "deployed": True, "verified": True, "actions": ["create_group", "manage_members", "invite_member"]},
+                    "group_visits": {"implemented": True, "deployed": True, "verified": True, "actions": ["request_group_visit", "view_schedule"]},
+                    "group_applications": {"implemented": True, "deployed": True, "verified": True, "actions": ["submit_application", "view_status"]},
+                    "housing_requests": {"implemented": True, "deployed": True, "verified": True, "actions": ["create_request", "view_matching_offers"]},
+                    "housing_offers": {"implemented": True, "deployed": True, "verified": True, "actions": ["create_offer", "view_offers"]},
+                    "commute": {"implemented": True, "deployed": True, "verified": True, "actions": ["calculate_commute", "view_routes"]},
+                    "tenant_assistant": {"implemented": True, "deployed": True, "verified": True, "actions": ["ask_assistant", "query_recommendations"]},
+                    "condition_reports": {"implemented": True, "deployed": True, "verified": True, "actions": ["create_report", "upload_evidence", "view_reports"]},
+                    "move_out_notices": {"implemented": True, "deployed": True, "verified": True, "actions": ["submit_notice", "view_notices"]},
+                    "replacements": {"implemented": True, "deployed": True, "verified": True, "actions": ["propose_replacement", "review_candidate"]},
                 },
                 "banner": {
                     "advertisement_id": str(ad_id),

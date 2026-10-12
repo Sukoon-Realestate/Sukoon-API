@@ -1,242 +1,232 @@
 # Sokoun: current backend fixes and full-cycle test setup
 
-Prepared: **2026-10-12**. Based on the staging observations recorded **2026-10-12, 12:23–12:29 UTC**, after `SOKOUN_OWNER_TENANT_BACKEND_RETURN (1).md`. This document is a focused work order; preparing it did not run another live audit.
+Updated **2026-10-12**, after live verification of `SOKOUN_OWNER_TENANT_CURRENT_FIXES_HANDOFF.md` against staging at **13:54–14:01 UTC**.
 
-**Backend team: fix the open issues below, deploy them, and directly prepare the accounts, object relationships, permissions, service configuration and fixtures needed to execute the complete owner–tenant cycles.** Account/property setup is part of this work: complete it in staging and return the resulting IDs and evidence instead of handing that configuration back to mobile.
+**Backend team: complete the remaining work below in the deployed staging environment, including account, property, permission and provider setup. Return working fixtures and verification evidence so mobile can execute the complete cycles.** This file contains current defects and outstanding verification tasks only. Stable item IDs are retained for your next reply.
 
-Environment: **`https://sukoon-app-y4j5r.ondigitalocean.app/api/v1/`**, the nonproduction environment identified in your reply. All API paths below are relative to this base. Use normal application authorization with test accounts and sandbox providers. An account must receive the rights appropriate to its role and current resource state; making it a superuser or disabling object permissions would invalidate the cycle tests.
+Base URL: **`https://sukoon-app-y4j5r.ondigitalocean.app/api/v1/`**. Paths below are relative to this base. Use dedicated QA records, ordinary object authorization and sandbox providers. Complete setup directly; do not make the test accounts superusers, bypass verification or grant every action in every state.
 
-## 1. Open work to complete
+## 1. Remaining work
 
-| ID | Current problem or missing prerequisite | Backend action | Completion evidence |
-| --- | --- | --- | --- |
-| OPEN-01 | Original banner still serves different image bytes | Restore the original artwork on the existing advertisement and storage reference | Exact length/hash, same-operation mock activation/replay, independent placement/media and redeploy durability |
-| OPEN-02 | Advertising Arabic requests receive English responses | Repair effective language selection and cache variation | Same-URL alternating-language tests pass for both plans and public feed |
-| OPEN-03 | Arabic planning response contains English blocking reasons | Localize all server-owned reason strings | Arabic reasons and headers agree for guest, owner and tenant |
-| OPEN-04 | Promised `auth/token/refresh/` alias returns 404 | Deploy the alias to the canonical refresh implementation, or explicitly withdraw the alias contract | Authenticated POST/identity evidence at the agreed routes |
-| OPEN-05 | Working pair has no eligible source visit; secondary actors and advanced fixtures are missing | Perform the account/property/fixture setup in sections 2–4 directly | Actual IDs, relationships, current permissions and successful preflight calls |
-| OPEN-06 | Fresh cancellation, funded cancellation and first-read consistency remain unverified | Test new valid fixtures; correct the transition if any invariant fails | Cancellation response, collection/detail/center consistency, replay and financial-obligation tests |
-| OPEN-07 | Full signing/payment/stay/exit jobs and chat recovery lack deployed evidence | Configure real sandbox integrations, workers and scenario fixtures; execute the remaining journeys | Provider/job/event/ledger correlations and both actors' results |
-| OPEN-08 | C08/C09 and dependent planning services remain undeployed/gated | Implement and deploy those services, configure dependencies, then issue genuine account/action grants | Endpoint scenarios, current service verification, grants and expiry; flags alone do not complete implementation |
-| OPEN-09 | Exact deployed release, schema and test outputs are missing; visit rejection enum remains unconfirmed | Return the concrete release/evidence package and confirm client-compatible action bodies | Immutable release identity, migration outputs, schema artifact/hash and exact sanitized request/response examples |
-
-These are the remaining actions. An unverified case is a verification task, not a claim that its implementation is necessarily defective.
-
-## 2. Exact staging records and direct setup instructions
-
-### 2.1 Use these existing identities
-
-The IDs below were resolved from the authenticated staging records. They are resource identifiers, not credentials.
-
-| Record | Actual ID | Required use |
+| ID | Current finding | Required result |
 | --- | --- | --- |
-| `owner_a` | `3b6d5dd4-2077-4bad-9c59-32717915035e` | Primary owner for the happy path and original banner recovery |
-| `tenant_a` | `9eef4201-0ca4-4fc1-b91f-9ef27551c0ea` | Primary tenant for the same property/offer/lease chain |
-| Existing owner property | `13954644-cc37-49d9-a772-f1a88be81401` | Prepare for eligible test visits if suitable; otherwise create a dedicated property under the same owner and return its ID |
-| Existing ineligible source visit | `ff1b94d2-3255-43a8-9a99-68735c6c7c6c` | Currently `canceled`; retain as the negative fixture and create a new eligible source |
-| Original advertisement | `85295dd1-f8bd-4c82-a903-9bdc3d90af98` | Repair in place; retain its owner and operation identities |
+| OPEN-02 | Arabic advertising plans/feed still return English headers and server text in both alternating request orders | Correct header-only localization and cache variation on the public deployment |
+| OPEN-05 | Supplied positive visit returns 404; advertised inventory/availability do not match staging; actor manifest and credentials are incomplete | Repair the actual staging fixture set and return verified IDs, relationships, credentials and valid terms |
+| OPEN-10 | Owner payment profile is not ready; its field types and onboarding action do not match the app; subject capability is disabled | Fix the serializer/action contract, enable legitimate scoped onboarding, and complete sandbox prerequisites |
+| OPEN-06 | New cancellation, collection-first consistency and funded/uncertain closure cases cannot yet run | Execute new unfunded and funded fixtures with authoritative closure, same-key replay and both actors' readbacks |
+| OPEN-07 | Signing/payment/stay/exit, worker and chat recovery claims lack deployed evidence | Supply complete scenario fixtures and actual provider/job/ledger/delivery results |
+| OPEN-08 | Planning services remain disabled with no verified services or grants | Implement/deploy/verify the required services, then issue real account/action grants |
+| OPEN-09 | Immutable serving release, schema, migrations and actual test outputs are absent | Return the deployment and evidence package in section 8; exercise the stated rejection body using a valid pending visit |
+| OPEN-01-V | Media durability across replicas/redeploy is unverified; immediate placement read was stale until cache expiry | Prove durable storage and specify/test the placement visibility bound; this is a remaining verification task |
 
-Confirm these relationships in the deployed database before applying setup. A different tenant's confirmed visit cannot authorize `tenant_a`. If the database no longer contains these records, report the environment mismatch and resolve it before creating unrelated substitutes.
+A missing fixture or evidence package is not proof that every underlying implementation is defective. Do not label those scenarios passed until they execute successfully.
 
-### 2.2 Configure accounts and permissions directly
+## 2. OPEN-02: advertising localization still fails
 
-| Actor / object | Backend must prepare | Authorization evidence to return |
-| --- | --- | --- |
-| `owner_a` | Active account, completed registration, valid test identity/owner eligibility; ownership of test listings/offers; any required sandbox entitlement, KYC and beneficiary setup | Current identity and actual owner-readiness response; owner can manage its property/availability and enter the applicable agreement/onboarding flow |
-| `tenant_a` | Active account, completed registration, valid test identity/tenant eligibility; any required test entitlement | Current identity; tenant can book the supplied slot, respond to its invitations, review/sign its agreement and pay its own eligible invoice |
-| `owner_b` | Create a separate active, verified owner with its own test property | Successful own-object access, then 403/404 for owner A's private resources |
-| `tenant_b` | Create a separate active, verified tenant with its own legitimate test relationship | Successful own-object access, then 403/404 for tenant A's private resources |
-| Test property and offers | Correct owner FK/relationship, normal publication/moderation eligibility, active supported rental offers, current revisions, valid pricing/policies, available inventory | Owner/private and tenant/public projections identify the same property and selected accommodation |
-| Visits/invitations/leases | Correct participant and parent relationships, current statuses, unexpired source/consent where required | Actions become available to the intended participant at the correct stage; another actor remains denied |
-| Invoice/deposit/payment | Correct lease, payer, currency, revision and ledger links; sandbox PSP configuration | Payable tenant invoice grants quote/checkout only when eligible; owner cannot pay or read unrelated tenant resources through a workspace override |
-| Private documents/evidence/chat | Participant-bound access, private storage and allowed counterparty relationship | Both intended parties can perform their permitted operations; other actors cannot fetch private content |
-
-Use the actual project models/services; this document does not assume a particular Django group name or a single `can_rent` flag exists. If a subscription/plan gates an operation, provision the appropriate **test entitlement** and return its scope/expiry. If a readiness blocker is missing sandbox configuration or a test-account field, configure it directly. Keep policy acceptance and signing as explicit actor actions in the main journey; expose the required versions and actions instead of silently accepting them for a real account.
-
-Provide working secondary credentials privately. Keep primary account IDs and the original advertisement association intact. For a new Google login exchange, use a legitimate fresh Google sign-in; do not extend or fabricate an expired Google ID token. A valid saved server session can support HTTP recovery tests while it remains valid.
-
-### 2.3 Prepare a usable property and new source visit
-
-1. Configure selectable future visit slots, based on the server clock and `Africa/Cairo`, with dates that remain valid through the scheduled QA run. Confirm agreement between owner availability/calendar and tenant `available_dates/`.
-2. For structured accommodation tests, create/prepare real `entire_property`, `room`, `room_group` and `bed` offers as supported by the application. Return stable offer/room/bed IDs, current offer revisions and canonical snapshots. Use separate inventory or non-overlapping scenarios so one test's hold cannot block another inadvertently.
-3. Create a **new** source visit connecting owner A's property to tenant A, in a backend-supported eligible `pending` or `confirmed`/`accepted` state. Return the exact stored token. Keep the cancelled visit unchanged as a denial case.
-4. Provide a fresh source with no consumed/expired invitation for the C03 positive scenario. Resolve ambiguous competing sources through normal test-data preparation; do not weaken source eligibility.
-5. Return current lease configuration, usable template/version, valid future start/end dates and server-approved Money rent. After the tenant accepts the new invitation, the owner picker must include that tenant; after draft creation it must exclude consumed consent.
-6. Supply an additional available slot for the main end-to-end booking journey. A pre-created source visit unblocks a focused C03 regression; it does not substitute for testing booking itself.
-
-Acceptance calls include owner `GET properties/owner/properties/{property_id}/availability/`, owner `GET properties/owner/visits/requests/{new_visit_id}/`, `GET features/v1/lease-configuration/`, and the correctly staged `GET features/v1/lease-tenants/?property_id=...`. Capture each actor's authorized response. `source_visit_id` belongs in the QA fixture manifest; it is **not** an extra field in the existing invitation POST body.
-
-## 3. Configure the real capability and action grants
-
-Permission setup must satisfy both capability discovery and resource-level authorization. A role name or `workspace=owner|tenant` does not grant access by itself.
-
-### 3.1 Rental services
-
-For the actual subject at each stage, query:
+At the public base, these exact URLs return `Content-Language: en` for `Accept-Language: ar`:
 
 ```text
-GET features/v1/rental-capabilities/?subject_id={actual_source_or_resource_id}&action={actual_action}
+GET advertising/v1/plans/
+GET advertising/v1/placements/tenant-home/
 ```
 
-Return the authenticated `account_id`, `account_verified:true`, supported nonempty `policy_version`, the required `enabled_capabilities`, and current `allowed_actions`. The resource itself must expose compatible actions/status/revision and remain authorized when the mutation executes. Test each actor separately. A closed lease granting only `rental_center` says nothing about permission on a new invitation, signed agreement or payable invoice.
+Plans still contain `Weekly`, `Monthly`, `Yearly` and `Available plans.`; feed messages remain English. `Vary: Accept-Language` is present. Reproduced with **en → ar → en → ar** and **ar → en → ar → en**, plus the real Flutter transport. A query override is not equivalent to the app's normal header-only request.
 
-Create new structured agreement fixtures with the supported writable contract and `legacy_read_only:false` where appropriate. Do not turn a historical read-only lease into a writable agreement by changing that flag alone.
+Resolve the effective locale before producing or caching server text. Review custom language helpers, Django middleware order, application cache keys and edge cache behavior in the actual serving release. Vary cached representations by the effective language and invalidate only affected stale entries. Django describes language-aware caching and header variation in its [cache documentation](https://docs.djangoproject.com/en/5.1/topics/cache/#the-per-site-cache).
 
-| Needed stage | Capability identifiers used by the app | Examples of actual action names |
+Acceptance: same-URL alternating requests, warm and cold cache, both languages and serving replicas. Assert headers, localized plan titles/messages and cache metadata. Preserve machine identifiers and user-written ad content.
+
+## 3. OPEN-05: prepare the actual accounts, property and source visit
+
+### 3.1 Bind setup to these records
+
+| Record | ID | Current finding / required action |
 | --- | --- | --- |
-| Interest and agreement | `rental_interests`, `rental_agreements`, `signed_documents` | `create_rental_interest`, `create_terms_proposal`, `create_lease`, `edit_lease`, `sign`; review/decision tokens depend on the current action |
-| Initial and recurring payments | `rent_checkout`, `rental_deposits` | `quote`, `checkout`, `reconcile` on the appropriate invoice/attempt |
-| Possession/evidence | `rental_handovers`, `condition_reports` | `create_rental_handover`, `edit_handover`, `upload_evidence`, plus the current review/acknowledgement action |
-| Ongoing stay | `rental_maintenance`, `rental_changes` | `create_maintenance_request`, the appropriate change action and participant decision |
-| Exit/settlement/dispute | `rental_settlement`, `rental_disputes` | `propose_settlement`, `create_rental_refund`, plus the permitted decision for the current state |
-| Owner payout, documents and review | `owner_payouts`, `signed_documents`, `rental_reviews`, `rental_center` | `onboard_beneficiary`, `request_statement`, `review_rental`, plus applicable payout decisions |
+| Owner A | `3b6d5dd4-2077-4bad-9c59-32717915035e` | Authenticated ID is correct; the reply's email does not match current-user data. Keep this identity and return its actual login mapping privately |
+| Tenant A | `9eef4201-0ca4-4fc1-b91f-9ef27551c0ea` | Same email mismatch; current authenticated ID is correct |
+| Owner B, claimed | `4c7e6ee5-3188-5cbe-815a-43828a26146f` | Supply working private credentials and prove distinct identity and appropriate ownership |
+| Tenant B, claimed | `af0a5312-1db5-502a-9f20-800a688221fb` | Supply working private credentials and prove distinct identity |
+| Property A | `13954644-cc37-49d9-a772-f1a88be81401` | Owner A relationship is confirmed; inventory and availability differ from the reply |
+| Positive visit, claimed | `e11a71e0-410a-42b7-a367-9c98867a5412` | Owner A detail returns **404**, `No PropertyVisit matches the given query.` |
+| Existing negative visit | `ff1b94d2-3255-43a8-9a99-68735c6c7c6c` | Remains cancelled; retain as a negative fixture |
+| Property B, claimed | `24b94f65-5122-4a0b-99d7-82a87401c102` | Public detail returns 404. Verify existence/publication and Owner B access; Owner A's 404 alone does not prove the isolation scenario |
 
-This is a list of capabilities needed across stages, **not a request to grant every action to every account**. Configure the prerequisites and derive the proper grants. In particular, signing belongs to the required signer, checkout to the invoice payer, and beneficiary/payout setup to the owner.
+A 404 establishes that the record is unavailable through the tested actor/endpoint; backend must distinguish absent data, wrong database/environment, hidden state and incorrect ownership. The owner's visit list contains the cancelled primary-tenant visit and a confirmed visit for a different tenant. That other tenant's visit cannot authorize Tenant A.
 
-For a payable invoice, return a fresh known revision, `invoice_status`, positive server balance, `can_pay:true` and permitted `quote`/`checkout` actions. The quote must cover the full combined amount and use the supported `rental-policy-v1`; checkout remains `invoice_id`, `quote_id`, `expected_revision`, `request_key`. Do not add a client amount or bypass quote validation to make the action available.
+Both primary sessions remain usable. Fresh owner Google authentication needs a current authorized login credential; the earlier ID token is expired. Secondary actor emails alone are not credentials. Deliver authentication inputs privately, outside the repository, and verify each through current-user identity after login/refresh. Do not overwrite established primary identities to match example emails.
 
-### 3.2 Planning and transition services
+### 3.2 Repair fixtures and verify their projections
 
-The remaining planning work needs implementation/deployment as well as permission configuration. After verifying a service, use:
+Run your supplied command against the **same deployed database and settings as this public URL**:
+
+```bash
+python manage.py prepare_owner_tenant_cycle_qa --output=fixtures.json --print-extended
+```
+
+Return sanitized command output, UTC execution time, serving release/environment identity and a generated manifest from persisted records. Keep the operation journal, financial history and consumed consent intact. The command must be additive and repeatable; do not reset the database. Return attachable JSON artifacts rather than a developer-local `file:///...` link.
+
+Complete these steps:
+
+1. Prepare an eligible, unconsumed source visit for the exact Owner A / Tenant A / Property A relationship. Return its real ID and status, then prove owner detail **200** and matching tenant/property IDs. Repair the claimed ID if it is the intended record, or clearly document its replacement in the manifest.
+2. Prepare selectable future availability. Observed week `2026-10-12` has `days:[]`; week `2026-10-19` has only Monday `12:00`; week `2026-10-26` has `days:[]`. The claimed 14 days at `10:00`, `14:00`, `16:00` are not present. Include actual slots, timezone and validity window for both the isolated C03 fixture and a fresh booking journey.
+3. Prepare structured room/bed/offer inventory with current revisions. `GET properties/{property_a}/` currently returns `rental_inventory.offers:[]`; the reply's room/bed/offer identifiers are not exposed. Verify the real IDs in the property response before declaring S01 or offer-aware flows ready. For legacy property mode, omit `offer_id` and `expected_offer_revision` together.
+4. Reconcile pricing and dates. The manifest states monthly `15000.00`; its lease Money `amount_minor:150000`, EGP exponent 2 means **1500.00 EGP**; the live property reports `price:"60000000.00"`, `price_period:"weekly"`. Return intended listing/offer/negotiated rent and billing period explicitly. If differences are intentional, identify the approved terms; mobile must not infer a conversion or charge an example amount. Refresh the supplied `2026-10-14` start date when necessary.
+5. Return current template/version and policy. The observed `eg-residential-v1`, version `1`, configuration permits creation, but that alone does not authorize an arbitrary tenant. After valid invitation acceptance, the picker must include Tenant A; after draft consumption, it must exclude consumed consent.
+6. Verify Property B under Owner B and test unrelated-object denial only after the target's authorized owner proves it exists. Prepare published competing properties/offers separately where C09 requires them.
+
+Required preflight paths:
 
 ```text
-GET features/v1/planning-capabilities/?capability={capability}&action={action}&subject_id={actual_subject_id}
+GET auth/users/me/
+GET properties/{property_id}/
+GET properties/owner/properties/{property_id}/availability/?week_start={YYYY-MM-DD}
+GET properties/owner/visits/requests/{source_visit_id}/
+GET features/v1/lease-configuration/
+GET features/v1/lease-tenants/?property_id={property_id}
 ```
 
-Subjectless collection discovery may omit `subject_id`; the resource endpoint must still enforce its parent/account scope. An enabled response needs the correct `account_id`, `account_verified:true`, nonempty `policy_version`, the service in **both** `enabled_capabilities` and `verified_services`, the actual `allowed_actions`, and a real future `expires_at`. Return localized reasons when a legitimate restriction applies.
+Keep `source_visit_id` in the QA manifest. The existing invitation POST uses `property_id`, `tenant_id`, `request_key` and, in offer mode, `offer_id` plus `expected_offer_revision`; it does not add a `source_visit_id` wire field. The server must validate the eligible relationship.
 
-Prepare these service families for the corresponding cycles: `lifestyle`, `roommates`, `housing_groups`, `group_visits`, `group_applications`, `housing_requests`, `housing_offers`, `commute`, `tenant_assistant`, `condition_reports`, `move_out_notices`, `replacements`. Example action names are `read`, `create` and the resource's declared action; do not reuse rental action names indiscriminately. Condition reports and tenancy transitions use this planning authorization path in the current app.
+## 4. OPEN-10: owner onboarding cannot proceed with the current response
 
-Do not advertise an unimplemented service merely to unblock the UI. Complete its route/storage/provider/job work, test it, then grant access to the designated test accounts. Return a per-service matrix of **implemented / deployed / verified / granted**, plus any external dependency with an owner and concrete next action.
-
-### 3.3 Coordinate the test build
-
-Backend permissions cannot change Flutter compile-time switches. Return the verified capability matrix so mobile can build with the corresponding `SOKOUN_*` flags. For example, hosted signing also needs `SOKOUN_LEASE_SIGNING`, while agreement/payment/handover flows use their corresponding flags. Full-cycle tests must keep `SOKOUN_BYPASS_VERIFICATION=false` and exercise normal server decisions.
-
-## 4. Supply distinct fixtures for the remaining journeys
-
-Prepare one untouched starting fixture for the full happy path, plus separate fixtures for destructive/negative branches. Seeded intermediate states are setup data; label them as such and do not report them as completed API transitions.
-
-| Scenario | Required preparation |
-| --- | --- |
-| C01 listing/visit/chat/review | Owner can create/manage a test listing; exact offers; future slots; bookable starting state; allowed conversation; a separate review-eligible visit |
-| C02 reject/cancel/resubmit | Separate pending and accepted visits; rejection reason compatibility; fresh resubmission slot; retained accepted-contact history |
-| C03 invite/legacy draft | New eligible source for the exact primary pair, current template/terms and unconsumed consent; unrelated B actors |
-| C04 agreement/sign/payment/move-in | Fresh interest/accepted invitation as required, server terms/policy, signer readiness, available inventory, hosted sandbox signing and checkout; separate signed-unpaid combined-invoice fixture for recovery tests |
-| C05 active stay | Active lease with paid initial invoice and move-in state, recurring billing schedule, maintenance evidence/costs and independent amendment/renewal/extension cases |
-| C06 exit/settlement | Separate clean unfunded cancellation, funded cancellation/refund, notice/move-out, settlement/deposit/dispute/payout and replacement cases; keep amounts and ledger links consistent |
-| C07 original advertisement | Existing ad and original operations, exact original artwork and owner authorization; no replacement record |
-| C08 group/roommate | Distinct discoverable test tenants, consent-controlled connection/chat, group administrator/member/invite and roster revisions, group visit/application fixtures |
-| C09 request/offer/compare | Tenant request, owner responses from correctly owned properties, two/three comparable offers, and selection handoff retaining exact offer identity; separate unrelated owner |
-| S01 exact accommodation | Coverage for the supported accommodation scopes with the same snapshot through booking, consent, agreement and occupancy |
-| S02 alerts/commute/assistant | Saved-search event/job fixture, routing sandbox and assistant configuration; verified account/service grants |
-| S03 recovery/isolation | Stable operation keys, durable lookup/receipt records, duplicate and lost-response tests, revoked/expired sessions and independent account-switch checks |
-
-Prefer an idempotent, additive Django management command using the existing domain services. Implement one if none exists; proposed command name: **`prepare_owner_tenant_cycle_qa`**. This is a requested backend utility, not a claim that the command already exists. Bind its fixture-set identity to this environment and primary pair; return created/reused IDs, revisions, validity windows and cleanup scope. Rerunning setup must not regenerate an unresolved operation key or erase financial/history records. Scope cleanup to dedicated disposable test fixtures; do not reset the shared database.
-
-Return a populated `fixtures.json` compatible with the current runner. The following is a **QA manifest template, not an API request**. Replace every `BACKEND_MUST_RETURN_...` value with the actual deployed value; money must contain real integer minor units. For an offer-aware C03 fixture add current `offer_id` and `expected_offer_revision`; omit both in legacy property mode.
+Owner A's `GET features/v1/owner-payment-profile/` returns:
 
 ```json
 {
-  "legacy": {
-    "property_id": "13954644-cc37-49d9-a772-f1a88be81401",
-    "source_visit_id": "BACKEND_MUST_RETURN_NEW_ELIGIBLE_VISIT_ID",
-    "draft": {
-      "template_id": "BACKEND_MUST_RETURN_CURRENT_TEMPLATE_ID",
-      "template_version": "BACKEND_MUST_RETURN_CURRENT_TEMPLATE_VERSION",
-      "start_date": "BACKEND_MUST_RETURN_VALID_YYYY_MM_DD",
-      "end_date": "BACKEND_MUST_RETURN_VALID_YYYY_MM_DD",
-      "rent": "BACKEND_MUST_REPLACE_WITH_MONEY_OBJECT"
-    }
+  "status": "not_started",
+  "revision": 1,
+  "provider": "",
+  "masked_beneficiary": {},
+  "policy_summary": {
+    "commission": "10% of first-period base rent, paid by owner",
+    "renewal_commission": "0%",
+    "tenant_service_fee": "0 EGP",
+    "processing_fee_payer": "platform"
   },
-  "banner": {
-    "advertisement_id": "85295dd1-f8bd-4c82-a903-9bdc3d90af98",
-    "operation_id": "74682688-4428-413c-a1ae-c4b87222c687",
-    "mock_operation_id": "74682688-4428-413c-a1ae-c4b87222c687-payment",
-    "artwork_sha256": "dc2be014d6db85c4e73572c11fe5f21eb10df6d84675a3cc1b3350097e2e212b"
-  }
+  "required_policy_versions": ["rental-policy-v1"],
+  "accepted_policy_versions": [],
+  "allowed_actions": ["onboard"]
 }
 ```
 
-If using a new dedicated property, replace the manifest property ID with the returned property owned by owner A. Keep a separate extended manifest for the other scenarios: actor aliases/IDs, property/offer/revision, source visit, invitation, lease, invoice, payment attempt, deposit, handover, settlement, group/request IDs, expected starting states and expiry. The current runner directly consumes the `legacy` and `banner` sections; the extended manifest supports the additional integration scenarios, not automatic coverage it does not yet have.
+This is an **observed subset**, not the full response. The reply's `payment_profile_ready:true` and `payout_ready:true` do not match it. Arabic profile requests have an Arabic header but English policy/blocking text.
 
-## 5. Implement and verify the current defects
+The current `OwnerPaymentProfile` model expects **strings** for `policy_summary` and `masked_beneficiary`. An object-valued policy becomes empty. `OwnerPaymentData.onboarding` requires a nonempty policy summary, required policy acceptance, matching revision and the exact action **`onboard_beneficiary`**. The UI uses that same action to expose onboarding. Consequently, this response prevents the legitimate owner from beginning onboarding.
 
-### OPEN-01 — exact original banner recovery
+Repair the deployed serializer to return localized display strings for those fields; any structured breakdown can be an additive separate field. For an eligible not-started profile, expose `onboard_beneficiary` consistently on the resource and capability response. Keep legitimate blockers/state restrictions. Return the real provider and masked beneficiary once available; do not fabricate readiness.
 
-Original asset: `packages/core/assets/png/logo.png` in the mobile repository. Expected **28,970 bytes**, SHA-256 **`dc2be014d6db85c4e73572c11fe5f21eb10df6d84675a3cc1b3350097e2e212b`**. Last observed remote response: **1,213 bytes**, SHA-256 `303a95728f601403f468dd9abe1cd8618d1f9fee2ef68e7cb57a257337b5b370`; status `pending_payment`.
-
-Restore that exact original object in durable shared storage and repair the existing ad's reference. Owner-authenticated `GET advertising/v1/media/85295dd1-f8bd-4c82-a903-9bdc3d90af98/` must match the original digest, with `Accept: image/jpeg, image/png, image/webp, application/json`. Verify stored and served bytes after restart/replica change/redeploy.
-
-Only after the image/current-operation checks pass, replay the existing intention at:
+This subject-specific probe currently returns HTTP 200 with **empty capabilities/actions** and `The requested rental action is not available yet.`:
 
 ```text
-POST advertising/v1/owner-advertisements/85295dd1-f8bd-4c82-a903-9bdc3d90af98/mock-payment/
+GET features/v1/rental-capabilities/?subject_id={owner_payment_profile_id}&action=onboard_beneficiary
+```
+
+Configure the verified owner, sandbox provider and policy prerequisites directly, then authorize `owner_payouts` / `onboard_beneficiary` for the correct profile. Complete the sandbox beneficiary/KYC flow using approved test identities and recorded policy acceptance. Setting a `payout_ready` flag alone is insufficient.
+
+The app's existing session request is:
+
+```text
+POST features/v1/owner-payment-profile/onboarding-session/
 ```
 
 ```json
-{"operation_id":"74682688-4428-413c-a1ae-c4b87222c687-payment","payment_mode":"mock"}
+{
+  "expected_revision": 1,
+  "request_key": "REUSE_THE_SAVED_ONBOARDING_REQUEST_KEY",
+  "accepted_policy_versions": ["rental-policy-v1"]
+}
 ```
 
-The response and fresh owner read must identify the same ad, `status=active`, the server mock receipt and activation dates. Exact replay must preserve receipt/dates and create no duplicate charge/effect. Tenant and guest must independently see the same ad/media in placement. Do not publish a substitute image to pass this test.
+This is a body template: use the fresh revision, versions actually presented/accepted, and a durable operation key created once for that intention. Return the established mutation resource/receipt, matching subject/key/revision, HTTPS hosted URL and future expiry. Verify exact replay, stale revision, wrong owner and expired session. Return a separate ready profile fixture for downstream payout tests while retaining an onboarding-start fixture for this journey.
 
-### OPEN-02 / OPEN-03 — language and caching
+## 5. Complete capabilities and scenario fixtures directly
 
-Affected paths: `advertising/v1/plans/`, `advertising/v1/placements/tenant-home/`, `features/v1/planning-capabilities/`.
+### Rental capabilities
 
-Resolve one effective language for server-owned payload strings and `Content-Language`. Review custom serializer helpers, active request locale and application/CDN cache keys. Emit appropriate `Vary: Accept-Language`; its presence alone is insufficient. Preserve normal header-only mobile requests.
+For each real resource and actor, query `features/v1/rental-capabilities/?subject_id={id}&action={action}`. Require matching `account_id`, `account_verified:true`, supported nonempty `policy_version`, the needed `enabled_capabilities` and current `allowed_actions`. The resource and mutation must enforce the same role, parent scope, state and revision. The currently observed closed lease grants only `rental_center`; that does not establish grants on a new lease or invoice.
 
-Test identical URLs with `Accept-Language` in **en → ar → en → ar**, then **ar → en → ar → en** order, on warm cache and after targeted invalidation, and across replicas. Check plan titles/server messages, language headers and cache metadata. User-authored advertisement text does not need automatic translation. Arabic planning must localize both the service-readiness reason and the guest-authentication reason, plus any applicable account reasons.
+| Stage | Capability identifiers | Required actions / setup |
+| --- | --- | --- |
+| Interest/agreement | `rental_interests`, `rental_agreements`, `signed_documents` | `create_rental_interest`, `create_terms_proposal`, `create_lease`, `edit_lease`, `sign`, with exact parties/offer/terms |
+| Billing | `rent_checkout`, `rental_deposits` | `quote`, `checkout`, `reconcile`; payable invoice with known revision, positive balance, `can_pay:true` and correct payer |
+| Possession/stay | `rental_handovers`, `rental_maintenance`, `rental_changes` | `create_rental_handover`, `edit_handover`, `upload_evidence`, `create_maintenance_request`, and state-specific participant decisions |
+| Exit/finance | `rental_settlement`, `rental_disputes`, `owner_payouts` | `propose_settlement`, `create_rental_refund`, `onboard_beneficiary`, and appropriate decisions |
+| Statements/reviews | `signed_documents`, `rental_reviews`, `rental_center` | `request_statement`, `review_rental`, eligible tenancy history |
 
-### OPEN-04 / OPEN-09 — refresh alias and remaining contract confirmation
+Grant only the actions legitimate at that stage. Use new writable structured agreements where appropriate; changing a historical lease's `legacy_read_only` flag is not a migration. Checkout remains `invoice_id`, `quote_id`, `expected_revision`, `request_key`, with the full server balance under the supported rental policy.
 
-Route the promised `auth/token/refresh/` alias to the same refresh implementation as `auth/refresh/`, or explicitly state that the alias is withdrawn from the backend contract. Preserve the canonical mobile route. Verify valid-session POST followed by the same current-user identity, then expired/revoked-session and concurrency cases. Return statuses/cookie metadata without secrets.
+### OPEN-08: planning implementation and grants
 
-Confirm that visit rejection accepts the current mobile `reason=timing_not_suitable` plus `custom_reason`, or supply a coordinated, versioned enum migration. Return actual request/response JSON for the tested actions. Keep invitation `revision`, structured rental `expected_revision`, and advertising `operation_id` as their distinct existing dialects.
+Guest and both primary actors still receive empty `enabled_capabilities`, `verified_services`, `allowed_actions`, and null `expires_at`. That is a disabled discovery contract; it does not implement C08/C09/S02.
 
-### OPEN-06 — fresh closure and funded cancellation
+Complete required services and dependencies for `lifestyle`, `roommates`, `housing_groups`, `group_visits`, `group_applications`, `housing_requests`, `housing_offers`, `commute`, `tenant_assistant`, `condition_reports`, `move_out_notices` and `replacements`. Condition reports and transitions use planning authorization in the current app.
 
-Run new cancellation fixtures after provisioning C03. The cancellation response, **first collection read**, detail and Rental Center must agree for both parties without relying on a GET to finish a transition or increment revision. Test another read order and exact cancellation replay.
+Then verify `features/v1/planning-capabilities/?capability={service}&action={action}&subject_id={id}`. An enabled grant needs the matching verified account, policy, service in **both** enabled and verified lists, proper actions and future expiry. Subjectless collection discovery may omit the subject; reads/writes still enforce their parent/account scope. Return a per-service **implemented / deployed / verified / granted** matrix and exact remaining dependency owners.
 
-Derive closure from authoritative obligations during the transition. Never-occupied status can waive an inapplicable handover; it does not settle an invoice, captured deposit or uncertain payment. Test clean unfunded cancellation separately from unpaid-invoice cancellation, captured funds/refund due, pending/unknown payment, failed refund, dispute and late capture racing cancellation. Keep financial closure unresolved while obligations remain. Verify ledger totals, bounded refunds and no restored consumed consent.
+### Fixtures still absent from the extended manifest
 
-Run transaction/race tests against PostgreSQL with independent transactions. Return test outputs and correlated state/ledger records, rather than only serializer snapshots.
+| Journey | Prepare distinct starting records and return IDs/revisions |
+| --- | --- |
+| C01/C02 | Bookable listing/offer/slot; pending and accepted visits; exact `timing_not_suitable` rejection body with optional `custom_reason`; resubmission slot; counterpart chat and review-eligible case |
+| C03 | Eligible primary-pair source, unconsumed consent, valid template/terms; unrelated B actors |
+| C04 | Untouched interest/consent start, hosted signing sandbox; separate signed-unpaid lease with one combined initial invoice |
+| C05 | Active lease, initial payment/move-in, recurring job period, maintenance/evidence/cost and independent amendment/renewal/extension cases |
+| C06 | Separate clean unfunded cancellation, unpaid invoice, captured funds/refund due, uncertain payment, notice/move-out, settlement/deposit/dispute/payout and replacement fixtures |
+| C08/C09 | Distinct tenants/consents/group administrator/members/roster revisions, group visit/application; tenant request plus two/three comparable offers from correctly owned properties |
+| S01/S02/S03 | Exact accommodation snapshots; saved-search event/job; routing/assistant providers; stable keys, receipts and controlled lost-response/restart/account-switch cases |
 
-### OPEN-07 / OPEN-08 — configure external dependencies and finish implementation
+The reply's extended JSON contains none of the required signed/active lease, invoice, attempt, deposit, handover, settlement, group or request IDs. Seeded intermediate states are setup data, not proof that API transitions ran.
 
-Provision actual sandbox signing/PSP/KYC/beneficiary credentials, callback URLs/signature verification, private document storage, queue workers, scheduler and WebSocket/notification infrastructure. Record API/worker compatibility. Verify the agreed sequence: **signatures → 48-hour hold and one rent/deposit invoice → required successful capture → active agreement → move-in**. Settlement/refund and owner payout need their own evidence.
+Return `fixtures.json` with verified `legacy` and unchanged `banner` sections plus an extended manifest for these cases. Preserve the existing private journal; never regenerate an unresolved key. Include fixture-set ID, actor/parent relationships, expected states, revisions, expiry and scoped cleanup rules. Supply a repeatable billing-period/job trigger for dedicated QA fixtures so recurring tests do not require waiting a calendar month.
 
-Exercise duplicate/out-of-order callbacks, lost responses, hold expiry/late capture, recurring invoice execution, refund/payout outcomes and restart recovery. A mock adapter result must be labeled mock; environment variables alone do not prove an integration works.
+## 6. OPEN-06 / OPEN-07: prove transitions and external effects
 
-Provide a controlled way to advance the dedicated fixture's billing period or invoke the real scheduled job in QA, so recurring-operation tests do not depend on waiting a calendar month. Keep the normal period uniqueness/locking rules and return actual job and invoice IDs.
+Run invitation → acceptance/replay → eligible picker → draft → consumed invitation → cancellation/replay on the newly provisioned source. Read **collections first**, then detail/center for both parties; repeat in another order on a separate untouched fixture. All projections and the mutation must agree immediately, with no GET required to finish a transition or increment revision.
 
-For chat, verify persistence and independent counterpart receipt, reconnect/history catch-up, message-key deduplication and rollback/process/broker failure behavior. `transaction.on_commit` does not itself guarantee durable delivery. Complete any missing recovery/outbox work required by these cases.
+Clarify the reply's `status:"closed"` wording. Keep lifecycle status `cancelled`/`canceled` distinct from **`financial_closure_status:"closed"`** and `occupancy_status:"not_started"`. Do not replace lease lifecycle status with financial closure or grant new permissions from that conflation.
 
-Deploy missing planning routes/providers before advertising those capabilities. If an external prerequisite cannot be supplied, return its exact missing item, responsible owner and delivery date; do not mark the affected cycle complete.
+Evaluate authoritative obligations during transitions. No occupancy can waive handover, but it does not settle an invoice, captured deposit, pending/unknown payment, failed refund or dispute. Test late capture racing cancellation, bounded refunds, ledger conservation, duplicate callbacks and no restoration of consumed consent. Run concurrency cases on PostgreSQL using independent transactions; Django documents the relevant [locking/test behavior](https://docs.djangoproject.com/en/5.1/ref/models/querysets/#select-for-update).
 
-## 6. Deployment proof and backend return
+Verify the agreed order: **final signatures → 48-hour inventory hold and one initial rent/deposit invoice → required successful capture → active agreement → move-in**. Return actual signing/PSP/KYC/refund/payout sandbox correlations, invoice/deposit/ledger readbacks, callback signature checks and worker/job IDs. Mock payment evidence must stay labeled mock.
 
-Return one completed response to this work order containing:
+For chat, return both-party persistence/delivery, rollback suppression, reconnect/history catch-up, duplicate message-key handling and process/broker restart recovery. `transaction.on_commit` runs after commit; it does not itself establish durable delivery after process loss. A source claim of an outbox needs records and recovery-test evidence. [Django transaction callbacks](https://docs.djangoproject.com/en/5.1/topics/db/transactions/#performing-actions-after-commit).
 
-1. **Release:** full committed SHA/image digest, deployment ID and UTC time for API/worker/scheduler/WebSocket, exact installed Python/Django/DRF/PostgreSQL versions, and schema artifact/hash.
-2. **Deployment checks:** sanitized deployed-settings outputs from `check --deploy`, `makemigrations --check --dry-run`, `showmigrations --plan`, and `migrate --check`. State applied migrations/backfills and any unresolved result; model drift and unapplied migrations are different checks.
-3. **Setup completed:** exact account/property/offer/source IDs, private secondary credentials, completed sandbox prerequisites, current actor/subject/action grant matrix and capability expiry where applicable. Include the populated runner fixture file and extended scenario manifest.
-4. **Each open item:** implementation commit, public-environment verification command, UTC time, exit status, request/response or provider/job correlation, expected/actual outcome and artifact reference. Use implemented/deployed/verified as separate fields.
-5. **Cycle results:** both participants' readbacks, negative-actor denial evidence, financial/provider/job assertions and outstanding dependencies. Prepared fixtures are not completed journeys.
+Coordinate verified backend capabilities with the appropriate Flutter build flags. `SOKOUN_LEASE_SIGNING=true` alone cannot enable all journeys; keep `SOKOUN_BYPASS_VERIFICATION=false` and enable only capabilities backed by verified services.
 
-Verify through the public staging URL after deploy and applicable cache invalidation. If deployed results contradict local tests, resolve the serving release/configuration/storage mismatch before returning “fixed.” Include recovery ownership and a compatible rollback/roll-forward procedure.
+## 7. OPEN-01-V: remaining storage and placement verification
 
-## 7. Handoff to integration testing
+For the existing advertisement `85295dd1-f8bd-4c82-a903-9bdc3d90af98`, prove the same **28,970 bytes**, SHA-256 `dc2be014d6db85c4e73572c11fe5f21eb10df6d84675a3cc1b3350097e2e212b`, survive replica change, process restart and redeploy. Return storage adapter/object identity and before/after evidence without storage secrets. A source-embedded audit asset or disk restoration helper alone does not prove deployment durability or general uploaded-media persistence.
 
-Backend should finish provisioning and return the ready fixtures directly. Mobile/QA can then run, from `apps/sokoun_app`:
+The immediate placement read at **13:57:47 UTC** was an empty cached response (`Age:12`, `max-age=60`, response `server_now` before activation). It was still empty at **13:58:31**, and the original ad was visible at **13:59:02**, after that cache entry's lifetime. This is observed cache delay, not an ongoing missing-banner claim. Specify the permitted publication visibility bound and test it. If publication must be immediately visible, invalidate the relevant placement cache after committed activation; otherwise document and verify the bounded delay, including edge caches.
+
+Retain the original create operation `74682688-4428-413c-a1ae-c4b87222c687` and mock operation `74682688-4428-413c-a1ae-c4b87222c687-payment`, receipt and activation dates during these tests. Do not reset or re-create this advertisement or operation.
+
+## 8. OPEN-09: return deployment proof and runnable inputs
+
+Return a completed response with:
+
+1. Full commit SHA/image digest, deployment ID and UTC time for API, worker, scheduler and WebSocket; installed Python/Django/DRF/PostgreSQL versions and schema artifact/hash.
+2. Sanitized deployed-settings outputs and exit statuses for the commands below; applied migrations/backfills and any unresolved result. Model drift and unapplied migrations are separate checks. Use the appropriate commands for the installed Django version; reference: [Django management commands](https://docs.djangoproject.com/en/5.1/ref/django-admin/).
+3. Actual fixture command output, runner/extended JSON, current actor IDs/private login inputs and real subject/action grants. Verify every manifest record through the intended account before returning it.
+4. Per-item implementation commit, public-URL verification command, UTC time, status, sanitized request/response and artifact. Report implemented, deployed and verified separately.
+5. Provider/job/ledger/event evidence, both participants' readbacks, unrelated-actor denials and remaining dependency owner/next action. Include a compatible rollback/recovery procedure that preserves operation identities.
 
 ```bash
-make ownerTenantCyclesLiveRead FLUTTER=/path/to/flutter SOKOUN_CYCLES_PRIVATE_DIR=/absolute/private/directory CYCLES_EVIDENCE_DIR=/fresh/read-evidence
-make ownerTenantCyclesLive FLUTTER=/path/to/flutter SOKOUN_CYCLES_PRIVATE_DIR=/absolute/private/directory CYCLES_EVIDENCE_DIR=/fresh/scenario-evidence
+python manage.py check --deploy
+python manage.py makemigrations --check --dry-run
+python manage.py showmigrations --plan
+python manage.py migrate --check
 ```
 
-For HTTP-only checks with valid saved sessions, `ownerTenantCyclesApiRead` / `ownerTenantCyclesApiLive` accept `CYCLES_REUSE_SESSIONS=true`. Flutter fresh-login tests still need current login inputs. Preserve the same private operation journal between runs and use fresh evidence directories. Resolve an uncertain operation before retrying it under the same identity.
+Prove rejected visits accept `reason:"timing_not_suitable"` and the optional `custom_reason` on a real pending fixture. This is runtime verification of your confirmation, not a request to invent a new enum. Preserve invitation `revision`, structured rental `expected_revision`, and advertising `operation_id` as their separate contracts.
 
-These targets cover public/account reads and the current C03/C07 regressions. Full acceptance additionally requires the other scenarios in section 4, provider/job evidence and Android/iOS user journeys with the verified test-build flags. Do not label a blocked or unimplemented scenario as passed.
+After setup, mobile/QA can run from `apps/sokoun_app` with fresh evidence paths:
 
-Supporting evidence, if the mobile repository is available: [current HTTP failures and blocked checks](../qa/evidence/owner-tenant-reply-2-2026-10-12/scenarios/cycle-report.json), [current Flutter assertions](../qa/evidence/owner-tenant-reply-2-2026-10-12/flutter-live-read.json), [visit/alias follow-up](../qa/evidence/owner-tenant-reply-2-2026-10-12/followup/followup-summary.json). The actions and known IDs needed to start are included in this file.
+```bash
+make ownerTenantCyclesApiLive CYCLES_REUSE_SESSIONS=true SOKOUN_CYCLES_PRIVATE_DIR=/absolute/private/directory CYCLES_EVIDENCE_DIR=/fresh/http-evidence
+make ownerTenantCyclesLive FLUTTER=/path/to/flutter SOKOUN_CYCLES_PRIVATE_DIR=/absolute/private/directory CYCLES_EVIDENCE_DIR=/fresh/combined-evidence
+```
+
+Saved-session reuse applies to the HTTP runner; fresh Flutter authentication still needs current login inputs. These targets automate reads and conditional C03/C07 regressions, not every full-cycle provider/job/device journey. Keep blocked cases visible and complete the remaining scenarios above before declaring full-cycle readiness.
+
+Supporting evidence in the mobile repository: [latest HTTP report](../qa/evidence/owner-tenant-current-fixes-reply-2026-10-12/scenarios-resumed/cycle-report.json), [Flutter checks](../qa/evidence/owner-tenant-current-fixes-reply-2026-10-12/flutter-live-read.json), [fixture/locale preflight](../qa/evidence/owner-tenant-current-fixes-reply-2026-10-12/preflight/), [fixture/payment follow-up](../qa/evidence/owner-tenant-current-fixes-reply-2026-10-12/followup/), [onboarding subject grant](../qa/evidence/owner-tenant-current-fixes-reply-2026-10-12/payment-profile-scope/), [placement after cache expiry](../qa/evidence/owner-tenant-current-fixes-reply-2026-10-12/placement-after-ttl/). The concrete instructions and identifiers are included here so this file can be sent alone.
