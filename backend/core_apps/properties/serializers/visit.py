@@ -12,7 +12,7 @@ from ..models import Property, PropertyVisit, PropertyVisitReview
 from ..services import PropertyVisitService
 
 
-# ? Arabic date/time labels for the tenant visit card UI
+# Arabic date/time labels for the tenant visit card UI
 _ARABIC_WEEKDAYS = {
     0: "الإثنين",
     1: "الثلاثاء",
@@ -21,6 +21,16 @@ _ARABIC_WEEKDAYS = {
     4: "الجمعة",
     5: "السبت",
     6: "الأحد",
+}
+
+_ENGLISH_WEEKDAYS = {
+    0: "Monday",
+    1: "Tuesday",
+    2: "Wednesday",
+    3: "Thursday",
+    4: "Friday",
+    5: "Saturday",
+    6: "Sunday",
 }
 
 _ARABIC_MONTHS = {
@@ -38,11 +48,33 @@ _ARABIC_MONTHS = {
     12: "ديسمبر",
 }
 
+_ENGLISH_MONTHS = {
+    1: "January",
+    2: "February",
+    3: "March",
+    4: "April",
+    5: "May",
+    6: "June",
+    7: "July",
+    8: "August",
+    9: "September",
+    10: "October",
+    11: "November",
+    12: "December",
+}
+
 _ARABIC_VISIT_STATUS = {
     PropertyVisit.Status.PENDING: "بانتظار رد المالك",
     PropertyVisit.Status.CONFIRMED: "مؤكد",
     PropertyVisit.Status.CANCELED: "ملغي",
     PropertyVisit.Status.REJECTED: "مرفوض",
+}
+
+_ENGLISH_VISIT_STATUS = {
+    PropertyVisit.Status.PENDING: "Pending owner response",
+    PropertyVisit.Status.CONFIRMED: "Confirmed",
+    PropertyVisit.Status.CANCELED: "Canceled",
+    PropertyVisit.Status.REJECTED: "Rejected",
 }
 
 _ARABIC_REQUEST_STATUS = {
@@ -51,6 +83,38 @@ _ARABIC_REQUEST_STATUS = {
     PropertyVisit.Status.CANCELED: "ملغي",
     PropertyVisit.Status.REJECTED: "مرفوض",
 }
+
+_ENGLISH_REQUEST_STATUS = {
+    PropertyVisit.Status.PENDING: "Pending owner response",
+    PropertyVisit.Status.CONFIRMED: "Accepted",
+    PropertyVisit.Status.CANCELED: "Canceled",
+    PropertyVisit.Status.REJECTED: "Rejected",
+}
+
+
+def get_visit_language(request_or_context):
+    """Resolve language ('en' or 'ar') for visit labels, defaulting to 'ar'."""
+    request = request_or_context.get("request") if isinstance(request_or_context, dict) else request_or_context
+    if request:
+        lang_param = getattr(request, "GET", {}).get("lang") or getattr(request, "GET", {}).get("language")
+        if lang_param:
+            clean = lang_param.strip().lower()
+            if clean.startswith("en"):
+                return "en"
+            if clean.startswith("ar"):
+                return "ar"
+        accept_lang = getattr(request, "headers", {}).get("Accept-Language") or getattr(request, "META", {}).get("HTTP_ACCEPT_LANGUAGE", "")
+        if accept_lang:
+            parts = [p.strip().split(";")[0].lower() for p in accept_lang.split(",") if p.strip()]
+            for part in parts:
+                if part.startswith("en"):
+                    return "en"
+                if part.startswith("ar"):
+                    return "ar"
+        lang_code = getattr(request, "LANGUAGE_CODE", None)
+        if lang_code and lang_code.startswith("en") and accept_lang:
+            return "en"
+    return "ar"
 
 User = get_user_model()
 
@@ -114,22 +178,36 @@ class TenantVisitListSerializer(serializers.ModelSerializer):
     def get_title(self, obj: PropertyVisit) -> str:
         return f"{obj.property.title} - {obj.property.district}"
 
+    def _lang(self) -> str:
+        return get_visit_language(self.context)
+
     def get_day(self, obj: PropertyVisit) -> str:
-        weekday = _ARABIC_WEEKDAYS[obj.visit_date.weekday()]
-        month = _ARABIC_MONTHS[obj.visit_date.month]
+        lang = self._lang()
+        if lang == "en":
+            weekday = _ENGLISH_WEEKDAYS[obj.visit_date.weekday()]
+            month = _ENGLISH_MONTHS[obj.visit_date.month]
+        else:
+            weekday = _ARABIC_WEEKDAYS[obj.visit_date.weekday()]
+            month = _ARABIC_MONTHS[obj.visit_date.month]
         return f"{weekday} {obj.visit_date.day} {month}"
 
     def get_time(self, obj: PropertyVisit) -> str:
         hour = obj.visit_time.hour
         minute = obj.visit_time.minute
-        period = "ص" if hour < 12 else "م"
+        lang = self._lang()
+        if lang == "en":
+            period = "AM" if hour < 12 else "PM"
+        else:
+            period = "ص" if hour < 12 else "م"
         hour_12 = hour % 12
         if hour_12 == 0:
             hour_12 = 12
         return f"{hour_12}:{minute:02d} {period}"
 
     def get_status(self, obj: PropertyVisit) -> str:
-        return _ARABIC_VISIT_STATUS.get(obj.status, obj.status)
+        lang = self._lang()
+        table = _ENGLISH_VISIT_STATUS if lang == "en" else _ARABIC_VISIT_STATUS
+        return table.get(obj.status, obj.status)
 
 
 class VisitTenantSerializer(serializers.ModelSerializer):
@@ -505,14 +583,19 @@ class TenantVisitRequestSerializer(serializers.ModelSerializer):
             **contact,
         }
 
+    def _lang(self) -> str:
+        return get_visit_language(self.context)
+
     def get_day_label(self, obj):
-        return TenantVisitListSerializer().get_day(obj)
+        return TenantVisitListSerializer(context=self.context).get_day(obj)
 
     def get_time_label(self, obj):
-        return TenantVisitListSerializer().get_time(obj)
+        return TenantVisitListSerializer(context=self.context).get_time(obj)
 
     def get_status_label(self, obj):
-        return _ARABIC_REQUEST_STATUS.get(obj.status, obj.status)
+        lang = self._lang()
+        table = _ENGLISH_REQUEST_STATUS if lang == "en" else _ARABIC_REQUEST_STATUS
+        return table.get(obj.status, obj.status)
 
     def get_actions(self, obj):
         scheduled_at = datetime.combine(
@@ -565,10 +648,13 @@ class TenantVisitRequestDetailSerializer(TenantVisitRequestSerializer):
 # ? Helper functions for formatting dates and times for the owner screens
 
 
-def _format_time_ar_compact(time_val):
+def _format_time_compact(time_val, lang="ar"):
     hour = time_val.hour
     minute = time_val.minute
-    period = "ص" if hour < 12 else "م"
+    if lang == "en":
+        period = "AM" if hour < 12 else "PM"
+    else:
+        period = "ص" if hour < 12 else "م"
     hour_12 = hour % 12
     if hour_12 == 0:
         hour_12 = 12
@@ -577,46 +663,78 @@ def _format_time_ar_compact(time_val):
     return f"{hour_12}:{minute:02d}{period}"
 
 
-def _format_time_ar_clock(time_val):
+def _format_time_clock(time_val, lang="ar"):
     hour = time_val.hour
     minute = time_val.minute
-    period = "ص" if hour < 12 else "م"
+    if lang == "en":
+        period = "AM" if hour < 12 else "PM"
+    else:
+        period = "ص" if hour < 12 else "م"
     hour_12 = hour % 12
     if hour_12 == 0:
         hour_12 = 12
     return f"{hour_12}:{minute:02d} {period}"
 
 
-def _format_owner_schedule_label(visit_date, visit_time):
+def _format_owner_schedule_label(visit_date, visit_time, lang="ar"):
     today = timezone.localdate()
-    time_str = _format_time_ar_compact(visit_time)
+    time_str = _format_time_compact(visit_time, lang=lang)
     if visit_date == today:
-        return f"النهارده {time_str}"
+        return f"Today {time_str}" if lang == "en" else f"النهارده {time_str}"
     if visit_date == today + timezone.timedelta(days=1):
-        return f"غداً {time_str}"
-    weekday = _ARABIC_WEEKDAYS[visit_date.weekday()]
+        return f"Tomorrow {time_str}" if lang == "en" else f"غداً {time_str}"
+    if lang == "en":
+        weekday = _ENGLISH_WEEKDAYS[visit_date.weekday()]
+    else:
+        weekday = _ARABIC_WEEKDAYS[visit_date.weekday()]
     return f"{weekday} {time_str}"
 
 
-def _format_full_date_ar(visit_date):
-    weekday = _ARABIC_WEEKDAYS[visit_date.weekday()]
-    month = _ARABIC_MONTHS[visit_date.month]
+def _format_full_date(visit_date, lang="ar"):
+    if lang == "en":
+        weekday = _ENGLISH_WEEKDAYS[visit_date.weekday()]
+        month = _ENGLISH_MONTHS[visit_date.month]
+    else:
+        weekday = _ARABIC_WEEKDAYS[visit_date.weekday()]
+        month = _ARABIC_MONTHS[visit_date.month]
     return f"{weekday} {visit_date.day} {month} {visit_date.year}"
 
 
-_OWNER_CARD_STATUS_LABEL = {
+_format_time_ar_compact = lambda t: _format_time_compact(t, lang="ar")
+_format_time_ar_clock = lambda t: _format_time_clock(t, lang="ar")
+_format_full_date_ar = lambda d: _format_full_date(d, lang="ar")
+
+_OWNER_CARD_STATUS_LABEL_AR = {
     PropertyVisit.Status.PENDING: "جديد",
     PropertyVisit.Status.CONFIRMED: "مقبول",
     PropertyVisit.Status.REJECTED: "مرفوض",
     PropertyVisit.Status.CANCELED: "ملغي",
 }
 
-_OWNER_DETAIL_STATUS_LABEL = {
+_OWNER_CARD_STATUS_LABEL_EN = {
+    PropertyVisit.Status.PENDING: "New",
+    PropertyVisit.Status.CONFIRMED: "Accepted",
+    PropertyVisit.Status.REJECTED: "Rejected",
+    PropertyVisit.Status.CANCELED: "Canceled",
+}
+
+_OWNER_CARD_STATUS_LABEL = _OWNER_CARD_STATUS_LABEL_AR
+
+_OWNER_DETAIL_STATUS_LABEL_AR = {
     PropertyVisit.Status.PENDING: "بانتظار رد المالك",
     PropertyVisit.Status.CONFIRMED: "مقبول",
     PropertyVisit.Status.REJECTED: "مرفوض",
     PropertyVisit.Status.CANCELED: "ملغي",
 }
+
+_OWNER_DETAIL_STATUS_LABEL_EN = {
+    PropertyVisit.Status.PENDING: "Pending owner response",
+    PropertyVisit.Status.CONFIRMED: "Accepted",
+    PropertyVisit.Status.REJECTED: "Rejected",
+    PropertyVisit.Status.CANCELED: "Canceled",
+}
+
+_OWNER_DETAIL_STATUS_LABEL = _OWNER_DETAIL_STATUS_LABEL_AR
 
 
 class OwnerVisitRequestCardSerializer(serializers.ModelSerializer):
@@ -652,6 +770,9 @@ class OwnerVisitRequestCardSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = fields
 
+    def _lang(self) -> str:
+        return get_visit_language(self.context)
+
     def get_property(self, obj: PropertyVisit):
         return {
             "id": str(obj.property.id),
@@ -681,16 +802,20 @@ class OwnerVisitRequestCardSerializer(serializers.ModelSerializer):
         }
 
     def get_schedule_label(self, obj: PropertyVisit) -> str:
-        return _format_owner_schedule_label(obj.visit_date, obj.visit_time)
+        return _format_owner_schedule_label(obj.visit_date, obj.visit_time, lang=self._lang())
 
     def get_subtitle(self, obj: PropertyVisit) -> str:
-        schedule = _format_owner_schedule_label(obj.visit_date, obj.visit_time)
+        schedule = self.get_schedule_label(obj)
         return f"{obj.property.title} · {schedule}"
 
     def get_status_label(self, obj: PropertyVisit) -> str:
+        lang = self._lang()
         if obj.status == PropertyVisit.Status.PENDING:
+            if lang == "en":
+                return "New" if obj.tenant.is_verified else "Pending"
             return "جديد" if obj.tenant.is_verified else "انتظار"
-        return _OWNER_CARD_STATUS_LABEL.get(obj.status, obj.status)
+        table = _OWNER_CARD_STATUS_LABEL_EN if lang == "en" else _OWNER_CARD_STATUS_LABEL_AR
+        return table.get(obj.status, obj.status)
 
     def get_actions(self, obj: PropertyVisit):
         is_pending = obj.status == PropertyVisit.Status.PENDING
@@ -703,6 +828,8 @@ class OwnerVisitRequestCardSerializer(serializers.ModelSerializer):
 
     def get_verification_warning(self, obj: PropertyVisit) -> str:
         if not obj.tenant.is_verified:
+            if self._lang() == "en":
+                return "This tenant has not verified their identity yet"
             return "هذا المستأجر لم يوثق هويته بعد"
         return ""
 
@@ -737,6 +864,9 @@ class OwnerVisitRequestDetailSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = fields
 
+    def _lang(self) -> str:
+        return get_visit_language(self.context)
+
     def get_tenant(self, obj: PropertyVisit):
         tenant = obj.tenant
         profile = getattr(tenant, "profile", None)
@@ -744,9 +874,13 @@ class OwnerVisitRequestDetailSerializer(serializers.ModelSerializer):
             profile.avatar.url if profile and getattr(profile, "avatar", None) else None
         )
         member_year = tenant.date_joined.year if tenant.date_joined else 2024
-
-        verification_prefix = "مستأجر موثّق · " if tenant.is_verified else ""
-        membership_label = f"{verification_prefix}عضو منذ {member_year}"
+        lang = self._lang()
+        if lang == "en":
+            verification_prefix = "Verified Tenant · " if tenant.is_verified else ""
+            membership_label = f"{verification_prefix}Member since {member_year}"
+        else:
+            verification_prefix = "مستأجر موثّق · " if tenant.is_verified else ""
+            membership_label = f"{verification_prefix}عضو منذ {member_year}"
 
         contact = counterpart_phone_payload(
             viewer=getattr(self.context.get("request"), "user", None),
@@ -774,13 +908,15 @@ class OwnerVisitRequestDetailSerializer(serializers.ModelSerializer):
         }
 
     def get_day_label(self, obj: PropertyVisit) -> str:
-        return _format_full_date_ar(obj.visit_date)
+        return _format_full_date(obj.visit_date, lang=self._lang())
 
     def get_time_label(self, obj: PropertyVisit) -> str:
-        return _format_time_ar_clock(obj.visit_time)
+        return _format_time_clock(obj.visit_time, lang=self._lang())
 
     def get_status_label(self, obj: PropertyVisit) -> str:
-        return _OWNER_DETAIL_STATUS_LABEL.get(obj.status, obj.status)
+        lang = self._lang()
+        table = _OWNER_DETAIL_STATUS_LABEL_EN if lang == "en" else _OWNER_DETAIL_STATUS_LABEL_AR
+        return table.get(obj.status, obj.status)
 
     def get_actions(self, obj: PropertyVisit):
         is_pending = obj.status == PropertyVisit.Status.PENDING

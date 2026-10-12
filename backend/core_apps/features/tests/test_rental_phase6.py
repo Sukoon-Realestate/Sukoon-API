@@ -9,6 +9,7 @@ from rest_framework.test import APIClient
 from core_apps.admin_api.models import StaffProfile
 from core_apps.features.models import (
     BillingPeriod,
+    DepositAgreement,
     InvoicePaymentAllocation,
     Lease,
     LedgerTransaction,
@@ -21,6 +22,10 @@ from core_apps.features.models import (
     RentInvoice,
 )
 from core_apps.features.providers import sign_fake_webhook
+from core_apps.features.services.rental_phase6 import (
+    closure_blocking_reasons,
+    evaluate_financial_closure,
+)
 from core_apps.features.tasks import process_rental_closure
 from core_apps.properties.models import City, Governorate, Property, PropertyType
 from core_apps.users.models import User
@@ -423,3 +428,46 @@ def test_dispute_documents_reviews_and_private_authorization(phase6_lease):
         .status_code
         == 409
     )
+
+
+@pytest.mark.django_db
+def test_cancelled_never_occupied_draft_closure_blockers_and_financial_policy(phase6_lease):
+    """Verifies GAP001: Never-occupied cancelled draft closure blockers and policy."""
+    owner, tenant, lease = phase6_lease
+    # 1. Clean unoccupied cancelled draft has no occupancy or settlement blockers
+    lease.status = Lease.Status.CANCELLED
+    lease.occupancy_status = Lease.OccupancyStatus.NOT_STARTED
+    lease.save()
+
+    reasons = closure_blocking_reasons(lease)
+    assert reasons == []
+
+    evaluate_financial_closure(lease)
+    lease.refresh_from_db()
+    assert lease.financial_closure_status == Lease.FinancialClosureStatus.CLOSED
+
+    # Verify rental center projection
+    rc = client_for(owner).get(f"/api/v1/features/v1/leases/{lease.id}/rental-center/")
+    assert rc.status_code == 200
+    assert rc.data["closure_blocking_reasons"] == []
+    assert rc.data["financial_closure_status"] == "closed"
+    assert rc.data["next_action"] is None
+
+    # 2. Cancelled draft with unresolved financial activity retains blockers
+    deposit = DepositAgreement.objects.create(
+        lease=lease,
+        agreed_minor=500_000,
+        due_minor=500_000,
+        collected_minor=500_000,
+        currency="EGP",
+    )
+    reasons_with_deposit = closure_blocking_reasons(lease)
+    assert "The deposit is unresolved." in reasons_with_deposit
+    assert "The final settlement is not accepted." in reasons_with_deposit
+    # Never-occupied must NEVER demand move-out / occupancy return
+    assert "Occupancy has not been returned." not in reasons_with_deposit
+
+    evaluate_financial_closure(lease)
+    lease.refresh_from_db()
+    assert lease.financial_closure_status == Lease.FinancialClosureStatus.OPEN
+

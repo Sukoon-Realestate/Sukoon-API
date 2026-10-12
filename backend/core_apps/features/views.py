@@ -18,7 +18,7 @@ from rest_framework.exceptions import (
     PermissionDenied,
     ValidationError,
 )
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from core_apps.common.models import ContentView
@@ -158,6 +158,36 @@ def rental_capabilities(request):
             subject,
             request.query_params.get("action", ""),
         )
+    )
+    return private_no_store(response)
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+@renderer_classes([FeatureJsonRenderer])
+def planning_capabilities(request):
+    """
+    Return planning capabilities.
+    Planning families C08 (roommates/groups), C09 (demand requests/owner offers),
+    and S02 (decision support/assistant) are gated and advertise only deployed/verified pairs.
+    Missing/unverified services remain disabled under policy version planning-policy-v1.
+    """
+    user = request.user
+    account_id = str(user.id) if user and user.is_authenticated else None
+    account_verified = bool(user.is_active and user.is_verified) if user and user.is_authenticated else False
+    blocking_reasons = ["Planning capabilities (C08/C09/S02) are pending live verification."]
+    if not (user and user.is_authenticated):
+        blocking_reasons.append("Authentication is required to access account planning.")
+
+    response = Response(
+        {
+            "account_id": account_id,
+            "account_verified": account_verified,
+            "enabled_capabilities": [],
+            "policy_version": "planning-policy-v1",
+            "allowed_actions": [],
+            "blocking_reasons": blocking_reasons,
+        }
     )
     return private_no_store(response)
 
@@ -1064,6 +1094,8 @@ def lease_cancel(request, lease_id):
         lease.status = Lease.Status.CANCELLED
         lease.revision += 1
         lease.save(update_fields=["status", "revision", "updated_at"])
+        from .services.rental_phase6 import evaluate_financial_closure
+        evaluate_financial_closure(lease)
         data = {
             "id": str(lease.id),
             "subject_id": str(lease.id),

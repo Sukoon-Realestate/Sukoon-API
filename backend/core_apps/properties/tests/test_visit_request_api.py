@@ -1,4 +1,4 @@
-from datetime import time, timedelta
+from datetime import date, time, timedelta
 import uuid
 
 import pytest
@@ -671,3 +671,108 @@ class TestPropertyReviewListAPI:
         assert response.status_code == status.HTTP_200_OK
         # Queries: 1 get property, 1 aggregates, 1 count for pagination, 1 select reviews with tenant/profile
         assert len(ctx.captured_queries) <= 5
+
+
+class TestBilingualVisitLabels:
+    """Verifies BE003: English and Arabic visit requests and calendar labels."""
+
+    def test_tenant_visit_request_labels_in_english_and_arabic(
+        self,
+        auth_client,
+        user,
+        another_user,
+        apartment_type,
+        cairo_city,
+        cairo_governorate,
+    ):
+        property_obj = create_property(
+            another_user, apartment_type, cairo_city, cairo_governorate
+        )
+        custom_note = "Please ensure someone is available at 2 PM sharp."
+        visit = PropertyVisit.objects.create(
+            property=property_obj,
+            tenant=user,
+            visit_date=timezone.localdate() + timedelta(days=1),
+            visit_time=time(14, 30),
+            status=PropertyVisit.Status.CONFIRMED,
+            note=custom_note,
+        )
+
+        # English request
+        res_en = auth_client.get(
+            reverse("tenant-visit-request-list"),
+            HTTP_ACCEPT_LANGUAGE="en-US,en;q=0.9",
+        )
+        assert res_en.status_code == status.HTTP_200_OK
+        assert res_en.headers.get("Content-Language") == "en"
+        card_en = res_en.json()["data"]["results"][0]
+        assert card_en["status_label"] == "Accepted"
+        assert "PM" in card_en["time_label"]
+        # Free-text detail preservation
+        detail_res_en = auth_client.get(
+            reverse("tenant-visit-request-detail", kwargs={"id": visit.id}),
+            HTTP_ACCEPT_LANGUAGE="en",
+        )
+        assert detail_res_en.status_code == status.HTTP_200_OK
+        assert detail_res_en.json()["data"]["note"] == custom_note
+
+        # Arabic request
+        res_ar = auth_client.get(
+            reverse("tenant-visit-request-list"),
+            HTTP_ACCEPT_LANGUAGE="ar-EG,ar;q=0.9",
+        )
+        assert res_ar.status_code == status.HTTP_200_OK
+        assert res_ar.headers.get("Content-Language") == "ar"
+        card_ar = res_ar.json()["data"]["results"][0]
+        assert card_ar["status_label"] == "مقبول"
+        assert "م" in card_ar["time_label"]
+        detail_res_ar = auth_client.get(
+            reverse("tenant-visit-request-detail", kwargs={"id": visit.id}),
+            HTTP_ACCEPT_LANGUAGE="ar",
+        )
+        assert detail_res_ar.status_code == status.HTTP_200_OK
+        assert detail_res_ar.json()["data"]["note"] == custom_note
+
+    def test_owner_calendar_bilingual_labels(
+        self,
+        auth_client,
+        user,
+        another_user,
+        apartment_type,
+        cairo_city,
+        cairo_governorate,
+    ):
+        property_obj = create_property(
+            user, apartment_type, cairo_city, cairo_governorate
+        )
+        target_date = date(2026, 7, 15)
+        PropertyVisit.objects.create(
+            property=property_obj,
+            tenant=another_user,
+            visit_date=target_date,
+            visit_time=time(10, 0),
+            status=PropertyVisit.Status.CONFIRMED,
+        )
+
+        cal_en = auth_client.get(
+            f"{reverse('owner-visit-calendar')}?year=2026&month=7&date={target_date.isoformat()}",
+            HTTP_ACCEPT_LANGUAGE="en",
+        )
+        assert cal_en.status_code == status.HTTP_200_OK
+        cal_data_en = cal_en.json()["data"]
+        assert cal_data_en["month_label"] == "July 2026"
+        assert cal_data_en["selected_date_label"] == "Visits on day 15"
+        assert cal_data_en["visits"][0]["status_label"] == "Confirmed"
+        assert "AM" in cal_data_en["visits"][0]["time_formatted"]
+
+        cal_ar = auth_client.get(
+            f"{reverse('owner-visit-calendar')}?year=2026&month=7&date={target_date.isoformat()}",
+            HTTP_ACCEPT_LANGUAGE="ar",
+        )
+        assert cal_ar.status_code == status.HTTP_200_OK
+        cal_data_ar = cal_ar.json()["data"]
+        assert cal_data_ar["month_label"] == "يوليو 2026"
+        assert cal_data_ar["selected_date_label"] == "زيارات يوم 15"
+        assert cal_data_ar["visits"][0]["status_label"] == "مؤكدة"
+        assert "ص" in cal_data_ar["visits"][0]["time_formatted"]
+

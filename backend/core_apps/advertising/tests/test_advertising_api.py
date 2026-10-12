@@ -514,3 +514,78 @@ def test_concurrent_payment_retries_share_one_receipt(auth_client, user):
     assert results[0][0] == results[1][0] == 200
     assert results[0][1] == results[1][1]
     assert MockAdvertisementPayment.objects.filter(advertisement=ad).count() == 1
+
+
+@pytest.mark.django_db
+def test_existing_audit_ad_media_recovery_and_mock_payment_activation(auth_client, user):
+    """
+    BE002: Verify that existing audit ad 85295dd1-f8bd-4c82-a903-9bdc3d90af98
+    recovers missing media across container restart, activates with mock payment,
+    replays idempotently, serves media, and places banner in tenant home.
+    """
+    from core_apps.advertising.models import AdvertisementMedia
+    op_id = "74682688-4428-413c-a1ae-c4b87222c687"
+    payment_op_id = f"{op_id}-payment"
+    ad_id = uuid.UUID("85295dd1-f8bd-4c82-a903-9bdc3d90af98")
+
+    op = AdvertisementOperation.objects.create(
+        owner=user,
+        operation_id=op_id,
+        state=AdvertisementOperation.State.FOUND,
+    )
+    plan = AdvertisingPlan.objects.get(id="weekly")
+    ad = Advertisement.objects.create(
+        id=ad_id,
+        owner=user,
+        operation=op,
+        title="Sokoun live test 74682688",
+        description="Integration test banner. Mock payment only; no money collected.",
+        plan_snapshot={
+            "id": plan.id,
+            "title": plan.title_en,
+            "duration_unit": plan.duration_unit,
+            "duration_count": plan.duration_count,
+            "amount_minor": plan.amount_minor,
+            "revision": plan.revision,
+        },
+        status=Advertisement.Status.PENDING_PAYMENT,
+    )
+    media = AdvertisementMedia.objects.create(
+        advertisement=ad,
+        banner="advertising/banner_ads/2026/10/85295dd1-f8bd-4c82-a903-9bdc3d90af98.png",
+        sha256="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        content_type="image/png",
+        size_bytes=1024,
+    )
+
+    # 1. Simulate media file missing from ephemeral disk
+    if media.banner.storage.exists(media.banner.name):
+        media.banner.storage.delete(media.banner.name)
+
+    # 2. Mock payment activation succeeds (does not fail with 400 errors.banner)
+    pay_url = reverse("advertising:mock-payment", args=[ad.id])
+    body = {"operation_id": payment_op_id, "payment_mode": "mock"}
+    res = auth_client.post(pay_url, body, format="json")
+    assert res.status_code == 200
+    assert res.json()["key"] == "success"
+    data = res.json()["data"]
+    assert data["status"] == "active"
+    assert data["payment"]["operation_id"] == payment_op_id
+
+    # 3. Media is retrievable
+    media_url = reverse("advertising:advertisement-media", args=[ad.id])
+    media_res = auth_client.get(media_url)
+    assert media_res.status_code == 200
+
+    # 4. Tenant home placement returns the active ad
+    guest_client = APIClient()
+    home_res = guest_client.get(reverse("advertising:tenant-home"))
+    assert home_res.status_code == 200
+    results = home_res.json()["data"]["results"]
+    assert any(item["id"] == str(ad.id) for item in results)
+
+    # 5. Idempotent replay of same activation returns same payload with HTTP 200
+    replay_res = auth_client.post(pay_url, body, format="json")
+    assert replay_res.status_code == 200
+    assert replay_res.json()["data"]["id"] == str(ad.id)
+

@@ -194,3 +194,33 @@ def test_placeholder_checkout_is_disabled_by_default():
     assert response.status_code == 403
     assert response.json()["code"] == "capability_unavailable"
     assert CheckoutSession.objects.count() == 0
+
+
+@pytest.mark.django_db
+def test_planning_capabilities_endpoint_returns_disabled_capabilities_and_version():
+    """Verifies DEP001: planning-capabilities endpoint returns 200 with policy version."""
+    user = User.objects.create_user(
+        email="planning-caps@example.com",
+        password="pass",
+        is_verified=True,
+    )
+    # 1. Authenticated call
+    res_auth = authenticated(user).get("/api/v1/features/v1/planning-capabilities/")
+    assert res_auth.status_code == 200
+    data_auth = res_auth.data
+    assert data_auth["account_id"] == str(user.id)
+    assert data_auth["account_verified"] is True
+    assert data_auth["policy_version"] == "planning-policy-v1"
+    assert data_auth["enabled_capabilities"] == []
+    assert data_auth["allowed_actions"] == []
+    assert "pending live verification" in data_auth["blocking_reasons"][0]
+    assert res_auth["Cache-Control"] == "private, no-store"
+
+    # 2. Unauthenticated / guest call
+    res_guest = APIClient().get("/api/v1/features/v1/planning-capabilities/")
+    assert res_guest.status_code == 200
+    data_guest = res_guest.data
+    assert data_guest["account_id"] is None
+    assert data_guest["policy_version"] == "planning-policy-v1"
+    assert data_guest["enabled_capabilities"] == []
+

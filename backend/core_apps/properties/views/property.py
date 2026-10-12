@@ -106,14 +106,14 @@ class PropertyTypeListAPIView(generics.ListAPIView):
     queryset = PropertyType.objects.all()
     serializer_class = PropertyTypeSerializer
     renderer_classes = [GenericJsonRenderer]
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
 
 class PropertyFilterOptionsAPIView(generics.GenericAPIView):
     """Return all option values accepted by the property listing filters."""
 
     renderer_classes = [GenericJsonRenderer]
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
         accept_lang = request.headers.get("Accept-Language", "").lower()
@@ -134,7 +134,7 @@ class AvailablePlacesAPIView(generics.GenericAPIView):
 
     serializer_class = AvailablePlacesQuerySerializer
     renderer_classes = [GenericJsonRenderer]
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def get(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.query_params)
@@ -154,7 +154,8 @@ class PropertyListAPIView(generics.ListAPIView):
     """
 
     queryset = (
-        Property.objects.select_related("property_type", "governorate", "city")
+        Property.objects.exclude(status=Property.Status.HIDDEN)
+        .select_related("property_type", "governorate", "city")
         .annotate(images_count=Count("images"))
         .annotate(
             is_sponsored=Exists(
@@ -171,7 +172,7 @@ class PropertyListAPIView(generics.ListAPIView):
     serializer_class = PropertyListSerializer
     renderer_classes = [GenericJsonRenderer]
     pagination_class = PropertyPagination
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
@@ -263,7 +264,8 @@ class PropertyNewListAPIView(generics.ListAPIView):
     """
 
     queryset = (
-        Property.objects.select_related("property_type", "governorate", "city")
+        Property.objects.exclude(status=Property.Status.HIDDEN)
+        .select_related("property_type", "governorate", "city")
         .annotate(images_count=Count("images"))
         .annotate(
             is_sponsored=Exists(
@@ -280,7 +282,7 @@ class PropertyNewListAPIView(generics.ListAPIView):
     serializer_class = PropertyNewListSerializer
     renderer_classes = [GenericJsonRenderer]
     pagination_class = PropertyPagination
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,

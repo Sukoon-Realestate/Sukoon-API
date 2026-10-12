@@ -91,10 +91,11 @@ def _create_property(**kwargs):
 
 @pytest.mark.django_db
 class TestPropertyViews:
-    def test_property_filter_options_requires_authentication(self, api_client):
+    def test_property_filter_options_allows_unauthenticated_guest(self, api_client):
         response = api_client.get(reverse("property-filter-options"))
-
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+        assert response.status_code == status.HTTP_200_OK
+        data = response.json()["data"]
+        assert "property_types" in data
 
     def test_property_filter_options_returns_all_supported_options(self, auth_client):
         response = auth_client.get(reverse("property-filter-options"))
@@ -215,10 +216,14 @@ class TestPropertyViews:
         assert response.status_code == status.HTTP_200_OK
         assert response.json()["data"]["banner"] is None
 
-    def test_new_properties_unauthenticated_returns_401(self, api_client):
+    def test_new_properties_unauthenticated_returns_200(self, api_client, user):
+        _create_property(owner=user, title="شقة معروضة للعامة")
         url = reverse("property-list")
         response = api_client.get(url)
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+        assert response.status_code == status.HTTP_200_OK
+        data = response.json()["data"]
+        assert "results" in data
+        assert len(data["results"]) >= 1
 
     def test_new_properties_happy_path_card_shape(self, auth_client, user):
         prop = _create_property(

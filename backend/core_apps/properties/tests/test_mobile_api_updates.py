@@ -110,12 +110,12 @@ class TestAvailablePlaces:
         response = auth_client.get(reverse("property-available-places"), params)
         assert response.status_code == status.HTTP_400_BAD_REQUEST
 
-    def test_requires_authentication(self, api_client, apartment_type):
+    def test_public_guest_access_allowed(self, api_client, apartment_type):
         response = api_client.get(
             reverse("property-available-places"),
             {"property_type_id": apartment_type.id},
         )
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
+        assert response.status_code == status.HTTP_200_OK
 
 
 @pytest.mark.django_db

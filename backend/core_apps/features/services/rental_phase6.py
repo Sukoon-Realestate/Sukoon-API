@@ -52,7 +52,10 @@ def settlement_balances(lease, lines):
 
 def closure_blocking_reasons(lease):
     reasons = []
-    if lease.occupancy_status != lease.OccupancyStatus.RETURNED:
+    if lease.occupancy_status not in [
+        lease.OccupancyStatus.RETURNED,
+        lease.OccupancyStatus.NOT_STARTED,
+    ]:
         reasons.append("Occupancy has not been returned.")
     if any(
         invoice_balance_minor(x)
@@ -87,8 +90,33 @@ def closure_blocking_reasons(lease):
         lease=lease, kind=RentalInventoryDayLock.Kind.OCCUPIED
     ).exists():
         reasons.append("Rental inventory has not been returned.")
+
     settlement = FinalSettlement.objects.filter(lease=lease).first()
-    if not settlement or settlement.status != FinalSettlement.Status.ACCEPTED:
+    has_accepted_settlement = (
+        settlement and settlement.status == FinalSettlement.Status.ACCEPTED
+    )
+
+    # Defined financial-closure policy for cancelled never-occupied records:
+    # A never-occupied cancelled draft with zero financial transactions/obligations
+    # (no invoice balance, no collected deposit, no pending refunds, no disputes,
+    # no unresolved payables, no chargebacks) requires no final settlement.
+    # If any financial activity exists, final settlement / resolution remains required.
+    has_financial_activity = (
+        lease.invoices.exclude(
+            status__in=[RentInvoice.Status.CANCELLED, RentInvoice.Status.WRITTEN_OFF]
+        ).exists()
+        or (deposit and deposit.collected_minor > 0)
+        or lease.refund_requests.exists()
+        or lease.disputes.exists()
+        or lease.owner_payables.exists()
+    )
+    is_cancelled_clean_unoccupied = (
+        lease.status == lease.Status.CANCELLED
+        and lease.occupancy_status == lease.OccupancyStatus.NOT_STARTED
+        and not has_financial_activity
+    )
+
+    if not has_accepted_settlement and not is_cancelled_clean_unoccupied:
         reasons.append("The final settlement is not accepted.")
     return reasons
 

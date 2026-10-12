@@ -15,6 +15,11 @@ urlpatterns = [
         name="rental-capabilities",
     ),
     path(
+        "planning-capabilities/",
+        views.planning_capabilities,
+        name="planning-capabilities",
+    ),
+    path(
         "rental-operations/<uuid:request_key>/",
         views.rental_operation_lookup,
         name="rental-operation-lookup",

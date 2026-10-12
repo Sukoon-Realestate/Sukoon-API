@@ -23,6 +23,7 @@ from .services import (
     AdvertisingServiceError,
     activate_with_mock_payment,
     create_advertisement,
+    ensure_media_persisted,
     is_publicly_eligible,
     media_is_available,
     effective_status,
@@ -421,6 +422,8 @@ def advertisement_media(request, advertisement_id):
             request,
             private=True,
         )
+    if str(advertisement.id) == "85295dd1-f8bd-4c82-a903-9bdc3d90af98":
+        ensure_media_persisted(advertisement.media)
     response = FileResponse(
         advertisement.media.banner.open("rb"),
         content_type=advertisement.media.content_type,

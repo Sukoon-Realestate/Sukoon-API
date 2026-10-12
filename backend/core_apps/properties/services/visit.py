@@ -520,8 +520,9 @@ class PropertyVisitService:
         )
 
     @staticmethod
-    def get_owner_visit_calendar(owner, year, month, selected_date=None):
+    def get_owner_visit_calendar(owner, year, month, selected_date=None, language="ar"):
         """Build monthly visit indicators and the selected-day appointment cards."""
+        is_en = str(language).lower().startswith("en")
         arabic_months = {
             1: "يناير",
             2: "فبراير",
@@ -535,6 +536,20 @@ class PropertyVisitService:
             10: "أكتوبر",
             11: "نوفمبر",
             12: "ديسمبر",
+        }
+        english_months = {
+            1: "January",
+            2: "February",
+            3: "March",
+            4: "April",
+            5: "May",
+            6: "June",
+            7: "July",
+            8: "August",
+            9: "September",
+            10: "October",
+            11: "November",
+            12: "December",
         }
         month_start = date(year, month, 1)
         next_month = date(year + 1, 1, 1) if month == 12 else date(year, month + 1, 1)
@@ -561,7 +576,7 @@ class PropertyVisitService:
         def _fmt_time(t):
             h = t.hour
             m = t.minute
-            period = "ص" if h < 12 else "م"
+            period = ("AM" if h < 12 else "PM") if is_en else ("ص" if h < 12 else "م")
             h12 = h % 12 or 12
             return f"{h12}:{m:02d} {period}"
 
@@ -577,9 +592,14 @@ class PropertyVisitService:
                 if profile and getattr(profile, "avatar", None)
                 else None
             )
-            status_label = (
-                "مؤكدة" if visit.status == PropertyVisit.Status.CONFIRMED else "معلقة"
-            )
+            if is_en:
+                status_label = (
+                    "Confirmed" if visit.status == PropertyVisit.Status.CONFIRMED else "Pending"
+                )
+            else:
+                status_label = (
+                    "مؤكدة" if visit.status == PropertyVisit.Status.CONFIRMED else "معلقة"
+                )
             visits_payload.append(
                 {
                     "id": str(visit.id),
@@ -600,10 +620,14 @@ class PropertyVisitService:
                 }
             )
 
-        month_label = f"{arabic_months.get(month, '')} {year}".strip()
-        selected_date_label = (
-            f"زيارات يوم {selected_date.day}" if selected_date else None
-        )
+        months_dict = english_months if is_en else arabic_months
+        month_label = f"{months_dict.get(month, '')} {year}".strip()
+        if selected_date:
+            selected_date_label = (
+                f"Visits on day {selected_date.day}" if is_en else f"زيارات يوم {selected_date.day}"
+            )
+        else:
+            selected_date_label = None
 
         return {
             "year": year,

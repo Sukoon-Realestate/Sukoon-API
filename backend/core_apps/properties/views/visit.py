@@ -36,6 +36,7 @@ from ..serializers import (
     TenantVisitRequestDetailSerializer,
     TenantVisitRequestSerializer,
 )
+from ..serializers.visit import get_visit_language
 from ..services import PropertyVisitService
 
 logger = logging.getLogger(__name__)
@@ -193,6 +194,7 @@ class OwnerVisitCalendarAPIView(generics.GenericAPIView):
             year=data["year"],
             month=data["month"],
             selected_date=data.get("date"),
+            language=get_visit_language(request),
         )
         return Response(calendar)
 

@@ -50,12 +50,8 @@ class TestLocationModels:
 
 @pytest.mark.django_db
 class TestGovernorateList:
-    def test_list_requires_authentication(self, api_client):
+    def test_guest_can_list_governorates(self, api_client, cairo_governorate):
         response = api_client.get(reverse("governorate-list"))
-        assert response.status_code == status.HTTP_401_UNAUTHORIZED
-
-    def test_authenticated_user_can_list(self, auth_client, cairo_governorate):
-        response = auth_client.get(reverse("governorate-list"))
         assert response.status_code == status.HTTP_200_OK
         assert response.json()["data"]["results"][0]["name"] == "Cairo"
 

@@ -137,12 +137,14 @@ def send_message(
         user=sender
     ).update(unread_count=F("unread_count") + 1)
 
-    # Broadcast via channel layer (non-blocking — errors are logged, never raised)
-    _broadcast_new_message(conversation=conversation, message=message)
-
-    # Dispatch FCM push and in-app notifications to recipients
-    _notify_recipients(
-        conversation=conversation, sender=sender, preview=preview, message=message
+    # Broadcast via channel layer and notify recipients on transaction commit
+    transaction.on_commit(
+        lambda: _broadcast_new_message(conversation=conversation, message=message)
+    )
+    transaction.on_commit(
+        lambda: _notify_recipients(
+            conversation=conversation, sender=sender, preview=preview, message=message
+        )
     )
 
     return message
@@ -226,7 +228,9 @@ def mark_conversation_read(*, conversation: Conversation, user) -> None:
         user=user,
     ).update(last_read_at=timezone.now(), unread_count=0)
 
-    _broadcast_read_receipt(conversation=conversation, reader=user)
+    transaction.on_commit(
+        lambda: _broadcast_read_receipt(conversation=conversation, reader=user)
+    )
 
 
 def _broadcast_read_receipt(*, conversation: Conversation, reader) -> None:

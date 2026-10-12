@@ -26,7 +26,7 @@ class GovernorateListAPIView(generics.ListAPIView):
     queryset = Governorate.objects.all()
     serializer_class = GovernorateSerializer
     renderer_classes = [GenericJsonRenderer]
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     filter_backends = [filters.SearchFilter]
     search_fields = ["name", "slug"]
 
@@ -37,7 +37,7 @@ class CityListAPIView(generics.ListAPIView):
     queryset = City.objects.select_related("governorate").all()
     serializer_class = CitySerializer
     renderer_classes = [GenericJsonRenderer]
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_class = CityFilter
     search_fields = ["name", "slug", "governorate__name"]
