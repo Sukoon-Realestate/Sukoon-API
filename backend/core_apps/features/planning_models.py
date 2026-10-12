@@ -18,6 +18,10 @@ class LifestyleProfile(TimeStampedModel):
     habits = models.JSONField(default=dict)
     preferences = models.JSONField(default=dict)
     disclosed = models.JSONField(default=list)
+    importance = models.JSONField(default=dict)
+    details = models.JSONField(default=dict)
+    search_context = models.JSONField(default=dict)
+    reason_categories = models.JSONField(default=list)
 
 
 class RoommateConnection(TimeStampedModel):
@@ -40,6 +44,7 @@ class RoommateConnection(TimeStampedModel):
     status = models.CharField(max_length=20, default="pending")
     note = models.TextField(blank=True, default="")
     blocked_by = models.JSONField(default=list)
+    disclosure_grants = models.JSONField(default=dict)
 
     class Meta:
         constraints = [
@@ -75,6 +80,7 @@ class GroupMembership(TimeStampedModel):
     )
     role = models.CharField(max_length=20, default="member")
     status = models.CharField(max_length=20, default="active")
+    joined_revision = models.PositiveIntegerField(default=0)
 
     class Meta:
         constraints = [
@@ -112,6 +118,9 @@ class GroupProcess(TimeStampedModel):
     selection = models.JSONField(default=dict)
     participant_ids = models.JSONField(default=list)
     consented_ids = models.JSONField(default=list)
+    proposal_snapshot = models.JSONField(default=dict)
+    owner_note = models.TextField(blank=True, default="")
+    history = models.JSONField(default=list)
     appointment_at = models.DateTimeField(null=True, blank=True)
     visit = models.OneToOneField(
         "properties.PropertyVisit", on_delete=models.PROTECT, null=True, blank=True
@@ -152,7 +161,7 @@ class HousingOffer(TimeStampedModel):
     selection = models.JSONField(default=dict)
     note = models.TextField(blank=True, default="")
     rent_minor = models.PositiveBigIntegerField()
-    deposit_minor = models.PositiveBigIntegerField()
+    deposit_minor = models.PositiveBigIntegerField(null=True, blank=True)
     price_period = models.CharField(max_length=20)
 
 
@@ -176,6 +185,11 @@ class ConditionReport(TimeStampedModel):
     baseline_revision = models.PositiveIntegerField(default=0)
     history = models.JSONField(default=list)
     versions = models.JSONField(default=list)
+    baseline_snapshot = models.JSONField(default=dict)
+    objections = models.JSONField(default=list)
+    supersedes = models.ForeignKey(
+        "self", on_delete=models.PROTECT, null=True, blank=True, related_name="addenda"
+    )
 
 
 class TenancyTransition(TimeStampedModel):
@@ -225,6 +239,11 @@ class CommuteSearch(TimeStampedModel):
     matches = models.JSONField(default=list)
     unknown_count = models.PositiveIntegerField(default=0)
     expires_at = models.DateTimeField()
+    status = models.CharField(max_length=20, default="succeeded")
+    processed_count = models.PositiveIntegerField(default=0)
+    total_count = models.PositiveIntegerField(default=0)
+    failure_code = models.CharField(max_length=60, blank=True, default="")
+    started_at = models.DateTimeField(null=True, blank=True)
 
 
 class TenantAssistantTurn(TimeStampedModel):
@@ -236,3 +255,42 @@ class TenantAssistantTurn(TimeStampedModel):
     )
     reply = models.JSONField(default=dict)
     expires_at = models.DateTimeField()
+    status = models.CharField(max_length=20, default="succeeded")
+
+
+class GroupJoinRequest(TimeStampedModel):
+    group = models.ForeignKey(
+        HousingGroup, on_delete=models.CASCADE, related_name="join_requests"
+    )
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    revision = models.PositiveIntegerField(default=1)
+    status = models.CharField(max_length=20, default="pending")
+    note = models.TextField(blank=True, default="")
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["group", "user"], name="unique_group_join_request"
+            )
+        ]
+
+
+class PlanningEvent(TimeStampedModel):
+    """Transactional notification outbox; contains IDs and generic copy only."""
+
+    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    event_key = models.CharField(max_length=200)
+    destination = models.JSONField(default=dict)
+    notification = models.OneToOneField(
+        "notifications.Notification", on_delete=models.SET_NULL, null=True, blank=True
+    )
+    delivered_at = models.DateTimeField(null=True, blank=True)
+    attempts = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["recipient", "event_key"],
+                name="unique_planning_event_recipient",
+            )
+        ]

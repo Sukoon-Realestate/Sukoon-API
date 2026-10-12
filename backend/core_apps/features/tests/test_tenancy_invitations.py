@@ -74,7 +74,7 @@ def owned_property(participants):
     PropertyVisit.objects.create(
         property=property_obj,
         tenant=tenant,
-        visit_date=timezone.localdate() + timedelta(days=1),
+        visit_date=timezone.localdate() - timedelta(days=1),
         visit_time=time(12),
         status=PropertyVisit.Status.CONFIRMED,
     )
@@ -88,10 +88,25 @@ def authenticated(user):
 
 
 def create_payload(property_obj, tenant, **extra):
+    # Direct invitation prerequisites now include the tenant's explicit attended
+    # decision; keep the old invitation/lease regression assertions unchanged.
+    source = {}
+    visit = PropertyVisit.objects.filter(property=property_obj, tenant=tenant).first()
+    if visit:
+        if not hasattr(visit, "post_visit_decision"):
+            response = authenticated(tenant).post(
+                f"/api/v1/properties/visits/{visit.id}/post-visit-decision/",
+                {"decision": "proceed", "attended": True, "expected_revision": visit.revision,
+                 "request_key": str(uuid.uuid4())}, format="json",
+            )
+            assert response.status_code == 200, response.data
+            visit.refresh_from_db()
+        source = {"source_visit_id": str(visit.id), "source_decision_id": str(visit.post_visit_decision.id)}
     return {
         "property_id": str(property_obj.id),
         "tenant_id": str(tenant.id),
         "request_key": str(uuid.uuid4()),
+        **source,
         **extra,
     }
 
@@ -133,6 +148,8 @@ def test_create_legacy_invitation_is_idempotent_and_notifies_once(
         "action_label": "Review invitation",
         "action_type": "open_tenancy_invitation",
         "target_id": first.data["id"],
+        "source_visit_id": payload["source_visit_id"],
+        "source_decision_id": payload["source_decision_id"],
     }
 
     duplicate = client.post(
@@ -330,7 +347,8 @@ def test_source_relationship_and_offer_revision_are_enforced(
         create_payload(owned_property, stranger),
         format="json",
     )
-    assert no_source.status_code == 403
+    assert no_source.status_code == 400
+    assert no_source.json()["code"] == "source_visit_required"
 
     offer_id = str(uuid.uuid4())
     owned_property.rental_inventory = {

@@ -1,6 +1,14 @@
 """Permissions for the template/invitation API, distinct from structured leases."""
 
-from ..models import Lease, RentalHandover, RentalInterest, TermsProposal
+from django.utils import timezone
+
+from ..models import (
+    Lease,
+    RentalHandover,
+    RentalInterest,
+    TenancyInvitation,
+    TermsProposal,
+)
 
 
 def supports_invitation_draft(lease):
@@ -27,6 +35,20 @@ def can_cancel_draft(user, lease):
         and user.pk == lease.owner_id
         and lease.status == Lease.Status.DRAFT
         and not is_read_only(lease)
+    )
+
+
+def can_revoke_invitation(user, invitation):
+    return bool(
+        user
+        and user.is_active
+        and user.is_verified
+        and user.pk == invitation.owner_id
+        and not invitation.lease_id
+        and not invitation.consumed_at
+        and invitation.status
+        in {TenancyInvitation.Status.PENDING, TenancyInvitation.Status.ACCEPTED}
+        and invitation.expires_at > timezone.now()
     )
 
 

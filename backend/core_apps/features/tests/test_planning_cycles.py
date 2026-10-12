@@ -139,6 +139,11 @@ def test_lifestyle_disclosure_connections_and_revocation(rental_participants):
             disclosed=["sleep"],
         ),
     )
+    post(
+        tenant,
+        "lifestyle-profile/",
+        command(discoverable=True, habits={}, preferences={}, disclosed=[]),
+    )
     candidates = authenticated(tenant).get(API + "roommate-candidates/").data["results"]
     assert len(candidates) == 1
     candidate = candidates[0]
@@ -200,7 +205,7 @@ def test_lifestyle_disclosure_connections_and_revocation(rental_participants):
     )
     assert authenticated(owner).get(API + "roommate-candidates/").data["results"] == []
     assert (
-        LifestyleProfile.objects.count() == 1
+        LifestyleProfile.objects.count() == 2
         and RoommateConnection.objects.count() == 1
     )
 
@@ -321,17 +326,22 @@ def test_group_invitation_cost_consent_visit_application_and_roster_change(
             consent=True,
         ),
     ).data["resource"]
-    assert RentalInterest.objects.count() == 1
-    interest = RentalInterest.objects.get()
-    assert (
-        interest.tenant == tenant
-        and interest.occupants == 2
-        and interest.offer_id == offer_id
+    assert not RentalInterest.objects.exists()
+    assert not Lease.objects.exists()
+    application = group["applications"][0]
+    assert application["status"] == "under_review"
+    owner_application = authenticated(owner).get(
+        API + f"group-applications/{application['id']}/"
     )
-    assert Lease.objects.count() == 0
-    # A real owner-facing interest exists; acceptance/signing is still separate.
-    owner_interest = authenticated(owner).get(API + f"rental-interests/{interest.id}/")
-    assert owner_interest.status_code == 200
+    assert owner_application.status_code == 200
+    assert owner_application.data["joint_contract_supported"] is False
+    reviewed = post(
+        owner,
+        f"group-applications/{application['id']}/approve/",
+        command(application["revision"], note="Reviewed"),
+    )
+    assert reviewed.data["resource"]["status"] == "approved_to_proceed"
+    assert not RentalInterest.objects.exists() and not Lease.objects.exists()
     accepted_group = group
     departure = group_action(member, group, "leave")
     assert departure["members"] == [] and departure["allowed_actions"] == []
@@ -340,8 +350,6 @@ def test_group_invitation_cost_consent_visit_application_and_roster_change(
     assert group["proposals"][0]["approved_by"] == []
     assert group["applications"][0]["status"] == "withdrawn"
     assert PropertyVisit.objects.get().status == "canceled"
-    interest.refresh_from_db()
-    assert interest.status == "withdrawn"
     assert (
         authenticated(member).get(API + f"housing-groups/{group['id']}/").status_code
         == 404
@@ -472,7 +480,11 @@ def test_housing_request_offer_identity_permissions_expiry_and_recovery(
         .get(API + f"housing-requests/{item['id']}/offers/")
         .data["results"][0]
     )
-    assert tenant_offer["allowed_actions"] == ["shortlist", "decline"]
+    assert tenant_offer["allowed_actions"] == [
+        "shortlist",
+        "select_to_proceed",
+        "decline",
+    ]
     shortlisted = post(
         tenant,
         f"housing-offers/{offer['id']}/shortlist/",

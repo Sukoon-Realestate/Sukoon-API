@@ -26,6 +26,26 @@ from .services.rental_phase2 import RentalConflict
 from .services.rental_phase3 import issue_invoice, process_provider_event
 
 
+@shared_task(acks_late=True)
+def process_commute_search(search_id):
+    from .services.commute_jobs import run_commute
+    run_commute(search_id)
+
+
+@shared_task(acks_late=True)
+def process_planning_jobs():
+    from .planning_models import CommuteSearch
+    from .services.commute_jobs import run_commute
+    from .services.planning_notifications import deliver_planning_events, record_lease_reminders
+    cutoff = timezone.now() - timedelta(minutes=5)
+    # A crashed or timed-out worker cannot leave a forever-running search.
+    CommuteSearch.objects.filter(status="running", updated_at__lt=cutoff).update(
+        status="failed", failure_code="worker_interrupted", coverage="unavailable")
+    for identifier in CommuteSearch.objects.filter(status="queued", expires_at__gt=timezone.now()).values_list("id", flat=True)[:20]:
+        run_commute(identifier)
+    return {"reminders": record_lease_reminders(), "notifications": deliver_planning_events()}
+
+
 @shared_task(
     bind=True,
     autoretry_for=(Exception,),
@@ -279,10 +299,19 @@ def process_rental_changes(self):
             elif change.kind == RentalChange.Kind.RENEWAL:
                 if change.status != RentalChange.Status.SIGNED:
                     continue
+                from .services.planning_transitions import require_no_departure
+                try:
+                    require_no_departure(lease, activating=True)
+                except RentalConflict:
+                    # Legacy or concurrently imported departures require explicit
+                    # resolution before a signed renewal can allocate inventory.
+                    continue
                 if change.terms.get("renewal_commission_rate_bps") != 0:
                     raise ValueError("Renewals must have zero acquisition commission.")
                 starts_on = date.fromisoformat(change.terms["starts_on"])
                 ends_on = date.fromisoformat(change.terms["ends_on_exclusive"])
+                if starts_on != lease.end_date or starts_on > timezone.localdate() or ends_on <= timezone.localdate():
+                    continue
                 renewal = Lease.objects.create(
                     property=lease.property,
                     owner=lease.owner,

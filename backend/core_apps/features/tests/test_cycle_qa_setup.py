@@ -60,11 +60,22 @@ def test_fixture_manifest_is_executable_and_uses_a_separate_legacy_property():
     assert manifest["test_enablement"]["full_cycles_verified"] is False
     assert OwnerPaymentProfile.objects.get(owner=owner).payout_ready is False
     client = authenticated(owner)
+    source = PropertyVisit.objects.get(id=legacy["source_visit_id"])
+    source.visit_date = timezone.localdate() - timedelta(days=1)
+    source.save(update_fields=["visit_date"])
+    decision = authenticated(tenant).post(
+        f"/api/v1/properties/visits/{source.id}/post-visit-decision/",
+        {"decision": "proceed", "attended": True, "expected_revision": source.revision,
+         "request_key": str(uuid.uuid4())}, format="json",
+    )
+    assert decision.status_code == 200, decision.data
     invited = client.post(
         "/api/v1/features/v1/tenancy-invitations/",
         {
             "property_id": legacy["property_id"],
             "tenant_id": TENANT_ID,
+            "source_visit_id": str(source.id),
+            "source_decision_id": decision.data["post_visit_decision"]["id"],
             "request_key": str(uuid.uuid4()),
         },
         format="json",

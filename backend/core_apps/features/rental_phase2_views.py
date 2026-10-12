@@ -52,6 +52,7 @@ from .rental_serializers import (
     TermsProposalSerializer,
 )
 from .serializers import TenancyInvitationSerializer
+from .services.lease_permissions import can_revoke_invitation
 from .services.rental_phase2 import (
     RentalConflict,
     assert_owner_ready,
@@ -206,6 +207,11 @@ def _notify(user, notification_type, title, action_type, target_id, **context):
         "target_id": str(target_id),
         **{key: str(value) for key, value in context.items() if value is not None},
     }
+    if context.get("lease_id"):
+        invitation = TenancyInvitation.objects.filter(lease__id=context["lease_id"]).select_related("source_visit", "source_decision").first()
+        if invitation and invitation.source_visit_id:
+            payload["source_visit_id"] = str(invitation.source_visit.id)
+            payload["source_decision_id"] = str(invitation.source_decision.id)
     NotificationService.create_notification(
         user=user,
         notification_type=notification_type,
@@ -679,6 +685,8 @@ def create_interest_invitation(request):
             data["tenant_id"]
         ) != str(interest.tenant.id):
             raise ValidationError("Invitation participants do not match the interest.")
+        if data["offer_id"] != interest.offer_id:
+            raise RentalConflict("The invitation must preserve the selected interest offer.", code="offer_mismatch")
         _, snapshot = resolve_offer_snapshot(
             interest.property, data["offer_id"], data["offer_revision"], request
         )
@@ -704,6 +712,7 @@ def create_interest_invitation(request):
             initiated_by=request.user,
             interest=interest,
             terms_proposal=proposal,
+            provenance_version="independent_interest_v1",
             eligibility_snapshot={
                 "interest_revision": interest.revision,
                 "proposal_revision": proposal.revision,
@@ -735,6 +744,8 @@ def create_interest_invitation(request):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def tenancy_invitation_revoke(request, invitation_id):
+    if not request.user.is_active or not request.user.is_verified:
+        raise PermissionDenied("A verified active owner account is required.")
     serializer = RentalDecisionSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     data = serializer.validated_data
@@ -752,6 +763,11 @@ def tenancy_invitation_revoke(request, invitation_id):
             id=invitation_id,
             owner=request.user,
         )
+        replay = _replay_response(
+            request.user, operation, data["request_key"], request.data
+        )
+        if replay:
+            return replay
         if data["decision"] != "revoke_invitation":
             raise ValidationError({"decision": "Must be revoke_invitation."})
         if data["expected_revision"] != invitation.revision:
@@ -760,10 +776,9 @@ def tenancy_invitation_revoke(request, invitation_id):
             raise RentalConflict(
                 "A consumed invitation cannot be revoked.", code="invitation_consumed"
             )
-        if invitation.status not in {
-            TenancyInvitation.Status.PENDING,
-            TenancyInvitation.Status.ACCEPTED,
-        }:
+        if invitation.expires_at <= timezone.now():
+            raise RentalConflict("The invitation expired.", code="invitation_expired")
+        if not can_revoke_invitation(request.user, invitation):
             raise RentalConflict("This invitation can no longer be revoked.")
         invitation.status = TenancyInvitation.Status.REVOKED
         invitation.revoked_at = timezone.now()
@@ -825,9 +840,25 @@ def create_structured_lease(request):
             data["tenant_id"]
         ) != str(invitation.tenant.id):
             raise ValidationError("Agreement participants do not match the invitation.")
+        from core_apps.properties.services.post_visit_decision import (
+            DecisionConflict, validate_invitation_provenance,
+        )
+
+        validate_invitation_provenance(invitation)
+        from .services.tenancy_invitations import validate_accounts
+
+        validate_accounts(request.user, invitation.tenant, request)
+        if invitation.property.status != invitation.property.Status.VERIFIED:
+            raise DecisionConflict("The property is not available for leasing.", "property_unavailable")
+        if data["offer_id"] != invitation.offer_id:
+            raise DecisionConflict("The agreement must preserve the accepted invitation's offer.", "offer_mismatch")
+        if data["offer_revision"] != (invitation.offer_snapshot or {}).get("offer_revision"):
+            raise DecisionConflict("The accepted offer has changed; a fresh invitation is required.", "stale_revision")
         _, snapshot = resolve_offer_snapshot(
             invitation.property, data["offer_id"], data["offer_revision"], request
         )
+        if snapshot != invitation.offer_snapshot:
+            raise DecisionConflict("The accepted accommodation has changed.", "accommodation_changed")
         _validate_terms_offer(data["terms"], snapshot)
         if (
             invitation.terms_proposal
@@ -913,6 +944,10 @@ def update_structured_lease(request, lease_id):
         _, snapshot = resolve_offer_snapshot(
             lease.property, data["offer_id"], data["offer_revision"], request
         )
+        from core_apps.properties.services.post_visit_decision import accommodation_identity
+
+        if accommodation_identity(snapshot or {}) != accommodation_identity(lease.offer_snapshot or {}):
+            raise RentalConflict("The accommodation cannot be changed.", code="accommodation_changed")
         _validate_terms_offer(data["terms"], snapshot)
         RentalInventoryDayLock.objects.filter(lease=lease).delete()
         lease.start_date = data["terms"]["starts_on"]
@@ -1009,6 +1044,11 @@ def lease_submit_for_signature(request, lease_id):
     with transaction.atomic():
         lease = _participant_lease(request, lease_id, lock=True)
         assert_owner_ready(request.user, lease.property)
+        replay = _replay_response(request.user, operation, data["request_key"], request.data)
+        if replay:
+            return replay
+        if lease.status != Lease.Status.DRAFT:
+            raise RentalConflict("Only a reviewed draft can be submitted for signature.", code="invalid_state")
         if data["decision"] != "submit_for_signature":
             raise ValidationError({"decision": "Must be submit_for_signature."})
         if data["expected_revision"] != lease.revision:

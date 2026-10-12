@@ -58,7 +58,6 @@ from .services.tenancy_invitations import (
     refresh_effective_status,
     resolve_offer_snapshot,
     validate_accounts,
-    validate_source_relationship,
 )
 from .services.rental_foundation import (
     capabilities_for,
@@ -167,6 +166,7 @@ def rental_capabilities(request):
 @renderer_classes([FeatureJsonRenderer])
 def planning_capabilities(request):
     from .services.planning import enabled_services
+    from .services.planning_providers import ready_services, configuration
     from .services.planning_access import planning_actions
 
     user = request.user
@@ -177,7 +177,7 @@ def planning_capabilities(request):
     requested_action = request.query_params.get("action", "")
     allowed = (
         planning_actions(user, capability, request.query_params.get("subject_id", ""))
-        if capability in enabled
+        if capability in ready_services(enabled)
         else []
     )
     if requested_action:
@@ -220,7 +220,8 @@ def planning_capabilities(request):
             "account_id": str(user.id) if authenticated else None,
             "account_verified": verified,
             "enabled_capabilities": enabled,
-            "verified_services": enabled,
+            "verified_services": ready_services(enabled),
+            "configuration": configuration(),
             "policy_version": "planning-policy-v1",
             "allowed_actions": allowed,
             "expires_at": (
@@ -710,7 +711,6 @@ def tenancy_invitations(request):
     )
     tenant = get_object_or_404(User, id=data_in["tenant_id"])
     validate_accounts(request.user, tenant, request)
-    validate_source_relationship(property_obj, tenant, request)
     replay = _replay(
         request.user,
         "tenancy_invitation.create",
@@ -719,6 +719,11 @@ def tenancy_invitations(request):
     )
     if replay:
         return replay
+    from core_apps.properties.services.post_visit_decision import (
+        validate_invitation_source, validate_visited_accommodation,
+    )
+
+    validate_invitation_source(property_obj, tenant, data_in)
     if property_obj.status != Property.Status.VERIFIED or not property_obj.is_verified:
         raise InvitationConflict(
             localized(
@@ -736,7 +741,6 @@ def tenancy_invitations(request):
             )
             tenant = get_object_or_404(User.objects.select_for_update(), pk=tenant.pk)
             validate_accounts(request.user, tenant, request)
-            validate_source_relationship(property_obj, tenant, request)
             replay = _replay(
                 request.user,
                 "tenancy_invitation.create",
@@ -745,6 +749,7 @@ def tenancy_invitations(request):
             )
             if replay:
                 return replay
+            source_visit, source_decision = validate_invitation_source(property_obj, tenant, data_in, lock=True)
             if (
                 property_obj.status != Property.Status.VERIFIED
                 or not property_obj.is_verified
@@ -762,6 +767,7 @@ def tenancy_invitations(request):
                 data_in.get("expected_offer_revision"),
                 request,
             )
+            validate_visited_accommodation(source_visit, snapshot)
             if Lease.objects.filter(
                 property=property_obj,
                 offer_id=offer_id,
@@ -816,6 +822,9 @@ def tenancy_invitations(request):
                 offer_snapshot=snapshot,
                 expires_at=timezone.now() + timedelta(days=7),
                 initiated_by=request.user,
+                source_visit=source_visit,
+                source_decision=source_decision,
+                provenance_version="visit_decision_v1",
             )
             output = TenancyInvitationSerializer(
                 invitation, context={"request": request}
@@ -1029,6 +1038,9 @@ def leases(request):
                         "لم يعد المستأجر المحدد مؤهلاً لمكان الإقامة هذا.",
                     )
                 )
+            from core_apps.properties.services.post_visit_decision import validate_invitation_provenance
+
+            validate_invitation_provenance(invitation)
             lease = Lease.objects.create(
                 property=property_obj,
                 owner=request.user,

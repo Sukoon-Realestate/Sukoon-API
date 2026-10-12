@@ -17,6 +17,7 @@ from core_apps.properties.services.visit import PropertyVisitService
 from .models import RentalInterest
 from .planning_models import (
     GroupInvitation,
+    GroupJoinRequest,
     GroupMembership,
     GroupProcess,
     HousingGroup,
@@ -110,7 +111,15 @@ def process_payload(item, user):
     actor_id = str(user.id)
     actions = []
     if (
-        status in {"collecting_consent", "ready", "submitted", "scheduled"}
+        status
+        in {
+            "collecting_consent",
+            "ready",
+            "submitted",
+            "scheduled",
+            "under_review",
+            "approved_to_proceed",
+        }
         and actor_id in item.participant_ids
     ):
         suffix = "visit" if item.kind == "visit" else "application"
@@ -133,7 +142,14 @@ def process_payload(item, user):
         "qualifying_visit_id": str(item.visit.id) if item.visit_id else "",
         "interest_id": str(item.interest.id) if item.interest_id else "",
         "allowed_actions": actions,
-        "blocking_reasons": [],
+        "proposal_snapshot": item.proposal_snapshot,
+        "owner_note": item.owner_note,
+        "joint_contract_supported": False,
+        "blocking_reasons": (
+            ["Joint contracting is not available; approval does not create a lease."]
+            if item.kind == "application" and status == "approved_to_proceed"
+            else []
+        ),
     }
 
 
@@ -152,16 +168,33 @@ def group_payload(group, user):
             "allowed_actions": [],
             "blocking_reasons": ["Group membership ended."],
         }
+    member = group.memberships.get(user=user, status="active")
     shortlist = [
         {
             **x,
             "votes": len(x.get("voter_ids", [])),
-            "comments": [c["text"] for c in x.get("comments", [])],
+            "comments": [
+                c["text"]
+                for c in x.get("comments", [])
+                if c.get("group_revision", 0) >= member.joined_revision
+            ],
+            "vote_counts": {
+                choice: [
+                    vote
+                    for actor, vote in x.get("votes_by_user", {}).items()
+                    if actor in active_ids(group)
+                ].count(choice)
+                for choice in ("interested", "maybe", "not_suitable")
+            },
+            "my_vote": x.get("votes_by_user", {}).get(str(user.id), ""),
+            "abstentions": len(active_ids(group))
+            - len(set(x.get("votes_by_user", {})) & set(active_ids(group))),
         }
         for x in group.shortlist
     ]
     for item in shortlist:
         item.pop("voter_ids", None)
+        item.pop("votes_by_user", None)
     return {
         "id": str(group.id),
         "name": group.name,
@@ -181,18 +214,30 @@ def group_payload(group, user):
             for x in group.memberships.select_related("user").order_by("pkid")
         ],
         "shortlist": shortlist,
-        "proposals": group.proposals,
+        "proposals": [
+            x for x in group.proposals if str(user.id) in x.get("contributions", {})
+        ],
+        "join_requests": (
+            [
+                join_payload(x, user)
+                for x in group.join_requests.filter(status="pending")
+            ]
+            if member.role == "admin"
+            else []
+        ),
         "visits": [
             process_payload(x, user)
             for x in group.processes.filter(kind="visit")
             .select_related("visit", "interest")
             .order_by("pkid")
+            if str(user.id) in x.participant_ids
         ],
         "applications": [
             process_payload(x, user)
             for x in group.processes.filter(kind="application")
             .select_related("visit", "interest")
             .order_by("pkid")
+            if str(user.id) in x.participant_ids
         ],
         "allowed_actions": group_actions(user, group),
         "blocking_reasons": [],
@@ -200,8 +245,8 @@ def group_payload(group, user):
 
 
 def _group_values(data):
-    if data.get("visibility", "invite_only") not in {"invite_only", "private"}:
-        raise ValidationError({"visibility": "Groups are private or invite_only."})
+    if data.get("visibility", "invite_only") not in {"invite_only", "private", "open"}:
+        raise ValidationError({"visibility": "Choose private, invite_only, or open."})
     capacity = data.get("capacity")
     if type(capacity) is not int or not 2 <= capacity <= 20:
         raise ValidationError({"capacity": "Use an integer between 2 and 20."})
@@ -368,12 +413,16 @@ def _submit_process(request, group, action):
     if (
         not isinstance(supplied, list)
         or any(not isinstance(x, str) for x in supplied)
-        or sorted(supplied) != members
+        or len(set(supplied)) != len(supplied)
+        or str(request.user.id) not in supplied
+        or not set(supplied).issubset(members)
+        or (kind == "application" and sorted(supplied) != members)
     ):
         raise RentalConflict(
             "The participants must match the current active roster.",
             code="roster_changed",
         )
+    members = sorted(supplied)
     prop, snapshot = selection(request, request.data.get("selection"))
     if prop.owner_id in group.memberships.filter(status="active").values_list(
         "user_id", flat=True
@@ -382,7 +431,12 @@ def _submit_process(request, group, action):
             "An owner cannot submit a tenant group process to themselves."
         )
     capacity = 1 if snapshot["rental_scope"] == "bed" else snapshot.get("capacity")
-    if capacity is not None and len(members) > capacity:
+    if capacity is None:
+        raise RentalConflict(
+            "The owner must confirm accommodation capacity before a group application or viewing.",
+            code="capacity_unknown",
+        )
+    if len(members) > capacity:
         raise ValidationError(
             {"selection": "Selected accommodation cannot hold this group."}
         )
@@ -412,7 +466,15 @@ def _submit_process(request, group, action):
                 code="consent_required",
             )
     if group.processes.filter(
-        kind=kind, status__in=["collecting_consent", "ready", "submitted", "scheduled"]
+        kind=kind,
+        status__in=[
+            "collecting_consent",
+            "ready",
+            "submitted",
+            "scheduled",
+            "under_review",
+            "approved_to_proceed",
+        ],
     ).exists():
         raise RentalConflict("Resolve the current group process first.")
     item = GroupProcess.objects.create(
@@ -487,18 +549,20 @@ def _dispatch_process(request, group, item):
                     }
                 )
             months = agreed_months
-        item.interest = RentalInterest.objects.create(
-            property=prop,
-            tenant=item.initiated_by,
-            offer_id=snapshot["offer_id"],
-            offer_revision=snapshot["offer_revision"],
-            offer_snapshot=snapshot,
-            desired_start=start,
-            months=months,
-            occupants=len(item.participant_ids),
-            message=f"Reviewed group application {group.id}; member cost consent is not a lease signature.",
-        )
-    item.status = "submitted"
+        item.proposal_snapshot = {
+            **proposal,
+            "participant_ids": list(item.participant_ids),
+            "participant_names": {
+                str(m.user.id): display_name(m.user)
+                for m in group.memberships.filter(
+                    status="active", user__id__in=item.participant_ids
+                ).select_related("user")
+            },
+        }
+        # An approved group application is not an individual tenancy interest.
+        item.status = "under_review"
+    if item.kind == "visit":
+        item.status = "submitted"
     item.save()
 
 
@@ -574,18 +638,31 @@ def housing_group_action(request, group_id, action):
                     if process.selection["offer_id"] == item["selection"]["offer_id"]:
                         invalidate_process(process)
             elif action == "vote":
-                voters = set(item["voter_ids"])
-                (
-                    voters.add(actor_id)
-                    if request.data.get("consent") is True
-                    else voters.discard(actor_id)
+                choice = request.data.get(
+                    "vote",
+                    "interested" if request.data.get("consent") is True else "abstain",
                 )
-                item["voter_ids"] = sorted(voters)
+                if choice not in {"interested", "maybe", "not_suitable", "abstain"}:
+                    raise ValidationError(
+                        {"vote": "Choose interested, maybe, not_suitable, or abstain."}
+                    )
+                votes = item.setdefault(
+                    "votes_by_user",
+                    {x: "interested" for x in item.get("voter_ids", [])},
+                )
+                if choice == "abstain":
+                    votes.pop(actor_id, None)
+                else:
+                    votes[actor_id] = choice
+                item["voter_ids"] = sorted(
+                    x for x, value in votes.items() if value == "interested"
+                )
                 item["revision"] += 1
             else:
                 item["comments"].append(
                     {
                         "user_id": actor_id,
+                        "group_revision": group.revision,
                         "text": text_field(
                             request.data, "note", required=True, limit=1000
                         ),
@@ -776,7 +853,11 @@ def group_invitation_join(request):
         GroupMembership.objects.update_or_create(
             group=group,
             user=request.user,
-            defaults={"role": "member", "status": "active"},
+            defaults={
+                "role": "member",
+                "status": "active",
+                "joined_revision": group.revision + 1,
+            },
         )
         invalidate_roster(group)
         group.revision += 1
@@ -785,4 +866,247 @@ def group_invitation_join(request):
 
     return mutate(
         request, "group.join", load, apply, lambda x: group_payload(x, request.user)
+    )
+
+
+def join_payload(item, user):
+    admin = item.group.memberships.filter(
+        user=user, status="active", role="admin"
+    ).exists()
+    return {
+        "id": str(item.id),
+        "group_id": str(item.group.id),
+        "group_name": item.group.name,
+        "user_id": str(item.user.id),
+        "name": display_name(item.user),
+        "note": item.note,
+        "revision": item.revision,
+        "status": item.status,
+        "allowed_actions": (
+            (["approve", "decline"] if admin else ["withdraw"])
+            if item.status == "pending"
+            else []
+        ),
+    }
+
+
+@planning_api(["GET"], "housing_groups")
+def open_groups(request):
+    groups = (
+        HousingGroup.objects.filter(status="active", visibility="open")
+        .exclude(memberships__user=request.user, memberships__status="removed")
+        .order_by("-created_at", "pkid")
+    )
+    return page(
+        request,
+        groups,
+        lambda x: {
+            "id": str(x.id),
+            "name": x.name,
+            "revision": x.revision,
+            "capacity": x.capacity,
+            "member_count": x.memberships.filter(status="active").count(),
+            "criteria": criteria_payload(x.criteria),
+            "status": x.status,
+        },
+    )
+
+
+@planning_api(["POST"], "housing_groups")
+def group_join_request(request, group_id):
+    def apply(group, revision):
+        check_revision(group.revision, request.data.get("group_revision"))
+        if group.visibility != "open" or group.status != "active":
+            raise NotFound()
+        if group.memberships.filter(
+            user=request.user, status__in=["active", "removed"]
+        ).exists():
+            raise PermissionDenied("Membership does not permit a new join request.")
+        if len(active_ids(group)) >= group.capacity:
+            raise RentalConflict("The group is full.", code="group_full")
+        if group.join_requests.filter(user=request.user, status="pending").exists():
+            raise RentalConflict("A join request is already pending.")
+        item, created = GroupJoinRequest.objects.get_or_create(
+            group=group, user=request.user
+        )
+        item.status, item.note = "pending", text_field(request.data, "note")
+        if not created:
+            item.revision += 1
+        item.save()
+        return item
+
+    return mutate(
+        request,
+        f"group.join_request.{group_id}",
+        lambda: get_object_or_404(
+            HousingGroup.objects.select_for_update(), id=group_id
+        ),
+        apply,
+        lambda x: join_payload(x, request.user),
+        creating=True,
+    )
+
+
+@planning_api(["GET"], "housing_groups")
+def group_join_detail(request, join_id):
+    item = get_object_or_404(
+        GroupJoinRequest.objects.select_related("group", "user"), id=join_id
+    )
+    if (
+        item.user_id != request.user.pk
+        and not item.group.memberships.filter(
+            user=request.user, role="admin", status="active"
+        ).exists()
+    ):
+        raise NotFound()
+    return Response(join_payload(item, request.user))
+
+
+@planning_api(["GET"], "housing_groups")
+def my_group_join_requests(request):
+    return page(
+        request,
+        GroupJoinRequest.objects.filter(user=request.user)
+        .select_related("group", "user")
+        .order_by("-created_at", "pkid"),
+        lambda x: join_payload(x, request.user),
+    )
+
+
+@planning_api(["POST"], "housing_groups")
+def group_join_decision(request, join_id, action):
+    def load():
+        item = get_object_or_404(GroupJoinRequest, id=join_id)
+        HousingGroup.objects.select_for_update().get(pk=item.group_id)
+        return GroupJoinRequest.objects.select_for_update().get(pk=item.pk)
+
+    def apply(item, revision):
+        if action not in join_payload(item, request.user)["allowed_actions"] or (
+            action == "withdraw" and item.user_id != request.user.pk
+        ):
+            raise PermissionDenied()
+        group = item.group
+        if action == "approve":
+            if group.status != "active" or group.visibility != "open":
+                raise RentalConflict("This group no longer accepts join requests.")
+            if not item.user.is_active or not item.user.is_verified:
+                raise RentalConflict("The applicant is no longer eligible.")
+            if len(active_ids(group)) >= group.capacity:
+                raise RentalConflict("The group is full.", code="group_full")
+            if group.memberships.filter(
+                user=item.user, status__in=["active", "removed"]
+            ).exists():
+                raise RentalConflict("Membership changed; refresh this request.")
+            GroupMembership.objects.update_or_create(
+                group=group,
+                user=item.user,
+                defaults={
+                    "role": "member",
+                    "status": "active",
+                    "joined_revision": group.revision + 1,
+                },
+            )
+            invalidate_roster(group)
+            group.revision += 1
+            group.save()
+        item.status = {
+            "approve": "approved",
+            "decline": "declined",
+            "withdraw": "withdrawn",
+        }[action]
+        item.revision += 1
+        item.save()
+        return item
+
+    return mutate(
+        request,
+        f"group.join.{action}.{join_id}",
+        load,
+        apply,
+        lambda x: join_payload(x, request.user),
+    )
+
+
+def owner_application_payload(item):
+    return {
+        **process_payload(item, item.property.owner),
+        "group_id": str(item.group.id),
+        "group_name": item.group.name,
+        "owner_note": item.owner_note,
+        "allowed_actions": (
+            ["approve", "decline", "request_changes"]
+            if item.status == "under_review"
+            else []
+        ),
+    }
+
+
+@planning_api(["GET"], "group_applications")
+def owner_group_applications(request):
+    items = (
+        GroupProcess.objects.filter(kind="application", property__owner=request.user)
+        .exclude(status__in=["collecting_consent", "ready"])
+        .select_related("property__owner", "group", "interest", "visit")
+        .order_by("-created_at", "pkid")
+    )
+    return page(request, items, owner_application_payload)
+
+
+@planning_api(["GET"], "group_applications")
+def owner_group_application_detail(request, application_id):
+    item = get_object_or_404(
+        GroupProcess,
+        id=application_id,
+        kind="application",
+        property__owner=request.user,
+    )
+    if item.status in {"collecting_consent", "ready"}:
+        raise NotFound()
+    return Response(owner_application_payload(item))
+
+
+@planning_api(["POST"], "group_applications")
+def owner_group_application_action(request, application_id, action):
+    def load():
+        item = get_object_or_404(
+            GroupProcess,
+            id=application_id,
+            kind="application",
+            property__owner=request.user,
+        )
+        HousingGroup.objects.select_for_update().get(pk=item.group_id)
+        return GroupProcess.objects.select_for_update().get(pk=item.pk)
+
+    def apply(item, revision):
+        if action not in owner_application_payload(item)["allowed_actions"]:
+            raise PermissionDenied()
+        check_revision(item.group.roster_revision, item.roster_revision)
+        selection(request, item.selection, owned=True)
+        if set(item.participant_ids) != set(item.consented_ids):
+            raise RentalConflict("Every applicant must approve the current proposal.")
+        item.status = {
+            "approve": "approved_to_proceed",
+            "decline": "rejected",
+            "request_changes": "changes_requested",
+        }[action]
+        item.owner_note = text_field(
+            request.data, "note", required=action == "request_changes"
+        )
+        item.revision += 1
+        item.history.append(
+            {
+                "action": action,
+                "at": timezone.now().isoformat(),
+                "revision": item.revision,
+            }
+        )
+        item.save()
+        return item
+
+    return mutate(
+        request,
+        f"group.application.{action}.{application_id}",
+        load,
+        apply,
+        owner_application_payload,
     )

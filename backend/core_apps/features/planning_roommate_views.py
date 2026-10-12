@@ -12,8 +12,14 @@ from .services.planning import (
     page,
     planning_api,
     text_field,
+    criteria_payload,
 )
 from .services.rental_phase2 import RentalConflict
+from .services.lifestyle_matching import (
+    profile_extensions,
+    match_facts,
+    disclosure_scope,
+)
 
 
 DIMENSIONS = {
@@ -24,6 +30,16 @@ DIMENSIONS = {
         key: {"yes", "no", "sometimes"}
         for key in ("workFromHome", "smoking", "guests", "pets")
     },
+    "workFromHome": {
+        "yes",
+        "no",
+        "sometimes",
+        "never",
+        "someDays",
+        "mostDays",
+        "variable",
+    },
+    "smoking": {"yes", "no", "sometimes", "outdoors", "indoors"},
 }
 
 
@@ -35,6 +51,14 @@ def lifestyle_payload(item):
         "habits": item.habits if item else {},
         "preferences": item.preferences if item else {},
         "disclosed": item.disclosed if item else [],
+        "importance": item.importance if item else {},
+        "details": item.details if item else {},
+        "search_context": (
+            criteria_payload(item.search_context)
+            if item and item.search_context
+            else {}
+        ),
+        "reason_categories": item.reason_categories if item else [],
     }
 
 
@@ -68,6 +92,7 @@ def profile_values(data):
         if result["habits"].get(key, "unspecified")
         not in {"unspecified", "preferNotToAnswer"}
     ]
+    result.update(profile_extensions(data, set(DIMENSIONS)))
     return result
 
 
@@ -119,16 +144,16 @@ def roommate_actions(user, item):
     return result
 
 
-def disclosures(profile):
+def disclosures(profile, fields=None):
     return [
         f"{key}: {profile.habits[key]}"
-        for key in profile.disclosed
+        for key in (profile.disclosed if fields is None else fields)
         if key in profile.habits
         and profile.habits[key] not in {"unspecified", "preferNotToAnswer"}
     ]
 
 
-def candidate_payload(item):
+def candidate_payload(item, facts=(), viewer_revision=0):
     return {
         "id": str(item.id),
         "user_id": str(item.user.id),
@@ -136,6 +161,9 @@ def candidate_payload(item):
         "status": "candidate",
         "revision": item.revision,
         "explanations": [],
+        "match_facts": list(facts),
+        "matching_rule_version": "declared-v2",
+        "profile_revisions": {"candidate": item.revision, "viewer": viewer_revision},
         "disclosures": disclosures(item),
         "chat_granted": False,
         "allowed_actions": ["request", "block"],
@@ -146,6 +174,14 @@ def candidate_payload(item):
 def connection_payload(item, user):
     other = item.second if item.first_id == user.pk else item.first
     profile = LifestyleProfile.objects.filter(user=other).first()
+    grant = item.disclosure_grants.get(str(other.id), {})
+    extra = (
+        grant.get("fields", [])
+        if isinstance(grant, dict)
+        and profile
+        and grant.get("revision") == profile.revision
+        else []
+    )
     return {
         "id": str(item.id),
         "user_id": str(other.id),
@@ -154,7 +190,14 @@ def connection_payload(item, user):
         "revision": item.revision,
         "explanations": [],
         "disclosures": (
-            disclosures(profile) if profile and item.status == "accepted" else []
+            disclosures(
+                profile,
+                sorted(
+                    set(profile.disclosed if profile.discoverable else []) | set(extra)
+                ),
+            )
+            if profile and item.status == "accepted"
+            else []
         ),
         "chat_granted": item.status == "accepted"
         and user.is_active
@@ -166,6 +209,11 @@ def connection_payload(item, user):
 
 @planning_api(["GET"], "roommates")
 def roommate_candidates(request):
+    viewer = LifestyleProfile.objects.filter(
+        user=request.user, discoverable=True
+    ).first()
+    if viewer is None:
+        return page(request, [], candidate_payload)
     excluded = {request.user.pk}
     for relation in connections(request.user).filter(
         status__in=["pending", "accepted", "blocked"]
@@ -179,7 +227,15 @@ def roommate_candidates(request):
         .select_related("user")
         .order_by("pkid")
     )
-    return page(request, queryset, candidate_payload)
+    ranked = []
+    for item in queryset:
+        conflict, agreements, differences, facts = match_facts(viewer, item, DIMENSIONS)
+        if not conflict:
+            ranked.append(((-agreements, differences, item.pk), item, facts))
+    ranked.sort(key=lambda x: x[0])
+    return page(
+        request, ranked, lambda x: candidate_payload(x[1], x[2], viewer.revision)
+    )
 
 
 @planning_api(["GET"], "roommates")
@@ -210,6 +266,15 @@ def roommate_candidate_action(request, candidate_id, action):
                 {"decision": "Use request or block matching the route."}
             )
         check_revision(candidate.revision, request.data.get("candidate_revision"))
+        if (
+            action == "request"
+            and not LifestyleProfile.objects.filter(
+                user=request.user, discoverable=True
+            ).exists()
+        ):
+            raise PermissionDenied(
+                "Enable roommate discovery before requesting a connection."
+            )
         first, second = sorted((request.user.pk, candidate.user_id))
         item = (
             RoommateConnection.objects.select_for_update()
@@ -225,6 +290,11 @@ def roommate_candidate_action(request, candidate_id, action):
             "status": "blocked" if action == "block" else "pending",
             "blocked_by": [str(request.user.id)] if action == "block" else [],
             "note": text_field(request.data, "note"),
+            "disclosure_grants": {
+                str(request.user.id): disclosure_scope(
+                    request.user, request.data, DIMENSIONS
+                )
+            },
         }
         if not item:
             try:
@@ -268,6 +338,12 @@ def roommate_connection_action(request, connection_id, action):
         }[action]
         if action == "block":
             item.blocked_by = [str(request.user.id)]
+        if action == "accept":
+            item.disclosure_grants[str(request.user.id)] = disclosure_scope(
+                request.user, request.data, DIMENSIONS
+            )
+        elif action in {"withdraw", "block", "decline"}:
+            item.disclosure_grants = {}
         item.revision += 1
         item.save()
         return item

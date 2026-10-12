@@ -290,6 +290,15 @@ class TenancyInvitation(TimeStampedModel):
     )
     eligibility_snapshot = models.JSONField(default=dict, blank=True)
     consumed_at = models.DateTimeField(null=True, blank=True)
+    provenance_version = models.CharField(max_length=30, default="visit_decision_v1")
+    source_visit = models.ForeignKey(
+        "properties.PropertyVisit", on_delete=models.PROTECT, null=True, blank=True,
+        related_name="rental_invitations",
+    )
+    source_decision = models.ForeignKey(
+        "properties.PropertyVisitDecision", on_delete=models.PROTECT, null=True, blank=True,
+        related_name="rental_invitations",
+    )
 
     class Meta:
         ordering = ["-created_at", "-id"]
@@ -312,6 +321,11 @@ class TenancyInvitation(TimeStampedModel):
                 fields=["owner", "property", "tenant", "offer_id"],
                 condition=Q(status__in=["pending", "accepted"], lease__isnull=True),
                 name="unique_live_tenancy_invitation",
+            ),
+            models.UniqueConstraint(
+                fields=["source_visit"],
+                condition=Q(status__in=["pending", "accepted"], lease__isnull=True),
+                name="unique_live_visit_invitation",
             ),
         ]
 

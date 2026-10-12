@@ -6,9 +6,27 @@ from . import planning_group_views as groups
 from . import planning_housing_views as housing
 from . import planning_roommate_views as roommates
 from . import planning_transition_views as transitions
+from .planning_home_views import planning_home
 
 
 urlpatterns = [
+    path("planning-home/", planning_home),
+    path("open-housing-groups/", groups.open_groups),
+    path("group-join-requests/", groups.my_group_join_requests),
+    path("group-join-requests/<uuid:join_id>/", groups.group_join_detail),
+    path("housing-groups/<uuid:group_id>/join-requests/", groups.group_join_request),
+    path(
+        "group-join-requests/<uuid:join_id>/<slug:action>/", groups.group_join_decision
+    ),
+    path("owner-group-applications/", groups.owner_group_applications),
+    path(
+        "group-applications/<uuid:application_id>/",
+        groups.owner_group_application_detail,
+    ),
+    path(
+        "group-applications/<uuid:application_id>/<slug:action>/",
+        groups.owner_group_application_action,
+    ),
     path("lifestyle-profile/", roommates.lifestyle_profile),
     path("roommate-candidates/", roommates.roommate_candidates),
     path("roommate-connections/", roommates.roommate_connections),
@@ -29,6 +47,7 @@ urlpatterns = [
     path("group-invitations/<uuid:invitation_id>/", groups.group_invitation_detail),
     path("housing-requests/", housing.housing_requests),
     path("housing-demand/", housing.housing_demand),
+    path("owner-housing-offers/", housing.owner_housing_offers),
     path("housing-requests/<uuid:request_id>/", housing.housing_request_detail),
     path("housing-requests/<uuid:request_id>/offers/", housing.housing_offers),
     path(
@@ -81,6 +100,7 @@ urlpatterns = [
     path("replacement-invitations/", transitions.replacement_invitations),
     path("commute-searches/", discovery.commute_searches),
     path("commute-searches/<uuid:search_id>/", discovery.commute_detail),
+    path("commute-searches/<uuid:search_id>/cancel/", discovery.commute_cancel),
     path("commute-searches/<uuid:search_id>/results/", discovery.commute_results),
     path("tenant-assistant/turns/", discovery.tenant_assistant_turns),
 ]

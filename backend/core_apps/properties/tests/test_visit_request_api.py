@@ -66,6 +66,8 @@ class TestTenantVisitRequestScreens:
             "status_label",
             "actions",
             "alternative_search_filters",
+            "revision", "offer_id", "offer_snapshot", "post_visit_decision",
+            "post_visit_actions", "rental_continuation",
         }
         assert set(card["property"]) == {"id", "title", "location", "price"}
         assert card["id"] == str(visit.id)

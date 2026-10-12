@@ -230,7 +230,28 @@ def group_entry(actors, participants):
             consent=True,
         ),
     )
-    interest = RentalInterest.objects.get()
+    # Group consensus is an owner-reviewed application, not permission for the
+    # leader to create an individual tenancy on everybody's behalf.
+    reviewed = owner_api.get(API + f"group-applications/{application['id']}/")
+    assert reviewed.status_code == 200 and reviewed.data["status"] == "under_review"
+    approved = mutate(
+        owner_api,
+        f"group-applications/{application['id']}/approve/",
+        command(reviewed.data["revision"], note="Suitable group application"),
+    )
+    assert approved["status"] == "approved_to_proceed"
+    assert not RentalInterest.objects.exists()
+    created = mutate(
+        tenant_api,
+        "rental-interests/",
+        command(
+            property_id=str(prop.id), offer_id=offer_id, offer_revision=2,
+            desired_start=criteria_for(prop)["start_on"], months=1,
+            occupants=2, message="Explicit individual application after owner group review",
+        ),
+        201,
+    )
+    interest = RentalInterest.objects.get(id=created["id"])
     assert (
         interest.tenant_id == tenant.pk
         and interest.offer_id == offer_id

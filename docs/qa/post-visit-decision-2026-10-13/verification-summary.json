@@ -1,0 +1,22 @@
+{
+  "evidence": "local PostgreSQL with explicit fake rental provider; no deployment",
+  "python": "3.11.17",
+  "django": "4.2.11",
+  "tests": 812,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "seconds": 63.057,
+  "post_visit_tests": 41,
+  "flutter_request_roundtrips": 8,
+  "response_scenarios": [
+    "eligible_tenant",
+    "proceed_tenant",
+    "proceed_owner",
+    "invitation",
+    "invitation_tenant_context",
+    "decline_tenant",
+    "decline_owner",
+    "historical_tenant"
+  ]
+}

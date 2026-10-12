@@ -1,7 +1,11 @@
 from django.utils import timezone
 from rest_framework import serializers
 
-from .services.lease_permissions import can_cancel_draft, is_read_only
+from .services.lease_permissions import (
+    can_cancel_draft,
+    can_revoke_invitation,
+    is_read_only,
+)
 
 from .models import (
     BoostCampaign,
@@ -358,6 +362,8 @@ class TenancyInvitationCreateSerializer(serializers.Serializer):
     offer_id = serializers.CharField(max_length=64, required=False, allow_blank=True)
     expected_offer_revision = serializers.IntegerField(min_value=1, required=False)
     request_key = serializers.CharField(max_length=100)
+    source_visit_id = serializers.UUIDField(required=False)
+    source_decision_id = serializers.UUIDField(required=False)
 
 
 class TenancyInvitationResponseSerializer(serializers.Serializer):
@@ -367,6 +373,8 @@ class TenancyInvitationResponseSerializer(serializers.Serializer):
 
 
 class TenancyInvitationSerializer(serializers.ModelSerializer):
+    source_visit_id = serializers.UUIDField(source="source_visit.id", read_only=True, allow_null=True)
+    source_decision_id = serializers.UUIDField(source="source_decision.id", read_only=True, allow_null=True)
     property_id = serializers.UUIDField(source="property.id", read_only=True)
     property_title = serializers.CharField(source="property.title", read_only=True)
     owner_id = serializers.UUIDField(source="owner.id", read_only=True)
@@ -412,6 +420,9 @@ class TenancyInvitationSerializer(serializers.ModelSerializer):
             "consumed_at",
             "allowed_actions",
             "blocking_reasons",
+            "source_visit_id",
+            "source_decision_id",
+            "provenance_version",
         ]
 
     def get_eligible_for_lease(self, obj):
@@ -437,14 +448,7 @@ class TenancyInvitationSerializer(serializers.ModelSerializer):
         actions = []
         if self.get_actions(obj)["can_respond"]:
             actions.append("respond")
-        if (
-            request
-            and request.user == obj.owner
-            and obj.lease_id is None
-            and obj.consumed_at is None
-            and obj.status
-            in {TenancyInvitation.Status.PENDING, TenancyInvitation.Status.ACCEPTED}
-        ):
+        if can_revoke_invitation(request.user if request else None, obj):
             actions.append("revoke_invitation")
         return actions
 

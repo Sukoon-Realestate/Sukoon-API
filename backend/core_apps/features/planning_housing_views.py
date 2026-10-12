@@ -1,4 +1,5 @@
 from datetime import timedelta
+from django.conf import settings
 
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
@@ -110,15 +111,30 @@ def housing_requests(request):
         )
     if request.data.get("action") != "publish":
         raise ValidationError({"action": "A new housing request must be published."})
+
+    def create(_, revision):
+        live = HousingRequest.objects.filter(
+            user=request.user,
+            status__in=["published", "paused"],
+            expires_at__gt=timezone.now(),
+        ).count()
+        if live >= settings.PLANNING_MAX_LIVE_REQUESTS:
+            raise RentalConflict(
+                "Close an existing housing request before publishing another.",
+                code="request_limit",
+            )
+        return HousingRequest.objects.create(
+            user=request.user,
+            expires_at=timezone.now()
+            + timedelta(days=settings.PLANNING_REQUEST_TTL_DAYS),
+            **_request_values(request.data),
+        )
+
     return mutate(
         request,
         "housing_request.create",
         lambda: None,
-        lambda _, revision: HousingRequest.objects.create(
-            user=request.user,
-            expires_at=timezone.now() + timedelta(days=30),
-            **_request_values(request.data),
-        ),
+        create,
         lambda x: request_payload(x, request.user),
         creating=True,
     )
@@ -193,18 +209,40 @@ def offer_status(item):
         or item.request_revision != item.request.revision
     ):
         return "expired"
+    if item.status in {"sent", "viewed", "shortlisted", "selected_to_proceed"}:
+        from .services.tenancy_invitations import resolve_offer_snapshot
+
+        try:
+            if not public_properties().filter(pk=item.property_id).exists():
+                return "unavailable"
+            resolve_offer_snapshot(
+                item.property,
+                item.selection["offer_id"],
+                item.selection["offer_revision"],
+            )
+        except (ValidationError, RentalConflict, KeyError):
+            return "unavailable"
     return item.status
 
 
 def offer_actions(user, item):
     if user.pk == item.owner_id:
-        return ["withdraw"] if item.status in {"sent", "viewed", "shortlisted"} else []
+        return (
+            ["withdraw"]
+            if item.status in {"sent", "viewed", "shortlisted", "selected_to_proceed"}
+            else []
+        )
     if user.pk == item.request.user_id and offer_status(item) in {
         "sent",
         "viewed",
         "shortlisted",
     }:
-        return ["shortlist", "decline"] if item.status != "shortlisted" else ["decline"]
+        return (["shortlist"] if item.status != "shortlisted" else []) + [
+            "select_to_proceed",
+            "decline",
+        ]
+    if user.pk == item.request.user_id and offer_status(item) == "selected_to_proceed":
+        return ["decline"]
     return []
 
 
@@ -262,6 +300,29 @@ def housing_offers(request, request_id):
             raise ValidationError({"request_id": "Must match the route."})
         check_revision(item.revision, request.data.get("request_revision"))
         prop, snapshot = selection(request, request.data.get("selection"), owned=True)
+        if (
+            item.offers.filter(
+                owner=request.user,
+                property=prop,
+                request_revision=item.revision,
+                selection__offer_id=snapshot["offer_id"],
+            )
+            .exclude(status__in=["withdrawn", "declined"])
+            .exists()
+        ):
+            raise RentalConflict(
+                "An offer for this exact accommodation already exists.",
+                code="duplicate_offer",
+            )
+        if (
+            item.offers.filter(
+                owner=request.user, created_at__gte=timezone.now() - timedelta(days=1)
+            ).count()
+            >= settings.PLANNING_OWNER_OFFERS_PER_REQUEST_PER_DAY
+        ):
+            raise RentalConflict(
+                "The offer limit for this request was reached.", code="offer_limit"
+            )
         if str(prop.city.id) != item.criteria["city_id"] or (
             item.criteria["rental_scope"]
             and item.criteria["rental_scope"] != snapshot["rental_scope"]
@@ -272,7 +333,7 @@ def housing_offers(request, request_id):
                 }
             )
         capacity = 1 if snapshot["rental_scope"] == "bed" else snapshot.get("capacity")
-        if capacity is not None and item.criteria["people"] > capacity:
+        if capacity is None or item.criteria["people"] > capacity:
             raise ValidationError(
                 {"selection": "The accommodation cannot hold the requested party."}
             )
@@ -340,12 +401,22 @@ def housing_offer_action(request, offer_id, action):
             raise PermissionDenied("This offer action is not available to you.")
         if request.data.get("decision") != action:
             raise ValidationError({"decision": "Body and route decision must match."})
-        if action == "shortlist":
+        if action in {"shortlist", "select_to_proceed"}:
             selection(request, item.selection)
+        if (
+            action == "select_to_proceed"
+            and item.request.offers.filter(status="selected_to_proceed")
+            .exclude(pk=item.pk)
+            .exists()
+        ):
+            raise RentalConflict(
+                "Review the previously selected offer before selecting another."
+            )
         item.status = {
             "shortlist": "shortlisted",
             "decline": "declined",
             "withdraw": "withdrawn",
+            "select_to_proceed": "selected_to_proceed",
         }[action]
         item.revision += 1
         item.save()
@@ -361,5 +432,16 @@ def housing_offer_action(request, offer_id, action):
         f"housing_offer.{action}.{offer_id}",
         load,
         apply,
+        lambda x: offer_payload(x, request.user),
+    )
+
+
+@planning_api(["GET"], "housing_offers")
+def owner_housing_offers(request):
+    return page(
+        request,
+        HousingOffer.objects.filter(owner=request.user)
+        .select_related("request", "owner", "property")
+        .order_by("-created_at", "pkid"),
         lambda x: offer_payload(x, request.user),
     )

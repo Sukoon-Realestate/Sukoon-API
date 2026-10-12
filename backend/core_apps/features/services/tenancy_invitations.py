@@ -9,7 +9,6 @@ from core_apps.features.models import Lease, TenancyInvitation
 from core_apps.notifications.models import Notification
 from core_apps.notifications.services.fcm_service import FCMService
 from core_apps.notifications.services.notification_service import NotificationService
-from core_apps.properties.models import PropertyVisit
 
 
 class InvitationConflict(APIException):
@@ -72,22 +71,6 @@ def validate_accounts(owner, tenant, request=None):
                 request,
                 "A verified active tenant account is required.",
                 "يلزم حساب مستأجر نشط وموثّق.",
-            )
-        )
-
-
-def validate_source_relationship(property_obj, tenant, request=None):
-    allowed = PropertyVisit.objects.filter(
-        property=property_obj,
-        tenant=tenant,
-        status__in=[PropertyVisit.Status.PENDING, PropertyVisit.Status.CONFIRMED],
-    ).exists()
-    if not allowed:
-        raise PermissionDenied(
-            localized(
-                request,
-                "The tenant must have a current visit relationship for this property.",
-                "يجب أن تكون للمستأجر علاقة زيارة حالية بهذا العقار.",
             )
         )
 
@@ -283,6 +266,9 @@ def notify_after_commit(*, recipient, invitation, notification_type, title, body
         "action_type": "open_tenancy_invitation",
         "target_id": str(invitation.id),
     }
+    if invitation.source_visit_id:
+        data["source_visit_id"] = str(invitation.source_visit.id)
+        data["source_decision_id"] = str(invitation.source_decision.id)
     NotificationService.create_notification(
         user=recipient,
         title=title,
@@ -299,6 +285,7 @@ def notify_after_commit(*, recipient, invitation, notification_type, title, body
             title=title,
             body=body,
             data={
+                **data,
                 "notification_type": notification_type,
                 "action_type": "open_tenancy_invitation",
                 "target_id": str(invitation.id),

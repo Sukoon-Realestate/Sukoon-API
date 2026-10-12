@@ -33,6 +33,7 @@ from ..providers import checkout_available, fake_provider_available
 from .cycle_permissions import cycle_actions
 from .lease_permissions import (
     agreement_actions,
+    can_revoke_invitation,
     handover_actions,
     interest_actions,
     proposal_actions,
@@ -242,16 +243,18 @@ def capabilities_for(user, subject, requested_action=""):
         enabled.extend(["rental_interests", "rental_agreements"])
         if isinstance(subject, OwnerPaymentProfile):
             enabled.append("owner_payouts")
-    elif phase2_ready and isinstance(subject, TenancyInvitation):
-        from django.utils import timezone
-
-        enabled.append("rental_agreements")
+    elif isinstance(subject, TenancyInvitation):
+        can_revoke = can_revoke_invitation(user, subject)
+        # Revocation only changes local invitation state; signing/payment
+        # provider availability must not prevent an owner from withdrawing it.
+        if phase2_ready or can_revoke:
+            enabled.append("rental_agreements")
+        if can_revoke:
+            allowed.append("revoke_invitation")
         if (
-            subject.owner_id == user.pk
+            phase2_ready
+            and can_revoke
             and subject.status == TenancyInvitation.Status.ACCEPTED
-            and not subject.lease_id
-            and not subject.consumed_at
-            and subject.expires_at > timezone.now()
         ):
             allowed.append("create_lease")
 

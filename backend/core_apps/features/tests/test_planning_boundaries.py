@@ -123,7 +123,7 @@ def test_condition_objection_reapproval_immutable_baseline_and_private_evidence(
     item = post(owner, record_path + "finalize/", report_body(item, "finalize")).data[
         "resource"
     ]
-    assert item["status"] == "final" and item["allowed_actions"] == []
+    assert item["status"] == "final" and item["allowed_actions"] == ["addendum"]
     post(owner, record_path + "submit/", report_body(item), 403)
     assert ConditionReport.objects.get().versions
     move_out = (
@@ -485,17 +485,8 @@ def test_commute_mock_filters_rank_before_paging_unknown_exclusion_expiry_and_pr
     assert result["results"][0]["estimates"][0]["duration_seconds"] == 0
     assert "mock" in result["results"][0]["estimates"][0]["explanation"]
     assert authenticated(stranger).get(API + path + "results/").status_code == 404
-    with override_settings(PLANNING_MOCK_DISCOVERY=False):
-        unknown = post(tenant, "commute-searches/", {**body, **command()}, 201).data[
-            "resource"
-        ]
-        assert unknown["unknown_count"] == 1
-        assert (
-            authenticated(tenant)
-            .get(API + f"commute-searches/{unknown['id']}/results/")
-            .data["results"]
-            == []
-        )
+    with override_settings(PLANNING_MOCK_DISCOVERY=False, PLANNING_ROUTES_API_KEY=""):
+        post(tenant, "commute-searches/", {**body, **command()}, 403)
     expensive = post(
         tenant,
         "commute-searches/",
@@ -552,7 +543,7 @@ def test_assistant_grounded_catalog_actions_no_raw_prompt_and_account_scoped_his
         x["kind"] in {"search", "property", "compare"} and "endpoint" not in x
         for x in reply["actions"]
     )
-    assert reply["costs"][0]["money"]["amount_minor"] == 1_000_000
+    assert reply["costs"] == []  # Prices require an explicitly selected offer.
     turn = TenantAssistantTurn.objects.get(id=reply["id"])
     assert body["text"] not in json.dumps(turn.reply)
     assert body["text"] not in json.dumps(
@@ -622,6 +613,11 @@ def test_departure_replays_and_recovers_without_disclosing_current_group(
 @pytest.mark.django_db
 def test_chat_send_uses_current_mutual_roommate_consent(rental_participants):
     _, tenant, member, _, _ = rental_participants
+    post(
+        tenant,
+        "lifestyle-profile/",
+        command(discoverable=True, habits={}, preferences={}, disclosed=[]),
+    )
     profile = post(
         member,
         "lifestyle-profile/",

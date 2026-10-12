@@ -1,4 +1,5 @@
 import re
+from copy import deepcopy
 import uuid
 
 from django.db.models import Q
@@ -45,6 +46,8 @@ def report_actions(user, report):
         return ["acknowledge", "object"] if report.author_id != user.pk else []
     if report.status == "acknowledged":
         return ["finalize", "object"]
+    if report.status == "final":
+        return ["addendum"]
     return []
 
 
@@ -55,6 +58,7 @@ def report_payload(item, user):
         "kind": item.kind,
         "status": item.status,
         "revision": item.revision,
+        "content_revision": item.content_revision,
         "inspected_on": str(item.inspected_on),
         "selection": item.selection,
         "items": item.items,
@@ -62,7 +66,12 @@ def report_payload(item, user):
         "acknowledgements": item.acknowledgements,
         "baseline_id": str(item.baseline.id) if item.baseline_id else "",
         "baseline_revision": item.baseline_revision,
-        "baseline_items": item.baseline.items if item.baseline_id else [],
+        "baseline_items": item.baseline_snapshot.get(
+            "items", item.baseline.items if item.baseline_id else []
+        ),
+        "versions": item.versions,
+        "objections": item.objections,
+        "supersedes_id": str(item.supersedes.id) if item.supersedes_id else "",
         "history": item.history,
         "allowed_actions": report_actions(user, item),
         "blocking_reasons": [],
@@ -138,7 +147,14 @@ def condition_report_context(request, lease_id):
     ]
     if baseline:
         items = [
-            {**x, "condition": "notInspected", "note": "", "evidence_ids": []}
+            {
+                **x,
+                "condition": "notInspected",
+                "note": "",
+                "reading": "",
+                "quantity": None,
+                "evidence_ids": [],
+            }
             for x in baseline.items
         ]
     return Response(
@@ -281,6 +297,7 @@ def _report_values(lease, data):
         "items": items,
         "baseline": baseline,
         "baseline_revision": baseline.revision if baseline else 0,
+        "baseline_snapshot": report_snapshot(baseline) if baseline else {},
     }, evidence
 
 
@@ -291,7 +308,26 @@ def _acknowledgement(user, revision, status="accepted", note=""):
         "status": status,
         "revision": revision,
         "note": note,
+        "at": timezone.now().isoformat(),
     }
+
+
+def report_snapshot(item):
+    return deepcopy(
+        {
+            "revision": item.revision,
+            "content_revision": item.content_revision,
+            "status": item.status,
+            "inspected_on": str(item.inspected_on),
+            "selection": item.selection,
+            "items": item.items,
+            "evidence_ids": sorted(
+                str(x) for x in item.evidence.values_list("id", flat=True)
+            ),
+            "acknowledgements": item.acknowledgements,
+            "objections": item.objections,
+        }
+    )
 
 
 @planning_api(["GET", "POST"], "condition_reports")
@@ -308,11 +344,26 @@ def condition_reports(request, lease_id):
         if request.data.get("action") != "submit":
             raise ValidationError({"action": "Use submit to create a report."})
         values, evidence = _report_values(lease, request.data)
+        source = None
+        if request.data.get("supersedes_id"):
+            source = get_object_or_404(
+                ConditionReport.objects.select_for_update(),
+                lease=lease,
+                id=request.data["supersedes_id"],
+                status="final",
+                kind=values["kind"],
+            )
+            check_revision(source.revision, request.data.get("source_revision"))
+            if source.addenda.exists():
+                raise RentalConflict(
+                    "Continue the existing addendum before creating another."
+                )
         item = ConditionReport.objects.create(
             lease=lease,
             author=request.user,
             acknowledgements=[_acknowledgement(request.user, 1)],
             history=["Report submitted."],
+            supersedes=source,
             **values,
         )
         item.evidence.set(evidence)
@@ -342,18 +393,15 @@ def condition_report_action(request, report_id, action):
             request.data.get("lease_id")
         ) != str(item.lease.id):
             raise ValidationError("Action and lease must match the report.")
+        if action == "addendum":
+            raise ValidationError(
+                "Submit a new report with supersedes_id and source_revision."
+            )
+        item.versions.append(report_snapshot(item))
         if action == "submit":
             values, evidence = _report_values(item.lease, request.data)
             if values["kind"] != item.kind:
                 raise ValidationError({"kind": "The report kind cannot change."})
-            item.versions.append(
-                {
-                    "revision": item.revision,
-                    "content_revision": item.content_revision,
-                    "items": item.items,
-                    "acknowledgements": item.acknowledgements,
-                }
-            )
             for key, value in values.items():
                 setattr(item, key, value)
             item.evidence.set(evidence)
@@ -364,15 +412,35 @@ def condition_report_action(request, report_id, action):
             item.status = "submitted"
         elif action == "object":
             note = text_field(request.data, "objection", required=True)
+            item_id = text_field(request.data, "objection_item_id", limit=100)
+            if item_id and not any(x["id"] == item_id for x in item.items):
+                raise ValidationError(
+                    {"objection_item_id": "Select an item from this report version."}
+                )
+            objection = {
+                **_acknowledgement(
+                    request.user, item.content_revision, "objected", note
+                ),
+                "id": str(uuid.uuid4()),
+                "item_id": item_id,
+            }
+            item.objections.append(objection)
             item.acknowledgements = [
+                x for x in item.acknowledgements if x["user_id"] != str(request.user.id)
+            ] + [
                 _acknowledgement(request.user, item.content_revision, "objected", note)
             ]
             item.status = "changes_requested"
         elif action == "acknowledge":
             # Full client bodies cannot edit inspected facts while acknowledging.
-            if request.data.get("items") != item.items or selection_payload(
-                request.data.get("selection") or {}
-            ) != selection_payload(item.selection):
+            if (
+                request.data.get("items") != item.items
+                or sorted(request.data.get("evidence_ids", []))
+                != sorted(str(x) for x in item.evidence.values_list("id", flat=True))
+                or request.data.get("inspected_on") != str(item.inspected_on)
+                or selection_payload(request.data.get("selection") or {})
+                != selection_payload(item.selection)
+            ):
                 raise RentalConflict(
                     "Acknowledgement must refer to the persisted report content.",
                     code="report_changed",

@@ -1,10 +1,13 @@
 import math
 import re
+from itertools import islice
 from datetime import timedelta
 from decimal import Decimal, InvalidOperation
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 from django.conf import settings
+from django.db import transaction
+from django.core.cache import cache
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime, parse_time
@@ -14,6 +17,14 @@ from rest_framework.response import Response
 from core_apps.properties.models import City
 from .planning_models import CommuteSearch, TenantAssistantTurn
 from .providers import fake_provider_available
+from .services.planning_providers import (
+    mock_discovery,
+    extract_criteria,
+    provider_budget,
+)
+from .services.commute_jobs import destination_constraints
+from .services.commands import command_identity
+from .services.rental_phase2 import replay_operation, fingerprint
 from .services.planning import (
     money,
     mutate,
@@ -31,6 +42,41 @@ def catalog_matches(filters):
     """Filter actual offer records before routing or pagination."""
     if not isinstance(filters, dict):
         raise ValidationError({"filters": "Supply a filter object."})
+    text_filters = {
+        "city",
+        "governorate",
+        "district",
+        "rental_scope",
+        "property_type",
+        "price_period",
+        "price_min",
+        "price_max",
+        "suitable_for",
+        "bedrooms",
+        "bathrooms",
+        "search",
+        "ordering",
+    }
+    if any(
+        key in filters and not isinstance(filters[key], (str, int, float))
+        for key in text_filters
+    ):
+        raise ValidationError(
+            {"filters": "Filter identifiers and values must be scalar values."}
+        )
+    if (
+        set(filters)
+        - text_filters
+        - {
+            "page",
+            "page_size",
+            "amenities",
+            "is_furnished",
+            "is_verified",
+            "smoking_allowed",
+        }
+    ):
+        raise ValidationError({"filters": "Unsupported search filters."})
     properties = (
         public_properties()
         .select_related("city", "property_type")
@@ -48,7 +94,7 @@ def catalog_matches(filters):
                     ): filters[field]
                 }
             )
-    for field in ("is_furnished", "smoking_allowed"):
+    for field in ("is_furnished", "smoking_allowed", "is_verified"):
         if filters.get(field) not in (None, ""):
             value = filters[field]
             if value not in (True, False, "true", "false"):
@@ -145,6 +191,10 @@ def commute_payload(item):
         "resolved_at": item.created_at.isoformat(),
         "expires_at": item.expires_at.isoformat(),
         "unknown_count": item.unknown_count,
+        "status": item.status,
+        "processed_count": item.processed_count,
+        "total_count": item.total_count,
+        "failure_code": item.failure_code,
     }
 
 
@@ -224,6 +274,29 @@ def commute_searches(request):
         mock = fake_provider_available() and getattr(
             settings, "PLANNING_MOCK_DISCOVERY", False
         )
+        if not mock:
+            constraints = destination_constraints(request.data)
+            # Validate filters before queueing; the worker rechecks inventory at execution.
+            next(catalog_matches(request.data.get("filters", {})), None)
+            provider_budget(request.user, "commute")
+            item = CommuteSearch.objects.create(
+                user=request.user,
+                query={
+                    "destinations": constraints,
+                    "balance": request.data["balance"],
+                    "filters": request.data.get("filters", {}),
+                },
+                coverage="pending",
+                provider="google_routes",
+                status="queued",
+                expires_at=timezone.now() + timedelta(minutes=30),
+            )
+            from .tasks import process_commute_search
+
+            transaction.on_commit(
+                lambda: process_commute_search.delay(str(item.id)), robust=True
+            )
+            return item
         matches, unknown = [], 0
         for prop, offers in catalog_matches(request.data.get("filters", {})):
             estimates = []
@@ -307,9 +380,36 @@ def commute_detail(request, search_id):
     return Response(commute_payload(_commute(request.user, search_id)))
 
 
+@planning_api(["POST"], "commute")
+def commute_cancel(request, search_id):
+    def apply(item, revision):
+        if item.status not in {"queued", "running"}:
+            raise RentalConflict("This search is already complete.")
+        item.status = "cancelled"
+        item.matches, item.query = [], {}
+        item.revision += 1
+        item.save()
+        return item
+
+    return mutate(
+        request,
+        f"commute.cancel.{search_id}",
+        lambda: get_object_or_404(
+            CommuteSearch.objects.select_for_update(), id=search_id, user=request.user
+        ),
+        apply,
+        commute_payload,
+    )
+
+
 @planning_api(["GET"], "commute")
 def commute_results(request, search_id):
     item = _commute(request.user, search_id)
+    if item.status != "succeeded":
+        raise RentalConflict(
+            "The route search is not complete.",
+            code=item.failure_code or "search_pending",
+        )
     # Recheck visibility at read time, including after moderation/withdrawal.
     current = {
         str(prop.id): {x["offer_id"] for x in offers}
@@ -331,6 +431,95 @@ def commute_results(request, search_id):
 
 @planning_api(["POST"], "tenant_assistant")
 def tenant_assistant_turns(request):
+    key, _ = command_identity(request.data)
+    replay = replay_operation(request.user, "assistant.turn", key, request.data)
+    if replay:
+        return Response(replay[0], status=replay[1])
+    text = text_field(request.data, "text", required=True, limit=4000)
+    language = request.data.get("language")
+    if language not in {"ar", "en"} or request.data.get("retain_history") is not False:
+        raise ValidationError("Use language ar/en and retain_history=false.")
+    session_id = text_field(request.data, "session_id", required=True, limit=100)
+    context = request.data.get("context", {})
+    if not isinstance(context, dict) or set(context) - {
+        "filters",
+        "property_id",
+        "offer_id",
+        "property_ids",
+    }:
+        raise ValidationError(
+            {"context": "Use reviewed filters and an optional exact property/offer."}
+        )
+    comparison_ids = context.get("property_ids", [])
+    if (
+        not isinstance(comparison_ids, list)
+        or len(comparison_ids) > 3
+        or any(not isinstance(x, str) for x in comparison_ids)
+        or len(set(comparison_ids)) != len(comparison_ids)
+    ):
+        raise ValidationError({"context": "Compare at most three distinct properties."})
+    if comparison_ids and (context.get("property_id") or context.get("offer_id")):
+        raise ValidationError(
+            {"context": "Choose either a comparison or an exact property and offer."}
+        )
+    if context.get("offer_id") and not context.get("property_id"):
+        raise ValidationError({"context": "An offer requires its property."})
+    # Resolve before a billable provider call. Client IDs are never authority.
+    selected_ids = comparison_ids or (
+        [context["property_id"]] if context.get("property_id") else []
+    )
+    selected_properties = [
+        get_object_or_404(public_properties(), id=x) for x in selected_ids
+    ]
+    if request.data.get("previous_turn_id"):
+        previous = get_object_or_404(
+            TenantAssistantTurn,
+            id=request.data["previous_turn_id"],
+            user=request.user,
+            session_id=session_id,
+            expires_at__gt=timezone.now(),
+        )
+        context = {"filters": previous.reply.get("filters", {}), **context}
+    extracted = None
+    lock_key = None
+    if not mock_discovery():
+        lock_key = "planning-assistant:" + fingerprint(
+            {"user": str(request.user.id), "key": key}
+        )
+        if not cache.add(lock_key, True, timeout=90):
+            raise RentalConflict(
+                "This assistant request is already processing.",
+                code="operation_in_progress",
+            )
+        try:
+            provider_budget(request.user, "assistant")
+            catalog = {
+                "cities": [
+                    {"id": str(x.id), "name": x.name}
+                    for x in City.objects.order_by("pkid")
+                ],
+                "amenities": [
+                    "wifi",
+                    "elevator",
+                    "garage",
+                    "security",
+                    "balcony",
+                    "air_conditioning",
+                    "near_metro",
+                    "natural_gas",
+                    "electricity_meter",
+                    "water_meter",
+                ],
+            }
+            extracted = extract_criteria(
+                text, language, catalog, {"filters": context.get("filters", {})}
+            )
+            # Reject unsupported typed operators and invalid prices before using model output.
+            next(catalog_matches(extracted["filters"]), None)
+        except Exception:
+            cache.delete(lock_key)
+            raise
+
     def apply(_, revision):
         text = text_field(request.data, "text", required=True, limit=4000)
         session_id = text_field(request.data, "session_id", required=True, limit=100)
@@ -349,7 +538,7 @@ def tenant_assistant_turns(request):
                 session_id=session_id,
                 expires_at__gt=timezone.now(),
             )
-        filters = {}
+        filters = dict(context.get("filters", {}))
         city = next(
             (
                 x
@@ -399,7 +588,43 @@ def tenant_assistant_turns(request):
                 if language == "ar"
                 else "Specify the price period before applying this budget."
             )
-        matches = list(catalog_matches(filters))[:3]
+        if extracted is not None:
+            filters = extracted["filters"]
+            unresolved = extracted["unresolved_requirements"]
+        matches = list(islice(catalog_matches(filters), 3))
+        if selected_properties:
+            selected_matches = []
+            for selected_prop in selected_properties:
+                prop = get_object_or_404(public_properties(), pk=selected_prop.pk)
+                offers = []
+                for raw in (prop.rental_inventory or {}).get("offers", []):
+                    if raw.get("archived") or raw.get("availability") != "available":
+                        continue
+                    if context.get("offer_id") and raw.get("id") != context["offer_id"]:
+                        continue
+                    try:
+                        _, snapshot = resolve_offer_snapshot(
+                            prop, raw["id"], raw["revision"]
+                        )
+                    except (ValidationError, RentalConflict):
+                        continue
+                    offers.append(snapshot)
+                if context.get("offer_id") and not offers:
+                    raise RentalConflict(
+                        "The selected offer changed or is unavailable.",
+                        code="offer_unavailable",
+                    )
+                selected_matches.append((prop, offers))
+            matches = (
+                selected_matches
+                if comparison_ids
+                else (
+                    selected_matches
+                    + [(p, o) for p, o in matches if p.pk != selected_properties[0].pk][
+                        :2
+                    ]
+                )
+            )
         ids = [str(prop.id) for prop, _ in matches]
         arabic = language == "ar"
         actions = [
@@ -411,7 +636,14 @@ def tenant_assistant_turns(request):
                     "kind": "property",
                     "title": prop.title,
                     "property_id": str(prop.id),
-                    "offer_id": offers[0]["offer_id"],
+                    "offer_id": (
+                        context.get("offer_id", "")
+                        if context.get("property_id") == str(prop.id)
+                        and any(
+                            x["offer_id"] == context.get("offer_id") for x in offers
+                        )
+                        else ""
+                    ),
                 }
             )
         if len(ids) >= 2:
@@ -423,14 +655,37 @@ def tenant_assistant_turns(request):
                 }
             )
         costs = []
-        if matches:
-            prop, offers = matches[0]
-            rent, deposit = offer_money(offers[0])
+        selected = next(
+            (
+                (prop, offer)
+                for prop, offers in matches
+                for offer in offers
+                if str(prop.id) == context.get("property_id")
+                and offer["offer_id"] == context.get("offer_id")
+            ),
+            None,
+        )
+        if selected:
+            prop, selected_offer = selected
+            if extracted and extracted["questions"]:
+                actions.append(
+                    {
+                        "kind": "messageDraft",
+                        "title": (
+                            "Review questions for the owner"
+                            if language == "en"
+                            else "مراجعة الأسئلة للمالك"
+                        ),
+                        "property_id": str(prop.id),
+                        "offer_id": selected_offer["offer_id"],
+                    }
+                )
+            rent, deposit = offer_money(selected_offer)
             costs = [
                 {
                     "label": prop.title,
                     "kind": "recurring",
-                    "period": offers[0]["terms"]["price_period"],
+                    "period": selected_offer["terms"]["price_period"],
                     "money": money(rent),
                 },
                 {
@@ -458,7 +713,18 @@ def tenant_assistant_turns(request):
             "grounded_property_ids": ids,
             "actions": actions,
             "costs": costs,
-            "provider": "catalog_rules",
+            "provider": "gemini" if extracted is not None else "catalog_rules",
+            "questions": extracted["questions"] if extracted else [],
+            "grounded_offers": [
+                {
+                    "property_id": str(prop.id),
+                    "offer_id": offer["offer_id"],
+                    "offer_revision": offer["offer_revision"],
+                    "terms": offer["terms"],
+                }
+                for prop, offers in matches
+                for offer in offers
+            ],
             "retain_history": False,
         }
         # Keep no raw prompt; a short-lived reply supports same-key recovery.
@@ -470,11 +736,15 @@ def tenant_assistant_turns(request):
             expires_at=timezone.now() + timedelta(hours=24),
         )
 
-    return mutate(
-        request,
-        "assistant.turn",
-        lambda: None,
-        apply,
-        lambda x: {"id": str(x.id), "revision": x.revision, **x.reply},
-        creating=True,
-    )
+    try:
+        return mutate(
+            request,
+            "assistant.turn",
+            lambda: None,
+            apply,
+            lambda x: {"id": str(x.id), "revision": x.revision, **x.reply},
+            creating=True,
+        )
+    finally:
+        if lock_key:
+            cache.delete(lock_key)

@@ -2,6 +2,7 @@
 
 import json
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import pytest
@@ -21,12 +22,19 @@ API = "/api/v1/features/v1/"
 
 def pending_change(phase5_lease, kind="amendments"):
     owner, tenant, lease = phase5_lease
+    terms = dict(lease.terms)
+    if kind == "renewals":
+        terms.update(
+            starts_on=str(lease.end_date),
+            ends_on_exclusive=str(lease.end_date + timedelta(days=31)),
+            handover_on=str(lease.end_date),
+        )
     created = client_for(owner).post(
         API + f"leases/{lease.id}/{kind}/",
         command(
             reason="Explicitly accepted change",
-            effective_on=str(timezone.localdate()),
-            terms=lease.terms,
+            effective_on=str(lease.end_date if kind == "renewals" else timezone.localdate()),
+            terms=terms,
             evidence_ids=[],
             lease_revision=lease.revision,
         ),

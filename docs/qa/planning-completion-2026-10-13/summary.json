@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-13",
+  "scope": "Local seven-feature completion in darak-app and Sukoon-API/backend; no deployment",
+  "postgres": {
+    "passed": 621,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 67.59,
+    "warning_records": 482,
+    "actual_flutter_request_body_tests": 8,
+    "scope": [
+      "features",
+      "properties",
+      "notifications",
+      "profiles",
+      "common"
+    ]
+  },
+  "flutter_enabled": {
+    "passed": 81,
+    "skipped": 5,
+    "reason": "Opposite build-mode tests; all five passed in the explicit disabled-mode run"
+  },
+  "flutter_disabled": {
+    "passed": 5,
+    "skipped": 0
+  },
+  "flutter_renewal_regression": {
+    "passed": 55
+  },
+  "flutter_django_roundtrip": {
+    "passed": 21
+  },
+  "flutter_counts_overlap": true,
+  "layout_scenarios": 360,
+  "analysis": {
+    "errors": 0,
+    "warnings": 0,
+    "infos": 1,
+    "exit_code": 1,
+    "info": "Existing TickerMode.of deprecation in chat_list_content.dart:74"
+  },
+  "django_system_check": "passed",
+  "migration_drift": "none; fresh test graph includes features/0017",
+  "android": {
+    "result": "built",
+    "flavor": "dev",
+    "mode": "debug",
+    "verification_bypass": false,
+    "apk_sha256": "91d7da29ccbf5461763eec925601aae5d79a2ca2183854e451bd8dc5eaacd703",
+    "apk_bytes": 269320512,
+    "gradle_seconds": 58.2
+  },
+  "providers": {
+    "routes": "mocked network boundary",
+    "gemini": "mocked network boundary; request schema checked against public REST discovery",
+    "push_signing_payments": "test providers only; no live completion claimed"
+  },
+  "not_verified": [
+    "live Google calls and account quota",
+    "deployed worker and beat",
+    "device push",
+    "Android/iOS device execution",
+    "voice permissions on device",
+    "live signature/payment/private-storage callbacks"
+  ],
+  "local_postgres_cleanup": "Owned isolated cluster stopped successfully; no shared database accessed"
+}

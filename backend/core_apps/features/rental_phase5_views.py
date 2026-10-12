@@ -174,6 +174,9 @@ def maintenance_requests(request, lease_id):
     evidence = _safe_evidence(lease, request.data["evidence_ids"])
     with transaction.atomic():
         lease = _lease(request, lease_id, lock=True)
+        replay = replay_operation(request.user, operation, request.data["request_key"], request.data)
+        if replay:
+            return Response(replay[0], status=replay[1])
         item = MaintenanceRequest.objects.create(
             lease=lease,
             reporter=request.user,
@@ -388,6 +391,23 @@ def change_collection(request, lease_id, kind):
         return Response(replay[0], status=replay[1])
     if int(request.data.get("lease_revision", 0)) != lease.revision:
         raise RentalConflict("Lease revision conflict.", code="stale_revision")
+    def optional_date(field):
+        value = request.data.get(field)
+        if value in (None, ""):
+            return None
+        try:
+            parsed = parse_date(value) if isinstance(value, str) else None
+        except ValueError:
+            parsed = None
+        if parsed is None:
+            raise ValidationError({field: "Use a valid YYYY-MM-DD date."})
+        return parsed
+
+    requested_date = optional_date("requested_date")
+    effective_date = optional_date("effective_on")
+    terms = request.data.get("terms", {})
+    if not isinstance(terms, dict):
+        raise ValidationError({"terms": "Supply an object."})
     invoice = None
     original_due = deferred = None
     if kind in {
@@ -430,6 +450,37 @@ def change_collection(request, lease_id, kind):
     evidence = _safe_evidence(lease, request.data.get("evidence_ids", []))
     with transaction.atomic():
         lease = _lease(request, lease_id, lock=True)
+        replay = replay_operation(request.user, operation, request.data["request_key"], request.data)
+        if replay:
+            return Response(replay[0], status=replay[1])
+        if int(request.data.get("lease_revision", 0)) != lease.revision:
+            raise RentalConflict("Lease revision conflict.", code="stale_revision")
+        if kind == RentalChange.Kind.RENEWAL:
+            from .services.planning_transitions import require_no_departure
+
+            require_no_departure(lease)
+            if lease.rental_changes.filter(kind=kind).exclude(status=RentalChange.Status.REJECTED).exists():
+                raise RentalConflict("Resolve the existing renewal before creating another.")
+            terms = request.data["terms"]
+            try:
+                starts = parse_date(terms.get("starts_on", ""))
+                ends = parse_date(terms.get("ends_on_exclusive", ""))
+                handover = parse_date(terms.get("handover_on", ""))
+            except (TypeError, ValueError):
+                raise ValidationError({"terms": "Use valid civil dates."}) from None
+            if not starts or starts != lease.end_date or not ends or ends <= starts:
+                raise ValidationError({"terms": "A continuous renewal starts at the current end date and ends later."})
+            if effective_date is not None and effective_date != starts:
+                raise ValidationError({"effective_on": "A renewal takes effect on its reviewed start date."})
+            from .services.commands import money_minor
+            if money_minor(terms.get("monthly_rent")) <= 0:
+                raise ValidationError({"terms": "Renewal rent must be positive."})
+            if handover is None or not starts <= handover < ends:
+                raise ValidationError({"terms": "The handover date must be inside the renewal term."})
+            if any(not isinstance(terms.get(field), str) or not terms[field].strip()
+                   for field in ("template_id", "template_version")):
+                raise ValidationError({"terms": "A reviewed agreement template and version are required."})
+            effective_date = starts
         item = RentalChange.objects.create(
             lease=lease,
             invoice=invoice,
@@ -441,10 +492,10 @@ def change_collection(request, lease_id, kind):
                 else RentalChange.Status.PROPOSED
             ),
             reason=request.data.get("reason", ""),
-            requested_date=request.data.get("requested_date"),
+            requested_date=requested_date,
             original_due_at=original_due,
             deferred_until=deferred,
-            effective_on=request.data.get("effective_on"),
+            effective_on=effective_date,
             amount_minor=(request.data.get("amount") or {}).get("amount_minor"),
             method=request.data.get("method", ""),
             terms=request.data.get("terms", {}),
@@ -460,6 +511,8 @@ def change_collection(request, lease_id, kind):
             ),
         )
         item.evidence.set(evidence)
+        from .services.planning_notifications import record_event
+        record_event(item, request.user, operation)
         output = remember_mutation(
             user=request.user,
             operation=operation,
@@ -603,6 +656,8 @@ def change_respond(request, change_id, kind):
                         item.applied_at = timezone.now()
         item.revision += 1
         item.save()
+        from .services.planning_notifications import record_event
+        record_event(item, request.user, operation)
         output = remember_mutation(
             user=request.user,
             operation=operation,
@@ -636,6 +691,9 @@ def submit_change_for_signature(request, change_id, kind):
             return Response(replay[0], status=replay[1])
         if item.status != RentalChange.Status.ACCEPTED:
             raise RentalConflict("Both participants must accept the exact change.")
+        if kind == RentalChange.Kind.RENEWAL:
+            from .services.planning_transitions import require_no_departure
+            require_no_departure(item.lease)
         if int(request.data.get("expected_revision", 0)) != item.revision:
             raise RentalConflict("Change revision conflict.", code="stale_revision")
         generated = get_rental_provider().generate_agreement(
@@ -647,6 +705,8 @@ def submit_change_for_signature(request, change_id, kind):
         item.signed_by = []
         item.revision += 1
         item.save()
+        from .services.planning_notifications import record_event
+        record_event(item, request.user, operation)
         output = remember_mutation(
             user=request.user,
             operation=operation,
@@ -756,4 +816,6 @@ def complete_change_signature(provider_session_id):
             item.status = RentalChange.Status.SIGNED
             item.revision += 1
         item.save()
+        from .services.planning_notifications import record_event
+        record_event(item, session.signer, f"change.signed.{session.id}")
         return item

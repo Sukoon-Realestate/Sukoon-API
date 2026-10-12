@@ -46,6 +46,8 @@ def enabled_services():
 
 
 def require_planning(user, capability):
+    from .planning_providers import ready_services
+
     if not user.is_active or not user.is_verified:
         raise PermissionDenied(
             {
@@ -53,7 +55,7 @@ def require_planning(user, capability):
                 "code": "account_verification_required",
             }
         )
-    if capability is not None and capability not in enabled_services():
+    if capability is not None and capability not in ready_services(enabled_services()):
         raise PermissionDenied(
             {
                 "message": "This planning service is disabled.",
@@ -120,6 +122,9 @@ def mutate(request, operation, load, apply, serialize, *, creating=False):
     elif parent is not None:
         check_revision(parent.revision, revision)
     item = apply(parent, revision)
+    from .planning_notifications import record_event
+
+    record_event(item, request.user, operation)
     response_status = 201 if creating else 200
     output = remember_mutation(
         user=request.user,
@@ -266,7 +271,9 @@ def offer_money(snapshot):
             raise ValueError
         rent = int(value)
         token = terms.get("deposit", "")
-        if token in {"", "none", "no_deposit"}:
+        if token in {"", None}:
+            deposit = None
+        elif token in {"none", "no_deposit"}:
             deposit = 0
         elif token in {"half_month", "one_month", "two_months"}:
             from decimal import ROUND_HALF_UP
@@ -367,6 +374,7 @@ def criteria(raw):
         "people": people,
         "amenities": amenities,
         "furnished": furnished,
+        "area_note": text_field(raw, "area_note", limit=300),
     }
 
 
@@ -394,7 +402,7 @@ def criteria_payload(value):
         "start_on": value.get("start_on", ""),
         "end_on": value.get("end_on", ""),
         "people": value.get("people", 1),
-        "area_note": "",
+        "area_note": value.get("area_note", ""),
     }
 
 
@@ -438,6 +446,7 @@ def validate_payload_types(value, depth=0):
         "time_kind",
         "timezone",
         "local_time",
+        "vote",
         "appointment_at",
         "condition",
         "token",
@@ -466,11 +475,17 @@ def validate_payload_types(value, depth=0):
         "total",
         "budget_min",
         "budget_max",
+        "importance",
+        "details",
+        "search_context",
+        "context",
     }
     string_lists = {
         "participant_ids",
         "evidence_ids",
         "disclosed",
+        "share_fields",
+        "reason_categories",
         "amenities",
         "room_ids",
         "room_names",

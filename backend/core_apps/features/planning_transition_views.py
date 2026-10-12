@@ -159,6 +159,9 @@ def _transition_list(request, lease_id, kind):
         )
 
     def apply(lease, revision):
+        from .services.planning_transitions import require_no_renewal
+
+        require_no_renewal(lease)
         if lease.legacy_read_only or lease.status not in {
             "active",
             "termination_pending",
@@ -251,8 +254,14 @@ def transition_detail_action(request, transition_id, kind, action=None):
         elif action == "nominate":
             _nominate(request, item)
         elif action == "approve_availability":
+            from .services.planning_transitions import require_no_renewal
+
+            require_no_renewal(item.lease)
             item.availability_approved = True
         elif action == "approve_candidate":
+            from .services.planning_transitions import require_no_renewal
+
+            require_no_renewal(item.lease)
             candidate = get_object_or_404(_candidates(item.lease), pk=item.candidate_id)
             check_revision(candidate.revision, item.candidate_revision)
             if not item.candidate_consented:
@@ -394,6 +403,9 @@ def reconcile_transitions():
             projection = transition_projection(item)
             released = projection["outgoing_release_status"] == "released"
             effective_on = max(lease.end_date, item.requested_on)
+            if projection["incoming_lease_id"]:
+                incoming = Lease.objects.get(id=projection["incoming_lease_id"])
+                effective_on = max(effective_on, incoming.start_date)
             ready = released and timezone.localdate() >= effective_on
             if item.kind == "replacement":
                 ready = (

@@ -10,6 +10,8 @@ from ..planning_models import (
     CommuteSearch,
     ConditionReport,
     GroupInvitation,
+    GroupJoinRequest,
+    GroupProcess,
     HousingGroup,
     HousingOffer,
     HousingRequest,
@@ -43,6 +45,19 @@ def planning_subject(user, identifier):
     ).first()
     if group:
         return group
+    join = GroupJoinRequest.objects.filter(id=identifier).first()
+    if join and (
+        join.user_id == user.pk
+        or join.group.memberships.filter(
+            user=user, role="admin", status="active"
+        ).exists()
+    ):
+        return join
+    process = GroupProcess.objects.filter(
+        id=identifier, property__owner=user, kind="application"
+    ).first()
+    if process:
+        return process
     invite = GroupInvitation.objects.filter(
         id=identifier,
         group__memberships__user=user,
@@ -78,7 +93,7 @@ def planning_actions(user, capability, subject_id=""):
     general = {
         "lifestyle": ["read", "save"],
         "roommates": ["read", "request", "block"],
-        "housing_groups": ["read", "create", "preview_invite", "join"],
+        "housing_groups": ["read", "create", "preview_invite", "join", "request_join"],
         "housing_requests": ["read", "publish"],
         "housing_offers": ["read"] + (["offer"] if eligible_owner(user) else []),
         "condition_reports": ["read", "submit"],
@@ -140,6 +155,14 @@ def planning_actions(user, capability, subject_id=""):
         elif capability == "group_applications":
             actions = [x for x in actions if "application" in x or x == "apply"]
         return ["read", *actions]
+    if isinstance(item, GroupJoinRequest) and capability == "housing_groups":
+        from ..planning_group_views import join_payload
+
+        return ["read", *join_payload(item, user)["allowed_actions"]]
+    if isinstance(item, GroupProcess) and capability == "group_applications":
+        from ..planning_group_views import owner_application_payload
+
+        return ["read", *owner_application_payload(item)["allowed_actions"]]
     if isinstance(item, GroupInvitation) and capability == "housing_groups":
         return ["read_invite"]
     if isinstance(item, HousingRequest) and capability == "housing_requests":
@@ -167,5 +190,5 @@ def planning_actions(user, capability, subject_id=""):
 
         return ["read", *transition_actions(user, item)]
     if isinstance(item, CommuteSearch) and capability == "commute":
-        return ["read"]
+        return ["read"] + (["cancel"] if item.status in {"queued", "running"} else [])
     return []

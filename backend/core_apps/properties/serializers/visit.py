@@ -119,7 +119,18 @@ def get_visit_language(request_or_context):
 User = get_user_model()
 
 
-class PropertyVisitSerializer(serializers.ModelSerializer):
+class PostVisitContextMixin:
+    def to_representation(self, instance):
+        output = super().to_representation(instance)
+        request = self.context.get("request")
+        if request and request.user.is_authenticated:
+            from ..services.post_visit_decision import visit_context
+
+            output.update(visit_context(instance, request.user))
+        return output
+
+
+class PropertyVisitSerializer(PostVisitContextMixin, serializers.ModelSerializer):
     property = PropertyListSerializer(read_only=True)
     tenant_name = serializers.CharField(source="tenant.get_full_name", read_only=True)
     tenant_email = serializers.SerializerMethodField()
@@ -254,7 +265,7 @@ class VisitTenantSerializer(serializers.ModelSerializer):
         return self._contact(obj)["phone_notice"]
 
 
-class PropertyVisitDetailSerializer(serializers.ModelSerializer):
+class PropertyVisitDetailSerializer(PostVisitContextMixin, serializers.ModelSerializer):
     tenant = serializers.SerializerMethodField()
     property_id = serializers.UUIDField(source="property.id", read_only=True)
     time = serializers.SerializerMethodField()
@@ -545,7 +556,7 @@ class PropertyReviewItemSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
 
-class TenantVisitRequestSerializer(serializers.ModelSerializer):
+class TenantVisitRequestSerializer(PostVisitContextMixin, serializers.ModelSerializer):
     """Payload used by the tenant visit-request cards shown in the mobile app."""
 
     property = VisitPropertySummarySerializer(read_only=True)
@@ -604,7 +615,8 @@ class TenantVisitRequestSerializer(serializers.ModelSerializer):
         was_reviewed = hasattr(obj, "review")
         return {
             "can_cancel": obj.status
-            in (PropertyVisit.Status.PENDING, PropertyVisit.Status.CONFIRMED),
+            in (PropertyVisit.Status.PENDING, PropertyVisit.Status.CONFIRMED)
+            and not hasattr(obj, "post_visit_decision"),
             "can_chat": obj.status == PropertyVisit.Status.CONFIRMED,
             "can_review": (
                 obj.status == PropertyVisit.Status.CONFIRMED
@@ -737,7 +749,7 @@ _OWNER_DETAIL_STATUS_LABEL_EN = {
 _OWNER_DETAIL_STATUS_LABEL = _OWNER_DETAIL_STATUS_LABEL_AR
 
 
-class OwnerVisitRequestCardSerializer(serializers.ModelSerializer):
+class OwnerVisitRequestCardSerializer(PostVisitContextMixin, serializers.ModelSerializer):
     """
     Card serializer for the Owner Visit Requests list screen (Screen 1).
     """
@@ -834,7 +846,7 @@ class OwnerVisitRequestCardSerializer(serializers.ModelSerializer):
         return ""
 
 
-class OwnerVisitRequestDetailSerializer(serializers.ModelSerializer):
+class OwnerVisitRequestDetailSerializer(PostVisitContextMixin, serializers.ModelSerializer):
     """
     Detailed serializer for the Owner Visit Request Details screen (Screen 2).
     """

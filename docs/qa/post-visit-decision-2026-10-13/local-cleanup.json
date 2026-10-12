@@ -1,0 +1,8 @@
+{
+  "owned_local_cluster": "/var/folders/5y/lhf2x27123vdrw05pgfvk__h0000gn/T/sokoun-post-visit-pg-lsu0l6rx/data",
+  "port": "55441",
+  "exit_code": 0,
+  "stdout": "waiting for server to shut down.... done\nserver stopped\n",
+  "stderr": "",
+  "directory_retained": true
+}

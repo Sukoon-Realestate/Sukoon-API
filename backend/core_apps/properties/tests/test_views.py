@@ -837,6 +837,8 @@ class TestPropertyVisitViews:
         assert set(result.keys()) == {
             "id",
             "property_id",
+            "revision", "offer_id", "offer_snapshot", "post_visit_decision",
+            "post_visit_actions", "rental_continuation",
             "tenant",
             "visit_date",
             "visit_time",
@@ -940,6 +942,8 @@ class TestPropertyVisitViews:
         assert set(results[0].keys()) == {
             "id",
             "property_id",
+            "revision", "offer_id", "offer_snapshot", "post_visit_decision",
+            "post_visit_actions", "rental_continuation",
             "tenant",
             "visit_date",
             "visit_time",
@@ -970,6 +974,8 @@ class TestPropertyVisitViews:
         assert set(visit_data.keys()) == {
             "id",
             "property_id",
+            "revision", "offer_id", "offer_snapshot", "post_visit_decision",
+            "post_visit_actions", "rental_continuation",
             "tenant",
             "visit_date",
             "visit_time",
