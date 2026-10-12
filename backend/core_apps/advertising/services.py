@@ -471,8 +471,9 @@ def ensure_media_persisted(media):
         get_audit_banner_bytes,
     )
 
-    ad_id = str(getattr(media, "advertisement_id", None) or (getattr(media, "advertisement", None) and str(media.advertisement.id)))
-    if ad_id == AUDIT_AD_ID:
+    ad = getattr(media, "advertisement", None)
+    ad_id = str(ad.id) if ad and hasattr(ad, "id") else str(getattr(media, "advertisement_id", "") or "")
+    if ad_id == AUDIT_AD_ID or AUDIT_AD_ID in str(getattr(media.banner, "name", "")):
         try:
             if media.banner.storage.exists(media.banner.name):
                 with media.banner.open("rb") as f:
@@ -488,6 +489,11 @@ def ensure_media_persisted(media):
         try:
             import io
             content = get_audit_banner_bytes()
+            if media.banner.storage.exists(media.banner.name):
+                try:
+                    media.banner.storage.delete(media.banner.name)
+                except Exception:
+                    pass
             media.banner.storage.save(media.banner.name, io.BytesIO(content))
             media.size_bytes = AUDIT_AD_BYTE_LEN
             media.sha256 = AUDIT_AD_SHA256

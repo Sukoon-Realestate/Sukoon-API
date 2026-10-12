@@ -1,0 +1,23 @@
+{
+  "legacy": {
+    "property_id": "13954644-cc37-49d9-a772-f1a88be81401",
+    "source_visit_id": "e11a71e0-410a-42b7-a367-9c98867a5412",
+    "draft": {
+      "template_id": "eg-residential-v1",
+      "template_version": "1",
+      "start_date": "2026-10-14",
+      "end_date": "2027-10-14",
+      "rent": {
+        "amount_minor": 150000,
+        "currency": "EGP",
+        "exponent": 2
+      }
+    }
+  },
+  "banner": {
+    "advertisement_id": "85295dd1-f8bd-4c82-a903-9bdc3d90af98",
+    "operation_id": "74682688-4428-413c-a1ae-c4b87222c687",
+    "mock_operation_id": "74682688-4428-413c-a1ae-c4b87222c687-payment",
+    "artwork_sha256": "dc2be014d6db85c4e73572c11fe5f21eb10df6d84675a3cc1b3350097e2e212b"
+  }
+}

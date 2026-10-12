@@ -595,12 +595,12 @@ def test_existing_audit_ad_media_recovery_and_mock_payment_activation(auth_clien
     assert replay_res.json()["data"]["id"] == str(ad.id)
 
     # 6. Alternating Accept-Language headers return proper Content-Language and localized messages
-    res_ar = guest_client.get(reverse("advertising:plans"), HTTP_ACCEPT_LANGUAGE="ar")
+    res_ar = guest_client.get(reverse("advertising:plan-list"), HTTP_ACCEPT_LANGUAGE="ar")
     assert res_ar.status_code == 200
     assert res_ar["Content-Language"] == "ar"
     assert res_ar.json()["message"] == "الخطط المتاحة."
 
-    res_en = guest_client.get(reverse("advertising:plans"), HTTP_ACCEPT_LANGUAGE="en")
+    res_en = guest_client.get(reverse("advertising:plan-list"), HTTP_ACCEPT_LANGUAGE="en")
     assert res_en.status_code == 200
     assert res_en["Content-Language"] == "en"
     assert res_en.json()["message"] == "Available plans."

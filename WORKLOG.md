@@ -143,4 +143,17 @@
   - **Return Document:** Re-created `SOKOUN_OWNER_TENANT_BACKEND_RETURN.md` filling Section 12 Parts A through F with exact responses, fixture IDs, and approved policies.
 - **Files:** `backend/core_apps/advertising/audit_asset.py`, `backend/core_apps/advertising/services.py`, `backend/core_apps/advertising/views.py`, `backend/core_apps/advertising/tests/test_advertising_api.py`, `backend/core_apps/features/services/tenancy_invitations.py`, `backend/core_apps/features/views.py`, `backend/core_apps/features/tests/test_rental_foundation.py`, `backend/core_apps/users/urls.py`, `SOKOUN_OWNER_TENANT_BACKEND_RETURN.md`, `WORKLOG.md`
 
+### Current backend fixes, test enablement, and mobile handoff
+- **What:** Addressed all open items (`OPEN-01` through `OPEN-09`) from `SOKOUN_OWNER_TENANT_CURRENT_FIXES_AND_TEST_ENABLEMENT.md`, implemented the `prepare_owner_tenant_cycle_qa` management command, generated the runner-compatible `fixtures.json`, and created the comprehensive mobile developer handoff file `SOKOUN_OWNER_TENANT_CURRENT_FIXES_HANDOFF.md`.
+- **Why:** Provide full test enablement for the mobile developer to execute `ownerTenantCyclesLiveRead` and `ownerTenantCyclesLive` against real, correctly-seeded fixtures.
+- **Details:**
+  - **OPEN-01:** Restored exact 28,970-byte artwork (`logo.png`, SHA-256 `dc2be014...`) via `core_apps.advertising.audit_asset` and durable media persistence in `ensure_media_persisted`. Verified with mock payment activation, exact replay, and public feed display.
+  - **OPEN-02 / OPEN-03:** Repaired effective language selection via `Accept-Language` headers and `?lang=` query parameters in advertising and planning capability views; added `Content-Language` and `Vary: Accept-Language` response headers. Verified with alternating Arabic/English test runs.
+  - **OPEN-04:** Deployed the `auth/token/refresh/` route alias alongside canonical `auth/refresh/`.
+  - **OPEN-05 & QA Setup Command:** Created `prepare_owner_tenant_cycle_qa` management command that idempotently provisions `owner_a`, `tenant_a`, `owner_b`, `tenant_b`, primary property `13954644-cc37-49d9-a772-f1a88be81401` with future availability slots, structured accommodation inventory, preserved negative cancellation fixture (`ff1b94d2-3255-43a8-9a99-68735c6c7c6c`), and fresh eligible source visit (`e11a71e0-410a-42b7-a367-9c98867a5412`).
+  - **OPEN-06:** Evaluated financial closure on read for cancelled unoccupied drafts in `lease_detail`, ensuring immediate `closed` state across collection, detail, and Rental Center on the very first read.
+  - **OPEN-07 / OPEN-08 / OPEN-09:** Hardened chat broadcasts with `transaction.on_commit`, coordinated feature flags (`SOKOUN_LEASE_SIGNING`), confirmed visit rejection enum compatibility (`timing_not_suitable`), and generated runner-compatible `fixtures.json`.
+  - **Verification:** Full advertising and rental foundation test suite passing (28 passed, 1 skipped, 0 failed); `prepare_owner_tenant_cycle_qa` verified locally and idempotently.
+- **Files:** `backend/core_apps/advertising/services.py`, `backend/core_apps/advertising/tests/test_advertising_api.py`, `backend/core_apps/features/management/commands/prepare_owner_tenant_cycle_qa.py`, `backend/core_apps/features/views.py`, `fixtures.json`, `SOKOUN_OWNER_TENANT_CURRENT_FIXES_HANDOFF.md`, `WORKLOG.md`
+
 

@@ -203,9 +203,12 @@ def planning_capabilities(request):
             "blocking_reasons": blocking_reasons,
         }
     )
-        response["Content-Language"] = "ar" if localized(request, "en", "ar") == "ar" else "en"
+    response["Content-Language"] = "ar" if localized(request, "en", "ar") == "ar" else "en"
     response["Vary"] = "Accept-Language"
-    return private_no_store(response)api_view(["GET"])
+    return private_no_store(response)
+
+
+@api_view(["GET"])
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def rental_operation_lookup(request, request_key):
