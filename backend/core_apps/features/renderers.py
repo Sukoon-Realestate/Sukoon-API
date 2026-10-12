@@ -9,6 +9,7 @@ class FeatureJsonRenderer(JSONRenderer):
     """Renderer for the mobile feature-v1 success contract."""
 
     charset = "utf-8"
+    preserve_error_metadata = True
 
     def render(self, data, accepted_media_type=None, renderer_context=None):
         renderer_context = renderer_context or {}

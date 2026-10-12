@@ -1,5 +1,3 @@
-from os import getenv
-
 from .base import *  # noqa
 from .base import SIMPLE_JWT
 
@@ -13,6 +11,7 @@ SITE_NAME = "Sukoon"
 DOMAIN = "localhost"
 
 EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
+CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}}
 
 DATABASES = {
     "default": {
@@ -39,6 +38,22 @@ CELERY_TASK_EAGER_PROPAGATES = True
 RENTAL_PROVIDER_BACKEND = "fake"
 RENTAL_RUNTIME_ENVIRONMENT = "test"
 RENTAL_FAKE_PROVIDER_ALLOWED = True
+OWNER_TENANT_QA_ENABLED = True
+PLANNING_ENABLED_SERVICES = [
+    "lifestyle",
+    "roommates",
+    "housing_groups",
+    "group_visits",
+    "group_applications",
+    "housing_requests",
+    "housing_offers",
+    "condition_reports",
+    "move_out_notices",
+    "replacements",
+    "commute",
+    "tenant_assistant",
+]
+PLANNING_MOCK_DISCOVERY = True
 RENTAL_PROVIDER_WEBHOOK_SECRET = "test-rental-provider-secret"
 RENTAL_CHECKOUT_ENABLED = True
 RENTAL_CHECKOUT_ALLOWED_ORIGINS = ["https://fake-rental-provider.test"]

@@ -4,7 +4,7 @@ import json
 from datetime import date, timedelta
 
 from django.conf import settings
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.utils import timezone
 from rest_framework import status
 from rest_framework.exceptions import APIException, PermissionDenied, ValidationError
@@ -150,14 +150,52 @@ def validate_interest_capacity(snapshot, occupants):
         raise ValidationError({"occupants": "The selected offer cannot hold this party."})
 
 
+def _overlapping_accommodation(first, second):
+    first, second = first or {}, second or {}
+    if (
+        not first
+        or not second
+        or "entire_property" in {first.get("rental_scope"), second.get("rental_scope")}
+    ):
+        return True
+    if first.get("rental_scope") == second.get("rental_scope") == "bed":
+        return first.get("bed_id") == second.get("bed_id")
+    return bool(set(first.get("room_ids", [])) & set(second.get("room_ids", [])))
+
+
+@transaction.atomic
 def reserve_inventory_days(lease, starts_on, ends_on_exclusive, expires_at):
+    from core_apps.properties.models import Property
+
     if ends_on_exclusive <= starts_on:
         raise ValidationError({"ends_on_exclusive": "Must be after starts_on."})
     now = timezone.now()
+    # All offers in a property share this lock: a room and a bed in that room
+    # must not be allocated concurrently under different offer IDs.
+    Property.objects.select_for_update().get(pk=lease.property_id)
     RentalInventoryDayLock.objects.filter(
+        property_id=lease.property_id,
         kind=RentalInventoryDayLock.Kind.HOLD,
         expires_at__lte=now,
     ).delete()
+    conflicts = (
+        RentalInventoryDayLock.objects.filter(
+            property_id=lease.property_id,
+            stay_on__gte=starts_on,
+            stay_on__lt=ends_on_exclusive,
+        )
+        .exclude(lease=lease)
+        .select_related("lease")
+    )
+    for occupied in conflicts:
+        if occupied.offer_id == lease.offer_id or _overlapping_accommodation(
+            lease.offer_snapshot,
+            occupied.lease.offer_snapshot if occupied.lease else None,
+        ):
+            raise RentalConflict(
+                "The accommodation is no longer available for those dates.",
+                code="offer_unavailable",
+            )
     days = []
     current = starts_on
     while current < ends_on_exclusive:
@@ -173,7 +211,8 @@ def reserve_inventory_days(lease, starts_on, ends_on_exclusive, expires_at):
         )
         current += timedelta(days=1)
     try:
-        RentalInventoryDayLock.objects.bulk_create(days)
+        with transaction.atomic():
+            RentalInventoryDayLock.objects.bulk_create(days)
     except IntegrityError:
         raise RentalConflict(
             "The accommodation is no longer available for those dates.",
@@ -182,10 +221,11 @@ def reserve_inventory_days(lease, starts_on, ends_on_exclusive, expires_at):
 
 
 def activate_inventory(lease):
-    updated = RentalInventoryDayLock.objects.filter(
+    holds = RentalInventoryDayLock.objects.filter(
         lease=lease,
         kind=RentalInventoryDayLock.Kind.HOLD,
         expires_at__gt=timezone.now(),
-    ).update(kind=RentalInventoryDayLock.Kind.OCCUPIED, expires_at=None)
-    if not updated:
+    )
+    if holds.count() != (lease.end_date - lease.start_date).days:
         raise RentalConflict("The inventory hold has expired.", code="hold_expired")
+    holds.update(kind=RentalInventoryDayLock.Kind.OCCUPIED, expires_at=None)

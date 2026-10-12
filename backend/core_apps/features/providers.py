@@ -24,16 +24,15 @@ class FakeRentalProvider:
     name = "fake"
 
     def __init__(self):
-        if getattr(settings, "RENTAL_RUNTIME_ENVIRONMENT", "production") not in {
-            "development",
-            "test",
-        }:
+        if not fake_provider_available():
             raise ImproperlyConfigured(
-                "The fake rental provider is forbidden outside development and tests."
+                "The fake rental provider is forbidden outside explicitly enabled non-production environments."
             )
 
     def create_onboarding_session(self, profile_id, request_key):
-        session_id = uuid.uuid5(uuid.NAMESPACE_URL, f"onboarding:{request_key}")
+        session_id = uuid.uuid5(
+            uuid.NAMESPACE_URL, f"onboarding:{profile_id}:{request_key}"
+        )
         return HostedProviderSession(
             provider_session_id=str(session_id),
             hosted_url=(
@@ -99,7 +98,7 @@ def fake_provider_available():
         getattr(settings, "RENTAL_PROVIDER_BACKEND", "disabled") == "fake"
         and getattr(settings, "RENTAL_FAKE_PROVIDER_ALLOWED", False)
         and getattr(settings, "RENTAL_RUNTIME_ENVIRONMENT", "production")
-        in {"development", "test"}
+        in {"development", "test", "staging"}
     )
 
 
@@ -108,6 +107,31 @@ def get_rental_provider():
     if backend == "fake":
         return FakeRentalProvider()
     raise ImproperlyConfigured("No production rental provider is configured.")
+
+
+def checkout_available():
+    return fake_provider_available() and bool(
+        getattr(settings, "RENTAL_CHECKOUT_ENABLED", False)
+    )
+
+
+def require_rental_provider(user):
+    from rest_framework.exceptions import PermissionDenied
+
+    if not user.is_active or not user.is_verified:
+        raise PermissionDenied(
+            {
+                "message": "A verified active account is required.",
+                "code": "account_verification_required",
+            }
+        )
+    if not fake_provider_available():
+        raise PermissionDenied(
+            {
+                "message": "A rental provider is not configured for this environment.",
+                "code": "capability_unavailable",
+            }
+        )
 
 
 def sign_fake_webhook(payload):
@@ -119,3 +143,17 @@ def sign_fake_webhook(payload):
 def verify_fake_webhook(payload, signature):
     expected = sign_fake_webhook(payload)
     return hmac.compare_digest(expected, signature or "")
+
+
+def mock_completion_metadata(kind, subject_id, revision):
+    if not fake_provider_available():
+        return {}
+    suffix = "events" if kind == "payment-attempts" else "complete"
+    return {
+        "provider_mode": "mock",
+        "mock_completion": {
+            "method": "POST",
+            "path": f"/api/v1/features/v1/mock-provider/{kind}/{subject_id}/{suffix}/",
+            "expected_revision": revision,
+        },
+    }

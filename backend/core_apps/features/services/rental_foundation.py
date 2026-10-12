@@ -1,16 +1,19 @@
 import uuid
 
-from django.conf import settings
 from rest_framework.exceptions import NotFound
 
 from core_apps.properties.models import Property, PropertyVisit
 from core_apps.users.models import User
 from ..models import (
+    ChangeSigningSession,
+    CheckoutSession,
     Lease,
+    OwnerOnboardingSession,
     OwnerPaymentProfile,
     RentalInterest,
     RentInvoice,
     PaymentAttempt,
+    PaymentQuote,
     RentalEvidence,
     RentalHandover,
     DepositAgreement,
@@ -24,8 +27,17 @@ from ..models import (
     RentalReview,
     TenancyInvitation,
     TermsProposal,
+    SigningSession,
 )
-from ..providers import fake_provider_available
+from ..providers import checkout_available, fake_provider_available
+from .cycle_permissions import cycle_actions
+from .lease_permissions import (
+    agreement_actions,
+    handover_actions,
+    interest_actions,
+    proposal_actions,
+)
+from .rental_phase3 import invoice_payment_allowed
 
 
 POLICY_VERSION = "rental-policy-v1"
@@ -39,6 +51,19 @@ def get_authorized_rental_subject(user, subject_id):
         raise NotFound()
     if str(user.id) == str(subject_id):
         return user
+
+    # Session/quote receipts identify the created resource, not its parent.
+    # Resolve these private results when reconciling an uncertain creation.
+    for model, actor_filter in (
+        (OwnerOnboardingSession, {"owner_profile__owner": user}),
+        (SigningSession, {"signer": user}),
+        (ChangeSigningSession, {"signer": user}),
+        (CheckoutSession, {"payer": user}),
+        (PaymentQuote, {"invoice__lease__tenant": user}),
+    ):
+        item = model.objects.filter(id=subject_id, **actor_filter).first()
+        if item:
+            return item
 
     owner_profile = OwnerPaymentProfile.objects.filter(id=subject_id).first()
     if owner_profile:
@@ -132,7 +157,11 @@ def get_authorized_rental_subject(user, subject_id):
     )
     if property_obj:
         is_participant = (
-            property_obj.owner_id == user.pk
+            (
+                property_obj.status == Property.Status.VERIFIED
+                and property_obj.is_verified
+            )
+            or property_obj.owner_id == user.pk
             or PropertyVisit.objects.filter(property=property_obj, tenant=user).exists()
             or TenancyInvitation.objects.filter(
                 property=property_obj, tenant=user
@@ -143,8 +172,9 @@ def get_authorized_rental_subject(user, subject_id):
             return property_obj
         raise NotFound()
 
-    # Keep an unknown ID indistinguishable from an unauthorized one.
-    raise NotFound()
+    from .planning_access import planning_subject
+
+    return planning_subject(user, subject_id)
 
 
 def capabilities_for(user, subject, requested_action=""):
@@ -155,10 +185,11 @@ def capabilities_for(user, subject, requested_action=""):
 
     phase2_ready = fake_provider_available()
     if isinstance(subject, Lease):
+        allowed.extend(agreement_actions(user, subject))
         enabled.append("rental_center")
         if phase2_ready and not subject.legacy_read_only:
             enabled.append("rental_agreements")
-        if phase2_ready and getattr(settings, "RENTAL_CHECKOUT_ENABLED", False):
+        if checkout_available():
             enabled.append("rent_checkout")
         if phase2_ready and not subject.legacy_read_only:
             enabled.extend(
@@ -175,63 +206,86 @@ def capabilities_for(user, subject, requested_action=""):
             )
             if subject.owner_id == user.pk:
                 enabled.append("owner_payouts")
-            if subject.status == Lease.Status.ACTIVE:
-                allowed.append("create_handover")
+            allowed.extend(cycle_actions(user, subject))
+    elif phase2_ready and isinstance(subject, RentalHandover):
+        enabled.append("rental_handovers")
+        allowed.extend(handover_actions(user, subject))
+    elif phase2_ready and isinstance(
+        subject, (MaintenanceRequest, RentalChange, FinalSettlement, RentalDispute)
+    ):
+        capability = {
+            MaintenanceRequest: "rental_maintenance",
+            RentalChange: "rental_changes",
+            FinalSettlement: "rental_settlement",
+            RentalDispute: "rental_disputes",
+        }[type(subject)]
+        enabled.extend([capability, "rental_disputes"])
+        allowed.extend(cycle_actions(user, subject))
+        if not subject.lease.legacy_read_only:
+            allowed.append("create_rental_dispute")
     elif isinstance(subject, RentInvoice):
         enabled.extend(["rental_center"])
-        if phase2_ready and getattr(settings, "RENTAL_CHECKOUT_ENABLED", False):
+        if checkout_available():
             enabled.append("rent_checkout")
-            if subject.lease.tenant_id == user.pk and subject.status in {
-                RentInvoice.Status.DUE,
-                RentInvoice.Status.OVERDUE,
-            }:
+            if invoice_payment_allowed(user, subject):
                 allowed.extend(["quote", "checkout"])
     elif isinstance(subject, PaymentAttempt):
         enabled.extend(["rental_center", "rent_checkout"])
         if subject.payer_id == user.pk:
             allowed.append("reconcile")
+        if phase2_ready:
+            enabled.append("rental_settlement")
+            allowed.extend(cycle_actions(user, subject))
     elif phase2_ready and isinstance(subject, (RentalInterest, TermsProposal)):
         enabled.extend(["rental_interests", "rental_agreements"])
     elif phase2_ready and isinstance(subject, (User, Property, OwnerPaymentProfile)):
         enabled.extend(["rental_interests", "rental_agreements"])
         if isinstance(subject, OwnerPaymentProfile):
             enabled.append("owner_payouts")
+    elif phase2_ready and isinstance(subject, TenancyInvitation):
+        from django.utils import timezone
+
+        enabled.append("rental_agreements")
+        if (
+            subject.owner_id == user.pk
+            and subject.status == TenancyInvitation.Status.ACCEPTED
+            and not subject.lease_id
+            and not subject.consumed_at
+            and subject.expires_at > timezone.now()
+        ):
+            allowed.append("create_lease")
 
     if phase2_ready:
         if isinstance(subject, OwnerPaymentProfile):
-            allowed.extend(["onboard", "onboard_beneficiary"])
+            if subject.status != OwnerPaymentProfile.Status.READY:
+                allowed.append("onboard_beneficiary")
         elif isinstance(subject, User):
             allowed.append("onboard")
         elif isinstance(subject, Property):
-            allowed.append(
-                "create_terms" if subject.owner_id == user.pk else "create_interest"
-            )
+            if (
+                subject.owner_id != user.pk
+                and subject.is_verified
+                and subject.status == Property.Status.VERIFIED
+            ):
+                allowed.append("create_rental_interest")
         elif isinstance(subject, RentalInterest):
-            allowed.append("respond")
-            if subject.property.owner_id == user.pk:
-                allowed.append("create_terms")
+            allowed.extend(interest_actions(user, subject))
         elif isinstance(subject, TermsProposal):
-            allowed.append("respond")
-        elif isinstance(subject, Lease) and not subject.legacy_read_only:
-            if subject.status == Lease.Status.DRAFT:
-                allowed.append("review")
-                if subject.owner_id == user.pk:
-                    allowed.append("submit_for_signature")
-            elif subject.status == Lease.Status.PENDING_SIGNATURES:
-                allowed.append("sign")
+            allowed.extend(proposal_actions(user, subject))
 
     if not user.is_active or not user.is_verified:
         blocking.append("A verified active account is required.")
         enabled = []
+        allowed = []
     elif requested_action and requested_action not in allowed:
         blocking.append("The requested rental action is not available yet.")
 
     return {
         "account_id": str(user.id),
         "account_verified": bool(user.is_active and user.is_verified),
-        "enabled_capabilities": enabled,
+        "enabled_capabilities": list(dict.fromkeys(enabled)),
         "policy_version": POLICY_VERSION,
-        "allowed_actions": allowed,
+        "allowed_actions": list(dict.fromkeys(allowed)),
         "blocking_reasons": blocking,
     }
 

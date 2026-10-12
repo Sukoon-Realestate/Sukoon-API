@@ -197,8 +197,9 @@ def test_placeholder_checkout_is_disabled_by_default():
 
 
 @pytest.mark.django_db
+@override_settings(PLANNING_ENABLED_SERVICES=[])
 def test_planning_capabilities_endpoint_returns_disabled_capabilities_and_version():
-    """Verifies planning-capabilities endpoint returns 200 with policy version and enabled grants."""
+    """Disabled services must not grant actions even when routes exist."""
     user = User.objects.create_user(
         email="planning-caps@example.com",
         password="pass",
@@ -211,10 +212,11 @@ def test_planning_capabilities_endpoint_returns_disabled_capabilities_and_versio
     assert data_auth["account_id"] == str(user.id)
     assert data_auth["account_verified"] is True
     assert data_auth["policy_version"] == "planning-policy-v1"
-    assert "lifestyle" in data_auth["enabled_capabilities"]
-    assert "roommates" in data_auth["verified_services"]
-    assert len(data_auth["allowed_actions"]) > 0
-    assert data_auth["expires_at"] is not None
+    assert data_auth["enabled_capabilities"] == []
+    assert data_auth["verified_services"] == []
+    assert data_auth["allowed_actions"] == []
+    assert data_auth["expires_at"] is None
+    assert data_auth["blocking_reasons"]
     assert res_auth["Cache-Control"] == "private, no-store"
 
     # Targeted capability & action query
@@ -222,8 +224,8 @@ def test_planning_capabilities_endpoint_returns_disabled_capabilities_and_versio
         "/api/v1/features/v1/planning-capabilities/?capability=housing_groups&action=create_group"
     )
     assert res_cap.status_code == 200
-    assert res_cap.data["enabled_capabilities"] == ["housing_groups"]
-    assert res_cap.data["allowed_actions"] == ["create_group"]
+    assert res_cap.data["enabled_capabilities"] == []
+    assert res_cap.data["allowed_actions"] == []
 
     # 2. Unauthenticated / guest call (blocked from account planning)
     res_guest = APIClient().get("/api/v1/features/v1/planning-capabilities/")
@@ -241,5 +243,3 @@ def test_planning_capabilities_endpoint_returns_disabled_capabilities_and_versio
     assert res_ar.status_code == 200
     assert res_ar["Content-Language"] == "ar"
     assert "تسجيل الدخول مطلوب" in res_ar.data["blocking_reasons"][0]
-
-

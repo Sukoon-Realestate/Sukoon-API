@@ -304,7 +304,10 @@ def test_refund_balance_duplicate_worker_and_proportional_commission(phase6_leas
     refund = RefundRequest.objects.get(id=refund_id)
     payable.refresh_from_db()
     assert refund.status == RefundRequest.Status.SUCCEEDED
-    assert payable.commission_minor == 50_000
+    # The historical paid payout is immutable; recovery is a separate obligation.
+    assert payable.commission_minor == 100_000
+    assert refund.commission_reversal_minor == 50_000
+    assert refund.owner_recovery_minor == 450_000
     tx = LedgerTransaction.objects.get(reference=f"refund:{refund.id}")
     assert sum(x.amount_minor for x in tx.entries.filter(direction="debit")) == 500_000
     assert sum(x.amount_minor for x in tx.entries.filter(direction="credit")) == 500_000
@@ -470,4 +473,3 @@ def test_cancelled_never_occupied_draft_closure_blockers_and_financial_policy(ph
     evaluate_financial_closure(lease)
     lease.refresh_from_db()
     assert lease.financial_closure_status == Lease.FinancialClosureStatus.OPEN
-

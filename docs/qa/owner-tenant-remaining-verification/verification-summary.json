@@ -1,0 +1,112 @@
+{
+  "backend_sqlite": {
+    "passed": 652,
+    "failed": 0,
+    "skipped": 14,
+    "skip_details": [
+      {
+        "test": "test_booking_revalidates_slot_and_prevents_owner_double_booking",
+        "reason": "Temporarily disabled: rejection of already booked slots is commented out"
+      },
+      {
+        "test": "test_booking_rejects_unconfigured_slot",
+        "reason": "Temporarily disabled: unconfigured slot rejection is commented out"
+      },
+      {
+        "test": "test_create_visit_service_duplicate_fails",
+        "reason": "Temporarily disabled: rejection of already booked slots is commented out"
+      },
+      {
+        "test": "test_concurrent_payment_retries_share_one_receipt",
+        "reason": "Row-lock concurrency requires PostgreSQL"
+      },
+      {
+        "test": "test_duplicate_mock_capture_posts_one_allocation_and_receipt",
+        "reason": "Row locking requires PostgreSQL"
+      },
+      {
+        "test": "test_room_and_bed_overlapping_inventory_cannot_both_be_reserved",
+        "reason": "Row locking requires PostgreSQL"
+      },
+      {
+        "test": "test_complete_funded_cycle_over_http",
+        "reason": "Full HTTP cycle uses isolated PostgreSQL and real transaction locks"
+      },
+      {
+        "test": "test_duplicate_partial_refund_reserves_capture_once",
+        "reason": "These races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_competing_partial_refunds_cannot_oversubscribe_component",
+        "reason": "These races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_duplicate_funded_settlement_acceptance_posts_once",
+        "reason": "These races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_competing_group_joins_cannot_overfill",
+        "reason": "These races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_concurrent_invitation_mutations_have_one_winner[create]",
+        "reason": "Row-lock concurrency requires PostgreSQL"
+      },
+      {
+        "test": "test_concurrent_invitation_mutations_have_one_winner[respond]",
+        "reason": "Row-lock concurrency requires PostgreSQL"
+      },
+      {
+        "test": "test_concurrent_invitation_mutations_have_one_winner[draft]",
+        "reason": "Row-lock concurrency requires PostgreSQL"
+      }
+    ]
+  },
+  "backend_postgres": {
+    "passed": 663,
+    "failed": 0,
+    "skipped": 3,
+    "skip_details": [
+      {
+        "test": "test_booking_revalidates_slot_and_prevents_owner_double_booking",
+        "reason": "Temporarily disabled: rejection of already booked slots is commented out"
+      },
+      {
+        "test": "test_booking_rejects_unconfigured_slot",
+        "reason": "Temporarily disabled: unconfigured slot rejection is commented out"
+      },
+      {
+        "test": "test_create_visit_service_duplicate_fails",
+        "reason": "Temporarily disabled: rejection of already booked slots is commented out"
+      }
+    ]
+  },
+  "remaining_cycles": {
+    "passed": 30,
+    "failed": 0,
+    "skipped": 0,
+    "skip_details": []
+  },
+  "flutter_requests_to_django": {
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0,
+    "skip_details": []
+  },
+  "verified_at_utc": "2026-10-12T19:22:49.922448+00:00",
+  "environment": "local isolated databases; API mock providers; no shared-server deployment",
+  "flutter": {
+    "full_passed": 3988,
+    "full_skipped": 42,
+    "planning_enabled_passed": 75,
+    "planning_enabled_skipped": 5,
+    "django_response_contracts_passed": 17
+  },
+  "full_http_cycle": {
+    "request_count": 84,
+    "lease_status": "ended",
+    "occupancy_status": "returned",
+    "financial_closure_status": "closed"
+  },
+  "deployment": "Backend team to deploy and perform shared-server/device acceptance"
+}

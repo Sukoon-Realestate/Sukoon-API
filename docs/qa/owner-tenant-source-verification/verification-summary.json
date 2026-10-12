@@ -1,0 +1,33 @@
+{
+  "verified_at_utc": "2026-10-12T17:52:46.862900+00:00",
+  "base_revision": "449cf5c306025a76f7778ab3f732609d91c5e5e8",
+  "uncommitted_source_changes": true,
+  "environment": "isolated local tests",
+  "provider_mode": "mock",
+  "deployed": false,
+  "backend": {
+    "backend-full": {
+      "tests": 628,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 9,
+      "passed": 619
+    },
+    "postgres-final": {
+      "tests": 337,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3,
+      "passed": 334
+    }
+  },
+  "flutter_tests_passed": 36,
+  "django_migrations_and_checks": "passed",
+  "flutter_analysis": "no issues",
+  "remaining": [
+    "shared-server deployment and device integration",
+    "unimplemented planning services",
+    "funded settlement execution",
+    "explicit partial combined-invoice refund allocation"
+  ]
+}

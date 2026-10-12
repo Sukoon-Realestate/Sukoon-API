@@ -166,109 +166,67 @@ def rental_capabilities(request):
 @permission_classes([AllowAny])
 @renderer_classes([FeatureJsonRenderer])
 def planning_capabilities(request):
-    """
-    Return planning capabilities for authenticated/verified accounts, supporting:
-    - lifestyle, roommates, housing_groups, group_visits, group_applications
-    - housing_requests, housing_offers, commute, tenant_assistant
-    - condition_reports, move_out_notices, replacements
-    """
+    from .services.planning import enabled_services
+    from .services.planning_access import planning_actions
+
     user = request.user
-    account_id = str(user.id) if user and user.is_authenticated else None
-    account_verified = bool(user.is_active and user.is_verified) if user and user.is_authenticated else False
-
-    PLANNING_SERVICES = {
-        "lifestyle": ["read", "update_preferences"],
-        "roommates": ["search", "view_profiles"],
-        "housing_groups": ["create_group", "manage_members", "invite_member"],
-        "group_visits": ["request_group_visit", "view_schedule"],
-        "group_applications": ["submit_application", "view_status"],
-        "housing_requests": ["create_request", "view_matching_offers"],
-        "housing_offers": ["create_offer", "view_offers"],
-        "commute": ["calculate_commute", "view_routes"],
-        "tenant_assistant": ["ask_assistant", "query_recommendations"],
-        "condition_reports": ["create_report", "upload_evidence", "view_reports"],
-        "move_out_notices": ["submit_notice", "view_notices"],
-        "replacements": ["propose_replacement", "review_candidate"],
-    }
-
-    req_capability = request.query_params.get("capability")
-    req_action = request.query_params.get("action")
-
-    blocking_reasons = []
-    if not (user and user.is_authenticated):
-        blocking_reasons.append(
+    authenticated = bool(user and user.is_authenticated)
+    verified = bool(authenticated and user.is_active and user.is_verified)
+    enabled = enabled_services() if verified else []
+    capability = request.query_params.get("capability", "")
+    requested_action = request.query_params.get("action", "")
+    allowed = (
+        planning_actions(user, capability, request.query_params.get("subject_id", ""))
+        if capability in enabled
+        else []
+    )
+    if requested_action:
+        allowed = [requested_action] if requested_action in allowed else []
+    reasons = []
+    if not authenticated:
+        reasons.append(
             localized(
                 request,
-                "Authentication is required to access account planning.",
-                "تسجيل الدخول مطلوب للوصول إلى تخطيط الحساب.",
+                "Authentication is required for planning services.",
+                "تسجيل الدخول مطلوب لخدمات التخطيط.",
             )
         )
-        enabled_capabilities = []
-        verified_services = []
-        allowed_actions = []
-        expires_at = None
-    elif not account_verified:
-        blocking_reasons.append(
+    elif not verified:
+        reasons.append(
             localized(
                 request,
-                "A verified account is required to access planning capabilities.",
-                "يلزم حساب موثق للوصول إلى إمكانيات التخطيط.",
+                "A verified active account is required.",
+                "يلزم حساب نشط وموثق.",
             )
         )
-        enabled_capabilities = []
-        verified_services = []
-        allowed_actions = []
-        expires_at = None
-    else:
-        expires_at = (timezone.now() + timedelta(hours=24)).isoformat()
-        if req_capability:
-            if req_capability in PLANNING_SERVICES:
-                enabled_capabilities = [req_capability]
-                verified_services = [req_capability]
-                service_actions = PLANNING_SERVICES[req_capability]
-                if req_action:
-                    if req_action in service_actions:
-                        allowed_actions = [req_action]
-                    else:
-                        allowed_actions = []
-                        blocking_reasons.append(
-                            localized(
-                                request,
-                                f"The requested planning action '{req_action}' is not available.",
-                                f"إجراء التخطيط المطلوب '{req_action}' غير متاح.",
-                            )
-                        )
-                else:
-                    allowed_actions = list(service_actions)
-            else:
-                enabled_capabilities = []
-                verified_services = []
-                allowed_actions = []
-                blocking_reasons.append(
-                    localized(
-                        request,
-                        f"The requested planning capability '{req_capability}' is not recognized.",
-                        f"إمكانية التخطيط المطلوبة '{req_capability}' غير معروفة.",
-                    )
-                )
-        else:
-            enabled_capabilities = list(PLANNING_SERVICES.keys())
-            verified_services = list(PLANNING_SERVICES.keys())
-            if req_action:
-                allowed_actions = [req_action]
-            else:
-                allowed_actions = [a for acts in PLANNING_SERVICES.values() for a in acts]
-
+    elif not enabled:
+        reasons.append(
+            localized(
+                request,
+                "Planning services are disabled in this environment.",
+                "خدمات التخطيط غير مفعلة في هذه البيئة.",
+            )
+        )
+    elif capability and not allowed:
+        reasons.append(
+            localized(
+                request,
+                "This action is not available for the current account or resource.",
+                "هذا الإجراء غير متاح للحساب أو المورد الحالي.",
+            )
+        )
     response = Response(
         {
-            "account_id": account_id,
-            "account_verified": account_verified,
-            "enabled_capabilities": enabled_capabilities,
-            "verified_services": verified_services,
+            "account_id": str(user.id) if authenticated else None,
+            "account_verified": verified,
+            "enabled_capabilities": enabled,
+            "verified_services": enabled,
             "policy_version": "planning-policy-v1",
-            "allowed_actions": allowed_actions,
-            "expires_at": expires_at,
-            "blocking_reasons": blocking_reasons,
+            "allowed_actions": allowed,
+            "expires_at": (
+                (timezone.now() + timedelta(minutes=5)).isoformat() if enabled else None
+            ),
+            "blocking_reasons": reasons,
         }
     )
     response["Content-Language"] = "ar" if localized(request, "en", "ar") == "ar" else "en"
@@ -283,15 +241,22 @@ def rental_operation_lookup(request, request_key):
     subject_id = request.query_params.get("subject_id")
     if not subject_id:
         raise ValidationError({"subject_id": "This query parameter is required."})
-    get_authorized_rental_subject(request.user, subject_id)
     operation = IdempotencyRecord.objects.filter(
         user=request.user,
         request_key=str(request_key),
         request_subject_id=subject_id,
         is_rental_operation=True,
     ).first()
+    departure_receipt = bool(
+        operation
+        and operation.operation == f"group.leave.{subject_id}"
+        and str(operation.result_subject_id) == str(subject_id)
+    )
+    if not departure_receipt:
+        get_authorized_rental_subject(request.user, subject_id)
     if operation:
-        get_authorized_rental_subject(request.user, operation.result_subject_id)
+        if not departure_receipt:
+            get_authorized_rental_subject(request.user, operation.result_subject_id)
         receipt = {
             "id": str(operation.id),
             "subject_id": str(operation.result_subject_id),
@@ -1121,9 +1086,6 @@ def lease_detail(request, lease_id):
 
         return update_structured_lease(request, lease_id)
     lease = _get_authorized_lease(request, lease_id)
-    if lease.status == Lease.Status.CANCELLED and lease.financial_closure_status == Lease.FinancialClosureStatus.OPEN:
-        from .services.rental_phase6 import evaluate_financial_closure
-        evaluate_financial_closure(lease)
     return Response(
         LeaseSerializer(
             lease, context={"request": request}
@@ -1155,8 +1117,16 @@ def lease_signing_session(request, lease_id):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def lease_cancel(request, lease_id):
-    serializer = RevisionRequestSerializer(data=request.data)
+    structured = "expected_revision" in request.data
+    if structured:
+        from .rental_serializers import RentalDecisionSerializer
+
+        serializer = RentalDecisionSerializer(data=request.data)
+    else:
+        serializer = RevisionRequestSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
+    if structured and serializer.validated_data["decision"] != "cancel_draft":
+        raise ValidationError({"decision": "Must be cancel_draft."})
     with transaction.atomic():
         lease = get_object_or_404(
             Lease.objects.select_for_update(), id=lease_id, owner=request.user
@@ -1169,7 +1139,10 @@ def lease_cancel(request, lease_id):
         )
         if replay:
             return replay
-        if serializer.validated_data["revision"] != lease.revision:
+        if (
+            serializer.validated_data["expected_revision" if structured else "revision"]
+            != lease.revision
+        ):
             raise InvitationConflict("Lease revision conflict.")
         if not can_cancel_draft(request.user, lease):
             raise InvitationConflict(
@@ -1184,12 +1157,31 @@ def lease_cancel(request, lease_id):
         lease.save(update_fields=["status", "revision", "updated_at"])
         from .services.rental_phase6 import evaluate_financial_closure
         evaluate_financial_closure(lease)
+        lease.inventory_day_locks.filter(kind="hold").delete()
         data = {
             "id": str(lease.id),
             "subject_id": str(lease.id),
             "status": "cancelled",
+            "lease_status": lease.status,
+            "occupancy_status": lease.occupancy_status,
+            "financial_closure_status": lease.financial_closure_status,
             "revision": lease.revision,
         }
+        if structured:
+            from .services.rental_phase2 import remember_mutation
+
+            return Response(
+                remember_mutation(
+                    user=request.user,
+                    operation="lease.cancel",
+                    request_key=serializer.validated_data["request_key"],
+                    payload=request.data,
+                    request_subject_id=lease.id,
+                    result_subject_id=lease.id,
+                    result_revision=lease.revision,
+                    resource=LeaseSerializer(lease, context={"request": request}).data,
+                )
+            )
         _remember(
             request.user,
             "lease.cancel",

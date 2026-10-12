@@ -30,7 +30,13 @@ from .models import (
     TermsProposal,
 )
 from .pagination import FeaturePagination
-from .providers import fake_provider_available, get_rental_provider, verify_fake_webhook
+from .providers import (
+    mock_completion_metadata,
+    fake_provider_available,
+    get_rental_provider,
+    require_rental_provider,
+    verify_fake_webhook,
+)
 from .renderers import FeatureJsonRenderer
 from .rental_serializers import (
     LeasePhase2Serializer,
@@ -48,7 +54,6 @@ from .rental_serializers import (
 from .serializers import TenancyInvitationSerializer
 from .services.rental_phase2 import (
     RentalConflict,
-    activate_inventory,
     assert_owner_ready,
     fingerprint,
     get_or_create_owner_profile,
@@ -103,12 +108,27 @@ def _remember_session(
         result_revision=result_revision,
     )
     response_data["operation_receipt_id"] = str(record.id)
+    # Keep the historical flat projection while supplying the canonical
+    # session/receipt envelope consumed by Flutter create operations.
+    response_data = {
+        **response_data,
+        "resource": dict(response_data),
+        "operation_receipt": {
+            "id": str(record.id),
+            "subject_id": str(result_subject_id),
+            "request_key": str(request_key),
+            "revision": result_revision,
+            "status": "confirmed",
+        },
+    }
     record.response_data = response_data
     record.save(update_fields=["response_data", "updated_at"])
     return response_data
 
 
 def _participant_interest(request, interest_id, lock=False):
+    if request.method not in {"GET", "HEAD", "OPTIONS"}:
+        require_rental_provider(request.user)
     queryset = RentalInterest.objects.select_related("property__owner", "tenant")
     if lock:
         queryset = queryset.select_for_update()
@@ -119,6 +139,8 @@ def _participant_interest(request, interest_id, lock=False):
 
 
 def _participant_proposal(request, proposal_id, lock=False):
+    if request.method not in {"GET", "HEAD", "OPTIONS"}:
+        require_rental_provider(request.user)
     queryset = TermsProposal.objects.select_related(
         "owner", "interest__tenant", "interest__property"
     )
@@ -131,6 +153,8 @@ def _participant_proposal(request, proposal_id, lock=False):
 
 
 def _participant_lease(request, lease_id, lock=False):
+    if request.method not in {"GET", "HEAD", "OPTIONS"}:
+        require_rental_provider(request.user)
     queryset = Lease.objects.select_related("property", "owner", "tenant")
     if lock:
         queryset = queryset.select_for_update()
@@ -202,6 +226,7 @@ def owner_payment_profile(request):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def owner_onboarding_session(request):
+    require_rental_provider(request.user)
     serializer = OwnerOnboardingBodySerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     data = serializer.validated_data
@@ -218,15 +243,17 @@ def owner_onboarding_session(request):
         )
     with transaction.atomic():
         profile = OwnerPaymentProfile.objects.select_for_update().get(pk=profile.pk)
-        if data["expected_revision"] != profile.revision:
-            raise RentalConflict(
-                "Owner profile revision conflict.", code="stale_revision"
-            )
         replay = _replay_response(
             request.user, operation, data["request_key"], request.data
         )
         if replay:
             return replay
+        if data["expected_revision"] != profile.revision:
+            raise RentalConflict(
+                "Owner profile revision conflict.", code="stale_revision"
+            )
+        if profile.status == OwnerPaymentProfile.Status.READY:
+            raise RentalConflict("Beneficiary onboarding is already complete.")
         provider_session = get_rental_provider().create_onboarding_session(
             profile.id, data["request_key"]
         )
@@ -258,7 +285,11 @@ def owner_onboarding_session(request):
             "session_id": str(session.id),
             "subject_id": str(profile.id),
             "request_key": str(data["request_key"]),
-            "revision": profile.revision,
+            "revision": session.profile_revision,
+            "profile_revision": profile.revision,
+            **mock_completion_metadata(
+                "onboarding-sessions", session.id, profile.revision
+            ),
             "hosted_url": session.hosted_url,
             "expires_at": expires_at.isoformat(),
         }
@@ -268,8 +299,8 @@ def owner_onboarding_session(request):
             request_key=data["request_key"],
             payload=request.data,
             request_subject_id=profile.id,
-            result_subject_id=profile.id,
-            result_revision=profile.revision,
+            result_subject_id=session.id,
+            result_revision=session.profile_revision,
             response_data=output,
         )
     return Response(output, status=status.HTTP_201_CREATED)
@@ -293,6 +324,7 @@ def rental_interests(request):
             RentalInterestSerializer,
         )
 
+    require_rental_provider(request.user)
     serializer = RentalInterestBodySerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     data = serializer.validated_data
@@ -712,7 +744,7 @@ def tenancy_invitation_revoke(request, invitation_id):
         return replay
     with transaction.atomic():
         invitation = get_object_or_404(
-            TenancyInvitation.objects.select_for_update().select_related(
+            TenancyInvitation.objects.select_for_update(of=("self",)).select_related(
                 "property", "owner", "tenant", "lease"
             ),
             id=invitation_id,
@@ -770,7 +802,7 @@ def create_structured_lease(request):
         return replay
     with transaction.atomic():
         invitation = (
-            TenancyInvitation.objects.select_for_update()
+            TenancyInvitation.objects.select_for_update(of=("self",))
             .select_related("property", "owner", "tenant", "terms_proposal")
             .get(pk=invitation.pk)
         )
@@ -1071,6 +1103,7 @@ def create_structured_signing_session(request, lease_id):
             "revision": lease.revision,
             "document_id": str(lease.document_id),
             "document_hash": lease.document_hash,
+            **mock_completion_metadata("signing-sessions", session.id, lease.revision),
             "hosted_url": session.hosted_url,
             "expires_at": expires_at.isoformat(),
         }
@@ -1080,7 +1113,7 @@ def create_structured_signing_session(request, lease_id):
             request_key=data["request_key"],
             payload=request.data,
             request_subject_id=lease.id,
-            result_subject_id=lease.id,
+            result_subject_id=session.id,
             result_revision=lease.revision,
             response_data=output,
         )
@@ -1150,17 +1183,34 @@ def fake_rental_provider_webhook(request):
         raise NotFound()
     if not verify_fake_webhook(request.data, request.headers.get("X-Rental-Signature")):
         raise PermissionDenied("Invalid provider signature.")
-    event_type = request.data.get("type")
-    provider_session_id = request.data.get("provider_session_id")
+    return Response(apply_fake_rental_event(request.data))
+
+
+def apply_fake_rental_event(payload):
+    event_type = payload.get("type")
+    provider_session_id = payload.get("provider_session_id")
     with transaction.atomic():
         if event_type == "onboarding.completed":
             session = get_object_or_404(
-                OwnerOnboardingSession.objects.select_for_update().select_related(
-                    "owner_profile"
-                ),
-                provider_session_id=provider_session_id,
+                OwnerOnboardingSession, provider_session_id=provider_session_id
+            )
+            OwnerPaymentProfile.objects.select_for_update().get(
+                pk=session.owner_profile_id
+            )
+            session = (
+                OwnerOnboardingSession.objects.select_for_update(of=("self",))
+                .select_related("owner_profile")
+                .get(pk=session.pk)
             )
             if session.status != "completed":
+                if session.expires_at <= timezone.now():
+                    raise RentalConflict(
+                        "The onboarding session has expired.", code="session_expired"
+                    )
+                if session.owner_profile.revision != session.profile_revision + 1:
+                    raise RentalConflict(
+                        "The onboarding session is stale.", code="stale_revision"
+                    )
                 session.status = "completed"
                 session.completed_at = timezone.now()
                 session.save(update_fields=["status", "completed_at", "updated_at"])
@@ -1175,15 +1225,20 @@ def fake_rental_provider_webhook(request):
                 profile.save()
         elif event_type == "signature.completed":
             session = get_object_or_404(
-                SigningSession.objects.select_for_update().select_related(
-                    "lease__owner", "lease__tenant"
-                ),
-                provider_session_id=provider_session_id,
+                SigningSession, provider_session_id=provider_session_id
+            )
+            Lease.objects.select_for_update().get(pk=session.lease_id)
+            session = (
+                SigningSession.objects.select_for_update(of=("self",))
+                .select_related("lease__owner", "lease__tenant")
+                .get(pk=session.pk)
             )
             if session.status != "completed":
                 lease = Lease.objects.select_for_update().get(pk=session.lease_id)
                 if (
-                    session.document_id != lease.document_id
+                    lease.status != Lease.Status.PENDING_SIGNATURES
+                    or session.expires_at <= timezone.now()
+                    or session.document_id != lease.document_id
                     or session.document_hash != lease.document_hash
                     or session.lease_revision != lease.revision
                 ):
@@ -1202,14 +1257,22 @@ def fake_rental_provider_webhook(request):
                     ).values_list("signer_id", flat=True)
                 )
                 if {lease.owner_id, lease.tenant_id}.issubset(signer_ids):
-                    activate_inventory(lease)
-                    lease.status = Lease.Status.ACTIVE
-                    lease.activated_at = timezone.now()
+                    now = timezone.now()
+                    holds = lease.inventory_day_locks.filter(
+                        kind=RentalInventoryDayLock.Kind.HOLD, expires_at__gt=now
+                    )
+                    if holds.count() != (lease.end_date - lease.start_date).days:
+                        raise RentalConflict(
+                            "The inventory hold has expired.", code="hold_expired"
+                        )
+                    lease.hold_expires_at = now + timedelta(hours=48)
+                    holds.update(expires_at=lease.hold_expires_at)
+                    lease.status = Lease.Status.SIGNED
                     lease.revision += 1
                     lease.save(
                         update_fields=[
                             "status",
-                            "activated_at",
+                            "hold_expires_at",
                             "revision",
                             "updated_at",
                         ]
@@ -1217,7 +1280,12 @@ def fake_rental_provider_webhook(request):
                     from .services.rental_phase3 import generate_billing_schedule
 
                     generate_billing_schedule(lease)
-                    _event(lease, None, "activated", "Agreement activated")
+                    _event(
+                        lease,
+                        None,
+                        "signed",
+                        "Agreement signed; initial payment is due",
+                    )
                     for participant, workspace in (
                         (lease.owner, "owner"),
                         (lease.tenant, "tenant"),
@@ -1226,7 +1294,7 @@ def fake_rental_provider_webhook(request):
                             lambda participant=participant, workspace=workspace: _notify(
                                 participant,
                                 Notification.NotificationType.RENTAL_AGREEMENT,
-                                "Rental agreement activated",
+                                "Rental agreement signed; initial payment is due",
                                 "open_rental_center",
                                 lease.id,
                                 lease_id=lease.id,
@@ -1239,4 +1307,4 @@ def fake_rental_provider_webhook(request):
             complete_change_signature(provider_session_id)
         else:
             raise ValidationError({"type": "Unsupported fake-provider event."})
-    return Response({"status": "accepted"})
+    return {"status": "accepted"}

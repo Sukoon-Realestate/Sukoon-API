@@ -1,0 +1,196 @@
+{
+  "created": {
+    "resource": {
+      "id": "990a8897-0cd6-487f-a388-1decde069b13",
+      "lease_id": "28273fc8-1d9f-4fda-ba71-0f1eb13437a4",
+      "kind": "replacement",
+      "status": "submitted",
+      "revision": 1,
+      "requested_on": "2026-12-21",
+      "received_at": "2026-10-12T19:21:51.752798+00:00",
+      "effective_on": "",
+      "reason": "Leaving after the current lease",
+      "candidate_id": "",
+      "candidate_revision": 0,
+      "candidate_consented": false,
+      "outgoing_release_status": "pending",
+      "incoming_agreement_status": "not_started",
+      "future_availability_status": "pending_approval",
+      "incoming_lease_id": "",
+      "history": [
+        "Request received; the lease and possession remain unchanged."
+      ],
+      "allowed_actions": [
+        "withdraw"
+      ],
+      "blocking_reasons": []
+    },
+    "operation_receipt": {
+      "id": "b4d519fc-a113-414e-b716-1a7240ae27cc",
+      "subject_id": "990a8897-0cd6-487f-a388-1decde069b13",
+      "request_key": "538d09e8-43d3-4a49-8b29-71f4f24f324c",
+      "revision": 1,
+      "status": "confirmed"
+    }
+  },
+  "effective": {
+    "id": "990a8897-0cd6-487f-a388-1decde069b13",
+    "lease_id": "28273fc8-1d9f-4fda-ba71-0f1eb13437a4",
+    "kind": "replacement",
+    "status": "effective",
+    "revision": 6,
+    "requested_on": "2026-12-21",
+    "received_at": "2026-10-12T19:21:51.752798+00:00",
+    "effective_on": "2026-12-21",
+    "reason": "Leaving after the current lease",
+    "candidate_id": "4aebb041-cdc6-481d-b58b-22ebe2b0a602",
+    "candidate_revision": 1,
+    "candidate_consented": true,
+    "outgoing_release_status": "released",
+    "incoming_agreement_status": "active",
+    "future_availability_status": "approved",
+    "incoming_lease_id": "6640ad96-fd47-4380-9883-518ead5415c6",
+    "history": [
+      "Request received; the lease and possession remain unchanged.",
+      "nominate by Phase Owner at revision 2.",
+      "Candidate accept at revision 3.",
+      "approve_candidate by Phase Owner at revision 4.",
+      "approve_availability by Phase Owner at revision 5.",
+      "Effective state confirmed from legal, possession and agreement records."
+    ],
+    "allowed_actions": [],
+    "blocking_reasons": []
+  },
+  "invitation": {
+    "id": "990a8897-0cd6-487f-a388-1decde069b13",
+    "revision": 2,
+    "kind": "replacement",
+    "status": "candidate_pending",
+    "candidate_id": "4aebb041-cdc6-481d-b58b-22ebe2b0a602",
+    "candidate_revision": 1,
+    "property_id": "14dcd665-c6b5-4782-b7a8-4fd4c556fecd",
+    "selection": {
+      "property_id": "14dcd665-c6b5-4782-b7a8-4fd4c556fecd",
+      "offer_id": "4f2ac329-33bc-4033-95bb-609ce83abe60",
+      "offer_revision": 2,
+      "rental_scope": "entire_property",
+      "name": "Whole home",
+      "room_ids": [],
+      "room_names": [],
+      "bed_id": "",
+      "bed_name": "",
+      "availability": "available",
+      "archived": false,
+      "capacity": 2,
+      "bathroom_access": [],
+      "offer_link": "",
+      "terms": {
+        "price": "10000",
+        "price_period": "monthly",
+        "rental_period": 1,
+        "deposit": "",
+        "suitable_for": "all",
+        "description": "Configured shared accommodation",
+        "smoking_allowed": false,
+        "rules": []
+      }
+    },
+    "requested_on": "2026-12-21",
+    "allowed_actions": [
+      "accept",
+      "decline"
+    ],
+    "blocking_reasons": []
+  },
+  "consent": {
+    "resource": {
+      "id": "990a8897-0cd6-487f-a388-1decde069b13",
+      "revision": 3,
+      "kind": "replacement",
+      "status": "candidate_consented",
+      "candidate_id": "4aebb041-cdc6-481d-b58b-22ebe2b0a602",
+      "candidate_revision": 1,
+      "property_id": "14dcd665-c6b5-4782-b7a8-4fd4c556fecd",
+      "selection": {
+        "property_id": "14dcd665-c6b5-4782-b7a8-4fd4c556fecd",
+        "offer_id": "4f2ac329-33bc-4033-95bb-609ce83abe60",
+        "offer_revision": 2,
+        "rental_scope": "entire_property",
+        "name": "Whole home",
+        "room_ids": [],
+        "room_names": [],
+        "bed_id": "",
+        "bed_name": "",
+        "availability": "available",
+        "archived": false,
+        "capacity": 2,
+        "bathroom_access": [],
+        "offer_link": "",
+        "terms": {
+          "price": "10000",
+          "price_period": "monthly",
+          "rental_period": 1,
+          "deposit": "",
+          "suitable_for": "all",
+          "description": "Configured shared accommodation",
+          "smoking_allowed": false,
+          "rules": []
+        }
+      },
+      "requested_on": "2026-12-21",
+      "allowed_actions": [],
+      "blocking_reasons": []
+    },
+    "operation_receipt": {
+      "id": "b70a1543-4c0d-4bd2-813c-c8b9c56ba4c1",
+      "subject_id": "990a8897-0cd6-487f-a388-1decde069b13",
+      "request_key": "218486db-ea35-41f3-8482-765b0a234b8f",
+      "revision": 3,
+      "status": "confirmed"
+    }
+  },
+  "consent_body": {
+    "request_key": "218486db-ea35-41f3-8482-765b0a234b8f",
+    "expected_revision": 2,
+    "decision": "accept"
+  },
+  "actor_id": "32a6dbe1-6eb0-4eb1-afc9-3e77ac573d9a",
+  "grant": {
+    "account_id": "32a6dbe1-6eb0-4eb1-afc9-3e77ac573d9a",
+    "account_verified": true,
+    "enabled_capabilities": [
+      "lifestyle",
+      "roommates",
+      "housing_groups",
+      "group_visits",
+      "group_applications",
+      "housing_requests",
+      "housing_offers",
+      "condition_reports",
+      "move_out_notices",
+      "replacements",
+      "commute",
+      "tenant_assistant"
+    ],
+    "verified_services": [
+      "lifestyle",
+      "roommates",
+      "housing_groups",
+      "group_visits",
+      "group_applications",
+      "housing_requests",
+      "housing_offers",
+      "condition_reports",
+      "move_out_notices",
+      "replacements",
+      "commute",
+      "tenant_assistant"
+    ],
+    "policy_version": "planning-policy-v1",
+    "allowed_actions": [
+      "accept_candidate_nomination"
+    ],
+    "expires_at": "2026-10-12T19:26:51.781853+00:00",
+    "blocking_reasons": []
+  }
+}

@@ -114,7 +114,12 @@ class OwnerPaymentProfileSerializer(serializers.ModelSerializer):
             return obj.masked_beneficiary
         if isinstance(obj.masked_beneficiary, dict):
             bank = obj.masked_beneficiary.get("bank_name") or ""
-            account = obj.masked_beneficiary.get("account_number") or obj.masked_beneficiary.get("last4") or ""
+            account = str(
+                obj.masked_beneficiary.get("account_last4")
+                or obj.masked_beneficiary.get("last4")
+                or obj.masked_beneficiary.get("account_number")
+                or ""
+            )[-4:]
             if bank and account:
                 return f"{bank} •••• {account}"
             return str(account or bank or "")
@@ -124,11 +129,33 @@ class OwnerPaymentProfileSerializer(serializers.ModelSerializer):
         return ["rental-policy-v1"]
 
     def get_allowed_actions(self, obj):
-        return [] if obj.status == OwnerPaymentProfile.Status.READY else ["onboard_beneficiary"]
+        from .providers import fake_provider_available
+
+        request = self.context.get("request")
+        return (
+            ["onboard_beneficiary"]
+            if (
+                request
+                and request.user.pk == obj.owner_id
+                and request.user.is_active
+                and request.user.is_verified
+                and fake_provider_available()
+                and obj.status != OwnerPaymentProfile.Status.READY
+            )
+            else []
+        )
 
     def get_blocking_reasons(self, obj):
+        from .providers import fake_provider_available
+
         is_ar = self._is_arabic()
         reasons = []
+        if not fake_provider_available():
+            reasons.append(
+                "خدمة إعداد المستفيد غير متاحة حالياً."
+                if is_ar
+                else "Beneficiary onboarding is unavailable in this environment."
+            )
         if obj.status != OwnerPaymentProfile.Status.READY:
             reasons.append("يلزم استكمال إعداد حساب المستفيد." if is_ar else "Beneficiary onboarding is incomplete.")
         if "rental-policy-v1" not in obj.accepted_policy_versions:
@@ -203,14 +230,10 @@ class RentalInterestSerializer(serializers.ModelSerializer):
         }
 
     def get_allowed_actions(self, obj):
+        from .services.lease_permissions import interest_actions
+
         request = self.context.get("request")
-        if not request:
-            return []
-        if request.user == obj.property.owner and self.get_source_eligible(obj):
-            return ["create_terms", "reject"]
-        if request.user == obj.tenant and obj.status == RentalInterest.Status.SUBMITTED:
-            return ["withdraw"]
-        return []
+        return interest_actions(request.user if request else None, obj)
 
     def get_blocking_reasons(self, obj):
         return [] if self.get_source_eligible(obj) else ["This interest is closed."]
@@ -264,15 +287,10 @@ class TermsProposalSerializer(serializers.ModelSerializer):
         return str(invitation.id) if invitation else None
 
     def get_allowed_actions(self, obj):
+        from .services.lease_permissions import proposal_actions
+
         request = self.context.get("request")
-        if not request or request.user not in (obj.owner, obj.interest.tenant):
-            return []
-        if obj.status in {
-            TermsProposal.Status.PROPOSED,
-            TermsProposal.Status.CHANGES_REQUESTED,
-        }:
-            return ["accept", "reject", "request_changes"]
-        return []
+        return proposal_actions(request.user if request else None, obj)
 
     def get_blocking_reasons(self, obj):
         return [] if self.get_allowed_actions(obj) else ["No action is currently available."]
@@ -356,24 +374,10 @@ class LeasePhase2Serializer(serializers.ModelSerializer):
         return str(invitation.id) if invitation else None
 
     def get_allowed_actions(self, obj):
+        from .services.lease_permissions import agreement_actions
+
         request = self.context.get("request")
-        if not request or request.user not in (obj.owner, obj.tenant):
-            return []
-        actor_id = str(request.user.id)
-        actions = []
-        if obj.status == Lease.Status.DRAFT and actor_id not in obj.reviewed_by:
-            actions.append("accept_review")
-        if (
-            request.user == obj.owner
-            and obj.status == Lease.Status.DRAFT
-            and {str(obj.owner.id), str(obj.tenant.id)}.issubset(set(obj.reviewed_by))
-        ):
-            actions.append("submit_for_signature")
-        if obj.status == Lease.Status.PENDING_SIGNATURES:
-            actions.append("sign")
-        if request.user == obj.owner and obj.status == Lease.Status.DRAFT:
-            actions.append("cancel_draft")
-        return actions
+        return agreement_actions(request.user if request else None, obj)
 
     def get_blocking_reasons(self, obj):
         if obj.legacy_read_only:

@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="76" time="9.574" timestamp="2026-10-12T20:10:33.550382+03:00" hostname="Emara.local"><testcase classname="core_apps.features.tests.test_api" name="test_configuration_is_free_and_workspace_scoped" time="5.374" /><testcase classname="core_apps.features.tests.test_api" name="test_alert_create_replays_same_request_key" time="0.007" /><testcase classname="core_apps.features.tests.test_api" name="test_alert_request_key_conflict_is_409" time="0.005" /><testcase classname="core_apps.features.tests.test_api" name="test_alert_revision_protects_updates" time="0.005" /><testcase classname="core_apps.features.tests.test_api" name="test_feature_routes_require_authentication" time="0.001" /><testcase classname="core_apps.features.tests.test_rental_foundation" name="test_capabilities_are_fresh_private_and_account_scoped" time="0.002" /><testcase classname="core_apps.features.tests.test_rental_foundation" name="test_capabilities_do_not_disclose_another_account" time="0.021" /><testcase classname="core_apps.features.tests.test_rental_foundation" name="test_operation_lookup_returns_confirmed_receipt_for_exact_subject" time="0.007" /><testcase classname="core_apps.features.tests.test_rental_foundation" name="test_missing_operation_is_unknown_not_final_absence" time="0.003" /><testcase classname="core_apps.features.tests.test_rental_foundation" name="test_placeholder_checkout_is_disabled_by_default" time="0.017" /><testcase classname="core_apps.features.tests.test_rental_foundation" name="test_planning_capabilities_endpoint_returns_disabled_capabilities_and_version" time="0.010" /><testcase classname="core_apps.features.tests.test_rental_phase2" name="test_phase2_complete_interest_to_activation_flow" time="0.127"><failure message="django.db.utils.NotSupportedError: FOR UPDATE cannot be applied to the nullable side of an outer join">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+E   psycopg2.errors.FeatureNotSupported: FOR UPDATE cannot be applied to the nullable side of an outer join
+
+The above exception was the direct cause of the following exception:
+core_apps/features/tests/test_rental_phase2.py:264: in test_phase2_complete_interest_to_activation_flow
+    lease_response = owner_client.post(
+.venv/lib/python3.11/site-packages/rest_framework/test.py:296: in post
+    response = super().post(
+.venv/lib/python3.11/site-packages/rest_framework/test.py:210: in post
+    return self.generic('POST', path, data, content_type, **extra)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:234: in generic
+    return super().generic(
+.venv/lib/python3.11/site-packages/django/test/client.py:609: in generic
+    return self.request(**r)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:286: in request
+    return super().request(**kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:238: in request
+    request = super().request(**kwargs)
+.venv/lib/python3.11/site-packages/django/test/client.py:891: in request
+    self.check_exception(response)
+.venv/lib/python3.11/site-packages/django/test/client.py:738: in check_exception
+    raise exc_value
+.venv/lib/python3.11/site-packages/django/core/handlers/exception.py:55: in inner
+    response = get_response(request)
+.venv/lib/python3.11/site-packages/django/core/handlers/base.py:197: in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+.venv/lib/python3.11/site-packages/django/views/decorators/csrf.py:56: in wrapper_view
+    return view_func(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/views/generic/base.py:104: in view
+    return self.dispatch(request, *args, **kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:509: in dispatch
+    response = self.handle_exception(exc)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:469: in handle_exception
+    self.raise_uncaught_exception(exc)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:480: in raise_uncaught_exception
+    raise exc
+.venv/lib/python3.11/site-packages/rest_framework/views.py:506: in dispatch
+    response = handler(request, *args, **kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/decorators.py:50: in handler
+    return func(*args, **kwargs)
+core_apps/features/views.py:948: in leases
+    return create_structured_lease(request)
+core_apps/features/rental_phase2_views.py:778: in create_structured_lease
+    .get(pk=invitation.pk)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:633: in get
+    num = len(clone)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:380: in __len__
+    self._fetch_all()
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1881: in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+.venv/lib/python3.11/site-packages/django/db/models/query.py:91: in __iter__
+    results = compiler.execute_sql(
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1562: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+E   django.db.utils.NotSupportedError: FOR UPDATE cannot be applied to the nullable side of an outer join</failure></testcase><testcase classname="core_apps.features.tests.test_rental_phase2" name="test_phase2_private_resources_and_stale_revisions" time="0.027" /><testcase classname="core_apps.features.tests.test_rental_phase2" name="test_expiry_worker_never_restores_consumed_invitation" time="0.048" /><testcase classname="core_apps.features.tests.test_rental_phase2" name="test_daily_inventory_lock_rejects_overlap" time="0.012" /><testcase classname="core_apps.features.tests.test_rental_phase3" name="test_billing_anchor_preserves_month_end_and_issues_first_invoice" time="0.012" /><testcase classname="core_apps.features.tests.test_rental_phase3" name="test_quote_checkout_recovery_and_out_of_order_webhooks" time="0.042"><failure message="django.db.utils.NotSupportedError: FOR UPDATE cannot be applied to the nullable side of an outer join">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+E   psycopg2.errors.FeatureNotSupported: FOR UPDATE cannot be applied to the nullable side of an outer join
+
+The above exception was the direct cause of the following exception:
+core_apps/features/tests/test_rental_phase3.py:141: in test_quote_checkout_recovery_and_out_of_order_webhooks
+    webhook.post(
+.venv/lib/python3.11/site-packages/rest_framework/test.py:296: in post
+    response = super().post(
+.venv/lib/python3.11/site-packages/rest_framework/test.py:210: in post
+    return self.generic('POST', path, data, content_type, **extra)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:234: in generic
+    return super().generic(
+.venv/lib/python3.11/site-packages/django/test/client.py:609: in generic
+    return self.request(**r)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:286: in request
+    return super().request(**kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:238: in request
+    request = super().request(**kwargs)
+.venv/lib/python3.11/site-packages/django/test/client.py:891: in request
+    self.check_exception(response)
+.venv/lib/python3.11/site-packages/django/test/client.py:738: in check_exception
+    raise exc_value
+.venv/lib/python3.11/site-packages/django/core/handlers/exception.py:55: in inner
+    response = get_response(request)
+.venv/lib/python3.11/site-packages/django/core/handlers/base.py:197: in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+.venv/lib/python3.11/site-packages/django/views/decorators/csrf.py:56: in wrapper_view
+    return view_func(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/views/generic/base.py:104: in view
+    return self.dispatch(request, *args, **kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:509: in dispatch
+    response = self.handle_exception(exc)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:469: in handle_exception
+    self.raise_uncaught_exception(exc)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:480: in raise_uncaught_exception
+    raise exc
+.venv/lib/python3.11/site-packages/rest_framework/views.py:506: in dispatch
+    response = handler(request, *args, **kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/decorators.py:50: in handler
+    return func(*args, **kwargs)
+core_apps/features/rental_phase3_views.py:418: in fake_payment_webhook
+    process_provider_event(event)
+/Users/aait/.local/share/uv/python/cpython-3.11.17-macos-aarch64-none/lib/python3.11/contextlib.py:81: in inner
+    return func(*args, **kwds)
+core_apps/features/services/rental_phase3.py:449: in process_provider_event
+    .get(pk=event.pk)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:633: in get
+    num = len(clone)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:380: in __len__
+    self._fetch_all()
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1881: in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+.venv/lib/python3.11/site-packages/django/db/models/query.py:91: in __iter__
+    results = compiler.execute_sql(
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1562: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+E   django.db.utils.NotSupportedError: FOR UPDATE cannot be applied to the nullable side of an outer join</failure></testcase><testcase classname="core_apps.features.tests.test_rental_phase3" name="test_checkout_return_data_never_captures_payment" time="0.017" /><testcase classname="core_apps.features.tests.test_rental_phase4" name="test_private_evidence_validation_scan_recovery_and_download" time="0.016" /><testcase classname="core_apps.features.tests.test_rental_phase4" name="test_handover_revision_invalidation_acceptance_and_deposit_separation" time="0.017"><failure message="NameError: name 'Lease' is not defined">core_apps/features/tests/test_rental_phase4.py:146: in test_handover_revision_invalidation_acceptance_and_deposit_separation
+    created = client_for(owner).post(
+.venv/lib/python3.11/site-packages/rest_framework/test.py:296: in post
+    response = super().post(
+.venv/lib/python3.11/site-packages/rest_framework/test.py:210: in post
+    return self.generic('POST', path, data, content_type, **extra)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:234: in generic
+    return super().generic(
+.venv/lib/python3.11/site-packages/django/test/client.py:609: in generic
+    return self.request(**r)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:286: in request
+    return super().request(**kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:238: in request
+    request = super().request(**kwargs)
+.venv/lib/python3.11/site-packages/django/test/client.py:891: in request
+    self.check_exception(response)
+.venv/lib/python3.11/site-packages/django/test/client.py:738: in check_exception
+    raise exc_value
+.venv/lib/python3.11/site-packages/django/core/handlers/exception.py:55: in inner
+    response = get_response(request)
+.venv/lib/python3.11/site-packages/django/core/handlers/base.py:197: in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+.venv/lib/python3.11/site-packages/django/views/decorators/csrf.py:56: in wrapper_view
+    return view_func(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/views/generic/base.py:104: in view
+    return self.dispatch(request, *args, **kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:509: in dispatch
+    response = self.handle_exception(exc)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:469: in handle_exception
+    self.raise_uncaught_exception(exc)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:480: in raise_uncaught_exception
+    raise exc
+.venv/lib/python3.11/site-packages/rest_framework/views.py:506: in dispatch
+    response = handler(request, *args, **kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/decorators.py:50: in handler
+    return func(*args, **kwargs)
+core_apps/features/rental_phase4_views.py:286: in lease_handovers
+    if lease.status not in {Lease.Status.ACTIVE, Lease.Status.TERMINATION_PENDING, Lease.Status.ENDED}:
+E   NameError: name 'Lease' is not defined</failure></testcase><testcase classname="core_apps.features.tests.test_rental_phase4" name="test_only_operations_can_execute_each_eligible_payable_once" time="0.023" /><testcase classname="core_apps.features.tests.test_rental_phase5" name="test_complete_maintenance_vocabulary_and_exact_cost_approval" time="0.091" /><testcase classname="core_apps.features.tests.test_rental_phase5" name="test_extension_preserves_due_at_and_external_claim_is_not_capture" time="0.033"><failure message="django.db.utils.NotSupportedError: FOR UPDATE cannot be applied to the nullable side of an outer join">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+E   psycopg2.errors.FeatureNotSupported: FOR UPDATE cannot be applied to the nullable side of an outer join
+
+The above exception was the direct cause of the following exception:
+core_apps/features/tests/test_rental_phase5.py:183: in test_extension_preserves_due_at_and_external_claim_is_not_capture
+    accepted = client_for(owner).post(
+.venv/lib/python3.11/site-packages/rest_framework/test.py:296: in post
+    response = super().post(
+.venv/lib/python3.11/site-packages/rest_framework/test.py:210: in post
+    return self.generic('POST', path, data, content_type, **extra)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:234: in generic
+    return super().generic(
+.venv/lib/python3.11/site-packages/django/test/client.py:609: in generic
+    return self.request(**r)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:286: in request
+    return super().request(**kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:238: in request
+    request = super().request(**kwargs)
+.venv/lib/python3.11/site-packages/django/test/client.py:891: in request
+    self.check_exception(response)
+.venv/lib/python3.11/site-packages/django/test/client.py:738: in check_exception
+    raise exc_value
+.venv/lib/python3.11/site-packages/django/core/handlers/exception.py:55: in inner
+    response = get_response(request)
+.venv/lib/python3.11/site-packages/django/core/handlers/base.py:197: in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+.venv/lib/python3.11/site-packages/django/views/decorators/csrf.py:56: in wrapper_view
+    return view_func(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/views/generic/base.py:104: in view
+    return self.dispatch(request, *args, **kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:509: in dispatch
+    response = self.handle_exception(exc)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:469: in handle_exception
+    self.raise_uncaught_exception(exc)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:480: in raise_uncaught_exception
+    raise exc
+.venv/lib/python3.11/site-packages/rest_framework/views.py:506: in dispatch
+    response = handler(request, *args, **kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/decorators.py:50: in handler
+    return func(*args, **kwargs)
+core_apps/features/rental_phase5_views.py:547: in change_respond
+    item = _change(request, change_id, kind, lock=True)
+core_apps/features/rental_phase5_views.py:342: in _change
+    item = get_object_or_404(queryset, id=change_id)
+.venv/lib/python3.11/site-packages/django/shortcuts.py:85: in get_object_or_404
+    return queryset.get(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:633: in get
+    num = len(clone)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:380: in __len__
+    self._fetch_all()
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1881: in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+.venv/lib/python3.11/site-packages/django/db/models/query.py:91: in __iter__
+    results = compiler.execute_sql(
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1562: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+E   django.db.utils.NotSupportedError: FOR UPDATE cannot be applied to the nullable side of an outer join</failure></testcase><testcase classname="core_apps.features.tests.test_rental_phase5" name="test_amendment_invalid_signature_is_rejected_and_signed_change_applies" time="0.028"><failure message="django.db.utils.NotSupportedError: FOR UPDATE cannot be applied to the nullable side of an outer join">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+E   psycopg2.errors.FeatureNotSupported: FOR UPDATE cannot be applied to the nullable side of an outer join
+
+The above exception was the direct cause of the following exception:
+core_apps/features/tests/test_rental_phase5.py:274: in test_amendment_invalid_signature_is_rejected_and_signed_change_applies
+    accepted = client_for(tenant).post(
+.venv/lib/python3.11/site-packages/rest_framework/test.py:296: in post
+    response = super().post(
+.venv/lib/python3.11/site-packages/rest_framework/test.py:210: in post
+    return self.generic('POST', path, data, content_type, **extra)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:234: in generic
+    return super().generic(
+.venv/lib/python3.11/site-packages/django/test/client.py:609: in generic
+    return self.request(**r)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:286: in request
+    return super().request(**kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:238: in request
+    request = super().request(**kwargs)
+.venv/lib/python3.11/site-packages/django/test/client.py:891: in request
+    self.check_exception(response)
+.venv/lib/python3.11/site-packages/django/test/client.py:738: in check_exception
+    raise exc_value
+.venv/lib/python3.11/site-packages/django/core/handlers/exception.py:55: in inner
+    response = get_response(request)
+.venv/lib/python3.11/site-packages/django/core/handlers/base.py:197: in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+.venv/lib/python3.11/site-packages/django/views/decorators/csrf.py:56: in wrapper_view
+    return view_func(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/views/generic/base.py:104: in view
+    return self.dispatch(request, *args, **kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:509: in dispatch
+    response = self.handle_exception(exc)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:469: in handle_exception
+    self.raise_uncaught_exception(exc)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:480: in raise_uncaught_exception
+    raise exc
+.venv/lib/python3.11/site-packages/rest_framework/views.py:506: in dispatch
+    response = handler(request, *args, **kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/decorators.py:50: in handler
+    return func(*args, **kwargs)
+core_apps/features/rental_phase5_views.py:547: in change_respond
+    item = _change(request, change_id, kind, lock=True)
+core_apps/features/rental_phase5_views.py:342: in _change
+    item = get_object_or_404(queryset, id=change_id)
+.venv/lib/python3.11/site-packages/django/shortcuts.py:85: in get_object_or_404
+    return queryset.get(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:633: in get
+    num = len(clone)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:380: in __len__
+    self._fetch_all()
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1881: in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+.venv/lib/python3.11/site-packages/django/db/models/query.py:91: in __iter__
+    results = compiler.execute_sql(
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1562: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+E   django.db.utils.NotSupportedError: FOR UPDATE cannot be applied to the nullable side of an outer join</failure></testcase><testcase classname="core_apps.features.tests.test_rental_phase6" name="test_settlement_dispute_items_closure_and_late_chargeback_reopens" time="0.042"><failure message="django.db.utils.DataError: value too long for type character varying(80)">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+E   psycopg2.errors.StringDataRightTruncation: value too long for type character varying(80)
+
+The above exception was the direct cause of the following exception:
+core_apps/features/tests/test_rental_phase6.py:225: in test_settlement_dispute_items_closure_and_late_chargeback_reopens
+    accepted = client_for(tenant).post(
+.venv/lib/python3.11/site-packages/rest_framework/test.py:296: in post
+    response = super().post(
+.venv/lib/python3.11/site-packages/rest_framework/test.py:210: in post
+    return self.generic('POST', path, data, content_type, **extra)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:234: in generic
+    return super().generic(
+.venv/lib/python3.11/site-packages/django/test/client.py:609: in generic
+    return self.request(**r)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:286: in request
+    return super().request(**kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:238: in request
+    request = super().request(**kwargs)
+.venv/lib/python3.11/site-packages/django/test/client.py:891: in request
+    self.check_exception(response)
+.venv/lib/python3.11/site-packages/django/test/client.py:738: in check_exception
+    raise exc_value
+.venv/lib/python3.11/site-packages/django/core/handlers/exception.py:55: in inner
+    response = get_response(request)
+.venv/lib/python3.11/site-packages/django/core/handlers/base.py:197: in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+.venv/lib/python3.11/site-packages/django/views/decorators/csrf.py:56: in wrapper_view
+    return view_func(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/views/generic/base.py:104: in view
+    return self.dispatch(request, *args, **kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:509: in dispatch
+    response = self.handle_exception(exc)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:469: in handle_exception
+    self.raise_uncaught_exception(exc)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:480: in raise_uncaught_exception
+    raise exc
+.venv/lib/python3.11/site-packages/rest_framework/views.py:506: in dispatch
+    response = handler(request, *args, **kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/decorators.py:50: in handler
+    return func(*args, **kwargs)
+core_apps/features/rental_phase6_views.py:218: in final_settlement_respond
+    output = remember_mutation(
+core_apps/features/services/rental_phase2.py:58: in remember_mutation
+    record = IdempotencyRecord.objects.create(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+E   django.db.utils.DataError: value too long for type character varying(80)</failure></testcase><testcase classname="core_apps.features.tests.test_rental_phase6" name="test_refund_balance_duplicate_worker_and_proportional_commission" time="0.049" /><testcase classname="core_apps.features.tests.test_rental_phase6" name="test_legacy_reconciliation_preserves_identifiers_and_financial_facts" time="0.008" /><testcase classname="core_apps.features.tests.test_rental_phase6" name="test_dispute_documents_reviews_and_private_authorization" time="0.028"><failure message="django.db.utils.DataError: value too long for type character varying(80)">.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+E   psycopg2.errors.StringDataRightTruncation: value too long for type character varying(80)
+
+The above exception was the direct cause of the following exception:
+core_apps/features/tests/test_rental_phase6.py:349: in test_dispute_documents_reviews_and_private_authorization
+    reply = client_for(owner).post(
+.venv/lib/python3.11/site-packages/rest_framework/test.py:296: in post
+    response = super().post(
+.venv/lib/python3.11/site-packages/rest_framework/test.py:210: in post
+    return self.generic('POST', path, data, content_type, **extra)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:234: in generic
+    return super().generic(
+.venv/lib/python3.11/site-packages/django/test/client.py:609: in generic
+    return self.request(**r)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:286: in request
+    return super().request(**kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/test.py:238: in request
+    request = super().request(**kwargs)
+.venv/lib/python3.11/site-packages/django/test/client.py:891: in request
+    self.check_exception(response)
+.venv/lib/python3.11/site-packages/django/test/client.py:738: in check_exception
+    raise exc_value
+.venv/lib/python3.11/site-packages/django/core/handlers/exception.py:55: in inner
+    response = get_response(request)
+.venv/lib/python3.11/site-packages/django/core/handlers/base.py:197: in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+.venv/lib/python3.11/site-packages/django/views/decorators/csrf.py:56: in wrapper_view
+    return view_func(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/views/generic/base.py:104: in view
+    return self.dispatch(request, *args, **kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:509: in dispatch
+    response = self.handle_exception(exc)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:469: in handle_exception
+    self.raise_uncaught_exception(exc)
+.venv/lib/python3.11/site-packages/rest_framework/views.py:480: in raise_uncaught_exception
+    raise exc
+.venv/lib/python3.11/site-packages/rest_framework/views.py:506: in dispatch
+    response = handler(request, *args, **kwargs)
+.venv/lib/python3.11/site-packages/rest_framework/decorators.py:50: in handler
+    return func(*args, **kwargs)
+core_apps/features/rental_phase6_views.py:570: in dispute_respond
+    output = remember_mutation(
+core_apps/features/services/rental_phase2.py:58: in remember_mutation
+    record = IdempotencyRecord.objects.create(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:658: in create
+    obj.save(force_insert=True, using=self.db)
+.venv/lib/python3.11/site-packages/django/db/models/base.py:814: in save
+    self.save_base(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:877: in save_base
+    updated = self._save_table(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1020: in _save_table
+    results = self._do_insert(
+.venv/lib/python3.11/site-packages/django/db/models/base.py:1061: in _do_insert
+    return manager._insert(
+.venv/lib/python3.11/site-packages/django/db/models/manager.py:87: in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+.venv/lib/python3.11/site-packages/django/db/models/query.py:1805: in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+.venv/lib/python3.11/site-packages/django/db/models/sql/compiler.py:1822: in execute_sql
+    cursor.execute(sql, params)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:67: in execute
+    return self._execute_with_wrappers(
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:80: in _execute_with_wrappers
+    return executor(sql, params, many, context)
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:84: in _execute
+    with self.db.wrap_database_errors:
+.venv/lib/python3.11/site-packages/django/db/utils.py:91: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+.venv/lib/python3.11/site-packages/django/db/backends/utils.py:89: in _execute
+    return self.cursor.execute(sql, params)
+E   django.db.utils.DataError: value too long for type character varying(80)</failure></testcase><testcase classname="core_apps.features.tests.test_rental_phase6" name="test_cancelled_never_occupied_draft_closure_blockers_and_financial_policy" time="0.029" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_create_legacy_invitation_is_idempotent_and_notifies_once" time="0.023" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_exact_offer_acceptance_picker_and_draft_consumption" time="0.040" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_expired_and_changed_invitations_cannot_be_accepted" time="0.017" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_participant_privacy_and_rejected_invitation_not_in_picker" time="0.024" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_source_relationship_and_offer_revision_are_enforced" time="0.011" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_all_supported_offer_scopes_are_snapshotted[entire_property-0-False]" time="0.015" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_all_supported_offer_scopes_are_snapshotted[room-1-False]" time="0.013" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_all_supported_offer_scopes_are_snapshotted[room_group-2-False]" time="0.026" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_all_supported_offer_scopes_are_snapshotted[bed-1-True]" time="0.016" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_changed_offer_terms_revoke_before_acceptance" time="0.017" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_list_is_workspace_scoped_and_empty_page_shape" time="0.020" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_offer_conflicts_use_arabic_message_when_requested" time="0.009" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_cancelled_draft_requires_and_allows_a_fresh_invitation" time="0.045" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_provider_disabled_draft_capabilities_match_mutations[disabled-en]" time="0.067" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_provider_disabled_draft_capabilities_match_mutations[disabled-ar]" time="0.065" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_provider_disabled_draft_capabilities_match_mutations[fake-en]" time="0.069" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_provider_disabled_draft_capabilities_match_mutations[fake-ar]" time="0.098" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_historical_legacy_drafts_remain_read_only" time="0.016" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_unverified_owner_configuration_and_post_agree[en]" time="0.008" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_unverified_owner_configuration_and_post_agree[ar]" time="0.007" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_followup_legacy_round_trip[inventory0-en]" time="0.071" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_followup_legacy_round_trip[inventory0-ar]" time="0.069" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_followup_legacy_round_trip[inventory1-en]" time="0.065" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_followup_legacy_round_trip[inventory1-ar]" time="0.063" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_empty_legacy_compatibility_does_not_bypass_offer_validation[inventory0-extra0]" time="0.011" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_empty_legacy_compatibility_does_not_bypass_offer_validation[inventory1-extra1]" time="0.010" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_empty_legacy_compatibility_does_not_bypass_offer_validation[inventory2-extra2]" time="0.009" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_empty_legacy_compatibility_does_not_bypass_offer_validation[inventory3-extra3]" time="0.011" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_empty_legacy_compatibility_does_not_bypass_offer_validation[inventory4-extra4]" time="0.010" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_followup_ineligible_draft_is_json_conflict[missing-en]" time="0.016" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_followup_ineligible_draft_is_json_conflict[missing-ar]" time="0.018" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_followup_ineligible_draft_is_json_conflict[pending-en]" time="0.029" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_followup_ineligible_draft_is_json_conflict[pending-ar]" time="0.040" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_followup_ineligible_draft_is_json_conflict[rejected-en]" time="0.038" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_followup_ineligible_draft_is_json_conflict[rejected-ar]" time="0.025" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_followup_ineligible_draft_is_json_conflict[expired-en]" time="0.028" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_followup_ineligible_draft_is_json_conflict[expired-ar]" time="0.026" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_followup_ineligible_draft_is_json_conflict[revoked-en]" time="0.025" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_followup_ineligible_draft_is_json_conflict[revoked-ar]" time="0.025" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_followup_ineligible_draft_is_json_conflict[consumed-en]" time="0.036" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_followup_ineligible_draft_is_json_conflict[consumed-ar]" time="0.032" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_followup_ineligible_draft_is_json_conflict[unavailable-en]" time="0.029" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_followup_ineligible_draft_is_json_conflict[unavailable-ar]" time="0.029" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_concurrent_invitation_mutations_have_one_winner[create]" time="0.290" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_concurrent_invitation_mutations_have_one_winner[respond]" time="0.266" /><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_concurrent_invitation_mutations_have_one_winner[draft]" time="0.370" /><testcase classname="core_apps.features.tests.test_rental_phase2" name="test_fake_provider_is_forbidden_in_production_settings" time="0.275" /></testsuite></testsuites>

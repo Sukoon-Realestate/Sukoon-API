@@ -1,5 +1,8 @@
 # ── Sukoon Backend Makefile ──────────────────────────────
 PYTHON ?= python
+CYCLE_PYTHON ?= .venv/bin/python
+CYCLE_SETTINGS ?= config.settings.postgres_test
+CYCLE_EVIDENCE ?= ../docs/qa/owner-tenant-source-verification
 PIPENV ?= pipenv
 ROOT_ENV_FILE ?= ../.env
 REMOTE_SETTINGS ?= config.settings.production
@@ -48,6 +51,17 @@ test:
 test-cov:
 	$(PIPENV) run pytest --cov=core_apps --cov-report=term-missing
 
+.PHONY: test-owner-tenant test-cycle-contract check-owner-tenant
+test-owner-tenant: ## Run rental, property, advertising and renderer regressions on an isolated DB
+	$(CYCLE_PYTHON) -m pytest core_apps/features/tests core_apps/advertising/tests core_apps/properties/tests core_apps/common --ds=$(CYCLE_SETTINGS) --junitxml=$(CYCLE_EVIDENCE)/owner-tenant.xml
+
+test-cycle-contract: ## Generate fresh Django API responses for the Flutter contract test
+	SOKOUN_CONTRACT_ARTIFACT_DIR=$(abspath $(CYCLE_EVIDENCE)) $(CYCLE_PYTHON) -m pytest core_apps/features/tests/test_rental_phase2.py::test_phase2_complete_interest_to_activation_flow --ds=$(CYCLE_SETTINGS)
+
+check-owner-tenant: ## Check Django configuration and migration source consistency
+	$(CYCLE_PYTHON) manage.py check --settings=$(CYCLE_SETTINGS)
+	$(CYCLE_PYTHON) manage.py makemigrations --check --dry-run --settings=$(CYCLE_SETTINGS)
+
 check:
 	$(PIPENV) run python manage.py check
 
@@ -71,3 +85,10 @@ clean:
 	rm -rf .pytest_cache .coverage
 
 .PHONY: help install run run-manage migrate makemigrations shell test test-cov check lint superuser static seed clean
+
+.PHONY: test-remaining-cycles test-flutter-request-bodies
+test-remaining-cycles: ## Exercise remaining cycles and export real planning/refund API contracts
+	SOKOUN_PLANNING_ARTIFACT_DIR=$(abspath $(CYCLE_EVIDENCE)) SOKOUN_CONTRACT_ARTIFACT_DIR=$(abspath $(CYCLE_EVIDENCE)) $(CYCLE_PYTHON) -m pytest core_apps/features/tests/test_planning_cycles.py core_apps/features/tests/test_planning_boundaries.py core_apps/features/tests/test_funded_settlement.py core_apps/features/tests/test_remaining_concurrency.py core_apps/features/tests/test_full_cycle_http.py --ds=$(CYCLE_SETTINGS) --junitxml=$(CYCLE_EVIDENCE)/remaining-cycles.xml
+
+test-flutter-request-bodies: ## Feed the actual Flutter-serialized request bodies back into Django
+	SOKOUN_FLUTTER_REQUEST_BODIES=$(abspath $(CYCLE_EVIDENCE))/flutter-request-bodies.json $(CYCLE_PYTHON) -m pytest core_apps/features/tests/test_flutter_request_roundtrip.py --ds=$(CYCLE_SETTINGS) --junitxml=$(CYCLE_EVIDENCE)/flutter-request-roundtrip.xml

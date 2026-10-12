@@ -16,7 +16,7 @@ class IdempotencyRecord(TimeStampedModel):
         ABSENT_FINAL = "absent_final", "Absent final"
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    operation = models.CharField(max_length=80)
+    operation = models.CharField(max_length=160)
     request_key = models.CharField(max_length=100)
     fingerprint = models.CharField(max_length=64)
     response_data = models.JSONField(default=dict)
@@ -788,6 +788,7 @@ class InvoicePaymentAllocation(TimeStampedModel):
         PaymentAttempt, on_delete=models.PROTECT, related_name="invoice_allocation"
     )
     amount_minor = models.PositiveBigIntegerField()
+    components = models.JSONField(default=dict, blank=True)
 
 
 class PaymentReceipt(TimeStampedModel):
@@ -803,14 +804,25 @@ class OwnerPayable(TimeStampedModel):
     lease = models.ForeignKey(
         Lease, on_delete=models.PROTECT, related_name="owner_payables"
     )
-    invoice = models.OneToOneField(
-        RentInvoice, on_delete=models.PROTECT, related_name="owner_payable"
+    invoice = models.ForeignKey(
+        RentInvoice, on_delete=models.PROTECT, related_name="owner_payables"
     )
     payment_attempt = models.OneToOneField(
-        PaymentAttempt, on_delete=models.PROTECT, related_name="owner_payable"
+        PaymentAttempt,
+        on_delete=models.PROTECT,
+        related_name="owner_payable",
+        null=True,
+        blank=True,
     )
     billing_period = models.ForeignKey(
-        BillingPeriod, on_delete=models.PROTECT, related_name="owner_payables"
+        BillingPeriod,
+        on_delete=models.PROTECT,
+        related_name="owner_payables",
+        null=True,
+        blank=True,
+    )
+    source_reference = models.CharField(
+        max_length=120, null=True, blank=True, unique=True
     )
     revision = models.PositiveIntegerField(default=1)
     gross_minor = models.PositiveBigIntegerField()
@@ -1088,6 +1100,11 @@ class FinalSettlement(TimeStampedModel):
     proposed_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="proposed_settlements", null=True
     )
+    financial_snapshot = models.JSONField(default=dict, blank=True)
+    execution_plan = models.JSONField(default=dict, blank=True)
+    execution_status = models.CharField(max_length=20, default="not_started")
+    executed_at = models.DateTimeField(null=True, blank=True)
+    history = models.JSONField(default=list, blank=True)
 
 
 class RefundRequest(TimeStampedModel):
@@ -1117,6 +1134,12 @@ class RefundRequest(TimeStampedModel):
         settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="approved_refunds", null=True, blank=True
     )
     request_key = models.UUIDField()
+    allocations = models.JSONField(default=dict, blank=True)
+    purpose = models.CharField(max_length=30, default="payment_reversal")
+    commission_reversal_minor = models.PositiveBigIntegerField(default=0)
+    owner_recovery_minor = models.PositiveBigIntegerField(default=0)
+    owner_recovered_minor = models.PositiveBigIntegerField(default=0)
+    recovery_reference = models.CharField(max_length=120, blank=True, default="")
 
     class Meta:
         constraints = [
@@ -1205,3 +1228,20 @@ class PrivateAccessRevocation(TimeStampedModel):
         constraints = [
             models.UniqueConstraint(fields=["lease", "user"], name="unique_lease_private_revocation")
         ]
+
+
+# Import the separate module so Django registers planning resources and migrations.
+from .planning_models import (  # noqa: E402,F401
+    CommuteSearch,
+    ConditionReport,
+    GroupInvitation,
+    GroupMembership,
+    GroupProcess,
+    HousingGroup,
+    HousingOffer,
+    HousingRequest,
+    LifestyleProfile,
+    RoommateConnection,
+    TenancyTransition,
+    TenantAssistantTurn,
+)

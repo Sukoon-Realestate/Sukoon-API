@@ -21,8 +21,13 @@ from .models import (
     RentalEvidence,
     RentInvoice,
 )
-from .providers import get_rental_provider
+from .providers import (
+    mock_completion_metadata,
+    get_rental_provider,
+    require_rental_provider,
+)
 from .renderers import FeatureJsonRenderer
+from .services.cycle_permissions import MAINTENANCE_TRANSITIONS, cycle_actions
 from .services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
 from .services.rental_phase3 import cairo_instant
 
@@ -52,9 +57,11 @@ def _money(value):
 
 
 def _lease(request, lease_id, lock=False):
+    if request.method not in {"GET", "HEAD", "OPTIONS"}:
+        require_rental_provider(request.user)
     queryset = Lease.objects.select_related("owner", "tenant")
     if lock:
-        queryset = queryset.select_for_update()
+        queryset = queryset.select_for_update(of=("self",))
     lease = get_object_or_404(queryset, id=lease_id)
     if request.user not in (lease.owner, lease.tenant):
         raise NotFound()
@@ -76,8 +83,10 @@ def _safe_evidence(lease, ids):
     return items
 
 
-def maintenance_payload(item):
+def maintenance_payload(item, user=None):
     return {
+        "allowed_actions": cycle_actions(user, item),
+        "blocking_reasons": [],
         "id": str(item.id),
         "lease_id": str(item.lease.id),
         "revision": item.revision,
@@ -119,7 +128,7 @@ def _maintenance(request, request_id, lock=False):
         "lease__owner", "lease__tenant"
     ).prefetch_related("events", "evidence")
     if lock:
-        queryset = queryset.select_for_update()
+        queryset = queryset.select_for_update(of=("self",))
     item = get_object_or_404(queryset, id=request_id)
     if request.user not in (item.lease.owner, item.lease.tenant):
         raise NotFound()
@@ -133,7 +142,7 @@ def maintenance_requests(request, lease_id):
     lease = _lease(request, lease_id)
     if request.method == "GET":
         results = [
-            maintenance_payload(x)
+            maintenance_payload(x, request.user)
             for x in lease.maintenance_requests.prefetch_related("events", "evidence")
         ]
         return Response(
@@ -186,7 +195,7 @@ def maintenance_requests(request, lease_id):
             request_subject_id=lease.id,
             result_subject_id=item.id,
             result_revision=item.revision,
-            resource=maintenance_payload(item),
+            resource=maintenance_payload(item, request.user),
             response_status=201,
         )
     return Response(output, status=status.HTTP_201_CREATED)
@@ -196,14 +205,16 @@ def maintenance_requests(request, lease_id):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def maintenance_detail(request, request_id):
-    return Response(maintenance_payload(_maintenance(request, request_id)))
+    return Response(
+        maintenance_payload(_maintenance(request, request_id), request.user)
+    )
 
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def maintenance_action(request, request_id):
-    action = request.data.get("action")
+    action = request.data.get("action") or request.data.get("decision")
     if action not in MAINTENANCE_ACTIONS or not request.data.get("request_key"):
         raise ValidationError({"action": "Unsupported action or missing request key."})
     item = _maintenance(request, request_id)
@@ -213,19 +224,7 @@ def maintenance_action(request, request_id):
     )
     if replay:
         return Response(replay[0], status=replay[1])
-    transitions = {
-        "acknowledge": ({"open"}, "acknowledged"),
-        "propose_appointment": ({"open", "acknowledged"}, "appointment_proposed"),
-        "accept_appointment": ({"appointment_proposed"}, "scheduled"),
-        "start_work": ({"acknowledged", "scheduled"}, "in_progress"),
-        "report_resolved": ({"in_progress"}, "resolution_reported"),
-        "confirm_resolved": ({"resolution_reported"}, "resolved"),
-        "reopen": ({"resolution_reported", "resolved"}, "open"),
-        "cancel": (
-            {"open", "acknowledged", "appointment_proposed", "scheduled"},
-            "cancelled",
-        ),
-    }
+    transitions = MAINTENANCE_TRANSITIONS
     with transaction.atomic():
         item = _maintenance(request, request_id, lock=True)
         if int(request.data.get("expected_revision", 0)) != item.revision:
@@ -300,13 +299,15 @@ def maintenance_action(request, request_id):
             request_subject_id=item.id,
             result_subject_id=item.id,
             result_revision=item.revision,
-            resource=maintenance_payload(item),
+            resource=maintenance_payload(item, request.user),
         )
     return Response(output)
 
 
-def change_payload(item):
+def change_payload(item, user=None):
     return {
+        "allowed_actions": cycle_actions(user, item),
+        "blocking_reasons": [],
         "id": str(item.id),
         "lease_id": str(item.lease.id),
         "invoice_id": str(item.invoice.id) if item.invoice else None,
@@ -337,8 +338,6 @@ def _change(request, change_id, expected_kind=None, lock=False):
     queryset = RentalChange.objects.select_related(
         "lease__owner", "lease__tenant", "invoice"
     )
-    if lock:
-        queryset = queryset.select_for_update()
     item = get_object_or_404(queryset, id=change_id)
     if expected_kind and item.kind != expected_kind:
         raise NotFound()
@@ -360,13 +359,20 @@ def _change(request, change_id, expected_kind=None, lock=False):
         and not operations_external
     ):
         raise NotFound()
+    if lock:
+        lease = Lease.objects.select_for_update().get(pk=item.lease_id)
+        item = queryset.select_for_update(of=("self",)).get(pk=item.pk)
+        item.lease = lease
     return item
 
 
 def change_collection(request, lease_id, kind):
     lease = _lease(request, lease_id)
     if request.method == "GET":
-        results = [change_payload(x) for x in lease.rental_changes.filter(kind=kind)]
+        results = [
+            change_payload(x, request.user)
+            for x in lease.rental_changes.filter(kind=kind)
+        ]
         return Response(
             {"count": len(results), "next": None, "previous": None, "results": results}
         )
@@ -409,6 +415,18 @@ def change_collection(request, lease_id, kind):
         raise ValidationError(
             {"terms": "Continuous renewals require zero acquisition commission."}
         )
+    if kind == RentalChange.Kind.TERMINATION:
+        effective = parse_date(request.data.get("effective_on", ""))
+        if (
+            not effective
+            or effective < max(lease.start_date, timezone.localdate())
+            or effective > lease.end_date
+        ):
+            raise ValidationError(
+                {
+                    "effective_on": "Choose a current or future date within this lease term."
+                }
+            )
     evidence = _safe_evidence(lease, request.data.get("evidence_ids", []))
     with transaction.atomic():
         lease = _lease(request, lease_id, lock=True)
@@ -450,7 +468,7 @@ def change_collection(request, lease_id, kind):
             request_subject_id=lease.id,
             result_subject_id=item.id,
             result_revision=item.revision,
-            resource=change_payload(item),
+            resource=change_payload(item, request.user),
             response_status=201,
         )
     return Response(output, status=status.HTTP_201_CREATED)
@@ -510,7 +528,7 @@ def external_claim_create(request, invoice_id):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def change_detail(request, change_id, kind):
-    return Response(change_payload(_change(request, change_id, kind)))
+    return Response(change_payload(_change(request, change_id, kind), request.user))
 
 
 @api_view(["POST"])
@@ -547,6 +565,12 @@ def change_respond(request, change_id, kind):
         item = _change(request, change_id, kind, lock=True)
         if int(request.data.get("expected_revision", 0)) != item.revision:
             raise RentalConflict("Change revision conflict.", code="stale_revision")
+        if item.status not in {
+            RentalChange.Status.PROPOSED,
+            RentalChange.Status.CHANGES_REQUESTED,
+            RentalChange.Status.REVIEW_REQUIRED,
+        }:
+            raise RentalConflict("This change is no longer awaiting a response.")
         if action == "reject":
             item.status = RentalChange.Status.REJECTED
         elif action == "request_changes":
@@ -570,15 +594,13 @@ def change_respond(request, change_id, kind):
                     )
                     item.status = RentalChange.Status.APPLIED
                     item.applied_at = timezone.now()
-                elif (
-                    kind == RentalChange.Kind.TERMINATION
-                    and item.effective_on
-                    and item.effective_on <= timezone.localdate()
-                ):
-                    item.lease.occupancy_status = Lease.OccupancyStatus.MOVE_OUT_PENDING
-                    item.lease.save(update_fields=["occupancy_status", "updated_at"])
-                    item.status = RentalChange.Status.APPLIED
-                    item.applied_at = timezone.now()
+                elif kind == RentalChange.Kind.TERMINATION:
+                    from .services.legal_lifecycle import accept_termination
+
+                    accept_termination(item)
+                    if item.effective_on <= timezone.localdate():
+                        item.status = RentalChange.Status.APPLIED
+                        item.applied_at = timezone.now()
         item.revision += 1
         item.save()
         output = remember_mutation(
@@ -589,7 +611,7 @@ def change_respond(request, change_id, kind):
             request_subject_id=item.id,
             result_subject_id=item.id,
             result_revision=item.revision,
-            resource=change_payload(item),
+            resource=change_payload(item, request.user),
         )
     return Response(output)
 
@@ -631,7 +653,7 @@ def submit_change_for_signature(request, change_id, kind):
             request_subject_id=item.id,
             result_subject_id=item.id,
             result_revision=item.revision,
-            resource=change_payload(item),
+            resource=change_payload(item, request.user),
         )
     return Response(output)
 
@@ -679,6 +701,9 @@ def change_signing_session(request, change_id, kind):
             "document_id": str(item.document_id),
             "document_hash": item.document_hash,
             "hosted_url": session.hosted_url,
+            **mock_completion_metadata(
+                "change-signing-sessions", session.id, item.revision
+            ),
             "expires_at": session.expires_at.isoformat(),
         }
         output = remember_mutation(
@@ -687,7 +712,7 @@ def change_signing_session(request, change_id, kind):
             request_key=request_key,
             payload=request.data,
             request_subject_id=item.id,
-            result_subject_id=item.id,
+            result_subject_id=session.id,
             result_revision=item.revision,
             resource=resource,
             response_status=201,
@@ -698,16 +723,16 @@ def change_signing_session(request, change_id, kind):
 def complete_change_signature(provider_session_id):
     with transaction.atomic():
         session = get_object_or_404(
-            ChangeSigningSession.objects.select_for_update().select_related(
-                "change__lease__owner", "change__lease__tenant"
-            ),
-            provider_session_id=provider_session_id,
+            ChangeSigningSession, provider_session_id=provider_session_id
         )
         item = RentalChange.objects.select_for_update().get(pk=session.change_id)
+        session = ChangeSigningSession.objects.select_for_update().get(pk=session.pk)
         if session.status == "completed":
             return item
         if (
-            session.change_revision != item.revision
+            item.status != RentalChange.Status.PENDING_SIGNATURES
+            or session.expires_at <= timezone.now()
+            or session.change_revision != item.revision
             or session.document_id != item.document_id
             or session.document_hash != item.document_hash
         ):

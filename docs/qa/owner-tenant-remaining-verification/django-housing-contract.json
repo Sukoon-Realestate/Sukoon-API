@@ -1,0 +1,370 @@
+{
+  "owner_id": "78a6f6c6-18a0-425e-98c0-70c92487e91d",
+  "tenant_id": "110bcd12-f5b0-4e36-9a7b-d29052ad8d9d",
+  "request_body": {
+    "request_key": "682388fa-d786-4c0f-b578-e96b5a40506d",
+    "expected_revision": 0,
+    "action": "publish",
+    "title": "Campus home",
+    "note": "Two residents",
+    "criteria": {
+      "city_id": "a7b1f584-023b-41c7-8583-f860522ab767",
+      "district_ids": [],
+      "rental_scope": "entire_property",
+      "property_type": "phase-two-apartment",
+      "budget_min": {
+        "amount_minor": 100000,
+        "currency": "EGP",
+        "exponent": 2
+      },
+      "budget_max": {
+        "amount_minor": 2000000,
+        "currency": "EGP",
+        "exponent": 2
+      },
+      "price_period": "monthly",
+      "start_on": "2026-10-22",
+      "end_on": null,
+      "people": 2,
+      "amenities": [],
+      "furnished": null
+    },
+    "visibility": "eligible_owners"
+  },
+  "request": {
+    "key": "success",
+    "msg": "",
+    "data": {
+      "resource": {
+        "id": "8fd062be-d2f7-42ad-bc93-735d4870d711",
+        "user_id": "110bcd12-f5b0-4e36-9a7b-d29052ad8d9d",
+        "title": "Campus home",
+        "note": "Two residents",
+        "status": "published",
+        "visibility": "eligible_owners",
+        "revision": 1,
+        "criteria": {
+          "city": {
+            "id": "a7b1f584-023b-41c7-8583-f860522ab767",
+            "name": "Phase Two City",
+            "slug": "phase-two-city"
+          },
+          "filters": {
+            "city": "a7b1f584-023b-41c7-8583-f860522ab767",
+            "rental_scope": "entire_property",
+            "property_type": "phase-two-apartment",
+            "price_period": "monthly",
+            "price_min": "1000",
+            "price_max": "20000",
+            "amenities": [],
+            "is_furnished": ""
+          },
+          "start_on": "2026-10-22",
+          "end_on": "",
+          "people": 2,
+          "area_note": ""
+        },
+        "expires_at": "2026-11-11T19:21:51.245888+00:00",
+        "allowed_actions": [
+          "edit",
+          "pause",
+          "close",
+          "fulfill"
+        ],
+        "blocking_reasons": []
+      },
+      "operation_receipt": {
+        "id": "499be86d-c840-436c-aa60-4f7b9a71f9fe",
+        "subject_id": "8fd062be-d2f7-42ad-bc93-735d4870d711",
+        "request_key": "682388fa-d786-4c0f-b578-e96b5a40506d",
+        "revision": 1,
+        "status": "confirmed"
+      }
+    }
+  },
+  "offer_body": {
+    "request_key": "f77da378-e877-4fd2-b17e-e19a4e177d86",
+    "expected_revision": 0,
+    "request_id": "8fd062be-d2f7-42ad-bc93-735d4870d711",
+    "request_revision": 1,
+    "selection": {
+      "property_id": "ab54c149-3ce7-4a67-b384-2bede40bdf3d",
+      "offer_id": "81fcf5ba-7b6b-46fd-ac98-f7194096bf22",
+      "offer_revision": 2,
+      "rental_scope": "entire_property",
+      "name": "Whole home",
+      "room_ids": [],
+      "room_names": [],
+      "bed_id": "",
+      "bed_name": "",
+      "capacity": 2,
+      "bathroom_access": [],
+      "availability": "available",
+      "archived": false,
+      "offer_link": "",
+      "terms": {
+        "price": "10000",
+        "price_period": "monthly",
+        "rental_period": 1,
+        "suitable_for": "all",
+        "description": "Configured shared accommodation",
+        "smoking_allowed": false,
+        "rules": []
+      }
+    },
+    "note": "Owned available home"
+  },
+  "offer": {
+    "key": "success",
+    "msg": "",
+    "data": {
+      "resource": {
+        "id": "79fe2998-f453-42c4-9c53-021fc8a55432",
+        "request_id": "8fd062be-d2f7-42ad-bc93-735d4870d711",
+        "owner_user_id": "78a6f6c6-18a0-425e-98c0-70c92487e91d",
+        "status": "sent",
+        "note": "Owned available home",
+        "revision": 1,
+        "request_revision": 1,
+        "selection": {
+          "property_id": "ab54c149-3ce7-4a67-b384-2bede40bdf3d",
+          "offer_id": "81fcf5ba-7b6b-46fd-ac98-f7194096bf22",
+          "offer_revision": 2,
+          "rental_scope": "entire_property",
+          "name": "Whole home",
+          "room_ids": [],
+          "room_names": [],
+          "bed_id": "",
+          "bed_name": "",
+          "availability": "available",
+          "archived": false,
+          "capacity": 2,
+          "bathroom_access": [],
+          "offer_link": "",
+          "terms": {
+            "price": "10000",
+            "price_period": "monthly",
+            "rental_period": 1,
+            "deposit": "",
+            "suitable_for": "all",
+            "description": "Configured shared accommodation",
+            "smoking_allowed": false,
+            "rules": []
+          }
+        },
+        "rent": {
+          "amount_minor": 1000000,
+          "currency": "EGP",
+          "exponent": 2
+        },
+        "deposit": {
+          "amount_minor": 0,
+          "currency": "EGP",
+          "exponent": 2
+        },
+        "price_period": "monthly",
+        "allowed_actions": [
+          "withdraw"
+        ],
+        "blocking_reasons": []
+      },
+      "operation_receipt": {
+        "id": "70ef08be-11cc-415f-8706-440e90991911",
+        "subject_id": "79fe2998-f453-42c4-9c53-021fc8a55432",
+        "request_key": "f77da378-e877-4fd2-b17e-e19a4e177d86",
+        "revision": 1,
+        "status": "confirmed"
+      }
+    }
+  },
+  "tenant_offer": {
+    "id": "79fe2998-f453-42c4-9c53-021fc8a55432",
+    "request_id": "8fd062be-d2f7-42ad-bc93-735d4870d711",
+    "owner_user_id": "78a6f6c6-18a0-425e-98c0-70c92487e91d",
+    "status": "sent",
+    "note": "Owned available home",
+    "revision": 1,
+    "request_revision": 1,
+    "selection": {
+      "name": "Whole home",
+      "terms": {
+        "price": "10000",
+        "rules": [],
+        "deposit": "",
+        "description": "Configured shared accommodation",
+        "price_period": "monthly",
+        "suitable_for": "all",
+        "rental_period": 1,
+        "smoking_allowed": false
+      },
+      "bed_id": "",
+      "archived": false,
+      "bed_name": "",
+      "capacity": 2,
+      "offer_id": "81fcf5ba-7b6b-46fd-ac98-f7194096bf22",
+      "room_ids": [],
+      "offer_link": "",
+      "room_names": [],
+      "property_id": "ab54c149-3ce7-4a67-b384-2bede40bdf3d",
+      "availability": "available",
+      "rental_scope": "entire_property",
+      "offer_revision": 2,
+      "bathroom_access": []
+    },
+    "rent": {
+      "amount_minor": 1000000,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "deposit": {
+      "amount_minor": 0,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "price_period": "monthly",
+    "allowed_actions": [
+      "shortlist",
+      "decline"
+    ],
+    "blocking_reasons": []
+  },
+  "shortlisted": {
+    "key": "success",
+    "msg": "",
+    "data": {
+      "resource": {
+        "id": "79fe2998-f453-42c4-9c53-021fc8a55432",
+        "request_id": "8fd062be-d2f7-42ad-bc93-735d4870d711",
+        "owner_user_id": "78a6f6c6-18a0-425e-98c0-70c92487e91d",
+        "status": "shortlisted",
+        "note": "Owned available home",
+        "revision": 2,
+        "request_revision": 1,
+        "selection": {
+          "name": "Whole home",
+          "terms": {
+            "price": "10000",
+            "rules": [],
+            "deposit": "",
+            "description": "Configured shared accommodation",
+            "price_period": "monthly",
+            "suitable_for": "all",
+            "rental_period": 1,
+            "smoking_allowed": false
+          },
+          "bed_id": "",
+          "archived": false,
+          "bed_name": "",
+          "capacity": 2,
+          "offer_id": "81fcf5ba-7b6b-46fd-ac98-f7194096bf22",
+          "room_ids": [],
+          "offer_link": "",
+          "room_names": [],
+          "property_id": "ab54c149-3ce7-4a67-b384-2bede40bdf3d",
+          "availability": "available",
+          "rental_scope": "entire_property",
+          "offer_revision": 2,
+          "bathroom_access": []
+        },
+        "rent": {
+          "amount_minor": 1000000,
+          "currency": "EGP",
+          "exponent": 2
+        },
+        "deposit": {
+          "amount_minor": 0,
+          "currency": "EGP",
+          "exponent": 2
+        },
+        "price_period": "monthly",
+        "allowed_actions": [
+          "decline"
+        ],
+        "blocking_reasons": []
+      },
+      "operation_receipt": {
+        "id": "86504053-45d0-461b-b90c-dea617d36fea",
+        "subject_id": "79fe2998-f453-42c4-9c53-021fc8a55432",
+        "request_key": "b4673062-158e-42c7-8f33-e125c1591f4b",
+        "revision": 2,
+        "status": "confirmed"
+      }
+    }
+  },
+  "request_grant": {
+    "account_id": "110bcd12-f5b0-4e36-9a7b-d29052ad8d9d",
+    "account_verified": true,
+    "enabled_capabilities": [
+      "lifestyle",
+      "roommates",
+      "housing_groups",
+      "group_visits",
+      "group_applications",
+      "housing_requests",
+      "housing_offers",
+      "condition_reports",
+      "move_out_notices",
+      "replacements",
+      "commute",
+      "tenant_assistant"
+    ],
+    "verified_services": [
+      "lifestyle",
+      "roommates",
+      "housing_groups",
+      "group_visits",
+      "group_applications",
+      "housing_requests",
+      "housing_offers",
+      "condition_reports",
+      "move_out_notices",
+      "replacements",
+      "commute",
+      "tenant_assistant"
+    ],
+    "policy_version": "planning-policy-v1",
+    "allowed_actions": [
+      "publish"
+    ],
+    "expires_at": "2026-10-12T19:26:51.309957+00:00",
+    "blocking_reasons": []
+  },
+  "offer_grant": {
+    "account_id": "78a6f6c6-18a0-425e-98c0-70c92487e91d",
+    "account_verified": true,
+    "enabled_capabilities": [
+      "lifestyle",
+      "roommates",
+      "housing_groups",
+      "group_visits",
+      "group_applications",
+      "housing_requests",
+      "housing_offers",
+      "condition_reports",
+      "move_out_notices",
+      "replacements",
+      "commute",
+      "tenant_assistant"
+    ],
+    "verified_services": [
+      "lifestyle",
+      "roommates",
+      "housing_groups",
+      "group_visits",
+      "group_applications",
+      "housing_requests",
+      "housing_offers",
+      "condition_reports",
+      "move_out_notices",
+      "replacements",
+      "commute",
+      "tenant_assistant"
+    ],
+    "policy_version": "planning-policy-v1",
+    "allowed_actions": [
+      "offer"
+    ],
+    "expires_at": "2026-10-12T19:26:51.310726+00:00",
+    "blocking_reasons": []
+  }
+}

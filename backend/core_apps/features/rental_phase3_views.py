@@ -23,17 +23,26 @@ from rest_framework.throttling import UserRateThrottle
 
 from .models import (
     CheckoutSession,
+    Lease,
+    IdempotencyRecord,
     OwnerPayable,
     PaymentAttempt,
     PaymentQuote,
     ProviderWebhookEvent,
     RentInvoice,
 )
-from .providers import fake_provider_available, get_rental_provider, verify_fake_webhook
+from .providers import (
+    mock_completion_metadata,
+    checkout_available,
+    fake_provider_available,
+    get_rental_provider,
+    verify_fake_webhook,
+)
 from .renderers import FeatureJsonRenderer
 from .services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
 from .services.rental_phase3 import (
     invoice_balance_minor,
+    invoice_payment_allowed,
     payment_attempt_payload,
     process_provider_event,
     quote_fingerprint,
@@ -53,7 +62,9 @@ def _invoice(request, invoice_id, lock=False):
         "lease", "lease__property", "billing_period"
     )
     if lock:
-        queryset = queryset.select_for_update()
+        candidate = get_object_or_404(queryset, id=invoice_id)
+        Lease.objects.select_for_update().get(pk=candidate.lease_id)
+        queryset = queryset.select_for_update(of=("self",))
     invoice = get_object_or_404(queryset, id=invoice_id)
     if request.user not in (invoice.lease.owner, invoice.lease.tenant):
         raise NotFound()
@@ -63,7 +74,9 @@ def _invoice(request, invoice_id, lock=False):
 def _attempt(request, attempt_id, lock=False):
     queryset = PaymentAttempt.objects.select_related("invoice__lease", "quote")
     if lock:
-        queryset = queryset.select_for_update()
+        candidate = get_object_or_404(queryset, id=attempt_id)
+        Lease.objects.select_for_update().get(pk=candidate.invoice.lease_id)
+        queryset = queryset.select_for_update(of=("self",))
     attempt = get_object_or_404(queryset, id=attempt_id)
     if request.user not in (attempt.invoice.lease.owner, attempt.invoice.lease.tenant):
         raise NotFound()
@@ -76,20 +89,29 @@ def _active_session(attempt):
         not session
         or session.expires_at <= timezone.now()
         or session.status not in {"created", "pending"}
+        or attempt.payment_status not in {"created", "pending"}
     ):
         return None
-    return {
-        "session_id": str(session.id),
-        "checkout_url": session.hosted_url,
-        "expires_at": session.expires_at.isoformat(),
-        "navigation": session.navigation,
-    }
+    receipt = IdempotencyRecord.objects.filter(
+        user=attempt.payer,
+        operation=f"invoice.checkout.{attempt.invoice.id}",
+        request_key=str(attempt.request_key),
+        result_subject_id=session.id,
+    ).first()
+    if not receipt:
+        return None
+    resource = receipt.response_data.get("resource", {})
+    if resource.get("session_id") != str(session.id) or resource.get(
+        "payment_attempt_id"
+    ) != str(attempt.id):
+        return None
+    return {**resource, "operation_receipt_id": str(receipt.id)}
 
 
 def quote_payload(quote):
     return {
         "quote_id": str(quote.id),
-        "invoice_id": str(quote.invoice_id),
+        "invoice_id": str(quote.invoice.id),
         "invoice_revision": quote.invoice_revision,
         "payer_amount": _money(
             quote.payer_amount_minor, quote.currency, quote.exponent
@@ -114,8 +136,9 @@ def rent_invoice_quote(request, invoice_id):
             {"request_key": "request_key and expected_revision are required."}
         )
     try:
+        expected = int(expected)
         request_key = uuid.UUID(str(request_key))
-    except ValueError:
+    except (ValueError, TypeError):
         raise ValidationError({"request_key": "Must be a UUID."})
     replay = replay_operation(
         request.user, f"invoice.quote.{invoice_id}", request_key, request.data
@@ -124,9 +147,14 @@ def rent_invoice_quote(request, invoice_id):
         return Response(replay[0], status=replay[1])
     with transaction.atomic():
         invoice = _invoice(request, invoice_id, lock=True)
+        replay = replay_operation(
+            request.user, f"invoice.quote.{invoice_id}", request_key, request.data
+        )
+        if replay:
+            return Response(replay[0], status=replay[1])
         if request.user != invoice.lease.tenant:
             raise PermissionDenied("Only the tenant can quote this invoice.")
-        if not getattr(settings, "RENTAL_CHECKOUT_ENABLED", False):
+        if not checkout_available():
             raise PermissionDenied(
                 {
                     "message": "Secure checkout is unavailable.",
@@ -135,10 +163,13 @@ def rent_invoice_quote(request, invoice_id):
             )
         if int(expected) != invoice.revision:
             raise RentalConflict("Invoice revision conflict.", code="stale_revision")
+        if not invoice_payment_allowed(request.user, invoice):
+            raise RentalConflict("This invoice is not payable.")
         balance = invoice_balance_minor(invoice)
         if not balance or invoice.status not in {
             RentInvoice.Status.DUE,
             RentInvoice.Status.OVERDUE,
+            RentInvoice.Status.PARTIALLY_PAID,
         }:
             raise RentalConflict("This invoice is not payable.")
         expires = timezone.now() + timedelta(minutes=settings.RENTAL_QUOTE_TTL_MINUTES)
@@ -208,7 +239,7 @@ def rent_invoice_checkout(request, invoice_id):
         invoice = _invoice(request, invoice_id, lock=True)
         if request.user != invoice.lease.tenant:
             raise PermissionDenied("Only the tenant can pay this invoice.")
-        if not getattr(settings, "RENTAL_CHECKOUT_ENABLED", False):
+        if not checkout_available():
             return Response(
                 {
                     "message": "Secure checkout is unavailable.",
@@ -217,6 +248,11 @@ def rent_invoice_checkout(request, invoice_id):
                 },
                 status=status.HTTP_403_FORBIDDEN,
             )
+        replay = replay_operation(request.user, operation, request_key, request.data)
+        if replay:
+            return Response(replay[0], status=replay[1])
+        if not invoice_payment_allowed(request.user, invoice):
+            raise RentalConflict("This invoice is not payable.")
         quote = get_object_or_404(
             PaymentQuote.objects.select_for_update(), id=quote_id, invoice=invoice
         )
@@ -232,17 +268,18 @@ def rent_invoice_checkout(request, invoice_id):
                 "The quote no longer matches the invoice.", code="document_changed"
             )
         try:
-            attempt = PaymentAttempt.objects.create(
-                invoice=invoice,
-                payer=request.user,
-                quote=quote,
-                request_key=request_key,
-                invoice_revision=invoice.revision,
-                policy_version=quote.policy_version,
-                quote_fingerprint=quote.fingerprint,
-                amount_minor=quote.payer_amount_minor,
-                payment_status=PaymentAttempt.Status.PENDING,
-            )
+            with transaction.atomic():
+                attempt = PaymentAttempt.objects.create(
+                    invoice=invoice,
+                    payer=request.user,
+                    quote=quote,
+                    request_key=request_key,
+                    invoice_revision=invoice.revision,
+                    policy_version=quote.policy_version,
+                    quote_fingerprint=quote.fingerprint,
+                    amount_minor=quote.payer_amount_minor,
+                    payment_status=PaymentAttempt.Status.PENDING,
+                )
         except IntegrityError:
             raise RentalConflict(
                 "This invoice already has a live payment attempt.",
@@ -270,6 +307,9 @@ def rent_invoice_checkout(request, invoice_id):
         )
         resource = {
             "session_id": str(session.id),
+            **mock_completion_metadata(
+                "payment-attempts", attempt.id, attempt.revision
+            ),
             "payment_attempt_id": str(attempt.id),
             "invoice_id": str(invoice.id),
             "quote_id": str(quote.id),
@@ -287,7 +327,7 @@ def rent_invoice_checkout(request, invoice_id):
             request_key=request_key,
             payload=request.data,
             request_subject_id=invoice.id,
-            result_subject_id=attempt.id,
+            result_subject_id=session.id,
             result_revision=attempt.revision,
             resource=resource,
             response_status=201,
@@ -314,7 +354,7 @@ def payment_attempts(request):
         {
             "invoice_id": str(invoice.id),
             "request_key": request_key,
-            "results": [payment_attempt_payload(x) for x in attempts],
+            "results": [payment_attempt_payload(x, request.user) for x in attempts],
             "absence_confirmed": not attempts,
             "active_session": active,
         }
@@ -325,7 +365,9 @@ def payment_attempts(request):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def payment_attempt_detail(request, attempt_id):
-    return Response(payment_attempt_payload(_attempt(request, attempt_id)))
+    return Response(
+        payment_attempt_payload(_attempt(request, attempt_id), request.user)
+    )
 
 
 @api_view(["POST"])
@@ -338,13 +380,14 @@ def payment_attempt_reconcile(request, attempt_id):
         if request.user != attempt.payer:
             raise PermissionDenied("Only the payer can reconcile this attempt.")
         if (
-            request.data.get("action") != "reconcile"
-            or int(request.data.get("expected_revision", 0)) != attempt.revision
-        ):
+            request.data.get("action") or request.data.get("decision")
+        ) != "reconcile" or int(
+            request.data.get("expected_revision", 0)
+        ) != attempt.revision:
             raise RentalConflict(
                 "Payment attempt revision or action is invalid.", code="stale_revision"
             )
-        return Response(payment_attempt_payload(attempt))
+        return Response(payment_attempt_payload(attempt, request.user))
 
 
 @api_view(["GET"])
@@ -357,12 +400,12 @@ def owner_payables(request):
         "lease", "invoice"
     )
     if request.query_params.get("lease_id"):
-        queryset = queryset.filter(lease_id=request.query_params["lease_id"])
+        queryset = queryset.filter(lease__id=request.query_params["lease_id"])
     results = [
         {
             "id": str(item.id),
-            "lease_id": str(item.lease_id),
-            "invoice_id": str(item.invoice_id),
+            "lease_id": str(item.lease.id),
+            "invoice_id": str(item.invoice.id),
             "revision": item.revision,
             "gross": _money(item.gross_minor),
             "commission": _money(item.commission_minor),
@@ -387,24 +430,28 @@ def fake_payment_webhook(request):
         raise NotFound()
     if not verify_fake_webhook(request.data, request.headers.get("X-Rental-Signature")):
         raise PermissionDenied("Invalid provider signature.")
+    return Response(apply_fake_payment_event(request.data))
+
+
+def apply_fake_payment_event(payload):
     try:
-        attempt = PaymentAttempt.objects.get(id=request.data.get("payment_attempt_id"))
+        attempt = PaymentAttempt.objects.get(id=payload.get("payment_attempt_id"))
     except (PaymentAttempt.DoesNotExist, ValueError):
         raise NotFound()
-    canonical = json.dumps(request.data, sort_keys=True, separators=(",", ":")).encode()
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
     event, created = ProviderWebhookEvent.objects.get_or_create(
         provider="fake",
-        provider_event_id=str(request.data.get("event_id")),
+        provider_event_id=str(payload.get("event_id")),
         defaults={
-            "event_type": request.data.get("type", ""),
+            "event_type": payload.get("type", ""),
             "payment_attempt": attempt,
-            "sequence": int(request.data.get("sequence", 0)),
+            "sequence": int(payload.get("sequence", 0)),
             "payload_digest": hashlib.sha256(canonical).hexdigest(),
             "signature_valid": True,
-            "payload": request.data,
+            "payload": payload,
         },
     )
     if not created and event.payload_digest != hashlib.sha256(canonical).hexdigest():
         raise RentalConflict("Provider event ID was reused with different content.")
     process_provider_event(event)
-    return Response({"status": "accepted", "duplicate": not created})
+    return {"status": "accepted", "duplicate": not created}

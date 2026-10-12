@@ -1,0 +1,373 @@
+{
+  "draft": {
+    "id": "",
+    "lease_id": "9dfbf734-5e96-41de-88a9-d0eb816f0a4f",
+    "kind": "move_in",
+    "status": "draft",
+    "revision": 0,
+    "inspected_on": "2026-10-12",
+    "selection": {
+      "property_id": "0d27fef4-c786-4500-992f-90bc06cf5760",
+      "offer_id": "cea68f1b-7d8d-4d60-9d12-f1d5601cd88a",
+      "offer_revision": 2,
+      "rental_scope": "entire_property",
+      "name": "Whole home",
+      "room_ids": [],
+      "room_names": [],
+      "bed_id": "",
+      "bed_name": "",
+      "availability": "available",
+      "archived": false,
+      "capacity": 2,
+      "bathroom_access": [],
+      "offer_link": "",
+      "terms": {
+        "price": "10000",
+        "price_period": "monthly",
+        "rental_period": 1,
+        "deposit": "",
+        "suitable_for": "all",
+        "description": "Configured shared accommodation",
+        "smoking_allowed": false,
+        "rules": []
+      }
+    },
+    "items": [
+      {
+        "id": "3d9b7d1c-554a-5c1e-9391-41060b33989e",
+        "space": "Phase two home",
+        "label": "Walls and floors",
+        "kind": "surface",
+        "condition": "good",
+        "note": "",
+        "reading": "",
+        "unit": "",
+        "quantity": null,
+        "evidence_ids": []
+      }
+    ],
+    "evidence": [],
+    "acknowledgements": [],
+    "baseline_id": "",
+    "baseline_revision": 0,
+    "baseline_items": [],
+    "history": [],
+    "allowed_actions": [
+      "create"
+    ],
+    "blocking_reasons": []
+  },
+  "created": {
+    "resource": {
+      "id": "37929185-9687-43a9-a5b2-eee653d768bc",
+      "lease_id": "9dfbf734-5e96-41de-88a9-d0eb816f0a4f",
+      "kind": "move_in",
+      "status": "submitted",
+      "revision": 1,
+      "inspected_on": "2026-10-12",
+      "selection": {
+        "property_id": "0d27fef4-c786-4500-992f-90bc06cf5760",
+        "offer_id": "cea68f1b-7d8d-4d60-9d12-f1d5601cd88a",
+        "offer_revision": 2,
+        "rental_scope": "entire_property",
+        "name": "Whole home",
+        "room_ids": [],
+        "room_names": [],
+        "bed_id": "",
+        "bed_name": "",
+        "availability": "available",
+        "archived": false,
+        "capacity": 2,
+        "bathroom_access": [],
+        "offer_link": "",
+        "terms": {
+          "price": "10000",
+          "price_period": "monthly",
+          "rental_period": 1,
+          "deposit": "",
+          "suitable_for": "all",
+          "description": "Configured shared accommodation",
+          "smoking_allowed": false,
+          "rules": []
+        }
+      },
+      "items": [
+        {
+          "id": "3d9b7d1c-554a-5c1e-9391-41060b33989e",
+          "space": "Phase two home",
+          "label": "Walls and floors",
+          "kind": "surface",
+          "condition": "good",
+          "note": "",
+          "reading": "",
+          "unit": "",
+          "quantity": null,
+          "evidence_ids": []
+        }
+      ],
+      "evidence": [],
+      "acknowledgements": [
+        {
+          "user_id": "ee84c14e-a4c0-464e-b05d-d00a1376c530",
+          "name": "Phase Owner",
+          "status": "accepted",
+          "revision": 1,
+          "note": ""
+        }
+      ],
+      "baseline_id": "",
+      "baseline_revision": 0,
+      "baseline_items": [],
+      "history": [
+        "Report submitted."
+      ],
+      "allowed_actions": [],
+      "blocking_reasons": []
+    },
+    "operation_receipt": {
+      "id": "69deac9e-b7fb-442d-96c9-637a38a5870c",
+      "subject_id": "37929185-9687-43a9-a5b2-eee653d768bc",
+      "request_key": "3893dcc6-7251-4ddf-8c07-88785b7016ad",
+      "revision": 1,
+      "status": "confirmed"
+    }
+  },
+  "final": {
+    "id": "37929185-9687-43a9-a5b2-eee653d768bc",
+    "lease_id": "9dfbf734-5e96-41de-88a9-d0eb816f0a4f",
+    "kind": "move_in",
+    "status": "final",
+    "revision": 5,
+    "inspected_on": "2026-10-12",
+    "selection": {
+      "name": "Whole home",
+      "terms": {
+        "price": "10000",
+        "rules": [],
+        "deposit": "",
+        "description": "Configured shared accommodation",
+        "price_period": "monthly",
+        "suitable_for": "all",
+        "rental_period": 1,
+        "smoking_allowed": false
+      },
+      "bed_id": "",
+      "archived": false,
+      "bed_name": "",
+      "capacity": 2,
+      "offer_id": "cea68f1b-7d8d-4d60-9d12-f1d5601cd88a",
+      "room_ids": [],
+      "offer_link": "",
+      "room_names": [],
+      "property_id": "0d27fef4-c786-4500-992f-90bc06cf5760",
+      "availability": "available",
+      "rental_scope": "entire_property",
+      "offer_revision": 2,
+      "bathroom_access": []
+    },
+    "items": [
+      {
+        "id": "3d9b7d1c-554a-5c1e-9391-41060b33989e",
+        "kind": "surface",
+        "note": "",
+        "unit": "",
+        "label": "Walls and floors",
+        "space": "Phase two home",
+        "reading": "",
+        "quantity": null,
+        "condition": "worn",
+        "evidence_ids": []
+      }
+    ],
+    "evidence": [],
+    "acknowledgements": [
+      {
+        "name": "Phase Owner",
+        "note": "",
+        "status": "accepted",
+        "user_id": "ee84c14e-a4c0-464e-b05d-d00a1376c530",
+        "revision": 2
+      },
+      {
+        "name": "Phase Tenant",
+        "note": "",
+        "status": "accepted",
+        "user_id": "10929028-fbda-479f-a6a3-bdce9213477b",
+        "revision": 2
+      }
+    ],
+    "baseline_id": "",
+    "baseline_revision": 0,
+    "baseline_items": [],
+    "history": [
+      "Report submitted.",
+      "object by Phase Tenant at revision 2.",
+      "submit by Phase Owner at revision 3.",
+      "acknowledge by Phase Tenant at revision 4.",
+      "finalize by Phase Owner at revision 5."
+    ],
+    "allowed_actions": [],
+    "blocking_reasons": []
+  },
+  "move_out": {
+    "id": "",
+    "lease_id": "9dfbf734-5e96-41de-88a9-d0eb816f0a4f",
+    "kind": "move_out",
+    "status": "draft",
+    "revision": 0,
+    "inspected_on": "2026-10-12",
+    "selection": {
+      "property_id": "0d27fef4-c786-4500-992f-90bc06cf5760",
+      "offer_id": "cea68f1b-7d8d-4d60-9d12-f1d5601cd88a",
+      "offer_revision": 2,
+      "rental_scope": "entire_property",
+      "name": "Whole home",
+      "room_ids": [],
+      "room_names": [],
+      "bed_id": "",
+      "bed_name": "",
+      "availability": "available",
+      "archived": false,
+      "capacity": 2,
+      "bathroom_access": [],
+      "offer_link": "",
+      "terms": {
+        "price": "10000",
+        "price_period": "monthly",
+        "rental_period": 1,
+        "deposit": "",
+        "suitable_for": "all",
+        "description": "Configured shared accommodation",
+        "smoking_allowed": false,
+        "rules": []
+      }
+    },
+    "items": [
+      {
+        "id": "3d9b7d1c-554a-5c1e-9391-41060b33989e",
+        "kind": "surface",
+        "note": "",
+        "unit": "",
+        "label": "Walls and floors",
+        "space": "Phase two home",
+        "reading": "",
+        "quantity": null,
+        "condition": "notInspected",
+        "evidence_ids": []
+      }
+    ],
+    "evidence": [],
+    "acknowledgements": [],
+    "baseline_id": "37929185-9687-43a9-a5b2-eee653d768bc",
+    "baseline_revision": 5,
+    "baseline_items": [
+      {
+        "id": "3d9b7d1c-554a-5c1e-9391-41060b33989e",
+        "kind": "surface",
+        "note": "",
+        "unit": "",
+        "label": "Walls and floors",
+        "space": "Phase two home",
+        "reading": "",
+        "quantity": null,
+        "condition": "worn",
+        "evidence_ids": []
+      }
+    ],
+    "history": [],
+    "allowed_actions": [
+      "create"
+    ],
+    "blocking_reasons": []
+  },
+  "create_body": {
+    "request_key": "3893dcc6-7251-4ddf-8c07-88785b7016ad",
+    "expected_revision": 0,
+    "action": "submit",
+    "lease_id": "9dfbf734-5e96-41de-88a9-d0eb816f0a4f",
+    "kind": "move_in",
+    "inspected_on": "2026-10-12",
+    "selection": {
+      "property_id": "0d27fef4-c786-4500-992f-90bc06cf5760",
+      "offer_id": "cea68f1b-7d8d-4d60-9d12-f1d5601cd88a",
+      "offer_revision": 2,
+      "rental_scope": "entire_property",
+      "name": "Whole home",
+      "room_ids": [],
+      "room_names": [],
+      "bed_id": "",
+      "bed_name": "",
+      "availability": "available",
+      "archived": false,
+      "capacity": 2,
+      "bathroom_access": [],
+      "offer_link": "",
+      "terms": {
+        "price": "10000",
+        "price_period": "monthly",
+        "rental_period": 1,
+        "deposit": "",
+        "suitable_for": "all",
+        "description": "Configured shared accommodation",
+        "smoking_allowed": false,
+        "rules": []
+      }
+    },
+    "items": [
+      {
+        "id": "3d9b7d1c-554a-5c1e-9391-41060b33989e",
+        "space": "Phase two home",
+        "label": "Walls and floors",
+        "kind": "surface",
+        "condition": "good",
+        "note": "",
+        "reading": "",
+        "unit": "",
+        "quantity": null,
+        "evidence_ids": []
+      }
+    ],
+    "baseline_id": "",
+    "baseline_revision": 0,
+    "evidence_ids": []
+  },
+  "actor_id": "ee84c14e-a4c0-464e-b05d-d00a1376c530",
+  "grant": {
+    "account_id": "ee84c14e-a4c0-464e-b05d-d00a1376c530",
+    "account_verified": true,
+    "enabled_capabilities": [
+      "lifestyle",
+      "roommates",
+      "housing_groups",
+      "group_visits",
+      "group_applications",
+      "housing_requests",
+      "housing_offers",
+      "condition_reports",
+      "move_out_notices",
+      "replacements",
+      "commute",
+      "tenant_assistant"
+    ],
+    "verified_services": [
+      "lifestyle",
+      "roommates",
+      "housing_groups",
+      "group_visits",
+      "group_applications",
+      "housing_requests",
+      "housing_offers",
+      "condition_reports",
+      "move_out_notices",
+      "replacements",
+      "commute",
+      "tenant_assistant"
+    ],
+    "policy_version": "planning-policy-v1",
+    "allowed_actions": [
+      "submit"
+    ],
+    "expires_at": "2026-10-12T19:26:51.496608+00:00",
+    "blocking_reasons": []
+  }
+}

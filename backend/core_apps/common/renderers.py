@@ -160,5 +160,23 @@ def custom_exception_handler(exc: Any, context: Any) -> Any:
     if response is not None:
         request = context.get("request") if context else None
         req_lang = getattr(request, "LANGUAGE_CODE", None)
-        response.data = {"message": _extract_message(response.data, req_lang)}
+        original = response.data
+        response.data = {"message": _extract_message(original, req_lang)}
+        if getattr(
+            getattr(request, "accepted_renderer", None),
+            "preserve_error_metadata",
+            False,
+        ) and isinstance(original, dict):
+            for key in (
+                "code",
+                "subject_id",
+                "next_action",
+                "payment_attempt_id",
+                "correlation_id",
+            ):
+                if key in original:
+                    response.data[key] = original[key]
+            detail_code = getattr(original.get("detail"), "code", None)
+            if detail_code and "code" not in response.data:
+                response.data["code"] = detail_code
     return response

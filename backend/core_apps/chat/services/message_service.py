@@ -8,7 +8,7 @@ from django.db import IntegrityError, transaction
 from django.db.models import F
 from django.utils import timezone
 from rest_framework import status
-from rest_framework.exceptions import APIException, ValidationError
+from rest_framework.exceptions import APIException, PermissionDenied, ValidationError
 
 from core_apps.chat.models import Conversation, ConversationParticipant, Message
 
@@ -44,6 +44,17 @@ def is_user_online(user_id: str) -> bool:
         return False
 
 
+def direct_message_blocked(first_user, second_user, *, lock=False):
+    from core_apps.features.planning_models import RoommateConnection
+
+    first, second = sorted([first_user.pk, second_user.pk])
+    query = RoommateConnection.objects.filter(first_id=first, second_id=second)
+    if lock:
+        query = query.select_for_update()
+    item = query.first()
+    return item is not None and item.status != "accepted"
+
+
 @transaction.atomic
 def get_or_create_direct_conversation(*, user, other_user) -> Conversation:
     """
@@ -55,6 +66,9 @@ def get_or_create_direct_conversation(*, user, other_user) -> Conversation:
         raise ValidationError(
             {"user_id": "You cannot start a conversation with yourself."}
         )
+
+    if direct_message_blocked(user, other_user, lock=True):
+        raise PermissionDenied("Messaging consent is not active for this connection.")
 
     # Find an existing conversation shared by both users
     existing = (
@@ -91,6 +105,12 @@ def send_message(
         raise ValidationError(
             {"content": "You are not a participant in this conversation."}
         )
+
+    for recipient in conversation.participants.exclude(pk=sender.pk):
+        if direct_message_blocked(sender, recipient, lock=True):
+            raise PermissionDenied(
+                "Messaging consent is not active for this connection."
+            )
 
     if client_message_id:
         existing = Message.objects.filter(

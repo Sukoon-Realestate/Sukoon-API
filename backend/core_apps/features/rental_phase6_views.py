@@ -29,10 +29,24 @@ from .models import (
     RentalReview,
     RentInvoice,
 )
-from .providers import get_rental_provider
+from .providers import (
+    fake_provider_available,
+    get_rental_provider,
+    require_rental_provider,
+)
 from .renderers import FeatureJsonRenderer
+from .services.cycle_permissions import cycle_actions
+from .services.commands import command_identity, money_minor
+from .services.refunds import validate_allocations
+from .services.settlements import (
+    LINE_TYPES,
+    execute_settlement,
+    financial_snapshot,
+    prepare_settlement,
+)
 from .services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
 from .services.rental_phase6 import (
+    closure_blocking_reasons,
     evaluate_financial_closure,
     refundable_balance_minor,
     settlement_balances,
@@ -44,9 +58,11 @@ def _money(value):
 
 
 def _lease(request, lease_id, lock=False):
+    if request.method not in {"GET", "HEAD", "OPTIONS"}:
+        require_rental_provider(request.user)
     queryset = Lease.objects.select_related("owner", "tenant", "property")
     if lock:
-        queryset = queryset.select_for_update()
+        queryset = queryset.select_for_update(of=("self",))
     lease = get_object_or_404(queryset, id=lease_id)
     if request.user not in (lease.owner, lease.tenant):
         raise NotFound()
@@ -55,8 +71,10 @@ def _lease(request, lease_id, lock=False):
     return lease
 
 
-def settlement_payload(item):
+def settlement_payload(item, user=None):
     return {
+        "allowed_actions": cycle_actions(user, item),
+        "blocking_reasons": [],
         "id": str(item.id),
         "lease_id": str(item.lease.id),
         "revision": item.revision,
@@ -68,6 +86,10 @@ def settlement_payload(item):
         "total_due": _money(item.total_due_minor),
         "accepted_by": item.accepted_by,
         "disputed_item_ids": item.disputed_item_ids,
+        "execution_status": item.execution_status,
+        "execution_plan": item.execution_plan,
+        "executed_at": item.executed_at.isoformat() if item.executed_at else None,
+        "history": item.history,
     }
 
 
@@ -80,7 +102,9 @@ def _settlement(lease):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def final_settlement_detail(request, lease_id):
-    return Response(settlement_payload(_settlement(_lease(request, lease_id))))
+    return Response(
+        settlement_payload(_settlement(_lease(request, lease_id)), request.user)
+    )
 
 
 @api_view(["POST"])
@@ -88,29 +112,26 @@ def final_settlement_detail(request, lease_id):
 @renderer_classes([FeatureJsonRenderer])
 def final_settlement_propose(request, lease_id):
     lease = _lease(request, lease_id)
-    request_key = request.data.get("request_key")
-    if not request_key or int(request.data.get("expected_revision", 0)) < 1:
-        raise ValidationError("expected_revision and request_key are required.")
+    request_key, expected_revision = command_identity(request.data, minimum=1)
     operation = f"settlement.propose.{lease.id}"
     replay = replay_operation(request.user, operation, request_key, request.data)
     if replay:
         return Response(replay[0], status=replay[1])
-    allowed_types = {
-        "damage",
-        "cleaning",
-        "utilities",
-        "rent_adjustment",
-        "deposit_return",
-        "refund",
-    }
     lines = []
     seen = set()
+    if (
+        not isinstance(request.data.get("lines", []), list)
+        or len(request.data.get("lines", [])) > 100
+    ):
+        raise ValidationError({"lines": "Supply at most 100 settlement lines."})
     for raw in request.data.get("lines", []):
+        if not isinstance(raw, dict):
+            raise ValidationError({"lines": "Each line must be an object."})
         line_id = str(raw.get("id") or uuid.uuid4())
-        amount = (raw.get("amount") or {}).get("amount_minor")
+        amount = money_minor(raw.get("amount"), allow_negative=True)
         if (
             line_id in seen
-            or raw.get("type") not in allowed_types
+            or raw.get("type") not in LINE_TYPES
             or not isinstance(amount, int)
         ):
             raise ValidationError(
@@ -133,23 +154,48 @@ def final_settlement_propose(request, lease_id):
                 "id": line_id,
                 "type": raw["type"],
                 "label": raw.get("label", raw["type"]),
+                "description": raw.get("description")
+                or raw.get("label")
+                or raw["type"],
                 "amount": _money(amount),
                 "evidence_ids": list(evidence_ids),
+                **(
+                    {"invoice_id": str(raw["invoice_id"])}
+                    if raw.get("invoice_id")
+                    else {}
+                ),
             }
         )
-    balances = settlement_balances(lease, lines)
     with transaction.atomic():
         lease = _lease(request, lease_id, lock=True)
-        item = FinalSettlement.objects.select_for_update().get(lease=lease)
-        if item.revision != int(request.data["expected_revision"]):
+        replay = replay_operation(request.user, operation, request_key, request.data)
+        if replay:
+            return Response(replay[0], status=replay[1])
+        item = _settlement(lease)
+        if item.revision != expected_revision:
             raise RentalConflict("Settlement revision conflict.", code="stale_revision")
+        if item.status == FinalSettlement.Status.ACCEPTED:
+            raise RentalConflict("An accepted settlement cannot be rewritten.")
+        plan = prepare_settlement(lease, lines)
+        item.history.append(
+            {
+                "revision": item.revision,
+                "status": item.status,
+                "lines": item.lines,
+                "accepted_by": item.accepted_by,
+                "disputed_item_ids": item.disputed_item_ids,
+            }
+        )
         item.lines = lines
-        (
-            item.rent_balance_minor,
-            item.deposit_to_return_minor,
-            item.refund_due_minor,
-            item.total_due_minor,
-        ) = balances
+        item.financial_snapshot = financial_snapshot(lease)
+        item.execution_plan = plan
+        for field in (
+            "rent_balance_minor",
+            "deposit_to_return_minor",
+            "refund_due_minor",
+            "total_due_minor",
+        ):
+            setattr(item, field, plan[field])
         item.status = FinalSettlement.Status.PROPOSED
         item.accepted_by = [str(request.user.id)]
         item.disputed_item_ids = []
@@ -161,10 +207,10 @@ def final_settlement_propose(request, lease_id):
             operation=operation,
             request_key=request_key,
             payload=request.data,
-            request_subject_id=lease.id,
+            request_subject_id=item.id,
             result_subject_id=item.id,
             result_revision=item.revision,
-            resource=settlement_payload(item),
+            resource=settlement_payload(item, request.user),
         )
     return Response(output)
 
@@ -174,6 +220,7 @@ def final_settlement_propose(request, lease_id):
 @renderer_classes([FeatureJsonRenderer])
 def final_settlement_respond(request, lease_id):
     lease = _lease(request, lease_id)
+    request_key, expected_revision = command_identity(request.data, minimum=1)
     action = request.data.get("action") or request.data.get("decision")
     if action not in {"accept", "dispute"} or not request.data.get("request_key"):
         raise ValidationError("accept/dispute and request_key are required.")
@@ -185,9 +232,16 @@ def final_settlement_respond(request, lease_id):
         return Response(replay[0], status=replay[1])
     with transaction.atomic():
         lease = _lease(request, lease_id, lock=True)
+        replay = replay_operation(request.user, operation, request_key, request.data)
+        if replay:
+            return Response(replay[0], status=replay[1])
         item = FinalSettlement.objects.select_for_update().get(lease=lease)
-        if item.revision != int(request.data.get("expected_revision", 0)):
+        if item.revision != expected_revision:
             raise RentalConflict("Settlement revision conflict.", code="stale_revision")
+        if item.status != FinalSettlement.Status.PROPOSED:
+            raise RentalConflict("This settlement is not awaiting approval.")
+        if str(request.user.id) in item.accepted_by and action == "accept":
+            raise RentalConflict("You already accepted this revision.")
         current_ids = {line["id"] for line in item.lines}
         if action == "dispute":
             disputed = set(map(str, request.data.get("item_ids", [])))
@@ -207,6 +261,7 @@ def final_settlement_respond(request, lease_id):
         item.revision += 1
         item.save()
         if item.status == FinalSettlement.Status.ACCEPTED:
+            item = execute_settlement(item)
             RentalDocument.objects.get_or_create(
                 lease=lease,
                 document_type=RentalDocument.DocumentType.SETTLEMENT,
@@ -219,10 +274,10 @@ def final_settlement_respond(request, lease_id):
             operation=operation,
             request_key=request.data["request_key"],
             payload=request.data,
-            request_subject_id=lease.id,
+            request_subject_id=item.id,
             result_subject_id=item.id,
             result_revision=item.revision,
-            resource=settlement_payload(item),
+            resource=settlement_payload(item, request.user),
         )
     return Response(output)
 
@@ -239,6 +294,11 @@ def refund_payload(item):
         "reason": item.reason,
         "provider_refund_id": item.provider_refund_id,
         "failure_code": item.failure_code,
+        "allocations": item.allocations,
+        "purpose": item.purpose,
+        "owner_recovery": _money(
+            item.owner_recovery_minor - item.owner_recovered_minor
+        ),
     }
 
 
@@ -247,7 +307,7 @@ def _refund(request, refund_id, allow_operations=False, lock=False):
         "lease__owner", "lease__tenant", "payment_attempt__invoice"
     )
     if lock:
-        queryset = queryset.select_for_update()
+        queryset = queryset.select_for_update(of=("self",))
     item = get_object_or_404(queryset, id=refund_id)
     profile = getattr(request.user, "staff_profile", None)
     operator = allow_operations and (
@@ -294,14 +354,18 @@ def refund_requests(request):
     lease = _lease(request, attempt.invoice.lease.id)
     if request.user != attempt.payer:
         raise PermissionDenied("Only the captured payer can request a refund.")
-    request_key = request.data.get("request_key")
-    if not request_key:
-        raise ValidationError({"request_key": "Required."})
+    request_key, expected_revision = command_identity(request.data)
+    if expected_revision != 0:
+        raise ValidationError(
+            {"expected_revision": "A new refund starts at revision 0."}
+        )
+    if request.data.get("lease_id") and str(request.data["lease_id"]) != str(lease.id):
+        raise ValidationError({"lease_id": "Payment belongs to a different lease."})
     operation = f"refund.create.{attempt.id}"
     replay = replay_operation(request.user, operation, request_key, request.data)
     if replay:
         return Response(replay[0], status=replay[1])
-    amount = (request.data.get("amount") or {}).get("amount_minor")
+    amount = money_minor(request.data.get("amount"))
     if (
         not isinstance(amount, int)
         or amount <= 0
@@ -312,7 +376,25 @@ def refund_requests(request):
             code="refund_exceeds_balance",
         )
     with transaction.atomic():
+        lease = _lease(request, lease.id, lock=True)
         attempt = PaymentAttempt.objects.select_for_update().get(pk=attempt.pk)
+        replay = replay_operation(request.user, operation, request_key, request.data)
+        if replay:
+            return Response(replay[0], status=replay[1])
+        if amount > refundable_balance_minor(attempt):
+            raise RentalConflict(
+                "Refund exceeds the remaining refundable capture balance.",
+                code="refund_exceeds_balance",
+            )
+        if attempt.payment_status != "captured":
+            raise RentalConflict(
+                "Only confirmed captures can be refunded.", code="payment_not_captured"
+            )
+        if request.data.get("payment_revision", attempt.revision) != attempt.revision:
+            raise RentalConflict("Payment revision conflict.", code="stale_revision")
+        allocations = validate_allocations(
+            attempt, amount, request.data.get("allocations")
+        )
         item = RefundRequest.objects.create(
             lease=lease,
             payment_attempt=attempt,
@@ -321,13 +403,14 @@ def refund_requests(request):
             refundable_balance_snapshot_minor=refundable_balance_minor(attempt),
             reason=request.data.get("reason", ""),
             request_key=request_key,
+            allocations=allocations,
         )
         output = remember_mutation(
             user=request.user,
             operation=operation,
             request_key=request_key,
             payload=request.data,
-            request_subject_id=lease.id,
+            request_subject_id=attempt.id,
             result_subject_id=item.id,
             result_revision=item.revision,
             resource=refund_payload(item),
@@ -370,9 +453,15 @@ def refund_respond(request, refund_id):
     if replay:
         return Response(replay[0], status=replay[1])
     with transaction.atomic():
+        Lease.objects.select_for_update().get(pk=item.lease_id)
         item = _refund(request, refund_id, allow_operations=True, lock=True)
+        replay = replay_operation(request.user, operation, request_key, request.data)
+        if replay:
+            return Response(replay[0], status=replay[1])
         if item.revision != int(request.data.get("expected_revision", 0)):
             raise RentalConflict("Refund revision conflict.", code="stale_revision")
+        if item.status != RefundRequest.Status.REQUESTED:
+            raise RentalConflict("Only a requested refund can be approved or rejected.")
         item.status = (
             RefundRequest.Status.APPROVED
             if action == "approve"
@@ -406,8 +495,89 @@ SUBJECT_MODELS = {
 }
 
 
-def dispute_payload(item):
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+@renderer_classes([FeatureJsonRenderer])
+def refund_execute(request, refund_id):
+    """Operations command; the worker calls the same idempotent service."""
+    from .services.refunds import execute_refund
+    from .services.rental_phase3 import post_ledger_transaction
+
+    item = _refund(request, refund_id, allow_operations=True)
+    profile = getattr(request.user, "staff_profile", None)
+    if not request.user.is_superuser and (
+        not profile
+        or not profile.is_active
+        or profile.role_name
+        not in {
+            StaffProfile.RoleName.REFUND_OPERATOR,
+            StaffProfile.RoleName.FINANCIAL_APPROVER,
+        }
+    ):
+        raise PermissionDenied("A financial operations role is required.")
+    key, revision = command_identity(request.data, minimum=1)
+    recover = request.data.get("action") == "confirm_owner_recovery"
+    if request.data.get("action", "execute") not in {
+        "execute",
+        "confirm_owner_recovery",
+    }:
+        raise ValidationError({"action": "Use execute or confirm_owner_recovery."})
+    if recover and not fake_provider_available():
+        raise NotFound()
+    operation = f"refund.{'recover' if recover else 'execute'}.{item.id}"
+    with transaction.atomic():
+        lease = Lease.objects.select_for_update().get(pk=item.lease_id)
+        item = RefundRequest.objects.select_for_update().get(pk=item.pk)
+        replay = replay_operation(request.user, operation, key, request.data)
+        if replay:
+            return Response(replay[0], status=replay[1])
+        if item.revision != revision:
+            raise RentalConflict("Refund revision conflict.", code="stale_revision")
+        if recover:
+            outstanding = item.owner_recovery_minor - item.owner_recovered_minor
+            if item.status != "succeeded" or outstanding <= 0:
+                raise RentalConflict("No owner recovery is outstanding.")
+            if money_minor(request.data.get("amount")) != outstanding:
+                raise ValidationError(
+                    {"amount": "Confirm the exact outstanding owner recovery."}
+                )
+            post_ledger_transaction(
+                reference=f"owner-recovered:{item.id}",
+                kind="owner_recovery",
+                lease=lease,
+                entries=[
+                    ("platform_cash", "debit", outstanding),
+                    ("owner_receivable", "credit", outstanding),
+                ],
+                metadata={"provider_mode": "mock", "actor_id": str(request.user.id)},
+            )
+            item.owner_recovered_minor += outstanding
+            item.recovery_reference = f"mock-recovery:{key}"
+            item.revision += 1
+            item.save()
+        else:
+            if item.status != "approved":
+                raise RentalConflict("Only an approved refund can execute.")
+            item = execute_refund(item)
+        evaluate_financial_closure(lease)
+        return Response(
+            remember_mutation(
+                user=request.user,
+                operation=operation,
+                request_key=key,
+                payload=request.data,
+                request_subject_id=item.id,
+                result_subject_id=item.id,
+                result_revision=item.revision,
+                resource=refund_payload(item),
+            )
+        )
+
+
+def dispute_payload(item, user=None):
     return {
+        "allowed_actions": cycle_actions(user, item),
+        "blocking_reasons": [],
         "id": str(item.id),
         "lease_id": str(item.lease.id),
         "subject_kind": item.subject_kind,
@@ -429,7 +599,7 @@ def _dispute(request, dispute_id, allow_operations=False, lock=False):
         "lease__owner", "lease__tenant"
     ).prefetch_related("evidence")
     if lock:
-        queryset = queryset.select_for_update()
+        queryset = queryset.select_for_update(of=("self",))
     item = get_object_or_404(queryset, id=dispute_id)
     profile = getattr(request.user, "staff_profile", None)
     operator = allow_operations and (
@@ -458,7 +628,10 @@ def disputes(request):
         )
         if request.query_params.get("lease_id"):
             queryset = queryset.filter(lease__id=request.query_params["lease_id"])
-        results = [dispute_payload(x) for x in queryset.prefetch_related("evidence")]
+        results = [
+            dispute_payload(x, request.user)
+            for x in queryset.prefetch_related("evidence")
+        ]
         return Response(
             {"count": len(results), "next": None, "previous": None, "results": results}
         )
@@ -504,7 +677,7 @@ def disputes(request):
             request_subject_id=lease.id,
             result_subject_id=item.id,
             result_revision=item.revision,
-            resource=dispute_payload(item),
+            resource=dispute_payload(item, request.user),
             response_status=201,
         ),
         status=status.HTTP_201_CREATED,
@@ -515,7 +688,7 @@ def disputes(request):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def dispute_detail(request, dispute_id):
-    return Response(dispute_payload(_dispute(request, dispute_id)))
+    return Response(dispute_payload(_dispute(request, dispute_id), request.user))
 
 
 @api_view(["POST"])
@@ -523,7 +696,7 @@ def dispute_detail(request, dispute_id):
 @renderer_classes([FeatureJsonRenderer])
 def dispute_respond(request, dispute_id):
     item = _dispute(request, dispute_id, allow_operations=True)
-    action = request.data.get("action", "reply")
+    action = request.data.get("action") or request.data.get("decision") or "reply"
     request_key = request.data.get("request_key")
     if not request_key:
         raise ValidationError({"request_key": "Required."})
@@ -574,7 +747,7 @@ def dispute_respond(request, dispute_id):
             request_subject_id=item.id,
             result_subject_id=item.id,
             result_revision=item.revision,
-            resource=dispute_payload(item),
+            resource=dispute_payload(item, request.user),
         )
     return Response(output)
 
@@ -751,10 +924,12 @@ def lease_reviews(request, lease_id):
 @renderer_classes([FeatureJsonRenderer])
 def rental_center(request, lease_id):
     lease = _lease(request, lease_id)
-    reasons = evaluate_financial_closure(lease)
+    reasons = closure_blocking_reasons(lease)
     balance = sum(
-        max((x.charges_minor or x.amount_minor) - x.credits_minor - x.applied_minor, 0)
-        for x in lease.invoices.all()
+        max(x.charges_minor - x.credits_minor - x.applied_minor, 0)
+        for x in lease.invoices.exclude(
+            status__in=[RentInvoice.Status.CANCELLED, RentInvoice.Status.WRITTEN_OFF]
+        )
     )
     next_action = (
         {

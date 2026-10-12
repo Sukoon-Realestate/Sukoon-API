@@ -58,7 +58,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             await self.send_json({"error": "Unknown message type."})
 
     async def _handle_send(self, content):
-        from rest_framework.exceptions import ValidationError
+        from rest_framework.exceptions import PermissionDenied, ValidationError
 
         from core_apps.chat.models import Conversation, ConversationParticipant
         from core_apps.chat.services.message_service import (
@@ -117,7 +117,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                     lambda: dict(MessageSerializer(message).data)
                 )()
                 await self.send_json({"type": "message.ack", "payload": payload})
-        except ValidationError:
+        except (ValidationError, PermissionDenied):
             await self.send_json({"error": "You cannot message this user."})
         except ChatMessageConflict as exc:
             await self.send_json(

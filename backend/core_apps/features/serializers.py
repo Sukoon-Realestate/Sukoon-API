@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.utils import timezone
 from rest_framework import serializers
 
@@ -91,6 +90,8 @@ class AlertCreateSerializer(serializers.Serializer):
 
 
 class LeaseSerializer(serializers.ModelSerializer):
+    owner_id = serializers.UUIDField(source="owner.id", read_only=True)
+    tenant_id = serializers.UUIDField(source="tenant.id", read_only=True)
     legacy_read_only = serializers.SerializerMethodField()
     property_id = serializers.UUIDField(source="property.id", read_only=True)
     property_title = serializers.CharField(source="property.title", read_only=True)
@@ -108,6 +109,8 @@ class LeaseSerializer(serializers.ModelSerializer):
         model = Lease
         fields = [
             "id",
+            "owner_id",
+            "tenant_id",
             "property_id",
             "property_title",
             "owner_name",
@@ -171,14 +174,10 @@ class LeaseSerializer(serializers.ModelSerializer):
         return bool(request and can_cancel_draft(request.user, obj))
 
     def get_allowed_actions(self, obj):
-        if self.get_legacy_read_only(obj):
-            return []
-        actions = []
-        if self.get_can_sign(obj):
-            actions.append("sign")
-        if self.get_can_cancel(obj):
-            actions.append("cancel_draft")
-        return actions
+        from .services.lease_permissions import agreement_actions
+
+        request = self.context.get("request")
+        return agreement_actions(request.user if request else None, obj)
 
     def get_blocking_reasons(self, obj):
         if self.get_legacy_read_only(obj):
@@ -219,6 +218,9 @@ class LeaseCreateSerializer(serializers.Serializer):
 
 
 class RentInvoiceSerializer(serializers.ModelSerializer):
+    billing_period_id = serializers.UUIDField(
+        source="billing_period.id", read_only=True
+    )
     lease_id = serializers.UUIDField(source="lease.id", read_only=True)
     property_title = serializers.CharField(
         source="lease.property.title", read_only=True
@@ -235,6 +237,9 @@ class RentInvoiceSerializer(serializers.ModelSerializer):
     blocking_reasons = serializers.SerializerMethodField()
     lines = serializers.SerializerMethodField()
     payment_attempt_id = serializers.SerializerMethodField()
+    charges = serializers.SerializerMethodField()
+    credits = serializers.SerializerMethodField()
+    applied = serializers.SerializerMethodField()
 
     class Meta:
         model = RentInvoice
@@ -256,6 +261,10 @@ class RentInvoiceSerializer(serializers.ModelSerializer):
             "allowed_actions",
             "blocking_reasons",
             "invoice_type",
+            "billing_period_id",
+            "charges",
+            "credits",
+            "applied",
             "period_start",
             "period_end_exclusive",
             "due_at",
@@ -273,17 +282,31 @@ class RentInvoiceSerializer(serializers.ModelSerializer):
         }
 
     def get_can_pay(self, obj):
+        from .services.rental_phase3 import invoice_payment_allowed
+
         request = self.context.get("request")
-        return bool(
-            request
-            and request.user == obj.lease.tenant
-            and obj.status in {RentInvoice.Status.DUE, RentInvoice.Status.OVERDUE}
-            and getattr(settings, "RENTAL_CHECKOUT_ENABLED", False)
-        )
+        return invoice_payment_allowed(request.user if request else None, obj)
+
+    def _money(self, obj, amount):
+        return {
+            "amount_minor": amount,
+            "currency": obj.currency,
+            "exponent": obj.exponent,
+        }
+
+    def get_charges(self, obj):
+        return self._money(obj, obj.charges_minor)
+
+    def get_credits(self, obj):
+        return self._money(obj, obj.credits_minor)
+
+    def get_applied(self, obj):
+        return self._money(obj, obj.applied_minor)
 
     def get_balance(self, obj):
-        charges = obj.charges_minor or obj.amount_minor
-        amount = max(charges - obj.credits_minor - obj.applied_minor, 0)
+        from .services.rental_phase3 import invoice_balance_minor
+
+        amount = invoice_balance_minor(obj)
         return {
             "amount_minor": amount,
             "currency": obj.currency,
@@ -315,9 +338,11 @@ class RentInvoiceSerializer(serializers.ModelSerializer):
         return str(attempt.id) if attempt else None
 
     def get_blocking_reasons(self, obj):
+        from .providers import checkout_available
+
         if self.get_can_pay(obj):
             return []
-        if not getattr(settings, "RENTAL_CHECKOUT_ENABLED", False):
+        if not checkout_available():
             return ["Secure rent checkout is not available yet."]
         return ["This invoice is not currently payable."]
 

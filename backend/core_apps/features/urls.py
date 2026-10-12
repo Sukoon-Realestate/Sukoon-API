@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 
 from . import views
 from . import rental_phase2_views as views_phase2
@@ -6,9 +6,15 @@ from . import rental_phase3_views as views_phase3
 from . import rental_phase4_views as views_phase4
 from . import rental_phase5_views as views_phase5
 from . import rental_phase6_views as views_phase6
+from . import mock_provider_views
 from .models import RentalChange
 
 urlpatterns = [
+    path("", include("core_apps.features.planning_urls")),
+    path("mock-provider/onboarding-sessions/<uuid:session_id>/complete/", mock_provider_views.onboarding_complete),
+    path("mock-provider/signing-sessions/<uuid:session_id>/complete/", mock_provider_views.signing_complete),
+    path("mock-provider/change-signing-sessions/<uuid:session_id>/complete/", mock_provider_views.signing_complete, {"change": True}),
+    path("mock-provider/payment-attempts/<uuid:attempt_id>/events/", mock_provider_views.payment_event),
     path(
         "rental-capabilities/",
         views.rental_capabilities,
@@ -172,6 +178,7 @@ urlpatterns = [
     path("termination-requests/<uuid:change_id>/respond/", views_phase5.change_respond, {"kind": RentalChange.Kind.TERMINATION}, name="termination-respond"),
     path("external-payment-claims/<uuid:change_id>/", views_phase5.change_detail, {"kind": RentalChange.Kind.EXTERNAL_PAYMENT}, name="external-claim-detail"),
     path("external-payment-claims/<uuid:change_id>/respond/", views_phase5.change_respond, {"kind": RentalChange.Kind.EXTERNAL_PAYMENT}, name="external-claim-respond"),
+    path("refund-requests/<uuid:refund_id>/execute/", views_phase6.refund_execute, name="refund-execute"),
     path("leases/<uuid:lease_id>/final-settlement/", views_phase6.final_settlement_detail, name="final-settlement"),
     path("leases/<uuid:lease_id>/final-settlement/propose/", views_phase6.final_settlement_propose, name="final-settlement-propose"),
     path("leases/<uuid:lease_id>/final-settlement/respond/", views_phase6.final_settlement_respond, name="final-settlement-respond"),
@@ -180,6 +187,7 @@ urlpatterns = [
     path("refund-requests/<uuid:refund_id>/respond/", views_phase6.refund_respond, name="refund-respond"),
     path("disputes/", views_phase6.disputes, name="rental-disputes"),
     path("disputes/<uuid:dispute_id>/", views_phase6.dispute_detail, name="rental-dispute-detail"),
+    path("disputes/<uuid:dispute_id>/responses/", views_phase6.dispute_respond, name="rental-dispute-responses"),
     path("disputes/<uuid:dispute_id>/respond/", views_phase6.dispute_respond, name="rental-dispute-respond"),
     path("leases/<uuid:lease_id>/documents/", views_phase6.lease_documents, name="lease-documents"),
     path("rental-documents/<uuid:document_id>/download/", views_phase6.document_download, name="rental-document-download"),

@@ -20,19 +20,20 @@ from rest_framework.response import Response
 from core_apps.admin_api.models import StaffProfile
 
 from .models import (
+    Lease,
     DepositAgreement,
-    InvoiceLine,
     OwnerPayable,
     OwnerPaymentProfile,
+    PaymentAttempt,
     PayoutAuditEvent,
     PayoutBatch,
     RentalEvidence,
     RentalHandover,
     RentalPayout,
-    RentInvoice,
 )
-from .providers import get_rental_provider
+from .providers import get_rental_provider, require_rental_provider
 from .renderers import FeatureJsonRenderer
+from .services.lease_permissions import handover_actions
 from .services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
 from .services.rental_phase3 import post_ledger_transaction
 
@@ -46,8 +47,8 @@ def _money(value):
 
 
 def _lease(request, lease_id, lock=False):
-    from .models import Lease
-
+    if request.method not in {"GET", "HEAD", "OPTIONS"}:
+        require_rental_provider(request.user)
     queryset = Lease.objects.select_related("owner", "tenant")
     if lock:
         queryset = queryset.select_for_update()
@@ -74,7 +75,7 @@ def evidence_payload(item):
     }
 
 
-def handover_payload(item):
+def handover_payload(item, user=None):
     return {
         "id": str(item.id),
         "lease_id": str(item.lease.id),
@@ -88,6 +89,8 @@ def handover_payload(item):
         "inventory": item.inventory,
         "evidence": [evidence_payload(x) for x in item.evidence.all()],
         "accepted_by": item.approvals,
+        "allowed_actions": handover_actions(user, item),
+        "blocking_reasons": [],
     }
 
 
@@ -245,7 +248,7 @@ def lease_handovers(request, lease_id):
     lease = _lease(request, lease_id)
     if request.method == "GET":
         items = [
-            handover_payload(x)
+            handover_payload(x, request.user)
             for x in lease.handovers.prefetch_related("evidence").all()
         ]
         return Response(
@@ -278,6 +281,29 @@ def lease_handovers(request, lease_id):
     evidence = _validate_evidence(lease, request.data["evidence_ids"])
     with transaction.atomic():
         lease = _lease(request, lease_id, lock=True)
+        if (
+            not request.user.is_active
+            or not request.user.is_verified
+            or lease.legacy_read_only
+        ):
+            raise PermissionDenied(
+                "A verified participant and a supported agreement are required."
+            )
+        if lease.status not in {
+            Lease.Status.ACTIVE,
+            Lease.Status.TERMINATION_PENDING,
+            Lease.Status.ENDED,
+        }:
+            raise RentalConflict("Handover requires a paid active agreement.")
+        if request.data["kind"] == "move_in" and lease.status != Lease.Status.ACTIVE:
+            raise RentalConflict("Move-in requires an active agreement.")
+        replay = replay_operation(
+            request.user, operation, request.data["request_key"], request.data
+        )
+        if replay:
+            return Response(replay[0], status=replay[1])
+        if lease.handovers.filter(kind=request.data["kind"]).exists():
+            raise RentalConflict("This handover already exists.")
         handover = RentalHandover.objects.create(
             lease=lease,
             kind=request.data["kind"],
@@ -297,7 +323,7 @@ def lease_handovers(request, lease_id):
             request_subject_id=lease.id,
             result_subject_id=handover.id,
             result_revision=handover.revision,
-            resource=handover_payload(handover),
+            resource=handover_payload(handover, request.user),
             response_status=201,
         )
     return Response(output, status=status.HTTP_201_CREATED)
@@ -309,7 +335,7 @@ def lease_handovers(request, lease_id):
 def handover_detail(request, handover_id):
     handover = _handover(request, handover_id)
     if request.method == "GET":
-        return Response(handover_payload(handover))
+        return Response(handover_payload(handover, request.user))
     expected = int(request.data.get("expected_revision", 0))
     request_key = request.data.get("request_key")
     if not request_key:
@@ -322,6 +348,8 @@ def handover_detail(request, handover_id):
         handover = _handover(request, handover_id, lock=True)
         if handover.revision != expected:
             raise RentalConflict("Handover revision conflict.", code="stale_revision")
+        if "edit_handover" not in handover_actions(request.user, handover):
+            raise RentalConflict("This handover cannot be edited.")
         evidence = _validate_evidence(
             handover.lease, request.data.get("evidence_ids", [])
         )
@@ -341,7 +369,7 @@ def handover_detail(request, handover_id):
             request_subject_id=handover.id,
             result_subject_id=handover.id,
             result_revision=handover.revision,
-            resource=handover_payload(handover),
+            resource=handover_payload(handover, request.user),
         )
     return Response(output)
 
@@ -366,6 +394,8 @@ def handover_respond(request, handover_id):
         handover = _handover(request, handover_id, lock=True)
         if int(request.data.get("expected_revision", 0)) != handover.revision:
             raise RentalConflict("Handover revision conflict.", code="stale_revision")
+        if handover.status == RentalHandover.Status.ACCEPTED:
+            raise RentalConflict("This handover is already accepted.")
         approvals = set(handover.approvals)
         if action == "dispute":
             handover.status = RentalHandover.Status.DISPUTED
@@ -380,7 +410,6 @@ def handover_respond(request, handover_id):
                 handover.accepted_at = timezone.now()
                 if handover.kind == RentalHandover.Kind.MOVE_IN:
                     handover.lease.occupancy_status = "occupied"
-                    evaluate_owner_payables(handover.lease)
                 else:
                     handover.lease.occupancy_status = "returned"
                     from .models import RentalInventoryDayLock
@@ -392,7 +421,15 @@ def handover_respond(request, handover_id):
                 handover.status = RentalHandover.Status.PENDING_APPROVAL
         handover.revision += 1
         handover.save()
-        handover.lease.save(update_fields=["occupancy_status", "updated_at"])
+        if (
+            handover.kind == RentalHandover.Kind.MOVE_IN
+            and handover.status == RentalHandover.Status.ACCEPTED
+        ):
+            evaluate_owner_payables(handover.lease)
+        handover.lease.revision += 1
+        handover.lease.save(
+            update_fields=["occupancy_status", "revision", "updated_at"]
+        )
         output = remember_mutation(
             user=request.user,
             operation=operation,
@@ -401,7 +438,7 @@ def handover_respond(request, handover_id):
             request_subject_id=handover.id,
             result_subject_id=handover.id,
             result_revision=handover.revision,
-            resource=handover_payload(handover),
+            resource=handover_payload(handover, request.user),
         )
     return Response(output)
 
@@ -432,31 +469,9 @@ def deposit_payload(deposit):
 @renderer_classes([FeatureJsonRenderer])
 def lease_deposit(request, lease_id):
     lease = _lease(request, lease_id)
-    raw = lease.terms.get("deposit", {})
-    amount = int(raw.get("amount_minor", 0)) if isinstance(raw, dict) else 0
-    with transaction.atomic():
-        deposit, created = DepositAgreement.objects.select_for_update().get_or_create(
-            lease=lease, defaults={"agreed_minor": amount, "due_minor": amount}
-        )
-        if created and amount:
-            invoice = RentInvoice.objects.create(
-                lease=lease,
-                reference=f"DEPOSIT-{lease.id.hex[:12].upper()}",
-                due_date=lease.start_date,
-                due_at=timezone.now(),
-                amount_minor=amount,
-                charges_minor=amount,
-                invoice_type=RentInvoice.InvoiceType.DEPOSIT,
-                status=RentInvoice.Status.DUE,
-            )
-            InvoiceLine.objects.create(
-                invoice=invoice,
-                line_type="security_deposit",
-                description="Security deposit",
-                amount_minor=amount,
-            )
-            deposit.invoice = invoice
-            deposit.save(update_fields=["invoice", "updated_at"])
+    # Issuance belongs to the signing transaction. A read must not create a
+    # separate charge, especially after the combined invoice was already paid.
+    deposit = get_object_or_404(DepositAgreement, lease=lease)
     return Response(deposit_payload(deposit))
 
 
@@ -466,6 +481,29 @@ def evaluate_owner_payables(lease):
         kind=RentalHandover.Kind.MOVE_IN, status=RentalHandover.Status.ACCEPTED
     ).exists()
     for payable in lease.owner_payables.select_for_update():
+        if payable.payout_status in {
+            "submitted",
+            "processing",
+            "succeeded",
+            "cancelled",
+        }:
+            continue
+        previous = (
+            payable.settlement_status,
+            payable.payout_status,
+            payable.blocking_reasons,
+        )
+        if payable.source_reference and payable.settlement_status != "settled":
+            deposit = DepositAgreement.objects.filter(lease=lease).first()
+            if (
+                deposit
+                and not PaymentAttempt.objects.filter(
+                    invoice=deposit.invoice, payment_status="captured"
+                )
+                .exclude(settlement_status="settled")
+                .exists()
+            ):
+                payable.settlement_status = "settled"
         reasons = []
         if payable.settlement_status != "settled":
             reasons.append("PSP settlement is pending.")
@@ -475,10 +513,19 @@ def evaluate_owner_payables(lease):
             reasons.append("Owner beneficiary is not ready.")
         if not profile or "rental-policy-v1" not in profile.accepted_policy_versions:
             reasons.append("Required policy is not accepted.")
+        if lease.refund_requests.filter(
+            status__in=["requested", "approved", "processing"]
+        ).exists():
+            reasons.append("A refund is awaiting resolution.")
         payable.blocking_reasons = reasons
         payable.payout_status = "ready" if not reasons else "held"
-        payable.revision += 1
-        payable.save()
+        if previous != (
+            payable.settlement_status,
+            payable.payout_status,
+            payable.blocking_reasons,
+        ):
+            payable.revision += 1
+            payable.save()
         if not reasons and payable.commission_minor:
             post_ledger_transaction(
                 reference=f"commission-earned:{payable.id}",
@@ -558,15 +605,36 @@ def operations_execute_payout(request):
     _require_payout_role(request.user)
     payable_ids = request.data.get("payable_ids", [])
     request_key = request.data.get("request_key")
-    if not payable_ids or not request_key:
+    if (
+        not isinstance(payable_ids, list)
+        or not payable_ids
+        or any(not isinstance(x, str) for x in payable_ids)
+        or not request_key
+    ):
         raise ValidationError("payable_ids and request_key are required.")
     operation = "payout.execute"
     replay = replay_operation(request.user, operation, request_key, request.data)
     if replay:
         return Response(replay[0], status=replay[1])
     with transaction.atomic():
+        from core_apps.users.models import User
+
+        User.objects.select_for_update(no_key=True).get(pk=request.user.pk)
+        replay = replay_operation(request.user, operation, request_key, request.data)
+        if replay:
+            return Response(replay[0], status=replay[1])
+        lease_ids = list(
+            OwnerPayable.objects.filter(id__in=payable_ids)
+            .values_list("lease_id", flat=True)
+            .order_by()
+            .distinct()
+        )
+        if len(lease_ids) != 1:
+            raise ValidationError("A payout batch must target one lease.")
+        lease = Lease.objects.select_for_update().get(pk=lease_ids[0])
+        evaluate_owner_payables(lease)
         payables = list(
-            OwnerPayable.objects.select_for_update()
+            OwnerPayable.objects.select_for_update(of=("self",))
             .select_related("lease__owner")
             .filter(id__in=payable_ids)
         )
@@ -595,7 +663,8 @@ def operations_execute_payout(request):
         payout.payables.set(payables)
         for payable in payables:
             payable.payout_status = "submitted"
-            payable.save(update_fields=["payout_status", "updated_at"])
+            payable.revision += 1
+            payable.save(update_fields=["payout_status", "revision", "updated_at"])
         PayoutAuditEvent.objects.create(
             payout=payout, actor=request.user, action="approved"
         )
@@ -626,6 +695,11 @@ def operations_reconcile_payout(request, payout_id):
     if replay:
         return Response(replay[0], status=replay[1])
     with transaction.atomic():
+        candidate = get_object_or_404(RentalPayout, id=payout_id)
+        Lease.objects.select_for_update().get(pk=candidate.lease_id)
+        replay = replay_operation(request.user, operation, request_key, request.data)
+        if replay:
+            return Response(replay[0], status=replay[1])
         payout = get_object_or_404(
             RentalPayout.objects.select_for_update().prefetch_related("payables"),
             id=payout_id,

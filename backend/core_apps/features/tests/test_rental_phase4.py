@@ -9,6 +9,7 @@ from rest_framework.test import APIClient
 from core_apps.admin_api.models import StaffProfile
 from core_apps.features.models import (
     BillingPeriod,
+    DepositAgreement,
     Lease,
     LedgerTransaction,
     OwnerPayable,
@@ -187,6 +188,19 @@ def test_handover_revision_invalidation_acceptance_and_deposit_separation(phase4
     lease.refresh_from_db()
     assert lease.occupancy_status == Lease.OccupancyStatus.OCCUPIED
 
+    # Preserve a pre-existing historical separate deposit invoice. GET must not
+    # manufacture one now that new agreements use combined initial billing.
+    legacy_invoice = RentInvoice.objects.create(
+        lease=lease,
+        reference="HISTORICAL-DEPOSIT",
+        due_date=lease.start_date,
+        amount_minor=200_000,
+        charges_minor=200_000,
+        invoice_type="deposit",
+    )
+    DepositAgreement.objects.create(
+        lease=lease, invoice=legacy_invoice, agreed_minor=200_000, due_minor=200_000
+    )
     deposit = client_for(tenant).get(f"/api/v1/features/v1/leases/{lease.id}/deposit/")
     assert deposit.data["agreed"]["amount_minor"] == 200_000
     assert deposit.data["collected"]["amount_minor"] == 0

@@ -22,6 +22,7 @@ from .models import (
     PrivateAccessRevocation,
 )
 from .providers import get_rental_provider
+from .services.rental_phase2 import RentalConflict
 from .services.rental_phase3 import issue_invoice, process_provider_event
 
 
@@ -49,6 +50,21 @@ def expire_rental_sources_and_holds(self):
             revision=models.F("revision") + 1,
             updated_at=now,
         )
+        # Capture/signature handlers also lock the lease before its day locks.
+        expired_leases = list(
+            Lease.objects.select_for_update()
+            .filter(
+                status=Lease.Status.SIGNED,
+                hold_expires_at__lte=now,
+            )
+            .order_by("pk")
+            .values_list("pk", flat=True)
+        )
+        expired_agreements = Lease.objects.filter(pk__in=expired_leases).update(
+            status=Lease.Status.EXPIRED,
+            revision=models.F("revision") + 1,
+            updated_at=now,
+        )
         expired_holds = RentalInventoryDayLock.objects.filter(
             kind=RentalInventoryDayLock.Kind.HOLD,
             expires_at__lte=now,
@@ -56,6 +72,7 @@ def expire_rental_sources_and_holds(self):
     return {
         "expired_invitations": expired_invitations,
         "expired_holds": expired_holds,
+        "expired_agreements": expired_agreements,
     }
 
 
@@ -91,7 +108,9 @@ def run_rental_billing_cycle(self):
     issued = 0
     with transaction.atomic():
         for period in BillingPeriod.objects.select_for_update().filter(
-            status=BillingPeriod.Status.SCHEDULED, issue_at__lte=now
+            status=BillingPeriod.Status.SCHEDULED,
+            issue_at__lte=now,
+            lease__status__in=[Lease.Status.ACTIVE, Lease.Status.TERMINATION_PENDING],
         ):
             issue_invoice(period)
             issued += 1
@@ -189,6 +208,7 @@ def reconcile_approved_payouts(self):
         :100
     ]:
         with transaction.atomic():
+            Lease.objects.select_for_update().get(pk=candidate.lease_id)
             payout = RentalPayout.objects.select_for_update().get(pk=candidate.pk)
             if payout.status != RentalPayout.Status.CREATED:
                 continue
@@ -235,8 +255,9 @@ def process_rental_changes(self):
         effective_on__lte=timezone.localdate(),
     ).select_related("lease")[:100]:
         with transaction.atomic():
+            lease = Lease.objects.select_for_update().get(pk=candidate.lease_id)
             change = (
-                RentalChange.objects.select_for_update()
+                RentalChange.objects.select_for_update(of=("self",))
                 .select_related("lease__property")
                 .get(pk=candidate.pk)
             )
@@ -245,7 +266,7 @@ def process_rental_changes(self):
                 RentalChange.Status.SIGNED,
             }:
                 continue
-            lease = Lease.objects.select_for_update().get(pk=change.lease_id)
+            change.lease = lease
             if change.kind == RentalChange.Kind.AMENDMENT:
                 if change.status != RentalChange.Status.SIGNED:
                     continue
@@ -289,8 +310,9 @@ def process_rental_changes(self):
                 generate_billing_schedule(renewal)
                 change.result_lease = renewal
             elif change.kind == RentalChange.Kind.TERMINATION:
-                lease.occupancy_status = Lease.OccupancyStatus.MOVE_OUT_PENDING
-                lease.save(update_fields=["occupancy_status", "updated_at"])
+                from .services.legal_lifecycle import end_lease_if_due
+
+                end_lease_if_due(lease)
             else:
                 continue
             change.status = RentalChange.Status.APPLIED
@@ -313,13 +335,23 @@ def process_rental_closure(self):
     import hashlib
     import json
     from .services.rental_phase6 import evaluate_financial_closure, execute_refund
+    from .planning_transition_views import reconcile_transitions
 
+    from .services.legal_lifecycle import end_due_leases
+
+    ended = end_due_leases()
     refunded = generated = evaluated = revoked = 0
     for refund in RefundRequest.objects.filter(status=RefundRequest.Status.APPROVED)[
         :100
     ]:
-        execute_refund(refund)
-        refunded += 1
+        try:
+            execute_refund(refund)
+            refunded += 1
+        except RentalConflict as exc:
+            # One held refund must not starve unrelated refunds or closure work.
+            RefundRequest.objects.filter(pk=refund.pk, status="approved").update(
+                failure_code=str(exc.get_codes()), updated_at=timezone.now()
+            )
     for candidate in RentalDocument.objects.filter(
         status=RentalDocument.Status.QUEUED
     ).select_related("lease")[:100]:
@@ -374,8 +406,14 @@ def process_rental_closure(self):
                     lease=lease, user=participant, defaults={"reason": "account_closed"}
                 )
                 revoked += int(created)
+    transitions = reconcile_transitions()
+    from .services.planning import purge_expired_discovery
+
+    purge_expired_discovery()
     return {
         "refunds": refunded,
+        "transitions": transitions,
+        "legally_ended": ended,
         "documents": generated,
         "leases": evaluated,
         "access_revocations": revoked,
