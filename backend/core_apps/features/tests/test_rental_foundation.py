@@ -212,7 +212,9 @@ def test_planning_capabilities_endpoint_returns_disabled_capabilities_and_versio
     assert data_auth["account_verified"] is True
     assert data_auth["policy_version"] == "planning-policy-v1"
     assert data_auth["enabled_capabilities"] == []
+    assert data_auth["verified_services"] == []
     assert data_auth["allowed_actions"] == []
+    assert data_auth["expires_at"] is None
     assert "pending live verification" in data_auth["blocking_reasons"][0]
     assert res_auth["Cache-Control"] == "private, no-store"
 
@@ -223,4 +225,6 @@ def test_planning_capabilities_endpoint_returns_disabled_capabilities_and_versio
     assert data_guest["account_id"] is None
     assert data_guest["policy_version"] == "planning-policy-v1"
     assert data_guest["enabled_capabilities"] == []
+    assert data_guest["verified_services"] == []
+    assert data_guest["expires_at"] is None
 

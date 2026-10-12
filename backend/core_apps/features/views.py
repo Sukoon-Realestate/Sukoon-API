@@ -184,8 +184,10 @@ def planning_capabilities(request):
             "account_id": account_id,
             "account_verified": account_verified,
             "enabled_capabilities": [],
+            "verified_services": [],
             "policy_version": "planning-policy-v1",
             "allowed_actions": [],
+            "expires_at": None,
             "blocking_reasons": blocking_reasons,
         }
     )
