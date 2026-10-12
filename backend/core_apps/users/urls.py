@@ -34,6 +34,7 @@ urlpatterns = [
     path("resend-otp/", ResendOtpAPIView.as_view(), name="resend-otp"),
     path("login/", CustomTokenObtainPairView.as_view(), name="login"),
     path("refresh/", CustomTokenRefreshView.as_view(), name="refresh"),
+    path("token/refresh/", CustomTokenRefreshView.as_view(), name="token-refresh"),
     path("logout/", LogoutAPIView.as_view()),
     path("delete-account/", UserDeleteAPIView.as_view(), name="user-delete"),
     path("users/set_password/", SetPasswordAPIView.as_view(), name="user-set-password"),

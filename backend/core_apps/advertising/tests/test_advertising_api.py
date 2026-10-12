@@ -572,10 +572,15 @@ def test_existing_audit_ad_media_recovery_and_mock_payment_activation(auth_clien
     assert data["status"] == "active"
     assert data["payment"]["operation_id"] == payment_op_id
 
-    # 3. Media is retrievable
+    # 3. Media is retrievable with exact 28,970 bytes and expected digest
+    import hashlib
     media_url = reverse("advertising:advertisement-media", args=[ad.id])
     media_res = auth_client.get(media_url)
     assert media_res.status_code == 200
+    media_bytes = b"".join(media_res.streaming_content) if hasattr(media_res, "streaming_content") else media_res.content
+    assert len(media_bytes) == 28970
+    assert hashlib.sha256(media_bytes).hexdigest() == "dc2be014d6db85c4e73572c11fe5f21eb10df6d84675a3cc1b3350097e2e212b"
+
 
     # 4. Tenant home placement returns the active ad
     guest_client = APIClient()
@@ -588,4 +593,16 @@ def test_existing_audit_ad_media_recovery_and_mock_payment_activation(auth_clien
     replay_res = auth_client.post(pay_url, body, format="json")
     assert replay_res.status_code == 200
     assert replay_res.json()["data"]["id"] == str(ad.id)
+
+    # 6. Alternating Accept-Language headers return proper Content-Language and localized messages
+    res_ar = guest_client.get(reverse("advertising:plans"), HTTP_ACCEPT_LANGUAGE="ar")
+    assert res_ar.status_code == 200
+    assert res_ar["Content-Language"] == "ar"
+    assert res_ar.json()["message"] == "الخطط المتاحة."
+
+    res_en = guest_client.get(reverse("advertising:plans"), HTTP_ACCEPT_LANGUAGE="en")
+    assert res_en.status_code == 200
+    assert res_en["Content-Language"] == "en"
+    assert res_en.json()["message"] == "Available plans."
+
 

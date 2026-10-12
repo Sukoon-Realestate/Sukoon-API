@@ -175,9 +175,21 @@ def planning_capabilities(request):
     user = request.user
     account_id = str(user.id) if user and user.is_authenticated else None
     account_verified = bool(user.is_active and user.is_verified) if user and user.is_authenticated else False
-    blocking_reasons = ["Planning capabilities (C08/C09/S02) are pending live verification."]
+    blocking_reasons = [
+        localized(
+            request,
+            "Planning capabilities (C08/C09/S02) are pending live verification.",
+            "إمكانيات التخطيط (C08/C09/S02) قيد التحقق المباشر.",
+        )
+    ]
     if not (user and user.is_authenticated):
-        blocking_reasons.append("Authentication is required to access account planning.")
+        blocking_reasons.append(
+            localized(
+                request,
+                "Authentication is required to access account planning.",
+                "تسجيل الدخول مطلوب للوصول إلى تخطيط الحساب.",
+            )
+        )
 
     response = Response(
         {
@@ -191,10 +203,9 @@ def planning_capabilities(request):
             "blocking_reasons": blocking_reasons,
         }
     )
-    return private_no_store(response)
-
-
-@api_view(["GET"])
+        response["Content-Language"] = "ar" if localized(request, "en", "ar") == "ar" else "en"
+    response["Vary"] = "Accept-Language"
+    return private_no_store(response)api_view(["GET"])
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def rental_operation_lookup(request, request_key):
@@ -1038,9 +1049,13 @@ def lease_detail(request, lease_id):
         from .rental_phase2_views import update_structured_lease
 
         return update_structured_lease(request, lease_id)
+    lease = _get_authorized_lease(request, lease_id)
+    if lease.status == Lease.Status.CANCELLED and lease.financial_closure_status == Lease.FinancialClosureStatus.OPEN:
+        from .services.rental_phase6 import evaluate_financial_closure
+        evaluate_financial_closure(lease)
     return Response(
         LeaseSerializer(
-            _get_authorized_lease(request, lease_id), context={"request": request}
+            lease, context={"request": request}
         ).data
     )
 

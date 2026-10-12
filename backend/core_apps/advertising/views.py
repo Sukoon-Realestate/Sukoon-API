@@ -85,6 +85,20 @@ ERROR_MESSAGES_AR = {
 
 
 def language(request):
+    lang_param = request.query_params.get("lang", "") if hasattr(request, "query_params") else ""
+    if lang_param:
+        return "ar" if str(lang_param).lower().startswith("ar") else "en"
+    accept_lang = (
+        getattr(request, "headers", {}).get("Accept-Language")
+        or getattr(request, "META", {}).get("HTTP_ACCEPT_LANGUAGE", "")
+    )
+    if accept_lang:
+        for part in accept_lang.split(","):
+            token = part.split(";")[0].strip().lower()
+            if token.startswith("ar"):
+                return "ar"
+            if token.startswith("en"):
+                return "en"
     return (
         "ar" if str(getattr(request, "LANGUAGE_CODE", "en")).startswith("ar") else "en"
     )

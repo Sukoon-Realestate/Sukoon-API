@@ -228,3 +228,9 @@ def test_planning_capabilities_endpoint_returns_disabled_capabilities_and_versio
     assert data_guest["verified_services"] == []
     assert data_guest["expires_at"] is None
 
+    # 3. Arabic guest call returns localized blocking reasons
+    res_ar = APIClient().get("/api/v1/features/v1/planning-capabilities/", HTTP_ACCEPT_LANGUAGE="ar")
+    assert res_ar.status_code == 200
+    assert res_ar["Content-Language"] == "ar"
+    assert "إمكانيات التخطيط" in res_ar.data["blocking_reasons"][0]
+
