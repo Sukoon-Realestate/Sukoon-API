@@ -445,9 +445,14 @@ def test_cancelled_never_occupied_draft_closure_blockers_and_financial_policy(ph
     reasons = closure_blocking_reasons(lease)
     assert reasons == []
 
+    original_revision = lease.revision
     evaluate_financial_closure(lease)
     lease.refresh_from_db()
     assert lease.financial_closure_status == Lease.FinancialClosureStatus.CLOSED
+    assert lease.revision == original_revision + 1
+    evaluate_financial_closure(lease)
+    lease.refresh_from_db()
+    assert lease.revision == original_revision + 1
 
     # Verify rental center projection
     rc = client_for(owner).get(f"/api/v1/features/v1/leases/{lease.id}/rental-center/")
@@ -473,3 +478,4 @@ def test_cancelled_never_occupied_draft_closure_blockers_and_financial_policy(ph
     evaluate_financial_closure(lease)
     lease.refresh_from_db()
     assert lease.financial_closure_status == Lease.FinancialClosureStatus.OPEN
+    assert lease.revision == original_revision + 2

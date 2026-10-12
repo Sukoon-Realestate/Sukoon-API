@@ -125,7 +125,12 @@ def closure_blocking_reasons(lease):
     return reasons
 
 
-def evaluate_financial_closure(lease):
+def evaluate_financial_closure(lease, *, increment_revision=True):
+    """Persist derived closure state, normally as a new lease revision.
+
+    A caller that already increments the locked lease in the same transaction
+    can include closure in that mutation by passing increment_revision=False.
+    """
     reasons = closure_blocking_reasons(lease)
     desired = (
         lease.FinancialClosureStatus.CLOSED
@@ -134,6 +139,9 @@ def evaluate_financial_closure(lease):
     )
     if lease.financial_closure_status != desired:
         lease.financial_closure_status = desired
-        lease.revision += 1
-        lease.save(update_fields=["financial_closure_status", "revision", "updated_at"])
+        fields = ["financial_closure_status", "updated_at"]
+        if increment_revision:
+            lease.revision += 1
+            fields.append("revision")
+        lease.save(update_fields=fields)
     return reasons

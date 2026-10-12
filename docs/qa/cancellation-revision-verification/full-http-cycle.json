@@ -1,0 +1,431 @@
+{
+  "transport": "HTTP over loopback with JWT login",
+  "database": "isolated PostgreSQL",
+  "providers": "API mocks",
+  "clock_advanced_for_termination": true,
+  "final_status": "ended",
+  "occupancy_status": "returned",
+  "financial_closure_status": "closed",
+  "calls": [
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/owner-payment-profile/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=1ebdcb00-0056-4160-8843-85ff59dd6224&action=onboard_beneficiary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/owner-payment-profile/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=1ebdcb00-0056-4160-8843-85ff59dd6224&action=onboard_beneficiary",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/owner-payment-profile/onboarding-session/",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-operations/7b5115a4-ec2d-44b3-b129-0104262720e6/?subject_id=1ebdcb00-0056-4160-8843-85ff59dd6224",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/mock-provider/onboarding-sessions/9806bbfd-1f86-4311-b173-5f8d426b4918/complete/",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/mock-provider/onboarding-sessions/9806bbfd-1f86-4311-b173-5f8d426b4918/complete/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=d4883c6b-4eba-41e3-8103-3c298c314d5c&action=create_terms_proposal",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/terms-proposals/",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=d4883c6b-4eba-41e3-8103-3c298c314d5c&action=create_invitation",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/tenancy-invitations/",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=da0dca0b-923b-4e48-9d90-a621eb56658e&action=create_lease",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/leases/",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=37633eb9-dec4-48d1-831e-01bab24086f1&action=accept_review",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/review/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=37633eb9-dec4-48d1-831e-01bab24086f1&action=submit_for_signature",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/submit-for-signature/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=37633eb9-dec4-48d1-831e-01bab24086f1&action=sign",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/signing-session/",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-operations/7ca110db-8c83-4eed-9d5e-0e4499d28836/?subject_id=37633eb9-dec4-48d1-831e-01bab24086f1",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/mock-provider/signing-sessions/22fa5df8-abd0-44bb-b843-d94f342e61c4/complete/",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/mock-provider/signing-sessions/22fa5df8-abd0-44bb-b843-d94f342e61c4/complete/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/deposit/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=37633eb9-dec4-48d1-831e-01bab24086f1&action=create_rental_handover",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/handovers/",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=2d4a586f-e771-4369-9c89-41895ce60e34&action=accept",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/handovers/2d4a586f-e771-4369-9c89-41895ce60e34/respond/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/owner-payables/?workspace=owner&lease_id=37633eb9-dec4-48d1-831e-01bab24086f1",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=6e26e00f-51e9-4500-ad55-3a2d8bc359b7&action=acknowledge",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/maintenance-requests/6e26e00f-51e9-4500-ad55-3a2d8bc359b7/actions/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=6e26e00f-51e9-4500-ad55-3a2d8bc359b7&action=start_work",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/maintenance-requests/6e26e00f-51e9-4500-ad55-3a2d8bc359b7/actions/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=6e26e00f-51e9-4500-ad55-3a2d8bc359b7&action=report_resolved",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/maintenance-requests/6e26e00f-51e9-4500-ad55-3a2d8bc359b7/actions/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/owner-payment-profile/",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/termination-requests/",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/handovers/",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/handovers/4f2b0f14-e53f-48fd-8412-418b8deef22b/respond/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/final-settlement/",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/final-settlement/propose/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=78712a9f-6676-473a-8fa2-c8e6683a0413&action=create_rental_interest",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/rental-interests/",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=da9a4301-6780-4f3f-a6e9-764d88853f31&action=accept",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/terms-proposals/da9a4301-6780-4f3f-a6e9-764d88853f31/respond/",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/tenancy-invitations/da0dca0b-923b-4e48-9d90-a621eb56658e/respond/",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/review/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=37633eb9-dec4-48d1-831e-01bab24086f1&action=sign",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/signing-session/",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-operations/331d924e-6346-4386-9dc4-ce8fe773ade6/?subject_id=37633eb9-dec4-48d1-831e-01bab24086f1",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/mock-provider/signing-sessions/0bf3d5b8-013f-4f57-81ab-dddb9e06dab3/complete/",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/mock-provider/signing-sessions/0bf3d5b8-013f-4f57-81ab-dddb9e06dab3/complete/",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/mock-provider/signing-sessions/0bf3d5b8-013f-4f57-81ab-dddb9e06dab3/complete/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rent-invoices/3708200c-8920-45c3-b119-9cf4ea42ba2b/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=3708200c-8920-45c3-b119-9cf4ea42ba2b&action=quote",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/rent-invoices/3708200c-8920-45c3-b119-9cf4ea42ba2b/quote/",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=3708200c-8920-45c3-b119-9cf4ea42ba2b&action=checkout",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/rent-invoices/3708200c-8920-45c3-b119-9cf4ea42ba2b/checkout/",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-operations/9885f224-c63b-49d0-a71e-76b1750ad3a1/?subject_id=3708200c-8920-45c3-b119-9cf4ea42ba2b",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/rent-invoices/3708200c-8920-45c3-b119-9cf4ea42ba2b/checkout/",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/payment-attempts/?invoice_id=3708200c-8920-45c3-b119-9cf4ea42ba2b&request_key=9885f224-c63b-49d0-a71e-76b1750ad3a1",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/mock-provider/payment-attempts/ad697bc4-7801-4ce9-b838-e8dbd2bb8d4d/events/",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/mock-provider/payment-attempts/ad697bc4-7801-4ce9-b838-e8dbd2bb8d4d/events/",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/mock-provider/payment-attempts/ad697bc4-7801-4ce9-b838-e8dbd2bb8d4d/events/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/deposit/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=2d4a586f-e771-4369-9c89-41895ce60e34&action=accept",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/handovers/2d4a586f-e771-4369-9c89-41895ce60e34/respond/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=37633eb9-dec4-48d1-831e-01bab24086f1&action=create_maintenance_request",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/maintenance-requests/",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/rental-capabilities/?subject_id=6e26e00f-51e9-4500-ad55-3a2d8bc359b7&action=confirm_resolved",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/maintenance-requests/6e26e00f-51e9-4500-ad55-3a2d8bc359b7/actions/",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/termination-requests/4f3bf0d1-0d95-441d-b28a-5ac7d265e3f1/respond/",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/handovers/4f2b0f14-e53f-48fd-8412-418b8deef22b/respond/",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/final-settlement/respond/",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/final-settlement/respond/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/features/v1/leases/37633eb9-dec4-48d1-831e-01bab24086f1/",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/operations/payouts/execute/",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/operations/payouts/execute/",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/features/v1/operations/payouts/9d36c3eb-6ddc-46ee-84a7-d2328395cd6f/reconcile/",
+      "status": 200
+    }
+  ]
+}

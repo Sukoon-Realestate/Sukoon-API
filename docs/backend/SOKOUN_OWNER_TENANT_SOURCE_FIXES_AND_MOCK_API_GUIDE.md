@@ -2,7 +2,7 @@
 
 Date: 2026-10-12. Backend: `Sukoon-API/backend`. Mobile contract checked against the separate `darak-app/apps/sokoun_app` checkout.
 
-**These are local source changes with automated verification. They have not been deployed to the shared server. Provider interactions are intentionally mocked, as requested. No external onboarding, signing or payment provider is required for this API test mode.**
+**This guide records local source changes and automated verification. No deployment was performed from this workspace. The supplied October 12 live retest verifies part of the invitation/draft flow; the new cancellation-revision fix still requires deployment and a fresh live retest. Provider interactions are intentionally mocked, as requested. No external onboarding, signing or payment provider is required for this API test mode.**
 
 This document supersedes earlier claims that seeded C04/C05/C06 rows or enabled capability flags prove completed cycles. Regression tests for previously resolved banner-media, locale and refresh-route issues remain included. The visit-booking follow-up also closes the missing-slot validation bug and re-enables all three previously skipped visit tests.
 
@@ -21,7 +21,7 @@ This document supersedes earlier claims that seeded C04/C05/C06 rows or enabled 
 | Rent versus deposit | The owner payable and 10% first-period commission use rent only. The deposit remains a separate liability within the combined payment. |
 | Move-in/payout eligibility | Approval is persisted before eligibility is evaluated. Provider settlement and accepted move-in are independently required. Submitted/paid payables are not made eligible again. |
 | Flutter contract | Public UUIDs, exact action tokens, session receipt identities, onboarding revision binding and canonical response envelopes match the actual Flutter request helpers. |
-| Cancellation | Cancellation updates financial closure in the mutation transaction. Detail/aggregate GET ordering does not change stored lease state. Historical repair is an explicit command. |
+| Cancellation | Cancellation and immediate financial closure advance the lease revision once (`n → n+1`). Identical retries replay the stored receipt, including older revision-3 receipts. Independent later financial transitions still advance revision. Detail/aggregate reads do not change stored lease state. |
 | QA setup | The preparation command is additive, preserves passwords and existing financial/visit states, repairs missing offer terms with revision changes, and separates legacy from structured fixtures. |
 | Planning | C08/C09, roommates, housing demand, commute and assistant routes now have persisted records, scoped permissions, command receipts and explicit deployment switches. |
 | Funded exit | A current two-party settlement executes credits, deposit applications, adjustment invoices and refund instructions exactly once. Closure waits for actual mock refunds, owner payouts and recovery. |
@@ -519,12 +519,14 @@ Uncollected deposit debt is released at exit, not credited as owner income. Paid
 
 ## 10. Local verification and repeatable commands
 
-Final results and filenames are listed below. The latest backend results, visit regression evidence and refreshed HTTP-cycle artifact are in `Sukoon-API/docs/qa/visit-booking-verification/`. Unchanged Flutter and earlier contract/migration evidence remains in `Sukoon-API/docs/qa/owner-tenant-remaining-verification/`; Flutter was not rerun for this backend-only visit fix. The earlier backend counts and visit skips in that directory are historical.
+Final results and filenames are listed below. The latest full backend results, cancellation regressions and refreshed HTTP-cycle artifact are in `Sukoon-API/docs/qa/cancellation-revision-verification/`. The focused visit results remain in `Sukoon-API/docs/qa/visit-booking-verification/`. Earlier full Flutter and contract/migration evidence remains in `Sukoon-API/docs/qa/owner-tenant-remaining-verification/`; this follow-up reran three focused Flutter cancellation widget checks, not the full app suite. Earlier backend counts and visit skips are historical.
 
 | Check | Result | Evidence |
 |---|---|---|
-| Full backend, SQLite | **663 passed, 14 PostgreSQL-only skips, 0 failed** | `visit-booking-verification/backend-sqlite.log`, `.xml` |
-| Full backend, PostgreSQL | **677 passed, 0 skipped, 0 failed** | `visit-booking-verification/backend-postgres.log`, `.xml` |
+| Full backend, SQLite | **666 passed, 18 PostgreSQL-only skips, 0 failed** | `cancellation-revision-verification/backend-sqlite.log`, `.xml` |
+| Full backend, PostgreSQL | **684 passed, 0 skipped, 0 failed** | `cancellation-revision-verification/backend-postgres.log`, `.xml` |
+| Cancellation, invitations and financial closure, PostgreSQL | **71 passed, 0 skipped, 0 failed** | `cancellation-revision-verification/focused-postgres.log`, `cancellation-revision.xml` |
+| Flutter cancellation permissions and refresh | **3 passed, 0 skipped, 0 failed** | `cancellation-revision-verification/flutter-cancellation.log` |
 | Property/visit and group integration, PostgreSQL | **199 passed, 0 skipped, 0 failed** | `visit-booking-verification/focused-postgres.log`, `visit-booking.xml` |
 | Remaining-cycle PostgreSQL cases including HTTP and races | **30 passed** (included in full suite) | `remaining-cycles.log`, `.xml`, `full-http-cycle.json` |
 | Actual Flutter JSON request bodies accepted by Django | **8 passed** (included in full suite) | `flutter-request-roundtrip.log`, `.xml`, `flutter-request-bodies.json` |
@@ -535,10 +537,10 @@ Final results and filenames are listed below. The latest backend results, visit 
 | Original Django onboarding/signing/payment contract through Flutter | **4 passed** | `flutter-initial-contract.log` |
 | Scoped Flutter analysis | **No issues** | `flutter-analysis.log` |
 | Fresh PostgreSQL migrate through 0012, consistency and system checks | **Passed, no model changes missing migrations** | `migration-checks.log` |
-| Current Django checks and migration consistency | **Passed; no migration needed for the visit fix** | `visit-booking-verification/checks.log` |
-| Critical Python lint and whitespace | **Passed** | `visit-booking-verification/source-checks.log` |
+| Current Django checks and migration consistency | **Passed; no migration needed for the cancellation fix** | `cancellation-revision-verification/checks.log` |
+| Critical Python lint and whitespace | **Passed** | `cancellation-revision-verification/source-checks.log` |
 
-The three previously skipped visit tests now run and pass on both databases. Re-enabling them first reproduced one real bug: an unconfigured appointment returned HTTP 201 when a property had no schedule. The two duplicate-booking checks already worked. New tests also cover disabled/mismatched slots, removal or disablement after an availability read, confirmed bookings, concurrent tenants and concurrent schedule edits. Fourteen SQLite skips now consist solely of PostgreSQL-dependent races and the real HTTP journey; all fourteen passed on PostgreSQL. Normal dependency/test warnings include Django deprecations, the test static-files directory and an existing naive-datetime fixture. Do not report skipped tests as passed.
+The three previously skipped visit tests now run and pass on both databases. Re-enabling them first reproduced one real bug: an unconfigured appointment returned HTTP 201 when a property had no schedule. The two duplicate-booking checks already worked. New tests also cover disabled/mismatched slots, removal or disablement after an availability read, confirmed bookings, concurrent tenants and concurrent schedule edits. Eighteen SQLite skips consist solely of PostgreSQL-dependent races and the real HTTP journey; all eighteen passed on PostgreSQL, including four new cancellation races. Normal dependency/test warnings include Django deprecations, the test static-files directory and an existing naive-datetime fixture. Do not report skipped tests as passed.
 
 For visit test enablement, the ordinary property owner must configure future slots through `PUT /api/v1/properties/owner/properties/<property_uuid>/availability/`. This replaces the editable slots for that day, so include every slot that should remain available. Booked slots are preserved. Use a future date in the configured `Africa/Cairo` timezone:
 
@@ -561,6 +563,30 @@ An independent tenant reads `GET /api/v1/properties/<property_uuid>/available_da
 
 For a structured property, also supply its current `offer_id` and `expected_offer_revision`; use the existing `Idempotency-Key` recovery contract. The first valid booking returns HTTP 201 with the visit in `data`. A missing, disabled or removed slot returns HTTP 400 with a not-available message. A pending or confirmed booking at that property/date/time makes a new booking return HTTP 400 with an already-booked message. An identical completed request replay with the same key returns its original response. Group viewing submission follows the same slot checks when all participant consents are collected. No new administrator privilege or migration is required. Existing visits are retained.
 
+**Cancellation revision contract:** The October 12 live retest found revision `1 → 3`, because `lease_cancel` incremented the lease and the financial-closure evaluator incremented it again. The local fix keeps the existing single-increment contract. `POST /api/v1/features/v1/leases/<lease_uuid>/cancel/` accepts the existing template body:
+
+```json
+{
+  "revision": 1,
+  "request_key": "24db349a-193b-407e-b8b1-230068e76bb5"
+}
+```
+
+The structured request retains its existing shape:
+
+```json
+{
+  "expected_revision": 1,
+  "decision": "cancel_draft",
+  "note": "",
+  "request_key": "0fb25458-e6c1-4f5c-a123-1e7435ccdbaf"
+}
+```
+
+Use the fresh server revision and a new key for a new operation. A successful first cancellation of a clean revision-1 draft returns HTTP 200, revision `2`, `status/lease_status="cancelled"`, `occupancy_status="not_started"` and `financial_closure_status="closed"`. The structured `resource.revision` and `operation_receipt.revision` are both `2`. The legacy response's `data.revision` is `2`. Identical retries preserve the same receipt; changing a body under the same key returns HTTP 409. Competing different keys with the same prior revision have one winner and one HTTP 409. Existing cancelled revision-3 records and their stored receipts remain unchanged; do not reset their revisions or rewrite receipts. Independent later financial changes still increment revision normally. No migration is needed for this correction.
+
+**Deployment acceptance:** Repeat cancellation using a fresh invitation-backed draft after deploying the new source, then retry the exact body/key in English and Arabic and read both parties' detail/list projections. Verify `n → n+1` on first cancellation and no further increment from retries or reads. Device UI, push delivery, deployed expiry/revocation, concurrent-request behavior and the full deployed mock signing/payment/activation journey still require acceptance evidence. Local expiry/revocation and PostgreSQL race tests, stored-notification assertions and the loopback mock cycle do not substitute for those live checks.
+
 The default Flutter run intentionally skips opt-in live tests, fresh-artifact contract tests and enabled-feature branches. Dedicated targets above exercise the relevant contract/enabled branches. Shared-server/device tests are still a deployment acceptance step.
 
 The full HTTP test uses actual JWT login and HTTP requests over a loopback Django server backed by PostgreSQL. Onboarding → interest → proposal → invitation → lease review → both mock signatures → combined capture/settlement → move-in → maintenance → agreed termination → move-out → funded settlement → deposit refund → owner payout → financial closure all execute. Time is advanced inside the test to reach the agreed termination date. The C09 replacement test also creates the incoming proposal, invitation and lease, reviews it, completes both signatures and captures its invoice through actual API handlers before checking effective replacement; it does not seed an active incoming lease as proof of completion. Workers are invoked synchronously in tests; this does not prove the deployed Celery scheduler is running.
@@ -582,6 +608,7 @@ The visit follow-up can be repeated with the same isolated PostgreSQL environmen
 
 ```bash
 make test-visit-booking CYCLE_EVIDENCE=../docs/qa/visit-booking-verification
+make test-cancellation-revision CYCLE_EVIDENCE=../docs/qa/cancellation-revision-verification
 ```
 
 Immediately validate the freshly generated responses in the actual Flutter checkout (capability grants/quotes expire):

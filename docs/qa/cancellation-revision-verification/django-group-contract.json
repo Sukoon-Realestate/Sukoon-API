@@ -1,0 +1,347 @@
+{
+  "owner_id": "2a04038c-f9f9-4469-ad85-887c954deab1",
+  "tenant_id": "5ae5b7f8-1e3b-4028-9dd0-a59872f0a544",
+  "member_id": "5c2186aa-8625-40f7-8e07-efc49efb0d97",
+  "group": {
+    "id": "cd4de4c7-9ad3-4f3c-bbf6-47f1ef75fc5c",
+    "name": "Campus group",
+    "status": "active",
+    "visibility": "invite_only",
+    "revision": 10,
+    "roster_revision": 2,
+    "capacity": 2,
+    "criteria": {
+      "city": {
+        "id": "1d6dce84-5740-4df5-921d-c9f807655ca2",
+        "name": "Phase Two City",
+        "slug": "phase-two-city"
+      },
+      "filters": {
+        "city": "1d6dce84-5740-4df5-921d-c9f807655ca2",
+        "rental_scope": "entire_property",
+        "property_type": "phase-two-apartment",
+        "price_period": "monthly",
+        "price_min": "1000",
+        "price_max": "20000",
+        "amenities": [],
+        "is_furnished": ""
+      },
+      "start_on": "2026-10-22",
+      "end_on": "",
+      "people": 2,
+      "area_note": ""
+    },
+    "members": [
+      {
+        "user_id": "5ae5b7f8-1e3b-4028-9dd0-a59872f0a544",
+        "name": "Phase Tenant",
+        "role": "admin",
+        "status": "active"
+      },
+      {
+        "user_id": "5c2186aa-8625-40f7-8e07-efc49efb0d97",
+        "name": "Phase Stranger",
+        "role": "member",
+        "status": "active"
+      }
+    ],
+    "shortlist": [
+      {
+        "id": "3d7c5268-27ca-4484-9e96-b33d772d43db",
+        "comments": [],
+        "revision": 1,
+        "selection": {
+          "name": "Whole home",
+          "terms": {
+            "price": "10000",
+            "rules": [],
+            "deposit": "",
+            "description": "Configured shared accommodation",
+            "price_period": "monthly",
+            "suitable_for": "all",
+            "rental_period": 1,
+            "smoking_allowed": false
+          },
+          "bed_id": "",
+          "archived": false,
+          "bed_name": "",
+          "capacity": 2,
+          "offer_id": "0cb06e47-7729-4be3-b453-8de11b91ab42",
+          "room_ids": [],
+          "offer_link": "",
+          "room_names": [],
+          "property_id": "69c6f252-28cd-47af-8b9d-e2bca4f329a8",
+          "availability": "available",
+          "rental_scope": "entire_property",
+          "offer_revision": 2,
+          "bathroom_access": []
+        },
+        "votes": 0
+      }
+    ],
+    "proposals": [
+      {
+        "id": "a795d5d2-d254-4e2d-b36f-07d37dea9518",
+        "total": {
+          "currency": "EGP",
+          "exponent": 2,
+          "amount_minor": 1000000
+        },
+        "end_on": "",
+        "period": "monthly",
+        "offer_id": "0cb06e47-7729-4be3-b453-8de11b91ab42",
+        "revision": 3,
+        "start_on": "2026-10-22",
+        "approved_by": [
+          "5ae5b7f8-1e3b-4028-9dd0-a59872f0a544",
+          "5c2186aa-8625-40f7-8e07-efc49efb0d97"
+        ],
+        "contributions": {
+          "5ae5b7f8-1e3b-4028-9dd0-a59872f0a544": 600000,
+          "5c2186aa-8625-40f7-8e07-efc49efb0d97": 400000
+        },
+        "offer_revision": 2,
+        "roster_revision": 2
+      }
+    ],
+    "visits": [
+      {
+        "id": "5f85d047-d63e-4e04-b2fa-f9783b1c970d",
+        "revision": 2,
+        "roster_revision": 2,
+        "status": "submitted",
+        "selection": {
+          "name": "Whole home",
+          "terms": {
+            "price": "10000",
+            "rules": [],
+            "deposit": "",
+            "description": "Configured shared accommodation",
+            "price_period": "monthly",
+            "suitable_for": "all",
+            "rental_period": 1,
+            "smoking_allowed": false
+          },
+          "bed_id": "",
+          "archived": false,
+          "bed_name": "",
+          "capacity": 2,
+          "offer_id": "0cb06e47-7729-4be3-b453-8de11b91ab42",
+          "room_ids": [],
+          "offer_link": "",
+          "room_names": [],
+          "property_id": "69c6f252-28cd-47af-8b9d-e2bca4f329a8",
+          "availability": "available",
+          "rental_scope": "entire_property",
+          "offer_revision": 2,
+          "bathroom_access": []
+        },
+        "participant_ids": [
+          "5ae5b7f8-1e3b-4028-9dd0-a59872f0a544",
+          "5c2186aa-8625-40f7-8e07-efc49efb0d97"
+        ],
+        "consented_ids": [
+          "5ae5b7f8-1e3b-4028-9dd0-a59872f0a544",
+          "5c2186aa-8625-40f7-8e07-efc49efb0d97"
+        ],
+        "appointment_at": "2026-10-13T11:00:00+00:00",
+        "qualifying_visit_id": "11d80f29-60ca-4220-a648-8524f55a7061",
+        "interest_id": "",
+        "allowed_actions": [
+          "withdraw_visit_consent"
+        ],
+        "blocking_reasons": []
+      }
+    ],
+    "applications": [
+      {
+        "id": "b7ac3ff7-356a-4226-afef-520035efce51",
+        "revision": 2,
+        "roster_revision": 2,
+        "status": "submitted",
+        "selection": {
+          "name": "Whole home",
+          "terms": {
+            "price": "10000",
+            "rules": [],
+            "deposit": "",
+            "description": "Configured shared accommodation",
+            "price_period": "monthly",
+            "suitable_for": "all",
+            "rental_period": 1,
+            "smoking_allowed": false
+          },
+          "bed_id": "",
+          "archived": false,
+          "bed_name": "",
+          "capacity": 2,
+          "offer_id": "0cb06e47-7729-4be3-b453-8de11b91ab42",
+          "room_ids": [],
+          "offer_link": "",
+          "room_names": [],
+          "property_id": "69c6f252-28cd-47af-8b9d-e2bca4f329a8",
+          "availability": "available",
+          "rental_scope": "entire_property",
+          "offer_revision": 2,
+          "bathroom_access": []
+        },
+        "participant_ids": [
+          "5ae5b7f8-1e3b-4028-9dd0-a59872f0a544",
+          "5c2186aa-8625-40f7-8e07-efc49efb0d97"
+        ],
+        "consented_ids": [
+          "5ae5b7f8-1e3b-4028-9dd0-a59872f0a544",
+          "5c2186aa-8625-40f7-8e07-efc49efb0d97"
+        ],
+        "appointment_at": "",
+        "qualifying_visit_id": "",
+        "interest_id": "73379dae-cea4-4e30-80b7-d4c26294137d",
+        "allowed_actions": [
+          "withdraw_application_consent"
+        ],
+        "blocking_reasons": []
+      }
+    ],
+    "allowed_actions": [
+      "leave",
+      "add_shortlist",
+      "vote",
+      "comment",
+      "propose_costs",
+      "approve_costs",
+      "consent_visit",
+      "withdraw_visit_consent",
+      "consent_application",
+      "withdraw_application_consent"
+    ],
+    "blocking_reasons": []
+  },
+  "invitation": {
+    "key": "success",
+    "msg": "",
+    "data": {
+      "resource": {
+        "id": "8f6748dd-6ca3-44c2-962d-59df805eeef9",
+        "group_id": "cd4de4c7-9ad3-4f3c-bbf6-47f1ef75fc5c",
+        "group_name": "Campus group",
+        "status": "active",
+        "link": "https://sokoun.app/housing-groups/join#j2dI3WyjRMKWLVnfgF7u-UTDFH3dcNXJoamMgb_FhSQiKgwYvppLxOuzIhwqwA4p",
+        "revision": 1,
+        "group_revision": 1,
+        "member_count": 1,
+        "capacity": 2,
+        "expires_at": "2026-10-19T20:32:28.917474+00:00"
+      },
+      "operation_receipt": {
+        "id": "89211adb-16d5-4cfc-9a83-b408d937a134",
+        "subject_id": "8f6748dd-6ca3-44c2-962d-59df805eeef9",
+        "request_key": "fd6948d2-8045-4213-9dac-d02b6cd8545b",
+        "revision": 1,
+        "status": "confirmed"
+      }
+    }
+  },
+  "preview": {
+    "key": "success",
+    "msg": "",
+    "data": {
+      "id": "8f6748dd-6ca3-44c2-962d-59df805eeef9",
+      "group_id": "cd4de4c7-9ad3-4f3c-bbf6-47f1ef75fc5c",
+      "group_name": "Campus group",
+      "status": "active",
+      "link": "",
+      "revision": 1,
+      "group_revision": 1,
+      "member_count": 1,
+      "capacity": 2,
+      "expires_at": "2026-10-19T20:32:28.917474+00:00"
+    }
+  },
+  "selection": {
+    "property_id": "69c6f252-28cd-47af-8b9d-e2bca4f329a8",
+    "offer_id": "0cb06e47-7729-4be3-b453-8de11b91ab42",
+    "offer_revision": 2,
+    "rental_scope": "entire_property",
+    "name": "Whole home",
+    "room_ids": [],
+    "room_names": [],
+    "bed_id": "",
+    "bed_name": "",
+    "capacity": 2,
+    "bathroom_access": [],
+    "availability": "available",
+    "archived": false,
+    "offer_link": "",
+    "terms": {
+      "price": "10000",
+      "price_period": "monthly",
+      "rental_period": 1,
+      "suitable_for": "all",
+      "description": "Configured shared accommodation",
+      "smoking_allowed": false,
+      "rules": []
+    }
+  },
+  "proposal_body": {
+    "id": "",
+    "revision": 0,
+    "roster_revision": 2,
+    "offer_id": "0cb06e47-7729-4be3-b453-8de11b91ab42",
+    "offer_revision": 2,
+    "start_on": "2026-10-22",
+    "end_on": "",
+    "period": "monthly",
+    "total": {
+      "amount_minor": 1000000,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "contributions": {
+      "5ae5b7f8-1e3b-4028-9dd0-a59872f0a544": 600000,
+      "5c2186aa-8625-40f7-8e07-efc49efb0d97": 400000
+    }
+  },
+  "invite_grant": {
+    "account_id": "5ae5b7f8-1e3b-4028-9dd0-a59872f0a544",
+    "account_verified": true,
+    "enabled_capabilities": [
+      "lifestyle",
+      "roommates",
+      "housing_groups",
+      "group_visits",
+      "group_applications",
+      "housing_requests",
+      "housing_offers",
+      "condition_reports",
+      "move_out_notices",
+      "replacements",
+      "commute",
+      "tenant_assistant"
+    ],
+    "verified_services": [
+      "lifestyle",
+      "roommates",
+      "housing_groups",
+      "group_visits",
+      "group_applications",
+      "housing_requests",
+      "housing_offers",
+      "condition_reports",
+      "move_out_notices",
+      "replacements",
+      "commute",
+      "tenant_assistant"
+    ],
+    "policy_version": "planning-policy-v1",
+    "allowed_actions": [
+      "create_invite"
+    ],
+    "expires_at": "2026-10-12T20:37:29.027279+00:00",
+    "blocking_reasons": []
+  },
+  "invite_body": {
+    "request_key": "fd6948d2-8045-4213-9dac-d02b6cd8545b",
+    "group_id": "cd4de4c7-9ad3-4f3c-bbf6-47f1ef75fc5c",
+    "group_revision": 1
+  }
+}

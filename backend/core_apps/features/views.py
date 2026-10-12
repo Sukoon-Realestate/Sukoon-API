@@ -1156,7 +1156,9 @@ def lease_cancel(request, lease_id):
         lease.revision += 1
         lease.save(update_fields=["status", "revision", "updated_at"])
         from .services.rental_phase6 import evaluate_financial_closure
-        evaluate_financial_closure(lease)
+
+        # Cancellation and its derived financial state are one lease mutation.
+        evaluate_financial_closure(lease, increment_revision=False)
         lease.inventory_day_locks.filter(kind="hold").delete()
         data = {
             "id": str(lease.id),

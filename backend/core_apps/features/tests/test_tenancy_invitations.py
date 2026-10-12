@@ -258,6 +258,26 @@ def test_exact_offer_acceptance_picker_and_draft_consumption(
     )
     assert consumed_picker.data["results"] == []
 
+    # Regression for the deployed offer-backed draft: closing its empty
+    # financial state is part of the same cancellation revision.
+    lease_url = f"/api/v1/features/v1/leases/{lease_response.data['id']}/"
+    cancel_body = {"revision": 1, "request_key": str(uuid.uuid4())}
+    cancelled = owner_client.post(lease_url + "cancel/", cancel_body, format="json")
+    assert cancelled.status_code == 200
+    assert cancelled.data["revision"] == 2
+    assert cancelled.data["financial_closure_status"] == "closed"
+    for language in ("en", "ar"):
+        replay = owner_client.post(
+            lease_url + "cancel/", cancel_body, format="json", HTTP_ACCEPT_LANGUAGE=language
+        )
+        assert replay.status_code == 200
+        assert replay.data == cancelled.data
+    for actor in (owner, tenant):
+        assert authenticated(actor).get(lease_url).data["revision"] == 2
+    invitation.refresh_from_db()
+    assert invitation.lease_id is not None
+    assert not RentInvoice.objects.exists()
+
 
 @pytest.mark.django_db
 def test_expired_and_changed_invitations_cannot_be_accepted(
@@ -666,6 +686,8 @@ def test_provider_disabled_draft_capabilities_match_mutations(
         )
     cancelled = owner_client.post(url + "cancel/", cancel, format="json")
     assert cancelled.status_code == 200
+    assert cancelled.data["revision"] == 2
+    assert cancelled.data["financial_closure_status"] == "closed"
     assert (
         owner_client.post(url + "cancel/", cancel, format="json").data == cancelled.data
     )
@@ -674,6 +696,7 @@ def test_provider_disabled_draft_capabilities_match_mutations(
         assert item["legacy_read_only"] is True
         assert item["can_sign"] is item["can_cancel"] is False
         assert item["allowed_actions"] == []
+        assert item["revision"] == 2
     invitation = TenancyInvitation.objects.get(id=created.data["id"])
     assert invitation.lease_id == lease.pk
 

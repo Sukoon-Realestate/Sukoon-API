@@ -51,12 +51,15 @@ test:
 test-cov:
 	$(PIPENV) run pytest --cov=core_apps --cov-report=term-missing
 
-.PHONY: test-owner-tenant test-visit-booking test-cycle-contract check-owner-tenant
+.PHONY: test-owner-tenant test-visit-booking test-cancellation-revision test-cycle-contract check-owner-tenant
 test-owner-tenant: ## Run rental, property, advertising and renderer regressions on an isolated DB
 	$(CYCLE_PYTHON) -m pytest core_apps/features/tests core_apps/advertising/tests core_apps/properties/tests core_apps/common --ds=$(CYCLE_SETTINGS) --junitxml=$(CYCLE_EVIDENCE)/owner-tenant.xml
 
 test-visit-booking: ## Verify visit booking, owner schedules and group visit integration
 	$(CYCLE_PYTHON) -m pytest core_apps/properties/tests core_apps/features/tests/test_planning_cycles.py --ds=$(CYCLE_SETTINGS) --junitxml=$(CYCLE_EVIDENCE)/visit-booking.xml
+
+test-cancellation-revision: ## Verify cancellation revision, receipts and invitation/closure regressions
+	$(CYCLE_PYTHON) -m pytest core_apps/features/tests/test_current_cycle_contract.py core_apps/features/tests/test_tenancy_invitations.py core_apps/features/tests/test_rental_phase6.py core_apps/features/tests/test_cancellation_revision.py --ds=$(CYCLE_SETTINGS) --junitxml=$(CYCLE_EVIDENCE)/cancellation-revision.xml
 
 test-cycle-contract: ## Generate fresh Django API responses for the Flutter contract test
 	SOKOUN_CONTRACT_ARTIFACT_DIR=$(abspath $(CYCLE_EVIDENCE)) $(CYCLE_PYTHON) -m pytest core_apps/features/tests/test_rental_phase2.py::test_phase2_complete_interest_to_activation_flow --ds=$(CYCLE_SETTINGS)

@@ -333,6 +333,7 @@ def test_cancel_receipt_matches_collection_before_detail_and_read_is_side_effect
     receipt = response.data
     assert receipt["status"] == receipt["lease_status"] == "cancelled"
     assert receipt["financial_closure_status"] == "closed"
+    assert receipt["revision"] == body["revision"] + 1
     for actor, workspace in ((owner, "owner"), (tenant, "tenant")):
         client = authenticated(actor)
         collection = client.get(API + f"leases/?workspace={workspace}").data["results"]
@@ -391,7 +392,10 @@ def test_masked_beneficiary_never_serializes_full_account_number(rental_particip
 
 
 @pytest.mark.django_db
-def test_structured_cancel_uses_flutter_body_and_canonical_receipt(rental_participants):
+@pytest.mark.parametrize("initial_revision", [1, 7])
+def test_structured_cancel_uses_flutter_body_and_canonical_receipt(
+    rental_participants, initial_revision
+):
     owner, tenant, _, prop, _ = rental_participants
     starts = timezone.localdate() + timedelta(days=7)
     lease = Lease.objects.create(
@@ -404,10 +408,11 @@ def test_structured_cancel_uses_flutter_body_and_canonical_receipt(rental_partic
         end_date=starts + timedelta(days=30),
         rent_amount_minor=1000000,
         legacy_read_only=False,
+        revision=initial_revision,
     )
     body = {
         "decision": "cancel_draft",
-        "expected_revision": 1,
+        "expected_revision": initial_revision,
         "request_key": str(uuid.uuid4()),
         "note": "",
     }
@@ -416,5 +421,10 @@ def test_structured_cancel_uses_flutter_body_and_canonical_receipt(rental_partic
     assert result.status_code == 200
     assert result.data["resource"]["status"] == "cancelled"
     assert result.data["resource"]["financial_closure_status"] == "closed"
+    assert result.data["resource"]["revision"] == initial_revision + 1
+    assert result.data["operation_receipt"]["revision"] == initial_revision + 1
     assert result.data["operation_receipt"]["request_key"] == body["request_key"]
     assert authenticated(owner).post(url, body, format="json").data == result.data
+    lease.refresh_from_db()
+    assert lease.revision == initial_revision + 1
+    assert IdempotencyRecord.objects.get(operation="lease.cancel").result_revision == lease.revision
