@@ -93,7 +93,13 @@ class TestMentorPropertyVideoAndDeepLink:
 @pytest.mark.django_db
 class TestReceivedVisitsScheduledTime:
     def test_received_visits_includes_scheduled_time_and_property_id(
-        self, auth_client, user, another_user, apartment_type, cairo_city, cairo_governorate
+        self,
+        auth_client,
+        user,
+        another_user,
+        apartment_type,
+        cairo_city,
+        cairo_governorate,
     ):
         prop = _create_property(
             owner=user,

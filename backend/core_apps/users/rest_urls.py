@@ -1,4 +1,5 @@
 """Djoser permissions/actions with Sokoun's JSON command response contract."""
+
 from djoser.views import UserViewSet
 from rest_framework.routers import DefaultRouter
 
@@ -15,7 +16,10 @@ class CanonicalUserViewSet(UserViewSet):
                 "destroy": "User account deleted successfully.",
             }
             response.status_code = 200
-            response.data = {"message": messages.get(self.action, "Updated successfully."), "data": None}
+            response.data = {
+                "message": messages.get(self.action, "Updated successfully."),
+                "data": None,
+            }
         return super().finalize_response(request, response, *args, **kwargs)
 
 

@@ -307,21 +307,43 @@ def pay_invoice(client, ad_id):
     """Explicit local purchase path; return the authoritative private ad on success."""
     root = "/api/v1/features/v1/billing/invoices/"
     identity = str(ad_id)
-    issued = client.post(root, {"purpose": "advertising", "workspace": "owner",
-        "advertisement_id": identity,
-        "request_key": str(uuid.uuid5(uuid.NAMESPACE_URL, "issue:" + identity))}, format="json")
+    issued = client.post(
+        root,
+        {
+            "purpose": "advertising",
+            "workspace": "owner",
+            "advertisement_id": identity,
+            "request_key": str(uuid.uuid5(uuid.NAMESPACE_URL, "issue:" + identity)),
+        },
+        format="json",
+    )
     if issued.status_code not in (200, 201):
         return issued
     invoice = issued.json()["data"]
-    quote = client.post(root + invoice["id"] + "/quote/", {
-        "expected_revision": invoice["revision"],
-        "request_key": str(uuid.uuid5(uuid.NAMESPACE_URL, "quote:" + identity))}, format="json")
+    quote = client.post(
+        root + invoice["id"] + "/quote/",
+        {
+            "expected_revision": invoice["revision"],
+            "request_key": str(uuid.uuid5(uuid.NAMESPACE_URL, "quote:" + identity)),
+        },
+        format="json",
+    )
     if quote.status_code not in (200, 201):
         return quote
-    paid = client.post(root + invoice["id"] + "/checkout/", {
-        "quote_id": quote.json()["data"]["id"], "expected_revision": invoice["revision"],
-        "request_key": str(uuid.uuid5(uuid.NAMESPACE_URL, "pay:" + identity))}, format="json")
-    return client.get(reverse("advertising:owner-advertisement-detail", args=[ad_id])) if paid.status_code == 200 else paid
+    paid = client.post(
+        root + invoice["id"] + "/checkout/",
+        {
+            "quote_id": quote.json()["data"]["id"],
+            "expected_revision": invoice["revision"],
+            "request_key": str(uuid.uuid5(uuid.NAMESPACE_URL, "pay:" + identity)),
+        },
+        format="json",
+    )
+    return (
+        client.get(reverse("advertising:owner-advertisement-detail", args=[ad_id]))
+        if paid.status_code == 200
+        else paid
+    )
 
 
 def pending_ad(client, **overrides):
@@ -371,7 +393,9 @@ def test_informational_payment_snapshot_recovery_and_expired_retry(
     assert auth_client.post(url, body, format="json").json()["data"] == paid
     detail = reverse("advertising:owner-advertisement-detail", args=[ad.id])
     assert auth_client.get(detail).json()["data"] == paid
-    assert auth_client.get(reverse("advertising:owner-advertisement-list")).json()["data"] == [paid]
+    assert auth_client.get(reverse("advertising:owner-advertisement-list")).json()[
+        "data"
+    ] == [paid]
     assert (
         auth_client.get(
             reverse("advertising:operation-detail", args=[ad.operation.operation_id])
@@ -435,7 +459,9 @@ def test_payment_revalidates_media_and_destination(
     eligible_property.save()
     response = pay_invoice(auth_client, ad.id)
     assert response.status_code == 409
-    assert set(response.json()) == {"message", "data"} and response.json()["data"] is None
+    assert (
+        set(response.json()) == {"message", "data"} and response.json()["data"] is None
+    )
     ad.refresh_from_db()
     assert ad.status == "pending_payment"
     assert ad.starts_at is ad.ends_at is None
@@ -510,16 +536,30 @@ def test_concurrent_payment_retries_share_one_receipt(auth_client, user):
     )
     ad, _, _ = pending_ad(auth_client)
     root = "/api/v1/features/v1/billing/invoices/"
-    issued = auth_client.post(root, {"purpose": "advertising", "workspace": "owner",
-        "advertisement_id": str(ad.id), "request_key": str(uuid.uuid4())}, format="json")
+    issued = auth_client.post(
+        root,
+        {
+            "purpose": "advertising",
+            "workspace": "owner",
+            "advertisement_id": str(ad.id),
+            "request_key": str(uuid.uuid4()),
+        },
+        format="json",
+    )
     assert issued.status_code == 201
     invoice = issued.json()["data"]
-    quote = auth_client.post(root + invoice["id"] + "/quote/", {
-        "expected_revision": invoice["revision"], "request_key": str(uuid.uuid4())}, format="json")
+    quote = auth_client.post(
+        root + invoice["id"] + "/quote/",
+        {"expected_revision": invoice["revision"], "request_key": str(uuid.uuid4())},
+        format="json",
+    )
     assert quote.status_code == 201
     url = root + invoice["id"] + "/checkout/"
-    body = {"quote_id": quote.json()["data"]["id"], "expected_revision": invoice["revision"],
-        "request_key": str(uuid.uuid4())}
+    body = {
+        "quote_id": quote.json()["data"]["id"],
+        "expected_revision": invoice["revision"],
+        "request_key": str(uuid.uuid4()),
+    }
     barrier = Barrier(2)
 
     def submit():
@@ -541,18 +581,27 @@ def test_concurrent_payment_retries_share_one_receipt(auth_client, user):
     assert results[0][1] == results[1][1]
     assert MockAdvertisementPayment.objects.filter(advertisement=ad).count() == 1
     from core_apps.features.models import PaymentAttempt, PaymentReceipt
+
     assert PaymentAttempt.objects.filter(invoice__id=invoice["id"]).count() == 1
-    assert PaymentReceipt.objects.filter(payment_attempt__invoice__id=invoice["id"]).count() == 1
+    assert (
+        PaymentReceipt.objects.filter(
+            payment_attempt__invoice__id=invoice["id"]
+        ).count()
+        == 1
+    )
 
 
 @pytest.mark.django_db
-def test_existing_audit_ad_media_recovery_and_mock_payment_activation(auth_client, user):
+def test_existing_audit_ad_media_recovery_and_mock_payment_activation(
+    auth_client, user
+):
     """
     BE002: Verify that existing audit ad 85295dd1-f8bd-4c82-a903-9bdc3d90af98
     recovers missing media across container restart, activates with mock payment,
     replays idempotently, serves media, and places banner in tenant home.
     """
     from core_apps.advertising.models import AdvertisementMedia
+
     op_id = "74682688-4428-413c-a1ae-c4b87222c687"
     payment_op_id = f"{op_id}-payment"
     ad_id = uuid.UUID("85295dd1-f8bd-4c82-a903-9bdc3d90af98")
@@ -603,13 +652,20 @@ def test_existing_audit_ad_media_recovery_and_mock_payment_activation(auth_clien
 
     # 3. Media is retrievable with exact 28,970 bytes and expected digest
     import hashlib
+
     media_url = reverse("advertising:advertisement-media", args=[ad.id])
     media_res = auth_client.get(media_url)
     assert media_res.status_code == 200
-    media_bytes = b"".join(media_res.streaming_content) if hasattr(media_res, "streaming_content") else media_res.content
+    media_bytes = (
+        b"".join(media_res.streaming_content)
+        if hasattr(media_res, "streaming_content")
+        else media_res.content
+    )
     assert len(media_bytes) == 28970
-    assert hashlib.sha256(media_bytes).hexdigest() == "dc2be014d6db85c4e73572c11fe5f21eb10df6d84675a3cc1b3350097e2e212b"
-
+    assert (
+        hashlib.sha256(media_bytes).hexdigest()
+        == "dc2be014d6db85c4e73572c11fe5f21eb10df6d84675a3cc1b3350097e2e212b"
+    )
 
     # 4. Tenant home placement returns the active ad
     guest_client = APIClient()
@@ -624,14 +680,16 @@ def test_existing_audit_ad_media_recovery_and_mock_payment_activation(auth_clien
     assert replay_res.json()["data"]["id"] == str(ad.id)
 
     # 6. Alternating Accept-Language headers return proper Content-Language and localized messages
-    res_ar = guest_client.get(reverse("advertising:plan-list"), HTTP_ACCEPT_LANGUAGE="ar")
+    res_ar = guest_client.get(
+        reverse("advertising:plan-list"), HTTP_ACCEPT_LANGUAGE="ar"
+    )
     assert res_ar.status_code == 200
     assert res_ar["Content-Language"] == "ar"
     assert res_ar.json()["message"] == "الخطط المتاحة."
 
-    res_en = guest_client.get(reverse("advertising:plan-list"), HTTP_ACCEPT_LANGUAGE="en")
+    res_en = guest_client.get(
+        reverse("advertising:plan-list"), HTTP_ACCEPT_LANGUAGE="en"
+    )
     assert res_en.status_code == 200
     assert res_en["Content-Language"] == "en"
     assert res_en.json()["message"] == "Available plans."
-
-

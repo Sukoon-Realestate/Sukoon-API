@@ -12,6 +12,7 @@ from .content_models import PublicContentPage
 
 logger = logging.getLogger(__name__)
 
+
 class StaticPageAPIView(APIView):
     """
     Public read endpoint for static and legal content (About Us, Privacy Policy, Terms).

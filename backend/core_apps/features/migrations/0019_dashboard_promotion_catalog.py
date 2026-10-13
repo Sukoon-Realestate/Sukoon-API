@@ -10,35 +10,56 @@ def seed_options(apps, schema_editor):
         ("week", 7, "Free promotion for 7 days", "ترويج مجاني لمدة 7 أيام", 0),
         ("month", 30, "Free promotion for 30 days", "ترويج مجاني لمدة 30 يومًا", 1),
     ):
-        model.objects.get_or_create(id=identity, defaults={"duration_days": days,
-            "title_en": english, "title_ar": arabic, "sort_order": order})
+        model.objects.get_or_create(
+            id=identity,
+            defaults={
+                "duration_days": days,
+                "title_en": english,
+                "title_ar": arabic,
+                "sort_order": order,
+            },
+        )
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('features', '0018_billing_subscriptions'),
+        ("features", "0018_billing_subscriptions"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PromotionOption',
+            name="PromotionOption",
             fields=[
-                ('id', models.SlugField(max_length=40, primary_key=True, serialize=False)),
-                ('title_en', models.CharField(max_length=150)),
-                ('title_ar', models.CharField(max_length=150)),
-                ('duration_days', models.PositiveSmallIntegerField(validators=[django.core.validators.MinValueValidator(1), django.core.validators.MaxValueValidator(365)])),
-                ('active', models.BooleanField(default=True)),
-                ('sort_order', models.PositiveSmallIntegerField(default=0)),
-                ('revision', models.PositiveIntegerField(default=1, editable=False)),
+                (
+                    "id",
+                    models.SlugField(max_length=40, primary_key=True, serialize=False),
+                ),
+                ("title_en", models.CharField(max_length=150)),
+                ("title_ar", models.CharField(max_length=150)),
+                (
+                    "duration_days",
+                    models.PositiveSmallIntegerField(
+                        validators=[
+                            django.core.validators.MinValueValidator(1),
+                            django.core.validators.MaxValueValidator(365),
+                        ]
+                    ),
+                ),
+                ("active", models.BooleanField(default=True)),
+                ("sort_order", models.PositiveSmallIntegerField(default=0)),
+                ("revision", models.PositiveIntegerField(default=1, editable=False)),
             ],
             options={
-                'ordering': ['sort_order', 'id'],
+                "ordering": ["sort_order", "id"],
             },
         ),
         migrations.AddConstraint(
-            model_name='promotionoption',
-            constraint=models.CheckConstraint(check=models.Q(('duration_days__gte', 1), ('duration_days__lte', 365)), name='valid_promotion_duration'),
+            model_name="promotionoption",
+            constraint=models.CheckConstraint(
+                check=models.Q(("duration_days__gte", 1), ("duration_days__lte", 365)),
+                name="valid_promotion_duration",
+            ),
         ),
         migrations.RunPython(seed_options, migrations.RunPython.noop),
     ]

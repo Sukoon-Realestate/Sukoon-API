@@ -185,9 +185,7 @@ class TestTicketDetailAndRepliesAPIView:
 
         first = auth_client.post(url, payload, format="json", **headers)
         replay = auth_client.post(url, payload, format="json", **headers)
-        conflict = auth_client.post(
-            url, {"body": "رد مختلف"}, format="json", **headers
-        )
+        conflict = auth_client.post(url, {"body": "رد مختلف"}, format="json", **headers)
 
         assert first.status_code == status.HTTP_200_OK
         assert replay.status_code == status.HTTP_200_OK

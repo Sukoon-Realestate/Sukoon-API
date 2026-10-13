@@ -156,5 +156,3 @@ class TestUnreadCountsAndMyRates:
         url = reverse("tenant-my-rates")
         res = client.get(url)
         assert res.status_code == status.HTTP_401_UNAUTHORIZED
-
-

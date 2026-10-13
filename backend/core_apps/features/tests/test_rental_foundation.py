@@ -185,7 +185,12 @@ def test_placeholder_checkout_is_disabled_by_default():
     )
     response = authenticated(tenant).post(
         f"/api/v1/features/v1/rent-invoices/{invoice.id}/checkout/",
-        {"invoice_id": str(invoice.id), "quote_id": str(uuid.uuid4()), "expected_revision": invoice.revision, "request_key": str(uuid.uuid4())},
+        {
+            "invoice_id": str(invoice.id),
+            "quote_id": str(uuid.uuid4()),
+            "expected_revision": invoice.revision,
+            "request_key": str(uuid.uuid4()),
+        },
         format="json",
     )
 
@@ -239,7 +244,9 @@ def test_planning_capabilities_endpoint_returns_disabled_capabilities_and_versio
     assert "Authentication is required" in data_guest["blocking_reasons"][0]
 
     # 3. Arabic guest call returns localized blocking reasons
-    res_ar = APIClient().get("/api/v1/features/v1/planning-capabilities/", HTTP_ACCEPT_LANGUAGE="ar")
+    res_ar = APIClient().get(
+        "/api/v1/features/v1/planning-capabilities/", HTTP_ACCEPT_LANGUAGE="ar"
+    )
     assert res_ar.status_code == 200
     assert res_ar["Content-Language"] == "ar"
     assert "تسجيل الدخول مطلوب" in res_ar.data["blocking_reasons"][0]

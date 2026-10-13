@@ -129,7 +129,13 @@ class TestWorkspaceAccountContract:
         assert owner_data["account_details"]["phone_number"] == "+201098765432"
 
     def test_notification_types_preserved(
-        self, auth_client, user, another_user, apartment_type, cairo_city, cairo_governorate
+        self,
+        auth_client,
+        user,
+        another_user,
+        apartment_type,
+        cairo_city,
+        cairo_governorate,
     ):
         # Owner owns the property
         prop = _create_property(

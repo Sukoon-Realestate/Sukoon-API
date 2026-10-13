@@ -12,8 +12,14 @@ class ManagedContent(models.Model):
 
 
 class PublicContentPage(ManagedContent):
-    slug = models.SlugField(primary_key=True, choices=[("about-us", "About us"),
-        ("privacy-policy", "Privacy policy"), ("terms", "Terms")])
+    slug = models.SlugField(
+        primary_key=True,
+        choices=[
+            ("about-us", "About us"),
+            ("privacy-policy", "Privacy policy"),
+            ("terms", "Terms"),
+        ],
+    )
     title_en = models.CharField(max_length=150)
     title_ar = models.CharField(max_length=150)
     content_en = models.TextField()
@@ -30,23 +36,41 @@ class PublicContentPage(ManagedContent):
 
 class ReleaseNote(ManagedContent):
     version = models.CharField(max_length=40)
-    workspace = models.CharField(max_length=10, default="both", choices=[
-        ("tenant", "Tenant"), ("owner", "Owner"), ("both", "Both")])
-    items_en = models.TextField(help_text="One plain-text release note per line; at most 20.")
-    items_ar = models.TextField(help_text="One plain-text release note per line; at most 20.")
+    workspace = models.CharField(
+        max_length=10,
+        default="both",
+        choices=[("tenant", "Tenant"), ("owner", "Owner"), ("both", "Both")],
+    )
+    items_en = models.TextField(
+        help_text="One plain-text release note per line; at most 20."
+    )
+    items_ar = models.TextField(
+        help_text="One plain-text release note per line; at most 20."
+    )
     publish_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=["version", "workspace"], name="release_note_version_workspace")]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["version", "workspace"], name="release_note_version_workspace"
+            )
+        ]
 
     def clean(self):
         import re
+
         if not re.fullmatch(r"\d+\.\d+\.\d+(?:-[a-zA-Z0-9.-]+)?", self.version):
             raise ValidationError({"version": "Use the installed application version."})
         for field in ("items_en", "items_ar"):
-            items = [line.strip() for line in getattr(self, field).splitlines() if line.strip()]
+            items = [
+                line.strip()
+                for line in getattr(self, field).splitlines()
+                if line.strip()
+            ]
             if not 1 <= len(items) <= 20 or any(len(line) > 500 for line in items):
-                raise ValidationError({field: "Supply 1 to 20 lines, each at most 500 characters."})
+                raise ValidationError(
+                    {field: "Supply 1 to 20 lines, each at most 500 characters."}
+                )
 
     def __str__(self):
         return f"{self.version} / {self.workspace}"

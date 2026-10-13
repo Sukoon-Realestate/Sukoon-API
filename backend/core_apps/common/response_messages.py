@@ -1,4 +1,5 @@
 """Localized response text; stable codes never depend on these messages."""
+
 from typing import Any, Optional
 from django.utils.translation import gettext as _
 from .translation import translate_field_label, translate_message
@@ -19,7 +20,11 @@ def _extract_message(data: Any, language: Optional[str] = None) -> str:
         return translate_message(str(msg), language) if language else str(msg)
 
     if "message" in data and isinstance(data["message"], str):
-        return translate_message(data["message"], language) if language else data["message"]
+        return (
+            translate_message(data["message"], language)
+            if language
+            else data["message"]
+        )
 
     if "detail" in data:
         return _stringify_value(data["detail"], language)
@@ -52,7 +57,9 @@ def _stringify_field_errors(errors: dict, language: Optional[str] = None) -> str
         messages.append(f"{label}: {_stringify_value(value, language)}")
 
     default_err = _("An error occurred.")
-    fallback = translate_message(str(default_err), language) if language else str(default_err)
+    fallback = (
+        translate_message(str(default_err), language) if language else str(default_err)
+    )
     return " ".join(messages) if messages else fallback
 
 
@@ -80,5 +87,3 @@ def _default_success_message(method: Optional[str], status_code: int) -> str:
         return _("Updated successfully.")
 
     return _("Operation successful.")
-
-

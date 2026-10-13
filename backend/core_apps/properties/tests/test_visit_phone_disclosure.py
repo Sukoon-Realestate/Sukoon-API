@@ -13,7 +13,9 @@ from core_apps.notifications.models import Notification
 from core_apps.properties.models import Property, PropertyVisit
 
 
-def make_property(owner, apartment_type, cairo_city, cairo_governorate, title="Phone home"):
+def make_property(
+    owner, apartment_type, cairo_city, cairo_governorate, title="Phone home"
+):
     return Property.objects.create(
         owner=owner,
         title=title,
@@ -54,9 +56,7 @@ def test_pending_visit_hides_numbers_across_visit_property_and_chat_reads(
 ):
     tenant, owner = user, another_user
     set_phones(owner, tenant)
-    property_obj = make_property(
-        owner, apartment_type, cairo_city, cairo_governorate
-    )
+    property_obj = make_property(owner, apartment_type, cairo_city, cairo_governorate)
     visit = make_visit(property_obj, tenant)
     conversation = get_or_create_direct_conversation(user=tenant, other_user=owner)
 
@@ -118,9 +118,7 @@ def test_acceptance_discloses_both_numbers_is_idempotent_and_survives_cancel(
 ):
     tenant, owner = user, another_user
     set_phones(owner, tenant)
-    property_obj = make_property(
-        owner, apartment_type, cairo_city, cairo_governorate
-    )
+    property_obj = make_property(owner, apartment_type, cairo_city, cairo_governorate)
     visit = make_visit(property_obj, tenant)
     conversation = get_or_create_direct_conversation(user=tenant, other_user=owner)
 
@@ -131,9 +129,12 @@ def test_acceptance_discloses_both_numbers_is_idempotent_and_survives_cancel(
     assert accepted.status_code == repeated.status_code == 200
     visit.refresh_from_db()
     assert visit.accepted_at is not None
-    assert Notification.objects.filter(
-        user=tenant, notification_type=Notification.NotificationType.VISIT_ACCEPTED
-    ).count() == 1
+    assert (
+        Notification.objects.filter(
+            user=tenant, notification_type=Notification.NotificationType.VISIT_ACCEPTED
+        ).count()
+        == 1
+    )
     notification = Notification.objects.get(
         user=tenant, notification_type=Notification.NotificationType.VISIT_ACCEPTED
     )
@@ -262,9 +263,7 @@ def test_rejected_or_pre_acceptance_cancelled_visit_never_discloses(
 ):
     tenant, owner = user, another_user
     set_phones(owner, tenant)
-    property_obj = make_property(
-        owner, apartment_type, cairo_city, cairo_governorate
-    )
+    property_obj = make_property(owner, apartment_type, cairo_city, cairo_governorate)
     rejected = make_visit(property_obj, tenant, PropertyVisit.Status.REJECTED)
     cancelled = PropertyVisit.objects.create(
         property=property_obj,
@@ -297,9 +296,7 @@ def test_notices_localize_and_missing_granted_phone_stays_authorized(
     cairo_governorate,
 ):
     tenant, owner = user, another_user
-    property_obj = make_property(
-        owner, apartment_type, cairo_city, cairo_governorate
-    )
+    property_obj = make_property(owner, apartment_type, cairo_city, cairo_governorate)
     visit = make_visit(property_obj, tenant)
     api_client.force_authenticate(tenant)
     url = reverse("tenant-visit-request-detail", kwargs={"id": visit.id})

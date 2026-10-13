@@ -3,6 +3,8 @@
 Contract tests inspect response.json() directly. Existing business scenarios use
 this adapter to keep their domain assertions while verifying envelope/headers.
 """
+
+
 def api_json(response):
     body = response.json()
     assert set(body) == {"message", "data"}
@@ -14,8 +16,14 @@ def api_json(response):
         return body
     for key in ("X-Page", "X-Per-Page", "X-Total-Count", "X-Total-Pages"):
         assert key in response.headers, key
-    return {**body, "data": {
-        "results": body["data"], "count": int(response.headers["X-Total-Count"]),
-        "per_page": int(response.headers["X-Per-Page"]), "total_pages": int(response.headers["X-Total-Pages"]),
-        "next": response.headers.get("X-Next-Page"), "previous": response.headers.get("X-Previous-Page"),
-    }}
+    return {
+        **body,
+        "data": {
+            "results": body["data"],
+            "count": int(response.headers["X-Total-Count"]),
+            "per_page": int(response.headers["X-Per-Page"]),
+            "total_pages": int(response.headers["X-Total-Pages"]),
+            "next": response.headers.get("X-Next-Page"),
+            "previous": response.headers.get("X-Previous-Page"),
+        },
+    }

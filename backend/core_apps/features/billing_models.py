@@ -1,4 +1,5 @@
 """Non-rent catalogs and entitlements; financial records stay in RentInvoice."""
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -10,7 +11,10 @@ class SubscriptionPlan(TimeStampedModel):
     name_ar = models.CharField(max_length=100)
     description_en = models.TextField(blank=True)
     description_ar = models.TextField(blank=True)
-    workspace = models.CharField(max_length=10, choices=[("tenant", "Tenant"), ("owner", "Owner"), ("both", "Both")])
+    workspace = models.CharField(
+        max_length=10,
+        choices=[("tenant", "Tenant"), ("owner", "Owner"), ("both", "Both")],
+    )
     period_months = models.PositiveSmallIntegerField(default=1)
     amount_minor = models.PositiveBigIntegerField()
     currency = models.CharField(max_length=3, default="EGP")
@@ -22,9 +26,18 @@ class SubscriptionPlan(TimeStampedModel):
     class Meta:
         ordering = ["sort_order", "id"]
         constraints = [
-            models.CheckConstraint(check=models.Q(amount_minor__gt=0), name="subscription_plan_positive_price"),
-            models.CheckConstraint(check=models.Q(period_months__gte=1, period_months__lte=120), name="subscription_plan_valid_period"),
-            models.CheckConstraint(check=models.Q(currency="EGP", exponent=2), name="subscription_plan_supported_money"),
+            models.CheckConstraint(
+                check=models.Q(amount_minor__gt=0),
+                name="subscription_plan_positive_price",
+            ),
+            models.CheckConstraint(
+                check=models.Q(period_months__gte=1, period_months__lte=120),
+                name="subscription_plan_valid_period",
+            ),
+            models.CheckConstraint(
+                check=models.Q(currency="EGP", exponent=2),
+                name="subscription_plan_supported_money",
+            ),
         ]
 
     def clean(self):
@@ -38,9 +51,15 @@ class SubscriptionPlan(TimeStampedModel):
 
 
 class AccountSubscription(TimeStampedModel):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="subscriptions")
-    plan = models.ForeignKey(SubscriptionPlan, on_delete=models.PROTECT, related_name="subscriptions")
-    invoice = models.OneToOneField("features.RentInvoice", on_delete=models.PROTECT, related_name="subscription")
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="subscriptions"
+    )
+    plan = models.ForeignKey(
+        SubscriptionPlan, on_delete=models.PROTECT, related_name="subscriptions"
+    )
+    invoice = models.OneToOneField(
+        "features.RentInvoice", on_delete=models.PROTECT, related_name="subscription"
+    )
     workspace = models.CharField(max_length=10)
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()
@@ -48,4 +67,9 @@ class AccountSubscription(TimeStampedModel):
     plan_snapshot = models.JSONField()
 
     class Meta:
-        constraints = [models.CheckConstraint(check=models.Q(ends_at__gt=models.F("starts_at")), name="subscription_valid_period")]
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(ends_at__gt=models.F("starts_at")),
+                name="subscription_valid_period",
+            )
+        ]

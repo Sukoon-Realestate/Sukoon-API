@@ -1,4 +1,5 @@
 """Create isolated local actors; seeded records are not execution evidence."""
+
 import secrets
 import uuid
 from pathlib import Path
@@ -8,6 +9,7 @@ from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
 from core_apps.features.management.cycle_qa import write_private_json
+from core_apps.features.management.billing_qa import prepare_commerce_prerequisites
 from core_apps.features.models import SubscriptionPlan
 
 
@@ -21,24 +23,60 @@ class Command(BaseCommand):
     @transaction.atomic
     def handle(self, *args, **options):
         runtime = getattr(settings, "RENTAL_RUNTIME_ENVIRONMENT", "production")
-        if runtime not in {"development", "test"} or not getattr(settings, "OWNER_TENANT_QA_ENABLED", False):
+        if runtime not in {"development", "test"} or not getattr(
+            settings, "OWNER_TENANT_QA_ENABLED", False
+        ):
             raise CommandError("Explicit local/test QA settings are required.")
         base = urlsplit(options["base_url"])
-        if base.scheme not in {"http", "https"} or base.hostname != "127.0.0.1" or base.path != "/api/v1/" or base.username or base.query or base.fragment:
+        if (
+            base.scheme not in {"http", "https"}
+            or base.hostname != "127.0.0.1"
+            or base.path != "/api/v1/"
+            or base.username
+            or base.query
+            or base.fragment
+        ):
             raise CommandError("Only the local loopback API is supported.")
         output = Path(options["output"])
         if output.exists() or output.is_symlink():
-            raise CommandError("Use a fresh output file; existing identities are preserved.")
+            raise CommandError(
+                "Use a fresh output file; existing identities are preserved."
+            )
         run = uuid.uuid4().hex[:12]
         actors = {}
         for role in ("owner", "tenant"):
             password = secrets.token_urlsafe(24)
-            user = get_user_model().objects.create_user(email=f"billing-{run}-{role}@example.test",
-                password=password, first_name="Local", last_name=role, is_verified=True)
-            actors[role] = {"email": user.email, "password": password, "id": str(user.id)}
-        plan = SubscriptionPlan.objects.create(name_en=f"Local billing plan {run}",
-            name_ar=f"خطة اختبار محلية {run}", workspace="both", period_months=1,
-            amount_minor=12500, sort_order=0)
-        fixture = {"base_url": options["base_url"], "actors": actors, "plan_id": str(plan.id)}
+            user = get_user_model().objects.create_user(
+                email=f"billing-{run}-{role}@example.test",
+                password=password,
+                first_name="Local",
+                last_name=role,
+                is_verified=True,
+            )
+            actors[role] = {
+                "email": user.email,
+                "password": password,
+                "id": str(user.id),
+            }
+        plan = SubscriptionPlan.objects.create(
+            name_en=f"Local billing plan {run}",
+            name_ar=f"خطة اختبار محلية {run}",
+            workspace="both",
+            period_months=1,
+            amount_minor=12500,
+            sort_order=0,
+        )
+        fixture = {
+            "base_url": options["base_url"],
+            "actors": actors,
+            "plan_id": str(plan.id),
+        }
+        fixture.update(
+            prepare_commerce_prerequisites(
+                get_user_model().objects.get(id=actors["owner"]["id"]), run
+            )
+        )
         write_private_json(output, fixture)
-        self.stdout.write("Created fresh local billing actors. Credentials are only in the private output file.")
+        self.stdout.write(
+            "Created fresh local billing actors. Credentials are only in the private output file."
+        )

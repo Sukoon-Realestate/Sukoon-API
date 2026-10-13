@@ -3,13 +3,26 @@ from rest_framework.decorators import api_view, permission_classes, renderer_cla
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .billing_serializers import IssueInvoiceSerializer, InvoiceActionSerializer, PurchaseCheckoutSerializer
+from .billing_serializers import (
+    IssueInvoiceSerializer,
+    InvoiceActionSerializer,
+    PurchaseCheckoutSerializer,
+)
 from .pagination import FeaturePagination
 from .renderers import FeatureJsonRenderer
 from .services.billing_catalog import workspace_for
-from .services.billing_invoices import authorized_invoice, invoice_queryset, issue_purchase, cancel_invoice
+from .services.billing_invoices import (
+    authorized_invoice,
+    invoice_queryset,
+    issue_purchase,
+    cancel_invoice,
+)
 from .services.billing_payments import quote_purchase, checkout_purchase
-from .services.billing_projection import invoice_payload, purchase_quote_payload, purchase_attempt_payload
+from .services.billing_projection import (
+    invoice_payload,
+    purchase_quote_payload,
+    purchase_attempt_payload,
+)
 from .models import IdempotencyRecord
 
 
@@ -28,8 +41,13 @@ def language(request):
 @renderer_classes([FeatureJsonRenderer])
 def invoices(request):
     if request.method == "POST":
-        invoice, created = issue_purchase(request.user, validated(IssueInvoiceSerializer, request))
-        return Response(invoice_payload(invoice, request.user, language(request)), status=201 if created else 200)
+        invoice, created = issue_purchase(
+            request.user, validated(IssueInvoiceSerializer, request)
+        )
+        return Response(
+            invoice_payload(invoice, request.user, language(request)),
+            status=201 if created else 200,
+        )
     workspace = workspace_for(request.query_params.get("workspace", "tenant"))
     query = invoice_queryset(request.user, workspace).prefetch_related("lines")
     if request.query_params.get("status"):
@@ -42,7 +60,10 @@ def invoices(request):
         if purpose not in {"rent", "subscription", "advertising"}:
             raise ValidationError({"purpose": "Unknown invoice purpose."})
         query = query.filter(purpose=purpose)
-    for key, lookup in (("from", "created_at__date__gte"), ("to", "created_at__date__lte")):
+    for key, lookup in (
+        ("from", "created_at__date__gte"),
+        ("to", "created_at__date__lte"),
+    ):
         if request.query_params.get(key):
             try:
                 day = parse_date(request.query_params[key])
@@ -53,7 +74,9 @@ def invoices(request):
             query = query.filter(**{lookup: day})
     pager = FeaturePagination()
     page = pager.paginate_queryset(query, request)
-    return pager.get_paginated_response([invoice_payload(x, request.user, language(request)) for x in page])
+    return pager.get_paginated_response(
+        [invoice_payload(x, request.user, language(request)) for x in page]
+    )
 
 
 @api_view(["GET"])
@@ -68,17 +91,31 @@ def invoice_detail(request, invoice_id):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def invoice_operation(request, request_key):
-    record = IdempotencyRecord.objects.filter(user=request.user, operation="billing.issue", request_key=request_key).first()
-    invoice = authorized_invoice(request.user, record.result_subject_id) if record else None
-    return Response({"invoice": invoice_payload(invoice, request.user, language(request)) if invoice else None,
-                     "absence_confirmed": record is None})
+    record = IdempotencyRecord.objects.filter(
+        user=request.user, operation="billing.issue", request_key=request_key
+    ).first()
+    invoice = (
+        authorized_invoice(request.user, record.result_subject_id) if record else None
+    )
+    return Response(
+        {
+            "invoice": (
+                invoice_payload(invoice, request.user, language(request))
+                if invoice
+                else None
+            ),
+            "absence_confirmed": record is None,
+        }
+    )
 
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def invoice_quote(request, invoice_id):
-    quote = quote_purchase(request.user, invoice_id, validated(InvoiceActionSerializer, request))
+    quote = quote_purchase(
+        request.user, invoice_id, validated(InvoiceActionSerializer, request)
+    )
     return Response(purchase_quote_payload(quote), status=201)
 
 
@@ -86,7 +123,9 @@ def invoice_quote(request, invoice_id):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def invoice_checkout(request, invoice_id):
-    attempt = checkout_purchase(request.user, invoice_id, validated(PurchaseCheckoutSerializer, request))
+    attempt = checkout_purchase(
+        request.user, invoice_id, validated(PurchaseCheckoutSerializer, request)
+    )
     return Response(purchase_attempt_payload(attempt))
 
 

@@ -5,7 +5,14 @@ from .models import AccountSubscription, SubscriptionPlan
 
 @admin.register(SubscriptionPlan)
 class SubscriptionPlanAdmin(admin.ModelAdmin):
-    list_display = ["name_en", "workspace", "amount_minor", "period_months", "revision", "active"]
+    list_display = [
+        "name_en",
+        "workspace",
+        "amount_minor",
+        "period_months",
+        "revision",
+        "active",
+    ]
     list_filter = ["workspace", "active"]
     readonly_fields = ["id", "revision", "created_at", "updated_at"]
 

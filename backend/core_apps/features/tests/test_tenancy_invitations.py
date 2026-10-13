@@ -97,12 +97,20 @@ def create_payload(property_obj, tenant, **extra):
         if not hasattr(visit, "post_visit_decision"):
             response = authenticated(tenant).post(
                 f"/api/v1/properties/visits/{visit.id}/post-visit-decision/",
-                {"decision": "proceed", "attended": True, "expected_revision": visit.revision,
-                 "request_key": str(uuid.uuid4())}, format="json",
+                {
+                    "decision": "proceed",
+                    "attended": True,
+                    "expected_revision": visit.revision,
+                    "request_key": str(uuid.uuid4()),
+                },
+                format="json",
             )
             assert response.status_code == 200, response.data
             visit.refresh_from_db()
-        source = {"source_visit_id": str(visit.id), "source_decision_id": str(visit.post_visit_decision.id)}
+        source = {
+            "source_visit_id": str(visit.id),
+            "source_decision_id": str(visit.post_visit_decision.id),
+        }
     return {
         "property_id": str(property_obj.id),
         "tenant_id": str(tenant.id),
@@ -286,7 +294,10 @@ def test_exact_offer_acceptance_picker_and_draft_consumption(
     assert cancelled.data["financial_closure_status"] == "closed"
     for language in ("en", "ar"):
         replay = owner_client.post(
-            lease_url + "cancel/", cancel_body, format="json", HTTP_ACCEPT_LANGUAGE=language
+            lease_url + "cancel/",
+            cancel_body,
+            format="json",
+            HTTP_ACCEPT_LANGUAGE=language,
         )
         assert replay.status_code == 200
         assert replay.data == cancelled.data
@@ -826,10 +837,9 @@ def test_followup_legacy_round_trip(participants, owned_property, language, inve
     assert api_json(accepted)["data"]["accepted_at"]
     assert api_json(accepted)["data"]["revision"] == 2
     assert api_json(accepted)["data"]["eligible_for_lease"] is True
-    assert (
-        tenant_client.post(detail + "respond/", answer, format="json").json()
-        == api_json(accepted)
-    )
+    assert tenant_client.post(
+        detail + "respond/", answer, format="json"
+    ).json() == api_json(accepted)
     assert (
         tenant_client.post(
             detail + "respond/", {**answer, "decision": "rejected"}, format="json"
@@ -850,12 +860,9 @@ def test_followup_legacy_round_trip(participants, owned_property, language, inve
         "/api/v1/features/v1/leases/", lease_payload, format="json"
     )
     assert draft.status_code == 201
-    assert (
-        owner_client.post(
-            "/api/v1/features/v1/leases/", lease_payload, format="json"
-        ).json()
-        == api_json(draft)
-    )
+    assert owner_client.post(
+        "/api/v1/features/v1/leases/", lease_payload, format="json"
+    ).json() == api_json(draft)
     lease = Lease.objects.get(id=api_json(draft)["data"]["id"])
     assert lease.status == "draft"
     assert lease.rent_amount_minor == 6000000000

@@ -427,4 +427,7 @@ def test_structured_cancel_uses_flutter_body_and_canonical_receipt(
     assert authenticated(owner).post(url, body, format="json").data == result.data
     lease.refresh_from_db()
     assert lease.revision == initial_revision + 1
-    assert IdempotencyRecord.objects.get(operation="lease.cancel").result_revision == lease.revision
+    assert (
+        IdempotencyRecord.objects.get(operation="lease.cancel").result_revision
+        == lease.revision
+    )

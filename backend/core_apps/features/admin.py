@@ -87,7 +87,18 @@ admin.site.register(
     ]
 )
 
-admin.site.register([RentInvoice, InvoiceLine, PaymentQuote, PaymentAttempt,
-    LedgerTransaction, LedgerEntry, InvoicePaymentAllocation, PaymentReceipt], FinancialHistoryAdmin)
+admin.site.register(
+    [
+        RentInvoice,
+        InvoiceLine,
+        PaymentQuote,
+        PaymentAttempt,
+        LedgerTransaction,
+        LedgerEntry,
+        InvoicePaymentAllocation,
+        PaymentReceipt,
+    ],
+    FinancialHistoryAdmin,
+)
 
 from . import catalog_admin  # noqa: E402,F401

@@ -778,7 +778,10 @@ class TestPropertyVisitViews:
         assert replay.headers["Idempotency-Replayed"] == "true"
         assert replay.json()["data"]["id"] == first.json()["data"]["id"]
         assert conflict.status_code == status.HTTP_409_CONFLICT
-        assert PropertyVisit.objects.filter(property=property_obj, tenant=user).count() == 1
+        assert (
+            PropertyVisit.objects.filter(property=property_obj, tenant=user).count()
+            == 1
+        )
 
     def test_create_visit_owner_cannot_book_own_property(self, auth_client, user):
         property_obj = _create_property(
@@ -838,8 +841,12 @@ class TestPropertyVisitViews:
         assert set(result.keys()) == {
             "id",
             "property_id",
-            "revision", "offer_id", "offer_snapshot", "post_visit_decision",
-            "post_visit_actions", "rental_continuation",
+            "revision",
+            "offer_id",
+            "offer_snapshot",
+            "post_visit_decision",
+            "post_visit_actions",
+            "rental_continuation",
             "tenant",
             "visit_date",
             "visit_time",
@@ -943,8 +950,12 @@ class TestPropertyVisitViews:
         assert set(results[0].keys()) == {
             "id",
             "property_id",
-            "revision", "offer_id", "offer_snapshot", "post_visit_decision",
-            "post_visit_actions", "rental_continuation",
+            "revision",
+            "offer_id",
+            "offer_snapshot",
+            "post_visit_decision",
+            "post_visit_actions",
+            "rental_continuation",
             "tenant",
             "visit_date",
             "visit_time",
@@ -975,8 +986,12 @@ class TestPropertyVisitViews:
         assert set(visit_data.keys()) == {
             "id",
             "property_id",
-            "revision", "offer_id", "offer_snapshot", "post_visit_decision",
-            "post_visit_actions", "rental_continuation",
+            "revision",
+            "offer_id",
+            "offer_snapshot",
+            "post_visit_decision",
+            "post_visit_actions",
+            "rental_continuation",
             "tenant",
             "visit_date",
             "visit_time",

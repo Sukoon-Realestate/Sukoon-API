@@ -32,7 +32,9 @@ class AdvertisingPlan(models.Model):
         if self.amount_minor <= 0 or self.currency != "EGP" or self.exponent != 2:
             raise ValidationError("Supply a positive EGP price with exponent 2.")
         if not 1 <= self.duration_count <= 120:
-            raise ValidationError({"duration_count": "Choose a duration from 1 to 120."})
+            raise ValidationError(
+                {"duration_count": "Choose a duration from 1 to 120."}
+            )
         if not self.title_en.strip() or not self.title_ar.strip():
             raise ValidationError("Arabic and English titles are required.")
 

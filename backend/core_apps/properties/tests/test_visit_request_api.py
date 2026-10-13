@@ -67,8 +67,12 @@ class TestTenantVisitRequestScreens:
             "status_label",
             "actions",
             "alternative_search_filters",
-            "revision", "offer_id", "offer_snapshot", "post_visit_decision",
-            "post_visit_actions", "rental_continuation",
+            "revision",
+            "offer_id",
+            "offer_snapshot",
+            "post_visit_decision",
+            "post_visit_actions",
+            "rental_continuation",
         }
         assert set(card["property"]) == {"id", "title", "location", "price"}
         assert card["id"] == str(visit.id)
@@ -778,4 +782,3 @@ class TestBilingualVisitLabels:
         assert cal_data_ar["selected_date_label"] == "زيارات يوم 15"
         assert cal_data_ar["visits"][0]["status_label"] == "مؤكدة"
         assert "ص" in cal_data_ar["visits"][0]["time_formatted"]
-

@@ -1,4 +1,5 @@
 """Shared HTTP JSON contract. Protocol-specific endpoints opt out explicitly."""
+
 import logging
 import uuid
 
@@ -20,9 +21,14 @@ class GenericJsonRenderer(JSONRenderer):
         if response is None:
             raise ValueError("Response not found in renderer context!")
         request = context.get("request")
-        if response.status_code in (204, 304) or getattr(request, "method", None) == "HEAD":
+        if (
+            response.status_code in (204, 304)
+            or getattr(request, "method", None) == "HEAD"
+        ):
             return b""
-        return super().render(envelope(data, response, request), accepted_media_type, context)
+        return super().render(
+            envelope(data, response, request), accepted_media_type, context
+        )
 
 
 def custom_exception_handler(exc, context):
@@ -31,11 +37,18 @@ def custom_exception_handler(exc, context):
     response = exception_handler(exc, context)
     if response is None:
         correlation = str(uuid.uuid4())
-        logger.error("api_request_failed correlation=%s error_type=%s", correlation, type(exc).__name__)
+        logger.error(
+            "api_request_failed correlation=%s error_type=%s",
+            correlation,
+            type(exc).__name__,
+        )
         response = Response({"message": "An error occurred.", "data": None}, status=500)
         response["X-Correlation-ID"] = correlation
     else:
         error_metadata(response, response.data, exc)
         language = getattr((context or {}).get("request"), "LANGUAGE_CODE", None)
-        response.data = {"message": _extract_message(response.data, language), "data": None}
+        response.data = {
+            "message": _extract_message(response.data, language),
+            "data": None,
+        }
     return response

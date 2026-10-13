@@ -73,7 +73,9 @@ class FakeRentalProvider:
         )
 
     def capture_purchase(self, attempt_id, request_key):
-        return "mock-" + str(uuid.uuid5(uuid.NAMESPACE_URL, f"purchase:{attempt_id}:{request_key}"))
+        return "mock-" + str(
+            uuid.uuid5(uuid.NAMESPACE_URL, f"purchase:{attempt_id}:{request_key}")
+        )
 
     def store_private_evidence(self, lease_id, evidence_id, content):
         return f"rental-evidence/{lease_id}/{evidence_id}/{hashlib.sha256(content).hexdigest()}"

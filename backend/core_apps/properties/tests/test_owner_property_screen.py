@@ -40,7 +40,13 @@ class TestMyPropertyListEndpoint:
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_list_contains_status_is_verified_and_metrics(
-        self, auth_client, user, another_user, apartment_type, cairo_city, cairo_governorate
+        self,
+        auth_client,
+        user,
+        another_user,
+        apartment_type,
+        cairo_city,
+        cairo_governorate,
     ):
         prop1 = _create_property(
             owner=user,
@@ -133,7 +139,9 @@ class TestMyPropertyListEndpoint:
 
 @pytest.mark.django_db
 class TestPropertyStatisticsAPI:
-    def test_unauthenticated_returns_401(self, api_client, user, apartment_type, cairo_city, cairo_governorate):
+    def test_unauthenticated_returns_401(
+        self, api_client, user, apartment_type, cairo_city, cairo_governorate
+    ):
         prop = _create_property(
             owner=user,
             property_type=apartment_type,
@@ -145,7 +153,13 @@ class TestPropertyStatisticsAPI:
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_non_owner_returns_403(
-        self, api_client, user, another_user, apartment_type, cairo_city, cairo_governorate
+        self,
+        api_client,
+        user,
+        another_user,
+        apartment_type,
+        cairo_city,
+        cairo_governorate,
     ):
         prop = _create_property(
             owner=user,
@@ -159,7 +173,13 @@ class TestPropertyStatisticsAPI:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_owner_retrieves_complete_statistics(
-        self, auth_client, user, another_user, apartment_type, cairo_city, cairo_governorate
+        self,
+        auth_client,
+        user,
+        another_user,
+        apartment_type,
+        cairo_city,
+        cairo_governorate,
     ):
         prop = _create_property(
             owner=user,
@@ -249,10 +269,11 @@ class TestPropertyStatisticsAPI:
         assert criteria_percentages == [78, 65, 55, 42]
 
 
-
 @pytest.mark.django_db
 class TestPropertyVisibilityToggleAPI:
-    def test_unauthenticated_returns_401(self, api_client, user, apartment_type, cairo_city, cairo_governorate):
+    def test_unauthenticated_returns_401(
+        self, api_client, user, apartment_type, cairo_city, cairo_governorate
+    ):
         prop = _create_property(
             owner=user,
             property_type=apartment_type,
@@ -264,7 +285,13 @@ class TestPropertyVisibilityToggleAPI:
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
     def test_non_owner_returns_403(
-        self, api_client, user, another_user, apartment_type, cairo_city, cairo_governorate
+        self,
+        api_client,
+        user,
+        another_user,
+        apartment_type,
+        cairo_city,
+        cairo_governorate,
     ):
         prop = _create_property(
             owner=user,
@@ -378,83 +405,16 @@ class TestOwnerRevenuesAPI:
         response = api_client.get(url)
         assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-    def test_default_revenues_matches_screen_mockup_exactly(self, auth_client):
-        url = reverse("owner-revenues")
-        response = auth_client.get(url)
+    def test_empty_financial_history_returns_zero_without_demo_rows(self, auth_client):
+        response = auth_client.get(reverse("owner-revenues"))
         assert response.status_code == status.HTTP_200_OK
-
         data = response.json()["data"]
+        assert data["total_this_month"] == 0
+        assert data["percentage_change"] == 0
+        assert data["properties"] == []
+        assert data["recent_transactions"] == []
 
-        # 1. Total this month hero card
-        assert data["total_this_month"] == 21500.0
-        assert data["formatted_total"] == "21,500 ج"
-        assert data["currency"] == "ج"
-        assert data["percentage_change"] == 8.0
-        assert data["comparison_text"] == "+8% عن الشهر السابق"
-        assert data["is_positive"] is True
-
-        # 2. Properties breakdown (4 cards)
-        props = data["properties"]
-        assert len(props) == 4
-
-        # Card 1: شقة مدينة نصر - 6,500 - مدفوع
-        assert props[0]["title"] == "شقة مدينة نصر"
-        assert props[0]["amount"] == 6500.0
-        assert props[0]["formatted_amount"] == "6,500 ج"
-        assert props[0]["status"] == "paid"
-        assert props[0]["status_label"] == "مدفوع"
-        assert props[0]["status_color"] == "green"
-
-        # Card 2: ستوديو التجمع - 4,200 - قادم
-        assert props[1]["title"] == "ستوديو التجمع"
-        assert props[1]["amount"] == 4200.0
-        assert props[1]["formatted_amount"] == "4,200 ج"
-        assert props[1]["status"] == "upcoming"
-        assert "قادم 15" in props[1]["status_label"]
-        assert props[1]["status_color"] == "orange"
-
-        # Card 3: شقة المهندسين - 8,800 - مدفوع
-        assert props[2]["title"] == "شقة المهندسين"
-        assert props[2]["amount"] == 8800.0
-        assert props[2]["formatted_amount"] == "8,800 ج"
-        assert props[2]["status"] == "paid"
-        assert props[2]["status_label"] == "مدفوع"
-        assert props[2]["status_color"] == "green"
-
-        # Card 4: غرفة الزمالك - 2,000 - متأخر
-        assert props[3]["title"] == "غرفة الزمالك"
-        assert props[3]["amount"] == 2000.0
-        assert props[3]["formatted_amount"] == "2,000 ج"
-        assert props[3]["status"] == "overdue"
-        assert props[3]["status_label"] == "متأخر"
-        assert props[3]["status_color"] == "red"
-
-        # 3. Recent transactions (آخر المعاملات)
-        txs = data["recent_transactions"]
-        assert len(txs) == 3
-
-        # Tx 1: إيجار شهري – شقة نصر (+6,500 ج)
-        assert txs[0]["title"] == "إيجار شهري – شقة نصر"
-        assert txs[0]["amount"] == 6500.0
-        assert txs[0]["formatted_amount"] == "+6,500 ج"
-        assert txs[0]["type"] == "credit"
-        assert txs[0]["is_credit"] is True
-
-        # Tx 2: إيجار – شقة المهندسين (+8,800 ج)
-        assert txs[1]["title"] == "إيجار – شقة المهندسين"
-        assert txs[1]["amount"] == 8800.0
-        assert txs[1]["formatted_amount"] == "+8,800 ج"
-        assert txs[1]["type"] == "credit"
-        assert txs[1]["is_credit"] is True
-
-        # Tx 3: رسوم المنصة (-350 ج)
-        assert txs[2]["title"] == "رسوم المنصة"
-        assert txs[2]["amount"] == -350.0
-        assert txs[2]["formatted_amount"] == "-350 ج"
-        assert txs[2]["type"] == "debit"
-        assert txs[2]["is_credit"] is False
-
-    def test_owner_with_properties_calculates_dynamically(
+    def test_listing_prices_are_not_collected_revenue(
         self, auth_client, user, apartment_type, cairo_city, cairo_governorate
     ):
         _create_property(
@@ -479,14 +439,13 @@ class TestOwnerRevenuesAPI:
         assert response.status_code == status.HTTP_200_OK
 
         data = response.json()["data"]
-        assert data["total_this_month"] == 55000.0
-        assert data["formatted_total"] == "55,000 ج"
-        assert len(data["properties"]) == 2
-        assert len(data["recent_transactions"]) >= 2
+        assert data["total_this_month"] == 0
+        assert data["percentage_change"] == 0
+        assert data["properties"] == []
+        assert data["recent_transactions"] == []
 
     def test_owner_earnings_alias_route_works(self, auth_client):
         url = reverse("owner-earnings")
         response = auth_client.get(url)
         assert response.status_code == status.HTTP_200_OK
-        assert response.json()["data"]["total_this_month"] == 21500.0
-
+        assert response.json()["data"]["total_this_month"] == 0

@@ -168,7 +168,8 @@ def test_route_adapter_rejects_malformed_and_missing_is_unknown():
     }
     origins = [{"latitude": 30, "longitude": 31}]
     with patch(
-        "core_apps.features.services.planning_providers.post_json", return_value=[]
+        "core_apps.features.services.planning_providers_parts.route_matrix.post_json",
+        return_value=[],
     ):
         assert route_matrix(origins, destination)[0]["duration_seconds"] is None
     for malformed in [
@@ -177,7 +178,7 @@ def test_route_adapter_rejects_malformed_and_missing_is_unknown():
         {"condition": "ROUTE_EXISTS", "duration": "NaNs"},
     ]:
         with patch(
-            "core_apps.features.services.planning_providers.post_json",
+            "core_apps.features.services.planning_providers_parts.route_matrix.post_json",
             return_value=[malformed],
         ):
             with pytest.raises(DiscoveryUnavailable):
@@ -228,7 +229,7 @@ def test_gemini_grounding_exact_offer_refinement_replay_and_no_raw_prompt(
         "unresolved_requirements": ["Utility costs are unknown"],
     }
     with patch(
-        "core_apps.features.planning_discovery_views.extract_criteria",
+        "core_apps.features.planning_discovery_views_parts.tenant_assistant_turns.extract_criteria",
         return_value=response,
     ) as provider:
         item = post(tenant, "tenant-assistant/turns/", body, 201).data["resource"]
@@ -270,7 +271,8 @@ def test_gemini_grounding_exact_offer_refinement_replay_and_no_raw_prompt(
 def test_gemini_output_is_untrusted(value):
     raw = {"candidates": [{"content": {"parts": [{"text": json.dumps(value)}]}}]}
     with patch(
-        "core_apps.features.services.planning_providers.post_json", return_value=raw
+        "core_apps.features.services.planning_providers_parts.extract_criteria.post_json",
+        return_value=raw,
     ):
         with pytest.raises(DiscoveryUnavailable):
             extract_criteria("text", "en", {"cities": [], "amenities": []}, {})
@@ -451,7 +453,10 @@ def test_gemini_request_uses_rest_schema_enum_types_and_safe_provider_url():
         assert headers["x-goog-api-key"] == "test-only"
         return {"candidates": [{"content": {"parts": [{"text": json.dumps(value)}]}}]}
 
-    with patch("core_apps.features.services.planning_providers.post_json", http):
+    with patch(
+        "core_apps.features.services.planning_providers_parts.extract_criteria.post_json",
+        http,
+    ):
         assert (
             extract_criteria("Private text", "en", {"cities": [], "amenities": []}, {})
             == value
@@ -650,7 +655,7 @@ def test_assistant_comparison_keeps_selected_properties_and_rejects_private_cont
         context={"property_ids": [str(prop.id)]},
     )
     with patch(
-        "core_apps.features.planning_discovery_views.extract_criteria",
+        "core_apps.features.planning_discovery_views_parts.tenant_assistant_turns.extract_criteria",
         return_value=response,
     ) as provider:
         item = post(tenant, "tenant-assistant/turns/", body, 201).data["resource"]

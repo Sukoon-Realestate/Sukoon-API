@@ -204,7 +204,8 @@ def test_decline_preserves_unicode_private_reason_and_blocks_invitation(
         API + "tenancy-invitations/", invite_body(visit), format="json"
     )
     assert (
-        response.status_code == 409 and response["X-App-Error-Code"] == "decision_conflict"
+        response.status_code == 409
+        and response["X-App-Error-Code"] == "decision_conflict"
     )
     assert not TenancyInvitation.objects.exists()
     assert text not in str(IdempotencyRecord.objects.get().response_data)
@@ -270,7 +271,9 @@ def test_schedule_revision_and_attended_appointment_are_protected(visit):
     visit.save(update_fields=["visit_time"])
     assert visit.revision == stale["expected_revision"] + 1
     response = authenticated(visit.tenant).post(path(visit), stale, format="json")
-    assert response.status_code == 409 and response["X-App-Error-Code"] == "stale_revision"
+    assert (
+        response.status_code == 409 and response["X-App-Error-Code"] == "stale_revision"
+    )
     decide(visit)
     response = authenticated(visit.tenant).post(
         PROPERTIES + f"visits/{visit.id}/cancel/", {}, format="json"

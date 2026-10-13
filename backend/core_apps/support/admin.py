@@ -13,7 +13,14 @@ class HelpContactAdmin(ManagedContentAdmin):
 
 @admin.register(HelpArticle)
 class HelpArticleAdmin(ManagedContentAdmin):
-    list_display = ("slug", "workspace", "question_en", "sort_order", "active", "revision")
+    list_display = (
+        "slug",
+        "workspace",
+        "question_en",
+        "sort_order",
+        "active",
+        "revision",
+    )
     list_filter = ("workspace", "active")
     search_fields = ("slug", "question_ar", "question_en")
 

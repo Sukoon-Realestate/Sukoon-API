@@ -10,119 +10,205 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('features', '0017_renewal_effective_dates'),
+        ("features", "0017_renewal_effective_dates"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='AccountSubscription',
+            name="AccountSubscription",
             fields=[
-                ('pkid', models.BigAutoField(editable=False, primary_key=True, serialize=False)),
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('workspace', models.CharField(max_length=10)),
-                ('starts_at', models.DateTimeField()),
-                ('ends_at', models.DateTimeField()),
-                ('cancelled_at', models.DateTimeField(blank=True, null=True)),
-                ('plan_snapshot', models.JSONField()),
+                (
+                    "pkid",
+                    models.BigAutoField(
+                        editable=False, primary_key=True, serialize=False
+                    ),
+                ),
+                (
+                    "id",
+                    models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("workspace", models.CharField(max_length=10)),
+                ("starts_at", models.DateTimeField()),
+                ("ends_at", models.DateTimeField()),
+                ("cancelled_at", models.DateTimeField(blank=True, null=True)),
+                ("plan_snapshot", models.JSONField()),
             ],
         ),
         migrations.CreateModel(
-            name='SubscriptionPlan',
+            name="SubscriptionPlan",
             fields=[
-                ('pkid', models.BigAutoField(editable=False, primary_key=True, serialize=False)),
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('name_en', models.CharField(max_length=100)),
-                ('name_ar', models.CharField(max_length=100)),
-                ('description_en', models.TextField(blank=True)),
-                ('description_ar', models.TextField(blank=True)),
-                ('workspace', models.CharField(choices=[('tenant', 'Tenant'), ('owner', 'Owner'), ('both', 'Both')], max_length=10)),
-                ('period_months', models.PositiveSmallIntegerField(default=1)),
-                ('amount_minor', models.PositiveBigIntegerField()),
-                ('currency', models.CharField(default='EGP', max_length=3)),
-                ('exponent', models.PositiveSmallIntegerField(default=2)),
-                ('revision', models.PositiveIntegerField(default=1, editable=False)),
-                ('active', models.BooleanField(default=True)),
-                ('sort_order', models.PositiveSmallIntegerField(default=0)),
+                (
+                    "pkid",
+                    models.BigAutoField(
+                        editable=False, primary_key=True, serialize=False
+                    ),
+                ),
+                (
+                    "id",
+                    models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("name_en", models.CharField(max_length=100)),
+                ("name_ar", models.CharField(max_length=100)),
+                ("description_en", models.TextField(blank=True)),
+                ("description_ar", models.TextField(blank=True)),
+                (
+                    "workspace",
+                    models.CharField(
+                        choices=[
+                            ("tenant", "Tenant"),
+                            ("owner", "Owner"),
+                            ("both", "Both"),
+                        ],
+                        max_length=10,
+                    ),
+                ),
+                ("period_months", models.PositiveSmallIntegerField(default=1)),
+                ("amount_minor", models.PositiveBigIntegerField()),
+                ("currency", models.CharField(default="EGP", max_length=3)),
+                ("exponent", models.PositiveSmallIntegerField(default=2)),
+                ("revision", models.PositiveIntegerField(default=1, editable=False)),
+                ("active", models.BooleanField(default=True)),
+                ("sort_order", models.PositiveSmallIntegerField(default=0)),
             ],
             options={
-                'ordering': ['sort_order', 'id'],
+                "ordering": ["sort_order", "id"],
             },
         ),
         migrations.AlterModelOptions(
-            name='rentinvoice',
+            name="rentinvoice",
             options={},
         ),
         migrations.AddField(
-            model_name='rentinvoice',
-            name='business_reference',
-            field=models.CharField(blank=True, default='', max_length=100),
+            model_name="rentinvoice",
+            name="business_reference",
+            field=models.CharField(blank=True, default="", max_length=100),
         ),
         migrations.AddField(
-            model_name='rentinvoice',
-            name='payer',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='purchase_invoices', to=settings.AUTH_USER_MODEL),
+            model_name="rentinvoice",
+            name="payer",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="purchase_invoices",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='rentinvoice',
-            name='purchase_snapshot',
+            model_name="rentinvoice",
+            name="purchase_snapshot",
             field=models.JSONField(blank=True, default=dict),
         ),
         migrations.AddField(
-            model_name='rentinvoice',
-            name='purpose',
-            field=models.CharField(choices=[('rent', 'Rent'), ('subscription', 'Subscription'), ('advertising', 'Advertising')], default='rent', max_length=20),
+            model_name="rentinvoice",
+            name="purpose",
+            field=models.CharField(
+                choices=[
+                    ("rent", "Rent"),
+                    ("subscription", "Subscription"),
+                    ("advertising", "Advertising"),
+                ],
+                default="rent",
+                max_length=20,
+            ),
         ),
         migrations.AddField(
-            model_name='rentinvoice',
-            name='workspace',
-            field=models.CharField(default='tenant', max_length=10),
+            model_name="rentinvoice",
+            name="workspace",
+            field=models.CharField(default="tenant", max_length=10),
         ),
         migrations.AlterField(
-            model_name='rentinvoice',
-            name='lease',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='invoices', to='features.lease'),
+            model_name="rentinvoice",
+            name="lease",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="invoices",
+                to="features.lease",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='rentinvoice',
-            constraint=models.CheckConstraint(check=models.Q(models.Q(('lease__isnull', False), ('purpose', 'rent')), models.Q(('lease__isnull', True), ('payer__isnull', False), ('purpose__in', ['subscription', 'advertising']), models.Q(('business_reference', ''), _negated=True)), _connector='OR'), name='invoice_purpose_has_subject'),
+            model_name="rentinvoice",
+            constraint=models.CheckConstraint(
+                check=models.Q(
+                    models.Q(("lease__isnull", False), ("purpose", "rent")),
+                    models.Q(
+                        ("lease__isnull", True),
+                        ("payer__isnull", False),
+                        ("purpose__in", ["subscription", "advertising"]),
+                        models.Q(("business_reference", ""), _negated=True),
+                    ),
+                    _connector="OR",
+                ),
+                name="invoice_purpose_has_subject",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='rentinvoice',
-            constraint=models.UniqueConstraint(condition=models.Q(('purpose', 'rent'), _negated=True), fields=('purpose', 'business_reference'), name='unique_purchase_invoice_subject'),
+            model_name="rentinvoice",
+            constraint=models.UniqueConstraint(
+                condition=models.Q(("purpose", "rent"), _negated=True),
+                fields=("purpose", "business_reference"),
+                name="unique_purchase_invoice_subject",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='subscriptionplan',
-            constraint=models.CheckConstraint(check=models.Q(('amount_minor__gt', 0)), name='subscription_plan_positive_price'),
+            model_name="subscriptionplan",
+            constraint=models.CheckConstraint(
+                check=models.Q(("amount_minor__gt", 0)),
+                name="subscription_plan_positive_price",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='subscriptionplan',
-            constraint=models.CheckConstraint(check=models.Q(('period_months__gte', 1), ('period_months__lte', 120)), name='subscription_plan_valid_period'),
+            model_name="subscriptionplan",
+            constraint=models.CheckConstraint(
+                check=models.Q(("period_months__gte", 1), ("period_months__lte", 120)),
+                name="subscription_plan_valid_period",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='subscriptionplan',
-            constraint=models.CheckConstraint(check=models.Q(('currency', 'EGP'), ('exponent', 2)), name='subscription_plan_supported_money'),
+            model_name="subscriptionplan",
+            constraint=models.CheckConstraint(
+                check=models.Q(("currency", "EGP"), ("exponent", 2)),
+                name="subscription_plan_supported_money",
+            ),
         ),
         migrations.AddField(
-            model_name='accountsubscription',
-            name='invoice',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.PROTECT, related_name='subscription', to='features.rentinvoice'),
+            model_name="accountsubscription",
+            name="invoice",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="subscription",
+                to="features.rentinvoice",
+            ),
         ),
         migrations.AddField(
-            model_name='accountsubscription',
-            name='plan',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='subscriptions', to='features.subscriptionplan'),
+            model_name="accountsubscription",
+            name="plan",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="subscriptions",
+                to="features.subscriptionplan",
+            ),
         ),
         migrations.AddField(
-            model_name='accountsubscription',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='subscriptions', to=settings.AUTH_USER_MODEL),
+            model_name="accountsubscription",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="subscriptions",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddConstraint(
-            model_name='accountsubscription',
-            constraint=models.CheckConstraint(check=models.Q(('ends_at__gt', models.F('starts_at'))), name='subscription_valid_period'),
+            model_name="accountsubscription",
+            constraint=models.CheckConstraint(
+                check=models.Q(("ends_at__gt", models.F("starts_at"))),
+                name="subscription_valid_period",
+            ),
         ),
     ]

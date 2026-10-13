@@ -5,10 +5,14 @@ from core_apps.common.content_models import ManagedContent
 
 
 class HelpContact(ManagedContent):
-    workspace = models.CharField(primary_key=True, max_length=10,
-        choices=[("tenant", "Tenant"), ("owner", "Owner")])
-    phone = models.CharField(max_length=25, blank=True,
-        validators=[RegexValidator(r"^\+?[0-9 ()-]{7,25}$")])
+    workspace = models.CharField(
+        primary_key=True,
+        max_length=10,
+        choices=[("tenant", "Tenant"), ("owner", "Owner")],
+    )
+    phone = models.CharField(
+        max_length=25, blank=True, validators=[RegexValidator(r"^\+?[0-9 ()-]{7,25}$")]
+    )
     email = models.EmailField(blank=True)
     hours_en = models.CharField(max_length=200, blank=True)
     hours_ar = models.CharField(max_length=200, blank=True)
@@ -19,8 +23,10 @@ class HelpContact(ManagedContent):
 
 class HelpArticle(ManagedContent):
     slug = models.SlugField(primary_key=True)
-    workspace = models.CharField(max_length=10,
-        choices=[("tenant", "Tenant"), ("owner", "Owner"), ("both", "Both")])
+    workspace = models.CharField(
+        max_length=10,
+        choices=[("tenant", "Tenant"), ("owner", "Owner"), ("both", "Both")],
+    )
     question_en = models.CharField(max_length=250)
     question_ar = models.CharField(max_length=250)
     answer_en = models.TextField()
