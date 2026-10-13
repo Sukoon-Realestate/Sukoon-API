@@ -4,6 +4,9 @@ from ..providers import checkout_available
 
 def invoice_payload(invoice, user, language="en"):
     is_rent = invoice.purpose == "rent"
+    # Rental settlement credits reduce the obligation without rewriting its
+    # original amount or treating the credit as a cash payment.
+    total_minor = invoice.amount_minor - (invoice.credits_minor if is_rent else 0)
     payable = invoice.status in {"due", "overdue", "partially_paid"}
     if is_rent:
         from .rental_phase3 import invoice_payment_allowed
@@ -36,9 +39,9 @@ def invoice_payload(invoice, user, language="en"):
         "revision": invoice.revision,
         "currency": invoice.currency,
         "exponent": invoice.exponent,
-        "total_minor": invoice.amount_minor,
+        "total_minor": total_minor,
         "paid_minor": invoice.applied_minor,
-        "balance_minor": max(0, invoice.amount_minor - invoice.applied_minor),
+        "balance_minor": max(0, total_minor - invoice.applied_minor),
         "issued_at": invoice.created_at.isoformat(),
         "due_date": invoice.due_date.isoformat(),
         "paid_at": (
