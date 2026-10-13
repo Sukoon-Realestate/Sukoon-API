@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 from datetime import timedelta
 import ssl
 
+from config.planning import enabled_services_from_env
+
 # todo refactor the code, write explaining comments
 
 # ? Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -151,16 +153,17 @@ RENTAL_PROVIDER_BACKEND = getenv("RENTAL_PROVIDER_BACKEND", "disabled")
 RENTAL_RUNTIME_ENVIRONMENT = "production"
 RENTAL_FAKE_PROVIDER_ALLOWED = False
 OWNER_TENANT_QA_ENABLED = False
-PLANNING_ENABLED_SERVICES = [
-    x.strip() for x in getenv("PLANNING_ENABLED_SERVICES", "").split(",") if x.strip()
-]
+PLANNING_ENABLED_SERVICES = enabled_services_from_env(
+    getenv("PLANNING_ENABLED_SERVICES")
+)
 PLANNING_MOCK_DISCOVERY = False
 CELERY_BEAT_SCHEDULE["process-planning-jobs"] = {
-    "task": "core_apps.features.tasks.process_planning_jobs", "schedule": 30.0,
+    "task": "core_apps.features.tasks.process_planning_jobs",
+    "schedule": 30.0,
 }
-PLANNING_ROUTES_API_KEY = getenv("PLANNING_ROUTES_API_KEY", "")
-PLANNING_GEMINI_API_KEY = getenv("PLANNING_GEMINI_API_KEY", "")
-PLANNING_GEMINI_MODEL = getenv("PLANNING_GEMINI_MODEL", "")
+PLANNING_ROUTES_API_KEY = getenv("PLANNING_ROUTES_API_KEY", "").strip()
+PLANNING_GEMINI_API_KEY = getenv("PLANNING_GEMINI_API_KEY", "").strip()
+PLANNING_GEMINI_MODEL = getenv("PLANNING_GEMINI_MODEL", "").strip()
 PLANNING_PROVIDER_TIMEOUT_SECONDS = int(getenv("PLANNING_PROVIDER_TIMEOUT_SECONDS", "20"))
 PLANNING_ROUTE_MODES = [x for x in getenv("PLANNING_ROUTE_MODES", "driving,walking,transit").split(",") if x]
 PLANNING_ROUTE_MAX_ORIGINS = int(getenv("PLANNING_ROUTE_MAX_ORIGINS", "1000"))

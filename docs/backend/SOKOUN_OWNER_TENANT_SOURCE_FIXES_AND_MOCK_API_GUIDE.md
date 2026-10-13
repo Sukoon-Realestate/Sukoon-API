@@ -41,7 +41,7 @@ Use one of these settings modules:
 
 `config.settings.staging` keeps the provider unavailable. `staging_mock` opts into the fake provider and checkout, with `DEBUG=False`. Supply a private `RENTAL_PROVIDER_WEBHOOK_SECRET` through the deployment environment. A missing secret prevents staging mock startup. Production rejects the mock completion endpoints even if the fake-provider flag is mistakenly set.
 
-`staging_mock` also explicitly enables all twelve planning services and mock commute estimates. Other settings keep planning disabled unless `PLANNING_ENABLED_SERVICES` names the desired services. The assistant is a deterministic catalog helper; it is not connected to an external AI provider.
+`staging_mock` explicitly enables all twelve planning services and mock commute estimates. Its assistant is a deterministic catalog helper. As of the October 13 enablement fix, normal settings also select all twelve services by default, with real Routes/Gemini credentials required for the two discovery services. Omitted or blank `PLANNING_ENABLED_SERVICES` enables defaults; use `none` to disable all, or supply a specific subset. See [the deployment guide](../PLANNING_FEATURES_DEPLOYMENT.md) for provider and process configuration. Production never uses these mock discovery adapters.
 
 Set `DJANGO_SETTINGS_MODULE=config.settings.staging_mock` consistently for the API, Celery workers, beat and management commands. Configure the intended staging database, allowed hosts and existing deployment secrets through the normal deployment environment. Do not point test settings at the production database.
 

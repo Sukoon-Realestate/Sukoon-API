@@ -14,6 +14,7 @@ from rest_framework.exceptions import NotFound, PermissionDenied, ValidationErro
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from config.planning import SERVICES
 from core_apps.properties.models import City, Property
 from core_apps.users.models import User
 from ..pagination import FeaturePagination
@@ -21,22 +22,6 @@ from ..renderers import FeatureJsonRenderer
 from .commands import command_identity, money_minor
 from .rental_phase2 import RentalConflict, remember_mutation, replay_operation
 from .tenancy_invitations import resolve_offer_snapshot
-
-
-SERVICES = (
-    "lifestyle",
-    "roommates",
-    "housing_groups",
-    "group_visits",
-    "group_applications",
-    "housing_requests",
-    "housing_offers",
-    "condition_reports",
-    "move_out_notices",
-    "replacements",
-    "commute",
-    "tenant_assistant",
-)
 
 
 def enabled_services():

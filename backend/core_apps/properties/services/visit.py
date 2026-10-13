@@ -97,6 +97,10 @@ class PropertyVisitService:
         expected_offer_revision = validated_data.pop("expected_offer_revision", None)
         offer_id = str(validated_data.get("offer_id") or "")
         if offer_id:
+            from core_apps.features.services.tenancy_invitations import (
+                resolve_offer_snapshot,
+            )
+
             offer = next(
                 (
                     item
@@ -115,12 +119,12 @@ class PropertyVisitService:
                 raise ValidationError(
                     _("The selected rental offer changed. Refresh and review it again.")
                 )
-            validated_data["offer_snapshot"] = {
-                "property_id": str(property_obj.id),
-                "offer_id": offer_id,
-                "offer_revision": offer.get("revision"),
-                **offer,
-            }
+            # Capture names, room/bed identity, capacity and terms together at
+            # booking time. Never reconstruct an existing visit from inventory.
+            offer_id, snapshot = resolve_offer_snapshot(
+                property_obj, offer_id, expected_offer_revision
+            )
+            validated_data["offer_snapshot"] = snapshot
         elif property_obj.rental_inventory:
             raise ValidationError(_("Select a rental offer before requesting a visit."))
 

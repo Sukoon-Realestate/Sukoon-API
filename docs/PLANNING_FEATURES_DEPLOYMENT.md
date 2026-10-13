@@ -6,10 +6,13 @@ Local database, contract, HTTP and widget tests do not establish live provider r
 
 ## Runtime configuration
 
-Set these values in the environment of **API, worker and beat**, before Django settings are imported. Keep keys server-side. Do not put keys in Dart defines, application logs, committed files or notification payloads.
+All twelve implemented planning services are selected by default in normal settings. Deploy this source and restart **API, worker and beat** to apply the change. No `PLANNING_ENABLED_SERVICES` environment variable is required. Account verification, resource permissions and provider readiness still apply.
+
+Optional overrides and provider configuration belong in the environment of **API, worker and beat**, before Django settings are imported. Keep keys server-side. Do not put keys in Dart defines, application logs, committed files or notification payloads.
 
 ```dotenv
-PLANNING_ENABLED_SERVICES=lifestyle,roommates,housing_groups,group_visits,group_applications,housing_requests,housing_offers,condition_reports,move_out_notices,replacements,commute,tenant_assistant
+# Optional: omitted or blank has the same effect as all.
+PLANNING_ENABLED_SERVICES=all
 PLANNING_ROUTES_API_KEY=<restricted-server-Google-Routes-key>
 PLANNING_GEMINI_API_KEY=<server-Gemini-key>
 PLANNING_GEMINI_MODEL=<supported-structured-output-model-id>
@@ -23,9 +26,24 @@ PLANNING_OWNER_OFFERS_PER_REQUEST_PER_DAY=5
 PLANNING_LEASE_REMINDER_DAYS=30
 ```
 
-`PLANNING_ENABLED_SERVICES` is empty by default. Missing Google credentials remove only the corresponding discovery capability. Other services remain independently configurable. `PLANNING_MOCK_DISCOVERY=False` in normal settings; test discovery additionally requires the explicitly permitted test rental provider. Never enable test settings, fake rental providers or QA endpoints in production.
+`PLANNING_ENABLED_SERVICES` accepts:
+
+| Value | Behavior |
+|---|---|
+| Unset, blank, whitespace or `all` | Select all twelve supported services. |
+| Comma-separated service names | Select only the listed services; surrounding whitespace and duplicates are ignored. |
+| `none` | Explicitly disable all planning services. |
+| Unknown names or a mixed `all`/`none` list | Stop startup with a configuration error, instead of silently disabling features. |
+
+**Blank no longer means disabled.** Use `none` for a deliberate shutdown. API permissions and settings use one shared service registry. Normal production and staging imports are covered by regression tests independently of the enabled test settings.
+
+Ten services work without Google credentials: lifestyle, roommates, housing groups, group visits/applications, housing requests/offers, condition reports, move-out notices and replacements. Commute becomes available when `PLANNING_ROUTES_API_KEY` is configured; the assistant requires both `PLANNING_GEMINI_API_KEY` and `PLANNING_GEMINI_MODEL`. Missing or whitespace-only provider configuration removes only the corresponding `verified_services` entry. Capabilities return a localized setup message for that service, and other services remain usable.
+
+`PLANNING_MOCK_DISCOVERY=False` in normal settings; test discovery additionally requires the explicitly permitted test rental provider. Never enable test settings, fake rental providers or QA endpoints in production.
 
 Flutter planning flags now default to true so the fresh account-scoped API grant controls rollout. Explicit `--dart-define=SOKOUN_<FEATURE>=false` remains a build kill switch. Flags grant no permissions. Keep production account verification and the existing signing/payment readiness checks enabled.
+
+The companion app's `RentalCapability` flags also default to true. Previously an ordinary build omitted these defines and refused every rental mutation locally before requesting server capabilities. An explicit false still disables that client capability. The app now preserves `blocking_reasons` from planning and rental capability responses; an unverified account, denied record action or invalid request is no longer mislabeled as a missing rental service. Rebuild the app for this correction. Deliberate server shutdowns using `PLANNING_ENABLED_SERVICES=none` report an environment-disabled reason.
 
 Enable the Routes API, billing, server key restrictions and quota alerts in the Google project. Arrival-time searches use transit only; route matrix batches contain at most 100 origins per destination. The adapter requests status, indices, condition, duration and fallback information; fallback/missing routes never satisfy a time limit. These limits follow the [Google Routes matrix reference](https://developers.google.com/maps/documentation/routes/reference/rest/v2/TopLevel/computeRouteMatrix).
 
@@ -80,11 +98,17 @@ Notifications use a durable event and a single in-app record. Push retries may b
 
 Use designated test accounts and test-owned inventory:
 
-1. Verify `GET /api/v1/features/v1/planning-capabilities/?capability=commute` reports the current account, enabled/verified services, expiry and configured modes; repeat for assistant and a non-provider feature.
+1. With a verified test account, verify `GET /api/v1/features/v1/planning-capabilities/?capability=lifestyle&action=read` reports all twelve `enabled_capabilities`, at least the ten non-Google `verified_services`, and `read` in `allowed_actions`. Repeat for commute and assistant after configuring their respective providers. A deliberate service subset changes the expected list.
 2. Submit one and two destination searches; observe queued/running/succeeded, independent times and hard limits. Verify cancellation, unavailable route, expired search and quota error.
 3. Ask a Gemini question with reviewed filters and an exact offer; verify catalog-grounded IDs/prices, unknown costs, editable questions, refinement and same-key retry.
 4. Exercise two-account consent, group capacity conflict, owner application review, report revision/addendum and competing renewal/departure.
 5. Verify beat/worker runtime evidence for `process-planning-jobs`, notification delivery, reminder deduplication, evidence scanning and existing rental schedules.
 6. On Android and iOS devices verify foreground/background polling, incoming links, workspace/login changes, voice permissions, private media and actual provider return paths.
 
-Rollback by disabling individual services in `PLANNING_ENABLED_SERVICES` and restarting API/worker/beat. Keep additive data and operation receipts. Do not reverse migrations or discard pending financial/rental operations as a feature rollback.
+Rollback by supplying the subset of services to retain in `PLANNING_ENABLED_SERVICES`, or use `PLANNING_ENABLED_SERVICES=none` to disable all planning, then restart API/worker/beat. An empty value enables the defaults. Keep additive data and operation receipts. Do not reverse migrations or discard pending financial/rental operations as a feature rollback.
+
+## Local enablement verification — 2026-10-13
+
+The enablement correction passed **154 distinct backend tests**: 104 planning/configuration tests on isolated PostgreSQL, plus 50 related capability, rental and runtime regressions on SQLite. The 56 new configuration tests import normal settings in fresh processes and exercise their resulting permissions through actual API views. They cover missing/blank/all/subset/none settings, invalid names, independent provider prerequisites, Arabic/English setup messages, private collection reads, profile save/replay/stale revision, and guest/unverified/inactive rejection. The existing planning suites cover provider adapters, consent, group/application cycles, report history, competing lease transitions and durable jobs.
+
+Django system checks and migration consistency passed; this correction adds no migration. Provider HTTP remains mocked in local cycle tests. These results do not certify Google credentials, deployed worker/beat execution or enabled native app cycles. Earlier live Android evidence showed the old deployment disabled all planning; redeploy this source before repeating those checks.

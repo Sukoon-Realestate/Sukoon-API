@@ -1,5 +1,6 @@
 from .base import *  # noqa
 from .base import SIMPLE_JWT
+from config.planning import SERVICES
 
 SECRET_KEY = "test-secret-key-not-for-production"
 DEBUG = False
@@ -39,20 +40,7 @@ RENTAL_PROVIDER_BACKEND = "fake"
 RENTAL_RUNTIME_ENVIRONMENT = "test"
 RENTAL_FAKE_PROVIDER_ALLOWED = True
 OWNER_TENANT_QA_ENABLED = True
-PLANNING_ENABLED_SERVICES = [
-    "lifestyle",
-    "roommates",
-    "housing_groups",
-    "group_visits",
-    "group_applications",
-    "housing_requests",
-    "housing_offers",
-    "condition_reports",
-    "move_out_notices",
-    "replacements",
-    "commute",
-    "tenant_assistant",
-]
+PLANNING_ENABLED_SERVICES = list(SERVICES)
 PLANNING_MOCK_DISCOVERY = True
 RENTAL_PROVIDER_WEBHOOK_SECRET = "test-rental-provider-secret"
 RENTAL_CHECKOUT_ENABLED = True

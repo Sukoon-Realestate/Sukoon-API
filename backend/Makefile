@@ -93,8 +93,8 @@ clean:
 .PHONY: help install run run-manage migrate makemigrations shell test test-cov check lint superuser static seed clean
 
 .PHONY: test-planning-completion test-remaining-cycles test-flutter-request-bodies
-test-planning-completion: ## Verify planning providers, consent, notifications, and competing lease transitions
-	$(CYCLE_PYTHON) -m pytest core_apps/features/tests/test_planning_completion.py core_apps/features/tests/test_planning_cycles.py core_apps/features/tests/test_planning_boundaries.py --ds=$(CYCLE_SETTINGS) --junitxml=$(CYCLE_EVIDENCE)/planning-completion.xml
+test-planning-completion: ## Verify normal deployment defaults, providers, consent, and competing lease transitions
+	$(CYCLE_PYTHON) -m pytest core_apps/features/tests/test_planning_configuration.py core_apps/features/tests/test_planning_completion.py core_apps/features/tests/test_planning_cycles.py core_apps/features/tests/test_planning_boundaries.py --ds=$(CYCLE_SETTINGS) --junitxml=$(CYCLE_EVIDENCE)/planning-completion.xml
 
 test-remaining-cycles: ## Exercise remaining cycles and export real planning/refund API contracts
 	SOKOUN_PLANNING_ARTIFACT_DIR=$(abspath $(CYCLE_EVIDENCE)) SOKOUN_CONTRACT_ARTIFACT_DIR=$(abspath $(CYCLE_EVIDENCE)) $(CYCLE_PYTHON) -m pytest core_apps/features/tests/test_planning_cycles.py core_apps/features/tests/test_planning_boundaries.py core_apps/features/tests/test_funded_settlement.py core_apps/features/tests/test_remaining_concurrency.py core_apps/features/tests/test_full_cycle_http.py --ds=$(CYCLE_SETTINGS) --junitxml=$(CYCLE_EVIDENCE)/remaining-cycles.xml

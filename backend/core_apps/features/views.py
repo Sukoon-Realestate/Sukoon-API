@@ -173,11 +173,12 @@ def planning_capabilities(request):
     authenticated = bool(user and user.is_authenticated)
     verified = bool(authenticated and user.is_active and user.is_verified)
     enabled = enabled_services() if verified else []
+    ready = ready_services(enabled)
     capability = request.query_params.get("capability", "")
     requested_action = request.query_params.get("action", "")
     allowed = (
         planning_actions(user, capability, request.query_params.get("subject_id", ""))
-        if capability in ready_services(enabled)
+        if capability in ready
         else []
     )
     if requested_action:
@@ -207,6 +208,22 @@ def planning_capabilities(request):
                 "خدمات التخطيط غير مفعلة في هذه البيئة.",
             )
         )
+    elif capability and capability not in enabled:
+        reasons.append(
+            localized(
+                request,
+                "This planning service is disabled in this environment.",
+                "هذه الخدمة غير مفعلة في هذه البيئة.",
+            )
+        )
+    elif capability and capability not in ready:
+        reasons.append(
+            localized(
+                request,
+                "This service is awaiting setup.",
+                "هذه الخدمة في انتظار استكمال الإعداد.",
+            )
+        )
     elif capability and not allowed:
         reasons.append(
             localized(
@@ -220,7 +237,7 @@ def planning_capabilities(request):
             "account_id": str(user.id) if authenticated else None,
             "account_verified": verified,
             "enabled_capabilities": enabled,
-            "verified_services": ready_services(enabled),
+            "verified_services": ready,
             "configuration": configuration(),
             "policy_version": "planning-policy-v1",
             "allowed_actions": allowed,
