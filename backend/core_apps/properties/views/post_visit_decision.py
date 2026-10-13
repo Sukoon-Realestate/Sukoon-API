@@ -1,4 +1,3 @@
-import json
 import logging
 import uuid
 from functools import wraps
@@ -63,23 +62,11 @@ def private_visit_errors(view):
 
 
 class PostVisitJsonRenderer(GenericJsonRenderer):
-    preserve_error_metadata = True
-
     def render(self, data, accepted_media_type=None, renderer_context=None):
         response = (renderer_context or {}).get("response")
         if response is not None:
             response["Cache-Control"] = "private, no-store"
-        output = super().render(data, accepted_media_type, renderer_context)
-        if (
-            response is not None
-            and response.status_code >= 400
-            and isinstance(data, dict)
-            and "code" in data
-        ):
-            payload = json.loads(output)
-            payload["code"] = data["code"]
-            return json.dumps(payload, ensure_ascii=False).encode("utf-8")
-        return output
+        return super().render(data, accepted_media_type, renderer_context)
 
 
 @api_view(["GET", "POST"])

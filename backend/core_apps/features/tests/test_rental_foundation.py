@@ -192,7 +192,7 @@ def test_placeholder_checkout_is_disabled_by_default():
     assert detail.data["can_pay"] is False
     assert detail.data["allowed_actions"] == []
     assert response.status_code == 403
-    assert response.json()["code"] == "capability_unavailable"
+    assert response["X-App-Error-Code"] == "capability_unavailable"
     assert CheckoutSession.objects.count() == 0
 
 

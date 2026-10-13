@@ -1,3 +1,4 @@
+from core_apps.common.contract_testing import api_json
 import pytest
 from django.urls import reverse
 from django.utils import timezone
@@ -112,7 +113,7 @@ class TestReceivedVisitsScheduledTime:
         url = reverse("owner-visit-list")
         res = auth_client.get(url)
         assert res.status_code == status.HTTP_200_OK
-        data = res.json()["data"]
+        data = api_json(res)["data"]
         assert len(data["results"]) == 1
         item = data["results"][0]
         assert item["id"] == str(visit.id)

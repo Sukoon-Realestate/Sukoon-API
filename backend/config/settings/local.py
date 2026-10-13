@@ -19,6 +19,7 @@ RENTAL_PROVIDER_WEBHOOK_SECRET = getenv(
     "RENTAL_PROVIDER_WEBHOOK_SECRET", "local-rental-provider-secret"
 )
 RENTAL_CHECKOUT_ENABLED = True
+RENTAL_FAKE_AUTO_CAPTURE = True
 RENTAL_CHECKOUT_ALLOWED_ORIGINS = ["https://fake-rental-provider.test"]
 RENTAL_CHECKOUT_RETURN_URL = "https://fake-rental-provider.test/payments/return"
 RENTAL_CHECKOUT_EXTERNAL_SCHEMES = []

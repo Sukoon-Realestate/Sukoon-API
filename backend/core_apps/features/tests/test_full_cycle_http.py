@@ -10,6 +10,7 @@ import requests
 from django.db import connection
 from django.utils import timezone
 
+from core_apps.common.contract_testing import api_json
 from core_apps.admin_api.models import StaffProfile
 from core_apps.features.models import (
     Lease,
@@ -53,8 +54,8 @@ class HttpActor:
             json=data if method != "GET" else None,
             timeout=10,
         )
-        payload = response.json()
-        response.data = payload.get("data", payload)
+        payload = api_json(response)
+        response.data = payload["data"]
         self.calls.append(
             {"method": method, "path": path, "status": response.status_code}
         )

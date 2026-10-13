@@ -41,7 +41,7 @@ def test_combined_refund_preserves_rent_deposit_allocation(
             format="json",
         )
         assert rejected.status_code == 409
-        assert rejected.json()["code"] == "refund_allocation_required"
+        assert rejected["X-App-Error-Code"] == "refund_allocation_required"
         assert not RefundRequest.objects.exists()
     refund = RefundRequest.objects.create(
         lease=lease,

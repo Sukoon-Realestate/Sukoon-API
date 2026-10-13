@@ -269,7 +269,7 @@ def test_settlement_refuses_changed_finances_and_applies_explicit_writeoff(funde
         format="json",
     )
     assert rejected.status_code == 409
-    assert rejected.json()["code"] == "settlement_financial_state_changed"
+    assert rejected["X-App-Error-Code"] == "settlement_financial_state_changed"
     assert not RefundRequest.objects.exists()
     item = propose(
         owner,

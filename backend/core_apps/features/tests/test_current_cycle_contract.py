@@ -189,7 +189,7 @@ def test_disabled_provider_has_no_onboarding_grants_or_server_error(
         format="json",
     )
     assert response.status_code == 403
-    assert response.json()["code"] == "capability_unavailable"
+    assert response["X-App-Error-Code"] == "capability_unavailable"
     assert not OwnerOnboardingSession.objects.exists()
 
 

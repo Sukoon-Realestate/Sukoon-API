@@ -580,7 +580,12 @@ class RentInvoice(TimeStampedModel):
         CANCELLED = "cancelled", "Cancelled"
         WRITTEN_OFF = "written_off", "Written off"
 
-    lease = models.ForeignKey(Lease, on_delete=models.PROTECT, related_name="invoices")
+    lease = models.ForeignKey(Lease, on_delete=models.PROTECT, related_name="invoices", null=True, blank=True)
+    purpose = models.CharField(max_length=20, default="rent", choices=[("rent", "Rent"), ("subscription", "Subscription"), ("advertising", "Advertising")])
+    payer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, null=True, blank=True, related_name="purchase_invoices")
+    workspace = models.CharField(max_length=10, default="tenant")
+    business_reference = models.CharField(max_length=100, blank=True, default="")
+    purchase_snapshot = models.JSONField(default=dict, blank=True)
     reference = models.CharField(max_length=50, unique=True)
     due_date = models.DateField()
     amount_minor = models.PositiveBigIntegerField()
@@ -607,6 +612,12 @@ class RentInvoice(TimeStampedModel):
     credits_minor = models.PositiveBigIntegerField(default=0)
     applied_minor = models.PositiveBigIntegerField(default=0)
     receipt_id = models.UUIDField(null=True, blank=True)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(check=(Q(purpose="rent", lease__isnull=False) | (Q(purpose__in=["subscription", "advertising"], lease__isnull=True, payer__isnull=False) & ~Q(business_reference=""))), name="invoice_purpose_has_subject"),
+            models.UniqueConstraint(fields=["purpose", "business_reference"], condition=~Q(purpose="rent"), name="unique_purchase_invoice_subject"),
+        ]
 
 
 class InvoiceLine(TimeStampedModel):
@@ -1245,6 +1256,7 @@ class PrivateAccessRevocation(TimeStampedModel):
 
 
 # Import the separate module so Django registers planning resources and migrations.
+from .billing_models import AccountSubscription, SubscriptionPlan  # noqa: E402,F401
 from .planning_models import (  # noqa: E402,F401
     CommuteSearch,
     ConditionReport,
@@ -1259,3 +1271,5 @@ from .planning_models import (  # noqa: E402,F401
     TenancyTransition,
     TenantAssistantTurn,
 )
+
+from .catalog_models import PromotionOption  # noqa: E402,F401

@@ -132,7 +132,7 @@ def test_server_eligibility_rejects_unattendable_visits(visit, state):
     assert current["post_visit_actions"]["can_submit"] is False
     response = authenticated(visit.tenant).post(path(visit), body(visit), format="json")
     assert response.status_code == 409
-    assert response.json()["code"] == (
+    assert response["X-App-Error-Code"] == (
         "visit_not_started" if state == "future" else "visit_not_confirmed"
     )
     assert not PropertyVisitDecision.objects.exists()
@@ -168,7 +168,7 @@ def test_input_validation_no_side_effects(visit, extra, code):
     response = authenticated(visit.tenant).post(
         path(visit), body(visit, **extra), format="json"
     )
-    assert response.status_code == 400 and response.json()["code"] == code
+    assert response.status_code == 400 and response["X-App-Error-Code"] == code
     assert (
         not PropertyVisitDecision.objects.exists()
         and not PlanningEvent.objects.exists()
@@ -204,7 +204,7 @@ def test_decline_preserves_unicode_private_reason_and_blocks_invitation(
         API + "tenancy-invitations/", invite_body(visit), format="json"
     )
     assert (
-        response.status_code == 409 and response.json()["code"] == "decision_conflict"
+        response.status_code == 409 and response["X-App-Error-Code"] == "decision_conflict"
     )
     assert not TenancyInvitation.objects.exists()
     assert text not in str(IdempotencyRecord.objects.get().response_data)
@@ -257,7 +257,7 @@ def test_recovery_and_replays_return_canonical_without_duplicate_event(visit):
         ),
     ]:
         response = client.post(path(visit), changed, format="json")
-        assert response.status_code == 409 and response.json()["code"] == expected
+        assert response.status_code == 409 and response["X-App-Error-Code"] == expected
     assert PropertyVisitDecision.objects.count() == PlanningEvent.objects.count() == 1
 
 
@@ -270,7 +270,7 @@ def test_schedule_revision_and_attended_appointment_are_protected(visit):
     visit.save(update_fields=["visit_time"])
     assert visit.revision == stale["expected_revision"] + 1
     response = authenticated(visit.tenant).post(path(visit), stale, format="json")
-    assert response.status_code == 409 and response.json()["code"] == "stale_revision"
+    assert response.status_code == 409 and response["X-App-Error-Code"] == "stale_revision"
     decide(visit)
     response = authenticated(visit.tenant).post(
         PROPERTIES + f"visits/{visit.id}/cancel/", {}, format="json"
@@ -305,7 +305,7 @@ def test_direct_invitation_cannot_omit_or_swap_source_or_offer(
     response = client.post(API + "tenancy-invitations/", without, format="json")
     assert (
         response.status_code == 400
-        and response.json()["code"] == "source_visit_required"
+        and response["X-App-Error-Code"] == "source_visit_required"
     )
     decide(visit)
     for extra, expected in [
@@ -315,7 +315,7 @@ def test_direct_invitation_cannot_omit_or_swap_source_or_offer(
         response = client.post(
             API + "tenancy-invitations/", invite_body(visit, **extra), format="json"
         )
-        assert response.status_code == 409 and response.json()["code"] == expected
+        assert response.status_code == 409 and response["X-App-Error-Code"] == expected
     response = authenticated(rental_participants[2]).post(
         API + "tenancy-invitations/", invite_body(visit), format="json"
     )
@@ -838,7 +838,7 @@ def test_same_offer_id_cannot_silently_change_visited_accommodation(visit):
     )
     assert (
         response.status_code == 409
-        and response.json()["code"] == "accommodation_changed"
+        and response["X-App-Error-Code"] == "accommodation_changed"
     )
     assert not TenancyInvitation.objects.exists()
 
@@ -892,7 +892,7 @@ def test_draft_edit_cannot_replace_the_accepted_physical_accommodation(visit):
         format="json",
     )
     assert response.status_code == 409, response.data
-    assert response.json()["code"] == "accommodation_changed"
+    assert response["X-App-Error-Code"] == "accommodation_changed"
     canonical.refresh_from_db()
     assert (canonical.offer_snapshot, canonical.revision) == before
 
@@ -917,7 +917,7 @@ def test_original_operation_is_recoverable_after_auxiliary_record_retention(visi
     response = client.post(path(other), payload, format="json")
     assert (
         response.status_code == 409
-        and response.json()["code"] == "idempotency_conflict"
+        and response["X-App-Error-Code"] == "idempotency_conflict"
     )
     assert PropertyVisitDecision.objects.count() == PlanningEvent.objects.count() == 1
 
@@ -940,7 +940,7 @@ def test_unexpected_failure_logs_identifiers_without_private_feedback(
     client = authenticated(visit.tenant)
     response = client.post(path(visit), payload, format="json")
     assert response.status_code == 500
-    assert response.json()["code"] == "decision_request_failed"
+    assert response["X-App-Error-Code"] == "decision_request_failed"
     assert (
         private_text not in response.content.decode()
         and private_text not in caplog.text

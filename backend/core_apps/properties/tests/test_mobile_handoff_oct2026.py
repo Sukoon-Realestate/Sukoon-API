@@ -1,3 +1,4 @@
+from core_apps.common.contract_testing import api_json
 import io
 import json
 import uuid
@@ -372,13 +373,13 @@ class TestCheck5_ModerationStatusAndTenantIsolation:
             detail_url, {"title": "Updated Title Under Review"}, format="multipart"
         )
         assert res_patch.status_code == status.HTTP_200_OK
-        assert res_patch.json()["data"]["status"] == Property.Status.UNDER_REVIEW
+        assert api_json(res_patch)["data"]["status"] == Property.Status.UNDER_REVIEW
 
         # Owner's list shows under_review
         owned_url = reverse("my-property-list")
         res_owned = auth_client.get(owned_url)
         assert res_owned.status_code == status.HTTP_200_OK
-        owned_props = res_owned.json()["data"]["results"]
+        owned_props = api_json(res_owned)["data"]["results"]
         matched = [p for p in owned_props if p["id"] == str(prop.id)]
         assert len(matched) == 1
         assert matched[0]["status"] == Property.Status.UNDER_REVIEW
@@ -387,7 +388,7 @@ class TestCheck5_ModerationStatusAndTenantIsolation:
         api_client.force_authenticate(user=another_user)
         res_tenant = api_client.get(detail_url)
         assert res_tenant.status_code == status.HTTP_200_OK
-        assert res_tenant.json()["data"]["ownership_proof"] is None
+        assert api_json(res_tenant)["data"]["ownership_proof"] is None
 
 
 @pytest.mark.django_db

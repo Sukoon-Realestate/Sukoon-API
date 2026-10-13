@@ -4,6 +4,7 @@ from rest_framework import serializers
 
 from phonenumber_field.serializerfields import PhoneNumberField
 from core_apps.profiles.serializers import CloudinarySerializerField
+from .journey import PrivateJourneySerializerMixin
 
 User = get_user_model()
 
@@ -71,7 +72,7 @@ class CreateUserSerializer(UserCreatePasswordRetypeSerializer):
         return user
 
 
-class CustomUserSerializer(UserSerializer):
+class CustomUserSerializer(PrivateJourneySerializerMixin, UserSerializer):
     full_name = serializers.ReadOnlyField(source="get_full_name")
     gender = serializers.ReadOnlyField(source="profile.gender")
     birth_date = serializers.ReadOnlyField(source="profile.birth_date")

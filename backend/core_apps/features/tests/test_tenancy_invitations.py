@@ -1,3 +1,4 @@
+from core_apps.common.contract_testing import api_json
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 from datetime import time, timedelta
@@ -348,7 +349,7 @@ def test_source_relationship_and_offer_revision_are_enforced(
         format="json",
     )
     assert no_source.status_code == 400
-    assert no_source.json()["code"] == "source_visit_required"
+    assert no_source["X-App-Error-Code"] == "source_visit_required"
 
     offer_id = str(uuid.uuid4())
     owned_property.rental_inventory = {
@@ -506,6 +507,7 @@ def test_list_is_workspace_scoped_and_empty_page_shape(participants, owned_prope
     assert empty.data == {
         "results": [],
         "count": 0,
+        "page": 1,
         "per_page": 20,
         "total_pages": 1,
         "next": None,
@@ -797,7 +799,7 @@ def test_followup_legacy_round_trip(participants, owned_property, language, inve
         "/api/v1/features/v1/tenancy-invitations/", payload, format="json"
     )
     assert created.status_code == 201
-    data = created.json()["data"]
+    data = api_json(created)["data"]
     assert data["status"] == "pending"
     assert data["revision"] == 1
     assert data["expires_at"]
@@ -806,7 +808,7 @@ def test_followup_legacy_round_trip(participants, owned_property, language, inve
     assert data["eligible_for_lease"] is False
     detail = f"/api/v1/features/v1/tenancy-invitations/{data['id']}/"
     picker = f"/api/v1/features/v1/lease-tenants/?property_id={owned_property.id}"
-    assert owner_client.get(picker).json()["data"]["results"] == []
+    assert owner_client.get(picker).json()["data"] == []
     answer = {"decision": "accepted", "revision": 1, "request_key": str(uuid.uuid4())}
     assert (
         authenticated(stranger)
@@ -821,12 +823,12 @@ def test_followup_legacy_round_trip(participants, owned_property, language, inve
     tenant_client.defaults["HTTP_ACCEPT_LANGUAGE"] = language
     accepted = tenant_client.post(detail + "respond/", answer, format="json")
     assert accepted.status_code == 200
-    assert accepted.json()["data"]["accepted_at"]
-    assert accepted.json()["data"]["revision"] == 2
-    assert accepted.json()["data"]["eligible_for_lease"] is True
+    assert api_json(accepted)["data"]["accepted_at"]
+    assert api_json(accepted)["data"]["revision"] == 2
+    assert api_json(accepted)["data"]["eligible_for_lease"] is True
     assert (
         tenant_client.post(detail + "respond/", answer, format="json").json()
-        == accepted.json()
+        == api_json(accepted)
     )
     assert (
         tenant_client.post(
@@ -842,7 +844,7 @@ def test_followup_legacy_round_trip(participants, owned_property, language, inve
         ).status_code
         == 409
     )
-    assert owner_client.get(picker).json()["data"]["results"][0]["id"] == str(tenant.id)
+    assert owner_client.get(picker).json()["data"][0]["id"] == str(tenant.id)
     lease_payload = followup_lease_payload(owned_property, tenant)
     draft = owner_client.post(
         "/api/v1/features/v1/leases/", lease_payload, format="json"
@@ -852,13 +854,13 @@ def test_followup_legacy_round_trip(participants, owned_property, language, inve
         owner_client.post(
             "/api/v1/features/v1/leases/", lease_payload, format="json"
         ).json()
-        == draft.json()
+        == api_json(draft)
     )
-    lease = Lease.objects.get(id=draft.json()["data"]["id"])
+    lease = Lease.objects.get(id=api_json(draft)["data"]["id"])
     assert lease.status == "draft"
     assert lease.rent_amount_minor == 6000000000
     assert TenancyInvitation.objects.get(id=data["id"]).lease_id == lease.pk
-    assert owner_client.get(picker).json()["data"]["results"] == []
+    assert owner_client.get(picker).json()["data"] == []
     assert (
         owner_client.post(
             f"/api/v1/features/v1/leases/{lease.id}/cancel/",

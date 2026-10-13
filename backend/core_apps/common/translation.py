@@ -96,6 +96,8 @@ AR_TO_EN_MESSAGES = {
 }
 
 # Reverse-populate missing reverse mappings
+from .billing_translations import MESSAGES as BILLING_MESSAGES
+EN_TO_AR_MESSAGES.update(BILLING_MESSAGES)
 for en_msg, ar_msg in EN_TO_AR_MESSAGES.items():
     if ar_msg not in AR_TO_EN_MESSAGES:
         AR_TO_EN_MESSAGES[ar_msg] = en_msg

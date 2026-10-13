@@ -6,6 +6,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework import serializers
 from phonenumber_field.serializerfields import PhoneNumberField
 from .models import Contract, Profile, UserSettings
+from core_apps.users.journey import PrivateJourneySerializerMixin
 from .services.profile_service import (
     ARABIC_MONTHS,
     format_arabic_date,
@@ -130,7 +131,7 @@ class UpdateProfileSerializer(serializers.ModelSerializer):
 # * =========================================================================
 
 
-class MyAccountUserSerializer(serializers.Serializer):
+class MyAccountUserSerializer(PrivateJourneySerializerMixin, serializers.Serializer):
     id = serializers.UUIDField(read_only=True)
     full_name = serializers.CharField(read_only=True)
     first_name = serializers.CharField(read_only=True, allow_blank=True)
@@ -164,7 +165,7 @@ class MyAccountScreenSerializer(serializers.Serializer):
     account_details = MyAccountDetailsSerializer(read_only=True)
 
 
-class AccountSummaryUserSerializer(serializers.Serializer):
+class AccountSummaryUserSerializer(PrivateJourneySerializerMixin, serializers.Serializer):
     id = serializers.UUIDField(read_only=True)
     full_name = serializers.CharField(read_only=True)
     avatar = serializers.CharField(read_only=True, allow_null=True)

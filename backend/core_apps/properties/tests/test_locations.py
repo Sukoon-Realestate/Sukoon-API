@@ -1,3 +1,4 @@
+from core_apps.common.contract_testing import api_json
 import pytest
 from django.db import IntegrityError
 from django.urls import reverse
@@ -53,7 +54,7 @@ class TestGovernorateList:
     def test_guest_can_list_governorates(self, api_client, cairo_governorate):
         response = api_client.get(reverse("governorate-list"))
         assert response.status_code == status.HTTP_200_OK
-        assert response.json()["data"]["results"][0]["name"] == "Cairo"
+        assert api_json(response)["data"]["results"][0]["name"] == "Cairo"
 
 
 @pytest.mark.django_db
@@ -68,7 +69,7 @@ class TestCityList:
             reverse("city-list"), {"governorate": str(cairo_governorate.id)}
         )
         assert response.status_code == status.HTTP_200_OK
-        results = response.json()["data"]["results"]
+        results = api_json(response)["data"]["results"]
         assert [item["name"] for item in results] == ["Cairo"]
 
 

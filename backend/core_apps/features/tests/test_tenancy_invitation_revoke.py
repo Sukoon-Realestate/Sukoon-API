@@ -123,7 +123,7 @@ def test_owner_can_revoke_without_provider_and_replay_original_receipt(
         detail_url + "revoke/", {**body, "note": "changed"}, format="json"
     )
     assert changed.status_code == 409
-    assert changed.json()["code"] == "idempotency_conflict"
+    assert changed["X-App-Error-Code"] == "idempotency_conflict"
     invitation.refresh_from_db()
     assert invitation.revision == 5
     assert (
@@ -229,7 +229,7 @@ def test_revocation_rejects_stale_revision_without_mutation(invitation):
         format="json",
     )
     assert response.status_code == 409
-    assert response.json()["code"] == "stale_revision"
+    assert response["X-App-Error-Code"] == "stale_revision"
     invitation.refresh_from_db()
     assert invitation.status == "pending"
     assert invitation.revision == 1

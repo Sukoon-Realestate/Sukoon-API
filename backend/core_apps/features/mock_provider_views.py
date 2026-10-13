@@ -164,6 +164,8 @@ def payment_event(request, attempt_id):
             id=attempt_id,
             payer=request.user,
         )
+        if candidate.invoice.lease_id is None:
+            raise NotFound()
         Lease.objects.select_for_update().get(pk=candidate.invoice.lease_id)
         attempt = get_object_or_404(
             PaymentAttempt.objects.select_for_update(),

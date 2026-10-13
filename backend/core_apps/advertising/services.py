@@ -355,7 +355,7 @@ def calendar_expiry(starts_at, duration_unit, duration_count):
     return resolve_cairo_local(naive).astimezone(datetime_timezone.utc)
 
 
-def activate_with_mock_payment(owner, advertisement_id, operation_id, payment_mode):
+def activate_with_mock_payment(owner, advertisement_id, operation_id, payment_mode, *, invoice=None, attempt=None):
     with transaction.atomic():
         advertisement = (
             Advertisement.objects.select_for_update()
@@ -398,6 +398,16 @@ def activate_with_mock_payment(owner, advertisement_id, operation_id, payment_mo
                     errors={"status": ["invalid_transition"]},
                 )
             return advertisement, existing, False
+        # New collections must originate from a reviewed, shared invoice.
+        # The old endpoint remains useful for replaying historical ad receipts.
+        from core_apps.features.providers import checkout_available
+        if not checkout_available():
+            raise AdvertisingServiceError("Simulated payment is unavailable.", status_code=403)
+        if (invoice is None or attempt is None or invoice.purpose != "advertising"
+                or invoice.purchase_snapshot.get("subject_id") != str(advertisement.id)
+                or invoice.payer_id != owner.pk or attempt.invoice_id != invoice.pk):
+            raise AdvertisingServiceError("Review the advertisement invoice before paying.", status_code=409,
+                                          errors={"invoice": ["invoice_required"]})
         if advertisement.status != Advertisement.Status.PENDING_PAYMENT:
             raise AdvertisingServiceError(
                 "This advertisement cannot be activated from its current state.",

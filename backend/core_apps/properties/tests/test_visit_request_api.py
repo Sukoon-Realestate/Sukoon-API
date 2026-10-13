@@ -1,3 +1,4 @@
+from core_apps.common.contract_testing import api_json
 from datetime import date, time, timedelta
 import uuid
 
@@ -56,7 +57,7 @@ class TestTenantVisitRequestScreens:
         response = auth_client.get(reverse("tenant-visit-request-list"))
 
         assert response.status_code == status.HTTP_200_OK
-        card = response.json()["data"]["results"][0]
+        card = api_json(response)["data"]["results"][0]
         assert set(card) == {
             "id",
             "property",
@@ -707,7 +708,7 @@ class TestBilingualVisitLabels:
         )
         assert res_en.status_code == status.HTTP_200_OK
         assert res_en.headers.get("Content-Language") == "en"
-        card_en = res_en.json()["data"]["results"][0]
+        card_en = api_json(res_en)["data"]["results"][0]
         assert card_en["status_label"] == "Accepted"
         assert "PM" in card_en["time_label"]
         # Free-text detail preservation
@@ -716,7 +717,7 @@ class TestBilingualVisitLabels:
             HTTP_ACCEPT_LANGUAGE="en",
         )
         assert detail_res_en.status_code == status.HTTP_200_OK
-        assert detail_res_en.json()["data"]["note"] == custom_note
+        assert api_json(detail_res_en)["data"]["note"] == custom_note
 
         # Arabic request
         res_ar = auth_client.get(
@@ -725,7 +726,7 @@ class TestBilingualVisitLabels:
         )
         assert res_ar.status_code == status.HTTP_200_OK
         assert res_ar.headers.get("Content-Language") == "ar"
-        card_ar = res_ar.json()["data"]["results"][0]
+        card_ar = api_json(res_ar)["data"]["results"][0]
         assert card_ar["status_label"] == "مقبول"
         assert "م" in card_ar["time_label"]
         detail_res_ar = auth_client.get(
@@ -733,7 +734,7 @@ class TestBilingualVisitLabels:
             HTTP_ACCEPT_LANGUAGE="ar",
         )
         assert detail_res_ar.status_code == status.HTTP_200_OK
-        assert detail_res_ar.json()["data"]["note"] == custom_note
+        assert api_json(detail_res_ar)["data"]["note"] == custom_note
 
     def test_owner_calendar_bilingual_labels(
         self,

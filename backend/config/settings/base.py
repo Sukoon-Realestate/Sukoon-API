@@ -337,8 +337,8 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.UserRateThrottle",  # ? throttle auth-users to a given rate of requests.
     ),
     "DEFAULT_THROTTLE_RATES": {
-        "anon": "200/day",
-        "user": "500/day",
+        "anon": "2000/day",
+        "user": "2000/day",
     },
 }
 

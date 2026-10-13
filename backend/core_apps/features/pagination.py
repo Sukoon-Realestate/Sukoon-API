@@ -10,6 +10,7 @@ class FeaturePagination(PageNumberPagination):
     def get_paginated_response(self, data):
         return Response(
             {
+                "page": self.page.number,
                 "results": data,
                 "count": self.page.paginator.count,
                 "per_page": self.page.paginator.per_page,

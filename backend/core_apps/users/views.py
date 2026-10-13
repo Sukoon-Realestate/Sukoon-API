@@ -15,6 +15,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from core_apps.common.renderers import GenericJsonRenderer
+from .journey import canonical_user
+from .token_serializers import CanonicalTokenObtainPairSerializer
 from core_apps.users.serializers import (
     CompleteRegisterSerializer,
     CreateUserSerializer,
@@ -90,6 +92,7 @@ def set_auth_cookies(
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CanonicalTokenObtainPairSerializer
     def post(self, request: Request, *args, **kwargs) -> Response:
         token_res = super().post(request, *args, **kwargs)
 
@@ -170,7 +173,7 @@ class CustomProviderAuthView(ProviderAuthView):
 class LogoutAPIView(APIView):
     def post(self, request: Request, *args, **kwargs) -> Response:
 
-        response = Response(status=status.HTTP_204_NO_CONTENT)
+        response = Response(status=status.HTTP_200_OK)
 
         response.delete_cookie("access")
         response.delete_cookie("refresh")
@@ -185,12 +188,7 @@ def _issue_jwt(user) -> dict:
 
 
 def _user_payload(user) -> dict:
-    return {
-        "id": str(user.id),
-        "email": user.email,
-        "first_name": user.first_name,
-        "last_name": user.last_name,
-    }
+    return canonical_user(user)
 
 
 class GoogleAuthView(APIView):
@@ -341,7 +339,7 @@ class UserDeleteAPIView(generics.DestroyAPIView):
         instance = self.get_object()
         self.perform_destroy(instance)
 
-        response = Response(status=status.HTTP_204_NO_CONTENT)
+        response = Response(status=status.HTTP_200_OK)
 
         # * Clear authentication cookies
         response.delete_cookie("access", path=settings.COOKIE_PATH)
@@ -383,13 +381,7 @@ class UserRegisterAPIView(APIView):
         return Response(
             {
                 "message": "Registration successful. A verification code has been sent to your email.",
-                "user": {
-                    "id": str(user.id),
-                    "email": user.email,
-                    "first_name": user.first_name,
-                    "last_name": user.last_name,
-                    "is_verified": user.is_verified,
-                },
+                "user": canonical_user(user),
             },
             status=status.HTTP_201_CREATED,
         )
@@ -423,13 +415,7 @@ class VerifyEmailAPIView(APIView):
         response = Response(
             {
                 "message": "Email verified successfully.",
-                "user": {
-                    "id": str(user.id),
-                    "email": user.email,
-                    "first_name": user.first_name,
-                    "last_name": user.last_name,
-                    "is_verified": user.is_verified,
-                },
+                "user": canonical_user(user),
             },
             status=status.HTTP_200_OK,
         )

@@ -1,3 +1,4 @@
+from core_apps.common.contract_testing import api_json
 import io
 import uuid
 from PIL import Image
@@ -221,7 +222,7 @@ class TestPropertyViews:
         url = reverse("property-list")
         response = api_client.get(url)
         assert response.status_code == status.HTTP_200_OK
-        data = response.json()["data"]
+        data = api_json(response)["data"]
         assert "results" in data
         assert len(data["results"]) >= 1
 
@@ -244,7 +245,7 @@ class TestPropertyViews:
         response = auth_client.get(url)
 
         assert response.status_code == status.HTTP_200_OK
-        json_data = response.json()
+        json_data = api_json(response)
         assert "results" in json_data["data"]
         assert len(json_data["data"]["results"]) == 1
 
@@ -272,7 +273,7 @@ class TestPropertyViews:
             response = auth_client.get(url)
 
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.json()["data"]["results"]) == 5
+        assert len(api_json(response)["data"]["results"]) == 5
         assert len(ctx.captured_queries) <= 4
 
     def test_new_properties_supports_search_and_filter(self, auth_client, user):
@@ -294,7 +295,7 @@ class TestPropertyViews:
 
         response = auth_client.get(url, {"search": "Maadi"})
         assert response.status_code == status.HTTP_200_OK
-        response_data = response.json()["data"]
+        response_data = api_json(response)["data"]
         results = response_data["results"]
         assert response_data["count"] == 1
         assert len(results) == 1
@@ -302,7 +303,7 @@ class TestPropertyViews:
 
         response = auth_client.get(url, {"price_max": 10000})
         assert response.status_code == status.HTTP_200_OK
-        response_data = response.json()["data"]
+        response_data = api_json(response)["data"]
         results = response_data["results"]
         assert response_data["count"] == 1
         assert len(results) == 1
@@ -657,7 +658,7 @@ class TestMyPropertyListView:
         response = auth_client.get(url)
 
         assert response.status_code == status.HTTP_200_OK
-        json_data = response.json()
+        json_data = api_json(response)
         assert len(json_data["data"]["results"]) == 1
 
         item = json_data["data"]["results"][0]
@@ -686,7 +687,7 @@ class TestMyPropertyListView:
             response = auth_client.get(url)
 
         assert response.status_code == status.HTTP_200_OK
-        json_data = response.json()
+        json_data = api_json(response)
         assert len(json_data["data"]["results"]) == 5
         assert len(ctx.captured_queries) <= 3
 
@@ -805,7 +806,7 @@ class TestPropertyVisitViews:
         url = reverse("tenant-visit-list")
         response = auth_client.get(url)
         assert response.status_code == status.HTTP_200_OK
-        json_data = response.json()
+        json_data = api_json(response)
         assert "data" in json_data
         assert len(json_data["data"]["results"]) == 1
 
@@ -830,7 +831,7 @@ class TestPropertyVisitViews:
         url = reverse("owner-visit-list")
         response = auth_client.get(url)
         assert response.status_code == status.HTTP_200_OK
-        json_data = response.json()
+        json_data = api_json(response)
         assert "data" in json_data
         assert len(json_data["data"]["results"]) == 1
         result = json_data["data"]["results"][0]
@@ -879,7 +880,7 @@ class TestPropertyVisitViews:
         response = auth_client.get(url, {"status": "confirmed"})
 
         assert response.status_code == status.HTTP_200_OK
-        results = response.json()["data"]["results"]
+        results = api_json(response)["data"]["results"]
         assert len(results) == 1
         assert results[0]["status"] == "مؤكد"
 
@@ -912,7 +913,7 @@ class TestPropertyVisitViews:
         response = auth_client.get(url, {"status": "pending"})
 
         assert response.status_code == status.HTTP_200_OK
-        results = response.json()["data"]["results"]
+        results = api_json(response)["data"]["results"]
         assert len(results) == 1
         assert results[0]["status"] == PropertyVisit.Status.PENDING
 
@@ -938,7 +939,7 @@ class TestPropertyVisitViews:
         list_url = reverse("owner-visit-list")
         list_response = auth_client.get(list_url)
         assert list_response.status_code == status.HTTP_200_OK
-        results = list_response.json()["data"]["results"]
+        results = api_json(list_response)["data"]["results"]
         assert set(results[0].keys()) == {
             "id",
             "property_id",

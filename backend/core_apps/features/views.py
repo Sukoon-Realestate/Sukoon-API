@@ -1,3 +1,4 @@
+from .catalog_models import PromotionOption
 import copy
 import hashlib
 import json
@@ -68,18 +69,6 @@ from .services.lease_permissions import can_cancel_draft
 
 User = get_user_model()
 FEATURE_DECORATORS = [api_view]
-BOOST_OPTIONS = {
-    "week": {
-        "duration_days": 7,
-        "title_en": "Free promotion for 7 days",
-        "title_ar": "ترويج مجاني لمدة 7 أيام",
-    },
-    "month": {
-        "duration_days": 30,
-        "title_en": "Free promotion for 30 days",
-        "title_ar": "ترويج مجاني لمدة 30 يومًا",
-    },
-}
 LEASE_TEMPLATES = [
     {
         "id": "eg-residential-v1",
@@ -317,11 +306,12 @@ def configuration(request):
     if workspace == "owner":
         options = [
             {
-                "id": key,
-                "title": value["title_ar" if lang == "ar" else "title_en"],
-                "duration_days": value["duration_days"],
+                "id": value.id,
+                "title": value.title_ar if lang == "ar" else value.title_en,
+                "duration_days": value.duration_days,
+                "revision": value.revision,
             }
-            for key, value in BOOST_OPTIONS.items()
+            for value in PromotionOption.objects.filter(active=True)
         ]
     return Response(
         {
@@ -352,7 +342,7 @@ def boost_campaigns(request):
     )
     if replay:
         return replay
-    option = BOOST_OPTIONS.get(request.data["option_id"])
+    option = PromotionOption.objects.filter(id=request.data["option_id"], active=True).first()
     if not option:
         raise ValidationError({"option_id": "Unsupported promotion option."})
     property_obj = get_object_or_404(
@@ -370,9 +360,9 @@ def boost_campaigns(request):
             owner=request.user,
             property=property_obj,
             option_id=request.data["option_id"],
-            duration_days=option["duration_days"],
+            duration_days=option.duration_days,
             starts_at=now,
-            ends_at=now + timedelta(days=option["duration_days"]),
+            ends_at=now + timedelta(days=option.duration_days),
             status=BoostCampaign.Status.ACTIVE,
         )
         data = {
@@ -1241,7 +1231,7 @@ def _invoice_queryset(user, workspace):
 @renderer_classes([FeatureJsonRenderer])
 def rent_invoices(request):
     RentInvoice.objects.filter(
-        status=RentInvoice.Status.DUE, due_date__lt=timezone.localdate()
+        purpose="rent", status=RentInvoice.Status.DUE, due_date__lt=timezone.localdate()
     ).update(status=RentInvoice.Status.OVERDUE)
     queryset = _invoice_queryset(
         request.user, request.query_params.get("workspace")
@@ -1264,7 +1254,7 @@ def rent_invoices(request):
 
 def _get_authorized_invoice(request, invoice_id):
     invoice = get_object_or_404(
-        RentInvoice.objects.select_related("lease", "lease__property"), id=invoice_id
+        RentInvoice.objects.select_related("lease", "lease__property"), id=invoice_id, purpose="rent"
     )
     if request.user not in (invoice.lease.owner, invoice.lease.tenant):
         raise NotFound()

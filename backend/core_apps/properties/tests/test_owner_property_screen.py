@@ -1,3 +1,4 @@
+from core_apps.common.contract_testing import api_json
 import pytest
 from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
@@ -101,7 +102,7 @@ class TestMyPropertyListEndpoint:
         response = auth_client.get(url)
 
         assert response.status_code == status.HTTP_200_OK
-        results = response.json()["data"]["results"]
+        results = api_json(response)["data"]["results"]
         assert len(results) == 3
 
         # Map results by title

@@ -145,7 +145,7 @@ def error_response(error, request=None):
     text = error.message
     if request is not None and language(request) == "ar":
         text = ERROR_MESSAGES_AR.get(text, text)
-    return Response(
+    response = Response(
         {
             "key": "error",
             "message": text,
@@ -154,6 +154,15 @@ def error_response(error, request=None):
         },
         status=error.status_code,
     )
+
+    codes = {"invoice_required", "too_large", "invalid_image", "unsupported_type", "not_eligible", "idempotency_conflict", "operation_processing", "not_available", "plan_changed", "invalid_payment_operation", "unsupported", "invalid_transition", "unavailable"}
+    if isinstance(error.errors, dict):
+        for errors in error.errors.values():
+            for code in errors if isinstance(errors, list) else []:
+                if code in codes:
+                    response["X-App-Error-Code"] = code
+                    return response
+    return response
 
 
 def validation_error_response(serializer, request):
@@ -272,6 +281,11 @@ def owner_advertisement_collection(request):
             page = []
         payload = {
             "count": paginator.count,
+            "page": page_number,
+            "per_page": page_size,
+            "total_pages": paginator.num_pages,
+            "next": page_number + 1 if page_number < paginator.num_pages else None,
+            "previous": page_number - 1 if page_number > 1 else None,
             "results": [advertisement_payload(request, item) for item in page],
         }
         return finalize(

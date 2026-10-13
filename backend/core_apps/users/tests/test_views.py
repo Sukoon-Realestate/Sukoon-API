@@ -52,9 +52,9 @@ class TestLoginView:
 @pytest.mark.django_db
 class TestLogoutView:
     def test_logout_clears_auth_cookies(self, auth_client):
-        """Bug: Response(status.HTTP_204_NO_CONTENT) sets data=204, not status."""
+        """Bug: Response(status.HTTP_200_OK) sets data=204, not status."""
         res = auth_client.post(LOGOUT_URL)
-        assert res.status_code == status.HTTP_204_NO_CONTENT
+        assert res.status_code == status.HTTP_200_OK
         assert res.cookies["access"].value == ""
         assert res.cookies["refresh"].value == ""
         assert res.cookies["logged_in"].value == ""
@@ -112,7 +112,7 @@ class TestUserDeleteView:
     ):
         user_id = user.id
         res = auth_client.delete(DELETE_ACCOUNT_URL)
-        assert res.status_code == status.HTTP_204_NO_CONTENT
+        assert res.status_code == status.HTTP_200_OK
 
         # Cookies cleared
         assert res.cookies["access"].value == ""
@@ -127,7 +127,7 @@ class TestUserDeleteView:
     def test_post_delete_account_success(self, auth_client, user):
         user_id = user.id
         res = auth_client.post(DELETE_ACCOUNT_URL, {}, format="json")
-        assert res.status_code == status.HTTP_204_NO_CONTENT
+        assert res.status_code == status.HTTP_200_OK
         assert res.cookies["access"].value == ""
 
         from django.contrib.auth import get_user_model
@@ -137,7 +137,7 @@ class TestUserDeleteView:
     def test_delete_account_alias_url_success(self, auth_client, user):
         user_id = user.id
         res = auth_client.delete(PROFILE_DELETE_ACCOUNT_URL)
-        assert res.status_code == status.HTTP_204_NO_CONTENT
+        assert res.status_code == status.HTTP_200_OK
 
         from django.contrib.auth import get_user_model
 
@@ -150,7 +150,7 @@ class TestUserDeleteView:
             {"password": "Testpass123!"},
             format="json",
         )
-        assert res.status_code == status.HTTP_204_NO_CONTENT
+        assert res.status_code == status.HTTP_200_OK
 
         from django.contrib.auth import get_user_model
 

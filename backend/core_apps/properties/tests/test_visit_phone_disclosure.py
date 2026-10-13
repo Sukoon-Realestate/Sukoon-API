@@ -1,3 +1,4 @@
+from core_apps.common.contract_testing import api_json
 from datetime import time, timedelta
 
 import pytest
@@ -89,7 +90,7 @@ def test_pending_visit_hides_numbers_across_visit_property_and_chat_reads(
     send_message(conversation=conversation, sender=owner, content="Hello")
     messages = api_client.get(
         reverse("message-list", kwargs={"id": conversation.id})
-    ).json()["data"]["results"]
+    ).json()["data"]
     assert "phone_number" not in messages[0]["sender"]
 
     api_client.force_authenticate(owner)
@@ -151,7 +152,7 @@ def test_acceptance_discloses_both_numbers_is_idempotent_and_survives_cancel(
     owner_list = api_client.get(reverse("owner-visit-request-list")).json()["data"]
     assert owner_list["results"][0]["tenant"]["phone_number"] == "+201112345678"
     legacy_owner_list = api_client.get(reverse("owner-visit-list")).json()["data"]
-    assert legacy_owner_list["results"][0]["tenant"]["is_phone_revealed"] is True
+    assert legacy_owner_list[0]["tenant"]["is_phone_revealed"] is True
 
     api_client.force_authenticate(tenant)
     tenant_detail = api_client.get(
@@ -172,7 +173,7 @@ def test_acceptance_discloses_both_numbers_is_idempotent_and_survives_cancel(
     assert conversation_data["other_participant"]["phone_number"] == "+201001234567"
     assert conversation_data["other_participant"]["is_phone_revealed"] is True
     conversation_list = api_client.get(reverse("conversation-list")).json()["data"]
-    assert conversation_list["results"][0]["other_participant"]["phone_number"] == (
+    assert conversation_list[0]["other_participant"]["phone_number"] == (
         "+201001234567"
     )
     conversation_create = api_client.post(

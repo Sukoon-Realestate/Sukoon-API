@@ -264,6 +264,9 @@ def quote_fingerprint(invoice, request_key, amount_minor, expires_at):
 
 
 def payment_attempt_payload(attempt, user=None):
+    if attempt.invoice.purpose != "rent":
+        from .billing_projection import purchase_attempt_payload
+        return purchase_attempt_payload(attempt)
     from ..providers import mock_completion_metadata
     from .refunds import remaining_components
 
@@ -545,6 +548,8 @@ def process_provider_event(event):
     lease_id = PaymentAttempt.objects.values_list("invoice__lease_id", flat=True).get(
         pk=event.payment_attempt_id
     )
+    if lease_id is None:
+        raise RentalConflict("This provider event is not a rental payment.", code="invalid_payment_domain")
     Lease.objects.select_for_update().get(pk=lease_id)
     attempt = PaymentAttempt.objects.select_for_update().get(
         pk=event.payment_attempt_id

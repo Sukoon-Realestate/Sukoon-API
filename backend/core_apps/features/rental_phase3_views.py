@@ -63,10 +63,12 @@ def _invoice(request, invoice_id, lock=False):
     )
     if lock:
         candidate = get_object_or_404(queryset, id=invoice_id)
+        if candidate.lease_id is None:
+            raise NotFound()
         Lease.objects.select_for_update().get(pk=candidate.lease_id)
         queryset = queryset.select_for_update(of=("self",))
     invoice = get_object_or_404(queryset, id=invoice_id)
-    if request.user not in (invoice.lease.owner, invoice.lease.tenant):
+    if invoice.lease_id is None or request.user not in (invoice.lease.owner, invoice.lease.tenant):
         raise NotFound()
     return invoice
 
@@ -75,9 +77,14 @@ def _attempt(request, attempt_id, lock=False):
     queryset = PaymentAttempt.objects.select_related("invoice__lease", "quote")
     if lock:
         candidate = get_object_or_404(queryset, id=attempt_id)
-        Lease.objects.select_for_update().get(pk=candidate.invoice.lease_id)
+        if candidate.invoice.lease_id is not None:
+            Lease.objects.select_for_update().get(pk=candidate.invoice.lease_id)
         queryset = queryset.select_for_update(of=("self",))
     attempt = get_object_or_404(queryset, id=attempt_id)
+    if attempt.invoice.lease_id is None:
+        if request.user.pk != attempt.payer_id:
+            raise NotFound()
+        return attempt
     if request.user not in (attempt.invoice.lease.owner, attempt.invoice.lease.tenant):
         raise NotFound()
     return attempt
@@ -305,6 +312,17 @@ def rent_invoice_checkout(request, invoice_id):
             navigation=navigation,
             return_state=navigation["return_state"],
         )
+        auto_captured = fake_provider_available() and getattr(settings, "RENTAL_FAKE_AUTO_CAPTURE", False)
+        if auto_captured:
+            apply_fake_payment_event({
+                "event_id": f"mock-checkout:{attempt.id}:{request_key}",
+                "type": "payment.captured", "sequence": attempt.revision,
+                "payment_attempt_id": str(attempt.id), "amount_minor": attempt.amount_minor,
+                "currency": attempt.currency,
+            })
+            attempt.refresh_from_db()
+            session.status = "completed"
+            session.save(update_fields=["status", "updated_at"])
         resource = {
             "session_id": str(session.id),
             **mock_completion_metadata(
@@ -315,7 +333,7 @@ def rent_invoice_checkout(request, invoice_id):
             "quote_id": str(quote.id),
             "invoice_revision": invoice.revision,
             "request_key": str(request_key),
-            "status": "created",
+            "status": "captured" if auto_captured else "created",
             "amount": _money(attempt.amount_minor),
             "checkout_url": session.hosted_url,
             "expires_at": expires.isoformat(),
@@ -343,7 +361,8 @@ def payment_attempts(request):
     request_key = request.query_params.get("request_key")
     if not invoice_id or not request_key:
         raise ValidationError("invoice_id and request_key are required for recovery.")
-    invoice = _invoice(request, invoice_id)
+    from .services.billing_invoices import authorized_invoice
+    invoice = authorized_invoice(request.user, invoice_id)
     attempts = list(
         PaymentAttempt.objects.filter(
             invoice=invoice, payer=request.user, request_key=request_key
