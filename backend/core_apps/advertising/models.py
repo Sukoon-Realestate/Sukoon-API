@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.core.exceptions import ValidationError
 
 from core_apps.common.models import TimeStampedModel
 
@@ -26,6 +27,14 @@ class AdvertisingPlan(models.Model):
 
     class Meta:
         ordering = ["sort_order", "id"]
+
+    def clean(self):
+        if self.amount_minor <= 0 or self.currency != "EGP" or self.exponent != 2:
+            raise ValidationError("Supply a positive EGP price with exponent 2.")
+        if not 1 <= self.duration_count <= 120:
+            raise ValidationError({"duration_count": "Choose a duration from 1 to 120."})
+        if not self.title_en.strip() or not self.title_ar.strip():
+            raise ValidationError("Arabic and English titles are required.")
 
     def __str__(self):
         return self.title_en

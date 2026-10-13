@@ -101,7 +101,7 @@ def get_authorized_rental_subject(user, subject_id):
         raise NotFound()
 
     invoice = (
-        RentInvoice.objects.filter(id=subject_id)
+        RentInvoice.objects.filter(id=subject_id, purpose="rent")
         .select_related("lease__owner", "lease__tenant")
         .first()
     )
@@ -111,7 +111,7 @@ def get_authorized_rental_subject(user, subject_id):
         raise NotFound()
 
     attempt = (
-        PaymentAttempt.objects.filter(id=subject_id)
+        PaymentAttempt.objects.filter(id=subject_id, invoice__purpose="rent")
         .select_related("invoice__lease__owner", "invoice__lease__tenant")
         .first()
     )

@@ -136,6 +136,7 @@ def run_rental_billing_cycle(self):
             issued += 1
         overdue = (
             RentInvoice.objects.filter(
+                purpose="rent",
                 status=RentInvoice.Status.DUE,
                 due_at__lt=now,
             )
@@ -167,6 +168,7 @@ def reconcile_ambiguous_rental_payments(self):
         process_provider_event(event)
         processed += 1
     expired = PaymentAttempt.objects.filter(
+        invoice__purpose="rent",
         payment_status__in=[
             PaymentAttempt.Status.CREATED,
             PaymentAttempt.Status.PENDING,

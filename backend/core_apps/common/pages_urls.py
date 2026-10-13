@@ -1,4 +1,5 @@
 from django.urls import path
+from .release_views import ReleaseNotesAPIView
 from .pages_views import (
     AboutUsPageAPIView,
     PrivacyPolicyPageAPIView,
@@ -7,6 +8,7 @@ from .pages_views import (
 )
 
 urlpatterns = [
+    path("release-notes/", ReleaseNotesAPIView.as_view(), name="release-notes"),
     path("about-us/", AboutUsPageAPIView.as_view(), name="page-about-us"),
     path(
         "privacy-policy/",

@@ -1,5 +1,6 @@
 """Two-key JSON policy and bounded, non-sensitive transport metadata."""
 import re
+import uuid
 from urllib.parse import parse_qs, urlsplit
 
 from .response_messages import _default_success_message, _extract_message
@@ -103,4 +104,10 @@ def envelope(data, response, request):
         message = str(_default_success_message(getattr(request, "method", None), response.status_code))
     if language:
         message = translate_message(message, language)
+    if payload is not None and not isinstance(payload, (dict, list)):
+        response.status_code = 500
+        response["X-App-Error-Code"] = "malformed_response"
+        response["X-Correlation-ID"] = uuid.uuid4().hex
+        response["Cache-Control"] = "private, no-store"
+        return {"message": translate_message("An error occurred.", language or "en"), "data": None}
     return {"message": message, "data": collection_payload(payload, response, request)}

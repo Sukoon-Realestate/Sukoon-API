@@ -13,6 +13,16 @@ from .renderers import GenericJsonRenderer, custom_exception_handler
 RENDERERS = [GenericJsonRenderer, FeatureJsonRenderer, AdvertisingJsonRenderer, PostVisitJsonRenderer]
 
 
+@pytest.mark.parametrize("renderer", RENDERERS)
+@pytest.mark.parametrize("payload", [True, 42, "private server detail"])
+def test_scalar_server_payload_is_a_safe_failure(renderer, payload):
+    value, response = render(renderer, payload)
+    assert response.status_code == 500
+    assert value == {"message": "An error occurred.", "data": None}
+    assert response["X-App-Error-Code"] == "malformed_response"
+    assert response["X-Correlation-ID"]
+
+
 def render(renderer, payload, status=200, method="GET", language="en"):
     request = getattr(APIRequestFactory(), method.lower())("/?page=2", HTTP_ACCEPT_LANGUAGE=language)
     request.LANGUAGE_CODE = language

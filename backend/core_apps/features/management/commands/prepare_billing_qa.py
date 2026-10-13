@@ -24,7 +24,7 @@ class Command(BaseCommand):
         if runtime not in {"development", "test"} or not getattr(settings, "OWNER_TENANT_QA_ENABLED", False):
             raise CommandError("Explicit local/test QA settings are required.")
         base = urlsplit(options["base_url"])
-        if base.hostname != "127.0.0.1" or base.path != "/api/v1/" or base.username or base.query:
+        if base.scheme not in {"http", "https"} or base.hostname != "127.0.0.1" or base.path != "/api/v1/" or base.username or base.query or base.fragment:
             raise CommandError("Only the local loopback API is supported.")
         output = Path(options["output"])
         if output.exists() or output.is_symlink():

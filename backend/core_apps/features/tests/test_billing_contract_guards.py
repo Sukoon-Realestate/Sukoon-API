@@ -108,3 +108,12 @@ def test_purchase_cannot_enter_rent_only_handlers(client, plan):
     invoice = body(issue(client, plan)[0], 201)
     assert body(client.get(ROOT + f"rent-invoices/{invoice['id']}/"), 404) is None
     assert body(client.post(ROOT + f"rent-invoices/{invoice['id']}/quote/", {"action": "quote", "expected_revision": 1, "request_key": str(uuid.uuid4())}, format="json"), 404) is None
+
+    assert body(client.post(ROOT + f"rent-invoices/{invoice['id']}/external-payment-claims/", {}, format="json"), 404) is None
+    from rest_framework.exceptions import NotFound
+    from core_apps.features.services.rental_foundation import get_authorized_rental_subject
+    with pytest.raises(NotFound):
+        get_authorized_rental_subject(client.handler._force_user, invoice['id'])
+    attempt = body(pay(client, invoice)[0])
+    with pytest.raises(NotFound):
+        get_authorized_rental_subject(client.handler._force_user, attempt['id'])

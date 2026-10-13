@@ -71,3 +71,7 @@ class ContentView(TimeStampedModel):
                 view.save(update_fields=["last_viewed"])
         except IntegrityError:
             pass
+
+
+from .content_models import PublicContentPage  # noqa: E402,F401
+from .content_models import ReleaseNote  # noqa: E402,F401

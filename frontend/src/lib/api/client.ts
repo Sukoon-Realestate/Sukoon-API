@@ -91,10 +91,11 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
     throw new Error('Invalid API response');
   }
   // Keep the dashboard's typed page model while the HTTP body is an array.
-  if (Array.isArray(envelope.data) && response.headers.has('X-Page')) {
+  const pageHeaders = ['X-Page', 'X-Per-Page', 'X-Total-Count', 'X-Total-Pages', 'X-Next-Page', 'X-Previous-Page'];
+  if (Array.isArray(envelope.data) && pageHeaders.some(name => response.headers.has(name))) {
     const integer = (name: string, minimum: number): number => {
       const raw = response.headers.get(name);
-      if (raw === null || !/^\d+$/.test(raw) || Number(raw) < minimum) {
+      if (raw === null || !/^\d+$/.test(raw) || !Number.isSafeInteger(Number(raw)) || Number(raw) < minimum) {
         throw new Error('Invalid API pagination');
       }
       return Number(raw);
@@ -103,9 +104,17 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
     const per_page = integer('X-Per-Page', 1);
     const total_pages = integer('X-Total-Pages', 1);
     const count = integer('X-Total-Count', 0);
+    const next = response.headers.has('X-Next-Page') ? integer('X-Next-Page', 1) : null;
+    const previous = response.headers.has('X-Previous-Page') ? integer('X-Previous-Page', 1) : null;
+    if (page > total_pages || total_pages !== Math.max(1, Math.ceil(count / per_page)) ||
+        envelope.data.length > per_page ||
+        (next !== null && (next !== page + 1 || next > total_pages)) ||
+        (previous !== null && previous !== page - 1)) {
+      throw new Error('Invalid API pagination');
+    }
     return { results: envelope.data, count, page, per_page, total_pages,
-      next: response.headers.has('X-Next-Page') ? `?page=${integer('X-Next-Page', 1)}` : null,
-      previous: response.headers.has('X-Previous-Page') ? `?page=${integer('X-Previous-Page', 1)}` : null,
+      next: next === null ? null : `?page=${next}`,
+      previous: previous === null ? null : `?page=${previous}`,
     } as T;
   }
   return envelope.data as T;

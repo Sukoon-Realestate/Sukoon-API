@@ -23,5 +23,5 @@ class AdminPlatformSettingsAPIView(APIView):
         return Response(settings_data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        updated = update_platform_settings(request.data)
+        updated = update_platform_settings(request.data, actor=request.user)
         return Response(updated, status=status.HTTP_200_OK)

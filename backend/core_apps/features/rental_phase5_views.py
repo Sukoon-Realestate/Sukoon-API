@@ -567,7 +567,7 @@ def external_claims(request, lease_id):
 @renderer_classes([FeatureJsonRenderer])
 def external_claim_create(request, invoice_id):
     invoice = get_object_or_404(
-        RentInvoice.objects.select_related("lease"), id=invoice_id
+        RentInvoice.objects.select_related("lease"), id=invoice_id, purpose="rent"
     )
     mutable = request.data.copy()
     mutable["invoice_id"] = str(invoice.id)
