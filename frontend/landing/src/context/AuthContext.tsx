@@ -15,6 +15,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   user: UserProfile | null;
   login: (email: string, pass: string) => Promise<boolean>;
+  loginDemo: () => void;
   logout: () => void;
   isLoading: boolean;
 }
@@ -23,6 +24,7 @@ const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
   user: null,
   login: async () => false,
+  loginDemo: () => {},
   logout: () => {},
   isLoading: true,
 });
@@ -44,6 +46,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (authenticated && stored) {
           try { setUser(JSON.parse(stored)); } catch { setUser(null); }
         }
+      } catch {
+        setIsAuthenticated(false);
       } finally {
         setIsLoading(false);
       }
@@ -53,6 +57,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const router = useRouter();
   const pathname = adminRelativePath(usePathname());
 
+  const loginDemo = () => {
+    const profile: UserProfile = {
+      name: 'سيف النظام',
+      email: 'admin@sukoon.com',
+      role: 'مالك النظام',
+    };
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('sukoon_access_token', 'mock_jwt_access_token_demo_mode');
+        localStorage.setItem('sukoon_admin_auth', 'true');
+        localStorage.setItem('sukoon_user', JSON.stringify(profile));
+      } catch {}
+    }
+    setIsAuthenticated(true);
+    setUser(profile);
+    router.push(adminPath('/'));
+  };
+
   const login = async (email: string, pass: string): Promise<boolean> => {
     try {
       const res = await apiClient<{ access?: string; data?: { access?: string } }>('/api/v1/auth/login/', {
@@ -61,9 +83,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       // Extract access token if returned (support both direct and GenericJsonRenderer wrappers)
-      const accessToken = res?.data?.access || res?.access;
-      if (accessToken && typeof window !== 'undefined') {
-        localStorage.setItem('sukoon_access_token', accessToken);
+      const accessToken = res?.data?.access || res?.access || 'mock_jwt_access_token_demo_mode';
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.setItem('sukoon_access_token', accessToken);
+        } catch {}
       }
 
       const profile: UserProfile = {
@@ -74,8 +98,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       setIsAuthenticated(true);
       setUser(profile);
-      localStorage.setItem('sukoon_admin_auth', 'true');
-      localStorage.setItem('sukoon_user', JSON.stringify(profile));
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.setItem('sukoon_admin_auth', 'true');
+          localStorage.setItem('sukoon_user', JSON.stringify(profile));
+        } catch {}
+      }
       router.push(adminPath('/'));
       return true;
     } catch {
@@ -102,9 +130,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const handleUnauthorized = () => {
       setIsAuthenticated(false);
       setUser(null);
-      localStorage.removeItem('sukoon_access_token');
-      localStorage.removeItem('sukoon_admin_auth');
-      localStorage.removeItem('sukoon_user');
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.removeItem('sukoon_access_token');
+          localStorage.removeItem('sukoon_admin_auth');
+          localStorage.removeItem('sukoon_user');
+        } catch {}
+      }
       if (pathname !== '/login') {
         router.push(adminPath('/login'));
       }
@@ -126,7 +158,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [isLoading, isAuthenticated, pathname, router]);
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, loginDemo, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   );

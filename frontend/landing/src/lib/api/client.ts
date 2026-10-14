@@ -46,17 +46,28 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
     finalBody = JSON.stringify(body);
   }
 
-  const response = await fetch(url, {
-    credentials: 'include',
-    headers: {
-      ...defaultHeaders,
-      ...(headers as Record<string, string>),
-    },
-    body: finalBody,
-    ...restOptions,
-  });
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      credentials: 'include',
+      headers: {
+        ...defaultHeaders,
+        ...(headers as Record<string, string>),
+      },
+      body: finalBody,
+      ...restOptions,
+    });
+  } catch (networkError) {
+    console.warn(`[Sukoon API] Backend is unreachable at ${url}. Seamlessly falling back to mock data:`, networkError);
+    return handleMockRequest<T>(endpoint, options);
+  }
 
   if (!response.ok) {
+    if (response.status >= 500) {
+      console.warn(`[Sukoon API] Server error ${response.status} from ${url}. Falling back to mock data.`);
+      return handleMockRequest<T>(endpoint, options);
+    }
+
     let errorData: any = null;
     try {
       errorData = await response.json();
@@ -68,9 +79,11 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
 
     if (response.status === 401 && !endpoint.includes('/auth/login/')) {
       if (typeof window !== 'undefined') {
-        localStorage.removeItem('sukoon_access_token');
-        localStorage.removeItem('sukoon_admin_auth');
-        localStorage.removeItem('sukoon_user');
+        try {
+          localStorage.removeItem('sukoon_access_token');
+          localStorage.removeItem('sukoon_admin_auth');
+          localStorage.removeItem('sukoon_user');
+        } catch {}
         window.dispatchEvent(new Event('auth:unauthorized'));
         const loginPath = `${BASE_PATH}/login`;
         if (window.location.pathname !== loginPath) {

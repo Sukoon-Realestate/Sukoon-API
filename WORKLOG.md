@@ -2,6 +2,12 @@
 
 ## 2026-10-14
 
+### Admin Quick Demo Login & Offline Fallback Fix
+- **What:** Fixed the admin "دخول سريع كـ Admin (تجريبي)" quick login flow to seamlessly authenticate and redirect directly to the dashboard even when the Django backend is offline, unreachable, or accessed from a mobile browser.
+- **Why:** Clicking the quick demo login button previously attempted a network login against the backend and failed with an error alert if the server was not running or seed data was unreachable.
+- **Details:** Added `loginDemo` to `AuthContext` across both frontend zones with safe `try/catch` wrappers around `localStorage` operations for mobile/WebView compatibility. Updated `apiClient` to gracefully fall back to `handleMockRequest` whenever a network error or 5xx server failure occurs. Updated the login pages so clicking quick demo login immediately logs in as the demo admin and navigates straight to `/admin`.
+- **Files:** `frontend/src/app/login/page.tsx`, `frontend/src/context/AuthContext.tsx`, `frontend/src/lib/api/client.ts`, `frontend/.env`, `frontend/landing/src/app/(admin)/admin/login/page.tsx`, `frontend/landing/src/context/AuthContext.tsx`, `frontend/landing/src/lib/api/client.ts`
+
 ### Merge origin/main and push
 - **What:** Merged diverged origin/main into local main and pushed.
 - **Why:** Local and remote had diverged (1 vs 2 commits).
