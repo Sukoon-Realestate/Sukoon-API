@@ -32,42 +32,85 @@ def add_member(group, user):
 
 
 @pytest.mark.django_db
-def test_archive_filter_restore_and_old_invites_stay_revoked(rental_participants):
+def test_manual_archive_and_restore_are_retired(rental_participants):
+    _, admin, _, prop, _ = rental_participants
+    group = create_group(admin, prop)
+    client = authenticated(admin)
+    assert "archive" not in group["allowed_actions"]
+    for action in ("archive", "unarchive"):
+        grant = client.get(
+            API + "planning-capabilities/",
+            {
+                "capability": "housing_groups",
+                "action": action,
+                "subject_id": group["id"],
+            },
+        )
+        assert grant.json()["data"]["allowed_actions"] == []
+        post(
+            admin,
+            f"housing-groups/{group['id']}/{action}/",
+            command(
+                group["revision"],
+                roster_revision=group["roster_revision"],
+                action=action,
+            ),
+            403,
+        )
+    stored = HousingGroup.objects.get(id=group["id"])
+    assert stored.status == "active"
+    assert stored.revision == group["revision"]
+
+
+@pytest.mark.django_db
+def test_retiring_archives_restores_populated_groups_without_reviving_invites(
+    rental_participants,
+):
+    from importlib import import_module
+    from types import SimpleNamespace
+    from django.apps import apps
+    from django.db import connection
+
     _, admin, member, prop, _ = rental_participants
     group = create_group(admin, prop)
     add_member(group, member)
-    invitation = post(
-        admin,
-        f"housing-groups/{group['id']}/invitations/",
-        command(group_id=group["id"], group_revision=group["revision"]),
-        201,
-    ).data["resource"]
-    archived = group_action(admin, group, "archive")
-    assert archived["status"] == "archived"
-    assert "unarchive" in archived["allowed_actions"]
-    assert "unarchive" in planning_actions(admin, "housing_groups", group["id"])
-    assert "unarchive" not in planning_actions(member, "housing_groups", group["id"])
-    active_list = authenticated(admin).get(
-        API + "housing-groups/", {"status": "active"}
+    stored = HousingGroup.objects.get(id=group["id"])
+    # A previously archived group, before deploying the retirement migration.
+    stored.status = "archived"
+    stored.save(update_fields=["status"])
+    invitation = GroupInvitation.objects.create(
+        group=stored,
+        status="revoked",
+        nonce="x" * 64,
+        expires_at=timezone.now() + timedelta(days=1),
     )
-    assert active_list.data["results"] == []
-    archived_list = authenticated(admin).get(
-        API + "housing-groups/", {"status": "archived"}
-    )
-    assert [x["id"] for x in archived_list.data["results"]] == [group["id"]]
-    body = command(
-        archived["revision"],
-        roster_revision=archived["roster_revision"],
-        action="unarchive",
-    )
-    post(member, f"housing-groups/{group['id']}/unarchive/", body, 403)
-    restored = post(admin, f"housing-groups/{group['id']}/unarchive/", body).data
-    assert restored["resource"]["status"] == "active"
-    assert restored["resource"]["revision"] == archived["revision"] + 1
-    assert (
-        post(admin, f"housing-groups/{group['id']}/unarchive/", body).data == restored
-    )
-    assert GroupInvitation.objects.get(id=invitation["id"]).status == "revoked"
+    empty = HousingGroup.objects.create(name="Departed group", status="archived")
+    GroupMembership.objects.create(group=empty, user=admin, status="left")
+    restore = import_module(
+        "core_apps.features.migrations.0020_retire_group_archiving"
+    ).restore_populated_groups
+    restore(apps, SimpleNamespace(connection=connection))
+    stored.refresh_from_db()
+    assert stored.status == "active"
+    assert stored.revision == group["revision"] + 1
+    assert stored.roster_revision == group["roster_revision"] + 1
+    assert stored.memberships.filter(status="active").count() == 2
+    assert stored.memberships.get(user=admin).role == "admin"
+    invitation.refresh_from_db()
+    assert invitation.status == "revoked"
+    empty.refresh_from_db()
+    assert empty.status == "archived"
+    assert empty.memberships.get(user=admin).status == "left"
+    # Re-running the migration cannot bump revisions or revive old invitations.
+    restore(apps, SimpleNamespace(connection=connection))
+    stored.refresh_from_db()
+    assert stored.revision == group["revision"] + 1
+    response = authenticated(admin).get(API + "housing-groups/")
+    assert response.status_code == 200
+    assert [row["id"] for row in response.json()["data"]] == [group["id"]]
+    assert response.json()["data"][0]["status"] == "active"
+    assert int(response["X-Total-Count"]) == 1
+    assert "edit" in planning_actions(admin, "housing_groups", group["id"])
 
 
 @pytest.mark.django_db

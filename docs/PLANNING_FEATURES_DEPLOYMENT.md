@@ -106,6 +106,14 @@ Local verification: four new demand-discovery tests, the existing complete housi
 
 After deployment, publish a request from a designated tenant account in a different city from the test owner's listings. Confirm it appears in the owner's feed and detail, while no `offer` action is advertised without matching inventory. Verify the explicit city filter and a matching-city offer through the app.
 
+## Live group-management mismatch — 2026-10-14
+
+Read-only checks of `sukoon-app-y4j5r.ondigitalocean.app` found that `housing-groups/?status=active` and `?status=archived` both returned the same archived group. `?status=invalid` also returned HTTP 200. Fresh detail and the `unarchive` capability omitted the action even though the signed-in account was an active administrator. Responses were `private, no-store` with Cloudflare `BYPASS`. No live group mutations were performed.
+
+The current source filters these collections, rejects invalid statuses, and grants `unarchive` to an active administrator of an archived group. A new rendered HTTP regression verifies both populated tabs, counts, detail/capability permissions, the unarchive POST, and both collections after restore; all six group-management tests pass locally. The existing implementation was introduced in commit `bdac7ac` and is present on the checked-out `main`.
+
+Deploy/restart the API with the current `backend/` source, including `core_apps/features/planning_group_views_parts/housing_groups.py`, `process_payload.py` and `housing_group_action.py`. Confirm all API workers use that version. No migration is needed for these group fixes. A successful local test does not resolve the observed live mismatch; verify the status queries and fresh restore permission after deployment. The Flutter app now rejects wrong-status pages and unsuccessful state changes rather than displaying them as successful results.
+
 ## Post-deployment acceptance
 
 Use designated test accounts and test-owned inventory:
@@ -124,3 +132,16 @@ Rollback by supplying the subset of services to retain in `PLANNING_ENABLED_SERV
 The enablement correction passed **154 distinct backend tests**: 104 planning/configuration tests on isolated PostgreSQL, plus 50 related capability, rental and runtime regressions on SQLite. The 56 new configuration tests import normal settings in fresh processes and exercise their resulting permissions through actual API views. They cover missing/blank/all/subset/none settings, invalid names, independent provider prerequisites, Arabic/English setup messages, private collection reads, profile save/replay/stale revision, and guest/unverified/inactive rejection. The existing planning suites cover provider adapters, consent, group/application cycles, report history, competing lease transitions and durable jobs.
 
 Django system checks and migration consistency passed; this correction adds no migration. Provider HTTP remains mocked in local cycle tests. These results do not certify Google credentials, deployed worker/beat execution or enabled native app cycles. Earlier live Android evidence showed the old deployment disabled all planning; redeploy this source before repeating those checks.
+
+
+## Latest follow-up: demand deployment and retirement of manual group archiving
+
+This section supersedes the earlier Active/Archived tabs and unarchive acceptance steps. The user requested permanent removal of manual archiving.
+
+The 2026-10-14 read-only production check found `housing_requests` permissions working (`read`, `publish`) and one published request in the current account's `housing-requests/` collection, but an empty owner `housing-demand/` feed. `housing-demand/?city=invalid` returned 200; the local implementation returns 400. Redeploy the all-cities demand implementation in `planning_housing_views_parts/housing_requests.py`; the deployed handler still differs from the current source. Owner demand intentionally excludes the owner's own requests.
+
+Deploy the full backend change including **migration `features.0020_retire_group_archiving`**, run `python manage.py migrate --noinput`, and restart API/worker/beat through the normal release workflow. The migration restores only archived groups with active members, advancing group and roster revisions once. Revoked invitations and invalidated consent/process history stay unchanged. Empty groups remain closed. Manual `archive` and `unarchive` are no longer advertised or accepted; the app now presents a single groups list without those controls.
+
+Verify another account's published request in another city appears in owner demand, invalid city values return 400, and a populated formerly archived group is active and usable without a restore action. Rebuild the mobile app for the new group UI and rental-offer confirmation fix. No live deployment or migration was performed during this local work.
+
+Local validation for this final follow-up: 15 Django tests passed, including the rendered housing-request/demand contract, cross-city discovery, archive-command removal, restoration migration, group succession and consent/application cycles. Django system checks, migration consistency and Black checks passed. No live deployment has been performed.

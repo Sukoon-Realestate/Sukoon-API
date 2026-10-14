@@ -97,14 +97,8 @@ def housing_group_action(request, group_id, action):
                 target.status = "left" if action == "leave" else "removed"
             target.save()
             invalidate_roster(group)
-        elif action in {"archive", "revoke_invites"}:
+        elif action == "revoke_invites":
             group.invitations.filter(status="active").update(status="revoked")
-            if action == "archive":
-                group.status = "archived"
-                invalidate_roster(group)
-        elif action == "unarchive":
-            # Archived invitations, consents and processes remain invalidated.
-            group.status = "active"
         elif action == "add_shortlist":
             _, snapshot = selection(request, request.data.get("selection"))
             if any(

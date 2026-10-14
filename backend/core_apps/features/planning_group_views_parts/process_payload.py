@@ -23,8 +23,6 @@ def group_actions(user, group):
     member = group.memberships.filter(user=user, status="active").first()
     if not member:
         return []
-    if group.status == "archived":
-        return ["unarchive", "read_invite"] if member.role == "admin" else []
     if group.status != "active":
         return []
     actions = [
@@ -44,7 +42,6 @@ def group_actions(user, group):
             "edit",
             "transfer_admin",
             "remove_member",
-            "archive",
             "revoke_invites",
             "create_invite",
             "read_invite",

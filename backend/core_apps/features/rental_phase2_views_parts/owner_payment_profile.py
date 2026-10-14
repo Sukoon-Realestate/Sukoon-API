@@ -17,7 +17,7 @@ from ..models import (
     TermsProposal,
 )
 from ..pagination import FeaturePagination
-from ..providers import require_rental_provider
+from ..providers import require_rental_provider, require_verified_rental_account
 from ..renderers import FeatureJsonRenderer
 from ..rental_serializers import OwnerPaymentProfileSerializer
 from ..services.rental_phase2 import (
@@ -86,9 +86,12 @@ def _remember_session(
     return response_data
 
 
-def _participant_interest(request, interest_id, lock=False):
+def _participant_interest(request, interest_id, lock=False, *, provider_required=True):
     if request.method not in {"GET", "HEAD", "OPTIONS"}:
-        require_rental_provider(request.user)
+        if provider_required:
+            require_rental_provider(request.user)
+        else:
+            require_verified_rental_account(request.user)
     queryset = RentalInterest.objects.select_related("property__owner", "tenant")
     if lock:
         queryset = queryset.select_for_update()
