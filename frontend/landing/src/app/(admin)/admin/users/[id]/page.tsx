@@ -89,7 +89,7 @@ export default function UserProfilePage() {
           title="ملف المستخدم"
           subtitle="تفاصيل الحساب الكاملة، سجل النشاطات والإجراءات المتاحة"
         />
-        <div className="p-12 text-center text-slate-400 text-xs font-bold space-y-3">
+        <div className="p-12 text-center text-[var(--text-muted)] text-xs font-bold space-y-3">
           <LogoLoader showLabel label="جاري تحميل تفاصيل المستخدم من الخادم..." />
         </div>
       </div>
@@ -103,7 +103,7 @@ export default function UserProfilePage() {
           title="المستخدم غير موجود"
           subtitle="لم يتم العثور على الحساب المطلوب"
         />
-        <div className="p-12 text-center text-slate-400 text-xs font-bold space-y-4">
+        <div className="p-12 text-center text-[var(--text-muted)] text-xs font-bold space-y-4">
           <p>لم يتم العثور على أي مستخدم مطابق لهذا المعرف.</p>
           <Link
             href="/users"
@@ -127,10 +127,10 @@ export default function UserProfilePage() {
         lastUpdated="محدث الآن"
       />
 
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="admin-page-body space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: User Profile Details Card (4 cols) */}
-          <div className="lg:col-span-4 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex flex-col items-center text-center animate-fadeInUp">
+          <div className="lg:col-span-4 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex flex-col items-center text-center">
             {/* Avatar Circle */}
             <div className="w-24 h-24 rounded-full bg-teal-500/10 border-2 border-teal-500/30 flex items-center justify-center text-teal-400 text-3xl font-bold mb-4 shadow-inner overflow-hidden">
               {user.avatar ? (
@@ -146,7 +146,7 @@ export default function UserProfilePage() {
 
             <div className="flex items-center gap-2 mb-6">
               <StatusBadge status={user.kycStatus} />
-              <span className="text-xs text-slate-400 font-semibold">
+              <span className="text-xs text-[var(--text-muted)] font-semibold">
                 {user.type}
               </span>
             </div>
@@ -154,26 +154,26 @@ export default function UserProfilePage() {
             {/* Field Rows */}
             <div className="w-full space-y-4 border-t border-[var(--divider)] pt-5 text-right text-xs">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 font-medium">رقم الهاتف</span>
+                <span className="text-[var(--text-muted)] font-medium">رقم الهاتف</span>
                 <span className="font-bold text-white dir-ltr font-mono">
                   {user.phone || 'غير مسجل'}
                 </span>
               </div>
 
               <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
-                <span className="text-slate-400 font-medium">البريد الإلكتروني</span>
+                <span className="text-[var(--text-muted)] font-medium">البريد الإلكتروني</span>
                 <span className="font-bold text-white font-mono text-[11px] dir-ltr">
                   {user.email}
                 </span>
               </div>
 
               <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
-                <span className="text-slate-400 font-medium">تاريخ الانضمام</span>
+                <span className="text-[var(--text-muted)] font-medium">تاريخ الانضمام</span>
                 <span className="font-bold text-white font-mono">{user.regDate}</span>
               </div>
 
               <div className="flex items-center justify-between border-t border-[var(--divider)] pt-3">
-                <span className="text-slate-400 font-medium">حالة الحساب</span>
+                <span className="text-[var(--text-muted)] font-medium">حالة الحساب</span>
                 <StatusBadge status={user.status} />
               </div>
             </div>
@@ -202,9 +202,9 @@ export default function UserProfilePage() {
 
               <button
                 onClick={handleExportData}
-                className="w-full py-2.5 px-4 rounded-xl border border-slate-700 bg-slate-800/60 hover:bg-slate-800 text-slate-200 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-2.5 px-4 rounded-xl border border-[var(--card-border)] bg-[var(--card-hover)]/60 hover:bg-[var(--card-hover)] text-slate-200 text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
-                <Download className="w-4 h-4 text-slate-400" />
+                <Download className="w-4 h-4 text-[var(--text-muted)]" />
                 <span>تصدير بيانات المستخدم</span>
               </button>
             </div>
@@ -214,48 +214,48 @@ export default function UserProfilePage() {
           <div className="lg:col-span-8 space-y-6">
             {/* Top Stat Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="bg-[var(--card-bg)] rounded-2xl p-4 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center animate-fadeInUp">
+              <div className="bg-[var(--card-bg)] rounded-2xl p-4 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
                 <div className="text-2xl font-black text-white mb-1">
                   {user.visitRequests ?? 0}
                 </div>
-                <div className="text-xs font-semibold text-slate-400">
+                <div className="text-xs font-semibold text-[var(--text-muted)]">
                   طلبات المعاينة
                 </div>
               </div>
 
               <div
-                className="bg-[var(--card-bg)] rounded-2xl p-4 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center animate-fadeInUp"
+                className="bg-[var(--card-bg)] rounded-2xl p-4 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center"
                 style={{ animationDelay: '50ms' }}
               >
                 <div className="text-2xl font-black text-teal-400 mb-1 flex items-center justify-center gap-1">
                   <span>{user.properties_count ?? 0}</span>
                 </div>
-                <div className="text-xs font-semibold text-slate-400">
+                <div className="text-xs font-semibold text-[var(--text-muted)]">
                   عقارات معلنة
                 </div>
               </div>
 
               <div
-                className="bg-[var(--card-bg)] rounded-2xl p-4 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center animate-fadeInUp"
+                className="bg-[var(--card-bg)] rounded-2xl p-4 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center"
                 style={{ animationDelay: '100ms' }}
               >
                 <div className="text-2xl font-black text-rose-500 mb-1">
                   {user.reportsAgainst ?? 0}
                 </div>
-                <div className="text-xs font-semibold text-slate-400">
+                <div className="text-xs font-semibold text-[var(--text-muted)]">
                   بلاغات ضد المستخدم
                 </div>
               </div>
 
               <div
-                className="bg-[var(--card-bg)] rounded-2xl p-4 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center animate-fadeInUp"
+                className="bg-[var(--card-bg)] rounded-2xl p-4 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center"
                 style={{ animationDelay: '150ms' }}
               >
                 <div className="text-2xl font-black text-emerald-400 mb-1 flex items-center justify-center gap-1">
                   <span>{user.is_verified ? '5.0' : '4.5'}</span>
                   <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
                 </div>
-                <div className="text-xs font-semibold text-slate-400">
+                <div className="text-xs font-semibold text-[var(--text-muted)]">
                   تقييم السلوك
                 </div>
               </div>
@@ -263,7 +263,7 @@ export default function UserProfilePage() {
 
             {/* Timeline Activity Log */}
             <div
-              className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] animate-fadeInUp"
+              className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)]"
               style={{ animationDelay: '200ms' }}
             >
               <h4 className="font-extrabold text-white text-base mb-6 border-b border-[var(--divider)] pb-3">
@@ -271,7 +271,7 @@ export default function UserProfilePage() {
               </h4>
 
               {activityLog.length === 0 ? (
-                <p className="text-xs text-slate-400 text-center py-6">
+                <p className="text-xs text-[var(--text-muted)] text-center py-6">
                   لا توجد نشاطات مسجلة لهذا الحساب حالياً.
                 </p>
               ) : (
@@ -283,7 +283,7 @@ export default function UserProfilePage() {
                         <p className="text-xs font-bold text-white">
                           {log.title}
                         </p>
-                        <p className="text-[11px] text-slate-400 font-medium">
+                        <p className="text-[11px] text-[var(--text-muted)] font-medium">
                           {log.time}
                         </p>
                       </div>

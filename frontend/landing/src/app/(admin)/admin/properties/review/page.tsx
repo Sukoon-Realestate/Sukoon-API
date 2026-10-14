@@ -157,7 +157,7 @@ function PropertyReviewQueueContent() {
         lastUpdated="محدث الآن"
       />
 
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="admin-page-body space-y-6">
         <Breadcrumbs
           items={[
             { label: 'الرئيسية', href: '/' },
@@ -251,7 +251,7 @@ function PropertyReviewQueueContent() {
             {/* List items */}
             <div className="space-y-3">
               {isLoading ? (
-                <div className="py-12 text-center text-slate-400">
+                <div className="py-12 text-center text-[var(--text-muted)]">
                   <LogoLoader showLabel label="جاري تحميل قائمة العقارات..." />
                 </div>
               ) : filteredList.length > 0 ? (
@@ -307,7 +307,7 @@ function PropertyReviewQueueContent() {
                   );
                 })
               ) : (
-                <div className="p-8 text-center text-slate-400 text-xs font-bold">
+                <div className="p-8 text-center text-[var(--text-muted)] text-xs font-bold">
                   لا توجد عقارات تطابق هذا الفلتر حالياً.
                 </div>
               )}
@@ -446,7 +446,7 @@ export default function PropertyReviewQueuePage() {
   return (
     <Suspense
       fallback={
-        <div className="flex-1 p-12 text-center text-slate-400">
+        <div className="flex-1 p-12 text-center text-[var(--text-muted)]">
           <LogoLoader showLabel label="جاري تحميل طابور مراجعة العقارات..." />
         </div>
       }

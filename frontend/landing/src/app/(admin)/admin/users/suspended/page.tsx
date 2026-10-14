@@ -62,38 +62,38 @@ export default function SuspendedUsersPage() {
         lastUpdated="محدث الآن"
       />
 
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="admin-page-body space-y-6">
         {/* Top Stat Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center animate-scaleIn">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-3xl font-black text-amber-400 mb-1">
               {tempCount}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-muted)]">
               موقوف مؤقتاً
             </div>
           </div>
 
           <div
-            className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center animate-scaleIn"
+            className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center"
             style={{ animationDelay: '80ms' }}
           >
             <div className="text-3xl font-black text-rose-400 mb-1">
               {bannedCount}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-muted)]">
               محظور نهائياً
             </div>
           </div>
 
           <div
-            className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center animate-scaleIn"
+            className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center"
             style={{ animationDelay: '160ms' }}
           >
             <div className="text-3xl font-black text-blue-400 mb-1">
               {users.length}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-muted)]">
               إجمالي الحسابات المعلقة
             </div>
           </div>
@@ -101,7 +101,7 @@ export default function SuspendedUsersPage() {
 
         {/* Suspended Users Section */}
         <div
-          className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] p-6 space-y-6 animate-fadeInUp"
+          className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] p-6 space-y-6"
           style={{ animationDelay: '100ms' }}
         >
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -116,7 +116,7 @@ export default function SuspendedUsersPage() {
                 className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
                   activeTab === 'all'
                     ? 'bg-rose-600 text-white'
-                    : 'bg-slate-800 text-slate-400 hover:text-white'
+                    : 'bg-[var(--card-hover)] text-[var(--text-muted)] hover:text-white'
                 }`}
               >
                 الكل ({users.length})
@@ -126,7 +126,7 @@ export default function SuspendedUsersPage() {
                 className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
                   activeTab === 'temp'
                     ? 'bg-amber-500 text-white'
-                    : 'bg-slate-800 text-slate-400 hover:text-white'
+                    : 'bg-[var(--card-hover)] text-[var(--text-muted)] hover:text-white'
                 }`}
               >
                 موقوف مؤقتاً ({tempCount})
@@ -136,7 +136,7 @@ export default function SuspendedUsersPage() {
                 className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
                   activeTab === 'banned'
                     ? 'bg-rose-600 text-white'
-                    : 'bg-slate-800 text-slate-400 hover:text-white'
+                    : 'bg-[var(--card-hover)] text-[var(--text-muted)] hover:text-white'
                 }`}
               >
                 محظور ({bannedCount})
@@ -147,14 +147,14 @@ export default function SuspendedUsersPage() {
           {/* User List Rows */}
           <div className="divide-y divide-[var(--divider)]">
             {isLoading ? (
-              <div className="py-8 text-center text-xs text-slate-400">
+              <div className="py-8 text-center text-xs text-[var(--text-muted)]">
                 جاري تحميل المستخدمين الموقوفين...
               </div>
             ) : filteredUsers.length > 0 ? (
               filteredUsers.map((user) => (
                 <div
                   key={user.id}
-                  className="py-4 flex flex-col sm:flex-row items-center justify-between gap-4 hover:bg-slate-800/40 transition-colors px-2 rounded-xl"
+                  className="py-4 flex flex-col sm:flex-row items-center justify-between gap-4 hover:bg-[var(--card-hover)]/40 transition-colors px-2 rounded-xl"
                 >
                   <div className="flex items-center gap-4 w-full sm:w-auto">
                     <div className="w-10 h-10 rounded-full bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0 border border-rose-500/20">
@@ -165,7 +165,7 @@ export default function SuspendedUsersPage() {
                       <h4 className="font-bold text-white text-sm">
                         {user.name}
                       </h4>
-                      <p className="text-xs text-slate-400 mt-0.5">
+                      <p className="text-xs text-[var(--text-muted)] mt-0.5">
                         {user.email} • تاريخ التسجيل: {user.regDate}
                       </p>
                     </div>
@@ -186,16 +186,16 @@ export default function SuspendedUsersPage() {
 
                     <Link
                       href={`/users/${user.id}`}
-                      className="inline-flex items-center gap-1 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                      className="inline-flex items-center gap-1 bg-[var(--card-hover)] hover:bg-slate-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
                     >
-                      <Eye className="w-3.5 h-3.5 text-slate-400" />
+                      <Eye className="w-3.5 h-3.5 text-[var(--text-muted)]" />
                       <span>عرض</span>
                     </Link>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="py-8 text-center text-xs text-slate-400">
+              <div className="py-8 text-center text-xs text-[var(--text-muted)]">
                 لا يوجد مستخدمون موقوفون حالياً في النظام.
               </div>
             )}

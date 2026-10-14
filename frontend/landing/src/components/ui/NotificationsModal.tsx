@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from '@/components/ui/AdminLink';
 import {
   Bell,
@@ -32,6 +32,10 @@ interface NotificationsModalProps {
 }
 
 export const NotificationsModal: React.FC<NotificationsModalProps> = ({ isOpen, onClose }) => {
+  const dialog = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    if (isOpen && !dialog.current?.open) dialog.current?.showModal();
+  }, [isOpen]);
   const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState<'all' | 'unread' | 'kyc' | 'property'>('all');
 
@@ -137,9 +141,9 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({ isOpen, 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-end p-2 sm:p-4 bg-black/50 backdrop-blur-xs animate-fadeIn">
+    <dialog ref={dialog} className="admin-notifications-dialog" aria-label="الإشعارات" onCancel={onClose}>
       <div
-        className="w-full max-w-md bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-2xl flex flex-col max-h-[85vh] animate-scaleIn text-right overflow-hidden"
+        className="w-full max-w-md bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-2xl flex flex-col max-h-[85vh]  text-right overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
@@ -149,7 +153,7 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({ isOpen, 
               <Bell className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-black text-base text-[var(--foreground)] leading-tight">
+              <h3 className="font-semibold text-base text-[var(--foreground)] leading-tight">
                 مركز التنبيهات الإدارية
               </h3>
               <p className="text-[11px] text-[var(--text-muted)] font-medium">
@@ -309,6 +313,6 @@ export const NotificationsModal: React.FC<NotificationsModalProps> = ({ isOpen, 
           </Link>
         </div>
       </div>
-    </div>
+    </dialog>
   );
 };

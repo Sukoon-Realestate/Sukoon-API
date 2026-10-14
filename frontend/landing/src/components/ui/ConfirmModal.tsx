@@ -1,7 +1,7 @@
 'use client';
-
-import React from 'react';
-import { AlertTriangle, CheckCircle2, X, Info } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { AlertTriangle, CheckCircle2, Info, X } from 'lucide-react';
+import type React from 'react';
 
 interface ConfirmModalProps {
   isOpen: boolean;
@@ -21,100 +21,32 @@ interface ConfirmModalProps {
 }
 
 export const ConfirmModal: React.FC<ConfirmModalProps> = ({
-  isOpen,
-  onClose,
-  onCancel,
-  onConfirm,
-  title,
-  message,
-  description,
-  confirmText,
-  confirmLabel,
-  cancelText,
-  cancelLabel,
-  variant,
-  confirmVariant,
-  children,
+  isOpen, onClose, onCancel, onConfirm, title, message, description,
+  confirmText, confirmLabel, cancelText, cancelLabel, variant, confirmVariant, children,
 }) => {
-  if (!isOpen) return null;
+  const dialog = useRef<HTMLDialogElement>(null);
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState(false);
+  const close = onClose || onCancel || (() => {});
+  const tone = variant || confirmVariant || 'danger';
+  const Icon = tone === 'success' ? CheckCircle2 : tone === 'info' ? Info : AlertTriangle;
 
-  const handleClose = onClose || onCancel || (() => {});
-  const finalMessage = message || description || '';
-  const finalConfirmText = confirmText || confirmLabel || 'تأكيد الإجراء';
-  const finalCancelText = cancelText || cancelLabel || 'إلغاء';
-  const finalVariant = (variant || confirmVariant || 'danger') as 'danger' | 'success' | 'warning' | 'info';
+  useEffect(() => {
+    if (isOpen && !dialog.current?.open) dialog.current?.showModal();
+    if (!isOpen && dialog.current?.open) dialog.current?.close();
+  }, [isOpen]);
 
-  const getIcon = () => {
-    switch (finalVariant) {
-      case 'danger':
-        return <AlertTriangle className="w-6 h-6 text-rose-500" />;
-      case 'success':
-        return <CheckCircle2 className="w-6 h-6 text-emerald-500" />;
-      case 'warning':
-        return <AlertTriangle className="w-6 h-6 text-amber-500" />;
-      default:
-        return <Info className="w-6 h-6 text-teal-500" />;
-    }
-  };
+  async function confirm() {
+    setPending(true);
+    setError(false);
+    try { await onConfirm(); close(); } catch { setError(true); } finally { setPending(false); }
+  }
 
-  const getButtonBg = () => {
-    switch (finalVariant) {
-      case 'danger':
-        return 'bg-rose-500 hover:bg-rose-600 text-white';
-      case 'success':
-        return 'bg-emerald-500 hover:bg-emerald-600 text-white';
-      case 'warning':
-        return 'bg-amber-500 hover:bg-amber-600 text-white';
-      default:
-        return 'bg-teal-600 hover:bg-teal-700 text-white';
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-      <div
-        className="relative w-full max-w-md bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-2xl p-6 space-y-5 animate-scaleIn text-right glass-card"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          onClick={handleClose}
-          className="absolute top-4 left-4 p-1.5 rounded-xl text-[var(--text-subtle)] hover:bg-[var(--card-hover)] transition-colors cursor-pointer"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        <div className="flex items-center gap-3.5">
-          <div className="w-12 h-12 rounded-2xl bg-[var(--card-hover)] border border-[var(--card-border)] shrink-0 flex items-center justify-center">
-            {getIcon()}
-          </div>
-          <div>
-            <h3 className="font-black text-base text-[var(--foreground)] leading-tight">{title}</h3>
-            <p className="text-xs font-semibold text-[var(--text-muted)] mt-1">{finalMessage}</p>
-          </div>
-        </div>
-
-        {children && <div className="pt-2">{children}</div>}
-
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-[var(--divider)]">
-          <button
-            type="button"
-            onClick={handleClose}
-            className="px-4 py-2 bg-[var(--badge-bg-muted)] hover:bg-[var(--card-hover)] text-[var(--foreground)] text-xs font-bold rounded-xl transition-all cursor-pointer btn-press border border-[var(--card-border)]"
-          >
-            {finalCancelText}
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              onConfirm();
-              handleClose();
-            }}
-            className={`px-5 py-2 text-xs font-extrabold rounded-xl transition-all shadow-md cursor-pointer btn-press ${getButtonBg()}`}
-          >
-            {finalConfirmText}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
+  return <dialog ref={dialog} className="admin-confirm-dialog" aria-label={title} onCancel={(event) => { if (pending) event.preventDefault(); else close(); }}>
+    <div className="flex items-start justify-between gap-4"><span className={`inline-flex p-2 rounded-lg ${tone === 'danger' ? 'text-rose-600 bg-rose-50 dark:bg-rose-950 dark:text-rose-300' : 'text-[var(--primary-text)] bg-[var(--primary-subtle)]'}`}><Icon size={22} aria-hidden /></span><button type="button" className="admin-icon-button" disabled={pending} onClick={close} aria-label="إغلاق"><X size={19} /></button></div>
+    <h2 className="text-lg font-medium mt-4">{title}</h2><p className="text-sm leading-7 text-[var(--text-muted)] mt-2">{message || description || ''}</p>
+    {children && <div className="mt-4">{children}</div>}
+    {error && <p role="alert" className="text-sm text-rose-600 dark:text-rose-300 mt-3">تعذر إكمال الإجراء. حاول مرة أخرى.</p>}
+    <div className="flex items-center justify-end gap-2 mt-6 pt-4 border-t border-[var(--divider)]"><button type="button" disabled={pending} className="admin-button admin-button-secondary" onClick={close}>{cancelText || cancelLabel || 'إلغاء'}</button><button type="button" disabled={pending} onClick={() => void confirm()} className={`admin-button ${tone === 'danger' ? 'bg-rose-700 hover:bg-rose-800 text-white' : 'admin-button-primary'}`}>{pending ? 'جاري التنفيذ…' : confirmText || confirmLabel || 'تأكيد الإجراء'}</button></div>
+  </dialog>;
 };

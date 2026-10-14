@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from '@/components/ui/AdminLink';
+import { TableScroll } from '@/components/ui/TableScroll';
 import { Header } from '@/components/layout/Header';
 import { OverviewTicket, ReportsOverviewStats } from '@/lib/api/types';
 import { fetchReportsOverview } from '@/lib/api/reports';
@@ -53,7 +54,7 @@ export default function ReportsOverviewPage() {
         lastUpdated="9:41 ص"
       />
 
-      <div className="p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="admin-page-body space-y-6">
         {/* Top 4 Stat Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
@@ -148,10 +149,10 @@ export default function ReportsOverviewPage() {
             </div>
 
             {/* Table */}
-            <div className="overflow-x-auto">
+            <TableScroll>
               <table className="w-full text-right border-collapse">
                 <thead>
-                  <tr className="bg-[var(--table-header-bg)] border-b border-slate-200 text-[var(--text-muted)] text-xs font-bold">
+                  <tr className="bg-[var(--table-header-bg)] border-b border-[var(--card-border)] text-[var(--text-muted)] text-xs font-bold">
                     <th className="py-4 px-4">Ticket ID</th>
                     <th className="py-4 px-4">الموضوع</th>
                     <th className="py-4 px-4">المُبلِّغ</th>
@@ -205,7 +206,7 @@ export default function ReportsOverviewPage() {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </TableScroll>
           </div>
 
           {/* Right Sidebar Column (4 cols) */}

@@ -67,7 +67,7 @@ export default function PushNotificationsPage() {
         lastUpdated="محدث الآن"
       />
 
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="admin-page-body space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: Create Notification Form (6 cols) */}
           <div className="lg:col-span-6 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-5">

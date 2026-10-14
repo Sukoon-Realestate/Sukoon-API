@@ -89,7 +89,7 @@ function IndividualKycReviewContent() {
         lastUpdated="محدث الآن"
       />
 
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="admin-page-body space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: User Info Card (3.5 cols) */}
           <div className="lg:col-span-4 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex flex-col items-center">
@@ -182,7 +182,7 @@ function IndividualKycReviewContent() {
                       <img src={kycData.idFaceUrl} alt="ID Front" className="w-full h-full object-cover" />
                     ) : (
                       <div className="text-center p-4">
-                        <FileText className="w-8 h-8 text-slate-400 mx-auto mb-1" />
+                        <FileText className="w-8 h-8 text-[var(--text-muted)] mx-auto mb-1" />
                         <span className="text-xs text-[var(--text-muted)] font-medium">
                           معاينة صورة بطاقة الرقم القومي (الوجه)
                         </span>
@@ -206,7 +206,7 @@ function IndividualKycReviewContent() {
                       <img src={kycData.idBackUrl} alt="ID Back" className="w-full h-full object-cover" />
                     ) : (
                       <div className="text-center p-4">
-                        <FileText className="w-8 h-8 text-slate-400 mx-auto mb-1" />
+                        <FileText className="w-8 h-8 text-[var(--text-muted)] mx-auto mb-1" />
                         <span className="text-xs text-[var(--text-muted)] font-medium">
                           معاينة صورة بطاقة الرقم القومي (الظهر)
                         </span>
@@ -226,7 +226,7 @@ function IndividualKycReviewContent() {
                     <img src={kycData.selfieUrl} alt="Selfie" className="w-full h-full object-cover" />
                   ) : (
                     <div className="text-center p-4">
-                      <User className="w-8 h-8 text-slate-400 mx-auto mb-1" />
+                      <User className="w-8 h-8 text-[var(--text-muted)] mx-auto mb-1" />
                       <span className="text-xs text-[var(--text-muted)] font-medium">
                         صورة السيلفي الحية ملتقطة من تطبيق الجوال
                       </span>
@@ -319,7 +319,7 @@ export default function IndividualKycReviewPage() {
   return (
     <Suspense
       fallback={
-        <div className="flex-1 p-12 text-center text-slate-400">
+        <div className="flex-1 p-12 text-center text-[var(--text-muted)]">
           <LogoLoader showLabel label="جاري تحميل صفحة المراجعة..." />
         </div>
       }

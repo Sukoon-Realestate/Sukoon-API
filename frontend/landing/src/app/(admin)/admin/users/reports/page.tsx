@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from '@/components/ui/AdminLink';
+import { TableScroll } from '@/components/ui/TableScroll';
 import { Header } from '@/components/layout/Header';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { useToast } from '@/components/ui/Toast';
@@ -87,9 +88,9 @@ export default function ReportsQueuePage() {
         subtitle="مراجعة البلاغات الصادرة من المستخدمين والنظام والتحقق الإداري"
       />
 
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="admin-page-body space-y-6">
         {/* Top Control Bar: Tabs & Search */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 animate-fadeInUp">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto">
             <button
               onClick={() => setActiveTab('active')}
@@ -115,7 +116,7 @@ export default function ReportsQueuePage() {
               onClick={() => setActiveTab('banned')}
               className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-[var(--shadow-card)] cursor-pointer ${
                 activeTab === 'banned'
-                  ? 'bg-slate-800 dark:bg-slate-600 text-white'
+                  ? 'bg-[var(--card-hover)] dark:bg-slate-600 text-white'
                   : 'bg-[var(--card-bg)] text-[var(--foreground)] hover:bg-[var(--card-hover)] border border-[var(--card-border)]'
               }`}
             >
@@ -137,7 +138,7 @@ export default function ReportsQueuePage() {
 
         {/* AI System Warning Banner */}
         <div
-          className="bg-amber-50/80 dark:bg-amber-500/10 border border-amber-200/80 dark:border-amber-500/20 rounded-2xl p-4 flex items-center gap-3 text-amber-900 dark:text-amber-300 text-xs font-semibold shadow-[var(--shadow-card)] animate-fadeInUp"
+          className="bg-amber-50/80 dark:bg-amber-500/10 border border-amber-200/80 dark:border-amber-500/20 rounded-2xl p-4 flex items-center gap-3 text-amber-900 dark:text-amber-300 text-xs font-semibold shadow-[var(--shadow-card)]"
           style={{ animationDelay: '50ms' }}
         >
           <ShieldAlert className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0" />
@@ -148,10 +149,10 @@ export default function ReportsQueuePage() {
 
         {/* Reports Data Table */}
         <div
-          className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] overflow-hidden animate-fadeInUp"
+          className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] overflow-hidden"
           style={{ animationDelay: '100ms' }}
         >
-          <div className="overflow-x-auto">
+          <TableScroll>
             <table className="w-full text-right border-collapse">
               <thead>
                 <tr className="bg-[var(--table-header-bg)] border-b border-[var(--card-border)] text-[var(--text-muted)] text-xs font-bold">
@@ -224,7 +225,7 @@ export default function ReportsQueuePage() {
                 )}
               </tbody>
             </table>
-          </div>
+          </TableScroll>
         </div>
       </div>
     </div>

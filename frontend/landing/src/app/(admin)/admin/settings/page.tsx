@@ -132,9 +132,9 @@ export default function PlatformSettingsPage() {
         lastUpdated="محدث الآن"
       />
 
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="admin-page-body space-y-6">
         {/* Save Floating Header Bar */}
-        <div className="flex items-center justify-between bg-[var(--card-bg)] p-4 rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] animate-fadeInUp">
+        <div className="flex items-center justify-between bg-[var(--card-bg)] p-4 rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)]">
           <div>
             <h3 className="font-extrabold text-sm text-[var(--foreground)]">إعدادات النظام العامة</h3>
             <p className="text-xs text-[var(--text-subtle)]">قم بتعديل الضوابط ثم انقر حفظ التغييرات</p>

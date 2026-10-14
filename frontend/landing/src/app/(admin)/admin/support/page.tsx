@@ -57,7 +57,7 @@ export default function SupportTicketsPage() {
         lastUpdated="9:41 ص"
       />
 
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="admin-page-body space-y-6">
         {/* Top 4 Stat Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">

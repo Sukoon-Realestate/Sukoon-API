@@ -43,7 +43,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
   let breadcrumbs: BreadcrumbItem[] = [];
 
   if (items && items.length > 0) {
-    breadcrumbs = items;
+    breadcrumbs = items.filter((item, index) => !(index === 0 && item.href && adminRelativePath(item.href) === '/'));
   } else {
     const segments = pathname.split('/').filter(Boolean);
     breadcrumbs = segments.map((segment, index) => {
@@ -60,7 +60,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
   if (pathname === '/') return null;
 
   return (
-    <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs font-bold text-[var(--text-subtle)] mb-4 flex-wrap animate-fadeIn">
+    <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs font-bold text-[var(--text-subtle)] mb-4 flex-wrap ">
       <Link
         href="/"
         className="inline-flex items-center gap-1 text-[var(--text-muted)] hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
@@ -76,7 +76,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
           <React.Fragment key={index}>
             <ChevronLeft className="w-3.5 h-3.5 text-[var(--text-subtle)] shrink-0" />
             {isLast || !item.href ? (
-              <span className="px-2 py-0.5 rounded-lg bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20 font-extrabold">
+              <span className="px-2 py-0.5 rounded-lg bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20 font-semibold">
                 {item.label}
               </span>
             ) : (

@@ -50,7 +50,7 @@ export default function AnalyticsReportsPage() {
         lastUpdated="9:41 ص"
       />
 
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="admin-page-body space-y-6">
         {/* Header Period Filter */}
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-extrabold text-[var(--foreground)]">

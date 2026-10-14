@@ -56,7 +56,7 @@ export default function ExecutiveDashboardPage() {
         lastUpdated="محدث الآن"
       />
 
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-8">
+      <div className="admin-page-body space-y-8">
         {/* Top 5 Metrics Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           {metrics.map((metric, idx) => (
@@ -83,7 +83,7 @@ export default function ExecutiveDashboardPage() {
         {/* Bottom Section: User Summary & Recent Activities */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* User Summary Widget (Left Column) */}
-          <div className="lg:col-span-4 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex flex-col justify-between animate-fadeInUp">
+          <div className="lg:col-span-4 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex flex-col justify-between">
             <div>
               <h3 className="font-bold text-[var(--foreground)] text-base mb-6">
                 ملخص المستخدمين

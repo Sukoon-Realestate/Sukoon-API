@@ -1,178 +1,82 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
+import { ArrowUpLeft, Building2, ShieldCheck, Headphones, RotateCw, AlertCircle, Users, Wallet } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
+import Link from '@/components/ui/AdminLink';
 import { MetricCard } from '@/components/ui/MetricCard';
 import { BarChartComponent } from '@/components/ui/BarChartComponent';
 import { ActivityFeed } from '@/components/ui/ActivityFeed';
 import { QuickActionsToolbar } from '@/components/ui/QuickActionsToolbar';
+import { SkeletonLoader } from '@/components/ui/SkeletonLoader';
+import { sumAvailableCounts } from '@/lib/admin-dashboard';
 import { fetchDashboardStats } from '@/lib/api/dashboard';
-import {
-  DashboardMetric,
-  UserDistribution,
-  ActivityItem,
-} from '@/lib/api/types';
+import { fetchAdminPropertyMetrics } from '@/lib/api/properties';
+import { fetchSupportMetrics } from '@/lib/api/support';
+import { fetchFinancialSummary } from '@/lib/api/financials';
+import type { DashboardStatsResponse, PropertyMetrics, SupportMetrics, FinancialSummary } from '@/lib/api/types';
 
 export default function OverviewDashboardPage() {
-  const [metrics, setMetrics] = useState<DashboardMetric[]>([]);
-  const [chartData, setChartData] = useState<Array<{ label: string; value: number }>>([]);
-  const [distribution, setDistribution] = useState<UserDistribution>({
-    total: 0,
-    tenants: 0,
-    landlords: 0,
-    verified: 0,
-    pending: 0,
-    suspended: 0,
-  });
-  const [activities, setActivities] = useState<ActivityItem[]>([]);
+  const [dashboard, setDashboard] = useState<DashboardStatsResponse | null>(null);
+  const [properties, setProperties] = useState<PropertyMetrics | null>(null);
+  const [support, setSupport] = useState<SupportMetrics | null>(null);
+  const [financials, setFinancials] = useState<FinancialSummary | null>(null);
   const [loading, setLoading] = useState(true);
+  const [failed, setFailed] = useState(false);
 
-  useEffect(() => {
-    async function loadStats() {
-      try {
-        const data = await fetchDashboardStats();
-        if (data.metrics) {
-          setMetrics(data.metrics);
-        }
-        if (data.chart_data) {
-          setChartData(data.chart_data);
-        }
-        if (data.user_distribution) {
-          setDistribution(data.user_distribution);
-        }
-        if (data.recent_activities) {
-          setActivities(data.recent_activities);
-        }
-      } catch (err) {
-        console.error('Failed to load dashboard stats from backend:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadStats();
+  const load = useCallback(async () => {
+    const [stats, propertyStats, supportStats, financialStats] = await Promise.allSettled([
+      fetchDashboardStats(), fetchAdminPropertyMetrics(), fetchSupportMetrics(), fetchFinancialSummary(),
+    ]);
+    setDashboard(stats.status === 'fulfilled' ? stats.value : null);
+    setProperties(propertyStats.status === 'fulfilled' ? propertyStats.value : null);
+    setSupport(supportStats.status === 'fulfilled' ? supportStats.value : null);
+    setFinancials(financialStats.status === 'fulfilled' ? financialStats.value : null);
+    setFailed([stats, propertyStats, supportStats, financialStats].some((result) => result.status === 'rejected'));
+    setLoading(false);
   }, []);
+  useEffect(() => { void Promise.resolve().then(load); }, [load]);
 
-  const total = distribution.total || 1;
-  const tenantPercent = Math.round((distribution.tenants / total) * 100);
-  const landlordPercent = Math.round((distribution.landlords / total) * 100);
+  const distribution = dashboard?.user_distribution;
+  const total = distribution?.total || 0;
+  const percent = (value: number) => total ? Math.min(100, Math.round(value / total * 100)) : 0;
+  const pendingTotal = sumAvailableCounts([distribution?.pending, properties?.pending, support?.openTickets]);
+  const display = (value?: number) => loading ? '…' : value === undefined ? '—' : value.toLocaleString('en-US');
+  const queue = [
+    { title: 'عقارات بانتظار المراجعة', description: 'راجع التفاصيل والصور قبل النشر', href: '/properties/review', icon: Building2, value: properties?.pending },
+    { title: 'طلبات توثيق الهوية', description: 'تحقق من مستندات الملاك والمستأجرين', href: '/kyc', icon: ShieldCheck, value: distribution?.pending },
+    { title: 'تذاكر دعم مفتوحة', description: 'تابع أسئلة ومشكلات المستخدمين', href: '/support', icon: Headphones, value: support?.openTickets },
+  ];
 
-  return (
-    <div className="flex-1 flex flex-col pb-12">
-      <Header
-        title="لوحة تحكم سكون"
-        subtitle="متابعة الأداء العام وحالة المنصة والمستخدمين"
-        lastUpdated="محدث الآن"
-      />
-
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-8">
-        <section className="admin-welcome">
-          <span className="inline-flex rounded-full border border-[#7fe08d]/25 bg-[#7fe08d]/10 px-3 py-1 text-xs font-medium text-[#7fe08d]">مساحة إدارة سكون</span>
-          <h1 className="mt-4 text-2xl sm:text-3xl font-semibold leading-relaxed">كل التفاصيل، في مكان واحد.</h1>
-          <p className="mt-2 max-w-xl text-sm leading-7 text-[#c4d5c7]">تابع أداء المنصة، وراجع الطلبات، وساعد مجتمع سكون على الوصول إلى سكن أفضل.</p>
+  return <div className="flex-1 flex flex-col pb-10">
+    <Header title="ملخص المنصة" subtitle="أداء الأعمال وما يحتاج إلى متابعة، في مكان واحد." />
+    <div className="admin-page-body space-y-6">
+      <div className="admin-overview-intro"><p>تابع نمو سكون، ثم انتقل إلى العمل الأهم.</p><button className="admin-button admin-button-secondary" onClick={() => { setLoading(true); setFailed(false); void load(); }} disabled={loading}><RotateCw size={15} className={loading ? 'animate-spin' : ''} aria-hidden />{loading ? 'جاري التحديث' : 'تحديث البيانات'}</button></div>
+      {failed && <div role="alert" className="admin-error"><AlertCircle size={19} aria-hidden /><p>تعذر تحميل بعض المؤشرات. البيانات المتاحة ما زالت ظاهرة؛ جرّب تحديث البيانات.</p><button onClick={() => { setLoading(true); setFailed(false); void load(); }} disabled={loading}>إعادة المحاولة</button></div>}
+      {loading && !dashboard ? <SkeletonLoader variant="metric" count={4} /> : dashboard?.metrics.length ? <section aria-label="مؤشرات الأداء" className="admin-metrics-grid">{dashboard.metrics.map((metric) => <MetricCard key={`${metric.icon}-${metric.title}`} metric={metric} />)}</section> : <div className="admin-panel admin-inline-empty">لا تتوفر مؤشرات أداء حالياً. استخدم تحديث البيانات للمحاولة مجدداً.</div>}
+      <div className="admin-overview-grid">
+        <OverviewDataState title="نمو المستخدمين" loading={loading} available={Boolean(dashboard)}><BarChartComponent title="نمو المستخدمين" data={dashboard?.chart_data || []} periodLabel="آخر 30 يوماً" /></OverviewDataState>
+        <section className="admin-panel admin-queue"><div className="admin-panel-heading"><div><h2>يحتاج إلى متابعة</h2><p>المراجعات والتذاكر المفتوحة</p></div><span className="admin-queue-total">{loading ? '…' : pendingTotal === null ? '—' : pendingTotal.toLocaleString('en-US')}</span></div>
+          <div className="admin-queue-list">{queue.map((item) => { const Icon = item.icon; return <Link href={item.href} key={item.href}><span className="admin-queue-icon"><Icon size={19} strokeWidth={1.7} aria-hidden /></span><span className="min-w-0 flex-1"><strong>{item.title}</strong><small>{item.description}</small></span><b>{display(item.value)}</b><ArrowUpLeft size={16} aria-hidden /></Link>; })}</div>
+          <Link href="/reports/overview" className="admin-queue-footer">متابعة البلاغات وتسويتها<ArrowUpLeft size={16} aria-hidden /></Link>
         </section>
-        {/* Admin Quick Toolbar */}
-        <QuickActionsToolbar />
-
-        {/* Top 4 Metrics Row */}
-        {loading && metrics.length === 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {[1, 2, 3, 4].map((i) => (
-              <div
-                key={i}
-                className="h-32 bg-[var(--card-hover)] rounded-3xl animate-pulse border border-[var(--card-border)]"
-              />
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {metrics.map((metric, idx) => (
-              <MetricCard key={idx} metric={metric} delay={idx * 80} />
-            ))}
-          </div>
-        )}
-
-        {/* Middle Section: New Users Chart & User Distribution */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* 30-Day New Users Chart */}
-          <div className="lg:col-span-7">
-            <BarChartComponent
-              title="المستخدمون الجدد (30 يوم)"
-              data={chartData}
-              color="teal"
-              periodLabel="30 يوم"
-            />
-          </div>
-
-          {/* User Distribution Card */}
-          <div
-            className="lg:col-span-5 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex flex-col justify-between animate-fadeInUp"
-            style={{ animationDelay: '100ms' }}
-          >
-            <div>
-              <h3 className="font-extrabold text-[var(--foreground)] text-base mb-6">
-                توزيع المستخدمين
-              </h3>
-
-              {/* Tenants Row */}
-              <div className="mb-6 space-y-2">
-                <div className="flex items-center justify-between text-xs font-bold">
-                  <span className="text-[var(--text-muted)] font-bold">مستأجرون</span>
-                  <span className="text-[var(--foreground)] font-black text-sm">
-                    {distribution.tenants.toLocaleString('en-US')}
-                  </span>
-                </div>
-                <div className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/50 rounded-full h-3 overflow-hidden p-0.5">
-                  <div
-                    className="bg-gradient-to-r from-teal-700 to-teal-500 h-2 rounded-full transition-all duration-1000 shadow-sm shadow-blue-500/20"
-                    style={{ width: `${tenantPercent}%` }}
-                  ></div>
-                </div>
-              </div>
-
-              {/* Landlords Row */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs font-bold">
-                  <span className="text-[var(--text-muted)] font-bold">ملاك</span>
-                  <span className="text-[var(--foreground)] font-black text-sm">
-                    {distribution.landlords.toLocaleString('en-US')}
-                  </span>
-                </div>
-                <div className="w-full bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/50 rounded-full h-3 overflow-hidden p-0.5">
-                  <div
-                    className="bg-gradient-to-r from-[#9eb77b] to-[#698b50] h-2 rounded-full transition-all duration-1000 shadow-sm shadow-amber-500/20"
-                    style={{ width: `${landlordPercent}%` }}
-                  ></div>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom Status Tags */}
-            <div className="pt-6 mt-6 border-t border-[var(--divider)] grid grid-cols-3 gap-2 text-center text-xs">
-              <div className="bg-emerald-50/90 dark:bg-slate-900/50 p-3 rounded-2xl border border-emerald-200/90 dark:border-slate-800 transition-transform hover:scale-105">
-                <div className="text-[11px] text-emerald-800 dark:text-emerald-300 font-extrabold mb-0.5">موثقون</div>
-                <div className="text-base font-black text-emerald-700 dark:text-emerald-400">
-                  {distribution.verified.toLocaleString('en-US')}
-                </div>
-              </div>
-              <div className="bg-amber-50/90 dark:bg-slate-900/50 p-3 rounded-2xl border border-amber-200/90 dark:border-slate-800 transition-transform hover:scale-105">
-                <div className="text-[11px] text-amber-800 dark:text-amber-300 font-extrabold mb-0.5">قيد التوثيق</div>
-                <div className="text-base font-black text-amber-700 dark:text-amber-400">
-                  {distribution.pending.toLocaleString('en-US')}
-                </div>
-              </div>
-              <div className="bg-rose-50/90 dark:bg-slate-900/50 p-3 rounded-2xl border border-rose-200/90 dark:border-slate-800 transition-transform hover:scale-105">
-                <div className="text-[11px] text-rose-800 dark:text-rose-300 font-extrabold mb-0.5">موقوفون</div>
-                <div className="text-base font-black text-rose-700 dark:text-rose-400">
-                  {distribution.suspended.toLocaleString('en-US')}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Section: Recent Activities Feed */}
-        <ActivityFeed activities={activities} />
       </div>
+      <div className="admin-overview-secondary">
+        <section className="admin-panel admin-community"><div className="admin-panel-heading"><div><h2>مجتمع سكون</h2><p>توزيع الحسابات وحالة التوثيق</p></div><Users size={21} strokeWidth={1.5} aria-hidden /></div>
+          <div className="admin-community-total"><strong>{display(distribution?.total)}</strong><span>مستخدم على المنصة</span></div>
+          {distribution && <div className="admin-composition-bar" role="img" aria-label={`المستأجرون ${percent(distribution?.tenants || 0)}٪، الملاك ${percent(distribution?.landlords || 0)}٪`}><span style={{ width: `${percent(distribution?.tenants || 0)}%` }} /><span style={{ width: `${percent(distribution?.landlords || 0)}%` }} /></div>}
+          <div className="admin-composition-legend"><span><i />مستأجرون <strong>{display(distribution?.tenants)}</strong></span><span><i />ملاك <strong>{display(distribution?.landlords)}</strong></span></div>
+          <dl className="admin-status-summary"><div><dt>موثقون</dt><dd>{display(distribution?.verified)}</dd></div><div><dt>قيد التوثيق</dt><dd>{display(distribution?.pending)}</dd></div><div><dt>موقوفون</dt><dd>{display(distribution?.suspended)}</dd></div></dl>
+        </section>
+        <section className="admin-panel admin-business-summary"><div className="admin-panel-heading"><div><h2>الأداء المالي</h2><p>ملخص إيرادات الشهر</p></div><Wallet size={21} strokeWidth={1.5} aria-hidden /></div><div className="admin-revenue-value" dir="auto">{loading ? '…' : financials?.metrics.totalRevenueMonth || '—'}</div><span className="text-sm text-[var(--text-muted)]">إجمالي إيرادات الشهر</span><dl><div><dt>رسوم المنصة</dt><dd dir="auto">{financials?.metrics.platformFees || '—'}</dd></div><div><dt>المعاملات النشطة</dt><dd dir="auto">{financials?.metrics.activeTransactions || '—'}</dd></div></dl><Link href="/financials" className="admin-text-link">عرض تفاصيل الإيرادات<ArrowUpLeft size={16} aria-hidden /></Link></section>
+      </div>
+      <OverviewDataState title="آخر الأنشطة" loading={loading} available={Boolean(dashboard)}><ActivityFeed activities={dashboard?.recent_activities || []} /></OverviewDataState>
+      <QuickActionsToolbar />
     </div>
-  );
+  </div>;
+}
+
+function OverviewDataState({ title, loading, available, children }: { title: string; loading: boolean; available: boolean; children: ReactNode }) {
+  if (available) return children;
+  return <section className="admin-panel" aria-busy={loading}><div className="admin-panel-heading"><h2>{title}</h2></div>{loading ? <div className="px-6 pb-6 space-y-3 animate-pulse" role="status"><span className="sr-only">جاري تحميل {title}</span><div className="h-4 w-1/2 rounded bg-[var(--card-hover)]" /><div className="h-40 rounded bg-[var(--card-hover)]" /></div> : <p role="status" className="admin-inline-empty">تعذر تحميل هذا القسم. استخدم تحديث البيانات لإعادة المحاولة.</p>}</section>;
 }

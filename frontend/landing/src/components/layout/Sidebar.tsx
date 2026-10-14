@@ -1,360 +1,97 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import Link from '@/components/ui/AdminLink';
+import { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
+import PublicLink from 'next/link';
 import { usePathname } from 'next/navigation';
+import { ChevronDown, X, ArrowUpLeft, Search } from 'lucide-react';
+import Link from '@/components/ui/AdminLink';
+import logo from '@/assets/brand/logo.png';
 import { adminRelativePath } from '@/lib/basePath';
+import { activeAdminHref, adminNavigation } from '@/lib/admin-navigation';
 import { fetchDashboardStats } from '@/lib/api/dashboard';
 import { fetchAdminPropertyMetrics } from '@/lib/api/properties';
-import logo from '@/assets/brand/logo.png';
-import {
-  LayoutDashboard,
-  Users,
-  ShieldCheck,
-  Building2,
-  FileText,
-  Shield,
-  Settings,
-  ShieldAlert,
-  UserX,
-  ClipboardList,
-  Headphones,
-  DollarSign,
-  Receipt,
-  BarChart3,
-  ShieldBan,
-  BellRing,
-  History,
-  Activity,
-  X,
-  Radio,
-} from 'lucide-react';
+import { fetchSupportMetrics } from '@/lib/api/support';
+import { useAuth } from '@/context/AuthContext';
 
-interface SidebarProps {
-  isMobileOpen?: boolean;
-  onCloseMobile?: () => void;
-}
+interface SidebarProps { isMobileOpen?: boolean; onCloseMobile?: () => void }
 
-export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onCloseMobile }) => {
+export function Sidebar({ isMobileOpen = false, onCloseMobile }: SidebarProps) {
   const pathname = adminRelativePath(usePathname());
-  const [counts, setCounts] = useState<{
-    suspended: number | null;
-    kyc: number | null;
-    propertiesReview: number | null;
-    reports: number | null;
-    support: number | null;
-    moderation: number | null;
-  }>({
-    suspended: null,
-    kyc: null,
-    propertiesReview: null,
-    reports: null,
-    support: null,
-    moderation: null,
-  });
+  const activeHref = activeAdminHref(pathname);
+  const { user } = useAuth();
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const [query, setQuery] = useState('');
+  const [counts, setCounts] = useState<Record<string, number>>({});
+  const drawer = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
-    async function loadCounts() {
-      try {
-        const [dashStats, propMetrics] = await Promise.allSettled([
-          fetchDashboardStats(),
-          fetchAdminPropertyMetrics(),
-        ]);
-        let suspended = null;
-        let kyc = null;
-        let propertiesReview = null;
-
-        if (dashStats.status === 'fulfilled' && dashStats.value?.user_distribution) {
-          suspended = dashStats.value.user_distribution.suspended;
-          kyc = dashStats.value.user_distribution.pending;
-        }
-        if (propMetrics.status === 'fulfilled' && propMetrics.value) {
-          propertiesReview = propMetrics.value.pending;
-        }
-
-        setCounts((prev) => ({
-          ...prev,
-          suspended,
-          kyc,
-          propertiesReview,
-        }));
-      } catch (err) {
-        console.warn('Could not load sidebar live counts:', err);
-      }
-    }
-    loadCounts();
+    let cancelled = false;
+    Promise.allSettled([fetchDashboardStats(), fetchAdminPropertyMetrics(), fetchSupportMetrics()]).then(([dashboard, properties, support]) => {
+      if (cancelled) return;
+      const values: Record<string, number> = {};
+      if (dashboard.status === 'fulfilled') values.kyc = dashboard.value.user_distribution.pending;
+      if (properties.status === 'fulfilled') values.properties = properties.value.pending;
+      if (support.status === 'fulfilled') values.support = support.value.openTickets;
+      setCounts(values);
+    });
+    return () => { cancelled = true; };
   }, []);
 
-  const section1 = [
-    {
-      title: 'لوحة التحكم',
-      href: '/',
-      icon: LayoutDashboard,
-      active: pathname === '/' || pathname === '/executive',
-    },
-    {
-      title: 'المستخدمون',
-      href: '/users',
-      icon: Users,
-      active:
-        pathname === '/users' ||
-        (pathname.startsWith('/users/') &&
-          !pathname.startsWith('/users/suspended') &&
-          !pathname.startsWith('/users/reports')),
-    },
-    {
-      title: 'الموقوفون والمحظورون',
-      href: '/users/suspended',
-      icon: UserX,
-      badge: counts.suspended !== null ? String(counts.suspended) : undefined,
-      active: pathname === '/users/suspended',
-    },
-    {
-      title: 'التوثيق KYC',
-      href: '/kyc',
-      icon: ShieldCheck,
-      badge: counts.kyc !== null ? String(counts.kyc) : undefined,
-      active: pathname === '/kyc' || pathname === '/kyc/review',
-    },
-    {
-      title: 'إدارة العقارات',
-      href: '/properties',
-      icon: Building2,
-      active: pathname === '/properties',
-    },
-    {
-      title: 'مراجعة العقارات',
-      href: '/properties/review',
-      icon: ClipboardList,
-      badge: counts.propertiesReview !== null ? String(counts.propertiesReview) : undefined,
-      active: pathname === '/properties/review',
-    },
-  ];
+  useEffect(() => {
+    const dialog = drawer.current;
+    if (!dialog) return;
+    if (isMobileOpen && !dialog.open) dialog.showModal();
+    if (!isMobileOpen && dialog.open) dialog.close();
+    if (!isMobileOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, [isMobileOpen]);
 
-  const section2 = [
-    {
-      title: 'مراجعة المحتوى',
-      href: '/moderation',
-      icon: ShieldBan,
-      badge: counts.moderation !== null ? String(counts.moderation) : undefined,
-      active: pathname === '/moderation',
-    },
-    {
-      title: 'طابور البلاغات',
-      href: '/users/reports',
-      icon: ShieldAlert,
-      badge: counts.reports !== null ? String(counts.reports) : undefined,
-      active: pathname === '/users/reports',
-    },
-    {
-      title: 'دعم العملاء',
-      href: '/support',
-      icon: Headphones,
-      badge: counts.support !== null ? String(counts.support) : undefined,
-      active: pathname.startsWith('/support'),
-    },
-    {
-      title: 'التقارير والتذاكر',
-      href: '/reports/overview',
-      icon: FileText,
-      active: pathname === '/reports/overview' || pathname === '/reports',
-    },
-    {
-      title: 'التحليلات والتقارير',
-      href: '/analytics',
-      icon: BarChart3,
-      active: pathname === '/analytics',
-    },
-  ];
-
-  const section3 = [
-    {
-      title: 'الإيرادات والمالية',
-      href: '/financials',
-      icon: DollarSign,
-      active: pathname === '/financials',
-    },
-    {
-      title: 'سجل المعاملات',
-      href: '/financials/transactions',
-      icon: Receipt,
-      active: pathname === '/financials/transactions',
-    },
-    {
-      title: 'الإشعارات المدفوعة',
-      href: '/notifications',
-      icon: BellRing,
-      active: pathname === '/notifications',
-    },
-    {
-      title: 'سجل النشاط',
-      href: '/system/logs',
-      icon: History,
-      active: pathname === '/system/logs',
-    },
-    {
-      title: 'الأدوار والصلاحيات',
-      href: '/roles',
-      icon: Shield,
-      active: pathname === '/roles',
-    },
-    {
-      title: 'صحة النظام',
-      href: '/system/health',
-      icon: Activity,
-      active: pathname === '/system/health',
-    },
-    {
-      title: 'إعدادات النظام',
-      href: '/settings',
-      icon: Settings,
-      active: pathname === '/settings',
-    },
-  ];
-
-  const renderNavGroup = (items: typeof section1, startIndex: number) => (
-    <div className="space-y-1">
-      {items.map((item, idx) => {
-        const Icon = item.icon;
-        return (
-          <Link
-            key={item.href}
-            aria-current={item.active ? 'page' : undefined}
-            href={item.href}
-            onClick={onCloseMobile}
-            className={`relative flex items-center justify-between px-3.5 py-2.5 rounded-xl font-bold text-xs transition-all duration-200 group animate-slideInFromSide cursor-pointer ${
-              item.active
-                ? 'bg-teal-500/15 text-teal-400 font-extrabold shadow-xs border border-teal-500/20'
-                : 'text-[var(--sidebar-text)] hover:bg-[var(--sidebar-hover)] hover:text-slate-100'
-            }`}
-            style={{ animationDelay: `${(startIndex + idx) * 20}ms` }}
-          >
-            {item.active && (
-              <span className="absolute right-0 top-2 bottom-2 w-1.5 rounded-l-full bg-teal-400 "></span>
-            )}
-            <div className="flex items-center gap-3 pr-1">
-              <Icon
-                className={`w-4 h-4 transition-transform duration-200 group-hover:scale-110 ${
-                  item.active ? 'text-teal-400' : 'text-[var(--sidebar-text)] group-hover:text-slate-200'
-                }`}
-              />
-              <span>{item.title}</span>
-            </div>
-            {item.badge && (
-              <span className="px-2 py-0.5 text-[10px] font-extrabold bg-[#123520] text-teal-400 rounded-full border border-teal-500/30">
-                {item.badge}
-              </span>
-            )}
-          </Link>
-        );
-      })}
+  const content = (mobile: boolean) => <>
+    <div className="admin-sidebar-brand">
+      <Link href="/" onClick={onCloseMobile} className="flex items-center gap-3" aria-label="سكون، ملخص المنصة">
+        <Image src={logo} alt="" width={38} height={38} priority className="size-10 object-contain" />
+        <span><strong className="block text-xl font-semibold">سكون</strong><span className="text-xs text-[var(--text-muted)]">مساحة الإدارة</span></span>
+      </Link>
+      {mobile ? <button className="admin-icon-button" aria-label="إغلاق القائمة" onClick={onCloseMobile}><X size={19} /></button> : null}
     </div>
-  );
-
-  const sidebarContent = (
-    <div className="flex flex-col h-full">
-      {/* Brand Header */}
-      <div className="p-5 flex items-center justify-between border-b border-[var(--sidebar-border)] bg-[#0b2415]">
-        <div className="flex items-center gap-3">
-          <Image src={logo} alt="" width={40} height={40} priority className="w-10 h-10 shrink-0" />
-          <div>
-            <h1 className="font-black text-white text-base tracking-tight leading-tight">سكون</h1>
-            <p className="text-[11px] font-semibold text-[var(--sidebar-text)] mt-0.5">منظومة المراجعة والتوثيق</p>
-          </div>
-        </div>
-
-        {onCloseMobile && (
-          <button
-            onClick={onCloseMobile}
-            aria-label="إغلاق القائمة"
-            className="lg:hidden p-1.5 text-[var(--sidebar-text)] hover:text-white rounded-xl transition-colors cursor-pointer"
-          >
-            <X className="w-5 h-5" />
+    <div className="admin-workspace"><span className="admin-workspace-mark">S</span><div><strong>إدارة منصة سكون</strong><span>العقارات والمجتمع</span></div></div>
+    <label className="admin-nav-filter"><Search size={16} aria-hidden /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="تصفية القائمة…" aria-label="تصفية أقسام الإدارة" /></label>
+    <nav aria-label="أقسام الإدارة" className="admin-sidebar-nav">
+      {adminNavigation.map((group) => {
+        const items = group.items.filter((item) => `${item.title} ${item.description}`.includes(query.trim()));
+        if (!items.length) return null;
+        const hasActive = group.items.some((item) => item.href === activeHref);
+        const isOpen = Boolean(query.trim()) || !(collapsed[group.id] ?? (group.id !== 'overview' && !hasActive));
+        const panelId = `nav-${mobile ? 'mobile' : 'desktop'}-${group.id}`;
+        return <section key={group.id} className="admin-nav-group">
+          <button type="button" className="admin-nav-heading" aria-expanded={isOpen} aria-controls={panelId} onClick={() => setCollapsed((current) => ({ ...current, [group.id]: isOpen }))}>
+            <span>{group.title}</span><ChevronDown size={14} className={isOpen ? '' : '-rotate-90'} aria-hidden />
           </button>
-        )}
-      </div>
-
-      {/* Mode Quick Switcher */}
-      <div className="px-4 pt-4 pb-2">
-        <div className="bg-[#0b2415] p-1 rounded-xl flex text-xs font-bold border border-[var(--sidebar-border)] shadow-inner">
-          <Link
-            href="/"
-            onClick={onCloseMobile}
-            className={`flex-1 text-center py-1.5 rounded-lg transition-all duration-200 cursor-pointer ${
-              pathname === '/' ? 'bg-teal-600 text-white font-extrabold shadow-sm' : 'text-[var(--sidebar-text)] hover:text-white'
-            }`}
-          >
-            الرئيسية
-          </Link>
-          <Link
-            href="/executive"
-            onClick={onCloseMobile}
-            className={`flex-1 text-center py-1.5 rounded-lg transition-all duration-200 cursor-pointer ${
-              pathname === '/executive' ? 'bg-teal-600 text-white font-extrabold shadow-sm' : 'text-[var(--sidebar-text)] hover:text-white'
-            }`}
-          >
-            التنفيذية
-          </Link>
-        </div>
-      </div>
-
-      {/* Navigation Links */}
-      <nav className="flex-1 px-3 py-3 space-y-4 overflow-y-auto">
-        <div>
-          <div className="px-3 pb-1 text-[10px] font-extrabold tracking-wider text-[#a1b0a6] uppercase">
-            الإدارة الرئيسية
+          <div id={panelId} hidden={!isOpen}>
+            {items.map((item) => {
+              const Icon = item.icon;
+              const selected = item.href === activeHref;
+              return <Link key={item.href} href={item.href} onClick={onCloseMobile} className={`admin-nav-item ${selected ? 'is-active' : ''}`} aria-current={selected ? 'page' : undefined}>
+                <Icon size={18} strokeWidth={1.7} aria-hidden /><span>{item.title}</span>
+                {item.count && counts[item.count] > 0 && <span className="admin-nav-count">{counts[item.count].toLocaleString('en-US')}</span>}
+              </Link>;
+            })}
           </div>
-          {renderNavGroup(section1, 0)}
-        </div>
-
-        <div>
-          <div className="px-3 pb-1 text-[10px] font-extrabold tracking-wider text-[#a1b0a6] uppercase">
-            المراقبة والدعم
-          </div>
-          {renderNavGroup(section2, section1.length)}
-        </div>
-
-        <div>
-          <div className="px-3 pb-1 text-[10px] font-extrabold tracking-wider text-[#a1b0a6] uppercase">
-            المالية والنظام
-          </div>
-          {renderNavGroup(section3, section1.length + section2.length)}
-        </div>
-      </nav>
-
-      {/* Footer Info */}
-      <div className="p-3.5 border-t border-[var(--sidebar-border)] bg-[#0b2415] text-[11px] text-[var(--sidebar-text)] flex items-center justify-between">
-        <span className="font-bold">Sukoon Real Estate</span>
-        <span className="inline-flex items-center gap-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-full text-[10px] font-extrabold">
-          <Radio className="w-3 h-3 animate-pulse" />
-          متصل • v1.4.0
-        </span>
-      </div>
+        </section>;
+      })}
+      {query.trim() && !adminNavigation.some((group) => group.items.some((item) => `${item.title} ${item.description}`.includes(query.trim()))) && <p className="px-3 py-6 text-sm text-[var(--text-muted)]">لا توجد أقسام بهذا الاسم.</p>}
+    </nav>
+    <div className="admin-sidebar-footer">
+      <PublicLink href="/ar" className="admin-public-link">زيارة الموقع <ArrowUpLeft size={16} aria-hidden /></PublicLink>
+      <div className="admin-sidebar-user"><span className="admin-avatar">{user?.name?.slice(0, 1) || 'س'}</span><div><strong>{user?.name || 'حساب الإدارة'}</strong><span>{user?.role || 'إدارة المنصة'}</span></div></div>
     </div>
-  );
+  </>;
 
-  return (
-    <>
-      {/* Desktop Fixed Sidebar */}
-      <aside className="hidden lg:flex w-64 xl:w-72 bg-[var(--sidebar-bg)] text-slate-300 h-screen sticky top-0 flex-col border-l border-[var(--sidebar-border)] shrink-0">
-        {sidebarContent}
-      </aside>
-
-      {/* Mobile Drawer Overlay */}
-      {isMobileOpen && (
-        <div className="fixed inset-0 z-50 flex lg:hidden">
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-xs animate-fadeIn"
-            onClick={onCloseMobile}
-          />
-          {/* Drawer Panel */}
-          <aside className="relative w-72 max-w-[80vw] bg-[var(--sidebar-bg)] text-slate-300 h-full flex flex-col shadow-2xl border-l border-[var(--sidebar-border)] z-10 animate-slideInDrawer">
-            {sidebarContent}
-          </aside>
-        </div>
-      )}
-    </>
-  );
-};
+  return <>
+    <aside className="admin-sidebar hidden lg:flex">{content(false)}</aside>
+    <dialog ref={drawer} className="admin-mobile-drawer" onCancel={onCloseMobile} onClick={(event) => { if (event.target === event.currentTarget) onCloseMobile?.(); }}><div className="admin-drawer-inner">{content(true)}</div></dialog>
+  </>;
+}

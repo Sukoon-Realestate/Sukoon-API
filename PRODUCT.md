@@ -16,7 +16,7 @@ Sukoon is a real-estate platform connecting landlords and tenants. Its administr
 
 ## Users
 
-Administrators and staff reviewing and operating the platform. Their exact staffing structure and usage frequency are open questions; daily operational review is the working assumption for this redesign.
+Administrators and staff reviewing and operating the platform. Their exact staffing structure and usage frequency are open questions; the home page must balance daily operations with business performance, as confirmed by the user.
 
 ## Capabilities and Constraints
 
@@ -36,4 +36,4 @@ Keep important operational work easy to find. Group navigation by staff workflow
 
 ## Open Decisions
 
-The user was asked whether the home should prioritize operations or executive reporting and whether to retain the landing palette. No answer has arrived; operations and the previously requested landing palette are the stated working defaults for this session, not permanent user preferences.
+The user confirmed a balanced overview of operations and business performance and retention of the cream / forest-green palette with a cleaner admin layout. Exact staff roles and operational frequency remain unspecified.

@@ -54,7 +54,7 @@ export default function SystemHealthPage() {
         lastUpdated="محدث الآن"
       />
 
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="admin-page-body space-y-6">
         {/* Top 4 Stat Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Card 1: Uptime */}
@@ -223,7 +223,7 @@ export default function SystemHealthPage() {
                     style={{ height: item.height }}
                     className="w-full bg-[#10B981] hover:bg-[#059669] rounded-t-md transition-all relative"
                   >
-                    <div className="opacity-0 group-hover:opacity-100 absolute -top-7 left-1/2 -translate-x-1/2 bg-slate-900 text-white text-[10px] font-bold px-1.5 py-0.5 rounded pointer-events-none transition-opacity whitespace-nowrap z-10">
+                    <div className="opacity-0 group-hover:opacity-100 absolute -top-7 left-1/2 -translate-x-1/2 bg-[var(--card-hover)] text-white text-[10px] font-bold px-1.5 py-0.5 rounded pointer-events-none transition-opacity whitespace-nowrap z-10">
                       {item.ms}ms
                     </div>
                   </div>
@@ -239,7 +239,7 @@ export default function SystemHealthPage() {
             Internal Admin Notes
           </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-semibold text-slate-300">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs font-semibold text-[var(--text-muted)]">
             {internalNotes.map((note, idx) => (
               <div key={idx} className="flex items-center gap-2.5">
                 <div className="w-4 h-4 rounded-full bg-teal-500/20 text-teal-400 flex items-center justify-center shrink-0">

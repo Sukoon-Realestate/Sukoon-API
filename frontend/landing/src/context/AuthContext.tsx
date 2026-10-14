@@ -30,39 +30,32 @@ const AuthContext = createContext<AuthContextType>({
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('sukoon_admin_auth') === 'true';
-    }
-    return false;
-  });
+  // Hydrate persisted auth after the initial render so server and client agree.
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<UserProfile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const [user, setUser] = useState<UserProfile | null>(() => {
-    if (typeof window !== 'undefined' && localStorage.getItem('sukoon_admin_auth') === 'true') {
-      const stored = localStorage.getItem('sukoon_user');
-      if (stored) {
-        try {
-          return JSON.parse(stored);
-        } catch {
-          // ignore
+  useEffect(() => {
+    void Promise.resolve().then(() => {
+      try {
+        const authenticated = localStorage.getItem('sukoon_admin_auth') === 'true';
+        const stored = localStorage.getItem('sukoon_user');
+        setIsAuthenticated(authenticated);
+        if (authenticated && stored) {
+          try { setUser(JSON.parse(stored)); } catch { setUser(null); }
         }
+      } finally {
+        setIsLoading(false);
       }
-      return {
-        name: 'سيف النظام',
-        email: 'admin@sukoon.com',
-        role: 'مالك النظام',
-      };
-    }
-    return null;
-  });
+    });
+  }, []);
 
-  const isLoading = false;
   const router = useRouter();
   const pathname = adminRelativePath(usePathname());
 
   const login = async (email: string, pass: string): Promise<boolean> => {
     try {
-      const res: any = await apiClient('/api/v1/auth/login/', {
+      const res = await apiClient<{ access?: string; data?: { access?: string } }>('/api/v1/auth/login/', {
         method: 'POST',
         body: JSON.stringify({ email: email.trim(), password: pass.trim() }),
       });
@@ -85,7 +78,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('sukoon_user', JSON.stringify(profile));
       router.push(adminPath('/'));
       return true;
-    } catch (err) {
+    } catch {
       return false;
     }
   };

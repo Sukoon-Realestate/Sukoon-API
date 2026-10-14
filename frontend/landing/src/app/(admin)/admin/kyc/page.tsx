@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from '@/components/ui/AdminLink';
+import { TableScroll } from '@/components/ui/TableScroll';
 import { Header } from '@/components/layout/Header';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { Eye, AlertTriangle, User } from 'lucide-react';
@@ -60,14 +61,14 @@ export default function KycReviewQueuePage() {
         lastUpdated="محدث الآن"
       />
 
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="admin-page-body space-y-6">
         {/* Top 4 Stat Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
             <div className="text-2xl font-black text-rose-500 mb-1">
               {metrics.rejectedToday}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-muted)]">
               مرفوض اليوم
             </div>
           </div>
@@ -76,7 +77,7 @@ export default function KycReviewQueuePage() {
             <div className="text-2xl font-black text-emerald-400 mb-1">
               {metrics.acceptedToday}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-muted)]">
               مقبول اليوم
             </div>
           </div>
@@ -85,7 +86,7 @@ export default function KycReviewQueuePage() {
             <div className="text-2xl font-black text-blue-400 mb-1">
               {metrics.reviewedToday}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-muted)]">
               مراجع اليوم
             </div>
           </div>
@@ -94,7 +95,7 @@ export default function KycReviewQueuePage() {
             <div className="text-2xl font-black text-amber-400 mb-1">
               {metrics.pendingReview}
             </div>
-            <div className="text-xs font-semibold text-slate-400">
+            <div className="text-xs font-semibold text-[var(--text-muted)]">
               انتظار المراجعة
             </div>
           </div>
@@ -114,7 +115,7 @@ export default function KycReviewQueuePage() {
                 className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
                   activeTab === 'all'
                     ? 'bg-teal-600 text-white'
-                    : 'bg-slate-800 text-slate-400 hover:text-white'
+                    : 'bg-[var(--card-hover)] text-[var(--text-muted)] hover:text-white'
                 }`}
               >
                 كل الطلبات ({requests.length})
@@ -124,7 +125,7 @@ export default function KycReviewQueuePage() {
                 className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
                   activeTab === 'pending'
                     ? 'bg-teal-600 text-white'
-                    : 'bg-slate-800 text-slate-400 hover:text-white'
+                    : 'bg-[var(--card-hover)] text-[var(--text-muted)] hover:text-white'
                 }`}
               >
                 مُعلّق ({requests.filter((r) => r.status === 'pending').length})
@@ -134,7 +135,7 @@ export default function KycReviewQueuePage() {
                 className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
                   activeTab === 'tenants'
                     ? 'bg-teal-600 text-white'
-                    : 'bg-slate-800 text-slate-400 hover:text-white'
+                    : 'bg-[var(--card-hover)] text-[var(--text-muted)] hover:text-white'
                 }`}
               >
                 مستأجرون
@@ -144,7 +145,7 @@ export default function KycReviewQueuePage() {
                 className={`px-4 py-1.5 rounded-full text-xs font-bold transition-colors cursor-pointer ${
                   activeTab === 'landlords'
                     ? 'bg-teal-600 text-white'
-                    : 'bg-slate-800 text-slate-400 hover:text-white'
+                    : 'bg-[var(--card-hover)] text-[var(--text-muted)] hover:text-white'
                 }`}
               >
                 ملاك
@@ -153,13 +154,13 @@ export default function KycReviewQueuePage() {
           </div>
 
           {/* Table */}
-          <div className="overflow-x-auto">
+          <TableScroll>
             {isLoading ? (
-              <div className="py-8 text-center text-xs text-slate-400">
+              <div className="py-8 text-center text-xs text-[var(--text-muted)]">
                 جاري تحميل طلبات التوثيق من الخادم...
               </div>
             ) : filteredRequests.length === 0 ? (
-              <div className="py-8 text-center text-xs text-slate-400">
+              <div className="py-8 text-center text-xs text-[var(--text-muted)]">
                 لا توجد طلبات توثيق مطابقة.
               </div>
             ) : (
@@ -209,7 +210,7 @@ export default function KycReviewQueuePage() {
                 </tbody>
               </table>
             )}
-          </div>
+          </TableScroll>
         </div>
       </div>
     </div>

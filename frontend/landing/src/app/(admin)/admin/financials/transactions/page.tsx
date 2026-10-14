@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { TableScroll } from '@/components/ui/TableScroll';
 import { Header } from '@/components/layout/Header';
 import { Search, FileSpreadsheet } from 'lucide-react';
 import { fetchTransactions } from '@/lib/api/financials';
@@ -51,7 +52,7 @@ export default function FinancialTransactionsPage() {
         lastUpdated="محدث الآن"
       />
 
-      <div className="p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="admin-page-body space-y-6">
         {/* Top Control Bar */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3 w-full md:w-auto">
@@ -119,10 +120,10 @@ export default function FinancialTransactionsPage() {
 
         {/* Transactions Table Container */}
         <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] overflow-hidden">
-          <div className="overflow-x-auto">
+          <TableScroll>
             <table className="w-full text-right border-collapse">
               <thead>
-                <tr className="bg-[var(--table-header-bg)] border-b border-slate-200 text-[var(--text-muted)] text-xs font-bold">
+                <tr className="bg-[var(--table-header-bg)] border-b border-[var(--card-border)] text-[var(--text-muted)] text-xs font-bold">
                   <th className="py-4 px-6">TXN ID</th>
                   <th className="py-4 px-6">الوصف</th>
                   <th className="py-4 px-6">المالك</th>
@@ -185,7 +186,7 @@ export default function FinancialTransactionsPage() {
                 )}
               </tbody>
             </table>
-          </div>
+          </TableScroll>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { TableScroll } from '@/components/ui/TableScroll';
 import { Header } from '@/components/layout/Header';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { useToast } from '@/components/ui/Toast';
@@ -134,7 +135,7 @@ export default function AdminRolesPage() {
         lastUpdated="محدث الآن"
       />
 
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="admin-page-body space-y-6">
         {/* Top Section: Roles & Admins */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* Left Column: Roles & Permissions (6 cols) */}
@@ -261,7 +262,7 @@ export default function AdminRolesPage() {
             مصفوفة الصلاحيات (انقر للتعديل المباشر)
           </h3>
 
-          <div className="overflow-x-auto">
+          <TableScroll>
             <table className="w-full text-right border-collapse">
               <thead>
                 <tr className="bg-[var(--table-header-bg)] text-[var(--text-muted)] text-xs font-bold border-b border-[var(--card-border)]">
@@ -287,7 +288,7 @@ export default function AdminRolesPage() {
                       {row.systemOwner ? (
                         <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mx-auto" />
                       ) : (
-                        <X className="w-4 h-4 text-slate-300 dark:text-slate-600 mx-auto" />
+                        <X className="w-4 h-4 text-[var(--text-muted)] dark:text-slate-600 mx-auto" />
                       )}
                     </td>
 
@@ -298,7 +299,7 @@ export default function AdminRolesPage() {
                       {row.mainAdmin ? (
                         <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mx-auto" />
                       ) : (
-                        <X className="w-4 h-4 text-slate-300 dark:text-slate-600 mx-auto" />
+                        <X className="w-4 h-4 text-[var(--text-muted)] dark:text-slate-600 mx-auto" />
                       )}
                     </td>
 
@@ -309,7 +310,7 @@ export default function AdminRolesPage() {
                       {row.kycReviewer ? (
                         <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mx-auto" />
                       ) : (
-                        <X className="w-4 h-4 text-slate-300 dark:text-slate-600 mx-auto" />
+                        <X className="w-4 h-4 text-[var(--text-muted)] dark:text-slate-600 mx-auto" />
                       )}
                     </td>
 
@@ -320,7 +321,7 @@ export default function AdminRolesPage() {
                       {row.propertyReviewer ? (
                         <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mx-auto" />
                       ) : (
-                        <X className="w-4 h-4 text-slate-300 dark:text-slate-600 mx-auto" />
+                        <X className="w-4 h-4 text-[var(--text-muted)] dark:text-slate-600 mx-auto" />
                       )}
                     </td>
 
@@ -331,21 +332,21 @@ export default function AdminRolesPage() {
                       {row.support ? (
                         <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400 mx-auto" />
                       ) : (
-                        <X className="w-4 h-4 text-slate-300 dark:text-slate-600 mx-auto" />
+                        <X className="w-4 h-4 text-[var(--text-muted)] dark:text-slate-600 mx-auto" />
                       )}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
+          </TableScroll>
         </div>
       </div>
 
       {/* Invite Admin Modal */}
       {showInviteModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
-          <div className="w-full max-w-md bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-2xl p-6 space-y-4 text-right animate-scaleIn">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="w-full max-w-md bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-2xl p-6 space-y-4 text-right">
             <h3 className="font-extrabold text-base text-[var(--foreground)]">دعوة مشرف جديد</h3>
             <div className="space-y-3 text-xs">
               <div>

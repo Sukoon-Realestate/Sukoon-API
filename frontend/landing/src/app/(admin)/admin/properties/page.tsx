@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from '@/components/ui/AdminLink';
+import { TableScroll } from '@/components/ui/TableScroll';
 import { Header } from '@/components/layout/Header';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
 import { useToast } from '@/components/ui/Toast';
@@ -107,7 +108,7 @@ export default function PropertiesManagementPage() {
         lastUpdated="محدث الآن"
       />
 
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="admin-page-body space-y-6">
         <Breadcrumbs items={[{ label: 'الرئيسية', href: '/' }, { label: 'إدارة العقارات' }]} />
 
         {/* Search & Filter Bar */}
@@ -146,7 +147,7 @@ export default function PropertiesManagementPage() {
 
               {/* Filter Dropdown */}
               {showFilterDrawer && (
-                <div className="absolute top-12 left-0 w-48 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-xl p-3 z-30 animate-fadeInUp">
+                <div className="absolute top-12 left-0 w-48 bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-xl p-3 z-30">
                   <p className="text-xs font-bold text-[var(--text-muted)] mb-2 px-1">نوع العقار:</p>
                   <div className="space-y-1">
                     {(['all', 'شقة', 'ستوديو', 'غرفة', 'فيلا'] as const).map((t) => (
@@ -210,7 +211,7 @@ export default function PropertiesManagementPage() {
 
         {/* Properties Data Table */}
         <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] overflow-hidden">
-          <div className="overflow-x-auto">
+          <TableScroll>
             <table className="w-full text-right border-collapse">
               <thead>
                 <tr className="bg-[var(--table-header-bg)] border-b border-[var(--card-border)] text-[var(--text-muted)] text-xs font-bold">
@@ -226,7 +227,7 @@ export default function PropertiesManagementPage() {
               <tbody className="divide-y divide-[var(--divider)] text-sm">
                 {isLoading ? (
                   <tr>
-                    <td colSpan={7} className="py-12 text-center text-slate-400">
+                    <td colSpan={7} className="py-12 text-center text-[var(--text-muted)]">
                       <LogoLoader showLabel label="جاري تحميل قائمة العقارات من الخادم..." />
                     </td>
                   </tr>
@@ -318,7 +319,7 @@ export default function PropertiesManagementPage() {
                 )}
               </tbody>
             </table>
-          </div>
+          </TableScroll>
 
           {/* Pagination */}
           <Pagination

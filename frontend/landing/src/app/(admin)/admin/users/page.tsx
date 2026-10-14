@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from '@/components/ui/AdminLink';
+import { TableScroll } from '@/components/ui/TableScroll';
 import { Header } from '@/components/layout/Header';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { ConfirmModal } from '@/components/ui/ConfirmModal';
@@ -94,14 +95,14 @@ export default function UserManagementPage() {
         subtitle="متابعة الحسابات، تفاصيل التوثيق، صلاحيات الوصول والإجراءات الإدارية"
       />
 
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="admin-page-body space-y-6">
         <Breadcrumbs items={[{ label: 'الرئيسية', href: '/' }, { label: 'المستخدمون' }]} />
 
         {/* Search & Tabs Controls */}
         {/* Search & Tabs Controls */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
           {/* Tab Navigation */}
-          <div className="flex items-center gap-1.5 p-1 bg-slate-200/70 dark:bg-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800 self-start">
+          <div className="flex items-center gap-1.5 p-1 bg-[var(--card-hover)] dark:bg-[var(--card-hover)] rounded-2xl border border-[var(--card-border)] dark:border-[var(--card-border)] self-start">
             {[
               { id: 'all', label: 'الكل' },
               { id: 'verified', label: 'موثقون' },
@@ -157,7 +158,7 @@ export default function UserManagementPage() {
 
         {/* Filter Drawer */}
         {showFilterDrawer && (
-          <div className="p-4 bg-[var(--card-hover)] border border-[var(--card-border)] rounded-2xl flex flex-wrap items-center justify-between gap-4 animate-fadeIn">
+          <div className="p-4 bg-[var(--card-hover)] border border-[var(--card-border)] rounded-2xl flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <span className="text-xs text-[var(--text-muted)] font-bold">نوع المستخدم:</span>
               <div className="flex items-center gap-2">
@@ -203,7 +204,7 @@ export default function UserManagementPage() {
               onAction={handleResetFilters}
             />
           ) : (
-            <div className="overflow-x-auto">
+            <TableScroll>
               <table className="w-full text-right text-xs">
                 <thead className="bg-[var(--table-header-bg)] border-b border-[var(--card-border)] text-[var(--text-muted)] font-bold">
                   <tr>
@@ -242,15 +243,7 @@ export default function UserManagementPage() {
                       </td>
 
                       <td className="py-3.5 px-4">
-                        <span
-                          className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
-                            user.type === 'مالك'
-                              ? 'bg-amber-100 text-amber-800 border border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20'
-                              : 'bg-blue-100 text-blue-800 border border-blue-200 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20'
-                          }`}
-                        >
-                          {user.type}
-                        </span>
+                        <StatusBadge type="role" value={user.type} />
                       </td>
 
                       <td className="py-3.5 px-4">
@@ -299,12 +292,12 @@ export default function UserManagementPage() {
                   ))}
                 </tbody>
               </table>
-            </div>
+            </TableScroll>
           )}
 
           {/* Pagination */}
           {!isLoading && totalCount > itemsPerPage && (
-            <div className="p-4 border-t border-[var(--card-border)] bg-slate-950/20">
+            <div className="p-4 border-t border-[var(--card-border)] bg-[var(--table-header-bg)]">
               <Pagination
                 currentPage={currentPage}
                 totalItems={totalCount}

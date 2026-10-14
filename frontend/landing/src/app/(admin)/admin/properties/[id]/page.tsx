@@ -67,7 +67,7 @@ export default function PropertyDetailPage() {
           title="تفاصيل العقار – Admin View"
           subtitle="سجل المراجعة، الإحصائيات الكاملة وإجراءات الإشراف"
         />
-        <div className="p-12 text-center text-slate-400 text-xs font-bold space-y-3">
+        <div className="p-12 text-center text-[var(--text-muted)] text-xs font-bold space-y-3">
           <LogoLoader showLabel label="جاري تحميل تفاصيل العقار من الخادم..." />
         </div>
       </div>
@@ -82,7 +82,7 @@ export default function PropertyDetailPage() {
           subtitle="تعذر العثور على العقار المطلوب"
         />
         <div className="p-12 text-center space-y-4">
-          <p className="text-slate-400 font-bold">العقار المطلوب غير متوفر أو تم حذفه.</p>
+          <p className="text-[var(--text-muted)] font-bold">العقار المطلوب غير متوفر أو تم حذفه.</p>
           <Link
             href="/properties"
             className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-bold px-4 py-2 rounded-xl text-xs"
@@ -103,7 +103,7 @@ export default function PropertyDetailPage() {
         lastUpdated="محدث الآن"
       />
 
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="admin-page-body space-y-6">
         <Breadcrumbs
           items={[
             { label: 'الرئيسية', href: '/' },
@@ -124,7 +124,7 @@ export default function PropertyDetailPage() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <Building2 className="w-16 h-16 text-slate-300" />
+                <Building2 className="w-16 h-16 text-[var(--text-muted)]" />
               )}
             </div>
 

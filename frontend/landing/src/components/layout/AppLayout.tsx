@@ -32,9 +32,10 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
 
   return (
     <SidebarContext.Provider value={{ isMobileOpen, toggleMobileMenu, closeMobileMenu }}>
-      <div className="min-h-full flex bg-[var(--background)] text-[var(--foreground)] font-sans w-full overflow-x-hidden">
+      <div className="admin-shell min-h-full flex text-[var(--foreground)] font-sans w-full">
+        <a href="#admin-main" className="admin-skip-link">انتقل إلى المحتوى</a>
         <Sidebar isMobileOpen={isMobileOpen} onCloseMobile={closeMobileMenu} />
-        <main className="flex-1 min-w-0 flex flex-col min-h-screen">
+        <main id="admin-main" className="admin-main flex-1 min-w-0 flex flex-col min-h-screen">
           {children}
         </main>
       </div>

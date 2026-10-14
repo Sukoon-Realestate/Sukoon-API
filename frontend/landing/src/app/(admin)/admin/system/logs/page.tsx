@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { TableScroll } from '@/components/ui/TableScroll';
 import { Header } from '@/components/layout/Header';
 import { Search, Download } from 'lucide-react';
 import { fetchAuditLogs } from '@/lib/api/system';
@@ -51,7 +52,7 @@ export default function SystemAuditLogsPage() {
         lastUpdated="محدث الآن"
       />
 
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-6">
+      <div className="admin-page-body space-y-6">
         {/* Top Control Bar */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="relative w-full md:w-72">
@@ -126,10 +127,10 @@ export default function SystemAuditLogsPage() {
 
         {/* Audit Log Table Container */}
         <div className="bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] overflow-hidden">
-          <div className="overflow-x-auto">
+          <TableScroll>
             <table className="w-full text-right border-collapse">
               <thead>
-                <tr className="bg-[var(--table-header-bg)] border-b border-slate-200 text-[var(--text-muted)] text-xs font-bold">
+                <tr className="bg-[var(--table-header-bg)] border-b border-[var(--card-border)] text-[var(--text-muted)] text-xs font-bold">
                   <th className="py-4 px-6">الوقت</th>
                   <th className="py-4 px-6">الإجراء</th>
                   <th className="py-4 px-6">النوع</th>
@@ -210,7 +211,7 @@ export default function SystemAuditLogsPage() {
                 )}
               </tbody>
             </table>
-          </div>
+          </TableScroll>
         </div>
       </div>
     </div>
