@@ -20,6 +20,40 @@ def base(conversation):
     )
 
 
+@pytest.mark.parametrize("access", ["member", "disabled", "unverified", "removed"])
+def test_group_chat_discovery_preserves_current_access(
+    chat_group, api_client, settings, access
+):
+    group, conversation, user, member = chat_group
+    if access == "disabled":
+        settings.PLANNING_ENABLED_SERVICES = []
+    elif access == "unverified":
+        member.is_verified = False
+        member.save(update_fields=["is_verified"])
+    elif access == "removed":
+        group.memberships.filter(user=member).update(status="removed")
+    api_client.force_authenticate(member)
+    discovery = api_client.get(
+        "/api/v1/features/v1/planning-capabilities/",
+        {"capability": "housing_groups"},
+    )
+    assert discovery.status_code == 200
+    assert discovery.json()["data"]["configuration"]["group_chat"] is True
+    if access in {"disabled", "unverified"}:
+        assert discovery.json()["data"]["allowed_actions"] == []
+    summary = api_client.get(base(conversation))
+    sent = api_client.post(
+        base(conversation) + "messages/create/", message_request(), format="json"
+    )
+    if access == "member":
+        assert summary.status_code == 200
+        assert "send_message" in summary.json()["data"]["allowed_actions"]
+        assert sent.status_code == 201
+    else:
+        assert summary.status_code == sent.status_code == 403
+        assert summary.json()["data"] is sent.json()["data"] is None
+
+
 def test_group_lookup_is_read_only_and_owner_role_has_no_grant(
     chat_group, api_client, superuser
 ):
