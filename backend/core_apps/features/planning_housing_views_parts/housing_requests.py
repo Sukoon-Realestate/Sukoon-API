@@ -1,6 +1,7 @@
 """Planning housing views: housing requests."""
 
 from datetime import timedelta
+from uuid import UUID
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
@@ -33,6 +34,16 @@ def can_read_request(user, item):
         return True
     return (
         request_status(item) == "published"
+        and item.visibility == "eligible_owners"
+        and eligible_owner(user)
+    )
+
+
+def can_offer_request(user, item):
+    return (
+        item.user_id != user.pk
+        and request_status(item) == "published"
+        and item.visibility == "eligible_owners"
         and public_properties()
         .filter(
             owner=user,
@@ -63,7 +74,7 @@ def request_actions(user, item):
             "paused": ["edit", "publish", "close"],
             "draft": ["edit", "publish", "close"],
         }.get(state, [])
-    return ["offer"] if state == "published" and can_read_request(user, item) else []
+    return ["offer"] if can_offer_request(user, item) else []
 
 
 def request_payload(item, user):
@@ -141,21 +152,26 @@ def housing_demand(request):
         raise PermissionDenied(
             "A verified owned listing is required to read housing demand."
         )
-    cities = {
-        str(x)
-        for x in public_properties()
-        .filter(owner=request.user, is_ownership_verified=True)
-        .values_list("city__id", flat=True)
-    }
-    items = [
-        x
-        for x in HousingRequest.objects.filter(
-            status="published", expires_at__gt=timezone.now()
+    # Discovery is available across cities. Matching inventory remains a
+    # separate requirement for sending an offer, enforced by request_actions
+    # and the exact-selection validation in housing_offers.
+    items = (
+        HousingRequest.objects.filter(
+            status="published",
+            visibility="eligible_owners",
+            expires_at__gt=timezone.now(),
         )
         .exclude(user=request.user)
+        .select_related("user")
         .order_by("-created_at", "pkid")
-        if x.criteria.get("city_id") in cities
-    ]
+    )
+    city = request.query_params.get("city", "").strip()
+    if city:
+        try:
+            city = str(UUID(city))
+        except ValueError:
+            raise ValidationError({"city": "Use a city catalog UUID."})
+        items = items.filter(criteria__city_id=city)
     return page(request, items, lambda x: request_payload(x, request.user))
 
 

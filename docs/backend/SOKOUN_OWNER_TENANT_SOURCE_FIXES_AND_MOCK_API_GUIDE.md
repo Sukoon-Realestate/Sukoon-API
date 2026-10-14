@@ -273,13 +273,16 @@ All creates carry `expected_revision:0` and a new UUID `request_key`. Updates ca
 | GET `roommate-candidates/`, `roommate-connections/` | Verified user | Private candidate/connection pages, no hidden habits or email fallback. |
 | POST `roommate-candidates/<id>/request/` | Requester; `candidate_revision`, `decision:"request"`, optional `note` | Creates a pending connection. |
 | POST `roommate-connections/<id>/<action>/` | Authorized participant; `decision` matches action | `accept`, `decline`, `withdraw`, `block`; accepted mutual consent controls chat sending through REST and WebSocket. |
-| GET/POST `housing-groups/`; GET `housing-groups/<id>/` | Member; creation has `name`, `visibility:"invite_only"`, `capacity`, `criteria`, `roster_revision:0`, `action:"create"`, `consent:false` | Private membership and roster revisions. Unrelated users receive 404. |
-| POST `housing-groups/<id>/invitations/` | Admin; `group_id`, `group_revision` | Signed, expiring invitation token. Share its returned link; do not log the token. |
+| GET/POST `housing-groups/`; GET `housing-groups/<id>/` | Member; creation has `name`, `visibility:"invite_only"`, `capacity`, `criteria`, `roster_revision:0`, `action:"create"`, `consent:false` | Private membership and roster revisions. Collection accepts `status=active` or `status=archived`. Unrelated users receive 404. |
+| GET/POST `housing-groups/<id>/invitations/` | Admin; POST has `group_id`, `group_revision` | GET includes revoked/expired history. POST returns a signed, expiring invitation token. Share its returned link; do not log the token. |
 | POST `group-invitations/preview/` | Invitee; `token` | Redacted preview; does not join the group. |
 | POST `group-invitations/join/` | Invitee; token, `group_id`, `group_revision`, current `expected_revision` | Capacity enforced under locking; duplicate key replays the original join. |
 | POST `housing-groups/<id>/<action>/` | Follow `allowed_actions`; current group/roster revisions | Group lifecycle, shortlist, cost proposals, member consent, visits and applications. |
-| GET/POST `housing-requests/`; GET `housing-requests/<id>/` | Request author | Persists criteria and state. |
-| GET `housing-demand/` | Owner with verified ownership of a published property in the requested city | Scoped eligible demand; not a public tenant directory. |
+| POST `housing-groups/<id>/unarchive/` | Active administrator; `action:"unarchive"`, current group/roster revisions | Restores the group; old invitation links stay revoked. |
+| POST `housing-groups/<id>/leave/` | Active member; an administrator leaving other members supplies `member_id` for the successor | Transfer and departure are atomic. The final administrator's departure archives the group. |
+| GET `profiles/tenant/unread-counts/` (outside the features prefix) | Current tenant | `group_join_requests_count` counts pending requests in active groups administered by the caller. |
+| GET/POST `housing-requests/`; GET `housing-requests/<id>/` | Collection/create: author; detail: author, an existing offering owner, or an eligible owner reading published demand | Persists criteria and state; history stays scoped to its participants. |
+| GET `housing-demand/` | Active verified owner with verified ownership of a published property | All cities by default. Optional `city=<UUID>` explicitly narrows the feed. Only published, unexpired `eligible_owners` requests from other accounts appear. |
 | POST `housing-requests/<id>/<action>/` | Author | `edit`, `pause`, `publish`, `close`, `fulfill`; criteria changes invalidate older offers. |
 | GET/POST `housing-requests/<id>/offers/` | Request author reads; eligible owner creates | Submitted selection is checked against the owner's current offer, request criteria and current prices. |
 | POST `housing-offers/<id>/<action>/` | Request author/offer owner as allowed | `shortlist`, `decline`, `withdraw`. Shortlisting does not sign a lease. |
