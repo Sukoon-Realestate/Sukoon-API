@@ -7,6 +7,7 @@ const ar = {
       "سكون يجمع المالك والمستأجر في مكان واحد، بدون سمسار وبدون عمولة. نراجع كل عقار قبل نشره، وكل الحسابات موثّقة.",
     ogAlt: "سكون: سكنك القادم من المالك مباشرة، بدون سمسار وبدون عمولة.",
   },
+  loading: "جارٍ التحميل…",
   header: {
     switchLanguage: "English",
     getApp: "حمّل التطبيق",
@@ -165,6 +166,7 @@ const en: Dictionary = {
       "Sukoon brings owners and tenants together in one place, with no broker and no commission. We review every property before it goes live, and every account is verified.",
     ogAlt: "Sukoon: your next home, straight from the owner, with no broker and no commission.",
   },
+  loading: "Loading…",
   header: {
     switchLanguage: "العربية",
     getApp: "Get the app",

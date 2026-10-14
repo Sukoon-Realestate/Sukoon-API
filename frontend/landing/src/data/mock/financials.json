@@ -1,0 +1,61 @@
+{
+  "summary": {
+    "metrics": {
+      "totalRevenueMonth": "248,500 ج",
+      "platformFees": "12,425 ج",
+      "activeTransactions": "1,203",
+      "avgRent": "6,200 ج"
+    },
+    "revenueBreakdown": {
+      "platformFees": { "value": "12,425 ج", "percent": 5 },
+      "managedRentals": { "value": "211,225 ج", "percent": 85 },
+      "kycFees": { "value": "24,850 ج", "percent": 10 }
+    },
+    "sixMonthTrend": [
+      { "month": "أبريل", "value": 180000 },
+      { "month": "مايو", "value": 195000 },
+      { "month": "يونيو", "value": 210000 },
+      { "month": "يوليو", "value": 225000 },
+      { "month": "أغسطس", "value": 238000 },
+      { "month": "سبتمبر", "value": 248500, "isCurrent": true }
+    ]
+  },
+  "transactions": [
+    {
+      "id": "TXN-8821",
+      "description": "إيجار شهري – شقة نصر",
+      "landlord": "أحمد محمد",
+      "tenant": "سارة أحمد",
+      "amount": "+6,500 ج",
+      "isPositive": true,
+      "status": "مدفوع"
+    },
+    {
+      "id": "TXN-8820",
+      "description": "رسوم توثيق KYC",
+      "landlord": "–",
+      "tenant": "محمد علي",
+      "amount": "+50 ج",
+      "isPositive": true,
+      "status": "مدفوع"
+    },
+    {
+      "id": "TXN-8819",
+      "description": "إيجار – ستوديو تجمع",
+      "landlord": "نادر طارق",
+      "tenant": "نورا كمال",
+      "amount": "+4,200 ج",
+      "isPositive": true,
+      "status": "معلق"
+    },
+    {
+      "id": "TXN-8818",
+      "description": "استرداد – إلغاء زيارة",
+      "landlord": "–",
+      "tenant": "كريم سالم",
+      "amount": "-200 ج",
+      "isPositive": false,
+      "status": "مسترد"
+    }
+  ]
+}

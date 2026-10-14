@@ -1,0 +1,80 @@
+{
+  "metrics": {
+    "active": 31,
+    "suspended": 12,
+    "banned": 5,
+    "dismissed": 18,
+    "total": 66
+  },
+  "reports": [
+    {
+      "id": "rep-1",
+      "reportedUser": "كريم طارق سالم",
+      "reportedUserId": "karim-salem",
+      "userType": "مالك",
+      "reason": "احتيال محتمل",
+      "reason_type": "fraud",
+      "reporter": "سارة أحمد",
+      "date": "منذ 1 ساعة",
+      "automation_level": "high",
+      "automationLevelDisplay": "عالي",
+      "status": "نشط",
+      "statusDisplay": "نشط",
+      "notes": "تم الإبلاغ عن صور مكررة لحساب آخر"
+    },
+    {
+      "id": "rep-2",
+      "reportedUser": "حسن منير عبدالفتاح",
+      "reportedUserId": "user-202",
+      "userType": "مالك",
+      "reason": "معلومات غير مطابقة",
+      "reason_type": "fake_info",
+      "reporter": "نورا كمال",
+      "date": "منذ 3 ساعات",
+      "automation_level": "auto",
+      "automationLevelDisplay": "تلقائي",
+      "status": "موقوف مؤقتاً",
+      "statusDisplay": "موقوف مؤقتاً",
+      "notes": "موقع العقار لا يتطابق مع الإحداثيات"
+    }
+  ],
+  "overview": {
+    "metrics": {
+      "avgResolutionTime": "4.2 ساعة",
+      "activeDisputes": 7,
+      "solvedToday": 18,
+      "openTickets": 31
+    },
+    "tickets": [
+      {
+        "id": "TKT-0081",
+        "rawId": "tkt-0081",
+        "subject": "مالك رفض رد الأمانة",
+        "reporter": "سارة أحمد",
+        "type": "خلاف",
+        "status": "مفتوح",
+        "reviewer": "أحمد العدل"
+      },
+      {
+        "id": "TKT-0082",
+        "rawId": "tkt-0082",
+        "subject": "معلومات عقار مضللة وغير دقيقة",
+        "reporter": "محمود حسن",
+        "type": "بلاغ عقار",
+        "status": "قيد المراجعة",
+        "reviewer": "سلمى رشدي"
+      }
+    ],
+    "disputeReasons": [
+      { "title": "رد الأمانة", "count": 12, "color": "bg-rose-500" },
+      { "title": "دقة المعلومات", "count": 8, "color": "bg-amber-500" },
+      { "title": "إلغاء الزيارة", "count": 6, "color": "bg-blue-500" },
+      { "title": "التواصل", "count": 5, "color": "bg-teal-500" }
+    ],
+    "bookingLog": [
+      { "id": "BK-441", "title": "شقة نصر", "status": "مكتمل" },
+      { "id": "BK-440", "title": "ستوديو تجمع", "status": "ملغي" },
+      { "id": "BK-439", "title": "غرفة معادي", "status": "مكتمل" }
+    ]
+  }
+}

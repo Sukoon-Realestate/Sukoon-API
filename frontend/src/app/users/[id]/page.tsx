@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { fetchUserDetail, suspendUser, unsuspendUser } from '@/lib/api/users';
 import { UserItem } from '@/lib/api/types';
+import { LogoLoader } from '@/components/ui/LogoLoader';
 
 export default function UserProfilePage() {
   const params = useParams();
@@ -89,8 +90,7 @@ export default function UserProfilePage() {
           subtitle="تفاصيل الحساب الكاملة، سجل النشاطات والإجراءات المتاحة"
         />
         <div className="p-12 text-center text-slate-400 text-xs font-bold space-y-3">
-          <div className="w-8 h-8 border-2 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-          <p>جاري تحميل تفاصيل المستخدم من الخادم...</p>
+          <LogoLoader showLabel label="جاري تحميل تفاصيل المستخدم من الخادم..." />
         </div>
       </div>
     );

@@ -1,0 +1,115 @@
+{
+  "executiveMetrics": [
+    {
+      "title": "المستخدمون النشطون",
+      "value": "2,847",
+      "change": "+12%",
+      "isPositive": true,
+      "icon": "users"
+    },
+    {
+      "title": "عقارات نشطة",
+      "value": "1,203",
+      "change": "+8%",
+      "isPositive": true,
+      "icon": "building"
+    },
+    {
+      "title": "طلبات الزيارة اليوم",
+      "value": "143",
+      "change": "+23%",
+      "isPositive": true,
+      "icon": "calendar"
+    },
+    {
+      "title": "توثيق معلق",
+      "value": "487",
+      "change": "-5%",
+      "isPositive": false,
+      "icon": "clock"
+    },
+    {
+      "title": "بلاغات مفتوحة",
+      "value": "31",
+      "change": "+7%",
+      "isPositive": true,
+      "icon": "alert"
+    }
+  ],
+  "monthlyUserChartData": [
+    { "day": 1, "value": 35 },
+    { "day": 3, "value": 48 },
+    { "day": 6, "value": 30 },
+    { "day": 9, "value": 65 },
+    { "day": 12, "value": 42 },
+    { "day": 15, "value": 85 },
+    { "day": 18, "value": 55 },
+    { "day": 21, "value": 92 },
+    { "day": 24, "value": 78 },
+    { "day": 27, "value": 88 },
+    { "day": 30, "value": 105, "isCurrent": true }
+  ],
+  "reportTrendData": [
+    { "day": 1, "value": 12 },
+    { "day": 3, "value": 15 },
+    { "day": 6, "value": 10 },
+    { "day": 9, "value": 22 },
+    { "day": 12, "value": 18 },
+    { "day": 15, "value": 25 },
+    { "day": 18, "value": 14 },
+    { "day": 21, "value": 28 },
+    { "day": 24, "value": 32 },
+    { "day": 27, "value": 29 },
+    { "day": 30, "value": 31, "isCurrent": true }
+  ],
+  "userDistribution": {
+    "total": 2847,
+    "tenants": 1924,
+    "landlords": 923,
+    "verified": 1920,
+    "pending": 487,
+    "suspended": 43
+  },
+  "executiveActivities": [
+    {
+      "id": "eact-1",
+      "title": "تم قبول توثيق سارة أحمد خالد",
+      "time": "منذ 2 دقيقة",
+      "role": "مستأجر",
+      "roleType": "tenant",
+      "iconType": "check"
+    },
+    {
+      "id": "eact-2",
+      "title": "بلاغ جديد على ستوديو التجمع الخامس",
+      "time": "منذ 8 دقائق",
+      "role": "عقار",
+      "roleType": "property",
+      "iconType": "alert"
+    },
+    {
+      "id": "eact-3",
+      "title": "عقار جديد بانتظار المراجعة - مدينة نصر",
+      "time": "منذ 15 دقيقة",
+      "role": "مالك",
+      "roleType": "landlord",
+      "iconType": "building"
+    },
+    {
+      "id": "eact-4",
+      "title": "تسجيل مستخدم جديد: محمد طارق (مستأجر)",
+      "time": "منذ 22 دقيقة",
+      "role": "مستأجر",
+      "roleType": "tenant",
+      "iconType": "user"
+    },
+    {
+      "id": "eact-5",
+      "title": "تغيير صلاحية: سلمى رشدي ⬅ مراجع كبير",
+      "time": "منذ 45 دقيقة",
+      "role": "Admin",
+      "roleType": "admin",
+      "iconType": "shield"
+    }
+  ]
+}

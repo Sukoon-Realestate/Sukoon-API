@@ -15,6 +15,7 @@ import {
   rejectProperty,
 } from '@/lib/api/properties';
 import { PropertyItem, PropertyMetrics } from '@/lib/api/types';
+import { LogoLoader } from '@/components/ui/LogoLoader';
 
 export default function PropertiesManagementPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -226,8 +227,7 @@ export default function PropertiesManagementPage() {
                 {isLoading ? (
                   <tr>
                     <td colSpan={7} className="py-12 text-center text-slate-400">
-                      <div className="w-8 h-8 border-2 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                      <p className="text-xs font-bold">جاري تحميل قائمة العقارات من الخادم...</p>
+                      <LogoLoader showLabel label="جاري تحميل قائمة العقارات من الخادم..." />
                     </td>
                   </tr>
                 ) : propertiesList.length > 0 ? (

@@ -22,6 +22,7 @@ import {
   requestPropertyRevision,
 } from '@/lib/api/properties';
 import { PropertyItem, PropertyMetrics, PropertyDetail } from '@/lib/api/types';
+import { LogoLoader } from '@/components/ui/LogoLoader';
 
 function PropertyReviewQueueContent() {
   const searchParams = useSearchParams();
@@ -251,8 +252,7 @@ function PropertyReviewQueueContent() {
             <div className="space-y-3">
               {isLoading ? (
                 <div className="py-12 text-center text-slate-400">
-                  <div className="w-6 h-6 border-2 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                  <p className="text-xs">جاري تحميل قائمة العقارات...</p>
+                  <LogoLoader showLabel label="جاري تحميل قائمة العقارات..." />
                 </div>
               ) : filteredList.length > 0 ? (
                 filteredList.map((item) => {
@@ -447,8 +447,7 @@ export default function PropertyReviewQueuePage() {
     <Suspense
       fallback={
         <div className="flex-1 p-12 text-center text-slate-400">
-          <div className="w-8 h-8 border-2 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-          <p className="text-xs font-bold">جاري تحميل طابور مراجعة العقارات...</p>
+          <LogoLoader showLabel label="جاري تحميل طابور مراجعة العقارات..." />
         </div>
       }
     >

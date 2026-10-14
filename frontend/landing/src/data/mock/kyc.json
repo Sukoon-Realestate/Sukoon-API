@@ -1,0 +1,108 @@
+{
+  "metrics": {
+    "pendingReview": 487,
+    "reviewedToday": 124,
+    "acceptedToday": 108,
+    "rejectedToday": 16
+  },
+  "requests": [
+    {
+      "id": "kyc-1",
+      "user": "سارة أحمد خالد",
+      "userId": "sara-ahmed",
+      "type": "مستأجر",
+      "nationalIdMask": "29...12",
+      "waitTime": "2 ساعة",
+      "status": "pending",
+      "statusDisplay": "انتظار المراجعة",
+      "hasWarning": false,
+      "created_at": "2026-10-08T18:30:00Z"
+    },
+    {
+      "id": "kyc-2",
+      "user": "أحمد فاروق إبراهيم",
+      "userId": "ahmed-farouk",
+      "type": "مالك",
+      "nationalIdMask": "28...45",
+      "waitTime": "45 دقيقة",
+      "status": "approved",
+      "statusDisplay": "مقبول",
+      "hasWarning": false,
+      "created_at": "2026-10-08T19:15:00Z"
+    },
+    {
+      "id": "kyc-3",
+      "user": "نورا كمال فؤاد",
+      "userId": "nour-kamal",
+      "type": "مستأجر",
+      "nationalIdMask": "30...88",
+      "waitTime": "5 ساعات",
+      "status": "pending",
+      "statusDisplay": "انتظار المراجعة",
+      "hasWarning": true,
+      "created_at": "2026-10-08T15:00:00Z"
+    }
+  ],
+  "details": {
+    "kyc-1": {
+      "id": "kyc-1",
+      "user_id": "sara-ahmed",
+      "userName": "سارة أحمد خالد",
+      "userEmail": "sara@gmail.com",
+      "userPhone": "01012345432",
+      "userType": "مستأجر",
+      "nationalId": "29801011234567",
+      "birthDate": "1998-01-01",
+      "gender": "أنثى",
+      "idFaceUrl": "https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?auto=format&fit=crop&w=600&q=80",
+      "idBackUrl": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=600&q=80",
+      "selfieUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=80",
+      "status": "pending",
+      "statusDisplay": "انتظار المراجعة",
+      "submittedAt": "2026-10-08 18:30",
+      "rejectionReason": "",
+      "reviewedBy": null,
+      "reviewedAt": null
+    },
+    "kyc-2": {
+      "id": "kyc-2",
+      "user_id": "ahmed-farouk",
+      "userName": "أحمد فاروق إبراهيم",
+      "userEmail": "ahmed.farouk@example.com",
+      "userPhone": "01298765432",
+      "userType": "مالك",
+      "nationalId": "29107051234567",
+      "birthDate": "1991-07-05",
+      "gender": "ذكر",
+      "idFaceUrl": "https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?auto=format&fit=crop&w=600&q=80",
+      "idBackUrl": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=600&q=80",
+      "selfieUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
+      "status": "approved",
+      "statusDisplay": "مقبول",
+      "submittedAt": "2026-10-08 19:15",
+      "rejectionReason": "",
+      "reviewedBy": "سلمى رشدي",
+      "reviewedAt": "2026-10-08 19:40"
+    },
+    "kyc-3": {
+      "id": "kyc-3",
+      "user_id": "nour-kamal",
+      "userName": "نورا كمال فؤاد",
+      "userEmail": "noura.k@example.com",
+      "userPhone": "01511223344",
+      "userType": "مستأجر",
+      "nationalId": "29909181234567",
+      "birthDate": "1999-09-18",
+      "gender": "أنثى",
+      "idFaceUrl": "https://images.unsplash.com/photo-1607346256330-dee7af15f7c5?auto=format&fit=crop&w=600&q=80",
+      "idBackUrl": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=600&q=80",
+      "selfieUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80",
+      "status": "pending",
+      "statusDisplay": "انتظار المراجعة",
+      "submittedAt": "2026-10-08 15:00",
+      "rejectionReason": "",
+      "reviewedBy": null,
+      "reviewedAt": null
+    }
+  }
+}

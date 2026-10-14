@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { fetchAdminPropertyDetail, rejectProperty } from '@/lib/api/properties';
 import { PropertyDetail } from '@/lib/api/types';
+import { LogoLoader } from '@/components/ui/LogoLoader';
 
 export default function PropertyDetailPage() {
   const params = useParams();
@@ -67,8 +68,7 @@ export default function PropertyDetailPage() {
           subtitle="سجل المراجعة، الإحصائيات الكاملة وإجراءات الإشراف"
         />
         <div className="p-12 text-center text-slate-400 text-xs font-bold space-y-3">
-          <div className="w-8 h-8 border-2 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-          <p>جاري تحميل تفاصيل العقار من الخادم...</p>
+          <LogoLoader showLabel label="جاري تحميل تفاصيل العقار من الخادم..." />
         </div>
       </div>
     );

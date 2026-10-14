@@ -44,6 +44,7 @@
 
   --animate-float: float 6s ease-in-out infinite;
   --animate-float-delayed: float 6s ease-in-out 1.5s infinite;
+  --animate-float-slow: float 9s ease-in-out infinite;
   --animate-fade-up: fade-up 0.7s ease-out both;
   --animate-fade-up-late: fade-up 0.8s ease-out 0.15s both;
   --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
@@ -103,14 +104,326 @@ body {
   --color-chip: #173a24;
 }
 
-/* Fades sections in as they scroll into view; browsers without scroll-driven
-   animations simply show the content. */
-@supports (animation-timeline: view()) {
-  .reveal {
-    animation: fade-up linear both;
-    animation-timeline: view();
-    animation-range: entry 0% entry 60%;
+/* ── Motion ────────────────────────────────────────────────────────────────
+   html[data-motion] is set before paint (lib/motion.ts) unless the visitor
+   prefers reduced motion; InViewObserver adds [data-inview] to `.reveal` and
+   `[data-animate]` elements once they scroll into view. Without JS, neither
+   attribute exists and everything renders in its final state. */
+
+@property --count {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
   }
+  60% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes grow-y {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes count-down {
+  from {
+    --count: 100;
+  }
+  to {
+    --count: 0;
+  }
+}
+
+/* Concentric arches light up from the doorway outwards, like slow ripples. */
+@keyframes ripple {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-4%, 6%) scale(1.08);
+  }
+}
+
+@keyframes typing {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.45;
+  }
+  30% {
+    transform: translateY(-3px);
+    opacity: 1;
+  }
+}
+
+/* Typing bubble: shows while the "owner" types, then gives way to the reply. */
+@keyframes typing-life {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  12%,
+  85% {
+    opacity: 1;
+  }
+}
+
+@keyframes shine {
+  from {
+    transform: translateX(-120%) skewX(-20deg);
+  }
+  to {
+    transform: translateX(220%) skewX(-20deg);
+  }
+}
+
+@keyframes header-lift {
+  to {
+    box-shadow: 0 10px 30px -18px rgba(12, 42, 24, 0.35);
+  }
+}
+
+@keyframes progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Section / card entrance. */
+[data-motion] .reveal {
+  /* translate / border-color keep hover effects smooth (and undelayed). */
+  transition:
+    opacity 0.8s ease var(--delay, 0ms),
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) var(--delay, 0ms),
+    translate 0.3s ease,
+    border-color 0.3s ease;
+}
+
+[data-motion] .reveal:not([data-inview]) {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+/* Choreographed children inside an in-view container; --d staggers them. */
+[data-motion] :is(.reveal, [data-animate]):not([data-inview]) :is(.seq-pop, .seq-rise) {
+  opacity: 0;
+}
+
+[data-motion] :is(.reveal, [data-animate]):not([data-inview]) .seq-grow {
+  transform: scaleY(0);
+}
+
+[data-inview] .seq-pop {
+  animation: pop 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) var(--d, 0ms) both;
+}
+
+[data-inview] .seq-rise {
+  animation: rise 0.6s ease-out var(--d, 0ms) both;
+}
+
+[data-inview] .seq-grow {
+  transform-origin: top;
+  animation: grow-y 0.9s ease-in-out var(--d, 0ms) both;
+}
+
+.typing-bubble {
+  opacity: 0;
+}
+
+[data-inview] .typing-bubble {
+  animation: typing-life 1.1s ease var(--d, 0ms) both;
+}
+
+.typing-dot {
+  animation: typing 1s ease-in-out infinite;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+/* The "0%" stat counts down from 100 when its card comes into view. */
+.countdown::after {
+  counter-reset: n var(--count);
+  content: counter(n) "%";
+}
+
+[data-motion] :is(.reveal, [data-animate]):not([data-inview]) .countdown {
+  --count: 100;
+}
+
+[data-inview] .countdown {
+  animation: count-down 1.8s cubic-bezier(0.3, 0.6, 0.2, 1) 0.2s both;
+}
+
+/* A light sweep across a button, once. */
+.shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: translateX(-120%) skewX(-20deg);
+}
+
+[data-inview] .shine::after {
+  animation: shine 1.1s ease-in-out var(--d, 0ms) both;
+}
+
+.arch-ripple path {
+  animation: ripple 7s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.7s);
+}
+
+.animate-drift {
+  animation: drift 18s ease-in-out infinite;
+}
+
+/* Hero headline underline draws itself after the text lands. */
+.draw-line {
+  stroke-dasharray: 1;
+  animation: draw 1.1s cubic-bezier(0.6, 0, 0.2, 1) 0.7s both;
+}
+
+/* FAQ answers ease in when opened. */
+details[open] > .faq-answer {
+  animation: rise 0.45s ease-out;
+}
+
+/* Header gains a soft shadow and a reading-progress line as you scroll. */
+@supports (animation-timeline: scroll()) {
+  .header-lift {
+    animation: header-lift linear both;
+    animation-timeline: scroll();
+    animation-range: 0 160px;
+  }
+
+  .scroll-progress {
+    display: block;
+    animation: progress linear both;
+    animation-timeline: scroll();
+  }
+}
+
+/* ── Logo loader ─────────────────────────────────────────────────────────── */
+
+/* Green rises through the wordmark, rests, then drains: one calm breath. The
+   resting (and reduced-motion) state is the fully filled logo. */
+@keyframes logo-fill {
+  0% {
+    background-position: 0 0%;
+  }
+  50%,
+  70% {
+    background-position: 0 100%;
+  }
+  100% {
+    background-position: 0 0%;
+  }
+}
+
+@keyframes logo-breathe {
+  0%,
+  100% {
+    transform: scale(0.97);
+  }
+  50%,
+  70% {
+    transform: scale(1);
+  }
+}
+
+.logo-loader {
+  --loader-empty: color-mix(in oklab, var(--color-fg) 14%, transparent);
+  -webkit-mask: var(--logo) center / contain no-repeat;
+  mask: var(--logo) center / contain no-repeat;
+  /* bottom half = filled, top half = empty; sliding the 200%-tall gradient raises the "water line" */
+  background: linear-gradient(to top, var(--color-brand) 0 47%, var(--loader-empty) 53% 100%) 0 100% / 100% 200%;
+  animation:
+    logo-fill 2.6s cubic-bezier(0.45, 0, 0.25, 1) infinite,
+    logo-breathe 2.6s ease-in-out infinite;
+}
+
+/* Splash: only while html[data-loading] is set (lib/loading.ts). */
+.splash {
+  display: none;
+}
+
+[data-loading] .splash {
+  display: grid;
+}
+
+[data-loading="out"] .splash {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.5s ease,
+    visibility 0s linear 0.5s;
+}
+
+/* Hold the page's own entrance animations until the splash lifts. */
+[data-loading="on"] body > :not(.splash),
+[data-loading="on"] body > :not(.splash) * {
+  animation-play-state: paused !important;
 }
 
 /* Faint paper grain for the light surfaces. */

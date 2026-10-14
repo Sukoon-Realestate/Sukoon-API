@@ -1,0 +1,152 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { Header } from '@/components/layout/Header';
+import { MetricCard } from '@/components/ui/MetricCard';
+import { BarChartComponent } from '@/components/ui/BarChartComponent';
+import { ActivityFeed } from '@/components/ui/ActivityFeed';
+import { UserCheck } from 'lucide-react';
+import { fetchExecutiveDashboardStats } from '@/lib/api/dashboard';
+import { ExecutiveDashboardStats } from '@/lib/api/types';
+
+export default function ExecutiveDashboardPage() {
+  const [data, setData] = useState<ExecutiveDashboardStats | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadStats() {
+      try {
+        const res = await fetchExecutiveDashboardStats();
+        setData(res);
+      } catch (err) {
+        console.error('Failed to load executive dashboard stats:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadStats();
+  }, []);
+
+  const metrics = data?.executiveMetrics || [
+    { title: 'المستخدمون النشطون', value: '–', change: '0%', isPositive: true, icon: 'users' },
+    { title: 'عقارات نشطة', value: '–', change: '0%', isPositive: true, icon: 'building' },
+    { title: 'طلبات الزيارة اليوم', value: '–', change: '0%', isPositive: true, icon: 'calendar' },
+    { title: 'توثيق معلق', value: '–', change: '0%', isPositive: false, icon: 'clock' },
+    { title: 'بلاغات مفتوحة', value: '–', change: '0%', isPositive: true, icon: 'alert' },
+  ];
+
+  const userDistribution = data?.userDistribution || {
+    total: 0,
+    tenants: 0,
+    landlords: 0,
+    verified: 0,
+    pending: 0,
+    suspended: 0,
+  };
+
+  const monthlyUserChartData = data?.monthlyUserChartData || [];
+  const reportTrendData = data?.reportTrendData || [];
+  const activities = data?.executiveActivities || [];
+
+  return (
+    <div className="flex-1 flex flex-col pb-12">
+      <Header
+        title="لوحة التحكم التنفيذية"
+        subtitle="نظرة عامة على مؤشرات الأداء والأنشطة الإدارية الحية"
+        lastUpdated="محدث الآن"
+      />
+
+      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full space-y-8">
+        {/* Top 5 Metrics Row */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          {metrics.map((metric, idx) => (
+            <MetricCard key={idx} metric={metric} delay={idx * 80} />
+          ))}
+        </div>
+
+        {/* Dual Trend Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <BarChartComponent
+            title="نشاط المنصة – Traffic Trend"
+            data={monthlyUserChartData}
+            color="teal"
+            periodLabel="30 يوم"
+          />
+          <BarChartComponent
+            title="البلاغات – Reports Trend"
+            data={reportTrendData}
+            color="red"
+            periodLabel="30 يوم"
+          />
+        </div>
+
+        {/* Bottom Section: User Summary & Recent Activities */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* User Summary Widget (Left Column) */}
+          <div className="lg:col-span-4 bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] flex flex-col justify-between animate-fadeInUp">
+            <div>
+              <h3 className="font-bold text-[var(--foreground)] text-base mb-6">
+                ملخص المستخدمين
+              </h3>
+
+              <div className="flex items-center gap-3 mb-6 p-3 bg-[var(--card-hover)] rounded-xl border border-[var(--card-border)]">
+                <div className="w-12 h-12 rounded-full bg-teal-100 dark:bg-teal-500/15 text-teal-700 dark:text-teal-400 flex items-center justify-center font-bold text-lg">
+                  <UserCheck className="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-[var(--foreground)] text-base">Admin User</h4>
+                  <div className="flex items-center gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>نشط الآن</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* User Breakdown Stats */}
+              <div className="space-y-4 divide-y divide-[var(--divider)]">
+                <div className="flex items-center justify-between pt-2">
+                  <span className="text-xs font-semibold text-[var(--text-muted)]">
+                    إجمالي المستخدمين
+                  </span>
+                  <span className="font-black text-[var(--foreground)] text-base">
+                    {isLoading ? '...' : userDistribution.total.toLocaleString()}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between pt-3">
+                  <span className="text-xs font-semibold text-[var(--text-muted)]">
+                    مستأجرون
+                  </span>
+                  <span className="font-bold text-[var(--foreground)] text-sm">
+                    {isLoading ? '...' : userDistribution.tenants.toLocaleString()}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between pt-3">
+                  <span className="text-xs font-semibold text-[var(--text-muted)]">ملاك</span>
+                  <span className="font-bold text-[var(--foreground)] text-sm">
+                    {isLoading ? '...' : userDistribution.landlords.toLocaleString()}
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between pt-3">
+                  <span className="text-xs font-semibold text-[var(--text-muted)]">
+                    موثّقون
+                  </span>
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400 text-sm">
+                    {isLoading ? '...' : userDistribution.verified.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Activity Feed (Right Column) */}
+          <div className="lg:col-span-8">
+            <ActivityFeed activities={activities} showViewAll={true} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

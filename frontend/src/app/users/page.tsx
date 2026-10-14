@@ -12,6 +12,7 @@ import { Pagination } from '@/components/ui/Pagination';
 import { Search, Filter, Eye, UserX, CheckCircle2 } from 'lucide-react';
 import { fetchUsers, suspendUser, unsuspendUser } from '@/lib/api/users';
 import { UserItem } from '@/lib/api/types';
+import { LogoLoader } from '@/components/ui/LogoLoader';
 
 export default function UserManagementPage() {
   const [activeTab, setActiveTab] = useState<'all' | 'verified' | 'pending' | 'suspended'>('all');
@@ -192,8 +193,7 @@ export default function UserManagementPage() {
         <div className="bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl shadow-[var(--shadow-card)] overflow-hidden">
           {isLoading ? (
             <div className="p-12 text-center text-[var(--text-muted)] text-xs font-bold space-y-3">
-              <div className="w-8 h-8 border-2 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-              <p>جاري تحميل بيانات المستخدمين من الخادم...</p>
+              <LogoLoader showLabel label="جاري تحميل بيانات المستخدمين من الخادم..." />
             </div>
           ) : usersList.length === 0 ? (
             <EmptyState

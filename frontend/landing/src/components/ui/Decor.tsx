@@ -16,8 +16,17 @@ export function OutlinedWordmark({ className }: { className?: string }) {
   );
 }
 
-// Concentric doorway arches: the page's "home" motif.
-export function ArchLines({ className, count = 6 }: { className?: string; count?: number }) {
+// Concentric doorway arches: the page's "home" motif. `animated` ripples them
+// outwards from the innermost arch.
+export function ArchLines({
+  className,
+  count = 6,
+  animated = false,
+}: {
+  className?: string;
+  count?: number;
+  animated?: boolean;
+}) {
   const rise = 120;
 
   return (
@@ -28,7 +37,7 @@ export function ArchLines({ className, count = 6 }: { className?: string; count?
       preserveAspectRatio="xMidYMax meet"
       className={clsx("pointer-events-none absolute", className)}
     >
-      <g stroke="currentColor" strokeWidth="1.25">
+      <g stroke="currentColor" strokeWidth="1.25" className={clsx(animated && "arch-ripple")}>
         {Array.from({ length: count }, (_, index) => {
           const r = 60 + index * 28;
           const top = 400 - rise;
@@ -37,6 +46,7 @@ export function ArchLines({ className, count = 6 }: { className?: string; count?
               key={r}
               d={`M${200 - r} 400V${top}A${r} ${r} 0 0 1 ${200 + r} ${top}V400`}
               strokeOpacity={1 - index / (count + 1)}
+              style={{ "--i": index } as React.CSSProperties}
             />
           );
         })}

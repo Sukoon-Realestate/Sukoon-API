@@ -5,6 +5,8 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { ToastProvider } from '@/components/ui/Toast';
+import { Splash } from '@/components/ui/LogoLoader';
+import { loadingInitScript } from '@/lib/loading';
 
 const cairo = Cairo({
   subsets: ['arabic', 'latin'],
@@ -45,8 +47,11 @@ export default function RootLayout({
             `,
           }}
         />
+        {/* ! Logo splash flag, set before paint (see lib/loading.ts) */}
+        <script dangerouslySetInnerHTML={{ __html: loadingInitScript }} />
       </head>
       <body className="min-h-full flex bg-[var(--background)] text-[var(--foreground)] font-sans">
+        <Splash />
         <ThemeProvider>
           <ToastProvider>
             <AuthProvider>

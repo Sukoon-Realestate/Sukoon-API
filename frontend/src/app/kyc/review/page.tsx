@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { fetchKycDetail, approveKyc, rejectKyc } from '@/lib/api/kyc';
 import { KycDetail } from '@/lib/api/types';
+import { LogoLoader } from '@/components/ui/LogoLoader';
 
 function IndividualKycReviewContent() {
   const searchParams = useSearchParams();
@@ -319,8 +320,7 @@ export default function IndividualKycReviewPage() {
     <Suspense
       fallback={
         <div className="flex-1 p-12 text-center text-slate-400">
-          <div className="w-8 h-8 border-2 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
-          <p className="text-xs font-bold">جاري تحميل صفحة المراجعة...</p>
+          <LogoLoader showLabel label="جاري تحميل صفحة المراجعة..." />
         </div>
       }
     >

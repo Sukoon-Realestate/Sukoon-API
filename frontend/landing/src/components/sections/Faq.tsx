@@ -22,7 +22,7 @@ export function Faq({ dict }: { dict: Dictionary }) {
                   <Plus className="size-4" aria-hidden />
                 </span>
               </summary>
-              <p className="max-w-2xl pb-6 pe-14 text-base leading-8 text-muted">{item.answer}</p>
+              <p className="faq-answer max-w-2xl pb-6 pe-14 text-base leading-8 text-muted">{item.answer}</p>
             </details>
           ))}
         </div>

@@ -34,7 +34,7 @@ export default function GlobalNotFound() {
           <OutlinedWordmark className="inset-x-0 -bottom-24 -z-10 text-center text-[18rem] sm:text-[30rem]" />
 
           <Link href="/ar" aria-label={getDictionary("ar").header.homeLabel} className="rounded-md">
-            <Logo />
+            <Logo preload />
           </Link>
 
           <p

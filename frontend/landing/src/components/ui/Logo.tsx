@@ -27,8 +27,8 @@ export function Logo({
       width={width}
       height={height}
       preload={preload}
-      className={clsx("w-auto select-none", className)}
-      style={{ height }}
+      className={clsx("select-none", className)}
+      style={{ height, width: "auto" }}
     />
   );
 }

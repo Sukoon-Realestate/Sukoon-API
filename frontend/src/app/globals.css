@@ -397,3 +397,72 @@ a, button, input, select, textarea,
   border-radius: 3px 3px 0 0;
 }
 
+
+/* ===========================
+   * Logo Loader & Splash
+   =========================== */
+
+/* ? Green rises through the wordmark, rests, then drains. The resting (and
+   reduced-motion) state is the fully filled logo. Mirrors the landing app. */
+@keyframes logoFill {
+  0% {
+    background-position: 0 0%;
+  }
+  50%,
+  70% {
+    background-position: 0 100%;
+  }
+  100% {
+    background-position: 0 0%;
+  }
+}
+
+@keyframes logoBreathe {
+  0%,
+  100% {
+    transform: scale(0.97);
+  }
+  50%,
+  70% {
+    transform: scale(1);
+  }
+}
+
+.logo-loader {
+  --loader-fill: #04a417;
+  --loader-empty: color-mix(in oklab, var(--foreground) 14%, transparent);
+  -webkit-mask: var(--logo) center / contain no-repeat;
+  mask: var(--logo) center / contain no-repeat;
+  /* bottom half = filled, top half = empty; sliding the 200%-tall gradient raises the "water line" */
+  background: linear-gradient(to top, var(--loader-fill) 0 47%, var(--loader-empty) 53% 100%) 0 100% / 100% 200%;
+  animation:
+    logoFill 2.6s cubic-bezier(0.45, 0, 0.25, 1) infinite,
+    logoBreathe 2.6s ease-in-out infinite;
+}
+
+/* ! Splash only shows while html[data-loading] is set by the init script. */
+.splash {
+  display: none;
+}
+
+[data-loading] .splash {
+  display: grid;
+}
+
+[data-loading="out"] .splash {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, visibility 0s linear 0.5s;
+}
+
+/* Hold the dashboard's own entrance animations until the splash lifts. */
+[data-loading="on"] body > :not(.splash),
+[data-loading="on"] body > :not(.splash) * {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-loader {
+    animation: none;
+  }
+}

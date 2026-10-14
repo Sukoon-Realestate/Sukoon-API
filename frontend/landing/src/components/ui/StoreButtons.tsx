@@ -34,24 +34,24 @@ export function StoreButtons({
   const light = tone === "light";
 
   return (
-    <ul className={clsx("flex flex-wrap gap-3", className)}>
+    <ul className={clsx("grid grid-cols-1 gap-3 min-[360px]:grid-cols-2 sm:flex sm:flex-wrap", className)}>
       {stores.map(({ name, Mark }) => (
         <li key={name}>
           <span
             aria-label={`${dict.store.comingSoon} ${name}`}
             className={clsx(
-              "flex min-w-40 items-center gap-3 rounded-2xl px-4.5 py-2.5 ring-1",
+              "flex items-center justify-center gap-2 rounded-2xl px-3 py-2.5 ring-1 sm:min-w-40 sm:justify-start sm:gap-3 sm:px-4.5",
               light
                 ? "bg-white text-pine ring-white/20 shadow-[0_12px_30px_-12px_rgba(0,0,0,0.6)]"
                 : "bg-pine text-white ring-pine/10 shadow-[0_14px_30px_-14px_rgba(12,42,24,0.7)] dark:bg-white dark:text-pine dark:ring-white/20",
             )}
           >
-            <Mark className="size-6 shrink-0" />
+            <Mark className="size-5 shrink-0 sm:size-6" />
             <span className="flex flex-col items-start leading-tight" aria-hidden>
               <span className={clsx("text-[0.65rem] font-medium", light ? "text-pine/60" : "text-white/65 dark:text-pine/60")}>
                 {dict.store.comingSoon}
               </span>
-              <span className="font-[family-name:var(--font-latin)] text-base font-semibold">{name}</span>
+              <span className="whitespace-nowrap font-[family-name:var(--font-latin)] text-sm font-semibold sm:text-base">{name}</span>
             </span>
           </span>
         </li>

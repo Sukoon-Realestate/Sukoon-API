@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useCallback, useSyncExternalStore } from 'react';
 
 type Theme = 'light' | 'dark';
 
@@ -16,43 +16,34 @@ const ThemeContext = createContext<ThemeContextType>({
 
 export const useTheme = () => useContext(ThemeContext);
 
+// ! The `dark` class on <html> is the single source of truth. The inline head script in
+// ! app/layout.tsx sets it before paint (saved choice, else system preference), so React
+// ! only reads it. Mirroring it in state used to strip it on mount and flash dark users to light.
+const subscribe = (onChange: () => void) => {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  return () => observer.disconnect();
+};
+
+const getSnapshot = (): Theme => (document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+const getServerSnapshot = (): Theme => 'light';
+
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>('light');
-
-  useEffect(() => {
-    // ? Read from localStorage or system preference on client mount (SSR-safe)
-    const stored = localStorage.getItem('sukoon_theme') as Theme | null;
-    if (stored === 'light' || stored === 'dark') {
-      setTheme(stored);
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setTheme('dark');
-    }
-  }, []);
-
-  // * Apply theme class to <html> and persist
-  useEffect(() => {
-    const root = document.documentElement;
-    // ? Add transitioning class for smooth theme switch
-    root.classList.add('theme-transitioning');
-    
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-
-    localStorage.setItem('sukoon_theme', theme);
-
-    // ? Remove transitioning class after animation completes
-    const timeout = setTimeout(() => {
-      root.classList.remove('theme-transitioning');
-    }, 450);
-
-    return () => clearTimeout(timeout);
-  }, [theme]);
+  const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   const toggleTheme = useCallback(() => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+    const root = document.documentElement;
+    const next: Theme = root.classList.contains('dark') ? 'light' : 'dark';
+
+    // ? Transitioning class gives the switch a smooth cross-fade
+    root.classList.add('theme-transitioning');
+    root.classList.toggle('dark', next === 'dark');
+    try {
+      localStorage.setItem('sukoon_theme', next);
+    } catch {
+      // ? Storage blocked (private mode etc.); the choice just won't persist
+    }
+    window.setTimeout(() => root.classList.remove('theme-transitioning'), 450);
   }, []);
 
   return (

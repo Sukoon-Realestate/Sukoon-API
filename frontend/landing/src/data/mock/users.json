@@ -1,0 +1,143 @@
+{
+  "users": [
+    {
+      "id": "sara-ahmed",
+      "name": "سارة أحمد خالد",
+      "first_name": "سارة",
+      "last_name": "خالد",
+      "type": "مستأجر",
+      "email": "sara@gmail.com",
+      "status": "نشط",
+      "kycStatus": "قيد المراجعة",
+      "regDate": "1 يناير 2024",
+      "phone": "01012345432",
+      "national_id": "29801011234567",
+      "visitRequests": 3,
+      "properties_count": 0,
+      "rating": 4.7,
+      "reportsAgainst": 0,
+      "is_active": true,
+      "is_verified": false,
+      "lastActive": "منذ 5 دقائق",
+      "activityLog": [
+        { "id": "al-1", "title": "حجز زيارة – شقة مدينة نصر", "time": "اليوم 9:30 ص", "type": "visit" },
+        { "id": "al-2", "title": "تم توثيق الهوية", "time": "أمس 3:00 م", "type": "kyc" },
+        { "id": "al-3", "title": "إرسال رسالة للمالك أحمد", "time": "أمس 2:45 م", "type": "message" },
+        { "id": "al-4", "title": "حفظ عقار ستوديو التجمع", "time": "الأحد 10:00 ص", "type": "saved" }
+      ]
+    },
+    {
+      "id": "mahmoud-hassan",
+      "name": "محمود حسن علي",
+      "first_name": "محمود",
+      "last_name": "علي",
+      "type": "مالك",
+      "email": "mahmoud@example.com",
+      "status": "نشط",
+      "kycStatus": "موثق",
+      "regDate": "12 يناير 2026",
+      "phone": "01123456789",
+      "national_id": "28503121234567",
+      "visitRequests": 28,
+      "properties_count": 4,
+      "rating": 4.9,
+      "reportsAgainst": 0,
+      "is_active": true,
+      "is_verified": true,
+      "lastActive": "منذ ساعة",
+      "activityLog": [
+        { "id": "al-5", "title": "إضافة عقار جديد بالمعادي", "time": "أمس 11:00 ص", "type": "visit" },
+        { "id": "al-6", "title": "الموافقة على طلب زيارة", "time": "منذ 3 ساعات", "type": "message" }
+      ]
+    },
+    {
+      "id": "ahmed-farouk",
+      "name": "أحمد فاروق إبراهيم",
+      "first_name": "أحمد",
+      "last_name": "إبراهيم",
+      "type": "مالك",
+      "email": "ahmed.farouk@example.com",
+      "status": "نشط",
+      "kycStatus": "موثق",
+      "regDate": "5 مارس 2025",
+      "phone": "01298765432",
+      "national_id": "29107051234567",
+      "visitRequests": 14,
+      "properties_count": 2,
+      "rating": 4.8,
+      "reportsAgainst": 1,
+      "is_active": true,
+      "is_verified": true,
+      "lastActive": "منذ 20 دقيقة",
+      "activityLog": [
+        { "id": "al-7", "title": "تحديث سعر شقة مدينة نصر", "time": "منذ يومين", "type": "visit" }
+      ]
+    },
+    {
+      "id": "nour-kamal",
+      "name": "نورا كمال فؤاد",
+      "first_name": "نورا",
+      "last_name": "فؤاد",
+      "type": "مستأجر",
+      "email": "noura.k@example.com",
+      "status": "نشط",
+      "kycStatus": "قيد المراجعة",
+      "regDate": "18 فبراير 2026",
+      "phone": "01511223344",
+      "national_id": "29909181234567",
+      "visitRequests": 6,
+      "properties_count": 0,
+      "rating": 4.6,
+      "reportsAgainst": 0,
+      "is_active": true,
+      "is_verified": false,
+      "lastActive": "منذ ساعتين",
+      "activityLog": [
+        { "id": "al-8", "title": "تقديم طلب زيارة ستوديو التجمع", "time": "اليوم 1:15 م", "type": "visit" }
+      ]
+    }
+  ],
+  "suspendedUsers": [
+    {
+      "id": "tarek-mohamed",
+      "name": "طارق محمد علي",
+      "first_name": "طارق",
+      "last_name": "علي",
+      "type": "مستأجر",
+      "email": "tarek@example.com",
+      "status": "موقوف",
+      "kycStatus": "قيد المراجعة",
+      "regDate": "3 مايو 2025",
+      "phone": "01033445566",
+      "suspensionReason": "لغة مسيئة",
+      "suspendedDate": "3 يونيو",
+      "suspendedBy": "أحمد العدل",
+      "reportsAgainst": 3,
+      "is_active": false,
+      "is_verified": false
+    },
+    {
+      "id": "karim-salem",
+      "name": "كريم سالم",
+      "first_name": "كريم",
+      "last_name": "سالم",
+      "type": "مالك",
+      "email": "karim.s@example.com",
+      "status": "محظور",
+      "kycStatus": "مرفوض",
+      "regDate": "15 يناير 2025",
+      "phone": "01199887766",
+      "suspensionReason": "احتيال",
+      "suspendedDate": "10 يونيو",
+      "suspendedBy": "سلمى رشدي",
+      "reportsAgainst": 5,
+      "is_active": false,
+      "is_verified": false
+    }
+  ],
+  "metrics": {
+    "tempSuspended": 43,
+    "permanentlyBanned": 12,
+    "pendingDecision": 8
+  }
+}

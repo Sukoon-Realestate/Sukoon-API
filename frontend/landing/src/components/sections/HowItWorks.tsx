@@ -13,11 +13,13 @@ function JourneyCard({
   journey,
   icon,
   tone,
+  delay = 0,
 }: {
   id: string;
   journey: Journey;
   icon: React.ReactNode;
   tone: "light" | "dark";
+  delay?: number;
 }) {
   const dark = tone === "dark";
   const lastIndex = journey.steps.length - 1;
@@ -25,8 +27,9 @@ function JourneyCard({
   return (
     <article
       id={id}
+      style={{ "--delay": `${delay}ms` } as React.CSSProperties}
       className={clsx(
-        "reveal relative scroll-mt-24 overflow-hidden rounded-[2rem] p-7 sm:p-10",
+        "reveal relative scroll-mt-24 overflow-hidden rounded-[2rem] p-5 min-[400px]:p-7 sm:p-10",
         dark ? "bg-pine text-white dark:ring-1 dark:ring-white/10" : "border border-line bg-sand text-fg",
       )}
     >
@@ -53,20 +56,24 @@ function JourneyCard({
       <ol className="relative mt-9">
         {journey.steps.map((step, index) => {
           const last = index === lastIndex;
+          // Steps light up one after another once the card is in view.
+          const at = (offset: number) => ({ "--d": `${delay + 350 + index * 260 + offset}ms` }) as React.CSSProperties;
           return (
             <li key={step.title} className="relative flex gap-4 pb-7 last:pb-0">
               {!last && (
                 <span
                   aria-hidden
+                  style={at(140)}
                   className={clsx(
-                    "absolute start-4 top-9 bottom-1 w-px -translate-x-1/2 rtl:translate-x-1/2",
+                    "seq-grow absolute start-4 top-9 bottom-1 w-px -translate-x-1/2 rtl:translate-x-1/2",
                     dark ? "bg-white/15" : "bg-line",
                   )}
                 />
               )}
               <span
+                style={at(0)}
                 className={clsx(
-                  "relative grid size-8 shrink-0 place-items-center rounded-full font-display text-sm font-semibold",
+                  "seq-pop relative grid size-8 shrink-0 place-items-center rounded-full font-display text-sm font-semibold",
                   last
                     ? "bg-brand text-white shadow-[0_0_0_5px_rgba(4,164,23,0.18)]"
                     : dark
@@ -76,7 +83,7 @@ function JourneyCard({
               >
                 {index + 1}
               </span>
-              <div className="pt-1">
+              <div style={at(80)} className="seq-rise pt-1">
                 <p className="font-semibold">{step.title}</p>
                 <p className={clsx("mt-1 text-sm leading-6", dark ? "text-white/60" : "text-muted")}>{step.body}</p>
               </div>
@@ -112,6 +119,7 @@ export function HowItWorks({ dict }: { dict: Dictionary }) {
             id="owners"
             journey={section.owner}
             tone="dark"
+            delay={150}
             icon={<Building2 className="size-5" aria-hidden />}
           />
         </div>

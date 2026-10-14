@@ -8,6 +8,7 @@ import { HowItWorks } from "@/components/sections/HowItWorks";
 import { WhySukoon } from "@/components/sections/WhySukoon";
 import { Faq } from "@/components/sections/Faq";
 import { FinalCta } from "@/components/sections/FinalCta";
+import { InViewObserver } from "@/components/layout/InViewObserver";
 import { landingPageGraph, serializeJsonLd } from "@/lib/structuredData";
 
 export default async function LandingPage({ params }: PageProps<"/[lang]">) {
@@ -30,6 +31,7 @@ export default async function LandingPage({ params }: PageProps<"/[lang]">) {
         <FinalCta dict={dict} />
       </main>
       <SiteFooter dict={dict} />
+      <InViewObserver />
     </>
   );
 }

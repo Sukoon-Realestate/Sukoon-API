@@ -1,0 +1,274 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Header } from '@/components/layout/Header';
+import { OverviewTicket, ReportsOverviewStats } from '@/lib/api/types';
+import { fetchReportsOverview } from '@/lib/api/reports';
+
+export default function ReportsOverviewPage() {
+  const [activeTab, setActiveTab] = useState<'all' | 'disputes' | 'props' | 'users'>('all');
+  const [data, setData] = useState<ReportsOverviewStats>({
+    metrics: {
+      avgResolutionTime: '4.2 ساعة',
+      activeDisputes: 0,
+      solvedToday: 0,
+      openTickets: 0,
+    },
+    tickets: [],
+    disputeReasons: [],
+    bookingLog: [],
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      setIsLoading(true);
+      try {
+        const res = await fetchReportsOverview();
+        if (res) {
+          setData(res);
+        }
+      } catch (err) {
+        console.error('Failed to load reports overview:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadData();
+  }, []);
+
+  const filteredTickets = (data.tickets || []).filter((t) => {
+    if (activeTab === 'disputes') return t.type === 'خلاف';
+    if (activeTab === 'props') return t.type === 'بلاغ عقار';
+    if (activeTab === 'users') return t.type === 'بلاغ مستخدم';
+    return true;
+  });
+
+  return (
+    <div className="flex-1 flex flex-col pb-12">
+      <Header
+        title="التقارير والتذاكر"
+        subtitle="نظرة عامة على بلاغات المستخدمين، تتبع الخلافات وتوزيع الحجوزات"
+        lastUpdated="9:41 ص"
+      />
+
+      <div className="p-8 max-w-7xl mx-auto w-full space-y-6">
+        {/* Top 4 Stat Cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
+            <div className="text-2xl font-black text-blue-600 mb-1">
+              {data.metrics.avgResolutionTime}
+            </div>
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
+              متوسط وقت الحل
+            </div>
+          </div>
+
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
+            <div className="text-2xl font-black text-amber-500 mb-1">
+              {data.metrics.activeDisputes}
+            </div>
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
+              خلافات نشطة
+            </div>
+          </div>
+
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
+            <div className="text-2xl font-black text-emerald-600 mb-1">
+              {data.metrics.solvedToday}
+            </div>
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
+              حُلت اليوم
+            </div>
+          </div>
+
+          <div className="bg-[var(--card-bg)] rounded-2xl p-5 border border-[var(--card-border)] shadow-[var(--shadow-card)] text-center">
+            <div className="text-2xl font-black text-rose-500 mb-1">
+              {data.metrics.openTickets}
+            </div>
+            <div className="text-xs font-semibold text-[var(--text-subtle)]">
+              تذاكر مفتوحة
+            </div>
+          </div>
+        </div>
+
+        {/* Main Section Split */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* Main Table Column (8 cols) */}
+          <div className="lg:col-span-8 bg-[var(--card-bg)] rounded-2xl border border-[var(--card-border)] shadow-[var(--shadow-card)] p-6 space-y-6">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <h3 className="font-extrabold text-[var(--foreground)] text-base">
+                سجل التذاكر • Ticket ID
+              </h3>
+
+              {/* Filter Tabs */}
+              <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto">
+                <button
+                  onClick={() => setActiveTab('all')}
+                  className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
+                    activeTab === 'all'
+                      ? 'bg-teal-700 text-white'
+                      : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
+                  }`}
+                >
+                  كل التذاكر
+                </button>
+                <button
+                  onClick={() => setActiveTab('disputes')}
+                  className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
+                    activeTab === 'disputes'
+                      ? 'bg-teal-700 text-white'
+                      : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
+                  }`}
+                >
+                  خلافات
+                </button>
+                <button
+                  onClick={() => setActiveTab('props')}
+                  className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
+                    activeTab === 'props'
+                      ? 'bg-teal-700 text-white'
+                      : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
+                  }`}
+                >
+                  بلاغات عقارات
+                </button>
+                <button
+                  onClick={() => setActiveTab('users')}
+                  className={`px-3 py-1.5 rounded-full text-xs font-bold transition-colors whitespace-nowrap ${
+                    activeTab === 'users'
+                      ? 'bg-teal-700 text-white'
+                      : 'bg-[var(--badge-bg-muted)] text-[var(--text-muted)] hover:bg-[var(--card-hover)]'
+                  }`}
+                >
+                  بلاغات مستخدمين
+                </button>
+              </div>
+            </div>
+
+            {/* Table */}
+            <div className="overflow-x-auto">
+              <table className="w-full text-right border-collapse">
+                <thead>
+                  <tr className="bg-[var(--table-header-bg)] border-b border-slate-200 text-[var(--text-muted)] text-xs font-bold">
+                    <th className="py-4 px-4">Ticket ID</th>
+                    <th className="py-4 px-4">الموضوع</th>
+                    <th className="py-4 px-4">المُبلِّغ</th>
+                    <th className="py-4 px-4">النوع</th>
+                    <th className="py-4 px-4">الحالة</th>
+                    <th className="py-4 px-4">المراجع</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[var(--divider)] text-xs">
+                  {filteredTickets.map((ticket) => (
+                    <tr
+                      key={ticket.id}
+                      className="hover:bg-[var(--table-row-hover)] transition-colors"
+                    >
+                      <td className="py-4 px-4 font-mono font-bold text-teal-700 dir-ltr text-right">
+                        <Link href="/support/SUP-201" className="hover:underline">
+                          {ticket.id}
+                        </Link>
+                      </td>
+                      <td className="py-4 px-4 font-bold text-[var(--foreground)]">
+                        {ticket.subject}
+                      </td>
+                      <td className="py-4 px-4 text-[var(--text-muted)]">{ticket.reporter}</td>
+                      <td className="py-4 px-4">
+                        <span className="px-2 py-0.5 rounded text-[11px] font-semibold bg-[var(--badge-bg-muted)] text-[var(--foreground)]">
+                          {ticket.type}
+                        </span>
+                      </td>
+                      <td className="py-4 px-4">
+                        {ticket.status === 'مفتوح' && (
+                          <span className="text-rose-600 font-bold">مفتوح</span>
+                        )}
+                        {ticket.status === 'قيد المراجعة' && (
+                          <span className="text-amber-600 font-bold">
+                            قيد المراجعة
+                          </span>
+                        )}
+                        {ticket.status === 'محلول' && (
+                          <span className="text-emerald-600 font-bold">
+                            محلول
+                          </span>
+                        )}
+                        {ticket.status === 'مغلق' && (
+                          <span className="text-[var(--text-subtle)] font-bold">مغلق</span>
+                        )}
+                      </td>
+                      <td className="py-4 px-4 text-[var(--text-muted)] font-medium">
+                        {ticket.reviewer}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Right Sidebar Column (4 cols) */}
+          <div className="lg:col-span-4 space-y-6">
+            {/* Dispute Reasons Card */}
+            <div className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-4">
+              <h3 className="font-extrabold text-[var(--foreground)] text-sm border-b border-[var(--divider)] pb-3">
+                توزيع أسباب الخلافات – Dispute Reason
+              </h3>
+
+              <div className="space-y-3.5 text-xs">
+                {(data.disputeReasons || []).map((item, idx) => (
+                  <div key={idx} className="space-y-1.5">
+                    <div className="flex items-center justify-between font-bold">
+                      <span className="text-[var(--foreground)]">{item.title}</span>
+                      <span className="text-[var(--text-muted)] font-medium">
+                        {item.count} حالة
+                      </span>
+                    </div>
+                    <div className="h-2 w-full bg-[var(--badge-bg-muted)] rounded-full overflow-hidden">
+                      <div
+                        className={`h-full ${item.color} rounded-full`}
+                        style={{ width: `${Math.min(100, (item.count / Math.max(1, data.metrics.openTickets || 10)) * 100)}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Booking Log Card */}
+            <div className="bg-[var(--card-bg)] rounded-2xl p-6 border border-[var(--card-border)] shadow-[var(--shadow-card)] space-y-4">
+              <h3 className="font-extrabold text-[var(--foreground)] text-sm border-b border-[var(--divider)] pb-3">
+                سجل الحجوزات – Booking Log
+              </h3>
+
+              <div className="space-y-3 text-xs">
+                {(data.bookingLog || []).map((log) => (
+                  <div
+                    key={log.id}
+                    className="flex items-center justify-between py-1.5 border-b border-slate-50"
+                  >
+                    <div>
+                      <div className="font-mono font-bold text-[var(--foreground)] dir-ltr text-right text-[11px]">
+                        {log.id}
+                      </div>
+                      <div className="text-[var(--text-muted)] font-medium">{log.title}</div>
+                    </div>
+
+                    <div>
+                      {log.status === 'مكتمل' ? (
+                        <span className="text-emerald-600 font-bold">مكتمل</span>
+                      ) : (
+                        <span className="text-rose-600 font-bold">ملغي</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

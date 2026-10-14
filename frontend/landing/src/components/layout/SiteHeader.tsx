@@ -16,7 +16,12 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: Dictionary }) {
   ];
 
   return (
-    <header className="sticky top-0 z-40 border-b border-line/70 bg-sand/80 backdrop-blur-lg backdrop-saturate-150">
+    <header className="header-lift sticky top-0 z-40 border-b border-line/70 bg-sand/80 backdrop-blur-lg backdrop-saturate-150">
+      {/* reading progress; only shown where scroll-driven animations exist */}
+      <span
+        aria-hidden
+        className="scroll-progress absolute inset-x-0 -bottom-px hidden h-0.5 origin-left bg-linear-to-r from-brand-deep via-brand to-brand-soft rtl:origin-right"
+      />
       <Container className="flex h-16 items-center justify-between gap-6 sm:h-18">
         <Link href={`/${lang}`} aria-label={dict.header.homeLabel} className="rounded-lg">
           <Logo size="sm" preload />
@@ -37,20 +42,21 @@ export function SiteHeader({ lang, dict }: { lang: Locale; dict: Dictionary }) {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-1.5 sm:gap-2">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-2">
           <ThemeToggle label={dict.header.toggleTheme} />
           <Link
             href={`/${target}`}
             hrefLang={target}
             lang={target}
-            className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium text-fg/80 transition-colors hover:bg-sand-deep hover:text-fg"
+            className="inline-flex items-center gap-1.5 rounded-full px-2 py-2 text-sm font-medium text-fg/80 sm:px-3 transition-colors hover:bg-sand-deep hover:text-fg"
           >
             <Globe className="size-4" strokeWidth={1.75} aria-hidden />
-            {dict.header.switchLanguage}
+            {/* globe only on the narrowest phones; the label stays for screen readers */}
+            <span className="max-[400px]:sr-only">{dict.header.switchLanguage}</span>
           </Link>
           <a
             href={`#${SECTION_IDS.download}`}
-            className="rounded-full bg-pine px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-moss sm:px-5 dark:bg-brand dark:hover:bg-brand-hover"
+            className="whitespace-nowrap rounded-full bg-pine px-3.5 py-2 text-xs font-semibold text-white min-[400px]:text-sm transition-colors hover:bg-moss sm:px-5 dark:bg-brand dark:hover:bg-brand-hover"
           >
             {dict.header.getApp}
           </a>
