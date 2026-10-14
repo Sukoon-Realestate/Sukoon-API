@@ -324,9 +324,83 @@
 - **Details:** Prepared a current-only runtime diagnostic with expected safe flags, runtime variable/launch override and active deployment checks, then API acceptance steps. The effective remote settings/SHA remains unknown. Preserved authorized sessions and rejected operation identity privately outside Git and /tmp, removed the consumed Google ID token, and prepared fresh inputs from the current offer. No runtime source change, permissions bypass, secret exposure or deployment was performed.
 - **Files:** docs/backend/SOKOUN_MOCK_PROVIDER_RUNTIME_RECHECK.md; source verification guide; WORKLOG.md; companion tenancy/post-visit reports and docs/qa/evidence/mock-runtime-recheck-2026-10-14/.
 
-### Check deployed API field contract without business writes
-- **What:** Ran twelve anonymous GET checks against the documented DigitalOcean API after the user reported deployment; all passed at 2026-10-14 09:02 UTC.
-- **Why:** Establish current deployment evidence separately from the earlier local field-audit tests.
-- **Details:** Dependency health, English/Arabic public pagination and guest readiness, empty city search, invalid-page errors and four protected-route authentication rejections preserved their expected contracts. Added a fixed-route GET-only checker and sanitized status/header/assertion report in the companion mobile repository. No login, business command, authenticated business read, payment, deployment or data migration was performed. Source review excluded GET routes that can create profiles/policies/settlements, advance invoice/invitation state or record property views. Existing unrelated working-tree changes were preserved.
-- **Remaining:** Anonymous health does not attest commit c451c0bd31907f80ce89e57b6d66a486e769bfeb or worker state, and HTTP 401 does not prove successful mobile projections or flows. Requested owner/tenant test-session file paths for the next signed-in checks. Original unresolved audit rows, device/provider validation and unexecuted concurrency cases remain open.
-- **Files:** WORKLOG.md; companion tools/api_field_audit/check_deployed_contract.py and README.md; docs/qa/evidence/api-field-deployment-2026-10-14/; docs/backend/SOKOUN_API_FIELD_CHANGES.md.
+### Landing Page – Standalone Next.js App (frontend only)
+- **What:** Built the bilingual (AR/EN) Sukoon marketing landing page from the `لاندنج بيدج سكون.pdf` design. It's a separate Next.js app at `frontend/landing/`.
+- **Why:** The new landing design needs to ship on the web independently of the admin dashboard.
+- **Details:**
+  - Standalone app with its own `package.json`, using the same Next 16.3.5, React 19.2.8 and Tailwind 4 versions as the admin app. It runs on port 3001 and its `turbopack.root` is pinned to its own folder.
+  - Routes `/ar` (default, RTL) and `/en` are statically prerendered (SSG). `src/proxy.ts` redirects `/` to a locale based on `Accept-Language`.
+  - All copy lives in typed dictionaries (`src/i18n/dictionaries.ts`). Layout uses logical CSS properties, so RTL mirrors without duplicated markup.
+  - Sections: hero with a CSS/SVG phone mockup, how-it-works (tenant/owner), the "Why Sukoon" bento, FAQ (native `<details>`, no JS), final CTA and footer.
+  - Excluded `landing/` from the admin app's `tsconfig.json` and ESLint. Added `make landing-install|dev|build`.
+  - `next build` and `eslint` pass. I checked the rendered output against the PDF in headless Chrome at desktop and mobile widths.
+  - **Open items:** the logo is a text placeholder until we get the official SVG wordmark. Store buttons are non-interactive "coming soon" badges. Footer links point to `#`. The AR commission badge copy ("سكون بدون سمسار او عموله") is taken verbatim from the PDF but doesn't match the EN "Non-profit at launch", so design should confirm it.
+- **Files:** `frontend/landing/**` (new), `frontend/tsconfig.json`, `frontend/eslint.config.mjs`, `Makefile`, `WORKLOG.md`
+
+### Serve Landing at `/` and Admin Dashboard at `/admin`
+- **What:** `localhost:3000` now serves the landing page and `localhost:3000/admin` serves the admin dashboard. The two are still separate Next.js apps, joined with Next.js multi-zones.
+- **Why:** One public origin, with the marketing site at the root and the dashboard under `/admin`.
+- **Details:**
+  - Admin app: added `basePath: '/admin'`, using the new `src/lib/basePath.ts`. `Link`, `router.push`, `redirect()` and `usePathname` handle the prefix on their own. The one hardcoded redirect, `window.location.href = '/login'` in `lib/api/client.ts`, now uses `BASE_PATH`. Admin dev and start now run on port 3001.
+  - Landing app: moved to port 3000. Added rewrites `/admin` and `/admin/:path+` → `ADMIN_URL` (default `http://localhost:3001`). `proxy.ts` now leaves `/admin` alone so it isn't redirected to `/ar/admin`.
+  - `frontend/npm run dev` now runs `scripts/dev.mjs`, which starts both zones with prefixed logs. It still accepts `-p`, so `make dev` (backend/scripts/dev.py) keeps working. `dev:admin` and `dev:landing` run the apps one at a time.
+  - Verified in dev: `/` → `/ar`, `/en`, and `/admin` → `/admin/login` (hydrated, styled, CSS/JS served under `/admin/_next`). Production builds pass for both apps.
+  - **Deploy note:** these are now two deployments. The landing deployment needs `ADMIN_URL` set to the admin deployment's URL. The admin deployment is only meant to be reached through `/admin` on the landing domain.
+- **Files:** `frontend/next.config.ts`, `frontend/src/lib/basePath.ts`, `frontend/src/lib/api/client.ts`, `frontend/package.json`, `frontend/scripts/dev.mjs`, `frontend/landing/next.config.ts`, `frontend/landing/src/proxy.ts`, `frontend/landing/package.json`, `frontend/landing/README.md`, `Makefile`, `WORKLOG.md`
+
+### Landing Page SEO, Metadata & Launch Polish (sukoon.rent)
+- **What:** Made the landing app launch-ready for search and sharing. It now has canonicals, hreflang, OG/Twitter cards with generated share images, a sitemap, robots, llms.txt, JSON-LD, brand favicons, a custom 404, and nav links in the header and footer. It also has a security patch bump for Next.
+- **Why:** The site still showed starter-template traces (the default Next favicon, unused starter SVGs, no 404) and had no SEO surface, which made it look unfinished.
+- **Details:**
+  - The domain is `https://sukoon.rent`, set in `src/lib/site.ts`. Canonicals and alternates are `/ar` and `/en`, and `x-default` points to `/ar`. **Not done in code:** attaching the domain in Vercel and setting DNS.
+  - Structured data: Organization, WebSite, WebPage and FAQPage. The LocalBusiness schema is gated on the `BUSINESS` placeholders (TODOs), so empty address and phone values never ship. Breadcrumbs were left out on purpose because the site is a single page. Add them along with the privacy and terms pages.
+  - Share images are 1200×630 per locale. Satori, used by `next/og`, renders Arabic words in the wrong order with broken spacing, so the Arabic text is shaped with `harfbuzzjs` (new dependency, marked `serverExternalPackages`) and embedded as an SVG.
+  - Favicon set: the brand "س" glyph extracted from IBM Plex Sans Arabic Bold, with the same icons in the admin app. Removed the five unused starter SVGs from `frontend/public/`.
+  - `global-not-found.tsx` (experimental flag) is needed because the root layout sits under `[lang]`. It returns a real 404 with `noindex`.
+  - Both apps now set `productionBrowserSourceMaps: false` explicitly and `poweredByHeader: false`. Admin gets `robots: noindex`.
+  - **Security:** bumped landing `next` and `eslint-config-next` from 16.3.5 to 16.3.8. 16.3.5 has a critical advisory for RCE in `next/og` ImageResponse (GHSA-vcvr-r3jv-pc5j), plus SSRF and cache-poisoning advisories. **The admin app is still on 16.3.5 and needs the same bump.**
+  - Verified: build, ESLint and tsc pass. In headless Edge at 1366px and 375px there are no console errors, no failed requests and no horizontal overflow, and every in-page anchor resolves. There's one `<h1>` per page, the JSON-LD parses, and no `.map` files are emitted. JS is unchanged at about 178 KB gzip, all of it Next/React runtime, because the page has no client components.
+  - Footer Privacy, Terms and Contact links stay as `#` with TODOs, per the request.
+- **Files:** `frontend/landing/src/app/{[lang]/layout.tsx,[lang]/page.tsx,[lang]/opengraph-image.tsx,global-not-found.tsx,robots.ts,sitemap.ts,llms.txt/route.ts,favicon.ico,icon.svg,apple-icon.png}`, `frontend/landing/src/lib/{site.ts,fonts.ts,sections.ts,structuredData.ts,og/shapeText.ts}`, `frontend/landing/src/types/harfbuzzjs.d.ts`, `frontend/landing/src/assets/fonts/*`, `frontend/landing/src/components/layout/{SiteHeader,SiteFooter}.tsx`, `frontend/landing/src/components/sections/{HowItWorks,WhySukoon,Faq,FinalCta}.tsx`, `frontend/landing/src/i18n/dictionaries.ts`, `frontend/landing/next.config.ts`, `frontend/landing/package.json`, `frontend/landing/README.md`, `frontend/next.config.ts`, `frontend/src/app/{layout.tsx,favicon.ico,icon.svg}`, `frontend/public/*.svg` (deleted), `WORKLOG.md`
+
+### Push frontend landing work and merge with main
+- **What:** Committed the landing/basePath/dev-runner frontend work, merged `origin/main` into local `main`, and pushed.
+- **Why:** User requested push and merge with main.
+- **Details:** Only conflict was `WORKLOG.md`; resolved by keeping both sides, with origin's entries first and the frontend 2026-10-14 entries appended under the existing 2026-10-14 heading. `frontend/src/lib/api/client.ts` auto-merged cleanly.
+- **Files:** `WORKLOG.md` (merge resolution)
+
+### Adopt the official Sukoon logo across the web apps
+- **What:** Replaced the text/glyph placeholders with the official logo (`logo.png` supplied at the repo root) in the landing site, the admin dashboard, favicons and the share image.
+- **Why:** The user provided the real brand mark and asked for it to be used everywhere it's needed.
+- **Details:**
+  - The master file moved to `docs/brand/logo.png` and is unchanged. Its letters are **transparent cut-outs**, not white, so on our dark pages they showed as black and the CTA's gradient ring bled through them. `docs/brand/logo-filled.png` is a derived version with the letters filled white, clipped to the logo's rounded square (radius ≈462px at 1620px, inset 3px to avoid a white fringe). All web assets are generated from it. If design has a version with solid white letters, swap it in.
+  - Landing: `components/ui/Logo.tsx` now renders the mark with `next/image` (40/48/64px). It's used by the header, footer, final CTA (the gradient ring now wraps the rounded square) and the 404 page. The OG image now uses the logo instead of the HarfBuzz-shaped "سكون" wordmark.
+  - Admin: the sidebar brand tile and the login card use the logo in place of the `ShieldCheck` icon.
+  - Icons for both apps: `favicon.ico` (16/32/48), `icon.png` (512) replaces `icon.svg`, and `apple-icon.png` (180) sits on a solid dark-green background because iOS renders transparent corners black. The JSON-LD `logo` still points to `/apple-icon.png`, which is now the real mark.
+  - Verified: ESLint and `next build` pass for both apps. I checked the landing header, CTA, footer and OG image in headless Edge. I didn't render-check the admin screens, only built them.
+  - Not done: the mobile app's launcher icons (`mobile/`) still use their current assets.
+- **Files:** `docs/brand/{logo.png,logo-filled.png}`, `frontend/landing/src/assets/brand/logo.png`, `frontend/landing/src/components/ui/Logo.tsx`, `frontend/landing/src/components/sections/FinalCta.tsx`, `frontend/landing/src/app/[lang]/opengraph-image.tsx`, `frontend/landing/src/app/{favicon.ico,icon.png,apple-icon.png}` (`icon.svg` removed), `frontend/landing/README.md`, `frontend/src/assets/brand/logo.png`, `frontend/src/components/layout/Sidebar.tsx`, `frontend/src/app/login/page.tsx`, `frontend/src/app/{favicon.ico,icon.png,apple-icon.png}` (`icon.svg` removed), `WORKLOG.md`
+
+### Landing page visual redesign ("calm" direction)
+- **What:** Restyled the whole landing site (`frontend/landing`). It moves from the near-black and neon-green template look to warm sand and paper surfaces with deep pine green, plus an arch ("doorway / home") motif.
+- **Why:** The user didn't like the existing landing UI and asked for it to be made better.
+- **Details:**
+  - New tokens in `globals.css` (`sand`, `sand-deep`, `paper`, `line`, `pine`, `pine-raised`, `moss`). The old `ink*` tokens stay because `global-not-found.tsx` still uses them. `THEME_COLOR` is now the sand colour.
+  - New display font: Readex Pro (Arabic and Latin, a sibling of Lexend), set as `--font-display` / `font-display`. Body text keeps Plex Arabic and Lexend. The OG image is unchanged.
+  - Header is now sticky with blur and shows the wordmark next to the logo. The hero puts the phone in front of a large arch, has an underlined highlight, card-style jump links, and a new trust strip (`dict.trust`, AR and EN). How it works has a connected step timeline. Why Sukoon is an inset pine panel with a refined bento grid. The FAQ is a divider-style accordion with a rotating plus icon. The final CTA is a rounded pine panel with concentric arches. The footer is on sand.
+  - Store badges are now dark (or white on dark) and carry Apple and Google Play marks as inline SVG. They are still non-interactive.
+  - Sections fade in on scroll using CSS scroll-driven animations (`.reveal`). There is no JS, browsers without support show content normally, and reduced-motion turns it off.
+  - Removed `GradientPill` and `ContourLines` because nothing uses them now.
+  - Verified: `tsc` and ESLint pass. I checked AR and EN in headless Chrome at 1440px and 500px. I didn't run `next build` (the user's dev server was running).
+- **Files:** `frontend/landing/src/app/globals.css`, `frontend/landing/src/app/[lang]/{layout,page}.tsx`, `frontend/landing/src/lib/{fonts,site}.ts`, `frontend/landing/src/i18n/dictionaries.ts`, `frontend/landing/src/components/layout/{SiteHeader,SiteFooter}.tsx`, `frontend/landing/src/components/sections/{Hero,HowItWorks,WhySukoon,Faq,FinalCta}.tsx`, `frontend/landing/src/components/phone/PhoneMockup.tsx`, `frontend/landing/src/components/ui/{Decor,StoreButtons,SectionHeading}.tsx`, `frontend/landing/src/components/ui/GradientPill.tsx` (deleted), `WORKLOG.md`
+
+### Landing: new wordmark logo + dark mode
+- **What:** The landing site now uses the Arabic + Latin "Sukoon" wordmark (`Asset 10@2x.png`) as its logo, and has a dark mode that follows the OS setting and can be switched with a header toggle.
+- **Why:** The user asked for the new logo file to be used in the app and for dark mode to be added.
+- **Details:**
+  - The wordmark master is at `docs/brand/wordmark.png`, with a copy in `frontend/landing/src/assets/brand/wordmark.png`. `Logo` now renders it sized by height (`sm` 44 / `md` 52 / `lg` 96) and takes Next 16's `preload` prop (`priority` is deprecated). It appears in the header, footer, final CTA and the 404 page. Favicons and the OG image still use the square mark, because a wordmark can't be read at icon sizes.
+  - Dark mode is driven by `html[data-theme]`. An inline script in `[lang]/layout.tsx` (`lib/theme.ts`) sets it before paint: a saved choice in `localStorage` (`sukoon-theme`) wins, otherwise it follows `prefers-color-scheme`. `<html>` has `suppressHydrationWarning` for this reason. `ThemeToggle` is the only client component, and its icons swap through the `dark:` variant, so it holds no state.
+  - Tailwind `dark` is a custom variant on `[data-theme="dark"]`. New theme-aware tokens `fg`, `muted`, `accent` and `chip`, plus `sand`, `sand-deep`, `paper` and `line`, are redefined under the dark theme. Section text moved from `text-pine`/`text-body`/`text-brand-deep` to these tokens. The phone screen and the pine panels keep fixed colours. Viewport `themeColor` now has light and dark entries.
+  - Verified: `tsc` and ESLint pass. I checked dark (EN, full page) and light (EN hero) with forced `prefers-color-scheme` in headless Chrome, and dark in AR. I didn't click the toggle in a real browser.
+  - The original `Asset 10@2x.png` is still untracked at the repo root.
+- **Files:** `docs/brand/wordmark.png`, `frontend/landing/src/assets/brand/wordmark.png`, `frontend/landing/src/components/ui/{Logo,StoreButtons,SectionHeading}.tsx`, `frontend/landing/src/components/layout/{SiteHeader,SiteFooter,ThemeToggle}.tsx`, `frontend/landing/src/components/sections/{Hero,HowItWorks,WhySukoon,Faq,FinalCta}.tsx`, `frontend/landing/src/components/phone/PhoneMockup.tsx`, `frontend/landing/src/lib/{theme,site}.ts`, `frontend/landing/src/app/globals.css`, `frontend/landing/src/app/[lang]/layout.tsx`, `frontend/landing/src/i18n/dictionaries.ts`, `WORKLOG.md`

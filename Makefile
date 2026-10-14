@@ -21,9 +21,12 @@ help:
 	@echo ""
 	@echo "Frontend (Next.js / TypeScript):"
 	@echo "  make frontend-install      - Install frontend dependencies"
-	@echo "  make frontend-dev          - Start Next.js dev server (port 3000)"
+	@echo "  make frontend-dev          - Start landing (:3000) + admin (:3000/admin) dev servers"
 	@echo "  make frontend-build        - Build Next.js production bundle"
 	@echo "  make frontend-lint         - Run ESLint on frontend code"
+	@echo "  make landing-install       - Install landing page dependencies"
+	@echo "  make landing-dev           - Start only the landing dev server (port 3000)"
+	@echo "  make landing-build         - Build landing page production bundle"
 	@echo ""
 	@echo "Mobile (Flutter / Melos Monorepo):"
 	@echo "  make mobile-analyze        - Melos analyze across all packages"
@@ -69,6 +72,15 @@ frontend-build:
 frontend-lint:
 	cd frontend && npm run lint
 
+landing-install:
+	cd frontend/landing && npm install
+
+landing-dev:
+	cd frontend/landing && npm run dev
+
+landing-build:
+	cd frontend/landing && npm run build
+
 # ── Mobile ──────────────────────────────────────────────
 mobile-analyze:
 	cd mobile && melos exec -- dart analyze .
@@ -85,4 +97,4 @@ mobile-translations:
 mobile-clean:
 	cd mobile && melos exec -- flutter clean
 
-.PHONY: help dev backend-run backend-test backend-migrate backend-makemigrations backend-shell backend-clean frontend-install frontend-dev frontend-build frontend-lint mobile-analyze mobile-test mobile-codegen mobile-translations mobile-clean
+.PHONY: help dev backend-run backend-test backend-migrate backend-makemigrations backend-shell backend-clean frontend-install frontend-dev frontend-build frontend-lint landing-install landing-dev landing-build mobile-analyze mobile-test mobile-codegen mobile-translations mobile-clean

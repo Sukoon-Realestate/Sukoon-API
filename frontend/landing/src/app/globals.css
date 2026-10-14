@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+/* Theme comes from html[data-theme], set before paint by the script in [lang]/layout.tsx. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+  /* Surfaces */
+  --color-ink: #060a07;
+  --color-ink-raised: #0c140e;
+  --color-ink-card: #0f1912;
+  --color-forest: #0b1b10;
+  --color-mint: #f0f5f0;
+  --color-mint-strong: #e1f0e2;
+
+  /* Calm palette: warm paper surfaces and deep forest greens. */
+  --color-sand: #f6f2e9;
+  --color-sand-deep: #ece5d5;
+  --color-paper: #fcfbf7;
+  --color-line: #e3dccb;
+  --color-pine: #0c2a18;
+  --color-pine-raised: #123520;
+  --color-moss: #1d4a2c;
+
+  /* Theme-aware roles for the landing surfaces (the phone screen keeps its fixed colours). */
+  --color-fg: #0c2a18;
+  --color-muted: #4b5650;
+  --color-accent: #0a5c18;
+  --color-chip: #e1f0e2;
+
+  /* Brand */
+  --color-brand: #04a417;
+  --color-brand-hover: #039313;
+  --color-brand-deep: #0a5c18;
+  --color-brand-soft: #7fe08d;
+  --color-accent-pink: #e3287c;
+  --color-accent-orange: #f2902a;
+
+  /* Text */
+  --color-heading: #0b120d;
+  --color-body: #4b5650;
+
+  --font-sans: var(--font-primary), var(--font-secondary), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-readex), var(--font-primary), ui-sans-serif, system-ui, sans-serif;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-delayed: float 6s ease-in-out 1.5s infinite;
+  --animate-fade-up: fade-up 0.7s ease-out both;
+  --animate-fade-up-late: fade-up 0.8s ease-out 0.15s both;
+  --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  @keyframes pulse-ring {
+    0% {
+      box-shadow: 0 0 0 0 rgba(4, 164, 23, 0.45);
+    }
+    70%,
+    100% {
+      box-shadow: 0 0 0 8px rgba(4, 164, 23, 0);
+    }
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-sand);
+  color: var(--color-heading);
+}
+
+/* Night palette: same calm greens, lights turned down. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-sand: #0a120d;
+  --color-sand-deep: #16241b;
+  --color-paper: #0e1912;
+  --color-line: #213628;
+  --color-fg: #ecf2ea;
+  --color-muted: #a1b0a6;
+  --color-accent: #7fe08d;
+  --color-chip: #173a24;
+}
+
+/* Fades sections in as they scroll into view; browsers without scroll-driven
+   animations simply show the content. */
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation: fade-up linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 60%;
+  }
+}
+
+/* Faint paper grain for the light surfaces. */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ! Negative tracking breaks Arabic letter joining; keep it Latin-only. */
+html[lang="ar"] * {
+  letter-spacing: 0 !important;
+}
+
+/* Hide the native disclosure triangle on FAQ items. */
+summary::-webkit-details-marker {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

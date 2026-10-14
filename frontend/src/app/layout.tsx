@@ -15,6 +15,8 @@ const cairo = Cairo({
 export const metadata: Metadata = {
   title: 'سكون – لوحة تحكم الإدارة',
   description: 'لوحة التحكم والإدارة لمركز عقارات سكون',
+  // Private dashboard: keep it out of search results (robots.txt on the landing app also disallows /admin).
+  robots: { index: false, follow: false },
 };
 
 export default function RootLayout({
