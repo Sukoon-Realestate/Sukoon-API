@@ -169,3 +169,44 @@
 
 
 
+
+## 2026-10-14
+
+### Landing Page – Standalone Next.js App (frontend only)
+- **What:** Built the bilingual (AR/EN) Sukoon marketing landing page from the `لاندنج بيدج سكون.pdf` design. It's a separate Next.js app at `frontend/landing/`.
+- **Why:** The new landing design needs to ship on the web independently of the admin dashboard.
+- **Details:**
+  - Standalone app with its own `package.json`, using the same Next 16.3.5, React 19.2.8 and Tailwind 4 versions as the admin app. It runs on port 3001 and its `turbopack.root` is pinned to its own folder.
+  - Routes `/ar` (default, RTL) and `/en` are statically prerendered (SSG). `src/proxy.ts` redirects `/` to a locale based on `Accept-Language`.
+  - All copy lives in typed dictionaries (`src/i18n/dictionaries.ts`). Layout uses logical CSS properties, so RTL mirrors without duplicated markup.
+  - Sections: hero with a CSS/SVG phone mockup, how-it-works (tenant/owner), the "Why Sukoon" bento, FAQ (native `<details>`, no JS), final CTA and footer.
+  - Excluded `landing/` from the admin app's `tsconfig.json` and ESLint. Added `make landing-install|dev|build`.
+  - `next build` and `eslint` pass. I checked the rendered output against the PDF in headless Chrome at desktop and mobile widths.
+  - **Open items:** the logo is a text placeholder until we get the official SVG wordmark. Store buttons are non-interactive "coming soon" badges. Footer links point to `#`. The AR commission badge copy ("سكون بدون سمسار او عموله") is taken verbatim from the PDF but doesn't match the EN "Non-profit at launch", so design should confirm it.
+- **Files:** `frontend/landing/**` (new), `frontend/tsconfig.json`, `frontend/eslint.config.mjs`, `Makefile`, `WORKLOG.md`
+
+### Serve Landing at `/` and Admin Dashboard at `/admin`
+- **What:** `localhost:3000` now serves the landing page and `localhost:3000/admin` serves the admin dashboard. The two are still separate Next.js apps, joined with Next.js multi-zones.
+- **Why:** One public origin, with the marketing site at the root and the dashboard under `/admin`.
+- **Details:**
+  - Admin app: added `basePath: '/admin'`, using the new `src/lib/basePath.ts`. `Link`, `router.push`, `redirect()` and `usePathname` handle the prefix on their own. The one hardcoded redirect, `window.location.href = '/login'` in `lib/api/client.ts`, now uses `BASE_PATH`. Admin dev and start now run on port 3001.
+  - Landing app: moved to port 3000. Added rewrites `/admin` and `/admin/:path+` → `ADMIN_URL` (default `http://localhost:3001`). `proxy.ts` now leaves `/admin` alone so it isn't redirected to `/ar/admin`.
+  - `frontend/npm run dev` now runs `scripts/dev.mjs`, which starts both zones with prefixed logs. It still accepts `-p`, so `make dev` (backend/scripts/dev.py) keeps working. `dev:admin` and `dev:landing` run the apps one at a time.
+  - Verified in dev: `/` → `/ar`, `/en`, and `/admin` → `/admin/login` (hydrated, styled, CSS/JS served under `/admin/_next`). Production builds pass for both apps.
+  - **Deploy note:** these are now two deployments. The landing deployment needs `ADMIN_URL` set to the admin deployment's URL. The admin deployment is only meant to be reached through `/admin` on the landing domain.
+- **Files:** `frontend/next.config.ts`, `frontend/src/lib/basePath.ts`, `frontend/src/lib/api/client.ts`, `frontend/package.json`, `frontend/scripts/dev.mjs`, `frontend/landing/next.config.ts`, `frontend/landing/src/proxy.ts`, `frontend/landing/package.json`, `frontend/landing/README.md`, `Makefile`, `WORKLOG.md`
+
+### Landing Page SEO, Metadata & Launch Polish (sukoon.rent)
+- **What:** Made the landing app launch-ready for search and sharing. It now has canonicals, hreflang, OG/Twitter cards with generated share images, a sitemap, robots, llms.txt, JSON-LD, brand favicons, a custom 404, and nav links in the header and footer. It also has a security patch bump for Next.
+- **Why:** The site still showed starter-template traces (the default Next favicon, unused starter SVGs, no 404) and had no SEO surface, which made it look unfinished.
+- **Details:**
+  - The domain is `https://sukoon.rent`, set in `src/lib/site.ts`. Canonicals and alternates are `/ar` and `/en`, and `x-default` points to `/ar`. **Not done in code:** attaching the domain in Vercel and setting DNS.
+  - Structured data: Organization, WebSite, WebPage and FAQPage. The LocalBusiness schema is gated on the `BUSINESS` placeholders (TODOs), so empty address and phone values never ship. Breadcrumbs were left out on purpose because the site is a single page. Add them along with the privacy and terms pages.
+  - Share images are 1200×630 per locale. Satori, used by `next/og`, renders Arabic words in the wrong order with broken spacing, so the Arabic text is shaped with `harfbuzzjs` (new dependency, marked `serverExternalPackages`) and embedded as an SVG.
+  - Favicon set: the brand "س" glyph extracted from IBM Plex Sans Arabic Bold, with the same icons in the admin app. Removed the five unused starter SVGs from `frontend/public/`.
+  - `global-not-found.tsx` (experimental flag) is needed because the root layout sits under `[lang]`. It returns a real 404 with `noindex`.
+  - Both apps now set `productionBrowserSourceMaps: false` explicitly and `poweredByHeader: false`. Admin gets `robots: noindex`.
+  - **Security:** bumped landing `next` and `eslint-config-next` from 16.3.5 to 16.3.8. 16.3.5 has a critical advisory for RCE in `next/og` ImageResponse (GHSA-vcvr-r3jv-pc5j), plus SSRF and cache-poisoning advisories. **The admin app is still on 16.3.5 and needs the same bump.**
+  - Verified: build, ESLint and tsc pass. In headless Edge at 1366px and 375px there are no console errors, no failed requests and no horizontal overflow, and every in-page anchor resolves. There's one `<h1>` per page, the JSON-LD parses, and no `.map` files are emitted. JS is unchanged at about 178 KB gzip, all of it Next/React runtime, because the page has no client components.
+  - Footer Privacy, Terms and Contact links stay as `#` with TODOs, per the request.
+- **Files:** `frontend/landing/src/app/{[lang]/layout.tsx,[lang]/page.tsx,[lang]/opengraph-image.tsx,global-not-found.tsx,robots.ts,sitemap.ts,llms.txt/route.ts,favicon.ico,icon.svg,apple-icon.png}`, `frontend/landing/src/lib/{site.ts,fonts.ts,sections.ts,structuredData.ts,og/shapeText.ts}`, `frontend/landing/src/types/harfbuzzjs.d.ts`, `frontend/landing/src/assets/fonts/*`, `frontend/landing/src/components/layout/{SiteHeader,SiteFooter}.tsx`, `frontend/landing/src/components/sections/{HowItWorks,WhySukoon,Faq,FinalCta}.tsx`, `frontend/landing/src/i18n/dictionaries.ts`, `frontend/landing/next.config.ts`, `frontend/landing/package.json`, `frontend/landing/README.md`, `frontend/next.config.ts`, `frontend/src/app/{layout.tsx,favicon.ico,icon.svg}`, `frontend/public/*.svg` (deleted), `WORKLOG.md`

@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  /* Surfaces */
+  --color-ink: #060a07;
+  --color-ink-raised: #0c140e;
+  --color-ink-card: #0f1912;
+  --color-forest: #0b1b10;
+  --color-mint: #f0f5f0;
+  --color-mint-strong: #e1f0e2;
+
+  /* Brand */
+  --color-brand: #04a417;
+  --color-brand-hover: #039313;
+  --color-brand-deep: #0a5c18;
+  --color-brand-soft: #7fe08d;
+  --color-accent-pink: #e3287c;
+  --color-accent-orange: #f2902a;
+
+  /* Text */
+  --color-heading: #0b120d;
+  --color-body: #4b5650;
+
+  --font-sans: var(--font-primary), var(--font-secondary), ui-sans-serif, system-ui, sans-serif;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-delayed: float 6s ease-in-out 1.5s infinite;
+  --animate-fade-up: fade-up 0.7s ease-out both;
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-ink);
+  color: var(--color-heading);
+}
+
+/* ! Negative tracking breaks Arabic letter joining; keep it Latin-only. */
+html[lang="ar"] * {
+  letter-spacing: 0 !important;
+}
+
+/* Hide the native disclosure triangle on FAQ items. */
+summary::-webkit-details-marker {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

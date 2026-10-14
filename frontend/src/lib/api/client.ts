@@ -1,5 +1,6 @@
 import { isBackendEnabled, API_BASE_URL } from './config';
 import { handleMockRequest } from './mockHandler';
+import { BASE_PATH } from '../basePath';
 
 export interface RequestOptions extends Omit<RequestInit, 'body'> {
   params?: Record<string, string | number | boolean | undefined | null>;
@@ -73,8 +74,9 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
         localStorage.removeItem('sukoon_admin_auth');
         localStorage.removeItem('sukoon_user');
         window.dispatchEvent(new Event('auth:unauthorized'));
-        if (window.location.pathname !== '/login') {
-          window.location.href = '/login';
+        const loginPath = `${BASE_PATH}/login`;
+        if (window.location.pathname !== loginPath) {
+          window.location.href = loginPath;
         }
       }
     }
