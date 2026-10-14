@@ -405,8 +405,8 @@ def test_group_capacity_expiry_wrong_token_stale_roster_and_independent_gates(
     )
     post(
         tenant,
-        f"housing-groups/{group['id']}/archive/",
-        command(group["revision"], action="archive", roster_revision=1),
+        f"housing-groups/{group['id']}/revoke_invites/",
+        command(group["revision"], action="revoke_invites", roster_revision=1),
         409,
     )
     assert HousingGroup.objects.get(id=group["id"]).status == "active"
