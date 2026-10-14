@@ -38,11 +38,25 @@ class ConversationListAPIView(ListAPIView):
     pagination_class = _ConversationPagination
 
     def get_queryset(self):
-        return (
+        queryset = (
             Conversation.objects.filter(participant_set__user=self.request.user)
             .prefetch_related("participants__profile", "participant_set")
             .order_by("-last_message_at")
         )
+        if self.request.query_params.get("include_groups") != "true":
+            return queryset.filter(kind="direct")
+        from django.db.models import Q, F
+        from rest_framework.exceptions import APIException
+        from core_apps.features.services.planning import require_planning
+        try:
+            require_planning(self.request.user, "housing_groups")
+        except APIException:
+            return queryset.filter(kind="direct")
+        return queryset.filter(Q(kind="direct") | Q(
+            kind="housing_group", housing_group__status="active",
+            participant_set__user=self.request.user, participant_set__membership__status="active",
+            participant_set__membership_revision=F("participant_set__membership__joined_revision"),
+        )).distinct()
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -87,6 +101,9 @@ class ConversationDetailAPIView(APIView):
             ),
             id=id,
         )
+        if conversation.kind == "housing_group":
+            from core_apps.chat.services.group_projection import summary
+            return Response(summary(conversation, request.user))
         self.check_object_permissions(request, conversation)
         return Response(
             ConversationSerializer(conversation, context={"request": request}).data
@@ -104,6 +121,9 @@ class ConversationReadAPIView(APIView):
 
     def post(self, request, id):
         conversation = get_object_or_404(Conversation, id=id)
+        if conversation.kind == "housing_group":
+            from core_apps.chat.services.group_operations import mark_group_read
+            return Response(mark_group_read(conversation, request.user, request.data.get("last_read_sequence")))
         self.check_object_permissions(request, conversation)
         mark_conversation_read(conversation=conversation, user=request.user)
         return Response({"status": "read"}, status=status.HTTP_200_OK)

@@ -29,6 +29,13 @@ class MessageListAPIView(ListAPIView):
     serializer_class = MessageSerializer
     pagination_class = _MessagePagination
 
+    def list(self, request, *args, **kwargs):
+        conversation = get_object_or_404(Conversation, id=kwargs["id"])
+        if conversation.kind == "housing_group":
+            from .group_history import history_response
+            return history_response(conversation, request.user, request.query_params)
+        return super().list(request, *args, **kwargs)
+
     def get_object(self):
         conversation = get_object_or_404(Conversation, id=self.kwargs["id"])
         self.check_object_permissions(self.request, conversation)
@@ -60,6 +67,15 @@ class MessageCreateAPIView(APIView):
 
     def post(self, request, id):
         conversation = get_object_or_404(Conversation, id=id)
+        if conversation.kind == "housing_group":
+            from core_apps.chat.services.group_send import send_group_message
+            from core_apps.chat.services.group_access import authorize
+            from core_apps.chat.services.group_projection import message_payload
+            from core_apps.chat.services.group_rate_limit import enforce_rate
+            enforce_rate(request.user, "send")
+            message = send_group_message(conversation, request.user, dict(request.data))
+            _, participant, member = authorize(conversation, request.user)
+            return Response(message_payload(message, participant, member), status=201)
         self.check_object_permissions(request, conversation)
 
         serializer = MessageCreateSerializer(data=request.data)

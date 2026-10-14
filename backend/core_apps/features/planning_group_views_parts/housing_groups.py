@@ -33,6 +33,8 @@ def housing_groups(request):
             raise ValidationError("New groups use action=create and roster_revision=0.")
         group = HousingGroup.objects.create(**_group_values(request.data))
         GroupMembership.objects.create(group=group, user=request.user, role="admin")
+        from core_apps.chat.services.group_provisioning import provision_group
+        provision_group(group)
         return group
 
     return mutate(

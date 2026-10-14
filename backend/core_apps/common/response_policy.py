@@ -20,6 +20,9 @@ EXPOSED_HEADERS = (
     "X-Previous-Page",
     "Retry-After",
     "Content-Language",
+    "X-Chat-Older-Cursor",
+    "X-Chat-Event-Cursor",
+    "X-Chat-Has-More",
 )
 
 

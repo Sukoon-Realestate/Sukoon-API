@@ -161,6 +161,15 @@ CELERY_BEAT_SCHEDULE["process-planning-jobs"] = {
     "task": "core_apps.features.tasks.process_planning_jobs",
     "schedule": 30.0,
 }
+CELERY_BEAT_SCHEDULE["drain-group-chat-outbox"] = {
+    "task": "core_apps.chat.tasks.drain_chat_outbox", "schedule": 5.0,
+}
+CELERY_BEAT_SCHEDULE["clean-group-chat-media"] = {
+    "task": "core_apps.chat.tasks.clean_chat_media", "schedule": 3600.0,
+}
+CHAT_PRIVATE_MEDIA_ROOT = getenv("CHAT_PRIVATE_MEDIA_ROOT", str(BASE_DIR / "private_chat_media"))
+CHAT_FFPROBE = getenv("CHAT_FFPROBE", "ffprobe")
+CHAT_FFMPEG = getenv("CHAT_FFMPEG", "ffmpeg")
 PLANNING_ROUTES_API_KEY = getenv("PLANNING_ROUTES_API_KEY", "").strip()
 PLANNING_GEMINI_API_KEY = getenv("PLANNING_GEMINI_API_KEY", "").strip()
 PLANNING_GEMINI_MODEL = getenv("PLANNING_GEMINI_MODEL", "").strip()

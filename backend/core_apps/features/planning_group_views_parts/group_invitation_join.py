@@ -49,6 +49,8 @@ def group_invitation_join(request):
         invalidate_roster(group)
         group.revision += 1
         group.save()
+        from core_apps.chat.services.group_provisioning import roster_changed
+        roster_changed(group, actor=request.user, kind="member_joined", subject=request.user)
         return group
 
     return mutate(

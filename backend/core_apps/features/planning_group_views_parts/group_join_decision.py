@@ -59,6 +59,8 @@ def group_join_decision(request, join_id, action):
             invalidate_roster(group)
             group.revision += 1
             group.save()
+            from core_apps.chat.services.group_provisioning import roster_changed
+            roster_changed(group, actor=request.user, kind="member_joined", subject=item.user)
         item.status = {
             "approve": "approved",
             "decline": "declined",
