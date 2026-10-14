@@ -23,6 +23,7 @@ from ..lease_permissions import (
     can_revoke_invitation,
     handover_actions,
     interest_actions,
+    interest_creation_blocker,
     proposal_actions,
 )
 from ..rental_phase3 import invoice_payment_allowed
@@ -88,9 +89,17 @@ def capabilities_for(user, subject, requested_action=""):
         if phase2_ready:
             enabled.append("rental_settlement")
             allowed.extend(cycle_actions(user, subject))
-    elif phase2_ready and isinstance(subject, (RentalInterest, TermsProposal)):
-        enabled.extend(["rental_interests", "rental_agreements"])
-    elif phase2_ready and isinstance(subject, (User, Property, OwnerPaymentProfile)):
+    elif isinstance(subject, (User, Property, RentalInterest)):
+        # Interest requests only persist local state and notify participants.
+        # Signing and payments must not control access to this workflow.
+        enabled.append("rental_interests")
+        if phase2_ready:
+            enabled.append("rental_agreements")
+        if isinstance(subject, RentalInterest):
+            allowed.extend(interest_actions(user, subject))
+        elif isinstance(subject, Property) and not interest_creation_blocker(user, subject):
+            allowed.append("create_rental_interest")
+    elif phase2_ready and isinstance(subject, (TermsProposal, OwnerPaymentProfile)):
         enabled.extend(["rental_interests", "rental_agreements"])
         if isinstance(subject, OwnerPaymentProfile):
             enabled.append("owner_payouts")
@@ -115,15 +124,6 @@ def capabilities_for(user, subject, requested_action=""):
                 allowed.append("onboard_beneficiary")
         elif isinstance(subject, User):
             allowed.append("onboard")
-        elif isinstance(subject, Property):
-            if (
-                subject.owner_id != user.pk
-                and subject.is_verified
-                and subject.status == Property.Status.VERIFIED
-            ):
-                allowed.append("create_rental_interest")
-        elif isinstance(subject, RentalInterest):
-            allowed.extend(interest_actions(user, subject))
         elif isinstance(subject, TermsProposal):
             allowed.extend(proposal_actions(user, subject))
 
@@ -132,7 +132,12 @@ def capabilities_for(user, subject, requested_action=""):
         enabled = []
         allowed = []
     elif requested_action and requested_action not in allowed:
-        blocking.append("The requested rental action is not available yet.")
+        reason = (
+            interest_creation_blocker(user, subject)
+            if isinstance(subject, Property) and requested_action == "create_rental_interest"
+            else None
+        )
+        blocking.append(reason or "The requested rental action is not available yet.")
 
     return {
         "account_id": str(user.id),

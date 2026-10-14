@@ -120,7 +120,7 @@ def checkout_available():
     )
 
 
-def require_rental_provider(user):
+def require_verified_rental_account(user):
     from rest_framework.exceptions import PermissionDenied
 
     if not user.is_active or not user.is_verified:
@@ -130,6 +130,12 @@ def require_rental_provider(user):
                 "code": "account_verification_required",
             }
         )
+
+
+def require_rental_provider(user):
+    from rest_framework.exceptions import PermissionDenied
+
+    require_verified_rental_account(user)
     if not fake_provider_available():
         raise PermissionDenied(
             {

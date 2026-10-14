@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from core_apps.properties.models import Property
 from core_apps.notifications.models import Notification
 from ..models import RentalInterest
-from ..providers import require_rental_provider
+from ..providers import require_verified_rental_account
 from ..renderers import FeatureJsonRenderer
 from ..rental_serializers import (
     RentalDecisionSerializer,
@@ -23,6 +23,7 @@ from ..services.rental_phase2 import (
     remember_mutation,
     validate_interest_capacity,
 )
+from ..services.lease_permissions import interest_actions, interest_creation_blocker
 from ..services.tenancy_invitations import resolve_offer_snapshot
 from .owner_payment_profile import (
     _paginate,
@@ -50,7 +51,7 @@ def rental_interests(request):
             RentalInterestSerializer,
         )
 
-    require_rental_provider(request.user)
+    require_verified_rental_account(request.user)
     serializer = RentalInterestBodySerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     data = serializer.validated_data
@@ -59,8 +60,6 @@ def rental_interests(request):
     )
     if property_obj.owner_id == request.user.pk:
         raise ValidationError("An owner cannot submit interest in their own property.")
-    if not request.user.is_active or not request.user.is_verified:
-        raise PermissionDenied("A verified active tenant is required.")
     operation = "rental_interest.create"
     replay = _replay_response(
         request.user, operation, data["request_key"], request.data
@@ -69,6 +68,14 @@ def rental_interests(request):
         return replay
     with transaction.atomic():
         property_obj = Property.objects.select_for_update().get(pk=property_obj.pk)
+        replay = _replay_response(
+            request.user, operation, data["request_key"], request.data
+        )
+        if replay:
+            return replay
+        blocker = interest_creation_blocker(request.user, property_obj)
+        if blocker:
+            raise PermissionDenied(blocker)
         offer_id, snapshot = resolve_offer_snapshot(
             property_obj, data["offer_id"], data["offer_revision"], request
         )
@@ -128,7 +135,7 @@ def rental_interest_detail(request, interest_id):
 @permission_classes([IsAuthenticated])
 @renderer_classes([FeatureJsonRenderer])
 def rental_interest_respond(request, interest_id):
-    _participant_interest(request, interest_id)
+    _participant_interest(request, interest_id, provider_required=False)
     serializer = RentalDecisionSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     data = serializer.validated_data
@@ -139,10 +146,19 @@ def rental_interest_respond(request, interest_id):
     if replay:
         return replay
     with transaction.atomic():
-        interest = _participant_interest(request, interest_id, lock=True)
+        interest = _participant_interest(
+            request, interest_id, lock=True, provider_required=False
+        )
+        replay = _replay_response(
+            request.user, operation, data["request_key"], request.data
+        )
+        if replay:
+            return replay
         if data["expected_revision"] != interest.revision:
             raise RentalConflict("Interest revision conflict.", code="stale_revision")
         decision = data["decision"]
+        if decision not in interest_actions(request.user, interest):
+            raise PermissionDenied("This decision is not allowed for the current interest.")
         if decision == "reject" and request.user == interest.property.owner:
             interest.status = RentalInterest.Status.REJECTED
         elif decision == "withdraw" and request.user == interest.tenant:
