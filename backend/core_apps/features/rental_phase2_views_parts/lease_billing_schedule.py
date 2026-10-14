@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view, permission_classes, renderer_cla
 from rest_framework.permissions import IsAuthenticated
 from ..pagination import FeaturePagination
 from ..renderers import FeatureJsonRenderer
+from ..services.rental_notes import response_note_label
 from .owner_payment_profile import _participant_lease
 
 
@@ -18,7 +19,9 @@ def lease_timeline(request, lease_id):
         [
             {
                 "id": str(item.id),
-                "label": item.label,
+                "label": response_note_label(
+                    item, request.headers.get("Accept-Language", "en")
+                ),
                 "description": item.description,
                 "occurred_at": item.occurred_at.isoformat(),
                 "kind": item.kind,

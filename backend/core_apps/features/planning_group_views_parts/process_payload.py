@@ -21,7 +21,11 @@ def group_for(user, identifier, *, lock=False, departed=False):
 
 def group_actions(user, group):
     member = group.memberships.filter(user=user, status="active").first()
-    if not member or group.status != "active":
+    if not member:
+        return []
+    if group.status == "archived":
+        return ["unarchive", "read_invite"] if member.role == "admin" else []
+    if group.status != "active":
         return []
     actions = [
         "leave",

@@ -11,6 +11,7 @@ from core_apps.admin_api.models import StaffProfile
 from ..models import RentalChange, RentInvoice
 from ..renderers import FeatureJsonRenderer
 from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
+from ..services.rental_notes import record_response_note, validated_note
 from .maintenance_action import change_payload, _change
 from .change_collection import change_collection
 
@@ -102,6 +103,7 @@ def change_respond(request, change_id, kind):
     )
     if replay:
         return Response(replay[0], status=replay[1])
+    note = validated_note(request.data)
     with transaction.atomic():
         item = _change(request, change_id, kind, lock=True)
         if int(request.data.get("expected_revision", 0)) != item.revision:
@@ -144,6 +146,7 @@ def change_respond(request, change_id, kind):
                         item.applied_at = timezone.now()
         item.revision += 1
         item.save()
+        record_response_note(item, request.user, "change", action, note)
         from ..services.planning_notifications import record_event
 
         record_event(item, request.user, operation)

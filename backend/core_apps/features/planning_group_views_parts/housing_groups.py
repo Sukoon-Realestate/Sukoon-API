@@ -11,11 +11,17 @@ from .group_payload import group_payload
 @planning_api(["GET", "POST"], "housing_groups")
 def housing_groups(request):
     if request.method == "GET":
+        groups = HousingGroup.objects.filter(
+            memberships__user=request.user, memberships__status="active"
+        )
+        status = request.query_params.get("status")
+        if status:
+            if status not in {"active", "archived"}:
+                raise ValidationError({"status": "Choose active or archived."})
+            groups = groups.filter(status=status)
         return page(
             request,
-            HousingGroup.objects.filter(
-                memberships__user=request.user, memberships__status="active"
-            ).order_by("-created_at", "pkid"),
+            groups.order_by("-created_at", "pkid"),
             lambda x: group_payload(x, request.user),
         )
 

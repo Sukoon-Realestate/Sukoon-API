@@ -13,6 +13,12 @@ from ..renderers import FeatureJsonRenderer
 from ..services.cycle_permissions import cycle_actions
 from ..services.commands import command_identity, money_minor
 from ..services.settlements import LINE_TYPES, financial_snapshot, prepare_settlement
+from ..services.settlement_notes import (
+    history_payload,
+    notes_payload,
+    remember_note,
+    validated_note,
+)
 from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
 
 
@@ -52,7 +58,8 @@ def settlement_payload(item, user=None):
         "execution_status": item.execution_status,
         "execution_plan": item.execution_plan,
         "executed_at": item.executed_at.isoformat() if item.executed_at else None,
-        "history": item.history,
+        "history": history_payload(item),
+        "notes": notes_payload(item),
     }
 
 
@@ -80,6 +87,7 @@ def final_settlement_propose(request, lease_id):
     replay = replay_operation(request.user, operation, request_key, request.data)
     if replay:
         return Response(replay[0], status=replay[1])
+    note = validated_note(request.data)
     lines = []
     seen = set()
     if (
@@ -164,6 +172,7 @@ def final_settlement_propose(request, lease_id):
         item.disputed_item_ids = []
         item.proposed_by = request.user
         item.revision += 1
+        remember_note(item, request.user, "propose", note, request_key)
         item.save()
         output = remember_mutation(
             user=request.user,

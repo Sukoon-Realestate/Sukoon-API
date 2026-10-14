@@ -16,6 +16,7 @@ from ..models import (
 )
 from ..renderers import FeatureJsonRenderer
 from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
+from ..services.rental_notes import record_response_note, validated_note
 from ..services.rental_phase3 import post_ledger_transaction
 from .handover_payload import _money, _lease, handover_payload, _handover
 from .lease_handovers import deposit_payload
@@ -113,6 +114,7 @@ def handover_respond(request, handover_id):
     )
     if replay:
         return Response(replay[0], status=replay[1])
+    note = validated_note(request.data)
     with transaction.atomic():
         handover = _handover(request, handover_id, lock=True)
         if int(request.data.get("expected_revision", 0)) != handover.revision:
@@ -144,6 +146,7 @@ def handover_respond(request, handover_id):
                 handover.status = RentalHandover.Status.PENDING_APPROVAL
         handover.revision += 1
         handover.save()
+        record_response_note(handover, request.user, "handover", action, note)
         if (
             handover.kind == RentalHandover.Kind.MOVE_IN
             and handover.status == RentalHandover.Status.ACCEPTED

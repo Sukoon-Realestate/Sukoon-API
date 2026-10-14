@@ -30,6 +30,21 @@ class IssueInvoiceSerializer(StrictBillingSerializer):
             raise serializers.ValidationError(
                 {key: "This field is required." for key in missing}
             )
+        # A purchase has one source. Do not silently accept an unrelated source
+        # identity (or include it in the idempotency fingerprint).
+        unrelated = (
+            ("advertisement_id",)
+            if attrs["purpose"] == "subscription"
+            else ("plan_id", "plan_revision")
+        )
+        unexpected = [key for key in unrelated if key in attrs]
+        if unexpected and self.context.get("mobile_contract"):
+            raise serializers.ValidationError(
+                {
+                    key: "This field does not apply to this purchase purpose."
+                    for key in unexpected
+                }
+            )
         return attrs
 
 

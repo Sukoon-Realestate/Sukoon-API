@@ -8,6 +8,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from ..models import MaintenanceEvent, MaintenanceRequest
 from ..renderers import FeatureJsonRenderer
+from ..rental_serializers_parts.maintenance_cost_decision_serializer import (
+    MaintenanceAccessTimesSerializer,
+)
 from ..services.rental_phase2 import remember_mutation, replay_operation
 from .maintenance_payload import (
     _lease,
@@ -53,6 +56,8 @@ def maintenance_requests(request, lease_id):
     )
     if replay:
         return Response(replay[0], status=replay[1])
+    access = MaintenanceAccessTimesSerializer(data=request.data)
+    access.is_valid(raise_exception=True)
     evidence = _safe_evidence(lease, request.data["evidence_ids"])
     with transaction.atomic():
         lease = _lease(request, lease_id, lock=True)
@@ -68,7 +73,7 @@ def maintenance_requests(request, lease_id):
             description=request.data["description"],
             category=request.data["category"],
             priority=request.data["priority"],
-            access_times=request.data["access_times"],
+            access_times=access.validated_data["access_times"],
         )
         item.evidence.set(evidence)
         MaintenanceEvent.objects.create(

@@ -82,6 +82,17 @@ class OwnerPaymentProfileSerializer(serializers.ModelSerializer):
             "blocking_reasons",
         ]
 
+    def get_fields(self):
+        fields = super().get_fields()
+        request = self.context.get("request")
+        if request and request.query_params.get("projection") == "mobile_v1":
+            # Provider routing is carried by the session descriptor. The policy
+            # summary is the reviewed mobile consent text; retain the structured
+            # internal policy and historical/default projection unchanged.
+            fields.pop("provider")
+            fields.pop("structured_summary")
+        return fields
+
     def _is_arabic(self):
         request = self.context.get("request")
         if not request:

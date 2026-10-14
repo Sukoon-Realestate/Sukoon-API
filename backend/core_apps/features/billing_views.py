@@ -27,9 +27,15 @@ from .models import IdempotencyRecord
 
 
 def validated(serializer, request):
-    value = serializer(data=request.data)
+    value = serializer(
+        data=request.data, context={"mobile_contract": mobile_projection(request)}
+    )
     value.is_valid(raise_exception=True)
     return value.validated_data
+
+
+def mobile_projection(request):
+    return request.query_params.get("projection") == "mobile_v1"
 
 
 def language(request):
@@ -45,7 +51,12 @@ def invoices(request):
             request.user, validated(IssueInvoiceSerializer, request)
         )
         return Response(
-            invoice_payload(invoice, request.user, language(request)),
+            invoice_payload(
+                invoice,
+                request.user,
+                language(request),
+                mobile=mobile_projection(request),
+            ),
             status=201 if created else 200,
         )
     workspace = workspace_for(request.query_params.get("workspace", "tenant"))
@@ -75,7 +86,12 @@ def invoices(request):
     pager = FeaturePagination()
     page = pager.paginate_queryset(query, request)
     return pager.get_paginated_response(
-        [invoice_payload(x, request.user, language(request)) for x in page]
+        [
+            invoice_payload(
+                x, request.user, language(request), mobile=mobile_projection(request)
+            )
+            for x in page
+        ]
     )
 
 
@@ -84,7 +100,11 @@ def invoices(request):
 @renderer_classes([FeatureJsonRenderer])
 def invoice_detail(request, invoice_id):
     invoice = authorized_invoice(request.user, invoice_id)
-    return Response(invoice_payload(invoice, request.user, language(request)))
+    return Response(
+        invoice_payload(
+            invoice, request.user, language(request), mobile=mobile_projection(request)
+        )
+    )
 
 
 @api_view(["GET"])
@@ -100,7 +120,12 @@ def invoice_operation(request, request_key):
     return Response(
         {
             "invoice": (
-                invoice_payload(invoice, request.user, language(request))
+                invoice_payload(
+                    invoice,
+                    request.user,
+                    language(request),
+                    mobile=mobile_projection(request),
+                )
                 if invoice
                 else None
             ),
@@ -135,4 +160,8 @@ def invoice_checkout(request, invoice_id):
 def invoice_cancel(request, invoice_id):
     body = validated(InvoiceActionSerializer, request)
     invoice = cancel_invoice(request.user, invoice_id, body)
-    return Response(invoice_payload(invoice, request.user, language(request)))
+    return Response(
+        invoice_payload(
+            invoice, request.user, language(request), mobile=mobile_projection(request)
+        )
+    )

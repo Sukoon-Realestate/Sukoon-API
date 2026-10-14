@@ -158,6 +158,7 @@ class TenantUnreadCountsSerializer(serializers.Serializer):
     """
 
     favorites_count = serializers.IntegerField(read_only=True)
+    group_join_requests_count = serializers.IntegerField(read_only=True)
     unread_chat_messages_count = serializers.IntegerField(read_only=True)
     unread_notifications_count = serializers.IntegerField(read_only=True)
     visit_requests_count = serializers.IntegerField(read_only=True)

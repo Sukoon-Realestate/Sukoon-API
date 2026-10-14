@@ -41,8 +41,20 @@ class ProfileUnreadMixin:
         from core_apps.properties.models import PropertyVisit, SavedProperty
         from core_apps.notifications.models import Notification
         from core_apps.chat.models.conversation import ConversationParticipant
+        from core_apps.features.planning_models import GroupJoinRequest
 
         favorites_count = SavedProperty.objects.filter(user=user).count()
+        group_join_requests_count = (
+            GroupJoinRequest.objects.filter(
+                status="pending",
+                group__status="active",
+                group__memberships__user=user,
+                group__memberships__role="admin",
+                group__memberships__status="active",
+            )
+            .distinct()
+            .count()
+        )
         visit_requests_count = PropertyVisit.objects.filter(
             tenant=user,
             status__in=[PropertyVisit.Status.PENDING, PropertyVisit.Status.CONFIRMED],
@@ -58,6 +70,7 @@ class ProfileUnreadMixin:
         )
         return {
             "favorites_count": favorites_count,
+            "group_join_requests_count": group_join_requests_count,
             "unread_chat_messages_count": unread_chat_messages_count,
             "unread_notifications_count": unread_notifications_count,
             "visit_requests_count": visit_requests_count,

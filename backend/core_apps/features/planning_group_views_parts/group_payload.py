@@ -12,14 +12,25 @@ from ..services.planning import (
     criteria_payload,
     display_name,
     mutate,
+    page,
     planning_api,
 )
 from .process_payload import group_for, group_actions, active_ids, process_payload
 from .invitation_from_token import invitation_from_token, invitation_payload
 
 
-@planning_api(["POST"], "housing_groups")
+@planning_api(["GET", "POST"], "housing_groups")
 def group_invitation_create(request, group_id):
+    if request.method == "GET":
+        group = group_for(request.user, group_id)
+        if "read_invite" not in group_actions(request.user, group):
+            raise NotFound()
+        return page(
+            request,
+            group.invitations.select_related("group").order_by("-created_at", "pkid"),
+            invitation_payload,
+        )
+
     def apply(group, revision):
         if "create_invite" not in group_actions(request.user, group):
             raise PermissionDenied("Only the group administrator can invite members.")

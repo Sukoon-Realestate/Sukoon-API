@@ -11,6 +11,7 @@ from ..models import FinalSettlement, RefundRequest, RentalDocument
 from ..renderers import FeatureJsonRenderer
 from ..services.commands import command_identity
 from ..services.settlements import execute_settlement
+from ..services.settlement_notes import remember_note, validated_note
 from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
 from ..services.rental_phase6 import (
     evaluate_financial_closure,
@@ -34,6 +35,7 @@ def final_settlement_respond(request, lease_id):
     )
     if replay:
         return Response(replay[0], status=replay[1])
+    note = validated_note(request.data)
     with transaction.atomic():
         lease = _lease(request, lease_id, lock=True)
         replay = replay_operation(request.user, operation, request_key, request.data)
@@ -63,6 +65,7 @@ def final_settlement_respond(request, lease_id):
             if {str(lease.owner.id), str(lease.tenant.id)}.issubset(accepted):
                 item.status = FinalSettlement.Status.ACCEPTED
         item.revision += 1
+        remember_note(item, request.user, action, note, request_key)
         item.save()
         if item.status == FinalSettlement.Status.ACCEPTED:
             item = execute_settlement(item)

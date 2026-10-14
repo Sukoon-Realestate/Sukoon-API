@@ -10,7 +10,11 @@ from rest_framework.response import Response
 from core_apps.admin_api.models import StaffProfile
 from ..models import Lease, MaintenanceEvent, MaintenanceRequest, RentalChange
 from ..renderers import FeatureJsonRenderer
+from ..rental_serializers_parts.maintenance_cost_decision_serializer import (
+    MaintenanceCostDecisionSerializer,
+)
 from ..services.cycle_permissions import MAINTENANCE_TRANSITIONS, cycle_actions
+from ..services.commands import money_minor
 from ..services.rental_phase2 import RentalConflict, remember_mutation, replay_operation
 from .maintenance_payload import (
     MAINTENANCE_ACTIONS,
@@ -51,16 +55,13 @@ def maintenance_action(request, request_id):
                 raise RentalConflict("Cancelled requests cannot receive replies.")
         elif action == "propose_cost":
             cost = request.data.get("cost", {})
+            amount = money_minor(cost)
             payer = request.data.get("cost_payer")
-            if (
-                payer not in {"owner", "tenant"}
-                or not isinstance(cost.get("amount_minor"), int)
-                or cost["amount_minor"] <= 0
-            ):
+            if payer not in {"owner", "tenant"} or amount <= 0:
                 raise ValidationError(
                     "A positive EGP cost and owner/tenant payer are required."
                 )
-            item.proposed_cost_minor = cost["amount_minor"]
+            item.proposed_cost_minor = amount
             item.cost_payer = payer
             item.cost_version += 1
             item.approved_cost_version = None
@@ -72,9 +73,12 @@ def maintenance_action(request, request_id):
                 raise PermissionDenied(
                     "Only the responsible payer may decide this cost."
                 )
+            decision = MaintenanceCostDecisionSerializer(data=request.data)
+            decision.is_valid(raise_exception=True)
             if (
-                int(request.data.get("cost_version", 0)) != item.cost_version
+                decision.validated_data["cost_version"] != item.cost_version
                 or not item.proposed_cost_minor
+                or item.approved_cost_version == item.cost_version
             ):
                 raise RentalConflict("Cost version conflict.", code="stale_revision")
             item.approved_cost_version = (

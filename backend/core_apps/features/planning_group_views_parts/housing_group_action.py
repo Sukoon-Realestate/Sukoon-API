@@ -58,7 +58,42 @@ def housing_group_action(request, group_id, action):
                 target.role = "admin"
             else:
                 if target.role == "admin":
-                    raise RentalConflict("Transfer administration before leaving.")
+                    if action != "leave":
+                        raise RentalConflict(
+                            "Transfer administration before removing an administrator."
+                        )
+                    successors = group.memberships.filter(status="active").exclude(
+                        pk=target.pk
+                    )
+                    if successors.exists():
+                        successor_id = request.data.get("member_id")
+                        try:
+                            successor_id = uuid.UUID(str(successor_id))
+                        except (ValueError, TypeError):
+                            raise ValidationError(
+                                {"member_id": "Choose an active group member."}
+                            )
+                        successor = (
+                            successors.filter(user__id=successor_id).first()
+                            if successor_id
+                            else None
+                        )
+                        if successor is None:
+                            raise ValidationError(
+                                {
+                                    "member_id": "Choose the next administrator from active members."
+                                }
+                            )
+                        # Release the unique active-admin constraint inside the
+                        # transaction before assigning the successor.
+                        target.role = "member"
+                        target.save(update_fields=["role", "updated_at"])
+                        successor.role = "admin"
+                        successor.save(update_fields=["role", "updated_at"])
+                    else:
+                        group.status = "archived"
+                    group.invitations.filter(status="active").update(status="revoked")
+                    target.role = "member"
                 target.status = "left" if action == "leave" else "removed"
             target.save()
             invalidate_roster(group)
@@ -67,6 +102,9 @@ def housing_group_action(request, group_id, action):
             if action == "archive":
                 group.status = "archived"
                 invalidate_roster(group)
+        elif action == "unarchive":
+            # Archived invitations, consents and processes remain invalidated.
+            group.status = "active"
         elif action == "add_shortlist":
             _, snapshot = selection(request, request.data.get("selection"))
             if any(

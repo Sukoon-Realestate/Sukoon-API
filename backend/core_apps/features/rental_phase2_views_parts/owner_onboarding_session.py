@@ -67,7 +67,15 @@ def owner_onboarding_session(request):
             hosted_url=provider_session.hosted_url,
             expires_at=expires_at,
         )
-        profile.accepted_policy_versions = data["accepted_policy_versions"]
+        # A new consent submission must not erase previously accepted versions.
+        profile.accepted_policy_versions = list(
+            dict.fromkeys(
+                [
+                    *profile.accepted_policy_versions,
+                    *data["accepted_policy_versions"],
+                ]
+            )
+        )
         profile.status = OwnerPaymentProfile.Status.PENDING
         profile.provider = get_rental_provider().name
         profile.revision += 1

@@ -2,7 +2,7 @@ from django.utils import timezone
 from ..providers import checkout_available
 
 
-def invoice_payload(invoice, user, language="en"):
+def invoice_payload(invoice, user, language="en", *, mobile=False):
     is_rent = invoice.purpose == "rent"
     # Rental settlement credits reduce the obligation without rewriting its
     # original amount or treating the credit as a cash payment.
@@ -30,7 +30,7 @@ def invoice_payload(invoice, user, language="en"):
         .select_related("receipt")
         .first()
     )
-    return {
+    payload = {
         "id": str(invoice.id),
         "reference": invoice.reference,
         "purpose": invoice.purpose,
@@ -86,6 +86,12 @@ def invoice_payload(invoice, user, language="en"):
             ),
         },
     }
+
+    if mobile:
+        # These immutable source snapshots remain in storage and in the legacy
+        # projection. Mobile renders the authoritative invoice/line amounts.
+        payload.pop("purchase")
+    return payload
 
 
 def purchase_attempt_payload(attempt):

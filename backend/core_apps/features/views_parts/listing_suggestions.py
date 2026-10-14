@@ -22,6 +22,10 @@ from .rental_operation_lookup import _replay, _remember
 @renderer_classes([FeatureJsonRenderer])
 def owner_analytics(request, property_id):
     property_obj = get_object_or_404(Property, id=property_id, owner=request.user)
+    language = request.query_params.get("lang") or request.headers.get(
+        "Accept-Language", "en"
+    )
+    is_arabic = language.lower().startswith("ar")
     try:
         period_days = int(request.query_params.get("period_days", 30))
     except ValueError:
@@ -46,30 +50,46 @@ def owner_analytics(request, property_id):
             "period_days": period_days,
             "measured_at": timezone.now().isoformat(),
             "methodology": (
-                "Unique stored property views and created visit requests in the "
+                "مشاهدات العقار الفريدة المسجلة وطلبات المعاينة خلال فترة التقرير المحددة بتوقيت القاهرة."
+                if is_arabic
+                else "Unique stored property views and created visit requests in the "
                 "selected Africa/Cairo reporting window."
             ),
             "metrics": [
                 {
                     "key": "unique_views",
-                    "label": "Unique visitors",
+                    "label": "الزوار الفريدون" if is_arabic else "Unique visitors",
                     "value": views,
                     "unit": "count",
-                    "definition": "Stored distinct property view records in the period.",
+                    "definition": (
+                        "سجلات مشاهدات العقار المميزة خلال الفترة المحددة."
+                        if is_arabic
+                        else "Stored distinct property view records in the period."
+                    ),
                 },
                 {
                     "key": "viewing_conversion",
-                    "label": "Viewing request rate",
+                    "label": (
+                        "معدل طلب المعاينة" if is_arabic else "Viewing request rate"
+                    ),
                     "value": conversion,
                     "unit": "percent",
-                    "definition": "Visit requests created in the period divided by unique stored views.",
+                    "definition": (
+                        "عدد طلبات المعاينة خلال الفترة مقسومًا على عدد المشاهدات الفريدة المسجلة."
+                        if is_arabic
+                        else "Visit requests created in the period divided by unique stored views."
+                    ),
                 },
                 {
                     "key": "saved_count",
-                    "label": "Saves",
+                    "label": "مرات الحفظ" if is_arabic else "Saves",
                     "value": saved,
                     "unit": "count",
-                    "definition": "New saves in the period.",
+                    "definition": (
+                        "مرات حفظ العقار الجديدة خلال الفترة المحددة."
+                        if is_arabic
+                        else "New saves in the period."
+                    ),
                 },
             ],
             "export_url": "",
