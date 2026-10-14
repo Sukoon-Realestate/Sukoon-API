@@ -3,3 +3,5 @@ from .user_report import UserReport
 from .staff_profile import StaffProfile
 
 __all__ = ["KYCSubmission", "UserReport", "StaffProfile"]
+
+from .platform_preferences import PlatformPreferences, PlatformPreferenceAudit

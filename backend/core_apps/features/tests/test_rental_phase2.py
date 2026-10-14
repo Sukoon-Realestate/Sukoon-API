@@ -8,9 +8,13 @@ from django.utils import timezone
 from rest_framework.test import APIClient
 
 from core_apps.features.models import (
+    DepositAgreement,
+    IdempotencyRecord,
     Lease,
     OwnerOnboardingSession,
     OwnerPaymentProfile,
+    OwnerPayable,
+    PaymentAttempt,
     RentalInventoryDayLock,
     SigningSession,
     TenancyInvitation,
@@ -95,10 +99,15 @@ def rental_participants(db):
     return owner, tenant, stranger, property_obj, offer_id
 
 
-def complete_owner_onboarding(owner):
+def complete_owner_onboarding(owner, completion_envelopes=None):
     client = authenticated(owner)
     profile_response = client.get("/api/v1/features/v1/owner-payment-profile/")
     profile = profile_response.data
+    grant = client.get(
+        f"/api/v1/features/v1/rental-capabilities/?subject_id={profile['id']}&action=onboard_beneficiary"
+    )
+    assert "owner_payouts" in grant.data["enabled_capabilities"]
+    assert "onboard_beneficiary" in grant.data["allowed_actions"]
     request_key = str(uuid.uuid4())
     session_response = client.post(
         "/api/v1/features/v1/owner-payment-profile/onboarding-session/",
@@ -110,18 +119,31 @@ def complete_owner_onboarding(owner):
         format="json",
     )
     assert session_response.status_code == 201
-    session = OwnerOnboardingSession.objects.get(id=session_response.data["session_id"])
-    payload = {
-        "type": "onboarding.completed",
-        "provider_session_id": session.provider_session_id,
-    }
-    webhook = APIClient().post(
-        "/api/v1/features/v1/provider-webhooks/rental/",
-        payload,
-        format="json",
-        HTTP_X_RENTAL_SIGNATURE=sign_fake_webhook(payload),
+    recovered = client.get(
+        f"/api/v1/features/v1/rental-operations/{request_key}/?subject_id={profile['id']}"
     )
-    assert webhook.status_code == 200
+    assert recovered.status_code == 200
+    assert (
+        recovered.data["operation_receipt"]["subject_id"]
+        == session_response.data["session_id"]
+    )
+    descriptor = session_response.data["mock_completion"]
+    assert session_response.data["provider_mode"] == "mock"
+    body = {
+        "expected_revision": descriptor["expected_revision"],
+        "request_key": str(uuid.uuid4()),
+    }
+    completion_grant = client.get(
+        f"/api/v1/features/v1/rental-capabilities/?subject_id={profile['id']}&action=onboard_beneficiary"
+    )
+    assert completion_grant.status_code == 200
+    assert "onboard_beneficiary" in completion_grant.data["allowed_actions"]
+    completed = client.post(descriptor["path"], body, format="json")
+    assert completed.status_code == 200, completed.data
+    assert client.post(descriptor["path"], body, format="json").data == completed.data
+    if completion_envelopes is not None:
+        completion_envelopes["onboarding"] = completed.json()
+        completion_envelopes["grants"]["onboarding"] = completion_grant.json()["data"]
     return OwnerPaymentProfile.objects.get(owner=owner)
 
 
@@ -157,8 +179,30 @@ def agreement_terms(starts_on, ends_on):
 
 @pytest.mark.django_db
 def test_phase2_complete_interest_to_activation_flow(rental_participants):
+    run_interest_to_activation(rental_participants)
+
+
+def run_interest_to_activation(
+    rental_participants,
+    existing_interest=None,
+    artifact_name="django-cycle-contract.json",
+):
+    """Reuse the real workflow when a planning cycle has created the interest."""
     owner, tenant, _, property_obj, offer_id = rental_participants
-    profile = complete_owner_onboarding(owner)
+    initial_owner_profile = (
+        authenticated(owner)
+        .get("/api/v1/features/v1/owner-payment-profile/")
+        .json()["data"]
+    )
+    onboarding_grant = (
+        authenticated(owner)
+        .get(
+            f"/api/v1/features/v1/rental-capabilities/?subject_id={initial_owner_profile['id']}&action=onboard_beneficiary"
+        )
+        .json()["data"]
+    )
+    completion_envelopes = {"signing": [], "grants": {"signing": []}}
+    profile = complete_owner_onboarding(owner, completion_envelopes)
     assert profile.status == OwnerPaymentProfile.Status.READY
     assert profile.masked_beneficiary == {"account_last4": "4242"}
 
@@ -166,31 +210,58 @@ def test_phase2_complete_interest_to_activation_flow(rental_participants):
     ends_on = starts_on + timedelta(days=31)
     tenant_client = authenticated(tenant)
     owner_client = authenticated(owner)
+    grants = {}
+    signing_responses = []
 
-    interest_response = tenant_client.post(
-        "/api/v1/features/v1/rental-interests/",
-        {
-            "property_id": str(property_obj.id),
-            "offer_id": offer_id,
-            "offer_revision": 2,
-            "desired_start": str(starts_on),
-            "months": 1,
-            "occupants": 1,
-            "message": "Interested",
-            "request_key": str(uuid.uuid4()),
-            "expected_revision": 0,
-        },
-        format="json",
+    def grant(client, subject, action):
+        response = client.get(
+            f"/api/v1/features/v1/rental-capabilities/?subject_id={subject}&action={action}"
+        )
+        assert response.status_code == 200
+        assert action in response.data["allowed_actions"], response.data
+        assert response.data["blocking_reasons"] == []
+        grants[str(subject) + ":" + action + ":" + response.data["account_id"]] = (
+            response.json()["data"]
+        )
+
+    grant(tenant_client, property_obj.id, "create_rental_interest")
+
+    interest_response = (
+        tenant_client.post(
+            "/api/v1/features/v1/rental-interests/",
+            {
+                "property_id": str(property_obj.id),
+                "offer_id": offer_id,
+                "offer_revision": 2,
+                "desired_start": str(starts_on),
+                "months": 1,
+                "occupants": 1,
+                "message": "Interested",
+                "request_key": str(uuid.uuid4()),
+                "expected_revision": 0,
+            },
+            format="json",
+        )
+        if existing_interest is None
+        else None
     )
-    assert interest_response.status_code == 201
-    interest = interest_response.data["resource"]
+    if interest_response is not None:
+        assert interest_response.status_code == 201
+    interest = (
+        interest_response.data["resource"]
+        if interest_response is not None
+        else existing_interest
+    )
+    terms = agreement_terms(starts_on, ends_on)
+    terms["occupants"] = interest["occupants"]
+    grant(owner_client, interest["id"], "create_terms_proposal")
 
     proposal_response = owner_client.post(
         "/api/v1/features/v1/terms-proposals/",
         {
             "interest_id": interest["id"],
             "offer_id": offer_id,
-            "terms": agreement_terms(starts_on, ends_on),
+            "terms": terms,
             "interest_revision": interest["revision"],
             "offer_revision": 2,
             "request_key": str(uuid.uuid4()),
@@ -200,6 +271,7 @@ def test_phase2_complete_interest_to_activation_flow(rental_participants):
     )
     assert proposal_response.status_code == 201
     proposal = proposal_response.data["resource"]
+    grant(tenant_client, proposal["id"], "accept")
 
     accepted = tenant_client.post(
         f"/api/v1/features/v1/terms-proposals/{proposal['id']}/respond/",
@@ -213,12 +285,16 @@ def test_phase2_complete_interest_to_activation_flow(rental_participants):
     assert accepted.status_code == 200
     proposal = accepted.data["resource"]
     assert proposal["status"] == "accepted"
+    interest = owner_client.get(
+        f"/api/v1/features/v1/rental-interests/{interest['id']}/"
+    ).data
+    grant(owner_client, interest["id"], "create_invitation")
 
     invitation_response = owner_client.post(
         "/api/v1/features/v1/tenancy-invitations/",
         {
             "interest_id": interest["id"],
-            "interest_revision": 2,
+            "interest_revision": interest["revision"],
             "property_id": str(property_obj.id),
             "offer_id": offer_id,
             "offer_revision": 2,
@@ -243,6 +319,7 @@ def test_phase2_complete_interest_to_activation_flow(rental_participants):
     )
     assert invitation_accept.status_code == 200
     invitation = invitation_accept.data
+    grant(owner_client, invitation["id"], "create_lease")
 
     lease_response = owner_client.post(
         "/api/v1/features/v1/leases/",
@@ -253,7 +330,7 @@ def test_phase2_complete_interest_to_activation_flow(rental_participants):
             "offer_id": offer_id,
             "offer_revision": 2,
             "tenant_id": str(tenant.id),
-            "terms": agreement_terms(starts_on, ends_on),
+            "terms": terms,
             "request_key": str(uuid.uuid4()),
             "expected_revision": 0,
         },
@@ -263,6 +340,11 @@ def test_phase2_complete_interest_to_activation_flow(rental_participants):
     lease = lease_response.data["resource"]
     assert lease["legacy_read_only"] is False
     assert RentalInventoryDayLock.objects.filter(lease__id=lease["id"]).count() == 31
+    grant(owner_client, lease["id"], "accept_review")
+    details = owner_client.get(f"/api/v1/features/v1/leases/{lease['id']}/").data
+    assert details["owner_id"] == str(owner.id)
+    assert details["tenant_id"] == str(tenant.id)
+    assert "accept_review" in details["allowed_actions"]
 
     owner_review = owner_client.post(
         f"/api/v1/features/v1/leases/{lease['id']}/review/",
@@ -283,6 +365,7 @@ def test_phase2_complete_interest_to_activation_flow(rental_participants):
         format="json",
     )
     lease = tenant_review.data["resource"]
+    grant(owner_client, lease["id"], "submit_for_signature")
 
     submitted = owner_client.post(
         f"/api/v1/features/v1/leases/{lease['id']}/submit-for-signature/",
@@ -299,6 +382,7 @@ def test_phase2_complete_interest_to_activation_flow(rental_participants):
 
     sessions = []
     for client in (owner_client, tenant_client):
+        grant(client, lease["id"], "sign")
         response = client.post(
             f"/api/v1/features/v1/leases/{lease['id']}/signing-session/",
             {
@@ -310,29 +394,309 @@ def test_phase2_complete_interest_to_activation_flow(rental_participants):
             format="json",
         )
         assert response.status_code == 201
+        signing_responses.append(response.json()["data"])
+        recovered = client.get(
+            f"/api/v1/features/v1/rental-operations/{response.data['request_key']}/?subject_id={lease['id']}"
+        )
+        assert recovered.status_code == 200
+        assert (
+            recovered.data["operation_receipt"]["subject_id"]
+            == response.data["session_id"]
+        )
         sessions.append(SigningSession.objects.get(id=response.data["session_id"]))
 
-    for session in sessions:
-        payload = {
-            "type": "signature.completed",
-            "provider_session_id": session.provider_session_id,
-        }
-        response = APIClient().post(
-            "/api/v1/features/v1/provider-webhooks/rental/",
-            payload,
-            format="json",
-            HTTP_X_RENTAL_SIGNATURE=sign_fake_webhook(payload),
+    for session, client in zip(sessions, (owner_client, tenant_client)):
+        completion_grant = client.get(
+            f"/api/v1/features/v1/rental-capabilities/?subject_id={lease['id']}&action=sign"
         )
-        assert response.status_code == 200
+        assert "sign" in completion_grant.data["allowed_actions"]
+        completion_envelopes["grants"]["signing"].append(
+            completion_grant.json()["data"]
+        )
+        payload = {
+            "expected_revision": lease["revision"],
+            "request_key": str(uuid.uuid4()),
+        }
+        completion_path = (
+            f"/api/v1/features/v1/mock-provider/signing-sessions/{session.id}/complete/"
+        )
+        response = client.post(completion_path, payload, format="json")
+        assert response.status_code == 200, response.data
+        completion_envelopes["signing"].append(response.json())
+        assert (
+            client.post(completion_path, payload, format="json").data == response.data
+        )
 
-    activated = Lease.objects.get(id=lease["id"])
-    assert activated.status == Lease.Status.ACTIVE
-    assert activated.activated_at is not None
+    signed = Lease.objects.get(id=lease["id"])
+    assert signed.status == Lease.Status.SIGNED
+    assert signed.activated_at is None
+    assert (
+        timedelta(hours=47, minutes=59)
+        < signed.hold_expires_at - timezone.now()
+        <= timedelta(hours=48)
+    )
     assert set(
-        RentalInventoryDayLock.objects.filter(lease=activated).values_list(
+        RentalInventoryDayLock.objects.filter(lease=signed).values_list(
             "kind", flat=True
         )
-    ) == {RentalInventoryDayLock.Kind.OCCUPIED}
+    ) == {RentalInventoryDayLock.Kind.HOLD}
+    assert signed.invoices.count() == 1
+    invoice = signed.invoices.get()
+    assert invoice.charges_minor == 2_000_000
+    assert dict(invoice.lines.values_list("line_type", "amount_minor")) == {
+        "base_rent": 1_000_000,
+        "security_deposit": 1_000_000,
+    }
+    deposit = DepositAgreement.objects.get(lease=signed)
+    assert deposit.invoice_id == invoice.pk
+    assert deposit.collected_minor == 0
+    assert deposit.due_minor == 1_000_000
+    # A repeated signing callback cannot restart the hold or issue another bill.
+    assert (
+        tenant_client.post(completion_path, payload, format="json").status_code == 200
+    )
+    signed.refresh_from_db()
+    assert signed.invoices.count() == 1
+    initial_invoice = tenant_client.get(
+        f"/api/v1/features/v1/rent-invoices/{invoice.id}/"
+    ).json()["data"]
+    assert initial_invoice["can_pay"] is True
+    assert (
+        initial_invoice["balance"]["amount_minor"]
+        == initial_invoice["charges"]["amount_minor"]
+        == 2_000_000
+    )
+    grant(tenant_client, invoice.id, "quote")
+    quote = tenant_client.post(
+        f"/api/v1/features/v1/rent-invoices/{invoice.id}/quote/",
+        {
+            "decision": "quote",
+            "expected_revision": invoice.revision,
+            "request_key": str(uuid.uuid4()),
+        },
+        format="json",
+    )
+    assert quote.status_code == 201
+    grant(tenant_client, invoice.id, "checkout")
+    checkout_body = {
+        "invoice_id": str(invoice.id),
+        "quote_id": quote.data["resource"]["quote_id"],
+        "expected_revision": invoice.revision,
+        "request_key": str(uuid.uuid4()),
+    }
+    checkout = tenant_client.post(
+        f"/api/v1/features/v1/rent-invoices/{invoice.id}/checkout/",
+        checkout_body,
+        format="json",
+    )
+    assert checkout.status_code == 201
+    recovered = tenant_client.get(
+        f"/api/v1/features/v1/rental-operations/{checkout_body['request_key']}/?subject_id={invoice.id}"
+    )
+    assert recovered.status_code == 200
+    assert (
+        recovered.data["operation_receipt"]["subject_id"]
+        == checkout.data["resource"]["session_id"]
+    )
+    assert (
+        tenant_client.post(
+            f"/api/v1/features/v1/rent-invoices/{invoice.id}/checkout/",
+            checkout_body,
+            format="json",
+        ).data
+        == checkout.data
+    )
+    pending_lookup = tenant_client.get(
+        f"/api/v1/features/v1/payment-attempts/?invoice_id={invoice.id}&request_key={checkout_body['request_key']}"
+    )
+    assert pending_lookup.status_code == 200
+    recovered_session = pending_lookup.data["active_session"]
+    assert recovered_session["session_id"] == checkout.data["resource"]["session_id"]
+    assert (
+        recovered_session["operation_receipt_id"]
+        == checkout.data["operation_receipt"]["id"]
+    )
+    assert recovered_session["quote_id"] == checkout_body["quote_id"]
+    attempt = PaymentAttempt.objects.get(
+        id=checkout.data["resource"]["payment_attempt_id"]
+    )
+    capture = {
+        "event": "captured",
+        "expected_revision": attempt.revision,
+        "request_key": str(uuid.uuid4()),
+    }
+    completion_path = (
+        f"/api/v1/features/v1/mock-provider/payment-attempts/{attempt.id}/events/"
+    )
+    payment_grant_path = f"/api/v1/features/v1/rental-capabilities/?subject_id={attempt.id}&action=reconcile"
+    completion_grant = tenant_client.get(payment_grant_path)
+    assert "reconcile" in completion_grant.data["allowed_actions"]
+    completion_envelopes["grants"]["captured"] = completion_grant.json()["data"]
+    captured = tenant_client.post(completion_path, capture, format="json")
+    assert captured.status_code == 200, captured.data
+    assert (
+        tenant_client.post(completion_path, capture, format="json").data
+        == captured.data
+    )
+    completion_grant = tenant_client.get(payment_grant_path)
+    assert "reconcile" in completion_grant.data["allowed_actions"]
+    completion_envelopes["grants"]["settled"] = completion_grant.json()["data"]
+    settled = tenant_client.post(
+        completion_path,
+        {
+            "event": "settled",
+            "expected_revision": captured.data["resource"]["revision"],
+            "request_key": str(uuid.uuid4()),
+        },
+        format="json",
+    )
+    assert settled.status_code == 200, settled.data
+    completion_envelopes["captured"] = captured.json()
+    completion_envelopes["settled"] = settled.json()
+    assert settled.data["resource"]["settlement_status"] == "settled"
+    signed.refresh_from_db()
+    invoice.refresh_from_db()
+    deposit.refresh_from_db()
+    assert signed.status == Lease.Status.ACTIVE and signed.activated_at
+    assert signed.occupancy_status == Lease.OccupancyStatus.NOT_STARTED
+    assert set(signed.inventory_day_locks.values_list("kind", flat=True)) == {
+        RentalInventoryDayLock.Kind.OCCUPIED
+    }
+    assert invoice.status == "paid" and invoice.receipt_id
+    assert deposit.collected_minor == 1_000_000 and deposit.due_minor == 0
+    payable = OwnerPayable.objects.get(invoice=invoice)
+    assert (payable.gross_minor, payable.commission_minor, payable.net_minor) == (
+        1_000_000,
+        100_000,
+        900_000,
+    )
+    for client in (owner_client, tenant_client):
+        read = client.get(f"/api/v1/features/v1/leases/{signed.id}/").data
+        assert read["status"] == "active" and read["revision"] == signed.revision
+        projection = client.get(f"/api/v1/features/v1/leases/{signed.id}/deposit/").data
+        assert projection["invoice_id"] == str(invoice.id)
+    assert signed.invoices.count() == 1
+    for entry in attempt.ledger_transactions.all():
+        assert sum(
+            entry.entries.filter(direction="debit").values_list(
+                "amount_minor", flat=True
+            )
+        ) == sum(
+            entry.entries.filter(direction="credit").values_list(
+                "amount_minor", flat=True
+            )
+        )
+
+    grant(owner_client, signed.id, "create_rental_handover")
+    moved = owner_client.post(
+        f"/api/v1/features/v1/leases/{signed.id}/handovers/",
+        {
+            "kind": "move_in",
+            "possession_on": str(starts_on),
+            "condition": {"summary": "good"},
+            "keys": {"count": 2},
+            "meters": {},
+            "inventory": [],
+            "evidence_ids": [],
+            "expected_revision": 0,
+            "request_key": str(uuid.uuid4()),
+        },
+        format="json",
+    )
+    assert moved.status_code == 201, moved.data
+    handover = moved.data["resource"]
+    for client in (owner_client, tenant_client):
+        grant(client, handover["id"], "accept")
+        moved = client.post(
+            f"/api/v1/features/v1/handovers/{handover['id']}/respond/",
+            {
+                "decision": "accept",
+                "expected_revision": handover["revision"],
+                "request_key": str(uuid.uuid4()),
+            },
+            format="json",
+        )
+        assert moved.status_code == 200, moved.data
+        handover = moved.data["resource"]
+    signed.refresh_from_db()
+    assert signed.occupancy_status == "occupied"
+    payable.refresh_from_db()
+    assert payable.payout_status == "ready"
+    displayed_payables = owner_client.get(
+        f"/api/v1/features/v1/owner-payables/?workspace=owner&lease_id={signed.id}"
+    )
+    assert displayed_payables.status_code == 200
+    assert displayed_payables.data["results"][0]["invoice_id"] == str(invoice.id)
+    grant(tenant_client, signed.id, "create_maintenance_request")
+    maintenance = tenant_client.post(
+        f"/api/v1/features/v1/leases/{signed.id}/maintenance-requests/",
+        {
+            "title": "Tap leak",
+            "description": "Repair the tap",
+            "category": "plumbing",
+            "priority": "normal",
+            "access_times": [],
+            "evidence_ids": [],
+            "request_key": str(uuid.uuid4()),
+            "expected_revision": 0,
+        },
+        format="json",
+    )
+    assert maintenance.status_code == 201, maintenance.data
+    item = maintenance.data["resource"]
+    for client, action in (
+        (owner_client, "acknowledge"),
+        (owner_client, "start_work"),
+        (owner_client, "report_resolved"),
+        (tenant_client, "confirm_resolved"),
+    ):
+        grant(client, item["id"], action)
+        assert action in item["allowed_actions"]
+        maintenance = client.post(
+            f"/api/v1/features/v1/maintenance-requests/{item['id']}/actions/",
+            {
+                "action": action,
+                "expected_revision": item["revision"],
+                "request_key": str(uuid.uuid4()),
+            },
+            format="json",
+        )
+        assert maintenance.status_code == 200, maintenance.data
+        item = maintenance.data["resource"]
+    assert item["status"] == "resolved"
+
+    import json, os
+    from pathlib import Path
+
+    if output := os.environ.get("SOKOUN_CONTRACT_ARTIFACT_DIR"):
+        folder = Path(output)
+        folder.mkdir(parents=True, exist_ok=True)
+        (folder / artifact_name).write_text(
+            json.dumps(
+                {
+                    "environment": "local-test-fake-provider",
+                    "mock_completions": completion_envelopes,
+                    "initial_invoice": initial_invoice,
+                    "quote": quote.json()["data"],
+                    "pending_lookup": pending_lookup.json()["data"],
+                    "payment_attempt": captured.json()["data"]["resource"],
+                    "grants": grants,
+                    "signing_sessions": signing_responses,
+                    "initial_owner_profile": initial_owner_profile,
+                    "onboarding_grant": onboarding_grant,
+                    "onboarding": IdempotencyRecord.objects.get(
+                        user=owner, operation="rental.owner_onboarding.create"
+                    ).response_data,
+                    "active_lease": read,
+                    "deposit": projection,
+                    "checkout": checkout.json()["data"],
+                    "owner_profile": owner_client.get(
+                        "/api/v1/features/v1/owner-payment-profile/"
+                    ).json()["data"],
+                },
+                indent=2,
+            )
+        )
 
 
 @pytest.mark.django_db

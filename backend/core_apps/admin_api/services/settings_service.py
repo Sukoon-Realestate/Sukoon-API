@@ -1,37 +1,36 @@
-import logging
+from django.db import transaction
 from rest_framework.exceptions import ValidationError
-
-logger = logging.getLogger(__name__)
-
-# * In-memory platform settings store
-_PLATFORM_SETTINGS = {
-    "maxReviewHours": True,
-    "tenantDocsRequired": False,
-    "landlordDocsRequired": True,
-    "autoVerification": True,
-    "maxPhotosLimit": True,
-    "reviewPeriodDays": False,
-    "approxLocation": True,
-    "hidePhoneDefault": True,
-}
+from core_apps.admin_api.models.platform_preferences import (
+    PlatformPreferences,
+    PlatformPreferenceAudit,
+    default_platform_preferences,
+)
 
 
 def get_platform_settings():
-    """
-    Returns current platform control settings and rules.
-    """
-    return _PLATFORM_SETTINGS
+    current, _ = PlatformPreferences.objects.get_or_create(pk=1)
+    return dict(current.values)
 
 
-def update_platform_settings(payload):
-    """
-    Updates platform control settings and rules.
-    """
-    if not isinstance(payload, dict):
-        raise ValidationError({"detail": "بيانات الإعدادات غير صالحة"})
-
-    for key in _PLATFORM_SETTINGS.keys():
-        if key in payload:
-            _PLATFORM_SETTINGS[key] = bool(payload[key])
-
-    return _PLATFORM_SETTINGS
+@transaction.atomic
+def update_platform_settings(payload, actor=None):
+    if (
+        not isinstance(payload, dict)
+        or set(payload) - set(default_platform_preferences())
+        or any(type(value) is not bool for value in payload.values())
+    ):
+        raise ValidationError(
+            {"detail": "Supply supported boolean platform preferences."}
+        )
+    PlatformPreferences.objects.get_or_create(pk=1)
+    current = PlatformPreferences.objects.select_for_update().get(pk=1)
+    before = dict(current.values)
+    current.values = {**before, **payload}
+    if current.values != before:
+        current.revision += 1
+        current.full_clean()
+        current.save(update_fields=["values", "revision", "updated_at"])
+        PlatformPreferenceAudit.objects.create(
+            actor=actor, revision=current.revision, before=before, after=current.values
+        )
+    return dict(current.values)

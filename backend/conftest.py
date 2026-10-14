@@ -1,8 +1,19 @@
 import pytest
 from django.contrib.auth import get_user_model
+from django.core.cache import caches
 from rest_framework.test import APIClient
 
 User = get_user_model()
+
+
+@pytest.fixture(autouse=True)
+def isolate_test_cache(settings):
+    # Database rollback reuses user IDs on SQLite. Throttle/cache state must
+    # have the same test lifetime, while remaining enabled within each test.
+    if settings.RENTAL_RUNTIME_ENVIRONMENT == "test":
+        for cache in caches.all():
+            cache.clear()
+    yield
 
 
 @pytest.fixture

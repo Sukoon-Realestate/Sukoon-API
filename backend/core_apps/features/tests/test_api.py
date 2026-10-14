@@ -28,7 +28,7 @@ def client(user):
 def test_configuration_is_free_and_workspace_scoped(client):
     response = client.get("/api/v1/features/v1/configuration/?workspace=owner&lang=en")
     assert response.status_code == 200
-    assert response.json()["key"] == "success"
+    assert set(response.json()) == {"message", "data"} and response.json()["message"]
     assert response.json()["data"]["workspace"] == "owner"
     assert response.data["workspace"] == "owner"
     assert response.data["boost_options"][0]["duration_days"] > 0

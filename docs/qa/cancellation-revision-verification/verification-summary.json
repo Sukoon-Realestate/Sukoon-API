@@ -1,0 +1,145 @@
+{
+  "verified_at_utc": "2026-10-12T20:35:04.868393+00:00",
+  "base_commit": "40389b0696bcac875bd7d387e6d9d911c5bf9cd2",
+  "environment": "Local isolated databases; API mock providers; no shared-server deployment performed",
+  "before_fix": {
+    "passed": 0,
+    "failed": 8,
+    "skipped": 0,
+    "skip_details": []
+  },
+  "backend_postgres": {
+    "passed": 684,
+    "failed": 0,
+    "skipped": 0,
+    "skip_details": []
+  },
+  "backend_sqlite": {
+    "passed": 666,
+    "failed": 0,
+    "skipped": 18,
+    "skip_details": [
+      {
+        "test": "test_concurrent_payment_retries_share_one_receipt",
+        "reason": "Row-lock concurrency requires PostgreSQL"
+      },
+      {
+        "test": "test_concurrent_cancellations_increment_once[False-False]",
+        "reason": "Cancellation races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_concurrent_cancellations_increment_once[False-True]",
+        "reason": "Cancellation races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_concurrent_cancellations_increment_once[True-False]",
+        "reason": "Cancellation races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_concurrent_cancellations_increment_once[True-True]",
+        "reason": "Cancellation races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_duplicate_mock_capture_posts_one_allocation_and_receipt",
+        "reason": "Row locking requires PostgreSQL"
+      },
+      {
+        "test": "test_room_and_bed_overlapping_inventory_cannot_both_be_reserved",
+        "reason": "Row locking requires PostgreSQL"
+      },
+      {
+        "test": "test_complete_funded_cycle_over_http",
+        "reason": "Full HTTP cycle uses isolated PostgreSQL and real transaction locks"
+      },
+      {
+        "test": "test_duplicate_partial_refund_reserves_capture_once",
+        "reason": "These races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_competing_partial_refunds_cannot_oversubscribe_component",
+        "reason": "These races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_duplicate_funded_settlement_acceptance_posts_once",
+        "reason": "These races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_competing_group_joins_cannot_overfill",
+        "reason": "These races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_concurrent_invitation_mutations_have_one_winner[create]",
+        "reason": "Row-lock concurrency requires PostgreSQL"
+      },
+      {
+        "test": "test_concurrent_invitation_mutations_have_one_winner[respond]",
+        "reason": "Row-lock concurrency requires PostgreSQL"
+      },
+      {
+        "test": "test_concurrent_invitation_mutations_have_one_winner[draft]",
+        "reason": "Row-lock concurrency requires PostgreSQL"
+      },
+      {
+        "test": "test_simultaneous_tenants_cannot_book_the_same_slot",
+        "reason": "Visit booking races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_schedule_edit_cannot_invalidate_concurrent_booking[disable]",
+        "reason": "Visit booking races require PostgreSQL row locks"
+      },
+      {
+        "test": "test_schedule_edit_cannot_invalidate_concurrent_booking[remove]",
+        "reason": "Visit booking races require PostgreSQL row locks"
+      }
+    ]
+  },
+  "focused_postgres": {
+    "passed": 71,
+    "failed": 0,
+    "skipped": 0,
+    "skip_details": []
+  },
+  "flutter_cancellation": {
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "scope": "Widget tests for actor permissions and refresh after success/conflict; no device run"
+  },
+  "contract": {
+    "first_cancellation": "n -> n+1, including immediate closure",
+    "identical_retry": "original stored receipt; no new revision",
+    "historical_revision_3": "preserved; never reset",
+    "independent_financial_change": "advances revision normally",
+    "migration_required": false
+  },
+  "full_http_cycle": {
+    "request_count": 84,
+    "lease_status": "ended",
+    "occupancy_status": "returned",
+    "financial_closure_status": "closed"
+  },
+  "checks": {
+    "django_system_check": "passed",
+    "migration_consistency": "passed; no migration needed",
+    "python_lint": "passed",
+    "new_test_format": "passed",
+    "whitespace": "passed",
+    "guide_json_and_sync": "passed"
+  },
+  "source_sha256": {
+    "backend/Makefile": "d2fd2417d94059065fa854a125b24f533c4a2d8d1f2f877b9cf8f5d43bd7d884",
+    "backend/core_apps/features/views.py": "06393ad2e14be384dd5177f0cab7c850889ae3ba08f9bf7a0932b97a147db700",
+    "backend/core_apps/features/services/rental_phase6.py": "797153d904548e446f1df2134c0e17a8502a9bb351ad21cc217fb85d00f98aba",
+    "backend/core_apps/features/tests/test_current_cycle_contract.py": "291e371ddf21d5ae498aa3c174116f1543b082301171538e0318c0661ea8a2cc",
+    "backend/core_apps/features/tests/test_tenancy_invitations.py": "dbed0c4d52ae060b4528472136a6a76d5b8e14e0bfb64f0ef986b52a8157c501",
+    "backend/core_apps/features/tests/test_rental_phase6.py": "53d8ee8c455b19b4fe805edf76abb76577c5da601970924a69661d68e8da23f0",
+    "backend/core_apps/features/tests/test_cancellation_revision.py": "7424593a3246c572e17c6d93bb161bcc1d4f8ed11864b8b099c573658a65b97b"
+  },
+  "pending_live_acceptance": [
+    "Deploy cancellation fix and verify fresh one-increment receipt/replays",
+    "Device UI",
+    "Notification delivery/navigation",
+    "Deployed expiry/revocation and concurrent requests",
+    "Deployed mock signing/payment/activation cycle"
+  ]
+}

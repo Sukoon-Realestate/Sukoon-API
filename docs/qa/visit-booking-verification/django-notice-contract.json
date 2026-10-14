@@ -1,0 +1,109 @@
+{
+  "created": {
+    "resource": {
+      "id": "0524f092-8853-473c-a523-36f86e519623",
+      "lease_id": "916400f7-26a9-4af0-99db-f4f3a89b7d3e",
+      "kind": "moveOutNotice",
+      "status": "submitted",
+      "revision": 1,
+      "requested_on": "2026-12-21",
+      "received_at": "2026-10-12T19:35:20.982123+00:00",
+      "effective_on": "",
+      "reason": "Leaving after the current lease",
+      "candidate_id": "",
+      "candidate_revision": 0,
+      "candidate_consented": false,
+      "outgoing_release_status": "pending",
+      "incoming_agreement_status": "not_started",
+      "future_availability_status": "pending_approval",
+      "incoming_lease_id": "",
+      "history": [
+        "Request received; the lease and possession remain unchanged."
+      ],
+      "allowed_actions": [
+        "withdraw"
+      ],
+      "blocking_reasons": []
+    },
+    "operation_receipt": {
+      "id": "63798d22-5681-4870-923d-29f53874a5fe",
+      "subject_id": "0524f092-8853-473c-a523-36f86e519623",
+      "request_key": "25076419-5457-4eba-9613-3f352dc8ce11",
+      "revision": 1,
+      "status": "confirmed"
+    }
+  },
+  "effective": {
+    "id": "0524f092-8853-473c-a523-36f86e519623",
+    "lease_id": "916400f7-26a9-4af0-99db-f4f3a89b7d3e",
+    "kind": "moveOutNotice",
+    "status": "effective",
+    "revision": 3,
+    "requested_on": "2026-10-12",
+    "received_at": "2026-10-12T19:35:20.982123+00:00",
+    "effective_on": "2026-10-12",
+    "reason": "Leaving after the current lease",
+    "candidate_id": "",
+    "candidate_revision": 0,
+    "candidate_consented": false,
+    "outgoing_release_status": "released",
+    "incoming_agreement_status": "not_started",
+    "future_availability_status": "pending_approval",
+    "incoming_lease_id": "",
+    "history": [
+      "Request received; the lease and possession remain unchanged.",
+      "acknowledge by Phase Owner at revision 2.",
+      "Effective state confirmed from legal, possession and agreement records."
+    ],
+    "allowed_actions": [],
+    "blocking_reasons": []
+  },
+  "create_body": {
+    "request_key": "25076419-5457-4eba-9613-3f352dc8ce11",
+    "expected_revision": 0,
+    "lease_id": "916400f7-26a9-4af0-99db-f4f3a89b7d3e",
+    "kind": "moveOutNotice",
+    "action": "submit",
+    "requested_on": "2026-12-21",
+    "reason": "Leaving after the current lease"
+  },
+  "actor_id": "5dde616d-7996-4852-b72f-61866719c3e7",
+  "grant": {
+    "account_id": "5dde616d-7996-4852-b72f-61866719c3e7",
+    "account_verified": true,
+    "enabled_capabilities": [
+      "lifestyle",
+      "roommates",
+      "housing_groups",
+      "group_visits",
+      "group_applications",
+      "housing_requests",
+      "housing_offers",
+      "condition_reports",
+      "move_out_notices",
+      "replacements",
+      "commute",
+      "tenant_assistant"
+    ],
+    "verified_services": [
+      "lifestyle",
+      "roommates",
+      "housing_groups",
+      "group_visits",
+      "group_applications",
+      "housing_requests",
+      "housing_offers",
+      "condition_reports",
+      "move_out_notices",
+      "replacements",
+      "commute",
+      "tenant_assistant"
+    ],
+    "policy_version": "planning-policy-v1",
+    "allowed_actions": [
+      "submit"
+    ],
+    "expires_at": "2026-10-12T19:40:21.006622+00:00",
+    "blocking_reasons": []
+  }
+}

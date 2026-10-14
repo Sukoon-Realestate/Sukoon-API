@@ -1,3 +1,4 @@
+from core_apps.common.contract_testing import api_json
 import pytest
 from django.urls import reverse
 from rest_framework import status
@@ -16,23 +17,23 @@ class TestProfileListView:
     def test_returns_paginated_profiles(self, auth_client):
         res = auth_client.get(PROFILE_LIST_URL)
         assert res.status_code == status.HTTP_200_OK
-        assert "results" in res.json()["data"]
+        assert "results" in api_json(res)["data"]
 
     def test_excludes_staff_profiles(self, auth_client, superuser):
         res = auth_client.get(PROFILE_LIST_URL)
-        profile_ids = [str(p["id"]) for p in res.json()["data"]["results"]]
+        profile_ids = [str(p["id"]) for p in api_json(res)["data"]["results"]]
         assert str(superuser.profile.id) not in profile_ids
 
     def test_filter_by_gender(self, auth_client):
         res = auth_client.get(PROFILE_LIST_URL, {"gender": "male"})
         assert res.status_code == status.HTTP_200_OK
-        for profile in res.json()["data"]["results"]:
+        for profile in api_json(res)["data"]["results"]:
             assert profile["gender"] == "male"
 
     def test_search_by_first_name(self, auth_client, user):
         res = auth_client.get(PROFILE_LIST_URL, {"search": user.first_name})
         assert res.status_code == status.HTTP_200_OK
-        ids = [str(p["id"]) for p in res.json()["data"]["results"]]
+        ids = [str(p["id"]) for p in api_json(res)["data"]["results"]]
         assert str(user.profile.id) in ids
 
 

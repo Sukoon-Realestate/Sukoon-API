@@ -1,3 +1,4 @@
+from core_apps.common.contract_testing import api_json
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 from datetime import time, timedelta
@@ -74,7 +75,7 @@ def owned_property(participants):
     PropertyVisit.objects.create(
         property=property_obj,
         tenant=tenant,
-        visit_date=timezone.localdate() + timedelta(days=1),
+        visit_date=timezone.localdate() - timedelta(days=1),
         visit_time=time(12),
         status=PropertyVisit.Status.CONFIRMED,
     )
@@ -88,10 +89,33 @@ def authenticated(user):
 
 
 def create_payload(property_obj, tenant, **extra):
+    # Direct invitation prerequisites now include the tenant's explicit attended
+    # decision; keep the old invitation/lease regression assertions unchanged.
+    source = {}
+    visit = PropertyVisit.objects.filter(property=property_obj, tenant=tenant).first()
+    if visit:
+        if not hasattr(visit, "post_visit_decision"):
+            response = authenticated(tenant).post(
+                f"/api/v1/properties/visits/{visit.id}/post-visit-decision/",
+                {
+                    "decision": "proceed",
+                    "attended": True,
+                    "expected_revision": visit.revision,
+                    "request_key": str(uuid.uuid4()),
+                },
+                format="json",
+            )
+            assert response.status_code == 200, response.data
+            visit.refresh_from_db()
+        source = {
+            "source_visit_id": str(visit.id),
+            "source_decision_id": str(visit.post_visit_decision.id),
+        }
     return {
         "property_id": str(property_obj.id),
         "tenant_id": str(tenant.id),
         "request_key": str(uuid.uuid4()),
+        **source,
         **extra,
     }
 
@@ -133,6 +157,8 @@ def test_create_legacy_invitation_is_idempotent_and_notifies_once(
         "action_label": "Review invitation",
         "action_type": "open_tenancy_invitation",
         "target_id": first.data["id"],
+        "source_visit_id": payload["source_visit_id"],
+        "source_decision_id": payload["source_decision_id"],
     }
 
     duplicate = client.post(
@@ -258,6 +284,29 @@ def test_exact_offer_acceptance_picker_and_draft_consumption(
     )
     assert consumed_picker.data["results"] == []
 
+    # Regression for the deployed offer-backed draft: closing its empty
+    # financial state is part of the same cancellation revision.
+    lease_url = f"/api/v1/features/v1/leases/{lease_response.data['id']}/"
+    cancel_body = {"revision": 1, "request_key": str(uuid.uuid4())}
+    cancelled = owner_client.post(lease_url + "cancel/", cancel_body, format="json")
+    assert cancelled.status_code == 200
+    assert cancelled.data["revision"] == 2
+    assert cancelled.data["financial_closure_status"] == "closed"
+    for language in ("en", "ar"):
+        replay = owner_client.post(
+            lease_url + "cancel/",
+            cancel_body,
+            format="json",
+            HTTP_ACCEPT_LANGUAGE=language,
+        )
+        assert replay.status_code == 200
+        assert replay.data == cancelled.data
+    for actor in (owner, tenant):
+        assert authenticated(actor).get(lease_url).data["revision"] == 2
+    invitation.refresh_from_db()
+    assert invitation.lease_id is not None
+    assert not RentInvoice.objects.exists()
+
 
 @pytest.mark.django_db
 def test_expired_and_changed_invitations_cannot_be_accepted(
@@ -310,7 +359,8 @@ def test_source_relationship_and_offer_revision_are_enforced(
         create_payload(owned_property, stranger),
         format="json",
     )
-    assert no_source.status_code == 403
+    assert no_source.status_code == 400
+    assert no_source["X-App-Error-Code"] == "source_visit_required"
 
     offer_id = str(uuid.uuid4())
     owned_property.rental_inventory = {
@@ -468,6 +518,7 @@ def test_list_is_workspace_scoped_and_empty_page_shape(participants, owned_prope
     assert empty.data == {
         "results": [],
         "count": 0,
+        "page": 1,
         "per_page": 20,
         "total_pages": 1,
         "next": None,
@@ -666,6 +717,8 @@ def test_provider_disabled_draft_capabilities_match_mutations(
         )
     cancelled = owner_client.post(url + "cancel/", cancel, format="json")
     assert cancelled.status_code == 200
+    assert cancelled.data["revision"] == 2
+    assert cancelled.data["financial_closure_status"] == "closed"
     assert (
         owner_client.post(url + "cancel/", cancel, format="json").data == cancelled.data
     )
@@ -674,6 +727,7 @@ def test_provider_disabled_draft_capabilities_match_mutations(
         assert item["legacy_read_only"] is True
         assert item["can_sign"] is item["can_cancel"] is False
         assert item["allowed_actions"] == []
+        assert item["revision"] == 2
     invitation = TenancyInvitation.objects.get(id=created.data["id"])
     assert invitation.lease_id == lease.pk
 
@@ -756,7 +810,7 @@ def test_followup_legacy_round_trip(participants, owned_property, language, inve
         "/api/v1/features/v1/tenancy-invitations/", payload, format="json"
     )
     assert created.status_code == 201
-    data = created.json()["data"]
+    data = api_json(created)["data"]
     assert data["status"] == "pending"
     assert data["revision"] == 1
     assert data["expires_at"]
@@ -765,7 +819,7 @@ def test_followup_legacy_round_trip(participants, owned_property, language, inve
     assert data["eligible_for_lease"] is False
     detail = f"/api/v1/features/v1/tenancy-invitations/{data['id']}/"
     picker = f"/api/v1/features/v1/lease-tenants/?property_id={owned_property.id}"
-    assert owner_client.get(picker).json()["data"]["results"] == []
+    assert owner_client.get(picker).json()["data"] == []
     answer = {"decision": "accepted", "revision": 1, "request_key": str(uuid.uuid4())}
     assert (
         authenticated(stranger)
@@ -780,13 +834,12 @@ def test_followup_legacy_round_trip(participants, owned_property, language, inve
     tenant_client.defaults["HTTP_ACCEPT_LANGUAGE"] = language
     accepted = tenant_client.post(detail + "respond/", answer, format="json")
     assert accepted.status_code == 200
-    assert accepted.json()["data"]["accepted_at"]
-    assert accepted.json()["data"]["revision"] == 2
-    assert accepted.json()["data"]["eligible_for_lease"] is True
-    assert (
-        tenant_client.post(detail + "respond/", answer, format="json").json()
-        == accepted.json()
-    )
+    assert api_json(accepted)["data"]["accepted_at"]
+    assert api_json(accepted)["data"]["revision"] == 2
+    assert api_json(accepted)["data"]["eligible_for_lease"] is True
+    assert tenant_client.post(
+        detail + "respond/", answer, format="json"
+    ).json() == api_json(accepted)
     assert (
         tenant_client.post(
             detail + "respond/", {**answer, "decision": "rejected"}, format="json"
@@ -801,23 +854,20 @@ def test_followup_legacy_round_trip(participants, owned_property, language, inve
         ).status_code
         == 409
     )
-    assert owner_client.get(picker).json()["data"]["results"][0]["id"] == str(tenant.id)
+    assert owner_client.get(picker).json()["data"][0]["id"] == str(tenant.id)
     lease_payload = followup_lease_payload(owned_property, tenant)
     draft = owner_client.post(
         "/api/v1/features/v1/leases/", lease_payload, format="json"
     )
     assert draft.status_code == 201
-    assert (
-        owner_client.post(
-            "/api/v1/features/v1/leases/", lease_payload, format="json"
-        ).json()
-        == draft.json()
-    )
-    lease = Lease.objects.get(id=draft.json()["data"]["id"])
+    assert owner_client.post(
+        "/api/v1/features/v1/leases/", lease_payload, format="json"
+    ).json() == api_json(draft)
+    lease = Lease.objects.get(id=api_json(draft)["data"]["id"])
     assert lease.status == "draft"
     assert lease.rent_amount_minor == 6000000000
     assert TenancyInvitation.objects.get(id=data["id"]).lease_id == lease.pk
-    assert owner_client.get(picker).json()["data"]["results"] == []
+    assert owner_client.get(picker).json()["data"] == []
     assert (
         owner_client.post(
             f"/api/v1/features/v1/leases/{lease.id}/cancel/",

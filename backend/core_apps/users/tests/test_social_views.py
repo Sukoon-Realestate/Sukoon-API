@@ -11,7 +11,7 @@ FACEBOOK_URL = reverse("facebook-login")
 
 @pytest.mark.django_db
 class TestSocialAuthViews:
-    @patch("core_apps.users.views.authenticate_google")
+    @patch("core_apps.users.views_parts.user_delete_apiview.authenticate_google")
     def test_google_login_success(self, mock_authenticate, api_client, user):
         mock_authenticate.return_value = user
         res = api_client.post(GOOGLE_URL, {"token": "valid-token"}, format="json")
@@ -22,7 +22,7 @@ class TestSocialAuthViews:
         assert res.data["message"] == "Logged in Successfully"
         assert res.json()["data"]["user"]["email"] == user.email
 
-    @patch("core_apps.users.views.authenticate_google")
+    @patch("core_apps.users.views_parts.user_delete_apiview.authenticate_google")
     def test_google_login_failure(self, mock_authenticate, api_client):
         mock_authenticate.side_effect = ValidationError(
             "Google token is invalid or expired."
@@ -30,7 +30,7 @@ class TestSocialAuthViews:
         res = api_client.post(GOOGLE_URL, {"token": "invalid-token"}, format="json")
         assert res.status_code == status.HTTP_400_BAD_REQUEST
 
-    @patch("core_apps.users.views.authenticate_apple")
+    @patch("core_apps.users.views_parts.user_delete_apiview.authenticate_apple")
     def test_apple_login_success(self, mock_authenticate, api_client, user):
         mock_authenticate.return_value = user
         res = api_client.post(
@@ -43,7 +43,7 @@ class TestSocialAuthViews:
         assert "refresh" in res.cookies
         assert res.data["message"] == "Logged in Successfully"
 
-    @patch("core_apps.users.views.authenticate_facebook")
+    @patch("core_apps.users.views_parts.user_delete_apiview.authenticate_facebook")
     def test_facebook_login_success(self, mock_authenticate, api_client, user):
         mock_authenticate.return_value = user
         res = api_client.post(FACEBOOK_URL, {"token": "valid-token"}, format="json")

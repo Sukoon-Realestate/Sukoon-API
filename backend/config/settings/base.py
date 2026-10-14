@@ -2,6 +2,9 @@ from pathlib import Path
 from os import getenv, path
 from dotenv import load_dotenv
 from datetime import timedelta
+import ssl
+
+from config.planning import enabled_services_from_env
 
 # todo refactor the code, write explaining comments
 
@@ -95,10 +98,18 @@ ASGI_APPLICATION = "config.asgi.application"
 REDIS_URL = getenv("REDIS_URL", "redis://localhost:6379/0")
 CELERY_BROKER_URL = getenv("CELERY_BROKER_URL", REDIS_URL)
 CELERY_RESULT_BACKEND = getenv("CELERY_RESULT_BACKEND", REDIS_URL)
+if CELERY_BROKER_URL.startswith("rediss://"):
+    CELERY_BROKER_USE_SSL = {"ssl_cert_reqs": ssl.CERT_REQUIRED}
+if CELERY_RESULT_BACKEND.startswith("rediss://"):
+    CELERY_REDIS_BACKEND_USE_SSL = {"ssl_cert_reqs": ssl.CERT_REQUIRED}
 CELERY_TASK_ACKS_LATE = True
 CELERY_TASK_REJECT_ON_WORKER_LOST = True
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TIMEZONE = "Africa/Cairo"
+CELERY_TASK_ALWAYS_EAGER = False
+SOKOUN_RELEASE_SHA = getenv("SOKOUN_RELEASE_SHA", "")
+RUNTIME_EVIDENCE_ENABLED = getenv("RUNTIME_EVIDENCE_ENABLED", "False").lower() == "true"
+RUNTIME_EVIDENCE_NAMESPACE = getenv("RUNTIME_EVIDENCE_NAMESPACE", "sukoon")
 CELERY_BEAT_SCHEDULE = {
     "expire-advertisements": {
         "task": "core_apps.advertising.tasks.expire_advertisements",
@@ -141,6 +152,34 @@ CELERY_BEAT_SCHEDULE = {
 RENTAL_PROVIDER_BACKEND = getenv("RENTAL_PROVIDER_BACKEND", "disabled")
 RENTAL_RUNTIME_ENVIRONMENT = "production"
 RENTAL_FAKE_PROVIDER_ALLOWED = False
+OWNER_TENANT_QA_ENABLED = False
+PLANNING_ENABLED_SERVICES = enabled_services_from_env(
+    getenv("PLANNING_ENABLED_SERVICES")
+)
+PLANNING_MOCK_DISCOVERY = False
+CELERY_BEAT_SCHEDULE["process-planning-jobs"] = {
+    "task": "core_apps.features.tasks.process_planning_jobs",
+    "schedule": 30.0,
+}
+PLANNING_ROUTES_API_KEY = getenv("PLANNING_ROUTES_API_KEY", "").strip()
+PLANNING_GEMINI_API_KEY = getenv("PLANNING_GEMINI_API_KEY", "").strip()
+PLANNING_GEMINI_MODEL = getenv("PLANNING_GEMINI_MODEL", "").strip()
+PLANNING_PROVIDER_TIMEOUT_SECONDS = int(
+    getenv("PLANNING_PROVIDER_TIMEOUT_SECONDS", "20")
+)
+PLANNING_ROUTE_MODES = [
+    x for x in getenv("PLANNING_ROUTE_MODES", "driving,walking,transit").split(",") if x
+]
+PLANNING_ROUTE_MAX_ORIGINS = int(getenv("PLANNING_ROUTE_MAX_ORIGINS", "1000"))
+PLANNING_REQUEST_TTL_DAYS = int(getenv("PLANNING_REQUEST_TTL_DAYS", "30"))
+PLANNING_PROVIDER_REQUESTS_PER_MINUTE = int(
+    getenv("PLANNING_PROVIDER_REQUESTS_PER_MINUTE", "10")
+)
+PLANNING_MAX_LIVE_REQUESTS = int(getenv("PLANNING_MAX_LIVE_REQUESTS", "3"))
+PLANNING_LEASE_REMINDER_DAYS = int(getenv("PLANNING_LEASE_REMINDER_DAYS", "30"))
+PLANNING_OWNER_OFFERS_PER_REQUEST_PER_DAY = int(
+    getenv("PLANNING_OWNER_OFFERS_PER_REQUEST_PER_DAY", "5")
+)
 RENTAL_ONBOARDING_TTL_MINUTES = int(getenv("RENTAL_ONBOARDING_TTL_MINUTES", "30"))
 RENTAL_SIGNING_TTL_MINUTES = int(getenv("RENTAL_SIGNING_TTL_MINUTES", "30"))
 RENTAL_HOLD_TTL_MINUTES = int(getenv("RENTAL_HOLD_TTL_MINUTES", "30"))
@@ -177,6 +216,9 @@ DATABASES = {
         "PORT": getenv("POSTGRES_PORT"),
     }
 }
+
+if getenv("POSTGRES_SSLMODE"):
+    DATABASES["default"]["OPTIONS"] = {"sslmode": getenv("POSTGRES_SSLMODE")}
 
 
 ## Password validation
@@ -303,8 +345,8 @@ REST_FRAMEWORK = {
         "rest_framework.throttling.UserRateThrottle",  # ? throttle auth-users to a given rate of requests.
     ),
     "DEFAULT_THROTTLE_RATES": {
-        "anon": "200/day",
-        "user": "500/day",
+        "anon": "2000/day",
+        "user": "2000/day",
     },
 }
 

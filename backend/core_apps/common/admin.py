@@ -12,3 +12,6 @@ class ContentViewInline(GenericTabularInline):
     model = ContentView
     extra = 0
     readonly_fields = ["user", "viewer_ip", "created_at"]
+
+
+from . import content_admin  # noqa: E402,F401

@@ -1,0 +1,2 @@
+pg_ctl stop: server stopped successfully
+Only the task-owned isolated loopback cluster was stopped.

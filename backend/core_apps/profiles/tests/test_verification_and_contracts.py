@@ -1,3 +1,4 @@
+from core_apps.common.contract_testing import api_json
 from datetime import date
 import pytest
 from django.urls import reverse
@@ -82,7 +83,7 @@ class TestTenantContractsAPI:
     def test_empty_contracts_returns_empty_results(self, auth_client, user):
         res = auth_client.get(CONTRACTS_URL)
         assert res.status_code == status.HTTP_200_OK
-        data = res.json()["data"]
+        data = api_json(res)["data"]
         assert data["count"] == 0
         assert data["results"] == []
 
@@ -105,7 +106,7 @@ class TestTenantContractsAPI:
 
         res = auth_client.get(f"{CONTRACTS_URL}?page=1&page_size=20")
         assert res.status_code == status.HTTP_200_OK
-        data = res.json()["data"]
+        data = api_json(res)["data"]
         assert data["count"] == 1
         assert len(data["results"]) == 1
         assert data["results"][0]["property_title"] == "شقة في المعادي"

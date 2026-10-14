@@ -1,3 +1,4 @@
+from core_apps.common.contract_testing import api_json
 import pytest
 from django.urls import reverse
 from django.utils import timezone
@@ -92,7 +93,13 @@ class TestMentorPropertyVideoAndDeepLink:
 @pytest.mark.django_db
 class TestReceivedVisitsScheduledTime:
     def test_received_visits_includes_scheduled_time_and_property_id(
-        self, auth_client, user, another_user, apartment_type, cairo_city, cairo_governorate
+        self,
+        auth_client,
+        user,
+        another_user,
+        apartment_type,
+        cairo_city,
+        cairo_governorate,
     ):
         prop = _create_property(
             owner=user,
@@ -112,7 +119,7 @@ class TestReceivedVisitsScheduledTime:
         url = reverse("owner-visit-list")
         res = auth_client.get(url)
         assert res.status_code == status.HTTP_200_OK
-        data = res.json()["data"]
+        data = api_json(res)["data"]
         assert len(data["results"]) == 1
         item = data["results"][0]
         assert item["id"] == str(visit.id)

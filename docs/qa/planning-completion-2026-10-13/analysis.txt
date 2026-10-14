@@ -1,0 +1,5 @@
+Analyzing 14 items...                                           
+
+   info • 'of' is deprecated and shouldn't be used. Use TickerMode.valuesOf to get both enabled and forceFrames. This feature was deprecated after v3.35.0-0.0.pre. Try replacing the use of the deprecated member with the replacement • lib/features/shared/chat/presentation/widgets/chat_list/chat_list_content.dart:74:23 • deprecated_member_use
+
+1 issue found. (ran in 14.1s)

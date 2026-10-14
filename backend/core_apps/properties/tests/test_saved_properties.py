@@ -1,3 +1,4 @@
+from core_apps.common.contract_testing import api_json
 import uuid
 
 import pytest
@@ -83,8 +84,10 @@ class TestSavedPropertyAPI:
         response = auth_client.get(reverse("saved-property-list"))
 
         assert response.status_code == status.HTTP_200_OK
-        assert response.json()["data"] == {
+        assert api_json(response)["data"] == {
             "count": 0,
+            "next": None,
+            "previous": None,
             "per_page": 9,
             "total_pages": 1,
             "results": [],
@@ -103,7 +106,7 @@ class TestSavedPropertyAPI:
         response = auth_client.get(reverse("saved-property-list"))
 
         assert response.status_code == status.HTTP_200_OK
-        data = response.json()["data"]
+        data = api_json(response)["data"]
         assert data["count"] == 1
         assert len(data["results"]) == 1
         card = data["results"][0]
@@ -151,7 +154,7 @@ class TestSavedPropertyAPI:
         )
 
         assert response.status_code == status.HTTP_200_OK
-        data = response.json()["data"]
+        data = api_json(response)["data"]
         assert data["count"] == 1
         assert data["results"][0]["id"] == str(apartment.id)
 
@@ -215,7 +218,7 @@ class TestSavedPropertyAPI:
             reverse("saved-property-delete", kwargs={"property_id": property_obj.id})
         )
 
-        assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert response.status_code == status.HTTP_200_OK
         assert not SavedProperty.objects.filter(
             user=user, property=property_obj
         ).exists()

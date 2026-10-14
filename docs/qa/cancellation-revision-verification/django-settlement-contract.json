@@ -1,0 +1,188 @@
+{
+  "proposed": {
+    "allowed_actions": [
+      "propose_settlement",
+      "dispute"
+    ],
+    "blocking_reasons": [],
+    "id": "ff84f493-3eb1-4d48-8138-42ff5bb646cc",
+    "lease_id": "c4e10beb-4698-4795-9d8b-dea869f7c23c",
+    "revision": 2,
+    "status": "proposed",
+    "lines": [
+      {
+        "id": "7c8c023d-fd42-4a32-a675-61166d724d56",
+        "type": "claim",
+        "label": "claim",
+        "description": "Approved restoration",
+        "amount": {
+          "amount_minor": 1250000,
+          "currency": "EGP",
+          "exponent": 2
+        },
+        "evidence_ids": []
+      }
+    ],
+    "rent_balance": {
+      "amount_minor": 0,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "deposit_to_return": {
+      "amount_minor": 0,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "refund_due": {
+      "amount_minor": 0,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "total_due": {
+      "amount_minor": 250000,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "accepted_by": [
+      "640ec872-515a-4c5f-9681-000abd190f77"
+    ],
+    "disputed_item_ids": [],
+    "execution_status": "not_started",
+    "execution_plan": {
+      "charges": [
+        {
+          "id": "7c8c023d-fd42-4a32-a675-61166d724d56",
+          "type": "claim",
+          "label": "claim",
+          "description": "Approved restoration",
+          "amount": {
+            "amount_minor": 1250000,
+            "currency": "EGP",
+            "exponent": 2
+          },
+          "evidence_ids": []
+        }
+      ],
+      "credits": [],
+      "deposit_applications": [
+        {
+          "invoice_id": "settlement_invoice",
+          "amount_minor": 1000000
+        }
+      ],
+      "released_deposit_due_minor": 0,
+      "refunds": [],
+      "rent_balance_minor": 0,
+      "deposit_to_return_minor": 0,
+      "refund_due_minor": 0,
+      "total_due_minor": 250000
+    },
+    "executed_at": null,
+    "history": [
+      {
+        "revision": 1,
+        "status": "draft",
+        "lines": [],
+        "accepted_by": [],
+        "disputed_item_ids": []
+      }
+    ]
+  },
+  "accepted": {
+    "resource": {
+      "allowed_actions": [],
+      "blocking_reasons": [],
+      "id": "ff84f493-3eb1-4d48-8138-42ff5bb646cc",
+      "lease_id": "c4e10beb-4698-4795-9d8b-dea869f7c23c",
+      "revision": 3,
+      "status": "accepted",
+      "lines": [
+        {
+          "id": "7c8c023d-fd42-4a32-a675-61166d724d56",
+          "type": "claim",
+          "label": "claim",
+          "amount": {
+            "currency": "EGP",
+            "exponent": 2,
+            "amount_minor": 1250000
+          },
+          "description": "Approved restoration",
+          "evidence_ids": []
+        }
+      ],
+      "rent_balance": {
+        "amount_minor": 0,
+        "currency": "EGP",
+        "exponent": 2
+      },
+      "deposit_to_return": {
+        "amount_minor": 0,
+        "currency": "EGP",
+        "exponent": 2
+      },
+      "refund_due": {
+        "amount_minor": 0,
+        "currency": "EGP",
+        "exponent": 2
+      },
+      "total_due": {
+        "amount_minor": 250000,
+        "currency": "EGP",
+        "exponent": 2
+      },
+      "accepted_by": [
+        "640ec872-515a-4c5f-9681-000abd190f77",
+        "8f2af1f7-0a97-43d4-8702-bc85dfe88008"
+      ],
+      "disputed_item_ids": [],
+      "execution_status": "executed",
+      "execution_plan": {
+        "charges": [
+          {
+            "id": "7c8c023d-fd42-4a32-a675-61166d724d56",
+            "type": "claim",
+            "label": "claim",
+            "amount": {
+              "currency": "EGP",
+              "exponent": 2,
+              "amount_minor": 1250000
+            },
+            "description": "Approved restoration",
+            "evidence_ids": []
+          }
+        ],
+        "credits": [],
+        "refunds": [],
+        "total_due_minor": 250000,
+        "refund_due_minor": 0,
+        "rent_balance_minor": 0,
+        "deposit_applications": [
+          {
+            "invoice_id": "settlement_invoice",
+            "amount_minor": 1000000
+          }
+        ],
+        "deposit_to_return_minor": 0,
+        "released_deposit_due_minor": 0,
+        "adjustment_invoice_id": "bbcecbf3-45e0-4d9c-80b5-621fdd37c669"
+      },
+      "executed_at": "2026-10-12T20:32:27.432775+00:00",
+      "history": [
+        {
+          "lines": [],
+          "status": "draft",
+          "revision": 1,
+          "accepted_by": [],
+          "disputed_item_ids": []
+        }
+      ]
+    },
+    "operation_receipt": {
+      "id": "8a70b336-ddb4-4db3-96f8-687e51a3421e",
+      "subject_id": "ff84f493-3eb1-4d48-8138-42ff5bb646cc",
+      "request_key": "b21caa60-c580-4040-8c90-523f05d0902c",
+      "revision": 3,
+      "status": "confirmed"
+    }
+  }
+}

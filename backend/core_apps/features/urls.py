@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 
 from . import views
 from . import rental_phase2_views as views_phase2
@@ -6,9 +6,29 @@ from . import rental_phase3_views as views_phase3
 from . import rental_phase4_views as views_phase4
 from . import rental_phase5_views as views_phase5
 from . import rental_phase6_views as views_phase6
+from . import mock_provider_views
 from .models import RentalChange
 
 urlpatterns = [
+    path("", include("core_apps.features.billing_urls")),
+    path("", include("core_apps.features.planning_urls")),
+    path(
+        "mock-provider/onboarding-sessions/<uuid:session_id>/complete/",
+        mock_provider_views.onboarding_complete,
+    ),
+    path(
+        "mock-provider/signing-sessions/<uuid:session_id>/complete/",
+        mock_provider_views.signing_complete,
+    ),
+    path(
+        "mock-provider/change-signing-sessions/<uuid:session_id>/complete/",
+        mock_provider_views.signing_complete,
+        {"change": True},
+    ),
+    path(
+        "mock-provider/payment-attempts/<uuid:attempt_id>/events/",
+        mock_provider_views.payment_event,
+    ),
     path(
         "rental-capabilities/",
         views.rental_capabilities,
@@ -132,58 +152,272 @@ urlpatterns = [
         views_phase3.rent_invoice_checkout,
         name="rent-invoice-checkout",
     ),
-    path("rent-invoices/<uuid:invoice_id>/quote/", views_phase3.rent_invoice_quote, name="rent-invoice-quote"),
+    path(
+        "rent-invoices/<uuid:invoice_id>/quote/",
+        views_phase3.rent_invoice_quote,
+        name="rent-invoice-quote",
+    ),
     path("payment-attempts/", views_phase3.payment_attempts, name="payment-attempts"),
-    path("payment-attempts/<uuid:attempt_id>/", views_phase3.payment_attempt_detail, name="payment-attempt-detail"),
-    path("payment-attempts/<uuid:attempt_id>/reconcile/", views_phase3.payment_attempt_reconcile, name="payment-attempt-reconcile"),
+    path(
+        "payment-attempts/<uuid:attempt_id>/",
+        views_phase3.payment_attempt_detail,
+        name="payment-attempt-detail",
+    ),
+    path(
+        "payment-attempts/<uuid:attempt_id>/reconcile/",
+        views_phase3.payment_attempt_reconcile,
+        name="payment-attempt-reconcile",
+    ),
     path("owner-payables/", views_phase3.owner_payables, name="owner-payables"),
-    path("provider-webhooks/payments/", views_phase3.fake_payment_webhook, name="fake-payment-webhook"),
-    path("leases/<uuid:lease_id>/handovers/", views_phase4.lease_handovers, name="lease-handovers"),
-    path("handovers/<uuid:handover_id>/", views_phase4.handover_detail, name="handover-detail"),
-    path("handovers/<uuid:handover_id>/respond/", views_phase4.handover_respond, name="handover-respond"),
-    path("rental-attachments/", views_phase4.rental_evidence_upload, name="rental-evidence-upload"),
-    path("rental-attachments/<uuid:evidence_id>/", views_phase4.rental_evidence_detail, name="rental-evidence-detail"),
-    path("rental-attachments/<uuid:evidence_id>/download/", views_phase4.rental_evidence_download, name="rental-evidence-download"),
-    path("leases/<uuid:lease_id>/deposit/", views_phase4.lease_deposit, name="lease-deposit"),
+    path(
+        "provider-webhooks/payments/",
+        views_phase3.fake_payment_webhook,
+        name="fake-payment-webhook",
+    ),
+    path(
+        "leases/<uuid:lease_id>/handovers/",
+        views_phase4.lease_handovers,
+        name="lease-handovers",
+    ),
+    path(
+        "handovers/<uuid:handover_id>/",
+        views_phase4.handover_detail,
+        name="handover-detail",
+    ),
+    path(
+        "handovers/<uuid:handover_id>/respond/",
+        views_phase4.handover_respond,
+        name="handover-respond",
+    ),
+    path(
+        "rental-attachments/",
+        views_phase4.rental_evidence_upload,
+        name="rental-evidence-upload",
+    ),
+    path(
+        "rental-attachments/<uuid:evidence_id>/",
+        views_phase4.rental_evidence_detail,
+        name="rental-evidence-detail",
+    ),
+    path(
+        "rental-attachments/<uuid:evidence_id>/download/",
+        views_phase4.rental_evidence_download,
+        name="rental-evidence-download",
+    ),
+    path(
+        "leases/<uuid:lease_id>/deposit/",
+        views_phase4.lease_deposit,
+        name="lease-deposit",
+    ),
     path("payouts/", views_phase4.payouts, name="rental-payouts"),
-    path("payouts/<uuid:payout_id>/", views_phase4.payout_detail, name="rental-payout-detail"),
-    path("operations/payouts/execute/", views_phase4.operations_execute_payout, name="operations-payout-execute"),
-    path("operations/payouts/<uuid:payout_id>/reconcile/", views_phase4.operations_reconcile_payout, name="operations-payout-reconcile"),
-    path("leases/<uuid:lease_id>/maintenance-requests/", views_phase5.maintenance_requests, name="maintenance-requests"),
-    path("maintenance-requests/<uuid:request_id>/", views_phase5.maintenance_detail, name="maintenance-detail"),
-    path("maintenance-requests/<uuid:request_id>/actions/", views_phase5.maintenance_action, name="maintenance-action"),
-    path("leases/<uuid:lease_id>/payment-extension-requests/", views_phase5.payment_extensions, name="payment-extensions"),
-    path("leases/<uuid:lease_id>/amendments/", views_phase5.amendments, name="amendments"),
+    path(
+        "payouts/<uuid:payout_id>/",
+        views_phase4.payout_detail,
+        name="rental-payout-detail",
+    ),
+    path(
+        "operations/payouts/execute/",
+        views_phase4.operations_execute_payout,
+        name="operations-payout-execute",
+    ),
+    path(
+        "operations/payouts/<uuid:payout_id>/reconcile/",
+        views_phase4.operations_reconcile_payout,
+        name="operations-payout-reconcile",
+    ),
+    path(
+        "leases/<uuid:lease_id>/maintenance-requests/",
+        views_phase5.maintenance_requests,
+        name="maintenance-requests",
+    ),
+    path(
+        "maintenance-requests/<uuid:request_id>/",
+        views_phase5.maintenance_detail,
+        name="maintenance-detail",
+    ),
+    path(
+        "maintenance-requests/<uuid:request_id>/actions/",
+        views_phase5.maintenance_action,
+        name="maintenance-action",
+    ),
+    path(
+        "leases/<uuid:lease_id>/payment-extension-requests/",
+        views_phase5.payment_extensions,
+        name="payment-extensions",
+    ),
+    path(
+        "leases/<uuid:lease_id>/amendments/", views_phase5.amendments, name="amendments"
+    ),
     path("leases/<uuid:lease_id>/renewals/", views_phase5.renewals, name="renewals"),
-    path("leases/<uuid:lease_id>/termination-requests/", views_phase5.terminations, name="terminations"),
-    path("rent-invoices/<uuid:invoice_id>/external-payment-claims/", views_phase5.external_claim_create, name="external-claim-create"),
-    path("leases/<uuid:lease_id>/external-payment-claims/", views_phase5.external_claims, name="external-claims"),
-    path("payment-extension-requests/<uuid:change_id>/", views_phase5.change_detail, {"kind": RentalChange.Kind.PAYMENT_EXTENSION}, name="payment-extension-detail"),
-    path("payment-extension-requests/<uuid:change_id>/respond/", views_phase5.change_respond, {"kind": RentalChange.Kind.PAYMENT_EXTENSION}, name="payment-extension-respond"),
-    path("amendments/<uuid:change_id>/", views_phase5.change_detail, {"kind": RentalChange.Kind.AMENDMENT}, name="amendment-detail"),
-    path("amendments/<uuid:change_id>/respond/", views_phase5.change_respond, {"kind": RentalChange.Kind.AMENDMENT}, name="amendment-respond"),
-    path("amendments/<uuid:change_id>/submit-for-signature/", views_phase5.submit_change_for_signature, {"kind": RentalChange.Kind.AMENDMENT}, name="amendment-submit"),
-    path("amendments/<uuid:change_id>/signing-session/", views_phase5.change_signing_session, {"kind": RentalChange.Kind.AMENDMENT}, name="amendment-signing"),
-    path("renewals/<uuid:change_id>/", views_phase5.change_detail, {"kind": RentalChange.Kind.RENEWAL}, name="renewal-detail"),
-    path("renewals/<uuid:change_id>/respond/", views_phase5.change_respond, {"kind": RentalChange.Kind.RENEWAL}, name="renewal-respond"),
-    path("renewals/<uuid:change_id>/submit-for-signature/", views_phase5.submit_change_for_signature, {"kind": RentalChange.Kind.RENEWAL}, name="renewal-submit"),
-    path("renewals/<uuid:change_id>/signing-session/", views_phase5.change_signing_session, {"kind": RentalChange.Kind.RENEWAL}, name="renewal-signing"),
-    path("termination-requests/<uuid:change_id>/", views_phase5.change_detail, {"kind": RentalChange.Kind.TERMINATION}, name="termination-detail"),
-    path("termination-requests/<uuid:change_id>/respond/", views_phase5.change_respond, {"kind": RentalChange.Kind.TERMINATION}, name="termination-respond"),
-    path("external-payment-claims/<uuid:change_id>/", views_phase5.change_detail, {"kind": RentalChange.Kind.EXTERNAL_PAYMENT}, name="external-claim-detail"),
-    path("external-payment-claims/<uuid:change_id>/respond/", views_phase5.change_respond, {"kind": RentalChange.Kind.EXTERNAL_PAYMENT}, name="external-claim-respond"),
-    path("leases/<uuid:lease_id>/final-settlement/", views_phase6.final_settlement_detail, name="final-settlement"),
-    path("leases/<uuid:lease_id>/final-settlement/propose/", views_phase6.final_settlement_propose, name="final-settlement-propose"),
-    path("leases/<uuid:lease_id>/final-settlement/respond/", views_phase6.final_settlement_respond, name="final-settlement-respond"),
+    path(
+        "leases/<uuid:lease_id>/termination-requests/",
+        views_phase5.terminations,
+        name="terminations",
+    ),
+    path(
+        "rent-invoices/<uuid:invoice_id>/external-payment-claims/",
+        views_phase5.external_claim_create,
+        name="external-claim-create",
+    ),
+    path(
+        "leases/<uuid:lease_id>/external-payment-claims/",
+        views_phase5.external_claims,
+        name="external-claims",
+    ),
+    path(
+        "payment-extension-requests/<uuid:change_id>/",
+        views_phase5.change_detail,
+        {"kind": RentalChange.Kind.PAYMENT_EXTENSION},
+        name="payment-extension-detail",
+    ),
+    path(
+        "payment-extension-requests/<uuid:change_id>/respond/",
+        views_phase5.change_respond,
+        {"kind": RentalChange.Kind.PAYMENT_EXTENSION},
+        name="payment-extension-respond",
+    ),
+    path(
+        "amendments/<uuid:change_id>/",
+        views_phase5.change_detail,
+        {"kind": RentalChange.Kind.AMENDMENT},
+        name="amendment-detail",
+    ),
+    path(
+        "amendments/<uuid:change_id>/respond/",
+        views_phase5.change_respond,
+        {"kind": RentalChange.Kind.AMENDMENT},
+        name="amendment-respond",
+    ),
+    path(
+        "amendments/<uuid:change_id>/submit-for-signature/",
+        views_phase5.submit_change_for_signature,
+        {"kind": RentalChange.Kind.AMENDMENT},
+        name="amendment-submit",
+    ),
+    path(
+        "amendments/<uuid:change_id>/signing-session/",
+        views_phase5.change_signing_session,
+        {"kind": RentalChange.Kind.AMENDMENT},
+        name="amendment-signing",
+    ),
+    path(
+        "renewals/<uuid:change_id>/",
+        views_phase5.change_detail,
+        {"kind": RentalChange.Kind.RENEWAL},
+        name="renewal-detail",
+    ),
+    path(
+        "renewals/<uuid:change_id>/respond/",
+        views_phase5.change_respond,
+        {"kind": RentalChange.Kind.RENEWAL},
+        name="renewal-respond",
+    ),
+    path(
+        "renewals/<uuid:change_id>/submit-for-signature/",
+        views_phase5.submit_change_for_signature,
+        {"kind": RentalChange.Kind.RENEWAL},
+        name="renewal-submit",
+    ),
+    path(
+        "renewals/<uuid:change_id>/signing-session/",
+        views_phase5.change_signing_session,
+        {"kind": RentalChange.Kind.RENEWAL},
+        name="renewal-signing",
+    ),
+    path(
+        "termination-requests/<uuid:change_id>/",
+        views_phase5.change_detail,
+        {"kind": RentalChange.Kind.TERMINATION},
+        name="termination-detail",
+    ),
+    path(
+        "termination-requests/<uuid:change_id>/respond/",
+        views_phase5.change_respond,
+        {"kind": RentalChange.Kind.TERMINATION},
+        name="termination-respond",
+    ),
+    path(
+        "external-payment-claims/<uuid:change_id>/",
+        views_phase5.change_detail,
+        {"kind": RentalChange.Kind.EXTERNAL_PAYMENT},
+        name="external-claim-detail",
+    ),
+    path(
+        "external-payment-claims/<uuid:change_id>/respond/",
+        views_phase5.change_respond,
+        {"kind": RentalChange.Kind.EXTERNAL_PAYMENT},
+        name="external-claim-respond",
+    ),
+    path(
+        "refund-requests/<uuid:refund_id>/execute/",
+        views_phase6.refund_execute,
+        name="refund-execute",
+    ),
+    path(
+        "leases/<uuid:lease_id>/final-settlement/",
+        views_phase6.final_settlement_detail,
+        name="final-settlement",
+    ),
+    path(
+        "leases/<uuid:lease_id>/final-settlement/propose/",
+        views_phase6.final_settlement_propose,
+        name="final-settlement-propose",
+    ),
+    path(
+        "leases/<uuid:lease_id>/final-settlement/respond/",
+        views_phase6.final_settlement_respond,
+        name="final-settlement-respond",
+    ),
     path("refund-requests/", views_phase6.refund_requests, name="refund-requests"),
-    path("refund-requests/<uuid:refund_id>/", views_phase6.refund_detail, name="refund-detail"),
-    path("refund-requests/<uuid:refund_id>/respond/", views_phase6.refund_respond, name="refund-respond"),
+    path(
+        "refund-requests/<uuid:refund_id>/",
+        views_phase6.refund_detail,
+        name="refund-detail",
+    ),
+    path(
+        "refund-requests/<uuid:refund_id>/respond/",
+        views_phase6.refund_respond,
+        name="refund-respond",
+    ),
     path("disputes/", views_phase6.disputes, name="rental-disputes"),
-    path("disputes/<uuid:dispute_id>/", views_phase6.dispute_detail, name="rental-dispute-detail"),
-    path("disputes/<uuid:dispute_id>/respond/", views_phase6.dispute_respond, name="rental-dispute-respond"),
-    path("leases/<uuid:lease_id>/documents/", views_phase6.lease_documents, name="lease-documents"),
-    path("rental-documents/<uuid:document_id>/download/", views_phase6.document_download, name="rental-document-download"),
-    path("rental-statements/", views_phase6.rental_statement_create, name="rental-statement-create"),
-    path("leases/<uuid:lease_id>/reviews/", views_phase6.lease_reviews, name="lease-reviews"),
-    path("leases/<uuid:lease_id>/rental-center/", views_phase6.rental_center, name="rental-center"),
+    path(
+        "disputes/<uuid:dispute_id>/",
+        views_phase6.dispute_detail,
+        name="rental-dispute-detail",
+    ),
+    path(
+        "disputes/<uuid:dispute_id>/responses/",
+        views_phase6.dispute_respond,
+        name="rental-dispute-responses",
+    ),
+    path(
+        "disputes/<uuid:dispute_id>/respond/",
+        views_phase6.dispute_respond,
+        name="rental-dispute-respond",
+    ),
+    path(
+        "leases/<uuid:lease_id>/documents/",
+        views_phase6.lease_documents,
+        name="lease-documents",
+    ),
+    path(
+        "rental-documents/<uuid:document_id>/download/",
+        views_phase6.document_download,
+        name="rental-document-download",
+    ),
+    path(
+        "rental-statements/",
+        views_phase6.rental_statement_create,
+        name="rental-statement-create",
+    ),
+    path(
+        "leases/<uuid:lease_id>/reviews/",
+        views_phase6.lease_reviews,
+        name="lease-reviews",
+    ),
+    path(
+        "leases/<uuid:lease_id>/rental-center/",
+        views_phase6.rental_center,
+        name="rental-center",
+    ),
 ]

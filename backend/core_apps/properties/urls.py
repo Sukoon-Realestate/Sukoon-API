@@ -1,4 +1,5 @@
 from django.urls import path
+from .views.post_visit_decision import post_visit_decision
 
 from .views import (
     CityListAPIView,
@@ -44,6 +45,7 @@ from .views import (
 )
 
 urlpatterns = [
+    path("visits/<uuid:id>/post-visit-decision/", post_visit_decision, name="post-visit-decision"),
     path("governorates/", GovernorateListAPIView.as_view(), name="governorate-list"),
     path("cities/", CityListAPIView.as_view(), name="city-list"),
     path("types/", PropertyTypeListAPIView.as_view(), name="property-type-list"),

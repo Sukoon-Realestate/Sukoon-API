@@ -1,0 +1,93 @@
+{
+  "evidence_kind": "local PostgreSQL source verification; explicit simulated rental providers",
+  "generated_at": "2026-10-12T21:45:43.412425+00:00",
+  "base_commit": "96d90551d1f9e30c8c5e05a338635d839b7daace",
+  "uncommitted_source_changes": true,
+  "runtime": {
+    "database": "disposable PostgreSQL16",
+    "settings": "config.settings.postgres_test",
+    "django": "4.2.11",
+    "python": "3.11.17",
+    "rental_provider": "fake"
+  },
+  "results": {
+    "backend-postgres.xml": {
+      "tests": 733,
+      "passed": 733,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 211.004,
+      "started_at": "2026-10-13T00:40:47.195761+03:00",
+      "source_xml_sha256": "75c3df5931db9e4e63ccf1482f3d87aeb84190d0ceeafbbe407a36c5849c3870",
+      "sanitized_xml_sha256": "5a023b3185d93deb00ac7d62bae0b17b67c6b7fb37ba37136531169a55739e53",
+      "apps": {
+        "admin_api": 34,
+        "advertising": 23,
+        "chat": 46,
+        "common": 55,
+        "features": 167,
+        "notifications": 41,
+        "profiles": 71,
+        "properties": 195,
+        "support": 29,
+        "users": 72
+      }
+    },
+    "chat-postgres.xml": {
+      "tests": 46,
+      "passed": 46,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 38.306,
+      "started_at": "2026-10-13T00:39:49.007897+03:00",
+      "source_xml_sha256": "a581fb61f626ea89431167f31dae346230dfcf9852f8f5ac801bd8c0720db4e8",
+      "sanitized_xml_sha256": "28e6c65da40fe47e3d86311a1d03b180f1286fbc0a8829f37fe7ab637ca07c79"
+    }
+  },
+  "flutter_request_roundtrip": {
+    "passed": 8,
+    "skipped": 0,
+    "input": "Fresh actual Flutter request-body export; kept outside Git"
+  },
+  "configuration_checks": {
+    "django_system_check": "passed; 0 issues",
+    "makemigrations_check_dry_run": "passed; no changes detected"
+  },
+  "chat_before_fix": {
+    "new_tests_failed": 2,
+    "observed": [
+      "Service allowed a nonparticipant read without PermissionDenied",
+      "Participant socket received a forged read receipt"
+    ]
+  },
+  "chat_network_after_fix": {
+    "passed": 15,
+    "failed": 0,
+    "layer": "Separate loopback ASGI HTTP/WebSocket process, in-memory channel layer",
+    "archive": "Mobile repository docs/qa/evidence/owner-tenant-local-2026-10-13"
+  },
+  "warnings": {
+    "count": 535,
+    "classes": [
+      "Existing Django deprecations",
+      "Missing test staticfiles directory",
+      "Existing naive-datetime fixture warning"
+    ]
+  },
+  "boundaries": [
+    "No push, deployment or remote runtime mutation performed",
+    "Connected business tests use controlled clocks/direct tasks for due transitions; real scheduler evidence is archived separately",
+    "Native UI, original historical advertisement, external providers, Google login and device push are separate evidence layers",
+    "Credentials and raw contract/account bodies are not archived here"
+  ],
+  "native_fixture_final_readback": "native-fixture-c-final-readback.json",
+  "local_runtime_cleanup": {
+    "recorded_at": "2026-10-12T21:50:58.124277+00:00",
+    "owned_api_stopped": true,
+    "owned_postgresql_cluster_stopped": true,
+    "database_files_preserved": true,
+    "private_fixture_credentials_and_journals_preserved": true
+  }
+}

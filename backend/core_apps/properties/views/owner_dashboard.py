@@ -40,9 +40,9 @@ class OwnerRevenuesAPIView(generics.GenericAPIView):
     matching the mobile "الإيرادات" screen.
 
     Response includes:
-    - total_this_month and comparison text (+8% عن الشهر السابق)
-    - per-property breakdown cards with statuses (مدفوع, قادم 15 يونيو, متأخر)
-    - recent transactions list
+    - confirmed owner payout totals for the Cairo calendar month
+    - property amounts and recent posted payouts scoped to the authenticated owner
+    - an authoritative empty history when no payouts exist
     """
 
     serializer_class = OwnerRevenuesSerializer
@@ -50,7 +50,12 @@ class OwnerRevenuesAPIView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        revenue_data = OwnerDashboardService.get_revenues(owner=request.user)
+        language = request.query_params.get("lang") or request.headers.get(
+            "Accept-Language", "ar"
+        )
+        revenue_data = OwnerDashboardService.get_revenues(
+            owner=request.user, language=language
+        )
         serializer = self.get_serializer(revenue_data)
         return Response(serializer.data)
 

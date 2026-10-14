@@ -8,6 +8,7 @@ from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
 from core_apps.properties.views import PropertyListAPIView
+from core_apps.common.runtime_views import health
 from core_apps.common.app_associations import (
     android_asset_links,
     apple_app_site_association,
@@ -28,6 +29,7 @@ schema_view = get_schema_view(
 
 
 urlpatterns = [
+    path("health/", health, name="runtime-health"),
     path(
         ".well-known/assetlinks.json", android_asset_links, name="android-asset-links"
     ),
@@ -44,7 +46,7 @@ urlpatterns = [
     path("password-reset/<str:uid>/<str:token>", PasswordResetConfirmView.as_view()),
     path("", schema_view.with_ui("redoc", cache_timeout=0), name="schema-redoc"),
     path("api/v1/auth/", include("core_apps.users.urls")),
-    path("api/v1/auth/", include("djoser.urls")),
+    path("api/v1/auth/", include("core_apps.users.rest_urls")),
     path("api/v1/profiles/", include("core_apps.profiles.urls")),
     path(
         "api/v1/homepage/", PropertyListAPIView.as_view(), name="property-homepage-list"

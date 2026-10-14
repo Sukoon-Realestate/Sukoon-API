@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from core_apps.chat.models import Conversation
+from core_apps.chat.services.message_service import direct_message_blocked
 from core_apps.chat.serializers.participant import ParticipantSerializer
 from core_apps.properties.phone_disclosure import counterpart_phone_payload
 
@@ -86,7 +87,12 @@ class ConversationSerializer(serializers.ModelSerializer):
         return bool(
             request
             and request.user.is_active
+            and obj.participants.filter(pk=request.user.pk).exists()
             and obj.participants.filter(is_active=True).count() == 2
+            and not any(
+                direct_message_blocked(request.user, other)
+                for other in obj.participants.exclude(pk=request.user.pk)
+            )
         )
 
 

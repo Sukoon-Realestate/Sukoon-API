@@ -1,0 +1,8 @@
+{
+  "evidence_scope": "local_disposable_Redis_not_DigitalOcean",
+  "generated_at_utc": "2026-10-12T21:25:41.045808+00:00",
+  "competing_schedulers": 2,
+  "concurrent_acquisition_rounds": 50,
+  "exactly_one_lease_owner_each_round": true,
+  "old_scheduler_close_preserves_replacement_lease": true
+}

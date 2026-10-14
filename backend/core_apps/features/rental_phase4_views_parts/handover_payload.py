@@ -1,0 +1,95 @@
+"""Rental phase4 views: handover payload."""
+
+from django.shortcuts import get_object_or_404
+from rest_framework.exceptions import NotFound, ValidationError
+from ..models import Lease, RentalEvidence, RentalHandover
+from ..providers import require_rental_provider
+from ..services.lease_permissions import handover_actions
+
+
+PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
+
+
+MAX_EVIDENCE_BYTES = 5 * 1024 * 1024
+
+
+def _money(value):
+    return {"amount_minor": value, "currency": "EGP", "exponent": 2}
+
+
+def _lease(request, lease_id, lock=False):
+    if request.method not in {"GET", "HEAD", "OPTIONS"}:
+        require_rental_provider(request.user)
+    queryset = Lease.objects.select_related("owner", "tenant")
+    if lock:
+        queryset = queryset.select_for_update()
+    lease = get_object_or_404(queryset, id=lease_id)
+    if request.user not in (lease.owner, lease.tenant):
+        raise NotFound()
+    return lease
+
+
+def evidence_payload(item):
+    return {
+        "id": str(item.id),
+        "lease_id": str(item.lease.id),
+        "name": item.original_name,
+        "mime_type": item.content_type,
+        "size_bytes": item.size_bytes,
+        "status": (
+            "ready"
+            if item.malware_status == RentalEvidence.MalwareStatus.SAFE
+            else item.malware_status
+        ),
+        "sha256": item.sha256,
+        "revision": item.revision,
+    }
+
+
+def handover_payload(item, user=None):
+    return {
+        "id": str(item.id),
+        "lease_id": str(item.lease.id),
+        "revision": item.revision,
+        "kind": item.kind,
+        "status": item.status,
+        "possession_on": str(item.possession_on),
+        "condition": item.condition,
+        "keys": item.keys,
+        "meters": item.meters,
+        "inventory": item.inventory,
+        "evidence": [evidence_payload(x) for x in item.evidence.all()],
+        "accepted_by": item.approvals,
+        "allowed_actions": handover_actions(user, item),
+        "blocking_reasons": [],
+    }
+
+
+def _handover(request, handover_id, lock=False):
+    queryset = RentalHandover.objects.select_related(
+        "lease__owner", "lease__tenant"
+    ).prefetch_related("evidence")
+    if lock:
+        queryset = queryset.select_for_update()
+    handover = get_object_or_404(queryset, id=handover_id)
+    if request.user not in (handover.lease.owner, handover.lease.tenant):
+        raise NotFound()
+    return handover
+
+
+def _validate_evidence(lease, ids):
+    if len(ids) > 5:
+        raise ValidationError({"evidence_ids": "At most five images are supported."})
+    evidence = list(
+        RentalEvidence.objects.filter(
+            id__in=ids,
+            lease=lease,
+            malware_status=RentalEvidence.MalwareStatus.SAFE,
+            deleted_at__isnull=True,
+        )
+    )
+    if len(evidence) != len(set(map(str, ids))):
+        raise ValidationError(
+            {"evidence_ids": "Every item must be safe evidence for this lease."}
+        )
+    return evidence

@@ -1,3 +1,4 @@
+from core_apps.common.contract_testing import api_json
 import io
 import uuid
 from concurrent.futures import ThreadPoolExecutor
@@ -97,8 +98,8 @@ class TestAdvertisingAPI:
         )
 
         assert response.status_code == 200
-        body = response.json()
-        assert body["key"] == "success"
+        body = api_json(response)
+        assert set(body) == {"message", "data"} and body["message"]
         assert [item["id"] for item in body["data"]["results"]] == [
             "weekly",
             "monthly",
@@ -127,7 +128,7 @@ class TestAdvertisingAPI:
         assert replay.status_code == 200
         assert replay.json()["data"]["id"] == created.json()["data"]["id"]
         assert conflict.status_code == 409
-        assert conflict.json()["errors"]["operation_id"] == ["idempotency_conflict"]
+        assert conflict["X-App-Error-Code"] == "idempotency_conflict"
         assert Advertisement.objects.count() == 1
         assert AdvertisementOperation.objects.count() == 1
 
@@ -164,7 +165,7 @@ class TestAdvertisingAPI:
             format="multipart",
         )
         assert invalid_image.status_code == 415
-        assert invalid_image.json()["errors"]["banner"] == ["invalid_image"]
+        assert invalid_image["X-App-Error-Code"] == "invalid_image"
         rejected = auth_client.get(
             reverse("advertising:operation-detail", args=[invalid_operation_id])
         )
@@ -179,7 +180,7 @@ class TestAdvertisingAPI:
             format="multipart",
         )
         assert foreign.status_code == 400
-        assert foreign.json()["errors"]["property_id"] == ["not_eligible"]
+        assert foreign["X-App-Error-Code"] == "not_eligible"
 
     def test_property_offer_activation_payment_replay_and_public_feed(
         self, auth_client, eligible_property, another_user
@@ -204,7 +205,7 @@ class TestAdvertisingAPI:
         }
         payment_url = reverse("advertising:mock-payment", args=[advertisement_id])
 
-        first = auth_client.post(payment_url, payment_body, format="json")
+        first = pay_invoice(auth_client, advertisement_id)
         replay = auth_client.post(payment_url, payment_body, format="json")
 
         assert first.status_code == 200
@@ -241,14 +242,7 @@ class TestAdvertisingAPI:
             format="multipart",
         )
         advertisement_id = created.json()["data"]["id"]
-        auth_client.post(
-            reverse("advertising:mock-payment", args=[advertisement_id]),
-            {
-                "operation_id": f"{operation_id}-payment",
-                "payment_mode": "mock",
-            },
-            format="json",
-        )
+        assert pay_invoice(auth_client, advertisement_id).status_code == 200
         Advertisement.objects.filter(id=advertisement_id).update(
             ends_at=timezone.now() - timedelta(seconds=1),
             status=Advertisement.Status.ACTIVE,
@@ -309,6 +303,49 @@ class TestAdvertisingCalendarExpiry:
         assert overlap.utcoffset() == timedelta(hours=2)
 
 
+def pay_invoice(client, ad_id):
+    """Explicit local purchase path; return the authoritative private ad on success."""
+    root = "/api/v1/features/v1/billing/invoices/"
+    identity = str(ad_id)
+    issued = client.post(
+        root,
+        {
+            "purpose": "advertising",
+            "workspace": "owner",
+            "advertisement_id": identity,
+            "request_key": str(uuid.uuid5(uuid.NAMESPACE_URL, "issue:" + identity)),
+        },
+        format="json",
+    )
+    if issued.status_code not in (200, 201):
+        return issued
+    invoice = issued.json()["data"]
+    quote = client.post(
+        root + invoice["id"] + "/quote/",
+        {
+            "expected_revision": invoice["revision"],
+            "request_key": str(uuid.uuid5(uuid.NAMESPACE_URL, "quote:" + identity)),
+        },
+        format="json",
+    )
+    if quote.status_code not in (200, 201):
+        return quote
+    paid = client.post(
+        root + invoice["id"] + "/checkout/",
+        {
+            "quote_id": quote.json()["data"]["id"],
+            "expected_revision": invoice["revision"],
+            "request_key": str(uuid.uuid5(uuid.NAMESPACE_URL, "pay:" + identity)),
+        },
+        format="json",
+    )
+    return (
+        client.get(reverse("advertising:owner-advertisement-detail", args=[ad_id]))
+        if paid.status_code == 200
+        else paid
+    )
+
+
 def pending_ad(client, **overrides):
     response = client.post(
         reverse("advertising:owner-advertisement-list"),
@@ -332,18 +369,18 @@ def test_informational_payment_snapshot_recovery_and_expired_retry(
     auth_client.defaults["HTTP_ACCEPT_LANGUAGE"] = language
     ad, url, body = pending_ad(auth_client)
     snapshot = ad.plan_snapshot
+    start = timezone.now()
+    monkeypatch.setattr("core_apps.advertising.services.timezone.now", lambda: start)
+    response = pay_invoice(auth_client, ad.id)
     AdvertisingPlan.objects.filter(id="weekly").update(
         amount_minor=123,
         duration_count=3,
         revision="2",
         active=False,
     )
-    start = timezone.now()
-    monkeypatch.setattr("core_apps.advertising.services.timezone.now", lambda: start)
-    response = auth_client.post(url, body, format="json")
     assert response.status_code == 200
     paid = response.json()["data"]
-    assert response.json()["key"] == "success"
+    assert set(response.json()) == {"message", "data"} and response.json()["message"]
     assert paid["property_id"] is paid["offer_id"] is None
     assert paid["plan_snapshot"] == snapshot
     assert paid["payment"]["advertisement_id"] == str(ad.id)
@@ -358,7 +395,7 @@ def test_informational_payment_snapshot_recovery_and_expired_retry(
     assert auth_client.get(detail).json()["data"] == paid
     assert auth_client.get(reverse("advertising:owner-advertisement-list")).json()[
         "data"
-    ]["results"] == [paid]
+    ] == [paid]
     assert (
         auth_client.get(
             reverse("advertising:operation-detail", args=[ad.operation.operation_id])
@@ -385,8 +422,8 @@ def test_informational_payment_snapshot_recovery_and_expired_retry(
         assert b"".join(media.streaming_content)
     invalid = auth_client.post(url, {**body, "operation_id": "wrong"}, format="json")
     assert invalid.status_code == 400
-    assert invalid.json()["key"] == "error"
-    assert invalid.json()["errors"] == {"operation_id": ["invalid_payment_operation"]}
+    assert set(invalid.json()) == {"message", "data"} and invalid.json()["data"] is None
+    assert invalid["X-App-Error-Code"] == "invalid_payment_operation"
     assert ("معرف" if language == "ar" else "operation ID") in invalid.json()["message"]
     monkeypatch.setattr(
         "core_apps.advertising.services.timezone.now", lambda: ad.ends_at
@@ -420,9 +457,11 @@ def test_payment_revalidates_media_and_destination(
     else:
         eligible_property.rental_inventory["offers"][0]["archived"] = True
     eligible_property.save()
-    response = auth_client.post(url, body, format="json")
-    assert response.status_code == 400
-    assert response.json()["key"] == "error"
+    response = pay_invoice(auth_client, ad.id)
+    assert response.status_code == 409
+    assert (
+        set(response.json()) == {"message", "data"} and response.json()["data"] is None
+    )
     ad.refresh_from_db()
     assert ad.status == "pending_payment"
     assert ad.starts_at is ad.ends_at is None
@@ -440,13 +479,15 @@ def test_payment_failure_rolls_back_activation_and_same_operation_can_retry(
             raise RuntimeError("Injected payment storage failure")
 
         patch.setattr(MockAdvertisementPayment.objects, "create", fail)
-        with pytest.raises(RuntimeError, match="Injected"):
-            auth_client.post(url, body, format="json")
+        response = pay_invoice(auth_client, ad.id)
+        assert response.status_code == 500
+        assert response.json()["data"] is None
+        assert response["X-Correlation-ID"]
     ad.refresh_from_db()
     assert ad.status == "pending_payment"
     assert ad.starts_at is ad.ends_at is ad.activated_at is None
     assert not MockAdvertisementPayment.objects.exists()
-    assert auth_client.post(url, body, format="json").status_code == 200
+    assert pay_invoice(auth_client, ad.id).status_code == 200
     assert MockAdvertisementPayment.objects.count() == 1
 
 
@@ -456,7 +497,7 @@ def test_payment_failure_rolls_back_activation_and_same_operation_can_retry(
 )
 def test_public_media_and_feed_share_live_eligibility(auth_client, user, ineligible):
     ad, url, body = pending_ad(auth_client)
-    assert auth_client.post(url, body, format="json").status_code == 200
+    assert pay_invoice(auth_client, ad.id).status_code == 200
     ad.refresh_from_db()
     if ineligible == "future":
         ad.starts_at = timezone.now() + timedelta(hours=1)
@@ -493,7 +534,32 @@ def test_concurrent_payment_retries_share_one_receipt(auth_client, user):
             "revision": "1",
         },
     )
-    ad, url, body = pending_ad(auth_client)
+    ad, _, _ = pending_ad(auth_client)
+    root = "/api/v1/features/v1/billing/invoices/"
+    issued = auth_client.post(
+        root,
+        {
+            "purpose": "advertising",
+            "workspace": "owner",
+            "advertisement_id": str(ad.id),
+            "request_key": str(uuid.uuid4()),
+        },
+        format="json",
+    )
+    assert issued.status_code == 201
+    invoice = issued.json()["data"]
+    quote = auth_client.post(
+        root + invoice["id"] + "/quote/",
+        {"expected_revision": invoice["revision"], "request_key": str(uuid.uuid4())},
+        format="json",
+    )
+    assert quote.status_code == 201
+    url = root + invoice["id"] + "/checkout/"
+    body = {
+        "quote_id": quote.json()["data"]["id"],
+        "expected_revision": invoice["revision"],
+        "request_key": str(uuid.uuid4()),
+    }
     barrier = Barrier(2)
 
     def submit():
@@ -514,16 +580,28 @@ def test_concurrent_payment_retries_share_one_receipt(auth_client, user):
     assert results[0][0] == results[1][0] == 200
     assert results[0][1] == results[1][1]
     assert MockAdvertisementPayment.objects.filter(advertisement=ad).count() == 1
+    from core_apps.features.models import PaymentAttempt, PaymentReceipt
+
+    assert PaymentAttempt.objects.filter(invoice__id=invoice["id"]).count() == 1
+    assert (
+        PaymentReceipt.objects.filter(
+            payment_attempt__invoice__id=invoice["id"]
+        ).count()
+        == 1
+    )
 
 
 @pytest.mark.django_db
-def test_existing_audit_ad_media_recovery_and_mock_payment_activation(auth_client, user):
+def test_existing_audit_ad_media_recovery_and_mock_payment_activation(
+    auth_client, user
+):
     """
     BE002: Verify that existing audit ad 85295dd1-f8bd-4c82-a903-9bdc3d90af98
     recovers missing media across container restart, activates with mock payment,
     replays idempotently, serves media, and places banner in tenant home.
     """
     from core_apps.advertising.models import AdvertisementMedia
+
     op_id = "74682688-4428-413c-a1ae-c4b87222c687"
     payment_op_id = f"{op_id}-payment"
     ad_id = uuid.UUID("85295dd1-f8bd-4c82-a903-9bdc3d90af98")
@@ -565,22 +643,29 @@ def test_existing_audit_ad_media_recovery_and_mock_payment_activation(auth_clien
     # 2. Mock payment activation succeeds (does not fail with 400 errors.banner)
     pay_url = reverse("advertising:mock-payment", args=[ad.id])
     body = {"operation_id": payment_op_id, "payment_mode": "mock"}
-    res = auth_client.post(pay_url, body, format="json")
+    res = pay_invoice(auth_client, ad.id)
     assert res.status_code == 200
-    assert res.json()["key"] == "success"
+    assert set(res.json()) == {"message", "data"} and res.json()["message"]
     data = res.json()["data"]
     assert data["status"] == "active"
     assert data["payment"]["operation_id"] == payment_op_id
 
     # 3. Media is retrievable with exact 28,970 bytes and expected digest
     import hashlib
+
     media_url = reverse("advertising:advertisement-media", args=[ad.id])
     media_res = auth_client.get(media_url)
     assert media_res.status_code == 200
-    media_bytes = b"".join(media_res.streaming_content) if hasattr(media_res, "streaming_content") else media_res.content
+    media_bytes = (
+        b"".join(media_res.streaming_content)
+        if hasattr(media_res, "streaming_content")
+        else media_res.content
+    )
     assert len(media_bytes) == 28970
-    assert hashlib.sha256(media_bytes).hexdigest() == "dc2be014d6db85c4e73572c11fe5f21eb10df6d84675a3cc1b3350097e2e212b"
-
+    assert (
+        hashlib.sha256(media_bytes).hexdigest()
+        == "dc2be014d6db85c4e73572c11fe5f21eb10df6d84675a3cc1b3350097e2e212b"
+    )
 
     # 4. Tenant home placement returns the active ad
     guest_client = APIClient()
@@ -595,14 +680,16 @@ def test_existing_audit_ad_media_recovery_and_mock_payment_activation(auth_clien
     assert replay_res.json()["data"]["id"] == str(ad.id)
 
     # 6. Alternating Accept-Language headers return proper Content-Language and localized messages
-    res_ar = guest_client.get(reverse("advertising:plan-list"), HTTP_ACCEPT_LANGUAGE="ar")
+    res_ar = guest_client.get(
+        reverse("advertising:plan-list"), HTTP_ACCEPT_LANGUAGE="ar"
+    )
     assert res_ar.status_code == 200
     assert res_ar["Content-Language"] == "ar"
     assert res_ar.json()["message"] == "الخطط المتاحة."
 
-    res_en = guest_client.get(reverse("advertising:plan-list"), HTTP_ACCEPT_LANGUAGE="en")
+    res_en = guest_client.get(
+        reverse("advertising:plan-list"), HTTP_ACCEPT_LANGUAGE="en"
+    )
     assert res_en.status_code == 200
     assert res_en["Content-Language"] == "en"
     assert res_en.json()["message"] == "Available plans."
-
-

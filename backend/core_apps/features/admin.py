@@ -1,4 +1,5 @@
 from django.contrib import admin
+from .billing_admin import FinancialHistoryAdmin
 
 from .models import (
     BoostCampaign,
@@ -54,7 +55,6 @@ admin.site.register(
         LeaseEligibleTenant,
         Lease,
         SigningSession,
-        RentInvoice,
         CheckoutSession,
         TenancyInvitation,
         IdempotencyRecord,
@@ -66,14 +66,7 @@ admin.site.register(
         RentalInventoryDayLock,
         RentalTimelineEvent,
         BillingPeriod,
-        InvoiceLine,
-        PaymentQuote,
-        PaymentAttempt,
         ProviderWebhookEvent,
-        LedgerTransaction,
-        LedgerEntry,
-        InvoicePaymentAllocation,
-        PaymentReceipt,
         OwnerPayable,
         RentalEvidence,
         RentalHandover,
@@ -93,3 +86,19 @@ admin.site.register(
         PrivateAccessRevocation,
     ]
 )
+
+admin.site.register(
+    [
+        RentInvoice,
+        InvoiceLine,
+        PaymentQuote,
+        PaymentAttempt,
+        LedgerTransaction,
+        LedgerEntry,
+        InvoicePaymentAllocation,
+        PaymentReceipt,
+    ],
+    FinancialHistoryAdmin,
+)
+
+from . import catalog_admin  # noqa: E402,F401

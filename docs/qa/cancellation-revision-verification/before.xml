@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="8" skipped="0" tests="8" time="6.328" timestamp="2026-10-12T23:28:46.447758+03:00" hostname="Emara.local"><testcase classname="core_apps.features.tests.test_current_cycle_contract" name="test_cancel_receipt_matches_collection_before_detail_and_read_is_side_effect_free" time="5.894"><failure message="assert 3 == (1 + 1)">core_apps/features/tests/test_current_cycle_contract.py:336: in test_cancel_receipt_matches_collection_before_detail_and_read_is_side_effect_free
+    assert receipt["revision"] == body["revision"] + 1
+E   assert 3 == (1 + 1)</failure></testcase><testcase classname="core_apps.features.tests.test_current_cycle_contract" name="test_structured_cancel_uses_flutter_body_and_canonical_receipt[1]" time="0.011"><failure message="assert 3 == (1 + 1)">core_apps/features/tests/test_current_cycle_contract.py:424: in test_structured_cancel_uses_flutter_body_and_canonical_receipt
+    assert result.data["resource"]["revision"] == initial_revision + 1
+E   assert 3 == (1 + 1)</failure></testcase><testcase classname="core_apps.features.tests.test_current_cycle_contract" name="test_structured_cancel_uses_flutter_body_and_canonical_receipt[7]" time="0.009"><failure message="assert 9 == (7 + 1)">core_apps/features/tests/test_current_cycle_contract.py:424: in test_structured_cancel_uses_flutter_body_and_canonical_receipt
+    assert result.data["resource"]["revision"] == initial_revision + 1
+E   assert 9 == (7 + 1)</failure></testcase><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_exact_offer_acceptance_picker_and_draft_consumption" time="0.032"><failure message="assert 3 == 2">core_apps/features/tests/test_tenancy_invitations.py:267: in test_exact_offer_acceptance_picker_and_draft_consumption
+    assert cancelled.data["revision"] == 2
+E   assert 3 == 2</failure></testcase><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_provider_disabled_draft_capabilities_match_mutations[disabled-en]" time="0.038"><failure message="assert 3 == 2">core_apps/features/tests/test_tenancy_invitations.py:689: in test_provider_disabled_draft_capabilities_match_mutations
+    assert cancelled.data["revision"] == 2
+E   assert 3 == 2</failure></testcase><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_provider_disabled_draft_capabilities_match_mutations[disabled-ar]" time="0.047"><failure message="assert 3 == 2">core_apps/features/tests/test_tenancy_invitations.py:689: in test_provider_disabled_draft_capabilities_match_mutations
+    assert cancelled.data["revision"] == 2
+E   assert 3 == 2</failure></testcase><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_provider_disabled_draft_capabilities_match_mutations[fake-en]" time="0.071"><failure message="assert 3 == 2">core_apps/features/tests/test_tenancy_invitations.py:689: in test_provider_disabled_draft_capabilities_match_mutations
+    assert cancelled.data["revision"] == 2
+E   assert 3 == 2</failure></testcase><testcase classname="core_apps.features.tests.test_tenancy_invitations" name="test_provider_disabled_draft_capabilities_match_mutations[fake-ar]" time="0.038"><failure message="assert 3 == 2">core_apps/features/tests/test_tenancy_invitations.py:689: in test_provider_disabled_draft_capabilities_match_mutations
+    assert cancelled.data["revision"] == 2
+E   assert 3 == 2</failure></testcase></testsuite></testsuites>

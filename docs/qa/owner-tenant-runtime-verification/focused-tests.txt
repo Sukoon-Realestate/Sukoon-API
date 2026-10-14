@@ -1,0 +1,53 @@
+.venv/bin/python -m pytest core_apps/common/test_runtime.py core_apps/common/test_digitalocean_runtime.py --ds=config.settings.test
+============================= test session starts ==============================
+platform darwin -- Python 3.11.17, pytest-8.3.5, pluggy-1.6.0 -- /Users/aait/Desktop/StudioProjects/Sukoon-API/backend/.venv/bin/python
+cachedir: .pytest_cache
+django: version: 4.2.11, settings: config.settings.test (from option)
+rootdir: /Users/aait/Desktop/StudioProjects/Sukoon-API/backend
+configfile: pytest.ini
+plugins: cov-6.0.0, platformdirs-4.12.3, django-4.9.0, asyncio-0.23.7, anyio-4.15.1
+asyncio: mode=Mode.STRICT
+collecting ... collected 30 items
+
+core_apps/common/test_runtime.py::test_health_checks_dependencies_without_exposing_failure_details PASSED [  3%]
+core_apps/common/test_runtime.py::test_local_or_unmarked_tasks_cannot_certify_scheduled_execution[True-False-None] PASSED [  6%]
+core_apps/common/test_runtime.py::test_local_or_unmarked_tasks_cannot_certify_scheduled_execution[False-True-None] PASSED [ 10%]
+core_apps/common/test_runtime.py::test_local_or_unmarked_tasks_cannot_certify_scheduled_execution[False-False-headers2] PASSED [ 13%]
+core_apps/common/test_runtime.py::test_missing_dispatch_cannot_certify_scheduled_execution PASSED [ 16%]
+core_apps/common/test_runtime.py::test_worker_records_actual_completion_and_only_safe_counts PASSED [ 20%]
+core_apps/common/test_runtime.py::test_evidence_failure_never_retries_a_completed_business_task PASSED [ 23%]
+core_apps/common/test_runtime.py::test_scheduled_report_requires_current_release_after_deployment PASSED [ 26%]
+core_apps/common/test_runtime.py::test_incomplete_or_mismatched_completion_does_not_pass[change0] PASSED [ 30%]
+core_apps/common/test_runtime.py::test_incomplete_or_mismatched_completion_does_not_pass[change1] PASSED [ 33%]
+core_apps/common/test_runtime.py::test_incomplete_or_mismatched_completion_does_not_pass[change2] PASSED [ 36%]
+core_apps/common/test_runtime.py::test_incomplete_or_mismatched_completion_does_not_pass[change3] PASSED [ 40%]
+core_apps/common/test_runtime.py::test_incomplete_or_mismatched_completion_does_not_pass[change4] PASSED [ 43%]
+core_apps/common/test_runtime.py::test_incomplete_or_mismatched_completion_does_not_pass[change5] PASSED [ 46%]
+core_apps/common/test_runtime.py::test_incomplete_or_mismatched_completion_does_not_pass[change6] PASSED [ 50%]
+core_apps/common/test_runtime.py::test_incomplete_or_mismatched_completion_does_not_pass[change7] PASSED [ 53%]
+core_apps/common/test_runtime.py::test_stale_worker_and_scheduler_evidence_does_not_pass PASSED [ 56%]
+core_apps/common/test_runtime.py::test_changed_lease_owner_is_not_a_live_scheduler PASSED [ 60%]
+core_apps/common/test_runtime.py::test_lost_beat_lease_does_not_publish PASSED [ 63%]
+core_apps/common/test_runtime.py::test_beat_marks_published_id_without_overwriting_schedule_options PASSED [ 66%]
+core_apps/common/test_digitalocean_runtime.py::test_plan_preserves_resources_secrets_and_original_spec PASSED [ 70%]
+core_apps/common/test_digitalocean_runtime.py::test_plan_repeatedly_converges_without_extra_workers PASSED [ 73%]
+core_apps/common/test_digitalocean_runtime.py::test_background_environment_retains_api_bindings_and_own_commit PASSED [ 76%]
+core_apps/common/test_digitalocean_runtime.py::test_missing_secrets_never_get_placeholders PASSED [ 80%]
+core_apps/common/test_digitalocean_runtime.py::test_existing_scheduler_blocks_apply_without_deleting_it PASSED [ 83%]
+core_apps/common/test_digitalocean_runtime.py::test_plan_hides_credentials_even_when_saved_as_general PASSED [ 86%]
+core_apps/common/test_digitalocean_runtime.py::test_current_spec_commands_and_logging_cannot_leak_credentials PASSED [ 90%]
+core_apps/common/test_digitalocean_runtime.py::test_private_files_reject_shared_permissions PASSED [ 93%]
+core_apps/common/test_digitalocean_runtime.py::test_offline_plan_never_connects_or_applies PASSED [ 96%]
+core_apps/common/test_digitalocean_runtime.py::test_changed_current_spec_cannot_apply_previously_reviewed_hash PASSED [100%]
+
+=============================== warnings summary ===============================
+.venv/lib/python3.11/site-packages/django/conf/__init__.py:241
+  /Users/aait/Desktop/StudioProjects/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:241: RemovedInDjango50Warning: The default value of USE_TZ will change from False to True in Django 5.0. Set USE_TZ to False in your project settings if you want to keep the current default behavior.
+    warnings.warn(
+
+.venv/lib/python3.11/site-packages/django/conf/__init__.py:289
+  /Users/aait/Desktop/StudioProjects/Sukoon-API/backend/.venv/lib/python3.11/site-packages/django/conf/__init__.py:289: RemovedInDjango51Warning: The STATICFILES_STORAGE setting is deprecated. Use STORAGES instead.
+    warnings.warn(STATICFILES_STORAGE_DEPRECATED_MSG, RemovedInDjango51Warning)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 30 passed, 2 warnings in 5.27s ========================

@@ -1,3 +1,4 @@
+from core_apps.common.contract_testing import api_json
 from datetime import time, timedelta
 
 import pytest
@@ -12,7 +13,9 @@ from core_apps.notifications.models import Notification
 from core_apps.properties.models import Property, PropertyVisit
 
 
-def make_property(owner, apartment_type, cairo_city, cairo_governorate, title="Phone home"):
+def make_property(
+    owner, apartment_type, cairo_city, cairo_governorate, title="Phone home"
+):
     return Property.objects.create(
         owner=owner,
         title=title,
@@ -53,9 +56,7 @@ def test_pending_visit_hides_numbers_across_visit_property_and_chat_reads(
 ):
     tenant, owner = user, another_user
     set_phones(owner, tenant)
-    property_obj = make_property(
-        owner, apartment_type, cairo_city, cairo_governorate
-    )
+    property_obj = make_property(owner, apartment_type, cairo_city, cairo_governorate)
     visit = make_visit(property_obj, tenant)
     conversation = get_or_create_direct_conversation(user=tenant, other_user=owner)
 
@@ -89,7 +90,7 @@ def test_pending_visit_hides_numbers_across_visit_property_and_chat_reads(
     send_message(conversation=conversation, sender=owner, content="Hello")
     messages = api_client.get(
         reverse("message-list", kwargs={"id": conversation.id})
-    ).json()["data"]["results"]
+    ).json()["data"]
     assert "phone_number" not in messages[0]["sender"]
 
     api_client.force_authenticate(owner)
@@ -117,9 +118,7 @@ def test_acceptance_discloses_both_numbers_is_idempotent_and_survives_cancel(
 ):
     tenant, owner = user, another_user
     set_phones(owner, tenant)
-    property_obj = make_property(
-        owner, apartment_type, cairo_city, cairo_governorate
-    )
+    property_obj = make_property(owner, apartment_type, cairo_city, cairo_governorate)
     visit = make_visit(property_obj, tenant)
     conversation = get_or_create_direct_conversation(user=tenant, other_user=owner)
 
@@ -130,9 +129,12 @@ def test_acceptance_discloses_both_numbers_is_idempotent_and_survives_cancel(
     assert accepted.status_code == repeated.status_code == 200
     visit.refresh_from_db()
     assert visit.accepted_at is not None
-    assert Notification.objects.filter(
-        user=tenant, notification_type=Notification.NotificationType.VISIT_ACCEPTED
-    ).count() == 1
+    assert (
+        Notification.objects.filter(
+            user=tenant, notification_type=Notification.NotificationType.VISIT_ACCEPTED
+        ).count()
+        == 1
+    )
     notification = Notification.objects.get(
         user=tenant, notification_type=Notification.NotificationType.VISIT_ACCEPTED
     )
@@ -151,7 +153,7 @@ def test_acceptance_discloses_both_numbers_is_idempotent_and_survives_cancel(
     owner_list = api_client.get(reverse("owner-visit-request-list")).json()["data"]
     assert owner_list["results"][0]["tenant"]["phone_number"] == "+201112345678"
     legacy_owner_list = api_client.get(reverse("owner-visit-list")).json()["data"]
-    assert legacy_owner_list["results"][0]["tenant"]["is_phone_revealed"] is True
+    assert legacy_owner_list[0]["tenant"]["is_phone_revealed"] is True
 
     api_client.force_authenticate(tenant)
     tenant_detail = api_client.get(
@@ -172,7 +174,7 @@ def test_acceptance_discloses_both_numbers_is_idempotent_and_survives_cancel(
     assert conversation_data["other_participant"]["phone_number"] == "+201001234567"
     assert conversation_data["other_participant"]["is_phone_revealed"] is True
     conversation_list = api_client.get(reverse("conversation-list")).json()["data"]
-    assert conversation_list["results"][0]["other_participant"]["phone_number"] == (
+    assert conversation_list[0]["other_participant"]["phone_number"] == (
         "+201001234567"
     )
     conversation_create = api_client.post(
@@ -261,9 +263,7 @@ def test_rejected_or_pre_acceptance_cancelled_visit_never_discloses(
 ):
     tenant, owner = user, another_user
     set_phones(owner, tenant)
-    property_obj = make_property(
-        owner, apartment_type, cairo_city, cairo_governorate
-    )
+    property_obj = make_property(owner, apartment_type, cairo_city, cairo_governorate)
     rejected = make_visit(property_obj, tenant, PropertyVisit.Status.REJECTED)
     cancelled = PropertyVisit.objects.create(
         property=property_obj,
@@ -296,9 +296,7 @@ def test_notices_localize_and_missing_granted_phone_stays_authorized(
     cairo_governorate,
 ):
     tenant, owner = user, another_user
-    property_obj = make_property(
-        owner, apartment_type, cairo_city, cairo_governorate
-    )
+    property_obj = make_property(owner, apartment_type, cairo_city, cairo_governorate)
     visit = make_visit(property_obj, tenant)
     api_client.force_authenticate(tenant)
     url = reverse("tenant-visit-request-detail", kwargs={"id": visit.id})

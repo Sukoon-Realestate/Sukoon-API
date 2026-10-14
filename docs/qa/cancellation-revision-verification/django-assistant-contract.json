@@ -1,0 +1,259 @@
+{
+  "created": {
+    "resource": {
+      "id": "17858178-e446-4a82-a26c-fb1f7cddac2b",
+      "revision": 1,
+      "text": "Suggestions from available property records. Review filters and terms before continuing.",
+      "filters": {
+        "city": "21d3a6b7-4d43-41f3-9f30-bbf13a17d647"
+      },
+      "unresolved_requirements": [
+        "Specify the price period before applying this budget.",
+        "Requirements not represented in the filters have not been verified."
+      ],
+      "grounded_property_ids": [
+        "01b06575-9486-47de-b873-5d92c05598e4"
+      ],
+      "actions": [
+        {
+          "kind": "search",
+          "title": "Review search"
+        },
+        {
+          "kind": "property",
+          "title": "Phase two home",
+          "property_id": "01b06575-9486-47de-b873-5d92c05598e4",
+          "offer_id": "fe3d4403-9b28-4d4a-ae33-87d9d87ed930"
+        }
+      ],
+      "costs": [
+        {
+          "label": "Phase two home",
+          "kind": "recurring",
+          "period": "monthly",
+          "money": {
+            "amount_minor": 1000000,
+            "currency": "EGP",
+            "exponent": 2
+          }
+        },
+        {
+          "label": "Deposit",
+          "kind": "deposit",
+          "period": "",
+          "money": {
+            "amount_minor": 0,
+            "currency": "EGP",
+            "exponent": 2
+          }
+        }
+      ],
+      "provider": "catalog_rules",
+      "retain_history": false
+    },
+    "operation_receipt": {
+      "id": "cfcbd930-c276-41a9-8246-1af05f6749bd",
+      "subject_id": "17858178-e446-4a82-a26c-fb1f7cddac2b",
+      "request_key": "32cdfe46-f43f-4e30-aa03-8746735d6675",
+      "revision": 1,
+      "status": "confirmed"
+    }
+  },
+  "create_body": {
+    "request_key": "32cdfe46-f43f-4e30-aa03-8746735d6675",
+    "expected_revision": 0,
+    "session_id": "private-test",
+    "previous_turn_id": "",
+    "language": "en",
+    "text": "An apartment in Phase Two City under 15000 near my workplace",
+    "retain_history": false
+  },
+  "actor_id": "76bed81b-929f-44f5-b105-a3a24254d5f4",
+  "grant": {
+    "account_id": "76bed81b-929f-44f5-b105-a3a24254d5f4",
+    "account_verified": true,
+    "enabled_capabilities": [
+      "lifestyle",
+      "roommates",
+      "housing_groups",
+      "group_visits",
+      "group_applications",
+      "housing_requests",
+      "housing_offers",
+      "condition_reports",
+      "move_out_notices",
+      "replacements",
+      "commute",
+      "tenant_assistant"
+    ],
+    "verified_services": [
+      "lifestyle",
+      "roommates",
+      "housing_groups",
+      "group_visits",
+      "group_applications",
+      "housing_requests",
+      "housing_offers",
+      "condition_reports",
+      "move_out_notices",
+      "replacements",
+      "commute",
+      "tenant_assistant"
+    ],
+    "policy_version": "planning-policy-v1",
+    "allowed_actions": [
+      "ask"
+    ],
+    "expires_at": "2026-10-12T20:37:28.629440+00:00",
+    "blocking_reasons": []
+  },
+  "catalog": {
+    "property_types": [
+      {
+        "id": "3b410d2d-1dd1-4ac8-8484-cd9a0dcc9d70",
+        "value": "apartment",
+        "label": "\u0634\u0642\u0629"
+      },
+      {
+        "id": "0d216c4f-f5fd-4b76-ba4c-8060b2115ba8",
+        "value": "house",
+        "label": "\u0645\u0646\u0632\u0644"
+      },
+      {
+        "id": "43e9141f-73b3-4aa8-9fca-ebc8d6f13f39",
+        "value": "penthouse",
+        "label": "\u0628\u0646\u062a\u0647\u0627\u0648\u0633"
+      },
+      {
+        "id": "f81110d7-1d81-41ea-8676-549f15e65c20",
+        "value": "phase-two-apartment",
+        "label": "Phase Two Apartment"
+      },
+      {
+        "id": "4973bc7c-71b4-4cb6-8aa2-a1d408df5a31",
+        "value": "studio",
+        "label": "\u0627\u0633\u062a\u0648\u062f\u064a\u0648"
+      },
+      {
+        "id": "c505beb2-3ee0-4036-b0ed-2d0a9fb31a3f",
+        "value": "villa",
+        "label": "\u0641\u064a\u0644\u0627"
+      }
+    ],
+    "ordering": [
+      {
+        "value": "-created_at",
+        "label": "\u0627\u0644\u0623\u062d\u062f\u062b"
+      },
+      {
+        "value": "created_at",
+        "label": "\u0627\u0644\u0623\u0642\u062f\u0645"
+      },
+      {
+        "value": "price",
+        "label": "\u0627\u0644\u0633\u0639\u0631 \u0627\u0644\u0623\u0642\u0644"
+      },
+      {
+        "value": "-price",
+        "label": "\u0627\u0644\u0633\u0639\u0631 \u0627\u0644\u0623\u0639\u0644\u0649"
+      }
+    ],
+    "bedrooms": "number",
+    "bathrooms": "number",
+    "price_periods": [
+      {
+        "value": "daily",
+        "label": "\u064a\u0648\u0645\u064a"
+      },
+      {
+        "value": "weekly",
+        "label": "\u0623\u0633\u0628\u0648\u0639\u064a"
+      },
+      {
+        "value": "monthly",
+        "label": "\u0634\u0647\u0631\u064a"
+      },
+      {
+        "value": "yearly",
+        "label": "\u0633\u0646\u0648\u064a"
+      }
+    ],
+    "suitable_for": [
+      {
+        "value": "families",
+        "label": "\u0639\u0627\u0626\u0644\u0627\u062a"
+      },
+      {
+        "value": "singles",
+        "label": "\u0623\u0641\u0631\u0627\u062f"
+      },
+      {
+        "value": "students",
+        "label": "\u0637\u0644\u0627\u0628"
+      },
+      {
+        "value": "female_students",
+        "label": "\u0637\u0627\u0644\u0628\u0627\u062a \u0641\u0642\u0637"
+      },
+      {
+        "value": "all",
+        "label": "\u0627\u0644\u0643\u0644"
+      }
+    ],
+    "amenities": [
+      {
+        "value": "wifi",
+        "query_parameter": "has_wifi",
+        "label": "\u0648\u0627\u064a \u0641\u0627\u064a"
+      },
+      {
+        "value": "elevator",
+        "query_parameter": "has_elevator",
+        "label": "\u0623\u0633\u0627\u0646\u0633\u064a\u0631"
+      },
+      {
+        "value": "garage",
+        "query_parameter": "has_garage",
+        "label": "\u062c\u0631\u0627\u062c"
+      },
+      {
+        "value": "security",
+        "query_parameter": "has_security",
+        "label": "\u062d\u0631\u0627\u0633\u0629"
+      },
+      {
+        "value": "balcony",
+        "query_parameter": "has_balcony",
+        "label": "\u0628\u0644\u0643\u0648\u0646\u0629"
+      },
+      {
+        "value": "air_conditioning",
+        "query_parameter": "has_air_conditioning",
+        "label": "\u062a\u0643\u064a\u064a\u0641"
+      },
+      {
+        "value": "near_metro",
+        "query_parameter": "near_metro",
+        "label": "\u0642\u0631\u064a\u0628 \u0645\u0646 \u0627\u0644\u0645\u062a\u0631\u0648"
+      },
+      {
+        "value": "natural_gas",
+        "query_parameter": "has_natural_gas",
+        "label": "\u063a\u0627\u0632 \u0637\u0628\u064a\u0639\u064a"
+      },
+      {
+        "value": "electricity_meter",
+        "query_parameter": "has_electricity_meter",
+        "label": "\u0639\u062f\u0627\u062f \u0643\u0647\u0631\u0628\u0627\u0621"
+      },
+      {
+        "value": "water_meter",
+        "query_parameter": "has_water_meter",
+        "label": "\u0639\u062f\u0627\u062f \u0645\u064a\u0627\u0647"
+      }
+    ],
+    "defaults": {
+      "ordering": "-created_at"
+    }
+  }
+}

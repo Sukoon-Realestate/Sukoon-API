@@ -1,3 +1,4 @@
+from core_apps.common.contract_testing import api_json
 import pytest
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
@@ -41,7 +42,7 @@ class TestTicketListCreateAPIView:
     def test_list_tickets_empty(self, auth_client, user):
         res = auth_client.get(f"{TICKETS_URL}?workspace=tenant&page=1&page_size=20")
         assert res.status_code == status.HTTP_200_OK
-        data = res.json()["data"]
+        data = api_json(res)["data"]
         assert data["count"] == 0
         assert data["results"] == []
 
@@ -184,9 +185,7 @@ class TestTicketDetailAndRepliesAPIView:
 
         first = auth_client.post(url, payload, format="json", **headers)
         replay = auth_client.post(url, payload, format="json", **headers)
-        conflict = auth_client.post(
-            url, {"body": "رد مختلف"}, format="json", **headers
-        )
+        conflict = auth_client.post(url, {"body": "رد مختلف"}, format="json", **headers)
 
         assert first.status_code == status.HTTP_200_OK
         assert replay.status_code == status.HTTP_200_OK

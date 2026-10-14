@@ -8,3 +8,4 @@ class PageContentSerializer(serializers.Serializer):
     content_format = serializers.CharField(read_only=True, default="plain_text")
     language = serializers.CharField(read_only=True, default="en")
     updated_at = serializers.DateTimeField(read_only=True)
+    revision = serializers.IntegerField(read_only=True)

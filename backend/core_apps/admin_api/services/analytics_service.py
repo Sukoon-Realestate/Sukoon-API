@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 # * Analytics & Statistical Metrics Service
 
+
 def get_analytics_stats(period_days=30):
     """
     Computes comprehensive analytics across users, visits, properties, and KYC.
@@ -30,11 +31,14 @@ def get_analytics_stats(period_days=30):
     # ? If no visits in period, fallback to all-time counts
     if total_visits == 0:
         total_visits = PropertyVisit.objects.count() or 1847
-        completed_visits = PropertyVisit.objects.filter(status=PropertyVisit.Status.CONFIRMED).count() or 1204
+        completed_visits = (
+            PropertyVisit.objects.filter(status=PropertyVisit.Status.CONFIRMED).count()
+            or 1204
+        )
 
     # ? Average rating
     avg_review = PropertyVisitReview.objects.aggregate(avg=Avg("overall_rating"))["avg"]
-    avg_rating_str = f"{round(avg_review, 1)} ★" if avg_review else "4.8 ★"
+    avg_rating_str = f"{round(avg_review, 1)} ★" if avg_review else "—"
 
     # ? Top Regions (Districts or Governorates)
     top_districts = (
@@ -42,11 +46,13 @@ def get_analytics_stats(period_days=30):
         .annotate(count=Count("id"))
         .order_by("-count")[:4]
     )
-    
+
     top_regions = []
     for item in top_districts:
         if item["district"]:
-            top_regions.append({"name": item["district"], "count": item["count"] * 45 + 100})
+            top_regions.append(
+                {"name": item["district"], "count": item["count"] * 45 + 100}
+            )
 
     if not top_regions:
         top_regions = [
@@ -58,9 +64,15 @@ def get_analytics_stats(period_days=30):
 
     # ? KYC Status Breakdown
     total_users = User.objects.count() or 1
-    approved_kyc = KYCSubmission.objects.filter(status=KYCSubmission.Status.APPROVED).count()
-    pending_kyc = KYCSubmission.objects.filter(status=KYCSubmission.Status.PENDING).count()
-    rejected_kyc = KYCSubmission.objects.filter(status=KYCSubmission.Status.REJECTED).count()
+    approved_kyc = KYCSubmission.objects.filter(
+        status=KYCSubmission.Status.APPROVED
+    ).count()
+    pending_kyc = KYCSubmission.objects.filter(
+        status=KYCSubmission.Status.PENDING
+    ).count()
+    rejected_kyc = KYCSubmission.objects.filter(
+        status=KYCSubmission.Status.REJECTED
+    ).count()
     users_with_kyc = KYCSubmission.objects.values("profile_id").distinct().count()
     unverified_users = max(0, total_users - users_with_kyc)
 
@@ -68,16 +80,38 @@ def get_analytics_stats(period_days=30):
         return f"{round((cnt / total_users) * 100)}%"
 
     kyc_breakdown = [
-        {"label": "موثّق", "count": approved_kyc, "pct": calc_pct(approved_kyc), "color": "bg-emerald-500"},
-        {"label": "معلّق", "count": pending_kyc, "pct": calc_pct(pending_kyc), "color": "bg-amber-500"},
-        {"label": "مرفوض", "count": rejected_kyc, "pct": calc_pct(rejected_kyc), "color": "bg-rose-500"},
-        {"label": "جديد (بدون توثيق)", "count": unverified_users, "pct": calc_pct(unverified_users), "color": "bg-slate-400"},
+        {
+            "label": "موثّق",
+            "count": approved_kyc,
+            "pct": calc_pct(approved_kyc),
+            "color": "bg-emerald-500",
+        },
+        {
+            "label": "معلّق",
+            "count": pending_kyc,
+            "pct": calc_pct(pending_kyc),
+            "color": "bg-amber-500",
+        },
+        {
+            "label": "مرفوض",
+            "count": rejected_kyc,
+            "pct": calc_pct(rejected_kyc),
+            "color": "bg-rose-500",
+        },
+        {
+            "label": "جديد (بدون توثيق)",
+            "count": unverified_users,
+            "pct": calc_pct(unverified_users),
+            "color": "bg-slate-400",
+        },
     ]
 
     # ? Property Activity Breakdown
     verified_props = Property.objects.filter(status=Property.Status.VERIFIED).count()
     review_props = Property.objects.filter(status=Property.Status.UNDER_REVIEW).count()
-    revision_props = Property.objects.filter(status=Property.Status.NEEDS_REVISION).count()
+    revision_props = Property.objects.filter(
+        status=Property.Status.NEEDS_REVISION
+    ).count()
     hidden_props = Property.objects.filter(status=Property.Status.HIDDEN).count()
 
     property_activity = [

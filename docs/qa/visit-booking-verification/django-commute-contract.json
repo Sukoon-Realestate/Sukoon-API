@@ -1,0 +1,109 @@
+{
+  "created": {
+    "resource": {
+      "id": "5163978a-c255-4c5b-9e03-7e0f886cdce0",
+      "revision": 1,
+      "coverage": "full_catalog",
+      "provider": "mock_haversine",
+      "resolved_at": "2026-10-12T19:35:21.455121+00:00",
+      "expires_at": "2026-10-12T20:05:21.455008+00:00",
+      "unknown_count": 0
+    },
+    "operation_receipt": {
+      "id": "52026afa-4ae1-434c-a3e4-35dc5eab8749",
+      "subject_id": "5163978a-c255-4c5b-9e03-7e0f886cdce0",
+      "request_key": "ee404acc-8b55-4548-9493-dbfcca035ab0",
+      "revision": 1,
+      "status": "confirmed"
+    }
+  },
+  "results": {
+    "results": [
+      {
+        "title": "Phase two home",
+        "estimates": [
+          {
+            "status": "ok",
+            "explanation": "API mock estimate; not a road or public transport route.",
+            "limit_seconds": 3600,
+            "duration_seconds": 0,
+            "destination_label": "Work"
+          }
+        ],
+        "offer_ids": [
+          "080a17b3-5aef-4fcc-b2f1-c739ed7f496b"
+        ],
+        "property_id": "b7134c91-2d75-4079-9be3-b015afa71faf"
+      }
+    ],
+    "count": 1,
+    "per_page": 20,
+    "total_pages": 1,
+    "next": null,
+    "previous": null
+  },
+  "create_body": {
+    "request_key": "ee404acc-8b55-4548-9493-dbfcca035ab0",
+    "expected_revision": 0,
+    "destinations": [
+      {
+        "label": "Work",
+        "location": {
+          "latitude": 30.04,
+          "longitude": 31.23
+        },
+        "mode": "walking",
+        "limit_minutes": 60
+      }
+    ],
+    "local_time": "2026-12-01T08:30",
+    "time_kind": "arrive_by",
+    "timezone": "Africa/Cairo",
+    "balance": false,
+    "hard_limits": true,
+    "filters": {
+      "city": "0c136f9f-b1f9-4965-a622-452eab012e6f",
+      "price_max": "15000",
+      "price_period": "monthly"
+    }
+  },
+  "actor_id": "1f5cfb75-86ce-492c-99b2-ee9232eb5e5a",
+  "grant": {
+    "account_id": "1f5cfb75-86ce-492c-99b2-ee9232eb5e5a",
+    "account_verified": true,
+    "enabled_capabilities": [
+      "lifestyle",
+      "roommates",
+      "housing_groups",
+      "group_visits",
+      "group_applications",
+      "housing_requests",
+      "housing_offers",
+      "condition_reports",
+      "move_out_notices",
+      "replacements",
+      "commute",
+      "tenant_assistant"
+    ],
+    "verified_services": [
+      "lifestyle",
+      "roommates",
+      "housing_groups",
+      "group_visits",
+      "group_applications",
+      "housing_requests",
+      "housing_offers",
+      "condition_reports",
+      "move_out_notices",
+      "replacements",
+      "commute",
+      "tenant_assistant"
+    ],
+    "policy_version": "planning-policy-v1",
+    "allowed_actions": [
+      "search"
+    ],
+    "expires_at": "2026-10-12T19:40:21.479256+00:00",
+    "blocking_reasons": []
+  }
+}

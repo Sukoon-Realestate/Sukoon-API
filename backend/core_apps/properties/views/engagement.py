@@ -157,7 +157,7 @@ class SavedPropertyDeleteAPIView(generics.DestroyAPIView):
         property_id = str(instance.property.id)
         self.perform_destroy(instance)
         if "offer_id" not in request.data:
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_200_OK)
         return Response(
             {
                 "message": "Property selection removed.",

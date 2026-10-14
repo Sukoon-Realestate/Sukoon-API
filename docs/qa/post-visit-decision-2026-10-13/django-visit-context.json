@@ -1,0 +1,578 @@
+{
+  "schema_version": 1,
+  "source": "actual_local_django_api_test_responses",
+  "scenarios": {
+    "eligible_tenant": {
+      "data": {
+        "id": "6520f065-5376-4cfc-a73f-7e5eb0a7b54b",
+        "property": {
+          "id": "ebac25f9-350b-4ebb-aad8-73cc4eb27aab",
+          "title": "Phase two home",
+          "location": "District, Phase Two City",
+          "price": "10000.00"
+        },
+        "owner": {
+          "id": "d08eaf15-699c-40c9-bd43-82e1fc951f26",
+          "name": "Phase Owner",
+          "is_verified": true,
+          "phone_number": null,
+          "masked_phone_number": "",
+          "is_phone_revealed": true,
+          "phone_notice": ""
+        },
+        "day_label": "الإثنين 12 أكتوبر",
+        "time_label": "2:29 ص",
+        "status_label": "مقبول",
+        "actions": {
+          "can_cancel": true,
+          "can_chat": true,
+          "can_review": true,
+          "can_find_alternative": false
+        },
+        "alternative_search_filters": null,
+        "visit_date": "2026-10-12",
+        "visit_time": "02:29:01.620997",
+        "status": "confirmed",
+        "note": "",
+        "review": null,
+        "revision": 1,
+        "offer_id": "668ee376-7da5-4b16-a087-e6bd30c5d571",
+        "offer_snapshot": {
+          "name": "Whole home",
+          "terms": {
+            "price": "10000",
+            "price_period": "monthly"
+          },
+          "bed_id": null,
+          "archived": false,
+          "bed_name": null,
+          "capacity": 2,
+          "offer_id": "668ee376-7da5-4b16-a087-e6bd30c5d571",
+          "room_ids": [],
+          "offer_link": "",
+          "room_names": [],
+          "property_id": "ebac25f9-350b-4ebb-aad8-73cc4eb27aab",
+          "availability": "available",
+          "rental_scope": "entire_property",
+          "offer_revision": 2,
+          "bathroom_access": []
+        },
+        "post_visit_decision": null,
+        "post_visit_actions": {
+          "can_submit": true,
+          "eligible_at": "2026-10-12T02:29:01.620997+03:00",
+          "blocked_reason": null
+        },
+        "rental_continuation": {
+          "status": "awaiting_tenant_decision",
+          "next_actor": "tenant",
+          "next_action": "submit_post_visit_decision",
+          "blocked_reason": null,
+          "source_visit_id": "6520f065-5376-4cfc-a73f-7e5eb0a7b54b",
+          "source_decision_id": null,
+          "invitation_id": null,
+          "agreement_id": null,
+          "invoice_id": null,
+          "compatibility_version": "visit_decision_v1"
+        }
+      }
+    },
+    "proceed_tenant": {
+      "data": {
+        "id": "6520f065-5376-4cfc-a73f-7e5eb0a7b54b",
+        "property": {
+          "id": "ebac25f9-350b-4ebb-aad8-73cc4eb27aab",
+          "title": "Phase two home",
+          "location": "District, Phase Two City",
+          "price": "10000.00"
+        },
+        "owner": {
+          "id": "d08eaf15-699c-40c9-bd43-82e1fc951f26",
+          "name": "Phase Owner",
+          "is_verified": true,
+          "phone_number": null,
+          "masked_phone_number": "",
+          "is_phone_revealed": true,
+          "phone_notice": ""
+        },
+        "day_label": "الإثنين 12 أكتوبر",
+        "time_label": "2:29 ص",
+        "status_label": "مقبول",
+        "actions": {
+          "can_cancel": false,
+          "can_chat": true,
+          "can_review": true,
+          "can_find_alternative": false
+        },
+        "alternative_search_filters": null,
+        "visit_date": "2026-10-12",
+        "visit_time": "02:29:01.620997",
+        "status": "confirmed",
+        "note": "",
+        "review": null,
+        "revision": 2,
+        "offer_id": "668ee376-7da5-4b16-a087-e6bd30c5d571",
+        "offer_snapshot": {
+          "name": "Whole home",
+          "terms": {
+            "price": "10000",
+            "price_period": "monthly"
+          },
+          "bed_id": null,
+          "archived": false,
+          "bed_name": null,
+          "capacity": 2,
+          "offer_id": "668ee376-7da5-4b16-a087-e6bd30c5d571",
+          "room_ids": [],
+          "offer_link": "",
+          "room_names": [],
+          "property_id": "ebac25f9-350b-4ebb-aad8-73cc4eb27aab",
+          "availability": "available",
+          "rental_scope": "entire_property",
+          "offer_revision": 2,
+          "bathroom_access": []
+        },
+        "post_visit_decision": {
+          "id": "45260e34-a484-4626-a6ce-b41ee3086478",
+          "visit_id": "6520f065-5376-4cfc-a73f-7e5eb0a7b54b",
+          "value": "proceed",
+          "attended": true,
+          "attendance_source": "tenant_attestation",
+          "attested_at": "2026-10-12T23:29:01.644354+00:00",
+          "created_at": "2026-10-12T23:29:01.644488+00:00",
+          "visit_revision": 1
+        },
+        "post_visit_actions": {
+          "can_submit": false,
+          "eligible_at": "2026-10-12T02:29:01.620997+03:00",
+          "blocked_reason": "decision_already_recorded"
+        },
+        "rental_continuation": {
+          "status": "awaiting_owner_invitation",
+          "next_actor": "owner",
+          "next_action": null,
+          "blocked_reason": null,
+          "source_visit_id": "6520f065-5376-4cfc-a73f-7e5eb0a7b54b",
+          "source_decision_id": "45260e34-a484-4626-a6ce-b41ee3086478",
+          "invitation_id": null,
+          "agreement_id": null,
+          "invoice_id": null,
+          "compatibility_version": "visit_decision_v1"
+        }
+      }
+    },
+    "proceed_owner": {
+      "data": {
+        "id": "6520f065-5376-4cfc-a73f-7e5eb0a7b54b",
+        "tenant": {
+          "id": "58e9a0f7-577a-4426-a795-448e8996683e",
+          "name": "Phase Tenant",
+          "avatar": null,
+          "is_verified": true,
+          "member_since_year": 2026,
+          "membership_label": "مستأجر موثّق · عضو منذ 2026",
+          "phone_number": null,
+          "masked_phone_number": "",
+          "is_phone_revealed": true,
+          "phone_notice": ""
+        },
+        "property": {
+          "id": "ebac25f9-350b-4ebb-aad8-73cc4eb27aab",
+          "title": "Phase two home",
+          "district": "District",
+          "display_name": "Phase two home – District"
+        },
+        "visit_date": "2026-10-12",
+        "visit_time": "02:29:01.620997",
+        "day_label": "الإثنين 12 أكتوبر 2026",
+        "time_label": "2:29 ص",
+        "note": "",
+        "status": "confirmed",
+        "status_label": "مقبول",
+        "actions": {
+          "can_accept": false,
+          "can_reject": false,
+          "can_chat": true
+        },
+        "created_at": "2026-10-13T02:29:01.621225+03:00",
+        "revision": 2,
+        "offer_id": "668ee376-7da5-4b16-a087-e6bd30c5d571",
+        "offer_snapshot": {
+          "name": "Whole home",
+          "terms": {
+            "price": "10000",
+            "price_period": "monthly"
+          },
+          "bed_id": null,
+          "archived": false,
+          "bed_name": null,
+          "capacity": 2,
+          "offer_id": "668ee376-7da5-4b16-a087-e6bd30c5d571",
+          "room_ids": [],
+          "offer_link": "",
+          "room_names": [],
+          "property_id": "ebac25f9-350b-4ebb-aad8-73cc4eb27aab",
+          "availability": "available",
+          "rental_scope": "entire_property",
+          "offer_revision": 2,
+          "bathroom_access": []
+        },
+        "post_visit_decision": {
+          "id": "45260e34-a484-4626-a6ce-b41ee3086478",
+          "visit_id": "6520f065-5376-4cfc-a73f-7e5eb0a7b54b",
+          "value": "proceed",
+          "attended": true,
+          "attendance_source": "tenant_attestation",
+          "attested_at": "2026-10-12T23:29:01.644354+00:00",
+          "created_at": "2026-10-12T23:29:01.644488+00:00",
+          "visit_revision": 1
+        },
+        "post_visit_actions": {
+          "can_submit": false,
+          "eligible_at": "2026-10-12T02:29:01.620997+03:00",
+          "blocked_reason": "not_visit_tenant"
+        },
+        "rental_continuation": {
+          "status": "awaiting_owner_invitation",
+          "next_actor": "owner",
+          "next_action": "create_rental_invitation",
+          "blocked_reason": null,
+          "source_visit_id": "6520f065-5376-4cfc-a73f-7e5eb0a7b54b",
+          "source_decision_id": "45260e34-a484-4626-a6ce-b41ee3086478",
+          "invitation_id": null,
+          "agreement_id": null,
+          "invoice_id": null,
+          "compatibility_version": "visit_decision_v1"
+        }
+      }
+    },
+    "invitation": {
+      "key": "success",
+      "msg": "",
+      "data": {
+        "id": "371043a2-10a7-4285-9725-9e6948d5cecc",
+        "property_id": "ebac25f9-350b-4ebb-aad8-73cc4eb27aab",
+        "property_title": "Phase two home",
+        "owner_id": "d08eaf15-699c-40c9-bd43-82e1fc951f26",
+        "owner_name": "Phase Owner",
+        "tenant_id": "58e9a0f7-577a-4426-a795-448e8996683e",
+        "tenant_name": "Phase Tenant",
+        "offer_id": "668ee376-7da5-4b16-a087-e6bd30c5d571",
+        "offer_snapshot": {
+          "property_id": "ebac25f9-350b-4ebb-aad8-73cc4eb27aab",
+          "offer_id": "668ee376-7da5-4b16-a087-e6bd30c5d571",
+          "offer_revision": 2,
+          "rental_scope": "entire_property",
+          "name": "Whole home",
+          "room_ids": [],
+          "room_names": [],
+          "bed_id": null,
+          "bed_name": null,
+          "capacity": 2,
+          "bathroom_access": [],
+          "availability": "available",
+          "archived": false,
+          "offer_link": "",
+          "terms": {
+            "price": "10000",
+            "price_period": "monthly"
+          }
+        },
+        "status": "pending",
+        "revision": 1,
+        "created_at": "2026-10-13T02:29:01.692360+03:00",
+        "expires_at": "2026-10-20T02:29:01.692098+03:00",
+        "accepted_at": null,
+        "rejected_at": null,
+        "revoked_at": null,
+        "lease_id": null,
+        "eligible_for_lease": false,
+        "actions": {
+          "can_respond": false
+        },
+        "interest_id": null,
+        "terms_proposal_id": null,
+        "consumed_at": null,
+        "allowed_actions": [
+          "revoke_invitation"
+        ],
+        "blocking_reasons": [],
+        "source_visit_id": "6520f065-5376-4cfc-a73f-7e5eb0a7b54b",
+        "source_decision_id": "45260e34-a484-4626-a6ce-b41ee3086478",
+        "provenance_version": "visit_decision_v1"
+      }
+    },
+    "invitation_tenant_context": {
+      "data": {
+        "id": "6520f065-5376-4cfc-a73f-7e5eb0a7b54b",
+        "property": {
+          "id": "ebac25f9-350b-4ebb-aad8-73cc4eb27aab",
+          "title": "Phase two home",
+          "location": "District, Phase Two City",
+          "price": "10000.00"
+        },
+        "owner": {
+          "id": "d08eaf15-699c-40c9-bd43-82e1fc951f26",
+          "name": "Phase Owner",
+          "is_verified": true,
+          "phone_number": null,
+          "masked_phone_number": "",
+          "is_phone_revealed": true,
+          "phone_notice": ""
+        },
+        "day_label": "الإثنين 12 أكتوبر",
+        "time_label": "2:29 ص",
+        "status_label": "مقبول",
+        "actions": {
+          "can_cancel": false,
+          "can_chat": true,
+          "can_review": true,
+          "can_find_alternative": false
+        },
+        "alternative_search_filters": null,
+        "visit_date": "2026-10-12",
+        "visit_time": "02:29:01.620997",
+        "status": "confirmed",
+        "note": "",
+        "review": null,
+        "revision": 2,
+        "offer_id": "668ee376-7da5-4b16-a087-e6bd30c5d571",
+        "offer_snapshot": {
+          "name": "Whole home",
+          "terms": {
+            "price": "10000",
+            "price_period": "monthly"
+          },
+          "bed_id": null,
+          "archived": false,
+          "bed_name": null,
+          "capacity": 2,
+          "offer_id": "668ee376-7da5-4b16-a087-e6bd30c5d571",
+          "room_ids": [],
+          "offer_link": "",
+          "room_names": [],
+          "property_id": "ebac25f9-350b-4ebb-aad8-73cc4eb27aab",
+          "availability": "available",
+          "rental_scope": "entire_property",
+          "offer_revision": 2,
+          "bathroom_access": []
+        },
+        "post_visit_decision": {
+          "id": "45260e34-a484-4626-a6ce-b41ee3086478",
+          "visit_id": "6520f065-5376-4cfc-a73f-7e5eb0a7b54b",
+          "value": "proceed",
+          "attended": true,
+          "attendance_source": "tenant_attestation",
+          "attested_at": "2026-10-12T23:29:01.644354+00:00",
+          "created_at": "2026-10-12T23:29:01.644488+00:00",
+          "visit_revision": 1
+        },
+        "post_visit_actions": {
+          "can_submit": false,
+          "eligible_at": "2026-10-12T02:29:01.620997+03:00",
+          "blocked_reason": "decision_already_recorded"
+        },
+        "rental_continuation": {
+          "status": "invitation_pending",
+          "next_actor": "tenant",
+          "next_action": "open_invitation",
+          "blocked_reason": null,
+          "source_visit_id": "6520f065-5376-4cfc-a73f-7e5eb0a7b54b",
+          "source_decision_id": "45260e34-a484-4626-a6ce-b41ee3086478",
+          "invitation_id": "371043a2-10a7-4285-9725-9e6948d5cecc",
+          "agreement_id": null,
+          "invoice_id": null,
+          "compatibility_version": "visit_decision_v1"
+        }
+      }
+    },
+    "decline_tenant": {
+      "data": {
+        "id": "e7a46a64-4851-4973-8be7-d9d2230bbe8e",
+        "property": {
+          "id": "ebac25f9-350b-4ebb-aad8-73cc4eb27aab",
+          "title": "Phase two home",
+          "location": "District, Phase Two City",
+          "price": "10000.00"
+        },
+        "owner": {
+          "id": "d08eaf15-699c-40c9-bd43-82e1fc951f26",
+          "name": "Phase Owner",
+          "is_verified": true,
+          "phone_number": null,
+          "masked_phone_number": "",
+          "is_phone_revealed": true,
+          "phone_notice": ""
+        },
+        "day_label": "الأحد 11 أكتوبر",
+        "time_label": "2:29 ص",
+        "status_label": "مقبول",
+        "actions": {
+          "can_cancel": false,
+          "can_chat": true,
+          "can_review": true,
+          "can_find_alternative": false
+        },
+        "alternative_search_filters": null,
+        "visit_date": "2026-10-11",
+        "visit_time": "02:29:01.620997",
+        "status": "confirmed",
+        "note": "",
+        "review": null,
+        "revision": 2,
+        "offer_id": "",
+        "offer_snapshot": null,
+        "post_visit_decision": {
+          "id": "e337bc94-7838-47ea-abe6-7c8dcec28d34",
+          "visit_id": "e7a46a64-4851-4973-8be7-d9d2230bbe8e",
+          "value": "decline",
+          "attended": true,
+          "attendance_source": "tenant_attestation",
+          "attested_at": "2026-10-12T23:29:01.712514+00:00",
+          "created_at": "2026-10-12T23:29:01.712643+00:00",
+          "visit_revision": 1,
+          "reason": "المساحة لا تناسب احتياجاتي.\nThe space does not meet my needs. 😀"
+        },
+        "post_visit_actions": {
+          "can_submit": false,
+          "eligible_at": "2026-10-11T02:29:01.620997+03:00",
+          "blocked_reason": "decision_already_recorded"
+        },
+        "rental_continuation": {
+          "status": "declined",
+          "next_actor": null,
+          "next_action": null,
+          "blocked_reason": null,
+          "source_visit_id": "e7a46a64-4851-4973-8be7-d9d2230bbe8e",
+          "source_decision_id": "e337bc94-7838-47ea-abe6-7c8dcec28d34",
+          "invitation_id": null,
+          "agreement_id": null,
+          "invoice_id": null,
+          "compatibility_version": "visit_decision_v1"
+        }
+      }
+    },
+    "decline_owner": {
+      "data": {
+        "id": "e7a46a64-4851-4973-8be7-d9d2230bbe8e",
+        "tenant": {
+          "id": "58e9a0f7-577a-4426-a795-448e8996683e",
+          "name": "Phase Tenant",
+          "avatar": null,
+          "is_verified": true,
+          "member_since_year": 2026,
+          "membership_label": "مستأجر موثّق · عضو منذ 2026",
+          "phone_number": null,
+          "masked_phone_number": "",
+          "is_phone_revealed": true,
+          "phone_notice": ""
+        },
+        "property": {
+          "id": "ebac25f9-350b-4ebb-aad8-73cc4eb27aab",
+          "title": "Phase two home",
+          "district": "District",
+          "display_name": "Phase two home – District"
+        },
+        "visit_date": "2026-10-11",
+        "visit_time": "02:29:01.620997",
+        "day_label": "الأحد 11 أكتوبر 2026",
+        "time_label": "2:29 ص",
+        "note": "",
+        "status": "confirmed",
+        "status_label": "مقبول",
+        "actions": {
+          "can_accept": false,
+          "can_reject": false,
+          "can_chat": true
+        },
+        "created_at": "2026-10-13T02:29:01.702586+03:00",
+        "revision": 2,
+        "offer_id": "",
+        "offer_snapshot": null,
+        "post_visit_decision": {
+          "id": "e337bc94-7838-47ea-abe6-7c8dcec28d34",
+          "visit_id": "e7a46a64-4851-4973-8be7-d9d2230bbe8e",
+          "value": "decline",
+          "attended": true,
+          "attendance_source": "tenant_attestation",
+          "attested_at": "2026-10-12T23:29:01.712514+00:00",
+          "created_at": "2026-10-12T23:29:01.712643+00:00",
+          "visit_revision": 1
+        },
+        "post_visit_actions": {
+          "can_submit": false,
+          "eligible_at": "2026-10-11T02:29:01.620997+03:00",
+          "blocked_reason": "not_visit_tenant"
+        },
+        "rental_continuation": {
+          "status": "declined",
+          "next_actor": null,
+          "next_action": null,
+          "blocked_reason": null,
+          "source_visit_id": "e7a46a64-4851-4973-8be7-d9d2230bbe8e",
+          "source_decision_id": "e337bc94-7838-47ea-abe6-7c8dcec28d34",
+          "invitation_id": null,
+          "agreement_id": null,
+          "invoice_id": null,
+          "compatibility_version": "visit_decision_v1"
+        }
+      }
+    },
+    "historical_tenant": {
+      "data": {
+        "id": "ab6d2328-15d1-4320-802d-c55349b2da62",
+        "property": {
+          "id": "ebac25f9-350b-4ebb-aad8-73cc4eb27aab",
+          "title": "Phase two home",
+          "location": "District, Phase Two City",
+          "price": "10000.00"
+        },
+        "owner": {
+          "id": "d08eaf15-699c-40c9-bd43-82e1fc951f26",
+          "name": "Phase Owner",
+          "is_verified": true,
+          "phone_number": null,
+          "masked_phone_number": "",
+          "is_phone_revealed": true,
+          "phone_notice": ""
+        },
+        "day_label": "الإثنين 12 أكتوبر",
+        "time_label": "2:29 ص",
+        "status_label": "مقبول",
+        "actions": {
+          "can_cancel": true,
+          "can_chat": true,
+          "can_review": true,
+          "can_find_alternative": false
+        },
+        "alternative_search_filters": null,
+        "visit_date": "2026-10-12",
+        "visit_time": "02:29:01.620997",
+        "status": "confirmed",
+        "note": "",
+        "review": null,
+        "revision": 1,
+        "offer_id": "668ee376-7da5-4b16-a087-e6bd30c5d571",
+        "offer_snapshot": null,
+        "post_visit_decision": null,
+        "post_visit_actions": {
+          "can_submit": false,
+          "eligible_at": "2026-10-12T02:29:01.620997+03:00",
+          "blocked_reason": "continuation_exists"
+        },
+        "rental_continuation": {
+          "status": "invitation_pending",
+          "next_actor": "tenant",
+          "next_action": "open_invitation",
+          "blocked_reason": null,
+          "source_visit_id": "ab6d2328-15d1-4320-802d-c55349b2da62",
+          "source_decision_id": null,
+          "invitation_id": "f79f52d3-45c9-4987-b024-03ba71eff554",
+          "agreement_id": null,
+          "invoice_id": null,
+          "compatibility_version": "historical_v0"
+        }
+      }
+    }
+  }
+}

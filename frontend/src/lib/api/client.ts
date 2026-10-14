@@ -63,10 +63,8 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
     } catch {
       errorData = { detail: response.statusText };
     }
-    const errorMessage =
-      errorData?.message ||
-      errorData?.detail ||
-      (typeof errorData === 'object' ? JSON.stringify(errorData) : 'حدث خطأ في الاتصال بالخادم');
+    const errorMessage = typeof errorData?.message === 'string' && errorData.message.trim()
+      ? errorData.message : 'حدث خطأ في الاتصال بالخادم';
 
     if (response.status === 401 && !endpoint.includes('/auth/login/')) {
       if (typeof window !== 'undefined') {
@@ -84,22 +82,42 @@ export async function apiClient<T = any>(endpoint: string, options: RequestOptio
     throw new Error(errorMessage);
   }
 
-  if (response.status === 204) {
-    return {} as T;
+  const json: unknown = await response.json();
+  if (!json || typeof json !== 'object' || Array.isArray(json)) {
+    throw new Error('Invalid API response');
   }
-
-  const json = await response.json();
-
-  // ? GenericJsonRenderer wraps all responses: GET → {"data": payload}, others → {"message": "...", "data": payload}
-  // Unwrap automatically so callers always receive the raw payload.
-  if (
-    json !== null &&
-    typeof json === 'object' &&
-    'data' in json &&
-    Object.keys(json).every((k) => k === 'data' || k === 'message')
-  ) {
-    return json.data as T;
+  const envelope = json as Record<string, unknown>;
+  if (Object.keys(envelope).length !== 2 || typeof envelope.message !== 'string' ||
+      !envelope.message.trim() || !('data' in envelope) ||
+      (envelope.data !== null && typeof envelope.data !== 'object')) {
+    throw new Error('Invalid API response');
   }
-
-  return json as T;
+  // Keep the dashboard's typed page model while the HTTP body is an array.
+  const pageHeaders = ['X-Page', 'X-Per-Page', 'X-Total-Count', 'X-Total-Pages', 'X-Next-Page', 'X-Previous-Page'];
+  if (Array.isArray(envelope.data) && pageHeaders.some(name => response.headers.has(name))) {
+    const integer = (name: string, minimum: number): number => {
+      const raw = response.headers.get(name);
+      if (raw === null || !/^\d+$/.test(raw) || !Number.isSafeInteger(Number(raw)) || Number(raw) < minimum) {
+        throw new Error('Invalid API pagination');
+      }
+      return Number(raw);
+    };
+    const page = integer('X-Page', 1);
+    const per_page = integer('X-Per-Page', 1);
+    const total_pages = integer('X-Total-Pages', 1);
+    const count = integer('X-Total-Count', 0);
+    const next = response.headers.has('X-Next-Page') ? integer('X-Next-Page', 1) : null;
+    const previous = response.headers.has('X-Previous-Page') ? integer('X-Previous-Page', 1) : null;
+    if (page > total_pages || total_pages !== Math.max(1, Math.ceil(count / per_page)) ||
+        envelope.data.length > per_page ||
+        (next !== null && (next !== page + 1 || next > total_pages)) ||
+        (previous !== null && previous !== page - 1)) {
+      throw new Error('Invalid API pagination');
+    }
+    return { results: envelope.data, count, page, per_page, total_pages,
+      next: next === null ? null : `?page=${next}`,
+      previous: previous === null ? null : `?page=${previous}`,
+    } as T;
+  }
+  return envelope.data as T;
 }

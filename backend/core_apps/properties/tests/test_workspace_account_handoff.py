@@ -1,9 +1,10 @@
+from core_apps.common.contract_testing import api_json
 import pytest
 from django.urls import reverse
 from django.utils import timezone
 from rest_framework import status
 
-from core_apps.properties.models import Property
+from core_apps.properties.models import OwnerAvailabilitySlot, Property
 from core_apps.notifications.models import Notification
 
 
@@ -39,19 +40,19 @@ class TestWorkspaceAccountContract:
         # 2. Owner endpoints with single session (no listings)
         res_owned = auth_client.get(reverse("my-property-list"))
         assert res_owned.status_code == status.HTTP_200_OK
-        assert res_owned.json()["data"]["count"] == 0
-        assert res_owned.json()["data"]["results"] == []
+        assert api_json(res_owned)["data"]["count"] == 0
+        assert api_json(res_owned)["data"]["results"] == []
 
         res_owner_dash = auth_client.get(reverse("owner-dashboard"))
         assert res_owner_dash.status_code == status.HTTP_200_OK
-        dash_data = res_owner_dash.json()["data"]
+        dash_data = api_json(res_owner_dash)["data"]
         assert dash_data["active_properties"] == 0
         assert dash_data["pending_requests"] == 0
         assert dash_data["pending_visits"] == []
 
         res_owner_profile = auth_client.get(reverse("owner-profile"))
         assert res_owner_profile.status_code == status.HTTP_200_OK
-        prof_data = res_owner_profile.json()["data"]
+        prof_data = api_json(res_owner_profile)["data"]
         assert prof_data["stats"]["properties_count"] == 0
         assert prof_data["recent_reviews"] == []
 
@@ -59,12 +60,12 @@ class TestWorkspaceAccountContract:
             f"{reverse('owner-visit-calendar')}?year=2026&month=7"
         )
         assert res_owner_cal.status_code == status.HTTP_200_OK
-        cal_data = res_owner_cal.json()["data"]
+        cal_data = api_json(res_owner_cal)["data"]
         assert cal_data["visits"] == []
 
         res_owner_requests = auth_client.get(reverse("owner-visit-request-list"))
         assert res_owner_requests.status_code == status.HTTP_200_OK
-        req_data = res_owner_requests.json()["data"]
+        req_data = api_json(res_owner_requests)["data"]
         assert "tabs" in req_data
         assert req_data["tabs"]["all"] == 0
         assert req_data["results"] == []
@@ -128,7 +129,13 @@ class TestWorkspaceAccountContract:
         assert owner_data["account_details"]["phone_number"] == "+201098765432"
 
     def test_notification_types_preserved(
-        self, auth_client, user, another_user, apartment_type, cairo_city, cairo_governorate
+        self,
+        auth_client,
+        user,
+        another_user,
+        apartment_type,
+        cairo_city,
+        cairo_governorate,
     ):
         # Owner owns the property
         prop = _create_property(
@@ -141,6 +148,9 @@ class TestWorkspaceAccountContract:
         # Tenant (another_user) requests a visit
         auth_client.force_authenticate(user=another_user)
         future_date = timezone.localdate() + timezone.timedelta(days=5)
+        OwnerAvailabilitySlot.objects.create(
+            owner=user, property=prop, date=future_date, time="15:00:00"
+        )
         url = reverse("property-visit-create", kwargs={"property_id": prop.id})
         res = auth_client.post(
             url,

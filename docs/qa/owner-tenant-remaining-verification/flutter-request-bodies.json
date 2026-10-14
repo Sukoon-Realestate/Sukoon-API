@@ -1,0 +1,274 @@
+{
+  "proposal": {
+    "id": "",
+    "revision": 0,
+    "roster_revision": 2,
+    "offer_revision": 2,
+    "offer_id": "67cfd07e-08a0-4811-b8c5-546be97b070e",
+    "start_on": "2026-10-22",
+    "end_on": "",
+    "period": "monthly",
+    "total": {
+      "amount_minor": 1000000,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "contributions": {
+      "13adba81-24dd-40ba-bd43-c209dfa7d63a": 600000,
+      "0a251031-083a-4640-b739-1ac55f10c9fa": 400000
+    }
+  },
+  "invite": {
+    "request_key": "f4b56556-9222-40ad-bc5f-9576d1396c97",
+    "expected_revision": 0,
+    "group_id": "b7e49848-97c5-4023-beb3-be2bf1efd9d4",
+    "group_revision": 1
+  },
+  "housing_request": {
+    "expected_revision": 0,
+    "request_key": "682388fa-d786-4c0f-b578-e96b5a40506d",
+    "action": "publish",
+    "title": "Campus home",
+    "note": "Two residents",
+    "criteria": {
+      "city_id": "a7b1f584-023b-41c7-8583-f860522ab767",
+      "district_ids": [],
+      "rental_scope": "entire_property",
+      "property_type": "phase-two-apartment",
+      "budget_min": {
+        "amount_minor": 100000,
+        "currency": "EGP",
+        "exponent": 2
+      },
+      "budget_max": {
+        "amount_minor": 2000000,
+        "currency": "EGP",
+        "exponent": 2
+      },
+      "price_period": "monthly",
+      "start_on": "2026-10-22",
+      "end_on": null,
+      "people": 2,
+      "amenities": [],
+      "furnished": null
+    },
+    "visibility": "eligible_owners"
+  },
+  "housing_offer": {
+    "expected_revision": 0,
+    "request_key": "f77da378-e877-4fd2-b17e-e19a4e177d86",
+    "request_id": "8fd062be-d2f7-42ad-bc93-735d4870d711",
+    "request_revision": 1,
+    "selection": {
+      "property_id": "ab54c149-3ce7-4a67-b384-2bede40bdf3d",
+      "offer_id": "81fcf5ba-7b6b-46fd-ac98-f7194096bf22",
+      "offer_revision": 2,
+      "rental_scope": "entire_property",
+      "name": "Whole home",
+      "room_ids": [],
+      "room_names": [],
+      "bed_id": "",
+      "bed_name": "",
+      "terms": {
+        "price": "10000",
+        "price_period": "monthly",
+        "rental_period": 1,
+        "deposit": "",
+        "suitable_for": "all",
+        "description": "Configured shared accommodation",
+        "smoking_allowed": false,
+        "rules": []
+      },
+      "availability": "available",
+      "archived": false,
+      "capacity": 2,
+      "bathroom_access": [],
+      "offer_link": ""
+    },
+    "note": "Owned available home"
+  },
+  "condition_create": {
+    "request_key": "3893dcc6-7251-4ddf-8c07-88785b7016ad",
+    "expected_revision": 0,
+    "lease_id": "9dfbf734-5e96-41de-88a9-d0eb816f0a4f",
+    "action": "submit",
+    "kind": "move_in",
+    "inspected_on": "2026-10-12",
+    "selection": {
+      "property_id": "0d27fef4-c786-4500-992f-90bc06cf5760",
+      "offer_id": "cea68f1b-7d8d-4d60-9d12-f1d5601cd88a",
+      "offer_revision": 2,
+      "rental_scope": "entire_property",
+      "name": "Whole home",
+      "room_ids": [],
+      "room_names": [],
+      "bed_id": "",
+      "bed_name": "",
+      "terms": {
+        "price": "10000",
+        "price_period": "monthly",
+        "rental_period": 1,
+        "deposit": "",
+        "suitable_for": "all",
+        "description": "Configured shared accommodation",
+        "smoking_allowed": false,
+        "rules": []
+      },
+      "availability": "available",
+      "archived": false,
+      "capacity": 2,
+      "bathroom_access": [],
+      "offer_link": ""
+    },
+    "items": [
+      {
+        "id": "3d9b7d1c-554a-5c1e-9391-41060b33989e",
+        "space": "Phase two home",
+        "label": "Walls and floors",
+        "kind": "surface",
+        "condition": "good",
+        "note": "",
+        "reading": null,
+        "unit": null,
+        "quantity": null,
+        "evidence_ids": []
+      }
+    ],
+    "evidence_ids": [],
+    "baseline_id": null,
+    "baseline_revision": 0
+  },
+  "condition_acknowledge": {
+    "request_key": "3893dcc6-7251-4ddf-8c07-88785b7016ad",
+    "expected_revision": 1,
+    "lease_id": "9dfbf734-5e96-41de-88a9-d0eb816f0a4f",
+    "action": "acknowledge",
+    "kind": "move_in",
+    "inspected_on": "2026-10-12",
+    "selection": {
+      "property_id": "0d27fef4-c786-4500-992f-90bc06cf5760",
+      "offer_id": "cea68f1b-7d8d-4d60-9d12-f1d5601cd88a",
+      "offer_revision": 2,
+      "rental_scope": "entire_property",
+      "name": "Whole home",
+      "room_ids": [],
+      "room_names": [],
+      "bed_id": "",
+      "bed_name": "",
+      "terms": {
+        "price": "10000",
+        "price_period": "monthly",
+        "rental_period": 1,
+        "deposit": "",
+        "suitable_for": "all",
+        "description": "Configured shared accommodation",
+        "smoking_allowed": false,
+        "rules": []
+      },
+      "availability": "available",
+      "archived": false,
+      "capacity": 2,
+      "bathroom_access": [],
+      "offer_link": ""
+    },
+    "items": [
+      {
+        "id": "3d9b7d1c-554a-5c1e-9391-41060b33989e",
+        "space": "Phase two home",
+        "label": "Walls and floors",
+        "kind": "surface",
+        "condition": "good",
+        "note": "",
+        "reading": null,
+        "unit": null,
+        "quantity": null,
+        "evidence_ids": []
+      }
+    ],
+    "evidence_ids": [],
+    "baseline_id": null,
+    "baseline_revision": 0
+  },
+  "notice": {
+    "lease_id": "8c855f4e-6c06-45fa-83c3-9664958a459d",
+    "kind": "moveOutNotice",
+    "action": "submit",
+    "request_key": "ecd9e805-ea8c-46ae-a985-cb83dbf9164b",
+    "expected_revision": 0,
+    "requested_on": "2026-12-21",
+    "reason": "Leaving after the current lease"
+  },
+  "commute": {
+    "destinations": [
+      {
+        "label": "Work",
+        "location": {
+          "latitude": 30.04,
+          "longitude": 31.23,
+          "address": ""
+        },
+        "mode": "walking",
+        "limit_minutes": 60
+      }
+    ],
+    "local_time": "2026-12-01T08:30",
+    "time_kind": "arrive_by",
+    "timezone": "Africa/Cairo",
+    "balance": false,
+    "hard_limits": true,
+    "filters": {
+      "search": "",
+      "city": "aebf525a-61b2-4021-9dd5-5841d41552b3",
+      "district": "",
+      "ordering": "-created_at",
+      "page": 1,
+      "page_size": 10,
+      "price_min": "",
+      "price_max": "15000",
+      "rental_scope": "",
+      "property_type": "",
+      "price_period": "monthly",
+      "suitable_for": "",
+      "is_furnished": "",
+      "is_verified": "",
+      "smoking_allowed": "",
+      "bedrooms": "",
+      "bathrooms": "",
+      "amenities": []
+    },
+    "request_key": "59671d0b-5a13-41c9-8851-58d9e0cc883f",
+    "expected_revision": 0
+  },
+  "assistant": {
+    "text": "An apartment in Phase Two City under 15000 near my workplace",
+    "session_id": "private-test",
+    "language": "en",
+    "previous_turn_id": null,
+    "retain_history": false,
+    "request_key": "bd842f61-d29d-407b-840c-b2080cea7507",
+    "expected_revision": 0
+  },
+  "refund": {
+    "allocations": {
+      "rent": 200000,
+      "deposit": 300000
+    },
+    "lease_id": "560727e1-ebee-40fd-bde5-76e0be9a7baf",
+    "payment_attempt_id": "8f9c0f0d-6d17-45f8-ac7d-df19ece40f45",
+    "amount": {
+      "amount_minor": 500000,
+      "currency": "EGP",
+      "exponent": 2
+    },
+    "reason": "Agreed partial refund",
+    "payment_revision": 3,
+    "request_key": "a3b20c51-8098-4cba-bd95-aba1f9f4bc5d",
+    "expected_revision": 0
+  },
+  "replacement_consent": {
+    "expected_revision": 2,
+    "request_key": "218486db-ea35-41f3-8482-765b0a234b8f",
+    "decision": "accept",
+    "note": ""
+  }
+}

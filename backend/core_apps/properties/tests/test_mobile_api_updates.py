@@ -14,6 +14,7 @@ from core_apps.properties.models import (
     PropertyVisit,
     SavedProperty,
 )
+from core_apps.properties.services import PropertyVisitService
 
 
 def create_property(owner, property_type, **kwargs):
@@ -332,10 +333,6 @@ class TestAvailableDatesAndBooking:
         assert response.status_code == status.HTTP_200_OK
         assert response.json()["data"] == {"days": []}
 
-    # TODO: Re-enable when booked visit slot rejection check is re-added
-    @pytest.mark.skip(
-        reason="Temporarily disabled: rejection of already booked slots is commented out"
-    )
     def test_booking_revalidates_slot_and_prevents_owner_double_booking(
         self, auth_client, api_client, user, another_user, superuser, apartment_type
     ):
@@ -361,10 +358,6 @@ class TestAvailableDatesAndBooking:
         assert second_response.status_code == status.HTTP_400_BAD_REQUEST
         assert "already booked" in second_response.json()["message"]
 
-    # TODO: Re-enable when unconfigured slot rejection check is re-added
-    @pytest.mark.skip(
-        reason="Temporarily disabled: unconfigured slot rejection is commented out"
-    )
     def test_booking_rejects_unconfigured_slot(
         self, auth_client, another_user, apartment_type
     ):
@@ -376,3 +369,108 @@ class TestAvailableDatesAndBooking:
         )
         assert response.status_code == status.HTTP_400_BAD_REQUEST
         assert "not available" in response.json()["message"]
+        assert not PropertyVisit.objects.filter(property=property_obj).exists()
+
+    @pytest.mark.parametrize(
+        "slot_kind",
+        ["disabled", "different_time", "different_date", "different_property", "wrong_owner"],
+    )
+    def test_booking_requires_matching_enabled_slot(
+        self, auth_client, user, another_user, apartment_type, slot_kind
+    ):
+        property_obj = create_property(another_user, apartment_type)
+        visit_date = timezone.localdate() + timedelta(days=3)
+        slot_data = {
+            "owner": another_user,
+            "property": property_obj,
+            "date": visit_date,
+            "time": "14:00:00",
+        }
+        if slot_kind == "disabled":
+            slot_data["is_enabled"] = False
+        elif slot_kind == "different_time":
+            slot_data["time"] = "15:00:00"
+        elif slot_kind == "different_date":
+            slot_data["date"] += timedelta(days=1)
+        elif slot_kind == "different_property":
+            slot_data["property"] = create_property(another_user, apartment_type)
+        else:
+            slot_data["owner"] = user
+        OwnerAvailabilitySlot.objects.create(**slot_data)
+
+        response = auth_client.post(
+            reverse("property-visit-create", kwargs={"property_id": property_obj.id}),
+            {"visit_date": visit_date.isoformat(), "visit_time": "14:00:00"},
+            format="json",
+        )
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert "not available" in response.json()["message"]
+        assert not PropertyVisit.objects.exists()
+
+    @pytest.mark.parametrize("edit", ["disable", "remove"])
+    def test_booking_rechecks_slot_after_availability_was_read(
+        self, auth_client, api_client, another_user, apartment_type, edit
+    ):
+        property_obj = create_property(another_user, apartment_type)
+        visit_date = timezone.localdate() + timedelta(days=3)
+        slot = OwnerAvailabilitySlot.objects.create(
+            owner=another_user,
+            property=property_obj,
+            date=visit_date,
+            time="14:00:00",
+        )
+        available = api_client.get(
+            reverse("property-available-dates", kwargs={"property_id": property_obj.id}),
+            {"date": visit_date.isoformat()},
+        )
+        assert available.status_code == status.HTTP_200_OK
+        assert available.json()["data"]["times"][0]["is_available"] is True
+
+        slot.refresh_from_db()
+        slots_data = (
+            [{"time": slot.time, "is_enabled": False}] if edit == "disable" else []
+        )
+        PropertyVisitService.replace_property_day_availability(
+            property_obj, visit_date, slots_data
+        )
+        if edit == "disable":
+            slot.refresh_from_db()
+            assert slot.is_enabled is False
+        else:
+            assert not property_obj.availability_slots.exists()
+        response = auth_client.post(
+            reverse("property-visit-create", kwargs={"property_id": property_obj.id}),
+            {"visit_date": visit_date.isoformat(), "visit_time": "14:00:00"},
+            format="json",
+        )
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert "not available" in response.json()["message"]
+        assert not PropertyVisit.objects.exists()
+
+    def test_confirmed_visit_keeps_slot_unavailable(
+        self, auth_client, another_user, superuser, apartment_type
+    ):
+        property_obj = create_property(another_user, apartment_type)
+        visit_date = timezone.localdate() + timedelta(days=3)
+        OwnerAvailabilitySlot.objects.create(
+            owner=another_user, property=property_obj, date=visit_date, time="14:00:00"
+        )
+        visit = PropertyVisit.objects.create(
+            tenant=superuser,
+            property=property_obj,
+            visit_date=visit_date,
+            visit_time="14:00:00",
+            status=PropertyVisit.Status.CONFIRMED,
+        )
+
+        response = auth_client.post(
+            reverse("property-visit-create", kwargs={"property_id": property_obj.id}),
+            {"visit_date": visit_date.isoformat(), "visit_time": "14:00:00"},
+            format="json",
+        )
+
+        assert response.status_code == status.HTTP_400_BAD_REQUEST
+        assert "already booked" in response.json()["message"]
+        assert PropertyVisit.objects.get().pk == visit.pk
